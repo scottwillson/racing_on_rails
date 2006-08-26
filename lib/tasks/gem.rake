@@ -3,7 +3,7 @@ require 'rubygems'
 require 'rake/gempackagetask'
 require 'test/unit'
 
-task :gem => [
+task :default => [
         :prepare,
         :gem,
         :uninstall_gem, 
