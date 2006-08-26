@@ -46,14 +46,14 @@ end
 
 task :uninstall_gem do
   begin
-    `gem uninstall racingonrails`
+    `sudo gem uninstall racingonrails`
   rescue
     put('uninstall gem failed')
   end
 end
 
 task :install_gem do
-  `gem install -l pkg/racingonrails-0.1`
+  `sudo gem install -l pkg/racingonrails-0.1`
 end
 
 task :create_app do
