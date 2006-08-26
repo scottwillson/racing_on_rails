@@ -29,7 +29,9 @@ task :gem_spec do
     s.require_path = 'lib'
     s.files = FileList['public/index.html', 'bin/racingonrails'].to_a
     s.autorequire = 'rails'
-    s.executables << 'racingonrails'
+    s.bindir = "bin"
+    s.executables = ["racingonrails"]
+    s.default_executable = "racingonrails"
     s.description = <<EOF
   Rails website for bicycle racing associations. Event schedule, member management, 
   race results, season-long competetion calculations. Look and feel can be customized.
