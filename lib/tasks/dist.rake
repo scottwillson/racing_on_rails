@@ -21,7 +21,7 @@ namespace :dist do
   
   task :prepare do
     rm_rf 'pkg'
-    rm_rf '/Users/sw/bike_racing_association'
+    rm_rf File.expand_path('~/bike_racing_association')
   end
   
   task :uninstall_gem do
@@ -37,7 +37,7 @@ namespace :dist do
   end
   
   task :create_app do
-    puts(`racingonrails /Users/sw/bike_racing_association`)
+    puts(`racingonrails #{File.expand_path('~/bike_racing_association')}`)
   end
   
   task :go_to_homepage do
@@ -47,7 +47,7 @@ namespace :dist do
       stdout = ''
       stderr = ''
   
-      t = bg '/Users/sw/bike_racing_association/script/server', 0=>stdin, 1=>stdout, 2=>stderr
+      t = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
       
       webrick = Thread.new{ y t.pid => t.exitstatus } # t.exitstatus is a blocking call!
   
