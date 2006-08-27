@@ -40,6 +40,7 @@ namespace :dist do
     puts(`racingonrails #{File.expand_path('~/bike_racing_association')}`)
   end
   
+  desc "Start Webrick and test homepage"
   task :go_to_homepage do
     begin
   
@@ -50,7 +51,8 @@ namespace :dist do
       t = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
       
       webrick = Thread.new{ y t.pid => t.exitstatus } # t.exitstatus is a blocking call!
-  
+
+      sleep 2  
       while(t.status != 'sleep')
         sleep 1
       end
@@ -58,6 +60,7 @@ namespace :dist do
       response = Net::HTTP.get('localhost', '/index.html', 3000)
       assert(response['Welcome aboard'], 'Homepage should be available')
     ensure
+      t.exit if t
       webrick.exit if webrick
     end
   end
