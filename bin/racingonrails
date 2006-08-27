@@ -1,1 +1,6 @@
-puts('racingonrails')
+Signal.trap("INT") { puts; exit }
+
+freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
+app_path = ARGV.first
+
+`rails #{app_path}`
