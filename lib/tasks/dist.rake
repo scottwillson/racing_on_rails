@@ -49,11 +49,7 @@ namespace :dist do
       stderr = ''
   
       webrick = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
-      
-      sleep 2  
-      while(webrick.status != 'sleep')
-        sleep 1
-      end
+      sleep 6
   
       response = Net::HTTP.get('127.0.0.1', '/index.html', 3000)
       assert(response['Welcome aboard'], 'Homepage should be available')
