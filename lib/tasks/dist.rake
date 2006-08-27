@@ -48,20 +48,20 @@ namespace :dist do
       stdout = ''
       stderr = ''
   
-      t = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
+      webrick = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
       
-      webrick = Thread.new{ y t.pid => t.exitstatus } # t.exitstatus is a blocking call!
-
       sleep 2  
-      while(t.status != 'sleep')
+      while(webrick.status != 'sleep')
         sleep 1
       end
   
-      response = Net::HTTP.get('localhost', '/index.html', 3000)
+      response = Net::HTTP.get('127.0.0.1', '/index.html', 3000)
       assert(response['Welcome aboard'], 'Homepage should be available')
     ensure
-      t.exit if t
-      webrick.exit if webrick
+      if webrick
+        puts(`kill #{webrick.pid}`)
+        webrick.exit
+      end
     end
   end
 end
