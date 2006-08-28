@@ -1,0 +1,16 @@
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001730)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001628)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002031)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001553)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001725)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001966)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001737)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002034)[0m   [0mSHOW TABLES[0m

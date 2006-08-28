@@ -72,7 +72,7 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'database (MySQL)'
   s.add_dependency('rails')
   s.require_path = 'lib'
-  s.files = FileList['public/index.html', 'bin/racingonrails'].to_a
+  s.files = FileList['public/index.html', 'bin/racingonrails', 'lib/racingonrails.rb'].to_a
   s.bindir = "bin"
   s.executables = ["racingonrails"]
   s.default_executable = "racingonrails"
