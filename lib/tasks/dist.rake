@@ -8,9 +8,9 @@ require 'open4'
 include Open4
 include Test::Unit::Assertions
 
-namespace :dist do
+namespace :racing_on_rails do
   desc "Create Racing on Rails gem, install it, run new Rails app"
-  task :default => [
+  task :dist => [
           :prepare,
           :gem,
           :uninstall_gem, 
