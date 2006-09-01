@@ -14,3 +14,495 @@
   [4;35;1mSQL (0.001737)[0m   [0mSHOW TABLES[0m
   [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
   [4;35;1mSQL (0.002034)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001805)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008584)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.012336)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.029316)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.408598)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.036073)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002105)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.009618)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010919)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.026898)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.008725)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.034273)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001629)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008796)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009665)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005735)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.191008)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.039179)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001626)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008478)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010101)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.021308)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006527)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017008)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001649)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008702)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010059)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005954)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005878)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.030851)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002229)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.009378)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.062299)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.004601)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005612)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018263)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001856)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.009023)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010987)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.037346)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.097391)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.047802)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001996)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.017973)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010291)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.089370)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006263)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.039358)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001987)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008768)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.013307)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.008002)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.021225)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.037891)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:24:23) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+
+
+ActionController::MissingTemplate (Missing template script/../config/../app/views/home/index.rhtml):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:1034:in `assert_existence_of_template_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:724:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:648:in `render_with_no_layout'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:253:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:24:54) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+
+
+ActionView::TemplateError (uninitialized constant ASSOCIATION) on line #6 of app/views/layouts/application.rhtml:
+3: <html>
+4:   <head>
+5:     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+6:     <title><%= ASSOCIATION.name %></title>
+7: 	<link rel="stylesheet" href="stylesheets/racing_on_rails.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+8:   </head>
+9:   <body>
+
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:123:in `const_missing'
+    #{RAILS_ROOT}/app/views/layouts/application.rhtml:6:in `_run_rhtml_layouts_application'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:316:in `compile_and_render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:292:in `render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:251:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:251:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:27:29) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+
+
+ActionView::TemplateError (uninitialized constant ASSOCIATION) on line #6 of app/views/layouts/application.rhtml:
+3: <html>
+4:   <head>
+5:     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+6:     <title><%= ASSOCIATION.name %></title>
+7: 	<link rel="stylesheet" href="stylesheets/racing_on_rails.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+8:   </head>
+9:   <body>
+
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:123:in `const_missing'
+    #{RAILS_ROOT}/app/views/layouts/application.rhtml:6:in `_run_rhtml_layouts_application'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:316:in `compile_and_render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:292:in `render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:251:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:251:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:29:14) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+
+
+ActionView::TemplateError (uninitialized constant ASSOCIATION) on line #6 of app/views/layouts/application.rhtml:
+3: <html>
+4:   <head>
+5:     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+6:     <title><%= ASSOCIATION.name %></title>
+7: 	<link rel="stylesheet" href="stylesheets/racing_on_rails.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+8:   </head>
+9:   <body>
+
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:123:in `const_missing'
+    #{RAILS_ROOT}/app/views/layouts/application.rhtml:6:in `_run_rhtml_layouts_application'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:316:in `compile_and_render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:292:in `render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:251:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:251:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:31:48) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+
+
+ActionView::TemplateError (uninitialized constant ASSOCIATION) on line #6 of app/views/layouts/application.rhtml:
+3: <html>
+4:   <head>
+5:     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+6:     <title><%= ASSOCIATION.name %></title>
+7: 	<link rel="stylesheet" href="stylesheets/racing_on_rails.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+8:   </head>
+9:   <body>
+
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:123:in `const_missing'
+    #{RAILS_ROOT}/app/views/layouts/application.rhtml:6:in `_run_rhtml_layouts_application'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:316:in `compile_and_render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:292:in `render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:251:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:251:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:32:09) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.02277 (43 reqs/sec) | Rendering: 0.02015 (88%) | 200 OK [http://localhost/]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-08-31 20:32:09) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/stylesheets/racing_on_rails.css"):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:522:in `recognition_failed'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:512:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:33:29) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00362 (276 reqs/sec) | Rendering: 0.00172 (47%) | 200 OK [http://localhost/]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-08-31 20:33:31) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/images/backgrounds/bar.gif"):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:522:in `recognition_failed'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:512:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing Base#index (for 127.0.0.1 at 2006-08-31 20:33:31) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/images/backgrounds/bar_low.gif"):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:522:in `recognition_failed'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:512:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:46:33) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00725 (137 reqs/sec) | Rendering: 0.00343 (47%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:49:55) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00981 (101 reqs/sec) | Rendering: 0.00401 (40%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 20:50:20) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00653 (153 reqs/sec) | Rendering: 0.00329 (50%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-08-31 21:16:40) [GET]
+  Session ID: 88103ae9e8b19371032a55704646b0d7
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.02829 (35 reqs/sec) | Rendering: 0.02520 (89%) | 200 OK [http://localhost/]
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002317)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.012954)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.014705)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005993)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.038356)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.039943)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m

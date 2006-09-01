@@ -1,0 +1,35 @@
+Race Header	Name	City	State	Oregon Cup	Date	Type		
+Parent Race	Mt. Tabor Circuit Race	 Portland	Oregon	yes	June 26, 2005	Road		
+								
+Race Header	BAR Category	Category						
+Race	Senior Women	Senior Women						
+Result Header	place	First Name	Last Name	Team	BAR Category	
+Result	1	Kim	Anderson	Colavita
+	2	Kerry	Martin	Sunnyside Sports
+	3	Alice	Pennington	Desalvo/S&M
+	4	Kori	Kunz	EWEB Windpower	Women 4
+	7	Shannan	Whitlatch	Fred Meyer
+	10	Miranda	Duff	Team Rubicon
+								
+Race	Senior Men	Senior Men						
+Result	1	Aaron	Olson	Colavita
+	2	Seth	Hosmer
+	3	Shannon	Skerritt	Bike Gallery/Trek/VW
+	4	Robert	Campbell	The Valley Athletic Club/Specialized
+	5	Zach	Winter	Guinness Cycling
+	6	John	Browning	Half Fast Velo
+	7	Nathan	Dills	Bike Gallery/TREK
+	8	Donald	Reeb	GUINNESS CYCLING
+	9	Paul	Bourcier	Hutch's
+	10	Timmy	Evans	Gentle Lovers
+	11	Derek	Stalling	Hutch's
+	12	Mark	Duff	
+	13	Mike	Martin	Guinness Cycling
+	14	Bruce	Connelly	Logie Velo
+	15	Yann	Blindert	Bike Gallery
+	16	Jon	Myers	Team S&M
+	17	Damon	Pettinger	California Giant Cycling
+	18	Mark	King	Guinness Cycling
+	19	Nathan	Coffey	Team Oregon
+	20	John	Bravard	Half Vast Velo
+	21	Scott	Willson	Gentle Lovers

@@ -52,3 +52,5 @@ end
 
 # Include your application configuration below
 require 'racing_on_rails'
+
+ASSOCIATION = Association.new
