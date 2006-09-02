@@ -51,8 +51,11 @@ namespace :racing_on_rails do
       webrick = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
       sleep 6
   
-      response = Net::HTTP.get('127.0.0.1', '/index.html', 3000)
-      assert(response['Welcome aboard'], 'Homepage should be available')
+      response = Net::HTTP.get('127.0.0.1', '/', 3000)
+      puts(response)
+      assert(response['Bicycle Racing Association'], 'Homepage should be available')
+      assert(response['<a href="/results"'], 'Homepage should have link to results')
+      assert(response['<a href="/schedule"'], 'Homepage should have link to schedule')
     ensure
       if webrick
         puts(`kill #{webrick.pid}`)
@@ -72,13 +75,17 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'database (MySQL)'
   s.add_dependency('rails')
   s.require_path = 'lib'
-  s.files = FileList['public/index.html', 'bin/racingonrails', 'lib/racingonrails.rb'].to_a
+  s.files = FileList[
+    'bin/racingonrails', 
+    'app/**/*',
+    'lib/**/*'
+  ].to_a
   s.bindir = "bin"
   s.executables = ["racingonrails"]
   s.default_executable = "racingonrails"
   s.description = <<EOF
 Rails website for bicycle racing associations. Event schedule, member management, 
-race results, season-long competetion calculations. Look and feel can be customized.
+race results, season-long competition calculations. Customizable look and feel.
 EOF
 end
 

@@ -1,6 +1,17 @@
+require 'fileutils'
+
+include FileUtils
+
 Signal.trap("INT") { puts; exit }
 
 freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
 app_path = ARGV.first
 
-`rails #{app_path}`
+puts(`rails #{app_path}`)
+
+rm("#{app_path}/public/index.html")
+routes = IO.read('config/routes.rb')
+routes = routes.replace("#map.connect ''", "map.connect ''")
+IO.open('config/routes.rb', 'w') {|io|
+  io.write(routes)
+}
