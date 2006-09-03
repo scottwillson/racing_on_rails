@@ -55,6 +55,14 @@ namespace :racing_on_rails do
       assert(response['Bicycle Racing Association'], "Homepage should be available in \n#{response}")
       assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
       assert(response['<a href="/schedule"'], "Schedule link should be available in \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
+      assert(response['Schedule'], "Schedule should be available in \n#{response}")
+      assert(response['January'], "Schedule should be available in \n#{response}")
+      assert(response['December'], "Schedule should be available in \n#{response}")
+      
+      # TODO Run unit and functional tests
+      # TODO move above assertions into tests
     ensure
       if webrick
         puts(`kill #{webrick.pid}`)

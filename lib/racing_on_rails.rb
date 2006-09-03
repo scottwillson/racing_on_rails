@@ -6,4 +6,10 @@ require 'racing_on_rails/grid'
 require 'racing_on_rails/grid_file'
 require 'racing_on_rails/association'
 
+require 'racing_on_rails/schedule/schedule'
+require 'racing_on_rails/schedule/day'
+require 'racing_on_rails/schedule/month'
+require 'racing_on_rails/schedule/week'
+
 include RacingOnRails
+include RacingOnRails::Schedule

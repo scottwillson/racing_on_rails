@@ -1,0 +1,149 @@
+--- !omap
+#
+# Order is import because of foreign key constraints.
+#
+- banana_belt_series:
+    id: 1
+    name: Banana Belt Series
+    discipline: Road
+    sanctioned_by: OBRA
+    promoter_id: 1
+    date: 2004-01-01
+    type: Series
+- banana_belt_1:
+    id: 2
+    parent_id: 1
+    name: Banana Belt I
+    discipline: Road
+    sanctioned_by: OBRA
+    promoter_id: 1
+    updated_at: 2004-01-05
+    date: 2004-01-01
+    type: SingleDayEvent
+- banana_belt_2:
+    id: 3
+    parent_id: 1
+    name: Banana Belt II
+    discipline: Road
+    sanctioned_by: OBRA
+    promoter_id: 1
+    date: 2004-01-08
+    type: SingleDayEvent
+- banana_belt_3:
+    id: 4
+    parent_id: 1
+    name: Banana Belt III
+    discipline: Road
+    sanctioned_by: OBRA
+    promoter_id: 1
+    date: 2004-01-15
+    type: SingleDayEvent
+- jack_frost:
+    id: 11
+    name: Jack Frost
+    date: 2004-01-15
+    discipline: Time Trial
+    type: SingleDayEvent
+- kings_valley:
+    id: 5
+    name: Kings Valley Road Race
+    date: 2003-12-31
+    discipline: Road
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+- tabor_cr:
+    id: 6
+    name: Mt. Tabor Circuit Race
+    date: 2005-07-01
+    discipline: Road
+    sanctioned_by: OBRA
+    promoter_id: 3
+    flyer: http://www.obra.org/flyers/2006/tabor_cr.html
+    flyer_approved: false
+    type: SingleDayEvent
+- pir_series:
+    id: 7
+    date: 2005-07-02
+    name: Tuesday Night PIR
+    city: Portland
+    state: OR
+    discipline: Road
+    flyer: http://www.obra.org/flyers/2005/pir.html
+    flyer_approved: true
+    promoter_id: 2
+    sanctioned_by: OBRA
+    type: WeeklySeries
+- pir:
+    id: 8
+    parent_id: 7
+    date: 2005-07-02
+    name: Tuesday Night PIR
+    city: Portland
+    state: OR
+    discipline: Road
+    flyer: http://www.obra.org/flyers/2005/pir.html
+    promoter_id: 2
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+- pir_2:
+    id: 9
+    parent_id: 7
+    date: 2005-07-07
+    name: Tuesday Night PIR
+    city: Portland
+    state: OR
+    discipline: Road
+    flyer: http://www.obra.org/flyers/2005/pir.html
+    promoter_id: 2
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+- kings_valley_2004:
+    id: 10
+    name: Kings Valley Road Race
+    date: 2004-12-31
+    discipline: Road
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+- mt_hood:
+    id: 12
+    date: 2005-07-11
+    name: Mt. Hood Classic
+    city: Hood River
+    state: OR
+    discipline: Road
+    flyer: http://www.hoodriversr.net/
+    promoter_id: 1
+    sanctioned_by: OBRA
+    type: MultiDayEvent
+- mt_hood_1:
+    id: 13
+    parent_id: 12
+    date: 2005-07-11
+    name: Mount Hood Day 1
+    state: OR
+    discipline: Road
+    flyer: http://www.hoodriversr.net/
+    promoter_id: 1
+    sanctioned_by: OBRA
+    city: Hood River
+    type: SingleDayEvent
+- mt_hood_2:
+    id: 14
+    parent_id: 12
+    date: 2005-07-12
+    name: Mount Hood Day 2
+    city: Cloud Cap
+    state: OR
+    discipline: Road
+    flyer: http://www.hoodriversr.net/
+    promoter_id: 1
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+- kings_valley_2004:
+    id: 15
+    name: Kings Valley Road Race
+    date: 2004-12-31
+    discipline: Road
+    sanctioned_by: OBRA
+    type: SingleDayEvent
+    

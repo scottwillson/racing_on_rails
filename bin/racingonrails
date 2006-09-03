@@ -6,6 +6,7 @@ Signal.trap("INT") { puts; exit }
 
 freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
 app_path = ARGV.first
+template_root = File.expand_path(File.dirname(__FILE__) + '/..'
 
 # Create new Rails app
 puts(`rails #{app_path}`)
@@ -14,6 +15,7 @@ puts(`rails #{app_path}`)
 rm("#{app_path}/public/index.html")
 
 # Uncomment default routing and change to 'home' controller
+# TODO Extract this code into generic method -- probably not using text Rakefile, but separate file
 routes_path = File.expand_path("#{app_path}/config/routes.rb")
 routes_text = IO.read(routes_path)
 routes_text.gsub!(%q{# map.connect '', :controller => "welcome"}, %q{map.connect '', :controller => "home"})
@@ -33,7 +35,22 @@ File.open(routes_path, 'w') {|io|
   io << routes_text
 }
 
-# Racing on Rails default controllers, helpers, and views
-cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/controllers/'), "#{app_path}/app/")
-cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/helpers/'), "#{app_path}/app/")
-cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/views/'), "#{app_path}/app/")
+# Racing on Rails default 'Rails' classess
+copy_templates('/app/controllers')
+copy_templates('/app/helpers')
+copy_templates('/app/models')
+copy_templates('/app/views')
+
+# Default theme
+copy_templates('/public/images/backgrounds')
+copy_template('/public/stylesheets/racing_on_rails.css')
+
+# TODO Setup database
+
+def copy_template(file_path)
+  cp(template_root + file_path, app_path + file)
+end
+
+def copy_templates(dir_path)
+  cp_r(template_root + dir_path, app_path + dir_path)
+end

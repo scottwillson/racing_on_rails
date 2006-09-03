@@ -1,0 +1,24 @@
+cyclocross:
+  id: 1
+  name: Cyclocross
+criterium:
+  id: 2
+  name: Criterium
+mountain_bike:
+  id: 3
+  name: Mountain Bike
+road:
+  id: 4
+  name: Road
+time_trial:
+  id: 5
+  name: Time Trial
+track:
+  id: 6
+  name: Track
+tour:
+  id: 8
+  name: Tour
+circuit_race:
+  id: 9
+  name: Circuit Race

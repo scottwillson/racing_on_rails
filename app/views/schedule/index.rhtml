@@ -1,0 +1,86 @@
+<% @page_title = "Schedule: #{@year}" %>
+		<center><a href="schedlist.html">2006 Schedule in list format</a> &ndash; includes contact information for race organizers
+			<br>
+Archived Oregon calendars: <a href="../2005/index.html">2005</a> | <a href="../2004/index.html">2004</a> | <a href="../2003/index.html">2003</a> | <a href="../2002/index.html">2002</a> | <a href="../2001/index.html">2001</a>
+			<br><br>       
+   
+<a href="http://www.wsbaracing.com/events.asp">2006 Washington state calendar</a><!--  | <a href="http://www.montanacycling.org/2006calendar.htm">2006 Montana calendar</a> --> | <a href="http://www.lostrivercycling.org/2006schedule.html">2006 Idaho regional calendar</a>
+		<br><br>
+			
+		
+		<center><font color="#CC0000"><small>Updated <%= Date.today.strftime("%m/%d/%Y") %></small></font>
+		</center>
+		<center>
+			<br><br>
+			<table border="0" width="100%">
+				<tr>
+					<td width="20%" align="center"><a href="#January">January</a></td>
+					<td width="20%" align="center"><a href="#February">February</a></td>
+					<td width="20%" align="center"><a href="#March">March</a></td>
+					<td width="20%" align="center"><a href="#April">April</a></td>
+				</tr>
+				<tr>
+					<td width="20%" align="center"><a href="#May">May</a></td>
+					<td width="20%" align="center"><a href="#June">June</a></td>
+					<td width="20%" align="center"><a href="#July">July</a></td>
+					<td width="20%" align="center"><a href="#August">August</a></td>
+				</tr>
+				<tr>
+					<td width="20%" align="center"><a href="#September">September</a></td>
+					<td width="20%" align="center"><a href="#October">October</a></td>
+					<td width="20%" align="center"><a href="#November">November</a></td>
+					<td width="20%" align="center"><a href="#December">December</a></td>
+				</tr>
+			</table>
+
+		</center>
+<% for month in @schedule.months %>
+	<div align="center"><a name="<%= month.name %>"><b><%= month.name %> <%= @year %></b></a></div>
+    <table border="0" width="100%" cellspacing="0" cellpadding="2" bgcolor="#ffde14">
+      <tr>
+        <td align="center"><b>Sunday</td>
+        <td align="center"><b>Monday</td>
+        <td align="center"><b>Tuesday</td>
+        <td align="center"><b>Wednesday</td>
+        <td align="center"><b>Thursday</td>
+        <td align="center"><b>Friday</td>
+        <td align="center"><b>Saturday</td>
+      </tr>
+    </table>
+    <% for week in month.weeks %>
+    <table border="0" bgcolor="#FFFFFF" cellspacing="2" cellpadding="4" width="100%">
+      <tr height="70">
+      <%- for day in week.days -%>
+        <%- if day.previous_month? -%>
+        <td bgcolor="#FFFFCC" align="left" valign="top" width="14%" height="70"><span class="resultstable"><%= day.day_of_month -%></span>
+			  <%- else -%>
+        <td bgcolor="#FFFF99" align="left" valign="top" width="14%" height="70">
+          <b><%= day.day_of_month -%></b>
+				  <%- for event in day.events -%>
+			    <br>
+			<%- if event.cancelled %>
+				<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
+			<%- else -%>
+	            <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
+				    <a href="<%= event.flyer -%>"><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%></a>
+						  <%- else -%>
+				    <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%>
+						  <%- end -%>
+			<%- end -%>
+            
+			    <br>
+				  <%- end -%>
+			  <%- end -%>
+		    </td>
+		  <%- end -%>
+      </tr>
+    <%- end -%>
+    </table>
+	
+	<br><br>
+	
+<% end %>
