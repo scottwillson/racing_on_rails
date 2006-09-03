@@ -7,11 +7,33 @@ Signal.trap("INT") { puts; exit }
 freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
 app_path = ARGV.first
 
+# Create new Rails app
 puts(`rails #{app_path}`)
 
+# Remove homepage -- index requests will be handled by controller
 rm("#{app_path}/public/index.html")
-routes = IO.read('config/routes.rb')
-routes = routes.replace("#map.connect ''", "map.connect ''")
-IO.open('config/routes.rb', 'w') {|io|
-  io.write(routes)
+
+# Uncomment default routing and change to 'home' controller
+routes_path = File.expand_path("#{app_path}/config/routes.rb")
+routes_text = IO.read(routes_path)
+routes_text.gsub!(%q{# map.connect '', :controller => "welcome"}, %q{map.connect '', :controller => "home"})
+File.open(routes_path, 'w') {|io|
+  io << routes_text
 }
+
+# Add ASSOCIATION default to environment
+routes_path = File.expand_path("#{app_path}/config/environment.rb")
+routes_text = IO.read(routes_path)
+routes_text.gsub!(
+  %q{# Include your application configuration below}, 
+  %q{# Include your application configuration below
+    require 'racing_on_rails'
+    ASSOCIATION = Association.new})
+File.open(routes_path, 'w') {|io|
+  io << routes_text
+}
+
+# Racing on Rails default controllers, helpers, and views
+cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/controllers/'), "#{app_path}/app/")
+cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/helpers/'), "#{app_path}/app/")
+cp_r(File.expand_path(File.dirname(__FILE__) + '/../app/views/'), "#{app_path}/app/")

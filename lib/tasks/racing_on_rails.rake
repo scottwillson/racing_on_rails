@@ -52,10 +52,9 @@ namespace :racing_on_rails do
       sleep 6
   
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
-      puts(response)
-      assert(response['Bicycle Racing Association'], 'Homepage should be available')
-      assert(response['<a href="/results"'], 'Homepage should have link to results')
-      assert(response['<a href="/schedule"'], 'Homepage should have link to schedule')
+      assert(response['Bicycle Racing Association'], "Homepage should be available in \n#{response}")
+      assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
+      assert(response['<a href="/schedule"'], "Schedule link should be available in \n#{response}")
     ensure
       if webrick
         puts(`kill #{webrick.pid}`)
