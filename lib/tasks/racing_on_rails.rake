@@ -85,7 +85,10 @@ spec = Gem::Specification.new do |s|
   s.files = FileList[
     'bin/racingonrails', 
     'app/**/*',
-    'lib/**/*'
+    'db/schema.rb',
+    'lib/**/*',
+    'public/images/backgrounds/*',
+    'public/stylesheets/*'
   ].to_a
   s.bindir = "bin"
   s.executables = ["racingonrails"]

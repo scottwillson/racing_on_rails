@@ -1019,3 +1019,163 @@ Completed in 1.23516 (0 reqs/sec) | Rendering: 0.03023 (2%) | DB: 0.08604 (6%) |
   [4;35;1mSQL (0.007681)[0m   [0mDROP TABLE users[0m
   [4;36;1mSQL (0.047016)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
   [4;35;1mSQL (0.048841)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (3.110931)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.222684)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.209240)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.146818)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.178368)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.088623)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.128112)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.071034)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.104757)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.069975)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.083488)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.254728)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.061177)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.066414)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.031797)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.161779)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.052134)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.059561)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.038361)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.039847)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.040748)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.033450)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.054355)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.044997)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005059)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.025929)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.012347)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.039711)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.156981)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.175935)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.044536)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.063133)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.061256)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.026241)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.031480)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.065968)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.103401)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.011664)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005914)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016993)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.011822)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.022681)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.034650)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.091524)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005273)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.018631)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.005722)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.054760)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.032953)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.044153)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.018532)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.032662)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.045986)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005953)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.005916)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017489)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.030448)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.006237)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.007282)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016858)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.029617)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.233920)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.068051)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.018076)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005585)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.037266)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.005920)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.062185)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.048082)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.017728)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.020342)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.017987)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.019990)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.006992)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.007082)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017663)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.018090)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.017973)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005908)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017480)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.006355)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.006924)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.179569)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.024393)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005747)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.008431)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.025810)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.008795)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.055737)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.028607)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.017907)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.032957)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.035027)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.006888)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006978)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.022219)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.038583)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.006396)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.007480)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.021276)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.005342)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.041614)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.078656)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.034301)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005517)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.009898)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.009641)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.096762)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.038996)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.017720)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.023813)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.018826)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.042726)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005918)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.007101)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016801)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.033550)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005444)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005861)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.049652)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.020317)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.024482)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.081789)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.018528)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005384)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.006241)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.007783)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.047380)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.125988)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.018502)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.018521)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.036766)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.024070)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005552)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.043118)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.033771)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.017044)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.007400)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.008000)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.047811)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.004577)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.022490)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.087511)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.026973)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.006149)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.022859)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006415)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.032510)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.064050)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.019659)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.032698)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.041051)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.029077)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.014128)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006155)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016488)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.032428)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005474)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.007246)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016669)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m

@@ -1,22 +1,34 @@
+# TODO Standardize: Base, template, Racing on Rails, generator?
+
 require 'fileutils'
+require 'active_record'
 
 include FileUtils
 
 Signal.trap("INT") { puts; exit }
 
+def copy_template(file_path)
+  cp(@template_root + file_path, @app_path + file_path)
+end
+
+def copy_templates(dir_path)
+  cp_r("#{@template_root}#{dir_path}/." ,"#{@app_path}#{dir_path}")
+end
+
 freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
-app_path = ARGV.first
-template_root = File.expand_path(File.dirname(__FILE__) + '/..'
+@app_path = ARGV.first
+@app_name = File.basename(@app_path)
+@template_root = File.expand_path(File.dirname(__FILE__) + '/..')
 
 # Create new Rails app
-puts(`rails #{app_path}`)
+puts(`rails #{@app_path}`)
 
 # Remove homepage -- index requests will be handled by controller
-rm("#{app_path}/public/index.html")
+rm("#{@app_path}/public/index.html")
 
 # Uncomment default routing and change to 'home' controller
 # TODO Extract this code into generic method -- probably not using text Rakefile, but separate file
-routes_path = File.expand_path("#{app_path}/config/routes.rb")
+routes_path = File.expand_path("#{@app_path}/config/routes.rb")
 routes_text = IO.read(routes_path)
 routes_text.gsub!(%q{# map.connect '', :controller => "welcome"}, %q{map.connect '', :controller => "home"})
 File.open(routes_path, 'w') {|io|
@@ -24,15 +36,20 @@ File.open(routes_path, 'w') {|io|
 }
 
 # Add ASSOCIATION default to environment
-routes_path = File.expand_path("#{app_path}/config/environment.rb")
-routes_text = IO.read(routes_path)
-routes_text.gsub!(
-  %q{# Include your application configuration below}, 
-  %q{# Include your application configuration below
-    require 'racing_on_rails'
-    ASSOCIATION = Association.new})
-File.open(routes_path, 'w') {|io|
-  io << routes_text
+config = <<CONFIG
+require 'racing_on_rails'
+
+RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
+
+ASSOCIATION = Association.new
+ASSOCIATION.name = 'Bicycle Racing Association'
+ASSOCIATION.short_name = 'BRA'
+ASSOCIATION.state = 'OR'
+
+SANCTIONING_ORGANIZATIONS = ["FIAC", "OBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
+CONFIG
+File.open(routes_path, 'a') {|io|
+  io << config
 }
 
 # Racing on Rails default 'Rails' classess
@@ -45,12 +62,10 @@ copy_templates('/app/views')
 copy_templates('/public/images/backgrounds')
 copy_template('/public/stylesheets/racing_on_rails.css')
 
+# Base schema (should be different file, really)
+copy_template('/db/schema.rb')
+
 # TODO Setup database
-
-def copy_template(file_path)
-  cp(template_root + file_path, app_path + file)
-end
-
-def copy_templates(dir_path)
-  cp_r(template_root + dir_path, app_path + dir_path)
-end
+puts(`mysql -u root -e 'create database if not exists #{@app_name}_development'`)
+puts(`mysql -u root -e 'create database if not exists #{@app_name}_test'`)
+puts(`rake -f #{@app_path}/Rakefile db:schema:load`)
