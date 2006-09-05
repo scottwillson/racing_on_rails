@@ -1179,3 +1179,2715 @@ Completed in 1.23516 (0 reqs/sec) | Rendering: 0.03023 (2%) | DB: 0.08604 (6%) |
   [4;35;1mSQL (0.005474)[0m   [0mDROP TABLE users[0m
   [4;36;1mSQL (0.007246)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
   [4;35;1mSQL (0.016669)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-03 19:36:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.269806)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.021212)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.33461 (0 reqs/sec) | Rendering: 0.05792 (4%) | DB: 0.29102 (21%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-03 19:38:11) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"list"}
+  [4;36;1mSingleDayEvent Columns (0.019920)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018146)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.37625 (0 reqs/sec) | Rendering: 0.02595 (1%) | DB: 0.03807 (2%) | 200 OK [http://localhost/schedule/list]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#racing_on_rails.css (for 127.0.0.1 at 2006-09-03 19:38:13) [GET]
+  Parameters: {"action"=>"racing_on_rails.css", "controller"=>"schedule", "year"=>"stylesheets"}
+
+
+ActionController::UnknownAction (No action responded to racing_on_rails.css):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-03 19:39:22) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.016924)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.016170)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.12370 (0 reqs/sec) | Rendering: 0.06032 (5%) | DB: 0.03309 (2%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-03 19:39:28) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.017572)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.017913)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+Completed in 1.14365 (0 reqs/sec) | Rendering: 0.02860 (2%) | DB: 0.03549 (3%) | 200 OK [http://localhost/schedule/list]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#stylesheets (for 127.0.0.1 at 2006-09-03 19:39:30) [GET]
+  Parameters: {"action"=>"stylesheets", "id"=>"racing_on_rails.css", "controller"=>"schedule"}
+
+
+ActionController::UnknownAction (No action responded to stylesheets):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 07:29:48) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.352027)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.045952)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.85598 (0 reqs/sec) | Rendering: 0.05641 (3%) | DB: 0.39798 (21%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 07:36:55) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.017029)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.016126)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.36712 (0 reqs/sec) | Rendering: 0.41583 (30%) | DB: 0.03315 (2%) | 200 OK [http://localhost/schedule]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 07:37:08) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.13101 (7 reqs/sec) | Rendering: 0.12719 (97%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 07:38:19) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01735 (57 reqs/sec) | Rendering: 0.01189 (68%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 07:38:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.024504)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.027173)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 1.32947 (0 reqs/sec) | Rendering: 0.02323 (1%) | DB: 0.05168 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 10:58:45) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00849 (117 reqs/sec) | Rendering: 0.00387 (45%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:00:05) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01376 (72 reqs/sec) | Rendering: 0.01167 (84%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:01:04) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.10108 (9 reqs/sec) | Rendering: 0.09902 (97%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:01:19) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00791 (126 reqs/sec) | Rendering: 0.00544 (68%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:01:27) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00931 (107 reqs/sec) | Rendering: 0.00664 (71%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:02:01) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00674 (148 reqs/sec) | Rendering: 0.00414 (61%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:02:09) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.083188)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.008246)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.58954 (1 reqs/sec) | Rendering: 0.01541 (2%) | DB: 0.09143 (15%) | 200 OK [http://localhost/schedule]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:02:43) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00610 (164 reqs/sec) | Rendering: 0.00335 (54%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:02:52) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00683 (146 reqs/sec) | Rendering: 0.00463 (67%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:02:58) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011349)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.009821)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.54093 (1 reqs/sec) | Rendering: 0.01604 (2%) | DB: 0.02117 (3%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:03:17) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.027778)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.051393)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.57468 (1 reqs/sec) | Rendering: 0.01883 (3%) | DB: 0.07917 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:03:21) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01102 (90 reqs/sec) | Rendering: 0.00863 (78%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:03:32) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.16959 (5 reqs/sec) | Rendering: 0.00560 (3%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:04:37) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01431 (69 reqs/sec) | Rendering: 0.00434 (30%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:05:39) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00577 (173 reqs/sec) | Rendering: 0.00379 (65%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:05:57) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00637 (157 reqs/sec) | Rendering: 0.00403 (63%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:06:12) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00602 (166 reqs/sec) | Rendering: 0.00386 (64%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:06:18) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00633 (157 reqs/sec) | Rendering: 0.00440 (69%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:07:18) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01746 (57 reqs/sec) | Rendering: 0.01545 (88%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:07:43) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00606 (164 reqs/sec) | Rendering: 0.00370 (61%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:07:55) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.02526 (39 reqs/sec) | Rendering: 0.02243 (88%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:08:29) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01071 (93 reqs/sec) | Rendering: 0.00874 (81%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:12:35) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.03041 (32 reqs/sec) | Rendering: 0.02626 (86%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:14:52) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01205 (82 reqs/sec) | Rendering: 0.00947 (78%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:15:21) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.02821 (35 reqs/sec) | Rendering: 0.02601 (92%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:15:39) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00779 (128 reqs/sec) | Rendering: 0.00565 (72%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:15:50) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01193 (83 reqs/sec) | Rendering: 0.00931 (77%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:17:07) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00824 (121 reqs/sec) | Rendering: 0.00531 (64%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:17:24) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00863 (115 reqs/sec) | Rendering: 0.00607 (70%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:17:42) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00915 (109 reqs/sec) | Rendering: 0.00693 (75%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:17:55) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00842 (118 reqs/sec) | Rendering: 0.00573 (68%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:18:10) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01258 (79 reqs/sec) | Rendering: 0.00929 (73%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:18:28) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00810 (123 reqs/sec) | Rendering: 0.00527 (65%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:18:34) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00588 (170 reqs/sec) | Rendering: 0.00386 (65%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:18:55) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.01076 (92 reqs/sec) | Rendering: 0.00809 (75%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:19:23) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00705 (141 reqs/sec) | Rendering: 0.00385 (54%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:19:45) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00645 (155 reqs/sec) | Rendering: 0.00422 (65%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:19:58) [GET]
+  Session ID: a56cbad396293fb8e0681bd6cf21be5e
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00593 (168 reqs/sec) | Rendering: 0.00393 (66%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:20:05) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00633 (158 reqs/sec) | Rendering: 0.00366 (57%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:20:08) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.033298)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018412)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.86310 (1 reqs/sec) | Rendering: 0.01729 (2%) | DB: 0.05171 (5%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:20:34) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.060029)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.055358)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.64281 (1 reqs/sec) | Rendering: 0.01608 (2%) | DB: 0.11539 (17%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:21:30) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.012071)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.045182)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.65394 (1 reqs/sec) | Rendering: 0.01611 (2%) | DB: 0.05725 (8%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:21:35) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.034127)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010429)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.70360 (1 reqs/sec) | Rendering: 0.01620 (2%) | DB: 0.04456 (6%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:23:17) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.031819)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.052220)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.56962 (1 reqs/sec) | Rendering: 0.02570 (4%) | DB: 0.08404 (14%) | 200 OK [http://localhost/schedule]
+ScheduleController: missing default helper path schedule_helper
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:24:08) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011676)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.060962)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+Completed in 0.54923 (1 reqs/sec) | Rendering: 0.01540 (2%) | DB: 0.07264 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-04 11:24:12) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.00898 (111 reqs/sec) | Rendering: 0.00696 (77%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:27:33) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011753)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.054601)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+
+
+ActionView::TemplateError (undefined method `links' for #<#<Class:0x27598a0>:0x2759878>) on line #4 of app/views/schedule/index.rhtml:
+1: <% @page_title = "Schedule: #{@year}" %>
+2: 
+3: <%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'underlined'} %> with contact information for race organizers
+4: <%= links_to_years %>
+5: 		
+6: 		<center><font color="#CC0000"><small>Updated <%= Date.today.strftime("%m/%d/%Y") %></small></font>
+7: 		</center>
+
+    #{RAILS_ROOT}/app/helpers/schedule_helper.rb:4:in `links_to_years'
+    #{RAILS_ROOT}/app/views/schedule/index.rhtml:4:in `_run_rhtml_schedule_index'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:316:in `compile_and_render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:292:in `render_template'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_view/base.rb:251:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:726:in `render_file'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:648:in `render_with_no_layout'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/layout.rb:245:in `render_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:53:in `render'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:942:in `perform_action_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:28:08) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011015)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.009963)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.201506)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.94066 (1 reqs/sec) | Rendering: 0.01808 (1%) | DB: 0.22248 (23%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:37:54) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.014879)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.059514)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000917)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66783 (1 reqs/sec) | Rendering: 0.11910 (17%) | DB: 0.07531 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:38:51) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.017328)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.047857)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000950)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53998 (1 reqs/sec) | Rendering: 0.02106 (3%) | DB: 0.06613 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:39:05) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.013715)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.048387)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001307)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.78261 (1 reqs/sec) | Rendering: 0.03610 (4%) | DB: 0.06341 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-09-04 11:42:15) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {}
+
+
+SyntaxError (script/../config/../app/helpers/schedule_helper.rb:21: parse error, unexpected ')', expecting kEND):
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:114:in `default_helper_module!'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:127:in `inherited_without_api'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/container/action_controller_container.rb:86:in `inherited_without_action_controller'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/dispatcher/action_controller_dispatcher.rb:34:in `inherited'
+    /app/controllers/schedule_controller.rb:1
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:98:in `const_missing'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:131:in `const_missing'
+    generated/routing/recognition.rb:33:in `recognize_path'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:511:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:42:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.012548)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010587)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000950)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.68419 (1 reqs/sec) | Rendering: 0.02556 (3%) | DB: 0.02409 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:42:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011209)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.012339)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000916)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66308 (1 reqs/sec) | Rendering: 0.01676 (2%) | DB: 0.02446 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-09-04 11:43:49) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {}
+
+
+SyntaxError (script/../config/../app/helpers/schedule_helper.rb:4: parse error, unexpected tASSOC
+    links.span(class => 'horizontal_links') {
+                       ^
+script/../config/../app/helpers/schedule_helper.rb:4: parse error, unexpected ')', expecting kEND
+    links.span(class => 'horizontal_links') {
+                                           ^
+script/../config/../app/helpers/schedule_helper.rb:11: parse error, unexpected '}', expecting kEND
+script/../config/../app/helpers/schedule_helper.rb:17: parse error, unexpected tASSOC
+    links.div(class => 'horizontal_links') {
+                      ^
+script/../config/../app/helpers/schedule_helper.rb:17: parse error, unexpected ')', expecting kEND
+    links.div(class => 'horizontal_links') {
+                                          ^
+script/../config/../app/helpers/schedule_helper.rb:24: parse error, unexpected '}', expecting kEND):
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:114:in `default_helper_module!'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:127:in `inherited_without_api'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/container/action_controller_container.rb:86:in `inherited_without_action_controller'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/dispatcher/action_controller_dispatcher.rb:34:in `inherited'
+    /app/controllers/schedule_controller.rb:1
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:98:in `const_missing'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:131:in `const_missing'
+    generated/routing/recognition.rb:33:in `recognize_path'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:511:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing Base#index (for 127.0.0.1 at 2006-09-04 11:44:04) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {}
+
+
+SyntaxError (script/../config/../app/helpers/schedule_helper.rb:4: parse error, unexpected tASSOC
+    links.span(class => 'horizontal_links') {
+                       ^
+script/../config/../app/helpers/schedule_helper.rb:4: parse error, unexpected ')', expecting kEND
+    links.span(class => 'horizontal_links') {
+                                           ^
+script/../config/../app/helpers/schedule_helper.rb:11: parse error, unexpected '}', expecting kEND):
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:114:in `default_helper_module!'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/helpers.rb:127:in `inherited_without_api'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/container/action_controller_container.rb:86:in `inherited_without_action_controller'
+    /usr/lib/ruby/gems/1.8/gems/actionwebservice-1.1.6/lib/action_web_service/dispatcher/action_controller_dispatcher.rb:34:in `inherited'
+    /app/controllers/schedule_controller.rb:1
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:140:in `load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:56:in `require_or_load'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:30:in `depend_on'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:85:in `require_dependency'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:98:in `const_missing'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:131:in `const_missing'
+    generated/routing/recognition.rb:33:in `recognize_path'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:511:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:44:19) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.010830)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010789)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001230)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.49240 (2 reqs/sec) | Rendering: 0.01869 (3%) | DB: 0.02285 (4%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:46:45) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.022327)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.050230)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000911)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.74416 (1 reqs/sec) | Rendering: 0.01679 (2%) | DB: 0.07347 (9%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:46:56) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.015409)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.032118)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000906)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.62744 (1 reqs/sec) | Rendering: 0.02044 (3%) | DB: 0.04843 (7%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:47:03) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011719)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.029096)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001040)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53536 (1 reqs/sec) | Rendering: 0.01905 (3%) | DB: 0.04186 (7%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:55:57) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.012175)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.081409)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001252)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.75084 (1 reqs/sec) | Rendering: 0.02282 (3%) | DB: 0.09484 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 11:58:55) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.016941)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.420072)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001835)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.09615 (0 reqs/sec) | Rendering: 0.01852 (1%) | DB: 0.43885 (40%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:00:57) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.025622)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.064554)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000908)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.55570 (1 reqs/sec) | Rendering: 0.01655 (2%) | DB: 0.09108 (16%) | 200 OK [http://localhost/schedule]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-09-04 12:00:59) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/images/backgrounds/table_head.gif"):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:522:in `recognition_failed'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:512:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:04:21) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.016493)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.067411)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000913)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.56816 (1 reqs/sec) | Rendering: 0.02490 (4%) | DB: 0.08482 (14%) | 200 OK [http://localhost/schedule]
+
+
+Processing Base#index (for 127.0.0.1 at 2006-09-04 12:04:23) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {}
+
+
+ActionController::RoutingError (Recognition failed for "/images/backgrounds/table_head.gif"):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:522:in `recognition_failed'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/routing.rb:512:in `recognize!'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:11:05) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.013318)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.080145)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001149)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.55911 (1 reqs/sec) | Rendering: 0.01637 (2%) | DB: 0.09461 (16%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:12:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.018091)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.003470)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001019)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.71736 (1 reqs/sec) | Rendering: 0.01814 (2%) | DB: 0.02258 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:12:24) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.033848)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.063841)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001302)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.69638 (1 reqs/sec) | Rendering: 0.01868 (2%) | DB: 0.09899 (14%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:12:45) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.012211)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.028894)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000969)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54690 (1 reqs/sec) | Rendering: 0.01849 (3%) | DB: 0.04207 (7%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:14:56) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.090500)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010922)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000918)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.76996 (1 reqs/sec) | Rendering: 0.01784 (2%) | DB: 0.10234 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:15:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.012013)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.062329)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000928)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.65989 (1 reqs/sec) | Rendering: 0.01783 (2%) | DB: 0.07527 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:15:44) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.013726)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.068127)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000915)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.59456 (1 reqs/sec) | Rendering: 0.01716 (2%) | DB: 0.08277 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:15:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011065)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.010907)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001618)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.52438 (1 reqs/sec) | Rendering: 0.02109 (4%) | DB: 0.02359 (4%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:16:39) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011001)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.066653)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000962)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.71122 (1 reqs/sec) | Rendering: 0.15719 (22%) | DB: 0.07862 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:16:46) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.017633)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.063985)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001131)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.67845 (1 reqs/sec) | Rendering: 0.02039 (3%) | DB: 0.08275 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:17:24) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.020816)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.049423)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000918)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54572 (1 reqs/sec) | Rendering: 0.01624 (2%) | DB: 0.07116 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:18:34) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.012292)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.076412)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000922)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.81767 (1 reqs/sec) | Rendering: 0.01807 (2%) | DB: 0.08963 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:18:45) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.014327)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.032157)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000928)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54971 (1 reqs/sec) | Rendering: 0.01850 (3%) | DB: 0.04741 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:19:18) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.125078)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.061238)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001135)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66829 (1 reqs/sec) | Rendering: 0.01734 (2%) | DB: 0.18745 (28%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:21:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011104)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.024205)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000923)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.67708 (1 reqs/sec) | Rendering: 0.02379 (3%) | DB: 0.03623 (5%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:25:28) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.025435)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.066105)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001129)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.81413 (1 reqs/sec) | Rendering: 0.16277 (19%) | DB: 0.09267 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:29:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011149)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.011055)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001116)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.59345 (1 reqs/sec) | Rendering: 0.01875 (3%) | DB: 0.02332 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:29:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011089)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.012589)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000925)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.50247 (1 reqs/sec) | Rendering: 0.01771 (3%) | DB: 0.02460 (4%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:29:44) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.025598)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.057177)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001021)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.82572 (1 reqs/sec) | Rendering: 0.01632 (1%) | DB: 0.08380 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:29:51) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.038569)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011000)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.002453)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.52842 (1 reqs/sec) | Rendering: 0.01492 (2%) | DB: 0.05202 (9%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:30:37) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.029538)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.053718)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001040)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.57958 (1 reqs/sec) | Rendering: 0.01570 (2%) | DB: 0.08430 (14%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:37:50) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.012405)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.061305)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001049)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.70577 (1 reqs/sec) | Rendering: 0.02365 (3%) | DB: 0.07476 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:38:36) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.024423)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.160582)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002118)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.83415 (1 reqs/sec) | Rendering: 0.15992 (19%) | DB: 0.18712 (22%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:39:05) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.016279)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.065035)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001046)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.56008 (1 reqs/sec) | Rendering: 0.01949 (3%) | DB: 0.08236 (14%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:39:27) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011640)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010971)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000918)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.49581 (2 reqs/sec) | Rendering: 0.01967 (3%) | DB: 0.02353 (4%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:39:37) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.031650)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.062116)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001197)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.73215 (1 reqs/sec) | Rendering: 0.01650 (2%) | DB: 0.09496 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:39:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.030583)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.011706)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002139)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53757 (1 reqs/sec) | Rendering: 0.03230 (6%) | DB: 0.04443 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:40:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011292)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.010751)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001150)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.62817 (1 reqs/sec) | Rendering: 0.01557 (2%) | DB: 0.02319 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:41:04) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.010671)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.058236)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000906)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.56183 (1 reqs/sec) | Rendering: 0.01625 (2%) | DB: 0.06981 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:42:37) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.026859)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.067372)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001069)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.73155 (1 reqs/sec) | Rendering: 0.01618 (2%) | DB: 0.09530 (13%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:42:55) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.010720)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.058265)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000924)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54832 (1 reqs/sec) | Rendering: 0.01694 (3%) | DB: 0.06991 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:43:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.025596)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.016883)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000887)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.52032 (1 reqs/sec) | Rendering: 0.01836 (3%) | DB: 0.04337 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:45:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011588)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.062299)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000916)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.69901 (1 reqs/sec) | Rendering: 0.01819 (2%) | DB: 0.07480 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:49:01) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.016923)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.060181)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001966)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.73982 (1 reqs/sec) | Rendering: 0.16406 (22%) | DB: 0.07907 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:51:58) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.020292)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.058345)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001189)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66887 (1 reqs/sec) | Rendering: 0.01717 (2%) | DB: 0.07983 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:53:24) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.014785)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.061988)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001177)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.69960 (1 reqs/sec) | Rendering: 0.01764 (2%) | DB: 0.07795 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:55:15) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.027691)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.071821)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002989)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.78892 (1 reqs/sec) | Rendering: 0.01570 (1%) | DB: 0.10250 (12%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:55:29) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011999)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.032623)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001131)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53484 (1 reqs/sec) | Rendering: 0.01998 (3%) | DB: 0.04575 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:55:39) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.019643)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010811)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001080)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54182 (1 reqs/sec) | Rendering: 0.01921 (3%) | DB: 0.03153 (5%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:55:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.012065)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.060273)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000933)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.70087 (1 reqs/sec) | Rendering: 0.01616 (2%) | DB: 0.07327 (10%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:56:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.013181)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.053800)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000891)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.61354 (1 reqs/sec) | Rendering: 0.01770 (2%) | DB: 0.06787 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 12:57:34) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011457)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.010432)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001211)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.62320 (1 reqs/sec) | Rendering: 0.02154 (3%) | DB: 0.02310 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:00:36) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.016387)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.116986)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000928)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.88328 (1 reqs/sec) | Rendering: 0.02190 (2%) | DB: 0.13430 (15%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:02:01) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.011043)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.066639)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.000905)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.70093 (1 reqs/sec) | Rendering: 0.15672 (22%) | DB: 0.07859 (11%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:02:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.027311)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.067202)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.000916)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.56859 (1 reqs/sec) | Rendering: 0.01525 (2%) | DB: 0.09543 (16%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 13:03:01) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.015860)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011081)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+Completed in 0.64037 (1 reqs/sec) | Rendering: 0.01118 (1%) | DB: 0.02694 (4%) | 200 OK [http://localhost/schedule/list]
+
+
+Processing ScheduleController#stylesheets (for 127.0.0.1 at 2006-09-04 13:03:02) [GET]
+  Parameters: {"action"=>"stylesheets", "id"=>"racing_on_rails.css", "controller"=>"schedule"}
+
+
+ActionController::UnknownAction (No action responded to stylesheets):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:05:04) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.024827)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.010313)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002245)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66261 (1 reqs/sec) | Rendering: 0.03781 (5%) | DB: 0.03738 (5%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:06:01) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.014636)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.010277)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001443)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.49165 (2 reqs/sec) | Rendering: 0.01771 (3%) | DB: 0.02636 (5%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:06:06) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.049793)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.044147)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001222)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.80229 (1 reqs/sec) | Rendering: 0.01636 (2%) | DB: 0.09516 (11%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#stylesheets (for 127.0.0.1 at 2006-09-04 13:06:07) [GET]
+  Parameters: {"action"=>"stylesheets", "id"=>"racing_on_rails.css", "controller"=>"schedule"}
+
+
+ActionController::UnknownAction (No action responded to stylesheets):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:06:35) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.040990)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.041069)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001555)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.68816 (1 reqs/sec) | Rendering: 0.15821 (22%) | DB: 0.08361 (12%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#stylesheets (for 127.0.0.1 at 2006-09-04 13:06:36) [GET]
+  Parameters: {"action"=>"stylesheets", "id"=>"racing_on_rails.css", "controller"=>"schedule"}
+
+
+ActionController::UnknownAction (No action responded to stylesheets):
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:368:in `perform_action_without_benchmark'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/benchmarking.rb:69:in `perform_action_without_rescue'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/rescue.rb:82:in `perform_action'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/base.rb:408:in `process_without_filters'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/filters.rb:377:in `process_without_session_management_support'
+    /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/session_management.rb:117:in `process'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/dispatcher.rb:38:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:115:in `handle_dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:81:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    /usr/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    /usr/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    /usr/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    /usr/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/webrick_server.rb:67:in `dispatch'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/servers/webrick.rb:59
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    /usr/lib/ruby/gems/1.8/gems/rails-1.1.6/lib/commands/server.rb:30
+    /usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    /usr/lib/ruby/gems/1.8/gems/activesupport-1.3.1/lib/active_support/dependencies.rb:147:in `require'
+    ./script/server:3
+
+
+Rendering /usr/lib/ruby/gems/1.8/gems/actionpack-1.12.5/lib/action_controller/templates/rescues/layout.rhtml (404 Page Not Found)
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:09:15) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.011567)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.060164)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001183)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.51498 (1 reqs/sec) | Rendering: 0.02022 (3%) | DB: 0.07291 (14%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:09:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.210866)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.038899)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001160)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.72508 (1 reqs/sec) | Rendering: 0.01574 (2%) | DB: 0.25093 (34%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:10:41) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.013999)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.015677)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001057)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.74058 (1 reqs/sec) | Rendering: 0.01647 (2%) | DB: 0.03073 (4%) | 200 OK [http://localhost/schedule/2005]
+  [4;36;1mEvent Load (0.007467)[0m   [0;1mSELECT * FROM events [0m
+  [4;35;1mSeries Columns (0.024127)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.007223)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Columns (0.010917)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.029217)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000918)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.032390)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mSeries Update with optimistic locking (0.025204)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-01', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'Series', `lock_version` = 1, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Banana Belt Series'
+ WHERE id = 1 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001110)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000442)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001179)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-01', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Banana Belt I'
+ WHERE id = 2 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001057)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000730)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001501)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-08', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Banana Belt II'
+ WHERE id = 3 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.013664)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000472)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001328)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-15', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Banana Belt III'
+ WHERE id = 4 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001093)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000445)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001535)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2003-12-31', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Kings Valley Road Race'
+ WHERE id = 5 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001439)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000438)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001241)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-01', `promoter_id` = 3, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.obra.org/flyers/2006/tabor_cr.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:51', `notification` = 1, `name` = 'Mt. Tabor Circuit Race'
+ WHERE id = 6 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001182)[0m   [0mCOMMIT[0m
+  [4;36;1mWeeklySeries Columns (0.010661)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.006458)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.002025)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000930)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.032025)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mWeeklySeries Update with optimistic locking (0.001338)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-02', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'WeeklySeries', `lock_version` = 1, `state` = 'OR', `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 7 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001092)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000457)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001290)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-02', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = 'OR', `parent_id` = 7, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 8 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001053)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000481)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001509)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-07', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = 'OR', `parent_id` = 7, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 9 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001072)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000445)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001920)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-15', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = NULL, `flyer` = NULL, `discipline` = 'Time Trial', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Jack Frost'
+ WHERE id = 11 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001043)[0m   [0mCOMMIT[0m
+  [4;36;1mMultiDayEvent Columns (0.010775)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.006270)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.032981)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000904)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.005371)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mMultiDayEvent Update with optimistic locking (0.001318)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-11', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Hood River', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'MultiDayEvent', `lock_version` = 1, `state` = 'OR', `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Mt. Hood Classic'
+ WHERE id = 12 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001072)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000437)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001241)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-11', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Hood River', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = 'OR', `parent_id` = 12, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Mount Hood Day 1'
+ WHERE id = 13 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001033)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000435)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001579)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-12', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Cloud Cap', `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = 'OR', `parent_id` = 12, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Mount Hood Day 2'
+ WHERE id = 14 
+ AND lock_version = 0
+[0m
+  [4;36;1mSQL (0.001298)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000460)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001551)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-12-31', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'OBRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 1, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 13:11:52', `notification` = 1, `name` = 'Kings Valley Road Race'
+ WHERE id = 15 
+ AND lock_version = 0
+[0m
+  [4;35;1mSQL (0.001072)[0m   [0mCOMMIT[0m
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 13:12:11) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.011193)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.061396)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.002600)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54584 (1 reqs/sec) | Rendering: 0.01597 (2%) | DB: 0.07519 (13%) | 200 OK [http://localhost/schedule/2005]
+  [4;36;1mEvent Load (0.018624)[0m   [0;1mSELECT * FROM events [0m
+  [4;35;1mSeries Columns (0.011667)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.007076)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Columns (0.010723)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011319)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000966)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.005350)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 1) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mSeries Update with optimistic locking (0.001374)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-01', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'Series', `lock_version` = 2, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Banana Belt Series'
+ WHERE id = 1 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001152)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000459)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001547)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-01', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Banana Belt I'
+ WHERE id = 2 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001062)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000440)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001297)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-08', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Banana Belt II'
+ WHERE id = 3 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001043)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000429)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.050633)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-15', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = 1, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Banana Belt III'
+ WHERE id = 4 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001308)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000455)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001566)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2003-12-31', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Kings Valley Road Race'
+ WHERE id = 5 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001130)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000444)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001349)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-01', `promoter_id` = 3, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.obra.org/flyers/2006/tabor_cr.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Mt. Tabor Circuit Race'
+ WHERE id = 6 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001109)[0m   [0mCOMMIT[0m
+  [4;36;1mWeeklySeries Columns (0.010572)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.006997)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001709)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000898)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.005734)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 7) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mWeeklySeries Update with optimistic locking (0.001460)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-02', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'WeeklySeries', `lock_version` = 2, `state` = 'OR', `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 7 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001396)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000459)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001272)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-02', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = 'OR', `parent_id` = 7, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 8 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001401)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000437)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001302)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-07', `promoter_id` = 2, `notes` = '', `flyer_approved` = 1, `city` = 'Portland', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.obra.org/flyers/2005/pir.html', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = 'OR', `parent_id` = 7, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Tuesday Night PIR'
+ WHERE id = 9 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.013079)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000452)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001549)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-01-15', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Time Trial', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Jack Frost'
+ WHERE id = 11 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001290)[0m   [0mCOMMIT[0m
+  [4;36;1mMultiDayEvent Columns (0.010228)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.007440)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.001917)[0m   [0;1mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;35;1mSQL (0.000900)[0m   [0mSELECT count(*) AS count_all FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+  [4;36;1mSingleDayEvent Load (0.004801)[0m   [0;1mSELECT * FROM events WHERE (events.parent_id = 12) AND ( (events.`type` = 'SingleDayEvent' ) ) ORDER BY date [0m
+  [4;35;1mMultiDayEvent Update with optimistic locking (0.001345)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-11', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Hood River', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'MultiDayEvent', `lock_version` = 2, `state` = 'OR', `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Mt. Hood Classic'
+ WHERE id = 12 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001146)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000436)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001261)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-11', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Hood River', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = 'OR', `parent_id` = 12, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Mount Hood Day 1'
+ WHERE id = 13 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001273)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000491)[0m   [0;1mBEGIN[0m
+  [4;35;1mSingleDayEvent Update with optimistic locking (0.001334)[0m   [0m UPDATE events
+ SET `created_at` = NULL, `date` = '2005-07-12', `promoter_id` = 1, `notes` = '', `flyer_approved` = 1, `city` = 'Cloud Cap', `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = 'http://www.hoodriversr.net/', `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = 'OR', `parent_id` = 12, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Mount Hood Day 2'
+ WHERE id = 14 
+ AND lock_version = 1
+[0m
+  [4;36;1mSQL (0.001046)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000449)[0m   [0mBEGIN[0m
+  [4;36;1mSingleDayEvent Update with optimistic locking (0.001273)[0m   [0;1m UPDATE events
+ SET `created_at` = NULL, `date` = '2004-12-31', `promoter_id` = NULL, `notes` = '', `flyer_approved` = 1, `city` = NULL, `cancelled` = 0, `sanctioned_by` = 'BRA', `flyer` = NULL, `discipline` = 'Road', `type` = 'SingleDayEvent', `lock_version` = 2, `state` = NULL, `parent_id` = NULL, `updated_at` = '2006-09-04 15:15:35', `notification` = 1, `name` = 'Kings Valley Road Race'
+ WHERE id = 15 
+ AND lock_version = 1
+[0m
+  [4;35;1mSQL (0.001311)[0m   [0mCOMMIT[0m
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:15:54) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.010670)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.060638)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001893)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.78369 (1 reqs/sec) | Rendering: 0.01741 (2%) | DB: 0.07320 (9%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:55:49) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.018607)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.050515)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001092)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.68309 (1 reqs/sec) | Rendering: 0.01698 (2%) | DB: 0.07021 (10%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:56:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.011083)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.062265)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001029)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.55272 (1 reqs/sec) | Rendering: 0.01575 (2%) | DB: 0.07438 (13%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:57:41) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.011126)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.062706)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001206)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54532 (1 reqs/sec) | Rendering: 0.01703 (3%) | DB: 0.07504 (13%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:57:52) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.129717)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.012018)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001180)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.77708 (1 reqs/sec) | Rendering: 0.02191 (2%) | DB: 0.14292 (18%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 15:59:55) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.014228)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.062403)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001057)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53926 (1 reqs/sec) | Rendering: 0.02127 (3%) | DB: 0.07769 (14%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:00:45) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.032424)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.063766)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001054)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.55798 (1 reqs/sec) | Rendering: 0.01653 (2%) | DB: 0.09724 (17%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:00:52) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.291987)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.005335)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001198)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.77149 (1 reqs/sec) | Rendering: 0.01882 (2%) | DB: 0.29852 (38%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:00:58) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.011858)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.037585)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001359)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.67466 (1 reqs/sec) | Rendering: 0.17862 (26%) | DB: 0.05080 (7%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:01:02) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.013550)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.034243)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001985)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.61948 (1 reqs/sec) | Rendering: 0.02275 (3%) | DB: 0.04978 (8%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:01:41) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.010784)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.062341)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001038)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53818 (1 reqs/sec) | Rendering: 0.02320 (4%) | DB: 0.07416 (13%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:01:58) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.016287)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.013132)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001454)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.76275 (1 reqs/sec) | Rendering: 0.02049 (2%) | DB: 0.03087 (4%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 16:02:41) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.011300)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.062555)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001186)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.67295 (1 reqs/sec) | Rendering: 0.02334 (3%) | DB: 0.07504 (11%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:12:52) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.011791)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.072955)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001044)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.64086 (1 reqs/sec) | Rendering: 0.01983 (3%) | DB: 0.08579 (13%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:13:04) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.021862)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.004553)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001069)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.50801 (1 reqs/sec) | Rendering: 0.01693 (3%) | DB: 0.02748 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:13:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.015270)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.088836)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001090)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.81711 (1 reqs/sec) | Rendering: 0.01993 (2%) | DB: 0.10520 (12%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:13:33) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.013488)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018448)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001463)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.52860 (1 reqs/sec) | Rendering: 0.01949 (3%) | DB: 0.03340 (6%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:13:45) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.011427)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011648)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001138)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.64518 (1 reqs/sec) | Rendering: 0.01697 (2%) | DB: 0.02421 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:13:51) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.012441)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.033404)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001892)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.69344 (1 reqs/sec) | Rendering: 0.02280 (3%) | DB: 0.04774 (6%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:14:21) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.017883)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.005940)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001141)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.63284 (1 reqs/sec) | Rendering: 0.16646 (26%) | DB: 0.02496 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:14:32) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.013495)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018467)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001050)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.53106 (1 reqs/sec) | Rendering: 0.02621 (4%) | DB: 0.03301 (6%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:14:40) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.012600)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.066314)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001202)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.65062 (1 reqs/sec) | Rendering: 0.01708 (2%) | DB: 0.08012 (12%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:15:08) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.042195)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.011724)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001096)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.76423 (1 reqs/sec) | Rendering: 0.01840 (2%) | DB: 0.05501 (7%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:15:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.119655)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011319)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001551)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.63163 (1 reqs/sec) | Rendering: 0.01771 (2%) | DB: 0.13252 (20%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:16:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.018739)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.065854)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001067)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.55345 (1 reqs/sec) | Rendering: 0.02276 (4%) | DB: 0.08566 (15%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 17:24:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.042214)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.008675)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.002327)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.77274 (1 reqs/sec) | Rendering: 0.01829 (2%) | DB: 0.05322 (6%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:40:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.011985)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.011684)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001039)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.65180 (1 reqs/sec) | Rendering: 0.17440 (26%) | DB: 0.02471 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:41:20) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.036388)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.058879)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001043)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.57699 (1 reqs/sec) | Rendering: 0.01684 (2%) | DB: 0.09631 (16%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:41:54) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.015070)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.015022)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001042)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.59900 (1 reqs/sec) | Rendering: 0.02268 (3%) | DB: 0.03113 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:42:03) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.010616)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011251)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001071)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.68097 (1 reqs/sec) | Rendering: 0.01796 (2%) | DB: 0.02294 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:44:56) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.011513)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.012587)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001045)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.61772 (1 reqs/sec) | Rendering: 0.02028 (3%) | DB: 0.02515 (4%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:48:48) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.010608)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.108539)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001154)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.71353 (1 reqs/sec) | Rendering: 0.02763 (3%) | DB: 0.12030 (16%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:50:30) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.010678)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.058564)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001153)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.81301 (1 reqs/sec) | Rendering: 0.01861 (2%) | DB: 0.07039 (8%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:51:00) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.017201)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.011803)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001050)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.52604 (1 reqs/sec) | Rendering: 0.01937 (3%) | DB: 0.03005 (5%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:51:16) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.040093)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.012352)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001214)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.61943 (1 reqs/sec) | Rendering: 0.01921 (3%) | DB: 0.05366 (8%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:52:58) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.011340)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.056225)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001046)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.61956 (1 reqs/sec) | Rendering: 0.01686 (2%) | DB: 0.06861 (11%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 19:53:11) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.011391)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.037803)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001174)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.67632 (1 reqs/sec) | Rendering: 0.17166 (25%) | DB: 0.05037 (7%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:05:15) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.016864)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.018730)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001974)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.94145 (1 reqs/sec) | Rendering: 0.03276 (3%) | DB: 0.03757 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:05:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.018023)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.017844)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001595)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.26065 (0 reqs/sec) | Rendering: 0.02954 (2%) | DB: 0.03746 (2%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:08:05) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.022927)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.068247)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001598)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.34263 (0 reqs/sec) | Rendering: 0.04485 (3%) | DB: 0.09277 (6%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:08:18) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.017867)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.020789)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002426)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.34695 (0 reqs/sec) | Rendering: 0.04141 (3%) | DB: 0.04108 (3%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:08:44) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;35;1mSingleDayEvent Columns (0.016808)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.081272)[0m   [0;1mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001547)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.31289 (0 reqs/sec) | Rendering: 0.04550 (3%) | DB: 0.09963 (7%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:09:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.039960)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.031245)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001917)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.07559 (0 reqs/sec) | Rendering: 0.04001 (3%) | DB: 0.07312 (6%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:09:35) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.018518)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.025528)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001541)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.52165 (0 reqs/sec) | Rendering: 0.03394 (2%) | DB: 0.04559 (2%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:13:38) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.017741)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.024728)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.002008)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.25820 (0 reqs/sec) | Rendering: 0.03739 (2%) | DB: 0.04448 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:14:12) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.024156)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.020251)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001671)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.29886 (0 reqs/sec) | Rendering: 0.03331 (2%) | DB: 0.04608 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:24:18) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.018015)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.060258)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001528)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.48873 (0 reqs/sec) | Rendering: 0.02966 (1%) | DB: 0.07980 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:24:25) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.017843)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.021377)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001768)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.99252 (1 reqs/sec) | Rendering: 0.04447 (4%) | DB: 0.04099 (4%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:24:31) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.017859)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.021355)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001909)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.97815 (1 reqs/sec) | Rendering: 0.03499 (3%) | DB: 0.04112 (4%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:24:38) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.017984)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.018103)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001906)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.43205 (0 reqs/sec) | Rendering: 0.03894 (2%) | DB: 0.03799 (2%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:24:46) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.016633)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.019048)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001555)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.18585 (0 reqs/sec) | Rendering: 0.03457 (2%) | DB: 0.03724 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:25:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.017291)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.018763)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.002079)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.50847 (0 reqs/sec) | Rendering: 0.03673 (2%) | DB: 0.03813 (2%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:25:14) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.291309)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.012859)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001633)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.57347 (0 reqs/sec) | Rendering: 0.04059 (2%) | DB: 0.30580 (19%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:30:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.023293)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.019976)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001538)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.37994 (0 reqs/sec) | Rendering: 0.04638 (3%) | DB: 0.04481 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:30:36) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.026490)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.017345)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001890)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.31193 (0 reqs/sec) | Rendering: 0.03990 (3%) | DB: 0.04573 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:35:26) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.018732)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.018555)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001902)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.15825 (0 reqs/sec) | Rendering: 0.04212 (3%) | DB: 0.03919 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:35:44) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.032835)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.041678)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001892)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.63249 (0 reqs/sec) | Rendering: 0.02996 (1%) | DB: 0.07641 (4%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:36:00) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.029882)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.065668)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001931)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.66036 (0 reqs/sec) | Rendering: 0.30038 (18%) | DB: 0.09748 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:37:11) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.034259)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018237)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.004041)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.012835)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.014412)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.004416)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.015989)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003196)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.38972 (0 reqs/sec) | Rendering: 0.10723 (7%) | DB: 0.10738 (7%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:39:37) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.015929)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.085745)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003683)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.021267)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.003781)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.205075)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003920)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.005790)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.40535 (0 reqs/sec) | Rendering: 0.08263 (5%) | DB: 0.34519 (24%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:40:38) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.023789)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.071789)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003133)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.012378)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.018508)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003856)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003883)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003176)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.71279 (0 reqs/sec) | Rendering: 0.09584 (5%) | DB: 0.14051 (8%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:43:11) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.021868)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.066965)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003363)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.026030)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.005106)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.010044)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003365)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.004674)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.21679 (0 reqs/sec) | Rendering: 0.07787 (6%) | DB: 0.14141 (11%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:44:44) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.022902)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.061078)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003671)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.012115)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.017033)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003843)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003064)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003065)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.39918 (0 reqs/sec) | Rendering: 0.05463 (3%) | DB: 0.12677 (9%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:46:10) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.018214)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.020463)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003114)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.012305)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.014130)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003505)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003075)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003044)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.20510 (0 reqs/sec) | Rendering: 0.05738 (4%) | DB: 0.07785 (6%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:48:14) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.017249)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.240478)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003804)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.014543)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.013782)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.004784)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003159)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003507)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.47517 (0 reqs/sec) | Rendering: 0.06701 (4%) | DB: 0.30131 (20%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:50:04) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.017351)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.058457)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003838)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.014152)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.011699)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.005523)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003942)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.004039)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.32106 (0 reqs/sec) | Rendering: 0.05319 (4%) | DB: 0.11900 (9%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:52:09) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.019591)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.060279)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;36;1mPromoter Load (0.003862)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;35;1mPromoter Columns (0.013960)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mPromoter Load (0.013537)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.036993)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003348)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003054)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.10624 (0 reqs/sec) | Rendering: 0.08109 (7%) | DB: 0.15462 (13%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:52:25) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.020458)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.018608)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001586)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.23990 (0 reqs/sec) | Rendering: 0.04309 (3%) | DB: 0.04065 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:52:46) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.016843)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.058358)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;35;1mPromoter Load (0.003136)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;36;1mPromoter Columns (0.012719)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mPromoter Load (0.003346)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.005789)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003633)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003642)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.63825 (0 reqs/sec) | Rendering: 0.44734 (27%) | DB: 0.10747 (6%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:53:31) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.016146)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.023359)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;35;1mPromoter Load (0.003396)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;36;1mPromoter Columns (0.013439)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mPromoter Load (0.018735)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.009964)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003484)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003782)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.00676 (0 reqs/sec) | Rendering: 0.05072 (5%) | DB: 0.09230 (9%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:54:06) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.017591)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.028398)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;35;1mPromoter Load (0.003673)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;36;1mPromoter Columns (0.012310)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mPromoter Load (0.013513)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003360)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.013304)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.006902)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.34570 (0 reqs/sec) | Rendering: 0.05881 (4%) | DB: 0.09905 (7%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:54:30) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.018501)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.026991)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;35;1mPromoter Load (0.003443)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;36;1mPromoter Columns (0.020883)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mPromoter Load (0.003312)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003170)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003519)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003234)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.65102 (0 reqs/sec) | Rendering: 0.06388 (3%) | DB: 0.08305 (5%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-04 20:55:03) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.025717)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.063169)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+  [4;35;1mPromoter Load (0.003460)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 3) LIMIT 1[0m
+  [4;36;1mPromoter Columns (0.032227)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mPromoter Load (0.003337)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.004131)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 2) LIMIT 1[0m
+  [4;35;1mPromoter Load (0.003323)[0m   [0mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+  [4;36;1mPromoter Load (0.003940)[0m   [0;1mSELECT * FROM promoters WHERE (promoters.id = 1) LIMIT 1[0m
+Completed in 1.43302 (0 reqs/sec) | Rendering: 0.32534 (22%) | DB: 0.13930 (9%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:56:42) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.016177)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.023976)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001918)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.24574 (0 reqs/sec) | Rendering: 0.02937 (2%) | DB: 0.04207 (3%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:59:10) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;36;1mSingleDayEvent Columns (0.033753)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.041794)[0m   [0mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001917)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 1.31817 (0 reqs/sec) | Rendering: 0.03817 (2%) | DB: 0.07746 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-04 20:59:18) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2003"}
+  [4;35;1mSingleDayEvent Columns (0.028599)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.020974)[0m   [0;1mSELECT * FROM events WHERE (date >= '2003-01-01' and date <= '2003-12-31' and sanctioned_by = 'BRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001811)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 1.57636 (0 reqs/sec) | Rendering: 0.02791 (1%) | DB: 0.05138 (3%) | 200 OK [http://localhost/schedule/2003]
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.003501)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.019324)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.119020)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.011996)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.014244)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.016113)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.016130)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.012457)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.016224)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.023875)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.015341)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.424865)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.185731)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.181571)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.039515)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.323639)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.008962)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.218763)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.009353)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.063900)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.045127)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.046979)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.055049)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.046767)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.090817)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.008408)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.022986)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.140118)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.174748)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.035538)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.027587)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m

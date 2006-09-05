@@ -1,0 +1,60 @@
+<% @page_title = "Schedule: #{@year}" %>
+<div align="center">
+	<table border="0" cellspacing="0" cellpadding="0" class="base">
+		<caption><%= @year %></caption>
+		<thead>
+			<tr class='column_titles'>
+				<th>Date</th>
+				<th>Event</th>
+				<th>Promoter</th> 
+				<th>Phone</th>
+				<th>Discipline</th>
+				<th>Location</th>
+			</tr>
+		</thead>
+		<tbody>
+	<%- for month in @schedule.months -%>
+		<%- for week in month.weeks -%>
+			<%- for day in week.days -%>
+				<%- for event in day.events -%>
+		<tr class="<%= cycle("even", "odd") %>">
+			<td>
+			  <%- if event.date -%>
+			  <%= event.date.strftime("%a %m/%d") -%>
+			  <%- end -%>
+		   	</td> 
+			<%- if event.cancelled %>
+			<td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
+			<%- else -%>
+			<td class="link">
+				<%- if (!event.flyer.blank? and event.flyer_approved?) -%>
+				    <a href="<%= event.flyer -%>"><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%></a>
+						  <%- else -%>
+				    <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%>
+				<%- end -%>
+	    	</td> 
+		<%- end -%>
+			<td>
+				<%- if event.promoter_email.blank? -%>
+					<%= event.promoter_name -%>
+				<%- elsif event.promoter_name.blank? -%>
+				<a href="mailto:<%= event.promoter_email -%>"><%= event.promoter_email -%></a>
+				<%- else -%>
+				<a href="mailto:<%= event.promoter_email -%>"><%= event.promoter_name -%></a>
+				<%- end -%>
+			</td> 
+			<td><%= event.promoter_phone -%></td> 
+			<td><%= event.discipline -%></td> 
+			<td><%= event.city -%></td>
+		</tr>
+		<%- end -%>
+			<%- end -%>
+		<%- end -%>
+	<%- end -%>
+	</tbody>
+	</table>
+</div>

@@ -10,21 +10,21 @@
 		<%= ASSOCIATION.name %>
 		<%- end %>
 	</title>
-	<link rel="stylesheet" href="stylesheets/racing_on_rails.css" type="text/css"/>
+	<link rel="stylesheet" href="/stylesheets/racing_on_rails.css" type="text/css"/>
   </head>
   <body>
 	<div class="shadow_2">
 		<div class="shadow_1">
 		 	<div class="frame">
 				<div class="nav" id="top">
-					<h1><%= ASSOCIATION.name %></h1>
-					<div class="breadcrumb"><a href="/"><%= ASSOCIATION.short_name %></a></div>
+					<h1><%= link_to ASSOCIATION.name, :controller => 'home', :action => 'index' %></h1>
+					<div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
 			 	</div>
-			 	<div class="content">
-				<%= @content_for_layout %>
+			 	<div class="content" align="center">
+<%= yield %>
 			 	</div>
 			 	<div class="nav" id="bottom">
-					<div class="breadcrumb"><a href="/"><%= ASSOCIATION.short_name %></a></div>
+					<div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
 			 	</div>
 		 	</div>
 		</div>

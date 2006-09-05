@@ -60,9 +60,12 @@ namespace :racing_on_rails do
       assert(response['Schedule'], "Schedule should be available in \n#{response}")
       assert(response['January'], "Schedule should be available in \n#{response}")
       assert(response['December'], "Schedule should be available in \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
       
       # TODO Run unit and functional tests
       # TODO move above assertions into tests
+      # TODO Validate HTML
     ensure
       if webrick
         puts(`kill #{webrick.pid}`)
