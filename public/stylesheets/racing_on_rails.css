@@ -70,6 +70,8 @@ ul.links
 .horizontal_links
 {
 	color: #999;
+	margin-top: 4px;
+	margin-bottom: 4px;
 }
 
 div.nav {
@@ -104,6 +106,7 @@ div.nav h1 a {
 	font-weight: bold;
 	font-style: italic;
 	color: #6D6D6D;
+	border-bottom: none;
 }
 
 div.breadcrumb {
@@ -118,6 +121,7 @@ div.nav#bottom div.breadcrumb {
 div.breadcrumb a {
 	font-weight: bold;
 	color:  #6D6D6D;
+	border-bottom: none;
 }
 
 table.base

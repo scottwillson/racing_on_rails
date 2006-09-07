@@ -52,13 +52,11 @@ end
 
 # Include your application configuration below
 # TODO extract to separate file and copy into new app's config
-require 'racing_on_rails'
-
-RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
+require 'racingonrails'
 
 ASSOCIATION = Association.new
-ASSOCIATION.name = 'Bicycle Racing Association'
-ASSOCIATION.short_name = 'BRA'
+ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
+ASSOCIATION.short_name = 'CBRA'
 ASSOCIATION.state = 'OR'
 
-SANCTIONING_ORGANIZATIONS = ["FIAC", "OBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
+SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)

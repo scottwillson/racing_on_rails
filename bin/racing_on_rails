@@ -1,0 +1,66 @@
+# TODO Standardize: Base, template, Racing on Rails, generator?
+
+require 'fileutils'
+require 'active_record'
+
+include FileUtils
+
+Signal.trap("INT") { puts; exit }
+
+def copy_template(file_path)
+  cp(@template_root + file_path, @app_path + file_path)
+end
+
+def copy_templates(dir_path)
+  cp_r("#{@template_root}#{dir_path}/." ,"#{@app_path}#{dir_path}")
+end
+
+freeze   = ARGV.any? { |option| %w(--freeze -f).include?(option) }
+@app_path = ARGV.first
+@app_name = File.basename(@app_path)
+@template_root = File.expand_path(File.dirname(__FILE__) + '/..')
+
+# Create new Rails app
+puts(`rails #{@app_path}`)
+
+# Remove homepage -- index requests will be handled by controller
+rm("#{@app_path}/public/index.html")
+
+# Uncomment default routing and change to 'home' controller
+# TODO Extract this code into generic method -- probably not using text Rakefile, but separate file
+copy_template('/config/routes.rb')
+
+# Add ASSOCIATION default to environment
+config = <<CONFIG
+
+require 'racingonrails'
+
+RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
+
+ASSOCIATION = Association.new
+ASSOCIATION.name = 'Bicycle Racing Association'
+ASSOCIATION.short_name = 'BRA'
+ASSOCIATION.state = 'OR'
+
+SANCTIONING_ORGANIZATIONS = ["FIAC", "BRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
+CONFIG
+
+config_path = File.expand_path("#{@app_path}/config/environment.rb")
+File.open(config_path, 'a') {|io|
+  io << config
+}
+
+# Racing on Rails default 'Rails' classess
+copy_templates('/app/views')
+
+# Default theme
+copy_templates('/public/images/backgrounds')
+copy_template('/public/stylesheets/racing_on_rails.css')
+
+# Base schema (should be different file, really)
+copy_template('/db/schema.rb')
+
+# TODO Setup database
+puts(`mysql -u root -e 'create database if not exists #{@app_name}_development'`)
+puts(`mysql -u root -e 'create database if not exists #{@app_name}_test'`)
+puts(`rake -f #{@app_path}/Rakefile db:schema:load`)

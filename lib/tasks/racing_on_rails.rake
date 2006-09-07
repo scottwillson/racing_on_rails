@@ -9,20 +9,9 @@ include Open4
 include Test::Unit::Assertions
 
 namespace :racing_on_rails do
-  desc "Create Racing on Rails gem, install it, run new Rails app"
-  task :dist => [
-          :prepare,
-          :gem,
-          :uninstall_gem, 
-          :install_gem,
-          :create_app,
-          :go_to_homepage
-  ]
-  
-  task :prepare do
-    rm_rf 'pkg'
-    rm_rf File.expand_path('~/bike_racing_association')
-  end
+
+  task :reinstall_gem => [:gem, :uninstall_gem, :install_gem]
+  task :lifecycle_test => [:reinstall_gem, :create_app, :web_test]
   
   task :uninstall_gem do
     begin
@@ -37,11 +26,12 @@ namespace :racing_on_rails do
   end
   
   task :create_app do
-    puts(`racingonrails #{File.expand_path('~/bike_racing_association')}`)
+    rm_rf File.expand_path('~/bike_racing_association')
+    puts(`racing_on_rails #{File.expand_path('~/bike_racing_association')}`)
   end
   
   desc "Start Webrick and test homepage"
-  task :go_to_homepage do
+  task :web_test do
     begin
   
       stdin = ''
@@ -85,17 +75,18 @@ spec = Gem::Specification.new do |s|
   s.requirements << 'database (MySQL)'
   s.add_dependency('rails')
   s.require_path = 'lib'
+  s.autorequire = 'racingonrails'
   s.files = FileList[
-    'bin/racingonrails', 
+    'bin/racing_on_rails', 
     'app/**/*',
+    'config/routes.rb',
     'db/schema.rb',
     'lib/**/*',
     'public/images/backgrounds/*',
     'public/stylesheets/*'
   ].to_a
   s.bindir = "bin"
-  s.executables = ["racingonrails"]
-  s.default_executable = "racingonrails"
+  s.executables = ["racing_on_rails"]
   s.description = <<EOF
 Rails website for bicycle racing associations. Event schedule, member management, 
 race results, season-long competition calculations. Customizable look and feel.

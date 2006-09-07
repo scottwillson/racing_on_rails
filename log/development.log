@@ -3891,3 +3891,1372 @@ Completed in 1.57636 (0 reqs/sec) | Rendering: 0.02791 (1%) | DB: 0.05138 (3%) |
   [4;35;1mSQL (0.174748)[0m   [0mDROP TABLE users[0m
   [4;36;1mSQL (0.035538)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
   [4;35;1mSQL (0.027587)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.038488)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002427)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.007652)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.028515)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008322)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.031187)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.012562)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.025917)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008497)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.030069)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008556)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.041768)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.066311)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006442)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.026875)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016485)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005889)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005762)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006851)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006176)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.034273)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017239)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.019913)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.020988)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018355)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.072737)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006822)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016858)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016664)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.020232)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005489)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016288)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mDiscipline Columns (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.discipline_bases' doesn't exist: SHOW FIELDS FROM discipline_bases[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008113)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002024)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008135)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010697)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007958)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.011779)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.012422)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011343)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008341)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.011536)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.009777)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010384)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005467)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006282)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.108771)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016484)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.007594)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005977)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006064)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006785)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017475)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017258)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018424)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.027647)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.028311)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.014378)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006128)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.025955)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.022102)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.010546)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006134)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.022847)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002515)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008215)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010925)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.008416)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009626)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.010513)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.012455)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008745)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010307)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.009129)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010401)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006989)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.061335)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.019086)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.017903)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005177)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.006044)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006581)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006488)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017019)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.020389)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.017600)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.021534)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.018124)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.033639)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006253)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016317)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.018923)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005524)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.006143)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018463)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.009473)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002309)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008100)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010170)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008853)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010073)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010389)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010943)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008536)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.009932)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.009062)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009828)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005407)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006496)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.024748)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.018572)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005409)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006340)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006185)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006253)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.033532)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017973)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018392)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.020982)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018909)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.006210)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006444)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016779)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016658)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005396)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006166)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016086)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.021164)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002535)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008019)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009614)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008442)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010642)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010419)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011114)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008204)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010246)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008178)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009575)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.007299)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005813)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.028797)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.019868)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005684)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005855)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006046)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.007347)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018527)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017732)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018661)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.019238)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018454)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005850)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006268)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016812)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016894)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005158)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006365)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016872)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008554)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001884)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008293)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010047)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.009109)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009505)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010423)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011161)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008513)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010342)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008821)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010210)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005465)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.007987)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.031928)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016307)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005716)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006279)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005903)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006436)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017358)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.019900)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017377)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.019343)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018604)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005962)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.007582)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016358)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017338)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005989)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005891)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017425)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008107)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001878)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.007846)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009772)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008098)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009309)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.011229)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.012111)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008647)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.011130)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008270)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009954)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006657)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005637)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016395)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.017341)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005525)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006196)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006032)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006166)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017003)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018086)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018491)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.020657)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.020605)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.008518)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006070)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017761)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.019425)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005276)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006201)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016128)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.007888)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001924)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008265)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009782)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.009104)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.015392)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.011507)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011499)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008318)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010642)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008558)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010878)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005614)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005652)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016493)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016204)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005284)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006032)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005756)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006488)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016872)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017978)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017790)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018377)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018229)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.006312)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006322)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017320)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017425)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005497)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005632)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016612)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008928)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001893)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008960)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.016009)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008252)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.011110)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010522)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.148818)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008526)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.044614)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008270)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010702)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005403)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005802)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.033655)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.017498)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005178)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005789)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006457)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006341)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016619)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017596)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.019138)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.019442)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019171)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005835)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006882)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016917)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017820)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.006067)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006469)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.112016)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.009371)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-06 06:10:30) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.020920)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.033335)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+Completed in 0.52860 (1 reqs/sec) | Rendering: 0.04326 (8%) | DB: 0.06363 (12%) | 200 OK [http://localhost/schedule/2005/list]
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-06 06:10:37) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.03145 (31 reqs/sec) | Rendering: 0.02917 (92%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+  [4;36;1mRacingOnRails::Discipline Columns (0.008175)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001959)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.007660)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009540)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008929)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009439)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010128)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011015)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008627)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010248)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008406)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009707)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006154)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.052352)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.015756)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.017488)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.006095)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005475)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005800)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006515)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.019482)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018152)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.016521)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018971)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.017676)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.025710)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006000)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018881)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017879)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005296)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005550)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017679)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008281)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001851)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008469)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010531)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007961)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009138)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010612)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.009935)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008410)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010484)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008310)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010141)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.190798)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006080)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018655)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016465)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005362)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005765)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006122)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006609)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016068)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017295)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.016628)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018663)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018579)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.025035)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006271)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018369)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016315)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.006294)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006155)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016242)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.007896)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.005195)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008340)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009863)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008084)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009982)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010311)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010914)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008316)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.011328)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008190)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010343)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005358)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005705)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.028456)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016136)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005236)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005542)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005601)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006766)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.015877)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018982)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017441)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018280)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.017759)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005442)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.005753)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016101)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016818)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005085)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006095)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015929)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008232)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002038)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.009126)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010254)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007726)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009480)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.011690)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010672)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.007982)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010443)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008158)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009591)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005897)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005669)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016760)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016939)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005445)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005557)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006379)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.008390)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.015881)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017714)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018536)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018774)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.020150)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005640)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.005806)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016531)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016494)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005098)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005773)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015311)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008606)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.003072)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008244)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009624)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007977)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010761)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010209)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010433)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008586)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010233)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.009461)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010668)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005225)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005774)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.033639)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016101)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.007377)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005806)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005984)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006894)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018773)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017124)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.016960)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018748)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018124)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005532)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.005601)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015949)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016123)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005194)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005539)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016713)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008251)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001867)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.011614)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010233)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007557)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009635)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.009953)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010480)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008297)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010108)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008441)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010954)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006291)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005545)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.026482)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.015909)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005026)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005535)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006139)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006361)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016491)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017514)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017437)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018262)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.017934)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005536)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.007457)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016349)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.105966)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005002)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005811)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016133)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.014511)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002084)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.014444)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.004485)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.013457)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.003579)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.017043)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.004784)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.014065)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.004595)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.013868)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.003521)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006262)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.062026)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017204)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016227)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005075)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.007565)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006967)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006313)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016028)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017369)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017300)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.017705)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018461)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005330)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.005767)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016469)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.016823)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005580)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005857)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015818)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.017370)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002876)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.016928)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.015024)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.017971)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.013894)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.026882)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.015317)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.014304)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.011464)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.014226)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010054)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.059566)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006173)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018602)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.027328)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.015344)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005763)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.021188)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.007788)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.024138)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.031842)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018345)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.047718)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.023721)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.007197)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006682)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.263988)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.032280)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.022791)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.014818)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.024031)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008604)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002316)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008142)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.011711)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008165)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010550)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.011149)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011021)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.009149)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.012575)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008300)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010214)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.025377)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006306)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017464)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.035142)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005967)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006759)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006563)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006678)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.041174)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.019259)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.033881)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.033768)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019456)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.015646)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006421)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018314)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.032009)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005964)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006512)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017944)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008112)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008221)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002160)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008467)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010895)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.024487)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.016148)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.012609)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011195)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008336)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010362)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.009538)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010360)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.028298)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.005938)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016567)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016576)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.021262)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005838)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006058)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006498)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.032844)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018800)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.033641)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.055043)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.021011)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005986)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006529)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017257)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.041973)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005244)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006137)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018032)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008265)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002104)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.016389)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.006290)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.226427)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009876)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.013967)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010767)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008488)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010488)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008255)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.012352)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005527)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006704)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016830)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.035477)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005511)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.057130)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006225)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.007005)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016923)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.067734)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018000)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018873)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.071010)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005388)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.016393)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.079795)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017784)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005550)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006543)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.086353)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.007945)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001935)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.009403)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009930)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008338)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009706)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.011613)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011489)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008886)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010178)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008440)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.011291)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005384)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006072)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.030591)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016581)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005357)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006400)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.092356)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006596)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017674)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018253)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017905)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.024154)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019982)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.007336)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006027)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016252)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.018644)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005108)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.007052)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.035703)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008212)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001883)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.009006)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010362)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008270)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.012385)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010763)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.014769)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.009141)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010436)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008421)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010550)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.030899)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006127)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.033021)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.043987)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005391)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005747)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006005)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006507)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.040237)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018801)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.023493)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.032437)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.022580)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.006589)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006324)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.036514)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.019850)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.007065)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006811)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.027267)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008098)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001931)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.007868)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009637)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008988)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009178)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.101854)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.011734)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.009008)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010761)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008192)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010006)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006333)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.021888)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016749)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016216)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005664)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.021386)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006109)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006220)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017147)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.027799)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.034083)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.031814)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019785)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005332)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006349)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.023633)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.036626)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005238)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006077)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017628)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+HomeController: missing default helper path home_helper
+ScheduleController: missing default helper path schedule_helper
+  [4;36;1mRacingOnRails::Discipline Columns (0.037740)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.003103)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008584)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009869)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.007599)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010102)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010736)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010960)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008720)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010336)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008304)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.011921)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.006691)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.097905)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.030361)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016571)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.006313)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.030310)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.007402)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006540)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016804)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.028128)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017642)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.036320)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.020859)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.007086)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006518)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016241)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.029769)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005350)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.006597)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016041)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008562)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001845)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.007968)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.010044)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008171)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.010266)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010988)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010592)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.008742)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010471)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008471)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.009606)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005366)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.007418)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018127)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016552)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.022459)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005791)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006036)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006901)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017989)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.036185)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017843)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.029304)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019039)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005216)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006160)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017036)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.033200)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005232)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005984)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.019861)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008798)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.001965)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008371)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009901)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008216)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009720)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010904)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.010681)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.011151)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010627)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008331)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010204)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005865)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.030646)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016891)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.016713)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005256)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.006622)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.005521)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.006358)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.112544)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.017756)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.018256)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.018901)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.018305)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.005902)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.005831)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018856)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.018407)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.006003)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.007525)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016640)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mRacingOnRails::Discipline Columns (0.008885)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.002659)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.008008)[0m   [0mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.011450)[0m   [0;1mSHOW KEYS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.008202)[0m   [0mSHOW FIELDS FROM disciplines[0m
+  [4;36;1mSQL (0.009857)[0m   [0;1mSHOW KEYS FROM disciplines[0m
+  [4;35;1mSQL (0.010630)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSQL (0.012569)[0m   [0;1mSHOW KEYS FROM events[0m
+  [4;35;1mSQL (0.012028)[0m   [0mSHOW FIELDS FROM promoters[0m
+  [4;36;1mSQL (0.010455)[0m   [0;1mSHOW KEYS FROM promoters[0m
+  [4;35;1mSQL (0.008784)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.010127)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;35;1mSQL (0.005771)[0m   [0mDROP TABLE aliases_disciplines[0m
+  [4;36;1mSQL (0.006978)[0m   [0;1mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017074)[0m   [0mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;36;1mSQL (0.017307)[0m   [0;1mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;35;1mSQL (0.005757)[0m   [0mDROP TABLE disciplines[0m
+  [4;36;1mSQL (0.005900)[0m   [0;1mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.006106)[0m   [0mDROP TABLE events[0m
+  [4;36;1mSQL (0.009255)[0m   [0;1mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.021697)[0m   [0mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;36;1mSQL (0.018355)[0m   [0;1mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;35;1mSQL (0.017574)[0m   [0mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;36;1mSQL (0.020317)[0m   [0;1mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;35;1mSQL (0.019164)[0m   [0mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;36;1mSQL (0.006146)[0m   [0;1mDROP TABLE promoters[0m
+  [4;35;1mSQL (0.006246)[0m   [0mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017420)[0m   [0;1mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;35;1mSQL (0.017207)[0m   [0mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;36;1mSQL (0.005710)[0m   [0;1mDROP TABLE users[0m
+  [4;35;1mSQL (0.005855)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017078)[0m   [0;1mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002381)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008626)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010189)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.007975)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009541)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.010201)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.011225)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008019)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010236)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008031)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009837)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005240)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.005952)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016879)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.019667)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005494)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.005597)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006312)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.007594)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016681)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.017902)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.128130)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.019772)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.021297)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005686)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006198)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017161)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.019801)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005381)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005922)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.018186)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002155)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008133)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010912)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.008919)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009671)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.010717)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.011695)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008447)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010529)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008842)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009595)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005878)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.005899)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.033840)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.016935)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005595)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.005569)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006220)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.021576)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017791)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.033218)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.017955)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.027391)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.018713)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.007619)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006836)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.027028)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.016610)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.006151)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.006265)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.034546)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002186)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.009306)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.054282)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.011933)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.011309)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.010610)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.014554)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008513)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.012012)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.010552)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.012384)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.005507)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.008540)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018216)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.019528)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005486)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.020136)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006699)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006614)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017099)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.018911)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.029634)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.035165)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.018269)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005706)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006541)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017000)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.030337)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005095)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.006487)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017054)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002094)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008183)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.143047)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.008618)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.010567)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.011175)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.011025)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008560)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010408)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008457)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009918)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006876)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.005532)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.066381)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.016798)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.018141)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.006335)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.021790)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006770)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018569)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.034350)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.024281)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.029341)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.017997)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.006558)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006743)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.038450)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.017500)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.006436)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.006052)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.021321)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001884)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008609)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010794)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.008375)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.012114)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.011054)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.014235)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008915)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010094)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.009160)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009974)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006904)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.049834)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.048346)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.017029)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.006009)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.005787)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.022950)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006586)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.018092)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.033103)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.019244)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.136117)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.021066)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005374)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006144)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.020333)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.036892)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005333)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.009516)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.021593)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+
+
+Processing HomeController#index (for 127.0.0.1 at 2006-09-06 20:47:56) [GET]
+  Session ID: 5e53ae1a10c73303f1458e23d5ae2ed3
+  Parameters: {"action"=>"index", "controller"=>"home"}
+Rendering  within layouts/application
+Rendering home/index
+Completed in 0.04167 (23 reqs/sec) | Rendering: 0.03929 (94%) | 200 OK [http://localhost/]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:48:03) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule"}
+  [4;36;1mSingleDayEvent Columns (0.018126)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.032158)[0m   [0mSELECT * FROM events WHERE (date >= '2006-01-01' and date <= '2006-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001031)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.68896 (1 reqs/sec) | Rendering: 0.03063 (4%) | DB: 0.05132 (7%) | 200 OK [http://localhost/schedule]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:48:13) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2005"}
+  [4;35;1mSingleDayEvent Columns (0.012115)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.010485)[0m   [0;1mSELECT * FROM events WHERE (date >= '2005-01-01' and date <= '2005-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001062)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.47042 (2 reqs/sec) | Rendering: 0.01660 (3%) | DB: 0.02366 (5%) | 200 OK [http://localhost/schedule/2005]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:48:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.018260)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.015996)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001243)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.50863 (1 reqs/sec) | Rendering: 0.01661 (3%) | DB: 0.03550 (6%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:50:15) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.010607)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.061278)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001042)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.51532 (1 reqs/sec) | Rendering: 0.01650 (3%) | DB: 0.07293 (14%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:51:25) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.024769)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.031285)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001025)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.51415 (1 reqs/sec) | Rendering: 0.01962 (3%) | DB: 0.05708 (11%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:51:32) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.111254)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.137392)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001172)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.82770 (1 reqs/sec) | Rendering: 0.01744 (2%) | DB: 0.24982 (30%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:51:47) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.010506)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.012226)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001139)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.66462 (1 reqs/sec) | Rendering: 0.02564 (3%) | DB: 0.02387 (3%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#list (for 127.0.0.1 at 2006-09-06 20:51:53) [GET]
+  Parameters: {"action"=>"list", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.012699)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.017216)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/list
+Completed in 0.61563 (1 reqs/sec) | Rendering: 0.04045 (6%) | DB: 0.02991 (4%) | 200 OK [http://localhost/schedule/2004/list]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:52:38) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.030816)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.003772)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001105)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.74331 (1 reqs/sec) | Rendering: 0.01688 (2%) | DB: 0.03569 (4%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:53:16) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.013334)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.035885)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001162)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.50086 (1 reqs/sec) | Rendering: 0.01627 (3%) | DB: 0.05038 (10%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:53:23) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.011211)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.059285)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001018)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54684 (1 reqs/sec) | Rendering: 0.02673 (4%) | DB: 0.07151 (13%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:53:40) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;36;1mSingleDayEvent Columns (0.016379)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSingleDayEvent Load (0.006238)[0m   [0mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;36;1mSQL (0.001088)[0m   [0;1mselect distinct extract(year from date) as year from events[0m
+Completed in 0.78772 (1 reqs/sec) | Rendering: 0.20061 (25%) | DB: 0.02371 (3%) | 200 OK [http://localhost/schedule/2004]
+
+
+Processing ScheduleController#index (for 127.0.0.1 at 2006-09-06 20:53:55) [GET]
+  Parameters: {"action"=>"index", "controller"=>"schedule", "year"=>"2004"}
+  [4;35;1mSingleDayEvent Columns (0.030683)[0m   [0mSHOW FIELDS FROM events[0m
+  [4;36;1mSingleDayEvent Load (0.060787)[0m   [0;1mSELECT * FROM events WHERE (date >= '2004-01-01' and date <= '2004-12-31' and sanctioned_by = 'CBRA') AND ( (events.`type` = 'SingleDayEvent' ) ) [0m
+Rendering  within layouts/application
+Rendering schedule/index
+  [4;35;1mSQL (0.001017)[0m   [0mselect distinct extract(year from date) as year from events[0m
+Completed in 0.54842 (1 reqs/sec) | Rendering: 0.01836 (3%) | DB: 0.09249 (16%) | 200 OK [http://localhost/schedule/2004]
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001860)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.009242)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.009853)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.009516)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009369)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.011351)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.010829)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008317)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010690)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008132)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010353)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006623)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.021969)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.058389)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.016633)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005202)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.025483)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.005629)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.007154)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016584)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.027299)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.018259)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.036850)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.019639)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.006052)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006290)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016953)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.032920)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005615)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.006218)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.107774)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002376)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.030489)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010541)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.007988)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009563)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.011436)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.010869)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008551)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010296)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008606)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009787)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.041170)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.006021)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.038906)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.016374)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.008396)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.019318)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006529)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006271)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016892)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.027490)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.023514)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.033323)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.018978)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.024952)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.005918)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.032183)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.015882)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.006901)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005798)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.031774)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002118)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.090152)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.013582)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.008986)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.009285)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.009801)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.010920)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.007921)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.010409)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008526)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.010845)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006875)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.344866)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016172)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.016627)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.032637)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.017770)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.006065)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006176)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.017122)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.028059)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.017452)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.035055)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.036395)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005879)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006147)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.017296)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.029072)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005588)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005743)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.015969)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002117)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.008017)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.010276)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.007950)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.010179)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.010464)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.010944)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008109)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.011560)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.008751)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009307)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.006080)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.098861)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.016237)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.034572)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.005543)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.006248)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.005954)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.006481)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.020925)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.017889)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.037108)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.031988)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.017398)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.005920)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.006048)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.030714)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.016204)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.005508)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.005978)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.032028)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'racing_on_rails_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.002280)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.014797)[0m   [0;1mSHOW FIELDS FROM aliases_disciplines[0m
+  [4;35;1mSQL (0.005238)[0m   [0mSHOW KEYS FROM aliases_disciplines[0m
+  [4;36;1mSQL (0.016909)[0m   [0;1mSHOW FIELDS FROM disciplines[0m
+  [4;35;1mSQL (0.003750)[0m   [0mSHOW KEYS FROM disciplines[0m
+  [4;36;1mSQL (0.016535)[0m   [0;1mSHOW FIELDS FROM events[0m
+  [4;35;1mSQL (0.005334)[0m   [0mSHOW KEYS FROM events[0m
+  [4;36;1mSQL (0.008616)[0m   [0;1mSHOW FIELDS FROM promoters[0m
+  [4;35;1mSQL (0.025059)[0m   [0mSHOW KEYS FROM promoters[0m
+  [4;36;1mSQL (0.013782)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.009294)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.047875)[0m   [0;1mDROP TABLE aliases_disciplines[0m
+  [4;35;1mSQL (0.013723)[0m   [0mCREATE TABLE aliases_disciplines (`discipline_id` int(11) DEFAULT 0 NOT NULL, `alias` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.083529)[0m   [0;1mCREATE INDEX `idx_alias` ON aliases_disciplines (`alias`)[0m
+  [4;35;1mSQL (0.059627)[0m   [0mCREATE INDEX `idx_discipline_id` ON aliases_disciplines (`discipline_id`)[0m
+  [4;36;1mSQL (0.034336)[0m   [0;1mDROP TABLE disciplines[0m
+  [4;35;1mSQL (0.020321)[0m   [0mCREATE TABLE disciplines (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(64) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.044945)[0m   [0;1mDROP TABLE events[0m
+  [4;35;1mSQL (0.025287)[0m   [0mCREATE TABLE events (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `promoter_id` int(11), `parent_id` int(11), `city` varchar(128), `date` date, `discipline` varchar(32), `flyer` varchar(255), `name` varchar(255), `notes` varchar(255) DEFAULT '', `sanctioned_by` varchar(255), `state` varchar(64), `type` varchar(32) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime, `flyer_approved` tinyint(1) DEFAULT 0 NOT NULL, `cancelled` tinyint(1) DEFAULT 0, `notification` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.043573)[0m   [0;1mCREATE INDEX `idx_date` ON events (`date`)[0m
+  [4;35;1mSQL (0.049909)[0m   [0mCREATE INDEX `idx_disciplined` ON events (`discipline`)[0m
+  [4;36;1mSQL (0.070050)[0m   [0;1mCREATE INDEX `parent_id` ON events (`parent_id`)[0m
+  [4;35;1mSQL (0.068439)[0m   [0mCREATE INDEX `idx_promoter_id` ON events (`promoter_id`)[0m
+  [4;36;1mSQL (0.037387)[0m   [0;1mCREATE INDEX `idx_type` ON events (`type`)[0m
+  [4;35;1mSQL (0.032932)[0m   [0mDROP TABLE promoters[0m
+  [4;36;1mSQL (0.015279)[0m   [0;1mCREATE TABLE promoters (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `email` varchar(255), `name` varchar(255) DEFAULT '' NOT NULL, `phone` varchar(255), `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.151450)[0m   [0mCREATE UNIQUE INDEX `promoter_info` ON promoters (`name`, `email`, `phone`)[0m
+  [4;36;1mSQL (0.059350)[0m   [0;1mCREATE INDEX `idx_name` ON promoters (`name`)[0m
+  [4;35;1mSQL (0.043273)[0m   [0mDROP TABLE users[0m
+  [4;36;1mSQL (0.022198)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT '' NOT NULL, `username` varchar(255) DEFAULT '' NOT NULL, `password` varchar(255) DEFAULT '' NOT NULL, `lock_version` int(11) DEFAULT 0 NOT NULL, `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.055928)[0m   [0mCREATE UNIQUE INDEX `idx_alias` ON users (`username`)[0m
