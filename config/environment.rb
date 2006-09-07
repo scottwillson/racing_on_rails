@@ -54,6 +54,8 @@ end
 # TODO extract to separate file and copy into new app's config
 require 'racingonrails'
 
+RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
+
 ASSOCIATION = Association.new
 ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
 ASSOCIATION.short_name = 'CBRA'
