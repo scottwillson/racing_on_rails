@@ -1,16 +1,17 @@
-def prepend_to_load_path(path)
-  abs_path = File.expand_path(File.dirname(__FILE__) + path)
-  $:.unshift(abs_path) unless $:.include?(abs_path) 
-end
+require 'racingonrails/app/helpers/schedule_helper'
 
-prepend_to_load_path('/racingonrails/app/controllers')
-prepend_to_load_path('/racingonrails/app/helpers')
-prepend_to_load_path('/racingonrails/app/models')
-prepend_to_load_path('/racingonrails/app/models/schedule')
-prepend_to_load_path('/racingonrails/lib')
+require 'racingonrails/app/models/association'
 
-module RacingOnRails
-end
+require 'racingonrails/app/models/schedule/day'
+require 'racingonrails/app/models/schedule/month'
+require 'racingonrails/app/models/schedule/schedule'
+require 'racingonrails/app/models/schedule/week'
+
+require 'racingonrails/lib/column'
+require 'racingonrails/lib/grid'
+require 'racingonrails/lib/grid_file'
+require 'racingonrails/lib/progress_monitor'
+require 'racingonrails/lib/null_progress_monitor'
 
 include RacingOnRails
 include RacingOnRails::Schedule

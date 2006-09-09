@@ -50,7 +50,10 @@ File.open(config_path, 'a') {|io|
   io << config
 }
 
-# Racing on Rails default 'Rails' classess
+# Racing on Rails default 'Rails' classes
+copy_templates('/app/controllers')
+copy_templates('/app/helpers')
+copy_templates('/app/models')
 copy_templates('/app/views')
 
 # Default theme

@@ -1,3 +1,5 @@
-class NullProgressMonitor
-  include ProgressMonitor
+module RacingOnRails
+  class NullProgressMonitor
+    include ProgressMonitor
+  end
 end

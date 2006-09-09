@@ -1,3 +1,5 @@
+# TODO Move into racing_on_rails/lib
+
 require 'net/http'
 require 'rubygems'
 require 'rake/gempackagetask'
@@ -11,7 +13,7 @@ include Test::Unit::Assertions
 namespace :racing_on_rails do
 
   task :reinstall_gem => [:gem, :uninstall_gem, :install_gem]
-  task :lifecycle_test => [:reinstall_gem, :create_app, :web_test]
+  task :dist_test => [:reinstall_gem, :create_app, :test_web]
   
   task :uninstall_gem do
     begin
@@ -30,17 +32,50 @@ namespace :racing_on_rails do
     puts(`racing_on_rails #{File.expand_path('~/bike_racing_association')}`)
   end
   
-  desc "Start Webrick and test homepage"
-  task :web_test do
-    begin
+  task :customize do
+    # Config
+    cp(File.expand_path('test/fixtures/config/environment.rb'),
+       File.expand_path('~/bike_racing_association/config/environment.rb'))
+    
+    # View
+    # Helper (extend, create new)
+    # Controller (extend, create new)
+    # Model (extend, create new)
+    # Routes
+    # Lib (extend, create new)
+  end
   
+  task :test_customization => [:reinstall_gem, :create_app, :customize] do
+    web_test do
+      response = Net::HTTP.get('127.0.0.1', '/', 3000)
+      assert(response['Northern California/Nevada Cycling Association'], "Association name on homepage in \n#{response}")
+      assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
+      assert(response['<a href="/schedule"'], "Schedule link should be available in \n#{response}")
+    end
+  end
+  
+  def web_test
+    begin
       stdin = ''
       stdout = ''
       stderr = ''
-  
+
       webrick = bg "#{File.expand_path('~/bike_racing_association/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
       sleep 6
+      
+      yield
+      
+    ensure
+      if webrick
+        puts(`kill #{webrick.pid}`)
+        webrick.exit
+      end
+    end
+  end
   
+  desc "Start Webrick and test homepage"
+  task :test_web do
+    web_test do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert(response['Bicycle Racing Association'], "Homepage should be available in \n#{response}")
       assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
@@ -56,11 +91,6 @@ namespace :racing_on_rails do
       # TODO Run unit and functional tests
       # TODO move above assertions into tests
       # TODO Validate HTML
-    ensure
-      if webrick
-        puts(`kill #{webrick.pid}`)
-        webrick.exit
-      end
     end
   end
 end
@@ -78,7 +108,10 @@ spec = Gem::Specification.new do |s|
   s.autorequire = 'racingonrails'
   s.files = FileList[
     'bin/racing_on_rails', 
-    'app/**/*',
+    'app/controllers/*',
+    'app/helpers/*',
+    'app/models/*',
+    'app/views/**/*',
     'config/routes.rb',
     'db/schema.rb',
     'lib/**/*',

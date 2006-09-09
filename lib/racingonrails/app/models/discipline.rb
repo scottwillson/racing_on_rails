@@ -1,5 +1,4 @@
-module RacingOnRails
-  class Discipline < ActiveRecord::Base
+  class Discipline  < ActiveRecord::Base
 
     NONE = Discipline.new(:name => "", :id => nil).freeze
 
@@ -59,4 +58,3 @@ module RacingOnRails
       "<#{self.class} #{id} #{name}>"
     end
   end
-end
