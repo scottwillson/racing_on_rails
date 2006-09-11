@@ -96,6 +96,12 @@ class Event < ActiveRecord::Base
         end
       end
     end
+    
+    def after_child_event_save
+    end
+    
+    def after_child_event_destroy
+    end
 
     # Update database immediately with save!
     def disable_notification!

@@ -1,6 +1,11 @@
 class SingleDayEvent < Event
 
-  belongs_to :parent, :foreign_key => "parent_id", :class_name => "MultiDayEvent"
+  after_save {|event| event.parent.after_child_event_save if event.parent}
+  after_destroy {|event| event.parent.after_child_event_destroy if event.parent}
+  
+  belongs_to :parent, 
+             :foreign_key => "parent_id", 
+             :class_name => "MultiDayEvent"
   
   def SingleDayEvent.find_all_by_year_month(year, month)
     start_of_month = Date.new(year, month, 1)
@@ -19,7 +24,7 @@ class SingleDayEvent < Event
     super
     @days_of_week = Set.new
   end
-
+  
   # Child/single day of MultiDayEvent
   def series_event?
     parent and (parent.is_a?(WeeklySeries))

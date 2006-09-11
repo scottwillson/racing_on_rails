@@ -11,12 +11,30 @@ class MultiDayEvent < Event
   validate_on_create {:parent.nil?}
   validate_on_update {:parent.nil?}
   
-  before_save :update_date
-  
   has_many :events, 
            :class_name => 'SingleDayEvent',
            :foreign_key => "parent_id",
-           :order => "date"
+           :order => "date",
+           :after_add => :update_date,
+           :after_remove => :update_date do
+             def create!(attributes = {})
+               attributes[:parent_id] = @owner.id
+               attributes[:parent] = @owner
+               event = SingleDayEvent.new(attributes)
+               event.parent = @owner
+               event.save!
+               event
+             end
+
+             def create(attributes = {})
+               attributes[:parent_id] = @owner.id
+               attributes[:parent] = @owner
+               event = SingleDayEvent.new(attributes)
+               event.parent = @owner
+               event.save
+               event
+             end
+           end
 
   def MultiDayEvent.find_all_by_year(year)
     # Workaround Rails class loader behavior
@@ -30,7 +48,7 @@ class MultiDayEvent < Event
     )
   end
 
-  def MultiDayEvent.new_from_events(events)
+  def MultiDayEvent.create_from_events(events)
     if events.empty?
       raise ArgumentError.new("events cannot be empty")
     end
@@ -54,12 +72,14 @@ class MultiDayEvent < Event
     multi_day_event.promoter = first_event.promoter
     multi_day_event.sanctioned_by = first_event.sanctioned_by
     multi_day_event.state = first_event.state
-
-    for event in events
-      multi_day_event.events << event
-      event.parent = multi_day_event
-    end
+    multi_day_event.create
     
+    for event in events
+      event.parent = multi_day_event
+      event.save!
+    end
+
+    multi_day_event.events(true)
     return multi_day_event
   end
   
@@ -87,21 +107,41 @@ class MultiDayEvent < Event
     end
   end
   
-  def date
+  def after_child_event_save
     update_date
-    self[:date]
+  end
+  
+  def after_child_event_destroy
+    update_date
+  end
+
+  def date
+    start_date
   end
   
   def start_date
-    if !events.empty?
-      events.first.date
+    if !events(true).empty?
+      first_event = events.min do |a, b|
+        a.date <=> b.date
+      end
+      _date = first_event.date
     else
-      date    
+      _date = Date.new(Date.today.year, 1, 1)    
     end
+    if _date != self[:date] and !frozen?
+      self[:date] = _date
+      save
+    end
+    _date
+  end
+  
+  def update_date(event = nil)
+    logger.debug('update_date')
+    start_date
   end
   
   def end_date
-    if !events.empty?
+    if !events(true).empty?
       events.last.date
     else
       date = Date.new(Date.today.year, 12, 31)
@@ -134,21 +174,5 @@ class MultiDayEvent < Event
   
   def friendly_class_name
     "Multi-Day Event"
-  end
-  
-  
-  protected
-  
-  def update_date
-    if frozen?
-      return
-    end
-    
-    if !events.empty?
-      self[:date] = start_date
-    else
-      _date = self[:date] || Date.today
-      self[:date] = Date.new(_date.year, 1, 1)
-    end
   end
 end

@@ -54,6 +54,7 @@ end
 # TODO extract to separate file and copy into new app's config
 require 'racingonrails'
 
+ActiveRecord::Base.colorize_logging = false
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
 ASSOCIATION = Association.new

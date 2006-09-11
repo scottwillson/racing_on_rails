@@ -51,7 +51,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     short_track_series.reload
     assert_not_nil(short_track_series.created_at, "initial short_track_series.created_at")
     assert_not_nil(short_track_series.updated_at, "initial short_track_series.updated_at")
-    assert_equal(short_track_series.created_at, short_track_series.updated_at, "initial short_track_series.updated_at and created_at")
+    assert(short_track_series.updated_at - short_track_series.created_at < 10, "initial short_track_series.updated_at and created_at")
   end
 
   def test_start_end_dates
@@ -92,19 +92,19 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal("#{year}-06-19", sql_results["date"], "Series date column from DB")
   end
   
-  def test_new_from_events
-    single_event = SingleDayEvent.new(:date => Date.new(2007, 6, 19))
-    multi_day_event = MultiDayEvent.new_from_events([single_event])
+  def test_create_from_events
+    single_event = SingleDayEvent.create(:date => Date.new(2007, 6, 19))
+    multi_day_event = MultiDayEvent.create_from_events([single_event])
     assert_not_nil(multi_day_event, "MultiDayEvent from one event")
     assert(multi_day_event.instance_of?(MultiDayEvent), "MultiDayEvent class")
     assert_not_nil(single_event.parent, "SingleDayEvent parent")
-    assert_equal(1, multi_day_event.events.size, "MultiDayEvent events size")
+    assert_equal(1, multi_day_event.events(true).size, "MultiDayEvent events size")
     assert_equal_dates("2007-06-19", multi_day_event.start_date, "MultiDayEvent events start date")
     assert_equal_dates("2007-06-19", multi_day_event.end_date, "MultiDayEvent events end date")
 
-    single_event_1 = SingleDayEvent.new(:date => Date.new(2007, 6, 19))
-    single_event_2 = SingleDayEvent.new(:date => Date.new(2007, 6, 20))
-    multi_day_event = MultiDayEvent.new_from_events([single_event_1, single_event_2])
+    single_event_1 = SingleDayEvent.create(:date => Date.new(2007, 6, 19))
+    single_event_2 = SingleDayEvent.create(:date => Date.new(2007, 6, 20))
+    multi_day_event = MultiDayEvent.create_from_events([single_event_1, single_event_2])
     assert_not_nil(multi_day_event, "MultiDayEvent from two events")
     assert(multi_day_event.instance_of?(MultiDayEvent), "MultiDayEvent should be instance of MultiDayEvent class")
     assert_not_nil(single_event_1.parent, "SingleDayEvent parent")
@@ -113,9 +113,9 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal_dates("2007-06-19", multi_day_event.start_date, "MultiDayEvent events start date")
     assert_equal_dates("2007-06-20", multi_day_event.end_date, "MultiDayEvent events end date")
 
-    single_event_1 = SingleDayEvent.new(:date => Date.new(2007, 6, 16))
-    single_event_2 = SingleDayEvent.new(:date => Date.new(2007, 6, 23))
-    multi_day_event = MultiDayEvent.new_from_events([single_event_1, single_event_2])
+    single_event_1 = SingleDayEvent.create(:date => Date.new(2007, 6, 16))
+    single_event_2 = SingleDayEvent.create(:date => Date.new(2007, 6, 23))
+    multi_day_event = MultiDayEvent.create_from_events([single_event_1, single_event_2])
     assert_not_nil(multi_day_event, "Series from two events")
     assert(multi_day_event.instance_of?(Series), "MultiDayEvent should be instance of Series class")
     assert_not_nil(single_event_1.parent, "SingleDayEvent parent")
@@ -124,9 +124,9 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal_dates("2007-06-16", multi_day_event.start_date, "MultiDayEvent events start date")
     assert_equal_dates("2007-06-23", multi_day_event.end_date, "MultiDayEvent events end date")
 
-    single_event_1 = SingleDayEvent.new(:date => Date.new(2007, 6, 15))
-    single_event_2 = SingleDayEvent.new(:date => Date.new(2007, 6, 22))
-    multi_day_event = MultiDayEvent.new_from_events([single_event_1, single_event_2])
+    single_event_1 = SingleDayEvent.create(:date => Date.new(2007, 6, 15))
+    single_event_2 = SingleDayEvent.create(:date => Date.new(2007, 6, 22))
+    multi_day_event = MultiDayEvent.create_from_events([single_event_1, single_event_2])
     assert_not_nil(multi_day_event, "Series from two events")
     assert(multi_day_event.instance_of?(WeeklySeries), "MultiDayEvent should be instance of WeeklySeries class")
     assert_not_nil(single_event_1.parent, "SingleDayEvent parent")
@@ -162,6 +162,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     single_event_1.promoter = promoters(:brad_ross)
     single_event_1.sanctioned_by = "FIAC"
     single_event_1.state = "NY"
+    single_event_1.save!
     
     single_event_2 = SingleDayEvent.new(:date => Date.new(2007, 6, 26))
     single_event_2.name = "Elkhorn Stage Race"
@@ -171,9 +172,12 @@ class MultiDayEventTest < Test::Unit::TestCase
     single_event_2.promoter = promoters(:brad_ross)
     single_event_2.sanctioned_by = "FIAC"
     single_event_2.state = "NY"
+    single_event_2.save!
     
-    multi_day_event = MultiDayEvent.new_from_events([single_event_1, single_event_2])
+    multi_day_event = MultiDayEvent.create_from_events([single_event_1, single_event_2])
     multi_day_event.save!
+    
+    RAILS_DEFAULT_LOGGER.debug('*** setup done')
     
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -185,6 +189,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal(promoters(:brad_ross).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "SingleDayEvent state")
+    assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -196,6 +201,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal(promoters(:brad_ross).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "SingleDayEvent state")
+    assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")

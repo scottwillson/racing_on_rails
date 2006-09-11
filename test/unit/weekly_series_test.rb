@@ -3,7 +3,31 @@ require File.dirname(__FILE__) + '/../test_helper'
 class WeeklySeriesTest < Test::Unit::TestCase
 
   def test_new
-    WeeklySeries.new.save!
+    pir = WeeklySeries.create!(
+      :date => Date.new(2008, 4, 1), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
+    )
+    assert(pir.valid?, "PIR valid?")
+    assert(!pir.new_record?, "PIR new?")
+    assert_equal(0, pir.events.size, 'PIR events')
+
+    Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) {|date|
+      individual_pir = pir.events.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
+      pir.logger.debug('before_add')
+      pir.logger.debug('after_add')
+      assert(individual_pir.valid?, "PIR valid?")
+      assert(!individual_pir.new_record?, "PIR new?")
+      assert_equal(pir, individual_pir.parent, "PIR parent")
+      assert_equal(date, individual_pir.date, 'New single day of PIR date')
+    }
+    pir.reload
+    
+    assert_equal(30, pir.events.size, 'PIR events')
+    date = WeeklySeries.connection.select_value("select date from events where id = #{pir.id}")
+    assert_equal('2008-04-01', date, 'PIR data in database')
+    
+    assert_equal(Date.new(2008, 4, 1), pir.start_date, 'PIR start date')
+    assert_equal(Date.new(2008, 4, 1), pir.date, 'PIR date')
+    assert_equal(Date.new(2008, 10, 21), pir.end_date, 'PIR end date')
   end
   
   def test_days_of_week
