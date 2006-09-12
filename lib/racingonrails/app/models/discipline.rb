@@ -45,6 +45,8 @@
         :road_number
       end
     end
+    
+    def self.reloadable?; false end
       
     def to_param
       name.underscore.gsub(' ', '_')
