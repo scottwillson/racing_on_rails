@@ -1,0 +1,63 @@
+<% @page_title = "Schedule: #{@year}" %>
+
+<%= cherry_pie_coutdown %>
+<br>
+
+<%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'underlined'} %> with race organizer contact information
+<br><br>
+
+<%= links_to_months @schedule %>
+<%= links_to_years %>
+<br>
+
+<%- for month in @schedule.months -%>
+<div align="center">
+	<table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">
+		<caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
+		<thead>
+			<tr class='column_titles'>
+				<th>Sunday</th>
+				<th>Monday</th>
+				<th>Tuesday</th>
+				<th>Wednesday</th>
+				<th>Thursday</th>
+				<th>Friday</th>
+				<th>Saturday</th>
+			</tr>
+		</thead>
+		<tbody>
+		<%- for week in month.weeks -%>
+	      <tr class="month">
+	      <%- for day in week.days -%>
+	        <%- if day.previous_month? -%>
+	        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+				  <%- else -%>
+	        <td class="day">
+	          <div class="number	"><%= day.day_of_month -%></div>
+					  <%- for event in day.events -%>
+				<%- if event.cancelled %>
+					<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
+				<%- else -%>
+		            <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
+					    <a href="<%= event.flyer -%>"><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+		          MTB
+		            <%- end -%></a>
+							  <%- else -%>
+					    <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+		          MTB
+		            <%- end -%>
+							  <%- end -%>
+				<%- end -%>
+            
+				    <br>
+					  <%- end -%>
+				  <%- end -%>
+			    </td>
+			  <%- end -%>
+	      </tr>
+	    <%- end -%>
+		</tbody>
+	    </table>
+	</div>
+	<br><br>
+<% end %>

@@ -1,0 +1,14 @@
+<%= flash[:message] %>
+
+<h4>Schedule</h4>
+<table border="0" cellspacing="0" cellpadding="0" align="center">
+	<tr>
+		<td>
+			<ul class='links'>
+				<li><%= link_to '2006', {:controller => 'schedule', :year => 2006}, {:class => 'underlined'} %></li>
+				<li><%= link_to '2005', {:controller => 'schedule', :year => 2005}, {:class => 'underlined'} %></li>
+				<li><%= link_to '2004', {:controller => 'schedule', :year => 2004}, {:class => 'underlined'} %></li>
+			</ul>
+		</td>
+	</tr>
+</table>

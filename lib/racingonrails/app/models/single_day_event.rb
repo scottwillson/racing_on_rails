@@ -20,6 +20,13 @@ class SingleDayEvent < Event
     return events
   end
   
+  def SingleDayEvent.find_all_by_year(year)
+    SingleDayEvent.find(
+      :all,
+      :conditions => ["date >= ? and date <= ? and sanctioned_by = ?",
+                      "#{year}-01-01", "#{year}-12-31", ASSOCIATION.short_name])
+  end
+  
   def initialize(attributes = nil)
     super
     @days_of_week = Set.new
@@ -29,6 +36,9 @@ class SingleDayEvent < Event
   def series_event?
     parent and (parent.is_a?(WeeklySeries))
   end
+    
+  # Lame workaround to allow customization
+  def self.reloadable?; false end
  
   def friendly_class_name
     'Single Day Event'

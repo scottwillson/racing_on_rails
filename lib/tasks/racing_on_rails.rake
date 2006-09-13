@@ -13,7 +13,7 @@ include Test::Unit::Assertions
 namespace :racing_on_rails do
 
   task :reinstall_gem => [:gem, :uninstall_gem, :install_gem]
-  task :dist_test => [:reinstall_gem, :create_app, :test_web]
+  task :test_dist => [:reinstall_gem, :create_app, :test_web, :test_customization]
   
   task :uninstall_gem do
     begin
@@ -34,23 +34,51 @@ namespace :racing_on_rails do
   
   task :customize do
     # Config
-    cp(File.expand_path('test/fixtures/config/environment.rb'),
-       File.expand_path('~/bike_racing_association/config/environment.rb'))
+    customize("config/environment.rb")
     
-    # View
-    # Helper (extend, create new)
-    # Controller (extend, create new)
-    # Model (extend, create new)
-    # Routes
-    # Lib (extend, create new)
+    # Views
+    customize("app/views/home/index.rhtml")
+    customize("app/views/schedule/index.rhtml")
+
+    # Extend Helpers, Controller, Model, Routes, Lib
+    customize("app/helpers/schedule_helper.rb")
+    customize("app/controllers/home_controller.rb")
+    customize("app/models/single_day_event.rb")
+    # TODO Add custom lib class
+    
+    # Create whole slice (view, controller, model, helper, lib) for 'shops'
+    
+    path = File.expand_path('~/bike_racing_association')
+    puts(`#{path}/script/generate model BikeShop`)
+    puts(`#{path}/script/generate controller BikeShops list`)
+    customize('script/create_bike_shops_table.rb')
+    puts(`ruby #{path}/script/create_bike_shops_table.rb`)
+    customize("app/views/bike_shops/list.rhtml")
   end
   
   task :test_customization => [:reinstall_gem, :create_app, :customize] do
     web_test do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert(response['Northern California/Nevada Cycling Association'], "Association name on homepage in \n#{response}")
-      assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
-      assert(response['<a href="/schedule"'], "Schedule link should be available in \n#{response}")
+      assert_nil(response['Error'], "No error on homepage \n#{response}")
+      assert_nil(response['Application Trace'], "No error on homepage \n#{response}")
+      assert_nil(response['<a href="/results"'], "No results link in \n#{response}")
+      assert(response['<a href="/schedule/2006"'], "2006 schedule link should be available in \n#{response}")
+      assert(response['<a href="/schedule/2005"'], "2005 schedule link should be available in \n#{response}")
+      assert(response['<a href="/schedule/2004"'], "2004 schedule link should be available in \n#{response}")
+      assert(response['Flash message from customized controller'], "Custom controller flash message in \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/schedule/', 3000)
+      assert_nil(response['Error'], "No error on schedule page \n#{response}")
+      assert_nil(response['Application Trace'], "No error on schedule page \n#{response}")
+      assert(response['January'], "Months on schedule page \n#{response}")
+      assert(response['December'], "Months on schedule page \n#{response}")
+      assert(response['until the 2010 Cherry Pie Road Race!!!'], "Cherry Pie coutdown \n#{response}")
+      assert(response['Custom Finder Event'], "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
+      assert(response['<i>Custom Finder Event</i>'], "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
+      assert(response['Sellwood Cycle Repair'], "Sellwood on bike shops list page \n#{response}")
     end
   end
   
@@ -93,6 +121,11 @@ namespace :racing_on_rails do
       # TODO Validate HTML
     end
   end
+end
+
+def customize(fixture_path)
+  cp(File.expand_path("test/fixtures/#{fixture_path}"),
+     File.expand_path("~/bike_racing_association/#{fixture_path}"))
 end
   
 spec = Gem::Specification.new do |s|

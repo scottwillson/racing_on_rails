@@ -46,6 +46,7 @@
       end
     end
     
+    # Lame workaround to allow customization
     def self.reloadable?; false end
       
     def to_param

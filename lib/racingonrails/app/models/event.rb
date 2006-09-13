@@ -170,6 +170,9 @@ class Event < ActiveRecord::Base
     def friendly_class_name
       'Event'
     end
+    
+    # Lame workaround to allow customization
+    def self.reloadable?; false end
   
     def <=>(other)
       date_diff = date <=> other.date
