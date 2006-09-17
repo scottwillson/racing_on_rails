@@ -1,0 +1,6 @@
+page.replace_html('message_text', "Merged #{@merged_team_name} into #{@existing_team.name}")
+page.show('message_icon')
+page.show('message_text')
+page.hide('warn_icon')
+page.hide('warn_text')
+page.replace_html "team_#{@existing_team.id}_aliases", render(:partial => 'aliases', :locals => { :team => @existing_team })

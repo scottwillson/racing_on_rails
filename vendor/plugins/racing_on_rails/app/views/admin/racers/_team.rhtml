@@ -1,0 +1,12 @@
+<span class='editable' id="team_name_<%= racer.id %>">
+	<% if racer.team.nil? or racer.team.name.blank? 
+			team_name = '&nbsp;' * 30
+		else
+			team_name = racer.team.name
+		end
+	%>
+	<%= link_to_remote team_name, 
+		:update => "team_name_#{racer.id}", 
+		:url => { :action => "edit_team_name", :id => racer.id }
+	%>
+</span>

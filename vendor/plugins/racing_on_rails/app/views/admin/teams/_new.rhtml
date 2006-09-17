@@ -1,0 +1,21 @@
+<td><%= image_tag('/images/icons/people.gif', 
+				  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
+				  :id => "team_icon_#{@team.id}") %></td>
+<td nowrap>
+	<div class="inline">
+	<%= form_remote_tag(:url => {:action => 'create'}, :update => 'new_row', :complete => evaluate_remote_response) %>
+		<%= text_field_tag 'name', @team.name, :size => 30, :class => 'edit_in_place_text_field' %>
+	</div>
+	<div class="inline">
+			<%= link_to_function image_tag('/images/buttons/small_cancel.gif', 
+			                               :height => 20, :width => 22, :border => 0, :align => 'absbottom'), 
+				"Element.hide('new_row')" %>
+			</div>
+		<%= error_message_on 'team', 'name' %>
+		<%= render(:partial => 'error', :locals => { :error => @error, :message => @message }) if @error and @message %>
+	<%= end_form_tag %>
+</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>

@@ -1,0 +1,30 @@
+<tr valign="top" id="team_<%= team.id %>_row">
+	<td><%= image_tag('/images/icons/people.gif', 
+					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
+					  :id => "team_#{team.id}") %></td>
+	<td nowrap>
+		<%= attribute(team, 'name') %>
+		<span id="message_<%= team.id %>" ></span>
+	</td>
+	<td width="300">
+		<%= render(:partial => 'aliases', :locals => { :team => team }) %>
+	</td>
+	<td nowrap>
+		<%= attribute(team, 'obra_member') %>
+	</td>
+ 	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+		:url => {:action => "destroy", :id => team.id},
+		:confirm => "Really delete #{team.name}?",
+		:complete => evaluate_remote_response
+        %>
+    </td>
+</tr>
+<%= draggable_element("team_#{team.id}", :revert => true) %>
+<%= drop_receiving_element("team_#{team.id}", 
+	:url => { :action => "merge", :target_id => team.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+<%= drop_receiving_element("team_name_#{team.id}", 
+	:url => { :action => "merge", :target_id => team.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>

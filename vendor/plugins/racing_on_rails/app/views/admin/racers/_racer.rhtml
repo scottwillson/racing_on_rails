@@ -1,0 +1,51 @@
+<tr valign="top" id="racer_<%= racer.id %>_row">
+	<td><%= image_tag('/images/icons/person.gif', 
+					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
+					  :id => "racer_#{racer.id}") %></td>
+	<td nowrap>
+		<%= attribute(racer, 'name') %>
+		<span id="message_<%= racer.id %>" ></span>
+	</td>
+	<td nowrap>
+		<%= render(:partial => 'team', :locals => { :racer => racer }) %>
+	</td>
+	<td width="300">
+		<%= render(:partial => 'aliases', :locals => { :racer => racer }) %>
+	</td>
+	<td align="right">
+		<%= racer.road_number %>
+	</td>
+	<td align="right">
+		<%= racer.xc_number %>
+	</td>
+	<td align="right">
+		<%= racer.dh_number %>
+	</td>
+	<td align="right">
+		<%= racer.ccx_number %>
+	</td>
+	<td align="center">
+		<%= attribute(racer, 'obra_member') %>
+	</td>
+	<td align="right">
+    	<%= link_to 'Results', :controller => '/results', :action => 'racer', :id => racer.id %>
+		|
+		<%= link_to 'Edit', :action => 'show', :id => racer.id %>
+	</td>
+ 	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+		:url => {:action => "destroy", :id => racer.id},
+		:confirm => "Really delete #{racer.name}?",
+		:complete => evaluate_remote_response
+        %>
+    </td>
+</tr>
+<%= draggable_element("racer_#{racer.id}", :revert => true) %>
+<%= drop_receiving_element("racer_#{racer.id}", 
+	:url => { :action => "merge", :target_id => racer.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+<%= drop_receiving_element("racer_name_#{racer.id}", 
+	:url => { :action => "merge", :target_id => racer.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+
