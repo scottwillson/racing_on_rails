@@ -1,0 +1,25 @@
+<% @page_title = "Admin: Events: New" %>
+
+<%= render "shared/admin/tabs" %>
+
+<div align="center">
+<%- if flash[:notice] -%>
+	<div class="message" id="message">
+			<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:notice] %>
+	</div>
+<%- end -%>
+
+<%- if flash[:warning] -%>
+	<div class="message" id="message">
+			<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:warning] %>
+	</div>
+<%- end -%>
+
+<%= error_messages_for 'event' %>
+
+<%= start_form_tag :action => 'create' %>
+	<%= render :partial => "event" %>
+<%= end_form_tag %>
+</div>

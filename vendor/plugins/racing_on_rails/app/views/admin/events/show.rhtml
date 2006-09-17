@@ -1,0 +1,32 @@
+<% @page_title = "Admin: Events: #{@event.name}" %>
+
+<%= render "shared/admin/tabs" %>
+
+<div align="center">
+<%- if flash[:notice] -%>
+	<div class="message" id="message">
+			<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:notice] %>
+	</div>
+<%- end -%>
+
+<%- if flash[:warn] -%>
+	<div class="message" id="message">
+			<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:warn] %>
+	</div>
+<%- end -%>
+
+<%= error_messages_for 'event' %>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td valign="top" width="100%">
+			<%= start_form_tag({:action => 'update', :id => @event.id}) %>
+				<%= render(:partial => "event") %>
+			<% end_form_tag %>
+			<%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
+		</td>
+	</tr>
+</table>
+</div>

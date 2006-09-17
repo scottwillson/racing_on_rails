@@ -1,0 +1,46 @@
+<% @page_title = "Admin: Login" %>
+
+<div align="center">
+    
+<% if @flash['notice'] %>
+  <div id="message"><%= @flash['notice'] %></div>
+<% end %>
+
+<% if @user %>
+
+<%= start_form_tag :action=> "login" %>
+<table border="0" cellspacing="0" cellpadding="0" class="yellow">
+	<th></th>
+	<tr>
+		<td>You are logged-in as <%= @user.name %></td>
+	</tr>
+	<tr>
+		<td><input type="submit" name="logout" value="Logout"/></td>
+	</tr>
+</table>
+<%= end_form_tag %>
+
+<% else %>
+
+<%= start_form_tag :action=> "login" %>
+<table border="0" cellspacing="0" cellpadding="0" class="yellow">
+	<th colspan="2">
+		Login
+	</th>
+	<tr>
+		<td class="field_label">Username:</td>
+		<td><input type="text" name="username" id="user_login" size="30" value=""/></td>
+	</tr>
+	<tr>
+		<td class="field_label">Password:</td>
+		<td><input type="password" name="user_password" id="user_password" size="30"/></td>
+	</tr>
+	<tr>
+		<td colspan="2" align="right"><input type="submit" name="login" value="Login"/></td>
+	</tr>
+</table>
+<%= end_form_tag %>
+
+<% end %>
+
+</div>

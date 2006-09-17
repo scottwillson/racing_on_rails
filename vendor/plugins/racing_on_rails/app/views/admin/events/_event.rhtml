@@ -1,0 +1,127 @@
+<table class="yellow" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th colspan="2"><%= event.friendly_class_name %>: <%= event.name %></th>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td class="field_label">Name:</td>
+					<td><%= text_field 'event', 'name', :style => 'width: 100%;' %></td>
+				</tr>
+				<%- if event.is_a?(SingleDayEvent) and event.parent -%>
+				<tr>
+					<td class="field_label">Parent:</td>
+					<td>
+						<%= link_to event.parent.name, 
+							{:action => 'show', :id =>  event.parent.to_param}, 
+							:style => 'color: red' %> (<%= event.parent.friendly_class_name %>) 						
+					</td>
+				</tr>
+				<%- end -%>
+			</table>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td>
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="field_label">Date:</td>
+					<td>
+						<%- if @event.is_a?(SingleDayEvent) -%>
+						<%= text_field 'event', 'date' %>
+						<%- else -%>
+							<%= event.start_date.strftime('%A, %B %d, %Y') -%>
+							<%- if event.start_date != event.end_date -%>
+								 &nbsp;to <br>
+								<%= event.end_date.strftime('%A, %B %d, %Y') -%>
+							<%- end -%>
+						<%- end -%>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="field_label" id="left"><%= check_box 'event', 'cancelled' %> Cancelled</td>
+				</tr>
+				<tr>
+					<td class="field_label">Discipline:</td>
+					<td><%= select 'event', 'discipline', Discipline.find_all_names %></td>
+				</tr>
+				<tr>
+					<td class="field_label">City:</td>
+					<td><%= text_field 'event', 'city' %></td>
+				</tr>
+				<tr>
+					<td class="field_label">State:</td>
+					<td><%= text_field 'event', 'state' %></td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<table cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
+							<tr>
+								<th colspan="2">Promoter</th>
+							</tr>
+							<tr>
+								<td class="field_label">Name:</td>
+								<td><%= text_field_tag 'event[promoter][name]', event.promoter_name %></td>
+							</tr>
+							<tr>
+								<td class="field_label">Email:</td>
+								<td><%= text_field_tag 'event[promoter][email]', event.promoter_email %></td>
+							</tr>
+							<tr>
+								<td class="field_label">Phone:</td>
+								<td><%= text_field_tag 'event[promoter][phone]', event.promoter_phone %></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<%= radio_button_tag 'same_promoter', value='true', (params[:same_promoter] == 'true' or params[:same_promoter].blank?) -%>&nbsp;New information for this promoter
+									<br>
+									<%= radio_button_tag 'same_promoter', value='false', params[:same_promoter] == 'false' %>&nbsp;Different promoter
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="field_label">Sanctioned by:</td>
+								<td><%= select 'event', 'sanctioned_by', SANCTIONING_ORGANIZATIONS %></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<table cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td class="field_label" width="100">Notes:</td>
+					<td width="100%"><%= text_field 'event', 'notes', :style => 'width: 100%;' %></td>
+				</tr>
+				<tr>
+					<td class="field_label" width="100">Flyer URL:</td>
+					<td width="100%"><%= text_field 'event', 'flyer', :style => 'width: 100%;' %></td>
+				</tr>
+				<tr>
+					<td width="100"></td>
+					<td width="100%" class="field_label" id="left"><%= check_box 'event', 'flyer_approved' %> Approved</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="buttons">
+		<td class="updatedon">Updated: <%= @event.updated_at.to_formatted_s(:long) unless @event.updated_at.nil? %></td>
+		<td class="right">
+			<%= submit_tag "Save" %>
+		</td>
+	</tr>
+</table>
