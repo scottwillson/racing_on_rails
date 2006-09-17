@@ -1,0 +1,14 @@
+<tr>
+	<td class="add_remove">
+		<table spacing="0" padding="0">
+			<tr>
+			 	<td class="add_remove">
+					<%= link_to_remote image_tag('/images/buttons/add.gif', :border => 0, :height => 22, :width => 23), 
+			        {:update => "new_row", 
+			         :url => { :action => "new_inline" },
+					} %>
+		        </td>
+			</tr>
+		</table>
+	</td>
+</tr>
