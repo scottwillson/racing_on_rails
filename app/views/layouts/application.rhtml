@@ -4,13 +4,14 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>
-		<%- if @page_title -%>
-		<%= ASSOCIATION.short_name %>: <%= @page_title -%>
-		<%- else -%>
-		<%= ASSOCIATION.name %>
-		<%- end %>
-	</title>
-	<%= engine_stylesheet 'racing_on_rails' %>
+      <%- if @page_title -%>
+      <%= ASSOCIATION.short_name %>: <%= @page_title -%>
+      <%- else -%>
+      <%= ASSOCIATION.name %>
+      <%- end %>
+    </title>
+    <%= engine_stylesheet 'racing_on_rails' %>
+    <%= javascript_include_tag :defaults %>
   </head>
   <body>
 	<div class="shadow_2">
