@@ -4,6 +4,21 @@
 
 ActiveRecord::Schema.define() do
 
+  create_table "aliases", :force => true do |t|
+    t.column "alias", :string
+    t.column "created_at", :datetime
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "name", :string
+    t.column "racer_id", :integer
+    t.column "team_id", :integer
+    t.column "updated_at", :datetime
+  end
+
+  add_index "aliases", ["name"], :name => "idx_name", :unique => true
+  add_index "aliases", ["alias"], :name => "idx_id"
+  add_index "aliases", ["racer_id"], :name => "idx_racer_id"
+  add_index "aliases", ["team_id"], :name => "idx_team_id"
+
   create_table "aliases_disciplines", :id => false, :force => true do |t|
     t.column "discipline_id", :integer, :default => 0, :null => false
     t.column "alias", :string, :limit => 64, :default => "", :null => false
@@ -59,6 +74,62 @@ ActiveRecord::Schema.define() do
 
   add_index "promoters", ["name", "email", "phone"], :name => "promoter_info", :unique => true
   add_index "promoters", ["name"], :name => "idx_name"
+
+  create_table "racers", :force => true do |t|
+    t.column "age", :integer
+    t.column "ccx_category", :string
+    t.column "ccx_number", :string
+    t.column "cell_fax", :string
+    t.column "city", :string, :limit => 128
+    t.column "created_at", :datetime
+    t.column "date_of_birth", :date
+    t.column "dh_category", :string
+    t.column "dh_number", :string
+    t.column "email", :string
+    t.column "first_name", :string, :limit => 64
+    t.column "gender", :string, :limit => 2
+    t.column "home_phone", :string
+    t.column "last_name", :string
+    t.column "license", :string, :limit => 64
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "mtb_category", :string
+    t.column "notes", :string
+    t.column "obra_member_on", :date
+    t.column "obra_member", :boolean, :default => true, :null => false
+    t.column "occupation", :string
+    t.column "road_category", :string
+    t.column "road_number", :string
+    t.column "state", :string, :limit => 64
+    t.column "street", :string
+    t.column "team_id", :integer
+    t.column "track_category", :string
+    t.column "track_number", :string
+    t.column "updated_at", :datetime
+    t.column "work_phone", :string
+    t.column "xc_number", :string
+    t.column "zip", :string
+  end
+
+  add_index "racers", ["road_number"], :name => "idx_road_number", :unique => true
+  add_index "racers", ["ccx_number"], :name => "idx_ccx_number", :unique => true
+  add_index "racers", ["dh_number"], :name => "idx_dh_number", :unique => true
+  add_index "racers", ["track_number"], :name => "idx_track_number", :unique => true
+  add_index "racers", ["last_name"], :name => "idx_last_name"
+  add_index "racers", ["first_name"], :name => "idx_first_name"
+  add_index "racers", ["team_id"], :name => "idx_team_id"
+
+  create_table "teams", :force => true do |t|
+    t.column "city", :string, :limit => 128
+    t.column "created_at", :datetime
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "name", :string, :default => "", :null => false
+    t.column "notes", :string
+    t.column "obra_member", :boolean, :default => false
+    t.column "state", :string, :limit => 64
+    t.column "updated_at", :datetime
+  end
+
+  add_index "teams", ["name"], :name => "idx_name", :unique => true
 
   create_table "users", :force => true do |t|
     t.column "name", :string, :default => "", :null => false
