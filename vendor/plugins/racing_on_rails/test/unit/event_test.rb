@@ -31,7 +31,7 @@ class EventTest < Test::Unit::TestCase
     assert_equal("New Event #{formatted_date}", event.name, "event name")
     assert_equal("OR", event.state, "event.state")
     assert_nil(event.discipline, "event.discipline")
-    assert_equal("CBRA", event.sanctioned_by, "New event sanctioned_by default")
+    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "New event sanctioned_by default")
   end
   
   def test_new_with_promoters
