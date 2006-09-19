@@ -59,6 +59,25 @@ a:active
 	background: #D0FA30;
 }
 
+table.base span.editable a {
+	color: black;
+	text-decoration: none;
+	border-style: none;
+	border-width: 0px;
+}
+
+table.base span.editable a:hover {
+	color: black;
+	background-color: white;
+	text-decoration: none;
+	border-top-style: dotted;
+	border-top-width: 2px;
+	border-top-color: #D0FA30;
+	border-bottom-style: dotted;
+	border-bottom-width: 2px;
+	border-bottom-color: #D0FA30;
+}
+
 ul.links
 {
 	padding-left: 0px;
@@ -215,4 +234,71 @@ td.day_from_other_month div.number
 {
 	font-style: italic;
 	text-align: left;
+}
+
+table.base#inline
+{
+	border-left: 1px solid #B3B3B3;
+	border-right: 1px solid #B3B3B3;
+	width: 100%;
+}
+
+div.inline {
+  	float: left;
+}
+
+.field_label
+{
+	text-align: right;
+	font-weight: bold;
+	min-width: 75px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 12px;
+	padding-right: 8px;
+	white-space: nowrap;	
+}
+
+.field_label#left
+{
+	text-align: left;
+}
+
+.vertical_field_label
+{
+	text-align: left;
+	vertical-align: bottom;
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 12px;
+	padding-right: 8px;
+}
+
+.vertical_field
+{
+	text-align: left;
+	vertical-align: top;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 12px;
+	padding-right: 8px;
+}
+
+tr.buttons td.right {
+	text-align: right;
+	padding-top: 8px;
+}
+
+.right {
+	padding-left: 8px;
+}
+
+.updatedon
+{
+	font-size: 8pt;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #666666;
+	font-style: italic;
+	white-space: nowrap;
 }

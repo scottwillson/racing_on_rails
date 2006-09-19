@@ -20,10 +20,8 @@
 <%= error_messages_for 'racer' %>
 
 <%= start_form_tag({:action => 'update', :id => @racer.id}) %>
-	<table class="yellow" cellspacing="0" cellpadding="0">
-		<tr>
-			<th colspan="6">New Racer</th>
-		</tr>
+	<table class="base" cellspacing="0" cellpadding="0">
+		<caption>New Racer</caption>
 		<tr>
 			<td class="field_label">First Name:</td>
 			<td><%= text_field 'racer', 'first_name' %></td>
@@ -79,10 +77,8 @@
 		</tr>
 		<tr valign="top">
 			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
-					<tr>
-						<th colspan="2">Numbers</th>
-					</tr>
+				<table cellspacing="0" cellpadding="0" class="base" id="inline">
+					<caption>Numbers</caption>
 					<tr>
 						<td class="field_label">Cyclocross:</td>
 						<td><%= text_field 'racer', 'ccx_number', :size => 4 %></td>
@@ -102,37 +98,10 @@
 				</table>
 			</td>
 			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
-					<tr>
-						<th colspan="2">Categories</th>
-					</tr>
-					<tr>
-						<td class="field_label">Cyclocross:</td>
-						<td><%= text_field 'racer', 'ccx_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Downhill:</td>
-						<td><%= text_field 'racer', 'dh_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Mountain Bike:</td>
-						<td><%= text_field 'racer', 'mtb_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Road:</td>
-						<td><%= text_field 'racer', 'road_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Track:</td>
-						<td><%= text_field 'racer', 'track_category', :size => 20 %></td>
-					</tr>
-				</table>
 			</td>
 			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
-					<tr>
-						<th>Aliases</th>
-					</tr>
+				<table cellspacing="0" cellpadding="0" class="base" id="inline">
+					<caption>Aliases</caption>
 					<%- for name_alias in @racer.aliases -%>
 					<tr>
 						<td><%= name_alias.name %></td>
@@ -146,11 +115,11 @@
 				</table>
 			</td>
 		</tr>
-        <tr>
+        <!-- <tr>
 	        <td colspan="6">
 	        	<%= link_to 'Results', :controller => '/results', :action => 'racer', :id => @racer.id %>
 	        </td>
-        </tr>
+        </tr> -->
 		<tr class="buttons">
 			<td class="updatedon" colspan="2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></td>
 			<td class="right" colspan="4">

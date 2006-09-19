@@ -324,7 +324,7 @@ class Racer < ActiveRecord::Base
       begin
         save!
         aliases << racer.aliases
-        results << racer.results
+        # results << racer.results
         Racer.delete(racer.id)
         existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
         if existing_alias.nil? and Racer.match(:name => racer.name).empty?

@@ -1,4 +1,4 @@
-<tr valign="top" id="racer_<%= racer.id %>_row">
+<tr valign="top" id="racer_<%= racer.id %>_row" class="<%= cycle("even", "odd") %>">
 	<td><%= image_tag('/images/icons/person.gif', 
 					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
 					  :id => "racer_#{racer.id}") %></td>
