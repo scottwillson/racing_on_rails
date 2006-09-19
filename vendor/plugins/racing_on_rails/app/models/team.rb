@@ -44,13 +44,25 @@ class Team < ActiveRecord::Base
       raise(ArgumentError, 'Cannot merge nil team')
     end
     Team.transaction do
-      aliases << team.aliases
-      # results << team.results
-      racers << team.racers
-      Team.delete(team.id)
-      existing_alias = aliases.detect{|a| a.name == team.name}
-      aliases.create(:name => team.name) unless existing_alias or Alias.find_by_name(team.name) 
-      save!
+      begin
+        # events = team.results.collect do |result|
+        #   event = result.race.standings.event
+        #   event.disable_notification!
+        #   event
+        # end
+        aliases << team.aliases
+        # results << team.results
+        racers << team.racers
+        Team.delete(team.id)
+        existing_alias = aliases.detect{|a| a.name == team.name}
+        aliases.create(:name => team.name) unless existing_alias or Alias.find_by_name(team.name) 
+        save!
+      ensure
+        # events.each do |event|
+        #   event.reload
+        #   event.enable_notification!
+        # end
+      end
     end
   end
   

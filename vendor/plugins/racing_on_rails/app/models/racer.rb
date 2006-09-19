@@ -310,7 +310,7 @@ class Racer < ActiveRecord::Base
   
   def merge(racer)
     # TODO Consider just using straight SQL for this --
-    # it's not complicate, and the current process generates an
+    # it's not complicated, and the current process generates an
     # enormous amount of SQL
     if racer == self
       raise(IllegalArgumentError, 'Cannot merge racer onto itself')
@@ -321,18 +321,21 @@ class Racer < ActiveRecord::Base
       #   event.disable_notification!
       #   event
       # end
-      save!
-      aliases << racer.aliases
-      # results << racer.results
-      Racer.delete(racer.id)
-      existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
-      if existing_alias.nil? and Racer.match(:name => racer.name).empty?
-        aliases.create(:name => racer.name) 
+      begin
+        save!
+        aliases << racer.aliases
+        results << racer.results
+        Racer.delete(racer.id)
+        existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
+        if existing_alias.nil? and Racer.match(:name => racer.name).empty?
+          aliases.create(:name => racer.name) 
+        end
+      ensure
+        # events.each do |event|
+        #   event.reload
+        #   event.enable_notification!
+        # end
       end
-      # events.each do |event|
-      #   event.reload
-      #   event.enable_notification!
-      # end
     end
   end
   
