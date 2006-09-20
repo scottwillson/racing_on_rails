@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/events_controller'
+require_or_load 'admin/events_controller'
 
 # Re-raise errors caught by the controller.
 class Admin::EventsController; def rescue_action(e) raise e end; end

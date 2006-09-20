@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'home_controller'
+require_or_load 'home_controller'
 
 # Re-raise errors caught by the controller.
 class HomeController; def rescue_action(e) raise e end; end
@@ -13,7 +13,7 @@ class HomeControllerTest < Test::Unit::TestCase
 
   def test_index
     get(:index)
-    assert_not_nil(assigns[:upcoming_events], 'Should assign upcoming_events')
+    assert_not_nil(assigns['upcoming_events'], 'Should assign upcoming_events')
   end
 
 end
