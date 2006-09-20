@@ -1,43 +1,52 @@
-<!-- Upcoming Races -->
-<div class="base">
-	<div class="caption">Upcoming Events</div>
-	<div class="spacer">&nbsp;</div>
-<%- for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross'] -%>
-	<div class="discipline">
-		<div class="header"><%= discipline %></div>
-	<%- if @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
-				None
-    <%- else -%>
-      <%- discipline_events = @upcoming_events.events[discipline] -%>
-      <%- discipline_events.sort! -%>
-		<%- for event in discipline_events -%>
-		<div>
-			<span class="date"><%= event.date_range_s %></span>
-			<span class="info"><%= link_to(event.name, event.flyer) unless event.flyer.blank? -%><%= event.name if event.flyer.blank? -%></span>
-		</div>
-		<%- end -%>
-		<%- for event in @upcoming_events.weekly_series[discipline].sort {|a, b|
-				wday_diff = a.earliest_day_of_week.wday <=> b.earliest_day_of_week.wday
-				if wday_diff == 0
-					date_diff = a.date <=> b.date
-					if date_diff == 0
-						a.name <=> b.name
-					else
-						date_diff
-					end
-				else
-					wday_diff
-				end
-		} -%>
-		<div>
-			<span class="date"><%= event.days_of_week_s %></span>
-			<span class="info"><%= link_to(event.name, event.flyer) unless event.flyer.blank? -%><%= event.name if event.flyer.blank? -%> <small>(<%=
-			    event.start_date.strftime("%m/%d") -%> - <%= event.end_date.strftime("%m/%d") -%>)</small>
-			</span>
-		</div>
-		<%- end -%>
-	<%- end -%>
-	</div>
-<%- end -%>
-<div class="spacer">&nbsp;</div>
-</div>
+<table class="base" border="0" cellspacing="0" cellpadding="0">
+	<caption>Upcoming Events</caption>
+	<thead>
+		<tr>
+			<%- for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross'] -%>
+			<th><%= discipline %></th>
+			<%- end -%>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="discipline_upcoming_events">
+			<%- for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross'] -%>
+			<td>
+					<%- if @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
+								<div class="note">None</div>
+				    <%- else -%>
+				<table border="0" cellspacing="0" cellpadding="0">
+				      <%- discipline_events = @upcoming_events.events[discipline] -%>
+				      <%- discipline_events.sort! -%>
+						<%- for event in discipline_events -%>
+						<tr>
+							<td class="date"><%= event.date_range_s %></td>
+							<td class="info"><%= link_to(event.name, event.flyer) unless event.flyer.blank? -%><%= event.name if event.flyer.blank? -%></td>
+						</tr>
+						<%- end -%>
+						<%- for event in @upcoming_events.weekly_series[discipline].sort {|a, b|
+								wday_diff = a.earliest_day_of_week.wday <=> b.earliest_day_of_week.wday
+								if wday_diff == 0
+									date_diff = a.date <=> b.date
+									if date_diff == 0
+										a.name <=> b.name
+									else
+										date_diff
+									end
+								else
+									wday_diff
+								end
+						} -%>
+						<tr>
+							<td class="date"><%= event.days_of_week_s %></td>
+							<td class="info"><%= link_to(event.name, event.flyer) unless event.flyer.blank? -%><%= event.name if event.flyer.blank? -%> <small>(<%=
+							    event.start_date.strftime("%m/%d") -%> - <%= event.end_date.strftime("%m/%d") -%>)</small>
+							</td>
+						</tr>
+						<%- end -%>
+				</table>
+				<%- end -%>
+			</td>
+			<%- end -%>
+		</tr>
+	</tbody>
+</table>
