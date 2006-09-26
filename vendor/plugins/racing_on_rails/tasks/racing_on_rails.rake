@@ -8,32 +8,23 @@ require 'rake/packagetask'
 include Open4
 include Test::Unit::Assertions
 
-task :test_dist => [:package, :create_app, :test_web, :test_customization]
+task :test_dist => [:repackage, :create_app, :acceptence, :test_customization]
 
 namespace :racing_on_rails do
   task :create_app do
-    app_path = File.expand_path('~/devel/cbra')
+    app_path = File.expand_path('~/cbra')
     rm_rf app_path
-    puts(`rails #{app_path}`)
-
-    cp("app/controllers/application.rb", "#{app_path}/app/controllers/")
-    cp("app/helpers/application_helper.rb", "#{app_path}/app/helpers/")
-    cp("app/views/layouts/application.rhtml", "#{app_path}/app/views/layouts/")
-    cp("config/routes.rb", "#{app_path}/config/")
-    cp("config/environment.rb", "#{app_path}/config/")
-    cp("db/schema.sql", "#{app_path}/db/")
-    cp_r("public/images", "#{app_path}/public/")
-    cp_r("vendor/parseexcel", "#{app_path}/vendor/parseexcel/")
-    cp_r("vendor/plugins/engines", "#{app_path}/vendor/plugins/")
-    cp_r("vendor/plugins/racing_on_rails", "#{app_path}/vendor/plugins/")
-    rm_rf("#{app_path}/public/index.html")
-
-    `mysql -u root -e 'DROP DATABASE IF EXISTS cbra_development'`
-    `mysql -u root -e 'create database cbra_development'`
+    
+    cp 'pkg/racing_on_rails-0.0.1.tar.gz', File.expand_path('~')
+    puts(`tar zxf ~/racing_on_rails-0.0.1.tar.gz`)
+    mv "racing_on_rails-0.0.1", app_path
     `mysql -u root cbra_development < #{app_path}/db/schema.sql`
-    `mysql -u root -e 'DROP DATABASE IF EXISTS cbra_test'`
-    `mysql -u root -e 'create database cbra_test'`
   end
+  
+  # "User acceptence test for end users and developers"
+  # task :acceptence do
+  #   
+  # end
 
   desc 'Customize new app'
   task :customize do
@@ -63,7 +54,7 @@ namespace :racing_on_rails do
     customize("app/views/bike_shops/list.rhtml")
   end
 
-  task :test_customization => [:reinstall_gem, :create_app, :customize] do
+  task :test_customization => [:create_app] do
     web_test do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert(response['Northern California/Nevada Cycling Association'], "Association name on homepage in \n#{response}")
@@ -95,8 +86,8 @@ namespace :racing_on_rails do
       stdout = ''
       stderr = ''
 
-      webrick = bg "#{File.expand_path('~/racing_on_rails-0.0.1/script/server')}", 0=>stdin, 1=>stdout, 2=>stderr
-      sleep 6
+      webrick = bg File.expand_path("#{RAILS_ROOT}/script/server"), 0 => stdin, 1 => stdout, 2 => stderr
+      sleep 20
     
       yield
     
@@ -108,13 +99,13 @@ namespace :racing_on_rails do
     end
   end
 
-  desc "Start Webrick and test homepage"
-  task :test_web do
+  desc "Start Webrick and web interface"
+  task :acceptence do
     web_test do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert(response['Bicycle Racing Association'], "Homepage should be available in \n#{response}")
-      assert(response['<a href="/results"'], "Results link should be available in \n#{response}")
       assert(response['<a href="/schedule"'], "Schedule link should be available in \n#{response}")
+      assert(response['Upcoming Events'], "Upcoming Events should be available in \n#{response}")
 
       response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
       assert(response['Schedule'], "Schedule should be available in \n#{response}")
