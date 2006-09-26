@@ -15,24 +15,26 @@ class GridFile < Grid
     workbook = Spreadsheet::ParseExcel.parse(file.path)
     return [] if workbook.sheet_count == 0
 
-    for row in workbook.worksheet(0)
-      if row
-        line = []
-        for cell in row
-          if cell
-             #RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-             if(cell.format_no == 25 or cell.format_no == 30) and (cell.to_i > 5000)             
-               line << cell.date.to_s
-             elsif cell.to_f > 0.0 and (cell.format_no == 25 or cell.format_no == 30 or cell.format_no == 42 or cell.format_no == 27 or cell.format_no == 44)
-                 line << cell.to_f.to_s
+    for workbook_index in 0..(workbook.sheet_count - 1)
+      for row in workbook.worksheet(workbook_index)
+        if row
+          line = []
+          for cell in row
+            if cell
+               #RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+               if(cell.format_no == 25 or cell.format_no == 30) and (cell.to_i > 5000)             
+                 line << cell.date.to_s
+               elsif cell.to_f > 0.0 and (cell.format_no == 25 or cell.format_no == 30 or cell.format_no == 42 or cell.format_no == 27 or cell.format_no == 44)
+                   line << cell.to_f.to_s
+              else
+                line << cell.to_s
+              end
             else
-              line << cell.to_s
+              line << ""
             end
-          else
-            line << ""
           end
+          excel_rows << line
         end
-        excel_rows << line
       end
     end
     excel_rows
