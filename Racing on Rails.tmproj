@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>vendor/plugins/racing_on_rails/test/functional/admin/racers_controller_test.rb</string>
+	<string>vendor/plugins/racing_on_rails/tasks/racing_on_rails.rake</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -131,54 +131,70 @@
 	<integer>307</integer>
 	<key>metaData</key>
 	<dict>
-		<key>vendor/plugins/racing_on_rails/app/controllers/admin/racers_controller.rb</key>
+		<key>vendor/plugins/racing_on_rails/tasks/racing_on_rails.rake</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>34</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>15</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>15</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>41</integer>
+				<key>line</key>
+				<integer>15</integer>
+			</dict>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/app/controllers/admin/teams_controller.rb</key>
+		<key>vendor/plugins/racing_on_rails/test/fixtures/config/environment.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>61</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>16</integer>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/test/functional/admin/racers_controller_test.rb</key>
+		<key>vendor/plugins/racing_on_rails/test/fixtures/config/routes.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>465</integer>
+				<integer>26</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>439</integer>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>vendor/plugins/racing_on_rails/test/functional/admin/racers_controller_test.rb</string>
-		<string>vendor/plugins/racing_on_rails/app/controllers/admin/racers_controller.rb</string>
-		<string>vendor/plugins/racing_on_rails/app/controllers/admin/teams_controller.rb</string>
+		<string>vendor/plugins/racing_on_rails/tasks/racing_on_rails.rake</string>
+		<string>vendor/plugins/racing_on_rails/test/fixtures/config/environment.rb</string>
+		<string>vendor/plugins/racing_on_rails/test/fixtures/config/routes.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

@@ -52,11 +52,13 @@ end
 
 # Include your application configuration below
 # TODO extract to separate file and copy into new app's config
-require 'racingonrails'
+ActiveRecord::Base.colorize_logging = false
+Engines.start :racing_on_rails
 
+RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 1, 1.megabyte)
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
-ASSOCIATION = Association.new
+ASSOCIATION = RacingOnRails::Association.new
 ASSOCIATION.name = 'Northern California/Nevada Cycling Association'
 ASSOCIATION.short_name = 'NCNCA'
 ASSOCIATION.state = 'CA'
