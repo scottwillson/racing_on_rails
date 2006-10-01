@@ -52,9 +52,9 @@ end
 
 # Include your application configuration below
 # TODO extract to separate file and copy into new app's config
-ActiveRecord::Base.colorize_logging = false
 Engines.start :racing_on_rails
 
+ActiveRecord::Base.colorize_logging = false
 RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 1, 1.megabyte)
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 

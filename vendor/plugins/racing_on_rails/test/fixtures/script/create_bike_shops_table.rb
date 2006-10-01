@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/../config/boot'
+require File.dirname(__FILE__) + '/../config/environment.rb'
+
+include RacingOnRails
 
 BikeShop.connection.create_table "bike_shops", :force => true do |t|
   t.column "name", :string

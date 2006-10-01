@@ -1,6 +1,4 @@
-module ScheduleHelper
-  include RacingOnRails::ScheduleHelper
-  
+module ScheduleHelper  
   def cherry_pie_coutdown
     coutdown = Builder::XmlMarkup.new( :indent => 2)
     coutdown.flash {
