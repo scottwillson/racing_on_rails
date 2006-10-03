@@ -19,13 +19,11 @@ namespace :racing_on_rails do
   end
 
   task :create_app do
-    app_path = File.expand_path('~/cbra')
+    app_path = File.expand_path('~/racing_on_rails-0.0.1')
     rm_rf app_path
-    rm_rf File.expand_path('~/racing_on_rails-0.0.1')
   
     puts(`tar zxf ~/racing_on_rails-0.0.1.tar.gz -C ~`)
-    mv  File.expand_path('~/racing_on_rails-0.0.1'), app_path
-    `mysql -u root cbra_development < #{app_path}/db/schema.sql`
+    `mysql -u root racing_on_rails_development < #{app_path}/db/schema.sql`
   end
 
   desc 'Customize new app'
@@ -48,7 +46,7 @@ namespace :racing_on_rails do
     # Override instance and class methods of AR
     # And in superclasses, then reference in subclass
 
-    path = File.expand_path('~/cbra')
+    path = File.expand_path('~/racing_on_rails-0.0.1')
     puts(`#{path}/script/generate model BikeShop`)
     puts(`#{path}/script/generate controller BikeShops list`)
     customize('script/create_bike_shops_table.rb')
@@ -57,7 +55,7 @@ namespace :racing_on_rails do
   end
 
   task :acceptence_developer => [:create_app, :customize] do
-    web_test(File.expand_path('~/cbra')) do
+    web_test(File.expand_path('~/racing_on_rails-0.0.1')) do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert_match('Northern California/Nevada Cycling Association', response, "Association name on homepage in \n#{response}")
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
@@ -84,7 +82,7 @@ namespace :racing_on_rails do
 
   desc "Start Webrick and web interface"
   task :acceptence_user do
-    web_test(File.expand_path('~/cbra')) do
+    web_test(File.expand_path('~/racing_on_rails-0.0.1')) do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
       assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
@@ -104,9 +102,9 @@ namespace :racing_on_rails do
   end
 
   def customize(fixture_path)
-    mkpath(File.dirname(File.expand_path("~/cbra/#{fixture_path}")))
+    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.1/#{fixture_path}")))
     cp(File.expand_path("vendor/plugins/racing_on_rails/test/fixtures/#{fixture_path}"),
-       File.expand_path("~/cbra/#{fixture_path}"))
+       File.expand_path("~/racing_on_rails-0.0.1/#{fixture_path}"))
   end
 
   def web_test(root = RAILS_ROOT)
