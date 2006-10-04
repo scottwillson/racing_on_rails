@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require_or_load 'admin/events_controller'
 
+# :stopdoc:
 # Re-raise errors caught by the controller.
 class Admin::EventsController; def rescue_action(e) raise e end; end
 

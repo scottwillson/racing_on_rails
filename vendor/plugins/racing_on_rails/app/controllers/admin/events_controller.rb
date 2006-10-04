@@ -1,7 +1,18 @@
+# Show Schedule, add and edit Events, show Results for Events
 class Admin::EventsController < ApplicationController
   
   model :event
 
+  # Show results for Event
+  # === Params
+  # * id: SingleDayEvent id
+  # * standings_id: Standings id (optional
+  # * race_id: Race id (optional
+  # === Assigns
+  # * event
+  # * standings
+  # * race
+  # * disciplines: List of all Disciplines + blank
   def show
     @event = Event.find(params[:id])
     if params[:race_id]
@@ -16,6 +27,11 @@ class Admin::EventsController < ApplicationController
     @disciplines.sort!
   end
   
+  # Show page to create new Event
+  # === Params
+  # * year: optional
+  # === Assigns
+  # * event: Unsaved SingleDayEvent
   def new
     if params[:year].blank?
       date = Date.today
@@ -26,6 +42,13 @@ class Admin::EventsController < ApplicationController
     @event = SingleDayEvent.new(:date => date)
   end
   
+  # Create new SingleDayEvent
+  # === Params
+  # * event: Attributes Hash for new event
+  # === Assigns
+  # * event: Unsaved SingleDayEvent
+  # === Flash
+  # * warn
   def create
     event_params = params[:event].clone
     if event_params[:promoter].values.all? {|field| field.blank?}
@@ -50,6 +73,14 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Update existing Event
+  # === Params
+  # * id
+  # * event: Attributes Hash
+  # === Assigns
+  # * event: Unsaved Event
+  # === Flash
+  # * warn
   def update
     begin
       @event = Event.find(params[:id])
@@ -81,6 +112,7 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # :nodoc
   def update_promoter(promoter, params)
      if promoter and (params[:name] != promoter.name or params[:email] != promoter.email or params[:phone] != promoter.phone)
        promoter.name = params[:name]

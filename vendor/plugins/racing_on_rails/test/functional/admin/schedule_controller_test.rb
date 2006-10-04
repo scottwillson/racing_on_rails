@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require 'admin/schedule_controller'
 
+# :stopdoc:
 class Admin::ScheduleController
   def rescue_action(e) raise e end
 end

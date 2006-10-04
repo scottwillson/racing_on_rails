@@ -48,6 +48,7 @@ def assert_same_elements(expected, actual, message = '')
   end
 end
 
+# Assert two Enumerable objects contain exactly same object in the same order
 def assert_equal_enumerables(expected, actual, message)
   diff = expected - actual
   unless diff.empty?
@@ -60,6 +61,7 @@ def assert_equal_enumerables(expected, actual, message)
   end
 end
 
+# Assert Arrays of Results are the same. Only considers place, Racer, and time
 def assert_results(expected, actual, message = nil)
   assert_equal(expected.size, actual.size, "Size of results. #{message}")
   expected.each_with_index {|result, index|

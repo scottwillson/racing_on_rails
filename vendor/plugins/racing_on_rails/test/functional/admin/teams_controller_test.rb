@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require 'admin/teams_controller'
 
+# :stopdoc:
 class Admin::TeamsController; def rescue_action(e) raise e end; end
 
 class Admin::TeamsControllerTest < Test::Unit::TestCase

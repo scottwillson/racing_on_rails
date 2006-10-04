@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'schedule_controller'
 
+# :stopdoc:
 # Re-raise errors caught by the controller.
 class ScheduleController; def rescue_action(e) raise e end; end #:nodoc: all
 
