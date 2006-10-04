@@ -1,2 +1,11 @@
-Use this README file to introduce your application and point to useful places in the API for learning more.
-Run "rake appdoc" to generate API documentation for your models and controllers.
+Racing on Rails is a bike racing association schedule, results, and membership database.
+
+Open source (MIT license)
+Ruby on Rails
+Rails Engines
+
+Documentation + quick start
+http://trac.butlerpress.com/racing_on_rails/wiki/WikiStart
+
+Subversion repository
+svn+ssh://butlerpress.com/var/repos/racing_on_rails

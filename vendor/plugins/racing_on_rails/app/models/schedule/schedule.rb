@@ -1,4 +1,5 @@
 module Schedule
+  # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
 
     # FIXME Remove dependency. Is it here because we need a helper?
@@ -7,6 +8,24 @@ module Schedule
     # 0-based array of Months
     attr_reader :months
 
+    # Import Schedule from Excel +filename+.
+    #
+    # *Warning:* Deletes all future event
+    #
+    # Rigid OBRA legacy format (skip first row):
+    # 0. _skip_
+    # 1. _skip_
+    # 2. date
+    # 3. _skip_
+    # 4. name
+    # 5. city
+    # 6. promoter_name
+    # 7. promoter_phone
+    # 8. promoter_email
+    # 9. discipline
+    # 10. notes
+    #
+    # Import implemented in several methods. See source code.
     def Schedule.import(filename, progress_monitor = NullProgressMonitor.new)
       start_import(progress_monitor)
       Event.transaction do
@@ -17,7 +36,7 @@ module Schedule
                            save(events, multi_day_events, progress_monitor)
       end
     end
-
+    
     def Schedule.start_import(progress_monitor)
       progress_monitor.text = "Import schedule"
       progress_monitor.total = 300
@@ -29,7 +48,8 @@ module Schedule
       Event.delete_all_future_events!
       progress_monitor.increment(2)
     end
-
+    
+    # Create GridFile from Excel
     def Schedule.read_file(filename, progress_monitor)
       progress_monitor.detail_text = "Read #{filename}"
       file = GridFile.new(File.new(filename), 
@@ -40,6 +60,7 @@ module Schedule
       return file
     end
 
+    # Read GridFile +file+, split city and state, read and create promoter
     def Schedule.parse_events(file, progress_monitor)
       progress_monitor.total = file.rows.size * 3 + 4
       events = []
@@ -47,7 +68,7 @@ module Schedule
         row_hash = row.to_hash
 
         progress_monitor.detail_text = row_hash[:name]
-        if has_event(row_hash)
+        if has_event?(row_hash)
           split_city_state(row_hash)
           event = Schedule.parse(row_hash)
           if event != nil
@@ -66,12 +87,13 @@ module Schedule
       return events
     end
 
-    def Schedule.has_event(row_hash)
+    def Schedule.has_event?(row_hash)
       name = row_hash[:name]
       date = row_hash[:date]
       return (!name.blank? and !date.blank?)
     end
 
+    # Split location on comma
     def Schedule.split_city_state(row_hash)
       city = row_hash[:city]
       state = row_hash[:state]
@@ -84,6 +106,7 @@ module Schedule
       end
     end
 
+    # Read GridFile Row and create SingleDayEvent
     def Schedule.parse(row_hash)
       if RACING_ON_RAILS_DEFAULT_LOGGER.debug? then RACING_ON_RAILS_DEFAULT_LOGGER.debug(row_hash) end
       event = nil
@@ -108,6 +131,7 @@ module Schedule
       return event
     end
 
+    # Try and create parent MultiDayEvents from imported SingleDayEvents
     def Schedule.find_multi_day_events(events, progress_monitor)
       progress_monitor.detail_text = "Find multi-day events"
 
@@ -171,7 +195,7 @@ module Schedule
     end
   end
 
-
+  # Hash that keeps a count for each key
   class HashBag < Hash
 
     def initialize

@@ -1,4 +1,4 @@
-class HomeController < ApplicationController
+class HomeController < ApplicationController #:nodoc: all
   
   session :on
   

@@ -52,6 +52,8 @@ end
 
 # Include your application configuration below
 ActiveRecord::Base.colorize_logging = false
+
+# Include Racing on Rails engine
 Engines.start :racing_on_rails
 
 RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 1, 1.megabyte)

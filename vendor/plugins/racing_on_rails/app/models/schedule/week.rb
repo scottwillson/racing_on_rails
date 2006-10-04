@@ -1,6 +1,8 @@
 module Schedule
+  # Week in yearly Schedule::Schedule
   class Week
 
+    # Array of Days
     attr_reader :days
 
     # start_date must be Sunday

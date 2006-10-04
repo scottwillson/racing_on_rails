@@ -1,8 +1,9 @@
 module Schedule
+  # Day on a year's Schedule::Schedule
   class Day
 
-    attr_reader :events
-    attr_writer :events
+    # Array of SingleDayEvents
+    attr_accessor :events
 
     def initialize(month, date)
       @date = date
@@ -14,10 +15,12 @@ module Schedule
       @previous_month
     end
 
+    # 1-31
     def day_of_month
       @date.day
     end
-
+    
+    # Sunday, Monday, ... Saturday
     def day_of_week
     	Date::DAYNAMES[@date.wday]
     end

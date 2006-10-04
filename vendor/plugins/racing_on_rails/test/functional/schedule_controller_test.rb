@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'schedule_controller'
 
 # Re-raise errors caught by the controller.
-class ScheduleController; def rescue_action(e) raise e end; end
+class ScheduleController; def rescue_action(e) raise e end; end #:nodoc: all
 
-class ScheduleControllerTest < Test::Unit::TestCase
+class ScheduleControllerTest < Test::Unit::TestCase #:nodoc: all
 
   fixtures :promoters, :events, :aliases_disciplines, :disciplines, :users
 

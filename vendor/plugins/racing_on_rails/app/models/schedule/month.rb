@@ -1,7 +1,12 @@
 module Schedule
+  # Month in yearly Schedule::Schedule
   class Month
 
-    attr_reader :name, :weeks
+    # January, February ...
+    attr_reader :name
+    
+    # List of Weeks
+    attr_reader :weeks
 
     def initialize(year, month)
       @year = year
@@ -16,6 +21,7 @@ module Schedule
       end
     end
 
+    # Monday of this week's day as a number
     def monday_of_week(day)
       until day.wday == 0
         day = day - 1
