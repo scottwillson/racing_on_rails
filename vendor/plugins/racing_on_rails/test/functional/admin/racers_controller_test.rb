@@ -365,22 +365,22 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal(original_name, mollie.name, 'Racer name after cancel')
   end
 
-  def test_update_obra_member
+  def test_update_member
     @request.session[:user] = users(:candi)
     mollie = racers(:mollie)
-    assert_equal(true, mollie.obra_member, 'obra_member before update')
-    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'obra_member')
+    assert_equal(true, mollie.member, 'member before update')
+    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
     mollie.reload
-    assert_equal(false, mollie.obra_member, 'obra_member after update')
+    assert_equal(false, mollie.member, 'member after update')
 
     mollie = racers(:mollie)
-    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'obra_member')
+    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
     mollie.reload
-    assert_equal(true, mollie.obra_member, 'obra_member after second update')
+    assert_equal(true, mollie.member, 'member after second update')
   end
   
   def test_dupes_merge?

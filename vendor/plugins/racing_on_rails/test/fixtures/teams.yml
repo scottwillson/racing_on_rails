@@ -1,11 +1,11 @@
 kona:
   id: 1
   name: Kona
-  obra_member: true
+  member: true
 gentle_lovers:
   id: 2
   name: Gentle Lovers
-  obra_member: true
+  member: true
 vanilla:
   id: 3
   name: Vanilla
@@ -13,4 +13,4 @@ vanilla:
 dfl:
   id: 4
   name: Team dFL
-  obra_member: true
+  member: true

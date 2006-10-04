@@ -92,24 +92,24 @@ class TeamTest < Test::Unit::TestCase
     assert_equal('vanilla', vanilla.name, 'Name after update')
   end
 
-  def test_obra_member
+  def test_member
     team = Team.new(:name => 'Team Spine')
-    assert_equal(false, team.obra_member, 'obra_member')
+    assert_equal(false, team.member, 'member')
     team.save!
     team.reload
-    assert_equal(false, team.obra_member, 'obra_member')
+    assert_equal(false, team.member, 'member')
 
     team = Team.new(:name => 'California Road Club')
-    assert_equal(false, team.obra_member, 'obra_member')
-    team.obra_member = true
-    assert_equal(true, team.obra_member, 'obra_member')
+    assert_equal(false, team.member, 'member')
+    team.member = true
+    assert_equal(true, team.member, 'member')
     team.save!
     team.reload
-    assert_equal(true, team.obra_member, 'obra_member')
+    assert_equal(true, team.member, 'member')
 
-    team.obra_member = true
+    team.member = true
     team.save!
     team.reload
-    assert_equal(true, team.obra_member, 'obra_member')
+    assert_equal(true, team.member, 'member')
   end
 end

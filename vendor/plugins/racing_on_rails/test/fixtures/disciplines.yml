@@ -1,24 +1,41 @@
 cyclocross:
   id: 1
   name: Cyclocross
+  bar: true
 criterium:
   id: 2
   name: Criterium
+  bar: true
 mountain_bike:
   id: 3
   name: Mountain Bike
+  bar: true
 road:
   id: 4
   name: Road
+  bar: true
 time_trial:
   id: 5
   name: Time Trial
+  bar: true
 track:
   id: 6
   name: Track
+  bar: true
+overall:
+  id: 7
+  name: Overall
+  bar: true
 tour:
   id: 8
   name: Tour
+  bar: false
 circuit_race:
   id: 9
   name: Circuit Race
+  bar: false
+team:
+  id: 10
+  name: Team
+  bar: true
+  

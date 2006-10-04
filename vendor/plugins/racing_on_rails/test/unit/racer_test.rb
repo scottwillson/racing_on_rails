@@ -54,7 +54,7 @@ class RacerTest < Test::Unit::TestCase
       :license => "125162", 
       :mtb_category => 'Expert', 
       :notes => 'Won Giro', 
-      :obra_member_on => '2001-07-19', 
+      :member_on => '2001-07-19', 
       :road_number => "300", 
       :occupation => 'Vinter', 
       :road_category => '1', 
@@ -72,7 +72,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Novice", racer.dh_category, "dh_category")
     assert_equal("(315) 221-4774", racer.home_phone, "home_phone")
     assert_equal("Expert", racer.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", racer.obra_member_on, "obra_member_on")
+    assert_equal_dates("2001-07-19", racer.member_on, "member_on")
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
@@ -100,7 +100,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Novice", racer.dh_category, "dh_category")
     assert_equal("(315) 221-4774", racer.home_phone, "home_phone")
     assert_equal("Expert", racer.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", racer.obra_member_on, "obra_member_on")
+    assert_equal_dates("2001-07-19", racer.member_on, "member_on")
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
@@ -180,19 +180,19 @@ class RacerTest < Test::Unit::TestCase
     assert_equal(racer.name, '', 'name')
   end
   
-  def test_obra_member
+  def test_member
     racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
-    assert_equal(true, racer.obra_member, 'obra_member')
-    racer.obra_member = false
-    assert_equal(false, racer.obra_member, 'obra_member')
+    assert_equal(true, racer.member, 'member')
+    racer.member = false
+    assert_equal(false, racer.member, 'member')
     racer.save!
     racer.reload
-    assert_equal(false, racer.obra_member, 'obra_member')
+    assert_equal(false, racer.member, 'member')
 
-    racer.obra_member = true
+    racer.member = true
     racer.save!
     racer.reload
-    assert_equal(true, racer.obra_member, 'obra_member')
+    assert_equal(true, racer.member, 'member')
   end
   
   def test_team_name

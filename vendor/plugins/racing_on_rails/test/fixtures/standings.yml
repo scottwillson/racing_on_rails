@@ -1,0 +1,36 @@
+--- !omap
+#
+# Order is import because of foreign key constraints.
+#
+- banana_belt:
+    id: 1
+    event_id: 2
+    name: Banana Belt I
+    date: 2004-01-01
+    bar_points: 1
+    discipline: Road
+    updated_at: 2004-01-05
+- kings_valley:
+    id: 2
+    event_id: 5
+    name: Kings Valley Road Race
+    date: 2003-12-31
+    bar_points: 1
+    updated_at: 2004-01-01
+- kings_valley_2004:
+    id: 3
+    event_id: 15
+    name: Kings Valley Road Race
+    date: 2004-12-31
+    bar_points: 1
+    updated_at: 2004-12-31
+
+# Event is actually in 2004
+- jack_frost:
+    id: 4
+    event_id: 11
+    name: Jack Frost
+    date: 2002-01-15
+    bar_points: 1
+    updated_at: 2002-12-31
+        

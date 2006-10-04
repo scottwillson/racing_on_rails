@@ -1,0 +1,123 @@
+--- !omap
+#
+# Order is import because of foreign key constraints.
+# Insert OBRA categories after inserting their BAR categories.
+# "omap" means "ordered map" in YAML. Very picky about indentation.
+#
+- women_4_bar:
+    id: 4
+    name: Women 4
+    is_overall: true
+    overall_id: 4
+    bar_category_id: 4
+    scheme: BAR
+- men_3_bar:
+    id: 15
+    bar_category_id: 15
+    name: Men 3
+    is_overall: true
+    scheme: BAR
+- senior_men_bar:
+    id: 17
+    name: Senior Men
+    is_overall: true
+    overall_id: 17
+    bar_category_id: 17
+    position: 1
+    scheme: BAR
+- cx_a_bar:
+    id: 16
+    name: Men A
+    is_overall: false
+    overall_id: 17
+    bar_category_id: 16
+    scheme: BAR
+- senior_women_bar:
+    id: 18
+    name: Senior Women
+    is_overall: true
+    overall_id: 18
+    bar_category_id: 18
+    position: 2
+    scheme: BAR
+- masters_35_plus_women:
+    id: 5
+    name: Masters 35+ Women
+    scheme: OBRA
+- sr_p_1_2:
+    id: 6
+    name: Senior Men Pro 1/2
+    bar_category_id: 17
+    position: 1
+    scheme: OBRA
+- cx_a:
+    id: 7
+    name: Men A
+    bar_category_id: 16
+    scheme: OBRA
+- sr_women:
+    id: 8
+    name: Senior Women
+    bar_category_id: 18
+    position: 4
+    scheme: OBRA
+- women_4:
+    id: 9
+    name: Women 4
+    bar_category_id: 4
+    position: 12
+    scheme: OBRA
+- senior_men_3:
+    id: 10
+    bar_category_id: 15
+    name: Senior Men 3
+    position: 8
+    scheme: OBRA
+- masters_35_plus:
+    id: 11
+    name: Masters 35+
+    scheme: OBRA
+- senior_women_1_2_3:
+    id: 12
+    name: Senior Women 1/2/3
+    scheme: OBRA
+- cat_3:
+    id: 14
+    bar_category_id: 15
+    name: Category 3
+    scheme: OBRA
+- team:
+    id: 19
+    name: Team
+    scheme: BAR
+- pro_semi_pro_elite_men:
+    id: 20
+    name: Pro, Semi-Pro, Elite Men
+    overall_id: 17
+    bar_category_id: 20
+    scheme: BAR
+- pro_elite_expert_women:
+    id: 21
+    name: Pro, Elite, Expert Women
+    overall_id: 18
+    bar_category_id: 21
+    scheme: BAR
+- junior_men:
+    id: 22
+    name: Junior Men
+    is_overall: true
+    overall_id: 22
+    bar_category_id: 22
+    scheme: BAR
+- expert_junior_men:
+    id: 23
+    name: Expert Junior Men
+    bar_category_id: 23
+    overall_id: 22
+    scheme: BAR
+- sport_junior_men:
+    id: 24
+    name: Sport Junior Men
+    bar_category_id: 24
+    overall_id: 22
+    scheme: BAR

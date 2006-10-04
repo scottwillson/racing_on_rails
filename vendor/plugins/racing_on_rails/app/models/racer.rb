@@ -175,8 +175,8 @@ class Racer < ActiveRecord::Base
   end
   
   def attributes=(attributes)
-    if self.obra_member.nil?
-      self.obra_member = true
+    if self.member.nil?
+      self.member = true
     end
     
     unless attributes.nil?

@@ -276,21 +276,21 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["icon"], "Should assign 'icon'")
   end
 
-  def test_update_obra_member
+  def test_update_member
     @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
-    assert_equal(true, vanilla.obra_member, 'obra_member before update')
-    post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'obra_member')
+    assert_equal(true, vanilla.member, 'member before update')
+    post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
     vanilla.reload
-    assert_equal(false, vanilla.obra_member, 'obra_member after update')
+    assert_equal(false, vanilla.member, 'member after update')
 
     vanilla = teams(:vanilla)
-    post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'obra_member')
+    post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
     vanilla.reload
-    assert_equal(true, vanilla.obra_member, 'obra_member after second update')
+    assert_equal(true, vanilla.member, 'member after second update')
   end
 end
