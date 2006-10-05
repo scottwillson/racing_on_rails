@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SingleDayEventTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :users
+  fixtures :promoters, :events, :aliases_disciplines, :disciplines
 
   def test_find_all_by_year_month
     events = SingleDayEvent.find_all_by_year_month(1980, 1)
@@ -19,5 +19,10 @@ class SingleDayEventTest < Test::Unit::TestCase
     
     events = SingleDayEvent.find_all_by_year_month(2005, 7)
     assert_equal(5, events.size, "find_all_by_year_month(2005, 7)")
+  end
+
+  def test_new
+    event = SingleDayEvent.new
+    assert_equal(0, event.standings.size, "New event should have no standings")
   end
 end

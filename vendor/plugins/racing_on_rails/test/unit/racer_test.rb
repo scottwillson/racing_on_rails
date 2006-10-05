@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RacerTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases
+  fixtures :teams, :aliases, :promoters, :categories, :racers, :events, :standings, :races, :results
 
   def test_save
     assert_nil(Racer.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
@@ -125,24 +125,24 @@ class RacerTest < Test::Unit::TestCase
     racer_to_merge = racers(:tonkin)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    # assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollies's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should be in DB")
-    # assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
+    assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")
     
     racer_to_keep.merge(racer_to_merge)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    # assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
     aliases = Alias.find_all_by_racer_id(racer_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
     assert_not_nil(erik_alias, 'Mollie should have Erik Tonkin alias')
     assert_equal(3, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's aliases")
     
     assert_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should not be in DB")
-    # assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
+    assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")
   end
   
@@ -152,24 +152,24 @@ class RacerTest < Test::Unit::TestCase
     racer_same_name_as_merged = Racer.create(:name => racer_to_merge.name, :road_number => 'YYZ')
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    # assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollies's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should be in DB")
-    # assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
+    assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")
     
     racer_to_keep.merge(racer_to_merge)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    # assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
     aliases = Alias.find_all_by_racer_id(racer_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
     assert_nil(erik_alias, 'Mollie should not have Erik Tonkin alias because there is another Erik Tonkin')
     assert_equal(2, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should still be in DB")
-    # assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
+    assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")
   end
 

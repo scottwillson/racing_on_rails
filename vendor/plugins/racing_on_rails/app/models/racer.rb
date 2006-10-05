@@ -10,7 +10,7 @@ class Racer < ActiveRecord::Base
 
   belongs_to :team
   has_many :aliases
-  # has_many :results
+  has_many :results
 
   def Racer.find_by_name(name)
     if name.blank?
@@ -295,18 +295,18 @@ class Racer < ActiveRecord::Base
   end
   
   # All non-Competition results
-  # def event_results
-  #   results.reject do |result|
-  #     result.race.standings.event.is_a?(Competition)
-  #   end
-  # end
-  # 
-  # # BAR, Oregon Cup, Ironman
-  # def competition_results
-  #   results.select do |result|
-  #     result.race.standings.event.is_a?(Competition)
-  #   end
-  # end
+  def event_results
+    results.reject do |result|
+      result.race.standings.event.is_a?(Competition)
+    end
+  end
+  
+  # BAR, Oregon Cup, Ironman
+  def competition_results
+    results.select do |result|
+      result.race.standings.event.is_a?(Competition)
+    end
+  end
   
   def merge(racer)
     # TODO Consider just using straight SQL for this --
@@ -316,25 +316,25 @@ class Racer < ActiveRecord::Base
       raise(IllegalArgumentError, 'Cannot merge racer onto itself')
     end
     Racer.transaction do
-      # events = racer.results.collect do |result|
-      #   event = result.race.standings.event
-      #   event.disable_notification!
-      #   event
-      # end
+      events = racer.results.collect do |result|
+        event = result.race.standings.event
+        event.disable_notification!
+        event
+      end
       begin
         save!
         aliases << racer.aliases
-        # results << racer.results
+        results << racer.results
         Racer.delete(racer.id)
         existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
         if existing_alias.nil? and Racer.match(:name => racer.name).empty?
           aliases.create(:name => racer.name) 
         end
       ensure
-        # events.each do |event|
-        #   event.reload
-        #   event.enable_notification!
-        # end
+        events.each do |event|
+          event.reload
+          event.enable_notification!
+        end
       end
     end
   end

@@ -10,7 +10,7 @@
 		<%= render(:partial => 'aliases', :locals => { :team => team }) %>
 	</td>
 	<td nowrap>
-		<%= attribute(team, 'obra_member') %>
+		<%= attribute(team, 'member') %>
 	</td>
  	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
 		:url => {:action => "destroy", :id => team.id},

@@ -3,6 +3,24 @@ require File.dirname(__FILE__) + '/../test_helper'
 class EventTest < Test::Unit::TestCase
   
   fixtures :promoters, :events, :aliases_disciplines, :disciplines
+  
+  def test_standings_create
+    event = SingleDayEvent.create(:name => 'Saved')
+    standings = event.standings.create
+    assert(standings.errors.empty?, standings.errors.full_messages)
+    assert_equal(event.id, standings[:event_id])
+    assert_equal(event, standings.event)
+    assert_equal(standings, event.standings.first)
+    assert_equal(standings.id, event.standings.first[:id])
+    assert_equal(1, event.standings.count)
+  end
+    
+  def test_new_standings
+    pir_july_2 = events(:pir)
+    assert(!pir_july_2.new_standings?, "PIR should have no new standings")
+    pir_july_2.standings.build(:event => pir_july_2)
+    assert(pir_july_2.new_standings?, "PIR should have new standings")
+  end
 
   def test_find_years
     years = Event.find_all_years

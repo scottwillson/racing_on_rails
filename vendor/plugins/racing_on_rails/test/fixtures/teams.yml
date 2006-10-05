@@ -9,7 +9,7 @@ gentle_lovers:
 vanilla:
   id: 3
   name: Vanilla
-  obra_member: true
+  member: true
 dfl:
   id: 4
   name: Team dFL

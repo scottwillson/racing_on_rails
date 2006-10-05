@@ -6,6 +6,10 @@ class Event < ActiveRecord::Base
     validates_presence_of :name, :date
 
     belongs_to :promoter, :foreign_key => "promoter_id"
+    has_many :standings, 
+             :class_name => "Standings", 
+             :dependent => :destroy, 
+             :order => 'position'
            
     def Event.find_all_years
       extract_year_sql = "extract(year from date)"
@@ -101,6 +105,15 @@ class Event < ActiveRecord::Base
     end
     
     def after_child_event_destroy
+    end
+
+    def new_standings?
+      for standing in standings
+        if standing.new_record?
+          return true  
+        end
+      end
+      return false
     end
 
     # Update database immediately with save!

@@ -7,7 +7,7 @@ class Team < ActiveRecord::Base
   
   has_many :aliases
   has_many :racers
-  # has_many :results
+  has_many :results
 
   def Team.find_by_name_or_alias(name)
     team = Team.find_by_name(name)
@@ -45,23 +45,23 @@ class Team < ActiveRecord::Base
     end
     Team.transaction do
       begin
-        # events = team.results.collect do |result|
-        #   event = result.race.standings.event
-        #   event.disable_notification!
-        #   event
-        # end
+        events = team.results.collect do |result|
+          event = result.race.standings.event
+          event.disable_notification!
+          event
+        end
         aliases << team.aliases
-        # results << team.results
+        results << team.results
         racers << team.racers
         Team.delete(team.id)
         existing_alias = aliases.detect{|a| a.name == team.name}
         aliases.create(:name => team.name) unless existing_alias or Alias.find_by_name(team.name) 
         save!
       ensure
-        # events.each do |event|
-        #   event.reload
-        #   event.enable_notification!
-        # end
+        events.each do |event|
+          event.reload
+          event.enable_notification!
+        end
       end
     end
   end

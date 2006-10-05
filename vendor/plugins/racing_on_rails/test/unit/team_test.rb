@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases
+  fixtures :teams, :aliases, :promoters, :categories, :racers, :events, :standings, :races, :results
 
   def test_find_by_name_or_alias_or_create
     assert_equal(teams(:gentle_lovers), Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')
@@ -18,19 +18,19 @@ class TeamTest < Test::Unit::TestCase
     team_to_merge = teams(:gentle_lovers)
     
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
-    # assert_equal(2, Result.find_all_by_team_id(team_to_keep.id).size, "Vanilla's results")
+    assert_equal(2, Result.find_all_by_team_id(team_to_keep.id).size, "Vanilla's results")
     assert_equal(1, Racer.find_all_by_team_id(team_to_keep.id).size, "Vanilla's racers")
     assert_equal(1, Alias.find_all_by_team_id(team_to_keep.id).size, "Vanilla's aliases")
     
     assert_not_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should be in DB")
-    # assert_equal(1, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
+    assert_equal(1, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
     assert_equal(2, Racer.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's racers")
     assert_equal(1, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
     
     team_to_keep.merge(team_to_merge)
     
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
-    # assert_equal(3, Result.find_all_by_team_id(team_to_keep.id).size, "Vanilla's results")
+    assert_equal(3, Result.find_all_by_team_id(team_to_keep.id).size, "Vanilla's results")
     assert_equal(3, Racer.find_all_by_team_id(team_to_keep.id).size, "Vanilla's racers")
     aliases = Alias.find_all_by_team_id(team_to_keep.id)
     lovers_alias = aliases.detect{|a| a.name == 'Gentle Lovers'}
@@ -38,7 +38,7 @@ class TeamTest < Test::Unit::TestCase
     assert_equal(3, aliases.size, "Vanilla's aliases")
     
     assert_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should not be in DB")
-    # assert_equal(0, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
+    assert_equal(0, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
     assert_equal(0, Racer.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's racers")
     assert_equal(0, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
   end

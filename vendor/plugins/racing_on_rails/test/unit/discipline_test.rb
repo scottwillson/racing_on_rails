@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DisciplineTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :users
+  fixtures :promoters, :events, :aliases_disciplines, :disciplines
 
   def setup
     # Discipline class may have loaded earlier with no aliases in database
