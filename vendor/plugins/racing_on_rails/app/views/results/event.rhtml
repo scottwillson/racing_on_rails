@@ -1,0 +1,110 @@
+<% @page_title = "Results: #{@event.date.year}: #{@event.name}" %>
+
+<%= @event.name %>
+<br />
+<% if @event.city -%>
+  <%= @event.city -%>, 
+<%- end -%>
+<%= @event.state %>
+<br />
+
+<%= @event.date.to_formatted_s(:long) %>
+<% unless @event.notes.blank? -%>
+<br />
+<%= @event.notes -%>
+<%- end -%>
+<br /><br />
+
+<% @event.standings.each_with_index do |standings, standings_index| %>
+  <% unless standings.is_a?(CombinedStandings) %>
+
+    <% if standings.name != @event.name %>
+<%= standings.name %>
+<br />
+    <% end %>
+
+    <% unless standings.notes.blank? -%>
+<%= standings.notes -%>
+<br />
+    <%- end -%>
+
+    <% if standings.date.strftime('%B %d, %Y') != @event.date.strftime('%B %d, %Y') %>
+<%= standings.date.strftime('%B %d, %Y') %>
+<br />
+    <% end %>
+
+<%# TODO Encapsulate in a helper method %>
+<table border="0" cellspacing="0" cellpadding="0">
+    <% index = 0 %>  
+    <% sorted_races = standings.races_with_results %> 
+    <% sorted_races.delete_if {|race| race.results.empty? }%>
+    <% rows = (sorted_races.size / 2.0).round %>
+    <% for row in 0..(rows - 1) %>
+  <tr valign="top">
+    <td><a href="#<%= (standings_index * 100) + row %>"><span class="type"><%= sorted_races[row].name %></span></a></td>
+      <% if rows + row < sorted_races.size %>
+    <td width="16">&nbsp;</td>
+    <td><a href="#<%= (standings_index * 100) + rows + row %>"><span class="type"><%= sorted_races[rows + row].name %></span></a></td>
+      <% end %>  
+  </tr>
+    <% end %>  
+</table>
+<br />
+  <% end %>
+<% end %>  
+
+<% @event.standings.each_with_index do |standings, standings_index| %>
+    
+  <% unless standings.is_a?(CombinedStandings)%>
+  <span class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a href="/results/questions.html">Results questions?</a></small>
+  <br/><br/>
+  
+  <% sorted_races = standings.races_with_results %> 
+  <% sorted_races.each_with_index do |race, index| %>
+  <table class="yellow" id="results" border="0" cellspacing="0" cellpadding="0">
+    <tr bgcolor="#ffde14">
+      <th><a name="<%= (standings_index * 100) + index %>"></a><span class="tablehead"><%= race.name %></span></th>
+    </tr>
+    <tr>
+      <td>
+  <%
+    @result_grid_columns = race.result_columns_or_default.collect do |column|
+      grid_columns(column)
+    end
+    rows = race.results.sort.collect do |result|
+      row = []
+      for grid_column in @result_grid_columns
+      if grid_column.field and result.respond_to?(grid_column.field)
+        cell = result.send(grid_column.field).to_s
+        cell = '' if cell == '0.0'
+        row << cell
+      else
+        row << ''
+      end
+      end
+      row
+    end
+    results_grid = Grid.new(rows, @result_grid_columns)
+    results_grid.truncate
+    results_grid.calculate_padding
+    
+    race.results.sort.each_with_index do |result, row_index|
+      @result_grid_columns.each_with_index do |grid_column, index|
+      if grid_column.link
+        cell = results_grid[row_index][index]
+        results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
+      end
+      end
+    end
+  %>
+  
+  <pre><%= results_grid.to_s(true) -%>
+<%- unless race.notes.blank? -%>
+<%= race.notes %><%- end -%></pre>
+  </td>
+    </tr>
+  </table>
+  <br><br>
+  <% end %>
+<% end %>
+<% end %>

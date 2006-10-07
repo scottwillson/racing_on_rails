@@ -1,7 +1,6 @@
 class Result < ActiveRecord::Base
   
   include Dirty
-  include ResultSupport
   
   # FIME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
@@ -151,6 +150,14 @@ class Result < ActiveRecord::Base
     write_attribute(:points_from_place, value)
   end
   
+  def first_name
+    if racer and !racer.first_name.blank?
+      racer.first_name
+    else
+      ""
+    end
+  end
+
   def first_name=(value)
     if self.racer
       self.racer.first_name = value
@@ -160,12 +167,29 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def last_name
+    if (racer and !racer.last_name.blank?)
+      racer.last_name
+    else
+      ""
+    end
+  end
+  
   def last_name=(value)
     if self.racer
       self.racer.last_name = value
       self.racer.dirty
     else
       self.racer = Racer.new(:last_name => value)
+    end
+  end
+
+  # racer.name
+  def name
+    if racer == nil
+      ""
+    else
+      racer.name
     end
   end
 
@@ -180,6 +204,13 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def team_name
+    if team
+      return team.name unless team.nil? or team.name.nil?
+    end
+    ""
+  end
+
   def team_name=(value)
     if self.team
       self.team.name = value
@@ -193,25 +224,64 @@ class Result < ActiveRecord::Base
     end
   end
   
-  def time=(value)
-    if value.is_a?(String) and value.include?(':')
-      value = s_to_time(value)
-    end
-    self[:time] = value
+  def time_s
+    time_to_s(self.time)
   end
-
-  def time_bonus_penalty=(value)
-    if value.is_a?(String) and value.include?(':')
-      value = s_to_time(value)
-    end
-    self[:time_bonus_penalty] = value
+  
+  def time_s=(time)
+    self.time = s_to_time(time)
   end
-
-  def time_gap_to_leader=(value)
-    if value.is_a?(String) and value.include?(':')
-      value = s_to_time(value)
+  
+  def time_total_s
+    time_to_s(self.time_total)
+  end
+  
+  def time_total_s=(time_total)
+    self.time_total = s_to_time(time_total)
+  end
+  
+  def time_bonus_penalty_s
+    time_to_s(self.time_bonus_penalty)
+  end
+  
+  def time_bonus_penalty_s=(time_bonus_penalty)
+    self.time_bonus_penalty = s_to_time(time_bonus_penalty)
+  end
+  
+  def time_gap_to_leader_s
+    time_to_s(self.time_gap_to_leader)
+  end
+  
+  def time_gap_to_leader_s=(time_gap_to_leader_s)
+    self.time_gap_to_leader = s_to_time(time_gap_to_leader_s)
+  end
+  
+  def time_to_s(time)
+    return '' if time == 0.0 or time.blank?
+    hours = (time / 3600).to_i
+    minutes = ((time - (hours * 3600)) / 60).floor
+    seconds = (time - (hours * 3600).floor - (minutes * 60).floor)
+    # TODO Use sprintf better
+    seconds = sprintf('%0.2f', seconds)
+    if hours > 0
+      hour_prefix = "#{hours.to_s.rjust(2, '0')}:"
     end
-    self[:time_gap_to_leader] = value
+    "#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
+  end
+  
+  def s_to_time(string)
+    if string.to_s.blank?
+      0.0
+    else
+      string.gsub!(',', '.')
+      parts = string.to_s.split(':')
+      parts.reverse!
+      t = 0.0
+      parts.each_with_index do |part, index|
+        t = t + (part.to_f) * (60.0 ** index)
+      end
+      t
+    end  
   end
 
   # Fix common formatting mistakes and inconsistencies
@@ -256,6 +326,95 @@ class Result < ActiveRecord::Base
     name = name.gsub(/ *\/ */, '/')
   end
   
+  def <=>(other)
+    begin
+      if place.blank?
+        place_as_int = 0
+      else
+        place_as_int = place.to_i
+      end
+      if other.place.blank?
+        other_place_as_int = 0
+      else
+        other_place_as_int = other.place.to_i
+      end
+    
+      if place_as_int > 0
+        if other_place_as_int == 0
+          return -1
+        elsif place_as_int != other_place_as_int
+          return place_as_int <=> other_place_as_int
+        end
+      elsif place == 'DNF'
+        if other_place_as_int > 0
+          return 1
+        elsif other.place == 'DNF'
+          if id.nil?
+            return 0
+          else
+            return id <=> other.id
+          end
+        elsif other.place == 'DQ'
+          return -1
+        else
+          return -1
+        end
+      elsif place == 'DQ'
+        if other_place_as_int > 0
+          return 1
+        elsif other.place == 'DNF'
+          return 1
+        elsif other.place == 'DQ'
+          if id.nil?
+            return 0
+          else
+            return id <=> other.id
+          end
+        else
+          return -1
+        end
+      elsif place == 'DNS'
+        if other_place_as_int > 0
+          return 1
+        elsif other.place == 'DNF'
+          return 1
+        elsif other.place == 'DQ'
+          return 1
+        elsif other.place == 'DNS'
+          if id.nil?
+            return 0
+          else
+            return id <=> other.id
+          end
+        else
+          return -1
+        end
+      elsif place.blank?
+        if other_place_as_int > 0
+          return 1
+        elsif other.place == 'DNF'
+          return 1
+        elsif other.place == 'DNS'
+          return 1
+        else
+          if id.nil?
+            return 0
+          else
+            return id <=> other.id
+          end
+        end
+      end
+      if id.nil?
+        return 0
+      else
+        return id <=> other.id
+      end
+    rescue ArgumentError => error
+      RAILS_DEFAULT_LOGGER.error("Error in Result.<=> #{error} comparing #{self} with #{other}")
+      throw error
+    end
+  end
+
   def to_long_s
     "<Result #{id}\t#{place}\t#{race.standings.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{points}\t#{time_s if self[:time]}>"
   end

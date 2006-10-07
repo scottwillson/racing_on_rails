@@ -21,6 +21,10 @@
 #  THE SOFTWARE.
 #  
 
+Inflector.inflections do |inflect|
+   inflect.singular 'standings', 'standings'
+   inflect.plural   'standings', 'standings'
+end
 
 module RacingOnRails
   module VERSION

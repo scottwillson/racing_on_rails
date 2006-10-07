@@ -3,7 +3,6 @@ class Race < ActiveRecord::Base
 
   include Comparable
   include Dirty
-  include RaceSupport
 
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}
   # Prototype Result used for checking valid column names
@@ -97,8 +96,27 @@ class Race < ActiveRecord::Base
     true
   end
   
+  def <=>other
+    category <=> other.category
+  end
+
+  def hash
+    if new_record?
+      category.hash
+    else
+      id
+    end
+  end
+
+  def==(other)
+    return false unless other.is_a?(self.class)
+    unless other.new_record? or new_record?
+      return other.id == id
+    end
+    category == other.category
+  end
+
   def to_s
     "<Race #{id} #{self[:standings_id]} #{self[:category_id]} >"
   end
-  
 end

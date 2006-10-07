@@ -1,0 +1,208 @@
+<% @page_title = "Results: #{@year}" %>
+
+		  <b>2006</b> | 
+		  <a href="../2005/index.html"><b>2005</b></a> |
+		  <a href="../2004/index.html"><b>2004</b></a> |
+		  <a href="../2003/index.html"><b>2003</b></a> |
+		  <a href="../2002/index.html"><b>2002</b></a> |
+		  <a href="../2001/index.html"><b>2001</b></a><!--  |  -->
+<!-- 		  <a href="../2000/index.html"><b>2000</b></a> |  -->
+<!-- 		  <a href="../1999/index.html"><b>1999</b></a> |  -->
+<!-- 		  <a href="../1998/index.html"><b>1998</b></a> |  -->
+<!-- 		  <a href="../1997/index.html"><b>1997</b></a> |  -->
+<!-- 		  <a href="../1996/index.html"><b>1996</b></a> -->
+		  <br><br>
+		  <a href="../questions.html">Results questions?</a>
+		  <br><br>	
+
+    <!--- Table lays-out the yellow tables in a 2x2 grid -->
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top" width="50%">
+        
+
+          <!--- Road table -->
+		<table class="yellow" id="results_index" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<th id="results_index">Road</th>
+		  </tr>
+		  <tr valign="top">
+		  	<% unless @road_events.empty? %> 
+		    <td><pre>
+		    <%- for event in @road_events -%>
+<%= event.short_date %> <%= 
+    link_to event.name, 
+    :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id 
+  %>
+        <%- end -%>
+        </pre>
+        </td>
+            <% else %>
+              <td><pre>Results will be posted when available</pre></td>
+            <% end %>
+		  </tr>
+		</table>
+          
+        </td>
+        <td width="24"><img height="1" width="24" src="../../images/spacer.gif"></td>
+        <td valign="top" width="50%">
+
+        
+<!--- Cross table -->
+
+<!-- 
+          <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFF99">
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="4" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+              <td colspan="3" align="center"><span class="tablehead">
+Cyclocross</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><pre>Results will be posted when available</pre>
+              </td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="1" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+          </table>
+        
+          <br><br>
+ -->
+
+        
+<!--- Track table --> 
+          <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFF99">
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="4" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+              <td colspan="3" align="center"><span class="tablehead">Track</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+<pre>Results will be posted when available.</pre></td>
+              <td>&nbsp;</td>
+
+            </tr>
+
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="1" width="1" src="../../images/spacer.gif"></td>
+
+            </tr>
+          </table>
+
+        
+          <br><br>
+        
+<!--- Mountain Bike table -->
+          <table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFF99">
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="4" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+
+              <td colspan="3" align="center"><span class="tablehead">Mountain Bike</span></td>
+
+            </tr>
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><pre>Results will be posted when available.</pre></td>
+              <td>&nbsp;</td>
+            </tr>
+
+
+            <tr>
+              <td colspan="3"><img height="6" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+            <tr bgcolor="#ffde14">
+              <td colspan="3"><img height="1" width="1" src="../../images/spacer.gif"></td>
+            </tr>
+          </table>  
+          
+        </td>
+      </tr>
+  </table>   
+     
+<br><br>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="9" align="center">&#160;</td>
+  </tr>
+ </table>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="0" bgcolor="#FFFF99">
+  <tr bgcolor="#ffde14">
+    <td colspan="11" align="center">
+    <span class="tablehead">Weekly Race Series</span>
+  </td>
+  </tr>
+  <tr bgcolor="#ffde14">
+    <td colspan="11"><img height="1" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+  <tr>
+    <td colspan="11"><img height="6" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+  <tr>
+    <td align="center"><font face="Verdana">Monday<br>PIR</font></td>
+    <td align="center"><font face="Verdana">True Amateur<br>Crit Series</font></td>
+    <td align="center"><font face="Verdana">Tuesday<br>PIR</font></td>
+    <td align="center"><font face="Verdana">Handicap<br>PIR</font></td>
+    <td align="center"><font face="Verdana">Eugene Twilight<br>Crit Series</font></td>
+    <td align="center"><font face="Verdana">Eugene TT/HC<br>Series</font></td>
+    <td align="center"><font face="Verdana">Bend TT<br>Series</font></td>
+    <td align="center"><font face="Verdana">Mt Tabor<br>Series</font></td>
+    <td align="center"><font face="Verdana">Thursday<br>Track</font></td>
+    <td align="center"><font face="Verdana">So. Oregon<br>Thurs Series</font></td>
+    <td align="center"><font face="Verdana">Friday<br>Track</font></td>
+  </tr>
+  <tr>
+    <td colspan="11"><img height="6" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+
+  <tr bgcolor="#ffde14">
+    <td colspan="11"><img height="1" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+  <tr>
+    <td colspan="11"><img height="6" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+  <tr>
+    <td align="center" valign="top"><!-- <a href="weekly/mon_pir/august_29.html">8-29</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/true_amateur/june_6.html">6-6</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/tues_pir/april_05.html">4-5</a><br> --></td>
+<td align="center" valign="top"><!-- <a href="weekly/handicap_pir/september_6.html">9-6</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/twilight_tues_crit/june_7.html">6-7</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/eugene_tt_hc/april_05.html">4-5</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/bend_tt/april_06.html">4-6</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/mt_tabor/june_1.html">6-1</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/thurs_track/may_12.html">5-12</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/so_oregon_thurs/may_26.html">5-26</a> --><br></td>
+    <td align="center" valign="top"><!-- <a href="weekly/fri_track/may_6.html">5-6</a> --><br></td>
+  </tr>
+  <tr>
+    <td colspan="11"><img height="6" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+  <tr bgcolor="#ffde14">
+    <td colspan="11"><img height="1" width="1" src="../../images/spacer.gif"></td>
+  </tr>
+</table>

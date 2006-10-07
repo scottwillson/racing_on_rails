@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(:version => 3) do
   create_table "racers", :force => true do |t|
     t.column "first_name", :string, :limit => 64
     t.column "last_name", :string
-    t.column "obra_member", :boolean, :default => true, :null => false
+    t.column "member", :boolean, :default => true
     t.column "age", :integer
     t.column "city", :string, :limit => 128
     t.column "date_of_birth", :date
@@ -132,7 +132,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "gender", :string, :limit => 2
     t.column "home_phone", :string
     t.column "mtb_category", :string
-    t.column "obra_member_on", :date
+    t.column "member_on", :date
     t.column "occupation", :string
     t.column "road_category", :string
     t.column "street", :string
@@ -205,6 +205,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
     t.column "time_total", :float
+    t.column "laps", :integer
   end
 
   add_index "results", ["category_id"], :name => "idx_category_id"
@@ -251,7 +252,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
-    t.column "obra_member", :boolean, :default => false
+    t.column "member", :boolean, :default => false
   end
 
   add_index "teams", ["name"], :name => "idx_name", :unique => true

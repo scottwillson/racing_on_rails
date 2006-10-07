@@ -24,6 +24,7 @@
 require 'racing_on_rails/column'
 require 'racing_on_rails/grid'
 require 'racing_on_rails/grid_file'
+require 'racing_on_rails/results_file'
 
 require 'racing_on_rails/login_system'
 require 'racing_on_rails/application_controller_base'

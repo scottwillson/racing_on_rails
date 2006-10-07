@@ -1,6 +1,5 @@
   class Category < ActiveRecord::Base
 
-  include CategorySupport
   include Dirty
 
   belongs_to :overall, :class_name => "Category", :foreign_key => "overall_id"
@@ -37,9 +36,20 @@
       self.scheme = "OBRA"
     end
   end
-  
+
+  def <=>(other)
+    if other
+      do1 = position || 9999
+      do2 = other.position || 9999
+      do1 <=> do2
+    elsif !name.nil?
+      name <=> other.name
+    else
+      -1
+    end
+  end
+    
   def to_s
     "<Category #{id} #{bar_category_id} #{position} #{name} #{scheme}>"
   end
-
 end
