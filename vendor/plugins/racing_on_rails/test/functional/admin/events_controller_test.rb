@@ -1,19 +1,39 @@
+# :stopdoc:
 require File.dirname(__FILE__) + '/../../test_helper'
 require_or_load 'admin/events_controller'
 
-# :stopdoc:
 # Re-raise errors caught by the controller.
 class Admin::EventsController; def rescue_action(e) raise e end; end
 
 class Admin::EventsControllerTest < Test::Unit::TestCase
 
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :users
+  fixtures :teams, :aliases, :users, :promoters, :categories, :racers, :events, :standings, :races, :results
+
   include ApplicationHelper
 
   def setup
     @controller = Admin::EventsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+  end
+
+  def test_show
+    @request.session[:user] = users(:candi)
+    banana_belt = events(:banana_belt_1)
+    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
+    assert_routing("/admin/events/#{banana_belt.to_param}", opts)
+    
+    # expose old bug
+    race = banana_belt.standings.first.races.first
+    race.result_columns = race.result_columns_or_default
+    race.result_columns << 'hometown'
+    race.save(false)
+    
+    get(:show, :id => banana_belt.to_param.to_s)
+    assert_response(:success)
+    assert_template("admin/events/show")
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert_nil(assigns["race"], "Should not assign race")
   end
 
   def test_show_parent
@@ -29,6 +49,82 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_nil(assigns["race"], "Should not assign race")
   end
 
+  def test_show_no_results
+    @request.session[:user] = users(:candi)
+    mt_hood_1 = events(:mt_hood_1)
+    opts = {:controller => "admin/events", :action => "show", :id => mt_hood_1.to_param.to_s}
+    assert_routing("/admin/events/#{mt_hood_1.to_param}", opts)
+    get(:show, :id => mt_hood_1.to_param.to_s)
+    assert_response(:success)
+    assert_template("admin/events/show")
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert_nil(assigns["race"], "Should not assign race")
+  end
+
+  def test_show_with_standings
+    @request.session[:user] = users(:candi)
+    kings_valley = events(:kings_valley)
+    standings = kings_valley.standings.first
+    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param.to_s, :standings_id => standings.to_param.to_s,}
+    assert_routing("/admin/events/#{kings_valley.to_param}/#{standings.to_param}", opts)
+    get(:show, :id => kings_valley.to_param, :standings_id => standings.to_param)
+    assert_response(:success)
+    assert_template("admin/events/show")
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert_nil(assigns["race"], "Should not assign race")
+  end
+
+  def test_show_with_race
+    @request.session[:user] = users(:candi)
+    kings_valley = events(:kings_valley)
+    standings = kings_valley.standings.first
+    kings_valley_3 = races(:kings_valley_3)
+    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param.to_s, :standings_id => standings.to_param.to_s, :race_id => kings_valley_3.to_param.to_s}
+    assert_routing("/admin/events/#{kings_valley.to_param}/#{standings.to_param}/#{kings_valley_3.to_param}", opts)
+    get(:show, :id => kings_valley.to_param, :standings_id => standings.to_param, :race_id => kings_valley_3.to_param)
+    assert_response(:success)
+    assert_template("admin/events/show")
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert_equal(kings_valley_3, assigns["race"], "Should assign kings_valley_3 race")
+  end
+
+  def test_upload
+    @request.session[:user] = users(:candi)
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
+    
+    file = uploaded_file("vendor/plugins/racing_on_rails/test/fixtures/results/pir_2006_format.xls", "pir_2006_format.xls", "application/vnd.ms-excel")
+    opts = {
+      :controller => "admin/events", 
+      :action => "upload",
+      :id => mt_hood_1.to_param.to_s
+    }
+    assert_routing("/admin/events/upload/#{mt_hood_1.to_param}", opts)
+
+    post :upload, :id => mt_hood_1.to_param, :results_file => file
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert_response :redirect
+    assert_redirected_to(:action => :show, :id => mt_hood_1.to_param, :standings_id => mt_hood_1.standings(true).last.to_param)
+    assert(flash.has_key?(:notice))
+    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after upload attempt')
+  end
+
+  def test_upload_invalid_columns
+    @request.session[:user] = users(:candi)
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
+    
+    file = uploaded_file("/vendor/plugins/racing_on_rails/test/fixtures/results/invalid_columns.xls", "invalid_columns.xls", "application/vnd.ms-excel")
+    post :upload, :id => mt_hood_1.to_param, :results_file => file
+    assert_redirected_to(:action => :show, :id => mt_hood_1.to_param, :standings_id => mt_hood_1.standings(true).last.to_param)
+
+    assert_response :redirect
+    assert(flash.has_key?(:notice))
+    assert(flash.has_key?(:warn))
+    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after upload attempt')
+  end
+  
   def test_new_single_day_event
     @request.session[:user] = users(:candi)
     opts = {:controller => "admin/events", :action => "new", :year => '2008'}
@@ -86,6 +182,70 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal('tplummer@gmail.com', skull_hollow.promoter_email, 'promoter_email')
   end
   
+  def test_upload_dupe_racers
+    # Two racers with different name, same numbers
+    # Excel file has Greg Rodgers with no number
+    Racer.create(:name => 'Greg Rodgers', :road_number => '404')
+    Racer.create(:name => 'Greg Rodgers', :road_number => '500')
+    
+    @request.session[:user] = users(:candi)
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.standings(true).empty?, 'Should have no standings before import')
+    
+    file = uploaded_file("/vendor/plugins/racing_on_rails/test/fixtures/results/dupe_racers.xls", "dupe_racers.xls", "application/vnd.ms-excel")
+    post :upload, :id => mt_hood_1.to_param, :results_file => file
+    
+    assert_response :redirect
+    assert(mt_hood_1.standings(true).empty?, 'Should have no standings after bad import')
+    assert(flash.has_key?(:warn))
+  end
+
+  def test_destroy_race
+    @request.session[:user] = users(:candi)
+    kings_valley_women_2003 = races(:kings_valley_women_2003)
+    opts = {:controller => "admin/events", :action => "destroy_race", :id => kings_valley_women_2003.to_param.to_s}
+    assert_routing("/admin/events/destroy_race/#{kings_valley_women_2003.to_param}", opts)
+    post(:destroy_race, :id => kings_valley_women_2003.id, :commit => 'Delete')
+    assert_response(:success)
+    assert_raise(ActiveRecord::RecordNotFound, 'kings_valley_women_2003 should have been destroyed') { Race.find(kings_valley_women_2003.id) }
+  end
+
+  def test_destroy_standings
+    @request.session[:user] = users(:candi)
+    jack_frost = standings(:jack_frost)
+    opts = {:controller => "admin/events", :action => "destroy_standings", :id => jack_frost.to_param.to_s}
+    assert_routing("/admin/events/destroy_standings/#{jack_frost.to_param}", opts)
+    post(:destroy_standings, :id => jack_frost.id, :commit => 'Delete')
+    assert_response(:success)
+    assert_raise(ActiveRecord::RecordNotFound, 'jack_frost should have been destroyed') { Standings.find(jack_frost.id) }
+  end
+
+  def test_destroy_result
+    @request.session[:user] = users(:candi)
+    tonkin_kings_valley = results(:tonkin_kings_valley)
+    opts = {:controller => "admin/events", :action => "destroy_result", :id => tonkin_kings_valley.to_param.to_s}
+    assert_routing("/admin/events/destroy_result/#{tonkin_kings_valley.to_param}", opts)
+    post(:destroy_result, :id => tonkin_kings_valley.id, :commit => 'Delete')
+    assert_response(:success)
+    assert_raise(ActiveRecord::RecordNotFound, 'tonkin_kings_valley should have been destroyed') { Result.find(tonkin_kings_valley.id) }
+  end
+
+  def test_upcoming_events
+    @request.session[:user] = users(:candi)
+    opts = {:controller => "admin/events", :action => "upcoming"}
+    assert_routing("/admin/events/upcoming", opts)
+    get(:upcoming)
+    assert_response(:success)
+    assert_template("admin/events/upcoming")
+  end
+  
+  def test_upcoming_events_refresh
+    @request.session[:user] = users(:candi)
+    post(:upcoming, "commit"=>"Refresh", "date"=>{"month"=>"6", "day"=>"25", "year"=>"2004"}, "weeks"=>"6")
+    assert_response(:success)
+    assert_template("admin/events/upcoming")
+  end
+  
   def test_update_event
     @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
@@ -131,6 +291,70 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal('JMitchem@ffadesign.com', banana_belt.promoter_email, 'promoter_email')
   end
 
+  def test_update_standings
+    @request.session[:user] = users(:candi)
+    banana_belt = standings(:banana_belt)
+    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s}
+    assert_routing("/admin/events/update/#{banana_belt.event.to_param}/#{banana_belt.to_param}", opts)
+
+    assert_not_equal('Banana Belt One', banana_belt.name, 'name')
+    assert_not_equal(2, banana_belt.bar_points, 'bar_points')
+    assert_not_equal('Cyclocross', banana_belt.discipline, 'discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.event.to_param.to_s,
+         :standings_id => banana_belt.to_param.to_s,
+         "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+
+    banana_belt.reload
+    assert_equal('Banana Belt One', banana_belt.name, 'name')
+    assert_equal('Cyclocross', banana_belt.discipline, 'discipline')
+    assert_equal(2, banana_belt.bar_points, 'bar_points')
+  end
+
+  def test_update_discipline_nil
+    @request.session[:user] = users(:candi)
+    banana_belt = standings(:banana_belt)
+    banana_belt.update_attribute(:discipline, nil)
+    assert_nil(banana_belt[:discipline], 'discipline')
+    assert_equal('Road', banana_belt.event.discipline, 'Parent event discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.event.to_param.to_s,
+         :standings_id => banana_belt.to_param.to_s,
+         "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+
+    banana_belt.reload
+    assert_nil(banana_belt[:discipline], 'discipline')
+  end
+
+  def test_update_discipline_same_as_parent
+    @request.session[:user] = users(:candi)
+    banana_belt = standings(:banana_belt)
+    assert_equal('Road', banana_belt[:discipline], 'discipline')
+    assert_equal('Road', banana_belt.event.discipline, 'Parent event discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.event.to_param.to_s,
+         :standings_id => banana_belt.to_param.to_s,
+         "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+
+    banana_belt.reload
+    assert_nil(banana_belt[:discipline], 'discipline')
+  end
+
   def test_update_error
     @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
@@ -154,6 +378,27 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal('Banana Belt I', banana_belt.name, 'name')
   end
   
+  def test_update_bar_points
+    @request.session[:user] = users(:candi)
+    race = races(:banana_belt_pro_1_2)
+
+    opts = {:controller => "admin/events", :action => "update_bar_points", :id => race.to_param.to_s}
+    assert_routing("/admin/events/update_bar_points/#{race.to_param}", opts)
+
+    assert_equal(nil, race[:bar_points], ':bar_points')
+    assert_equal(1, race.bar_points, 'BAR points')
+
+    post(:update_bar_points, 
+         :id => race.to_param.to_s,
+         :bar_points => '2'
+    )
+    assert_response(:success)
+
+    race.reload
+    assert_equal(2, race[:bar_points], ':bar_points')
+    assert_equal(2, race.bar_points, 'BAR points')
+  end
+
   def test_save_new_single_day_no_promoter
     assert_nil(SingleDayEvent.find_by_name('Silverton'), 'Silverton should not be in database')
     # New event, no changes, single day, no promoter
@@ -621,4 +866,16 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_nil(tabor_cr.promoter, "Tabor Promoter")
   end
 
+  private
+
+  def uploaded_file(path, original_filename, content_type)
+    file_contents = File.new("#{RAILS_ROOT}/#{path}").read
+    uploaded_file = StringIO.new(file_contents);
+    (class << uploaded_file; self; end).class_eval do
+      alias local_path path
+      define_method(:original_filename) {original_filename}
+      define_method(:content_type) {content_type}
+    end
+    return uploaded_file
+  end
 end
