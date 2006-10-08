@@ -1,0 +1,35 @@
+<table class="yellow" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th colspan="4">Standings: <%= standings.name %></th>
+	</tr>
+	<%= start_form_tag :action => 'update', :id => standings.event.id, :standings_id => standings.id %>
+	<tr>
+		<td class="field_label">Name:</td>
+		<td><%= text_field 'standings', 'name' %></td>
+		<td class="field_label">Date:</td>
+		<td><%= standings.date.strftime('%A, %B %d, %Y') %></td>
+	</tr>
+	<tr>
+		<td class="field_label">Discipline:</td>
+		<td><%= select 'standings', 'discipline', Discipline.find_all_names %></td>
+		<td class="field_label">BAR Points:</td>
+		<td><%= select 'standings', 'bar_points', Bar::POINTS_AND_LABELS %></td>
+	</tr>
+	<tr>
+		<td colspan="4">
+			<table cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td class="field_label" width="100">Notes:</td>
+					<td width="100%"><%= text_field 'standings', 'notes', :style => 'width: 100%;' %></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="buttons">
+		<td class="updatedon" colspan="2">Updated: <%= @event.updated_at.strftime('%A, %B %d, %Y, %I:%M %p')  unless @event.updated_at.nil? %></td>
+		<td class="right" colspan="2">
+			<%= submit_tag "Save" %>
+		</td>
+	</tr>
+	<%= end_form_tag %>
+</table>

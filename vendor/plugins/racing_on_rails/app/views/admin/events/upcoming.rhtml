@@ -1,0 +1,44 @@
+<% @page_title = 'Admin: Upcoming Events' %>
+
+<%= render "shared/admin/tabs" %>
+
+<div align="center">
+	<%= start_form_tag %>
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td class="field_label">Date:</td>
+			<td><%= select_date @date %></td>
+		</tr>
+		<tr>
+			<td class="field_label">Weeks:</td>
+			<td>
+				<select name="weeks">
+					<%= options_for_select [1, 2, 4, 8, 16], @weeks %>
+				</select>
+			</td>
+		</tr>
+		<tr class="buttons">
+			<td colspan="2" class="right"><%= submit_tag "Refresh" %></td>
+		</tr>
+	</table>
+	
+	<table cellpadding="12" width="100%">
+		<tr valign="top">
+			<td width="50%">
+				<%= render_component(
+					:controller => 'obra', 
+					:action => "upcoming_events", 
+					:params => {:date => {:year => @date.year, :month => @date.month, :day => @date.day}, :weeks => @weeks}) %>
+			</td>
+			<td width="50%">
+				<%= text_area_tag 'html', 
+					render_component(:controller => 'obra', 
+									 :action => "upcoming_events", 
+									 :params => {:date => {:year => @date.year, :month => @date.month, :day => @date.day}, :weeks => @weeks}), 
+						:size => "60x30", :style => 'width: 100%;' %>
+			</td>
+		</tr>
+	</table>	
+	<%= end_form_tag %>
+
+</div>
