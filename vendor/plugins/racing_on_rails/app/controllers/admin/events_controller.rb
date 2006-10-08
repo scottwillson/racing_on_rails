@@ -242,6 +242,19 @@ class Admin::EventsController < ApplicationController
     render(:partial => 'bar_points', :locals => {:race => race, :bar_points => bar_points})
   end
   
+  def upcoming
+    if params['date'].blank?
+      @date = Date.today
+    else
+      @date = Date.new(params['date']['year'].to_i, params['date']['month'].to_i, params['date']['day'].to_i)
+    end
+    if params['weeks'].blank?
+      @weeks = 2
+    else
+      @weeks = params['weeks']
+    end
+  end
+  
   # :nodoc
   def update_promoter(promoter, params)
      if promoter and (params[:name] != promoter.name or params[:email] != promoter.email or params[:phone] != promoter.phone)
