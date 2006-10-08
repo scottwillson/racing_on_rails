@@ -1,0 +1,35 @@
+<tr valign="top" id="category_<%= category.id %>_row">
+	<td>
+    <% unless category.bar_category %>
+		<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :title => 'No BAR category assigned') %>
+    <% end %>
+	</td>
+	<td><%= image_tag('/images/icons/category.gif', 
+					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
+					  :id => "category_#{category.id}") %></td>
+	<td nowrap>
+		<%= attribute(category, 'name') %>
+		<span id="message_<%= category.id %>" ></span>
+	</td>
+	<td nowrap>
+		<%= render(:partial => 'bar_category', :locals => {:category => category}) %>
+		<span id="bar_category_message_<%= category.id %>" ></span>
+	</td>
+    <td><%= category.bar_category.overall.name if category.bar_category and category.bar_category.overall %></td>
+ 	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+		:url => {:action => "destroy", :id => category.id},
+		:confirm => "Really delete #{category.name}?",
+		:complete => evaluate_remote_response
+        %>
+    </td>
+</tr>
+<%= draggable_element("category_#{category.id}", :revert => true) %>
+<%= drop_receiving_element("category_#{category.id}", 
+	:url => { :action => "insert_at", :target_id => category.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+<%= drop_receiving_element("category_name_#{category.id}", 
+	:url => { :action => "insert_at", :target_id => category.id }, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+

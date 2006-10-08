@@ -1,0 +1,43 @@
+<% @page_title = 'Admin: Categories' %>
+
+<%= render "shared/admin/tabs" %>
+
+<div align="center">
+
+<div class="message" id="message">
+	<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+	<%= flash[:notice] if flash[:notice] %>
+</div>
+
+<table cellspacing="0" cellpadding="0" class="table_with_buttons">
+	<tr>
+		<td>
+			<table class="yellow" cellspacing="0" cellpadding="0" id="categories">
+			    <thead>
+			        <tr>
+						<th></th>
+						<th></th>
+			            <th>Name</th>
+			            <th>BAR Category</th>
+			            <th>Overall BAR Category</th>
+						<th></th>
+			        </tr>
+			    </thead>
+				<tbody>
+					<%= render :partial => "category", :collection => @categories.sort %>
+					<% if @categories.empty? %>
+					<tr valign="top">
+						<td colspan="6" width="200" class="not_found">No categories found</td>
+					</tr>
+					<% end %>
+					<tr valign="top" id="new_row">
+						<td colspan="6"></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+	</tr>
+	<%= render :partial => "/admin/add_button_row" %>
+</table>
+
+</div>

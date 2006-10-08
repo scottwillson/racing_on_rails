@@ -6,6 +6,8 @@ class Admin::CategoriesController; def rescue_action(e) raise e end; end
 
 class Admin::CategoriesControllerTest < Test::Unit::TestCase
 
+  fixtures :teams, :aliases, :users, :promoters, :categories
+
   def setup
     @controller = Admin::CategoriesController.new
     @request    = ActionController::TestRequest.new

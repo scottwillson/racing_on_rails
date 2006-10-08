@@ -8,7 +8,11 @@ ActionController::Routing::Routes.draw do |map|
   # Sample of named route:
   # map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
   # This route can be invoked with purchase_url(:id => product.id)
-
+  map.connect "/admin/events/update_bar_points/:id", :controller => "admin/events", :action => "update_bar_points"
+  map.connect "/admin/events/upcoming", :controller => "admin/events", :action => "upcoming"
+  map.connect "/admin/events/update/:id/:standings_id", :controller => "admin/events", :action => "update", :requirements => {:id => /\d+/, :standings_id => /\d+/}
+  map.connect "/admin/events/:id/:standings_id/:race_id", :controller => "admin/events", :action => "show"
+  map.connect "/admin/events/:id/:standings_id", :controller => "admin/events", :action => "show", :requirements => {:id => /\d+/, :standings_id => /\d+/}
   map.connect "/admin/events/:id", :controller => "admin/events", :action => "show", :requirements => {:id => /\d+/}
   map.connect "/admin/events/new/:year", :controller => "admin/events", :action => 'new', :requirements => {:year => /\d+/}
   map.connect "/admin/events/:action/:id", :controller => "admin/events"

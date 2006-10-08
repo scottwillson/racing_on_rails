@@ -1,0 +1,12 @@
+<span id="category_bar_category_<%= category.id %>">
+	<div class="inline">
+		<%= form_remote_tag(:url => {:action => 'update_bar_category'}, :update => "category_bar_category_#{category.id}") %>
+		<select name="bar_category_id" onchange="new Ajax.Updater('category_bar_category_<%= category.id %>', '/admin/categories/update_bar_category', {asynchronous:true, evalScripts:true, parameters:Form.serialize(this.form)}); return false;">
+		  <%= options_from_collection_for_select(bar_categories, 'id', 'name', category.bar_category_id) %>
+		</select>
+		<% @category = category %>
+		<%= hidden_field 'category', 'id' %>
+	<%= end_form_tag %>
+		<%= error_message_on 'category', 'bar_category' %>
+	</div>
+</span>
