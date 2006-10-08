@@ -230,22 +230,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_raise(ActiveRecord::RecordNotFound, 'tonkin_kings_valley should have been destroyed') { Result.find(tonkin_kings_valley.id) }
   end
 
-  def test_upcoming_events
-    @request.session[:user] = users(:candi)
-    opts = {:controller => "admin/events", :action => "upcoming"}
-    assert_routing("/admin/events/upcoming", opts)
-    get(:upcoming)
-    assert_response(:success)
-    assert_template("admin/events/upcoming")
-  end
-  
-  def test_upcoming_events_refresh
-    @request.session[:user] = users(:candi)
-    post(:upcoming, "commit"=>"Refresh", "date"=>{"month"=>"6", "day"=>"25", "year"=>"2004"}, "weeks"=>"6")
-    assert_response(:success)
-    assert_template("admin/events/upcoming")
-  end
-  
   def test_update_event
     @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
