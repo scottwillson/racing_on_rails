@@ -1,7 +1,6 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.name}" %>
 
-<%= @event.name %>
-<br />
+<h3><%= @event.name %></h3>
 <% if @event.city -%>
   <%= @event.city -%>, 
 <%- end -%>
@@ -15,6 +14,7 @@
 <%- end -%>
 <br /><br />
 
+<div align="center">
 <% @event.standings.each_with_index do |standings, standings_index| %>
   <% unless standings.is_a?(CombinedStandings) %>
 
@@ -56,15 +56,13 @@
 <% @event.standings.each_with_index do |standings, standings_index| %>
     
   <% unless standings.is_a?(CombinedStandings)%>
-  <span class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a href="/results/questions.html">Results questions?</a></small>
+  <span class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></span>
   <br/><br/>
   
   <% sorted_races = standings.races_with_results %> 
   <% sorted_races.each_with_index do |race, index| %>
-  <table class="yellow" id="results" border="0" cellspacing="0" cellpadding="0">
-    <tr bgcolor="#ffde14">
-      <th><a name="<%= (standings_index * 100) + index %>"></a><span class="tablehead"><%= race.name %></span></th>
-    </tr>
+  <table class="base" id="results" border="0" cellspacing="0" cellpadding="0">
+      <caption><a name="<%= (standings_index * 100) + index %>"></a><span class="tablehead"><%= race.name %></span></caption>
     <tr>
       <td>
   <%
@@ -108,3 +106,4 @@
   <% end %>
 <% end %>
 <% end %>
+</div>
