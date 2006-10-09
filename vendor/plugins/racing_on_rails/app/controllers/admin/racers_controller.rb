@@ -1,3 +1,4 @@
+# Add, delete, and edit Racer information. Also merge 
 class Admin::RacersController < Admin::RecordEditor
 
   include ApplicationHelper
@@ -5,6 +6,20 @@ class Admin::RacersController < Admin::RecordEditor
   model :racer
   edits :racer
   
+  # Search for Racers by name. This is a 'like' search on the concatenated 
+  # first and last name, and aliases. E.g.,:
+  # 'son' finds:
+  #  * Sonja Red
+  #  * Charles Sondheim 
+  #  * Cheryl Willson
+  #  * Scott Willson
+  #  * Jim Andersen (with an 'Jim Anderson' alias)
+  # Store previous search in session and cookie as 'racer_name'.
+  # Limit results to ApplicationControllerBase::RESULTS_LIMIT
+  # === Params
+  # * name
+  # === Assigns
+  # * racer: Array of Racers
   def index
     @name = @params['name'] || @session['racer_name'] || cookies[:racer_name] || ''
     if @name.blank?
