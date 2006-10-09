@@ -10,7 +10,7 @@ module Schedule
 
     # Import Schedule from Excel +filename+.
     #
-    # *Warning:* Deletes all future event
+    # *Warning:* Deletes all events after the schedule's first event date
     #
     # Rigid OBRA legacy format (skip first row):
     # 0. _skip_
@@ -29,8 +29,8 @@ module Schedule
     def Schedule.import(filename, progress_monitor = NullProgressMonitor.new)
       start_import(progress_monitor)
       Event.transaction do
-                           delete_all_future_events(progress_monitor)
         file             = read_file(filename, progress_monitor)
+                           delete_all_future_events(file, progress_monitor)
         events           = parse_events(file, progress_monitor)
         multi_day_events = find_multi_day_events(events, progress_monitor)
                            save(events, multi_day_events, progress_monitor)
@@ -43,9 +43,9 @@ module Schedule
       progress_monitor.progress = 1
     end  
 
-    def Schedule.delete_all_future_events(progress_monitor)
+    def Schedule.delete_all_future_events(file, progress_monitor)
       progress_monitor.detail_text = "Delete all future events"
-      Event.delete_all_future_events!
+      Event.destroy_all(["date >= ?", file.rows.first['date']])
       progress_monitor.increment(2)
     end
     

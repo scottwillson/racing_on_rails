@@ -2,10 +2,8 @@ require 'net/http'
 require 'rubygems'
 require 'test/unit'
 require 'yaml'
-require 'open4'
 require 'rake/packagetask'
 
-include Open4
 include Test::Unit::Assertions
 
 namespace :racing_on_rails do
@@ -109,20 +107,11 @@ namespace :racing_on_rails do
 
   def web_test(root = RAILS_ROOT)
     begin
-      stdin = ''
-      stdout = ''
-      stderr = ''
-
-      webrick = bg File.expand_path("#{root}/script/server"), 0 => stdin, 1 => stdout, 2 => stderr
+      @process = open("|#{root}/script/server", "r+")
       sleep 20
-  
-      yield
-  
+      yield(self)
     ensure
-      if webrick
-        puts(`kill #{webrick.pid}`)
-        webrick.exit
-      end
+      @process.close if @process
     end
   end
   

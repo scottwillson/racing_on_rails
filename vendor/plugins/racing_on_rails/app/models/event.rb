@@ -26,11 +26,6 @@ class Event < ActiveRecord::Base
       years.sort.reverse
     end
 
-    def Event.delete_all_future_events!
-      today = Date.today
-      Event.destroy_all(["date > ?", today])
-    end
-
     def initialize(attributes = nil)
       super
       if state == nil then write_attribute(:state, ASSOCIATION.state) end

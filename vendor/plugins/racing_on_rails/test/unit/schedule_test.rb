@@ -63,21 +63,26 @@ class ScheduleTest < Test::Unit::TestCase
   end
   
   def test_import_excel
-    assert_import(File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls"))
-  end
-  
-  def assert_import(filename, events_in_2005_before_import = 7)
-    before_import_2005 = Event.count("date >= '2005-01-01'")
-    assert_equal(events_in_2005_before_import, before_import_2005, "2005 events count before import")
-    before_import_all = Event.count
-    assert_equal(events_in_2005_before_import + 7, before_import_all, "All events count before import")
+    event_before = SingleDayEvent.create(:name => 'Before Schedule Start', :date => Date.new(2006, 1, 19))
+    event_on = SingleDayEvent.create(:name => 'On Schedule Start', :date => Date.new(2006, 1, 20))
+    event_after = SingleDayEvent.create(:name => 'After Schedule Start', :date => Date.new(2006, 1, 21))
     
+    before_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
+    assert_equal(1, before_import_after_schedule_start_date, "2006 events count before import")
+    before_import_all = Event.count
+    assert_equal(17, before_import_all, "All events count before import")
+    
+    filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
     Schedule::Schedule.import(filename)
     
-    after_import_2005 = Event.count("date >= '2005-01-01'")
-    assert_equal(83, after_import_2005, "2005 events count after import")
+    after_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
+    assert_equal(74, after_import_after_schedule_start_date, "2006 events count after import")
     after_import_all = Event.count
-    assert_equal(90, after_import_all, "All events count after import")
+    assert_equal(91, after_import_all, "All events count after import")
+    
+    assert(SingleDayEvent.exists?(event_before.id), 'Event before schedule start')
+    assert(!SingleDayEvent.exists?(event_on.id), 'Event on schedule start')
+    assert(!SingleDayEvent.exists?(event_after.id), 'Event after schedule start')
 
     cream_puff = nil
     fast_twitch_fridays = []
