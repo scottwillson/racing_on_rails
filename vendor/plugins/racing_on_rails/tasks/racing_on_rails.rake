@@ -19,10 +19,10 @@ namespace :racing_on_rails do
   end
 
   task :create_app do
-    app_path = File.expand_path('~/racing_on_rails-0.0.1')
+    app_path = File.expand_path('~/racing_on_rails-0.0.2')
     rm_rf app_path
   
-    puts(`tar zxf ~/racing_on_rails-0.0.1.tar.gz -C ~`)
+    puts(`tar zxf ~/racing_on_rails-0.0.2.tar.gz -C ~`)
     `mysql -u root racing_on_rails_development < #{app_path}/db/schema.sql`
   end
 
@@ -46,7 +46,7 @@ namespace :racing_on_rails do
     # Override instance and class methods of AR
     # And in superclasses, then reference in subclass
 
-    path = File.expand_path('~/racing_on_rails-0.0.1')
+    path = File.expand_path('~/racing_on_rails-0.0.2')
     puts(`#{path}/script/generate model BikeShop`)
     puts(`#{path}/script/generate controller BikeShops list`)
     customize('script/create_bike_shops_table.rb')
@@ -55,8 +55,8 @@ namespace :racing_on_rails do
   end
 
   task :acceptence_developer => [:create_app, :customize] do
-    web_test(File.expand_path('~/racing_on_rails-0.0.1')) do
-      response = Net::HTTP.get('127.0.0.1', '/', 3000)
+    web_test(File.expand_path('~/racing_on_rails-0.0.2')) do
+      response = Net::HTTP.get('127.0.0.2', '/', 3000)
       assert_match('Northern California/Nevada Cycling Association', response, "Association name on homepage in \n#{response}")
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
       assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
@@ -66,7 +66,7 @@ namespace :racing_on_rails do
       assert_match('<a href="/schedule/2004"', response, "2004 schedule link should be available in \n#{response}")
       assert_match('Flash message from customized controller', response, "Custom controller flash message in \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.1', '/schedule/', 3000)
+      response = Net::HTTP.get('127.0.0.2', '/schedule/', 3000)
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
       assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
       assert_match('January', response, "Months on schedule page \n#{response}")
@@ -75,25 +75,25 @@ namespace :racing_on_rails do
       assert_match('Custom Finder Event', response, "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
       assert_match('<i>Custom Finder Event</i>', response, "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
+      response = Net::HTTP.get('127.0.0.2', '/bike_shops/list', 3000)
       assert_match('Sellwood Cycle Repair', response, "Sellwood on bike shops list page \n#{response}")
     end
   end
 
   desc "Start Webrick and web interface"
   task :acceptence_user do
-    web_test(File.expand_path('~/racing_on_rails-0.0.1')) do
-      response = Net::HTTP.get('127.0.0.1', '/', 3000)
+    web_test(File.expand_path('~/racing_on_rails-0.0.2')) do
+      response = Net::HTTP.get('127.0.0.2', '/', 3000)
       assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
       assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
       assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
+      response = Net::HTTP.get('127.0.0.2', '/schedule', 3000)
       assert_match('Schedule', response, "Schedule should be available in \n#{response}")
       assert_match('January', response, "Schedule should be available in \n#{response}")
       assert_match('December', response, "Schedule should be available in \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
+      response = Net::HTTP.get('127.0.0.2', '/schedule/list', 3000)
   
       # TODO Run unit and functional tests
       # TODO move above assertions into tests
@@ -102,9 +102,9 @@ namespace :racing_on_rails do
   end
 
   def customize(fixture_path)
-    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.1/#{fixture_path}")))
+    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}")))
     cp(File.expand_path("vendor/plugins/racing_on_rails/test/fixtures/#{fixture_path}"),
-       File.expand_path("~/racing_on_rails-0.0.1/#{fixture_path}"))
+       File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}"))
   end
 
   def web_test(root = RAILS_ROOT)
@@ -126,7 +126,7 @@ namespace :racing_on_rails do
     end
   end
   
-  Rake::PackageTask.new("racing_on_rails", "0.0.1") do |p|
+  Rake::PackageTask.new("racing_on_rails", "0.0.2") do |p|
     p.need_tar_gz = true
     p.need_zip = true
     files = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f| 
