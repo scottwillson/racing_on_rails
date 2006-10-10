@@ -58,7 +58,7 @@ module Schedule
     def Schedule.read_file(filename, progress_monitor)
       progress_monitor.detail_text = "Read #{filename}"
       file = GridFile.new(File.new(filename), 
-        ["", "", "date", "", "name", "city", 
+        ["", "", "", "date", "", "name", "city", 
         "promoter_name", "promoter_phone", "promoter_email", "discipline", "notes"]
       )
       progress_monitor.increment(2)
