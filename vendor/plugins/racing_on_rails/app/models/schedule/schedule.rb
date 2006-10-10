@@ -26,15 +26,20 @@ module Schedule
     # 10. notes
     #
     # Import implemented in several methods. See source code.
+    # === Returns
+    # * date of first event
     def Schedule.import(filename, progress_monitor = NullProgressMonitor.new)
       start_import(progress_monitor)
+      date = nil
       Event.transaction do
         file             = read_file(filename, progress_monitor)
-                           delete_all_future_events(file, progress_monitor)
+        date             = file.rows.first['date']
+                           delete_all_future_events(date, progress_monitor)
         events           = parse_events(file, progress_monitor)
         multi_day_events = find_multi_day_events(events, progress_monitor)
                            save(events, multi_day_events, progress_monitor)
       end
+      Date.parse(date)
     end
     
     def Schedule.start_import(progress_monitor)
@@ -43,9 +48,9 @@ module Schedule
       progress_monitor.progress = 1
     end  
 
-    def Schedule.delete_all_future_events(file, progress_monitor)
-      progress_monitor.detail_text = "Delete all future events"
-      Event.destroy_all(["date >= ?", file.rows.first['date']])
+    def Schedule.delete_all_future_events(date, progress_monitor)
+      progress_monitor.detail_text = "Delete all events after #{date}"
+      Event.destroy_all(["date >= ?", date])
       progress_monitor.increment(2)
     end
     
