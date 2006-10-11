@@ -27,7 +27,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
 
   def test_admin_index
     opts = {:controller => "admin/schedule", :action => "index"}
-    assert_routing("/admin", opts)
+    assert_recognizes(opts, "/admin")
   end
   
   def test_index

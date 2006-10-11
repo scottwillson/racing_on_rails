@@ -33,13 +33,13 @@ module Schedule
       date = nil
       Event.transaction do
         file             = read_file(filename, progress_monitor)
-        date             = file.rows.first['date']
+        date             = read_date(file)
                            delete_all_future_events(date, progress_monitor)
         events           = parse_events(file, progress_monitor)
         multi_day_events = find_multi_day_events(events, progress_monitor)
                            save(events, multi_day_events, progress_monitor)
       end
-      Date.parse(date)
+      date
     end
     
     def Schedule.start_import(progress_monitor)
@@ -48,6 +48,12 @@ module Schedule
       progress_monitor.progress = 1
     end  
 
+    def Schedule.read_date(file)
+      date             = file.rows.first['date']
+      RACING_ON_RAILS_DEFAULT_LOGGER.debug("Schedule Import starting at #{date}")
+      Date.parse(date)
+    end
+    
     def Schedule.delete_all_future_events(date, progress_monitor)
       progress_monitor.detail_text = "Delete all events after #{date}"
       Event.destroy_all(["date >= ?", date])

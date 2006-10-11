@@ -22,7 +22,7 @@ class GridFile < Grid
           for cell in row
             if cell
                #RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-               if(cell.format_no == 25 or cell.format_no == 30) and (cell.to_i > 5000)             
+               if(cell.format_no == 24 or cell.format_no == 25 or cell.format_no == 30) and (cell.to_i > 5000)             
                  line << cell.date.to_s
                elsif cell.to_f > 0.0 and (cell.format_no == 25 or cell.format_no == 30 or cell.format_no == 42 or cell.format_no == 27 or cell.format_no == 44)
                    line << cell.to_f.to_s
