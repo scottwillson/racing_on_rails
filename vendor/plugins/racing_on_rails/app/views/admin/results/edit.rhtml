@@ -1,0 +1,22 @@
+<%= error_messages_for 'result' %>
+
+<%= form_tag({:controller => 'results', :action => 'update', :id => @result.to_param}) %>
+<%= hidden_field 'result', 'id' %>
+<table class="base" cellspacing="0" cellpadding="0">
+	<tr>
+		<% for column in @result.race.result_columns_or_default %>
+		<th><%= column %></th>
+		<% end %>
+	</tr>
+	<tr>
+		<% for column in @result.race.result_columns_or_default %>
+		<td><%= text_field('result', column, :size => grid_columns(column).size, :autocomplete => 'off') if @result.respond_to?(grid_columns(column).field) %></td>
+		<% end %>
+	</tr>
+	<tr>
+		<td colspan="<%= @result.race.result_columns_or_default.size %>" align="right">
+			<%= submit_tag "Save" %>
+		</td>
+	</tr>
+</table>
+<%= end_form_tag %>

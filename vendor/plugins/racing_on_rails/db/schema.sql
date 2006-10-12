@@ -251,7 +251,7 @@ CREATE TABLE `races` (
   `time` float default NULL,
   `finishers` int(11) default NULL,
   `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default 'OBRA',
+  `sanctioned_by` varchar(255),
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,

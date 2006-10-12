@@ -5,11 +5,10 @@
 		<caption><%= @racer.name %></caption>
 	    <thead>
 	        <tr>
-				<th></th>
+				<th>&nbsp;</th>
 		        <th>Race</th>
 	            <th>Category</th>
 	            <th>Date</th>
-				<th></th>
 	        </tr>
 	    </thead>
 		<tbody>
@@ -19,12 +18,10 @@
 		    <td width="400"><%= result.race.standings.name %></td>
 		    <td width="200"><%= result.race.name %></td>
 		    <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
-		    <td width="50">&nbsp;</td>
 		  </tr>
 		  <% end %>
 		</tbody>
 	</table>
-
 
 <% for result in @racer.competition_results %>
 <br/><br/>
@@ -34,12 +31,11 @@
 	</caption>
     <thead>
         <tr>
-			<th></th>
+			<th>&nbsp;</th>
 	        <th>Race</th>
             <th>Category</th>
             <th>Date</th>
 			<th>Points</th>
-			<th></th>
         </tr>
     </thead>
 	<tbody>

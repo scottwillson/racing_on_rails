@@ -1,7 +1,7 @@
 require 'pathname'
 
 class SystemNotifier < ActionMailer::Base
-  SYSTEM_EMAIL_ADDRESS = %{"Error  Notifier" <app@app.obra.org>}
+  SYSTEM_EMAIL_ADDRESS = %{"Error  Notifier" <app@class="base">}
 
   EXCEPTION_RECIPIENTS = %w{scott@butlerpress.com}
 

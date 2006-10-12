@@ -22,6 +22,10 @@ div.content {
 	border: 1px solid #F6F6F6;
 }
 
+img {
+	border-style: none;
+}
+
 a:link
 {
 	border-bottom-style: dotted;
@@ -99,7 +103,7 @@ div.nav {
 
 div.nav#top {
 	height: 51px;
-	background-image: url(/images/backgrounds/bar.gif);
+	background-image: url(/engine_files/racing_on_rails/images/backgrounds/bar.gif);
 	text-align: left;
 	border-bottom: 1px solid #6D6D6D;
 }
@@ -108,7 +112,7 @@ div.nav#bottom {
 	text-align: left;
 	border: 0px none; !important;
 	height: 23px;
-	background-image: url(/images/backgrounds/bar_low.gif);
+	background-image: url(/engine_files/racing_on_rails/images/backgrounds/bar_low.gif);
 	border-top: 1px solid #6D6D6D;
 }
 
@@ -143,6 +147,24 @@ div.breadcrumb a {
 	border-bottom: none;
 }
 
+table#left_nav {
+	font-size: 8pt;
+}
+
+table#left_nav td.text {
+	white-space: nowrap;	
+	padding-left: 4px;
+}
+
+table#left_nav td.icon {
+	text-align: right;
+	padding-right: 0px;
+}
+
+table#left_nav td.icon_padding {
+	padding-width: 36px;
+}
+
 table.base
 {
 	border-style: solid;
@@ -159,7 +181,26 @@ table.base caption
 	border-bottom-width: 0px;
 	border-left-width: 1px;
 	border-color: #B3B3B3;
-	background-image: url(/images/backgrounds/table_head.jpg);
+	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_head.jpg);
+	text-align: left;
+	font-weight: bold;
+	font-size: 8pt;
+	line-height: 21px;
+	height: 21px;
+	padding: 0px 0px 0px 8px;
+/*	Safari only
+	margin-right: -2px;*/
+}
+
+table.base th.caption
+{
+	border-style: solid;
+	border-top-width: 1px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+	border-left-width: 0px;
+	border-color: #B3B3B3;
+	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -172,7 +213,7 @@ table.base caption
 
 table.base thead tr
 {
-	background-image: url(/images/backgrounds/table_column_titles.jpg);
+	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_column_titles.jpg);
 	height: 20px;
 }
 
@@ -190,6 +231,7 @@ table.base thead th {
 
 table.base tbody td {
 	padding: 4px 6px;
+	text-align: left;
 }
 
 table.base tbody tr.even {

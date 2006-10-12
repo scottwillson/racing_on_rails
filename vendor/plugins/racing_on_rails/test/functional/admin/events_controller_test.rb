@@ -351,7 +351,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
          "commit"=>"Save", 
          :id => banana_belt.to_param.to_s,
          "event"=>{"city"=>"Forest Grove", "name"=>"", "promoter_name"=>"Geoff Mitchem", "date"=>"99822sasa!",
-                   "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"OBRA", "flyer_approved"=>"1", "promoter_phone"=>"503-233-3636", 
+                   "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>ASSOCIATION.short_name, "flyer_approved"=>"1", "promoter_phone"=>"503-233-3636", 
                   "promoter_email"=>"JMitchem@ffadesign.com", "discipline"=>"Road", "cancelled"=>"1", "state"=>"OR"}
     )
     assert_response(:success)

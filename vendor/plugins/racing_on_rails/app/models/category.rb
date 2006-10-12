@@ -17,13 +17,13 @@
     Category.find_by_name_and_scheme(name, "BAR")
   end
     
-  def Category.find_obra(name)
-    Category.find_by_name_and_scheme(name, "OBRA")
+  def Category.find_association(name)
+    Category.find_by_name_and_scheme(name, ASSOCIATION.short_name)
   end
     
   # Can't use join because of table name collisions in eager association loading
-  def Category.find_obra_with_bar(name)
-    category = find_obra(name)
+  def Category.find_with_bar(name)
+    category = find_association(name)
     if category != nil
       category.bar_category = Category.find(category.bar_category_id)
     end
@@ -33,7 +33,7 @@
   def initialize(attributes = nil)
     super
     if scheme.blank?
-      self.scheme = "OBRA"
+      self.scheme = ASSOCIATION.short_name
     end
   end
 

@@ -6,7 +6,7 @@ class Admin::CategoriesController < Admin::RecordEditor
   edits :category
 
   def index
-    @categories = Category.find_all_by_scheme('OBRA')
+    @categories = Category.find_all_by_scheme(ASSOCIATION.short_name)
   end
   
   def edit_name

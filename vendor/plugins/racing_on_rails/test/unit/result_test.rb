@@ -45,7 +45,7 @@ class ResultTest < Test::Unit::TestCase
     event.save!
     standings = Standings.new(:event => event)
     standings.save!
-    category = Category.find_obra("Senior Men Pro 1/2")
+    category = Category.find_association("Senior Men Pro 1/2")
     race = Race.new(:standings => standings, :category => category)
     race.save!
     assert_equal(0, race.results.size, "Results before save")
@@ -89,7 +89,7 @@ class ResultTest < Test::Unit::TestCase
   def test_find_associated_records
     event = SingleDayEvent.new(:name => "Tabor CR")
     standings = Standings.new(:event => event)
-    category = Category.find_obra("Senior Men Pro 1/2")
+    category = Category.find_association("Senior Men Pro 1/2")
     race = Race.new(:standings => standings, :category => category)
     result1 = race.results.build(
       :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon"
@@ -146,7 +146,7 @@ class ResultTest < Test::Unit::TestCase
     result = Result.new(attributes)
     assert_equal("", result.category_name, "category_name")
     
-    result.category = Category.find_obra("Senior Men Pro 1/2")
+    result.category = Category.find_association("Senior Men Pro 1/2")
     assert_equal("Senior Men Pro 1/2", result.category_name, "category_name")
 
     result = Result.new

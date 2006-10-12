@@ -5,27 +5,90 @@
 <div align="center">
 <%- if flash[:notice] -%>
 	<div class="message" id="message">
-			<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= image_tag('/engine_files/racing_on_rails/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
 			<%= flash[:notice] %>
 	</div>
 <%- end -%>
 
 <%- if flash[:warn] -%>
 	<div class="message" id="message">
-			<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= image_tag('/engine_files/racing_on_rails/images/icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
 			<%= flash[:warn] %>
 	</div>
 <%- end -%>
 
 <%= error_messages_for 'event' %>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<table>
 	<tr>
+		<td valign="top" style="padding-right: 20px;">
+			<!-- standing + races tree -->
+			<table border="0" cellspacing="0" cellpadding="0" class="base" id="left_nav">
+				<caption>
+					<%= link_to @event.name, :id => @event.to_param, :standings_id => nil, :race_id => nil %>
+					<span style="padding-left: 15px;">	
+						<%= link_to(image_tag('/engine_files/racing_on_rails/images/icons/web_page.gif', :title => 'View public results web page', :alt => 'View public results web page'), 
+							 :controller => '/results', :action => 'event', :year => @event.date.year, 
+							 :discipline => @event.discipline, :id => @event.id) unless @event.standings.empty? %>
+					</span>
+				</caption>
+				<% for standings in @event.standings %>
+				<tr id="standings_<%= standings.id %>_row">
+					<td class="icon"><%= image_tag '/engine_files/racing_on_rails/images/icons/results.gif' %></td>
+					<td colspan="2" class="text"><%= link_to standings.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => nil %></td>
+					<td style="padding-left: 12px;">
+						<%= link_to_remote image_tag('/engine_files/racing_on_rails/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+						:url => {:action => "destroy_standings", :id => standings.id},
+						:confirm => "Really delete #{standings.name}?",
+						:complete => evaluate_remote_response
+						%>
+						<span id="message_<%= standings.id %>" ></span>
+					</td>
+				</tr>
+				<% for race in standings.races %>
+				<tr id="race_<%= race.id %>_row">
+					<td class="icon_padding"></td>
+					<td class="icon"><%= image_tag '/engine_files/racing_on_rails/images/icons/category.gif' %></td>
+					<td class="text"><%= link_to race.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => race.to_param %></td>
+					<td style="padding-left: 12px;">
+						<%= link_to_remote image_tag('/engine_files/racing_on_rails/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+						:url => {:action => "destroy_race", :id => race.id},
+						:complete => evaluate_remote_response
+						%>
+						<span id="message_<%= race.id %>" ></span>
+					</td>
+				</tr>
+				<% end %>
+				<% end %>
+				<% if @event.standings.empty? %>
+				<tr>
+					<td colspan="4"><i>No results</i></td>
+				</tr>
+				<% end %>
+				<tr>
+					<th colspan="4" class="caption">Import Results</th>
+				</tr>
+				<tr>
+					<td colspan="4" style="white-space: nowrap;">
+			            <%= form_tag({:controller => 'events', :action => 'upload', :id => @event.to_param}, { :multipart => true }) %>
+							<%= file_field_tag "results_file" %><%= submit_tag 'Import' %>
+			            <%= end_form_tag %>
+					</td>
+				</tr>
+			</table>
+		</td>
 		<td valign="top" width="100%">
-			<%= start_form_tag({:action => 'update', :id => @event.id}) %>
-				<%= render(:partial => "event") %>
-			<% end_form_tag %>
-			<%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
+			<!-- results -->
+			<% if @race %>
+				<%= render :partial => "race" %>
+			<% elsif @standings %>
+				<%= render :partial => "standings" %>
+			<% else %>
+				<%= start_form_tag({:action => 'update', :id => @event.id}) %>
+					<%= render(:partial => "event") %>
+				<% end_form_tag %>
+				<%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
+			<% end %>
 		</td>
 	</tr>
 </table>

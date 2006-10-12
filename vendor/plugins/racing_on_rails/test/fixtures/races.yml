@@ -1,7 +1,7 @@
 --- !omap
 #
 # Order is import because of foreign key constraints.
-# Insert OBRA categories after inserting their BAR categories.
+# Insert association categories after inserting their BAR categories.
 # "omap" means "ordered map" in YAML. Very picky about indentation.
 #
 - banana_belt_pro_1_2:

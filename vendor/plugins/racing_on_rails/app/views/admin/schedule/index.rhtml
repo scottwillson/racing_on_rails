@@ -4,18 +4,37 @@
 <%= links_to_years %>
 <%= links_to_months @schedule %>
 
-<div style="background: yellow; display: table;">
-	<div style="display: table-cell;">
-	<%= form_tag({:action => 'upload'}, { :multipart => true }) %>
-		<span class="field_label">Import Schedule:</span><%= file_field_tag "schedule_file" %><%= submit_tag 'Import' %>
-	<%= end_form_tag %>
-	</div>
-	<div style="display: table-cell;">
-		<%= button_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, :align => 'right' %>
-	</div>
-</div>
+<table width="100%">
+	<tr>
+		<td>
+			<%= form_tag({:action => 'upload'}, { :multipart => true }) %>
+			<table>
+				<tr>
+					<td>
+						<div class="field_label" id="left">Import Schedule:</div>
+						<%= file_field_tag "schedule_file" %>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<%= submit_tag 'Import' %>
+					</td>
+				</tr>
+			</table>
+			<%= end_form_tag %>
+		</td>
+		<td>
+			<table align="right">
+				<tr>
+					<td align="right">
+						<%= button_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, :align => 'right' %>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
 
-<br>
 
 <%- for month in @schedule.months -%>
 <div align="center">

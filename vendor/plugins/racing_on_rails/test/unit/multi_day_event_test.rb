@@ -28,7 +28,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal("Road", pir_july_2.discipline, "discipline")
     assert_equal("http://www.obra.org/flyers/2005/pir.html", pir_july_2.flyer, "flyer")
     assert_equal(promoter, pir_july_2.promoter, "promoter")
-    assert_equal("OBRA", pir_july_2.sanctioned_by, "sanctioned_by")
+    assert_equal(ASSOCIATION.short_name, pir_july_2.sanctioned_by, "sanctioned_by")
     assert_equal("Nathan Hobson", pir_july_2.promoter.name, "promoter name")
     assert_equal("411-9292", pir_july_2.promoter.phone, "promoter phone")
     assert_equal("sixhobson@hotmail.com", pir_july_2.promoter.email, "promoter email")
@@ -41,7 +41,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal("Road", pir_july_7.discipline, "discipline")
     assert_equal("http://www.obra.org/flyers/2005/pir.html", pir_july_7.flyer, "flyer")
     assert_equal(promoter, pir_july_7.promoter, "promoter")
-    assert_equal("OBRA", pir_july_7.sanctioned_by, "sanctioned_by")
+    assert_equal(ASSOCIATION.short_name, pir_july_7.sanctioned_by, "sanctioned_by")
     assert_equal("Nathan Hobson", pir_july_7.promoter.name, "promoter name")
     assert_equal("411-9292", pir_july_7.promoter.phone, "promoter phone")
     assert_equal("sixhobson@hotmail.com", pir_july_7.promoter.email, "promoter email")
@@ -290,7 +290,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     single_event_1.discipline = "Cyclocross"
     single_event_1.flyer = "http://www.letour.fr"
     single_event_1.promoter = nil
-    single_event_1.sanctioned_by = "OBRA"
+    single_event_1.sanctioned_by = ASSOCIATION.short_name
     single_event_1.save!
     
     original_attributes = multi_day_event.attributes.clone
@@ -313,7 +313,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal("Cyclocross", results["discipline"], "SingleDayEvent discipline")
     assert_equal("http://www.letour.fr", results["flyer"], "SingleDayEvent flyer")
     assert_nil(results["promoter_id"], "SingleDayEvent promoter_id")
-    assert_equal("OBRA", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
+    assert_equal(ASSOCIATION.short_name, results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("France", results["state"], "SingleDayEvent state")
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")

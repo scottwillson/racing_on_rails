@@ -207,6 +207,7 @@ class Grid
     @calculated_padding
   end
 
+  # TODO Just redefine helper method
   def truncate_obra(text, length = 30, truncate_string = "...")
     if text.nil? then return end
 
