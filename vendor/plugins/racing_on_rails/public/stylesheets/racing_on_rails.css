@@ -304,7 +304,7 @@ div.inline {
 
 .field_label
 {
-	text-align: right;
+	text-align: right !important;
 	font-weight: bold;
 	min-width: 75px;
 	padding-top: 4px;
@@ -316,7 +316,7 @@ div.inline {
 
 .field_label#left
 {
-	text-align: left;
+	text-align: left !important;
 }
 
 .vertical_field_label

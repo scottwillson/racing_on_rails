@@ -31,9 +31,18 @@
 			<td><%= text_field 'racer', 'team_name' %></td>
 		</tr>
 		<tr>
+			<td class="field_label">Joined:</td>
+			<td><%= date_select 'racer', 'member_on', 
+					:order => [:month, :day, :year], 
+					:start_year => 1999, :end_year => Date.today.year, 
+					:include_blank => true %>
+			</td>
+			<td class="field_label">Notes:</td>
+			<td colspan="3" rowspan="2"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
+		</tr>
+		<tr>
 			<td></td>
-			<td class="field_label" id="left"><%= check_box 'racer', 'member' %> Member</td>
-			<td colspan="4"></td>
+			<td class="field_label" id="left"><%= check_box 'racer', 'member' %> Current Member</td>
 		</tr>
 		<tr>
 			<td class="field_label">Email:</td>
