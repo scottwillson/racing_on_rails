@@ -53,6 +53,7 @@ class Race < ActiveRecord::Base
     category.name if category
   end
   
+  # FIXME: Incorrectly doubles tandem and other team events' field sizes
   def field_size
     if self[:field_size] and self[:field_size] > 0
       self[:field_size]
