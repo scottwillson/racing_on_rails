@@ -53,6 +53,14 @@ class Race < ActiveRecord::Base
     category.name if category
   end
   
+  def field_size
+    if self[:field_size] and self[:field_size] > 0
+      self[:field_size]
+    else
+      results.size
+    end
+  end
+  
   # Default columns if empty
   def result_columns_or_default
     self.result_columns || DEFAULT_RESULT_COLUMNS

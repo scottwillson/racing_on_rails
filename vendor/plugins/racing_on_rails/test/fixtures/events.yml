@@ -6,7 +6,7 @@
     id: 1
     name: Banana Belt Series
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
     date: 2004-01-01
     type: Series
@@ -15,7 +15,7 @@
     parent_id: 1
     name: Banana Belt I
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
     updated_at: 2004-01-05
     date: 2004-01-01
@@ -25,7 +25,7 @@
     parent_id: 1
     name: Banana Belt II
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
     date: 2004-01-08
     type: SingleDayEvent
@@ -34,7 +34,7 @@
     parent_id: 1
     name: Banana Belt III
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
     date: 2004-01-15
     type: SingleDayEvent
@@ -49,14 +49,14 @@
     name: Kings Valley Road Race
     date: 2003-12-31
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
 - tabor_cr:
     id: 6
     name: Mt. Tabor Circuit Race
     date: 2005-07-01
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 3
     flyer: http://www.obra.org/flyers/2006/tabor_cr.html
     flyer_approved: false
@@ -71,7 +71,7 @@
     flyer: http://www.obra.org/flyers/2005/pir.html
     flyer_approved: true
     promoter_id: 2
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: WeeklySeries
 - pir:
     id: 8
@@ -83,7 +83,7 @@
     discipline: Road
     flyer: http://www.obra.org/flyers/2005/pir.html
     promoter_id: 2
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
 - pir_2:
     id: 9
@@ -95,14 +95,14 @@
     discipline: Road
     flyer: http://www.obra.org/flyers/2005/pir.html
     promoter_id: 2
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
 - kings_valley_2004:
     id: 10
     name: Kings Valley Road Race
     date: 2004-12-31
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
 - mt_hood:
     id: 12
@@ -113,7 +113,7 @@
     discipline: Road
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: MultiDayEvent
 - mt_hood_1:
     id: 13
@@ -124,7 +124,7 @@
     discipline: Road
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     city: Hood River
     type: SingleDayEvent
 - mt_hood_2:
@@ -137,13 +137,13 @@
     discipline: Road
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
 - kings_valley_2004:
     id: 15
     name: Kings Valley Road Race
     date: 2004-12-31
     discipline: Road
-    sanctioned_by: CBRA
+    sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
     

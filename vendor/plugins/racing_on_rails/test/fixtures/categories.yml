@@ -1,7 +1,7 @@
 --- !omap
 #
 # Order is import because of foreign key constraints.
-# Insert CBRA categories after inserting their BAR categories.
+# Insert <%= ASSOCIATION.short_name %> categories after inserting their BAR categories.
 # "omap" means "ordered map" in YAML. Very picky about indentation.
 #
 - women_4_bar:
@@ -43,49 +43,49 @@
 - masters_35_plus_women:
     id: 5
     name: Masters 35+ Women
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - sr_p_1_2:
     id: 6
     name: Senior Men Pro 1/2
     bar_category_id: 17
     position: 1
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - cx_a:
     id: 7
     name: Men A
     bar_category_id: 16
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - sr_women:
     id: 8
     name: Senior Women
     bar_category_id: 18
     position: 4
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - women_4:
     id: 9
     name: Women 4
     bar_category_id: 4
     position: 12
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - senior_men_3:
     id: 10
     bar_category_id: 15
     name: Senior Men 3
     position: 8
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - masters_35_plus:
     id: 11
     name: Masters 35+
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - senior_women_1_2_3:
     id: 12
     name: Senior Women 1/2/3
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - cat_3:
     id: 14
     bar_category_id: 15
     name: Category 3
-    scheme: CBRA
+    scheme: <%= ASSOCIATION.short_name %>
 - team:
     id: 19
     name: Team

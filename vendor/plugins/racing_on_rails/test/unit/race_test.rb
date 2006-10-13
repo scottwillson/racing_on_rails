@@ -108,4 +108,18 @@ class RaceTest < Test::Unit::TestCase
     race.reload
     assert_equal('My notes', race.notes)
   end
+  
+  # Return value from field_size column. If column is blank, count results
+  def test_field_size
+    single_speed = Category.create(:name => "Singlespeed")
+    race = standings(:kings_valley_2004).races.create!(:category => single_speed)
+    assert_equal(0, race.field_size, 'New race field size')
+    
+    race = races(:banana_belt_pro_1_2)
+    assert_equal(4, race.field_size, 'Race field size with empty field_size column')
+    
+    race.field_size = 120
+    race.save!
+    assert_equal(120, race.field_size, 'Race field size from field_size column')
+  end
 end
