@@ -30,6 +30,12 @@ class Competition < Event
     end
   end
 
+  def destroy_standings
+    for s in standings(true)
+      s.destroy
+    end
+  end
+
   def to_s
     "<self.class #{id} #{name} #{start_date} #{end_date}>"
   end
