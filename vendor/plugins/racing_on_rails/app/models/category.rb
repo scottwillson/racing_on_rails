@@ -6,6 +6,9 @@
   belongs_to :bar_category, :class_name => "Category", :foreign_key => "bar_category_id"
   belongs_to :combined_bar_category, :class_name => "Category", :foreign_key => "combined_bar_category_id"
   has_many :results
+  has_many :races
+  # BAR categories have other categories mapped to them
+  has_many :categories, :foreign_key => "bar_category_id"
  
   validates_presence_of :name, :scheme
  
