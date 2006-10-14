@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class EventTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines
+  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :events, :standings, :races, :results
   
   def test_standings_create
     event = SingleDayEvent.create(:name => 'Saved')
@@ -136,11 +136,19 @@ class EventTest < Test::Unit::TestCase
   end
   
   def test_destroy
-    pir_july_2 = events(:pir)
-    pir_july_2.destroy
-    assert_raises(ActiveRecord::RecordNotFound, "PIR should be deleted") {Event.find(pir_july_2.id)}
+    event = SingleDayEvent.create
+    standings = event.standings.create!.races.create!
+    event.destroy
+    assert_raises(ActiveRecord::RecordNotFound, "event should be deleted") {Event.find(event.id)}
   end
   
+  def test_no_delete_with_results
+    kings_valley = events(:kings_valley)
+    assert(!kings_valley.destroy, 'Should not be destroyed')
+    assert(!kings_valley.errors.empty?, 'Should have errors')
+    assert_not_nil(Event.find(kings_valley.id), "Kings Valley should not be deleted")
+  end
+
   def test_to_param
     tabor_cr = events(:tabor_cr)
     assert_equal(6, tabor_cr.to_param, "to_param")

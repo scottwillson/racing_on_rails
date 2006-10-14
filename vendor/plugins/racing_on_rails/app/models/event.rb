@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
     before_validation :find_associated_records
     validate_on_create :validate_type
     validates_presence_of :name, :date
+    before_destroy :validate_no_results
 
     belongs_to :promoter, :foreign_key => "promoter_id"
     has_many :standings, 
@@ -79,6 +80,19 @@ class Event < ActiveRecord::Base
       end
     end
 
+    # TODO Could be replaced with a select join if too slow
+    def validate_no_results
+      for s in standings(true)
+        for race in s.races(true)
+          if !race.results(true).empty?
+            errors.add('results', 'Cannot destroy event with results')
+            return false 
+          end
+        end
+      end
+      true
+    end
+    
     # TODO Remove. Old workaround to ensure children are cancelled
     def find_associated_records
       existing_discipline = Discipline.find_via_alias(discipline)
