@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RaceTest < Test::Unit::TestCase
   
-  fixtures :teams, :aliases, :promoters, :categories, :racers, :events, :standings, :races
+  fixtures :teams, :racers, :aliases, :promoters, :categories, :events, :standings, :races, :results
 
   def test_new_from_hash
     race = Race.new({

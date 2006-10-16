@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RacerTest < Test::Unit::TestCase
 
-  fixtures :teams, :aliases, :promoters, :categories, :racers, :events, :standings, :races, :results
+  fixtures :teams, :racers, :aliases, :promoters, :categories, :events, :standings, :races, :results
 
   def test_save
     assert_nil(Racer.find_by_last_name("Hampsten"), "Hampsten should not be in DB")

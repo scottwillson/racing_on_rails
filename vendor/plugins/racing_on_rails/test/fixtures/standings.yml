@@ -10,6 +10,7 @@
     bar_points: 1
     discipline: Road
     updated_at: 2004-01-05
+    type: Standings
 - kings_valley:
     id: 2
     event_id: 5
@@ -17,6 +18,7 @@
     date: 2003-12-31
     bar_points: 1
     updated_at: 2004-01-01
+    type: Standings
 - kings_valley_2004:
     id: 3
     event_id: 15
@@ -24,6 +26,7 @@
     date: 2004-12-31
     bar_points: 1
     updated_at: 2004-12-31
+    type: Standings
 
 # Event is actually in 2004
 - jack_frost:
@@ -33,4 +36,5 @@
     date: 2002-01-15
     bar_points: 1
     updated_at: 2002-12-31
+    type: Standings
         

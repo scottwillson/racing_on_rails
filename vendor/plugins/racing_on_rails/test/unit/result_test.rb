@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ResultTest < Test::Unit::TestCase
 
-  fixtures :teams, :aliases, :users, :promoters, :categories, :racers, :events, :standings, :races, :results
+  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :events, :standings, :races, :results
 
   def test_racer_first_last_name
     result = Result.new
@@ -163,7 +163,7 @@ class ResultTest < Test::Unit::TestCase
   def test_racer_team
     standings = standings(:kings_valley_2004)
     race = standings.races.create(:category => categories(:cx_a))
-    result = race.results.build
+    result = race.results.build(:place => '3', :number => '932')
     racer = Racer.new(:last_name => 'Kovach', :first_name => 'Barry')
     team = Team.new(:name => 'Sorella Forte ')
     result.racer = racer
@@ -180,7 +180,7 @@ class ResultTest < Test::Unit::TestCase
     assert_equal(sorella_forte, racer.team, 'result team')
 
     race = standings.races.create(:category => categories(:sr_women))
-    result = race.results.build
+    result = race.results.build(:place => '3', :number => '932')
     result.racer = racer
     new_team = Team.new(:name => 'Bike Gallery')
     result.racer = racer
@@ -193,7 +193,7 @@ class ResultTest < Test::Unit::TestCase
     assert_not_equal(bike_gallery_from_db, racer.team, 'result team')
     
     racer_with_no_team = Racer.create(:last_name => 'Ollerenshaw', :first_name => 'Doug')
-    result = race.results.build
+    result = race.results.build(:place => '3', :number => '932')
     result.racer = racer_with_no_team
     vanilla = teams(:vanilla)
     result.team = vanilla
@@ -359,62 +359,62 @@ class ResultTest < Test::Unit::TestCase
   
     # new, no aliases
     race = races(:kings_valley_pro_1_2_2004)
-    result = race.results.create(:first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Bianchi')
+    result = race.results.create(:place => 1, :first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Bianchi', :number => '')
     assert_equal('Fausto Coppi', result.name, 'racer name')
     assert_equal('Bianchi', result.team_name, 'team name')
     
     # existing racer, new team
-    result = race.results.create(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Bianchi')
+    result = race.results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Bianchi', :number => '')
     result.save!
     assert_equal(racers(:tonkin).id, result.racer.id, 'racer id')
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Bianchi', result.team_name, 'team name')
     
     # new racer, existing team
-    result = race.results.create(:first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Kona')
+    result = race.results.create(:place => 1, :first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Kona', :number => '')
     result.save!
     assert_equal(teams(:kona).id, result.team.id, 'team id')
     assert_equal('Fausto Coppi', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
     
     # existing racer, existing team
-    result = race.results.create(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona')
+    result = race.results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona', :number => '')
     result.save!
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
 
     # new racer, aliased team
-    result = race.results.create(:first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Kona Les Gets')
+    result = race.results.create(:place => 1, :first_name => 'Fausto', :last_name => 'Coppi', :team_name => 'Kona Les Gets', :number => '')
     result.save!
     assert_equal('Fausto Coppi', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
     
     # aliased racer, new team
-    result = race.results.create(:first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Bianchi')
+    result = race.results.create(:place => 1, :first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Bianchi', :number => '')
     result.save!
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Bianchi', result.team_name, 'team name')
     
     # aliased racer, aliased team
-    result = race.results.create(:first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Kona Les Gets')
+    result = race.results.create(:place => 1, :first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Kona Les Gets', :number => '')
     result.save!
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
     
     # aliased racer, existing team
-    result = race.results.create(:first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Kona')
+    result = race.results.create(:place => 1, :first_name => 'Erin', :last_name => 'Tonkin', :team_name => 'Kona', :number => '')
     result.save!
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
     
     # existing racer, aliased team
-    result = race.results.create(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona Les Gets')
+    result = race.results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona Les Gets', :number => '')
     result.save!
     assert_equal('Erik Tonkin', result.name, 'racer name')
     assert_equal('Kona', result.team_name, 'team name')
     
     # no racer, no team
-    result = race.results.create
+    result = race.results.create(:place => 1, :number => '')
     result.save!
     assert_equal('', result.name, 'racer name')
     assert_equal('', result.team_name, 'team name')
@@ -422,7 +422,7 @@ class ResultTest < Test::Unit::TestCase
   
   def test_save_number
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result = results.create(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
     assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
     assert_equal('300', result.racer.road_number, 'Road number')
     assert(result.racer.ccx_number.blank?, 'Cyclocross number')
@@ -433,24 +433,27 @@ class ResultTest < Test::Unit::TestCase
     # Same name, number as existing racer
     tonkin = racers(:tonkin)
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
-    assert_equal(tonkin, result.racer, 'Racer')
+    result_1 = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
+    assert_equal(tonkin, result_1.racer, 'Racer')
     
     # Same name, different number as existing racer
     tonkin = racers(:tonkin)
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Erik', :last_name => 'Tonkin', :number => '4100')
-    assert_equal(tonkin, result.racer, 'Racer')
+    result_2 = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :number => '4100')
+    assert_equal(tonkin, result_2.racer, 'Racer')
     # TODO assert warning
     
     # Different name, same number as existing racer
     tonkin = racers(:tonkin)
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Ron', :last_name => 'Tonkin', :number => '104')
-    assert_not_equal(tonkin, result.racer, 'Racer')
-    assert_equal("Ron", result.racer.first_name, 'Racer')
+    result_3 = results.create(:place => 1, :first_name => 'Ron', :last_name => 'Tonkin', :number => '104')
+    assert_not_equal(tonkin, result_3.racer, 'Racer')
+    assert_equal("Ron", result_3.racer.first_name, 'Racer')
 
     # Clean up from previous
+    result_1.destroy
+    result_2.destroy
+    result_3.destroy
     Racer.delete_all(['road_number <> ?', '104'])
     assert_equal(1, Racer.find_all_by_first_name_and_last_name('Erik','Tonkin').size, 'Erik Tonkins in database')
 
@@ -462,7 +465,7 @@ class ResultTest < Test::Unit::TestCase
     kings_valley_2004.discipline = 'Cyclocross'
     kings_valley_2004.save!
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Erik', :last_name => 'Tonkin', :number => '999')
+    result = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :number => '999')
     assert_equal(tonkin, result.racer, 'Racer')
     # TODO assert wrong number warning
     
@@ -474,7 +477,7 @@ class ResultTest < Test::Unit::TestCase
     kings_valley_2004.discipline = 'Mountain Bike'
     kings_valley_2004.save!
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
+    result = results.create(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
     assert_equal(tonkin, result.racer, 'Racer')
     # TODO assert wrong number warning
     
@@ -484,7 +487,7 @@ class ResultTest < Test::Unit::TestCase
     kings_valley_2004.discipline = 'Mountain Bike'
     kings_valley_2004.save!
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:first_name => 'Eric', :last_name => 'Tonkin', :number => '70A')
+    result = results.create(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '70A')
     assert_equal(tonkin, result.racer, 'Racer')
   end
   

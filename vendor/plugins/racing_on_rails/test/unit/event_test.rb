@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class EventTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :events, :standings, :races, :results
+  fixtures :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results
   
   def test_standings_create
     event = SingleDayEvent.create(:name => 'Saved')
@@ -137,7 +137,7 @@ class EventTest < Test::Unit::TestCase
   
   def test_destroy
     event = SingleDayEvent.create
-    standings = event.standings.create!.races.create!
+    standings = event.standings.create!.races.create!(:category => categories(:cat_3))
     event.destroy
     assert_raises(ActiveRecord::RecordNotFound, "event should be deleted") {Event.find(event.id)}
   end

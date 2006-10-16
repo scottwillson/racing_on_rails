@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CategoryTest < Test::Unit::TestCase
-  fixtures :teams, :aliases, :promoters, :categories
+  fixtures :disciplines, :teams, :racers, :aliases, :promoters, :categories, :number_issuers, :race_numbers, :racers, :events, :standings, :races, :results
   
   def test_find
     category = Category.find_bar("Women 4")

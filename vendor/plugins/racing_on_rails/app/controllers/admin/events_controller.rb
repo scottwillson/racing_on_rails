@@ -1,7 +1,7 @@
 # Show Schedule, add and edit Events, show Results for Events
 class Admin::EventsController < ApplicationController
   
-  model :event
+  model :event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
 
   # Show results for Event
   # === Params
@@ -115,6 +115,8 @@ class Admin::EventsController < ApplicationController
         end
         @event = Event.update(params[:id], event_params)
       rescue Exception => e
+        stack_trace = e.backtrace.join("\n")
+        logger.error("#{e}\n#{stack_trace}")
         flash[:warn] = e
         return render(:action => :show)
       end
@@ -152,6 +154,8 @@ class Admin::EventsController < ApplicationController
         :id => event.to_param
       }
     rescue  Exception => error
+      stack_trace = error.backtrace.join("\n")
+      logger.error("#{error}\n#{stack_trace}")
       redirect_path = {
         :controller => "/admin/events", 
         :action => :show, 
@@ -178,7 +182,7 @@ class Admin::EventsController < ApplicationController
       end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
+      logger.error("#{error}\n#{stack_trace}")
       message = "Could not delete #{race.name}"
       render :update do |page|
         page.replace_html("message_#{race.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
@@ -201,7 +205,7 @@ class Admin::EventsController < ApplicationController
       end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
+      logger.error("#{error}\n#{stack_trace}")
       message = "Could not delete #{standings.name}"
       render :update do |page|
         page.replace_html("message_#{standings.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
@@ -222,7 +226,7 @@ class Admin::EventsController < ApplicationController
       end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
+      logger.error("#{error}\n#{stack_trace}")
       message = "Could not delete #{result.name}"
       render :update do |page|
         page.replace_html("message_#{result.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))

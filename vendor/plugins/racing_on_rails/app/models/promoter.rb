@@ -13,6 +13,10 @@ class Promoter < ActiveRecord::Base
       )
     end
   end
+  
+  def name
+    self[:name] || ''
+  end
 
   def not_blank
     if (name.blank? and email.blank? and phone.blank?)

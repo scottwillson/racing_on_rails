@@ -6,7 +6,7 @@ class ResultsController; def rescue_action(e) raise e end; end
 
 class ResultsControllerTest < Test::Unit::TestCase
 
-  fixtures :teams, :aliases, :users, :promoters, :categories, :categories, :racers, :events, :standings, :races, :results, :disciplines
+  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :disciplines, :events, :standings, :races, :results
 
   def setup
     @controller = ResultsController.new
@@ -18,7 +18,7 @@ class ResultsControllerTest < Test::Unit::TestCase
     banana_belt_1 = events(:banana_belt_1)
     big_team = Team.create(:name => "T" * 60)
     big_racer = Racer.create(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
-    banana_belt_1.standings.first.races.first.results.create(:racer => big_racer, :team => big_team)
+    banana_belt_1.standings.first.races.first.results.create(:place => 20, :racer => big_racer, :team => big_team, :number => '')
     opts = {:controller => "results", :action => "event", :year => "2004", :discipline => "road", :id => banana_belt_1.id.to_s}
     assert_routing("/results/2004/road/2", opts)
 
@@ -63,7 +63,7 @@ class ResultsControllerTest < Test::Unit::TestCase
   def test_racer
     big_team = Team.create(:name => "T" * 60)
     big_racer = Racer.create(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
-    events(:banana_belt_1).standings.first.races.first.results.create(:racer => big_racer, :team => big_team)
+    events(:banana_belt_1).standings.first.races.first.results.create(:racer => big_racer, :team => big_team, :place => 2, :number => '99')
 
     get(:racer, {:controller => "results", :action => "racer", :id => big_racer.id.to_s})
     assert_response(:success)

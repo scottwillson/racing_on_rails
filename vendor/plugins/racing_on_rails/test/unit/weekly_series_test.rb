@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class WeeklySeriesTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines
+  fixtures :promoters, :events, :disciplines, :aliases_disciplines
 
   def test_new
     pir = WeeklySeries.create!(

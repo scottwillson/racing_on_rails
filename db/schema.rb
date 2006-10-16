@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 3) do
 
   create_table "aliases_disciplines", :id => false, :force => true do |t|
     t.column "discipline_id", :integer, :default => 0, :null => false
-    t.column "alias", :string, :limit => 64, :default => "", :null => false
+    t.column "alias", :string, :limit => 64, :null => false
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "bar_category_id", :integer
     t.column "position", :integer, :default => 0, :null => false
     t.column "is_overall", :integer, :default => 0, :null => false
-    t.column "name", :string, :limit => 64, :default => "", :null => false
+    t.column "name", :string, :limit => 64, :null => false
     t.column "overall_id", :integer
     t.column "scheme", :string, :default => ""
     t.column "lock_version", :integer, :default => 0, :null => false
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "discipline_bar_categories", ["discipline_id"], :name => "idx_discipline_id"
 
   create_table "disciplines", :force => true do |t|
-    t.column "name", :string, :limit => 64, :default => "", :null => false
+    t.column "name", :string, :limit => 64, :null => false
     t.column "bar", :boolean
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "notes", :string, :default => ""
     t.column "sanctioned_by", :string
     t.column "state", :string, :limit => 64
-    t.column "type", :string, :limit => 32, :default => "", :null => false
+    t.column "type", :string, :limit => 32, :null => false
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
@@ -98,9 +98,16 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "events", ["type"], :name => "idx_type"
   add_index "events", ["oregon_cup_id"], :name => "oregon_cup_id"
 
+  create_table "number_issuers", :force => true do |t|
+    t.column "name", :string, :null => false
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
   create_table "promoters", :force => true do |t|
     t.column "email", :string
-    t.column "name", :string, :default => "", :null => false
+    t.column "name", :string, :default => ""
     t.column "phone", :string
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
@@ -109,6 +116,23 @@ ActiveRecord::Schema.define(:version => 3) do
 
   add_index "promoters", ["name", "email", "phone"], :name => "promoter_info", :unique => true
   add_index "promoters", ["name"], :name => "idx_name"
+
+  create_table "race_numbers", :force => true do |t|
+    t.column "racer_id", :integer, :null => false
+    t.column "discipline_id", :integer, :null => false
+    t.column "number_issuer_id", :integer, :null => false
+    t.column "value", :string, :null => false
+    t.column "year", :integer, :null => false
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
+  add_index "race_numbers", ["value", "number_issuer_id", "year"], :name => "unique_numbers", :unique => true
+  add_index "race_numbers", ["racer_id"], :name => "racer_id"
+  add_index "race_numbers", ["number_issuer_id"], :name => "number_issuer_id"
+  add_index "race_numbers", ["discipline_id"], :name => "discipline_id"
+  add_index "race_numbers", ["value"], :name => "race_numbers_value_index"
 
   create_table "racers", :force => true do |t|
     t.column "first_name", :string, :limit => 64
@@ -187,8 +211,8 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "is_series", :boolean
     t.column "license", :string, :limit => 64, :default => ""
     t.column "notes", :string
-    t.column "number", :string, :limit => 16, :default => "", :null => false
-    t.column "place", :string, :limit => 8, :default => "", :null => false
+    t.column "number", :string, :limit => 16, :null => false
+    t.column "place", :string, :limit => 8, :null => false
     t.column "place_in_category", :integer, :default => 0
     t.column "points", :float, :default => 0.0
     t.column "points_from_place", :float, :default => 0.0
@@ -237,7 +261,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.column "discipline", :string, :limit => 32
     t.column "notes", :string, :default => ""
     t.column "source_id", :integer
-    t.column "type", :string, :limit => 32, :default => "", :null => false
+    t.column "type", :string, :limit => 32
   end
 
   add_index "standings", ["date"], :name => "idx_date"
@@ -245,7 +269,7 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "standings", ["source_id"], :name => "source_id"
 
   create_table "teams", :force => true do |t|
-    t.column "name", :string, :default => "", :null => false
+    t.column "name", :string, :null => false
     t.column "city", :string, :limit => 128
     t.column "state", :string, :limit => 64
     t.column "notes", :string
@@ -258,14 +282,53 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "teams", ["name"], :name => "idx_name", :unique => true
 
   create_table "users", :force => true do |t|
-    t.column "name", :string, :default => "", :null => false
-    t.column "username", :string, :default => "", :null => false
-    t.column "password", :string, :default => "", :null => false
+    t.column "name", :string, :null => false
+    t.column "username", :string, :null => false
+    t.column "password", :string, :null => false
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
   end
 
   add_index "users", ["username"], :name => "idx_alias", :unique => true
+
+  add_foreign_key "aliases", ["racer_id"], "racers", ["id"], :on_delete => :cascade
+  add_foreign_key "aliases", ["team_id"], "teams", ["id"], :on_delete => :cascade
+
+  add_foreign_key "aliases_disciplines", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
+
+  add_foreign_key "categories", ["bar_category_id"], "categories", ["id"], :on_delete => :set_null
+  add_foreign_key "categories", ["overall_id"], "categories", ["id"], :on_delete => :set_null
+
+  add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
+  add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
+
+  add_foreign_key "events", ["parent_id"], "events", ["id"], :on_delete => :cascade
+  add_foreign_key "events", ["promoter_id"], "promoters", ["id"], :on_delete => :set_null
+  add_foreign_key "events", ["oregon_cup_id"], "events", ["id"], :on_delete => :set_null
+
+  add_foreign_key "race_numbers", ["racer_id"], "racers", ["id"]
+  add_foreign_key "race_numbers", ["discipline_id"], "disciplines", ["id"]
+  add_foreign_key "race_numbers", ["number_issuer_id"], "number_issuers", ["id"]
+  add_foreign_key "race_numbers", ["racer_id"], "racers", ["id"], :on_delete => :cascade
+  add_foreign_key "race_numbers", ["number_issuer_id"], "number_issuers", ["id"]
+  add_foreign_key "race_numbers", ["discipline_id"], "disciplines", ["id"]
+
+  add_foreign_key "racers", ["team_id"], "teams", ["id"]
+
+  add_foreign_key "races", ["category_id"], "categories", ["id"]
+  add_foreign_key "races", ["standings_id"], "standings", ["id"], :on_delete => :cascade
+
+  add_foreign_key "results", ["category_id"], "categories", ["id"]
+  add_foreign_key "results", ["race_id"], "races", ["id"], :on_delete => :cascade
+  add_foreign_key "results", ["racer_id"], "racers", ["id"]
+  add_foreign_key "results", ["team_id"], "teams", ["id"]
+
+  add_foreign_key "scores", ["competition_result_id"], "results", ["id"], :on_delete => :cascade
+  add_foreign_key "scores", ["source_result_id"], "results", ["id"], :on_delete => :cascade
+
+  add_foreign_key "standings", ["event_id"], "events", ["id"], :on_delete => :cascade
+  add_foreign_key "standings", ["source_id"], "standings", ["id"], :on_delete => :cascade
+  add_foreign_key "standings", ["source_id"], "standings", ["id"], :on_delete => :cascade
 
 end

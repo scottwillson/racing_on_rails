@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class StandingsTest < Test::Unit::TestCase
   
-  fixtures :teams, :aliases, :users, :promoters, :categories, :racers, :events, :standings, :races, :results, :disciplines, :discipline_bar_categories, :aliases_disciplines
+  fixtures :teams, :racers, :categories, :events, :standings, :races, :results
 
   def test_new
     bb3 = events(:banana_belt_3)

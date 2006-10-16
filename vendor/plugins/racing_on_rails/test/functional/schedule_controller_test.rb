@@ -7,7 +7,7 @@ class ScheduleController; def rescue_action(e) raise e end; end #:nodoc: all
 
 class ScheduleControllerTest < Test::Unit::TestCase #:nodoc: all
 
-  fixtures :promoters, :events, :aliases_disciplines, :disciplines, :users
+  fixtures :promoters, :events, :teams, :racers, :disciplines, :aliases, :aliases_disciplines, :standings, :races, :results
 
   def setup
     @controller = ScheduleController.new
