@@ -292,43 +292,43 @@ ActiveRecord::Schema.define(:version => 3) do
 
   add_index "users", ["username"], :name => "idx_alias", :unique => true
 
-  add_foreign_key "aliases", ["racer_id"], "racers", ["id"], :on_delete => :cascade
   add_foreign_key "aliases", ["team_id"], "teams", ["id"], :on_delete => :cascade
+  add_foreign_key "aliases", ["racer_id"], "racers", ["id"], :on_delete => :cascade
 
   add_foreign_key "aliases_disciplines", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
 
-  add_foreign_key "categories", ["bar_category_id"], "categories", ["id"], :on_delete => :set_null
   add_foreign_key "categories", ["overall_id"], "categories", ["id"], :on_delete => :set_null
+  add_foreign_key "categories", ["bar_category_id"], "categories", ["id"], :on_delete => :set_null
 
-  add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
+  add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
 
+  add_foreign_key "events", ["oregon_cup_id"], "events", ["id"], :on_delete => :set_null
   add_foreign_key "events", ["parent_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "events", ["promoter_id"], "promoters", ["id"], :on_delete => :set_null
-  add_foreign_key "events", ["oregon_cup_id"], "events", ["id"], :on_delete => :set_null
 
+  add_foreign_key "race_numbers", ["discipline_id"], "disciplines", ["id"]
   add_foreign_key "race_numbers", ["racer_id"], "racers", ["id"]
   add_foreign_key "race_numbers", ["discipline_id"], "disciplines", ["id"]
   add_foreign_key "race_numbers", ["number_issuer_id"], "number_issuers", ["id"]
   add_foreign_key "race_numbers", ["racer_id"], "racers", ["id"], :on_delete => :cascade
   add_foreign_key "race_numbers", ["number_issuer_id"], "number_issuers", ["id"]
-  add_foreign_key "race_numbers", ["discipline_id"], "disciplines", ["id"]
 
   add_foreign_key "racers", ["team_id"], "teams", ["id"]
 
-  add_foreign_key "races", ["category_id"], "categories", ["id"]
   add_foreign_key "races", ["standings_id"], "standings", ["id"], :on_delete => :cascade
+  add_foreign_key "races", ["category_id"], "categories", ["id"]
 
+  add_foreign_key "results", ["team_id"], "teams", ["id"]
   add_foreign_key "results", ["category_id"], "categories", ["id"]
   add_foreign_key "results", ["race_id"], "races", ["id"], :on_delete => :cascade
   add_foreign_key "results", ["racer_id"], "racers", ["id"]
-  add_foreign_key "results", ["team_id"], "teams", ["id"]
 
-  add_foreign_key "scores", ["competition_result_id"], "results", ["id"], :on_delete => :cascade
   add_foreign_key "scores", ["source_result_id"], "results", ["id"], :on_delete => :cascade
+  add_foreign_key "scores", ["competition_result_id"], "results", ["id"], :on_delete => :cascade
 
-  add_foreign_key "standings", ["event_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "standings", ["source_id"], "standings", ["id"], :on_delete => :cascade
+  add_foreign_key "standings", ["event_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "standings", ["source_id"], "standings", ["id"], :on_delete => :cascade
 
 end

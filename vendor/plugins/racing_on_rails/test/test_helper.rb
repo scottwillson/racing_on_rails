@@ -14,6 +14,10 @@ Engines.disable_app_code_mixing = true
 Test::Unit::TestCase.fixture_path = File.dirname(__FILE__)  + "/fixtures/"
 $LOAD_PATH.unshift(Test::Unit::TestCase.fixture_path)
 
+class Test::Unit::TestCase
+  fixtures :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :users, :promoters, :categories, :events, :standings, :races, :results
+end
+
 # Assert two Enumerable objects contain exactly same object in any order
 def assert_same_elements(expected, actual, message = '')
   if expected.nil? && actual.nil?

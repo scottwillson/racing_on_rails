@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class AliasTest < Test::Unit::TestCase
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :events, :standings, :races, :results
 
   def test_new
     weaver = racers(:weaver)

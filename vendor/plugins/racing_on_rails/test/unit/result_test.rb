@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ResultTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :events, :standings, :races, :results
-
   def test_racer_first_last_name
     result = Result.new
     assert_equal("", result.first_name, "Racer first name w/nil racer")
