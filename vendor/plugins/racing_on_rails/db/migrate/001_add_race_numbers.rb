@@ -25,10 +25,10 @@ class AddRaceNumbers < ActiveRecord::Migration
     add_index(:race_numbers, :value)
     add_index(:race_numbers, [:value, :number_issuer_id, :year], :unique => true, :name => 'unique_numbers')
     
-    Standings.execute('alter table standings modify column type varchar(32) default null;')
     change_column_default(:promoters, :name, '')
-    change_column(:results, :place, :string, :limit => 8, :default => '')
-    change_column(:results, :number, :string, :limit => 16, :default => '')
+    change_column(:results, :place, :string, :default => '', :limit => 8)
+    change_column(:results, :number, :string, :default => '', :limit => 16)
+    Standings.connection.execute('alter table standings modify column type varchar(32) default null;')
   end
 
   def self.down
