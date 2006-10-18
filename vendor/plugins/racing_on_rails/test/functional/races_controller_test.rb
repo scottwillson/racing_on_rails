@@ -5,8 +5,6 @@ class RacesController; def rescue_action(e) raise e end; end
 
 class RacesControllerTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :events, :standings, :races
-
   def setup
     @controller = RacesController.new
     @request    = ActionController::TestRequest.new

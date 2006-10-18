@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SingleDayEventTest < Test::Unit::TestCase
   
-  fixtures :events
-
   def test_find_all_by_year_month
     events = SingleDayEvent.find_all_by_year_month(1980, 1)
     assert_equal(0, events.size, "find_all_by_year_month(1980, 1)")

@@ -5,8 +5,6 @@ require "tempfile"
 
 class ResultsFileTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :events, :standings, :races, :results
-
   def test_has_results?
     file = ResultsFile.new("text \t results")
     

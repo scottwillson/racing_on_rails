@@ -6,8 +6,6 @@ class ResultsController; def rescue_action(e) raise e end; end
 
 class ResultsControllerTest < Test::Unit::TestCase
 
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :disciplines, :events, :standings, :races, :results
-
   def setup
     @controller = ResultsController.new
     @request    = ActionController::TestRequest.new

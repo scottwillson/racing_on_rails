@@ -14,8 +14,6 @@ end
 
 class AdminScheduleControllerTest < Test::Unit::TestCase
   
-  fixtures :users, :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :promoters, :categories, :number_issuers, :race_numbers, :events, :standings, :races, :results
-
   include Admin::ScheduleHelper
   
   def setup

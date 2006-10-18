@@ -1,9 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class EventTest < Test::Unit::TestCase
-  
-  fixtures :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results
-  
+    
   def test_standings_create
     event = SingleDayEvent.create(:name => 'Saved')
     standings = event.standings.create

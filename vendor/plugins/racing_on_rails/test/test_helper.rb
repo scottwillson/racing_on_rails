@@ -15,7 +15,7 @@ Test::Unit::TestCase.fixture_path = File.dirname(__FILE__)  + "/fixtures/"
 $LOAD_PATH.unshift(Test::Unit::TestCase.fixture_path)
 
 class Test::Unit::TestCase
-  fixtures :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :users, :promoters, :categories, :events, :standings, :races, :results
+  fixtures :teams, :racers, :disciplines, :aliases, :aliases_disciplines, :categories, :promoters, :events, :standings, :races, :results, :discipline_bar_categories, :number_issuers, :race_numbers, :users
 end
 
 # Assert two Enumerable objects contain exactly same object in any order

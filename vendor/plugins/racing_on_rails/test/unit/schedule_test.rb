@@ -5,8 +5,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ScheduleTest < Test::Unit::TestCase
   
-  fixtures :teams, :racers, :aliases, :users, :promoters, :categories, :disciplines, :aliases_disciplines, :events, :standings, :races, :results
-
   def setup
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.load_aliases

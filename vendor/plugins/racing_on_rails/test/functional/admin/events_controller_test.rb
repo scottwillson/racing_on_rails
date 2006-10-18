@@ -7,8 +7,6 @@ class Admin::EventsController; def rescue_action(e) raise e end; end
 
 class Admin::EventsControllerTest < Test::Unit::TestCase
 
-  fixtures :users, :teams, :racers, :disciplines, :aliases, :aliases_disciplines, :promoters, :categories, :number_issuers, :race_numbers, :events, :standings, :races, :results
-
   include ApplicationHelper
 
   def setup

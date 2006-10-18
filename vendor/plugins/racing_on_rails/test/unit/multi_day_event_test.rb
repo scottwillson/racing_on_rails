@@ -5,8 +5,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class MultiDayEventTest < Test::Unit::TestCase
   
-  fixtures :teams, :racers, :aliases, :disciplines, :aliases_disciplines, :categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results
-
   def test_update_events_promoter
     pir_july_2 = events(:pir)
     pir_july_7 = events(:pir_2)

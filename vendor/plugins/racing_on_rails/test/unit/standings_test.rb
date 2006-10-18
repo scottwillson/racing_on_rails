@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class StandingsTest < Test::Unit::TestCase
   
-  fixtures :teams, :racers, :categories, :events, :standings, :races, :results
-
   def test_new
     bb3 = events(:banana_belt_3)
     standings = bb3.standings.create

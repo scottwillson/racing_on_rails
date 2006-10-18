@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class PromoterTest < Test::Unit::TestCase
   
-  fixtures :promoters
-
   def test_find_by_info
     assert_equal(promoters(:brad_ross), Promoter.find_by_info("Brad ross"))
     assert_equal(promoters(:brad_ross), Promoter.find_by_info("Brad ross", "brad@foo.com"))
@@ -15,11 +13,11 @@ class PromoterTest < Test::Unit::TestCase
     assert_nil(Promoter.find_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
     assert_nil(Promoter.find_by_info("", "membership@obra.org"))
     
-    promoter = Promoter.new(:phone => "(212) 522-1872")
+    promoter = Promoter.new(:name => '', :phone => "(212) 522-1872")
     promoter.save!
     assert_equal(promoter, Promoter.find_by_info("", "", "(212) 522-1872"))
     
-    promoter = Promoter.new(:email => "cjw@cjw.net")
+    promoter = Promoter.new(:name => '', :email => "cjw@cjw.net")
     promoter.save!
     assert_equal(promoter, Promoter.find_by_info("", "cjw@cjw.net", ""))
   end

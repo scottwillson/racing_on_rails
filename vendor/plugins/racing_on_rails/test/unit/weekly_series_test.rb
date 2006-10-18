@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class WeeklySeriesTest < Test::Unit::TestCase
   
-  fixtures :promoters, :events, :disciplines, :aliases_disciplines
-
   def test_new
     pir = WeeklySeries.create!(
       :date => Date.new(2008, 4, 1), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true

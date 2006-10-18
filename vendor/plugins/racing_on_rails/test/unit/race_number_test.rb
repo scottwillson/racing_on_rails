@@ -2,8 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RaceNumberTest < Test::Unit::TestCase
 
-  fixtures :disciplines, :teams, :racers, :aliases, :promoters, :categories, :number_issuers, :race_numbers, :racers, :events, :standings, :races, :results
-
   def test_create
     alice = racers(:alice)
     elkhorn = NumberIssuer.create(:name => 'Elkhorn Classic SR')

@@ -5,8 +5,6 @@ require 'admin/teams_controller'
 class Admin::TeamsController; def rescue_action(e) raise e end; end
 
 class Admin::TeamsControllerTest < Test::Unit::TestCase
-
-  fixtures :teams, :racers, :aliases, :users, :promoters, :events, :disciplines, :aliases_disciplines
   
   def setup
     @controller = Admin::TeamsController.new
