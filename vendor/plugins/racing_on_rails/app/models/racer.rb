@@ -43,7 +43,7 @@ class Racer < ActiveRecord::Base
   # criteria example: {:first_name => 'Ryan', road_number => '70'}
   # Assume only one number key
   # Return array of Racers
-  def Racer.match(criteria)
+  def Racer.match(criteria, event = nil)
     logger.debug("Racer.match: #{criteria.inspect}")
     if criteria.include?(:name) and (criteria.include?(:first_name) or criteria.include?(:last_name))
       raise(ArgumentError, 'Cannot match on both :name and :first_name or :last_name')
@@ -59,7 +59,7 @@ class Racer < ActiveRecord::Base
     end
     
     if has_number?(_criteria) and !has_names?(_criteria)
-      results = match_by_number(_criteria)
+      results = match_by_number(_criteria, event)
       logger.debug("Racer.match found: #{results}")
       return results
     end
@@ -74,7 +74,7 @@ class Racer < ActiveRecord::Base
         return name_matches
       else
         # Break ties by number
-        number_matches = match_by_number(_criteria, name_matches)
+        number_matches = match_by_number(_criteria, event, name_matches)
         if number_matches.size == 1
           logger.debug("Racer.match found: #{number_matches}")
           return number_matches
@@ -112,14 +112,15 @@ class Racer < ActiveRecord::Base
     criteria.include?(:name) or criteria.include?(:first_name) or criteria.include?(:last_name)
   end
   
-  def Racer.match_by_number(criteria, previous_matches = nil)
+  def Racer.match_by_number(criteria, event = nil, previous_matches = nil)
     number_condition = criteria.detect do |key, value|
       NUMBERS.include?(key)
     end
     return [] if number_condition.nil?
-    
+
     if previous_matches.nil?
-      Racer.find(:all, :conditions => ["#{number_condition.first} = ?", number_condition.last])
+      race_number = RaceNumber.find_by_value_and_event(number_condition.last, event)
+      race_number.racer
     else
       previous_matches.select do |racer|
         racer[number_condition.first] == number_condition.last

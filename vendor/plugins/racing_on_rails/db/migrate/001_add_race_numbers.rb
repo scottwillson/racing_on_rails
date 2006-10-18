@@ -25,7 +25,9 @@ class AddRaceNumbers < ActiveRecord::Migration
     add_index(:race_numbers, :value)
     add_index(:race_numbers, [:value, :number_issuer_id, :year], :unique => true, :name => 'unique_numbers')
     
-    change_column_default(:promoters, :name, '')
+    # Odd error with this one -- change with SQL
+    # change_column_default(:promoters, :name, '')
+    Standings.connection.execute("alter table promoters modify column name varchar(255) default '';")
     change_column(:results, :place, :string, :default => '', :limit => 8)
     change_column(:results, :number, :string, :default => '', :limit => 16)
     Standings.connection.execute('alter table standings modify column type varchar(32) default null;')
