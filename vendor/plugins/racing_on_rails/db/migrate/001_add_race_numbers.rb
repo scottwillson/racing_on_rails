@@ -27,6 +27,8 @@ class AddRaceNumbers < ActiveRecord::Migration
     
     Standings.execute('alter table standings modify column type varchar(32) default null;')
     change_column_default(:promoters, :name, '')
+    change_column(:results, :place, :string, :limit => 8, :default => '')
+    change_column(:results, :number, :string, :limit => 16, :default => '')
   end
 
   def self.down
