@@ -52,11 +52,7 @@ class Result < ActiveRecord::Base
       if _racer.name.blank?
         self.racer = nil
       else
-        existing_racers = Racer.match(
-          :first_name => _racer.first_name, 
-          :last_name => _racer.last_name, 
-          Discipline.number_type(self.race.standings.event.discipline) => number
-        )
+        existing_racers = find_racers
         self.racer = existing_racers.first if existing_racers.size == 1
       end
     end
@@ -69,6 +65,32 @@ class Result < ActiveRecord::Base
         self.team = existing_team if existing_team
       end
     end
+  end
+  
+  def find_racers
+    matches = []
+    
+    if !first_name.blank? and !last_name.blank?
+      matches = Racer.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
+      ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
+      
+    elsif last_name.blank?
+      matches = Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
+      
+    elsif first_name.blank?
+      matches = Racer.find_all_by_last_name(last_name) | Alias.find_all_racers_by_name(last_name)
+      
+    else
+      matches = Racer.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', '', ''],
+        :order => 'last_name, first_name')
+      
+    end
+    
+    matches
   end
   
   def update_racer_team 

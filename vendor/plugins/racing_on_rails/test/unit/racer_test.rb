@@ -207,85 +207,13 @@ class RacerTest < Test::Unit::TestCase
     assert_equal('', racer.team_name, 'name')
   end
   
-  # Numbers should be unique
-  def test_match
-    # criteria: (first_name + last_name, last_name, name), number, team (12)
-    # match: first_name + last_name, last_name, alias, number, team, team_alias (256)
-    # existing: 0, 1, 2 (3)
-    
-    tonkin = racers(:tonkin)
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin'), 'first_name + last_name')
-    assert_equal([tonkin], Racer.match(:last_name => 'Tonkin'), 'last_name')
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik'), 'first_name')
-    assert_equal([tonkin], Racer.match(:name => 'erik tonkin'), 'name')
-
-    assert_equal([], Racer.match(:first_name => 'Erika', :last_name => 'Tonkin'), 'first_name + last_name should not match')
-    assert_equal([], Racer.match(:last_name => 'onkin'), 'last_name should not match')
-    assert_equal([], Racer.match(:first_name => 'Erika'), 'first_name should not match')
-    assert_equal([], Racer.match(:name => 'Erika Tonkin'), 'name should not match')
-
-    assert_equal([tonkin], Racer.match(:road_number => '104'), 'road number')
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '104'), 'road number, first_name, last_name')
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :ccx_number => '6'), 'cross number (not in DB), first_name, last_name')
-
-    # TODO Add warning that numbers don't match
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1'), 'Different number')
-    assert_equal([], Racer.match(:first_name => 'Rhonda', :last_name => 'Tonkin', :road_number => '104'), 'Different number')
-    assert_equal([], Racer.match(:first_name => 'Erik', :last_name => 'Viking', :road_number => '104'), 'Different number')
-
-    tonkin_clone = Racer.create(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1')
-    unless tonkin_clone.valid?
-      flunk(tonkin_clone.errors.full_messages)
-    end
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :ccx_number => '6'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:last_name => 'Tonkin'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
-    assert_equal([], Racer.match(:ccx_number => '6'), 'ccx number (not in DB)')
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '104'), 'road number, first_name, last_name')
-    assert_equal([tonkin_clone], Racer.match(:road_number => '1'), 'road number')
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1'), 'road number, first_name, last_name')
-    
-    # team_name -- consider last
-    assert_equal([tonkin], Racer.match(:name => 'erik tonkin', :team_name => 'Kona'), 'name, team')
-    assert_equal([], Racer.match(:first_name => 'Erika', :last_name => 'Tonkin', :team_name => 'Kona'), 'first_name + last_name should not match')
-    assert_equal([tonkin], Racer.match(:name => 'erik tonkin', :team_name => 'Kona', :road_number => '104'), 'name, team, number, should match')
-    assert_equal([tonkin], Racer.match(:last_name => 'Tonkin', :team_name => 'Kona'), 'last_name + team should match')
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => ''), 'first_name, last_name + team should match')
-    assert_equal([racers(:weaver)], Racer.match(:name => 'Ryan Weaver', :team_name => 'Camerati'), 'name + wrong team should match')
-    assert_equal([racers(:weaver)], Racer.match(:name => 'Ryan Weaver', :team_name => 'Camerati', :road_number => '987'), 
-                'name + wrong team + wrong number should match')
-    tonkin_clone.team = teams(:vanilla)
-    tonkin_clone.save!
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Vanilla Bicycles'), 
-                'first_name, last_name + team alias should match')
-                
-    # required: first, last, name, or number 
-    assert_equal([], Racer.match({}), 'blank name should not match if no blank names in DB')
-    assert_equal([], Racer.match(:team_name => 'Astana Wurth'), 'blank team name should not match if no blank names in DB')
-    assert_raise(ArgumentError) {Racer.match({:first_name => 'Erik', :name => 'fred rogers'})}
-    assert_raise(ArgumentError) {Racer.match({:last_name => 'Tonkin', :name => 'fred rogers'})}
-    assert_raise(ArgumentError) {Racer.match({:first_name => 'Erik', :last_name => 'Tonkin', :name => 'fred rogers'})}
-    
-    # rental numbers
-    assert_equal([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '60'), 'road number, first_name, last_name')
-    
-    assert_equal([], Racer.match(:first_name => '', :last_name => ''), 'blank first_name + last_name should not match if no blank names in DB')
-    assert_equal([], Racer.match(:name => ''), 'blank name should not match if no blank names in DB')
-    
-    blank_name_racer = Racer.create(:name => '', :dh_number => '1')
-    assert_equal([blank_name_racer], Racer.match(:first_name => '', :last_name => ''), 'blank first_name + last_name should match')
-    assert_equal([blank_name_racer], Racer.match(:name => ''), 'blank name should  match')
-  end
-  
   def test_duplicate
     Racer.create(:first_name => 'Otis', :last_name => 'Guy')
     racer = Racer.new(:first_name => 'Otis', :last_name => 'Guy')
-    assert(!racer.valid?, 'Dupe racer name with no number should be invalid')
+    assert(racer.valid?, 'Dupe racer name with no number should be valid')
 
     racer = Racer.new(:first_name => 'Otis', :last_name => 'Guy', :road_number => '180')
-    assert(!racer.valid?, 'Dupe racer name invalid if racer has no numbers')
+    assert(racer.valid?, 'Dupe racer name valid even if racer has no numbers')
 
     Racer.create(:first_name => 'Otis', :last_name => 'Guy', :ccx_number => '180')
     Racer.create(:first_name => 'Otis', :last_name => 'Guy', :ccx_number => '19')

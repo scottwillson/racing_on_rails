@@ -6,7 +6,6 @@ class Racer < ActiveRecord::Base
   NUMBERS = [:road_number, :ccx_number, :xc_number, :downhill_number]
   
   before_validation :find_associated_records
-  validate :unique
 
   belongs_to :team
   has_many :aliases
@@ -347,44 +346,6 @@ class Racer < ActiveRecord::Base
       else
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
-      end
-    end
-  end
-  
-  # first + last name and no same, non-blank numbers
-  def unique
-    racers_with_same_name = Racer.match_by_name(:first_name => first_name, :last_name => last_name)
-    racers_with_same_name.delete(self)
-    if racers_with_same_name.size == 0
-      return
-    end
-    
-    non_blank_number = false
-    for number in NUMBERS
-      if !self[number].blank?
-        non_blank_number = true
-      end
-    end
-    unless non_blank_number
-      errors.add(number, "Ambiguous racer: multiple racers named '#{name}', but racer's numbers are all blank")
-      return
-    end
-    
-    for number in NUMBERS
-      racer_numbers = Set.new
-      for racer in racers_with_same_name
-        if !self[number].blank? and self[number] == racer[number]
-          errors.add(number, "Racer ID #{racer.id} has same name '#{name}' has same #{number}: '#{self[number]}")
-          return
-        end
-        if self[number].blank? and !racer[number].blank?
-          errors.add(number, "Ambiguous Racer: racer ID #{racer.id} has same name '#{name}' and #{number} of '#{self[number]},' but current racer's #{number} is blank")
-          return
-        end
-        if !self[number].blank? and racer[number].blank?
-          errors.add(number, "Ambiguous Racer: racer ID #{racer.id} has same name '#{name},' but blank #{number}. Current racer's '#{number} is not blank")
-          return
-        end
       end
     end
   end
