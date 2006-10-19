@@ -490,6 +490,7 @@ class ResultTest < Test::Unit::TestCase
   end
   
   def test_find_racers
+    # TODO Add warning that numbers don't match
     tonkin = racers(:tonkin)
     race = races(:banana_belt_pro_1_2)
     
@@ -522,20 +523,37 @@ class ResultTest < Test::Unit::TestCase
     
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '6')
     assert_equal([tonkin], result.find_racers, 'cross number (not in DB), first_name, last_name')
-  end
-  
-  def test_match
-    # TODO Add warning that numbers don't match
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1'), 'Different number')
-    assert_equal([], Racer.match(:first_name => 'Rhonda', :last_name => 'Tonkin', :road_number => '104'), 'Different number')
-    assert_equal([], Racer.match(:first_name => 'Erik', :last_name => 'Viking', :road_number => '104'), 'Different number')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '1')
+    assert_equal([tonkin], result.find_racers, 'Different number')
+    
+    result = race.results.new(:first_name => 'Rhonda', :last_name => 'Tonkin', :number => '104')
+    assert_equal([], result.find_racers, 'Tonkin\'s number, different first name')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Viking', :number => '104')
+    assert_equal([], result.find_racers, 'Tonkin\'s number, different last name')
 
     tonkin_clone = Racer.create(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1')
     unless tonkin_clone.valid?
       flunk(tonkin_clone.errors.full_messages)
     end
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :ccx_number => '6'))
+
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin')
+    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, no numbers')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :ccx_number => '6')
+    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, bogus numbers')
+    
+    result = race.results.new(:last_name => 'Tonkin')
+    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same last name')
+    
+    result = race.results.new(:first_name => 'Erik')
+    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, bogus numbers')
+    
+    # Add exact dupes with same numbers
+  end
+  
+  def test_match
     assert_same_elements([tonkin, tonkin_clone], Racer.match(:last_name => 'Tonkin'))
     assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
     assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
