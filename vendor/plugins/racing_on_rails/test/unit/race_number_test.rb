@@ -14,13 +14,9 @@ class RaceNumberTest < Test::Unit::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
-    # dupe
-    assert_raise(ActiveRecord::StatementInvalid) {
-      RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
-    }
-    assert_raise(ActiveRecord::StatementInvalid) {
-      RaceNumber.create!(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
-    }
+    # dupes (OK now, were not before)
+    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    RaceNumber.create!(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     
     # invalid because missing fields
     assert(!RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No racer')

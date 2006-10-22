@@ -9,6 +9,7 @@ class Racer < ActiveRecord::Base
 
   belongs_to :team
   has_many :aliases
+  has_many :race_numbers
   has_many :results
 
   def Racer.find_by_name(name)
@@ -325,6 +326,7 @@ class Racer < ActiveRecord::Base
         save!
         aliases << racer.aliases
         results << racer.results
+        race_numbers << racer.race_numbers
         Racer.delete(racer.id)
         existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
         if existing_alias.nil? and Racer.match(:name => racer.name).empty?

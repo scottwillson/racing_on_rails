@@ -19,6 +19,7 @@
     promoter_id: 1
     updated_at: 2004-01-05
     date: 2004-01-01
+    number_issuer_id: 1
     type: SingleDayEvent
 - banana_belt_2:
     id: 3
@@ -144,6 +145,7 @@
     name: Kings Valley Road Race
     date: 2004-12-31
     discipline: Road
+    number_issuer_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
     

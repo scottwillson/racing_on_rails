@@ -1,0 +1,7 @@
+tonkin_road_number:
+  id: 1
+  racer_id: 1
+  number_issuer_id: 1
+  discipline_id: 4
+  year: 2004
+  value: 104

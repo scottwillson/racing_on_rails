@@ -201,6 +201,12 @@ class ResultTest < Test::Unit::TestCase
     assert_equal(vanilla, racer_with_no_team.team, 'result team')
   end
   
+  def test_event
+    result = races(:kings_valley_pro_1_2_2004).results.create!(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result.reload
+    assert_equal(events(:kings_valley_2004), result.event, 'Result event')
+  end
+  
   def test_time_s
     result = Result.new
     assert_in_delta(0.0, result.time, 0.0001, "no time")
@@ -442,11 +448,12 @@ class ResultTest < Test::Unit::TestCase
     # TODO assert warning
     
     # Different name, same number as existing racer
+    # TODO Should be warning with possibility to create alias
     tonkin = racers(:tonkin)
     results = races(:kings_valley_pro_1_2_2004).results
     result_3 = results.create(:place => 1, :first_name => 'Ron', :last_name => 'Tonkin', :number => '104')
-    assert_not_equal(tonkin, result_3.racer, 'Racer')
-    assert_equal("Ron", result_3.racer.first_name, 'Racer')
+    assert_equal(tonkin, result_3.racer, 'Racer')
+    assert_equal("Erik", result_3.racer.first_name, 'Racer')
 
     # Clean up from previous
     result_1.destroy
@@ -493,105 +500,130 @@ class ResultTest < Test::Unit::TestCase
     # TODO Add warning that numbers don't match
     tonkin = racers(:tonkin)
     race = races(:banana_belt_pro_1_2)
+    event = events(:banana_belt_1)
     
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin')
-    assert_equal([tonkin], result.find_racers, 'first_name + last_name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'first_name + last_name')
     
     result = race.results.new(:name => 'Erik Tonkin')
-    assert_equal([tonkin], result.find_racers, 'name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'name')
     
     result = race.results.new(:last_name => 'Tonkin')
-    assert_equal([tonkin], result.find_racers, 'last_name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'last_name')
     
     result = race.results.new(:first_name => 'Erik')
-    assert_equal([tonkin], result.find_racers, 'first_name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'first_name')
     
     result = race.results.new(:first_name => 'Erika', :last_name => 'Tonkin')
-    assert_equal([], result.find_racers, 'first_name + last_name should not match')
+    assert_equal([], result.find_racers(event).to_a, 'first_name + last_name should not match')
     
     result = race.results.new(:name => 'Erika Tonkin')
-    assert_equal([], result.find_racers, 'name should not match')
+    assert_equal([], result.find_racers(event).to_a, 'name should not match')
     
     result = race.results.new(:last_name => 'onkin')
-    assert_equal([], result.find_racers, 'last_name should not match')
+    assert_equal([], result.find_racers(event).to_a, 'last_name should not match')
     
     result = race.results.new(:first_name => 'Erika')
-    assert_equal([], result.find_racers, 'first_name should not match')
+    assert_equal([], result.find_racers(event).to_a, 'first_name should not match')
     
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
-    assert_equal([tonkin], result.find_racers, 'road number, first_name, last_name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'road number, first_name, last_name')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '340')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'Matson road number, first_name, last_name')
     
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '6')
-    assert_equal([tonkin], result.find_racers, 'cross number (not in DB), first_name, last_name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'cross number (not in DB), first_name, last_name')
     
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '1')
-    assert_equal([tonkin], result.find_racers, 'Different number')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'Different number')
     
+    # TODO make null racer and list this match as a possibility
     result = race.results.new(:first_name => 'Rhonda', :last_name => 'Tonkin', :number => '104')
-    assert_equal([], result.find_racers, 'Tonkin\'s number, different first name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'Tonkin\'s number, different first name')
     
+    # TODO make null racer and list this match as a possibility
     result = race.results.new(:first_name => 'Erik', :last_name => 'Viking', :number => '104')
-    assert_equal([], result.find_racers, 'Tonkin\'s number, different last name')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'Tonkin\'s number, different last name')
 
-    tonkin_clone = Racer.create(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1')
+    tonkin_clone = Racer.create!(:first_name => 'Erik', :last_name => 'Tonkin')
+    RaceNumber.create!(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '1')
     unless tonkin_clone.valid?
       flunk(tonkin_clone.errors.full_messages)
     end
 
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin')
-    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, no numbers')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'Same names, no numbers')
     
-    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :ccx_number => '6')
-    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, bogus numbers')
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '6')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'Same names, bogus numbers')
     
     result = race.results.new(:last_name => 'Tonkin')
-    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same last name')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'Same last name')
     
     result = race.results.new(:first_name => 'Erik')
-    assert_equal([tonkin, tonkin_clone], result.find_racers, 'Same names, bogus numbers')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'Same names, bogus numbers')
     
-    # Add exact dupes with same numbers
-  end
-  
-  def test_match
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:last_name => 'Tonkin'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
-    assert_same_elements([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik'))
-    assert_equal([], Racer.match(:ccx_number => '6'), 'ccx number (not in DB)')
-    assert_equal([tonkin], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '104'), 'road number, first_name, last_name')
-    assert_equal([tonkin_clone], Racer.match(:road_number => '1'), 'road number')
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '1'), 'road number, first_name, last_name')
+    result = race.results.new(:number => '6')
+    assert_equal([], result.find_racers(event).to_a, 'ccx number (not in DB)')
     
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'road number, first_name, last_name')
+
+    result = race.results.new(:number => '1')
+    assert_equal([tonkin_clone], result.find_racers(event).to_a, 'road number')
+
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '1')
+    assert_equal([tonkin_clone], result.find_racers(event).to_a, 'road number, first_name, last_name')
+
     # team_name -- consider last
-    assert_equal([tonkin], Racer.match(:name => 'erik tonkin', :team_name => 'Kona'), 'name, team')
-    assert_equal([], Racer.match(:first_name => 'Erika', :last_name => 'Tonkin', :team_name => 'Kona'), 'first_name + last_name should not match')
-    assert_equal([tonkin], Racer.match(:name => 'erik tonkin', :team_name => 'Kona', :road_number => '104'), 'name, team, number, should match')
-    assert_equal([tonkin], Racer.match(:last_name => 'Tonkin', :team_name => 'Kona'), 'last_name + team should match')
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => ''), 'first_name, last_name + team should match')
-    assert_equal([racers(:weaver)], Racer.match(:name => 'Ryan Weaver', :team_name => 'Camerati'), 'name + wrong team should match')
-    assert_equal([racers(:weaver)], Racer.match(:name => 'Ryan Weaver', :team_name => 'Camerati', :road_number => '987'), 
-                'name + wrong team + wrong number should match')
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'first_name, last_name, team')
+
+    # TODO: change to possible match
+    result = race.results.new(:first_name => 'Erika', :last_name => 'Tonkin', :team_name => 'Kona')
+    assert_equal([], result.find_racers(event).to_a, 'wrong first_name, last_name, team')
+
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Kona', :number => '104')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'first_name, last_name, team, number')
+
+    result = race.results.new(:last_name => 'Tonkin', :team_name => 'Kona')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'last_name, team')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => '')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'first_name, last_name, blank team')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Camerati')
+    assert_equal([tonkin_clone], result.find_racers(event).to_a, 'first_name, last_name, wrong team')
+    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Camerati', :number => '987')
+    assert_equal([tonkin_clone], result.find_racers(event).to_a, 'first_name, last_name, wrong team, wrong number')
+    
     tonkin_clone.team = teams(:vanilla)
     tonkin_clone.save!
-    assert_equal([tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Vanilla Bicycles'), 
-                'first_name, last_name + team alias should match')
-                
-    # required: first, last, name, or number 
-    assert_equal([], Racer.match({}), 'blank name should not match if no blank names in DB')
-    assert_equal([], Racer.match(:team_name => 'Astana Wurth'), 'blank team name should not match if no blank names in DB')
-    assert_raise(ArgumentError) {Racer.match({:first_name => 'Erik', :name => 'fred rogers'})}
-    assert_raise(ArgumentError) {Racer.match({:last_name => 'Tonkin', :name => 'fred rogers'})}
-    assert_raise(ArgumentError) {Racer.match({:first_name => 'Erik', :last_name => 'Tonkin', :name => 'fred rogers'})}
     
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :team_name => 'Vanilla Bicycles')
+    assert_equal([tonkin_clone], result.find_racers(event).to_a, 'first_name, last_name + team alias should match')
+
+    result = race.results.new
+    assert_equal([], result.find_racers(event).to_a, 'no racer, team, nor number')
+
+    result = race.results.new(:team_name => 'Astana Wurth')
+    assert_equal([], result.find_racers(event).to_a, 'wrong team only')
+
     # rental numbers
-    assert_equal([tonkin, tonkin_clone], Racer.match(:first_name => 'Erik', :last_name => 'Tonkin', :road_number => '60'), 'road number, first_name, last_name')
-    
-    assert_equal([], Racer.match(:first_name => '', :last_name => ''), 'blank first_name + last_name should not match if no blank names in DB')
-    assert_equal([], Racer.match(:name => ''), 'blank name should not match if no blank names in DB')
-    
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '60')
+    assert_same_elements([tonkin, tonkin_clone], result.find_racers(event).to_a, 'rental number')
+
+    result = race.results.new(:first_name => '', :last_name => '')
+    assert_same_elements([], result.find_racers(event).to_a, 'blank name with no blank names')
+
     blank_name_racer = Racer.create(:name => '', :dh_number => '1')
-    assert_equal([blank_name_racer], Racer.match(:first_name => '', :last_name => ''), 'blank first_name + last_name should match')
-    assert_equal([blank_name_racer], Racer.match(:name => ''), 'blank name should  match')
+    result = race.results.new(:first_name => '', :last_name => '')
+    assert_same_elements([blank_name_racer], result.find_racers(event).to_a, 'blank names')
+
+    # Add exact dupes with same numbers
+    # Test numbers from different years or disciplines
   end
   
   def test_sort

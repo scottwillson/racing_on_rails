@@ -44,6 +44,8 @@ class ResultsFileTest < Test::Unit::TestCase
   def test_import_excel
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"))
     event = SingleDayEvent.new
+    event.number_issuer = number_issuers(:association)
+    event.save!
     standings = event.standings.build(:event => event)
     
     remote_standings = results_file.import(event)
@@ -67,11 +69,17 @@ class ResultsFileTest < Test::Unit::TestCase
   end
   
   def test_import_time_trial_racers_with_same_name
-    Racer.create(:first_name => 'Bruce', :last_name => 'Carter', :road_number => '9')
-    Racer.create(:first_name => 'Bruce', :last_name => 'Carter', :road_number => '1300')
+    bruce_9 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
+    association = number_issuers(:association)
+    bruce_9.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '9')
+    
+    bruce_1300 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
+    bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
     
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"))
     event = SingleDayEvent.create(:discipline => 'Time Trial')
+    event.number_issuer = association
+    event.save!
     
     remote_standings = results_file.import(event)
     assert_equal(10, results_file.columns.size, 'Columns size')
@@ -79,6 +87,7 @@ class ResultsFileTest < Test::Unit::TestCase
     assert_equal(:license, results_file.columns[0].field, 'Column 0 field')
     assert_equal('place', results_file.columns[2].name, 'Column 2 name')
     assert_equal(:place, results_file.columns[2].field, 'Column 2 field')
+    assert_equal(2, Racer.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
     
     assert_equal(2, remote_standings.races(true).size, "remote_standings races")
     assert_equal(7, remote_standings.races[0].results.size, "Results")

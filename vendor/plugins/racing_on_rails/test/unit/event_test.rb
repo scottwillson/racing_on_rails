@@ -185,4 +185,11 @@ class EventTest < Test::Unit::TestCase
     event.reload
     assert_equal('My notes', event.notes)
   end
+  
+  def test_number_issuer
+    assert_nil(events(:kings_valley).number_issuer, 'Kings Valley number issuer')
+    
+    kings_valley = events(:kings_valley_2004)
+    assert_equal(number_issuers(:association), kings_valley.number_issuer, '2004 Kings Valley NumberIssuer')
+  end
 end

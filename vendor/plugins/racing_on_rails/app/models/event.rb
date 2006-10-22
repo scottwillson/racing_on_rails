@@ -6,6 +6,7 @@ class Event < ActiveRecord::Base
     validates_presence_of :name, :date
     before_destroy :validate_no_results
 
+    belongs_to :number_issuer
     belongs_to :promoter, :foreign_key => "promoter_id"
     has_many :standings, 
              :class_name => "Standings", 
@@ -151,7 +152,12 @@ class Event < ActiveRecord::Base
       suffix = ' ' if date.day < 10
       "#{prefix}#{date.month}/#{date.day}#{suffix}"
     end
-  
+    
+    # TODO move to model class
+    def discipline_id
+      Discipline[discipline].id if Discipline[discipline]
+    end
+    
     def promoter_name
       promoter.name if promoter
     end

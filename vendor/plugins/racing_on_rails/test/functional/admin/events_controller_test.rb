@@ -194,8 +194,10 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect
-    assert(mt_hood_1.standings(true).empty?, 'Should have no standings after bad import')
-    assert(flash.has_key?(:warn))
+    
+    # Dupe racers used to be allowed, and this would have been an error
+    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after bad import')
+    assert(!flash.has_key?(:warn))
   end
 
   def test_destroy_race

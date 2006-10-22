@@ -53,7 +53,7 @@ class Result < ActiveRecord::Base
         self.racer = nil
       else
         existing_racers = find_racers
-        self.racer = existing_racers.first if existing_racers.size == 1
+        self.racer = existing_racers.to_a.first if existing_racers.size == 1
       end
     end
     
@@ -67,27 +67,51 @@ class Result < ActiveRecord::Base
     end
   end
   
-  def find_racers
-    matches = []
+  # TODO refactor into methods or split responsibilities with Racer?
+  # Need Event to match on race number. Event will not be set before result is saved to database
+  def find_racers(_event = event)
+    matches = Set.new
     
+    # name
     if !first_name.blank? and !last_name.blank?
-      matches = Racer.find(
+      matches = matches + Racer.find(
         :all,
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
       
     elsif last_name.blank?
-      matches = Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
+      matches = matches +  Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
       
     elsif first_name.blank?
-      matches = Racer.find_all_by_last_name(last_name) | Alias.find_all_racers_by_name(last_name)
+      matches = matches + Racer.find_all_by_last_name(last_name) | Alias.find_all_racers_by_name(last_name)
       
     else
-      matches = Racer.find(
+      matches = matches + Racer.find(
         :all,
         :conditions => ['first_name = ? and last_name = ?', '', ''],
         :order => 'last_name, first_name')
       
+    end
+    
+    return matches if matches.size == 1
+    
+    # number
+    race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
+    race_numbers.each do |race_number|
+      if matches.include?(race_number.racer)
+        return [race_number.racer]
+      else
+        matches << race_number.racer
+      end
+    end
+    return matches if matches.size == 1
+    
+    # team
+    unless team_name.blank?
+      team = Team.find_by_name_or_alias(team_name)
+      matches.reject! do |match|
+        match.team != team
+      end
     end
     
     matches
@@ -143,6 +167,12 @@ class Result < ActiveRecord::Base
       self.category = nil
     else
       self.category = Category.new(:name => name)
+    end
+  end
+
+  def event
+    if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
+      race.standings.event
     end
   end
   
