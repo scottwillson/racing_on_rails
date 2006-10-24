@@ -13,7 +13,7 @@ namespace :racing_on_rails do
   end
 
   desc "User acceptence test for end users and developers"
-  task :acceptence => [:acceptence_user, :acceptence_developer] do
+  task :acceptence => [:create_app, :customize, :acceptence_user, :acceptence_developer] do
   end
 
   task :create_app do
@@ -21,7 +21,7 @@ namespace :racing_on_rails do
     rm_rf app_path
   
     puts(`tar zxf pkg/racing_on_rails-0.0.2.tar.gz -C ~`)
-    `mysql -u root racing_on_rails_development < #{app_path}/db/schema.sql`
+    `mysql -u root racing_on_rails_development < vendor/plugins/racing_on_rails/db/schema.sql`
   end
 
   desc 'Customize new app'
@@ -52,8 +52,8 @@ namespace :racing_on_rails do
     customize("app/views/bike_shops/list.rhtml")
   end
 
-  task :acceptence_developer => [:create_app, :customize] do
-    web_test(File.expand_path('~/racing_on_rails-0.0.2')) do
+  task :acceptence_developer do
+    web_test do
       response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert_match('Northern California/Nevada Cycling Association', response, "Association name on homepage in \n#{response}")
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
@@ -80,33 +80,23 @@ namespace :racing_on_rails do
 
   desc "Start Webrick and web interface"
   task :acceptence_user do
-      webrick_pid = nil
-      begin
-        webrick_pid = fork do
-          require "commands/servers/webrick"
-          Process.wait
-        end
-        sleep 5
-        response = Net::HTTP.get('127.0.0.1', '/', 3000)
-        assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
-        assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
-        assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
-  
-        response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
-        assert_match('Schedule', response, "Schedule should be available in \n#{response}")
-        assert_match('January', response, "Schedule should be available in \n#{response}")
-        assert_match('December', response, "Schedule should be available in \n#{response}")
-  
-        response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
-    
-        # TODO Run unit and functional tests
-        # TODO move above assertions into tests
-        # TODO Validate HTML
-      ensure
-        if webrick_pid
-          Process.kill("KILL", webrick_pid)
-        end
-      end
+    web_test do
+      response = Net::HTTP.get('127.0.0.1', '/', 3000)
+      assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
+      assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
+      assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
+      assert_match('Schedule', response, "Schedule should be available in \n#{response}")
+      assert_match('January', response, "Schedule should be available in \n#{response}")
+      assert_match('December', response, "Schedule should be available in \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
+
+      # TODO Run unit and functional tests
+      # TODO move above assertions into tests
+      # TODO Validate HTML
+    end
   end
 
   def customize(fixture_path)
@@ -115,13 +105,19 @@ namespace :racing_on_rails do
        File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}"))
   end
 
-  def web_test(root = RAILS_ROOT)
+  def web_test
+    webrick_pid = nil
     begin
-      @process = open("|#{root}/script/server", "r+")
-      sleep 20
-      yield(self)
+      webrick_pid = fork do
+        require "commands/servers/webrick"
+        Process.wait
+      end
+      sleep 5
+      yield
     ensure
-      @process.close if @process
+      if webrick_pid
+        Process.kill("KILL", webrick_pid)
+      end
     end
   end
   
