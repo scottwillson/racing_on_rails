@@ -80,9 +80,12 @@ namespace :racing_on_rails do
 
   desc "Start Webrick and web interface"
   task :acceptence_user do
-      webrick = nil
+      webrick_pid = nil
       begin
-        webrick = open("|#{File.expand_path('~/racing_on_rails-0.0.2')}/script/server")
+        webrick_pid = fork do
+          require "commands/servers/webrick"
+          Process.wait
+        end
         sleep 5
         response = Net::HTTP.get('127.0.0.1', '/', 3000)
         assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
@@ -95,13 +98,14 @@ namespace :racing_on_rails do
         assert_match('December', response, "Schedule should be available in \n#{response}")
   
         response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
-        webrick.close
     
         # TODO Run unit and functional tests
         # TODO move above assertions into tests
         # TODO Validate HTML
       ensure
-        webrick.exit if webrick
+        if webrick_pid
+          Process.kill("KILL", webrick_pid)
+        end
       end
   end
 
