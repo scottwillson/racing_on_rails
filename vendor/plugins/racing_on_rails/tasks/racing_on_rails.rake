@@ -20,7 +20,7 @@ namespace :racing_on_rails do
     app_path = File.expand_path('~/racing_on_rails-0.0.2')
     rm_rf app_path
   
-    puts(`tar zxf ~/racing_on_rails-0.0.2.tar.gz -C ~`)
+    puts(`tar zxf pkg/racing_on_rails-0.0.2.tar.gz -C ~`)
     `mysql -u root racing_on_rails_development < #{app_path}/db/schema.sql`
   end
 
@@ -54,7 +54,7 @@ namespace :racing_on_rails do
 
   task :acceptence_developer => [:create_app, :customize] do
     web_test(File.expand_path('~/racing_on_rails-0.0.2')) do
-      response = Net::HTTP.get('127.0.0.2', '/', 3000)
+      response = Net::HTTP.get('127.0.0.1', '/', 3000)
       assert_match('Northern California/Nevada Cycling Association', response, "Association name on homepage in \n#{response}")
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
       assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
@@ -64,7 +64,7 @@ namespace :racing_on_rails do
       assert_match('<a href="/schedule/2004"', response, "2004 schedule link should be available in \n#{response}")
       assert_match('Flash message from customized controller', response, "Custom controller flash message in \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.2', '/schedule/', 3000)
+      response = Net::HTTP.get('127.0.0.1', '/schedule/', 3000)
       assert_no_match(/Error/, response, "No error on homepage \n#{response}")
       assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
       assert_match('January', response, "Months on schedule page \n#{response}")
@@ -73,30 +73,36 @@ namespace :racing_on_rails do
       assert_match('Custom Finder Event', response, "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
       assert_match('<i>Custom Finder Event</i>', response, "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
 
-      response = Net::HTTP.get('127.0.0.2', '/bike_shops/list', 3000)
+      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
       assert_match('Sellwood Cycle Repair', response, "Sellwood on bike shops list page \n#{response}")
     end
   end
 
   desc "Start Webrick and web interface"
   task :acceptence_user do
-    web_test(File.expand_path('~/racing_on_rails-0.0.2')) do
-      response = Net::HTTP.get('127.0.0.2', '/', 3000)
-      assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
-      assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
-      assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.2', '/schedule', 3000)
-      assert_match('Schedule', response, "Schedule should be available in \n#{response}")
-      assert_match('January', response, "Schedule should be available in \n#{response}")
-      assert_match('December', response, "Schedule should be available in \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.2', '/schedule/list', 3000)
+      webrick = nil
+      begin
+        webrick = open("|#{File.expand_path('~/racing_on_rails-0.0.2')}/script/server")
+        sleep 5
+        response = Net::HTTP.get('127.0.0.1', '/', 3000)
+        assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
+        assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
+        assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
   
-      # TODO Run unit and functional tests
-      # TODO move above assertions into tests
-      # TODO Validate HTML
-    end
+        response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
+        assert_match('Schedule', response, "Schedule should be available in \n#{response}")
+        assert_match('January', response, "Schedule should be available in \n#{response}")
+        assert_match('December', response, "Schedule should be available in \n#{response}")
+  
+        response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
+        webrick.close
+    
+        # TODO Run unit and functional tests
+        # TODO move above assertions into tests
+        # TODO Validate HTML
+      ensure
+        webrick.exit if webrick
+      end
   end
 
   def customize(fixture_path)
