@@ -84,7 +84,7 @@ class Admin::RacersController < Admin::RecordEditor
     @racer = Racer.find(racer_id)
     original_name = @racer.name
     @racer.name = new_name
-    existing_racers = Racer.match_by_name(:name => new_name)
+    existing_racers = Racer.find_all_by_name(new_name) | Alias.find_all_racers_by_name(new_name)
     existing_racers.reject! {|racer| racer == @racer}
     if existing_racers.size > 0
       return merge?(original_name, existing_racers, @racer)

@@ -15,13 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP DATABASE IF EXISTS racing_on_rails_test;
-create database racing_on_rails_test;
-	
-DROP DATABASE IF EXISTS racing_on_rails_development;
-create database racing_on_rails_development;
-use racing_on_rails_development;
-
 --
 -- Table structure for table `aliases`
 --
@@ -130,6 +123,16 @@ CREATE TABLE `disciplines` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `engine_schema_info`
+--
+
+DROP TABLE IF EXISTS `engine_schema_info`;
+CREATE TABLE `engine_schema_info` (
+  `engine_name` varchar(255) default NULL,
+  `version` int(11) default NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `events`
 --
 
@@ -154,6 +157,7 @@ CREATE TABLE `events` (
   `cancelled` tinyint(1) default '0',
   `oregon_cup_id` int(11) default NULL,
   `notification` tinyint(1) default '1',
+  `number_issuer_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
   KEY `idx_date` (`date`),
   KEY `idx_disciplined` (`discipline`),
@@ -161,9 +165,26 @@ CREATE TABLE `events` (
   KEY `idx_promoter_id` (`promoter_id`),
   KEY `idx_type` (`type`),
   KEY `oregon_cup_id` (`oregon_cup_id`),
+  KEY `events_number_issuer_id_index` (`number_issuer_id`),
+  CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `events_ibfk_2` FOREIGN KEY (`promoter_id`) REFERENCES `promoters` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL
+  CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `number_issuers`
+--
+
+DROP TABLE IF EXISTS `number_issuers`;
+CREATE TABLE `number_issuers` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -174,7 +195,7 @@ DROP TABLE IF EXISTS `promoters`;
 CREATE TABLE `promoters` (
   `id` int(11) NOT NULL auto_increment,
   `email` varchar(255) default NULL,
-  `name` varchar(255) NOT NULL default '',
+  `name` varchar(255) default '',
   `phone` varchar(255) default NULL,
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
@@ -182,6 +203,34 @@ CREATE TABLE `promoters` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `promoter_info` (`name`,`email`,`phone`),
   KEY `idx_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `race_numbers`
+--
+
+DROP TABLE IF EXISTS `race_numbers`;
+CREATE TABLE `race_numbers` (
+  `id` int(11) NOT NULL auto_increment,
+  `racer_id` int(11) NOT NULL,
+  `discipline_id` int(11) NOT NULL,
+  `number_issuer_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `year` int(11) NOT NULL,
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `racer_id` (`racer_id`),
+  KEY `number_issuer_id` (`number_issuer_id`),
+  KEY `discipline_id` (`discipline_id`),
+  KEY `race_numbers_value_index` (`value`),
+  CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`),
+  CONSTRAINT `race_numbers_ibfk_2` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
+  CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
+  CONSTRAINT `race_numbers_ibfk_4` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `race_numbers_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
+  CONSTRAINT `race_numbers_ibfk_6` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -251,7 +300,7 @@ CREATE TABLE `races` (
   `time` float default NULL,
   `finishers` int(11) default NULL,
   `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255),
+  `sanctioned_by` varchar(255) default NULL,
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
@@ -282,8 +331,8 @@ CREATE TABLE `results` (
   `is_series` tinyint(1) default NULL,
   `license` varchar(64) default '',
   `notes` varchar(255) default NULL,
-  `number` varchar(16) NOT NULL default '',
-  `place` varchar(8) NOT NULL default '',
+  `number` varchar(16) default '',
+  `place` varchar(8) default '',
   `place_in_category` int(11) default '0',
   `points` float default '0',
   `points_from_place` float default '0',
@@ -359,7 +408,7 @@ CREATE TABLE `standings` (
   `discipline` varchar(32) default NULL,
   `notes` varchar(255) default '',
   `source_id` int(11) default NULL,
-  `type` varchar(32) NOT NULL default '',
+  `type` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
   KEY `idx_date` (`date`),
   KEY `event_id` (`event_id`),

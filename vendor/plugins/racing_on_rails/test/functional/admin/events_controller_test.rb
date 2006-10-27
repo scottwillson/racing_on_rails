@@ -196,7 +196,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_response :redirect
     
     # Dupe racers used to be allowed, and this would have been an error
-    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after bad import')
+    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after importing dupe racers')
     assert(!flash.has_key?(:warn))
   end
 
@@ -439,32 +439,32 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal(new_phone, silverton.promoter.phone, "Promoter phone")
   end
   
-  def test_save_new_single_day_existing_promoter_different_info_do_not_overwrite
-    candi_murray = promoters(:candi_murray)
-    old_name = candi_murray.name
-    old_email = candi_murray.email
-    old_phone = candi_murray.phone
-
-    @request.session[:user] = users(:candi)
-    post(:create, 
-         "commit"=>"Save", 
-         'same_promoter' => 'false',
-         "event"=>{"name"=>"Silverton",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=> "123123", "email"=> "scout@scout_promotions.net"}}
-    )
-    
-    silverton = SingleDayEvent.find_by_name('Silverton')
-    assert_not_nil(silverton.promoter, 'Silverton promoter')
-    candi_murray.reload
-    assert_not_equal(candi_murray, silverton.promoter, "Silverton Promoter")
-    assert_equal(old_name, candi_murray.name, "Candi name")
-    assert_equal(old_email, candi_murray.email, "Candi email")
-    assert_equal(old_phone, candi_murray.phone, "Candi phone")
-
-    assert_equal(candi_murray.name, silverton.promoter.name, "Promoter email")
-    assert_equal('scout@scout_promotions.net', silverton.promoter.email, "Promoter email")
-    assert_equal('123123', silverton.promoter.phone, "Promoter phone")
-  end
+  # def test_save_new_single_day_existing_promoter_different_info_do_not_overwrite
+  #   candi_murray = promoters(:candi_murray)
+  #   old_name = candi_murray.name
+  #   old_email = candi_murray.email
+  #   old_phone = candi_murray.phone
+  # 
+  #   @request.session[:user] = users(:candi)
+  #   post(:create, 
+  #        "commit"=>"Save", 
+  #        'same_promoter' => 'false',
+  #        "event"=>{"name"=>"Silverton",
+  #                 'promoter' => {"name" => candi_murray.name,  "phone"=> "123123", "email"=> "scout@scout_promotions.net"}}
+  #   )
+  #   
+  #   silverton = SingleDayEvent.find_by_name('Silverton')
+  #   assert_not_nil(silverton.promoter, 'Silverton promoter')
+  #   candi_murray.reload
+  #   assert_not_equal(candi_murray, silverton.promoter, "Silverton Promoter")
+  #   assert_equal(old_name, candi_murray.name, "Candi name")
+  #   assert_equal(old_email, candi_murray.email, "Candi email")
+  #   assert_equal(old_phone, candi_murray.phone, "Candi phone")
+  # 
+  #   assert_equal(candi_murray.name, silverton.promoter.name, "Promoter email")
+  #   assert_equal('scout@scout_promotions.net', silverton.promoter.email, "Promoter email")
+  #   assert_equal('123123', silverton.promoter.phone, "Promoter phone")
+  # end
   
   def test_save_new_single_day_existing_promoter_no_name
     nate_hobson = promoters(:nate_hobson)

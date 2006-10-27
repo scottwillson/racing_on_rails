@@ -2,6 +2,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class ResultTest < Test::Unit::TestCase
 
+  def setup
+    # Discipline class may have loaded earlier with no aliases in database
+    Discipline.load_aliases
+  end
+
   def test_racer_first_last_name
     result = Result.new
     assert_equal("", result.first_name, "Racer first name w/nil racer")
@@ -39,7 +44,7 @@ class ResultTest < Test::Unit::TestCase
   end
 
   def test_save
-    event = SingleDayEvent.new(:name => "Tabor CR")
+    event = SingleDayEvent.new(:name => "Tabor CR", :discipline => 'Road')
     event.save!
     standings = Standings.new(:event => event)
     standings.save!
@@ -428,7 +433,10 @@ class ResultTest < Test::Unit::TestCase
     results = races(:kings_valley_pro_1_2_2004).results
     result = results.create(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
     assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
-    assert_equal('300', result.racer.road_number, 'Road number')
+    assert_nil(result.racer(true).road_number(true), 'Current road number')
+    road_number_2004 = result.racer.race_numbers.detect{|number| number.year == 2004}
+    assert_not_nil(road_number_2004.value, '2004 road number')
+    assert_equal('300', road_number_2004.value, '2004 road number')
     assert(result.racer.ccx_number.blank?, 'Cyclocross number')
     assert(result.racer.xc_number.blank?, 'MTB number')
   end
@@ -452,8 +460,8 @@ class ResultTest < Test::Unit::TestCase
     tonkin = racers(:tonkin)
     results = races(:kings_valley_pro_1_2_2004).results
     result_3 = results.create(:place => 1, :first_name => 'Ron', :last_name => 'Tonkin', :number => '104')
-    assert_equal(tonkin, result_3.racer, 'Racer')
-    assert_equal("Erik", result_3.racer.first_name, 'Racer')
+    assert_not_equal(tonkin, result_3.racer, 'Racer')
+    assert_equal("Ron", result_3.racer.first_name, 'Racer')
 
     # Clean up from previous
     result_1.destroy
@@ -482,7 +490,7 @@ class ResultTest < Test::Unit::TestCase
     kings_valley_2004.discipline = 'Mountain Bike'
     kings_valley_2004.save!
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
+    result = results.create!(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
     assert_equal(tonkin, result.racer, 'Racer')
     # TODO assert wrong number warning
     
@@ -540,11 +548,11 @@ class ResultTest < Test::Unit::TestCase
     
     # TODO make null racer and list this match as a possibility
     result = race.results.new(:first_name => 'Rhonda', :last_name => 'Tonkin', :number => '104')
-    assert_equal([tonkin], result.find_racers(event).to_a, 'Tonkin\'s number, different first name')
+    assert_equal([], result.find_racers(event).to_a, 'Tonkin\'s number, different first name')
     
     # TODO make null racer and list this match as a possibility
     result = race.results.new(:first_name => 'Erik', :last_name => 'Viking', :number => '104')
-    assert_equal([tonkin], result.find_racers(event).to_a, 'Tonkin\'s number, different last name')
+    assert_equal([], result.find_racers(event).to_a, 'Tonkin\'s number, different last name')
 
     tonkin_clone = Racer.create!(:first_name => 'Erik', :last_name => 'Tonkin')
     RaceNumber.create!(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '1')
@@ -567,6 +575,9 @@ class ResultTest < Test::Unit::TestCase
     result = race.results.new(:number => '6')
     assert_equal([], result.find_racers(event).to_a, 'ccx number (not in DB)')
     
+    result = race.results.new(:number => '104')
+    assert_equal([tonkin], result.find_racers(event).to_a, 'road number, first_name, last_name')
+
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
     assert_equal([tonkin], result.find_racers(event).to_a, 'road number, first_name, last_name')
 

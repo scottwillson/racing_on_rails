@@ -12,7 +12,7 @@ class Discipline < ActiveRecord::Base
       @@aliases[name]
     else
       return nil if name.blank?
-      @@aliases[name.underscore.to_sym]
+      @@aliases[name.underscore.gsub(' ', '_').to_sym]
     end
   end
 
@@ -42,22 +42,6 @@ class Discipline < ActiveRecord::Base
     [''] + Discipline.find_all.collect {|discipline| discipline.name}
   end
 
-  # Which number is used for this discipline?
-  # TODO Make Discipline a full-fledged class association and move method to there
-  # TODO Put mapping in database
-  def Discipline.number_type(discipline)
-    case discipline
-    when 'Cyclocross'
-      :ccx_number
-    when 'Mountain Bike'
-      :xc_number
-    when 'Downhill'
-      :dh_number
-    else
-      :road_number
-    end
-  end
-  
   def self.reloadable?; false end
     
   def to_param

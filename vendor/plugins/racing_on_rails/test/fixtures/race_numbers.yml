@@ -1,7 +1,14 @@
-tonkin_road_number:
+tonkin_road_number_2004:
   id: 1
   racer_id: 1
   number_issuer_id: 1
   discipline_id: 4
   year: 2004
   value: 104
+tonkin_road_number:
+  id: 2
+  racer_id: 1
+  number_issuer_id: 1
+  discipline_id: 4
+  year: <%= Date.today.year %>
+  value: 102

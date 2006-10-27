@@ -19,11 +19,15 @@ class RaceNumberTest < Test::Unit::TestCase
     RaceNumber.create!(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     
     # invalid because missing fields
-    assert(!RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No racer')
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
     assert(!RaceNumber.new(:value => '', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Blank value')
     assert(!RaceNumber.new(:value => 'A1', :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No year')
     assert(!RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :discipline => disciplines(:road)).valid?, 'No issuer')
     assert(!RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn).valid?, 'No discipline')
+    
+    # No racer ID valid when new, but can't save
+    no_racer = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    assert(no_racer.valid?, 'No racer')
+    assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
   end
 end

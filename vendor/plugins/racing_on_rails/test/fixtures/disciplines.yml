@@ -38,4 +38,7 @@ team:
   id: 10
   name: Team
   bar: true
-  
+downhill:
+  id: 11
+  name: Downhill
+  bar: false

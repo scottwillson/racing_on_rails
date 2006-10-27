@@ -9,11 +9,22 @@ include Test::Unit::Assertions
 namespace :racing_on_rails do
   
   desc "Package, deploy new app from scratch. Test."
-  task :dist => [:repackage, :create_app, :acceptence] do
+  task :dist => [:dump_schema, :repackage, :create_app, :acceptence] do
+  end
+
+  desc 'Dump development schema'
+  task :dump_schema do
+    `mysqldump -u root --no-data racing_on_rails_development > vendor/plugins/racing_on_rails/db/schema.sql`
   end
 
   desc "User acceptence test for end users and developers"
-  task :acceptence => [:create_app, :customize, :acceptence_user, :acceptence_developer] do
+  task :acceptence => [:create_app] do
+    puts('acceptence_user')
+    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.2'))
+    puts('customize')
+    customize
+    puts('acceptence_developer')
+    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.2'))
   end
 
   task :create_app do
@@ -106,18 +117,28 @@ namespace :racing_on_rails do
   end
 
   def web_test
-    webrick_pid = nil
     begin
-      webrick_pid = fork do
-        require "commands/servers/webrick"
-        Process.wait
-      end
+      `mongrel_rails start -d`
       sleep 5
       yield
     ensure
-      if webrick_pid
-        Process.kill("KILL", webrick_pid)
-      end
+      `mongrel_rails stop`
+    end
+  end
+  
+  def run_acceptence_developer(project_root = nil)
+    if project_root
+      exec("rake --rakefile #{project_root}/Rakefile racing_on_rails:acceptence_developer")
+    else
+      acceptence_developer
+    end
+  end
+  
+  def run_acceptence_user(project_root = nil)
+    if project_root
+      exec("rake --rakefile #{project_root}/Rakefile racing_on_rails:acceptence_user")
+    else
+      acceptence_user
     end
   end
   

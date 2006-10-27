@@ -192,4 +192,11 @@ class EventTest < Test::Unit::TestCase
     kings_valley = events(:kings_valley_2004)
     assert_equal(number_issuers(:association), kings_valley.number_issuer, '2004 Kings Valley NumberIssuer')
   end
+  
+  def test_default_number_issuer
+    event = SingleDayEvent.create!(:name => 'Unsanctioned')
+    event.reload
+    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, 'sanctioned_by')
+    assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
+  end
 end

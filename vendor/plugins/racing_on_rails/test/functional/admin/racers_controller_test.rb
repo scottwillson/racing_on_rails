@@ -173,8 +173,8 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(mollie, assigns['racer'], 'Racer')
-    assert_not_nil(Racer.find_by_name('Mollie Cameron'), 'Mollie still in database')
-    assert_not_nil(Racer.find_by_name('Erik Tonkin'), 'Tonkin still in database')
+    assert_not_nil(Racer.find_all_by_name('Mollie Cameron'), 'Mollie still in database')
+    assert_not_nil(Racer.find_all_by_name('Erik Tonkin'), 'Tonkin still in database')
     mollie.reload
     assert_equal('Mollie Cameron', mollie.name, 'Racer name after cancel')
   end
@@ -230,9 +230,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
     assert_equal([racers(:mollie)], assigns['existing_racers'], 'existing_racers')
-    assert(!Racer.match(:name => 'Molly Cameron').empty?, 'Molly still in database')
-    assert(!Racer.match(:name => 'Mollie Cameron').empty?, 'Mollie still in database')
-    assert(!Racer.match(:name => 'Erik Tonkin').empty?, 'Erik Tonkin still in database')
+    assert(!Alias.find_all_racers_by_name('Molly Cameron').empty?, 'Molly still in database')
+    assert(!Racer.find_all_by_name('Mollie Cameron').empty?, 'Mollie still in database')
+    assert(!Racer.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
   end
   
   def test_update_to_other_racer_existing_alias_and_duplicate_names
@@ -245,9 +245,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
     assert_equal(2, assigns['existing_racers'].size, 'existing_racers')
-    assert(!Racer.match(:name => 'Molly Cameron').empty?, 'Molly still in database')
-    assert(!Racer.match(:name => 'Mollie Cameron').empty?, 'Mollie still in database')
-    assert(!Racer.match(:name => 'Erik Tonkin').empty?, 'Erik Tonkin still in database')
+    assert(!Racer.find_all_by_name('Molly Cameron').empty?, 'Molly still in database')
+    assert(!Racer.find_all_by_name('Mollie Cameron').empty?, 'Mollie still in database')
+    assert(!Racer.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
   end
   
   def test_destroy
@@ -276,15 +276,15 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     mollie = racers(:mollie)
     tonkin = racers(:tonkin)
     old_id = tonkin.id
-    assert(Racer.find_by_name('Erik Tonkin'), 'Tonkin should be in database')
+    assert(Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should be in database')
 
     @request.session[:user] = users(:candi)
     get(:merge, :id => tonkin.to_param, :target_id => mollie.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
 
-    assert(Racer.find_by_name('Mollie Cameron'), 'Mollie should be in database')
-    assert_nil(Racer.find_by_name('Erik Tonkin'), 'Tonkin should not be in database')
+    assert(Racer.find_all_by_name('Mollie Cameron'), 'Mollie should be in database')
+    assert_equal([], Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should not be in database')
   end
 
   def test_new_inline
@@ -435,15 +435,15 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages}")
     assert_equal(tonkin_with_different_road_number.new_record?, false, 'tonkin_with_different_road_number should be saved')
     old_id = tonkin.id
-    assert_equal(2, Racer.match(:name => 'Erik Tonkin').size, 'Tonkins in database')
+    assert_equal(2, Racer.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
     @request.session[:user] = users(:candi)
     get(:merge, :id => tonkin.to_param, :target_id => mollie.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
 
-    assert(Racer.find_by_name('Mollie Cameron'), 'Mollie should be in database')
-    tonkins_after_merge = Racer.match(:name => 'Erik Tonkin')
+    assert(Racer.find_all_by_name('Mollie Cameron'), 'Mollie should be in database')
+    tonkins_after_merge = Racer.find_all_by_name('Erik Tonkin')
     assert_equal(1, tonkins_after_merge.size, tonkins_after_merge)
   end
   
@@ -475,14 +475,14 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     opts = {:controller => "admin/racers", :action => "update"}
     assert_routing("/admin/racers/update", opts)
 
-    assert_nil(Racer.find_by_name('Jon Knowlson'), 'Knowlson should not be in database')
+    assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
     @request.session[:user] = users(:candi)
     
     post(:update, {:racer => {:first_name => 'Jon', :last_name => 'Knowlson'}})
     assert_response(:redirect)
-    knowlson = Racer.find_by_name('Jon Knowlson')
-    assert_not_nil(knowlson, 'Knowlson should be created')
-    assert_redirected_to(:id => knowlson.id)
+    knowlsons = Racer.find_all_by_name('Jon Knowlson')
+    assert(!knowlsons.empty?, 'Knowlson should be created')
+    assert_redirected_to(:id => knowlsons.first.id)
   end
 
 end

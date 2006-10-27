@@ -1,10 +1,15 @@
 class RaceNumber < ActiveRecord::Base
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id
-  validates_presence_of :racer_id
+  validates_presence_of :racer_id, :if => Proc.new {|race_number| 
+    race_number.racer && !race_number.racer.new_record? 
+  }
   validates_presence_of :value
   validates_presence_of :year
 
+  before_save :get_racer_id
+  before_save :set_defaults
+  
   belongs_to :discipline
   belongs_to :number_issuer
   belongs_to :racer
@@ -36,5 +41,21 @@ class RaceNumber < ActiveRecord::Base
     else
       Discipline[:road].id
     end
+  end
+  
+  def get_racer_id
+    if racer and racer.new_record?
+      racer.reload
+    end
+  end
+  
+  def set_defaults
+    self.discipline = Discipline[:road] unless self[:discipline_id]
+    self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self[:number_issuer_id]
+    self.discipline = Date.today.year unless self[:year]
+  end
+  
+  def to_s
+    "<RaceNumber #{id} #{racer_id} #{value} #{discipline_id} #{year}>"
   end
 end

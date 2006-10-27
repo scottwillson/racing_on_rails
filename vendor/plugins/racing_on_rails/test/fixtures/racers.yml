@@ -2,7 +2,6 @@ tonkin:
   id: 1
   first_name: Erik
   last_name: Tonkin
-  road_number: 104
   team_id: 1
 matson:
   id: 2

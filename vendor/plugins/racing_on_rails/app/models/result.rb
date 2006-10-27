@@ -5,8 +5,9 @@ class Result < ActiveRecord::Base
   # FIME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
-  before_validation :find_associated_records
-  before_save :update_racer_team, :update_racer_number, :save_racer
+  before_validation :validate_event, :find_associated_records
+  before_save :save_racer
+  after_save :update_racer_team, :update_racer_number
   after_save {|result| result.race.standings.after_result_save}
   after_destroy {|result| result.race.standings.after_result_destroy}
   
@@ -18,6 +19,10 @@ class Result < ActiveRecord::Base
   belongs_to :team
   
   validates_presence_of :race_id
+    
+  def validate_event
+    !event.discipline.blank? and event.number_issuer
+  end
   
   def attributes=(attributes)
     unless attributes.nil?
@@ -96,15 +101,17 @@ class Result < ActiveRecord::Base
     return matches if matches.size == 1
     
     # number
-    race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
-    race_numbers.each do |race_number|
-      if matches.include?(race_number.racer)
-        return [race_number.racer]
-      else
-        matches << race_number.racer
+    if matches.size > 1 or (matches.empty? and first_name.blank? and last_name.blank?)
+      race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
+      race_numbers.each do |race_number|
+        if matches.include?(race_number.racer)
+          return [race_number.racer]
+        else
+          matches << race_number.racer
+        end
       end
+      return matches if matches.size == 1
     end
-    return matches if matches.size == 1
     
     # team
     unless team_name.blank?
@@ -125,15 +132,19 @@ class Result < ActiveRecord::Base
   
   def update_racer_number
     if self.racer and !self.number.blank?
-      number_type = Discipline.number_type(self.race.standings.event.discipline)
-      existing_number = self.racer[number_type]
-      if existing_number.blank? or (existing_number.to_i > 10 and existing_number.to_i < 100)
-        self.racer[number_type] = self.number
+      existing_number = self.racer.race_numbers.detect do |number|
+        number.discipline == event.discipline and number.number_issuer == event.number_issuer and number.year == event.date.year
+      end
+      if existing_number.nil? or (existing_number.to_i > 10 and existing_number.to_i < 100)
+        event.number_issuer(true) unless event.number_issuer
+        self.racer.race_numbers.create!(
+          :value => number, 
+          :racer => self.racer,
+          :discipline => Discipline[event.discipline], 
+          :number_issuer => event.number_issuer, 
+          :year => event.date.year
+        )
         self.racer.dirty
-        existing_racer = Racer.find(:first, :conditions => ["#{number_type} = ?", self.number])
-        if existing_racer and existing_racer != self.racer
-          self.racer[number_type] = nil
-        end
       end
     end
   end

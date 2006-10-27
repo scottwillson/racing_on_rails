@@ -37,7 +37,7 @@ class RacerTest < Test::Unit::TestCase
   end
 
   def test_new
-    racer = Racer.new(
+    racer = Racer.create(
       :date_of_birth => '1970-12-31',
       :cell_fax => '(315) 342-1313',
       :city => "Santa Rosa", 
@@ -82,6 +82,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("125162", racer.license, "license")
     assert_equal("Andy Hampsten", racer.name, "name")
     assert_equal("Won Giro", racer.notes, "notes")
+    assert_not_nil(racer.road_number, "road_number")
     assert_equal("300", racer.road_number, "road_number")
     assert_equal("CA", racer.state, "state")
     assert_equal("5 Burr Street", racer.street, "street")
@@ -89,6 +90,9 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("100", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
     
+    for number in racer.race_numbers
+      assert(number.valid?, "#{number}: #{number.errors.full_messages}")
+    end
     racer.save!
     racer.reload
     
@@ -110,7 +114,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("125162", racer.license, "license")
     assert_equal("Andy Hampsten", racer.name, "name")
     assert_equal("Won Giro", racer.notes, "notes")
-    assert_equal("300", racer.road_number, "road_number")
+    assert_equal("300", racer.road_number(true), "road_number")
     assert_equal("CA", racer.state, "state")
     assert_equal("5 Burr Street", racer.street, "street")
     assert_equal("7-11", racer.team.name, "team.name")
@@ -309,5 +313,10 @@ class RacerTest < Test::Unit::TestCase
     assert_nil(racer.road_number, 'road number after update with empty string')
     assert_nil(racer.track_number, 'track number after update with empty string')
     assert_nil(racer.xc_number, 'xc number after update with empty string')
+  end
+  
+  def test_numbers
+    assert_equal('102', racers(:tonkin).road_number)
+    assert_nil(racers(:tonkin).dh_number)
   end
 end

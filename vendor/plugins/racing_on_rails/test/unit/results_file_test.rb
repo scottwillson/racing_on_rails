@@ -43,7 +43,7 @@ class ResultsFileTest < Test::Unit::TestCase
   
   def test_import_excel
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"))
-    event = SingleDayEvent.new
+    event = SingleDayEvent.new(:discipline => 'Road')
     event.number_issuer = number_issuers(:association)
     event.save!
     standings = event.standings.build(:event => event)
@@ -180,7 +180,7 @@ class ResultsFileTest < Test::Unit::TestCase
 		expected_races << race
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"))
-    event = SingleDayEvent.new
+    event = SingleDayEvent.new(:discipline => 'Road')
     standings = event.standings.build(:event => event)
     
     remote_standings = results_file.import(event)
@@ -204,7 +204,7 @@ class ResultsFileTest < Test::Unit::TestCase
   
   def test_stage_race
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/stage_race.xls"))
-    event = SingleDayEvent.new
+    event = SingleDayEvent.new(:discipline => 'Road')
     standings = results_file.import(event)
 
     assert_equal(7, standings.races.size, "standings races")
@@ -485,7 +485,7 @@ class ResultsFileTest < Test::Unit::TestCase
              ["3.0", "", "Masters Men 30-39", "", "brown", "kurt", "Unattached", "", "", "", "0.0283449074074074"],
     ]
     file = ResultsFile.new(rows, ['place', 'membership', 'category', 'city', 'last_name', 'first_name'])
-    event = SingleDayEvent.create
+    event = SingleDayEvent.create(:discipline => 'Road')
     file.import(event)
     assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool', event.standings.first.races.first.notes, 'Race notes')
   end

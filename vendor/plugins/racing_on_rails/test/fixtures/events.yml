@@ -18,8 +18,8 @@
     sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
     updated_at: 2004-01-05
-    date: 2004-01-01
     number_issuer_id: 1
+    date: 2004-01-01
     type: SingleDayEvent
 - banana_belt_2:
     id: 3
@@ -44,6 +44,7 @@
     name: Jack Frost
     date: 2004-01-15
     discipline: Time Trial
+    number_issuer_id: 1
     type: SingleDayEvent
 - kings_valley:
     id: 5
@@ -104,6 +105,7 @@
     date: 2004-12-31
     discipline: Road
     sanctioned_by: <%= ASSOCIATION.short_name %>
+    number_issuer_id: 1
     type: SingleDayEvent
 - mt_hood:
     id: 12
@@ -115,6 +117,7 @@
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
+    number_issuer_id: 1
     type: MultiDayEvent
 - mt_hood_1:
     id: 13
@@ -127,6 +130,7 @@
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
     city: Hood River
+    number_issuer_id: 1
     type: SingleDayEvent
 - mt_hood_2:
     id: 14
@@ -139,6 +143,7 @@
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
+    number_issuer_id: 1
     type: SingleDayEvent
 - kings_valley_2004:
     id: 15
@@ -147,5 +152,6 @@
     discipline: Road
     number_issuer_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
+    number_issuer_id: 1
     type: SingleDayEvent
     

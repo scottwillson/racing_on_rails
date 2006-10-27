@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
     before_validation :find_associated_records
     validate_on_create :validate_type
     validates_presence_of :name, :date
+    after_create :add_default_number_issuer
     before_destroy :validate_no_results
 
     belongs_to :number_issuer
@@ -92,6 +93,13 @@ class Event < ActiveRecord::Base
         end
       end
       true
+    end
+    
+    def add_default_number_issuer
+      unless self.number_issuer
+        self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+        save!
+      end
     end
     
     # TODO Remove. Old workaround to ensure children are cancelled

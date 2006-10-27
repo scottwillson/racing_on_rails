@@ -3,8 +3,6 @@ class Racer < ActiveRecord::Base
   include Comparable
   include Dirty
 
-  NUMBERS = [:road_number, :ccx_number, :xc_number, :downhill_number]
-  
   before_validation :find_associated_records
 
   belongs_to :team
@@ -12,15 +10,15 @@ class Racer < ActiveRecord::Base
   has_many :race_numbers
   has_many :results
 
-  def Racer.find_by_name(name)
+  def Racer.find_all_by_name(name)
     if name.blank?
       Racer.find(
-        :first,
+        :all,
         :conditions => ['first_name = ? and last_name = ?', '', ''],
         :order => 'last_name, first_name')
     else
       Racer.find(
-        :first,
+        :all,
         :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name],
         :order => 'last_name, first_name')
     end
@@ -38,141 +36,6 @@ class Racer < ActiveRecord::Base
     end
     
     ''
-  end
-  
-  # criteria example: {:first_name => 'Ryan', road_number => '70'}
-  # Assume only one number key
-  # Return array of Racers
-  def Racer.match(criteria, event = nil)
-    logger.debug("Racer.match: #{criteria.inspect}")
-    if criteria.include?(:name) and (criteria.include?(:first_name) or criteria.include?(:last_name))
-      raise(ArgumentError, 'Cannot match on both :name and :first_name or :last_name')
-    end
-    unless criteria.is_a?(Hash)
-      raise(ArgumentError, 'Criteria must be Hash')
-    end
-
-    _criteria = remove_rental_numbers(criteria)
-    unless has_number?(_criteria) or has_names?(_criteria)
-      logger.debug("Racer.match found: []")
-      return []
-    end
-    
-    if has_number?(_criteria) and !has_names?(_criteria)
-      results = match_by_number(_criteria, event)
-      logger.debug("Racer.match found: #{results}")
-      return results
-    end
-    
-    if has_names?(_criteria)
-      name_matches = match_by_name(_criteria)
-      case name_matches.size
-      when 0
-        # None found? Check number and add warning that name doesn't match
-      when 1
-        logger.debug("Racer.match found: #{name_matches}")
-        return name_matches
-      else
-        # Break ties by number
-        number_matches = match_by_number(_criteria, event, name_matches)
-        if number_matches.size == 1
-          logger.debug("Racer.match found: #{number_matches}")
-          return number_matches
-        end
-        # Break ties by team
-        team_matches = match_by_team(_criteria, name_matches)
-        if team_matches.size == 1
-          logger.debug("Racer.match found: #{team_matches}")
-          return team_matches
-        else
-          logger.debug("Racer.match found: #{name_matches}")
-          return name_matches
-        end
-      end
-    end
-    
-    logger.debug("Racer.match found: []")
-    []
-  end
-  
-  def Racer.remove_rental_numbers(criteria)
-    criteria.delete_if do |key, value|
-      NUMBERS.include?(key) and value.to_i > 10  and value.to_i < 100
-    end
-    criteria
-  end
-  
-  def Racer.has_number?(criteria)
-    criteria.detect do |key, value|
-      [:road_number, :ccx_number, :xc_number, :downhill_number].include?(key)
-    end
-  end
-  
-  def Racer.has_names?(criteria)
-    criteria.include?(:name) or criteria.include?(:first_name) or criteria.include?(:last_name)
-  end
-  
-  def Racer.match_by_number(criteria, event = nil, previous_matches = nil)
-    number_condition = criteria.detect do |key, value|
-      NUMBERS.include?(key)
-    end
-    return [] if number_condition.nil?
-
-    if previous_matches.nil?
-      race_number = RaceNumber.find_by_value_and_event(number_condition.last, event)
-      race_number.racer
-    else
-      previous_matches.select do |racer|
-        racer[number_condition.first] == number_condition.last
-      end
-    end
-  end
-  
-  def Racer.match_by_team(criteria, previous_matches = nil)
-    return [] unless criteria[:team_name]
-    
-    team = Team.find_by_name_or_alias(criteria[:team_name])
-    matches = [] | previous_matches
-    matches.reject! do |racer|
-      racer.team != team
-    end
-    
-    matches
-  end
-  
-  # TODO Order consistently
-  def Racer.match_by_name(criteria)
-    RAILS_DEFAULT_LOGGER.debug("Racer.match_by_name(#{criteria.inspect})")
-    matches = []
-    
-    if criteria.include?(:name)
-      if criteria[:name].blank?
-        matches = Racer.find(
-          :all,
-          :conditions => ['first_name = ? and last_name = ?', '', ''],
-          :order => 'last_name, first_name')  | Alias.find_all_racers_by_name(criteria[:name])
-      else
-        matches = Racer.find(
-          :all,
-          :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", criteria[:name]],
-          :order => 'last_name, first_name')  | Alias.find_all_racers_by_name(criteria[:name])
-      end
-        
-    elsif criteria.include?(:first_name) and criteria.include?(:last_name)
-      matches = Racer.find(
-        :all,
-        :conditions => ['first_name = ? and last_name = ?', criteria[:first_name], criteria[:last_name]]
-      ) | Alias.find_all_racers_by_name(Racer.full_name(criteria[:first_name], criteria[:last_name]))
-      
-    elsif criteria.include?(:first_name)
-      matches = Racer.find_all_by_first_name(criteria[:first_name]) | Alias.find_all_racers_by_name(criteria[:first_name])
-      
-    elsif criteria.include?(:last_name)
-      matches = Racer.find_all_by_last_name(criteria[:last_name]) | Alias.find_all_racers_by_name(criteria[:last_name])
-      
-    end
-    
-    matches
   end
   
   def attributes=(attributes)
@@ -255,44 +118,79 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def ccx_number=(value)
-    if value.blank?
-      self[:ccx_number] = nil
-    else
-      self[:ccx_number] = value
+  def number(discipline, reload = false)
+    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    number = race_numbers(reload).detect do |race_number|
+      race_number.year == Date.today.year and race_number.discipline == discipline and race_number.number_issuer == association
     end
+    if number
+      number.value
+    else
+      nil
+    end
+  end
+  
+  def add_number(value, discipline)
+    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    if value.nil?
+      RaceNumber.delete(
+        'racer_id=? and discipline=? and year=? and number_issuer_id=?', 
+        [self.id, discipline.id, Date.today.year, association])
+      return
+    end
+    unless value.blank?
+      if new_record?
+        race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
+      else
+        race_number = RaceNumber.find(
+          :first,
+          'value=? and racer_id=? and discipline=? and year=? and number_issuer_id=?', 
+          [value, self.id, discipline.id, Date.today.year, association])
+        unless race_number
+          race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
+        end
+      end
+    end
+  end
+  
+  def ccx_number(reload = false)
+    number(Discipline[:cyclocross], reload)
+  end
+  
+  def dh_number(reload = false)
+    number(Discipline[:downhill], reload)
+  end
+  
+  def road_number(reload = false)
+    number(Discipline[:road], reload)
+  end
+  
+  def track_number(reload = false)
+    number(Discipline[:track], reload)
+  end
+  
+  def xc_number(reload = false)
+    number(Discipline[:mountain_bike], reload)
+  end
+  
+  def ccx_number=(value)
+    add_number(value, Discipline[:cyclocross])
   end
   
   def dh_number=(value)
-    if value.blank?
-      self[:dh_number] = nil
-    else
-      self[:dh_number] = value
-    end
+    add_number(value, Discipline[:downhill])
   end
   
   def road_number=(value)
-    if value.blank?
-      self[:road_number] = nil
-    else
-      self[:road_number] = value
-    end
+    add_number(value, Discipline[:road])
   end
   
   def track_number=(value)
-    if value.blank?
-      self[:track_number] = nil
-    else
-      self[:track_number] = value
-    end
+    add_number(value, Discipline[:track])
   end
   
   def xc_number=(value)
-    if value.blank?
-      self[:xc_number] = nil
-    else
-      self[:xc_number] = value
-    end
+    add_number(value, Discipline[:mountain_bike])
   end
   
   # All non-Competition results
@@ -329,7 +227,7 @@ class Racer < ActiveRecord::Base
         race_numbers << racer.race_numbers
         Racer.delete(racer.id)
         existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
-        if existing_alias.nil? and Racer.match(:name => racer.name).empty?
+        if existing_alias.nil? and Racer.find_all_by_name(racer.name).empty?
           aliases.create(:name => racer.name) 
         end
       ensure
