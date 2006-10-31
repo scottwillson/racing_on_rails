@@ -319,4 +319,13 @@ class RacerTest < Test::Unit::TestCase
     assert_equal('102', racers(:tonkin).road_number)
     assert_nil(racers(:tonkin).dh_number)
   end
+  
+  def test_update
+    Racer.update(
+    racers(:alice).id,
+    "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_on(1i)"=>"2005", "dh_category"=>"", "member_on(2i)"=>"12", "member_on(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+    )
+    assert_equal('917', racers(:alice).dh_number, 'downhill_number')
+    assert_equal('112', racers(:alice).ccx_number, 'ccx_number')
+  end
 end

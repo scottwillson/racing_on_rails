@@ -467,7 +467,7 @@ class ResultTest < Test::Unit::TestCase
     result_1.destroy
     result_2.destroy
     result_3.destroy
-    Racer.delete_all(['road_number<>? and last_name=?', '104', 'tonkin'])
+    Racer.destroy_all(['first_name<>? and last_name=?', 'erik', 'tonkin'])
     assert_equal(1, Racer.find_all_by_first_name_and_last_name('Erik','Tonkin').size, 'Erik Tonkins in database')
 
     # CX: Same name, different number as existing racer

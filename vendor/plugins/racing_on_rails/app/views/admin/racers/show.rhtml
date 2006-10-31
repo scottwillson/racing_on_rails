@@ -1,4 +1,4 @@
-<% @page_title = "Admin: Racers: New" %>
+<% @page_title = "Admin: Racers: #{@racer.name}" %>
 
 <%= render "shared/admin/tabs" %>
 
@@ -21,7 +21,7 @@
 
 <%= start_form_tag({:action => 'update', :id => @racer.id}) %>
 	<table class="base" cellspacing="0" cellpadding="0">
-		<caption>New Racer</caption>
+		<caption><%= @racer.name %></caption>
 		<tr>
 			<td class="field_label">First Name:</td>
 			<td><%= text_field 'racer', 'first_name' %></td>

@@ -38,6 +38,10 @@ class Discipline < ActiveRecord::Base
     end
   end
 
+  def Discipline.reset
+    @@aliases = nil
+  end
+  
   def Discipline.find_all_names
     [''] + Discipline.find_all.collect {|discipline| discipline.name}
   end

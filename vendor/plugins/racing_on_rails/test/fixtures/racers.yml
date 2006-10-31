@@ -8,22 +8,18 @@ matson:
   first_name: Mark
   last_name: Matson
   team_id: 1
-  road_number: 340
 weaver:
   id: 3
   first_name: Ryan
   last_name: Weaver
   team_id: 2
-  road_number: 341
 mollie:
   id: 4
   first_name: Mollie
   last_name: Cameron
-  road_number: 202
   team_id: 3
 alice:
   id: 5
   first_name: Alice
   last_name: Pennington
-  road_number: 230
   team_id: 2

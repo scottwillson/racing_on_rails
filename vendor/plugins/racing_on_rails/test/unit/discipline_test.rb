@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DisciplineTest < Test::Unit::TestCase
   
-  def setup
+  def teardown
     # Discipline class may have loaded earlier with no aliases in database
-    Discipline.load_aliases
+    Discipline.reset
   end
   
   # Assume MySQL, which is not case-sensitive

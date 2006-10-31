@@ -72,8 +72,13 @@ class Admin::RacersController < Admin::RecordEditor
         return redirect_to(:action => :show, :id => @racer.to_param)
       end
     rescue Exception => e
-      RACING_ON_RAILS_DEFAULT_LOGGER.error(e)
-      flash[:warn] = e
+      begin
+        # try to redisplay racer
+        @racer = Racer.find(params[:id])
+      ensure
+        RACING_ON_RAILS_DEFAULT_LOGGER.error(e)
+        flash[:warn] = e
+      end
     end
     render('admin/racers/show')
   end

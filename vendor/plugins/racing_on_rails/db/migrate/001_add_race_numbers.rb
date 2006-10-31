@@ -7,23 +7,20 @@ class AddRaceNumbers < ActiveRecord::Migration
       t.column :created_at,   :datetime
       t.column :updated_at,   :datetime
     end
+    add_index(:number_issuers, :name, :unique => true)
     
     create_table :race_numbers do |t|
       t.column :id,               :primary_key
-      t.column :racer_id,         :int,        :null => false
-      t.column :discipline_id,    :int,        :null => false
-      t.column :number_issuer_id, :int,        :null => false
+      t.column :racer_id,         :int,        :null => false, :on_delete => :cascade
+      t.column :discipline_id,    :int,        :null => false, :on_delete => :restrict
+      t.column :number_issuer_id, :int,        :null => false, :on_delete => :restrict
       t.column :value,            :string,     :null => false
       t.column :year,             :int,        :null => false
       t.column :lock_version,     :int,        :null => false, :default => 0
       t.column :created_at,       :datetime
       t.column :updated_at,       :datetime
-      t.foreign_key :racer_id, :racers, :id, :on_delete => :cascade
-      t.foreign_key :number_issuer_id, :number_issuers, :id, :on_delete => :restrict
-      t.foreign_key :discipline_id, :disciplines, :id, :on_delete => :restrict
     end
     add_index(:race_numbers, :value)
-    add_index(:race_numbers, [:value, :number_issuer_id, :year], :unique => true, :name => 'unique_numbers')
     
     # Odd error with this one -- change with SQL
     # change_column_default(:promoters, :name, '')
