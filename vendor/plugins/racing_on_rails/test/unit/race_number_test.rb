@@ -2,10 +2,11 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RaceNumberTest < Test::Unit::TestCase
   def test_defaults
+    assert_not_nil(NumberIssuer.find_by_name(ASSOCIATION.short_name), 'Number issuer exists')
     race_number = RaceNumber.new
     assert_equal(Date.today.year, race_number.year, 'year default')
-    assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
+    assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
 
     race_number = RaceNumber.create!(:racer => racers(:alice), :value => '7')
     assert_equal(Date.today.year, race_number.year, 'year default')

@@ -1,6 +1,4 @@
 class RaceNumber < ActiveRecord::Base
-  defaults :discipline => Discipline[:road], :number_issuer => NumberIssuer.find_by_name(ASSOCIATION.short_name), :year => Date.today.year
-  
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id
   validates_presence_of :racer_id, :if => Proc.new {|race_number| 
@@ -42,6 +40,12 @@ class RaceNumber < ActiveRecord::Base
     else
       Discipline[:road].id
     end
+  end
+  
+  def after_initialize
+    self.discipline = Discipline[:road] unless self.discipline
+    self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer
+    self.year = Date.today.year unless self.year and self.year > 1800
   end
   
   def get_racer_id
