@@ -22,7 +22,7 @@ class RaceNumberTest < Test::Unit::TestCase
     # One field different
     RaceNumber.create!(:racer => alice, :value => 'A104', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2002, :number_issuer => elkhorn, :discipline => disciplines(:road))
-    obra = NumberIssuer.create!(:name => 'OBRA')
+    obra = NumberIssuer.find_or_create_by_name('OBRA')
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     

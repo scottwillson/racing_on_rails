@@ -16,9 +16,6 @@ class Event < ActiveRecord::Base
            
     def Event.find_all_years
       extract_year_sql = "extract(year from date)"
-      if connection.adapter_name == "SQLite"
-        extract_year_sql = "strftime('%Y', date)"
-      end
       years = []
       results = connection.select_all(
         "select distinct #{extract_year_sql} as year from events"

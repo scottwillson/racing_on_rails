@@ -5,7 +5,7 @@ class Result < ActiveRecord::Base
   # FIME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
-  before_validation :validate_event, :find_associated_records
+  before_validation :find_associated_records
   before_save :save_racer
   after_save :update_racer_team, :update_racer_number
   after_save {|result| result.race.standings.after_result_save}
@@ -20,10 +20,6 @@ class Result < ActiveRecord::Base
   
   validates_presence_of :race_id
     
-  def validate_event
-    !event.discipline.blank? and event.number_issuer
-  end
-  
   def attributes=(attributes)
     unless attributes.nil?
       if attributes[:first_name]
