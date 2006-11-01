@@ -15,15 +15,16 @@ module Schedule
     # Rigid OBRA legacy format (skip first row):
     # 0. _skip_
     # 1. _skip_
-    # 2. date
-    # 3. _skip_
-    # 4. name
-    # 5. city
-    # 6. promoter_name
-    # 7. promoter_phone
-    # 8. promoter_email
-    # 9. discipline
-    # 10. notes
+    # 2. _skip_
+    # 3. date
+    # 4. _skip_
+    # 5. name
+    # 6. city
+    # 7. promoter_name
+    # 8. promoter_phone
+    # 9. promoter_email
+    # 10. discipline
+    # 11. notes
     #
     # Import implemented in several methods. See source code.
     # === Returns
