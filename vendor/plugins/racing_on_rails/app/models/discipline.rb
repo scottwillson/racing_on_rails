@@ -2,7 +2,7 @@ class Discipline < ActiveRecord::Base
 
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
 
-  NONE = Discipline.new(:name => "", :id => nil).freeze
+  NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
   @@aliases = nil
   
   def Discipline.[](name)
