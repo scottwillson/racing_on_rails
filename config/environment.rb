@@ -43,24 +43,17 @@ Rails::Initializer.run do |config|
   # See Rails::Configuration for more options
 end
 
-# Add new inflection rules using the following format 
-# (all these examples are active by default):
-# Inflector.inflections do |inflect|
-#   inflect.plural /^(ox)$/i, '\1en'
-#   inflect.singular /^(ox)en/i, '\1'
-#   inflect.irregular 'person', 'people'
-#   inflect.uncountable %w( fish sheep )
-# end
+Inflector.inflections do |inflect|
+   inflect.singular 'standings', 'standings'
+   inflect.plural   'standings', 'standings'
+end
 
 # Include your application configuration below
 ActiveRecord::Base.colorize_logging = false
 
-# Include Racing on Rails engine
-Engines.start :racing_on_rails
-
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
-ASSOCIATION = RacingOnRails::Association.new
+ASSOCIATION = RacingAssociation.new
 ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
 ASSOCIATION.short_name = 'CBRA'
 ASSOCIATION.state = 'OR'

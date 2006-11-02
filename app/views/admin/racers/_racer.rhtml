@@ -1,5 +1,5 @@
 <tr valign="top" id="racer_<%= racer.id %>_row" class="<%= cycle("even", "odd") %>">
-	<td><%= image_tag('/engine_files/racing_on_rails/images/icons/person.gif', 
+	<td><%= image_tag('/images/icons/person.gif', 
 					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
 					  :id => "racer_#{racer.id}") %></td>
 	<td nowrap>
@@ -32,7 +32,7 @@
 		|
 		<%= link_to 'Edit', :action => 'show', :id => racer.id %>
 	</td>
- 	<td><%= link_to_remote image_tag('/engine_files/racing_on_rails/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+ 	<td><%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
 		:url => {:action => "destroy", :id => racer.id},
 		:confirm => "Really delete #{racer.name}?",
 		:complete => evaluate_remote_response

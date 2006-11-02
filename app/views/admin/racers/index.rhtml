@@ -9,9 +9,9 @@
 
 	<%# Nasty code required to show consisten meesages with and without AJAX. At least it could be in a helper. %>
 	<div class="message">
-		<%= image_tag('/engine_files/racing_on_rails/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+		<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
 		<span id='warn_text'><%= flash[:warn] %></span>
-		<%= image_tag('/engine_files/racing_on_rails/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
+		<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
 		<span id='message_text'><%= flash[:notice] %></span>
 	</div>
 	<%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
@@ -54,7 +54,7 @@
 				</tbody>
 			</table>
 			<div align="left">
-				<%= link_image_to '/engine_files/racing_on_rails/images/buttons/add.gif', :action => 'new' %>
+				<%= link_image_to '/images/buttons/add.gif', :action => 'new' %>
 			</div>
 		</td>
 	</tr>

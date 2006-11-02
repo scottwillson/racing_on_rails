@@ -14,7 +14,7 @@ namespace :racing_on_rails do
 
   desc 'Dump development schema'
   task :dump_schema do
-    `mysqldump -u root --no-data racing_on_rails_development > vendor/plugins/racing_on_rails/db/schema.sql`
+    `mysqldump -u root --no-data racing_on_rails_development > /db/schema.sql`
   end
 
   # From production
@@ -46,7 +46,7 @@ namespace :racing_on_rails do
     rm_rf app_path
   
     puts(`tar zxf pkg/racing_on_rails-0.0.2.tar.gz -C ~`)
-    `mysql -u root racing_on_rails_development < vendor/plugins/racing_on_rails/db/schema.sql`
+    `mysql -u root racing_on_rails_development < /db/schema.sql`
   end
 
   desc 'Customize new app'
@@ -126,7 +126,7 @@ namespace :racing_on_rails do
 
   def customize(fixture_path)
     mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}")))
-    cp(File.expand_path("vendor/plugins/racing_on_rails/test/fixtures/#{fixture_path}"),
+    cp(File.expand_path("/test/fixtures/#{fixture_path}"),
        File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}"))
   end
 

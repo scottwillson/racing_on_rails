@@ -103,7 +103,7 @@ div.nav {
 
 div.nav#top {
 	height: 51px;
-	background-image: url(/engine_files/racing_on_rails/images/backgrounds/bar.gif);
+	background-image: url(/images/backgrounds/bar.gif);
 	text-align: left;
 	border-bottom: 1px solid #6D6D6D;
 }
@@ -112,7 +112,7 @@ div.nav#bottom {
 	text-align: left;
 	border: 0px none; !important;
 	height: 23px;
-	background-image: url(/engine_files/racing_on_rails/images/backgrounds/bar_low.gif);
+	background-image: url(/images/backgrounds/bar_low.gif);
 	border-top: 1px solid #6D6D6D;
 }
 
@@ -181,7 +181,7 @@ table.base caption
 	border-bottom-width: 0px;
 	border-left-width: 1px;
 	border-color: #B3B3B3;
-	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_head.jpg);
+	background-image: url(/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -200,7 +200,7 @@ table.base th.caption
 	border-bottom-width: 1px;
 	border-left-width: 0px;
 	border-color: #B3B3B3;
-	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_head.jpg);
+	background-image: url(/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -213,7 +213,7 @@ table.base th.caption
 
 table.base thead tr
 {
-	background-image: url(/engine_files/racing_on_rails/images/backgrounds/table_column_titles.jpg);
+	background-image: url(/images/backgrounds/table_column_titles.jpg);
 	height: 20px;
 }
 

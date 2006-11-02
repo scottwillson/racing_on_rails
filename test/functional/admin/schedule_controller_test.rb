@@ -87,7 +87,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
   def uploaded_file(filename, content_type)
     t = Tempfile.new(filename);
     t.binmode
-    path = RAILS_ROOT + "/vendor/plugins/racing_on_rails/test/fixtures/" + filename
+    path = RAILS_ROOT + "/test/fixtures/" + filename
     FileUtils.copy_file(path, t.path)
     (class << t; self; end).class_eval do
       alias local_path path

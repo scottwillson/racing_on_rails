@@ -91,7 +91,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
     
-    file = uploaded_file("vendor/plugins/racing_on_rails/test/fixtures/results/pir_2006_format.xls", "pir_2006_format.xls", "application/vnd.ms-excel")
+    file = uploaded_file("/test/fixtures/results/pir_2006_format.xls", "pir_2006_format.xls", "application/vnd.ms-excel")
     opts = {
       :controller => "admin/events", 
       :action => "upload",
@@ -113,7 +113,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
     
-    file = uploaded_file("/vendor/plugins/racing_on_rails/test/fixtures/results/invalid_columns.xls", "invalid_columns.xls", "application/vnd.ms-excel")
+    file = uploaded_file("/test/fixtures/results/invalid_columns.xls", "invalid_columns.xls", "application/vnd.ms-excel")
     post :upload, :id => mt_hood_1.to_param, :results_file => file
     assert_redirected_to(:action => :show, :id => mt_hood_1.to_param, :standings_id => mt_hood_1.standings(true).last.to_param)
 
@@ -190,7 +190,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings(true).empty?, 'Should have no standings before import')
     
-    file = uploaded_file("/vendor/plugins/racing_on_rails/test/fixtures/results/dupe_racers.xls", "dupe_racers.xls", "application/vnd.ms-excel")
+    file = uploaded_file("/test/fixtures/results/dupe_racers.xls", "dupe_racers.xls", "application/vnd.ms-excel")
     post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect
