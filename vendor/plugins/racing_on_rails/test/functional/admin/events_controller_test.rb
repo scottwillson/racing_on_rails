@@ -850,6 +850,24 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_nil(tabor_cr.promoter, "Tabor Promoter")
   end
 
+  def test_delete
+    tabor_cr = events(:tabor_cr)
+
+    @request.session[:user] = users(:candi)
+    post(:update,
+         'id' => tabor_cr.to_param,
+         "commit"=>"Delete", 
+         'same_promoter' => 'false',
+         "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+                   "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                   "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+                  'promoter' => {"name"=>"Tim Plummer",  "phone"=>"503-913-7676", "email"=>"tplummer@gmail.com"}}
+    )
+    assert_response(:redirect)
+    
+    assert(!Event.exists?(tabor_cr.id), "Tabor should be deleted")
+  end
+
   private
 
   def uploaded_file(path, original_filename, content_type)

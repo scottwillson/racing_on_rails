@@ -119,6 +119,7 @@
 	<tr class="buttons">
 		<td class="updatedon">Updated: <%= @event.updated_at.to_formatted_s(:long) unless @event.updated_at.nil? %></td>
 		<td class="right">
+			<%= submit_tag "Delete" %>
 			<%= submit_tag "Save" %>
 		</td>
 	</tr>

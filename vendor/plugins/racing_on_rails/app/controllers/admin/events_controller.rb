@@ -82,6 +82,9 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * warn
   def update
+    if params[:commit] == 'Delete'
+      return destroy_event
+    end
     if params[:race_id]
       @race = Race.update(params[:race_id], params[:race])
       if @race.errors.empty?
@@ -159,7 +162,8 @@ class Admin::EventsController < ApplicationController
       redirect_path = {
         :controller => "/admin/events", 
         :action => :show, 
-        :id => event.to_param
+        :id => event.to_param,
+        
       }
       flash[:warn] = "Could not upload results: #{error}"
     end
@@ -167,26 +171,22 @@ class Admin::EventsController < ApplicationController
     redirect_to(redirect_path)
   end
   
-  def destroy_race
-    race = Race.find(@params[:id])
+  def destroy_event
+    event = Event.find(@params[:id])
     begin
-      race.destroy
-      render :update do |page|
-        page.visual_effect(:puff, "race_#{race.id}_row", :duration => 2)
-        flash[:notice] = "Deleted #{race.name}"
-        page.redirect_to(
-          :controller => "/admin/events", 
-          :action => :show, 
-          :id => race.standings.event.to_param
+      event.destroy
+      flash[:notice] = "Deleted #{event.name}"
+      redirect_to(
+          :controller => "/admin/schedule", 
+          :action => "index",
+          :year => event.date.year
         )
-      end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       logger.error("#{error}\n#{stack_trace}")
-      message = "Could not delete #{race.name}"
-      render :update do |page|
-        page.replace_html("message_#{race.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
-      end
+      message = "Could not delete #{event.name}"
+      @event = Event.find(params[:id])
+      return render(:action => 'show')
     end
   end
   
@@ -209,6 +209,29 @@ class Admin::EventsController < ApplicationController
       message = "Could not delete #{standings.name}"
       render :update do |page|
         page.replace_html("message_#{standings.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
+      end
+    end
+  end
+  
+  def destroy_race
+    race = Race.find(@params[:id])
+    begin
+      race.destroy
+      render :update do |page|
+        page.visual_effect(:puff, "race_#{race.id}_row", :duration => 2)
+        flash[:notice] = "Deleted #{race.name}"
+        page.redirect_to(
+          :controller => "/admin/events", 
+          :action => :show, 
+          :id => race.standings.event.to_param
+        )
+      end
+    rescue  Exception => error
+      stack_trace = error.backtrace.join("\n")
+      logger.error("#{error}\n#{stack_trace}")
+      message = "Could not delete #{race.name}"
+      render :update do |page|
+        page.replace_html("message_#{race.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
       end
     end
   end
