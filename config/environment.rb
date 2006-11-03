@@ -10,8 +10,14 @@ RAILS_GEM_VERSION = '1.1.6'
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+CUSTOM_SITE_ROOT = File.join(RAILS_ROOT, 'obra')
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
+  
+  # Override to put cache in site specific folder
+  config.action_controller.fragment_cache_store = :file_store, "#{CUSTOM_SITE_ROOT}/public"
+  config.action_controller.page_cache_directory = "#{CUSTOM_SITE_ROOT}/public"
   
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   config.frameworks -= [ :action_web_service ]
@@ -49,13 +55,16 @@ Inflector.inflections do |inflect|
 end
 
 # Include your application configuration below
+
+require 'customize'
+
 ActiveRecord::Base.colorize_logging = false
 
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
 ASSOCIATION = RacingAssociation.new
-ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
-ASSOCIATION.short_name = 'CBRA'
+ASSOCIATION.name = 'Oregon Bicycle Racing Association'
+ASSOCIATION.short_name = 'OBRA'
 ASSOCIATION.state = 'OR'
 
-SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
+SANCTIONING_ORGANIZATIONS = ["FIAC", "OBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
