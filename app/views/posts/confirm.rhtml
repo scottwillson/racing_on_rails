@@ -1,0 +1,28 @@
+<% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
+
+<div align="center">
+
+<% if flash[:notice] %><div class="message"><%= flash[:notice] %></div><% end %>
+<table>
+  <tr>
+    <td>
+      Your new post is now in the mailing queue. What happens next:
+      <ul>
+        <li>Confirm that you are a list subscriber</li>
+        <li>Check new post for spam</li>
+        <li>Check for viruses</li>
+        <li>Check size</li>
+        <li>Email post to list subscribers</li>
+        <li>Archive post</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
+  </tr>
+</table>
+
+</div>

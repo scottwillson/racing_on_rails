@@ -25,6 +25,30 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/admin/schedule/:year", :controller => "admin/schedule", :action => "index", :requirements => {:year => /\d+/}
   map.connect "/admin", :controller => "admin/schedule", :action => "index"
 
+  map.connect "/bar/categories", :controller => "bar", :action => 'categories'
+  map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
+  map.connect "/bar/:year/:discipline", :controller => "bar", :action => "show", :requirements => {:year => /\d+/}
+  map.connect "/bar/:year", :controller => "bar", :action => "show", :requirements => {:year => /\d+/}
+  map.connect "/bar", :controller => "bar", :action => "show"
+
+  map.connect "/ironman/:year", :controller => "ironman"
+
+  map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
+  map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
+  map.connect "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
+  map.connect "/oregon_cup", :controller => "oregon_cup", :action => "index"
+
+  map.connect "/posts/:mailing_list_name/new/:reply_to", :controller => "posts", :action => "new"
+  map.connect "/posts/:mailing_list_name/new",           :controller => "posts", :action => "new"
+  map.connect "/posts/new/:mailing_list_name",           :controller => "posts", :action => "new"
+  map.connect "/posts/:mailing_list_name/show/:id",      :controller => "posts", :action => "show"
+  map.connect "/posts/show/:mailing_list_name/:id",      :controller => "posts", :action => "show"
+  map.connect "/posts/:mailing_list_name/post",          :controller => "posts", :action => "post"
+  map.connect "/posts/:mailing_list_name/confirm",       :controller => "posts", :action => "confirm"
+  map.connect "/posts/:mailing_list_name/confirm_private_reply", :controller => "posts", :action => "confirm_private_reply"
+  map.connect "/posts/:mailing_list_name/:year/:month",  :controller => "posts", :action => "list"
+  map.connect "/posts/:mailing_list_name",               :controller => "posts"
+
   map.connect "/results/racer/:id", :controller => "results", :action => "racer"
   map.connect "/results/show/:id", :controller => "results", :action => "show"
   map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event"

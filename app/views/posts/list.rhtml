@@ -1,0 +1,46 @@
+<% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
+
+<div align="center">
+
+<%= archive_navigation(@mailing_list, @month, @year) %>
+
+<br><br>
+
+<table class="yellow" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th>Date</th>
+    <th>Subject</th>
+    <th>From</th>
+  </tr>
+  <% for post in @posts %>
+  <tr>
+    <td><%= post.date.strftime("%m/%d/%Y") %></td>
+    <td>
+      <%= link_to h(truncate(post.subject, 50)), {:action => "show", :mailing_list_name => @mailing_list.name, :id => post.id } %><br>
+    </td>
+    <td><%= h(post.sender_obscured) %></td>
+  </tr>
+  <% end %>
+  <% if @posts.empty? %>
+  <tr>
+    <td colspan = "3" align="center" height="40">
+      No posts for <%= Date::MONTHNAMES[@month] %> <%= @year %>
+    </td>
+  </tr>
+  <% end %>
+</table>
+
+<br>
+
+<%= archive_navigation(@mailing_list, @month, @year) %>
+
+<br><br>
+
+<table>
+  <tr>
+    <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
+  </tr>
+</table>
+
+
+</div>

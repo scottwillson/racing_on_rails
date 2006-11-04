@@ -2,7 +2,7 @@ class Admin::RecordEditor < ApplicationController
 
   before_filter :login_required
 
-  def RecordEditor.edits(active_record_symbol, icon = nil)
+  def self.edits(active_record_symbol, icon = nil)
     @@record_symbol = active_record_symbol
     @@record_class_name = active_record_symbol.to_s.humanize
     if icon.nil?

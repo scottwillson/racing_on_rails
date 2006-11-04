@@ -478,7 +478,12 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
     @request.session[:user] = users(:candi)
     
-    post(:update, {:racer => {:first_name => 'Jon', :last_name => 'Knowlson'}})
+    post(:update, {"racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, "commit"=>"Save"})
+    
+    if assigns['racer']
+      assert(assigns['racer'].errors.empty?, assigns['racer'].errors.full_messages)
+    end
+    
     assert_response(:redirect)
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')

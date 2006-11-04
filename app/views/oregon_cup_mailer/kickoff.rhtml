@@ -1,0 +1,10 @@
+The <%= @oregon_cup.date.year %> Oregon Cup kicks off this <%= @next_event.date.strftime('%A') %> with the <%= @next_event.name %>.
+
+<%= @oregon_cup.date.year %> Races
+<%- for event in @oregon_cup.events.sort -%>
+<%= event.date.strftime("%B %d").ljust(15) %><%= event.name %>
+<%- end -%>
+
+Full details and latest standings at http://app.obra.org/oregon_cup
+
+Questions? Contact Scott Willson <scott@butlerpress.com>.

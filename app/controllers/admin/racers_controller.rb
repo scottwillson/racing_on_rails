@@ -74,7 +74,7 @@ class Admin::RacersController < Admin::RecordEditor
     rescue Exception => e
       begin
         # try to redisplay racer
-        @racer = Racer.find(params[:id])
+        @racer = Racer.find(params[:id]) if params[:id]
       ensure
         RACING_ON_RAILS_DEFAULT_LOGGER.error(e)
         flash[:warn] = e

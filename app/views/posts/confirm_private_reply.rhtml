@@ -1,0 +1,13 @@
+<% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}: Reply Sent" %>
+
+<div align="center">
+
+<div class="message"><%= flash[:notice] %></div>
+
+<table>
+  <tr>
+    <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
+  </tr>
+</table>
+
+</div>

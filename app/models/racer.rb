@@ -139,7 +139,7 @@ class Racer < ActiveRecord::Base
       # FIXME Delete number individually in UI
       RaceNumber.destroy_all(
         ['racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-        self.id, discipline.id, Date.today.year, association])
+        self.id, discipline.id, Date.today.year, association.id])
     else
       if new_record?
         logger.debug('new racer -- build number')
@@ -149,7 +149,7 @@ class Racer < ActiveRecord::Base
         race_number = RaceNumber.find(
           :first,
           :conditions => ['value=? and racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-                           value, self.id, discipline.id, Date.today.year, association])
+                           value, self.id, discipline.id, Date.today.year, association.id])
         logger.debug("race_number: #{race_number}")
         unless race_number
           race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)

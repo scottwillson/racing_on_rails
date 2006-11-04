@@ -16,8 +16,9 @@ Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
   
   # Override to put cache in site specific folder
-  config.action_controller.fragment_cache_store = :file_store, "#{CUSTOM_SITE_ROOT}/public"
-  config.action_controller.page_cache_directory = "#{CUSTOM_SITE_ROOT}/public"
+  # Put cached pages in the site-specific public folder
+  config.action_controller.fragment_cache_store = :file_store, "obra/public"
+  config.action_controller.page_cache_directory = "obra/public"
   
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   config.frameworks -= [ :action_web_service ]
@@ -57,6 +58,7 @@ end
 # Include your application configuration below
 
 require 'customize'
+ActionController::Routing::Routes.reload
 
 ActiveRecord::Base.colorize_logging = false
 

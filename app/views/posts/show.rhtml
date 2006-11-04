@@ -1,0 +1,40 @@
+<% @page_title = "Mailing Lists: #{@post.mailing_list.friendly_name}" %>
+
+<div align="center">
+
+<%= post_navigation(@post) %>
+
+<table cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="field_label">Subject:</td>
+		<td><%= h(@post.subject) %></td>
+	</tr>
+	<tr>
+		<td class="field_label">Date:</td>
+		<td><%= @post.date.strftime("%m/%d/%Y %I:%M %p") %></td>
+	</tr>
+	<tr>
+		<td class="field_label">From:</td>
+		<td>
+		  <%= h(@post.sender_obscured) %>
+		</td>
+	</tr>
+	<tr>
+	  <td></td>
+		<td width="500">
+		  <%= sanitize(@post.body) if @post.topica? %>
+		  <%= sanitize(simple_format(@post.body)) unless (@post.topica? or @post.body["<html>"]) %>
+    </td>
+	</tr>
+</table>
+
+<br/>
+
+<table>
+  <tr>
+    <%= render("shared/mailing_list_links", :mailing_list => @post.mailing_list) %>
+  </tr>
+</table>
+
+</div>
+

@@ -1,0 +1,58 @@
+<% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
+
+<div align="center">
+
+  <%= error_messages_for "mailing_list_post" %>
+
+  <%= start_form_tag :action => "post" %>
+  <%= hidden_field("mailing_list_post", "mailing_list_id") %>
+  <%= hidden_field("reply_to", 'id') %>
+  
+  <table>
+    <tr>
+      <td class="field_label">To:</td>
+      <td>
+		<% if @reply_to %>
+		<%= h(@reply_to.sender_obscured) %>
+		<% else %>
+		<%= @mailing_list.friendly_name %>
+		<% end %>
+	  </td>
+    </tr>
+    <tr>
+      <td class="field_label">Your Name:</td>
+      <td><%= text_field("mailing_list_post", "from_name", :size => "40") %></td>
+    </tr>
+    <tr>
+      <td class="field_label">Your Email Address:</td>
+      <td><%= text_field("mailing_list_post", "from_email_address", :size => "40") %></td>
+    </tr>
+    <tr>
+      <td class="field_label">Subject:</td>
+      <td><%= text_field("mailing_list_post", "subject", :size => "40") %></td>
+    </tr>
+    <tr>
+      <td colspan="2"><%= text_area("mailing_list_post", "body", :rows => "14", :cols => "65") %></td>
+    </tr>
+    <tr>
+      <td class="updatedon">You must be a subscriber to post</td>
+      <td align="right">
+		<% if @reply_to %>
+	    	<%= submit_tag("Send") %>
+		<% else %>
+    	<%= submit_tag("Post") %>
+		<% end %>
+	  </td>
+    </tr>
+  </table>  
+  <%= end_form_tag %>
+  
+  <br/>
+
+  <table>
+    <tr>
+      <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
+    </tr>
+  </table>
+
+</div>

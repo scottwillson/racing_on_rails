@@ -868,6 +868,22 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert(!Event.exists?(tabor_cr.id), "Tabor should be deleted")
   end
 
+  def test_upcoming_events
+    @request.session[:user] = users(:candi)
+    opts = {:controller => "admin/events", :action => "upcoming"}
+    assert_routing("/admin/events/upcoming", opts)
+    get(:upcoming)
+    assert_response(:success)
+    assert_template("admin/events/upcoming")
+  end
+  
+  def test_upcoming_events_refresh
+    @request.session[:user] = users(:candi)
+    post(:upcoming, "commit"=>"Refresh", "date"=>{"month"=>"6", "day"=>"25", "year"=>"2004"}, "weeks"=>"6")
+    assert_response(:success)
+    assert_template("admin/events/upcoming")
+  end
+
   private
 
   def uploaded_file(path, original_filename, content_type)

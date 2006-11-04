@@ -280,6 +280,7 @@ class Admin::EventsController < ApplicationController
     else
       @weeks = params['weeks']
     end
+    @upcoming_events = UpcomingEvents.new(@date, @weeks)
   end
   
   # :nodoc
