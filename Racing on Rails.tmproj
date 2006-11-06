@@ -3,16 +3,24 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>vendor/plugins/racing_on_rails/lib/racing_on_rails/grid_file.rb</string>
+	<string>app/models/bar.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>name</key>
+			<string>local</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>local</string>
+		</dict>
+		<dict>
 			<key>expanded</key>
 			<true/>
 			<key>name</key>
 			<string>app</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>app</string>
 		</dict>
@@ -20,7 +28,7 @@
 			<key>name</key>
 			<string>components</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>components</string>
 		</dict>
@@ -30,17 +38,15 @@
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>config</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>db</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>db</string>
 		</dict>
@@ -48,17 +54,15 @@
 			<key>name</key>
 			<string>doc</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>doc</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>lib</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>lib</string>
 		</dict>
@@ -66,7 +70,7 @@
 			<key>name</key>
 			<string>log</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>log</string>
 		</dict>
@@ -74,90 +78,68 @@
 			<key>name</key>
 			<string>public</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>public</string>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>Rakefile</string>
-			<key>lastUsed</key>
-			<date>2006-09-04T02:20:50Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>README</string>
-			<key>lastUsed</key>
-			<date>2006-10-04T02:17:28Z</date>
+			<string>Racing on Rails.tmproj</string>
 		</dict>
 		<dict>
 			<key>name</key>
 			<string>script</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>script</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>test</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>test</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>tmp</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>tmp</string>
 		</dict>
 		<dict>
 			<key>expanded</key>
 			<true/>
+			<key>name</key>
+			<string>test</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>test</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>tmp</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>tmp</string>
+		</dict>
+		<dict>
 			<key>name</key>
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>vendor</string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>304</integer>
+	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
-		<key>vendor/plugins/racing_on_rails/app/controllers/admin/events_controller.rb</key>
+		<key>app/models/bar.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>10</integer>
 				<key>line</key>
-				<integer>181</integer>
+				<integer>428</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>162</integer>
+			<integer>385</integer>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/app/views/admin/events/_event.rhtml</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>121</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>76</integer>
-		</dict>
-		<key>vendor/plugins/racing_on_rails/app/views/admin/events/show.rhtml</key>
+		<key>app/models/results_email.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -171,42 +153,86 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/lib/racing_on_rails/grid_file.rb</key>
+		<key>app/views/admin/events/upcoming.rhtml</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>38</integer>
+				<integer>56</integer>
 				<key>line</key>
-				<integer>26</integer>
+				<integer>30</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>36</integer>
+			</dict>
+		</dict>
+		<key>local/app/views/admin/events/upcoming.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>36</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/test/functional/admin/events_controller_test.rb</key>
+		<key>test/functional/admin/events_controller_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>866</integer>
+				<integer>870</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>832</integer>
+			<integer>847</integer>
 		</dict>
-		<key>vendor/plugins/racing_on_rails/test/unit/results_file_test.rb</key>
+		<key>test/unit/bar_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>170</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>147</integer>
+		</dict>
+		<key>test/unit/results_email_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>19</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -216,15 +242,17 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>vendor/plugins/racing_on_rails/app/views/admin/events/_event.rhtml</string>
-		<string>vendor/plugins/racing_on_rails/app/views/admin/events/show.rhtml</string>
-		<string>vendor/plugins/racing_on_rails/test/functional/admin/events_controller_test.rb</string>
-		<string>vendor/plugins/racing_on_rails/lib/racing_on_rails/grid_file.rb</string>
-		<string>vendor/plugins/racing_on_rails/app/controllers/admin/events_controller.rb</string>
+		<string>app/models/bar.rb</string>
+		<string>test/unit/bar_test.rb</string>
+		<string>test/unit/results_email_test.rb</string>
+		<string>app/models/results_email.rb</string>
+		<string>test/functional/admin/events_controller_test.rb</string>
+		<string>app/views/admin/events/upcoming.rhtml</string>
+		<string>local/app/views/admin/events/upcoming.rhtml</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{314, 55}, {966, 777}}</string>
+	<string>{{319, 86}, {966, 746}}</string>
 </dict>
 </plist>
