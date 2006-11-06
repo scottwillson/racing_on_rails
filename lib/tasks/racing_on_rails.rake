@@ -18,16 +18,18 @@ namespace :racing_on_rails do
   end
 
   # From production
-  task :copy_production do
+  task :copy_production_schema do
     `mysql -u root -e 'drop database racing_on_rails_development'`
     `mysql -u root -e 'create database racing_on_rails_development'`
-    `mysqldump -u obra --password=fenders -h db.obra.org --no-data --ignore-table=obra.posts --ignore-table=obra.mailing_lists obra | mysql -u root racing_on_rails_development`
+    `mysqldump -u obra --password=fenders -h db.obra.org --no-data obra | mysql -u root racing_on_rails_development`
   end
 
   # From production
-  task :populate_development do
+  task :copy_production_data do
     `mysql -u root -e 'drop database racing_on_rails_development'`
     `mysql -u root -e 'create database racing_on_rails_development'`
+    # Mailing list tables are large
+    `mysqldump -u obra --password=fenders -h db.obra.org --no-data --databases obra --tables posts mailing_lists | mysql -u root racing_on_rails_development`
     `mysqldump -u obra --password=fenders -h db.obra.org --compress --ignore-table=obra.posts --ignore-table=obra.mailing_lists obra | mysql -u root racing_on_rails_development`
   end
 

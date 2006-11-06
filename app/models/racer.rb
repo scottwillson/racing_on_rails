@@ -135,11 +135,13 @@ class Racer < ActiveRecord::Base
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     if value.blank?
       logger.debug('blank # -- delete')
-      # Delete ALL numbers for ASSOCIATION and this discipline?
-      # FIXME Delete number individually in UI
-      RaceNumber.destroy_all(
-        ['racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-        self.id, discipline.id, Date.today.year, association.id])
+      unless new_record?
+        # Delete ALL numbers for ASSOCIATION and this discipline?
+        # FIXME Delete number individually in UI
+        RaceNumber.destroy_all(
+          ['racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
+          self.id, discipline.id, Date.today.year, association.id])
+      end
     else
       if new_record?
         logger.debug('new racer -- build number')

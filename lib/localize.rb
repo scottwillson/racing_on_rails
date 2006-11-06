@@ -4,7 +4,7 @@ module Dependencies
     file_name = "#{file_name}.rb" unless ! load? || file_name[-3..-1] == '.rb'
     load? ? load(file_name) : require(file_name)
     if file_name.include? 'controller'
-      file_name = File.join('obra', 'app', 'controllers', File.basename(file_name))
+      file_name = File.join('local', 'app', 'controllers', File.basename(file_name))
       if File.exist? file_name
         load? ? load(file_name) : require(file_name)
       end
@@ -19,8 +19,7 @@ module ActionView
     private
       def full_template_path(template_path, extension)
         # Check to see if the partial exists in our 'sites' folder first
-        site_specific_path = File.join('obra', 'app', 'views', "#{template_path}.#{extension}")
-
+        site_specific_path = File.join('local', 'app', 'views', "#{template_path}.#{extension}")
         if File.exist?(site_specific_path)
           site_specific_path
         else
@@ -38,11 +37,11 @@ module ActiveRecord
       generic_files = Dir["#{@migrations_path}/[0-9]*_*.rb"].sort
       puts generic_files.inspect
       # Include the site-specific files in our complete list of migration files
-      if defined? 'obra' and File.exist?("obra/db/migrate")
+      if defined? 'local' and File.exist?("local/db/migrate")
         # Note that a tilde (~) is used intentionally because its ascii value
         # is greater than both the lower-case and upper-case alphabets (thereby
         # causing the sort! below to behave as expected).
-        site_specific_files = Dir["obra/db/migrate/[0-9]*\.[0-9]*_*.rb"]
+        site_specific_files = Dir["local/db/migrate/[0-9]*\.[0-9]*_*.rb"]
         files = generic_files + site_specific_files
         # Sort by filename, ignoring the path to get there.  Also convert '.'
         # to '~' so that sorting occurs in the correct order.
@@ -88,8 +87,8 @@ module ActionController
         end
 
         # Add on site-specific routes
-        if File.exist?(File.join(RAILS_ROOT, 'obra', 'config', 'routes.rb'))
-          load(File.join(RAILS_ROOT, 'obra', 'config', 'routes.rb'))
+        if File.exist?(File.join(RAILS_ROOT, 'local', 'config', 'routes.rb'))
+          load(File.join(RAILS_ROOT, 'local', 'config', 'routes.rb'))
           loaded_routes = true
         end
 
@@ -107,7 +106,10 @@ end
 # Load any site-specific models
 # TODO: Make site-specific models re-open classes rather than
 # this temporary either/or hack
-$:.concat(Dir["obra/app/models/[_a-z]*"])
+$:.concat(Dir["local/app/models/[_a-z]*"])
 
 # Load custom local helpers, too
-ActionView::Base.load_helpers(RAILS_ROOT + "/obra/app/helpers/")
+ActionView::Base.load_helpers(RAILS_ROOT + "/local/app/helpers/")
+
+# Local config customization
+load("#{RAILS_ROOT}/local/config/environment.rb")

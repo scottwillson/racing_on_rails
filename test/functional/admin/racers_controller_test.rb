@@ -488,6 +488,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
     assert_redirected_to(:id => knowlsons.first.id)
+    assert(flash.empty?, 'flash empty?')
   end
 
   def test_update

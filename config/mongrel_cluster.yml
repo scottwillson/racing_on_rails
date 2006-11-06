@@ -1,0 +1,5 @@
+--- 
+cwd: /Users/sw/devel/racing_on_rails
+port: "8000"
+pid_file: log/mongrel.pid
+servers: 3

@@ -62,11 +62,11 @@ class Admin::RacersController < Admin::RecordEditor
   
   def update
     begin
-      if params[:id]
-        @racer = Racer.update(params[:id], params[:racer])
-      else
+      if params[:id].blank?
         @racer = Racer.new(params[:racer])
         @racer.save
+      else
+        @racer = Racer.update(params[:id], params[:racer])
       end
       if @racer.errors.empty?
         return redirect_to(:action => :show, :id => @racer.to_param)
@@ -80,6 +80,7 @@ class Admin::RacersController < Admin::RecordEditor
         flash[:warn] = e
       end
     end
+    @racer = Racer.new unless @racer
     render('admin/racers/show')
   end
 
