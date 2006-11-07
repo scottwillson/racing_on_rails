@@ -8,7 +8,6 @@
     id: 1
     standings_id: 1
     category_id: 6
-    field_size: 5
 - kings_valley_pro_1_2:
     id: 2
     standings_id: 2
@@ -21,7 +20,6 @@
     id: 4
     standings_id: 3
     category_id: 8
-    field_size: 6
 - kings_valley_women_2003:
     id: 5
     standings_id: 2

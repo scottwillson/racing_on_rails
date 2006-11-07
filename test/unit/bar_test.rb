@@ -32,7 +32,7 @@ class BarTest < Test::Unit::TestCase
     })
     swan_island_standings = swan_island.standings.create
     senior_men = Category.find_association("Senior Men Pro 1/2")
-    swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 5)
+    swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create({
       :place => 12,
       :racer => racers(:tonkin)
@@ -42,7 +42,7 @@ class BarTest < Test::Unit::TestCase
       :racer => racers(:mollie)
     })
     senior_women = Category.find_association("Senior Women")
-    senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 6)
+    senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
       :racer => racers(:mollie)
@@ -164,14 +164,14 @@ class BarTest < Test::Unit::TestCase
     
     assert_equal(racers(:tonkin), senior_men_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_overall_bar.results[0].place, "Senior Men Overall BAR results place")
-    assert_equal(1249, senior_men_overall_bar.results[0].points, "Senior Men Overall BAR results points")
+    assert_equal(1498, senior_men_overall_bar.results[0].points, "Senior Men Overall BAR results points")
     assert_equal(5, senior_men_overall_bar.results[0].scores.size, "Tonkin Overall BAR results scores")
     scores = senior_men_overall_bar.results[0].scores.sort {|x, y| y.points <=> x.points}
     assert_equal(300, scores[0].points, "Tonkin overall BAR points for discipline 0")
     assert_equal(300, scores[1].points, "Tonkin overall BAR points for discipline 1")
     assert_equal(300, scores[2].points, "Tonkin overall BAR points for discipline 2")
     assert_equal(299, scores[3].points, "Tonkin overall BAR points for discipline 3")
-    assert_equal(50, scores[4].points, "Tonkin overall BAR points for discipline 4")
+    assert_equal(299, scores[4].points, "Tonkin overall BAR points for discipline 4")
 
     assert_equal(racers(:weaver), senior_men_overall_bar.results[1].racer, "Senior Men Overall BAR results racer")
     assert_equal("2", senior_men_overall_bar.results[1].place, "Senior Men Overall BAR results place")
@@ -383,13 +383,13 @@ class BarTest < Test::Unit::TestCase
     womens_tt.results.create(:racer => leah, :place => '3')
     
     road_stage = mt_hood_1.standings.create(:name => 'Cooper Spur RR', :event => mt_hood_1, :date => Date.new(2005, 7))
-    senior_men_road_stage = road_stage.races.create(:standings => road_stage, :category => categories(:sr_p_1_2), :field_size => 6)
+    senior_men_road_stage = road_stage.races.create(:standings => road_stage, :category => categories(:sr_p_1_2))
     tuft = Racer.create(:name => 'Svein Tuft')
     senior_men_road_stage.results.create(:racer => tuft, :place => '2')
     
     mt_hood_2 = events(:mt_hood_2)
     womens_road_stage = mt_hood_2.standings.create(:name => 'Womens Cooper Spur RR', :event => mt_hood_2, :discipline => 'Road', :date => Date.new(2005, 7))
-    senior_women_road_stage = road_stage.races.create(:standings => womens_road_stage, :category => categories(:sr_women), :field_size => 6)
+    senior_women_road_stage = road_stage.races.create(:standings => womens_road_stage, :category => categories(:sr_women))
     senior_women_road_stage.results.create(:racer => leah, :place => '15')
     
     Bar.recalculate(2005)
@@ -442,7 +442,7 @@ class BarTest < Test::Unit::TestCase
     # Masters too
     marin_knobular = SingleDayEvent.create(:name => 'Marin Knobular', :date => Date.new(2001, 9, 7), :discipline => 'Mountain Bike')
     standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => expert_junior_men, :field_size => 6)
+    race = standings.races.create!(:category => expert_junior_men)
     kc = Racer.create(:name => 'KC Mautner')
     vanilla = teams(:vanilla)
     race.results.create(:racer => kc, :place => 4, :team => vanilla)
@@ -452,7 +452,7 @@ class BarTest < Test::Unit::TestCase
     
     lemurian = SingleDayEvent.create(:name => 'Lemurian', :date => Date.new(2001, 9, 14), :discipline => 'Mountain Bike')
     standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => sport_junior_men, :field_size => 6)
+    race = standings.races.create!(:category => sport_junior_men)
     race.results.create(:racer => chris_woods, :place => 14, :team => gentle_lovers)
     
     Bar.recalculate(2001)
@@ -676,6 +676,7 @@ class BarTest < Test::Unit::TestCase
     assert_equal(results_from_fixtures.size, results_after_bar_recalc.size, 'Should have no new results')
   end
   
+  # Used to only award bonus points for races of five or less, but now all races get equal points
   def test_field_size
     cross_crusade = Series.create!(:name => "Cross Crusade")
 
@@ -789,10 +790,10 @@ class BarTest < Test::Unit::TestCase
     men_a_bar.results.sort!
     tonkin_bar_result = men_a_bar.results.first
     assert_equal(racers(:tonkin), tonkin_bar_result.racer)
-    assert_equal(33 + 30 + 21, tonkin_bar_result.points, 'Tonkin BAR points')
+    assert_equal(33 + 30 + 25 + 21, tonkin_bar_result.points, 'Tonkin BAR points')
     weaver_bar_result = men_a_bar.results.last
     assert_equal(racers(:weaver), weaver_bar_result.racer)
-    assert_equal(1.5 + 11, weaver_bar_result.points, 'Weaver BAR points')
+    assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
     
     overall_bar = bar.standings.detect do |standings|
       standings.name == 'Overall'
@@ -808,7 +809,7 @@ class BarTest < Test::Unit::TestCase
     overall_sr_men_bar.results.sort!
     tonkin_bar_result = overall_sr_men_bar.results.first
     assert_equal(racers(:tonkin), tonkin_bar_result.racer)
-    assert_equal(350, tonkin_bar_result.points, 'Tonkin Overall BAR points')
+    assert_equal(600, tonkin_bar_result.points, 'Tonkin Overall BAR points')
     weaver_bar_result = overall_sr_men_bar.results.last
     assert_equal(racers(:weaver), weaver_bar_result.racer)
     assert_equal(299, weaver_bar_result.points, 'Weaver Overall BAR points')
@@ -826,110 +827,9 @@ class BarTest < Test::Unit::TestCase
 
     tonkin_bar_result = sr_men_crit_bar.results.first
     assert_equal(racers(:tonkin), tonkin_bar_result.racer)
-    assert_equal(0, tonkin_bar_result.points, 'Tonkin Crit BAR points')
+    assert_equal(2, tonkin_bar_result.points, 'Tonkin Crit BAR points')
   end
   
-  def test_set_bonus_points_for_extra_disciplines
-    # empty
-    scores = []
-    Bar.set_bonus_points_for_extra_disciplines(scores)
-    
-    # One result with points
-    weaver = racers(:weaver)
-    bar = Bar.create
-    track_bar = bar.standings.create!(:name => 'Track', :discipline => 'Track')
-    junior_men_track_bar = track_bar.races.create!(:category => categories(:junior_men))
-    discipline_source_result = junior_men_track_bar.results.create!(:racer => weaver, :place => 10, :points => 73)
-    
-    overall_bar = bar.standings.create!(:name => 'Overall', :discipline => 'Overall')
-    overall_jr_men_bar = overall_bar.races.create!(:category => categories(:junior_men))
-    overall_bar_result = overall_jr_men_bar.results.create!(:place => 42, :points => 291)
-
-    score_with_discipline_points = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 291)
-    scores = [score_with_discipline_points]
-    Bar.set_bonus_points_for_extra_disciplines(scores)
-    score_with_discipline_points.reload
-    assert_equal(291, score_with_discipline_points.points, 'score_with_discipline_points points')
-  end
-  
-  def test_set_bonus_points_for_extra_disciplines_bonus_result_with_high_placing
-    bar = Bar.create
-    track_bar = bar.standings.create!(:name => 'Track', :discipline => 'Track')
-    junior_men_track_bar = track_bar.races.create!(:category => categories(:junior_men))
-    overall_bar = bar.standings.create!(:name => 'Overall', :discipline => 'Overall')
-    overall_jr_men_bar = overall_bar.races.create!(:category => categories(:junior_men))
-    overall_bar_result = overall_jr_men_bar.results.create!(:place => 42, :points => 291)
-
-    # One result with only no discipline points
-    discipline_source_result = junior_men_track_bar.results.create!(:racer => racers(:tonkin), :place => 3, :points => 0)
-    overall_bar_result = overall_jr_men_bar.results.create!(:place => 8, :points => 50)
-
-    score_with_discipline_bonus_only = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 50)
-    scores = [score_with_discipline_bonus_only]
-    Bar.set_bonus_points_for_extra_disciplines(scores)
-    score_with_discipline_bonus_only.reload
-    assert_equal(50, score_with_discipline_bonus_only.points, 'score_with_discipline_bonus_only points')
-    
-    # 0-point discipline result (bonus only) with higher place than discipline results with points
-    discipline_source_result = junior_men_track_bar.results.create!(:racer => racers(:alice), :place => 3, :points => 0)
-    overall_bar_result = overall_jr_men_bar.results.create!(:place => 8)
-    score_with_discipline_bonus_only = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 50)
-      
-    road_bar = bar.standings.create!(:name => 'Road', :discipline => 'Road')
-    junior_men_road_bar = road_bar.races.create!(:category => categories(:junior_men))
-    discipline_source_result = junior_men_road_bar.results.create!(:racer => racers(:alice), :place => 10, :points => 73)
-    road_score = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 291)
-    
-    mtb_bar = bar.standings.create!(:name => 'MTB', :discipline => 'Mountain Bike')
-    junior_men_mtb_bar = mtb_bar.races.create!(:category => categories(:junior_men))
-    discipline_source_result = junior_men_mtb_bar.results.create!(:racer => racers(:alice), :place => 11, :points => 123)
-    mtb_score = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 290)
-
-    tt_bar = bar.standings.create!(:name => 'Time Trial', :discipline => 'Time Trial')
-    junior_men_tt_bar = tt_bar.races.create!(:category => categories(:junior_men))
-    discipline_source_result = junior_men_tt_bar.results.create!(:racer => racers(:alice), :place => 4, :points => 1)
-    tt_score = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 297)
-
-    crit_bar = bar.standings.create!(:name => 'Criterium', :discipline => 'Criterium')
-    junior_men_crit_bar = crit_bar.races.create!(:category => categories(:junior_men))
-    discipline_source_result = junior_men_crit_bar.results.create!(:racer => racers(:alice), :place => 5, :points => 124)
-    crit_score = overall_bar_result.scores.create(
-      :source_result => discipline_source_result, 
-      :competition_result => overall_bar_result, 
-      :points => 296)
-
-    scores = [score_with_discipline_bonus_only, tt_score, crit_score, road_score, mtb_score]
-    assert_equal(5, scores.size, 'Scores size before set_bonus_points_for_extra_disciplines')
-    Bar.set_bonus_points_for_extra_disciplines(scores)
-    assert_equal(5, scores.size, 'Scores size after set_bonus_points_for_extra_disciplines')
-
-    for score in scores
-      score.reload
-    end
-    assert_equal(297, tt_score.points, 'tt_score points')
-    assert_equal(296, crit_score.points, 'crit_score points')
-    assert_equal(291, road_score.points, 'road_score points')
-    assert_equal(290, mtb_score.points, 'mtb_score points')
-    assert_equal(50, score_with_discipline_bonus_only.points, 'score_with_discipline_bonus_only points')
-  end
   
   def test_result_key
     key_1 = ResultKey.new(results(:tonkin_banana_belt))
