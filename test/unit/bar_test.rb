@@ -162,10 +162,6 @@ class BarTest < Test::Unit::TestCase
     assert_equal(5, senior_men_overall_bar.results.size, "Senior Men Overall BAR results")
     assert_equal_dates(Date.today, senior_men_overall_bar.updated_at, "BAR last updated")
     
-    racers(:tonkin).results(true) do |result|
-      puts(result)
-    end
-
     assert_equal(racers(:tonkin), senior_men_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_overall_bar.results[0].place, "Senior Men Overall BAR results place")
     assert_equal(1249, senior_men_overall_bar.results[0].points, "Senior Men Overall BAR results points")
