@@ -99,13 +99,7 @@ class Bar < Competition
           progress_monitor.increment(1)
           for race in standings.races
             progress_monitor.detail_text = "Sort #{standings.name} #{race.name}"
-            race.results.sort! {|x,y| y.points <=> x.points }
-            progress_monitor.detail_text = "Save #{standings.name} #{race.name}"
-            place = 1
-            for result in race.results
-              result.update_attribute(:place, place)
-              place = place + 1
-            end
+            race.place_results_by_points
           end
         end
     

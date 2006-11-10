@@ -105,6 +105,25 @@ class Race < ActiveRecord::Base
     true
   end
   
+  # Sort results by points, assign places
+  # Save! each result after place is set
+  def place_results_by_points
+    results.sort! {|x,y| y.points <=> x.points }
+    previous_result = nil
+    results.each_with_index do |result, index|
+      if index == 0
+        result.place = 1
+      else
+        if results[index - 1].points == result.points
+          result.place = results[index - 1].place
+        else
+          result.place = index + 1
+        end
+      end
+      result.save!
+    end
+  end
+  
   def <=>other
     category <=> other.category
   end

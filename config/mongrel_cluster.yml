@@ -1,5 +1,5 @@
 --- 
-cwd: /Users/sw/devel/racing_on_rails
-port: "8000"
+port: "9001"
+environment: production
 pid_file: log/mongrel.pid
-servers: 3
+servers: 4

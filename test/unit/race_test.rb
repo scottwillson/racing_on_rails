@@ -120,4 +120,55 @@ class RaceTest < Test::Unit::TestCase
     race.save!
     assert_equal(120, race.field_size, 'Race field size from field_size column')
   end
+  
+  def test_place_results_by_points
+    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 50+")
+    race.place_results_by_points
+    
+    first_result = race.results.create!
+    second_result = race.results.create!
+    
+    race.results(true)
+    race.place_results_by_points
+    race.results(true)
+    assert_equal(first_result, race.results.first, 'First result')
+    assert_equal('1', race.results.first.place, 'First result place')
+    assert_equal(second_result, race.results.last, 'Last result')
+    assert_equal('1', race.results.last.place, 'Last result place')
+    
+    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 60+")
+    results = [
+      race.results.create!(:points => 90, :place => 4),
+      race.results.create!(:points => 0, :place => 5),
+      race.results.create!(:points => 89, :place => 4),
+      race.results.create!(:points => 89, :place => ''),
+      race.results.create!(:points => 100, :place => 1),
+      race.results.create!(:points => 89)
+    ]
+    
+    race.results(true)
+    race.place_results_by_points
+    race.results(true).sort!
+    
+    assert_equal(results[4], race.results[0], 'Result 0')
+    assert_equal('1', race.results[0].place, 'Result 0 place')
+    assert_equal(100, race.results[0].points, 'Result 0 points')
+    
+    assert_equal(results[0], race.results[1], 'Result 1')
+    assert_equal('2', race.results[1].place, 'Result 1 place')
+    assert_equal(90, race.results[1].points, 'Result 1 points')
+    
+    assert_equal('3', race.results[2].place, 'Result 2 place')
+    assert_equal(89, race.results[2].points, 'Result 2 points')
+    
+    assert_equal('3', race.results[3].place, 'Result 3 place')
+    assert_equal(89, race.results[3].points, 'Result 3 points')
+    
+    assert_equal('3', race.results[4].place, 'Result 4 place')
+    assert_equal(89, race.results[4].points, 'Result 4 points')
+    
+    assert_equal(results[1], race.results[5], 'Result 5')
+    assert_equal('6', race.results[5].place, 'Result 5 place')
+    assert_equal(0, race.results[5].points, 'Result 5 points')
+  end
 end

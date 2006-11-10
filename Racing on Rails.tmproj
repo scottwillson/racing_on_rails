@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/models/bar.rb</string>
+	<string>test/unit/bar_test.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -132,7 +132,7 @@
 				<key>column</key>
 				<integer>10</integer>
 				<key>line</key>
-				<integer>428</integer>
+				<integer>425</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -253,6 +253,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{319, 86}, {966, 746}}</string>
+	<string>{{314, 86}, {966, 746}}</string>
 </dict>
 </plist>
