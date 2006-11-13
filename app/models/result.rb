@@ -385,6 +385,38 @@ class Result < ActiveRecord::Base
     name = name.gsub(/ *\/ */, '/')
   end
   
+  def compare_by_points(other)
+    diff = other.points <=> points
+    return diff unless diff == 0
+    scores_by_place = scores.sort do |x, y|
+      x.source_result <=> y.source_result
+    end
+    other_scores_by_place = other.scores.sort do |x, y|
+      x.source_result <=> y.source_result
+    end
+    max_results = max(scores_by_place.size, other_scores_by_place.size)
+    return 0 if max_results == 0
+    for index in 0..(max_results - 1)
+      if scores_by_place.size == index
+        return 1
+      elsif other_scores_by_place.size == index
+        return -1
+      else
+        diff = scores_by_place[index].source_result.place <=> other_scores_by_place[index].source_result.place
+        return diff if diff != 0
+      end
+    end
+    0
+  end
+  
+  def max(x, y)
+    if x >= y
+      x
+    else
+      y
+    end
+  end
+  
   def <=>(other)
     begin
       if place.blank?
@@ -475,10 +507,10 @@ class Result < ActiveRecord::Base
   end
 
   def to_long_s
-    "<Result #{id}\t#{place}\t#{race.standings.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{points}\t#{time_s if self[:time]}>"
+    "#<Result #{id}\t#{place}\t#{race.standings.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{points}\t#{time_s if self[:time]}>"
   end
   
   def to_s
-    "<Result #{id} place #{place} race #{race_id} racer #{racer_id} team #{team_id} pts #{points}>"
+    "#<Result #{id} place #{place} race #{race_id} racer #{racer_id} team #{team_id} pts #{points}>"
   end
 end

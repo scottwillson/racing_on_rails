@@ -360,6 +360,15 @@ class ResultTest < Test::Unit::TestCase
     assert_equal('DNF', results[3].place, 'result 4 place')
     assert_equal('DQ', results[4].place, 'result 3 place')
     assert(results[5].place.blank?, 'result 5 place blank')
+
+    result_5 = Result.new(:place => '5')
+    result_dnf = Result.new(:place => 'DNF')
+    result_5 <=> result_dnf
+    result_dnf <=> result_5
+    
+    result_5 = Result.new(:place => 5)
+    result_5 <=> result_dnf
+    result_dnf <=> result_5
   end
 
   def test_find_by_alias
@@ -635,16 +644,5 @@ class ResultTest < Test::Unit::TestCase
 
     # Add exact dupes with same numbers
     # Test numbers from different years or disciplines
-  end
-  
-  def test_sort
-    result_5 = Result.new(:place => '5')
-    result_dnf = Result.new(:place => 'DNF')
-    result_5 <=> result_dnf
-    result_dnf <=> result_5
-    
-    result_5 = Result.new(:place => 5)
-    result_5 <=> result_dnf
-    result_dnf <=> result_5
   end
 end

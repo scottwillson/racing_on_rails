@@ -43,6 +43,9 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
   
   # See Rails::Configuration for more options
+  if File.exists?("#{RAILS_ROOT}/local/config/database.yml")
+    config.database_configuration_file = "#{RAILS_ROOT}/local/config/database.yml"
+  end
 end
 
 Inflector.inflections do |inflect|

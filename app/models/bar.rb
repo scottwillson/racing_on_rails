@@ -5,7 +5,7 @@ class Bar < Competition
   validate :valid_dates
   
   POINT_SCHEDULE = [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1] unless defined?(POINT_SCHEDULE)
-  POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]]
+  POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]] unless defined?(POINTS_AND_LABELS)
 
   # Calculate clashs with internal Rails method
   def Bar.recalculate(year = Date.today.year, progress_monitor = NullProgressMonitor.new)
@@ -368,7 +368,7 @@ class Bar < Competition
   end
 
   def to_s
-    "<Bar #{id} #{discipline} #{name} #{start_date} #{end_date}>"
+    "#<Bar #{id} #{discipline} #{name} #{start_date} #{end_date}>"
   end
 end
  
@@ -409,6 +409,6 @@ class ResultKey
   end
   
   def to_s
-    "<ResultKey #{@race_id} #{@racer_id}>"
+    "#<ResultKey #{@race_id} #{@racer_id}>"
   end
 end

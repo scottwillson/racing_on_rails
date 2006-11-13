@@ -171,4 +171,89 @@ class RaceTest < Test::Unit::TestCase
     assert_equal('6', race.results[5].place, 'Result 5 place')
     assert_equal(0, race.results[5].points, 'Result 5 points')
   end
+  
+  # Look at source results for tie-breaking
+  # Intentional nonsene in some results and points to test sorting
+  def test_competition_place_results_by_points
+    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 50+")
+
+    20.times do
+      race.results.create!
+    end
+    
+    ironman = Ironman.create(:date => Date.today)
+    ironman_race = ironman.standings.create!(:name => '2006').races.create!(:category => Category.new(:name => 'Ironman'))
+    
+    first_competition_result = ironman_race.results.create!
+    first_competition_result.scores.create!(:source_result => race.results[0], :competition_result => first_competition_result, :points => 45)
+    
+    second_competition_result = ironman_race.results.create!
+    second_competition_result.scores.create!(:source_result => race.results[2], :competition_result => second_competition_result, :points => 45)
+    
+    third_competition_result = ironman_race.results.create!
+    race.results[3].place = 2
+    race.results[3].save!
+    third_competition_result.scores.create!(:source_result => race.results[3], :competition_result => third_competition_result, :points => 15)
+    third_competition_result.scores.create!(:source_result => race.results[4], :competition_result => third_competition_result, :points => 15)
+    race.results[4].place = 3
+    race.results[4].save!
+    
+    fourth_competition_result = ironman_race.results.create!
+    fourth_competition_result.scores.create!(:source_result => race.results[1], :competition_result => fourth_competition_result, :points => 30)
+    race.results[1].place = 1
+    race.results[1].save!
+    
+    fifth_competition_result = ironman_race.results.create!
+    fifth_competition_result.scores.create!(:source_result => race.results[5], :competition_result => fifth_competition_result, :points => 4)
+    race.results[5].place = 15
+    race.results[5].save!
+    fifth_competition_result.scores.create!(:source_result => race.results[7], :competition_result => fifth_competition_result, :points => 2)
+    race.results[7].place = 17
+    race.results[7].save!
+    
+    sixth_competition_result = ironman_race.results.create!
+    sixth_competition_result.scores.create!(:source_result => race.results[6], :competition_result => sixth_competition_result, :points => 5)
+    race.results[6].place = 15
+    race.results[6].save!
+    sixth_competition_result.scores.create!(:source_result => race.results[8], :competition_result => sixth_competition_result, :points => 1)
+    race.results[8].place = 18
+    race.results[8].save!
+    
+    seventh_competition_result = ironman_race.results.create!
+    seventh_competition_result.scores.create!(:source_result => race.results[11], :competition_result => seventh_competition_result, :points => 2)
+    race.results[11].place = 20
+    race.results[11].save!
+    
+    eighth_competition_result = ironman_race.results.create!
+    eighth_competition_result.scores.create!(:source_result => race.results[10], :competition_result => eighth_competition_result, :points => 1)
+    race.results[10].place = 20
+    race.results[10].save!
+    eighth_competition_result.scores.create!(:source_result => race.results[9], :competition_result => eighth_competition_result, :points => 1)
+    race.results[9].place = 25
+    race.results[9].save!
+    
+    ironman_race.results(true)
+    for result in ironman_race.results
+      result.calculate_points
+      result.save!
+    end
+    ironman_race.place_results_by_points
+    ironman_race.results(true).sort!
+    assert_equal(first_competition_result, ironman_race.results.first, 'First result')
+    assert_equal('1', ironman_race.results.first.place, 'First result place')
+    assert_equal(second_competition_result, ironman_race.results[1], 'Second result')
+    assert_equal('1', ironman_race.results[1].place, 'Second result place')
+    assert_equal(fourth_competition_result, ironman_race.results[2], 'Third result')
+    assert_equal('3', ironman_race.results[2].place, 'Third result place')
+    assert_equal(third_competition_result, ironman_race.results[3], 'Fourth result')
+    assert_equal('4', ironman_race.results[3].place, 'Fourth result place')
+    assert_equal(fifth_competition_result, ironman_race.results[4], 'Fifth result')
+    assert_equal('5', ironman_race.results[4].place, 'Fifth result place')
+    assert_equal(sixth_competition_result, ironman_race.results[5], 'Sixth result')
+    assert_equal('6', ironman_race.results[5].place, 'Sixth result place')
+    assert_equal(eighth_competition_result, ironman_race.results[6], '7th result')
+    assert_equal('7', ironman_race.results[6].place, '7th result place')
+    assert_equal(seventh_competition_result, ironman_race.results[7], '8th result')
+    assert_equal('8', ironman_race.results[7].place, '8th result place')
+  end
 end

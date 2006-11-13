@@ -108,13 +108,15 @@ class Race < ActiveRecord::Base
   # Sort results by points, assign places
   # Save! each result after place is set
   def place_results_by_points
-    results.sort! {|x,y| y.points <=> x.points }
+    results.sort! do |x, y| 
+      x.compare_by_points(y)
+    end
     previous_result = nil
     results.each_with_index do |result, index|
       if index == 0
         result.place = 1
       else
-        if results[index - 1].points == result.points
+        if results[index - 1].compare_by_points(result) == 0
           result.place = results[index - 1].place
         else
           result.place = index + 1
@@ -145,6 +147,6 @@ class Race < ActiveRecord::Base
   end
 
   def to_s
-    "<Race #{id} #{self[:standings_id]} #{self[:category_id]} >"
+    "#<Race #{id} #{self[:standings_id]} #{self[:category_id]} >"
   end
 end
