@@ -154,14 +154,8 @@ class Bar < Competition
           race.results.sort! {|x, y| y.points <=> x.points}
         end
         
-        # assign place
         for race in overall_standings.races
-          place = 1
-          for result in race.results
-            result.place = place
-            result.save!
-            place = place + 1
-          end
+          race.place_results_by_points
         end
         
         bar.set_all_last_updated_dates(Date.today)
