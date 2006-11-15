@@ -2,6 +2,8 @@ class Promoter < ActiveRecord::Base
 
   validate :not_blank
   
+  has_many :events
+  
   def Promoter.find_by_info(name, email = nil, phone = nil)
     if !name.blank?
       return Promoter.find_by_name(name)
@@ -16,6 +18,14 @@ class Promoter < ActiveRecord::Base
   
   def name
     self[:name] || ''
+  end
+  
+  def name_or_contact_info
+    if name.blank?
+      [email, phone].join(', ')
+    else
+      name
+    end
   end
 
   def not_blank

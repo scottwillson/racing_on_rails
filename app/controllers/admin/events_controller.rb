@@ -1,6 +1,8 @@
 # Show Schedule, add and edit Events, show Results for Events
 class Admin::EventsController < ApplicationController
   
+  before_filter :login_required
+
   model :event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
 
   # Show results for Event
@@ -25,6 +27,10 @@ class Admin::EventsController < ApplicationController
       discipline.name
     end
     @disciplines.sort!
+    
+    unless params['promoter_id'].blank?
+      @event.promoter = Promoter.find(params['promoter_id'])
+    end
   end
   
   # Show page to create new Event
@@ -50,21 +56,7 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * warn
   def create
-    event_params = params[:event].clone
-    if event_params[:promoter].values.all? {|field| field.blank?}
-      event_params[:promoter] = nil
-    else
-      if params[:same_promoter] == 'true'
-        promoter = Promoter.find_by_info(event_params[:promoter][:name], event_params[:promoter][:email], event_params[:promoter][:phone])
-        promoter = Promoter.create!(event_params[:promoter]) unless promoter
-        update_promoter(promoter, event_params[:promoter])
-        promoter.save! if promoter
-        event_params[:promoter] = promoter
-      else
-        event_params[:promoter] = Promoter.create!(event_params[:promoter])
-      end
-    end
-    @event = SingleDayEvent.new(event_params)
+    @event = SingleDayEvent.new(params[:event])
     if @event.create
       redirect_to(:action => :show, :id => @event.to_param)
     else
@@ -105,17 +97,6 @@ class Admin::EventsController < ApplicationController
         original_event_attributes = @event.attributes.clone if @event.is_a?(MultiDayEvent)
         # TODO consolidate code
         event_params = params[:event].clone
-        if event_params[:promoter].values.all? {|field| field.blank?}
-          event_params[:promoter] = nil
-        elsif params[:same_promoter] == 'true'
-          promoter = Promoter.find_by_info(event_params[:promoter][:name], event_params[:promoter][:email], event_params[:promoter][:phone])
-          promoter = Promoter.create!(event_params[:promoter]) unless promoter
-          update_promoter(promoter, event_params[:promoter])
-          promoter.save! if promoter
-          event_params[:promoter] = promoter
-        else
-          event_params[:promoter] = Promoter.create!(event_params[:promoter])
-        end
         @event = Event.update(params[:id], event_params)
       rescue Exception => e
         stack_trace = e.backtrace.join("\n")
@@ -281,6 +262,31 @@ class Admin::EventsController < ApplicationController
       @weeks = params['weeks']
     end
     @upcoming_events = UpcomingEvents.new(@date, @weeks)
+  end
+  
+  def promoter_changed
+    promoter_id = params['promoter_id']
+    if promoter_id.blank?
+      render :update do |page|
+      end
+    else
+      promoter = Promoter.find(promoter_id)
+      render :update do |page|
+        page.replace_html("promoter_email", promoter.email)
+        page.replace_html("promoter_phone", promoter.phone)
+        page.replace_html("edit_promoter_link", 
+          link_to(
+							'Edit', 
+							:controller => 'promoters', 
+							:action => 'show', 
+							:id => promoter.id,
+							:event_id => params['id'])
+					)
+				page.visual_effect(:appear, 'promoter_email', :duration => 0.5)
+				page.visual_effect(:appear, 'promoter_phone', :duration => 0.5)
+				page.visual_effect(:appear, 'edit_promoter_link', :duration => 0.5)
+      end
+    end
   end
   
   # :nodoc

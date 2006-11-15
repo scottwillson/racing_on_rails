@@ -61,3 +61,12 @@ ActionController::Routing::Routes.reload
 ActiveRecord::Base.colorize_logging = false
 
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
+
+unless defined?(ASSOCIATION)
+  ASSOCIATION = RacingAssociation.new
+  ASSOCIATION.name = 'Cascadia Racing Association'
+  ASSOCIATION.short_name = 'CBRA'
+  ASSOCIATION.state = 'OR'
+
+  SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
+end

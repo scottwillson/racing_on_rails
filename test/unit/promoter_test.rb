@@ -26,4 +26,9 @@ class PromoterTest < Test::Unit::TestCase
     nate_hobson = promoters(:nate_hobson)
     nate_hobson.save!
   end
+  
+  def test_events
+    assert(!promoters(:candi_murray).events.empty?, 'Promoter Candi should have events')
+    assert(Promoter.create(:name => 'New').events.empty?, 'New promoter should not have events')
+  end
 end

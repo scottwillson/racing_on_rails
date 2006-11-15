@@ -65,21 +65,44 @@
 							</tr>
 							<tr>
 								<td class="field_label">Name:</td>
-								<td><%= text_field_tag 'event[promoter][name]', event.promoter_name %></td>
+								<td><%= select("event", 
+											   "promoter_id", 
+											   Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
+											   { :include_blank => true}) %>
+								    <%= observe_field(
+											'event_promoter_id', 
+											:url => {:action => 'promoter_changed', :id => @event.id}, :with => 'promoter_id',
+											:before => update_page {|page|
+																		page.visual_effect(:fade, 'promoter_email', :duration => 0.5)
+																		page.visual_effect(:fade, 'promoter_phone', :duration => 0.5)
+																		page.visual_effect(:fade, 'edit_promoter_link', :duration => 0.5)
+																	},
+											:success => evaluate_remote_response
+									) %>
+								</td>
 							</tr>
 							<tr>
 								<td class="field_label">Email:</td>
-								<td><%= text_field_tag 'event[promoter][email]', event.promoter_email %></td>
+								<td id="promoter_email"><%= event.promoter_email %></td>
 							</tr>
 							<tr>
 								<td class="field_label">Phone:</td>
-								<td><%= text_field_tag 'event[promoter][phone]', event.promoter_phone %></td>
+								<td id="promoter_phone"><%= event.promoter_phone %></td>
 							</tr>
 							<tr>
-								<td colspan="2">
-									<%= radio_button_tag 'same_promoter', value='true', (params[:same_promoter] == 'true' or params[:same_promoter].blank?) -%>&nbsp;New information for this promoter
-									<br>
-									<%= radio_button_tag 'same_promoter', value='false', params[:same_promoter] == 'false' %>&nbsp;Different promoter
+								<td></td>
+								<td style="text-align: right;">
+									<form method="post" action="/admin/promoters/new" class="button-to">
+										<span id="edit_promoter_link">
+										<%= link_to(
+													'Edit', 
+													:controller => 'promoters', 
+													:action => 'show', 
+													:id => @event.promoter.id,
+													:event_id => @event.id) if @event.promoter %>
+										</span>
+										&nbsp;<input type="submit" value="New" />
+									</form>
 								</td>
 							</tr>
 						</table>

@@ -109,7 +109,7 @@ end
 $:.concat(Dir["local/app/models/[_a-z]*"])
 
 # Load custom local helpers, too
-ActionView::Base.load_helpers(RAILS_ROOT + "/local/app/helpers/")
+ActionView::Base.load_helpers(RAILS_ROOT + "/local/app/helpers/") if File.exist?(RAILS_ROOT + "/local/app/helpers/")
 
 # Local config customization
-load("#{RAILS_ROOT}/local/config/environment.rb")
+load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
