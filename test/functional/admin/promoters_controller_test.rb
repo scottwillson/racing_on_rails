@@ -20,6 +20,7 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
 
     get(:index)
     assert_equal(3, assigns['promoters'].size, "Should assign all promoters to 'promoters'")
+    assert_template("admin/promoters/index")
   end
   
   def test_show
@@ -29,6 +30,7 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     get(:show, :id => '1')
     assert_equal(promoters(:brad_ross), assigns['promoter'], "Should assign 'promoter'")
     assert_nil(assigns['event'], "Should not assign 'event'")
+    assert_template("admin/promoters/show")
   end
 
   def test_show_with_event
@@ -39,6 +41,7 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     get(:show, :id => '1', :event_id => kings_valley.to_param.to_s)
     assert_equal(promoters(:brad_ross), assigns['promoter'], "Should assign 'promoter'")
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
+    assert_template("admin/promoters/show")
   end
   
   def test_new
@@ -48,6 +51,7 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     get(:new)
     assert_not_nil(assigns['promoter'], "Should assign 'promoter'")
     assert(assigns['promoter'].new_record?, 'Promoter should be new record')
+    assert_template("admin/promoters/show")
   end
 
   def test_new_with_event
@@ -59,78 +63,67 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns['promoter'], "Should assign 'promoter'")
     assert(assigns['promoter'].new_record?, 'Promoter should be new record')
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
+    assert_template("admin/promoters/show")
   end
   
   def test_create
+    path = {:controller => "admin/promoters", :action => 'update'}
+    assert_routing("/admin/promoters/update", path)
+    
+    assert_nil(Promoter.find_by_name("Fred Whatley"), 'Fred Whatley should not be in database')
+    post(:update, "promoter" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, "commit" => "Save")
+    
+    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
+    
+    promoter = Promoter.find_by_name("Fred Whatley")
+    assert_not_nil(promoter, 'New promoter should be database')
+    assert_equal('Fred Whatley', promoter.name, 'new promoter name')
+    assert_equal('(510) 410-2201', promoter.phone, 'new promoter name')
+    assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
+    
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => promoter.to_param)
   end
   
   def test_update
+    promoter = promoters(:brad_ross)
+    
+    assert_not_equal('Fred Whatley', promoter.name, 'existing promoter name')
+    assert_not_equal('(510) 410-2201', promoter.phone, 'existing promoter name')
+    assert_not_equal('fred@whatley.net', promoter.email, 'existing promoter email')
+
+    post(:update, :id => promoter.id, 
+      "promoter" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, "commit" => "Save")
+    
+    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
+    
+    promoter.reload
+    assert_equal('Fred Whatley', promoter.name, 'new promoter name')
+    assert_equal('(510) 410-2201', promoter.phone, 'new promoter phone')
+    assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
+    
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => promoter.to_param)
   end
 
-  def test_save_new_single_day_existing_promoter
-    candi_murray = promoters(:candi_murray)
-    email = candi_murray.email
-    phone = candi_murray.phone
-  
-    @request.session[:user] = users(:candi)
-    post(:create, 
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Silverton",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=>"", "email"=>""}}
-    )
-    
-    silverton = SingleDayEvent.find_by_name('Silverton')
-    assert_equal(candi_murray, silverton.promoter, "Silverton Promoter")
-    assert_equal("", silverton.promoter.email, "Silverton promoter email should be blank")
-    assert_equal("", silverton.promoter.phone, "Silverton promoter phone should be blank")
-  end
-  
   def test_save_new_single_day_existing_promoter_different_info_overwrite
     candi_murray = promoters(:candi_murray)
     new_email = "scout@scout_promotions.net"
     new_phone = "123123"
 
-    @request.session[:user] = users(:candi)
-    post(:create, 
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Silverton",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=> new_phone, "email"=> new_email}}
-    )
+    post(:update, :id => candi_murray.id, 
+      "promoter" => {"name" => candi_murray.name, "phone" => new_phone, "email" => new_email}, "commit" => "Save")
     
-    silverton = SingleDayEvent.find_by_name('Silverton')
-    assert_equal(candi_murray, silverton.promoter, "Silverton Promoter")
-    assert_equal(new_email, silverton.promoter.email, "Promoter email")
-    assert_equal(new_phone, silverton.promoter.phone, "Promoter phone")
+    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
+    
+    candi_murray.reload
+    assert_equal(candi_murray.name, candi_murray.name, 'promoter old name')
+    assert_equal(new_phone, candi_murray.phone, 'promoter new phone')
+    assert_equal(new_email, candi_murray.email, 'promoter new email')
+    
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => candi_murray.to_param)
   end
-  
-  # def test_save_new_single_day_existing_promoter_different_info_do_not_overwrite
-  #   candi_murray = promoters(:candi_murray)
-  #   old_name = candi_murray.name
-  #   old_email = candi_murray.email
-  #   old_phone = candi_murray.phone
-  # 
-  #   @request.session[:user] = users(:candi)
-  #   post(:create, 
-  #        "commit"=>"Save", 
-  #        'same_promoter' => 'false',
-  #        "event"=>{"name"=>"Silverton",
-  #                 'promoter' => {"name" => candi_murray.name,  "phone"=> "123123", "email"=> "scout@scout_promotions.net"}}
-  #   )
-  #   
-  #   silverton = SingleDayEvent.find_by_name('Silverton')
-  #   assert_not_nil(silverton.promoter, 'Silverton promoter')
-  #   candi_murray.reload
-  #   assert_not_equal(candi_murray, silverton.promoter, "Silverton Promoter")
-  #   assert_equal(old_name, candi_murray.name, "Candi name")
-  #   assert_equal(old_email, candi_murray.email, "Candi email")
-  #   assert_equal(old_phone, candi_murray.phone, "Candi phone")
-  # 
-  #   assert_equal(candi_murray.name, silverton.promoter.name, "Promoter email")
-  #   assert_equal('scout@scout_promotions.net', silverton.promoter.email, "Promoter email")
-  #   assert_equal('123123', silverton.promoter.phone, "Promoter phone")
-  # end
   
   def test_save_new_single_day_existing_promoter_no_name
     nate_hobson = promoters(:nate_hobson)
@@ -138,143 +131,66 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     old_email = nate_hobson.email
     old_phone = nate_hobson.phone
 
-    @request.session[:user] = users(:candi)
-    post(:create, 
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Silverton",
-                  'promoter' => {"name" => '',  "phone"=> nate_hobson.phone, "email"=> nate_hobson.email}}
-    )
+    post(:update, :id => nate_hobson.id, 
+      "promoter" => {"name" => '', "phone" => old_phone, "email" => old_email}, "commit" => "Save")
     
-    silverton = SingleDayEvent.find_by_name('Silverton')
-    assert(!silverton.new_record?, "Silverton should be saved")
-    assert_equal(nate_hobson, silverton.promoter, "Silverton Promoter")
-    assert_equal(old_name, silverton.promoter.name, "Promoter name")
-    assert_equal(old_email, silverton.promoter.email, "Promoter email")
-    assert_equal(old_phone, silverton.promoter.phone, "Promoter phone")
+    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
+    
+    promoter.reload
+    assert_equal('', promoter.name, 'promoter name')
+    assert_equal(old_phone, promoter.phone, 'promoter old phone')
+    assert_equal(old_email, promoter.email, 'promoter old email')
+    
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => promoter.to_param)
   end
   
-  # def test_save_new_multi_day_existing_promoter_different_info_overwrite
-  #   candi_murray = promoters(:candi_murray)
-  #   event_window.promoter_name.text = candi_murray.name
-  #   new_email = "scout@scout_promotions.net"
-  #   event_window.promoter_email.text = new_email
-  #   new_phone = "123123"
-  #   event_window.promoter_phone.text = new_phone
-  #   FXMessageBox.answer = MBOX_CLICKED_YES
-  #   event_window.save!
-  #   
-  #   @request.session[:user] = users(:candi)
-  #   post(:create, 
-  #        "commit"=>"Save", 
-  #        'same_promoter' => 'true',
-  #        "event"=>{"name"=>"Silverton",
-  #                 'promoter' => {"name" => '',  "phone"=> nate_hobson.phone, "email"=> nate_hobson.email}}
-  #   )
-  #   
-  #   assert(!event_window.event.new_record?, "Event should be saved")
-  #   silverton_sr = MultiDayEvent.find_by_name('Silverton SR')
-  #   assert_equal(candi_murray, silverton_sr.promoter, "Silverton Promoter")
-  #   assert_equal(new_email, silverton_sr.promoter.email, "Promoter email")
-  #   assert_equal(new_phone, silverton_sr.promoter.phone, "Promoter phone")
-  # end
-  # 
-  # def test_save_new_multi_day_existing_promoter_different_info_do_not_overwrite
-  #   candi_murray = promoters(:candi_murray)
-  #   silverton_sr = RemoteMultiDayEvent.new(:discipline => "Road", :name => 'Silverton SR')
-  #   event_window = EventWindow.new(@app, silverton_sr)
-  #   event_window.promoter_name.text = candi_murray.name
-  #   old_email = candi_murray.email
-  #   old_phone = candi_murray.phone
-  #   event_window.promoter_email.text = "scout@scout_promotions.net"
-  #   event_window.promoter_phone.text = "123123"
-  #   FXMessageBox.answer = MBOX_CLICKED_NO
-  #   event_window.save!
-  #   
-  #   assert(!event_window.event.new_record?, "Event should be saved")
-  #   silverton_sr = MultiDayEvent.find_by_name('Silverton SR')
-  #   assert_equal(candi_murray, silverton_sr.promoter, "Silverton Promoter")
-  #   assert_equal(old_email, silverton_sr.promoter.email, "Promoter email")
-  #   assert_equal(old_phone, silverton_sr.promoter.phone, "Promoter phone")
-  # end
-  
-  def test_save_single_day_existing_promoter_new_info
+  def test_update_blank_info
     candi_murray = promoters(:candi_murray)
-    email = candi_murray.email
-    phone = candi_murray.phone
-    jack_frost = events(:jack_frost)
 
-    @request.session[:user] = users(:candi)
-    post(:update,
-         'id' => jack_frost.to_param,
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Jack Frost",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=> '', "email"=> ''}}
-    )
+    post(:update, :id => candi_murray.id, 
+      "promoter" => {"name" => '', "phone" => '', "email" => ''}, "commit" => "Save")
     
-    jack_frost.reload
-    assert_equal(candi_murray, jack_frost.promoter, "Jack Frost Promoter")
-    assert_equal("", jack_frost.promoter.email, "Jack Frost promoter email should be blank")
-    assert_equal("", jack_frost.promoter.phone, "Jack Frost promoter phone should be blank")
-  end
-  
-  def test_save_single_day_no_promoter
-    jack_frost = events(:jack_frost)
-
-    @request.session[:user] = users(:candi)
-    post(:update,
-         'id' => jack_frost.to_param,
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Jack Frost",
-                  'promoter' => {"name" => '',  "phone"=> '', "email"=> ''}}
-    )
+    assert(!assigns['promoter'].errors.empty?, 'promoter should have errors')
     
-    jack_frost.reload
-    assert_nil(jack_frost.promoter, "Jack Frost Promoter")
+    candi_murray.reload
+    assert(!candi_murray.name.blank?, 'promoter name')
+    assert(!candi_murray.email.blank?, 'promoter email')
+    assert(!candi_murray.phone.blank?, 'promoter phone')
+    
+    assert_response(:success)
+    assert_template("admin/promoters/show")
   end
 
-  def test_save_single_day_existing_promoter_different_info_overwrite
-    candi_murray = promoters(:candi_murray)
-    jack_frost = events(:jack_frost)
-    new_email = "scout@scout_promotions.net"
-    new_phone = "123123"
-
-    @request.session[:user] = users(:candi)
-    post(:update,
-         'id' => jack_frost.to_param,
-         "commit"=>"Save", 
-         'same_promoter' => 'true',
-         "event"=>{"name"=>"Silverton",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=> new_phone, "email"=> new_email}}
-    )
-    
-    jack_frost.reload
-    assert_equal(candi_murray, jack_frost.promoter, "Jack Frost Promoter")
-    assert_equal(new_email, jack_frost.promoter.email, "Promoter email")
-    assert_equal(new_phone, jack_frost.promoter.phone, "Promoter phone")
-  end
-  
   def test_save_single_day_existing_promoter_different_info_do_not_overwrite
     candi_murray = promoters(:candi_murray)
-    jack_frost = events(:jack_frost)
-    old_email = candi_murray.email
-    old_phone = candi_murray.phone
+    candi_old_email = candi_murray.email
+    candi_old_phone = candi_murray.phone
 
-    @request.session[:user] = users(:candi)
+    nate_hobson = promoters(:nate_hobson)
+    nate_old_name = nate_hobson.name
+    nate_old_email = nate_hobson.email
+    nate_old_phone = nate_hobson.phone
+
     post(:update,
-         'id' => jack_frost.to_param,
+         'id' => candi_murray.to_param,
          "commit"=>"Save", 
-         'same_promoter' => 'false',
-         "event"=>{"name"=>"Jack Frost",
-                  'promoter' => {"name" => candi_murray.name,  "phone"=> "123123", "email"=> "scout@scout_promotions.net"}}
+         'promoter' => {"name" => nate_hobson.name,  "phone"=> candi_murray.phone, "email"=> candi_murray.email}
     )
     
-    jack_frost.reload
-    assert_equal(candi_murray, jack_frost.promoter, "Jack Frost Promoter")
-    assert_equal(old_email, jack_frost.promoter.email, "Promoter email")
-    assert_equal(old_phone, jack_frost.promoter.phone, "Promoter phone")
+    assert(!assigns['promoter'].errors.empty?, 'promoter should have errors')
+    
+    candi_murray.reload
+    assert_equal(candi_old_email, candi_murray.email, 'Candi email')
+    assert_equal(candi_old_phone, candi_murray.phone, 'Candi phone')
+    
+    nate_hobson.reload
+    assert_equal(nate_old_name, nate_hobson.name, 'nate_hobson name')
+    assert_equal(nate_old_email, nate_hobson.email, 'nate_hobson email')
+    assert_equal(nate_old_phone, nate_hobson.phone, 'nate_hobson phone')
+    
+    assert_response(:success)
+    assert_template("admin/promoters/show")
   end
   
   def test_save_single_day_existing_promoter_no_name
@@ -514,6 +430,10 @@ class Admin::PromotersControllerTest < Test::Unit::TestCase
     
     tabor_cr.reload
     assert_nil(tabor_cr.promoter, "Tabor Promoter")
+  end
+  
+  def test_remember_event_id_on_update
+    flunk
   end
 
 end

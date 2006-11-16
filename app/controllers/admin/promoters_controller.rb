@@ -16,16 +16,27 @@ class Admin::PromotersController < ApplicationController
   def new
     @promoter = Promoter.new
     remember_event
-    render(:template => 'show')
+    render(:template => 'admin/promoters/show')
   end
 
   def update
-    if params['id'].blank?
-      @promoter = Promoter.new(params['promoter'])
-    else
-      @promoter = Promoter.update(params['id'], params['promoter'])
+    begin
+      remember_event
+      if params['id'].blank?
+        @promoter = Promoter.create(params['promoter'])
+      else
+        @promoter = Promoter.update(params['id'], params['promoter'])
+      end
+      if @promoter.errors.empty?
+        redirect_to(:action => :show, :id => @promoter.id)
+      else
+        render(:template => 'admin/promoters/show')
+      end
+    rescue Exception => e
+      logger.error(e)
+      flash['warn'] = e.message
+      render(:template => 'admin/promoters/show')
     end
-    remember_event
   end
   
   private
