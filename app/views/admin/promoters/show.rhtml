@@ -65,6 +65,7 @@
 	</table>
 	<br>
 	<%= link_to("Back to #{@event.name}", :controller => 'events', :action => 'show', :id => @event.id, :promoter_id => @promoter.id) if @event %>
+	<%= hidden_field_tag('event_id', @event.id) if @event %>
 <% end_form_tag %>
 
 </div>
