@@ -1,6 +1,6 @@
 class Promoter < ActiveRecord::Base
 
-  validate :not_blank
+  validate :not_blank, :unique_info
   
   has_many :events
   
@@ -31,6 +31,13 @@ class Promoter < ActiveRecord::Base
   def not_blank
     if (name.blank? and email.blank? and phone.blank?)
       errors.add("name, email, and phone cannot all be blank")
+    end
+  end
+  
+  def unique_info
+    promoter = Promoter.find_by_info(name, email, phone)
+    if promoter && promoter != self
+      errors.add("existing promoter with name '#{name}'")
     end
   end
   

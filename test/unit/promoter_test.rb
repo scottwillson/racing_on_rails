@@ -31,4 +31,8 @@ class PromoterTest < Test::Unit::TestCase
     assert(!promoters(:candi_murray).events.empty?, 'Promoter Candi should have events')
     assert(Promoter.create(:name => 'New').events.empty?, 'New promoter should not have events')
   end
+  
+  def test_no_dupe_names
+    assert(!Promoter.new(:name => promoters(:candi_murray).name).valid?, 'Promoter with dupe name should not be valid')
+  end
 end

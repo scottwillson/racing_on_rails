@@ -290,9 +290,9 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal('Track', banana_belt.discipline, 'discipline')
     assert_equal(true, banana_belt.cancelled, 'cancelled')
     assert_equal('OR', banana_belt.state, 'state')
-    assert_equal('Geoff Mitchem', banana_belt.promoter_name, 'promoter_name')
-    assert_equal('503-233-3636', banana_belt.promoter_phone, 'promoter_phone')
-    assert_equal('JMitchem@ffadesign.com', banana_belt.promoter_email, 'promoter_email')
+    assert_equal('Brad Ross', banana_belt.promoter_name, 'promoter_name')
+    assert_nil(banana_belt.promoter_phone, 'promoter_phone')
+    assert_nil(banana_belt.promoter_email, 'promoter_email')
   end
 
   def test_update_standings

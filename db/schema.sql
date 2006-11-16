@@ -1,15 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.9
 --
--- Host: localhost    Database: racing_on_rails_development
+-- Host: db.obra.org    Database: obra
 -- ------------------------------------------------------
--- Server version	5.0.24-standard
+-- Server version	4.1.13
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
@@ -52,18 +50,6 @@ CREATE TABLE `aliases_disciplines` (
   KEY `idx_alias` (`alias`),
   KEY `idx_discipline_id` (`discipline_id`),
   CONSTRAINT `aliases_disciplines_ibfk_1` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `bike_shops`
---
-
-DROP TABLE IF EXISTS `bike_shops`;
-CREATE TABLE `bike_shops` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) default NULL,
-  `phone` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -166,11 +152,29 @@ CREATE TABLE `events` (
   KEY `idx_type` (`type`),
   KEY `oregon_cup_id` (`oregon_cup_id`),
   KEY `events_number_issuer_id_index` (`number_issuer_id`),
-  CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `events_ibfk_2` FOREIGN KEY (`promoter_id`) REFERENCES `promoters` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
+  CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
+  CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `mailing_lists`
+--
+
+DROP TABLE IF EXISTS `mailing_lists`;
+CREATE TABLE `mailing_lists` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `friendly_name` varchar(255) NOT NULL default '',
+  `subject_line_prefix` varchar(255) NOT NULL default '',
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `description` text,
+  PRIMARY KEY  (`id`),
+  KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -180,11 +184,38 @@ CREATE TABLE `events` (
 DROP TABLE IF EXISTS `number_issuers`;
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL default '',
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `number_issuers_name_index` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `posts`
+--
+
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL auto_increment,
+  `body` text NOT NULL,
+  `date` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `sender` varchar(255) NOT NULL default '',
+  `subject` varchar(255) NOT NULL default '',
+  `topica_message_id` varchar(255) default NULL,
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `mailing_list_id` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `idx_topica_message_id` (`topica_message_id`),
+  KEY `idx_date` (`date`),
+  KEY `idx_sender` (`sender`),
+  KEY `idx_subject` (`subject`),
+  KEY `idx_mailing_list_id` (`mailing_list_id`),
+  KEY `idx_date_list` (`date`,`mailing_list_id`),
+  CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -212,25 +243,22 @@ CREATE TABLE `promoters` (
 DROP TABLE IF EXISTS `race_numbers`;
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL auto_increment,
-  `racer_id` int(11) NOT NULL,
-  `discipline_id` int(11) NOT NULL,
-  `number_issuer_id` int(11) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `year` int(11) NOT NULL,
+  `racer_id` int(11) NOT NULL default '0',
+  `discipline_id` int(11) NOT NULL default '0',
+  `number_issuer_id` int(11) NOT NULL default '0',
+  `value` varchar(255) NOT NULL default '',
+  `year` int(11) NOT NULL default '0',
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   KEY `racer_id` (`racer_id`),
-  KEY `number_issuer_id` (`number_issuer_id`),
   KEY `discipline_id` (`discipline_id`),
+  KEY `number_issuer_id` (`number_issuer_id`),
   KEY `race_numbers_value_index` (`value`),
-  CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`),
+  CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `race_numbers_ibfk_2` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
-  CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
-  CONSTRAINT `race_numbers_ibfk_4` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `race_numbers_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
-  CONSTRAINT `race_numbers_ibfk_6` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`)
+  CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -256,7 +284,6 @@ CREATE TABLE `racers` (
   `cell_fax` varchar(255) default NULL,
   `ccx_category` varchar(255) default NULL,
   `dh_category` varchar(255) default NULL,
-  `dh_number` varchar(255) default NULL,
   `email` varchar(255) default NULL,
   `gender` char(2) default NULL,
   `home_phone` varchar(255) default NULL,
@@ -267,16 +294,8 @@ CREATE TABLE `racers` (
   `street` varchar(255) default NULL,
   `track_category` varchar(255) default NULL,
   `work_phone` varchar(255) default NULL,
-  `xc_number` varchar(255) default NULL,
   `zip` varchar(255) default NULL,
-  `road_number` varchar(255) default NULL,
-  `ccx_number` varchar(255) default NULL,
-  `track_number` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `idx_road_number` (`road_number`),
-  UNIQUE KEY `idx_ccx_number` (`ccx_number`),
-  UNIQUE KEY `idx_dh_number` (`dh_number`),
-  UNIQUE KEY `idx_track_number` (`track_number`),
   KEY `idx_last_name` (`last_name`),
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
@@ -300,7 +319,7 @@ CREATE TABLE `races` (
   `time` float default NULL,
   `finishers` int(11) default NULL,
   `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default NULL,
+  `sanctioned_by` varchar(255) default 'OBRA',
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
@@ -452,8 +471,7 @@ CREATE TABLE `users` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

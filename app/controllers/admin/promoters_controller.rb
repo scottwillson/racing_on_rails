@@ -28,7 +28,11 @@ class Admin::PromotersController < ApplicationController
         @promoter = Promoter.update(params['id'], params['promoter'])
       end
       if @promoter.errors.empty?
-        redirect_to(:action => :show, :id => @promoter.id)
+        if @event
+          redirect_to(:action => :show, :id => @promoter.id, :event_id => @event.id)
+        else
+          redirect_to(:action => :show, :id => @promoter.id)
+        end
       else
         render(:template => 'admin/promoters/show')
       end
