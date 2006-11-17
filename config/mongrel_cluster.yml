@@ -2,4 +2,5 @@
 port: "9001"
 environment: production
 pid_file: log/mongrel.pid
-servers: 4
+cwd: /srv/www/rails/racing_on_rails/current
+servers: 3
