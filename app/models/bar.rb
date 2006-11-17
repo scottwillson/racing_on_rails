@@ -144,7 +144,7 @@ class Bar < Competition
         # if racer has > 4 discipline results, those results are worth 50 points
         for race in overall_standings.races
           for result in race.results
-            remove_duplicate_discipline_results(result.scores)
+            set_bonus_points_for_extra_disciplines(result.scores)
             result.calculate_points
           end
         end
@@ -194,6 +194,16 @@ class Bar < Competition
       301 - discipline_result.place.to_i
     else
       50
+    end
+  end
+
+  def Bar.set_bonus_points_for_extra_disciplines(scores)
+    scores.sort! {|x, y| y.points.to_i <=> x.points.to_i}
+    remove_duplicate_discipline_results(scores)
+    if scores.size > 4
+      for score in scores[4..(scores.size - 1)]
+        score.update_attribute_with_validation_skipping(:points, 50)
+      end
     end
   end
 

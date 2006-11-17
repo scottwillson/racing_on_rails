@@ -11,12 +11,12 @@ class MultiDayEvent < Event
   validate_on_create {:parent.nil?}
   validate_on_update {:parent.nil?}
   
+  before_save :update_date
+  
   has_many :events, 
            :class_name => 'SingleDayEvent',
            :foreign_key => "parent_id",
-           :order => "date",
-           :after_add => :update_date,
-           :after_remove => :update_date do
+           :order => "date" do
              def create!(attributes = {})
                attributes[:parent_id] = @owner.id
                attributes[:parent] = @owner
@@ -114,30 +114,20 @@ class MultiDayEvent < Event
   def after_child_event_destroy
     update_date
   end
+  
+  def update_date
+    return if new_record?
+    
+    minimum_date = MultiDayEvent.connection.select_value("select min(date) from events where parent_id = #{id}")
+    unless minimum_date.blank? || minimum_date == self.date.to_s
+      logger.debug("updating date from #{self.date} to #{minimum_date.to_s}. Equal? #{minimum_date == self.date.to_s}")
+      MultiDayEvent.connection.execute("update events set date = '#{minimum_date}' where id = #{id}")
+      self.date = minimum_date
+    end
+  end
 
-  def date
-    start_date
-  end
-  
   def start_date
-    if !events(true).empty?
-      first_event = events.min do |a, b|
-        a.date <=> b.date
-      end
-      _date = first_event.date
-    else
-      _date = Date.new(Date.today.year, 1, 1)    
-    end
-    if _date != self[:date] and !frozen?
-      self[:date] = _date
-      save
-    end
-    _date
-  end
-  
-  def update_date(event = nil)
-    logger.debug('update_date')
-    start_date
+    date
   end
   
   def end_date

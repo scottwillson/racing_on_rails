@@ -37,10 +37,6 @@ class SingleDayEvent < Event
     parent and (parent.is_a?(WeeklySeries))
   end
 
-  def rating
-    "C"
-  end
-    
   def friendly_class_name
     'Single Day Event'
   end

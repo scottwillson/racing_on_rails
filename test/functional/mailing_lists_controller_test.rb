@@ -21,14 +21,4 @@ class MailingListsControllerTest < Test::Unit::TestCase
     assert_template("mailing_lists/index")
     assert_not_nil(assigns["mailing_lists"], "Should assign mailing_lists")
   end
-  
-  def test_app_index
-    opts = {:controller => "mailing_lists", :action => "app_index"}
-    assert_recognizes(opts, '/')
-
-    get(:app_index)
-    assert_response(:redirect)
-    assert_redirected_to(:controller => "mailing_lists", :action => "index")
-  end
-  
 end

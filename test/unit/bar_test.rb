@@ -164,14 +164,14 @@ class BarTest < Test::Unit::TestCase
     
     assert_equal(racers(:tonkin), senior_men_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_overall_bar.results[0].place, "Senior Men Overall BAR results place")
-    assert_equal(1498, senior_men_overall_bar.results[0].points, "Senior Men Overall BAR results points")
+    assert_equal(1249, senior_men_overall_bar.results[0].points, "Senior Men Overall BAR results points")
     assert_equal(5, senior_men_overall_bar.results[0].scores.size, "Tonkin Overall BAR results scores")
     scores = senior_men_overall_bar.results[0].scores.sort {|x, y| y.points <=> x.points}
     assert_equal(300, scores[0].points, "Tonkin overall BAR points for discipline 0")
     assert_equal(300, scores[1].points, "Tonkin overall BAR points for discipline 1")
     assert_equal(300, scores[2].points, "Tonkin overall BAR points for discipline 2")
     assert_equal(299, scores[3].points, "Tonkin overall BAR points for discipline 3")
-    assert_equal(299, scores[4].points, "Tonkin overall BAR points for discipline 4")
+    assert_equal(50, scores[4].points, "Tonkin overall BAR points for discipline 4")
 
     assert_equal(racers(:weaver), senior_men_overall_bar.results[1].racer, "Senior Men Overall BAR results racer")
     assert_equal("2", senior_men_overall_bar.results[1].place, "Senior Men Overall BAR results place")

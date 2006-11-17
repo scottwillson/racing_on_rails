@@ -1,7 +1,7 @@
 class WeeklySeries < Series
   
   # TODO Is this duplicaqted from Ruby core and standard lib?
-  WEEKDAYS = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa']
+  WEEKDAYS = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'] unless defined?(WEEKDAYS)
 
   # Only used by UpcomingEvents, could replace with days_of_week(date_range)
   attr_accessor :days_of_week

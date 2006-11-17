@@ -112,7 +112,6 @@ class UpcomingEventsTest < Test::Unit::TestCase
     )
     Date.new(2006, 6, 12).step(Date.new(2006, 6, 17), 1) {|date|
       single_day_six_day = SingleDayEvent.create!(:parent => six_day, :date => date, :name => 'Alpenrose Six Day', :discipline => 'Track', :flyer_approved => true)
-      six_day.events << single_day_six_day
       assert("Six Day valid?", single_day_six_day.valid?)
       assert("Six Day new?", !single_day_six_day.new_record?)
     }
