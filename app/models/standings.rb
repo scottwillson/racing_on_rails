@@ -1,3 +1,14 @@
+# Collection of Races (with hold Results). Normally, a SingleDayEvent has only one Standings that 
+# has all the SingleDayEvent's Races. Additional Standings are used for:
+# * Different time trial distances in the same event
+# * Split stage race stages on the same day
+# * Combined results for time trials and mountain bike races
+# * Sprint and KOM competitions
+#
+# The word 'standings' is used imprecisely by racers and officials. Along with 'race, 'competition,'
+# 'category,' this class imposes a somewhat arbritabry precision on a common term.
+#
+# Destryong a Standings destroys all of its child Races
 class Standings < ActiveRecord::Base
 
   include Comparable
@@ -45,6 +56,7 @@ class Standings < ActiveRecord::Base
     return nil
   end
   
+  # Returns only the Races with +results+
   def races_with_results
     races_copy = races.select {|race|
       !race.results.empty?
@@ -74,6 +86,7 @@ class Standings < ActiveRecord::Base
     self[:date] || self.event.date if self.event
   end
   
+  # Set date to the parent event's date
   def update_date
     self[:date] = self.event.date
   end
@@ -81,11 +94,9 @@ class Standings < ActiveRecord::Base
   def name
     self[:name] || self.event.name if self.event
   end
-  
-  def <=>(other)
-    self.position <=> other.position
-  end
 
+  # Adds +combined_standings+ if Mountain Bike or Time Trial Event. 
+  # Destroy +combined_standings+ if they exist, but should not
   def create_or_destroy_combined_standings
     if !requires_combined_standings? or (combined_standings(true) and combined_standings.discipline != discipline)
       destroy_combined_standings
@@ -111,15 +122,22 @@ class Standings < ActiveRecord::Base
     end
   end
   
+  # Let +combined_standings+ know that a result changed
   def after_result_save
     combined_standings.after_source_result_save if self.combined_standings
   end
 
+  # Let +combined_standings+ know that a result was destroyed
   def after_result_destroy
     combined_standings.after_result_destroy if self.combined_standings
   end
+  
+  # Compare by position
+  def <=>(other)
+    self.position <=> other.position
+  end
 
   def to_s
-    "<Standings '#{id}' '#{self[:event_id]}' '#{name}' '#{date}' #{discipline}>"
+    "#<Standings '#{id}' '#{self[:event_id]}' '#{name}' '#{date}' #{discipline}>"
   end
 end

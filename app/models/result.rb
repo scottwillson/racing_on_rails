@@ -1,3 +1,12 @@
+# Race result
+#
+# Race is the only required attribute -- even +racer+ and +place+ can be blank
+#
+# Result keeps its own copy of +number+ and +team+, even though each Racer has
+# a +team+ atribute and many RaceNumbers. Result's number is just a String, not
+# a RaceNumber
+#
+# Doesn't support multiple hotspot points, though it should
 class Result < ActiveRecord::Base
   
   include Dirty
@@ -38,6 +47,7 @@ class Result < ActiveRecord::Base
     super(attributes)
   end
   
+  # Replace any new +category+, +racer+, or +team+ with one that already exists if name matches
   def find_associated_records
     if category and (category.new_record? or category.dirty?)
       if category.name.blank?
@@ -68,6 +78,9 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +racer+ already exists.
+  # Returns an Array of Racers if there is more than one potential match
+  #
   # TODO refactor into methods or split responsibilities with Racer?
   # Need Event to match on race number. Event will not be set before result is saved to database
   def find_racers(_event = event)
@@ -120,12 +133,14 @@ class Result < ActiveRecord::Base
     matches
   end
   
+  # Set +racer#team+ to +team+ if +racer+ doesn't already have a team
   def update_racer_team 
     if self.racer and self.team and self.racer.team.nil?
       self.racer.team = self.team
     end
   end
   
+  # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
     if self.racer and !self.number.blank?
       existing_number = self.racer.race_numbers.detect do |number|
@@ -151,6 +166,7 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # Set points from +scores+
   def calculate_points
     if !scores.empty? and (race.standings.event.is_a?(Competition))
       pts = 0
@@ -195,6 +211,7 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # Hot spots
   def points_bonus_penalty=(value)
     if value == nil || value == ""
       value = 0
@@ -202,6 +219,7 @@ class Result < ActiveRecord::Base
     write_attribute(:points_bonus_penalty, value)
   end
   
+  # Points from placing at finish, not from hot spots
   def points_from_place=(value)
     if value == nil || value == ""
       value = 0
@@ -283,38 +301,48 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_s
     time_to_s(self.time)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_s=(time)
     self.time = s_to_time(time)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_total_s
     time_to_s(self.time_total)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_total_s=(time_total)
     self.time_total = s_to_time(time_total)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_bonus_penalty_s
     time_to_s(self.time_bonus_penalty)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_bonus_penalty_s=(time_bonus_penalty)
     self.time_bonus_penalty = s_to_time(time_bonus_penalty)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_gap_to_leader_s
     time_to_s(self.time_gap_to_leader)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_gap_to_leader_s=(time_gap_to_leader_s)
     self.time_gap_to_leader = s_to_time(time_gap_to_leader_s)
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  # This method doesn't handle some typical edge cases very well
   def time_to_s(time)
     return '' if time == 0.0 or time.blank?
     hours = (time / 3600).to_i
@@ -328,6 +356,8 @@ class Result < ActiveRecord::Base
     "#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
   end
   
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  # This method doesn't handle some typical edge cases very well
   def s_to_time(string)
     if string.to_s.blank?
       0.0
@@ -352,6 +382,7 @@ class Result < ActiveRecord::Base
     self.team_name = cleanup_name(team_name)
   end
 
+  # Drops the 'st' from 1st, among other things
   def cleanup_place
     if place
       normalized_place = place.to_s
@@ -375,6 +406,7 @@ class Result < ActiveRecord::Base
     self.number = self.number.to_i.to_s if self.number[/^\d+\.0$/]
   end
 
+  # Mostly removes unfortunate punctuation typos
   def cleanup_name(name)
     return name if name.nil?
     return '' if name == '0.0'
@@ -385,6 +417,7 @@ class Result < ActiveRecord::Base
     name = name.gsub(/ *\/ */, '/')
   end
   
+  # Highest points first. Break ties by highest placing
   def compare_by_points(other)
     diff = other.points <=> points
     return diff unless diff == 0
@@ -417,6 +450,7 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # All numbered places first, followed by DNF, DQ, and DNS
   def <=>(other)
     begin
       if place.blank?
@@ -506,6 +540,7 @@ class Result < ActiveRecord::Base
     end
   end
 
+  # Add +race+ and +race#standings+ name, and points to default to_s
   def to_long_s
     "#<Result #{id}\t#{place}\t#{race.standings.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{points}\t#{time_s if self[:time]}>"
   end

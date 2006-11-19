@@ -1,5 +1,7 @@
 require 'pathname'
 
+# Send error emails
+# TODO Take out hard-coded email address and do something else intelligent by default
 class SystemNotifier < ActionMailer::Base
   SYSTEM_EMAIL_ADDRESS = %{"Error  Notifier" <app@class="base">}
 

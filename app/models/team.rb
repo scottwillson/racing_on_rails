@@ -1,3 +1,8 @@
+# Bike racing team of Racers
+#
+# Like Racers, Teams may have many alternate  names. These are modelled as Aliases
+#
+# Team names must be unique
 class Team < ActiveRecord::Base
 
   include Dirty
@@ -36,6 +41,9 @@ class Team < ActiveRecord::Base
     end
   end
   
+  # Moves another Team's aliases, results, and racers to this Team,
+  # and delete the other Team.
+  # Also adds the other Team's name as a new alias
   def merge(team)
     if team == self
       raise(ArgumentError, 'Cannot merge team onto itself')
@@ -67,7 +75,7 @@ class Team < ActiveRecord::Base
   end
   
   def to_s
-    "<Team #{id} '#{name}'>"
+    "#<Team #{id} '#{name}'>"
   end
 
 end

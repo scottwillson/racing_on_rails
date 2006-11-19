@@ -1,7 +1,8 @@
-include ActionView
-
+# Race results email. Currently unused
 class ResultsEmail
   
+  include ActionView
+
   def initialize(standings)
     @standings = standings
   end

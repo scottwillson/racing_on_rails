@@ -1,7 +1,14 @@
+# All SingleDayEvents that will occur in the next +weeks+. Used to display a list of upcoming events
+# on the homepage. Organized by parent class (WeeklySeries and everything else) and Discipline:
+# @events: Hash keyed by Discipline#name
+# @weekly_series: Hash keyed by Discipline#name
+#
+# Does not simply add +weeks+ to date when selecting events -- applies a week boundary on Monday
 class UpcomingEvents
   
   attr_reader :events, :weekly_series
   
+  # Date = start date. Defaults to today
   def initialize(date = Date.today, weeks = 2)
     date = date || Date.today
     weeks = weeks || 2
@@ -76,6 +83,7 @@ class UpcomingEvents
     end
   end
     
+  # Set date to nearest Monday
   def cutoff_date(date, weeks)
     case date.wday
     when 0

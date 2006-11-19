@@ -1,3 +1,5 @@
+# Excel or text file of Racers. Assumes that the first row is a header row. 
+# On error, logs error and continues import
 class RacersFile
 
   def initialize(filename)

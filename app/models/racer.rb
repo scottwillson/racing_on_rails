@@ -59,6 +59,7 @@ class Racer < ActiveRecord::Base
     Racer.full_name(first_name, last_name)
   end
   
+  # Tries to split +name+ into +first_name+ and +last_name+
   # TODO Handle name, Jr.
   def name=(value)
     if value.blank?
@@ -104,18 +105,21 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  # 30 years old or older
   def master?
     if date_of_birth
       date_of_birth <= Date.new(30.years.ago.year, 12, 31)
     end
   end
   
+  # Under 18 years old
   def junior?
     if date_of_birth
       date_of_birth >= Date.new(18.years.ago.year, 1, 1)
     end
   end
   
+  # Oldest age racer will be at any point in year
   def racing_age
     if date_of_birth
       (Date.today.year - date_of_birth.year).ceil
@@ -217,29 +221,32 @@ class Racer < ActiveRecord::Base
       result.race.standings.event.is_a?(Competition)
     end
   end
-  
-  def merge(racer)
+
+  # Moves another racers' aliases, results, and race numbers to this racer,
+  # and delete the other racer.
+  # Also adds the other racers' name as a new alias
+  def merge(other_racer)
     # TODO Consider just using straight SQL for this --
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
-    if racer == self
+    if other_racer == self
       raise(IllegalArgumentError, 'Cannot merge racer onto itself')
     end
     Racer.transaction do
-      events = racer.results.collect do |result|
+      events = other_racer.results.collect do |result|
         event = result.race.standings.event
         event.disable_notification!
         event
       end
       begin
         save!
-        aliases << racer.aliases
-        results << racer.results
-        race_numbers << racer.race_numbers
-        Racer.delete(racer.id)
-        existing_alias = aliases.detect{|a| a.name.casecmp(racer.name) == 0}
-        if existing_alias.nil? and Racer.find_all_by_name(racer.name).empty?
-          aliases.create(:name => racer.name) 
+        aliases << other_racer.aliases
+        results << other_racer.results
+        race_numbers << other_racer.race_numbers
+        Racer.delete(other_racer.id)
+        existing_alias = aliases.detect{|a| a.name.casecmp(other_racer.name) == 0}
+        if existing_alias.nil? and Racer.find_all_by_name(other_racer.name).empty?
+          aliases.create(:name => other_racer.name) 
         end
       ensure
         events.each do |event|
@@ -250,6 +257,7 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team
   def find_associated_records
     if self.team and (team.new_record? or team.dirty?)
       if team.name.blank?
@@ -266,7 +274,6 @@ class Racer < ActiveRecord::Base
   end
   
   def to_s
-    "<Racer #{id} #{first_name} #{last_name} #{team_id}>"
+    "#<Racer #{id} #{first_name} #{last_name} #{team_id}>"
   end
-
 end

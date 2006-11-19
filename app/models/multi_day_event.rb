@@ -10,6 +10,9 @@
 #
 # Cannot have a parent event
 #
+# By convention, only SingleDayEvents have Standings and Results -- MultiDayEvents do not. 
+# Final standings like Overall GC are associated with the last day's SingleDayEvent.
+#
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 

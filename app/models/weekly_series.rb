@@ -1,3 +1,5 @@
+# By convention, only SingleDayEvents have Standings and Results -- WeeklySeries do not. 
+# Final standings like Overall GC are associated with the last day's SingleDayEvent.
 class WeeklySeries < Series
   
   # TODO Is this duplicaqted from Ruby core and standard lib?
@@ -14,6 +16,9 @@ class WeeklySeries < Series
     days_of_week.min {|a, b| a.wday <=> b.wday } 
   end
   
+  # Formatted list. Examples:
+  # * Tueday PIR: Tu
+  # * Track classes: M, W, F
   def days_of_week_s
     distinct_days = []
     for day in days_of_week

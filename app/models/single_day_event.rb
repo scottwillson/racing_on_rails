@@ -1,3 +1,7 @@
+# Event that takes place on one day only. By convention, this Event is the only subclass
+# that has Standings and Results.
+#
+# Notifys parent event on save or destroy
 class SingleDayEvent < Event
 
   after_save {|event| event.parent.after_child_event_save if event.parent}
@@ -32,7 +36,7 @@ class SingleDayEvent < Event
     @days_of_week = Set.new
   end
   
-  # Child/single day of MultiDayEvent
+  # Child/single day of MultiDayEvent?
   def series_event?
     parent and (parent.is_a?(WeeklySeries))
   end
@@ -42,6 +46,6 @@ class SingleDayEvent < Event
   end
   
   def to_s
-    "<#{self.class} #{id} #{parent_id} #{discipline} #{name} #{date}>"
+    "#<#{self.class} #{id} #{parent_id} #{discipline} #{name} #{date}>"
   end
 end
