@@ -64,7 +64,7 @@ RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_
 
 unless defined?(ASSOCIATION)
   ASSOCIATION = RacingAssociation.new
-  ASSOCIATION.name = 'Cascadia Racing Association'
+  ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
   ASSOCIATION.short_name = 'CBRA'
   ASSOCIATION.state = 'OR'
 
