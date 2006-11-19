@@ -1,13 +1,21 @@
+# Manage race promoters
 class Admin::PromotersController < ApplicationController
 
   model :promoter
 
   before_filter :login_required
 
+  # List all Promoters
+  # === Assigns
+  # * promoters
   def index
     @promoters = Promoter.find(:all).sort_by{|p| p.name_or_contact_info}
   end
 
+  # === Params
+  # * id
+  # === Assigns
+  # * promoter
   def show
     @promoter = Promoter.find(params['id'])
     remember_event
@@ -19,6 +27,8 @@ class Admin::PromotersController < ApplicationController
     render(:template => 'admin/promoters/show')
   end
 
+  # Update new (no :id param) or existing Promoter
+  # No duplicate names
   def update
     begin
       remember_event

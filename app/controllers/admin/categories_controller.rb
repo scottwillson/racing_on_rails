@@ -1,3 +1,4 @@
+# Manage Asssociation and BAR categories
 class Admin::CategoriesController < Admin::RecordEditor
 
   include ApplicationHelper
@@ -5,21 +6,29 @@ class Admin::CategoriesController < Admin::RecordEditor
   model :category
   edits :category
 
+  # Show all Association Categories
+  # === Assigns
+  # * categories
   def index
     @categories = Category.find_all_by_scheme(ASSOCIATION.short_name)
   end
   
+  # Edit Category name inline
+  # === Assigns
+  # * category
   def edit_name
     @category = Category.find(@params[:id])
     render(:partial => 'edit')
   end
   
+  # Edit Category BAR Category inline
   def edit_bar_category
     category = Category.find(@params[:id])
     bar_categories = bar_category_choices()
     render(:partial => 'edit_bar_category', :locals => {:category => category, :bar_categories => bar_categories})
   end
   
+  # Update Category name inline
   def update
     begin
       new_name = params[:name]
@@ -44,6 +53,7 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
   
+  # Update Category BAR category inline
   def update_bar_category
     begin
       category_id = params[:category][:id]
@@ -72,6 +82,7 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
   
+  # Cancel inline Category edit
   def cancel
     if @params[:id]
       category = Category.find(@params[:id])
@@ -81,6 +92,7 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
 
+  # Destroy Category
   def destroy
     category = Category.find(params[:id])
     begin
@@ -102,6 +114,7 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
 
+  # Re-order Category via drag and drop
   def insert_at
     category_id = @params[:id].gsub('category_', '')
     @category = Category.find(category_id)
@@ -125,6 +138,7 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
   
+  # Blank Category + all BAR Categories. Could handle this on the front-end probably
   def bar_category_choices
     [Category::NONE] + Category.find_all_by_scheme('BAR')
   end

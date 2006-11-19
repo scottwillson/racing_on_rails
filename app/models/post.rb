@@ -1,3 +1,4 @@
+# Mailing list post
 class Post < ActiveRecord::Base
 
   attr_accessor :from_email_address, :from_name
@@ -18,6 +19,7 @@ class Post < ActiveRecord::Base
     self.date = Time.now if date.nil?
   end
   
+  # Hack used when importing old Topica email
   def add_time
     if (date.hour == 0 or date.hour == 12) and date.min == 0 and date.sec == 0
       self.date = date + id    
@@ -44,6 +46,7 @@ class Post < ActiveRecord::Base
     update_sender
   end
   
+  # Replace a couple letters from email addresses to avoid spammers
   def sender_obscured
     if sender.blank? or !topica_message_id.blank?
       return sender
@@ -66,6 +69,7 @@ class Post < ActiveRecord::Base
     !topica_message_id.blank?
   end
   
+  # Used by Topica import only?
   def update_sender
     if !@from_name.blank? and from_email_address and !@from_email_address.empty? and !(@from_name.to_s == @from_email_address.to_s )
       self.sender = "#{@from_name} <#{@from_email_address}>"

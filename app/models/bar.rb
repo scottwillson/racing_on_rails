@@ -1,3 +1,10 @@
+# Best All-around Rider Competition. Assigns points for each top-15 placing in major Disciplines: road, track, etc.
+# Calculates a BAR for each Discipline, and an Overall BAR that combines all the discipline BARs.
+# Also calculates a team BAR.
+# Recalculating the BAR at years-end can take nearly 30 minutes even on a fast server. Recalculation must be manually triggered.
+# This class implements a number of OBRA-specific rules and should be generalized and simplified.
+# The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
+# show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 class Bar < Competition
 
   # TODO Add add_child(...) to Race
@@ -5,9 +12,12 @@ class Bar < Competition
   validate :valid_dates
   
   POINT_SCHEDULE = [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1] unless defined?(POINT_SCHEDULE)
+  # TODO Move to BarHelper
   POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]] unless defined?(POINTS_AND_LABELS)
 
   # Calculate clashs with internal Rails method
+  # Destroys existing BAR for the year first.
+  # This method could stand some decomposition into smaller, more meaningful methods
   def Bar.recalculate(year = Date.today.year, progress_monitor = NullProgressMonitor.new)
     # TODO: Use FKs in database to cascade delete`
     # TODO Use Hashs or class instead of iterating through Arrays!
@@ -130,7 +140,8 @@ class Bar < Competition
                   overall_bar_result.scores.create(
                     :source_result => discipline_source_result, 
                     :competition_result => overall_bar_result, 
-                    :points => overall_points_for(discipline_source_result))
+                    :points => 301 - discipline_source_result.place.to_i
+                  )
                   raise(RuntimeError, overall_bar_result.errors.full_messages) unless overall_bar_result.errors.empty?
                   overall_bar_result.calculate_points
                 else
@@ -158,8 +169,6 @@ class Bar < Competition
           race.place_results_by_points
         end
         
-        bar.set_all_last_updated_dates(Date.today)
-        
         progress_monitor.increment(1)
         progress_monitor.detail_text = "Finish up"
         bar.save!
@@ -170,9 +179,11 @@ class Bar < Competition
       end
     }
     RACING_ON_RAILS_DEFAULT_LOGGER.info("BAR #{benchmark}")
+    # Don't return the entire populated instance!
     true
   end
   
+  # Apply points from POINT_SCHEDULE, and adjust for field size
   def Bar.points_for(scoring_result)
     field_size = scoring_result.race.field_size
     
@@ -187,16 +198,8 @@ class Bar < Competition
     points
   end
   
-  # If none of a racer's results in a discipline count for the BAR because the field size is too small,
-  # give the racer a 50-point bonus for the overall
-  def Bar.overall_points_for(discipline_result)
-    if discipline_result.points > 0
-      301 - discipline_result.place.to_i
-    else
-      50
-    end
-  end
-
+  # if racer has > 4 discipline results, those results are worth 50 points
+  # E.g., racer had top-15 results in road, track, cyclocross, mountain bike, and criteriums
   def Bar.set_bonus_points_for_extra_disciplines(scores)
     scores.sort! {|x, y| y.points.to_i <=> x.points.to_i}
     remove_duplicate_discipline_results(scores)
@@ -208,7 +211,9 @@ class Bar < Competition
   end
 
   # If racer scored in more than one category that maps to same overall category in a discipline, count only highest-placing category
+  # This typically happens for age-based categories like Masters and Juniors
   # Assume scores sorted by points descending
+  # TODO Why do we have both remove_duplicate_discipline_results and racers_best_result_for_each_race?
   def Bar.remove_duplicate_discipline_results(scores)
     disciplines = []
     scores.each do |score|
@@ -219,6 +224,22 @@ class Bar < Competition
         disciplines << score.source_result.race.standings.discipline
       end
     end
+  end
+  
+  # If same ride places twice in same race, only highest result counts
+  # This method remove all but highest result
+  # Assume results are sorted by place already
+  # TODO Why do we have both remove_duplicate_discipline_results and racers_best_result_for_each_race?
+  def Bar.racers_best_result_for_each_race(scoring_results)
+    best_results = {}
+    scoring_results.each do |result|
+      key = ResultKey.new(result).freeze
+      best_results.rehash
+      unless best_results[key]
+        best_results[key] = result
+      end
+    end
+    best_results.values
   end
   
   def Bar.create_team_result(scoring_result, bar)
@@ -246,6 +267,9 @@ class Bar < Competition
     end
   end
   
+  # Simple logic to split team results (tandem, team TTs) between teams
+  # Just splits on first slash, so "Bike Gallery/Veloce" becomes "Bike Gallery" and "Veloce"  
+  # This method probably gets things wrong sometimes
   def Bar.extract_teams_from(scoring_result)
     return unless scoring_result.team
     
@@ -263,21 +287,6 @@ class Bar < Competition
     else
       [scoring_result.team]
     end
-  end
-  
-  # If same ride places twice in same race, only highest result counts
-  # This method remove all but highest result
-  # Assume results are sorted by place already
-  def Bar.racers_best_result_for_each_race(scoring_results)
-    best_results = {}
-    scoring_results.each do |result|
-      key = ResultKey.new(result).freeze
-      best_results.rehash
-      unless best_results[key]
-        best_results[key] = result
-      end
-    end
-    best_results.values
   end
   
   # TODO Just move to initialize
@@ -376,6 +385,7 @@ class Bar < Competition
   end
 end
  
+# Used in Hash of results to sort out duplicate results for same race
 class ResultKey
   
   include Comparable

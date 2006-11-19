@@ -50,11 +50,13 @@ class Admin::RacersController < Admin::RecordEditor
     @racer = Racer.find(params[:id])
   end
   
+  # Inline edit
   def edit_name
     @racer = Racer.find(@params[:id])
     render(:partial => 'edit')
   end
 
+  # Inline edit
   def edit_team_name
     @racer = Racer.find(@params[:id])
     render(:partial => 'edit_team_name')
@@ -84,6 +86,7 @@ class Admin::RacersController < Admin::RecordEditor
     render('admin/racers/show')
   end
 
+  # Inline update. Merge with existing Racer if names match
   def update_name
     new_name = params[:name]
     racer_id = params[:id]
@@ -109,6 +112,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
   end
   
+  # Inline
   def update_team_name
     @racer = Racer.find(@params[:id])
     new_name = params[:team_name]
@@ -128,6 +132,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
   end
   
+  # Cancel inline editing
   def cancel
     if @params[:id]
       @racer = Racer.find(@params[:id])
@@ -137,6 +142,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
   end
   
+  # Cancel inline editing
   def cancel_edit_team_name
     @racer = Racer.find(@params[:id])
     render(:partial => 'team', :locals => {:racer => @racer})

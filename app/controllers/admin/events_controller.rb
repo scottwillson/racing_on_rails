@@ -114,6 +114,17 @@ class Admin::EventsController < ApplicationController
     end
   end
 
+  # Upload results from Excel spreadsheet. 
+  # Expects column headers in first row
+  # Expects Race names in first column before set of results:
+  # Senior Women Category 3
+  # | 1 | Leitheiser | Ann | HFV |
+  # === Params
+  # * results_file
+  # * id: Event ID
+  # === Flash
+  # * warn: List invalid columns
+  # * notice
   def upload
     uploaded_file = @params[:results_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
@@ -152,6 +163,13 @@ class Admin::EventsController < ApplicationController
     redirect_to(redirect_path)
   end
   
+  # Permanently destroy Event
+  # === Params
+  # * id
+  # === Assigns
+  # * event: if Event could not be deleted
+  # === Flash
+  # * notice
   def destroy_event
     event = Event.find(@params[:id])
     begin
@@ -171,6 +189,11 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Permanently destroy Standings and redirect to Event
+  # === Params
+  # * id
+  # === Flash
+  # * notice
   def destroy_standings
     standings = Standings.find(@params[:id])
     begin
@@ -194,6 +217,11 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Permanently destroy race and redirect to Event
+  # === Params
+  # * id
+  # === Flash
+  # * notice
   def destroy_race
     race = Race.find(@params[:id])
     begin
@@ -217,6 +245,11 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Permanently destroy Results and redirect to Event
+  # === Params
+  # * id
+  # === Flash
+  # * notice
   def destroy_result
     result = Result.find(@params[:id])
     begin
@@ -237,19 +270,23 @@ class Admin::EventsController < ApplicationController
       end
     end
   end
-  
-  def confirm_if_duplicate_promoter
-    render :update do |page|
-      page.alert('dupe?')
-    end
-  end
 
+  # Inline update of Race BAR points
+  # === Params
+  # * id
+  # * bar_points
   def update_bar_points
     bar_points = params[:bar_points]
     race = Race.update(params[:id], :bar_points => bar_points)
     render(:partial => 'bar_points', :locals => {:race => race, :bar_points => bar_points})
   end
   
+  # Upcoming Events. Delegates to UpcomingEvents class
+  # === Params
+  # * date: Show all Events from this day onward. Optional -- defaults to today
+  # * weeks: optional, defaults to 2
+  # === Assigns
+  # * upcoming_events: instance of UpcomingEvents
   def upcoming
     if params['date'].blank?
       @date = Date.today
@@ -264,6 +301,10 @@ class Admin::EventsController < ApplicationController
     @upcoming_events = UpcomingEvents.new(@date, @weeks)
   end
   
+  # AJAX method: update promoter's contact information when different promoter selected
+  # === Params
+  # * promoter_id
+  # * id: Event ID
   def promoter_changed
     promoter_id = params['promoter_id']
     if promoter_id.blank?

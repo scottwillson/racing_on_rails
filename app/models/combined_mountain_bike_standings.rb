@@ -1,9 +1,13 @@
+# OBRA combines Pro, Semi-Pro, Elite Men and Pro, Elite, Expert Women into two sets of combined standings.
+# The combined standings are used for the BAR. Combined results are placed by time. Results without times 
+# are placed last in non-determinate order. (They should be placed by category and place)
 class CombinedMountainBikeStandings < CombinedStandings
 
   def discipline
     'Mountain Bike'
   end
   
+  # Recreate combine results from source results. Also set source race BAR points to none
   def recalculate
     logger.debug("CombinedMountainBikeStandings Recalculate")
     create_races if races(true).empty?

@@ -1,3 +1,4 @@
+# Road, track, criterium, time trial ...
 class Discipline < ActiveRecord::Base
 
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
@@ -5,6 +6,7 @@ class Discipline < ActiveRecord::Base
   NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
   @@aliases = nil
   
+  # Look up Discipline by name or alias. Caches Disciplines in memory
   def Discipline.[](name)
     return nil unless name
     load_aliases unless @@aliases
@@ -19,7 +21,6 @@ class Discipline < ActiveRecord::Base
   def Discipline.find_all_bar
     Discipline.find_all("bar = true")
   end
-
 
   def Discipline.find_via_alias(name)
     Discipline[name]
@@ -37,7 +38,8 @@ class Discipline < ActiveRecord::Base
       @@aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
     end
   end
-
+  
+  # Clear out cached aliases
   def Discipline.reset
     @@aliases = nil
   end
@@ -45,9 +47,7 @@ class Discipline < ActiveRecord::Base
   def Discipline.find_all_names
     [''] + Discipline.find_all.collect {|discipline| discipline.name}
   end
-
-  def self.reloadable?; false end
-    
+  
   def to_param
     name.underscore.gsub(' ', '_')
   end

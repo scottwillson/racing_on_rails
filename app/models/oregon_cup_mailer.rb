@@ -4,6 +4,7 @@ module ActionView
   end
 end
 
+# Send results and upcoming Oregon Cup emails
 class OregonCupMailer < ActionMailer::Base
   def kickoff(today = Date.today)
     @subject    = 'Oregon Cup Starts This Weekend'

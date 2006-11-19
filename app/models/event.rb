@@ -1,4 +1,7 @@
-# Abstract class
+# Abstract superclass for anything that can have standings and results:
+# * SingleDayEvent
+# * MultiDayEvent
+# * Competition
 class Event < ActiveRecord::Base
 
     before_validation :find_associated_records
@@ -13,7 +16,8 @@ class Event < ActiveRecord::Base
              :class_name => "Standings", 
              :dependent => :destroy, 
              :order => 'position'
-           
+    
+    # Return list of every year that has at least one event
     def Event.find_all_years
       extract_year_sql = "extract(year from date)"
       years = []
@@ -26,6 +30,7 @@ class Event < ActiveRecord::Base
       years.sort.reverse
     end
 
+    # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
     def initialize(attributes = nil)
       super
       if state == nil then write_attribute(:state, ASSOCIATION.state) end
@@ -46,6 +51,8 @@ class Event < ActiveRecord::Base
       end
     end
   
+    # Automatically applies value in promoter key to promoter.
+    # Hack for OBRA legacy format: truis to guess sanctioning body from 'notes' key if sanctioned_by is missing.
     def attributes=(attributes)
       unless attributes.nil?
          if attributes[:promoter] and attributes[:promoter].is_a?(Hash)
@@ -73,6 +80,7 @@ class Event < ActiveRecord::Base
       super(attributes)
     end
   
+    # Assert that we're not trying to save an abstract class
     def validate_type
       if instance_of?(Event)
         errors.add("class", "Cannot save abstract class Event. Use MultiDayEvent or SingleDayEvent.")
@@ -92,6 +100,7 @@ class Event < ActiveRecord::Base
       true
     end
     
+    # ASSOCIATION.short_name
     def add_default_number_issuer
       unless self.number_issuer
         self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
@@ -116,12 +125,15 @@ class Event < ActiveRecord::Base
       end
     end
     
+    # Default superclass implementation does nothing
     def after_child_event_save
     end
     
+    # Default superclass implementation does nothing
     def after_child_event_destroy
     end
 
+    # Any unsaved standings?
     def new_standings?
       for standing in standings
         if standing.new_record?
@@ -200,6 +212,7 @@ class Event < ActiveRecord::Base
       "#{date.month}/#{date.day}"
     end
   
+    # For display in UI
     def friendly_class_name
       'Event'
     end

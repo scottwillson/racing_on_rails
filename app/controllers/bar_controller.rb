@@ -1,8 +1,10 @@
+# BAR = Best All-around Rider
 class BarController < ApplicationController
   
   model :bar, :standings, :category
   session :off
 
+  # Default to Overall BAR with links to disciplines
   def show
     @year = params['year'] || Date.today.year.to_s
     @discipline = params['discipline']
@@ -24,6 +26,7 @@ class BarController < ApplicationController
     @all_disciplines = Discipline.find_all_bar.sort
   end
   
+  # BAR category mappings
   def categories
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)

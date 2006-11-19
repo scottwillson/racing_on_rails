@@ -1,3 +1,4 @@
+# Person who puts on events
 class Promoter < ActiveRecord::Base
 
   validate :not_blank, :unique_info
@@ -20,6 +21,7 @@ class Promoter < ActiveRecord::Base
     self[:name] || ''
   end
   
+  # Name. If +name+ is blank, returns email and phone
   def name_or_contact_info
     if name.blank?
       [email, phone].join(', ')
@@ -28,12 +30,14 @@ class Promoter < ActiveRecord::Base
     end
   end
 
+  # All contact information cannot be blank
   def not_blank
     if (name.blank? and email.blank? and phone.blank?)
       errors.add("name, email, and phone cannot all be blank")
     end
   end
   
+  # Cannot have promoters with duplicate contact information
   def unique_info
     promoter = Promoter.find_by_info(name, email, phone)
     if promoter && promoter != self
@@ -42,7 +46,7 @@ class Promoter < ActiveRecord::Base
   end
   
   def to_s
-    "<Promoter #{id} #{name} #{email} #{phone}>"
+    "#<Promoter #{id} #{name} #{email} #{phone}>"
   end
 
 end

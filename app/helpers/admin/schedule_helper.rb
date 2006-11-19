@@ -1,4 +1,6 @@
 module Admin::ScheduleHelper
+  
+  # Horizontal, pipe-delimited list of links to years
   def links_to_years
     links = Builder::XmlMarkup.new(:indent => 4)
     links.div(:class => 'horizontal_links') {
@@ -12,6 +14,7 @@ module Admin::ScheduleHelper
     links.to_s
   end
 
+  # Horizontal, pipe-delimited list of links to months
   def links_to_months(schedule)
     links = Builder::XmlMarkup.new(:indent => 4)
     links.div(:class => 'horizontal_links') {

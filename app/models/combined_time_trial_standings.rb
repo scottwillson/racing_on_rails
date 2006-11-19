@@ -1,3 +1,4 @@
+# All categories' results in a time trial by time
 class CombinedTimeTrialStandings < CombinedStandings
   
   def initialize(attributes = nil)

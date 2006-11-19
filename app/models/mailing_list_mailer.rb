@@ -1,5 +1,7 @@
+# Send email to mailing list
 class MailingListMailer < ActionMailer::Base
 
+  # Reply just to sender of post, not the whole list
   def private_reply(post, to)
     raise("'To' cannot be blank") if to.blank?
     @subject    = post.subject
@@ -19,6 +21,7 @@ class MailingListMailer < ActionMailer::Base
     @headers    = {}
   end
 
+  # Expects raw email from Mailman archiver
   # TODO: Really need tricky sender logic for web posts? Shouldn't web
   # posts be forwarded through list, too? If so, update test data
   def receive(email)

@@ -1,3 +1,8 @@
+# Superclass for controllers that edit model classes inline. Example:
+# class Admin::RacersController < Admin::RecordEditor
+#   edits :racer
+#
+# Enforce login as well
 class Admin::RecordEditor < ApplicationController
 
   before_filter :login_required

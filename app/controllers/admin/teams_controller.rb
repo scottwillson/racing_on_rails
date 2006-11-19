@@ -47,11 +47,13 @@ class Admin::TeamsController < Admin::RecordEditor
     end
   end
   
+  # Inline
   def edit_name
     @team = Team.find(@params[:id])
     render(:partial => 'edit')
   end
   
+  # Inline
   def update
     begin
       new_name = params[:name]
@@ -84,6 +86,7 @@ class Admin::TeamsController < Admin::RecordEditor
     end
   end
   
+  # Inline
   def merge?(original_name, existing_team, team)
     @team = team
     @existing_team = existing_team
@@ -92,6 +95,7 @@ class Admin::TeamsController < Admin::RecordEditor
     render(:partial => 'merge_confirm')
   end
   
+  # Inline
   def merge
     team_to_merge_id = @params[:id].gsub('team_', '')
     team_to_merge = Team.find(team_to_merge_id)
@@ -100,6 +104,7 @@ class Admin::TeamsController < Admin::RecordEditor
     @existing_team.merge(team_to_merge)
   end
   
+  # Inline
   def cancel
     if @params[:id]
       @team = Team.find(@params[:id])

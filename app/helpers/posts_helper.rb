@@ -1,5 +1,6 @@
 module PostsHelper
 
+  # Build links to archived posts
   def archive_navigation(mailing_list, month, year)
     if mailing_list.dates
       nav = Builder::XmlMarkup.new(:indent=>2)

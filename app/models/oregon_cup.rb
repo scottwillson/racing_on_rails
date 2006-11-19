@@ -1,7 +1,9 @@
+# Year-long best rider competition for senior men and women
 class OregonCup < Competition
 
   # 2006 races: 19, 80, 81, 259, 265, 381, 411
   # TODO Initialize OregonCup with "today" attribute
+  # TODO Break ties according to rules on website
   after_save :create_standings
   validate :valid_dates
   
@@ -123,6 +125,7 @@ class OregonCup < Competition
     !self.next_event(today).nil?
   end
   
+  # FIXME: Needs to sort by date?
   def next_event(today = Date.today)
     for event in events.sort
       if event.date > today

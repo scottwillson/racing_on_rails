@@ -1,7 +1,15 @@
+# Event that spans more than one day: stage races, six days, omniums
+# MultiDayEvents represent events that occur on concurrent days, and Series and 
+# WeeklySeries subclasses represent events that do not occur on concurrent days, though
+# this is just a convention.
+#
 # Calculate start_date, end_date, and date from events. 
 # date = start_date
-# OneDayEvents with no events default to start_date of Jan 1st and end_date of Dec 31
+# MultiDayEvents with no events default to start_date of Jan 1st and end_date of Dec 31
 # Save date to database, though this is a slight denormalization.
+#
+# Cannot have a parent event
+#
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 
@@ -48,6 +56,9 @@ class MultiDayEvent < Event
     )
   end
 
+  # Create MultiDayEvent from several SingleDayEvents.
+  # Use first SingleDayEvent to populate date, name, promoter, etc.
+  # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
   def MultiDayEvent.create_from_events(events)
     if events.empty?
       raise ArgumentError.new("events cannot be empty")
@@ -80,7 +91,7 @@ class MultiDayEvent < Event
     end
 
     multi_day_event.events(true)
-    return multi_day_event
+    multi_day_event
   end
   
   def initialize(attributes = nil)
@@ -88,6 +99,8 @@ class MultiDayEvent < Event
     self.date = Time.new.beginning_of_year
   end
   
+  # Update child events from parents' attributes if child attribute has the
+  # same value as the parent before update
   def update_events(original_event_attributes)
     for attribute in PROPOGATED_ATTRIBUTES
       original_value = original_event_attributes[attribute]
@@ -115,6 +128,7 @@ class MultiDayEvent < Event
     update_date
   end
   
+  # Uses SQL query to set +date+ from child events
   def update_date
     return if new_record?
     
@@ -126,6 +140,7 @@ class MultiDayEvent < Event
     end
   end
 
+  # +date+
   def start_date
     date
   end

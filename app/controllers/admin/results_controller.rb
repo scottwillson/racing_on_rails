@@ -15,6 +15,9 @@ class Admin::ResultsController < Admin::RecordEditor
     @result = Result.find(@params[:id])
   end
   
+  # Editing the Racer or Team name will update the Result's current Racer's or Team's name, which 
+  # may not be what you want. If you need to change the Racer or Team, and not just correct a misspelling,
+  # Delete the Result and create a new one
   def update
     @result = Result.update(@params[:result][:id], @params[:result])
     

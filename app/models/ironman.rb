@@ -1,3 +1,5 @@
+# Who has done the most events? Just counts starts/appearences in results. Not pefect -- some events
+# are probably over-counted.
 class Ironman < Competition
 
   # TODO Can't we just iterate through all of a racer's results? Would need to weed out many results
@@ -60,7 +62,6 @@ class Ironman < Competition
         place = place + 1
       end
       
-      ironman.set_all_last_updated_dates(Date.today)
       ironman.save!
       ironman.enable_notification!
     end
@@ -83,5 +84,4 @@ class Ironman < Competition
 
     ironman
   end
-  
 end

@@ -1,3 +1,12 @@
+# Number used to indentify a Racer during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
+# which is usually a racing Association, but sometimes an Event. RaceNumbers are also restricted
+# by Discipline and year.
+#
+# RaceNumbers can have letters and numbers
+#
+# This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
+# and associations. RacerNumbers are also used to differentiate between Racers with the same name, and 
+# to identify racer results with misspelled names.
 class RaceNumber < ActiveRecord::Base
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id
@@ -42,6 +51,7 @@ class RaceNumber < ActiveRecord::Base
     end
   end
   
+  # Default to Road, ASSOCIATION, and current year
   def after_initialize
     self.discipline = Discipline[:road] unless self.discipline
     self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer

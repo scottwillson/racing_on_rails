@@ -3,11 +3,13 @@
 module ApplicationHelper
   @@grid_columns = nil
   
+  # Class-scope Hash of Columns, keyed by field
+  # Used to display results in a grid
   # TODO Rewrite this a bit smarter
   def grid_columns(column)
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
-      @@grid_columns['age'] = Column.new('age', 'Age', 2, true, Column::LEFT)
+      @@grid_columns['age'] = Column.new('age', 'Age', 3, true, Column::LEFT)
       @@grid_columns['category_name'] = Column.new('category_name', 'Category', 20, true, Column::LEFT)
       @@grid_columns['city'] = Column.new('city', 'City', 15, true, Column::LEFT)
       @@grid_columns['date_of_birth'] = Column.new('date_of_birth', 'Date of Birth', 15, false, Column::LEFT)
@@ -42,6 +44,8 @@ module ApplicationHelper
     grid_column
   end
 
+  # Should field from model object displayed by a RecordEditor
+  # TODO: Move to Admin::RecordEditor?
   def attribute(record, name)
     render(:partial => '/admin/attribute', :locals => {:record => record, :name => name})
   end

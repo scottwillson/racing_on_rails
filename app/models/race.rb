@@ -1,4 +1,8 @@
+# A Race is essentionally a collection of Results labelled with a Category. Races must belong to a parent Standings,
+# and Standings must belong to a SingleDayEvent or a Competition.
 # TODO Use Discipline class, not String
+#
+#  Races only have some of their attributes populated. These attributes are listed in the +result_columns+ Array
 class Race < ActiveRecord::Base
 
   include Comparable
@@ -22,10 +26,12 @@ class Race < ActiveRecord::Base
     category.bar_category if category
   end
   
+  # Convenience method to get the Race's Category's BAR Category
   def bar_category_name
     category.bar_category.name if category and category.bar_category
   end
   
+  # Defaults to Standings' BAR points
   def bar_points
     self[:bar_points] || standings.bar_points
   end
@@ -67,6 +73,7 @@ class Race < ActiveRecord::Base
     self.result_columns || DEFAULT_RESULT_COLUMNS
   end
   
+  # Are there are +result_columns+ that don't map to a Result attribute
   def result_columns_valid?
     return if self.result_columns.nil?
     for column in self.result_columns

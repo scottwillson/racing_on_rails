@@ -1,3 +1,5 @@
+# Alternate name for a Racer or Team. Example: Erik Tonkin might have aliases of 'Eric Tonkin,' and 'E. Tonkin'
+# Must belong to either a Racer or Team, but not both. Used by Result when importing results from Excel.
 class Alias < ActiveRecord::Base
   belongs_to :racer
   belongs_to :team

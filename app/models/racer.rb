@@ -1,3 +1,6 @@
+# A rider who either appears in race results or who is added as a member of a racing association
+#
+# Names are _not_ unique
 class Racer < ActiveRecord::Base
 
   include Comparable
@@ -10,6 +13,7 @@ class Racer < ActiveRecord::Base
   has_many :race_numbers
   has_many :results
 
+  # Does not consider Aliases
   def Racer.find_all_by_name(name)
     if name.blank?
       Racer.find(
