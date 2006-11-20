@@ -8,13 +8,21 @@ include Test::Unit::Assertions
 
 namespace :racing_on_rails do
   
+  integration_build_root = File.expand_path("#{RAILS_ROOT}/integration_build")
+  
   desc "Package, deploy new app from scratch. Test."
-  task :dist => [:dump_schema, :repackage, :create_app, :acceptence] do
+  task :dist => [:dump_schema, :repackage, :drop_development_databases, :create_app, :acceptence] do
   end
 
   desc 'Dump development schema'
   task :dump_schema do
-    `mysqldump -u root --no-data racing_on_rails_development > /db/schema.sql`
+    `mysqldump -u root --no-data racing_on_rails_development > #{RAILS_ROOT}/db/schema.sql`
+  end
+  
+  desc 'Drop development and test databases'
+  task :drop_development_databases do
+    `mysql -u root -e 'drop database racing_on_rails_development'`
+    `mysql -u root -e 'drop database racing_on_rails_test'`
   end
 
   # From production
@@ -36,19 +44,21 @@ namespace :racing_on_rails do
   desc "User acceptence test for end users and developers"
   task :acceptence => [:create_app] do
     puts('acceptence_user')
-    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.2'))
+    run_acceptence_user(integration_build_root)
     puts('customize')
     customize
     puts('acceptence_developer')
-    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.2'))
+    run_acceptence_developer(integration_build_root)
   end
 
   task :create_app do
-    app_path = File.expand_path('~/racing_on_rails-0.0.2')
+    app_path = File.expand_path(integration_build_root)
     rm_rf app_path
   
-    puts(`tar zxf pkg/racing_on_rails-0.0.2.tar.gz -C ~`)
-    `mysql -u root racing_on_rails_development < /db/schema.sql`
+    puts(`tar zxf pkg/racing_on_rails-0.0.3.tar.gz`)
+    mv 'racing_on_rails-0.0.3', integration_build_root
+    `mysql -u root < db/create_databases.sql`
+    `mysql -u root racing_on_rails_development < db/schema.sql`
   end
 
   desc 'Customize new app'
@@ -71,11 +81,10 @@ namespace :racing_on_rails do
     # Override instance and class methods of AR
     # And in superclasses, then reference in subclass
 
-    path = File.expand_path('~/racing_on_rails-0.0.2')
-    puts(`#{path}/script/generate model BikeShop`)
-    puts(`#{path}/script/generate controller BikeShops list`)
+    puts(`#{integration_build_root}/script/generate model BikeShop`)
+    puts(`#{integration_build_root}/script/generate controller BikeShops list`)
     customize('script/create_bike_shops_table.rb')
-    puts(`ruby #{path}/script/create_bike_shops_table.rb`)
+    puts(`ruby #{integration_build_root}/script/create_bike_shops_table.rb`)
     customize("app/views/bike_shops/list.rhtml")
   end
 
@@ -127,9 +136,9 @@ namespace :racing_on_rails do
   end
 
   def customize(fixture_path)
-    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}")))
+    mkpath(File.dirname(File.expand_path("#{integration_build_root}/#{fixture_path}")))
     cp(File.expand_path("/test/fixtures/#{fixture_path}"),
-       File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}"))
+       File.expand_path("~#{integration_build_root}/#{fixture_path}"))
   end
 
   def web_test
@@ -158,7 +167,7 @@ namespace :racing_on_rails do
     end
   end
   
-  Rake::PackageTask.new("racing_on_rails", "0.0.2") do |p|
+  Rake::PackageTask.new("racing_on_rails", "0.0.3") do |p|
     p.need_tar_gz = true
     p.need_zip = true
     files = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f| 
