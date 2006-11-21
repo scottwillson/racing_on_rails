@@ -61,31 +61,21 @@ namespace :racing_on_rails do
     `mysql -u root racing_on_rails_development < db/schema.sql`
   end
 
-  desc 'Customize new app'
+  desc 'Add a local app with custom code'
   task :customize do
     # Config
-    customize("config/environment.rb")
+    customize("config/environment.rb", integration_build_root)
 
     # Views
-    customize("app/views/home/index.rhtml")
-    customize("app/views/schedule/index.rhtml")
+    customize("app/views/home/index.rhtml", integration_build_root)
+    customize("app/views/schedule/index.rhtml", integration_build_root)
 
     # Extend Helpers, Controller, Model, Routes, Lib
-    customize("app/helpers/schedule_helper.rb")
-    customize("app/controllers/home_controller.rb")
-    customize("app/models/single_day_event.rb")
+    customize("app/helpers/schedule_helper.rb", integration_build_root)
+    customize("app/controllers/home_controller.rb", integration_build_root)
+    customize("app/models/single_day_event.rb", integration_build_root)
     # TODO Add custom lib class
 
-    # Create whole slice (view, controller, model, helper, lib) for 'shops'
-
-    # Override instance and class methods of AR
-    # And in superclasses, then reference in subclass
-
-    puts(`#{integration_build_root}/script/generate model BikeShop`)
-    puts(`#{integration_build_root}/script/generate controller BikeShops list`)
-    customize('script/create_bike_shops_table.rb')
-    puts(`ruby #{integration_build_root}/script/create_bike_shops_table.rb`)
-    customize("app/views/bike_shops/list.rhtml")
   end
 
   task :acceptence_developer do
@@ -108,9 +98,6 @@ namespace :racing_on_rails do
       assert_match('until the 2010 Cherry Pie Road Race!!!', response, "Cherry Pie coutdown \n#{response}")
       assert_match('Custom Finder Event', response, "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
       assert_match('<i>Custom Finder Event</i>', response, "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
-      assert_match('Sellwood Cycle Repair', response, "Sellwood on bike shops list page \n#{response}")
     end
   end
 
@@ -135,10 +122,10 @@ namespace :racing_on_rails do
     end
   end
 
-  def customize(fixture_path)
+  def customize(fixture_path, integration_build_root)
     mkpath(File.dirname(File.expand_path("#{integration_build_root}/#{fixture_path}")))
-    cp(File.expand_path("/test/fixtures/#{fixture_path}"),
-       File.expand_path("~#{integration_build_root}/#{fixture_path}"))
+    cp(File.expand_path("test/fixtures/#{fixture_path}"),
+       File.expand_path("#{integration_build_root}/#{fixture_path}"))
   end
 
   def web_test
