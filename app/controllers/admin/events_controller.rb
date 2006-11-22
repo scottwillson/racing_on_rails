@@ -5,7 +5,7 @@ class Admin::EventsController < ApplicationController
 
   model :event, :single_day_event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
 
-  cache_sweeper :home_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event]
+  cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :destroy_standings, :upload]
 
   # Show results for Event
   # === Params

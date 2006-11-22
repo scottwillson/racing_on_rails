@@ -37,7 +37,7 @@ Rails::Initializer.run do |config|
   config.active_record.schema_format = :sql
 
   # Activate observers that should always be running
-  config.active_record.observers = :bar_sweeper, :home_sweeper, :schedule_sweeper
+  config.active_record.observers = :bar_sweeper, :home_sweeper, :results_sweeper, :schedule_sweeper
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
