@@ -20,7 +20,7 @@ end
 
 desc 'Pull in local OBRA code'
 task :after_update_code do
-  sudo "svn co svn+ssh://sw@butlerpress.com/var/repos/obra /srv/www/rails/#{application}/local"
+  sudo "svn co --password Merckx svn+ssh://sw@butlerpress.com/var/repos/obra /srv/www/rails/#{application}/local"
 end
 
 desc "Set file permissions for Rails app"
