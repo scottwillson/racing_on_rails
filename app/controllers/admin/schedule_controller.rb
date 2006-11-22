@@ -25,13 +25,13 @@ class Admin::ScheduleController < ApplicationController
   # * notice
   # * warn
   def upload
-    uploaded_file = params[:schedule_file]
-    path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
-    File.open(path, File::CREAT|File::WRONLY) do |f|
-      f.print(uploaded_file.read)
-    end
-
     begin
+      uploaded_file = params[:schedule_file]
+      path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
+      File.open(path, File::CREAT|File::WRONLY) do |f|
+        f.print(uploaded_file.read)
+      end
+
       date = Schedule::Schedule.import(path)
       flash[:notice] = "Uploaded schedule from #{uploaded_file.original_filename}"
       redirect_path = {
@@ -40,7 +40,6 @@ class Admin::ScheduleController < ApplicationController
         :year => date.year
       }
     rescue  Exception => error
-      raise error
       redirect_path = {
         :controller => "/admin/schedule"
       }

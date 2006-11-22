@@ -3,7 +3,9 @@ class Admin::EventsController < ApplicationController
   
   before_filter :login_required
 
-  model :event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
+  model :event, :single_day_event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
+
+  cache_sweeper :home_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event]
 
   # Show results for Event
   # === Params

@@ -1,3 +1,5 @@
+require 'fileutils'
+
 # Best All-around Rider Competition. Assigns points for each top-15 placing in major Disciplines: road, track, etc.
 # Calculates a BAR for each Discipline, and an Overall BAR that combines all the discipline BARs.
 # Also calculates a team BAR.
@@ -6,6 +8,7 @@
 # The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 class Bar < Competition
+  include FileUtils
 
   # TODO Add add_child(...) to Race
   
@@ -169,6 +172,8 @@ class Bar < Competition
           race.place_results_by_points
         end
         
+        expire_cache
+        
         progress_monitor.increment(1)
         progress_monitor.detail_text = "Finish up"
         bar.save!
@@ -310,6 +315,13 @@ class Bar < Competition
     end
     
     bar
+  end
+  
+  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
+  # BarSweeper seems to fire, but does not expire pages?
+  def Bar.expire_cache
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
   end
 
   # Find BAR races that match the discipline and BAR cat of "result's" race

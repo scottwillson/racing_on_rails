@@ -1,8 +1,12 @@
 # Controller for schedule/calendar in different formats. Default to current year if not provided.
+#
+# Caches all of its pages
 class ScheduleController < ApplicationController
 
     session :off
     model :event, :single_day_event
+
+    caches_page :index, :list
 
     # Default calendar format
     # === Params
@@ -29,5 +33,4 @@ class ScheduleController < ApplicationController
       events = SingleDayEvent.find_all_by_year(@year)
       @schedule = Schedule::Schedule.new(@year, events)
     end
-  
 end

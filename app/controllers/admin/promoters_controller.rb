@@ -1,9 +1,11 @@
 # Manage race promoters
+#
+# Promoter information shows up on the schedules
 class Admin::PromotersController < ApplicationController
 
   model :promoter
-
   before_filter :login_required
+  cache_sweeper :schedule_sweeper, :only => [:update]
 
   # List all Promoters
   # === Assigns

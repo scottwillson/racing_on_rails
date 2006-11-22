@@ -1,8 +1,8 @@
 # BAR = Best All-around Rider
 class BarController < ApplicationController
-  
   model :bar, :standings, :category
   session :off
+  caches_page :show
 
   # Default to Overall BAR with links to disciplines
   def show
