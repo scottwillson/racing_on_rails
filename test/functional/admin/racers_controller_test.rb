@@ -568,7 +568,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
 
   def test_update_error
-    @request.session[:user] = users(:candi)
     mollie = racers(:mollie)
     post(:update, 
     :id => mollie.to_param, 
@@ -599,5 +598,17 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal('2010', assigns["year"], "Should assign selected year as 'year'")
     assert_not_nil(assigns["years"], "Should assign range of years as 'years'")
     assert(assigns["years"].size >= 2, "Should assign range of years as 'years', but was: #{assigns[:years]}")
+  end
+  
+  def test_destroy_number
+    assert_not_nil(RaceNumber.find(5), 'RaceNumber with ID 5 should exist')
+    
+    opts = {:controller => "admin/racers", :action => "destroy_number", :id => '5'}
+    assert_routing("/admin/racers/destroy_number/5", opts)
+
+    post(:destroy_number, :id => '5')
+    assert_response(:success)
+    
+    assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
   end
 end

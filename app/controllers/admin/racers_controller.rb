@@ -243,9 +243,9 @@ class Admin::RacersController < Admin::RecordEditor
   
   def destroy_number
     id = params[:id]
-    number = RaceNumber.find(id)
+    RaceNumber.destroy(id)
     render :update do |page|
-      page.visual_effect(:puff, "number_#{number.id}_row", :duration => 2)
+      page.visual_effect(:puff, "number_#{id}_row", :duration => 2)
     end
   end
 end
