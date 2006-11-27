@@ -15,18 +15,12 @@ namespace :racing_on_rails do
   end
 
   desc "Package, deploy new app from scratch. Test."
-  task :dist => [:dump_schema, :repackage, :drop_development_databases, :create_app, :acceptence] do
+  task :dist => [:dump_schema, :repackage, :create_app, :acceptence] do
   end
 
   desc 'Dump development schema'
   task :dump_schema do
-    `mysqldump -u root --no-data racing_on_rails_development > #{RAILS_ROOT}/db/schema.sql`
-  end
-  
-  desc 'Drop development and test databases'
-  task :drop_development_databases do
-    `mysql -u root -e 'drop database racing_on_rails_development'`
-    `mysql -u root -e 'drop database racing_on_rails_test'`
+    `mysqldump -u root --no-data racing_on_rails_development > /db/schema.sql`
   end
 
   # From production
@@ -48,38 +42,47 @@ namespace :racing_on_rails do
   desc "User acceptence test for end users and developers"
   task :acceptence => [:create_app] do
     puts('acceptence_user')
-    run_acceptence_user(integration_build_root)
+    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.2'))
     puts('customize')
     customize
     puts('acceptence_developer')
-    run_acceptence_developer(integration_build_root)
+    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.2'))
   end
 
   task :create_app do
-    app_path = File.expand_path(integration_build_root)
+    app_path = File.expand_path('~/racing_on_rails-0.0.2')
     rm_rf app_path
   
-    puts(`tar zxf pkg/racing_on_rails-0.0.3.tar.gz`)
-    mv 'racing_on_rails-0.0.3', integration_build_root
-    `mysql -u root < db/create_databases.sql`
-    `mysql -u root racing_on_rails_development < db/schema.sql`
+    puts(`tar zxf pkg/racing_on_rails-0.0.2.tar.gz -C ~`)
+    `mysql -u root racing_on_rails_development < /db/schema.sql`
   end
 
-  desc 'Add a local app with custom code'
+  desc 'Customize new app'
   task :customize do
     # Config
-    customize("config/environment.rb", integration_build_root)
+    customize("config/environment.rb")
 
     # Views
-    customize("app/views/home/index.rhtml", integration_build_root)
-    customize("app/views/schedule/index.rhtml", integration_build_root)
+    customize("app/views/home/index.rhtml")
+    customize("app/views/schedule/index.rhtml")
 
     # Extend Helpers, Controller, Model, Routes, Lib
-    customize("app/helpers/schedule_helper.rb", integration_build_root)
-    customize("app/controllers/home_controller.rb", integration_build_root)
-    customize("app/models/single_day_event.rb", integration_build_root)
+    customize("app/helpers/schedule_helper.rb")
+    customize("app/controllers/home_controller.rb")
+    customize("app/models/single_day_event.rb")
     # TODO Add custom lib class
 
+    # Create whole slice (view, controller, model, helper, lib) for 'shops'
+
+    # Override instance and class methods of AR
+    # And in superclasses, then reference in subclass
+
+    path = File.expand_path('~/racing_on_rails-0.0.2')
+    puts(`#{path}/script/generate model BikeShop`)
+    puts(`#{path}/script/generate controller BikeShops list`)
+    customize('script/create_bike_shops_table.rb')
+    puts(`ruby #{path}/script/create_bike_shops_table.rb`)
+    customize("app/views/bike_shops/list.rhtml")
   end
 
   task :acceptence_developer do
@@ -102,6 +105,9 @@ namespace :racing_on_rails do
       assert_match('until the 2010 Cherry Pie Road Race!!!', response, "Cherry Pie coutdown \n#{response}")
       assert_match('Custom Finder Event', response, "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
       assert_match('<i>Custom Finder Event</i>', response, "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
+
+      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
+      assert_match('Sellwood Cycle Repair', response, "Sellwood on bike shops list page \n#{response}")
     end
   end
 
@@ -126,10 +132,10 @@ namespace :racing_on_rails do
     end
   end
 
-  def customize(fixture_path, integration_build_root)
-    mkpath(File.dirname(File.expand_path("#{integration_build_root}/#{fixture_path}")))
-    cp(File.expand_path("test/fixtures/#{fixture_path}"),
-       File.expand_path("#{integration_build_root}/#{fixture_path}"))
+  def customize(fixture_path)
+    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}")))
+    cp(File.expand_path("/test/fixtures/#{fixture_path}"),
+       File.expand_path("~/racing_on_rails-0.0.2/#{fixture_path}"))
   end
 
   def web_test
@@ -158,7 +164,7 @@ namespace :racing_on_rails do
     end
   end
   
-  Rake::PackageTask.new("racing_on_rails", "0.0.3") do |p|
+  Rake::PackageTask.new("racing_on_rails", "0.0.2") do |p|
     p.need_tar_gz = true
     p.need_zip = true
     files = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f| 

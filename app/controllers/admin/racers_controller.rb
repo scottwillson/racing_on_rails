@@ -85,8 +85,10 @@ class Admin::RacersController < Admin::RecordEditor
         @racer = Racer.create(params[:racer])
       else
         @racer = Racer.update(params[:id], params[:racer])
-        for id in params[:number].keys
-          RaceNumber.update(id, params[:number][id])
+        if params[:number]
+          for id in params[:number].keys
+            RaceNumber.update(id, params[:number][id])
+          end
         end
       end
       if params[:number_value]
