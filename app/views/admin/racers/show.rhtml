@@ -31,18 +31,31 @@
 			<td><%= text_field 'racer', 'team_name' %></td>
 		</tr>
 		<tr>
-			<td class="field_label">Joined:</td>
-			<td><%= date_select 'racer', 'member_on', 
-					:order => [:month, :day, :year], 
+			<td class="field_label">Membership:</td>
+			<td><%= date_select 'racer', 'member_from', 
+					:discard_month => true, :discard_day => true,
 					:start_year => 1999, :end_year => Date.today.year, 
 					:include_blank => true %>
+				to
+				<%= date_select 'racer', 'member_to', 
+						:discard_month => true, :discard_day => true,
+						:end_year => Date.today.year + 1, 
+						:include_blank => true %>
+				
+				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? %>
+				<br>
+				<%- if @racer.member? -%>
+					Current member
+				<%- else -%>
+					Not a member
+				<%- end -%>
 			</td>
 			<td class="field_label">Notes:</td>
 			<td colspan="3" rowspan="2"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
 		</tr>
 		<tr>
 			<td></td>
-			<td class="field_label" id="left"><%= check_box 'racer', 'member' %> Current Member</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td class="field_label">Email:</td>

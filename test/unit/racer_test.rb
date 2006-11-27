@@ -52,7 +52,7 @@ class RacerTest < Test::Unit::TestCase
       :license => "125162", 
       :mtb_category => 'Expert', 
       :notes => 'Won Giro', 
-      :member_on => '2001-07-19', 
+      :member_from => '2001-07-19', 
       :road_number => "300", 
       :occupation => 'Vinter', 
       :road_category => '1', 
@@ -70,7 +70,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Novice", racer.dh_category, "dh_category")
     assert_equal("(315) 221-4774", racer.home_phone, "home_phone")
     assert_equal("Expert", racer.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", racer.member_on, "member_on")
+    assert_equal_dates("2001-07-19", racer.member_from, "member_from")
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
@@ -102,7 +102,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Novice", racer.dh_category, "dh_category")
     assert_equal("(315) 221-4774", racer.home_phone, "home_phone")
     assert_equal("Expert", racer.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", racer.member_on, "member_on")
+    assert_equal_dates("2001-07-19", racer.member_from, "member_from")
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
@@ -184,17 +184,89 @@ class RacerTest < Test::Unit::TestCase
   
   def test_member
     racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
-    assert_equal(true, racer.member, 'member')
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.today, racer.member_from, 'Member from')
+    year = Date.today.year
+    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
+    
     racer.member = false
-    assert_equal(false, racer.member, 'member')
+    assert_equal(false, racer.member?, 'member')
+    assert_nil(racer.member_from, 'Member from')
+    assert_nil(racer.member_to, 'Member to')
     racer.save!
     racer.reload
-    assert_equal(false, racer.member, 'member')
+    assert_equal(false, racer.member?, 'member')
+    assert_nil(racer.member_from, 'Member on')
+    assert_nil(racer.member_to, 'Member to')
 
     racer.member = true
     racer.save!
     racer.reload
-    assert_equal(true, racer.member, 'member')
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.today, racer.member_from, 'Member on')
+    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
+    
+    # From nil, to nil
+    racer.member_from = nil
+    racer.member_to = nil
+    assert_equal(false, racer.member?, 'member?')
+    racer.member = true
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.today, racer.member_from, 'Member from')
+    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
+    
+    racer.member_from = nil
+    racer.member_to = nil
+    assert_equal(false, racer.member?, 'member?')
+    racer.member = false
+    racer.member_from = nil
+    racer.member_to = nil
+    assert_equal(false, racer.member?, 'member?')
+    
+    # From, to in past
+    racer.member_from = Date.new(2001, 1, 1)
+    racer.member_to = Date.new(2001, 12, 31)
+    assert_equal(false, racer.member?, 'member?')
+    racer.member = true
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.new(2001, 1, 1), racer.member_from, 'Member from')
+    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
+    
+    racer.member_from = Date.new(2001, 1, 1)
+    racer.member_to = Date.new(2001, 12, 31)
+    assert_equal(false, racer.member?, 'member?')
+    racer.member = false
+    assert_equal(Date.new(2001, 1, 1), racer.member_from, 'Member from')
+    racer.member_to = Date.new(2001, 12, 31)
+    assert_equal(false, racer.member?, 'member?')
+    
+    # From in past, to in future
+    racer.member_from = Date.new(2001, 1, 1)
+    racer.member_to = Date.new(3000, 12, 31)
+    assert_equal(true, racer.member?, 'member?')
+    racer.member = true
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.new(2001, 1, 1), racer.member_from, 'Member from')
+    assert_equal(Date.new(3000, 12, 31), racer.member_to, 'Member to')
+    
+    racer.member = false
+    assert_equal(Date.new(2001, 1, 1), racer.member_from, 'Member from')
+    assert_equal(Date.new(year - 1, 12, 31), racer.member_to, 'Member to')
+    assert_equal(false, racer.member?, 'member?')
+
+    # From, to in future
+    racer.member_from = Date.new(2500, 1, 1)
+    racer.member_to = Date.new(3000, 12, 31)
+    assert_equal(false, racer.member?, 'member?')
+    racer.member = true
+    assert_equal(true, racer.member?, 'member')
+    assert_equal_dates(Date.today, racer.member_from, 'Member from')
+    assert_equal_dates('3000-12-31', racer.member_to, 'Member to')
+    
+    racer.member = false
+    assert_nil(racer.member_from, 'Member on')
+    assert_nil(racer.member_to, 'Member to')
+    assert_equal(false, racer.member?, 'member?')
   end
   
   def test_team_name
@@ -323,7 +395,7 @@ class RacerTest < Test::Unit::TestCase
   def test_update
     Racer.update(
     racers(:alice).id,
-    "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_on(1i)"=>"2005", "dh_category"=>"", "member_on(2i)"=>"12", "member_on(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+    "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
     )
     assert_equal('917', racers(:alice).dh_number, 'downhill_number')
     assert_equal('112', racers(:alice).ccx_number, 'ccx_number')

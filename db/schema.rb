@@ -185,7 +185,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "gender", :string, :limit => 2
     t.column "home_phone", :string
     t.column "mtb_category", :string
-    t.column "member_on", :date
+    t.column "member_from", :date
     t.column "occupation", :string
     t.column "road_category", :string
     t.column "street", :string

@@ -52,7 +52,7 @@ class OregonCup < Competition
         or_cup_result = nil
         for scoring_result in scoring_results
           racer = scoring_result.racer
-          if racer and racer.member
+          if racer and racer.member?
             if racer != previous_racer
               or_cup_result = race.results.create(:racer => racer)
               previous_racer = racer

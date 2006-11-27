@@ -7,6 +7,7 @@ class Racer < ActiveRecord::Base
   include Dirty
 
   before_validation :find_associated_records
+  validate :membership_dates
 
   belongs_to :team
   has_many :aliases
@@ -43,11 +44,11 @@ class Racer < ActiveRecord::Base
   end
   
   def attributes=(attributes)
-    if self.member.nil?
-      self.member = true
-    end
-    
     unless attributes.nil?
+      unless attributes[:member_from]
+        attributes[:member_from] = Date.today
+        attributes[:member_to] = Date.new(Date.today.year, 12, 31)
+      end
       if attributes[:team] and attributes[:team].is_a?(Hash)
         attributes[:team] = Team.new(attributes[:team])
       end 
@@ -201,6 +202,40 @@ class Racer < ActiveRecord::Base
   
   def xc_number=(value)
     add_number(value, Discipline[:mountain_bike])
+  end
+  
+  # Is Racer a current member of the bike racing association?
+  def member?
+    !self.member_to.nil? && (self.member_from <= Date.today && self.member_to >= Date.today)
+  end
+  
+  def member
+    member?
+  end
+  
+  # Is Racer a current member of the bike racing association?
+  def member=(value)
+    if value and !member?
+      self.member_from = Date.today if self.member_from.nil? or self.member_from >= Date.today
+      self.member_to = Date.new(Date.today.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(Date.today.year, 12, 31))
+    elsif !value and member?
+      if self.member_from.year == Date.today.year
+        self.member_from = nil
+        self.member_to = nil
+      else
+        self.member_to = Date.new(Date.today.year - 1, 12, 31)
+      end
+    end
+  end
+  
+  # Validates member_from and member_to
+  def membership_dates
+    if member_to and member_from.nil?
+      errors.add('member_from', 'cannot be nil if member_to is not nil')
+    end
+    if member_from and member_to and member_from > member_to
+      errors.add('member_to', "cannot be greate the member_from #{member_from}")
+    end
   end
   
   # All non-Competition results

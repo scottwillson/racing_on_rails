@@ -3,23 +3,33 @@ tonkin:
   first_name: Erik
   last_name: Tonkin
   team_id: 1
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31
 matson:
   id: 2
   first_name: Mark
   last_name: Matson
   team_id: 1
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31
 weaver:
   id: 3
   first_name: Ryan
   last_name: Weaver
   team_id: 2
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31
 mollie:
   id: 4
   first_name: Mollie
   last_name: Cameron
   team_id: 3
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31
 alice:
   id: 5
   first_name: Alice
   last_name: Pennington
   team_id: 2
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31

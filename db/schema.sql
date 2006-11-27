@@ -290,7 +290,7 @@ CREATE TABLE `racers` (
   `gender` char(2) default NULL,
   `home_phone` varchar(255) default NULL,
   `mtb_category` varchar(255) default NULL,
-  `member_on` date default NULL,
+  `member_from` date default NULL,
   `occupation` varchar(255) default NULL,
   `road_category` varchar(255) default NULL,
   `street` varchar(255) default NULL,

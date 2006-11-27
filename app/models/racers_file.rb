@@ -37,7 +37,7 @@ class RacersFile
                 value = trim_to_nil(cell)
                 value = value.chomp unless value.nil?
                 case attribute
-                when 'obra_member_on'
+                when 'obra_member_from'
                   value = Date.strptime(value, '%m/%d/%Y') if value
                 when 'date_of_birth'
                   value = Date.strptime("1/1/19#{value}", '%m/%d/%Y') if value
