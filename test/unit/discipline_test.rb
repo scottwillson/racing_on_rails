@@ -32,4 +32,17 @@ class DisciplineTest < Test::Unit::TestCase
     assert_equal(disciplines(:cyclocross), Discipline.find_via_alias("cyclocross"), "cyclocross by alias")
     assert_equal(disciplines(:cyclocross), Discipline.find_via_alias("cx"), "cyclocross by alias")
   end
+  
+  def test_find_for_numbers
+    disciplines_for_numbers = Discipline.find_for_numbers
+    assert(disciplines_for_numbers.size > 2, 'Disciplines for numbers')
+    all_disciplines = Discipline.find(:all)
+    assert(all_disciplines.size > disciplines_for_numbers.size, 'Should only use a sub-set of Disciplines for numbers')
+  end
+  
+  def test_numbers
+    assert_equal(false, Discipline[:circuit_race].numbers, 'Circuit Race not used for numbers')
+    discipline = Discipline.create(:name => 'Unicycle', :numbers => true)
+    assert_equal(true, discipline.numbers, 'Unicycle used for numbers')
+  end
 end

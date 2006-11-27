@@ -19,7 +19,7 @@ module ActionView
     private
       def full_template_path(template_path, extension)
         # Check to see if the partial exists in our 'sites' folder first
-        site_specific_path = File.join('local', 'app', 'views', "#{template_path}.#{extension}")
+        site_specific_path = File.join(RAILS_ROOT, 'local', 'app', 'views', "#{template_path}.#{extension}")
         if File.exist?(site_specific_path)
           site_specific_path
         else
@@ -103,13 +103,78 @@ module ActionController
   end
 end
 
+module ActionController #:nodoc:
+  module Helpers #:nodoc:
+    module ClassMethods
+      def helper(*args, &block)
+        args.flatten.each do |arg|
+          case arg
+            when Module
+              add_template_helper(arg)
+            when String, Symbol
+              file_name  = arg.to_s.underscore + '_helper'
+              class_name = file_name.camelize
+                
+              begin
+                require_dependency(file_name)
+              rescue LoadError => load_error
+                requiree = / -- (.*?)(\.rb)?$/.match(load_error).to_a[1]
+                msg = (requiree == file_name) ? "Missing helper file helpers/#{file_name}.rb" : "Can't load file: #{requiree}"
+                raise LoadError.new(msg).copy_blame!(load_error)
+              end
+
+              add_template_helper(class_name.constantize)
+            else
+              raise ArgumentError, 'helper expects String, Symbol, or Module argument'
+          end
+          super
+        end
+
+        # Evaluate block in template class if given.
+        master_helper_module.module_eval(&block) if block_given?
+      end
+    end
+  end
+end
 # Load any site-specific models
 # TODO: Make site-specific models re-open classes rather than
 # this temporary either/or hack
 $:.concat(Dir["local/app/models/[_a-z]*"])
 
-# Load custom local helpers, too
-ActionView::Base.load_helpers(RAILS_ROOT + "/local/app/helpers/") if File.exist?(RAILS_ROOT + "/local/app/helpers/")
-
 # Local config customization
 load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
+ActionController::Routing::Routes.reload
+
+module ActionController #:nodoc:
+  module Helpers #:nodoc:
+    module ClassMethods
+      def helper(*args, &block)
+        args.flatten.each do |arg|
+          case arg
+            when Module
+              load("#{RAILS_ROOT}/local/app/helpers/#{arg.to_s.underscore}.rb") if File.exist?("#{RAILS_ROOT}/local/app/helpers/#{arg.to_s.underscore}.rb")
+              master_helper_module.send(:include, arg)
+            when String, Symbol
+              file_name  = arg.to_s.underscore + '_helper'
+              class_name = file_name.camelize
+                
+              begin
+                require_dependency(file_name)
+              rescue LoadError => load_error
+                requiree = / -- (.*?)(\.rb)?$/.match(load_error).to_a[1]
+                msg = (requiree == file_name) ? "Missing helper file helpers/#{file_name}.rb" : "Can't load file: #{requiree}"
+                raise LoadError.new(msg).copy_blame!(load_error)
+              end
+
+              add_template_helper(class_name.constantize)
+            else
+              raise ArgumentError, 'helper expects String, Symbol, or Module argument'
+          end
+        end
+
+        # Evaluate block in template class if given.
+        master_helper_module.module_eval(&block) if block_given?
+      end
+    end
+  end
+end

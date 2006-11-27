@@ -17,7 +17,11 @@ class RaceNumberTest < Test::Unit::TestCase
   def test_create
     alice = racers(:alice)
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
-    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    race_number = RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    assert_equal(alice, race_number.racer, 'New number racer')
+    assert_equal(2001, race_number.year, 'New number year')
+    assert_equal(elkhorn, race_number.number_issuer, 'New number_issuer racer')
+    assert_equal(disciplines(:road), race_number.discipline, 'New number discipline')
     
     # One field different
     RaceNumber.create!(:racer => alice, :value => 'A104', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))

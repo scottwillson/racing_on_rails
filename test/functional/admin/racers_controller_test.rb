@@ -11,9 +11,11 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @request.host = "localhost"
+    @request.session[:user] = users(:candi)
   end
 
   def test_not_logged_in_index
+    @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
     assert_redirect_url "http://localhost/admin/account/login"
@@ -21,6 +23,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_not_logged_in_edit
+    @request.session[:user] = nil
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)
@@ -29,7 +32,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/racers", :action => "index"}
     assert_routing("/admin/racers", opts)
     
@@ -456,6 +458,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_template("/admin/racers/show")
     assert_not_nil(assigns["racer"], "Should assign racer as 'racer'")
+    assert_not_nil(assigns["race_numbers"], "Should assign racer's number for current year as 'race_numbers'")
   end
 
   def test_show
@@ -484,21 +487,84 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
       assert(assigns['racer'].errors.empty?, assigns['racer'].errors.full_messages)
     end
     
+    assert(flash.empty?, "Flash should be empty, but was: #{flash}")
     assert_response(:redirect)
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
     assert_redirected_to(:id => knowlsons.first.id)
-    assert(flash.empty?, 'flash empty?')
+  end
+
+  def test_create_with_road_number
+    opts = {:controller => "admin/racers", :action => "update"}
+    assert_routing("/admin/racers/update", opts)
+
+    assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
+    @request.session[:user] = users(:candi)
+    
+    post(:update, {
+      "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
+      "number_issuer_id"=>["1", "1"], "number_value"=>["8977", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2007',
+      "commit"=>"Save"})
+    
+    if assigns['racer']
+      assert(assigns['racer'].errors.empty?, assigns['racer'].errors.full_messages)
+    end
+    
+    assert(flash.empty?, "flash empty? #{flash}")
+    knowlsons = Racer.find_all_by_name('Jon Knowlson')
+    assert(!knowlsons.empty?, 'Knowlson should be created')
+    assert_response(:redirect)
+    assert_redirected_to(:id => knowlsons.first.id)
+    race_numbers = knowlsons.first.race_numbers
+    assert_equal(2, race_numbers.size, 'Knowlson race numbers')
+    
+    race_number = RaceNumber.find(:first, :conditions => ['discipline_id=? and year=? and racer_id=?', Discipline[:road].id, 2007, knowlsons.first.id])
+    assert_not_nil(race_number, 'Road number')
+    assert_equal(2007, race_number.year, 'Road number year')
+    assert_equal('8977', race_number.value, 'Road number value')
+    assert_equal(Discipline[:road], race_number.discipline, 'Road number discipline')
+    assert_equal(number_issuers(:association), race_number.number_issuer, 'Road number issuer')
+    
+    race_number = RaceNumber.find(:first, :conditions => ['discipline_id=? and year=? and racer_id=?', Discipline[:mountain_bike].id, 2007, knowlsons.first.id])
+    assert_not_nil(race_number, 'MTB number')
+    assert_equal(2007, race_number.year, 'MTB number year')
+    assert_equal('BBB9', race_number.value, 'MTB number value')
+    assert_equal(Discipline[:mountain_bike], race_number.discipline, 'MTB number discipline')
+    assert_equal(number_issuers(:association), race_number.number_issuer, 'MTB number issuer')
   end
 
   def test_update
-    @request.session[:user] = users(:candi)
     mollie = racers(:mollie)
-    post(:update, 
-{"commit"=>"Save", "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_on(1i)"=>"2005", "dh_category"=>"", "member_on(2i)"=>"12", "member_on(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, "id"=>mollie.to_param}
+    post(:update, {"commit"=>"Save", 
+                   "number_year" => Date.today.year.to_s,
+                   "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
+                   "number"=>{"5"=>{"value"=>"222"}},
+                   "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_on(1i)"=>"2005", "dh_category"=>"", "member_on(2i)"=>"12", "member_on(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
+                   "id"=>mollie.to_param}
     )
     assert_response(:redirect)
     assert(flash.empty?, 'flash empty?')
+    assert_equal('222', mollie.road_number(true), 'Road number should be updated')
+  end
+
+  def test_update_new_number
+    mollie = racers(:mollie)
+    post(:update, {"commit"=>"Save", 
+                   "number_year" => Date.today.year.to_s,
+                   "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
+                   "number"=>{"5"=>{"value"=>"202"}},
+                   "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", 
+                   "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_on(1i)"=>"2005", "dh_category"=>"", "member_on(2i)"=>"12", "member_on(3i)"=>"17", 
+                   "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "street"=>"31153 SW Willamette Hwy W", 
+                   "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", 
+                   "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
+                   "id"=>mollie.to_param}
+    )
+    assert_response(:redirect)
+    assert(flash.empty?, 'flash empty?')
+    mollie.reload
+    assert_equal('202', mollie.road_number, 'Road number should not be updated')
+    assert_equal('AZY', mollie.xc_number, 'MTB number should be updated')
   end
 
   def test_update_error
@@ -514,5 +580,24 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(mollie, assigns['racer'], 'Should assign Alice to racer')
     assert(!flash.empty?, 'flash not empty?')
+  end
+  
+  def test_number_year_changed
+    racer = racers(:mollie)
+    
+    opts = {:controller => "admin/racers", :action => "number_year_changed", :id => racer.to_param.to_s}
+    assert_routing("/admin/racers/number_year_changed/#{racer.to_param}", opts)
+
+    post(:number_year_changed, 
+         :id => racer.to_param.to_s,
+         :year => '2010'
+    )
+    assert_response(:success)
+    assert_template("/admin/racers/_numbers")
+    assert_not_nil(assigns["race_numbers"], "Should assign 'race_numbers'")
+    assert_not_nil(assigns["year"], "Should assign today's year as 'year'")
+    assert_equal('2010', assigns["year"], "Should assign selected year as 'year'")
+    assert_not_nil(assigns["years"], "Should assign range of years as 'years'")
+    assert(assigns["years"].size >= 2, "Should assign range of years as 'years', but was: #{assigns[:years]}")
   end
 end

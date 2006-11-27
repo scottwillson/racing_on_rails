@@ -2,6 +2,7 @@ cyclocross:
   id: 1
   name: Cyclocross
   bar: true
+  numbers: true
 criterium:
   id: 2
   name: Criterium
@@ -10,10 +11,12 @@ mountain_bike:
   id: 3
   name: Mountain Bike
   bar: true
+  numbers: true
 road:
   id: 4
   name: Road
   bar: true
+  numbers: true
 time_trial:
   id: 5
   name: Time Trial
@@ -42,3 +45,5 @@ downhill:
   id: 11
   name: Downhill
   bar: false
+  numbers: true
+  

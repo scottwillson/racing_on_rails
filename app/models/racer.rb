@@ -139,10 +139,8 @@ class Racer < ActiveRecord::Base
   end
   
   def add_number(value, discipline)
-    logger.debug("add_number(#{value}, #{discipline})")
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     if value.blank?
-      logger.debug('blank # -- delete')
       unless new_record?
         # Delete ALL numbers for ASSOCIATION and this discipline?
         # FIXME Delete number individually in UI
@@ -152,15 +150,12 @@ class Racer < ActiveRecord::Base
       end
     else
       if new_record?
-        logger.debug('new racer -- build number')
         race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
       else
-        logger.debug('existing racer')
         race_number = RaceNumber.find(
           :first,
           :conditions => ['value=? and racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
                            value, self.id, discipline.id, Date.today.year, association.id])
-        logger.debug("race_number: #{race_number}")
         unless race_number
           race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
         end

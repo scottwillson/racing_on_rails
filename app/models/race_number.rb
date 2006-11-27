@@ -2,7 +2,7 @@
 # which is usually a racing Association, but sometimes an Event. RaceNumbers are also restricted
 # by Discipline and year.
 #
-# RaceNumbers can have letters and numbers
+# +Value+ is the number on the physical number. RaceNumber values can have letters and numbers
 #
 # This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
 # and associations. RacerNumbers are also used to differentiate between Racers with the same name, and 
@@ -55,7 +55,7 @@ class RaceNumber < ActiveRecord::Base
   def after_initialize
     self.discipline = Discipline[:road] unless self.discipline
     self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer
-    self.year = Date.today.year unless self.year and self.year > 1800
+    self.year = Date.today.year unless (self.year and self.year > 1800)
   end
   
   def get_racer_id

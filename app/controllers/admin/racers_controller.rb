@@ -43,11 +43,17 @@ class Admin::RacersController < Admin::RecordEditor
   
   def new
     @racer = Racer.new
+    @year = Date.today.year
+    @race_numbers = []
+    @years = (2005..(@year + 1)).to_a.reverse
     render('/admin/racers/show')
   end
   
   def show
     @racer = Racer.find(params[:id])
+    @year = Date.today.year
+    @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
+    @years = (2005..(@year + 1)).to_a.reverse
   end
   
   # Inline edit
@@ -62,13 +68,38 @@ class Admin::RacersController < Admin::RecordEditor
     render(:partial => 'edit_team_name')
   end
   
+  # Create new Racer or update existing. 
+  # 
+  # Existing RaceNumbers are updated from a Hash:
+  # :number => {'race_number_id' => {:value => 'new_value'}}
+  #
+  # New numbers are created from arrays:
+  # :number_value => [...]
+  # :discipline_id => [...]
+  # :number_issuer_id => [...]
+  # :number_year => year (not array)
+  # New blank numbers are ignored
   def update
     begin
       if params[:id].blank?
-        @racer = Racer.new(params[:racer])
-        @racer.save
+        @racer = Racer.create(params[:racer])
       else
         @racer = Racer.update(params[:id], params[:racer])
+        for id in params[:number].keys
+          RaceNumber.update(id, params[:number][id])
+        end
+      end
+      if params[:number_value]
+        params[:number_value].each_with_index do |number_value, index|
+          unless number_value.blank?
+            @racer.race_numbers.create(
+              :discipline_id => params[:discipline_id][index], 
+              :number_issuer_id => params[:number_issuer_id][index], 
+              :year => params[:number_year],
+              :value => number_value
+            )
+          end
+        end
       end
       if @racer.errors.empty?
         return redirect_to(:action => :show, :id => @racer.to_param)
@@ -77,8 +108,12 @@ class Admin::RacersController < Admin::RecordEditor
       begin
         # try to redisplay racer
         @racer = Racer.find(params[:id]) if params[:id]
+        @years = (2005..(Date.today.year + 1)).to_a.reverse
+        @year = params[:year] || Date.today.year
+        @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
       ensure
-        RACING_ON_RAILS_DEFAULT_LOGGER.error(e)
+        stack_trace = e.backtrace.join("\n")
+        logger.error("#{e}\n#{stack_trace}")
         flash[:warn] = e
       end
     end
@@ -182,5 +217,35 @@ class Admin::RacersController < Admin::RecordEditor
     @merged_racer_name = racer_to_merge.name
     @existing_racer = Racer.find(@params[:target_id])
     @existing_racer.merge(racer_to_merge)
+  end
+  
+  def number_year_changed
+    @year = params[:year] || Date.today.year
+    if params[:id]
+      @racer = Racer.find(params[:id])
+      @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
+    else
+      @racer = Racer.new
+      @race_numbers = []
+    end
+    @years = (2005..(Date.today.year + 1)).to_a.reverse
+    render(:partial => '/admin/racers/numbers', :locals => {:year => @year.to_i, :years => @years, :racer => @racer, :race_numbers => @race_numbers})
+  end
+  
+  def new_number
+    render :update do |page|
+      page.insert_html(
+        :before, 'new_number_button_row', 
+        :partial => '/admin/racers/new_number', 
+        :locals => {:discipline_id => Discipline[:road].id})
+    end
+  end
+  
+  def destroy_number
+    id = params[:id]
+    number = RaceNumber.find(id)
+    render :update do |page|
+      page.visual_effect(:puff, "number_#{number.id}_row", :duration => 2)
+    end
   end
 end

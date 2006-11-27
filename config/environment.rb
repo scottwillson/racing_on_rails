@@ -56,7 +56,6 @@ end
 # Include your application configuration below
 
 require 'localize'
-ActionController::Routing::Routes.reload
 
 ActiveRecord::Base.colorize_logging = false
 

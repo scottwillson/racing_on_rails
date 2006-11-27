@@ -25,6 +25,11 @@ class Discipline < ActiveRecord::Base
   def Discipline.find_via_alias(name)
     Discipline[name]
   end
+  
+  # All Disciplines that are used for numbers. Configured in the database.
+  def Discipline.find_for_numbers
+    Discipline.find(:all, :conditions => 'numbers=true')
+  end
 
   def Discipline.load_aliases
     @@aliases = {}

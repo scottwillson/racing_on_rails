@@ -8,8 +8,12 @@ include Test::Unit::Assertions
 
 namespace :racing_on_rails do
   
-  integration_build_root = File.expand_path("#{RAILS_ROOT}/integration_build")
-  
+  desc 'Copy release package to web server' 
+  task :deploy_release do
+    puts(`scp pkg/racing_on_rails-0.0.3.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.zip`)
+    puts(`scp pkg/racing_on_rails-0.0.3.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.tar.gz`)
+  end
+
   desc "Package, deploy new app from scratch. Test."
   task :dist => [:dump_schema, :repackage, :drop_development_databases, :create_app, :acceptence] do
   end
