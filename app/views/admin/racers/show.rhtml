@@ -86,25 +86,7 @@
 		</tr>
 		<tr valign="top">
 			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="base" id="inline">
-					<caption>Numbers</caption>
-					<tr>
-						<td class="field_label">Cyclocross:</td>
-						<td><%= text_field 'racer', 'ccx_number', :size => 4 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Downhill:</td>
-						<td><%= text_field 'racer', 'dh_number', :size => 4 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Mountain Bike:</td>
-						<td><%= text_field 'racer', 'xc_number', :size => 4 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Road:</td>
-						<td><%= text_field 'racer', 'road_number', :size => 4 %></td>
-					</tr>
-				</table>
+				<%= render :partial => 'numbers', :locals => {:year => @year, :years => @years, :racer => @racer, :race_numbers => @race_numbers} %>
 			</td>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="0" class="base" id="inline">

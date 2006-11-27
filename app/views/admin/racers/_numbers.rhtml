@@ -1,0 +1,34 @@
+<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
+	<tr>
+		<th colspan="3">Numbers</th>
+		<th><select name='number_year' id='number_year'><%= options_for_select years, year %></select></th>
+	</tr>
+	<% for @number in race_numbers %>
+	<tr id="<%= "number_#{@number.id}_row" %>">
+		<td><%= @number.number_issuer.name %></td>
+		<td><%= @number.discipline.name %></td>
+		<td><%= text_field 'number[]', 'value', :size => 4 %></td>
+		<td><%= link_to_remote(
+				  image_tag('/images/buttons/remove_solo.gif'),
+   				  :url => { :action => "destroy_number", :id => @number.id},
+				  :complete => evaluate_remote_response
+		          )
+		 %></td>
+	</tr>
+	<% end %>
+	<% if @racer.new_record? %>
+		<%= render :partial => '/admin/racers/new_number', :locals => {:discipline_id => Discipline[:road].id} %>
+	<% end %>
+	<tr id="new_number_button_row">
+		<td colspan="3"></td>
+		<td>
+			<%= link_to_remote(image_tag('/images/buttons/add.gif', :border => 0, :height => 22, :width => 23), 
+	         :url => { :action => "new_number" }) %>
+		    <%= observe_field(
+					'number_year', 
+					:url => {:action => 'number_year_changed', :id => @racer.id}, :with => 'year',
+					:update => 'numbers'
+			) %>
+		</td>
+	</tr>
+</table>
