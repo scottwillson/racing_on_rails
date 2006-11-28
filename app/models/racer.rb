@@ -45,6 +45,10 @@ class Racer < ActiveRecord::Base
   
   def attributes=(attributes)
     unless attributes.nil?
+      if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
+        attributes["member_to(2i)"] = '12'
+        attributes["member_to(3i)"] = '31'
+      end
       unless attributes[:member_from]
         attributes[:member_from] = Date.today
         attributes[:member_to] = Date.new(Date.today.year, 12, 31)
@@ -206,7 +210,7 @@ class Racer < ActiveRecord::Base
   
   # Is Racer a current member of the bike racing association?
   def member?
-    !self.member_to.nil? && (self.member_from <= Date.today && self.member_to >= Date.today)
+    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= Date.today && self.member_to >= Date.today)
   end
   
   def member
@@ -233,8 +237,26 @@ class Racer < ActiveRecord::Base
     if member_to and member_from.nil?
       errors.add('member_from', 'cannot be nil if member_to is not nil')
     end
+    if member_from and member_to.nil?
+      errors.add('member_to', 'cannot be nil if member_from is not nil')
+    end
     if member_from and member_to and member_from > member_to
-      errors.add('member_to', "cannot be greate the member_from #{member_from}")
+      errors.add('member_to', "cannot be greater than member_from: #{member_from}")
+    end
+  end
+  
+  def renewed?
+    self.member_from > Date.today
+  end
+  
+  # Hack around in-place editing
+  def toggle!(attribute)
+    logger.debug("toggle! #{attribute} #{attribute == 'member'}")
+    if attribute == 'member'
+      self.member = !member?
+      save!
+    else
+      super
     end
   end
   

@@ -14,7 +14,8 @@ class RaceNumber < ActiveRecord::Base
     race_number.racer && !race_number.racer.new_record? 
   }
   validates_presence_of :value
-
+  validate :unique_number
+  
   before_save :get_racer_id
   before_save :validate_year
   
@@ -66,6 +67,28 @@ class RaceNumber < ActiveRecord::Base
   
   def validate_year
     self.year > 1800
+  end
+  
+  def unique_number
+    if self.racer && !self.racer.new_record?
+      if new_record?
+        existing_numbers = RaceNumber.find(
+          :all, 
+          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=?', 
+          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year]])
+      else
+        existing_numbers = RaceNumber.find(
+          :all, 
+          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id=?', 
+          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
+      end
+        
+      logger.debug("Found #{existing_numbers.size} existing numbers")
+      unless existing_numbers.empty?
+        errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+        return false
+      end
+    end
   end
   
   def to_s

@@ -30,9 +30,9 @@ class RaceNumberTest < Test::Unit::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
-    # dupes (OK now, were not before)
-    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
-    RaceNumber.create!(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    # dupes OK if different racer 
+    assert(!RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    assert(RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
@@ -48,12 +48,12 @@ class RaceNumberTest < Test::Unit::TestCase
     assert(race_number.valid?, 'No year')
     race_number.save!
     
-    race_number = RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :discipline => disciplines(:road))
-    assert(race_number.valid?, "no issuer")
+    race_number = RaceNumber.new(:racer => alice, :value => '9000', :year => 2001, :discipline => disciplines(:road))
+    assert(race_number.valid?, "no issuer: #{race_number.errors.full_messages}")
     race_number.save!
     
-    race_number = RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn)
-    assert(race_number.valid?, 'No discipline')
+    race_number = RaceNumber.new(:racer => alice, :value => '9103', :year => 2001, :number_issuer => elkhorn)
+    assert(race_number.valid?, "No discipline: #{race_number.errors.full_messages}")
     race_number.save!
   end
 end

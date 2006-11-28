@@ -144,10 +144,10 @@ class Result < ActiveRecord::Base
   def update_racer_number
     if self.racer and !self.number.blank?
       existing_number = self.racer.race_numbers.detect do |number|
-        number.discipline == event.discipline and number.number_issuer == event.number_issuer and number.year == event.date.year
+        (number.discipline.name == event.discipline) && (number.number_issuer == event.number_issuer) && (number.year == event.date.year)
       end
-      if existing_number.nil? or (existing_number.to_i > 10 and existing_number.to_i < 100)
-        event.number_issuer(true) unless event.number_issuer
+      if existing_number.nil? or (existing_number.value != number and existing_number.value.to_i > 10 and existing_number.value.to_i < 100)
+        event.number_issuer unless event.number_issuer
         self.racer.race_numbers.create!(
           :value => number, 
           :racer => self.racer,

@@ -110,6 +110,7 @@ class Admin::RacersController < Admin::RecordEditor
       begin
         # try to redisplay racer
         @racer = Racer.find(params[:id]) if params[:id]
+        @racer = Racer.new unless @racer
         @years = (2005..(Date.today.year + 1)).to_a.reverse
         @year = params[:year] || Date.today.year
         @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
@@ -119,7 +120,9 @@ class Admin::RacersController < Admin::RecordEditor
         flash[:warn] = e
       end
     end
-    @racer = Racer.new unless @racer
+    @years = (2005..(Date.today.year + 1)).to_a.reverse
+    @year = params[:year] || Date.today.year
+    @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     render('admin/racers/show')
   end
 
