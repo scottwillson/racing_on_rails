@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/unit/bar_test.rb</string>
+	<string>test/unit/race_number_test.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>local</string>
 			<key>regexFolderFilter</key>
@@ -33,8 +35,6 @@
 			<string>components</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -95,8 +95,6 @@
 			<string>script</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>test</string>
 			<key>regexFolderFilter</key>
@@ -125,130 +123,69 @@
 	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/models/bar.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>10</integer>
-				<key>line</key>
-				<integer>425</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>385</integer>
-		</dict>
-		<key>app/models/results_email.rb</key>
+		<key>app/models/race_number.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>87</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>46</integer>
 		</dict>
-		<key>app/views/admin/events/upcoming.rhtml</key>
+		<key>app/models/result.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>56</integer>
+				<integer>27</integer>
 				<key>line</key>
-				<integer>30</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>36</integer>
-			</dict>
-		</dict>
-		<key>local/app/views/admin/events/upcoming.rhtml</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>6</integer>
-				<key>line</key>
-				<integer>36</integer>
+				<integer>149</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>129</integer>
 		</dict>
-		<key>test/functional/admin/events_controller_test.rb</key>
+		<key>test/unit/race_number_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>870</integer>
+				<integer>34</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>847</integer>
+			<integer>12</integer>
 		</dict>
-		<key>test/unit/bar_test.rb</key>
+		<key>test/unit/results_file_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>170</integer>
+				<integer>284</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>147</integer>
-		</dict>
-		<key>test/unit/results_email_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>19</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>256</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>app/models/bar.rb</string>
-		<string>test/unit/bar_test.rb</string>
-		<string>test/unit/results_email_test.rb</string>
-		<string>app/models/results_email.rb</string>
-		<string>test/functional/admin/events_controller_test.rb</string>
-		<string>app/views/admin/events/upcoming.rhtml</string>
-		<string>local/app/views/admin/events/upcoming.rhtml</string>
+		<string>test/unit/race_number_test.rb</string>
+		<string>test/unit/results_file_test.rb</string>
+		<string>app/models/result.rb</string>
+		<string>app/models/race_number.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

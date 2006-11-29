@@ -10,9 +10,7 @@
 class RaceNumber < ActiveRecord::Base
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id
-  validates_presence_of :racer_id, :if => Proc.new {|race_number| 
-    race_number.racer && !race_number.racer.new_record? 
-  }
+  validates_presence_of :racer_id
   validates_presence_of :value
   validate :unique_number
   
@@ -70,24 +68,22 @@ class RaceNumber < ActiveRecord::Base
   end
   
   def unique_number
-    if self.racer && !self.racer.new_record?
-      if new_record?
-        existing_numbers = RaceNumber.find(
-          :all, 
-          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=?', 
-          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year]])
-      else
-        existing_numbers = RaceNumber.find(
-          :all, 
-          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id=?', 
-          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
-      end
-        
-      logger.debug("Found #{existing_numbers.size} existing numbers")
-      unless existing_numbers.empty?
-        errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
-        return false
-      end
+    if new_record?
+      existing_numbers = RaceNumber.find(
+        :all, 
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id=?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self[:racer_id]])
+    else
+      existing_numbers = RaceNumber.find(
+        :all, 
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and racer_id=?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, self[:racer_id]])
+    end
+      
+    logger.debug("Found #{existing_numbers.size} existing numbers")
+    unless existing_numbers.empty?
+      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+      return false
     end
   end
   

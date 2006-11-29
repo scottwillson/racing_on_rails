@@ -232,6 +232,20 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def member_from=(date)
+    if date.nil?
+      self.member_to = nil 
+    elsif self.member_to.nil?
+      if date.is_a?(Date)
+        self.member_to = Date.new(date.year, 12, 31)
+      else
+        date_as_date = Date.parse(date)
+        self.member_to = Date.new(date_as_date.year, 12, 31)
+      end
+    end
+    self[:member_from] = date
+  end
+  
   # Validates member_from and member_to
   def membership_dates
     if member_to and member_from.nil?
@@ -246,7 +260,7 @@ class Racer < ActiveRecord::Base
   end
   
   def renewed?
-    self.member_from > Date.today
+    self.member_from && (self.member_from > Date.today)
   end
   
   # Hack around in-place editing

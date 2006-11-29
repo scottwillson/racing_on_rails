@@ -90,7 +90,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("100", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
     
-    for number in racer.race_numbers
+    for number in racer.race_numbers(true)
       assert(number.valid?, "#{number}: #{number.errors.full_messages}")
     end
     racer.save!
