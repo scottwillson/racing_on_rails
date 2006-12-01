@@ -4,6 +4,7 @@ set :application, "obra"
 set :repository, "svn+ssh://butlerpress.com/var/repos/racing_on_rails/trunk"
 
 role :app, "app.obra.org"
+role :db, 'app.obra.org'
 
 set :deploy_to, "/srv/www/rails/#{application}"
 
@@ -15,12 +16,11 @@ task :deploy do
     set_permissions
   end
 
-  restart
-end
-
-desc 'Pull in local OBRA code'
-task :after_update_code do
+  # Pull in local OBRA code
   run "svn co svn+ssh://butlerpress.com/var/repos/obra /srv/www/rails/#{application}/current/local"
+
+  restart
+  migrate
 end
 
 desc "Set file permissions for Rails app"
