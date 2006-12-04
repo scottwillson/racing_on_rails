@@ -125,6 +125,28 @@ class Admin::RacersController < Admin::RecordEditor
     @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     render('admin/racers/show')
   end
+  
+  def preview_upload
+    uploaded_file = @params[:racers_file]
+    path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
+    File.open(path, File::CREAT|File::WRONLY) do |f|
+      f.print(uploaded_file.read)
+    end
+
+    temp_file = File.new(path)
+    @grid_file = GridFile.new(
+      temp_file,
+      :delimiter => ','
+      :quoted => true
+      :column_map => {
+        'Birth date' => 'date_of_birth',
+        'Address1_Contact address' => 'street',
+        'Address2_Contact address' => 'street',
+        'Road Category -' => 'road_category',
+        'track_category_' => 'track_category'
+      }
+    )
+  end
 
   # Inline update. Merge with existing Racer if names match
   def update_name

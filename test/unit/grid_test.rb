@@ -9,7 +9,14 @@ class GridTest < Test::Unit::TestCase
   
   def test_new_empty_text
     text = ""
-    grid = Grid.new(text, [])
+    grid = Grid.new(text)
+    assert_equal(0, grid.column_count, "column count")
+    assert_equal(0, grid.row_count, "row count")
+    assert_equal(0, grid.column_size(0), "column 0 size")
+    assert_equal(0, grid.column_size(90), "column 90 size")
+    assert_equal("", grid.to_s, "to_s")
+
+    grid = Grid.new(text, :header_row => true)
     assert_equal(0, grid.column_count, "column count")
     assert_equal(0, grid.row_count, "row count")
     assert_equal(0, grid.column_size(0), "column 0 size")
@@ -19,7 +26,7 @@ class GridTest < Test::Unit::TestCase
   
   def test_new_one_line_text
     text = "1\t001\tChris Horner\tSaunier\t9"
-    grid = Grid.new(text, [])
+    grid = Grid.new(text)
     assert_equal(5, grid.column_count, "column count")
     assert_equal(1, grid.row_count, "row count")
     assert_equal(1, grid.column_size(0), "column 0 size")
@@ -38,7 +45,7 @@ class GridTest < Test::Unit::TestCase
       3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
       dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
-    grid = Grid.new(text, [])
+    grid = Grid.new(text)
     assert_equal(9, grid.column_count, "column count")
     assert_equal(5, grid.row_count, "row count")
     assert_equal(6, grid.column_size(1), "column 1 size")
@@ -64,7 +71,7 @@ END
       "3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t\n",
       "dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1\n"
     ]
-    grid = Grid.new(text, [])
+    grid = Grid.new(text)
     assert_equal(9, grid.column_count, "column count")
     assert_equal(5, grid.row_count, "row count")
     assert_equal(6, grid.column_size(1), "column 1 size")
@@ -82,7 +89,7 @@ END
       3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
       dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
-    grid = Grid.new(text, columns)
+    grid = Grid.new(text, :columns => columns)
     assert_equal("CCCP", grid[1][4], "grid[1][4]")
     grid[1][4] = "Gentle Lovers"
     assert_equal("Gentle Lovers", grid[1][4], "grid[1][4]")
@@ -98,12 +105,13 @@ END
       3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
       dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
-    grid = Grid.new(text, columns)
+    grid = Grid.new(text, :columns => columns)
+    assert_equal(9, grid.column_count, "column count #{grid.columns.join(', ')}")
+    assert_equal(:last_name, grid.columns[2].field, "third column field")
+    assert_equal("Last Name", grid.columns[2].name, "third column name")
     assert_equal("Huntair", grid[2][4], "grid[2][4]")
     assert_equal("Huntair", grid[2]["Team"], "grid[2][""Team""]")
     assert_equal("", grid[2]["Weight"], "grid[2][""Weight""]")
-    assert_equal(:"Last Name", grid.columns[2].field, "third column field")
-    assert_equal("Last Name", grid.columns[2].name, "third column name")
   end
 
   def test_empty_to_s_text
@@ -113,7 +121,7 @@ END
       Column.new('number', 'Number', 5, true),
       Column.new('last_name', 'Last Name', 15, true)
     ]
-    grid = Grid.new(text, columns)
+    grid = Grid.new(text, :columns => columns)
     assert_equal(3, grid.column_count, "column count")
     assert_equal(0, grid.row_count, "row count")
     assert_equal(5, grid.column_size(1), "column 1 size")
@@ -140,7 +148,7 @@ END
         Column.new('points_bonus_penalty', '', 3, true, Column::RIGHT),
         Column.new('points_total', '', 3, true, Column::RIGHT)
       ]
-      grid = Grid.new(text, columns)
+      grid = Grid.new(text, :columns => columns)
       assert_equal(9, grid.column_count, "column count")
       assert_equal(4, grid.row_count, "row count")
       assert_equal(6, grid.column_size(1), "column 1 size")
@@ -169,7 +177,7 @@ END
         \t\t\t  \t\t\t\t\t
         \t\t\t\t\t\t\t\t
 END
-      grid = Grid.new(text, columns)
+grid = Grid.new(text, :columns => columns)
       assert_equal(7, grid.row_count, "row count")
       grid.delete_blank_rows
       assert_equal(4, grid.row_count, "row count")

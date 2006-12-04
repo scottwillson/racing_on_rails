@@ -26,6 +26,18 @@ class Column
       end
     end
   end
+  
+  def field=(value)
+    if value.is_a?(Symbol)
+      @field = value
+    else
+      begin
+        @field = value.to_sym
+      rescue ArgumentError => error
+        raise ArgumentError.new("#{error}: Can't create column with name '#{value}'")
+      end
+    end
+  end
 
   def size=(value)
     unless fixed_size?
@@ -35,6 +47,10 @@ class Column
 
   def fixed_size?
     fixed_size
+  end
+  
+  def valid?
+    !@field.nil?
   end
 
   def to_s

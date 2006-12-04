@@ -47,8 +47,7 @@ class GridFile < Grid
   # header_row: start_at_row is header
   # FIXME Only honors start_at_row, header_row for Excel
   # FIXME Assumes all non-.txt files are Excel
-  def initialize(source = nil, columns = nil)
-    raise(ArgumentError, "'source' cannot be nil") if source.nil?
+  def initialize(source)
   
     case source
     when File, Tempfile
@@ -59,22 +58,16 @@ class GridFile < Grid
          else
            lines = source.readlines
          end
-        if columns.nil?
-          columns = lines.delete_at(0)
-        end
-        super(lines, columns)
+        super(lines)
       ensure
         source.close unless source == nil || source.closed?
       end
 
     when String
-      super(source, columns)
+      super(source)
 
     when Array
-      if columns.nil?
-        columns = source.delete_at(0)
-      end
-      super(source, columns)
+      super(source)
 
     else
       raise(ArgumentError, "Expected String or File, but was #{source.class}")

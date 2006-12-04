@@ -211,6 +211,11 @@ table.base th.caption
 	margin-right: -2px;*/
 }
 
+table.base th.invalid
+{
+	color: red;
+}
+
 table.base thead tr
 {
 	background-image: url(/images/backgrounds/table_column_titles.jpg);
