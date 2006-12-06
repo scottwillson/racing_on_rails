@@ -137,7 +137,7 @@ class Admin::EventsController < ApplicationController
     temp_file = File.new(path)
     event_id = @params[:id]
     event = Event.find(event_id)
-    results_file = ResultsFile.new(temp_file, nil, event)
+    results_file = ResultsFile.new(temp_file, event)
     begin
       standings = results_file.import(event)
       flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"

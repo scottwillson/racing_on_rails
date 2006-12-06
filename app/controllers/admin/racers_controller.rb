@@ -136,8 +136,8 @@ class Admin::RacersController < Admin::RecordEditor
     temp_file = File.new(path)
     @grid_file = GridFile.new(
       temp_file,
-      :delimiter => ','
-      :quoted => true
+      :delimiter => ',',
+      :quoted => true,
       :column_map => {
         'Birth date' => 'date_of_birth',
         'Address1_Contact address' => 'street',

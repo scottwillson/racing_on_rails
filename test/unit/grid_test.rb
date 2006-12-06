@@ -4,7 +4,6 @@ class GridTest < Test::Unit::TestCase
 
   def test_new
     Grid.new
-    Grid.new(nil)
   end
   
   def test_new_empty_text

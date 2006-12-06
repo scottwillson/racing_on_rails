@@ -6,7 +6,7 @@ require "tempfile"
 class ResultsFileTest < Test::Unit::TestCase
 
   def test_has_results?
-    file = ResultsFile.new("text \t results")
+    file = ResultsFile.new("text \t results", SingleDayEvent.new)
     
     row_hash = {:place=>"Pro/1/2", :first_name=>"", :last_name=>"", :team_name=>"", :points=>"Hot Spots", :number=>""}
     assert(file.has_results?(row_hash), 'Should have result')
@@ -27,7 +27,7 @@ class ResultsFileTest < Test::Unit::TestCase
              ["2.0", "", "Masters Men 30-39", "", "Davidson", "Casey", "MAC", "", "", "", "0.0281944444444444"],
              ["3.0", "", "Masters Men 30-39", "", "brown", "kurt", "Unattached", "", "", "", "0.0283449074074074"],
     ]
-    file = ResultsFile.new(rows, ['place', 'membership', 'category', 'city', 'last_name', 'first_name'])
+    file = ResultsFile.new(rows, Event.new, :columns => ['place', 'membership', 'category', 'city', 'last_name', 'first_name'], :header_row => false)
     assert(file.new_race?(file.rows[0].to_hash, 0), 'New race')
     assert(!file.new_race?(file.rows[1].to_hash, 1), 'New race')
     assert(!file.new_race?(file.rows[2].to_hash, 2), 'New race')
@@ -36,19 +36,19 @@ class ResultsFileTest < Test::Unit::TestCase
   
   def test_new
     file = Tempfile.new("test_results.txt")
-    ResultsFile.new(file)
+    ResultsFile.new(file, SingleDayEvent.new)
 
-    ResultsFile.new("text \t results")
+    ResultsFile.new("text \t results", SingleDayEvent.new)
   end
   
   def test_import_excel
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"))
     event = SingleDayEvent.new(:discipline => 'Road')
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
     event.number_issuer = number_issuers(:association)
     event.save!
     standings = event.standings.build(:event => event)
     
-    remote_standings = results_file.import(event)
+    remote_standings = results_file.import
 
     expected_races = get_expected_races
     assert_equal(expected_races.size, remote_standings.races.size, "remote_standings races")
@@ -76,16 +76,17 @@ class ResultsFileTest < Test::Unit::TestCase
     bruce_1300 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
     
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"))
     event = SingleDayEvent.create(:discipline => 'Time Trial')
     event.number_issuer = association
     event.save!
-    
-    remote_standings = results_file.import(event)
+
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"), event)
+    remote_standings = results_file.import
+
     assert_equal(10, results_file.columns.size, 'Columns size')
     assert_equal('license', results_file.columns[0].name, 'Column 0 name')
     assert_equal(:license, results_file.columns[0].field, 'Column 0 field')
-    assert_equal('place', results_file.columns[2].name, 'Column 2 name')
+    assert_equal('Place', results_file.columns[2].name, 'Column 2 name')
     assert_equal(:place, results_file.columns[2].field, 'Column 2 field')
     assert_equal(2, Racer.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
     
@@ -179,11 +180,11 @@ class ResultsFileTest < Test::Unit::TestCase
     race.results << Result.new(:place => "4", :first_name => "Brady", :last_name => "Brady", :number =>"415", :team_name =>"Team Oregon/River City Bicycles", :points => "")
 		expected_races << race
 
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"))
     event = SingleDayEvent.new(:discipline => 'Road')
     standings = event.standings.build(:event => event)
-    
-    remote_standings = results_file.import(event)
+
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
+    remote_standings = results_file.import
 
     assert_equal(expected_races.size, remote_standings.races.size, "remote_standings races")
     expected_races.each_with_index do |expected_race, index|
@@ -203,15 +204,24 @@ class ResultsFileTest < Test::Unit::TestCase
   end
   
   def test_stage_race
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/stage_race.xls"))
     event = SingleDayEvent.new(:discipline => 'Road')
-    standings = results_file.import(event)
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/stage_race.xls"), event)
+    standings = results_file.import
 
     assert_equal(7, standings.races.size, "standings races")
     actual_race = standings.races.first
     assert_equal(81, actual_race.results.size, "Results")
     assert_equal(
-      ['place', 'number', 'first_name', 'last_name', 'team_name', 'state', 'time', 'time_bonus_penalty', 'time_total', 'time_gap_to_leader'], 
+      ["place",
+       "number",
+       "first_name",
+       "last_name",
+       "team_name",
+       "state",
+       "time",
+       "time_bonus_penalty",
+       "time_total",
+       "time_gap_to_leader"], 
       actual_race.result_columns, 
       "Results"
     )
@@ -264,8 +274,8 @@ class ResultsFileTest < Test::Unit::TestCase
   # File causes error -- just import to recreate
   def test_dh
     event = SingleDayEvent.create(:discipline => 'Downhill')
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/dh.xls"))
-    results_file.import(event)
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/dh.xls"), event)
+    results_file.import
   end
   
   def test_mtb
@@ -276,8 +286,8 @@ class ResultsFileTest < Test::Unit::TestCase
     Category.create(:name => 'Pro/Elite/Expert Women', :bar_category => pro_elite_expert_women)
     
     event = SingleDayEvent.create(:discipline => 'Mountain Bike')
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/mtb.xls"))
-    standings = results_file.import(event)
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/mtb.xls"), event)
+    standings = results_file.import
     assert_not_nil(standings.combined_standings, 'Should have combined standings')
     assert(standings.combined_standings(true).races(true).first.results(true).size > 0, "Combined standings should have results")
     assert(standings.combined_standings.races(true).last.results(true).size > 0, "Combined standings should have results")
@@ -286,18 +296,17 @@ class ResultsFileTest < Test::Unit::TestCase
   
   def test_ccx
     event = SingleDayEvent.create(:discipline => 'Cyclocross')
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/ccx score sheet.xls"), nil, event)
-    standings = results_file.import(event)
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/ccx score sheet.xls"), event)
+    standings = results_file.import
     assert_equal(10, standings.races.size, 'Races')
-    assert_columns([:number, :last_name, :first_name, :team, :city, :category, :laps, :place], results_file.columns)
     assert_columns([:number, :last_name, :first_name, :team, :city, :category, :laps, :place], results_file.columns)
   end
   
   def test_invalid_columns
     event = SingleDayEvent.create(:discipline => 'Downhill')
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/invalid_columns.xls"))
-    results_file.import(event)
-    assert_equal(['bogusColumnName'], results_file.invalid_columns, 'Invalid columns')
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/invalid_columns.xls"), event)
+    results_file.import
+    assert_equal(['Bogus Column Name'], results_file.invalid_columns, 'Invalid columns')
   end
   
   def expected_standings(standings)
@@ -484,10 +493,10 @@ class ResultsFileTest < Test::Unit::TestCase
              ["2.0", "", "Masters Men 30-39", "", "Davidson", "Casey", "MAC", "", "", "", "0.0281944444444444"],
              ["3.0", "", "Masters Men 30-39", "", "brown", "kurt", "Unattached", "", "", "", "0.0283449074074074"],
     ]
-    file = ResultsFile.new(rows, ['place', 'membership', 'category', 'city', 'last_name', 'first_name'])
     event = SingleDayEvent.create(:discipline => 'Road')
-    file.import(event)
-    assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool', event.standings.first.races.first.notes, 'Race notes')
+    file = ResultsFile.new(rows, event, :columns => ['place', 'membership', 'category', 'city', 'last_name', 'first_name'], :header_row => false)
+    file.import
+    assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool', event.standings(true).first.races.first.notes, 'Race notes')
   end
   
   def build_result(race, place, first_name = nil, last_name = nil, team_name = nil)

@@ -82,7 +82,7 @@
       end
       row
     end
-    results_grid = Grid.new(rows, @result_grid_columns)
+    results_grid = Grid.new(rows, :columns => @result_grid_columns)
     results_grid.truncate
     results_grid.calculate_padding
     

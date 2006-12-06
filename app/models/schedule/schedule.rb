@@ -56,11 +56,10 @@ module Schedule
     # Create GridFile from Excel
     def Schedule.read_file(filename)
       logger.debug("Read #{filename}")
-      file = GridFile.new(File.new(filename), 
-        ["", "", "", "date", "", "name", "city", 
-        "promoter_name", "promoter_phone", "promoter_email", "discipline", "notes"]
+      GridFile.new(
+        File.new(filename), 
+        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", "notes"]
       )
-      return file
     end
 
     # Read GridFile +file+, split city and state, read and create promoter

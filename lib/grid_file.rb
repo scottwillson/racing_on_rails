@@ -47,27 +47,26 @@ class GridFile < Grid
   # header_row: start_at_row is header
   # FIXME Only honors start_at_row, header_row for Excel
   # FIXME Assumes all non-.txt files are Excel
-  def initialize(source)
-  
+  def initialize(source, *options)  
     case source
     when File, Tempfile
       begin
         @file = source
         if excel?
           lines = GridFile.read_excel(@file)
-         else
-           lines = source.readlines
-         end
-        super(lines)
+        else
+          lines = source.readlines
+        end
+        super(lines, options)
       ensure
         source.close unless source == nil || source.closed?
       end
 
     when String
-      super(source)
+      super(source, options)
 
     when Array
-      super(source)
+      super(source, options)
 
     else
       raise(ArgumentError, "Expected String or File, but was #{source.class}")
@@ -77,10 +76,10 @@ class GridFile < Grid
   def save
     begin
       out = File.open(@file.path, File::WRONLY)
-      for row in @rows
+      for row in rows
         for index in 0..(column_count - 1)
           out.write(row[index])
-          out.write("\t") unless index == column_count - 1
+          out.write("\t") unless index == (column_count - 1)
         end
         out.write("\n")
       end

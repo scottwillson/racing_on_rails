@@ -1,7 +1,7 @@
 # @columns.first.name = 'place' if !@columns.empty? and @columns.first.name.blank?
 
 class Grid
-  attr_accessor :columns, :rows
+  attr_accessor :columns, :rows, :invalid_columns
   attr_reader :column_count, :padding, :delimiter, :quoted, :column_map
 
   # The Grid class maps columns by default -- it changes them to lowercase and replaces
@@ -14,15 +14,19 @@ class Grid
   #               Defaults to false
   # * column_map: Hash of column names. Replace column names from the original file with another name if the default mapping isn't enough.
   #               Example: 'birth date' => 'date_of_birth'. 
+  #               All keys are forced to lowercase for case-insenstive comparions
+  # * row_class: Map each row to this Class. Example: :row_class => Racer
   #
   # If both +columns+ and +header_row+ options are provided, +columns+ is used to create the columns, and the first row is deleted and ignored
-  def initialize(text = '', *options)
+  def initialize(source = '', *options)
+    raise ArgumentError("'source' cannot be nil") if source.nil?
+    
+    options.flatten! if options
     @truncated = false
     @calculated_padding = false
-    @rows = []
-    @text = text
+    @invalid_columns = []
 
-    if options.empty?
+    if (options.nil? || options.empty?)
       options_hash = {}
     else
       options_hash = options.first
@@ -31,9 +35,25 @@ class Grid
     @delimiter = options_hash[:delimiter] || '\t'
     @header_row = options_hash[:header_row] || false
     @quoted = options_hash[:quoted] || false
+    
+    @column_map = {}
+    if options_hash[:column_map]
+      options_hash[:column_map].each do |key, value|
+        @column_map[key.downcase] = value
+      end
+    end
+    
+    @row_class = options_hash[:row_class]
+    if @row_class
+      @row_class_instance = @row_class.new
+    end
 
-    if @header_row
-      columns_array = @rows.delete_at(0)
+    if source.is_a?(String)
+      source = source.split(/\n/)
+    end
+
+    if @header_row and source.is_a?(Array) and !source.empty?
+      columns_array = source.delete_at(0)
     end
     
     if options_hash[:columns]
@@ -41,17 +61,26 @@ class Grid
     end
     
     @columns = create_columns(columns_array)
-    populate
+    self.rows = source
   end
 
-  def populate
-    return if @text.nil?
-    if @text.is_a?(Array)
-      rows = @text.clone
-    else
-      rows = @text.split(/\n/) unless @text.is_a?(Array)
+  def [](row)
+    if row > rows.size
+      raise(ArgumentError, "#{row} is greater then the number of rows: #{rows.size}")
     end
-    for row in rows
+    rows[row]
+  end
+  
+  def rows
+    if @rows.nil?
+      @rows = []
+    end
+    @rows
+  end
+
+  # Delimited String or Array of Strings or Arrays
+  def rows=(source)
+    for row in source
       row = row.split(/#{@delimiter}/) unless row.is_a?(Array)
       index = 0
       row = row.collect {|cell|
@@ -76,24 +105,12 @@ class Grid
         cell
       }
       
-      @rows << Row.new(row, self)
+      rows << Row.new(row, self)
     end
-  end
-
-  def [](row)
-    if row > @rows.size
-      raise(ArgumentError, "#{row} is greater then the number of rows: #{@rows.size}")
-    end
-    @rows[row]
-  end
-
-  def rows=(rows)
-    @rows = rows
-    calculate_columns
   end
 
   def row_count
-    @rows.size
+    rows.size
   end
   
   def columns
@@ -120,12 +137,17 @@ class Grid
       if column_name.is_a?(Column)
         column_name
       else
+        if !column_name.blank? && @column_map[column_name.downcase]
+          column_name = @column_map[column_name.downcase]
+        end
+      
         column = Column.new(column_name.to_s.strip, column_name.to_s.strip)
+
         unless column.name.blank?
           field = column.name.downcase
           field = field.underscore
           field.gsub!(' ', '_')
-          if @column_map && @column_map[field]
+          if @column_map[field]
             column.field = @column_map[field]
           else
             column.field = field
@@ -134,6 +156,9 @@ class Grid
         column
       end
     end
+
+    after_columns_created
+    validate_columns
     
     for column in @columns
       unless column.description.blank?
@@ -144,14 +169,17 @@ class Grid
     end
   end
   
+  # Callback for sub classes
   def after_columns_created
-    # Create instance to check for valid column fields
-    result_prototype = Racer.new
+  end
+  
+  def validate_columns
+    return unless @row_class_instance
+    
     for column in @columns
-      column.set_field_from_name
-      unless result_prototype.respond_to?(column.field)
+      if column.field.nil? || !(@row_class_instance.respond_to?(column.field))
         column.field = nil
-        # @invalid_columns << column.name unless column.name.blank?
+        @invalid_columns << column.name unless column.name.blank?
       end
     end
   end
@@ -168,7 +196,7 @@ class Grid
   def inspect
     text = ""
     text << "#{columns}\n" if columns
-    for row in @rows
+    for row in rows
       text << row.inspect
     end
     text
@@ -189,7 +217,7 @@ class Grid
       end
       text = text + header_to_s(descriptions)
     end
-    @rows.each_with_index do |row, row_index|
+    rows.each_with_index do |row, row_index|
       text = text + row_to_s(row, row_index)
     end
     text
@@ -237,7 +265,7 @@ class Grid
 
   def truncate
     @truncated = true
-    for row in @rows
+    for row in rows
       for index in 0..(column_count - 1)
         cell = row[index] || ''
         if cell.size > column_size(index)
@@ -250,7 +278,7 @@ class Grid
   def calculate_padding
     @calculated_padding = true
     @padding = []
-    @rows.each_with_index do |row, row_index|
+    rows.each_with_index do |row, row_index|
       row_padding = []
       for index in 0..(column_count - 1)
         cell = row[index] || ''
@@ -286,7 +314,7 @@ class Grid
   end
 
   def delete_blank_rows
-    @rows.delete_if {|row|
+    rows.delete_if {|row|
       row.blank?
     }
   end
@@ -304,25 +332,17 @@ class Row < Array
     return super if second_arg != -1
     if index.is_a?(String)
       index = @grid.index_for_column_name(index)
-      if index.blank?
-        return ""
-      end
+      return '' if index.blank?
     end
 
-    if index >= size
-      return ""
-    end
-    cell = slice(index)
-    if cell == nil
-      return ""
-    end
-    cell
+    return '' if index >= size
+    return slice(index) || ''
   end
 
   def to_hash
     hash = HashWithIndifferentAccess.new
     for index in 0..(size - 1)
-      hash[@grid.columns[index].name] = self[index] if @grid.columns[index].field
+      hash[@grid.columns[index].field] = self[index] if @grid.columns[index].field
     end
     hash
   end

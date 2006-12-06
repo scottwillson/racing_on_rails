@@ -6,35 +6,35 @@ class ResultsFile < GridFile
 
   COLUMN_MAP = {
     "#" => "number",
-    "barCategory" => "bar_category",
+    "barcategory" => "bar_category",
     "category.name" => "category_name",
     "categories" => "category_name",
     "category" => "category_name",
     "first" => "first_name",
-    "firstName" => "first_name",
+    "firstname" => "first_name",
     "racer.first_name" => "first_name",
     "racer" => "name",
     "last" => "last_name",
-    "lastName" => "last_name",
+    "lastname" => "last_name",
     "racer.last_name" => "last_name",
     "team" => "team_name",
     "team.name" => "team_name",
     "obra_number" => "number",
-    "oregonCup" => "oregon_cup",
+    "oregoncup" => "oregon_cup",
     "membership #" => "license",
     "membership" => "license",
-    "rider #" => "number",
-    "Last Name" => "last_name",
-    "First Name" => "first_name",
+    "rider_#" => "number",
+    "last name" => "last_name",
+    "first name" => "first_name",
     "club/team" => "team_name",
     "hometown" => 'city',
-    "stageTime" => "time",
+    "stage_time" => "time",
     "bonus" => "time_bonus_penalty",
     "penalty" => "time_bonus_penalty",
-    "stage +Penalty" => "time_total",
+    "stage_+_penalty" => "time_total",
     "time" => "time",
-    "time_total" => "time",
-    "totalTime" => "time_total",
+    "time_total" => "time_total",
+    "total_time" => "time_total",
     "down" => "time_gap_to_leader",
     "gap" => "time_gap_to_leader",
     "pts" => "points"
@@ -48,62 +48,50 @@ class ResultsFile < GridFile
     false
   end
 
-  def initialize(source = nil, columns = nil, event = nil)
+  def initialize(source, event, *options)
     @invalid_columns = []
+    @event = event
+    if options.empty?
+      options = Hash.new
+    else
+      options = options.first
+    end
     if ResultsFile.cyclocross_workbook?(source, event)
       @cyclocross_workbook = true
-      super(source, ['number', '', '', '', '', '', '', '', '', '', '', '', '', 'last_name', 'first_name', 'team_name', 'city', 'category', 'laps', 'place'])
+      options =  {:columns => ['number', '', '', '', '', '', '', '', '', '', '', '', '', 'last_name', 'first_name', 'team_name', 'city', 'category', 'laps', 'place'], 
+                  :column_map => COLUMN_MAP,
+                  :row_class => Result}.merge(options)
+      super(source, options)
     else
-      super(source, columns)
+      options = {:header_row => true, :column_map => COLUMN_MAP, :row_class => Result}.merge(options)
+      super(source, options)
     end
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("columns: #{@columns.inspect}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
     delete_blank_rows
   end
-
-  # lowercase, remove spaces
-  # Oregon Cup => oregon_cup
+  
   def after_columns_created
-    return if @cyclocross_workbook
-    for column in @columns
-      unless column.name.blank?
-        column.name = column.name.downcase
-        column.name = column.name.gsub(/ \w/) { |s|
-          s[1, 1].upcase
-        }
-      end
-    end
-    for column in @columns
-      if COLUMN_MAP[column.name]
-        column.name = COLUMN_MAP[column.name]
-      end
-    end
-    @columns.first.name = 'place' if !@columns.empty? and @columns.first.name.blank?
-    # Create instance to check for valid column fields
-    result_prototype = Result.new
-    for column in @columns
-      column.set_field_from_name
-      unless column.field and result_prototype.respond_to?(column.field)
-        column.field = nil
-        @invalid_columns << column.name unless column.name.blank?
+    unless @cyclocross_workbook
+      if !columns.empty? and columns.first.name.blank?
+        columns.first.name = 'place'
+        columns.first.field = :place
       end
     end
   end
 
-  def import(event, progress_monitor = NullProgressMonitor.new)
+  def import(progress_monitor = NullProgressMonitor.new)
     RACING_ON_RAILS_DEFAULT_LOGGER.info("import results")
-    progress_monitor.total = @rows.size + 2
-    progress_monitor.increment(1)
 
     standings = nil
     begin
-      event.disable_notification!
+      @event.disable_notification!
       standings = Standings.create!(
-        :event => event,
-        :name => event.name
+        :event => @event,
+        :name => @event.name
       )
-      result_columns = @columns.collect do |column|
+      result_columns = columns.collect do |column|
         # Remove invalid columns
-        column.name unless column.field.nil?
+        column.field.to_s unless column.field.nil?
       end
       result_columns.delete_if do |column|
         column.blank?
@@ -111,14 +99,14 @@ class ResultsFile < GridFile
       category = nil
       race = nil
       previous_place = nil
-      @rows.each_with_index do |row, index|
+      rows.each_with_index do |row, index|
         continue if row.blank?
         row_hash = row.to_hash
         RACING_ON_RAILS_DEFAULT_LOGGER.debug("import #{row_hash.inspect}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug? 
         if new_race?(row_hash, index)
           if @cyclocross_workbook
-            category = Category.new(:name => @rows[index - 1].first)
-            race = standings.races.create!(:category => category, :notes => to_notes(@rows[index - 1]))
+            category = Category.new(:name => rows[index - 1].first)
+            race = standings.races.create!(:category => category, :notes => to_notes(rows[index - 1]))
           else
             category = Category.new(:name => row.first)
             race = standings.races.create!(:category => category, :notes => to_notes(row))
@@ -175,7 +163,7 @@ class ResultsFile < GridFile
         end
         progress_monitor.increment(1)
       end
-      event.enable_notification!
+      @event.enable_notification!
       # TODO Not so clean
       standings.create_or_destroy_combined_standings
       standings.combined_standings.recalculate if standings.combined_standings
@@ -211,16 +199,16 @@ class ResultsFile < GridFile
 
   def new_race?(row_hash, index)
     # last row?
-    return false unless index < @rows.size
+    return false unless index < rows.size
     
     if @cyclocross_workbook
       return row_hash[:number] == 'Number'
     else
-      next_row = @rows[index + 1]
+      next_row = rows[index + 1]
       return false if row_hash.nil? or row_hash.empty? or next_row.nil? or next_row.empty?
 
       place_cell = row_hash[:place]
-      place_cell_next_row = @rows[index + 1].to_hash[:place]
+      place_cell_next_row = rows[index + 1].to_hash[:place]
       return false unless  place_cell.to_i == 0
       place_cell_next_row.to_i == 1
     end

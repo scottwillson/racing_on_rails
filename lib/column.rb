@@ -28,8 +28,11 @@ class Column
   end
   
   def field=(value)
-    if value.is_a?(Symbol)
+    case value
+    when Symbol
       @field = value
+    when NilClass
+      @field = nil
     else
       begin
         @field = value.to_sym
