@@ -475,17 +475,4 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_template("admin/events/upcoming")
   end
-
-  private
-
-  def uploaded_file(path, original_filename, content_type)
-    file_contents = File.new("#{RAILS_ROOT}/#{path}").read
-    uploaded_file = StringIO.new(file_contents);
-    (class << uploaded_file; self; end).class_eval do
-      alias local_path path
-      define_method(:original_filename) {original_filename}
-      define_method(:content_type) {content_type}
-    end
-    return uploaded_file
-  end
 end

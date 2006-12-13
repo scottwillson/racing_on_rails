@@ -110,6 +110,14 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def date_of_birth=(value)
+    if value.is_a?(String)
+      century = value[/^00\d\d/]
+      value.gsub!(/^00/, '19') if century
+    end
+    super
+  end
+  
   # 30 years old or older
   def master?
     if date_of_birth

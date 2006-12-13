@@ -400,4 +400,9 @@ class RacerTest < Test::Unit::TestCase
     assert_equal('917', racers(:alice).dh_number, 'downhill_number')
     assert_equal('112', racers(:alice).ccx_number, 'ccx_number')
   end
+  
+  def test_date
+    racer = Racer.new(:date_of_birth => '0073-10-04')
+    assert_equal_dates('1973-10-04', racer.date_of_birth, 'date_of_birth from 0073-10-04')
+  end
 end

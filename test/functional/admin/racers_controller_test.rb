@@ -413,7 +413,13 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
     assert_equal(mollie.name, assigns['racer'].name, 'Unsaved Tonkin name should be Mollie')
-    assert_equal([mollie, mollie_with_different_cross_number], assigns['existing_racers'], 'existing_racers')
+    existing_racers = assigns['existing_racers'].collect do |racer|
+      "#{racer.name} ##{racer.id}"
+    end
+    existing_racers = existing_racers.join(', ')
+    assert(assigns['existing_racers'].include?(mollie), "existing_racers should include Mollie ##{mollie.id}, but has #{existing_racers}")
+    assert(assigns['existing_racers'].include?(mollie_with_different_cross_number), 'existing_racers')
+    assert_equal(2, assigns['existing_racers'].size, 'existing_racers')
   end
   
   def test_dupes_merge_alias?
@@ -610,5 +616,57 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     
     assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
+  end
+  
+  def test_preview_import
+    racers_before_import = Racer.count
+
+    opts = {
+      :controller => "admin/racers", 
+      :action => "preview_import"
+    }
+    assert_routing("/admin/racers/preview_import", opts)
+
+    file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+    post :preview_import, :racers_file => file
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert_response :success
+    assert_template("admin/racers/preview_import")
+    assert_not_nil(assigns["racers_file"], "Should assign 'racers_file'")
+    assert_equal(
+      '/tmp/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv', 
+      session[:racers_file_path], 
+      'Should store temp file path in session as :racers_file_path')
+    
+    assert_equal(racers_before_import, Racer.count, 'Should not have added racers')
+  end
+  
+  def test_import
+    racers_before_import = Racer.count
+
+    file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+    @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    post(:import, :commit => 'Import', :racers_file => file)
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+    assert_response(:redirect)
+    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    
+    assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
+    assert(racers_before_import < Racer.count, 'Should have added racers')
+  end
+  
+  def test_cancel_import
+    opts = {
+      :controller => "admin/racers", 
+      :action => "import"
+    }
+    assert_routing("/admin/racers/import", opts)
+    post(:import, :commit => 'Cancel')
+    assert_response(:redirect)
+    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
   end
 end

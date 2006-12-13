@@ -126,7 +126,8 @@ class Admin::RacersController < Admin::RecordEditor
     render('admin/racers/show')
   end
   
-  def preview_upload
+  # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
+  def preview_import
     uploaded_file = @params[:racers_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
     File.open(path, File::CREAT|File::WRONLY) do |f|
@@ -134,10 +135,12 @@ class Admin::RacersController < Admin::RecordEditor
     end
 
     temp_file = File.new(path)
-    @grid_file = GridFile.new(
+    @racers_file = GridFile.new(
       temp_file,
       :delimiter => ',',
       :quoted => true,
+      :header_row => true,
+      :row_class => Racer,
       :column_map => {
         'Birth date' => 'date_of_birth',
         'Address1_Contact address' => 'street',
@@ -146,6 +149,26 @@ class Admin::RacersController < Admin::RecordEditor
         'track_category_' => 'track_category'
       }
     )
+
+    session[:racers_file_path] = temp_file.path
+  end
+  
+  # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
+  def import
+    if params[:commit] == 'Cancel'
+      session[:racers_file_path] = nil
+      redirect_to(:action => 'index')
+
+    elsif params[:commit] == 'Import'
+      path = session[:racers_file_path]
+      racers = RacersFile.new(path).import
+      flash[:notice] = "Imported #{racers} new members"
+      session[:racers_file_path] = nil
+      redirect_to(:action => 'index')
+
+    else
+      raise("Expected 'Import' or 'Cancel'")
+    end
   end
 
   # Inline update. Merge with existing Racer if names match

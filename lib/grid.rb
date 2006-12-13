@@ -32,9 +32,9 @@ class Grid
       options_hash = options.first
     end
 
-    @delimiter = options_hash[:delimiter] || '\t'
+    @delimiter  = options_hash[:delimiter]  || '\t'
     @header_row = options_hash[:header_row] || false
-    @quoted = options_hash[:quoted] || false
+    @quoted     = options_hash[:quoted]     || false
     
     @column_map = {}
     if options_hash[:column_map]
@@ -132,11 +132,17 @@ class Grid
   def create_columns(columns_array)
     @columns = []
     return if columns_array.nil?
-    
+
+    columns_array = columns_array.split(/#{@delimiter}/) unless columns_array.is_a?(Array)
     @columns = columns_array.collect do |column_name|
       if column_name.is_a?(Column)
         column_name
       else
+        column_name.strip!
+        if quoted
+          column_name.gsub!(/^"/, '')
+          column_name.gsub!(/"$/, '')
+        end
         if !column_name.blank? && @column_map[column_name.downcase]
           column_name = @column_map[column_name.downcase]
         end

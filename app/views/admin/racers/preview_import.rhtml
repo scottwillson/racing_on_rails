@@ -1,21 +1,21 @@
-<%= start_form_tag :action => 'upload' %>
+<%= start_form_tag :action => 'import' %>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>
 <%= end_form_tag %>
 <table class="base">
 	<thead>
 		<tr>
-		<%- for column in @grid_file.columns -%>
+		<%- for column in @racers_file.columns -%>
 			<th <%= "class=invalid" unless column.valid? %>><%= column.description %></th>
 		<%- end -%>
 		</tr>
 		<tr>
-		<%- for column in @grid_file.columns -%>
+		<%- for column in @racers_file.columns -%>
 			<th><%= column.field %></th>
 		<%- end -%>
 		</tr>
 	</thead>
-<%- for row in @grid_file.rows -%>
+<%- for row in @racers_file.rows -%>
 	<tr class="<%= cycle("even", "odd") %>">
 	<%- for cell in row -%>
 		<td><%= cell %></td>

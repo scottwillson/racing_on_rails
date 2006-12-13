@@ -97,4 +97,15 @@ class Test::Unit::TestCase
     end
     raise("#{message} \nExpected #{expected} \nbut was #{formatted_actual}") unless expected == formatted_actual
   end
+
+  def uploaded_file(path, original_filename, content_type)
+    file_contents = File.new(File.expand_path("#{RAILS_ROOT}/#{path}")).read
+    uploaded_file = StringIO.new(file_contents);
+    (class << uploaded_file; self; end).class_eval do
+      alias local_path path
+      define_method(:original_filename) {original_filename}
+      define_method(:content_type) {content_type}
+    end
+    return uploaded_file
+  end
 end

@@ -120,8 +120,8 @@ class ScheduleTest < Test::Unit::TestCase
     assert(cream_puff.instance_of?(SingleDayEvent), "Cream Puff class")
     assert_not_nil(cream_puff.promoter, "Cream Puff promoter")
     assert_equal("Don Person", cream_puff.promoter.name, "Cream Puff promoter name")
-    assert_equal("541-935-4996", cream_puff.promoter.phone, "Cream Puff promoter name")
-    assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter name")
+    assert_equal("541-935-4996", cream_puff.promoter.phone, "Cream Puff promoter phone")
+    assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter email")
     assert_equal(ASSOCIATION.short_name, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
     
     for event in fast_twitch_series.events
