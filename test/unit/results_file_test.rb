@@ -370,7 +370,7 @@ class ResultsFileTest < Test::Unit::TestCase
     
     race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
     race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :team_name =>"Jittery Joe's", :points => "23.0")
-    race.results << Result.new(:place => "2", :first_name => "Shannon", :last_name => "Skerritt", :number =>"102", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
+    race.results << Result.new(:place => "2", :first_name => "Tonkin", :last_name => "Erik", :number =>"102", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
     race.results << Result.new(:place => "3", :first_name => "John", :last_name => "Browning", :number =>"159", :team_name =>"Half Fast Velo", :points => "12.0")
     race.results << Result.new(:place => "4", :first_name => "Doug", :last_name => "Ollerenshaw", :number =>"132", :team_name =>"Health Net", :points => "8.0")
     race.results << Result.new(:place => "5", :first_name => "Dean", :last_name => "Tracy", :number =>"A76", :team_name =>"Team Rubicon", :points => "7.0")
@@ -380,7 +380,7 @@ class ResultsFileTest < Test::Unit::TestCase
     race.results << Result.new(:place => "9", :first_name => "Richard", :last_name => "Barrows", :number =>"568", :team_name =>"North River Racing", :points => "3.0")
     race.results << Result.new(:place => "10", :first_name => "George", :last_name => "Gardner", :number =>"385", :team_name =>"Team Oregon", :points => "2.0")
     race.results << Result.new(:place => "11", :first_name => "Kendall", :last_name => "Kuhar", :number =>"152", :team_name =>"Bike N Hike/Giant", :points => "1.0")
-    race.results << Result.new(:place => "12", :first_name => "Ryan", :last_name => "Weaver", :number =>"A50", :team_name =>"Gentle Lovers")
+    race.results << Result.new(:place => "12", :first_name => "Ryan", :last_name => "Weaver", :number =>"341", :team_name =>"Gentle Lovers")
     race.results << Result.new(:place => "13", :first_name => "Sal", :last_name => "Collura", :number =>"A99", :team_name =>"Hutch's")
     race.results << Result.new(:place => "14", :number => "X52")
     race.results << Result.new(:place => "15", :first_name => "Miranda", :last_name => "Duff", :number =>"201", :team_name =>"Team Rubicon")
