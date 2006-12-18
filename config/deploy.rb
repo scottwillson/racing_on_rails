@@ -23,6 +23,7 @@ task :deploy do
 
   restart
   migrate
+  
 end
 
 desc "Set file permissions for Rails app"

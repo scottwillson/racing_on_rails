@@ -3,9 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/unit/racers_file_test.rb</string>
+	<string>script/email_addresses</string>
 	<key>documents</key>
 	<array>
+		<dict>
+			<key>name</key>
+			<string>local</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>local</string>
+		</dict>
 		<dict>
 			<key>expanded</key>
 			<true/>
@@ -33,6 +41,8 @@
 			<string>config</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>db</string>
 			<key>regexFolderFilter</key>
@@ -77,6 +87,8 @@
 			<string>Racing on Rails.tmproj</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>script</string>
 			<key>regexFolderFilter</key>
@@ -115,37 +127,21 @@
 	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/admin/racers_controller.rb</key>
+		<key>app/models/announcement_mailer.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>18</integer>
 				<key>line</key>
-				<integer>163</integer>
+				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>133</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>163</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>164</integer>
-			</dict>
+			<integer>0</integer>
 		</dict>
-		<key>app/models/racer.rb</key>
+		<key>app/views/announcement_mailer/anncouncement.rhtml</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -157,44 +153,30 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>190</integer>
+			<integer>0</integer>
 		</dict>
-		<key>app/models/racers_file.rb</key>
+		<key>script/announcement</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>32</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>3</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/result.rb</key>
+		<key>script/email_addresses</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>27</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>149</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>129</integer>
-		</dict>
-		<key>test/unit/racers_file_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>60</integer>
-				<key>line</key>
-				<integer>28</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -204,14 +186,14 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>app/models/racers_file.rb</string>
-		<string>test/unit/racers_file_test.rb</string>
-		<string>app/models/racer.rb</string>
-		<string>app/controllers/admin/racers_controller.rb</string>
+		<string>script/announcement</string>
+		<string>app/views/announcement_mailer/anncouncement.rhtml</string>
+		<string>script/email_addresses</string>
+		<string>app/models/announcement_mailer.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{314, 77}, {962, 755}}</string>
+	<string>{{315, 59}, {965, 773}}</string>
 </dict>
 </plist>

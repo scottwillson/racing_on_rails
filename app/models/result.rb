@@ -142,21 +142,10 @@ class Result < ActiveRecord::Base
   
   # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
-    if self.racer and !self.number.blank?
-      existing_number = self.racer.race_numbers.detect do |number|
-        (number.discipline.name == event.discipline) && (number.number_issuer == event.number_issuer) && (number.year == event.date.year)
-      end
-      if existing_number.nil? or (existing_number.value != number and existing_number.value.to_i > 10 and existing_number.value.to_i < 100)
-        event.number_issuer unless event.number_issuer
-        self.racer.race_numbers.create!(
-          :value => number, 
-          :racer => self.racer,
-          :discipline => Discipline[event.discipline], 
-          :number_issuer => event.number_issuer, 
-          :year => event.date.year
-        )
-        self.racer.dirty
-      end
+    logger.debug("Result update_racer_number #{self.number} #{number}")
+    if self.racer and !number.blank? and !(number.to_i > 10 and number.to_i < 100)
+      event.number_issuer unless event.number_issuer
+      self.racer.add_number(number, Discipline[event.discipline], event.number_issuer, event.date.year)
     end
   end
   

@@ -151,26 +151,33 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def add_number(value, discipline)
-    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+  def add_number(value, discipline, association = nil, year = nil)
+    logger.debug("add_number #{value} #{discipline} #{association} #{year}")
+    association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
+    year = Date.today.year if year.nil?
+    
     if value.blank?
       unless new_record?
         # Delete ALL numbers for ASSOCIATION and this discipline?
         # FIXME Delete number individually in UI
         RaceNumber.destroy_all(
           ['racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-          self.id, discipline.id, Date.today.year, association.id])
+          self.id, discipline.id, year, association.id])
       end
     else
+      self.dirty
       if new_record?
-        race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
+        existing_number = race_numbers.any? do |number|
+          number.value == value && number.discipline == discipline && number.association == association && number.year == year
+        end
+        race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association) unless existing_number
       else
         race_number = RaceNumber.find(
           :first,
           :conditions => ['value=? and racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-                           value, self.id, discipline.id, Date.today.year, association.id])
+                           value, self.id, discipline.id, year, association.id])
         unless race_number
-          race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => Date.today.year, :number_issuer => association)
+          race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association)
         end
       end
     end

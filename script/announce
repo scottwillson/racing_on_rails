@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/../config/boot'
+
+ActionMailer::Base.template_root = "#{RAILS_ROOT}/app/views"
+ActionMailer::Base.delivery_method = :sendmail
+
+File.foreach(File.dirname(__FILE__) + '/email_addresses') do |line|
+  recipient = nil
+  if line.include?('<')
+    parts = line.match('([^<]+) <([^>]+)>')
+    recipient = "#{parts[2]} <#{parts[1]}>"
+  else
+    recipient = line
+  end
+
+  puts(recipient)
+  announcement_email = AnnouncementMailer.create_announcement(recipient)
+  announcement_email.reply_to = 'Yann Blindert <nevens42@yahoo.com>'
+  AnnouncementMailer.deliver(announcement_email)
+end

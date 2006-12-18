@@ -7,6 +7,8 @@
 # This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
 # and associations. RacerNumbers are also used to differentiate between Racers with the same name, and 
 # to identify racer results with misspelled names.
+#
+# TODO Add same(other) method that compares significatn fields
 class RaceNumber < ActiveRecord::Base
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id

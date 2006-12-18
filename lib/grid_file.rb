@@ -23,7 +23,7 @@ class GridFile < Grid
           line = []
           for cell in row
             if cell
-               RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
                if DATE_FORMATS.include?(cell.format_no) and cell.to_i > 5000
                  line << cell.date.to_s
                elsif cell.to_f > 0.0 and DATE_FORMATS.include?(cell.format_no) and cell.to_f.to_s == cell.to_s
