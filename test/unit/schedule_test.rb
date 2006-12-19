@@ -40,19 +40,20 @@ class ScheduleTest < Test::Unit::TestCase
     assert_equal(12, schedule.months.size, "Number of months")
     jan = schedule.months[0]
     assert_equal("January", jan.name)
+    assert_equal(5, jan.weeks.size, 'January 2007 weeks')
     march = schedule.months[2]
     assert_equal("March", march.name)
     
     assert_equal(5, march.weeks.size, "March number of weeks")
     first_week_of_march = march.weeks[0]
     day = first_week_of_march.days[0]
-    assert(day.previous_month?, "#{day} of #{first_week_of_march} is previous month")
+    assert(day.other_month?, "#{day} of #{first_week_of_march} is previous month")
     assert_equal(25, day.day_of_month, "1st day of 1st week of March 2007")
     assert_equal(0, day.events.size, "1st day of 1st week of March 2007 events")
     
     third_week_of_march = march.weeks[2]
     day = third_week_of_march.days[6]
-    assert(!day.previous_month?, "#{day} of #{first_week_of_march} is not previous month")
+    assert(!day.other_month?, "#{day} of #{third_week_of_march}, #{day.month} is not other month")
     assert_equal(17, day.day_of_month, "Last day of 3rd week of March 2007")
     # Existing event
     assert_equal(2, day.events.size, "Last day of 3rd week of March 2007 events")
@@ -113,7 +114,7 @@ class ScheduleTest < Test::Unit::TestCase
     assert(cream_puff.instance_of?(SingleDayEvent), "Cream Puff should be SingleDayEvent")
     assert_equal(0, cream_puff.date.wday, "Cream Puff day of week")
     assert_equal("Oakridge", cream_puff.city, "Cream Puff city")
-    assert_equal("OR", cream_puff.state, "Cream Puff state")
+    assert_equal(ASSOCIATION.state, cream_puff.state, "Cream Puff state")
     assert_equal("Mountain Bike", cream_puff.discipline, "Cream Puff discipline")
     assert_equal_dates(Date.today, cream_puff.updated_at, "Cream Puff updated_at")
     assert_equal_dates("2006-06-25", cream_puff.date, "Cream Puff date")
@@ -127,7 +128,7 @@ class ScheduleTest < Test::Unit::TestCase
     for event in fast_twitch_series.events
       assert_not_nil(event, "Should have imported Fast Twitch Fridays")
       assert_equal("Portland", event.city, "Fast Twitch Fridays city")
-      assert_equal("OR", event.state, "Fast Twitch Fridays state")
+      assert_equal(ASSOCIATION.state, event.state, "Fast Twitch Fridays state")
       assert_equal("Track", event.discipline, "Fast Twitch Fridays discipline")
       assert_equal_dates(Date.today, event.updated_at, "Fast Twitch Fridays lastUpdated")
       assert_equal(5, event.date.wday, "Fast Twitch Fridays day of week")

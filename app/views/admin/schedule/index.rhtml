@@ -55,7 +55,7 @@
 		<%- for week in month.weeks -%>
 	      <tr class="month">
 	      <%- for day in week.days -%>
-	        <%- if day.previous_month? -%>
+	        <%- if day.other_month? -%>
 	        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
 				  <%- else -%>
 	        <td class="day">

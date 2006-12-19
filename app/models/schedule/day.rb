@@ -4,15 +4,17 @@ module Schedule
 
     # Array of SingleDayEvents
     attr_accessor :events
+    
+    attr_reader :month
 
     def initialize(month, date)
       @date = date
-      @previous_month = month > date.month
+      @month = month
       @events = []
     end
 
-    def previous_month?
-      @previous_month
+    def other_month?
+      @date.month != @month.date.month
     end
 
     # 1-31
@@ -23,6 +25,10 @@ module Schedule
     # Sunday, Monday, ... Saturday
     def day_of_week
     	Date::DAYNAMES[@date.wday]
+    end
+
+    def to_s
+      "#<Schedule::Day #{@date.strftime('%x') if @date}>"
     end
   end
 end
