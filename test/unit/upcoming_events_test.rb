@@ -34,7 +34,7 @@ class UpcomingEventsTest < Test::Unit::TestCase
       :date => Date.new(2008, 4, 1), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
     )
     Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) {|date|
-      individual_pir = pir.events.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
+      individual_pir = pir.events.create(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
       assert("PIR valid?", individual_pir.valid?)
       assert("PIR new?", !individual_pir.new_record?)
     }

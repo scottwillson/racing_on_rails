@@ -177,7 +177,7 @@ class Racer < ActiveRecord::Base
           :conditions => ['value=? and racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
                            value, self.id, discipline.id, year, association.id])
         unless race_number
-          race_numbers.create!(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association)
+          race_numbers.create(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association)
         end
       end
     end

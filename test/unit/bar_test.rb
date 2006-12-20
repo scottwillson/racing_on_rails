@@ -442,7 +442,7 @@ class BarTest < Test::Unit::TestCase
     # Masters too
     marin_knobular = SingleDayEvent.create(:name => 'Marin Knobular', :date => Date.new(2001, 9, 7), :discipline => 'Mountain Bike')
     standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => expert_junior_men)
+    race = standings.races.create(:category => expert_junior_men)
     kc = Racer.create(:name => 'KC Mautner')
     vanilla = teams(:vanilla)
     race.results.create(:racer => kc, :place => 4, :team => vanilla)
@@ -452,7 +452,7 @@ class BarTest < Test::Unit::TestCase
     
     lemurian = SingleDayEvent.create(:name => 'Lemurian', :date => Date.new(2001, 9, 14), :discipline => 'Mountain Bike')
     standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => sport_junior_men)
+    race = standings.races.create(:category => sport_junior_men)
     race.results.create(:racer => chris_woods, :place => 14, :team => gentle_lovers)
     
     Bar.recalculate(2001)

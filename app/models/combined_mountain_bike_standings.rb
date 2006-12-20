@@ -39,14 +39,14 @@ class CombinedMountainBikeStandings < CombinedStandings
       end
       combined_results.delete_if {|result| result.place.to_i == 0}
       combined_results.each_with_index {|result, i|
-        race.results.create!(:place => (i + 1), :racer => result.racer, :team => result.team, :time => result.time)
+        race.results.create(:place => (i + 1), :racer => result.racer, :team => result.team, :time => result.time)
       }
     end
   end
 
   def create_races
-    races.create!(:category => Category.find_bar('Pro, Semi-Pro, Elite Men'))
-    races.create!(:category => Category.find_bar('Pro, Elite, Expert Women'))
+    races.create(:category => Category.find_bar('Pro, Semi-Pro, Elite Men'))
+    races.create(:category => Category.find_bar('Pro, Elite, Expert Women'))
   end
   
   def to_s

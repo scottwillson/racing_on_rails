@@ -71,10 +71,10 @@ class ResultsFileTest < Test::Unit::TestCase
   def test_import_time_trial_racers_with_same_name
     bruce_9 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
-    bruce_9.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '9')
+    bruce_9.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '9')
     
     bruce_1300 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
-    bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
+    bruce_1300.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
     
     event = SingleDayEvent.create(:discipline => 'Time Trial')
     event.number_issuer = association

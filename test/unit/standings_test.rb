@@ -142,7 +142,7 @@ class StandingsTest < Test::Unit::TestCase
 
   def test_save_road
     event = SingleDayEvent.create!(:name => 'Woodlands', :discipline => 'Road')
-    standings = event.standings.create!
+    standings = event.standings.create
     assert_equal(1, event.standings.size, 'New road event standings should not create combined standings')
     
     RAILS_DEFAULT_LOGGER.debug('\n *** change discipline to Mountain Bike\n')
@@ -163,7 +163,7 @@ class StandingsTest < Test::Unit::TestCase
 
   def test_save_mtb
     event = SingleDayEvent.create!(:name => 'Reheers', :discipline => 'Mountain Bike')
-    standings = event.standings.create!
+    standings = event.standings.create
     event.reload
     assert_equal(2, event.standings.size, 'New MTB standings should create combined standings')
     
@@ -175,7 +175,7 @@ class StandingsTest < Test::Unit::TestCase
 
   def test_races_with_results
     bb3 = events(:banana_belt_3)
-    standings = bb3.standings.create!
+    standings = bb3.standings.create
     assert(standings.races_with_results.empty?, 'No races')
     
     sr_p_1_2 = categories(:sr_p_1_2)
@@ -184,11 +184,11 @@ class StandingsTest < Test::Unit::TestCase
     
     sr_women = categories(:sr_women)
     race_1 = standings.races.create(:category => sr_women)
-    race_1.results.create!
+    race_1.results.create
     assert_equal([race_1], standings.races_with_results, 'One results')
     
     race_2 = standings.races.create(:category => sr_p_1_2)
-    race_2.results.create!
+    race_2.results.create
     women_4 = categories(:women_4)
     standings.races.create(:category => women_4)
     assert_equal([race_2, race_1], standings.races_with_results, 'Two races with results')
@@ -199,7 +199,7 @@ class StandingsTest < Test::Unit::TestCase
     assert_not_nil(combined_standings, 'Combined standings')
     assert_equal([race_2, race_1], standings.races_with_results, 'Two races with results')
     race_3 = combined_standings.races.first
-    race_3.results.create!
+    race_3.results.create
     assert(!race_3.results(true).empty?, 'Combined standings should have results')
     assert_equal([race_2, race_1, race_3], standings.races_with_results, 'Two races with results')
   end

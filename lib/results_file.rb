@@ -106,10 +106,10 @@ class ResultsFile < GridFile
         if new_race?(row_hash, index)
           if @cyclocross_workbook
             category = Category.new(:name => rows[index - 1].first)
-            race = standings.races.create!(:category => category, :notes => to_notes(rows[index - 1]))
+            race = standings.races.create(:category => category, :notes => to_notes(rows[index - 1]))
           else
             category = Category.new(:name => row.first)
-            race = standings.races.create!(:category => category, :notes => to_notes(row))
+            race = standings.races.create(:category => category, :notes => to_notes(row))
           end
           race.result_columns = result_columns
           if race.result_columns.include?('name')
@@ -127,7 +127,7 @@ class ResultsFile < GridFile
           if race
             result = race.results.build(row_hash)
             if race.nil? and result.place and result.place.to_i == 1
-              race = standings.races.create!(:category => category)
+              race = standings.races.create(:category => category)
               result.race = race
             end
             if row_hash[:time] and !row_hash[:time].include?(':')

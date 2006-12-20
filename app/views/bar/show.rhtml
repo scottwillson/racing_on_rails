@@ -7,14 +7,6 @@
 <% end %>
 <br><br>
 
-<%# TODO Consider making this dynamic %>
-<b>Archives: </b> <a href="http://www.obra.org/bar/2005/index.html">2005</a> | 
-<a href="http://www.obra.org/bar/2004/index.html">2004</a> | 
-<a href="http://www.obra.org/bar/2003/index.html">2003</a> | 
-<a href="http://www.obra.org/bar/2002/index.html">2002</a> | 
-<a href="http://www.obra.org/bar/2001/index.html">2001</a>
-<br><br>
-
 <% if @discipline == 'Overall' %>
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr valign="top">
@@ -62,6 +54,7 @@
 <b><a name="overall"><%= @discipline %> BAR Standings</a></b>
 <br><br>
 
+<% if @standings and !@standings.empty? and !@standings.races.empty? %>
 <%# TODO Encapsulate in a helper method %>
 <table border="0" cellspacing="0" cellpadding="0">
 <% index = 0 %>  
@@ -79,11 +72,6 @@
   <% index += 1 %>  
 <% end %>  
 </table>
-
-<% if @standings.nil? or @standings.races.empty? %>
-No results for <%= @year %>
-<br/>
-<% else %>
 
 <br/>
 <span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
@@ -124,4 +112,8 @@ No results for <%= @year %>
 
 <% end %>  
 <% end %>  
+
+<% else %>
+No results for <%= @year %>
+<br/>
 <% end %>

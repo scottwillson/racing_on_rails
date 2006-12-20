@@ -13,13 +13,16 @@ class BarController < ApplicationController
 
     date = Date.new(@year.to_i, 1, 1)
     bar = Bar.find(:first, :conditions => ['date = ?', date])
-    @standings = Standings.find(
-      :first, 
-      :conditions => ['event_id = ? and name = ?', bar.id, @discipline])
+    
+    if bar
+      @standings = Standings.find(
+        :first, 
+        :conditions => ['event_id = ? and name = ?', bar.id, @discipline])
 
-    unless @standings.nil?
-      @standings.races.reject! do |race|
-        race.results.empty?
+      unless @standings.nil?
+        @standings.races.reject! do |race|
+          race.results.empty?
+        end
       end
     end
 

@@ -110,7 +110,7 @@ class RaceTest < Test::Unit::TestCase
   # Return value from field_size column. If column is blank, count results
   def test_field_size
     single_speed = Category.create(:name => "Singlespeed")
-    race = standings(:kings_valley_2004).races.create!(:category => single_speed)
+    race = standings(:kings_valley_2004).races.create(:category => single_speed)
     assert_equal(0, race.field_size, 'New race field size')
     
     race = races(:banana_belt_pro_1_2)
@@ -122,11 +122,11 @@ class RaceTest < Test::Unit::TestCase
   end
   
   def test_place_results_by_points
-    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 50+")
+    race = standings(:jack_frost).races.create(:category_name => "Masters Men 50+")
     race.place_results_by_points
     
-    first_result = race.results.create!
-    second_result = race.results.create!
+    first_result = race.results.create
+    second_result = race.results.create
     
     race.results(true)
     race.place_results_by_points
@@ -136,14 +136,14 @@ class RaceTest < Test::Unit::TestCase
     assert_equal(second_result, race.results.last, 'Last result')
     assert_equal('1', race.results.last.place, 'Last result place')
     
-    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 60+")
+    race = standings(:jack_frost).races.create(:category_name => "Masters Men 60+")
     results = [
-      race.results.create!(:points => 90, :place => 4),
-      race.results.create!(:points => 0, :place => 5),
-      race.results.create!(:points => 89, :place => 4),
-      race.results.create!(:points => 89, :place => ''),
-      race.results.create!(:points => 100, :place => 1),
-      race.results.create!(:points => 89)
+      race.results.create(:points => 90, :place => 4),
+      race.results.create(:points => 0, :place => 5),
+      race.results.create(:points => 89, :place => 4),
+      race.results.create(:points => 89, :place => ''),
+      race.results.create(:points => 100, :place => 1),
+      race.results.create(:points => 89)
     ]
     
     race.results(true)
@@ -175,60 +175,60 @@ class RaceTest < Test::Unit::TestCase
   # Look at source results for tie-breaking
   # Intentional nonsene in some results and points to test sorting
   def test_competition_place_results_by_points
-    race = standings(:jack_frost).races.create!(:category_name => "Masters Men 50+")
+    race = standings(:jack_frost).races.create(:category_name => "Masters Men 50+")
 
     20.times do
-      race.results.create!
+      race.results.create
     end
     
     ironman = Ironman.create(:date => Date.today)
-    ironman_race = ironman.standings.create!(:name => '2006').races.create!(:category => Category.new(:name => 'Ironman'))
+    ironman_race = ironman.standings.create(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
     
-    first_competition_result = ironman_race.results.create!
-    first_competition_result.scores.create!(:source_result => race.results[0], :competition_result => first_competition_result, :points => 45)
+    first_competition_result = ironman_race.results.create
+    first_competition_result.scores.create(:source_result => race.results[0], :competition_result => first_competition_result, :points => 45)
     
-    second_competition_result = ironman_race.results.create!
-    second_competition_result.scores.create!(:source_result => race.results[2], :competition_result => second_competition_result, :points => 45)
+    second_competition_result = ironman_race.results.create
+    second_competition_result.scores.create(:source_result => race.results[2], :competition_result => second_competition_result, :points => 45)
     
-    third_competition_result = ironman_race.results.create!
+    third_competition_result = ironman_race.results.create
     race.results[3].place = 2
     race.results[3].save!
-    third_competition_result.scores.create!(:source_result => race.results[3], :competition_result => third_competition_result, :points => 15)
-    third_competition_result.scores.create!(:source_result => race.results[4], :competition_result => third_competition_result, :points => 15)
+    third_competition_result.scores.create(:source_result => race.results[3], :competition_result => third_competition_result, :points => 15)
+    third_competition_result.scores.create(:source_result => race.results[4], :competition_result => third_competition_result, :points => 15)
     race.results[4].place = 3
     race.results[4].save!
     
-    fourth_competition_result = ironman_race.results.create!
-    fourth_competition_result.scores.create!(:source_result => race.results[1], :competition_result => fourth_competition_result, :points => 30)
+    fourth_competition_result = ironman_race.results.create
+    fourth_competition_result.scores.create(:source_result => race.results[1], :competition_result => fourth_competition_result, :points => 30)
     race.results[1].place = 1
     race.results[1].save!
     
-    fifth_competition_result = ironman_race.results.create!
-    fifth_competition_result.scores.create!(:source_result => race.results[5], :competition_result => fifth_competition_result, :points => 4)
+    fifth_competition_result = ironman_race.results.create
+    fifth_competition_result.scores.create(:source_result => race.results[5], :competition_result => fifth_competition_result, :points => 4)
     race.results[5].place = 15
     race.results[5].save!
-    fifth_competition_result.scores.create!(:source_result => race.results[7], :competition_result => fifth_competition_result, :points => 2)
+    fifth_competition_result.scores.create(:source_result => race.results[7], :competition_result => fifth_competition_result, :points => 2)
     race.results[7].place = 17
     race.results[7].save!
     
-    sixth_competition_result = ironman_race.results.create!
-    sixth_competition_result.scores.create!(:source_result => race.results[6], :competition_result => sixth_competition_result, :points => 5)
+    sixth_competition_result = ironman_race.results.create
+    sixth_competition_result.scores.create(:source_result => race.results[6], :competition_result => sixth_competition_result, :points => 5)
     race.results[6].place = 15
     race.results[6].save!
-    sixth_competition_result.scores.create!(:source_result => race.results[8], :competition_result => sixth_competition_result, :points => 1)
+    sixth_competition_result.scores.create(:source_result => race.results[8], :competition_result => sixth_competition_result, :points => 1)
     race.results[8].place = 18
     race.results[8].save!
     
-    seventh_competition_result = ironman_race.results.create!
-    seventh_competition_result.scores.create!(:source_result => race.results[11], :competition_result => seventh_competition_result, :points => 2)
+    seventh_competition_result = ironman_race.results.create
+    seventh_competition_result.scores.create(:source_result => race.results[11], :competition_result => seventh_competition_result, :points => 2)
     race.results[11].place = 20
     race.results[11].save!
     
-    eighth_competition_result = ironman_race.results.create!
-    eighth_competition_result.scores.create!(:source_result => race.results[10], :competition_result => eighth_competition_result, :points => 1)
+    eighth_competition_result = ironman_race.results.create
+    eighth_competition_result.scores.create(:source_result => race.results[10], :competition_result => eighth_competition_result, :points => 1)
     race.results[10].place = 20
     race.results[10].save!
-    eighth_competition_result.scores.create!(:source_result => race.results[9], :competition_result => eighth_competition_result, :points => 1)
+    eighth_competition_result.scores.create(:source_result => race.results[9], :competition_result => eighth_competition_result, :points => 1)
     race.results[9].place = 25
     race.results[9].save!
     

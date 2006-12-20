@@ -135,7 +135,7 @@ class EventTest < Test::Unit::TestCase
   
   def test_destroy
     event = SingleDayEvent.create
-    standings = event.standings.create!.races.create!(:category => categories(:cat_3))
+    standings = event.standings.create.races.create(:category => categories(:cat_3))
     event.destroy
     assert_raises(ActiveRecord::RecordNotFound, "event should be deleted") {Event.find(event.id)}
   end

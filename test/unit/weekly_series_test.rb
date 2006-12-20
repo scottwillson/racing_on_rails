@@ -11,7 +11,7 @@ class WeeklySeriesTest < Test::Unit::TestCase
     assert_equal(0, pir.events.size, 'PIR events')
 
     Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) {|date|
-      individual_pir = pir.events.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
+      individual_pir = pir.events.create(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
       pir.logger.debug('before_add')
       pir.logger.debug('after_add')
       assert(individual_pir.valid?, "PIR valid?")

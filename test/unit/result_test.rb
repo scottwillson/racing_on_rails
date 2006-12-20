@@ -207,7 +207,7 @@ class ResultTest < Test::Unit::TestCase
   end
   
   def test_event
-    result = races(:kings_valley_pro_1_2_2004).results.create!(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result = races(:kings_valley_pro_1_2_2004).results.create(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
     result.reload
     assert_equal(events(:kings_valley_2004), result.event, 'Result event')
   end
@@ -499,7 +499,7 @@ class ResultTest < Test::Unit::TestCase
     kings_valley_2004.discipline = 'Mountain Bike'
     kings_valley_2004.save!
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create!(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
+    result = results.create(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '999')
     assert_equal(tonkin, result.racer, 'Racer')
     # TODO assert wrong number warning
     
@@ -563,8 +563,8 @@ class ResultTest < Test::Unit::TestCase
     result = race.results.new(:first_name => 'Erik', :last_name => 'Viking', :number => '104')
     assert_equal([], result.find_racers(event).to_a, 'Tonkin\'s number, different last name')
 
-    tonkin_clone = Racer.create!(:first_name => 'Erik', :last_name => 'Tonkin')
-    RaceNumber.create!(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '1')
+    tonkin_clone = Racer.create(:first_name => 'Erik', :last_name => 'Tonkin')
+    RaceNumber.create(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '1')
     unless tonkin_clone.valid?
       flunk(tonkin_clone.errors.full_messages)
     end
