@@ -53,17 +53,20 @@
 					</tr>
 				</tbody>
 			</table>
-			<div align="left">
-				<%= link_image_to '/images/buttons/add.gif', :action => 'new' %>
-			</div>
-			<div align="right">
-				<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
-						<div class="field_label" id="left">Import New Members:</div>
-						<%= file_field_tag "racers_file" %>
-						<%= select_tag 'year', ['2007', '2006'] %>
-						<%= submit_tag 'Import' %>
-				<%= end_form_tag %>
-			</div>
+			
+			<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
+				<table width="100%">
+					<tr>
+						<td><%=  link_image_to '/images/buttons/add.gif', :action => 'new' %></td>
+						<td style="text-align: right;">
+							<span class="field_label">Import New Members:</span>
+							<%= file_field_tag "racers_file" %>
+							<%= select_tag 'year', ['2007', '2006'] %>
+							<%= submit_tag 'Import' %>
+						</td>
+					</tr>
+				</table>
+			<%= end_form_tag %>
 		</td>
 	</tr>
 </table>
