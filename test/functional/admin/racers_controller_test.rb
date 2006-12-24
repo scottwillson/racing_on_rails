@@ -38,6 +38,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     get(:index)
     assert_response(:success)
     assert_template("admin/racers/index")
+    assert_equal('layouts/admin/application', @controller.active_layout)
     assert_not_nil(assigns["racers"], "Should assign racers")
     assert(assigns["racers"].empty?, "Should have no racers")
     assert_not_nil(assigns["name"], "Should assign name")

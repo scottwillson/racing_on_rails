@@ -1,22 +1,23 @@
 # Local config customization
 load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
 
-# Prefer site-specific templates, partials etc. if they exist.  Otherwise, use the base
+# Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
 module ActionView
   class Base
     private
       def full_template_path(template_path, extension)
-        # Check to see if the partial exists in our 'sites' folder first
-        site_specific_path = File.join(RAILS_ROOT, 'local', 'app', 'views', "#{template_path}.#{extension}")
-        if File.exist?(site_specific_path)
-          site_specific_path
+        # Check to see if the partial exists in our 'local' folder first
+        local_path = File.join(RAILS_ROOT, 'local', 'app', 'views', "#{template_path}.#{extension}")
+        if File.exist?(local_path)
+          local_path
         else
           "#{@base_path}/#{template_path}.#{extension}"
         end
       end
   end
 end
+
 # Scoop up both the base's migration files (those that should apply to ALL sites), plus
 # the site-specific migration files.  Sort them.  Apply them in turn.
 module ActiveRecord
@@ -40,6 +41,5 @@ module ActiveRecord
       end
       down? ? files.reverse : files
     end
-
   end
 end

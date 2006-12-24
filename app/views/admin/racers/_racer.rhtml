@@ -9,7 +9,7 @@
 	<td nowrap>
 		<%= render(:partial => 'team', :locals => { :racer => racer }) %>
 	</td>
-	<td width="300">
+	<td width="200">
 		<%= render(:partial => 'aliases', :locals => { :racer => racer }) %>
 	</td>
 	<td align="right">
@@ -27,7 +27,7 @@
 	<td align="center">
 		<%= attribute(racer, 'member') %>
 	</td>
-	<td align="right">
+	<td align="right" style="white-space: nowrap;">
     	<%= link_to 'Results', :controller => '/results', :action => 'racer', :id => racer.id %>
 		|
 		<%= link_to 'Edit', :action => 'show', :id => racer.id %>

@@ -1,6 +1,7 @@
 # View schedule with links to admin Event pages
 class Admin::ScheduleController < ApplicationController
 
+  layout 'admin/application'
   before_filter :login_required
 
   # schedule calendar  with links to admin Event pages

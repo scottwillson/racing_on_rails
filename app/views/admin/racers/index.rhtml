@@ -5,7 +5,7 @@
 <div align="center">
 
 <%= start_form_tag({}, {:method => 'get'}) %>
-	Name: <%= text_field_tag 'name', @name, :size => 30 %>
+	<span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
 
 	<%# Nasty code required to show consisten meesages with and without AJAX. At least it could be in a helper. %>
 	<div class="message">

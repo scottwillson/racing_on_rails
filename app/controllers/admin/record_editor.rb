@@ -6,6 +6,7 @@
 class Admin::RecordEditor < ApplicationController
 
   before_filter :login_required
+  layout 'admin/application'
 
   def self.edits(active_record_symbol, icon = nil)
     @@record_symbol = active_record_symbol
