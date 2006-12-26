@@ -51,6 +51,7 @@ class GridFile < Grid
     case source
     when File, Tempfile
       begin
+        raise "#{source} does not exist" unless File.exists?(source.path)
         @file = source
         if excel?
           lines = GridFile.read_excel(@file)

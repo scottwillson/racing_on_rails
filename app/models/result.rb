@@ -87,26 +87,7 @@ class Result < ActiveRecord::Base
     matches = Set.new
     
     # name
-    if !first_name.blank? and !last_name.blank?
-      matches = matches + Racer.find(
-        :all,
-        :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
-      ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
-      
-    elsif last_name.blank?
-      matches = matches +  Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
-      
-    elsif first_name.blank?
-      matches = matches + Racer.find_all_by_last_name(last_name) | Alias.find_all_racers_by_name(last_name)
-      
-    else
-      matches = matches + Racer.find(
-        :all,
-        :conditions => ['first_name = ? and last_name = ?', '', ''],
-        :order => 'last_name, first_name')
-      
-    end
-    
+    matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
     
     # number

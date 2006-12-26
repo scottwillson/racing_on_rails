@@ -28,6 +28,28 @@ class Racer < ActiveRecord::Base
         :order => 'last_name, first_name')
     end
   end
+  
+  def Racer.find_all_by_name_or_alias(first_name, last_name)
+    if !first_name.blank? and !last_name.blank?
+      Racer.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
+      ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
+      
+    elsif last_name.blank?
+      Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
+      
+    elsif first_name.blank?
+      Racer.find_all_by_last_name(last_name) | Alias.find_all_racers_by_name(last_name)
+      
+    else
+      Racer.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', '', ''],
+        :order => 'last_name, first_name')
+      
+    end
+  end
 
   def Racer.full_name(first_name, last_name)
     unless first_name.blank? or last_name.blank?
@@ -110,10 +132,22 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def gender=(value)
+    value.upcase!
+    case value
+    when 'M', 'MALE', 'BOY'
+      self[:gender] = 'M'
+    when 'F', 'FEMALE', 'GIRL'
+      self[:gender] = 'F'
+    else
+      self[:gender] = 'M'
+    end
+  end
+  
   def date_of_birth=(value)
     if value.is_a?(String)
-      century = value[/^00\d\d/]
-      value.gsub!(/^00/, '19') if century
+      value.gsub!(/^00/, '19')
+      value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
     end
     super
   end
@@ -276,6 +310,13 @@ class Racer < ActiveRecord::Base
   
   def renewed?
     self.member_from && (self.member_from > Date.today)
+  end
+  
+  def state=(value)
+    if value and value.size == 2
+      value.upcase!
+    end
+    super
   end
   
   # Hack around in-place editing

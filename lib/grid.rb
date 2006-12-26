@@ -18,6 +18,8 @@ class Grid
   # * row_class: Map each row to this Class. Example: :row_class => Racer
   #
   # If both +columns+ and +header_row+ options are provided, +columns+ is used to create the columns, and the first row is deleted and ignored
+  #
+  # TODO Consider using regex for column maps
   def initialize(source = '', *options)
     raise ArgumentError("'source' cannot be nil") if source.nil?
     
@@ -135,6 +137,7 @@ class Grid
 
     columns_array = columns_array.split(/#{@delimiter}/) unless columns_array.is_a?(Array)
     @columns = columns_array.collect do |column_name|
+      description = column_name
       if column_name.is_a?(Column)
         column_name
       else
@@ -142,19 +145,28 @@ class Grid
         if quoted
           column_name.gsub!(/^"/, '')
           column_name.gsub!(/"$/, '')
+          description = column_name
         end
         if !column_name.blank? && @column_map[column_name.downcase]
           column_name = @column_map[column_name.downcase]
         end
       
-        column = Column.new(column_name.to_s.strip, column_name.to_s.strip)
+        if column_name.is_a?(Column)
+          column = column_name
+        else
+          column = Column.new(column_name.to_s.strip, description)
+        end
 
         unless column.name.blank?
           field = column.name.downcase
           field = field.underscore
           field.gsub!(' ', '_')
           if @column_map[field]
-            column.field = @column_map[field]
+            if @column_map[field].is_a?(Column)
+              column = @column_map[field]
+            else
+              column.field = @column_map[field]
+            end
           else
             column.field = field
           end
@@ -326,7 +338,6 @@ class Grid
   end
 end
 
-
 class Row < Array
   def initialize(cells, grid)
     super(cells)
@@ -345,10 +356,34 @@ class Row < Array
     return slice(index) || ''
   end
 
+  # Concatenates duplicate keys into one value separated by a line return. 
+  # Example:
+  # name | street    | street
+  # Eddy | 10 Huy St | Apt #410
+  #
+  # :name  => 'Eddy'
+  # :steet => '10 Huy St
+  #            Apt #410'
   def to_hash
     hash = HashWithIndifferentAccess.new
     for index in 0..(size - 1)
-      hash[@grid.columns[index].field] = self[index] if @grid.columns[index].field
+      column = @grid.columns[index]
+      field = column.field
+      if field
+
+        value = self[index]
+        if field == :notes and value[/notes/].nil? and value[/Notes/].nil? and column.description[/notes/].nil? and column.description[/Notes/].nil?
+          value = "#{column.description}: #{value}"
+        end
+
+        existing_value = hash[field]
+        if existing_value
+          hash[field] = "#{existing_value}#{$INPUT_RECORD_SEPARATOR}#{value}" unless value.blank?
+        else   
+          hash[field] = value
+        end
+
+      end
     end
     hash
   end

@@ -648,9 +648,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
     file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
-    post(:import, :commit => 'Import', :racers_file => file)
+    post(:import, :commit => 'Import')
 
-    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_response(:redirect)
     assert_redirected_to(:controller => 'admin/racers', :action => 'index')

@@ -135,20 +135,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
 
     temp_file = File.new(path)
-    @racers_file = GridFile.new(
-      temp_file,
-      :delimiter => ',',
-      :quoted => true,
-      :header_row => true,
-      :row_class => Racer,
-      :column_map => {
-        'Birth date' => 'date_of_birth',
-        'Address1_Contact address' => 'street',
-        'Address2_Contact address' => 'street',
-        'Road Category -' => 'road_category',
-        'track_category_' => 'track_category'
-      }
-    )
+    @racers_file = RacersFile.new(temp_file)
 
     session[:racers_file_path] = temp_file.path
   end
@@ -161,8 +148,8 @@ class Admin::RacersController < Admin::RecordEditor
 
     elsif params[:commit] == 'Import'
       path = session[:racers_file_path]
-      racers = RacersFile.new(path).import
-      flash[:notice] = "Imported #{racers} new members"
+      created, updated = RacersFile.new(File.new(path)).import
+      flash[:notice] = "Imported #{created} new members and updated #{updated}"
       session[:racers_file_path] = nil
       redirect_to(:action => 'index')
 

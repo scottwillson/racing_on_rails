@@ -404,5 +404,8 @@ class RacerTest < Test::Unit::TestCase
   def test_date
     racer = Racer.new(:date_of_birth => '0073-10-04')
     assert_equal_dates('1973-10-04', racer.date_of_birth, 'date_of_birth from 0073-10-04')
+
+    racer = Racer.new(:date_of_birth => "10/27/78")
+    assert_equal_dates('1978-10-27', racer.date_of_birth, 'date_of_birth from 10/27/78')
   end
 end

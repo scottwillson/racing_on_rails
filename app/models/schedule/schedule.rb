@@ -58,7 +58,7 @@ module Schedule
       logger.debug("Read #{filename}")
       GridFile.new(
         File.new(filename), 
-        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", "notes"]
+        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", Column.new('notes', 'Notes')]
       )
     end
 
@@ -107,7 +107,7 @@ module Schedule
 
     # Read GridFile Row and create SingleDayEvent
     def Schedule.parse(row_hash)
-      if logger.debug? then logger.debug(row_hash) end
+      logger.debug(row_hash.inspect) if logger.debug?
       event = nil
       if !(row_hash[:date].blank? and row_hash[:name].blank?)
         begin
