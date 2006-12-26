@@ -13,6 +13,8 @@ class Racer < ActiveRecord::Base
   has_many :aliases
   has_many :race_numbers
   has_many :results
+  
+  CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
 
   # Does not consider Aliases
   def Racer.find_all_by_name(name)

@@ -10,11 +10,16 @@ class RacersFile < GridFile
     'Zip_Contact address'                    => 'zip',
     'Phone'                                  => 'home_phone',
     'Road Category - '                       => 'road_category',
-    'Track_category_'                        => 'track_category',
+    'Road Age Group - '                      => 'road_category',
+    'Track Category - '                      => 'track_category',
+    'Track Age Group - '                     => 'track_category',
+    'Cyclocross Category - '                 => 'ccx_category',
+    'Cyclocross Age Group -'                 => 'ccx_category',
     'Cross Country Mountain Bike Category -' => 'mtb_category',
     'Cross Country Mountain Age Group -'     => 'mtb_category',
+    'Downhill Mountain Bike Category - '     => 'dh_category',
+    'Downhill Mountain Bike Age Group -'     => 'dh_category',
     'What is your occupation? (optional)'    => 'occupation',
-    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new('team_name', 'Disciplines'),
     'Receipt Code'                           => 'notes',
     'Confirmation Code'                      => 'notes',
     'Transaction Payment Total'              => 'notes',
@@ -23,10 +28,11 @@ class RacersFile < GridFile
     'Singlespeed'                            => 'notes',
     'Tandem'                                 => 'notes',
     'Please select a category:'              => Column.new('notes', 'Disciplines'),
-    'Would you like to make an additional donation to support OBRA? '               => Column.new('notes', 'Donation'),
-    'Please indicate if you are interested in racing cross country or downhill. '   => Column.new('notes', 'Downhill/Cross Country'),
-    'Please indicate if you are interested in racing single speed.'                 => Column.new('notes', 'Singlespeed'),
-    'Please indicate other interests. (For example: time trial tandem triathalon r' => Column.new('notes', 'Other interests')
+    'Would you like to make an additional donation to support OBRA? '                 => Column.new('notes', 'Donation'),
+    'Please indicate if you are interested in racing cross country or downhill. '     => Column.new('notes', 'Downhill/Cross Country'),
+    'Please indicate if you are interested in racing single speed.'                   => Column.new('notes', 'Singlespeed'),
+    'Please indicate other interests. (For example: time trial tandem triathalon r'   => Column.new('notes', 'Other interests'),
+    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new('team_name', 'Disciplines')
   }
   
   def initialize(source, *options)
@@ -56,11 +62,8 @@ class RacersFile < GridFile
         for row in rows
           row_hash = row.to_hash
           logger.debug(row_hash.inspect) if logger.debug?
-          row_hash[:ccx_category]   = row_hash[:ccx_category].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[:ccx_category]
-          row_hash[:dh_category]    = row_hash[:dh_category].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[:dh_category]
-          row_hash[:mtb_category]   = row_hash[:mtb_category].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[:mtb_category]
-          row_hash[:road_category]  = row_hash[:road_category].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[:road_category]
-          row_hash[:track_category] = row_hash[:track_category].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[:track_category]
+          combine_categories(row_hash)
+
           racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
           racer = nil
           if racers.empty?
@@ -69,6 +72,9 @@ class RacersFile < GridFile
           else
             logger.warn("RacersFile Found #{racers.size} racers for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") if racers.size > 1
             row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+            # Don't want to overwrite existing categories
+            delete_blank_categories(row_hash)
+            
             Racer.update(racers.last.id, row_hash)
             updated = updated + 1
           end
@@ -79,6 +85,18 @@ class RacersFile < GridFile
       end
     end
     return created, updated
+  end
+  
+  def combine_categories(row_hash)
+    for field in Racer::CATEGORY_FIELDS
+      row_hash[field] = row_hash[field].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[field]
+    end
+  end
+  
+  def delete_blank_categories(row_hash)
+    for field in Racer::CATEGORY_FIELDS
+      row_hash.delete(field) if row_hash[field].blank?
+    end
   end
   
   def logger

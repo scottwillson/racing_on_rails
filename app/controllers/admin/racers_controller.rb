@@ -2,6 +2,7 @@
 class Admin::RacersController < Admin::RecordEditor
 
   include ApplicationHelper
+  include ActionView::Helpers::TextHelper
 
   model :racer
   edits :racer
@@ -149,7 +150,7 @@ class Admin::RacersController < Admin::RecordEditor
     elsif params[:commit] == 'Import'
       path = session[:racers_file_path]
       created, updated = RacersFile.new(File.new(path)).import
-      flash[:notice] = "Imported #{created} new members and updated #{updated}"
+      flash[:notice] = "Imported #{pluralize(created, 'new racer')} and updated #{pluralize(updated, 'existing racer')}"
       session[:racers_file_path] = nil
       redirect_to(:action => 'index')
 
