@@ -13,17 +13,14 @@ task :deploy do
   transaction do
     update_code
     symlink
-  end
   
-  update_local_code
-  set_permissions
-  migrate
-  # Pull in local OBRA code
-  run "svn co svn+ssh://butlerpress.com/var/repos/obra /srv/www/rails/#{application}/current/local"
+    set_permissions
+    # Pull in local OBRA code
+    run "svn co svn+ssh://butlerpress.com/var/repos/obra /srv/www/rails/#{application}/current/local"
 
-  restart
-  migrate
-  
+    restart
+    migrate
+  end
 end
 
 desc "Set file permissions for Rails app"
