@@ -4,7 +4,7 @@ set :application, "obra"
 set :repository, "svn+ssh://butlerpress.com/var/repos/racing_on_rails/trunk"
 
 role :app, "app.obra.org"
-role :db, 'app.obra.org'
+role :db, 'app.obra.org', :primary => true
 
 set :deploy_to, "/srv/www/rails/#{application}"
 
