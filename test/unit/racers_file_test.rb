@@ -69,12 +69,11 @@ Downhill/Cross Country: Downhill
 Singlespeed: 
 Other interests: }
     assert_equal(notes, tonkin.notes, 'notes')
-    # existing racer
-    # - update #
-    # - update membership
-    # - update contact info
-    # New racer
-    # N/A = No team
-    # How to handle more than one existing racer with same name?
+    
+    ted_gresham = Racer.find_all_by_name('Ted Greshsam').first
+    assert_equal(nil, ted_gresham.team, 'Team')
+    
+    camden_murray = Racer.find_all_by_name('Camden Murray').first
+    assert_equal(nil, camden_murray.team, 'Team')
   end
 end

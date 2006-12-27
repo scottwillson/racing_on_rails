@@ -127,7 +127,7 @@ class Racer < ActiveRecord::Base
   end
 
   def team_name=(value)
-    if value.blank?
+    if value.blank? or value == 'N/A'
       self.team = nil
     else
       self.team = Team.find_or_create_by_name(value)
@@ -392,7 +392,7 @@ class Racer < ActiveRecord::Base
   # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team
   def find_associated_records
     if self.team and (team.new_record? or team.dirty?)
-      if team.name.blank?
+      if team.name.blank? or team.name == 'N/A'
         self.team = nil
       else
         existing_team = Team.find_by_name_or_alias(team.name)
