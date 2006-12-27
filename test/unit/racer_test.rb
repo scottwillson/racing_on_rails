@@ -269,6 +269,51 @@ class RacerTest < Test::Unit::TestCase
     assert_equal(false, racer.member?, 'member?')
   end
   
+  def test_member_to
+    # from = nil, to = nil
+    racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
+    racer.member_from = nil
+    racer.member_to = nil
+    assert_equal(false, racer.member?, 'member?')
+    assert_nil(racer.member_from, 'member_from')
+    assert_nil(racer.member_to, 'member_to')
+    
+    racer.member_to = Date.new(3000, 12, 31)
+    assert_equal_dates(Date.today, racer.member_from, 'Member from')
+    assert_equal_dates('3000-12-31', racer.member_to, 'Member to')
+    assert_equal(true, racer.member?, 'member?')
+
+    # before, before
+    racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
+    racer.member_from = Date.new(1970, 1, 1)
+    racer.member_to = Date.new(1970, 12, 31)
+
+    racer.member_to = Date.new(1971, 7, 31)
+    assert_equal_dates(Date.new(1970, 1, 1), racer.member_from, 'Member from')
+    assert_equal_dates('1971-07-31', racer.member_to, 'Member to')
+    assert_equal(false, racer.member?, 'member?')
+
+    # before, after
+    racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
+    racer.member_from = Date.new(1970, 1, 1)
+    racer.member_to = Date.new(1985, 12, 31)
+
+    racer.member_to = Date.new(1971, 7, 31)
+    assert_equal_dates(Date.new(1970, 1, 1), racer.member_from, 'Member from')
+    assert_equal_dates('1971-07-31', racer.member_to, 'Member to')
+    assert_equal(false, racer.member?, 'member?')
+
+    # after, after
+    racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
+    racer.member_from = Date.new(2006, 1, 1)
+    racer.member_to = Date.new(2006, 12, 31)
+
+    racer.member_to = Date.new(2000, 1, 31)
+    assert_equal_dates(Date.new(2000, 1, 31), racer.member_from, 'Member from')
+    assert_equal_dates('2000-01-31', racer.member_to, 'Member to')
+    assert_equal(false, racer.member?, 'member?')
+  end
+  
   def test_team_name
     racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
     assert_equal(racer.team_name, '', 'name')

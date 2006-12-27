@@ -129,7 +129,7 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
   def preview_import
-    uploaded_file = @params[:racers_file]
+    uploaded_file = params[:racers_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
     File.open(path, File::CREAT|File::WRONLY) do |f|
       f.print(uploaded_file.read)
@@ -137,6 +137,7 @@ class Admin::RacersController < Admin::RecordEditor
 
     temp_file = File.new(path)
     @racers_file = RacersFile.new(temp_file)
+    @year = params[:year]
 
     session[:racers_file_path] = temp_file.path
   end

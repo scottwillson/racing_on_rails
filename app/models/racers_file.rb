@@ -1,5 +1,5 @@
 # Excel or text file of Racers. Assumes that the first row is a header row. 
-# On error, logs error and continues import
+# Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 class RacersFile < GridFile
   COLUMN_MAP = {
     'Birth date'                             => 'date_of_birth',
@@ -56,7 +56,13 @@ class RacersFile < GridFile
     logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
-
+    max_date_for_current_year = Event.find_max_date_for_current_year
+    if max_date_for_current_year and Date.today <= Event.find_max_date_for_current_year
+      member_to = Date.new(Date.today.year, 12, 31)
+    else
+      member_to = Date.new(Date.today.year + 1, 12, 31)
+    end
+    
     Racer.transaction do
       begin
         for row in rows
@@ -66,6 +72,7 @@ class RacersFile < GridFile
 
           racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
           racer = nil
+          row_hash[:member_to] = member_to
           if racers.empty?
             racer = Racer.create(row_hash)
             created = created + 1

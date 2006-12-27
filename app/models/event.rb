@@ -29,6 +29,12 @@ class Event < ActiveRecord::Base
       end
       years.sort.reverse
     end
+    
+    # Used when importing Racers: should membership be for this year or the next?
+    def Event.find_max_date_for_current_year
+      # TODO Make this better
+      maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])
+    end
 
     # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
     def initialize(attributes = nil)

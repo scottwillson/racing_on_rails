@@ -199,4 +199,10 @@ class EventTest < Test::Unit::TestCase
     assert_equal(ASSOCIATION.short_name, event.sanctioned_by, 'sanctioned_by')
     assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
   end
+  
+  def test_find_max_date_for_current_year
+    assert_nil(Event.find_max_date_for_current_year)
+    SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
+    assert_equal_dates("#{Date.today.year}-06-10", Event.find_max_date_for_current_year)
+  end
 end

@@ -285,16 +285,24 @@ class Racer < ActiveRecord::Base
   
   def member_from=(date)
     if date.nil?
-      self.member_to = nil 
+      self[:member_to] = nil 
     elsif self.member_to.nil?
       if date.is_a?(Date)
-        self.member_to = Date.new(date.year, 12, 31)
+        self[:member_to] = Date.new(date.year, 12, 31)
       else
         date_as_date = Date.parse(date)
-        self.member_to = Date.new(date_as_date.year, 12, 31)
+        self[:member_to] = Date.new(date_as_date.year, 12, 31)
       end
     end
     self[:member_from] = date
+  end
+  
+  def member_to=(date)
+    if !date.nil?
+      self[:member_from] = Date.today if self.member_from.nil?
+      self[:member_from] = date if self.member_from > date
+    end
+    self[:member_to] = date
   end
   
   # Validates member_from and member_to

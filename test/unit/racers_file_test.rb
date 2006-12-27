@@ -69,7 +69,6 @@ Downhill/Cross Country: Downhill
 Singlespeed: 
 Other interests: }
     assert_equal(notes, tonkin.notes, 'notes')
-    # consolidated fields into notes
     # existing racer
     # - update #
     # - update membership
