@@ -10,8 +10,8 @@ namespace :racing_on_rails do
   
   desc 'Copy release package to web server' 
   task :deploy_release do
-    puts(`scp pkg/racing_on_rails-0.0.3.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.zip`)
-    puts(`scp pkg/racing_on_rails-0.0.3.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.tar.gz`)
+    puts(`scp pkg/racing_on_rails-0.0.4.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.zip`)
+    puts(`scp pkg/racing_on_rails-0.0.4.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.tar.gz`)
   end
 
   desc "Package, deploy new app from scratch. Test."

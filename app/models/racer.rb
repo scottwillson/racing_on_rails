@@ -260,8 +260,8 @@ class Racer < ActiveRecord::Base
   end
   
   # Is Racer a current member of the bike racing association?
-  def member?
-    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= Date.today && self.member_to >= Date.today)
+  def member?(date = Date.today)
+    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
   end
   
   def member

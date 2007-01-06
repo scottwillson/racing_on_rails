@@ -227,6 +227,10 @@ class RacerTest < Test::Unit::TestCase
     racer.member_from = Date.new(2001, 1, 1)
     racer.member_to = Date.new(2001, 12, 31)
     assert_equal(false, racer.member?, 'member?')
+    assert_equal(false, racer.member?(Date.new(2000, 12, 31)), 'member')
+    assert_equal(true, racer.member?(Date.new(2001, 1, 1)), 'member')
+    assert_equal(true, racer.member?(Date.new(2001, 12, 31)), 'member')
+    assert_equal(false, racer.member?(Date.new(2002, 1, 1)), 'member')
     racer.member = true
     assert_equal(true, racer.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), racer.member_from, 'Member from')

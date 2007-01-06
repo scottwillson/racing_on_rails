@@ -81,7 +81,7 @@ class Bar < Competition
             racer = scoring_result.racer
             team = scoring_result.team
             races = bar.find_races(scoring_result)
-            if races and racer and racer.member?
+            if races and racer and racer.member?(bar.date)
               for race in races
                 bar_result = race.results.detect {|result| result.racer == racer}
                 if bar_result.nil?
@@ -252,7 +252,7 @@ class Bar < Competition
     
     teams = extract_teams_from(scoring_result)
     for team in teams
-      if team.member
+      if team.member and (scoring_result.racer.nil? or scoring_result.racer.member?(bar.date))
         team_standings = bar.standings.detect {|standings| standings.name == 'Team'}
         team_race = team_standings.races.first
         team_bar_result = team_race.results.detect {|result| result.team == team}
