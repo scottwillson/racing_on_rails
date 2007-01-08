@@ -16,7 +16,7 @@
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 
-  PROPOGATED_ATTRIBUTES = ["city", "discipline", "flyer", "flyer_approved", "name", "promoter_id", "sanctioned_by", "state"] unless defined?(PROPOGATED_ATTRIBUTES)
+  PROPOGATED_ATTRIBUTES = ['cancelled', "city", "discipline", "flyer", "flyer_approved", "name", "promoter_id", "sanctioned_by", "state"] unless defined?(PROPOGATED_ATTRIBUTES)
 
   validates_presence_of :name, :date
   validate_on_create {:parent.nil?}

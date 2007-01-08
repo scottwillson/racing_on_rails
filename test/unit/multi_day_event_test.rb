@@ -154,6 +154,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     # parent, children same except for dates
     single_event_1 = SingleDayEvent.new(:date => Date.new(2007, 6, 19))
     single_event_1.name = "Elkhorn Stage Race"
+    single_event_1.cancelled = false
     single_event_1.city = "Baker City"
     single_event_1.discipline = "Track"
     single_event_1.flyer = "http://google.com"
@@ -164,6 +165,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     
     single_event_2 = SingleDayEvent.new(:date => Date.new(2007, 6, 26))
     single_event_2.name = "Elkhorn Stage Race"
+    single_event_2.cancelled = false
     single_event_2.city = "Baker City"
     single_event_2.discipline = "Track"
     single_event_2.flyer = "http://google.com"
@@ -175,10 +177,10 @@ class MultiDayEventTest < Test::Unit::TestCase
     multi_day_event = MultiDayEvent.create_from_events([single_event_1, single_event_2])
     multi_day_event.save!
     
-    RAILS_DEFAULT_LOGGER.debug('*** setup done')
-    
+    # Bypass business logic and test what's really in the database
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
+    assert_equal('0', results["cancelled"], "SingleDayEvent cancelled")
     assert_equal("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
@@ -191,6 +193,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
+    assert_equal('0', results["cancelled"], "SingleDayEvent cancelled")
     assert_equal("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
@@ -203,6 +206,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
+    assert_equal('0', results["cancelled"], "MultiDayEvent cancelled")
     assert_equal("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Baker City", results["city"], "MultiDayEvent city")
     assert_equal("Track", results["discipline"], "MultiDayEvent discipline")
@@ -232,6 +236,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     multi_day_event.name = "Elkhorn Stage Race"
     multi_day_event.save
     original_attributes = multi_day_event.attributes.clone
+    multi_day_event.cancelled = true
     multi_day_event.city = "Boise"
     multi_day_event.state = "ID"
     multi_day_event.discipline = "Mountain Bike"
@@ -248,6 +253,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
+    assert_equal('1', results["cancelled"], "SingleDayEvent cancelled")
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
@@ -259,6 +265,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
+    assert_equal('1', results["cancelled"], "SingleDayEvent cancelled")
     assert_equal_dates("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
@@ -270,6 +277,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
+    assert_equal('1', results["cancelled"], "MultiDayEvent cancelled")
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Boise", results["city"], "MultiDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "MultiDayEvent discipline")
@@ -281,6 +289,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     # parent, children all different
     # change parent, children do not change
+    single_event_1.cancelled = false
     single_event_1.city = "Paris"
     single_event_1.state = "France"
     single_event_1.discipline = "Cyclocross"
@@ -290,6 +299,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     single_event_1.save!
     
     original_attributes = multi_day_event.attributes.clone
+    multi_day_event.cancelled = true
     multi_day_event.city = "Cazenovia"
     multi_day_event.state = "CT"
     multi_day_event.discipline = "Road"
@@ -304,6 +314,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
+    assert_equal('0', results["cancelled"], "SingleDayEvent cancelled")
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Paris", results["city"], "SingleDayEvent city")
     assert_equal("Cyclocross", results["discipline"], "SingleDayEvent discipline")
@@ -314,6 +325,7 @@ class MultiDayEventTest < Test::Unit::TestCase
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
+    assert_equal('1', results["cancelled"], "MultiDayEvent cancelled")
     assert_equal_dates("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Cazenovia", results["city"], "MultiDayEvent city")
     assert_equal("Road", results["discipline"], "MultiDayEvent discipline")
