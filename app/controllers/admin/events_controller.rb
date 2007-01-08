@@ -2,7 +2,7 @@
 class Admin::EventsController < ApplicationController
   
   before_filter :login_required
-  model :event, :single_day_event, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
+  model :event, :single_day_event, :multi_day_event, :weekly_series, :series, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
   layout 'admin/application'
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :destroy_standings, :upload]
 
