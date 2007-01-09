@@ -92,17 +92,19 @@
 							<tr>
 								<td></td>
 								<td style="text-align: right;">
-									<form method="post" action="/admin/promoters/new" class="button-to">
-										<span id="edit_promoter_link">
-										<%= link_to(
-													'Edit', 
-													:controller => 'promoters', 
-													:action => 'show', 
-													:id => @event.promoter.id,
-													:event_id => @event.id) if @event.promoter %>
-										</span>
-										&nbsp;<input type="submit" value="New" />
-									</form>
+									<span id="edit_promoter_link">
+									<%= link_to(
+												'Edit', 
+												:controller => 'promoters', 
+												:action => 'show', 
+												:id => @event.promoter.id,
+												:event_id => @event.id) if @event.promoter %>
+									</span>
+									&nbsp;<%= link_to(
+												'New', 
+												:controller => 'promoters', 
+												:action => 'new', 
+												:event_id => @event.id) %>
 								</td>
 							</tr>
 						</table>

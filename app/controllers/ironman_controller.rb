@@ -21,5 +21,6 @@ class IronmanController < ApplicationController
     else
       @ironman = nil
     end
+    @years = Ironman.years
   end
 end

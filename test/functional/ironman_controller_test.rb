@@ -32,11 +32,13 @@ class IronmanControllerTest < Test::Unit::TestCase
     assert_template("ironman/index")
     assert_not_nil(assigns["ironman"], "Should assign ironman")
     assert_not_nil(assigns["year"], "Should assign year")
+    assert_not_nil(assigns["years"], "Should assign years")
 
     get(:index)
     assert_response(:success)
     assert_template("ironman/index")
     assert_not_nil(assigns["ironman"], "Should assign ironman")
     assert_not_nil(assigns["year"], "Should assign year")
+    assert_not_nil(assigns["years"], "Should assign years")
   end
 end

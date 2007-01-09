@@ -1,5 +1,5 @@
 <% column = record.class.columns_hash[name] %>
-<% if column and !column.text? %>
+<% if (column and !column.text?) or name == 'member' %>
 
 	<%# Workaround for broken remote field code %>
 	<span class='editable' id="<%= name %>_<%= record.id %>" style='text-align: center;'>
