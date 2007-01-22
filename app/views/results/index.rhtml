@@ -1,20 +1,15 @@
 <% @page_title = "Results: #{@year}" %>
 
-<table class="base" id="results_index" border="0" cellspacing="0" cellpadding="0">
-	<caption>Results</caption>
-  <tr valign="top">
-  	<% unless @road_events.empty? %> 
-    <td><pre>
-    <%- for event in @road_events -%>
-<%= event.short_date %> <%= 
-  link_to event.name, 
-  :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id 
-%>
-      <%- end -%>
-      </pre>
-      </td>
-  <% else %>
-    <td><pre>Results will be posted when available</pre></td>
-  <% end %>
+<table class="base" border="0" cellspacing="0" cellpadding="0">
+	<caption>#{@year} Results</caption>
+  	<% unless @events.empty? %> 
+    <%- for event in @events.values.flatten.sort {|x,y| y.date <=> x.date} -%>
+  <tr class="<%= cycle('even', 'odd') %>">
+    <td class="right"><%= event.short_date %></td>
+	<td><%= link_to event.name, :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id %></td>
   </tr>
+  <% end %>
+  <% else %>
+  <tr><td>Results will be posted when available</td></tr>
+  <%- end -%>
 </table>
