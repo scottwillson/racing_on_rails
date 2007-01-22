@@ -30,7 +30,7 @@
 	        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
 				  <%- else -%>
 	        <td class="day">
-	          <div class="number	"><%= day.day_of_month -%></div>
+	          <div class="number"><%= day.day_of_month -%></div>
 					  <%- for event in day.events -%>
 				<%- if event.cancelled %>
 					<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>

@@ -42,7 +42,7 @@ class ResultsControllerTest < Test::Unit::TestCase
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("results/index")
-    assert_not_nil(assigns["road_events"], "Should assign road_events")
+    assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
   end
   

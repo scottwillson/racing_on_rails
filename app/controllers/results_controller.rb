@@ -9,12 +9,20 @@ class ResultsController < ApplicationController
   	@year = Date.today.year if @year == 0
   	first_of_year = Date.new(@year, 1, 1)
   	first_of_next_year = Date.new(@year +1, 1, 1)
-    @road_events = SingleDayEvent.find(
-      :all,
-      :conditions => ['date between ? and ? and id in (select event_id from standings)', 
-                      first_of_year, first_of_next_year],
-      :order => 'date desc'
-    )
+
+  	@events = Hash.new
+  	for discipline in [Discipline[:road], Discipline[:cyclocross], Discipline[:mountain_bike], Discipline[:track]]
+      discipline_events = SingleDayEvent.find(
+        :all,
+        :conditions => ['discipline = ? and date between ? and ? and id in (select event_id from standings)', 
+                         discipline.name, first_of_year, first_of_next_year],
+        :order => 'date desc'
+      )
+      discipline_events.delete_if {|event|
+        event.parent.is_a?(WeeklySeries)
+      }
+      @events[discipline.to_param] = discipline_events
+    end
   end
   
   def event
