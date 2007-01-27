@@ -10,7 +10,7 @@ class ResultsController < ApplicationController
   	first_of_year = Date.new(@year, 1, 1)
   	first_of_next_year = Date.new(@year +1, 1, 1)
 
-  	@events = Hash.new
+  	@events = HashWithIndifferentAccess.new
   	for discipline in [Discipline[:road], Discipline[:cyclocross], Discipline[:mountain_bike], Discipline[:track]]
       discipline_events = SingleDayEvent.find(
         :all,

@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  DATE_FORMATS = [24, 25, 27, 28, 30, 42, 45]
+  DATE_FORMATS = [22, 24, 25, 27, 28, 30, 42, 45]
 
   def GridFile.read_excel(file)
     if File::Stat.new(file.path).size == 0

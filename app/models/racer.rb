@@ -151,6 +151,15 @@ class Racer < ActiveRecord::Base
       value.gsub!(/^00/, '19')
       value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
     end
+    if value and value.to_s.size < 5
+      int_value = value.to_i
+      if int_value > 10 and int_value <= 99
+        value = "01/01/19#{value}"
+      end
+      if int_value > 0 and int_value <= 10
+        value = "01/01/20#{value}"
+      end
+    end
     super
   end
   
@@ -298,7 +307,7 @@ class Racer < ActiveRecord::Base
   end
   
   def member_to=(date)
-    if !date.nil?
+    unless date.nil?
       self[:member_from] = Date.today if self.member_from.nil?
       self[:member_from] = date if self.member_from > date
     end

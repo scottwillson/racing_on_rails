@@ -37,9 +37,7 @@ Transaction Payment Total: 32.95
 Registration Completion Date/Time: 11/20/06 10:04 AM
 Disciplines: Road/Track/Cyclocross
 Donation: 10
-Downhill/Cross Country: Downhill
-Singlespeed: 
-Other interests: }
+Downhill/Cross Country: Downhill}
     assert_equal(notes, tonkin.notes, 'notes')
 
     sautter = Racer.find_all_by_name('C Sautter').first
@@ -65,9 +63,7 @@ Transaction Payment Total: 32.95
 Registration Completion Date/Time: 11/20/06 10:04 AM
 Disciplines: Road/Track/Cyclocross
 Donation: 10
-Downhill/Cross Country: Downhill
-Singlespeed: 
-Other interests: }
+Downhill/Cross Country: Downhill}
     assert_equal(notes, tonkin.notes, 'notes')
     
     ted_gresham = Racer.find_all_by_name('Ted Greshsam').first
@@ -75,5 +71,66 @@ Other interests: }
     
     camden_murray = Racer.find_all_by_name('Camden Murray').first
     assert_equal(nil, camden_murray.team, 'Team')
+  end
+  
+  def test_excel_file_database
+    # Pre-existing racers
+    Racer.create(
+      :last_name =>'Abers',
+      :first_name => 'Brian',
+      :gender => 'M',
+      :email =>'brian@sportslabtraining.com',
+      :member_from => '2004-02-23',
+      :notes => 'Existing notes'
+    )
+
+    Racer.create(
+      :last_name =>'Babi',
+      :first_name => 'Rene',
+      :gender => 'M',
+      :email =>'rbabi@rbaintl.com',
+      :member_from => '2000-01-01',
+      :team_name => 'RBA Cycling Team',
+      :road_category => '4',
+      :date_of_birth => '1899-07-14'
+    )
+
+    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
+    racers = RacersFile.new(file).import
+    
+    assert_equal([1, 2], racers, 'Number of racers created and updated')
+    
+    all_abers = Racer.find_all_by_name('Brian Abers')
+    assert_equal(1, all_abers.size, 'Brian Abers in database after import')
+    brian_abers = all_abers.first
+    assert_equal('M', brian_abers.gender, 'Brian Abers gender')
+    assert_equal('thekilomonster@verizon.net', brian_abers.email, 'Brian Abers email')
+    assert_equal_dates('2007-01-16', brian_abers.member_from, 'Brian Abers member from')
+    assert_equal_dates(Date.new(Date.today.year, 12, 31), brian_abers.member_to, 'Brian Abers member to')
+    assert_equal_dates('1965-01-01', brian_abers.date_of_birth, 'Birth date')
+    assert_equal("Existing notes\nr\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
+    assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
+    
+    all_heidi_babi = Racer.find_all_by_name('heidi babi')
+    assert_equal(1, all_heidi_babi.size, 'Heidi Babi in database after import')
+    heidi_babi = all_heidi_babi.first
+    assert_equal('F', heidi_babi.gender, 'Heidi Babi gender')
+    assert_equal('hbabi77@hotmail.com', heidi_babi.email, 'Heidi Babi email')
+    assert_equal_dates(Date.today, heidi_babi.member_from, 'Heidi Babi member from')
+    assert_equal_dates(Date.new(Date.today.year, 12, 31), heidi_babi.member_to, 'Heidi Babi member to')
+    assert_equal_dates('1977-01-01', heidi_babi.date_of_birth, 'Birth date')
+    assert_equal("interests: 134", heidi_babi.notes, 'Heidi Babi notes')
+    assert_equal('11408 NE 102ND ST', heidi_babi.street, 'Heidi Babi street')
+    
+    all_rene_babi = Racer.find_all_by_name('rene babi')
+    assert_equal(1, all_rene_babi.size, 'Rene Babi in database after import')
+    rene_babi = all_rene_babi.first
+    assert_equal('M', rene_babi.gender, 'Rene Babi gender')
+    assert_equal('rbabi@rbaintl.com', rene_babi.email, 'Rene Babi email')
+    assert_equal_dates('2000-01-01', rene_babi.member_from, 'Rene Babi member from')
+    assert_equal_dates(Date.new(Date.today.year, 12, 31), rene_babi.member_to, 'Rene Babi member to')
+    assert_equal_dates('1899-07-14', rene_babi.date_of_birth, 'Birth date')
+    assert_equal(nil, rene_babi.notes, 'Rene Babi notes')
+    assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
   end
 end

@@ -195,7 +195,7 @@ class Grid
     return unless @row_class_instance
     
     for column in @columns
-      if column.field.nil? || !(@row_class_instance.respond_to?(column.field))
+      if column.field.nil? || !(@row_class_instance.respond_to?("#{column.field}="))
         column.field = nil
         @invalid_columns << column.name unless column.name.blank?
       end
@@ -371,16 +371,24 @@ class Row < Array
       field = column.field
       if field
 
+        # Existing value logic is too messy ...
         value = self[index]
-        if field == :notes and value[/notes/].nil? and value[/Notes/].nil? and column.description[/notes/].nil? and column.description[/Notes/].nil?
+        if field == :notes and !value.blank? and value[/notes/].nil? and value[/Notes/].nil? and column.description[/notes/].nil? and column.description[/Notes/].nil?
           value = "#{column.description}: #{value}"
         end
 
         existing_value = hash[field]
-        if existing_value
-          hash[field] = "#{existing_value}#{$INPUT_RECORD_SEPARATOR}#{value}" unless value.blank?
+        value = nil if value == $INPUT_RECORD_SEPARATOR
+        if existing_value.blank?
+          if value.blank?
+            hash.delete(field)
+          else
+            hash[field] = value
+          end
         else   
-          hash[field] = value
+          unless value.blank?
+            hash[field] = "#{existing_value}#{$INPUT_RECORD_SEPARATOR}#{value}"
+          end
         end
 
       end
