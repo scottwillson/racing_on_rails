@@ -160,6 +160,18 @@ class Racer < ActiveRecord::Base
         value = "01/01/20#{value}"
       end
     end
+    
+    # Don't overwrite month and day if we're just passing in the same year
+    if self[:date_of_birth] and value
+      if value.is_a?(String)
+        new_date = Date.parse(value)
+      else
+        new_date = value
+      end
+      if new_date.year == self[:date_of_birth].year and new_date.month == 1 and new_date.day == 1
+        return
+      end
+    end
     super
   end
   

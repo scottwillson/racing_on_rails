@@ -81,6 +81,7 @@ Downhill/Cross Country: Downhill}
       :gender => 'M',
       :email =>'brian@sportslabtraining.com',
       :member_from => '2004-02-23',
+      :date_of_birth => '1965-10-02',
       :notes => 'Existing notes'
     )
 
@@ -107,7 +108,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('thekilomonster@verizon.net', brian_abers.email, 'Brian Abers email')
     assert_equal_dates('2007-01-16', brian_abers.member_from, 'Brian Abers member from')
     assert_equal_dates(Date.new(Date.today.year, 12, 31), brian_abers.member_to, 'Brian Abers member to')
-    assert_equal_dates('1965-01-01', brian_abers.date_of_birth, 'Birth date')
+    assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\nr\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
     
