@@ -9,7 +9,7 @@
 <% if @user %>
 
 <%= start_form_tag :action=> "login" %>
-<table border="0" cellspacing="0" cellpadding="0" class="base">
+<table border="0" cellspacing="0" cellpadding="0" class="base" id="login">
 	<caption>Logged In</caption>
 	<th></th>
 	<tr>
@@ -24,7 +24,7 @@
 <% else %>
 
 <%= start_form_tag :action=> "login" %>
-<table border="0" cellspacing="0" cellpadding="0" class="base">
+<table border="0" cellspacing="0" cellpadding="0" class="base" id="login">
 	<caption>Login</caption>
 	<tbody>
 		<tr>
