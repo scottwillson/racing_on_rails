@@ -116,9 +116,9 @@ END
   def test_empty_to_s_text
     text = ""
     columns = [
-      Column.new('place', '', 3, true, Column::RIGHT),
-      Column.new('number', 'Number', 5, true),
-      Column.new('last_name', 'Last Name', 15, true)
+      Column.new(:name => 'place', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
+      Column.new(:name => 'number', :description => 'Number', :size => 5, :fixed_size => true),
+      Column.new(:name => 'last_name', :description => 'Last Name', :size => 15, :fixed_size => true)
     ]
     grid = Grid.new(text, :columns => columns)
     assert_equal(3, grid.column_count, "column count")
@@ -137,15 +137,15 @@ END
         dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
       columns = [
-        Column.new('place', '', 3, true, Column::RIGHT),
-        Column.new('number', 'Number', 5),
-        Column.new('last_name', 'Last Name', 15, true),
-        Column.new('first_name', 'First Name', 12),
-        Column.new('team_name', 'Team', 30),
-        Column.new('category', 'Category', 20),
-        Column.new('points', '', 3, true, Column::RIGHT),
-        Column.new('points_bonus_penalty', '', 3, true, Column::RIGHT),
-        Column.new('points_total', '', 3, true, Column::RIGHT)
+        Column.new(:name => 'place', :description => '', :size => 3, :justification => Column::RIGHT),
+        Column.new(:name => 'number', :description => 'Number', :size => 5),
+        Column.new(:name => 'last_name', :description => 'Last Name', :size => 15, :fixed_size => true),
+        Column.new(:name => 'first_name', :description => 'First Name', :size => 12),
+        Column.new(:name => 'team_name', :description => 'Team', :size => 30),
+        Column.new(:name => 'category', :description => 'Category', :size => 20),
+        Column.new(:name => 'points', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
+        Column.new(:name => 'points_bonus_penalty', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT),
+        Column.new(:name => 'points_total', :description => '', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
       ]
       grid = Grid.new(text, :columns => columns)
       assert_equal(9, grid.column_count, "column count")

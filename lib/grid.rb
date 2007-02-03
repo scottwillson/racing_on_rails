@@ -154,7 +154,7 @@ class Grid
         if column_name.is_a?(Column)
           column = column_name
         else
-          column = Column.new(column_name.to_s.strip, description)
+          column = Column.new(:name => column_name.to_s.strip, :description => description)
         end
 
         unless column.name.blank?

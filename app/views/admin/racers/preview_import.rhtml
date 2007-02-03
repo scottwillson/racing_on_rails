@@ -1,4 +1,6 @@
 <%= start_form_tag :action => 'import' %>
+<%= check_box_tag 'update_membership', false %> Make all imported racers current members
+<br>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>
 <%= end_form_tag %>

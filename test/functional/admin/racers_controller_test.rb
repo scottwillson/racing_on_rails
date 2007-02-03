@@ -386,6 +386,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_dupes_merge?
+    RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? start')
     @request.session[:user] = users(:candi)
     mollie = racers(:mollie)
     mollie_with_different_road_number = Racer.create(:name => 'Mollie Cameron', :road_number => '987123')
@@ -397,7 +398,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
     assert_equal(mollie.name, assigns['racer'].name, 'Unsaved Tonkin name should be Mollie')
-    assert_equal([mollie, mollie_with_different_road_number], assigns['existing_racers'], 'existing_racers')
+    existing_racers = assigns['existing_racers'].sort {|x, y| x.id <=> y.id}
+    assert_equal([mollie, mollie_with_different_road_number], existing_racers, 'existing_racers')
+    RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? end')
   end
   
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
@@ -648,7 +651,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
     file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
-    post(:import, :commit => 'Import')
+    post(:import, :commit => 'Import', :update_membership => 'true')
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
@@ -665,7 +668,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
       :action => "import"
     }
     assert_routing("/admin/racers/import", opts)
-    post(:import, :commit => 'Cancel')
+    post(:import, :commit => 'Cancel', :update_membership => 'false')
     assert_response(:redirect)
     assert_redirected_to(:controller => 'admin/racers', :action => 'index')
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')

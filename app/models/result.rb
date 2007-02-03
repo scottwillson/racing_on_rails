@@ -68,6 +68,10 @@ class Result < ActiveRecord::Base
       end
     end
     
+    if !self.racer.nil? && self.racer.new_record? && self.racer[:member_from].blank?
+      self.racer.member_from = Date.today
+    end
+    
     if self.team and (team.new_record? or team.dirty?)
       if team.name.blank?
         self.team = nil

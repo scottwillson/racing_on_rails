@@ -73,10 +73,6 @@ class Racer < ActiveRecord::Base
         attributes["member_to(2i)"] = '12'
         attributes["member_to(3i)"] = '31'
       end
-      unless attributes[:member_from]
-        attributes[:member_from] = Date.today
-        attributes[:member_to] = Date.new(Date.today.year, 12, 31)
-      end
       if attributes[:team] and attributes[:team].is_a?(Hash)
         attributes[:team] = Team.new(attributes[:team])
       end 
@@ -305,17 +301,23 @@ class Racer < ActiveRecord::Base
   end
   
   def member_from=(date)
+    logger.debug("member_from= #{date}")
     if date.nil?
-      self[:member_to] = nil 
-    elsif self.member_to.nil?
-      if date.is_a?(Date)
-        self[:member_to] = Date.new(date.year, 12, 31)
-      else
-        date_as_date = Date.parse(date)
-        self[:member_to] = Date.new(date_as_date.year, 12, 31)
-      end
+      self[:member_from] = nil
+      self[:member_to] = nil
+      return date
     end
-    self[:member_from] = date
+
+    date_as_date = date
+    unless date.is_a?(Date)
+      date_as_date = Date.parse(date)
+    end
+
+    logger.debug("date_as_date: #{date_as_date}")
+    if self.member_to.nil?
+      self[:member_to] = Date.new(date_as_date.year, 12, 31)
+    end
+    self[:member_from] = date_as_date
   end
   
   def member_to=(date)
@@ -329,10 +331,10 @@ class Racer < ActiveRecord::Base
   # Validates member_from and member_to
   def membership_dates
     if member_to and member_from.nil?
-      errors.add('member_from', 'cannot be nil if member_to is not nil')
+      errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
     end
     if member_from and member_to.nil?
-      errors.add('member_to', 'cannot be nil if member_from is not nil')
+      errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
     end
     if member_from and member_to and member_from > member_to
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")

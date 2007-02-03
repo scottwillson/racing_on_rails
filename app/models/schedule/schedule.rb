@@ -58,7 +58,7 @@ module Schedule
       logger.debug("Read #{filename}")
       GridFile.new(
         File.new(filename), 
-        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", Column.new('notes', 'Notes')]
+        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", Column.new(:name => 'notes', :description => 'Notes')]
       )
     end
 

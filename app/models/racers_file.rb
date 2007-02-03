@@ -30,7 +30,7 @@ class RacersFile < GridFile
     'Downhill Mountain Bike Age Group -'     => 'dh_category',
     '2007 road'                              => 'road_number',
     'Membership No'                          => 'license',
-    'date joined'                            => 'member_from',
+    'date joined'                            =>  Column.new(:name => 'member_from'),
     'year of birth'                          => 'date_of_birth',
     'sex'                                    => 'gender',
     'What is your occupation? (optional)'    => 'occupation',
@@ -42,13 +42,13 @@ class RacersFile < GridFile
     'Donation'                               => 'notes',
     'Singlespeed'                            => 'notes',
     'Tandem'                                 => 'notes',
-    'Please select a category:'              => Column.new('notes', 'Disciplines'),
+    'Please select a category:'              => Column.new(:name => 'notes', :description => 'Disciplines'),
     '2007 notes'                             => 'notes',
-    'Would you like to make an additional donation to support OBRA? '                 => Column.new('notes', 'Donation'),
-    'Please indicate if you are interested in racing cross country or downhill. '     => Column.new('notes', 'Downhill/Cross Country'),
-    'Please indicate if you are interested in racing single speed.'                   => Column.new('notes', 'Singlespeed'),
-    'Please indicate other interests. (For example: time trial tandem triathalon r'   => Column.new('notes', 'Other interests'),
-    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new('team_name', 'Disciplines')
+    'Would you like to make an additional donation to support OBRA? '                 => Column.new(:name => 'notes', :description => 'Donation'),
+    'Please indicate if you are interested in racing cross country or downhill. '     => Column.new(:name => 'notes', :description => 'Downhill/Cross Country'),
+    'Please indicate if you are interested in racing single speed.'                   => Column.new(:name => 'notes', :description => 'Singlespeed'),
+    'Please indicate other interests. (For example: time trial tandem triathalon r'   => Column.new(:name => 'notes', :description => 'Other interests'),
+    'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new(:name => 'team_name', :description => 'Team')
   }
   
   def initialize(source, *options)
@@ -67,16 +67,18 @@ class RacersFile < GridFile
     super(source, options)
   end
 
-  def import
+  def import(update_membership)
     logger.debug("Import Racers")
     logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
-    max_date_for_current_year = Event.find_max_date_for_current_year
-    if max_date_for_current_year.nil? || (max_date_for_current_year and Date.today <= Event.find_max_date_for_current_year)
-      member_to = Date.new(Date.today.year, 12, 31)
-    else
-      member_to = Date.new(Date.today.year + 1, 12, 31)
+    if update_membership
+      max_date_for_current_year = Event.find_max_date_for_current_year
+      if max_date_for_current_year.nil? || (max_date_for_current_year and Date.today <= Event.find_max_date_for_current_year)
+        member_to = Date.new(Date.today.year, 12, 31)
+      else
+        member_to = Date.new(Date.today.year + 1, 12, 31)
+      end
     end
     
     Racer.transaction do
@@ -88,7 +90,7 @@ class RacersFile < GridFile
 
           racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
           racer = nil
-          row_hash[:member_to] = member_to
+          row_hash[:member_to] = member_to if update_membership
           if racers.empty?
             delete_unwanted_member_from(row_hash, racer)
             racer = Racer.create!(row_hash)
@@ -97,8 +99,11 @@ class RacersFile < GridFile
             logger.warn("RacersFile Found #{racers.size} racers for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") if racers.size > 1
             # Don't want to overwrite existing categories
             delete_blank_categories(row_hash)
+            racer = racers.first
             delete_unwanted_member_from(row_hash, racer)
-            unless racers.last.notes.blank?
+            row_hash.delete(:team)
+            row_hash.delete(:team_name)
+            unless racer.notes.blank?
               row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
             
@@ -136,8 +141,8 @@ class RacersFile < GridFile
     end
     
     unless racer.nil?
-      if racer.member_from && (Date.new(row_hash[:member_from]) > racer.member_from)
-        row_hash.delete(:member_from)
+      if racer.member_from && (Date.parse(row_hash[:member_from]) > racer.member_from)
+        row_hash[:member_from] = racer.member_from
       end
     end
   end

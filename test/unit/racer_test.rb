@@ -184,15 +184,10 @@ class RacerTest < Test::Unit::TestCase
   
   def test_member
     racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
-    assert_equal(true, racer.member?, 'member')
-    assert_equal(Date.today, racer.member_from, 'Member from')
-    year = Date.today.year
-    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
-    
-    racer.member = false
     assert_equal(false, racer.member?, 'member')
     assert_nil(racer.member_from, 'Member from')
     assert_nil(racer.member_to, 'Member to')
+    
     racer.save!
     racer.reload
     assert_equal(false, racer.member?, 'member')
@@ -200,11 +195,26 @@ class RacerTest < Test::Unit::TestCase
     assert_nil(racer.member_to, 'Member to')
 
     racer.member = true
+    assert_equal(true, racer.member?, 'member')
+    assert_equal(Date.today, racer.member_from, 'Member on')
+    year = Date.today.year
+    assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
     racer.save!
     racer.reload
     assert_equal(true, racer.member?, 'member')
     assert_equal(Date.today, racer.member_from, 'Member on')
+    year = Date.today.year
     assert_equal(Date.new(year, 12, 31), racer.member_to, 'Member to')
+    
+    racer.member = false
+    assert_equal(false, racer.member?, 'member')
+    assert_nil(racer.member_from, 'Member on')
+    assert_nil(racer.member_to, 'Member to')
+    racer.save!
+    racer.reload
+    assert_equal(false, racer.member?, 'member')
+    assert_nil(racer.member_from, 'Member on')
+    assert_nil(racer.member_to, 'Member to')
     
     # From nil, to nil
     racer.member_from = nil

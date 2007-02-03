@@ -312,7 +312,8 @@ class BarTest < Test::Unit::TestCase
       :racer => first_racers,
       :team => gentle_lovers
     })
-    second_racers = Racer.new(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
+    # Existing racers
+    second_racers = Racer.create(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
     second_racers_team = Team.create(:name => 'Kona/Northampton Cycling Club')
     swan_island_tandem.results.create({
       :place => 2,

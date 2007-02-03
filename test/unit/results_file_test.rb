@@ -64,6 +64,9 @@ class ResultsFileTest < Test::Unit::TestCase
         assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
+        if result.racer
+          assert(result.racer.member?, "member? for race #{index} result #{result_index}")
+        end
       end
     end
   end
@@ -199,6 +202,9 @@ class ResultsFileTest < Test::Unit::TestCase
         assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
+        if result.racer
+          assert(result.racer.member?, "member? for race #{index} result #{result_index}")
+        end
       end
     end
   end

@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  DATE_FORMATS = [22, 24, 25, 27, 28, 30, 42, 45]
+  DATE_FORMATS = [24, 25, 26, 27, 28, 30, 42, 45]
 
   def GridFile.read_excel(file)
     if File::Stat.new(file.path).size == 0
@@ -23,14 +23,14 @@ class GridFile < Grid
           line = []
           for cell in row
             if cell
-               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-               if DATE_FORMATS.include?(cell.format_no) and cell.to_i > 5000
-                 line << cell.date.to_s
-               elsif cell.to_f > 0.0 and DATE_FORMATS.include?(cell.format_no) and cell.to_f.to_s == cell.to_s
-                   line << cell.to_f.to_s
-              else
-                line << cell.to_s
-              end
+               RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f} date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+                if DATE_FORMATS.include?(cell.format_no) and cell.to_i > 5000
+                  line << cell.date.to_s
+                elsif cell.to_f > 0.0 and DATE_FORMATS.include?(cell.format_no) and cell.to_f.to_s == cell.to_s
+                    line << cell.to_f.to_s
+               else
+                 line << cell.to_s
+               end
             else
               line << ""
             end

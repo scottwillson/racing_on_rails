@@ -150,7 +150,7 @@ class Admin::RacersController < Admin::RecordEditor
 
     elsif params[:commit] == 'Import'
       path = session[:racers_file_path]
-      created, updated = RacersFile.new(File.new(path)).import
+      created, updated = RacersFile.new(File.new(path)).import(params[:update_membership])
       flash[:notice] = "Imported #{pluralize(created, 'new racer')} and updated #{pluralize(updated, 'existing racer')}"
       session[:racers_file_path] = nil
       redirect_to(:action => 'index')

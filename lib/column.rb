@@ -2,27 +2,48 @@ class Column
 
   LEFT  = :left unless defined?(LEFT)
   RIGHT = :right unless defined?(RIGHT)
+  
+  VALID_OPTIONS = [:name, :description, :size, :justification, :fixed_size] unless defined?(VALID_OPTIONS)
 
   attr_accessor :name, :description, :size, :justification, :fixed_size, :field, :link
 
-  def initialize(name = '', description = nil, size = 0, fixed_size = false, justification = LEFT)
-    @name = name
+  # Grid Column
+  # === Options ===
+  # * name
+  # * description: defaults to +name+
+  # * size: defaults to 0
+  # * fixed_size: boolean, defaults to false
+  # * justification: defaults to LEFT
+  # * type: cast value to this Class
+  def initialize(*options)
+    if options
+      options.flatten! 
+      options = options.first
+    end
+    options = {} if options.nil?
+    
+    for option in options.keys
+      raise ArgumentError.new("#{option} is not a valid option") unless VALID_OPTIONS.include?(option)
+    end
+    
+    @name          = options[:name] || ''
+    @description   = options[:description] || @name
+    @size          = options[:size] || 0
+    @fixed_size    = options[:fixed_size] || false
+    @justification = options[:justification] || LEFT
+
     set_field_from_name
-    @description = description || name
-    raise ArgumentError.new("size must be a number, but was '#{size}'") unless size.is_a?(Fixnum)
-    @size = size
-    raise ArgumentError.new("fixed_size must be a boolean, but was '#{fixed_size}'") unless fixed_size.is_a?(FalseClass) or fixed_size.is_a?(TrueClass)
-    @fixed_size = fixed_size
-    raise ArgumentError.new("justification must LEFT or RIGHT, but was '#{justification}") unless justification == LEFT or justification == RIGHT
-    @justification = justification
+    raise ArgumentError.new("size must be a number, but was '#{@size}'") unless @size.is_a?(Fixnum)
+    raise ArgumentError.new("fixed_size must be a boolean, but was '#{@fixed_size}'") unless @fixed_size.is_a?(FalseClass) or @fixed_size.is_a?(TrueClass)
+    raise ArgumentError.new("justification must LEFT or RIGHT, but was '#{@justification}") unless @justification == LEFT or @justification == RIGHT
   end
 
   def set_field_from_name
-    unless name.blank?
+    unless self.name.blank?
       begin
-        @field = @name.to_sym
+        self.field = self.name.to_sym
       rescue ArgumentError => error
-        raise ArgumentError.new("#{error}: Can't create column with name '#{@name}'")
+        raise ArgumentError.new("#{error}: Can't create column with name '#{self.name}'")
       end
     end
   end
