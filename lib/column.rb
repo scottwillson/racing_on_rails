@@ -41,7 +41,7 @@ class Column
   def set_field_from_name
     unless self.name.blank?
       begin
-        self.field = self.name.to_sym
+        self.field = self.name.strip.to_sym
       rescue ArgumentError => error
         raise ArgumentError.new("#{error}: Can't create column with name '#{self.name}'")
       end

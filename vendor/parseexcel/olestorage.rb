@@ -23,6 +23,7 @@
 # OLEReader -- Spreadsheet::ParseExcel -- 05.06.2003 -- hwyss@ywesee.com 
 
 require 'date'
+require 'stringio'
 
 module OLE
 	class UnknownFormatError < RuntimeError; end
@@ -90,7 +91,7 @@ module OLE
 			end
 		end
 	end
-	class Storage < File
+	class Storage 
 		PpsType_Root  = 5
 		PpsType_Dir   = 1
 		PpsType_File  = 2
@@ -99,10 +100,18 @@ module OLE
 		PpsSize       = 0x80
 		attr_reader :header
 		def initialize(filename)
-			super(filename, "r")
-			binmode
+      case filename
+      when StringIO, File
+        @fh = filename
+      else 
+        @fh = File.open(filename, "r")
+      end
+			@fh.binmode
 			@header = get_header
 		end
+    def close
+      @fh.close
+    end
 		module PPS
 			class Node
 				attr_reader :no, :type, :prev_pps, :next_pps, :data
@@ -339,9 +348,11 @@ module OLE
 		private
 		def get_header
 			#0. Check ID
-			rewind
-			return unless(read(8) == "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1")
-			Header.new(self)
+			@fh.rewind
+			unless(@fh.read(8) == "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1")
+        raise UnknownFormatError
+      end
+			Header.new(@fh)
 		end
 	end
 	def asc2ucs(str)

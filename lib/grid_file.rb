@@ -5,9 +5,10 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  DATE_FORMATS = [24, 25, 26, 27, 28, 30, 42, 45]
+  TIME_FORMATS = [18, 19, 21, 22, 25, 27, 44] unless defined?(TIME_FORMATS)
 
   def GridFile.read_excel(file)
+    RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
     if File::Stat.new(file.path).size == 0
       RACING_ON_RAILS_DEFAULT_LOGGER.warn("#{file.path} is empty")
       return []
@@ -18,19 +19,24 @@ class GridFile < Grid
     return [] if workbook.sheet_count == 0
 
     for workbook_index in 0..(workbook.sheet_count - 1)
-      for row in workbook.worksheet(workbook_index)
+      worksheet = workbook.worksheet(workbook_index)
+      for row in worksheet
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row}")
         if row
           line = []
           for cell in row
             if cell
-               RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f} date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-                if DATE_FORMATS.include?(cell.format_no) and cell.to_i > 5000
-                  line << cell.date.to_s
-                elsif cell.to_f > 0.0 and DATE_FORMATS.include?(cell.format_no) and cell.to_f.to_s == cell.to_s
-                    line << cell.to_f.to_s
-               else
-                 line << cell.to_s
-               end
+              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              is_time = TIME_FORMATS.include?(cell.format_no)
+              cell_f = cell.to_f if is_time
+              if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
+                line << (cell_f * 86400).to_s
+              elsif cell.type == :date
+                line << cell.date.to_s
+              else
+                line << cell.to_s
+              end
             else
               line << ""
             end
@@ -39,6 +45,7 @@ class GridFile < Grid
         end
       end
     end
+    RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
     excel_rows
   end
 

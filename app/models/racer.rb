@@ -301,7 +301,6 @@ class Racer < ActiveRecord::Base
   end
   
   def member_from=(date)
-    logger.debug("member_from= #{date}")
     if date.nil?
       self[:member_from] = nil
       self[:member_to] = nil
@@ -313,7 +312,6 @@ class Racer < ActiveRecord::Base
       date_as_date = Date.parse(date)
     end
 
-    logger.debug("date_as_date: #{date_as_date}")
     if self.member_to.nil?
       self[:member_to] = Date.new(date_as_date.year, 12, 31)
     end

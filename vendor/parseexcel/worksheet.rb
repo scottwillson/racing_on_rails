@@ -23,21 +23,22 @@
 # Worksheet -- Spreadsheet::ParseExcel -- 10.06.2003 -- hwyss@ywesee.com 
 
 require 'parseexcel/olestorage'
+require 'iconv'
 
 module Spreadsheet
 	module ParseExcel
 		class Worksheet
 			include Enumerable
-			attr_accessor :default_row_height, :resolution, :v_resolution
-			attr_accessor :paper, :scale, :page_start, :fit_width, :fit_height
-			attr_accessor :header_margin, :footer_margin, :copies, :left_to_right
-			attr_accessor :no_pls, :no_color, :draft, :notes, :no_orient, :use_page
-			attr_accessor :landscape, :sheet_version, :sheet_type
-			attr_accessor :header, :footer, :page_fit
+			attr_accessor :default_row_height, :resolution, :v_resolution, :paper,
+				:scale, :page_start, :fit_width, :fit_height, :header_margin,
+				:footer_margin, :copies, :left_to_right, :no_pls, :no_color, :draft,
+				:notes, :no_orient, :use_page, :landscape, :sheet_version, :sheet_type,
+				:header, :footer, :page_fit
 			class Cell
-				attr_accessor :value, :kind, :numeric, :code, :book, :format_no
-				attr_accessor :format, :rich
+				attr_accessor :value, :kind, :numeric, :code, :book, :format_no,
+					:format, :rich, :encoding, :annotation
 				def initialize(params={:value=>'',:kind=>:blank,:numeric=>false})
+					@encoding = 'UTF-16LE'
 					params.each { |key, val|
 						mthd = key.to_s + '='
 						if(self.respond_to?(mthd))
@@ -91,8 +92,12 @@ module Spreadsheet
 				def to_f
 					@value.to_f
 				end
-				def to_s
-					@value.to_s
+				def to_s(target_encoding=nil)
+					if(target_encoding)
+						Iconv.new(target_encoding, @encoding).iconv(@value.to_s)
+					else
+						@value.to_s
+					end
 				end
 				def type 
 					@format.cell_type(self) if @format
@@ -118,15 +123,11 @@ module Spreadsheet
 			def initialize
 				@cells = []
 				@row_heights = []
-				@pkg_strings = []
 			end
 			def add_cell(row, col, cell)
 				(@cells[row] ||= [])[col] ||= cell
 				self.set_dimensions(row, col)
 				@cells[row][col]
-			end
-			def add_pkg_string(pkg_str)
-				@pkg_strings.push(pkg_str)
 			end
 			def cell(row, col)
 				(@cells[row] ||= [])[col] ||= Cell.new

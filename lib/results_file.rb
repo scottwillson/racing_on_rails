@@ -131,16 +131,16 @@ class ResultsFile < GridFile
               result.race = race
             end
             if row_hash[:time] and !row_hash[:time].include?(':')
-              result.time = result.time.to_f * 86400.0
+              result.time = result.time.to_f
             end
             if row_hash[:time_bonus_penalty] and !row_hash[:time_bonus_penalty].include?(':')
-              result.time_bonus_penalty = result.time_bonus_penalty.to_f * 86400.0
+              result.time_bonus_penalty = result.time_bonus_penalty.to_f
             end
             if row_hash[:time_total] and !row_hash[:time_total].include?(':')
-              result.time_total = result.time_total.to_f * 86400.0
+              result.time_total = result.time_total.to_f
             end
             if row_hash[:time_gap_to_leader] and !row_hash[:time_gap_to_leader].include?(':')
-              result.time_gap_to_leader = result.time_gap_to_leader.to_f * 86400.0
+              result.time_gap_to_leader = result.time_gap_to_leader.to_f
             end
         
             if result.place.to_i > 0

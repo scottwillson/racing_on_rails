@@ -68,6 +68,7 @@ module Spreadsheet
 			attr_accessor :align_h, :wrap, :align_v, :just_last, :rotate, :indent
 			attr_accessor :shrink, :merge, :read_dir
 			attr_accessor :border_style, :border_color, :border_diag, :fill
+			@@date_pattern = /(\0?d\0?d|\0?m\0?m|\0?y\0?y|\0?h|\0?s\0?s)/i
 			def initialize(params={})
 				params.each { |key, val|
 					mthd = key.to_s + '='
@@ -81,10 +82,9 @@ module Spreadsheet
 			end
 			def cell_type(cell)
 				if(cell.numeric)
-					#p @fmt_idx, @@fmt_strs[@fmt_idx]
 					if([0x0E..0x16, 0x2D..0x2F].any? { |range| range.include?(@fmt_idx.to_i) })
 						:date
-					elsif((fmt = @@fmt_strs[@fmt_idx]) && /(dd|mm|yy|hh|ss)/i.match(fmt))
+					elsif((fmt = @@fmt_strs[@fmt_idx]) && @@date_pattern.match(fmt))
 						:date
 					else
 						:numeric

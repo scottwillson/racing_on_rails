@@ -141,8 +141,15 @@ class RacersFile < GridFile
     end
     
     unless racer.nil?
-      if racer.member_from && (Date.parse(row_hash[:member_from]) > racer.member_from)
-        row_hash[:member_from] = racer.member_from
+      if racer.member_from
+        begin
+          date = Date.parse(row_hash[:member_from])
+          if date > racer.member_from
+            row_hash[:member_from] = racer.member_from
+          end
+        rescue ArgumentError => e
+          raise ArgumentError.new("#{e}: '#{row_hash[:member_from]}' is not a valid date. Row:\n #{row_hash.inspect}")
+        end
       end
     end
   end

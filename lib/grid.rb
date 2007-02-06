@@ -22,6 +22,8 @@ class Grid
   # TODO Consider using regex for column maps
   def initialize(source = '', *options)
     raise ArgumentError("'source' cannot be nil") if source.nil?
+
+    RACING_ON_RAILS_DEFAULT_LOGGER.debug("Grid (#{Time.now}) new")
     
     options.flatten! if options
     @truncated = false
@@ -82,6 +84,7 @@ class Grid
 
   # Delimited String or Array of Strings or Arrays
   def rows=(source)
+    RACING_ON_RAILS_DEFAULT_LOGGER.debug("Grid (#{Time.now}) rows=")
     for row in source
       row = row.split(/#{@delimiter}/) unless row.is_a?(Array)
       index = 0
@@ -154,7 +157,7 @@ class Grid
         if column_name.is_a?(Column)
           column = column_name
         else
-          column = Column.new(:name => column_name.to_s.strip, :description => description)
+          column = Column.new(:name => column_name.to_s, :description => description)
         end
 
         unless column.name.blank?

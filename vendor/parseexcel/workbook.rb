@@ -26,13 +26,20 @@ require 'parseexcel/worksheet'
 
 module Spreadsheet
 	module ParseExcel
+		class Annotation < String
+			attr_accessor :author
+		end
 		class Workbook
 			attr_accessor :biffversion, :version, :flg_1904
 			attr_writer :format
 			def initialize
 				@worksheets = []
 				@pkg_strs = []
+				@annotations = []
 				@formats = []
+			end
+			def add_annotation(pkg_str)
+				@annotations.push(pkg_str)
 			end
 			def add_text_format(idx, fmt_str)
 				@format.add_text_format(idx, fmt_str)
@@ -42,6 +49,9 @@ module Spreadsheet
 			end
 			def add_pkg_str(pkg_str)
 				@pkg_strs.push(pkg_str)
+			end
+			def annotation(idx)
+				@annotations.at(idx)
 			end
 			def format(idx=nil)
 				(idx.nil?) ? @format : @formats.at(idx)
