@@ -549,12 +549,16 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
                    "number"=>{"5"=>{"value"=>"222"}},
-                   "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
+                   "racer"=>{
+                     "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+                    }, 
                    "id"=>mollie.to_param}
     )
+    assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
     assert_response(:redirect)
-    assert(flash.empty?, 'flash empty?')
+    mollie.reload
     assert_equal('222', mollie.road_number(true), 'Road number should be updated')
+    assert_equal(true, mollie.print_card?, 'print_card?')
   end
 
   def test_update_new_number
@@ -672,5 +676,40 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:redirect)
     assert_redirected_to(:controller => 'admin/racers', :action => 'index')
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
+  end
+  
+  def test_print_no_cards
+    opts = {
+      :controller => "admin/racers", 
+      :action => "print_cards"
+    }
+    assert_routing("/admin/racers/print_cards", opts)
+    get(:print_cards)
+    assert_response(:success)
+    assert_template("admin/racers/no_cards")
+    assert_equal('layouts/admin/application', @controller.active_layout)
+  end
+  
+  def test_print_cards
+    opts = {
+      :controller => "admin/racers", 
+      :action => "print_cards"
+    }
+    assert_routing("/admin/racers/print_cards", opts)
+
+    tonkin = racers(:tonkin)
+    tonkin.print_card = true
+    tonkin.save!
+
+    get(:print_cards)
+
+    assert_response(:success)
+    assert_template("admin/racers/cards.rpdf")
+    assert_nil(@controller.active_layout, 'Should have no layout')
+    fail('assert number of cards')
+    fail('print_cards? should be cleared')
+    fail('test error page')
+    fail('ensure that mulitple pages look correct')
+    fail('mailing labels')
   end
 end

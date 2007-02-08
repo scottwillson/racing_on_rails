@@ -343,6 +343,10 @@ class Racer < ActiveRecord::Base
     self.member_from && (self.member_from > Date.today)
   end
   
+  def print_card?
+    self.print_card
+  end
+  
   def state=(value)
     if value and value.size == 2
       value.upcase!

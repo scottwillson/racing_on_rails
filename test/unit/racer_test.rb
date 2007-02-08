@@ -89,6 +89,8 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("7-11", racer.team.name, "team.name")
     assert_equal("100", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
+    assert_equal(false, racer.print_card, 'print_card')
+    assert_equal(false, racer.print_card?, 'print_card?')
     
     for number in racer.race_numbers(true)
       assert(number.valid?, "#{number}: #{number.errors.full_messages}")

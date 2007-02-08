@@ -7,6 +7,8 @@ class Admin::RacersController < Admin::RecordEditor
   model :racer
   edits :racer
   
+  layout 'admin/application', :except => :print_cards
+  
   # Search for Racers by name. This is a 'like' search on the concatenated 
   # first and last name, and aliases. E.g.,:
   # 'son' finds:
@@ -285,6 +287,15 @@ class Admin::RacersController < Admin::RecordEditor
     RaceNumber.destroy(id)
     render :update do |page|
       page.visual_effect(:puff, "number_#{id}_row", :duration => 2)
+    end
+  end
+  
+  def print_cards
+    @racers = Racer.find(:all, :conditions => ['print_card=?', true])
+    if @racers.empty?
+      render(:action => :no_cards)
+    else
+      render(:template => 'admin/racers/print_cards')
     end
   end
 end

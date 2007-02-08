@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>script/email_addresses</string>
+	<string>local/app/views/admin/racers/print_cards.rpdf</string>
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>local</string>
 			<key>regexFolderFilter</key>
@@ -59,6 +61,8 @@
 			<string>doc</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>lib</string>
 			<key>regexFolderFilter</key>
@@ -87,8 +91,6 @@
 			<string>Racing on Rails.tmproj</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>script</string>
 			<key>regexFolderFilter</key>
@@ -115,6 +117,8 @@
 			<string>tmp</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
@@ -127,6 +131,20 @@
 	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
+		<key>app/controllers/admin/racers_controller.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>9</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>app/models/announcement_mailer.rb</key>
 		<dict>
 			<key>caret</key>
@@ -141,7 +159,81 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/views/announcement_mailer/anncouncement.rhtml</key>
+		<key>app/models/racer.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>346</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>321</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>9</integer>
+				<key>line</key>
+				<integer>346</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>19</integer>
+				<key>line</key>
+				<integer>346</integer>
+			</dict>
+		</dict>
+		<key>local/app/views/admin/racers/index.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>5</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>5</integer>
+			</dict>
+		</dict>
+		<key>local/app/views/admin/racers/print_cards.rpdf</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>47</integer>
+				<key>line</key>
+				<integer>11</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>local/app/views/admin/racers/show.rhtml</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -155,41 +247,60 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>script/announcement</key>
+		<key>test/functional/admin/racers_controller_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>24</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>712</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>665</integer>
 		</dict>
-		<key>script/email_addresses</key>
+		<key>test/unit/racer_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>48</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>92</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>49</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>92</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>54</integer>
+				<key>line</key>
+				<integer>92</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>script/announcement</string>
-		<string>app/views/announcement_mailer/anncouncement.rhtml</string>
-		<string>script/email_addresses</string>
-		<string>app/models/announcement_mailer.rb</string>
+		<string>local/app/views/admin/racers/show.rhtml</string>
+		<string>app/models/racer.rb</string>
+		<string>test/unit/racer_test.rb</string>
+		<string>test/functional/admin/racers_controller_test.rb</string>
+		<string>app/controllers/admin/racers_controller.rb</string>
+		<string>local/app/views/admin/racers/print_cards.rpdf</string>
+		<string>local/app/views/admin/racers/index.rhtml</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

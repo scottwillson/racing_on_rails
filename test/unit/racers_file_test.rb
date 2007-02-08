@@ -195,5 +195,7 @@ Downhill/Cross Country: Downhill}
     number = RaceNumber.find(:first, :conditions => ['racer_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
+
+    fail('assert print_cards? set to true')
   end
 end
