@@ -354,6 +354,10 @@ class Racer < ActiveRecord::Base
     super
   end
   
+  def city_state_zip
+    "#{city} #{state}, #{zip}"
+  end
+  
   # Hack around in-place editing
   def toggle!(attribute)
     logger.debug("toggle! #{attribute} #{attribute == 'member'}")

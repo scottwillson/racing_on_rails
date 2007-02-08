@@ -91,6 +91,8 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("13035", racer.zip, "xc_number")
     assert_equal(false, racer.print_card, 'print_card')
     assert_equal(false, racer.print_card?, 'print_card?')
+    assert_equal(false, racer.print_mailing_label, 'print_mailing_label')
+    assert_equal(false, racer.print_mailing_label?, 'print_mailing_label?')
     
     for number in racer.race_numbers(true)
       assert(number.valid?, "#{number}: #{number.errors.full_messages}")

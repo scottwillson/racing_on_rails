@@ -681,10 +681,10 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   def test_print_no_cards
     opts = {
       :controller => "admin/racers", 
-      :action => "print_cards"
+      :action => "cards"
     }
-    assert_routing("/admin/racers/print_cards", opts)
-    get(:print_cards)
+    assert_routing("/admin/racers/cards", opts)
+    get(:cards)
     assert_response(:success)
     assert_template("admin/racers/no_cards")
     assert_equal('layouts/admin/application', @controller.active_layout)
@@ -693,23 +693,56 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   def test_print_cards
     opts = {
       :controller => "admin/racers", 
-      :action => "print_cards"
+      :action => "cards"
     }
-    assert_routing("/admin/racers/print_cards", opts)
+    assert_routing("/admin/racers/cards", opts)
 
     tonkin = racers(:tonkin)
     tonkin.print_card = true
     tonkin.save!
 
-    get(:print_cards)
+    get(:cards)
 
     assert_response(:success)
-    assert_template("admin/racers/cards.rpdf")
-    assert_nil(@controller.active_layout, 'Should have no layout')
+    assert_template("admin/racers/cards")
+    # How to test layout?
     fail('assert number of cards')
     fail('print_cards? should be cleared')
     fail('test error page')
     fail('ensure that mulitple pages look correct')
-    fail('mailing labels')
+  end
+  
+  def test_print_no_mailing_labels
+    opts = {
+      :controller => "admin/racers", 
+      :action => "mailing_labels"
+    }
+    assert_routing("/admin/racers/mailing_labels", opts)
+    get(:mailing_labels)
+    assert_response(:success)
+    assert_template("admin/racers/no_mailing_labels")
+    assert_equal('layouts/admin/application', @controller.active_layout)
+  end
+  
+  def test_print_mailing_labels
+    opts = {
+      :controller => "admin/racers", 
+      :action => "mailing_labels"
+    }
+    assert_routing("/admin/racers/mailing_labels", opts)
+
+    tonkin = racers(:tonkin)
+    tonkin.print_mailing_label = true
+    tonkin.save!
+
+    get(:mailing_labels)
+
+    assert_response(:success)
+    assert_template("admin/racers/mailing_labels")
+    # How to test layout?
+    fail('assert number of labels')
+    fail('print_mailing_labels? should be cleared')
+    fail('test error page')
+    fail('ensure that multiple pages look correct')
   end
 end
