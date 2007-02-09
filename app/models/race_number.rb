@@ -82,7 +82,6 @@ class RaceNumber < ActiveRecord::Base
         self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, self[:racer_id]])
     end
       
-    logger.debug("Found #{existing_numbers.size} existing numbers")
     unless existing_numbers.empty?
       errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
       return false

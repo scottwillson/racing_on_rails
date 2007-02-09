@@ -29,7 +29,10 @@ class RacersFile < GridFile
     'dh cat'                                 => 'dh_category',
     'Downhill Mountain Bike Age Group -'     => 'dh_category',
     '2007 road'                              => 'road_number',
+    '07 xc'                                  => 'xc_number',
+    '07 dh'                                  => 'dh_number',
     'Membership No'                          => 'license',
+    'card'                                   => 'print_card',
     'date joined'                            =>  Column.new(:name => 'member_from'),
     'year of birth'                          => 'date_of_birth',
     'sex'                                    => 'gender',
@@ -68,16 +71,22 @@ class RacersFile < GridFile
   end
 
   def import(update_membership)
-    logger.debug("Import Racers")
+    logger.debug("RacersFile import update_membership: #{update_membership}")
+    @update_membership = update_membership
+    @has_print_column = columns.any? do |column|
+      column.field == :print_card
+    end
+    logger.debug("RacersFile has_print_column: #{@has_print_column}")
+    
     logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
-    if update_membership
+    if @update_membership
       max_date_for_current_year = Event.find_max_date_for_current_year
       if max_date_for_current_year.nil? || (max_date_for_current_year and Date.today <= Event.find_max_date_for_current_year)
-        member_to = Date.new(Date.today.year, 12, 31)
+        @member_to_for_imported_racers = Date.new(Date.today.year, 12, 31)
       else
-        member_to = Date.new(Date.today.year + 1, 12, 31)
+        @member_to_for_imported_racers = Date.new(Date.today.year + 1, 12, 31)
       end
     end
     
@@ -87,16 +96,14 @@ class RacersFile < GridFile
           row_hash = row.to_hash
           logger.debug(row_hash.inspect) if logger.debug?
           combine_categories(row_hash)
+          row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
           racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
           racer = nil
-          row_hash[:member_to] = member_to if update_membership
+          row_hash[:member_to] = @member_to_for_imported_racers if @update_membership
           if racers.empty?
             delete_unwanted_member_from(row_hash, racer)
-            if update_membership
-              row_hash[:print_card] = true
-              row_hash[:print_mailing_label] = true
-            end
+            add_print_card_and_label(row_hash)
             racer = Racer.create!(row_hash)
             created = created + 1
           else
@@ -110,10 +117,7 @@ class RacersFile < GridFile
             unless racer.notes.blank?
               row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
-            if update_membership and (!racer.member? or racer.member_to < member_to)
-              row_hash[:print_card] = true
-              row_hash[:print_mailing_label] = true
-            end
+            add_print_card_and_label(row_hash, racer)
             
             racer = Racer.update(racers.last.id, row_hash)
             unless racer.valid?
@@ -159,6 +163,19 @@ class RacersFile < GridFile
           raise ArgumentError.new("#{e}: '#{row_hash[:member_from]}' is not a valid date. Row:\n #{row_hash.inspect}")
         end
       end
+    end
+  end
+  
+  def add_print_card_and_label(row_hash, racer = nil)
+    if @update_membership and !@has_print_column
+      if racer.nil? or (!racer.member? or racer.member_to < @member_to_for_imported_racers)
+        row_hash[:print_card] = true
+        row_hash[:print_mailing_label] = true
+      end
+    end
+    
+    if !row_hash[:print_card].blank? and row_hash[:print_mailing_label].blank?
+      row_hash[:print_mailing_label] = row_hash[:print_card]
     end
   end
   

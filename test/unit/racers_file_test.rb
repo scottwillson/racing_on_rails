@@ -135,8 +135,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('97219', quinn_jackson.zip, 'Quinn Jackson ZIP')
     assert_equal('503-768-3822', quinn_jackson.home_phone, 'Quinn Jackson phone')
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
-    assert(quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
-    assert(quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
+    assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
+    assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     
     all_abers = Racer.find_all_by_name('Brian Abers')
     assert_equal(1, all_abers.size, 'Brian Abers in database after import')
@@ -164,8 +164,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('360-896-3827', heidi_babi.home_phone, 'Heidi home phone')
     assert_equal('360-696-9272', heidi_babi.work_phone, 'Heidi work phone')
     assert_equal('360-696-9398', heidi_babi.cell_fax, 'Heidi cell/fax')
-    assert(heidi_babi.print_card?, 'sautter.print_card? after import')
-    assert(heidi_babi.print_mailing_label?, 'sautter.mailing_label? after import')
+    assert(heidi_babi.print_card?, 'heidi_babi.print_card? after import')
+    assert(heidi_babi.print_mailing_label?, 'heidi_babi.mailing_label? after import')
     
     all_rene_babi = Racer.find_all_by_name('rene babi')
     assert_equal(1, all_rene_babi.size, 'Rene Babi in database after import')
@@ -196,8 +196,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('541-389-3721', scott_seaton.home_phone, 'Scott Seaton phone')
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
     assert_equal('EWEB', scott_seaton.team_name, 'Scott Seaton team')
-    assert(scott_seaton.print_card?, 'sautter.print_card? after import')
-    assert(scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
+    assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
+    assert(!scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
     
     scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
     number = RaceNumber.find(:first, :conditions => ['racer_id=? and value=?', scott.id, '422'])

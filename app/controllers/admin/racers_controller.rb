@@ -291,7 +291,7 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def cards
-    @racers = Racer.find(:all, :conditions => ['print_card=?', true])
+    @racers = Racer.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @racers.empty?
       render(:action => :no_cards)
     else
@@ -301,7 +301,7 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def mailing_labels
-    @racers = Racer.find(:all, :conditions => ['print_mailing_label=?', true])
+    @racers = Racer.find(:all, :conditions => ['print_mailing_label=?', true], :order => 'last_name, first_name')
     if @racers.empty?
       render(:action => :no_mailing_labels)
     else
