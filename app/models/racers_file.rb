@@ -93,6 +93,10 @@ class RacersFile < GridFile
           row_hash[:member_to] = member_to if update_membership
           if racers.empty?
             delete_unwanted_member_from(row_hash, racer)
+            if update_membership
+              row_hash[:print_card] = true
+              row_hash[:print_mailing_label] = true
+            end
             racer = Racer.create!(row_hash)
             created = created + 1
           else
@@ -105,6 +109,10 @@ class RacersFile < GridFile
             row_hash.delete(:team_name)
             unless racer.notes.blank?
               row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+            end
+            if update_membership and (!racer.member? or racer.member_to < member_to)
+              row_hash[:print_card] = true
+              row_hash[:print_mailing_label] = true
             end
             
             racer = Racer.update(racers.last.id, row_hash)

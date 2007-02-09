@@ -705,11 +705,28 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
     assert_response(:success)
     assert_template("admin/racers/cards")
-    # How to test layout?
-    fail('assert number of cards')
-    fail('print_cards? should be cleared')
-    fail('test error page')
-    fail('ensure that mulitple pages look correct')
+    # TODO How to test layout?
+    assert_equal(1, assigns['racers'].size, 'Should assign racers')
+    tonkin.reload
+    assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
+  end
+  
+  def test_many_print_cards
+    racers = []
+    for i in 1..4
+      racers << Racer.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_card => true)
+    end
+
+    get(:cards)
+
+    assert_response(:success)
+    assert_template("admin/racers/cards")
+    # TODO How to test layout?
+    assert_equal(4, assigns['racers'].size, 'Should assign racers')
+    for racer in racers
+      racer.reload
+      assert(!racer.print_card?, 'Racer.print_card? after printing')
+    end
   end
   
   def test_print_no_mailing_labels
@@ -740,9 +757,25 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_template("admin/racers/mailing_labels")
     # How to test layout?
-    fail('assert number of labels')
-    fail('print_mailing_labels? should be cleared')
-    fail('test error page')
-    fail('ensure that multiple pages look correct')
+    assert_equal(1, assigns['racers'].size, 'Should assign racers')
+    tonkin.reload
+    assert(!tonkin.print_mailing_label?, 'Tonkin.mailing_label? after printing')
+  end
+
+  def test_many_mailing_labels
+    racers = []
+    for i in 1..31
+      racers << Racer.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_mailing_label => true)
+    end
+
+    get(:mailing_labels)
+
+    assert_response(:success)
+    assert_template("admin/racers/mailing_labels")
+    assert_equal(31, assigns['racers'].size, 'Should assign racers')
+    for racer in racers
+      racer.reload
+      assert(!racer.print_mailing_label?, 'Racer.print_mailing_label? after printing')
+    end
   end
 end

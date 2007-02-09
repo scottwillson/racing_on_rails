@@ -296,6 +296,7 @@ class Admin::RacersController < Admin::RecordEditor
       render(:action => :no_cards)
     else
       render(:template => 'admin/racers/cards')
+      Racer.update_all("print_card=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
   end
   
@@ -305,6 +306,17 @@ class Admin::RacersController < Admin::RecordEditor
       render(:action => :no_mailing_labels)
     else
       render(:template => 'admin/racers/mailing_labels')
+      Racer.update_all("print_mailing_label=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
+  end
+
+  def rescue_action_in_public(exception)
+		headers.delete("Content-Disposition")
+    super
+  end
+
+  def rescue_action_locally(exception)
+		headers.delete("Content-Disposition")
+    super
   end
 end

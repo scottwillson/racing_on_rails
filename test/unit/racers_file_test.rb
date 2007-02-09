@@ -39,6 +39,8 @@ Disciplines: Road/Track/Cyclocross
 Donation: 10
 Downhill/Cross Country: Downhill}
     assert_equal(notes, tonkin.notes, 'notes')
+    assert(tonkin.print_card?, 'Tonkin.print_card? after import')
+    assert(tonkin.print_mailing_label?, 'Tonkin.mailing_label? after import')
 
     sautter = Racer.find_all_by_name('C Sautter').first
     assert_equal('C Sautter', sautter.name, 'Sautter name')
@@ -56,15 +58,10 @@ Downhill/Cross Country: Downhill}
     assert_equal('Sport Master 40+', sautter.mtb_category, 'MTB cat')
     assert_equal('Engineer', sautter.occupation, 'occupation')
     assert_equal('B.I.K.E. Hincapie', sautter.team_name, 'Team')
-    notes = %Q{Spent Christmans in Belgium
-Receipt Code: 2R2T6R7
-Confirmation Code: 462TLJ7
-Transaction Payment Total: 32.95
-Registration Completion Date/Time: 11/20/06 10:04 AM
-Disciplines: Road/Track/Cyclocross
-Donation: 10
-Downhill/Cross Country: Downhill}
-    assert_equal(notes, tonkin.notes, 'notes')
+    notes = %Q{Receipt Code: 922T4R7\nConfirmation Code: PQ2THJ7\nTransaction Payment Total: 22.3\nRegistration Completion Date/Time: 11/20/06 09:23 PM\nDisciplines: Road/Track/Cyclocross & Mtn Bike \nDonation: 0\nDownhill/Cross Country: Cross country\nSinglespeed: No\nOther interests: Marathon XC Short track XC}
+    assert_equal(notes, sautter.notes, 'notes')
+    assert(sautter.print_card?, 'sautter.print_card? after import')
+    assert(sautter.print_mailing_label?, 'sautter.mailing_label? after import')
     
     ted_gresham = Racer.find_all_by_name('Ted Greshsam').first
     assert_equal(nil, ted_gresham.team, 'Team')
@@ -81,6 +78,7 @@ Downhill/Cross Country: Downhill}
       :gender => 'M',
       :email =>'brian@sportslabtraining.com',
       :member_from => '2004-02-23',
+      :member_to => Date.new(Date.today.year + 1, 12, 31),
       :date_of_birth => '1965-10-02',
       :notes => 'Existing notes'
     )
@@ -137,6 +135,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('97219', quinn_jackson.zip, 'Quinn Jackson ZIP')
     assert_equal('503-768-3822', quinn_jackson.home_phone, 'Quinn Jackson phone')
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
+    assert(quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
+    assert(quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     
     all_abers = Racer.find_all_by_name('Brian Abers')
     assert_equal(1, all_abers.size, 'Brian Abers in database after import')
@@ -148,6 +148,8 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\nr\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
+    assert(!brian_abers.print_card?, 'sautter.print_card? after import')
+    assert(!brian_abers.print_mailing_label?, 'sautter.mailing_label? after import')
     
     all_heidi_babi = Racer.find_all_by_name('heidi babi')
     assert_equal(1, all_heidi_babi.size, 'Heidi Babi in database after import')
@@ -162,6 +164,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('360-896-3827', heidi_babi.home_phone, 'Heidi home phone')
     assert_equal('360-696-9272', heidi_babi.work_phone, 'Heidi work phone')
     assert_equal('360-696-9398', heidi_babi.cell_fax, 'Heidi cell/fax')
+    assert(heidi_babi.print_card?, 'sautter.print_card? after import')
+    assert(heidi_babi.print_mailing_label?, 'sautter.mailing_label? after import')
     
     all_rene_babi = Racer.find_all_by_name('rene babi')
     assert_equal(1, all_rene_babi.size, 'Rene Babi in database after import')
@@ -173,6 +177,8 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1899-07-14', rene_babi.date_of_birth, 'Birth date')
     assert_equal(nil, rene_babi.notes, 'Rene Babi notes')
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
+    assert(rene_babi.print_card?, 'rene_babi.print_card? after import')
+    assert(rene_babi.print_mailing_label?, 'rene_babi.mailing_label? after import')
     
     all_scott_seaton = Racer.find_all_by_name('scott seaton')
     assert_equal(1, all_scott_seaton.size, 'Scott Seaton in database after import')
@@ -190,12 +196,12 @@ Downhill/Cross Country: Downhill}
     assert_equal('541-389-3721', scott_seaton.home_phone, 'Scott Seaton phone')
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
     assert_equal('EWEB', scott_seaton.team_name, 'Scott Seaton team')
+    assert(scott_seaton.print_card?, 'sautter.print_card? after import')
+    assert(scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
     
     scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
     number = RaceNumber.find(:first, :conditions => ['racer_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
-
-    fail('assert print_cards? set to true')
   end
 end
