@@ -7,7 +7,7 @@
 <%= start_form_tag({}, {:method => 'get'}) %>
 	<span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
 
-	<%# Nasty code required to show consisten meesages with and without AJAX. At least it could be in a helper. %>
+	<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
 	<div class="message">
 		<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
 		<span id='warn_text'><%= flash[:warn] %></span>
