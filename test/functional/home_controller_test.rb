@@ -15,6 +15,7 @@ class HomeControllerTest < Test::Unit::TestCase
   def test_index
     get(:index)
     assert_not_nil(assigns['upcoming_events'], 'Should assign upcoming_events')
+    assert_not_nil(assigns['recent_results'], 'Should assign recent_results')
   end
 
 end

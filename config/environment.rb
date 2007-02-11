@@ -56,6 +56,7 @@ end
 # Include your application configuration below
 
 require 'localize'
+require 'array'
 
 ActiveRecord::Base.colorize_logging = false
 

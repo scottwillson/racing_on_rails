@@ -8,5 +8,12 @@ class HomeController < ApplicationController
   # * upcoming_events: instance of UpcomingEvents with default parameters
   def index
     @upcoming_events = UpcomingEvents.new
+    
+    cutoff = Date.today - 14
+    @recent_results = SingleDayEvent.find(
+      :all,
+      :conditions => ['date > ? and id in (select event_id from standings)', cutoff],
+      :order => 'date desc'
+    )
   end
 end
