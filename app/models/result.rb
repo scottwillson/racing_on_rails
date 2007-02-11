@@ -256,10 +256,8 @@ class Result < ActiveRecord::Base
   end
   
   def team_name
-    if team
-      return team.name unless team.nil? or team.name.nil?
-    end
-    ""
+    return '' if team.nil?
+    team.name || ''
   end
 
   def team_name=(value)
