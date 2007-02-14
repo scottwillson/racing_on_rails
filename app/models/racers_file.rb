@@ -3,6 +3,10 @@
 class RacersFile < GridFile
   COLUMN_MAP = {
     'team'                                   => 'team_name',
+    'lname'                                  => 'last_name',
+    'f_name'                                 => 'first_name',
+    'l_name'                                 => 'last_name',
+    'fname'                                  => 'first_name',
     'Birth date'                             => 'date_of_birth',
     'address'                                => 'street',
     'Address1_Contact address'               => 'street',
@@ -13,6 +17,7 @@ class RacersFile < GridFile
     'Phone'                                  => 'home_phone',
     'cell/fax'                               => 'cell_fax',
     'e-mail'                                 => 'email',
+    'category'                               => 'road_category',
     'road cat'                               => 'road_category',
     'Road Category - '                       => 'road_category',
     'Road Age Group - '                      => 'road_category',
