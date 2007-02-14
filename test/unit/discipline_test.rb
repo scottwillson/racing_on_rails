@@ -41,7 +41,7 @@ class DisciplineTest < Test::Unit::TestCase
   end
   
   def test_numbers
-    assert_equal(false, Discipline[:circuit_race].numbers, 'Circuit Race not used for numbers')
+    assert_equal(false, Discipline[:circuit].numbers, 'Circuit Race not used for numbers')
     discipline = Discipline.create(:name => 'Unicycle', :numbers => true)
     assert_equal(true, discipline.numbers, 'Unicycle used for numbers')
   end
