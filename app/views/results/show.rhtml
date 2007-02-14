@@ -1,12 +1,15 @@
 <% @page_title = "Points: #{@result.race.standings.name}" %>
 
-<table class="base" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <th width="24" style="text-align: right;"><%= @result.place %></th>
-    <th colspan="4" width="400">
+<table class="base">
+	<caption>
+	  <%= @result.place %>
       <%= @result.race.standings.event.name %> 
       <%= @result.race.standings.name unless @result.race.standings.event.name == @result.race.standings.name %>
       <%= @result.race.name unless @result.race.name == @result.race.standings.name %></th>
+	</caption>
+  <tr>
+    <th width="24"></th>
+    <th colspan="4" width="400">
     <th colspan="3" width="350"></th>
   </tr>
   <tr>
@@ -15,18 +18,18 @@
     <td width="200" id="table_sub_head">CATEGORY</td>
     <td id="table_sub_head">RACER</td>
     <td id="table_sub_head">TEAM</td>
-    <td width="100" align="right" id="table_sub_head">DATE</td>
-    <td width="50" id="table_sub_head" align="right">POINTS</td>
+    <td width="100" class="right" id="table_sub_head">DATE</td>
+    <td width="50" class="right">POINTS</td>
   </tr>
   <% for score in @result.scores.sort! %>
   <tr>
-    <td align="right" width="24"><%= score.source_result.place %></td>
+    <td class="right" width="24"><%= score.source_result.place %></td>
     <td width="200"><%= score.source_result.race.standings.name %></td>
     <td width="200"><%= score.source_result.race.name %></td>
     <td><%= score.source_result.name %></td>
     <td><%= score.source_result.team_name %></td>
-    <td align="right" width="100"><%= score.source_result.race.standings.event.date.strftime("%D") %></td>
-    <td align="right" width="50"><%= sprintf('%d', score.points) %></td>
+    <td class="right" width="100"><%= score.source_result.race.standings.event.date.strftime("%D") %></td>
+    <td class="right" width="50"><%= sprintf('%d', score.points) %></td>
   </tr>
   <% end %>
   <tr>
@@ -35,6 +38,6 @@
     <td width="200"></td>
     <td></td>
     <td></td>
-    <td colspan="2" align="right" width="150"><span id="total">TOTAL</span><%= sprintf('%d', @result.points) %></td>
+    <td colspan="2" class="right" width="150"><span class="total">TOTAL</span><%= sprintf('%d', @result.points) %></td>
   </tr>
 </table>
