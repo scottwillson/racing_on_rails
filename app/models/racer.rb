@@ -248,6 +248,10 @@ class Racer < ActiveRecord::Base
     number(Discipline[:road], reload)
   end
   
+  def singlespeed_number(reload = false)
+    number(Discipline[:singlespeed], reload)
+  end
+
   def track_number(reload = false)
     number(Discipline[:track], reload)
   end
@@ -268,6 +272,10 @@ class Racer < ActiveRecord::Base
     add_number(value, Discipline[:road])
   end
   
+  def singlespeed_number=(value)
+    add_number(value, Discipline[:singlespeed])
+  end
+
   def track_number=(value)
     add_number(value, Discipline[:track])
   end

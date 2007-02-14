@@ -12,7 +12,10 @@ class ResultsController < ApplicationController
 
   	@events = HashWithIndifferentAccess.new
 
-  	road = [Discipline[:road].name, Discipline[:circuit].name, Discipline[:criterium].name, Discipline[:time_trial].name]
+  	road = [Discipline[:road].name, 
+  	        Discipline[:circuit].name, 
+  	        Discipline[:criterium].name, 
+  	        Discipline[:time_trial].name]
   	mountain_bike = [Discipline[:mountain_bike].name, Discipline[:downhill].name]
 
   	for discipline in [road, [Discipline[:cyclocross].name], mountain_bike, [Discipline[:track].name]]

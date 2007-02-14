@@ -35,7 +35,7 @@ tour:
   bar: false
 circuit_race:
   id: 9
-  name: Circuit Race
+  name: Circuit
   bar: false
 team:
   id: 10
