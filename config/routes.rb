@@ -54,11 +54,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/results/racer/:id", :controller => "results", :action => "racer"
   map.connect "/results/show/:id", :controller => "results", :action => "show"
-  map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event"
-  map.connect "/results/:year", :controller => "results", :action => "index"
+  map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event", :requirements => {:year => /\d\d\d\d/}
+  map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}
 
-  map.connect "/schedule/:year/:action", :controller => "schedule", :requirements => {:year => /\d+/}
-  map.connect "/schedule/:year", :controller => "schedule", :action => "index", :requirements => {:year => /\d+/}
+  map.connect "/schedule/:year/:action", :controller => "schedule", :requirements => {:year => /\d\d\d\d/}
+  map.connect "/schedule/:year", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:action", :controller => "schedule"
 
   # You can have the root of your site routed by hooking up '' 
