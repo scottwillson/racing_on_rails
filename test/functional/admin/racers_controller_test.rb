@@ -542,7 +542,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal(Discipline[:mountain_bike], race_number.discipline, 'MTB number discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'MTB number issuer')
   end
-
+  
   def test_update
     mollie = racers(:mollie)
     post(:update, {"commit"=>"Save", 
@@ -550,7 +550,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
                    "number"=>{"5"=>{"value"=>"222"}},
                    "racer"=>{
-                     "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+                     "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
                     }, 
                    "id"=>mollie.to_param}
     )
@@ -568,7 +568,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
                    "number"=>{"5"=>{"value"=>"202"}},
                    "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", 
-                   "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", 
+                   "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
                    "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "street"=>"31153 SW Willamette Hwy W", 
                    "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", 
                    "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
@@ -586,7 +586,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     post(:update, 
     :id => mollie.to_param, 
       :racer => {
-        :first_name => 'Mollie', :last_name => 'Cameron', :road_number => '123123612333', "member_from(2i)" => "999", :team_id => "-9"
+        :first_name => 'Mollie', :last_name => 'Cameron', :road_number => '123123612333', "member_to(1i)" => "AZZZ", :team_id => "-9"
     })
     assert_response(:success)
     assert_template("admin/racers/show")

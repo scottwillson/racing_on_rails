@@ -125,7 +125,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("100", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
   end
-  
+ 
   def test_merge
     racer_to_keep = racers(:mollie)
     racer_to_merge = racers(:tonkin)

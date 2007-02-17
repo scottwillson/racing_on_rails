@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>app/models/racers_file.rb</string>
+	<string>test/unit/racer_test.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -121,20 +121,6 @@
 	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/results_controller.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>23</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>app/models/announcement_mailer.rb</key>
 		<dict>
 			<key>caret</key>
@@ -149,19 +135,19 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/racers_file.rb</key>
+		<key>app/models/racer.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>20</integer>
 				<key>line</key>
-				<integer>36</integer>
+				<integer>329</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>139</integer>
+			<integer>304</integer>
 		</dict>
 		<key>config/environment.rb</key>
 		<dict>
@@ -177,71 +163,25 @@
 			<key>firstVisibleLine</key>
 			<integer>30</integer>
 		</dict>
-		<key>local/app/views/results/index.rhtml.mine</key>
+		<key>test/unit/racer_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>20</integer>
+				<integer>25</integer>
 				<key>line</key>
-				<integer>20</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>158</integer>
-			</dict>
-		</dict>
-		<key>local/app/views/schedule/index.rhtml</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
+				<integer>134</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>local/app/views/shared/footer.rhtml</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>109</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>local/app/views/shared/footer.rhtml</string>
-		<string>local/app/views/schedule/index.rhtml</string>
-		<string>app/controllers/results_controller.rb</string>
-		<string>app/models/racers_file.rb</string>
+		<string>app/models/racer.rb</string>
+		<string>test/unit/racer_test.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

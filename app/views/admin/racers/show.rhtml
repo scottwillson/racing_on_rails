@@ -1,5 +1,7 @@
 <% @page_title = "Admin: Racers: #{@racer.name}" %>
 
+<%= render "shared/admin/tabs" %>
+
 <% if @racer.new_record? 
      racer_name = 'New Racer' 
    else
@@ -37,16 +39,9 @@
 			<td><%= text_field 'racer', 'team_name' %></td>
 		</tr>
 		<tr>
-			<td class="field_label">Membership:</td>
-			<td><%= date_select 'racer', 'member_from', 
-					:discard_month => true, :discard_day => true,
-					:start_year => 1999, :end_year => Date.today.year + 1, 
-					:include_blank => true %>
-				to
-				<%= date_select 'racer', 'member_to', 
-						:discard_month => true, :discard_day => true,
-						:end_year => Date.today.year + 1, 
-						:include_blank => true %>
+			<td valign="top" class="field_label">Membership:</td>
+			<td><%= @racer.member_from.strftime('%m/%d/%Y') unless @racer.member_from.nil? %>&nbsp;to 12/31/<%= date_select 'racer', 'member_to', 
+				:discard_day => true, :discard_month => true, :end_year => Date.today.year + 1,  :include_blank => true %>
 				
 				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? or @racer.renewed? %>
 				<br>
@@ -60,12 +55,15 @@
 				<%- end -%>
 				</span>
 			</td>
-			<td class="field_label">Notes:</td>
-			<td colspan="3" rowspan="2"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
+			<td valign="top" class="field_label">Notes:</td>
+			<td valign="top" rowspan="2"colspan="3"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
 		</tr>
-		<tr>
+ 		<tr>
 			<td></td>
-			<td><%= check_box_tag 'card_printed' %> Card printed?</td>
+			<td>
+				<%= check_box_tag 'card_printed' %> Print card<br/>
+				<%= check_box_tag 'mailing_label_printed' %> Print mailing label
+			</td>
 		</tr>
 		<tr>
 			<td class="field_label">Email:</td>

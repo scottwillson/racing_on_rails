@@ -94,6 +94,7 @@ class Admin::RacersController < Admin::RecordEditor
           end
         end
       end
+      
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
           unless number_value.blank?
