@@ -24,6 +24,7 @@ class GridFile < Grid
         RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row}")
         if row
           line = []
+          is_not_blank = true
           for cell in row
             if cell
               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
@@ -31,17 +32,25 @@ class GridFile < Grid
               is_time = TIME_FORMATS.include?(cell.format_no)
               cell_f = cell.to_f if is_time
               if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
+                is_not_blank = true
                 line << (cell_f * 86400).to_s
               elsif cell.type == :date
+                is_not_blank = true
                 line << cell.date.to_s
+              elsif cell.type == :numeric
+                is_not_blank = true unless cell == 0
+                line << cell.to_i.to_s
               else
+                is_not_blank = true unless cell.to_s.strip.blank?
                 line << cell.to_s
               end
             else
               line << ""
             end
           end
-          excel_rows << line
+          if !line.empty? && is_not_blank
+            excel_rows << line
+          end
         end
       end
     end

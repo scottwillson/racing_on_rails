@@ -135,6 +135,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('97219', quinn_jackson.zip, 'Quinn Jackson ZIP')
     assert_equal('503-768-3822', quinn_jackson.home_phone, 'Quinn Jackson phone')
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
+    assert_equal('12', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     
@@ -148,6 +149,7 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\nr\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
+    assert_equal('825', brian_abers.road_number, 'Brian Abers road_number')
     assert(!brian_abers.print_card?, 'sautter.print_card? after import')
     assert(!brian_abers.print_mailing_label?, 'sautter.mailing_label? after import')
     
