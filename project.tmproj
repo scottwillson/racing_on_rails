@@ -3,7 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
+<<<<<<< .mine
+	<string>config/routes.rb</string>
+=======
 	<string>test/unit/racer_test.rb</string>
+>>>>>>> .r492
 	<key>documents</key>
 	<array>
 		<dict>
@@ -135,53 +139,119 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/racer.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>20</integer>
-				<key>line</key>
-				<integer>329</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>304</integer>
-		</dict>
+<<<<<<< .mine
 		<key>config/environment.rb</key>
+=======
+		<key>app/models/racer.rb</key>
+>>>>>>> .r492
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
 				<integer>14</integer>
+=======
+				<integer>20</integer>
+>>>>>>> .r492
 				<key>line</key>
+<<<<<<< .mine
 				<integer>58</integer>
+=======
+				<integer>329</integer>
+>>>>>>> .r492
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+<<<<<<< .mine
 			<integer>30</integer>
+=======
+			<integer>304</integer>
+>>>>>>> .r492
 		</dict>
+		<key>config/routes.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>116</integer>
+				<key>line</key>
+				<integer>60</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>26</integer>
+		</dict>
+<<<<<<< .mine
+		<key>local/app/views/home/_results.rhtml</key>
+=======
 		<key>test/unit/racer_test.rb</key>
+>>>>>>> .r492
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>25</integer>
 				<key>line</key>
+<<<<<<< .mine
+				<integer>14</integer>
+=======
 				<integer>134</integer>
+>>>>>>> .r492
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+<<<<<<< .mine
+			<integer>0</integer>
+=======
 			<integer>109</integer>
+>>>>>>> .r492
 		</dict>
+<<<<<<< .mine
+		<key>local/app/views/home/index.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>46</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>local/app/views/shared/footer.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+=======
+>>>>>>> .r492
 	</dict>
 	<key>openDocuments</key>
 	<array>
+<<<<<<< .mine
+		<string>local/app/views/shared/footer.rhtml</string>
+		<string>local/app/views/home/_results.rhtml</string>
+		<string>local/app/views/home/index.rhtml</string>
+		<string>config/routes.rb</string>
+=======
 		<string>app/models/racer.rb</string>
 		<string>test/unit/racer_test.rb</string>
+>>>>>>> .r492
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
