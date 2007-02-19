@@ -46,4 +46,8 @@ downhill:
   name: Downhill
   bar: false
   numbers: true
-  
+singlespeed:
+  id: 12
+  name: Singlespeed
+  bar: false
+  numbers: true
