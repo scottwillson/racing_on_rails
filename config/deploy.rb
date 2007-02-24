@@ -27,7 +27,6 @@ desc "Set file permissions for Rails app"
 task :set_permissions do
   sudo "chown -R wwwrun:rails #{deploy_to}/current/public"
   sudo "chown -R sw:rails #{deploy_to}/revisions.log"
-  sudo "chmod +x /srv/www/rails/obra/current/public/dispatch.fcgi"
   sudo "chmod +x /srv/www/rails/obra/current/script/runner"
 end
 
