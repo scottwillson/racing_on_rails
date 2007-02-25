@@ -5,6 +5,7 @@ tonkin:
   team_id: 1
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
+  gender: M
 matson:
   id: 2
   first_name: Mark
@@ -12,6 +13,7 @@ matson:
   team_id: 1
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
+  gender: M
 weaver:
   id: 3
   first_name: Ryan
@@ -19,6 +21,7 @@ weaver:
   team_id: 2
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
+  gender: M
 mollie:
   id: 4
   first_name: Mollie
@@ -26,6 +29,7 @@ mollie:
   team_id: 3
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
+  gender: F
 alice:
   id: 5
   first_name: Alice
@@ -33,3 +37,4 @@ alice:
   team_id: 2
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
+  gender: F

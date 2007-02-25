@@ -31,8 +31,8 @@ class RaceNumberTest < Test::Unit::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
     # dupes not OK if different racer 
-    assert(!RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
-    assert(!RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    assert(RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Same racer, same value')
+    assert(!RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Different racers, same value')
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
@@ -94,14 +94,37 @@ class RaceNumberTest < Test::Unit::TestCase
   end
   
   def test_gender
+    alice = racers(:alice)
+    tonkin = racers(:tonkin)
+    
     begin
       original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
       ASSOCIATION.gender_specific_numbers = false
+
+      race_number = RaceNumber.new(:racer => alice, :value => '9103')
+      assert(race_number.valid?, "Default non-gender-specific number: #{race_number.errors.full_messages}")
       
+      race_number = RaceNumber.create!(:racer => tonkin, :value => '200')
+      assert(race_number.valid?, "Default non-gender-specific number: #{race_number.errors.full_messages}")
+
+      race_number = RaceNumber.new(:racer => alice, :value => '200')
+      assert(!race_number.valid?, 'Dupe number for different gender should not be valid')
     ensure
-      ASSOCIATION.rental_numbers = original_gender_specific_numbers
+      ASSOCIATION.gender_specific_numbers = original_gender_specific_numbers
     end
     
-    # Assert true
+    
+    begin
+      original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
+      ASSOCIATION.gender_specific_numbers = true
+
+      race_number = RaceNumber.create!(:racer => alice, :value => '200')
+      assert(race_number.valid?, 'Dupe number for different gender should be valid')
+
+      race_number = RaceNumber.new(:racer => racers(:mollie), :value => '200')
+      assert(!race_number.valid?, 'Dupe number for same gender should not be valid')
+    ensure
+      ASSOCIATION.gender_specific_numbers = original_gender_specific_numbers
+    end
   end
 end

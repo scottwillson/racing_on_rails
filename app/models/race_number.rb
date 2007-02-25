@@ -94,20 +94,38 @@ class RaceNumber < ActiveRecord::Base
       return false 
     end
     
-    if new_record? and racer
-      existing_numbers = RaceNumber.find(
-        :all, 
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year]])
+    return true if racer.nil?
+  
+    if ASSOCIATION.gender_specific_numbers && !racer.gender.blank?
+      existing_numbers = RaceNumber.count_by_sql([%q{
+        SELECT COUNT(DISTINCT race_numbers.id) 
+        FROM race_numbers 
+        join racers ON racers.id = race_numbers.racer_id 
+        WHERE (value=? and discipline_id=? and number_issuer_id=? and year=? and racers.gender=? and racers.id <> ?)}, 
+        value, discipline.id, number_issuer.id, year, racer.gender, racer.id]
+      )
     else
-      existing_numbers = RaceNumber.find(
-        :all, 
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
+      if new_record?
+        existing_numbers = RaceNumber.count(
+          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id <> ?', 
+          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], racer.id])
+      else
+        existing_numbers = RaceNumber.count(
+          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>?', 
+          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
+      end
     end
       
-    unless existing_numbers.empty?
-      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}")
+    unless existing_numbers == 0
+      if racer
+        racer_id = racer.id
+      else
+        racer_id = nil
+      end
+      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+      if existing_numbers > 1
+        logger.warn("Race number '#{value}' found #{existing_numbers} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+      end
       return false
     end
   end
