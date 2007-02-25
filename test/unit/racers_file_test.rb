@@ -135,7 +135,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('97219', quinn_jackson.zip, 'Quinn Jackson ZIP')
     assert_equal('503-768-3822', quinn_jackson.home_phone, 'Quinn Jackson phone')
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
-    assert_equal('12', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
+    assert_equal('120', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     

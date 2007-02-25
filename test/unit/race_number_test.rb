@@ -59,11 +59,6 @@ class RaceNumberTest < Test::Unit::TestCase
     race_number = RaceNumber.new(:racer => alice, :value => '9103', :year => 2001, :number_issuer => elkhorn)
     assert(race_number.valid?, "No discipline: #{race_number.errors.full_messages}")
     race_number.save!
-    
-    # Rentals
-    assert(RaceNumber.new(:racer => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
-    assert(RaceNumber.new(:racer => alice, :value => '78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
-    assert(RaceNumber.new(:racer => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
   end
   
   def test_rental
@@ -84,6 +79,23 @@ class RaceNumberTest < Test::Unit::TestCase
       assert(!RaceNumber.rental?(' 9 '), '9 not rental')
       assert(RaceNumber.rental?('11'), '11 is rental')
       assert(RaceNumber.rental?('99'), '99 is rental')
+      assert(!RaceNumber.rental?('100'), '100 not rental')
+      assert(!RaceNumber.rental?('A100'), 'A100 not rental')
+      assert(!RaceNumber.rental?('A50'), 'A50 not rental')
+      assert(!RaceNumber.rental?('50Z'), '50Z not rental')
+
+      ASSOCIATION.rental_numbers = nil
+      assert(RaceNumber.new(:racer => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(RaceNumber.new(:racer => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(RaceNumber.new(:racer => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(RaceNumber.new(:racer => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(RaceNumber.new(:racer => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    
+      assert(!RaceNumber.rental?(nil), 'Nil number not rental')
+      assert(!RaceNumber.rental?(''), 'Blank number not rental')
+      assert(!RaceNumber.rental?(' 9 '), '9 not rental')
+      assert(!RaceNumber.rental?('11'), '11 is rental')
+      assert(!RaceNumber.rental?('99'), '99 is rental')
       assert(!RaceNumber.rental?('100'), '100 not rental')
       assert(!RaceNumber.rental?('A100'), 'A100 not rental')
       assert(!RaceNumber.rental?('A50'), 'A50 not rental')
@@ -109,12 +121,7 @@ class RaceNumberTest < Test::Unit::TestCase
 
       race_number = RaceNumber.new(:racer => alice, :value => '200')
       assert(!race_number.valid?, 'Dupe number for different gender should not be valid')
-    ensure
-      ASSOCIATION.gender_specific_numbers = original_gender_specific_numbers
-    end
-    
-    
-    begin
+
       original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
       ASSOCIATION.gender_specific_numbers = true
 

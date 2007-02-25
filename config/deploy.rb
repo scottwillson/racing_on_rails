@@ -16,10 +16,10 @@ task :deploy do
   
     set_permissions
     # Pull in local OBRA code
-    run "svn co svn+ssh://butlerpress.com/var/repos/obra /srv/www/rails/#{application}/current/local"
+    run "svn co svn+ssh://butlerpress.com/var/repos/obra/trunk /srv/www/rails/#{application}/current/local"
 
-    restart
     migrate
+    restart
   end
 end
 
