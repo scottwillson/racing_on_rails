@@ -1,7 +1,7 @@
 Race Header	Name	City	State	Oregon Cup	Date	Type		
 Parent Race	Mt. Tabor Circuit Race	 Portland	Oregon	yes	June 26, 2005	Road		
 								
-Race Header	BAR Category	Category						
+Race Header	BAR Category	Cat.						
 Race	Senior Women	Senior Women						
 Result Header	place	First Name	Last Name	Team	BAR Category	
 Result	1	Kim	Anderson	Colavita

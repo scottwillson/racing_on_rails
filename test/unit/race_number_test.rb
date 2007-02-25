@@ -30,9 +30,9 @@ class RaceNumberTest < Test::Unit::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
-    # dupes OK if different racer 
+    # dupes not OK if different racer 
     assert(!RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
-    assert(RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    assert(!RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
@@ -40,6 +40,10 @@ class RaceNumberTest < Test::Unit::TestCase
     
     # No racer ID valid when new, but can't save
     no_racer = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    assert(no_racer.valid?, 'No racer')
+    assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
+    
+    no_racer = RaceNumber.new(:value => '1009', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     assert(no_racer.valid?, 'No racer')
     assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
     
@@ -55,5 +59,38 @@ class RaceNumberTest < Test::Unit::TestCase
     race_number = RaceNumber.new(:racer => alice, :value => '9103', :year => 2001, :number_issuer => elkhorn)
     assert(race_number.valid?, "No discipline: #{race_number.errors.full_messages}")
     race_number.save!
+    
+    # Rentals
+    assert(RaceNumber.new(:racer => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    assert(RaceNumber.new(:racer => alice, :value => '78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    assert(RaceNumber.new(:racer => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+  end
+  
+  def test_rental
+    alice = racers(:alice)
+    elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
+    
+    begin
+      original_rental_numbers = ASSOCIATION.rental_numbers
+      ASSOCIATION.rental_numbers = 11..99
+      assert(RaceNumber.new(:racer => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(!RaceNumber.new(:racer => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(!RaceNumber.new(:racer => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(!RaceNumber.new(:racer => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+      assert(RaceNumber.new(:racer => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
+    
+      assert(!RaceNumber.rental?(nil), 'Nil number not rental')
+      assert(!RaceNumber.rental?(''), 'Blank number not rental')
+      assert(!RaceNumber.rental?(' 9 '), '9 not rental')
+      assert(RaceNumber.rental?('11'), '11 is rental')
+      assert(RaceNumber.rental?('99'), '99 is rental')
+      assert(!RaceNumber.rental?('100'), '100 not rental')
+    ensure
+      ASSOCIATION.rental_numbers = original_rental_numbers
+    end
+  end
+  
+  def test_gender
+    # FIXME test
   end
 end

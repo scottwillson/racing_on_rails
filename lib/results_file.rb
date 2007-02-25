@@ -6,10 +6,14 @@ class ResultsFile < GridFile
 
   COLUMN_MAP = {
     "#" => "number",
+    "wsba#" => "number",
+    "rider_#" => "number",
+    'racing_age' => 'age',
     "barcategory" => "bar_category",
     "category.name" => "category_name",
     "categories" => "category_name",
     "category" => "category_name",
+    "cat." => "category_name",
     "first" => "first_name",
     "firstname" => "first_name",
     "racer.first_name" => "first_name",
@@ -23,7 +27,6 @@ class ResultsFile < GridFile
     "oregoncup" => "oregon_cup",
     "membership #" => "license",
     "membership" => "license",
-    "rider_#" => "number",
     "last name" => "last_name",
     "first name" => "first_name",
     "club/team" => "team_name",

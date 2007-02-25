@@ -52,6 +52,17 @@ class RaceNumber < ActiveRecord::Base
     end
   end
   
+  def RaceNumber.rental?(number)
+    if number.nil? || ASSOCIATION.rental_numbers.nil?
+      return false
+    end
+    numeric_value = number.to_i
+    if ASSOCIATION.rental_numbers.include?(numeric_value)
+      return true
+    end
+    false
+  end
+  
   # Default to Road, ASSOCIATION, and current year
   def after_initialize
     self.discipline = Discipline[:road] unless self.discipline
@@ -69,21 +80,34 @@ class RaceNumber < ActiveRecord::Base
     self.year > 1800
   end
   
-  def unique_number
-    if new_record?
+  # Checks that another Racer doesn't already have this number.
+  #
+  # Numbers are unique by value, Discipline, NumberIssuer, and year.
+  #
+  # Skips check if +racer+ is not set. Typically, this happens when
+  # importing a Result that has a +number+, but no +racer+
+  #
+  # OBRA rental numbers (11-99) are not valid
+  def unique_number 
+    if RaceNumber.rental?(self[:value])
+      errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      return false 
+    end
+    
+    if new_record? and racer
       existing_numbers = RaceNumber.find(
         :all, 
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id=?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self[:racer_id]])
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year]])
     else
       existing_numbers = RaceNumber.find(
         :all, 
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and racer_id=?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, self[:racer_id]])
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
     end
       
     unless existing_numbers.empty?
-      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}")
       return false
     end
   end

@@ -128,7 +128,7 @@ class Result < ActiveRecord::Base
   # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
     logger.debug("Result update_racer_number #{self.number} #{number}")
-    if self.racer and !number.blank? and !(number.to_i > 10 and number.to_i < 100)
+    if self.racer and !number.blank? and !RaceNumber.rental?(number)
       event.number_issuer unless event.number_issuer
       self.racer.add_number(number, Discipline[event.discipline], event.number_issuer, event.date.year)
     end
