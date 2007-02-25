@@ -85,12 +85,23 @@ class RaceNumberTest < Test::Unit::TestCase
       assert(RaceNumber.rental?('11'), '11 is rental')
       assert(RaceNumber.rental?('99'), '99 is rental')
       assert(!RaceNumber.rental?('100'), '100 not rental')
+      assert(!RaceNumber.rental?('A100'), 'A100 not rental')
+      assert(!RaceNumber.rental?('A50'), 'A50 not rental')
+      assert(!RaceNumber.rental?('50Z'), '50Z not rental')
     ensure
       ASSOCIATION.rental_numbers = original_rental_numbers
     end
   end
   
   def test_gender
-    # FIXME test
+    begin
+      original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
+      ASSOCIATION.gender_specific_numbers = false
+      
+    ensure
+      ASSOCIATION.rental_numbers = original_gender_specific_numbers
+    end
+    
+    # Assert true
   end
 end

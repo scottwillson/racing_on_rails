@@ -53,7 +53,7 @@ class RaceNumber < ActiveRecord::Base
   end
   
   def RaceNumber.rental?(number)
-    if number.nil? || ASSOCIATION.rental_numbers.nil?
+    if number.nil? || ASSOCIATION.rental_numbers.nil? || number.strip[/^\d+$/].nil?
       return false
     end
     numeric_value = number.to_i
