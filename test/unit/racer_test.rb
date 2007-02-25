@@ -61,7 +61,7 @@ class RacerTest < Test::Unit::TestCase
       :team => {:name => "7-11"},
       :track_category => '2', 
       :work_phone => '(315) 444-1022',
-      :xc_number => "100",
+      :xc_number => "101",
       :zip => "13035"
     )
     assert_equal_dates("1970-12-31", racer.date_of_birth, "date_of_birth")
@@ -74,7 +74,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
-    assert_equal("100", racer.xc_number, "xc_number")
+    assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("Santa Rosa", racer.city, "city")
     assert_equal("98", racer.dh_number, "dh_number")
     assert_equal("andy@pig_bikes.com", racer.email, "email")
@@ -87,7 +87,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("CA", racer.state, "state")
     assert_equal("5 Burr Street", racer.street, "street")
     assert_equal("7-11", racer.team.name, "team.name")
-    assert_equal("100", racer.xc_number, "xc_number")
+    assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
     assert_equal(false, racer.print_card, 'print_card')
     assert_equal(false, racer.print_card?, 'print_card?')
@@ -110,7 +110,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("Vinter", racer.occupation, "occupation")
     assert_equal("1", racer.road_category, "road_category")
     assert_equal("2", racer.track_category, "track_category")
-    assert_equal("100", racer.xc_number, "xc_number")
+    assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("Santa Rosa", racer.city, "city")
     assert_equal("98", racer.dh_number, "dh_number")
     assert_equal("andy@pig_bikes.com", racer.email, "email")
@@ -122,7 +122,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("CA", racer.state, "state")
     assert_equal("5 Burr Street", racer.street, "street")
     assert_equal("7-11", racer.team.name, "team.name")
-    assert_equal("100", racer.xc_number, "xc_number")
+    assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("13035", racer.zip, "xc_number")
   end
  

@@ -8,6 +8,8 @@ class RacersFile < GridFile
     'l_name'                                 => 'last_name',
     'fname'                                  => 'first_name',
     'Birth date'                             => 'date_of_birth',
+    'year of birth'                          => 'date_of_birth',
+    'dob'                                    => 'date_of_birth',
     'address'                                => 'street',
     'Address1_Contact address'               => 'street',
     'Address2_Contact address'               => 'street',
@@ -42,7 +44,6 @@ class RacersFile < GridFile
     'Membership No'                          => 'license',
     'date joined'                            => 'member_from',
     'card'                                   => 'print_card',
-    'year of birth'                          => 'date_of_birth',
     'sex'                                    => 'gender',
     'What is your occupation? (optional)'    => 'occupation',
     'Interests'                              => 'notes',
@@ -103,6 +104,8 @@ class RacersFile < GridFile
         for row in rows
           row_hash = row.to_hash
           logger.debug(row_hash.inspect) if logger.debug?
+          next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
+          
           combine_categories(row_hash)
           row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
