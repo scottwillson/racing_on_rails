@@ -8,6 +8,7 @@ class Racer < ActiveRecord::Base
 
   before_validation :find_associated_records
   validate :membership_dates
+  after_save :save_numbers
 
   belongs_to :team
   has_many :aliases
@@ -435,6 +436,12 @@ class Racer < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
+    end
+  end
+  
+  def save_numbers
+    for number in race_numbers
+      number.save! if number.new_record?
     end
   end
   

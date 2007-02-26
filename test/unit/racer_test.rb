@@ -43,7 +43,7 @@ class RacerTest < Test::Unit::TestCase
       :city => "Santa Rosa", 
       :ccx_category => 'A', 
       :dh_category => 'Novice', 
-      :dh_number => "98", 
+      :dh_number => "100", 
       :email => 'andy@pig_bikes.com',
       :first_name => 'Andy',
       :gender => 'M',
@@ -76,7 +76,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("2", racer.track_category, "track_category")
     assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("Santa Rosa", racer.city, "city")
-    assert_equal("98", racer.dh_number, "dh_number")
+    assert_equal("100", racer.dh_number, "dh_number")
     assert_equal("andy@pig_bikes.com", racer.email, "email")
     assert_equal("M", racer.gender, "gender")
     assert_equal("125162", racer.license, "license")
@@ -112,7 +112,7 @@ class RacerTest < Test::Unit::TestCase
     assert_equal("2", racer.track_category, "track_category")
     assert_equal("101", racer.xc_number, "xc_number")
     assert_equal("Santa Rosa", racer.city, "city")
-    assert_equal("98", racer.dh_number, "dh_number")
+    assert_equal("100", racer.dh_number, "dh_number")
     assert_equal("andy@pig_bikes.com", racer.email, "email")
     assert_equal("M", racer.gender, "gender")
     assert_equal("125162", racer.license, "license")
