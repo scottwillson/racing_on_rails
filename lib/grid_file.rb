@@ -27,7 +27,7 @@ class GridFile < Grid
           is_not_blank = true
           for cell in row
             if cell
-              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} type: #{cell.type} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               is_time = TIME_FORMATS.include?(cell.format_no)
               cell_f = cell.to_f if is_time
@@ -36,7 +36,12 @@ class GridFile < Grid
                 line << (cell_f * 86400).to_s
               elsif cell.type == :date
                 is_not_blank = true
-                line << cell.date.to_s
+                date = cell.date.to_s
+                if date.blank?
+                  line << (cell.to_f * 86400).to_s
+                else
+                  line << date
+                end
               elsif cell.type == :numeric
                 is_not_blank = true unless cell == 0
                 line << cell.to_i.to_s

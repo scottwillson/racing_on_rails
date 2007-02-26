@@ -189,7 +189,7 @@ class ResultsFileTest < Test::Unit::TestCase
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
     remote_standings = results_file.import
 
-    assert_equal(expected_races.size, remote_standings.races.size, "remote_standings races")
+    assert_equal(expected_races.size, remote_standings.races.size, "standings races")
     expected_races.each_with_index do |expected_race, index|
       actual_race = remote_standings.races[index]
       assert_not_nil(actual_race, "race #{index}")
