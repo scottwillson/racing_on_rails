@@ -18,6 +18,21 @@ class SingleDayEventTest < Test::Unit::TestCase
     events = SingleDayEvent.find_all_by_year_month(2005, 7)
     assert_equal(5, events.size, "find_all_by_year_month(2005, 7)")
   end
+  
+  def test_find_all_by_year
+    begin
+      show_only_association_sanctioned_races_on_calendar = ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = true
+      events = SingleDayEvent.find_all_by_year(2004)
+      assert_equal(4, events.size, "test_find_all_by_year for 2004 events only found: #{events.join(', ')}")
+
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
+      events = SingleDayEvent.find_all_by_year(2004)
+      assert_equal(5, events.size, "test_find_all_by_year for 2004 events only found: #{events.join(', ')}")
+    ensure
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
+    end
+  end
 
   def test_new
     event = SingleDayEvent.new

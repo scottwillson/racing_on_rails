@@ -14,24 +14,24 @@ class UpcomingEvents
     weeks = weeks || 2
     _events = SingleDayEvent.find(
       :all, 
-      :conditions => ['date >= ? and date <= ? and sanctioned_by = ? and cancelled = ? and parent_id is null', 
-                      date.to_time.beginning_of_day, cutoff_date(date, weeks), ASSOCIATION.short_name, false],
+      :conditions => scope_by_sanctioned(['date >= ? and date <= ? and cancelled = ? and parent_id is null', 
+                      date.to_time.beginning_of_day, cutoff_date(date, weeks), false]),
       :order => 'date')
 
     _events.concat(MultiDayEvent.find(
         :all, 
         :include => :events,
-        :conditions => ['events_events.date >= ? and events_events.date <= ? and events.sanctioned_by = ? and events.type = ?', 
-                        date.to_time.beginning_of_day, cutoff_date(date, weeks), ASSOCIATION.short_name, 'MultiDayEvent'],
+        :conditions => scope_by_sanctioned(['events_events.date >= ? and events_events.date <= ? and events.type = ?', 
+                        date.to_time.beginning_of_day, cutoff_date(date, weeks), 'MultiDayEvent']),
         :order => 'events.date'))
 
     series_events = (SingleDayEvent.find(
         :all, 
         :include => :parent,
-        :conditions => ['events.date >= ? and events.date <= ? and events.sanctioned_by = ? and events.cancelled = ? and events.parent_id is not null', 
-            date.to_time.beginning_of_day, cutoff_date(date, weeks), ASSOCIATION.short_name, false],
+        :conditions => scope_by_sanctioned(['events.date >= ? and events.date <= ? and events.cancelled = ? and events.parent_id is not null', 
+            date.to_time.beginning_of_day, cutoff_date(date, weeks), false]),
         :order => 'events.date'))
-    # Cannot apply condition  with Rails' generated SQL
+    # Cannot apply condition  with Rails-generated SQL
     _events.concat(series_events.select {|event| event.parent.is_a?(Series) and !event.parent.is_a?(WeeklySeries)})
     
     weekly_series_events = SingleDayEvent.find(
@@ -100,6 +100,18 @@ class UpcomingEvents
       date + (weeks.to_i * 7) - 5
     when 6
       date + (weeks.to_i * 7) + 1
+    end
+  end
+  
+  private
+  
+  # Awkward method to add sanctioned_by to conditions
+  def scope_by_sanctioned(conditions)
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      conditions[0] = conditions.first + ' and events.sanctioned_by = ?'
+      conditions << ASSOCIATION.short_name
+    else
+      conditions
     end
   end
 end

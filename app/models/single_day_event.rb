@@ -25,10 +25,14 @@ class SingleDayEvent < Event
   end
   
   def SingleDayEvent.find_all_by_year(year)
-    SingleDayEvent.find(
-      :all,
-      :conditions => ["date >= ? and date <= ? and sanctioned_by = ?",
-                      "#{year}-01-01", "#{year}-12-31", ASSOCIATION.short_name])
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      SingleDayEvent.find(
+        :all,
+        :conditions => ["date >= ? and date <= ? and sanctioned_by = ?",
+                        "#{year}-01-01", "#{year}-12-31", ASSOCIATION.short_name])
+    else
+      SingleDayEvent.find(:all, :conditions => ["date >= ? and date <= ?", "#{year}-01-01", "#{year}-12-31"])
+    end
   end
   
   def initialize(attributes = nil)

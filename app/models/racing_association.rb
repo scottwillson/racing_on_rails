@@ -2,6 +2,7 @@
 class RacingAssociation
 
   attr_accessor :name, :gender_specific_numbers, :rental_numbers, :short_name, :state
+  attr_accessor :show_only_association_sanctioned_races_on_calendar
 
   def gender_specific_numbers?
     @gender_specific_numbers
