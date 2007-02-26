@@ -46,7 +46,7 @@ class Admin::EventsController < ApplicationController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    @event = SingleDayEvent.new(:date => date)
+    @event = SingleDayEvent.new(:date => date, :discipline => 'Road')
   end
   
   # Create new SingleDayEvent

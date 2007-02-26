@@ -3,6 +3,14 @@
 		<th colspan="3">Numbers</th>
 		<th><select name='number_year' id='number_year'><%= options_for_select years, year %></select></th>
 	</tr>
+	<% if ASSOCIATION.show_license %>
+	<tr>
+		<td><%= ASSOCIATION.short_name %></td>
+		<td>Membership</td>
+		<td><%= text_field 'racer', 'license' %></td>
+		<td></td>
+	</tr>
+	<% end %>
 	<% for @number in race_numbers %>
 	<tr id="<%= "number_#{@number.id}_row" %>">
 		<td><%= @number.number_issuer.name %></td>
