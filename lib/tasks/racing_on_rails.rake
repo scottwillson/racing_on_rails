@@ -27,7 +27,8 @@ namespace :racing_on_rails do
   task :copy_production_schema do
     `mysql -u root -e 'drop database racing_on_rails_development'`
     `mysql -u root -e 'create database racing_on_rails_development'`
-    `mysqldump -u obra --password=fenders -h db.obra.org --no-data obra | mysql -u root racing_on_rails_development`
+    `mysqldump -u obra --password=fenders -h db.obra.org --no-data obra > db/production_schema.sql`
+    `mysql -u root racing_on_rails_development < db/production_schema.sql`
   end
 
   # From production
@@ -36,8 +37,8 @@ namespace :racing_on_rails do
     `mysql -u root -e 'create database racing_on_rails_development'`
     # Mailing list tables are large
     `mysqldump -u obra --password=fenders -h db.obra.org --no-data --databases obra --tables posts mailing_lists > db/production.sql`
-    `mysqldump -u obra --password=fenders -h db.obra.org --compress --ignore-table=obra.posts --ignore-table=obra.mailing_lists obra >> db/production.sql`
-    `mysql -u root racing_on_rails_development < db/production.sql`
+    `mysqldump -u obra --password=fenders -h db.obra.org --compress --ignore-table=obra.posts --ignore-table=obra.mailing_lists obra >> db/production_data.sql`
+    `mysql -u root racing_on_rails_development < db/production_data.sql`
   end
   
   desc "User acceptence test for end users and developers"
