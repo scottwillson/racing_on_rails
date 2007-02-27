@@ -23,7 +23,7 @@ module ApplicationHelper
       @@grid_columns['notes'] = Column.new(:name => 'notes', :size => 12)
       @@grid_columns['number'] = Column.new(:name => 'number', :description => 'Num', :size => 4, :fixed_size => true)
       @@grid_columns['number'].link = 'link_to(cell, "/results/racer/#{result.racer.id}") if result.racer'
-      @@grid_columns['place'] = Column.new(:name => 'place', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
+      @@grid_columns['place'] = Column.new(:name => 'place', :description => 'Plc', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points'] = Column.new(:name => 'points', :description => 'Points', :size => 6, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['state'] = Column.new(:name => 'state', :description => 'ST', :size => 3)
       @@grid_columns['team_name'] = Column.new(:name => 'team_name', :description => 'Team', :size => 40)

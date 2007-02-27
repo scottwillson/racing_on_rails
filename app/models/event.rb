@@ -178,6 +178,22 @@ class Event < ActiveRecord::Base
     "#{prefix}#{date.month}/#{date.day}#{suffix}"
   end
   
+  def city_state
+    if !city.blank?
+      if !state.blank?
+        "#{city}, #{state}"
+      else
+        city
+      end
+    else
+      if !state.blank?
+        state
+      else
+        ''
+      end
+    end
+  end
+
   # TODO move to model class
   def discipline_id
     Discipline[discipline].id if Discipline[discipline]

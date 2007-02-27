@@ -364,7 +364,19 @@ class Racer < ActiveRecord::Base
   end
   
   def city_state_zip
-    "#{city} #{state}, #{zip}"
+    if !city.blank?
+      if !state.blank?
+        "#{city}, #{state} #{zip}"
+      else
+        "#{city} #{zip}"
+      end
+    else
+      if !state.blank?
+        "#{state} #{zip}"
+      else
+        zip || ''
+      end
+    end
   end
   
   # Hack around in-place editing

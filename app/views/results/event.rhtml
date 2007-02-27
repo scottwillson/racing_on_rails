@@ -2,10 +2,7 @@
 
 <h3><%= @event.name %></h3>
 <br />
-<% if @event.city -%>
-  <%= @event.city -%>, 
-<%- end -%>
-<%= @event.state %>
+<%= @event.city_state %>
 <br />
 
 <%= @event.date.to_formatted_s(:long) %>
