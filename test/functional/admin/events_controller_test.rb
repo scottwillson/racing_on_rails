@@ -475,4 +475,15 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_template("admin/events/upcoming")
   end
+  
+  def test_first_aid
+    @request.session[:user] = users(:candi)
+    opts = {:controller => "admin/events", :action => "first_aid"}
+    assert_routing("/admin/events/first_aid", opts)
+    get(:first_aid)
+    assert_response(:success)
+    assert_template("admin/events/first_aid")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+  end
 end

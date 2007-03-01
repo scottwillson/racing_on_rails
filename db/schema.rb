@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 12) do
 
   create_table "aliases", :force => true do |t|
     t.column "alias", :string
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "oregon_cup_id", :integer
     t.column "notification", :boolean, :default => true
     t.column "number_issuer_id", :integer
+    t.column "first_aid_provider", :string, :default => "Needed", :null => false
   end
 
   add_index "events", ["date"], :name => "idx_date"
@@ -167,12 +168,11 @@ ActiveRecord::Schema.define(:version => 4) do
   create_table "racers", :force => true do |t|
     t.column "first_name", :string, :limit => 64
     t.column "last_name", :string
-    t.column "member", :boolean, :default => true
     t.column "age", :integer
     t.column "city", :string, :limit => 128
     t.column "date_of_birth", :date
     t.column "license", :string, :limit => 64
-    t.column "notes", :string
+    t.column "notes", :text
     t.column "state", :string, :limit => 64
     t.column "team_id", :integer
     t.column "lock_version", :integer, :default => 0, :null => false
@@ -192,6 +192,9 @@ ActiveRecord::Schema.define(:version => 4) do
     t.column "track_category", :string
     t.column "work_phone", :string
     t.column "zip", :string
+    t.column "member_to", :date
+    t.column "print_card", :boolean, :default => false
+    t.column "print_mailing_label", :boolean, :default => false
   end
 
   add_index "racers", ["last_name"], :name => "idx_last_name"
@@ -324,10 +327,10 @@ ActiveRecord::Schema.define(:version => 4) do
   add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
 
-  add_foreign_key "events", ["number_issuer_id"], "number_issuers", ["id"]
   add_foreign_key "events", ["parent_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "events", ["promoter_id"], "promoters", ["id"], :on_delete => :set_null
   add_foreign_key "events", ["oregon_cup_id"], "events", ["id"], :on_delete => :set_null
+  add_foreign_key "events", ["number_issuer_id"], "number_issuers", ["id"]
   add_foreign_key "events", ["number_issuer_id"], "number_issuers", ["id"]
 
   add_foreign_key "posts", ["mailing_list_id"], "mailing_lists", ["id"]

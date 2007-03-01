@@ -5,7 +5,8 @@ class Admin::EventsController < ApplicationController
   model :event, :single_day_event, :multi_day_event, :weekly_series, :series, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
   layout 'admin/application'
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :destroy_standings, :upload]
-
+  in_place_edit_for :event, :first_aid_provider
+  
   # Show results for Event
   # === Params
   # * id: SingleDayEvent id
@@ -330,6 +331,29 @@ class Admin::EventsController < ApplicationController
       end
     end
   end
+  
+  def first_aid
+    @year = Date.today.year
+    @events = SingleDayEvent.find(:all, :conditions => ['date >= CURDATE()'], :order => 'date asc')
+  end
+  
+  def first_aid_provider_email
+    events = SingleDayEvent.find(
+      :all, 
+      :conditions => ['date >= CURDATE() and first_aid_provider = ?', 'Needed'], 
+      :order => 'date asc')
+
+      rows = events.collect do |event|
+      	[event.date.strftime("%a %m/%d") , event.name, event.city_state]
+      end
+      grid = Grid.new(rows)
+      grid.truncate
+      grid.calculate_padding
+      
+      headers['Content-Type'] = 'text/plain'
+
+      render :text => grid.to_s(false)
+    end
   
   # :nodoc
   def update_promoter(promoter, params)
