@@ -23,7 +23,7 @@ namespace :racing_on_rails do
     `mysqldump -u root --no-data racing_on_rails_development > /db/schema.sql`
   end
 
-  # From production
+  desc "Copy schema from production"
   task :copy_production_schema do
     `mysql -u root -e 'drop database racing_on_rails_development'`
     `mysql -u root -e 'create database racing_on_rails_development'`
@@ -31,12 +31,12 @@ namespace :racing_on_rails do
     `mysql -u root racing_on_rails_development < db/production_schema.sql`
   end
 
-  # From production
+  desc "Copy schema and data from production"
   task :copy_production_data do
     `mysql -u root -e 'drop database racing_on_rails_development'`
     `mysql -u root -e 'create database racing_on_rails_development'`
     # Mailing list tables are large
-    `mysqldump -u obra --password=fenders -h db.obra.org --no-data --databases obra --tables posts mailing_lists > db/production.sql`
+    `mysqldump -u obra --password=fenders -h db.obra.org --no-data --databases obra --tables posts mailing_lists > db/production_data.sql`
     `mysqldump -u obra --password=fenders -h db.obra.org --compress --ignore-table=obra.posts --ignore-table=obra.mailing_lists obra >> db/production_data.sql`
     `mysql -u root racing_on_rails_development < db/production_data.sql`
   end

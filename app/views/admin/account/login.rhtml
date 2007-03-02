@@ -9,9 +9,8 @@
 <% if @user %>
 
 <%= start_form_tag :action=> "login" %>
-<table border="0" cellspacing="0" cellpadding="0" class="base" id="login">
+<table class="base" id="login">
 	<caption>Logged In</caption>
-	<th></th>
 	<tr>
 		<td>You are logged-in as <%= @user.name %></td>
 	</tr>
@@ -24,21 +23,20 @@
 <% else %>
 
 <%= start_form_tag :action=> "login" %>
-<table border="0" cellspacing="0" cellpadding="0" class="base" id="login">
+<table class="base" id="login">
 	<caption>Login</caption>
-	<tbody>
-		<tr>
-			<td class="field_label">Username:</td>
-			<td><input type="text" name="username" id="user_login" size="30" value=""/></td>
-		</tr>
-		<tr>
-			<td class="field_label">Password:</td>
-			<td><input type="password" name="user_password" id="user_password" size="30"/></td>
-		</tr>
-		<tr class="buttons">
-			<td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
-		</tr>
-	</tbody>
+	<tr><th colspan="2"></tr>
+	<tr>
+		<td class="field_label">Username:</td>
+		<td><input type="text" name="username" id="user_login" size="30" value=""/></td>
+	</tr>
+	<tr>
+		<td class="field_label">Password:</td>
+		<td><input type="password" name="user_password" id="user_password" size="30"/></td>
+	</tr>
+	<tr class="buttons">
+		<td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
+	</tr>
 </table>
 <%= end_form_tag %>
 

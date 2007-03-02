@@ -6,6 +6,7 @@ class HomeController < ApplicationController
   # Show homepage
   # === Assigns
   # * upcoming_events: instance of UpcomingEvents with default parameters
+  # * recent_results: Events with Results within last two weeks
   def index
     @upcoming_events = UpcomingEvents.new
     
