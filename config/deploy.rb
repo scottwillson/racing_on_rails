@@ -1,3 +1,6 @@
+# Do not use 'rake deploy: it's deprecated, and it will ignore your deploy.rb
+# recipe in local/config. Use:
+# cap -f local/config/deploy.rb -a deploy
 require 'mongrel_cluster/recipes'
 
 set :application, "obra"
