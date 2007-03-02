@@ -340,11 +340,11 @@ class Admin::EventsController < ApplicationController
   def first_aid_provider_email
     events = SingleDayEvent.find(
       :all, 
-      :conditions => ['date >= CURDATE() and first_aid_provider = ?', 'Needed'], 
+      :conditions => ['date >= CURDATE()'], 
       :order => 'date asc')
 
       rows = events.collect do |event|
-      	[event.date.strftime("%a %m/%d") , event.name, event.city_state]
+      	[event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
       end
       grid = Grid.new(rows)
       grid.truncate
