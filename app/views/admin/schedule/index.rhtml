@@ -40,18 +40,15 @@
 <div align="center">
 	<table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">
 		<caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
-		<thead>
-			<tr class='column_titles'>
-				<th>Sunday</th>
-				<th>Monday</th>
-				<th>Tuesday</th>
-				<th>Wednesday</th>
-				<th>Thursday</th>
-				<th>Friday</th>
-				<th>Saturday</th>
-			</tr>
-		</thead>
-		<tbody>
+		<tr class='column_titles'>
+			<th>Sunday</th>
+			<th>Monday</th>
+			<th>Tuesday</th>
+			<th>Wednesday</th>
+			<th>Thursday</th>
+			<th>Friday</th>
+			<th>Saturday</th>
+		</tr>
 		<%- for week in month.weeks -%>
 	      <tr class="month">
 	      <%- for day in week.days -%>
@@ -69,7 +66,6 @@
 			  <%- end -%>
 	      </tr>
 	    <%- end -%>
-		</tbody>
 	    </table>
 	</div>
 	<br><br>

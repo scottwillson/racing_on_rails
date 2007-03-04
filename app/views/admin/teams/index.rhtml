@@ -21,31 +21,27 @@
 <table cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
-			<table class="base" cellspacing="0" cellpadding="0" id="teams">
-			    <thead>
-			        <tr>
-						<th>&nbsp;</th>
-				        <th>Name</th>
-			            <th>Aliases</th>
-						<th>Member</th>
-						<th>&nbsp;</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					<%= render :partial => "team", :collection => @teams %>
-					<% if @teams.empty? %>
-					<tr valign="top">
-						<%- if @name.blank? -%>
-						<td colspan="9" width="200" class="not_found">Enter part of a team's name</td>
-						<%- else -%>
-						<td colspan="9" width="200" class="not_found">No teams found</td>
-						<%- end -%>
-					</tr>
-					<% end %>
-					<tr valign="top" id="new_row">
-						<td colspan="6"></td>
-					</tr>
-				</tbody>
+			<table class="base" id="teams">
+		        <tr>
+					<th>&nbsp;</th>
+			        <th>Name</th>
+		            <th>Aliases</th>
+					<th>Member</th>
+					<th>&nbsp;</th>
+		        </tr>
+				<%= render :partial => "team", :collection => @teams %>
+				<% if @teams.empty? %>
+				<tr valign="top">
+					<%- if @name.blank? -%>
+					<td colspan="9" width="200" class="not_found">Enter part of a team's name</td>
+					<%- else -%>
+					<td colspan="9" width="200" class="not_found">No teams found</td>
+					<%- end -%>
+				</tr>
+				<% end %>
+				<tr valign="top" id="new_row">
+					<td colspan="6"></td>
+				</tr>
 			</table>
 		</td>
 	</tr>

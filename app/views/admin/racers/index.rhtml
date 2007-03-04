@@ -18,40 +18,36 @@
 	<%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
 <%= end_form_tag %>
 
-<table cellspacing="0" cellpadding="0">
+<table>
 	<tr>
 		<td>
-			<table class="base" cellspacing="0" cellpadding="0">
-			    <thead>
-			        <tr>
-						<th>&nbsp;</th>
-				        <th>Name</th>
-			            <th>Team</th>
-			            <th>Aliases</th>
-			            <th align="right">Road</th>
-			            <th align="right">MTB</th>
-			            <th align="right">DH</th>
-			            <th align="right">Cross</th>
-						<th align="center">Member</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					<%= render :partial => "racer", :collection => @racers %>
-					<% if @racers.empty? %>
-					<tr valign="top">
-						<%- if @name.blank? -%>
-						<td colspan="10" width="200" class="not_found">Enter part of a racer's name</td>
-						<%- else -%>
-						<td colspan="10" width="200" class="not_found">No racers found</td>
-						<%- end -%>
-					</tr>
-					<% end %>
-					<tr valign="top" id="new_row">
-						<td colspan="10"></td>
-					</tr>
-				</tbody>
+			<table class="base">
+		        <tr>
+					<th></th>
+			        <th>Name</th>
+		            <th>Team</th>
+		            <th>Aliases</th>
+		            <th align="right">Road</th>
+		            <th align="right">MTB</th>
+		            <th align="right">DH</th>
+		            <th align="right">Cross</th>
+					<th align="center">Member</th>
+					<th></th>
+					<th></th>
+		        </tr>
+				<%= render :partial => "racer", :collection => @racers %>
+				<% if @racers.empty? %>
+				<tr valign="top">
+					<%- if @name.blank? -%>
+					<td colspan="11" width="200" class="not_found">Enter part of a racer's name</td>
+					<%- else -%>
+					<td colspan="11" width="200" class="not_found">No racers found</td>
+					<%- end -%>
+				</tr>
+				<% end %>
+				<tr valign="top" id="new_row">
+					<td colspan="11"></td>
+				</tr>
 			</table>
 			
 			<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
@@ -63,6 +59,8 @@
 							<%= file_field_tag "racers_file" %>
 							<%= submit_tag 'Import' %>
 						</td>
+						<td><%= link_to 'Print Cards', :action => 'cards' %></td>
+						<td><%= link_to 'Print Mailing Labels', :action => 'mailing_labels' %></td>
 					</tr>
 				</table>
 			<%= end_form_tag %>

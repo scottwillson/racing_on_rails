@@ -10,18 +10,32 @@ class ResultsController < ApplicationController
   	first_of_year = Date.new(@year, 1, 1)
   	first_of_next_year = Date.new(@year +1, 1, 1)
 
-    @events = Event.find(
+    # SingleDayEvent with standings and parent is null or not a MultiDayEvent
+    # MultiDayEvent, Series, WeeklySeries with standings or events with standings
+    # Not a Competition
+    @events = SingleDayEvent.find(
         :all,
-        :include => :standings, 
+        :include => [:standings, :parent], 
         :conditions => [%Q{
             events.date between ? and ? 
-            and ((parent_id is null and events.id in (select event_id from standings where standings.date between ? and ?))
-            or (events.type <> 'WeeklySeries' and events.id in (select parent_id from events where events.date between ? and ? 
-              and events.id in (select event_id from standings where standings.date between ? and ?))))
+            and events.id in (select event_id from standings where standings.date between ? and ?)
+            and events.parent_id is null and parents_events.type <> 'MultiDayEvent'
             }, 
-            first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year],
+            first_of_year, first_of_next_year, first_of_year, first_of_next_year],
         :order => 'events.date desc'
       )
+      @events = @events + MultiDayEvent.find(
+          :all,
+          :include => [:standings, :events], 
+          :conditions => [%Q{
+              events.date between ? and ? 
+              and events.type <> 'Competition'
+              and (events.id in (select event_id from standings where standings.date between ? and ?)
+                   or events_events.id in (select event_id from standings where standings.date between ? and ?))
+              }, 
+              first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year],
+          :order => 'events.date desc'
+        )
   end
   
   def event
