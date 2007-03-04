@@ -10,33 +10,18 @@ class ResultsController < ApplicationController
   	first_of_year = Date.new(@year, 1, 1)
   	first_of_next_year = Date.new(@year +1, 1, 1)
 
-  	@events = HashWithIndifferentAccess.new
-
-  	road = [Discipline[:road].name, 
-  	        Discipline[:circuit].name, 
-  	        Discipline[:criterium].name, 
-  	        Discipline[:time_trial].name]
-  	mountain_bike = [Discipline[:mountain_bike].name, Discipline[:downhill].name]
-
-  	for discipline in [road, [Discipline[:cyclocross].name], mountain_bike, [Discipline[:track].name]]
-      events = SingleDayEvent.find(
+    @events = Event.find(
         :all,
-        :conditions => ['discipline in (?) and date between ? and ? and id in (select event_id from standings)', 
-                         discipline, first_of_year, first_of_next_year],
-        :order => 'date desc'
+        :include => :standings, 
+        :conditions => [%Q{
+            events.date between ? and ? 
+            and ((parent_id is null and events.id in (select event_id from standings where standings.date between ? and ?))
+            or (events.type <> 'WeeklySeries' and events.id in (select parent_id from events where events.date between ? and ? 
+              and events.id in (select event_id from standings where standings.date between ? and ?))))
+            }, 
+            first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year],
+        :order => 'events.date desc'
       )
-      weekly_series_events, events = events.partition {|event|
-        event.parent.is_a?(WeeklySeries)
-      }
-      @events[discipline.first] = events
-      
-      for event in weekly_series_events
-        unless @events[event.parent.name]
-          @events[event.parent.name] = []
-        end
-        @events[event.parent.name] << event
-      end
-    end
   end
   
   def event

@@ -19,11 +19,6 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  def rescue_action_locally(exception)
-    logger.debug('custom rescue_action_locally')
-    self.rescue_action_in_public(exception)
-  end
-  
   protected
   def local_or_default_file(name)
     local_path = File.join(RAILS_ROOT, 'local', 'public', "#{name}")

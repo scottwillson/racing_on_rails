@@ -13,7 +13,7 @@ class Admin::TeamsController < Admin::RecordEditor
       name_like = "%#{@name}%"
       @teams = Team.find(
         :all, 
-        :conditions => ['teams.name like ?', name_like], 
+        :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
         :include => :aliases,
         :limit => RESULTS_LIMIT,
         :order => 'teams.name'

@@ -86,6 +86,11 @@ class Standings < ActiveRecord::Base
     self[:date] || self.event.date if self.event
   end
   
+  def short_date
+    return '' unless date
+    "#{date.month}/#{date.day}"
+  end
+
   # Set date to the parent event's date
   def update_date
     self[:date] = self.event.date

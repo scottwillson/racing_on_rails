@@ -33,7 +33,7 @@ class Admin::RacersController < Admin::RecordEditor
       name_like = "%#{@name}%"
       @racers = Racer.find(
         :all, 
-        :conditions => ["concat(first_name, ' ', last_name) like ?", "%#{@name}%"],
+        :conditions => ["concat(first_name, ' ', last_name) like ? or aliases.name like ?", "%#{@name}%", "%#{@name}%"],
         :include => :aliases,
         :limit => RESULTS_LIMIT,
         :order => 'last_name, first_name'

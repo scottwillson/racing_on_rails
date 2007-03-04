@@ -171,6 +171,7 @@ class Event < ActiveRecord::Base
   end
 
   # Format for schedule page primarily
+  # TODO is this used?
   def short_date
     return '' unless date
     prefix = ' ' if date.month < 10
