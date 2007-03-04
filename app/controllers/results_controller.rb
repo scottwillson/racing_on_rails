@@ -17,9 +17,9 @@ class ResultsController < ApplicationController
         :all,
         :include => [:standings, :parent], 
         :conditions => [%Q{
-            events.date between ? and ? 
+            (events.date between ? and ? 
             and events.id in (select event_id from standings where standings.date between ? and ?)
-            and events.parent_id is null and parents_events.type <> 'MultiDayEvent'
+            and (events.parent_id is null or parents_events.type <> 'MultiDayEvent'))
             }, 
             first_of_year, first_of_next_year, first_of_year, first_of_next_year],
         :order => 'events.date desc'
@@ -29,13 +29,14 @@ class ResultsController < ApplicationController
           :include => [:standings, :events], 
           :conditions => [%Q{
               events.date between ? and ? 
-              and events.type <> 'Competition'
+              and events.type = 'MultiDayEvent'
               and (events.id in (select event_id from standings where standings.date between ? and ?)
                    or events_events.id in (select event_id from standings where standings.date between ? and ?))
               }, 
               first_of_year, first_of_next_year, first_of_year, first_of_next_year, first_of_year, first_of_next_year],
           :order => 'events.date desc'
         )
+        @events.sort! {|x, y| y.date <=> x.date}
   end
   
   def event

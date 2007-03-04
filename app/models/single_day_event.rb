@@ -9,7 +9,7 @@ class SingleDayEvent < Event
   
   belongs_to :parent, 
              :foreign_key => "parent_id", 
-             :class_name => "MultiDayEvent"
+             :class_name => "Event"
   
   def SingleDayEvent.find_all_by_year_month(year, month)
     start_of_month = Date.new(year, month, 1)
