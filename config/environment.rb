@@ -70,6 +70,7 @@ unless defined?(ASSOCIATION)
 
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
+APP_SERVER_ROOT = "/" unless defined?(APP_SERVER_ROOT)
 
 # Ensure all STI classes load
 SingleDayEvent
