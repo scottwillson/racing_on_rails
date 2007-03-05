@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  TIME_FORMATS = [18, 19, 21, 22, 25, 27, 44] unless defined?(TIME_FORMATS)
+  TIME_FORMATS = [18, 19, 21, 22, 25, 27, 32, 44] unless defined?(TIME_FORMATS)
 
   def GridFile.read_excel(file)
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
