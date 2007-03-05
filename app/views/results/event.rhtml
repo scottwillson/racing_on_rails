@@ -1,66 +1,88 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.name}" %>
 
-<h3><%= @event.name %></h3>
-<br />
-<%= @event.city_state %>
-<br />
+<h1><%= @event.name %></h1>
 
+<div style="margin-bottom: 1em;">
+<%= @event.city_state %>
+<br/>
+<%- if @event.respond_to?(:events) -%>
+<%= @event.date_range_long_s %>
+<%- else -%>
 <%= @event.date.to_formatted_s(:long) %>
-<% unless @event.notes.blank? -%>
-<br />
-<%= @event.notes -%>
 <%- end -%>
-<br /><br />
+
+<%- unless @event.notes.blank? -%>
+<div><%= @event.notes -%></div>
+<%- end -%>
+</div>
+
+<%- if @event.respond_to?(:events) -%>
+<div style="margin-bottom: 1em;">
+	<table>
+	<%- for single_day_event in @event.events -%>
+		<%- for standings in single_day_event.standings -%>
+		<tr>
+			<td class="right"><%= link_to standings.date.strftime('%A, %B %d'), :id => standings.event.to_param %></td>
+			<td><%= link_to standings.name, :id => standings.event.to_param %></td>
+		</tr>
+		<%- end -%>
+	<%- end -%>
+	</table>
+</div>
+<%- end -%>
+
 
 <div align="center">
-<% @event.standings.each_with_index do |standings, standings_index| %>
-  <% unless standings.is_a?(CombinedStandings) %>
+<%- @event.standings.each_with_index do |standings, standings_index| -%>
+  <%- unless standings.is_a?(CombinedStandings) -%>
 
-    <% if standings.name != @event.name %>
-<%= standings.name %>
-<br />
-    <% end %>
-
-    <% unless standings.notes.blank? -%>
-<%= standings.notes -%>
-<br />
+    <%- if standings.name != @event.name -%>
+<%= standings.name -%><br />
     <%- end -%>
 
-    <% if standings.date.strftime('%B %d, %Y') != @event.date.strftime('%B %d, %Y') %>
-<%= standings.date.strftime('%B %d, %Y') %>
+    <%- unless standings.notes.blank? -%>
+<%= standings.notes -%><br />
+    <%- end -%>
+
+    <%- if standings.date.strftime('%B %d, %Y') != @event.date.strftime('%B %d, %Y') -%>
+<%= standings.date.strftime('%B %d, %Y') -%>
 <br />
     <% end %>
 
-<%# TODO Encapsulate in a helper method %>
-<table border="0" cellspacing="0" cellpadding="0">
-    <% index = 0 %>  
-    <% sorted_races = standings.races_with_results %> 
-    <% sorted_races.delete_if {|race| race.results.empty? }%>
-    <% rows = (sorted_races.size / 2.0).round %>
-    <% for row in 0..(rows - 1) %>
-  <tr valign="top">
-    <td><a href="#<%= (standings_index * 100) + row %>"><span class="type"><%= sorted_races[row].name %></span></a></td>
-      <% if rows + row < sorted_races.size %>
-    <td width="16">&nbsp;</td>
-    <td><a href="#<%= (standings_index * 100) + rows + row %>"><span class="type"><%= sorted_races[rows + row].name %></span></a></td>
-      <% end %>  
-  </tr>
-    <% end %>  
-</table>
-<br />
-  <% end %>
-<% end %>  
+	<%- if @event.parent -%>
+	<div style="margin-bottom: 1em;">
+		Part of: <%= link_to @event.parent.name, :id => @event.parent.to_param %>
+	</div>
+	<%- end -%>
+
+	<%# TODO Encapsulate in a helper method %>
+	<table>
+		<%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
+		<tr>
+		  <td style="margin-right: 18px;">
+			<a href="#<%= (standings_index * 100) + row_index * 2 %>" class="underlined"><%= row.first.name %></a>
+		  </td>
+		  <td style="margin-left: 18px;">
+			&nbsp;
+			<%- if row.size == 2 -%><a href="#<%= (standings_index * 100) + row_index * 2 + 1%>" class="underlined"><%= row.last.name %></a><%- end -%>
+		  </td>
+		<%- end -%>
+		</tr>
+	<%- end -%>  
+	</table>
 
 <% @event.standings.each_with_index do |standings, standings_index| %>
     
   <% unless standings.is_a?(CombinedStandings)%>
-  <span class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></span>
+  <div class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
+  <small><a href="http://www.obra.org/results/questions.html" class="obvious">Results questions?</a></small>
   <br/><br/>
   
   <% sorted_races = standings.races_with_results %> 
   <% sorted_races.each_with_index do |race, index| %>
-  <table class="base" id="results" border="0" cellspacing="0" cellpadding="0">
-      <caption><a name="<%= (standings_index * 100) + index %>"></a><span class="tablehead"><%= race.name %></span></caption>
+  <table class="base" style="margin-bottom: 32px;">
+    <caption><a name="<%= (standings_index * 100) + index %>"></a><%= race.name %></caption>
+	<tr><th></th></tr>
     <tr>
       <td>
   <%
@@ -102,6 +124,7 @@
   </table>
   <br><br>
   <% end %>
+<% end %>
 <% end %>
 <% end %>
 </div>

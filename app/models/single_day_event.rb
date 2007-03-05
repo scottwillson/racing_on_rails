@@ -8,20 +8,19 @@ class SingleDayEvent < Event
   after_destroy {|event| event.parent.after_child_event_destroy if event.parent}
   
   belongs_to :parent, 
-             :foreign_key => "parent_id", 
-             :class_name => "Event"
+             :foreign_key => 'parent_id', 
+             :class_name => 'Event'
   
   def SingleDayEvent.find_all_by_year_month(year, month)
     start_of_month = Date.new(year, month, 1)
     # TODO Better way to do this?
     end_of_month = start_of_month >> 1
     end_of_month = end_of_month - 1
-    events = find(
+    find(
       :all,
       :conditions => ["date >= ? and date <= ?", start_of_month, end_of_month],
       :order => "date"
     )
-    return events
   end
   
   def SingleDayEvent.find_all_by_year(year)

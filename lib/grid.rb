@@ -84,7 +84,6 @@ class Grid
 
   # Delimited String or Array of Strings or Arrays
   def rows=(source)
-    RACING_ON_RAILS_DEFAULT_LOGGER.debug("Grid (#{Time.now}) rows=")
     for row in source
       row = row.split(/#{@delimiter}/) unless row.is_a?(Array)
       index = 0

@@ -46,6 +46,30 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["year"], "Should assign year")
   end
   
+  def test_index_road
+    opts = {:controller => "results", :action => "index", :year => "2004", :discipline => 'road'}
+    assert_routing("/results/2004/road", opts)
+
+    get(:index, :year => "2004", :discipline => 'road')
+    assert_response(:success)
+    assert_template("results/index")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+    assert_equal(assigns["discipline"], Discipline::ROAD, "discipline")
+  end
+  
+  def test_index_road
+    opts = {:controller => "results", :action => "index", :year => "2004", :discipline => 'time_trial'}
+    assert_routing("/results/2004/time_trial", opts)
+
+    get(:index, :year => "2004", :discipline => 'time_trial')
+    assert_response(:success)
+    assert_template("results/index")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+    assert_equal(assigns["discipline"], Discipline[:time_trial], "discipline")
+  end
+  
   def test_racer
   	weaver = racers(:weaver)
     opts = {:controller => "results", :action => "racer", :id => weaver.id.to_s}

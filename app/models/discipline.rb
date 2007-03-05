@@ -54,7 +54,7 @@ class Discipline < ActiveRecord::Base
   end
   
   def to_param
-    name.underscore.gsub(' ', '_')
+    @param || @param = name.underscore.gsub(' ', '_')
   end
 
   def <=>(other)
