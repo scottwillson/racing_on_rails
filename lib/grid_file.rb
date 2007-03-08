@@ -31,7 +31,10 @@ class GridFile < Grid
               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               is_time = TIME_FORMATS.include?(cell.format_no)
               cell_f = cell.to_f if is_time
-              if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
+              if cell.type == :numeric
+                is_not_blank = true unless cell == 0
+                line << cell.to_i.to_s
+              elsif is_time and cell_f < 2 and cell.to_s == cell_f.to_s
                 is_not_blank = true
                 line << (cell_f * 86400).to_s
               elsif cell.type == :date
@@ -42,9 +45,6 @@ class GridFile < Grid
                 else
                   line << date
                 end
-              elsif cell.type == :numeric
-                is_not_blank = true unless cell == 0
-                line << cell.to_i.to_s
               else
                 is_not_blank = true unless cell.to_s.strip.blank?
                 line << cell.to_s
