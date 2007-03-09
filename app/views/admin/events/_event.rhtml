@@ -1,8 +1,11 @@
-<table class="base" cellspacing="0" cellpadding="0" width="100%">
+<table class="base">
 	<caption><%= event.friendly_class_name %>: <%= event.name %></caption>
 	<tr>
+		<th colspan="4"></th>
+	</tr>
+	<tr>
 		<td colspan="2">
-			<table cellspacing="0" cellpadding="0" width="100%">
+			<table>
 				<tr>
 					<td class="field_label">Name:</td>
 					<td><%= text_field 'event', 'name', :style => 'width: 100%;' %></td>
@@ -22,7 +25,7 @@
 	</tr>
 	<tr valign="top">
 		<td>
-			<table cellspacing="0" cellpadding="0">
+			<table>
 				<tr>
 					<td class="field_label">Date:</td>
 					<td>
@@ -56,10 +59,10 @@
 			</table>
 		</td>
 		<td>
-			<table cellspacing="0" cellpadding="0">
+			<table>
 				<tr>
 					<td>
-						<table cellspacing="0" cellpadding="0" class="base" id="inline">
+						<table class="base" id="inline">
 							<tr>
 								<th colspan="2">Promoter</th>
 							</tr>
@@ -125,7 +128,7 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			<table cellspacing="0" cellpadding="0" width="100%">
+			<table>
 				<tr>
 					<td class="field_label" width="100">Notes:</td>
 					<td width="100%"><%= text_field 'event', 'notes', :style => 'width: 100%;' %></td>
