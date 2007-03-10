@@ -55,6 +55,17 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal('weav', assigns['name'], "'name' assigns")
   end
 
+  def test_find_by_number
+    @request.session[:user] = users(:candi)
+    get(:index, :name => '102')
+    assert_response(:success)
+    assert_template("admin/racers/index")
+    assert_not_nil(assigns["racers"], "Should assign racers")
+    assert_equal([racers(:tonkin)], assigns['racers'], 'Search for 102 should find Tonkin')
+    assert_not_nil(assigns["name"], "Should assign name")
+    assert_equal('102', assigns['name'], "'name' assigns")
+  end
+
   def test_find_nothing
     @request.session[:user] = users(:candi)
     get(:index, :name => 's7dfnacs89danfx')

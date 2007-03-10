@@ -53,6 +53,12 @@ class Racer < ActiveRecord::Base
       
     end
   end
+  
+  def Racer.find_by_number(number)
+    Racer.find(:all, 
+               :include => :race_numbers,
+               :conditions => ['year = ? and value = ?', Date.today.year, number])
+  end
 
   def Racer.full_name(first_name, last_name)
     unless first_name.blank? or last_name.blank?

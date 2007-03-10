@@ -38,6 +38,7 @@ class Admin::RacersController < Admin::RecordEditor
         :limit => RESULTS_LIMIT,
         :order => 'last_name, first_name'
       )
+      @racers = @racers + Racer.find_by_number(@name)
       if @racers.size == RESULTS_LIMIT
         flash[:notice] = "First #{RESULTS_LIMIT} racers"
       end

@@ -5,10 +5,14 @@
 <<<<<<< .mine
 	<key>currentDocument</key>
 <<<<<<< .mine
+	<string>local/app/views/admin/events/_race.rhtml</string>
+=======
+<<<<<<< .mine
 	<string>config/deploy.rb</string>
 =======
 	<key>currentDocument</key>
 	<string>local/app/views/results/index.rhtml</string>
+>>>>>>> .r547
 =======
 	<string>test/functional/results_controller_test.rb</string>
 >>>>>>> .r542
@@ -83,12 +87,24 @@
 			<string>lib</string>
 		</dict>
 		<dict>
+			<key>filename</key>
+			<string>MIT-LICENSE</string>
+		</dict>
+		<dict>
 			<key>name</key>
 			<string>public</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>public</string>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>Rakefile</string>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>README</string>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -109,7 +125,11 @@
 			<string>test</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
+<<<<<<< .mine
+=======
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
@@ -215,6 +235,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
+>>>>>>> .r547
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
@@ -224,29 +245,48 @@
 	</array>
 >>>>>>> .r539
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>305</integer>
+	<integer>236</integer>
 	<key>metaData</key>
 <<<<<<< .mine
 	<dict>
+<<<<<<< .mine
+		<key>app/helpers/application_helper.rb</key>
+=======
 		<key>app/models/announcement_mailer.rb</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>47</integer>
+=======
 				<integer>18</integer>
+>>>>>>> .r547
 				<key>line</key>
+<<<<<<< .mine
+				<integer>5</integer>
+=======
 				<integer>0</integer>
+>>>>>>> .r547
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+<<<<<<< .mine
+		<key>app/views/results/event.rhtml</key>
+=======
 		<key>app/models/event.rb</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>0</integer>
+=======
 				<integer>13</integer>
 				<key>line</key>
 				<integer>189</integer>
@@ -278,6 +318,7 @@
 				<integer>2</integer>
 				<key>line</key>
 				<integer>18</integer>
+>>>>>>> .r547
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -298,14 +339,22 @@
 			<key>firstVisibleLine</key>
 			<integer>172</integer>
 		</dict>
+<<<<<<< .mine
+		<key>app/views/results/index.rhtml</key>
+=======
 		<key>local/app/views/layouts/admin/application.rhtml</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>20</integer>
 				<key>line</key>
+<<<<<<< .mine
+				<integer>4</integer>
+=======
 				<integer>64</integer>
+>>>>>>> .r547
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -326,20 +375,39 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+<<<<<<< .mine
+		<key>config/environment.rb</key>
+=======
 		<key>local/config/database.yml</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>60</integer>
+=======
 				<integer>16</integer>
+>>>>>>> .r547
 				<key>line</key>
+<<<<<<< .mine
+				<integer>46</integer>
+=======
 				<integer>9</integer>
+>>>>>>> .r547
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+<<<<<<< .mine
+			<integer>31</integer>
+=======
 			<integer>0</integer>
+>>>>>>> .r547
 		</dict>
+<<<<<<< .mine
+		<key>lib/grid_file.rb</key>
+=======
 	</dict>
 	<key>openDocuments</key>
 	<array>
@@ -354,14 +422,25 @@
 =======
 	<dict>
 		<key>app/controllers/results_controller.rb</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>19</integer>
+=======
 				<integer>36</integer>
+>>>>>>> .r547
 				<key>line</key>
+<<<<<<< .mine
+				<integer>16</integer>
+=======
 				<integer>15</integer>
+>>>>>>> .r547
 			</dict>
+<<<<<<< .mine
+=======
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
@@ -392,25 +471,60 @@
 			</dict>
 			<key>columnSelection</key>
 			<false/>
+>>>>>>> .r547
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+<<<<<<< .mine
+			<integer>0</integer>
+		</dict>
+		<key>lib/results_file.rb</key>
+		<dict>
+			<key>caret</key>
+=======
 			<integer>53</integer>
 			<key>selectFrom</key>
+>>>>>>> .r547
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
+<<<<<<< .mine
+				<integer>0</integer>
+=======
 				<integer>77</integer>
+>>>>>>> .r547
 			</dict>
-			<key>selectTo</key>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>178</integer>
+		</dict>
+		<key>local/app/views/admin/events/_race.rhtml</key>
+		<dict>
+			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>76</integer>
+=======
 				<integer>0</integer>
+>>>>>>> .r547
 				<key>line</key>
+<<<<<<< .mine
+				<integer>18</integer>
+=======
 				<integer>78</integer>
+>>>>>>> .r547
 			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
+<<<<<<< .mine
+		<key>local/app/views/bar/show.rhtml</key>
+=======
 		<key>local/app/views/results/index.rhtml</key>
 		<dict>
 			<key>caret</key>
@@ -426,35 +540,88 @@
 			<integer>28</integer>
 		</dict>
 		<key>test/functional/results_controller_test.rb</key>
+>>>>>>> .r547
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>0</integer>
+=======
 				<integer>62</integer>
+>>>>>>> .r547
 				<key>line</key>
+<<<<<<< .mine
+				<integer>1</integer>
+=======
 				<integer>69</integer>
+>>>>>>> .r547
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>34</integer>
+			<integer>90</integer>
+		</dict>
+		<key>local/app/views/results/event.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>67</integer>
+				<key>line</key>
+				<integer>86</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>63</integer>
+		</dict>
+		<key>local/app/views/results/racer.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>app/controllers/results_controller.rb</string>
+		<string>app/views/results/event.rhtml</string>
+<<<<<<< .mine
+		<string>local/app/views/results/event.rhtml</string>
+		<string>app/helpers/application_helper.rb</string>
+		<string>local/app/views/results/racer.rhtml</string>
+		<string>local/app/views/bar/show.rhtml</string>
+		<string>config/environment.rb</string>
+		<string>lib/grid_file.rb</string>
+		<string>lib/results_file.rb</string>
+		<string>local/app/views/admin/events/_race.rhtml</string>
+		<string>app/views/results/index.rhtml</string>
+=======
 		<string>test/functional/results_controller_test.rb</string>
 		<string>app/views/results/event.rhtml</string>
 		<string>local/app/views/results/index.rhtml</string>
+>>>>>>> .r547
 	</array>
 >>>>>>> .r539
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
 <<<<<<< .mine
+	<string>{{61, 84}, {965, 746}}</string>
+=======
+<<<<<<< .mine
 	<string>{{315, 73}, {965, 746}}</string>
 =======
 	<string>{{315, 62}, {961, 770}}</string>
+>>>>>>> .r547
 >>>>>>> .r539
 </dict>
 </plist>

@@ -474,4 +474,9 @@ class RacerTest < Test::Unit::TestCase
     racer = Racer.new(:date_of_birth => "78")
     assert_equal_dates('1978-01-01', racer.date_of_birth, 'date_of_birth from 78')
   end
+  
+  def test_find_by_number
+    racer = Racer.find_by_number('340')
+    assert_equal([racers(:matson)], racer, 'Should find Matson')
+  end
 end
