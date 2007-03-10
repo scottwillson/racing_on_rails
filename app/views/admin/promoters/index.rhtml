@@ -4,29 +4,25 @@
 
 <div align="center">
 
-<table cellspacing="0" cellpadding="0">
+<table>
 	<tr>
 		<td>
-			<table class="base" cellspacing="0" cellpadding="0">
-			    <thead>
-			        <tr>
-						<th>&nbsp;</th>
-				        <th>Name</th>
-			            <th>Phone</th>
-			            <th>Email</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					<%= render :partial => "promoter", :collection => @promoters %>
-					<% if @promoters.empty? %>
-					<tr valign="top">
-						<td colspan="4" width="200" class="not_found">No promoters found</td>
-					</tr>
-					<% end %>
-					<tr valign="top" id="new_row">
-						<td colspan="4"></td>
-					</tr>
-				</tbody>
+			<table class="base">
+		        <tr>
+					<th>&nbsp;</th>
+			        <th>Name</th>
+		            <th>Phone</th>
+		            <th>Email</th>
+		        </tr>
+				<%= render :partial => "promoter", :collection => @promoters %>
+				<% if @promoters.empty? %>
+				<tr valign="top">
+					<td colspan="4" width="200" class="not_found">No promoters found</td>
+				</tr>
+				<% end %>
+				<tr valign="top" id="new_row">
+					<td colspan="4"></td>
+				</tr>
 			</table>
 			<div align="left">
 				<%= link_image_to '/images/buttons/add.gif', :action => 'new' %>

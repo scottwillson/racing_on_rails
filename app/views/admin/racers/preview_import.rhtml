@@ -1,5 +1,14 @@
 <%= start_form_tag :action => 'import' %>
-<%= check_box_tag 'update_membership', false %> Make all imported racers current members
+<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
+<%- unless flash[:warn].blank? -%>
+<div align="center">
+	<div class="message">
+		<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+		<span id='warn_text'><%= flash[:warn] %></span>
+	</div>
+</div>
+<%- end -%>
+<%= check_box_tag 'update_membership', true, true %> Make all imported racers current members
 <br>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>

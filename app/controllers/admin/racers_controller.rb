@@ -152,11 +152,21 @@ class Admin::RacersController < Admin::RecordEditor
       redirect_to(:action => 'index')
 
     elsif params[:commit] == 'Import'
-      path = session[:racers_file_path]
-      created, updated = RacersFile.new(File.new(path)).import(params[:update_membership])
-      flash[:notice] = "Imported #{pluralize(created, 'new racer')} and updated #{pluralize(updated, 'existing racer')}"
-      session[:racers_file_path] = nil
-      redirect_to(:action => 'index')
+      begin
+        path = session[:racers_file_path]
+        created, updated = RacersFile.new(File.new(path)).import(params[:update_membership])
+        flash[:notice] = "Imported #{pluralize(created, 'new racer')} and updated #{pluralize(updated, 'existing racer')}"
+        session[:racers_file_path] = nil
+        redirect_to(:action => 'index')
+      rescue Exception => e
+        stack_trace = e.backtrace.join("\n")
+        logger.error("#{e}\n#{stack_trace}")
+        flash[:warn] = e
+        temp_file = File.new(path)
+        @racers_file = RacersFile.new(temp_file)
+        @year = params[:year]
+        render(:template => 'admin/racers/preview_import')
+      end
 
     else
       raise("Expected 'Import' or 'Cancel'")

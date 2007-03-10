@@ -52,8 +52,8 @@ class RaceNumber < ActiveRecord::Base
     end
   end
   
-  def RaceNumber.rental?(number)
-    if number.nil? || ASSOCIATION.rental_numbers.nil? || number.strip[/^\d+$/].nil?
+  def RaceNumber.rental?(number, discipline = Discipline[:road])
+    if number.nil? || ASSOCIATION.rental_numbers.nil? || discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill] || number.strip[/^\d+$/].nil?
       return false
     end
     numeric_value = number.to_i
@@ -89,16 +89,18 @@ class RaceNumber < ActiveRecord::Base
   #
   # OBRA rental numbers (11-99) are not valid
   def unique_number 
-    if RaceNumber.rental?(self[:value])
+    _discipline = Discipline.find(self[:discipline_id])
+    if RaceNumber.rental?(self[:value], _discipline)
       errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      racer.errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
       return false 
     end
     
     return true if racer.nil?
   
     if ASSOCIATION.gender_specific_numbers && !racer.gender.blank?
-      existing_numbers = RaceNumber.count_by_sql([%q{
-        SELECT COUNT(DISTINCT race_numbers.id) 
+      existing_numbers = RaceNumber.find_by_sql([%q{
+        SELECT *
         FROM race_numbers 
         join racers ON racers.id = race_numbers.racer_id 
         WHERE (value=? and discipline_id=? and number_issuer_id=? and year=? and racers.gender=? and racers.id <> ?)}, 
@@ -106,25 +108,28 @@ class RaceNumber < ActiveRecord::Base
       )
     else
       if new_record?
-        existing_numbers = RaceNumber.count(
+        existing_numbers = RaceNumber.find(
+          :all,
           :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id <> ?', 
           self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], racer.id])
       else
-        existing_numbers = RaceNumber.count(
+        existing_numbers = RaceNumber.find(
+          :all,
           :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>?', 
           self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
       end
     end
       
-    unless existing_numbers == 0
+    unless existing_numbers.empty?
       if racer
         racer_id = racer.id
       else
         racer_id = nil
       end
-      errors.add('value', "'#{value}' already used for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
-      if existing_numbers > 1
-        logger.warn("Race number '#{value}' found #{existing_numbers} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+      errors.add('value', "'#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} for #{existing_numbers.first.racer.name}.")
+      racer.errors.add('value', "'#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} for #{existing_numbers.first.racer.name}.")
+      if existing_numbers.size > 1
+        logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
       end
       return false
     end

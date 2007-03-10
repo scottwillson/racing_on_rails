@@ -132,7 +132,7 @@ class RacersFile < GridFile
             
             racer = Racer.update(racers.last.id, row_hash)
             unless racer.valid?
-              raise RecordNotSaved.new(racer.errors.full_messages)
+              raise ActiveRecord::RecordNotSaved.new(racer.errors.full_messages.join(', '))
             end
             updated = updated + 1
           end

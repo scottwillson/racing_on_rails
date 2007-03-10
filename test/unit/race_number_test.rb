@@ -79,6 +79,8 @@ class RaceNumberTest < Test::Unit::TestCase
       assert(!RaceNumber.rental?(' 9 '), '9 not rental')
       assert(RaceNumber.rental?('11'), '11 is rental')
       assert(RaceNumber.rental?('99'), '99 is rental')
+      assert(!RaceNumber.rental?('11', Discipline[:downhill]), '11 is rental')
+      assert(!RaceNumber.rental?('99', Discipline[:mountain_bike]), '99 is rental')
       assert(!RaceNumber.rental?('100'), '100 not rental')
       assert(!RaceNumber.rental?('A100'), 'A100 not rental')
       assert(!RaceNumber.rental?('A50'), 'A50 not rental')

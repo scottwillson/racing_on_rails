@@ -20,11 +20,12 @@
 <%= error_messages_for 'promoter' %>
 
 <%= start_form_tag({:action => 'update', :id => @promoter.id}) %>
-	<table class="base" cellspacing="0" cellpadding="0">
+	<table class="base">
 		<caption><%= @promoter.name %></caption>
+		<tr><th colspan="3"></th></tr>
 		<tr valign="top">
 			<td>
-				<table cellspacing="0" cellpadding="0">
+				<table>
 					<tr>
 						<td class="field_label">Name:</td>
 						<td><%= text_field 'promoter', 'name' %></td>
@@ -40,8 +41,11 @@
 				</table>
 			</td>
 			<td>
-				<table cellspacing="0" cellpadding="0" class="base" id="inline">
-					<caption>Events</caption>
+				<table class="base" id="inline">
+					<tr>
+						<th>Date</th>
+						<th>Event</th>
+					</tr>
 					<%- for event in @promoter.events(true).sort_by {|event| event.date} -%>
 					<tr>
 						<td><%= event.date %></td>

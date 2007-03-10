@@ -92,9 +92,12 @@ Downhill/Cross Country: Downhill}
       :member_from => '2000-01-01',
       :team_name => 'RBA Cycling Team',
       :road_category => '4',
+      :road_number => '190A',
       :date_of_birth => '1899-07-14'
     )
     assert(rene.valid?, rene.errors.full_messages)
+    rene.reload
+    assert_equal('190A', rene.road_number(true), 'Rene existing DH number')
     
     scott = Racer.create(
       :last_name =>'Seaton',
@@ -181,6 +184,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
     assert(rene_babi.print_card?, 'rene_babi.print_card? after import')
     assert(rene_babi.print_mailing_label?, 'rene_babi.mailing_label? after import')
+    assert_equal('190A', rene_babi.road_number, 'Rene road_number')
     
     all_scott_seaton = Racer.find_all_by_name('scott seaton')
     assert_equal(1, all_scott_seaton.size, 'Scott Seaton in database after import')
