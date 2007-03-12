@@ -3,6 +3,18 @@ require 'bar'
 
 class BarTest < Test::Unit::TestCase
   
+  def setup
+    @local_bar_point_schedule = ASSOCIATION.bar_point_schedule
+    @local_overall_bar = ASSOCIATION.overall_bar
+    ASSOCIATION.bar_point_schedule = [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1]
+    ASSOCIATION.overall_bar = true
+  end
+  
+  def teardown
+    ASSOCIATION.bar_point_schedule = @local_bar_point_schedule
+    ASSOCIATION.overall_bar = @local_overall_bar
+  end
+  
   def test_recalculate
     # Lot of set-up for BAR. Keep it out of fixtures and do one-time here.
     
@@ -409,16 +421,17 @@ class BarTest < Test::Unit::TestCase
   end
   
   def test_racers_best_result_for_each_race
+    bar = Bar.new
     scoring_results = []
-    best_results = Bar.racers_best_result_for_each_race(scoring_results)
+    best_results = bar.racers_best_result_for_each_race(scoring_results)
     assert_equal_enumerables([], best_results, 'Empty results should not change')
     
     scoring_results = [results(:tonkin_banana_belt), results(:weaver_kings_valley)]
-    best_results = Bar.racers_best_result_for_each_race(scoring_results)
+    best_results = bar.racers_best_result_for_each_race(scoring_results)
     assert_equal_enumerables([results(:tonkin_banana_belt), results(:weaver_kings_valley)], best_results, 'No changes with no duplicate results')
     
     scoring_results = [results(:tonkin_banana_belt), results(:weaver_kings_valley), results(:weaver_jack_frost)]
-    best_results = Bar.racers_best_result_for_each_race(scoring_results)
+    best_results = bar.racers_best_result_for_each_race(scoring_results)
     assert_equal_enumerables([results(:tonkin_banana_belt), results(:weaver_kings_valley), results(:weaver_jack_frost)], best_results, 'No changes with no duplicate results')
     
     dupe_tonkin_kings_valley = races(:kings_valley_pro_1_2).results.create(:racer => racers(:tonkin), :place => 13)
@@ -430,7 +443,7 @@ class BarTest < Test::Unit::TestCase
       results(:weaver_jack_frost),
       dupe_weaver_kings_valley,
       results(:weaver_kings_valley)]
-    best_results = Bar.racers_best_result_for_each_race(scoring_results)
+    best_results = bar.racers_best_result_for_each_race(scoring_results)
     expected = [dupe_tonkin_kings_valley, dupe_weaver_kings_valley, results(:tonkin_banana_belt), results(:weaver_jack_frost)]
     assert_equal_enumerables(expected, best_results, 'Should remove Tonkin dupe result in 13th')
   end
@@ -910,6 +923,210 @@ class BarTest < Test::Unit::TestCase
     end
     current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
     assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
+  end
+  
+  def test_recalculate_custom_points
+    ASSOCIATION.overall_bar = false
+    ASSOCIATION.bar_point_schedule = [0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16]
+    cross_crusade = Series.create!(:name => "Cross Crusade")
+    barton = SingleDayEvent.create!({
+      :name => "Cross Crusade: Barton Park",
+      :discipline => "Cyclocross",
+      :date => Date.new(2004, 11, 7),
+      :parent => cross_crusade
+    })
+    barton_standings = barton.standings.create
+    men_a = Category.find_association("Men A")
+    barton_a = barton_standings.races.create(:category => men_a, :field_size => 5)
+    barton_a.results.create({
+      :place => 3,
+      :racer => racers(:tonkin)
+    })
+    barton_a.results.create({
+      :place => 10,
+      :racer => racers(:weaver)
+    })
+    
+    swan_island = SingleDayEvent.create!({
+      :name => "Swan Island",
+      :discipline => "Criterium",
+      :date => Date.new(2004, 5, 17),
+    })
+    swan_island_standings = swan_island.standings.create
+    senior_men = Category.find_association("Senior Men Pro 1/2")
+    swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 4)
+    swan_island_senior_men.results.create({
+      :place => 8,
+      :racer => racers(:tonkin)
+    })
+    swan_island_senior_men.results.create({
+      :place => 2,
+      :racer => racers(:mollie)
+    })
+    senior_women = Category.find_association("Senior Women")
+    senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
+    senior_women_swan_island.results.create({
+      :place => 1,
+      :racer => racers(:mollie)
+    })
+    # No BAR points
+    senior_women_swan_island.bar_points = 0
+    senior_women_swan_island.save!
+    
+    thursday_track_series = Series.create!(:name => "Thursday Track")
+    thursday_track = SingleDayEvent.create!({
+      :name => "Thursday Track",
+      :discipline => "Track",
+      :date => Date.new(2004, 5, 12),
+      :parent => thursday_track_series
+    })
+    thursday_track_standings = thursday_track.standings.create
+    thursday_track_senior_men = thursday_track_standings.races.create(:category => senior_men, :field_size => 6)
+    r = thursday_track_senior_men.results.create(
+      :place => 5,
+      :racer => racers(:weaver)
+    )
+    thursday_track_senior_men.results.create(
+      :place => 14,
+      :racer => racers(:tonkin),
+      :team => teams(:kona)
+    )
+    
+    team_track = SingleDayEvent.create!({
+      :name => "Team Track State Championships",
+      :discipline => "Track",
+      :date => Date.new(2004, 9, 1)
+    })
+    team_track_standings = team_track.standings.create
+    team_track_standings.bar_points = 2
+    team_track_standings.save!
+    team_track_senior_men = team_track_standings.races.create(:category => senior_men, :field_size => 6)
+    team_track_senior_men.results.create({
+      :place => 1,
+      :racer => racers(:weaver),
+      :team => teams(:kona)
+    })
+    team_track_senior_men.results.create({
+      :place => 1,
+      :racer => racers(:tonkin),
+      :team => teams(:kona)
+    })
+    team_track_senior_men.results.create({
+      :place => 1,
+      :racer => racers(:mollie)
+    })
+    team_track_senior_men.results.create({
+      :place => 5,
+      :racer => racers(:alice)
+    })
+    team_track_senior_men.results.create({
+      :place => 5,
+      :racer => racers(:matson)
+    })
+    # Weaver and Erik's second ride should not count
+    team_track_senior_men.results.create({
+      :place => 10,
+      :racer => racers(:weaver),
+      :team => teams(:kona)
+    })
+    team_track_senior_men.results.create({
+      :place => 10,
+      :racer => racers(:tonkin),
+      :team => teams(:kona)
+    })
+    
+    larch_mt_hillclimb = SingleDayEvent.create!({
+      :name => "Larch Mountain Hillclimb",
+      :discipline => "Time Trial",
+      :date => Date.new(2004, 2, 1)
+    })
+    larch_mt_hillclimb_standings = larch_mt_hillclimb.standings.create(:event => larch_mt_hillclimb)
+    larch_mt_hillclimb_senior_men = larch_mt_hillclimb_standings.races.create(:category => senior_men, :field_size => 6)
+    larch_mt_hillclimb_senior_men.results.create({
+      :place => 6,
+      :racer => racers(:tonkin),
+      :team => teams(:kona)
+    })
+  
+    results_baseline_count = Result.count
+    assert_equal(0, Bar.count, "Bar standings before recalculate")
+    assert_equal(27, Result.count, "Total count of results in DB before BAR recalculate")
+    Bar.recalculate(2004, NullProgressMonitor.new)
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    assert_not_nil(bar, "2004 Bar after recalculate")
+    assert_equal(1, Bar.count, "Bar events after recalculate")
+    assert_equal(7, bar.standings.count, "Bar standings after recalculate")
+    assert_equal(43, Result.count, "Total count of results in DB")
+    # Should delete old BAR
+    Bar.recalculate(2004, NullProgressMonitor.new)
+    assert_equal(1, Bar.count, "Bar events after recalculate")
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    assert_not_nil(bar, "2004 Bar after recalculate")
+    assert_equal(7, bar.standings.count, "Bar standings after recalculate")
+    assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Bar date")
+    assert_equal("2004 BAR", bar.name, "2004 Bar name")
+    assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
+    assert_equal(43, Result.count, "Total count of results in DB")
+
+    road_bar = bar.standings.detect do |standings|
+      standings.name == 'Road'
+    end
+    assert_equal("Road", road_bar.name, "2004 Road Bar name")
+    assert_equal(3, road_bar.races.size, "2004 Road Bar scores")
+    assert_equal_dates(Date.today, road_bar.updated_at, "BAR last updated")
+    
+    senior_men_road_bar = road_bar.races.detect do |b|
+      b.name == "Senior Men"
+    end
+    assert_equal(categories(:senior_men_bar), senior_men_road_bar.category, "Senior Men BAR race BAR cat")
+    assert_equal(3, senior_men_road_bar.results.size, "Senior Men Road BAR results")
+    assert_equal_dates(Date.today, senior_men_road_bar.updated_at, "BAR last updated")
+
+    senior_men_road_bar.results.sort!
+    assert_equal(racers(:tonkin), senior_men_road_bar.results[0].racer, "Senior Men Road BAR results racer")
+    assert_equal("1", senior_men_road_bar.results[0].place, "Senior Men Road BAR results place")
+    assert_equal(100, senior_men_road_bar.results[0].points, "Senior Men Road BAR results points")
+
+    assert_equal(racers(:weaver), senior_men_road_bar.results[1].racer, "Senior Men Road BAR results racer")
+    assert_equal("2", senior_men_road_bar.results[1].place, "Senior Men Road BAR results place")
+    assert_equal(70, senior_men_road_bar.results[1].points, "Senior Men Road BAR results points")
+    assert_equal(1, senior_men_road_bar.results[1].scores.size, "Weaver Road BAR results scores")
+
+    assert_equal(racers(:matson), senior_men_road_bar.results[2].racer, "Senior Men Road BAR results racer")
+    assert_equal("3", senior_men_road_bar.results[2].place, "Senior Men Road BAR results place")
+    assert_equal(50, senior_men_road_bar.results[2].points, "Senior Men Road BAR results points")
+    
+    women_road_bar = road_bar.races.detect do |b|
+      b.name == "Senior Women"
+    end
+    assert_equal(categories(:senior_women_bar), women_road_bar.category, "Senior Women BAR race BAR cat")
+    assert_equal(1, women_road_bar.results.size, "Senior Women Road BAR results")
+
+    women_road_bar.results.sort!
+    assert_equal(racers(:alice), women_road_bar.results[0].racer, "Senior Women Road BAR results racer")
+    assert_equal("1", women_road_bar.results[0].place, "Senior Women Road BAR results place")
+    assert_equal(70, women_road_bar.results[0].points, "Senior Women Road BAR results points")
+
+    team_standings = bar.standings.detect {|s| s.name == 'Team'}
+    assert_equal(1, team_standings.races.size, 'Should have only one team BAR standings race')
+    team_race = team_standings.races.first
+    
+    assert_equal(2, team_race.results.size, "Team BAR results")
+    assert_equal_dates(Date.today, team_race.updated_at, "BAR last updated")
+
+    team_race.results.sort!
+    assert_equal(teams(:kona), team_race.results[0].team, "Team BAR results team")
+    assert_equal("1", team_race.results[0].place, "Team BAR results place")
+    assert_in_delta(382, team_race.results[0].points, 0.0001, "Team BAR results points")
+
+    assert_equal(teams(:gentle_lovers), team_race.results[1].team, "Team BAR results team")
+    assert_equal("2", team_race.results[1].place, "Team BAR results place")
+    assert_equal(70, team_race.results[1].points, "Team BAR results points")
+
+    overall_bar = bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    assert_nil(overall_bar, "Should not have overall Bar")
   end
   
   def test_result_key

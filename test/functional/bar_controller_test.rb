@@ -46,6 +46,14 @@ class BarControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
   end
   
+  def test_rankings_routing
+    opts = {:controller => "bar", :action => "show", :year => "2004"}
+    assert_recognizes(opts, "/rankings/2004")
+
+    opts = {:controller => "bar", :action => "show", :year => "2004", :discipline => "Road"}
+    assert_recognizes(opts, "/rankings/2004/Road")
+  end
+  
   def test_categories
     opts = {:controller => "bar", :action => "categories", :year => "2004"}
     assert_routing("/bar/2004/categories", opts)
