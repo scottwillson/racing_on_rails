@@ -200,9 +200,8 @@ class Racer < ActiveRecord::Base
   end
   
   def number(discipline, reload = false)
-    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == Date.today.year and race_number.discipline == discipline and race_number.number_issuer == association
+      race_number.year == Date.today.year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
     end
     if number
       number.value

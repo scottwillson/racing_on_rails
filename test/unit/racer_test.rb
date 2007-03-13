@@ -451,8 +451,10 @@ class RacerTest < Test::Unit::TestCase
   end
   
   def test_numbers
-    assert_equal('102', racers(:tonkin).road_number)
-    assert_nil(racers(:tonkin).dh_number)
+    tonkin = racers(:tonkin)
+    assert_equal('102', tonkin.road_number)
+    assert_nil(tonkin.dh_number)
+    assert_nil(tonkin.ccx_number)
   end
   
   def test_update

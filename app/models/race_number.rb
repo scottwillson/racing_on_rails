@@ -10,6 +10,7 @@
 #
 # TODO Add same(other) method that compares significatn fields
 class RaceNumber < ActiveRecord::Base
+  before_validation :defaults
   validates_presence_of :discipline_id
   validates_presence_of :number_issuer_id
   validates_presence_of :racer_id
@@ -64,7 +65,7 @@ class RaceNumber < ActiveRecord::Base
   end
   
   # Default to Road, ASSOCIATION, and current year
-  def after_initialize
+  def defaults
     self.discipline = Discipline[:road] unless self.discipline
     self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer
     self.year = Date.today.year unless (self.year and self.year > 1800)
