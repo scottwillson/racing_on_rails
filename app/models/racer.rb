@@ -12,7 +12,7 @@ class Racer < ActiveRecord::Base
 
   belongs_to :team
   has_many :aliases
-  has_many :race_numbers
+  has_many :race_numbers, :include => [:discipline, :number_issuer]
   has_many :results
   
   CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
@@ -293,6 +293,7 @@ class Racer < ActiveRecord::Base
   
   # Is Racer a current member of the bike racing association?
   def member?(date = Date.today)
+    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
   end
   

@@ -789,4 +789,20 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
       assert(!racer.print_mailing_label?, 'Racer.print_mailing_label? after printing')
     end
   end
+  
+  def test_export_to_excel
+    opts = {
+      :controller => "admin/racers", 
+      :action => "export"
+    }
+    assert_routing("/admin/racers/export", opts)
+
+    get(:export)
+
+    assert_response(:success)
+    today = Date.today
+    assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
 end

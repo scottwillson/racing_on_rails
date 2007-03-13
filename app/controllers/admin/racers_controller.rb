@@ -321,6 +321,55 @@ class Admin::RacersController < Admin::RecordEditor
       Racer.update_all("print_mailing_label=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
   end
+  
+  def export
+    headers['Content-Type'] = 'application/vnd.ms-excel'
+    today = Date.today
+    headers['Content-Disposition'] = "filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\""
+
+    # A grid might be handy here, but not sure it matters
+    begin
+      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes}
+      racers = columns.join("\t")
+      racers << "\n"
+      for racer in Racer.find(
+        :all,
+        :include => :team
+        )
+        delimiter =''
+        for column in columns
+          racers << delimiter
+          value = racer.send(column)
+          case value
+          when String
+            if column['category'] and !value[/^Cat|cat/]
+              racers << 'Cat '
+            end
+              racers << value
+          when NilClass
+            # Skip
+          when Date, Time
+            racers << value.strftime('%m/%d/%Y')
+          when TrueClass
+            racers << '1'
+          when FalseClass
+            racers << '0'
+          else
+            racers << value.to_s
+          end
+          delimiter = "\t"
+        end
+        racers << "\n"
+      end
+    rescue Exception => e
+      racer_name = 'nil'
+      racer_name = racer.name if racer
+      raise "Could not export #{column}: '#{value}' for #{racer_name}: #{e}"
+    end
+    
+    headers['Content-Length'] = racers.size
+    render :text => racers
+  end
 
   def rescue_action_in_public(exception)
 		headers.delete("Content-Disposition")
