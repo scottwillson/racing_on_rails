@@ -127,8 +127,8 @@ class RaceNumber < ActiveRecord::Base
       else
         racer_id = nil
       end
-      errors.add('value', "'#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} for #{existing_numbers.first.racer.name}.")
-      racer.errors.add('value', "'#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} for #{existing_numbers.first.racer.name}.")
+      errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number for #{existing_numbers.first.racer.name}.")
+      racer.errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number for #{existing_numbers.first.racer.name}.")
       if existing_numbers.size > 1
         logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
       end

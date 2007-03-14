@@ -49,4 +49,63 @@ module ApplicationHelper
   def attribute(record, name)
     render(:partial => '/admin/attribute', :locals => {:record => record, :name => name})
   end
+  
+  def tabs
+    tabs = Tabs.new(@controller)
+    yield tabs
+    tabs.to_html
+  end
+end
+
+class Tabs
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::UrlHelper
+  
+  def initialize(controller)
+    @controller = controller
+    @tabs = []
+  end
+  
+  def add(name, options = {}, html_options = nil, *parameters_for_method_reference)
+    _html_options = {:onmouseover => "hover(this)", :onmouseout => "hoverOut(this)"}
+    _html_options.merge(html_options) if html_options
+    @tabs << link_to(name, options, _html_options, parameters_for_method_reference)
+  end
+  
+  def select(name)
+    @selected_name = name
+  end
+  
+  # Builder escapes text, which is not what we want
+  def to_html
+    table_class = "tabs"
+    table_class = "tabs_solo" if @tabs.size < 2
+    html = <<HTML
+<div>
+  <table class="#{table_class}">
+    <tr>
+HTML
+    @tabs.each_with_index do |tab, index|
+      if index == 0
+        html << "<td class=\"first\">"
+        html << tab
+        if @tabs.size < 2
+          html << "</td>\n<td class=\"last\">"
+        end
+      elsif index == @tabs.size - 1
+          html << "<td class=\"last\">"
+          html << tab
+      else
+        html << "<td>\n"
+        html << tab
+      end
+      html << "</td>"
+    end
+    end_html = <<HTML
+    </tr>
+  </table>
+</div>
+HTML
+    html << end_html
+  end
 end

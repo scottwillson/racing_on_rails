@@ -1,0 +1,99 @@
+/*  Need slightly different style for different tab states: */
+/*  solo, selected, first, last, hover */
+table.tabs, table.tabs_solo {
+	height: 24px; 
+	text-align: center;
+	margin-top: 0px;
+	margin-bottom: 16px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+table.tabs td, table.tabs_solo td {
+	background-image: url(/images/buttons/background.jpg); 
+	background-repeat: no-repeat;
+	background-position: top left;
+	border-left: 1px solid rgb(225, 225, 225);
+	vertical-align: middle;
+	padding-top: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+table.tabs td.first, table.tabs td.first_selected, table.tabs_solo td.first, table.tabs_solo td.first_selected {
+	border-left: none;
+	padding-left: 12px;
+}
+
+table.tabs td.first, table.tabs_solo td.first {
+	background-image: url(/images/buttons/left_cap.jpg); 
+}
+
+table.tabs td.last, table.tabs_solo td.last, table.tabs td.last_selected, table.tabs_solo td.last_selected {
+	background-position: top right;
+	padding-right: 12px;
+}
+
+table.tabs td.last, table.tabs_solo td.last {
+	background-image: url(/images/buttons/right_cap.jpg); 
+}
+
+table.tabs_solo td.last {
+	padding-left: 4px;
+	padding-right: 0px;
+	border-left: none;
+}
+
+table.tabs td.selected {
+	background-image: url(/images/buttons/selected.jpg); 
+	border-left: 1px solid rgb(225, 225, 225);
+	border-right: 1px solid rgb(225, 225, 225);
+}
+
+table.tabs td.first_selected, table.tabs_solo td.first_selected {
+	background-image: url(/images/buttons/left_cap_selected.jpg); 
+	border-right: 1px solid rgb(225, 225, 225);
+}
+
+table.tabs_solo td.first_selected {
+	border-right: none;
+}
+
+table.tabs td.last_selected, table.tabs_solo td.last_selected {
+	background-image: url(/images/buttons/right_cap_selected.jpg); 
+}
+
+table.tabs_solo td.last_selected {
+	padding-left: 4px;
+	padding-right: 0px;
+	border-left: none;
+}
+
+table.tabs td.hover {
+	background-image: url(/images/buttons/hover.jpg); 
+}
+
+table.tabs td.hover_first, table.tabs_solo td.hover_first {
+	border-left: none;
+	background-image: url(/images/buttons/left_cap_hover.jpg); 
+	padding-left: 12px;
+}
+
+table.tabs td.hover_last {
+	background-image: url(/images/buttons/right_cap_hover.jpg); 
+	background-position: top right;
+	padding-right: 12px;
+}
+
+table.tabs_solo td.hover_last {
+	background-image: url(/images/buttons/right_cap_hover.jpg); 
+	background-position: top right;
+	padding-left: 4px;
+	padding-right: 0px;
+	border-left: none;
+}
+
+table.tabs td a:hover, table.tabs td.hover a:hover, table.tabs_solo td.hover_first a:hover, table.tabs_solo td.first a:hover {
+	background: none !important;
+	border-bottom: none !important;
+}
