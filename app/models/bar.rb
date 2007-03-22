@@ -299,7 +299,7 @@ class Bar < Competition
     bar = super(:date => date, :name => "#{year} BAR")
     
     for discipline in Discipline.find_all_bar
-      unless discipline.name == 'Overall' and !ASSOCIATION.overall_bar
+      unless discipline.name == 'Overall'
         standings = bar.standings.create(
           :event => bar,
           :name => discipline.name,
