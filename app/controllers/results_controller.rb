@@ -46,13 +46,52 @@ class ResultsController < ApplicationController
   
   def event
     @event = Event.find(params[:id])
+    if @event.is_a?(Bar)
+      redirect_to(:controller => 'bar', :action => 'show', :year => @event.date.year)
+    end
+  end
+
+  def competition
+  	@competition = Event.find(params[:competition_id])
+    if !params[:racer_id].blank?
+    	@results = Result.find(
+    	  :all,
+    	  :include => [:racer, {:race => {:standings => :event}}],
+    	  :conditions => ['events.id = ? and racers.id = ?', params[:competition_id], params[:racer_id]]
+    	)
+    	@racer = Racer.find(params[:racer_id])
+  	else
+    	@results = Result.find(
+    	  :all,
+    	  :include => [:team, {:race => {:standings => :event}}],
+    	  :conditions => ['events.id = ? and teams.id = ?', params[:competition_id], params[:team_id]]
+    	)
+    	@team = Team.find(params[:team_id])
+    	return render(:template => 'results/team_competition')
+	  end
   end
   
   def racer
   	@racer = Racer.find(params[:id])
+    results = Result.find(
+      :all,
+  	  :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
+  	  :conditions => ['racers.id = ?', params[:id]]
+    )
+    @competition_results, @event_results = results.partition do |result|
+      result.race.standings.event.is_a?(Competition)
+    end
   end
   
-  def show
-  	@result = Result.find(params[:id])
+  def team
+    @team = Team.find(params[:id])
+    @results = Result.find(
+      :all,
+  	  :include => [:team, :racer, :category, {:race => {:standings => :event}}],
+  	  :conditions => ['teams.id = ?', params[:id]]
+    )
+    @results.reject! do |result|
+      result.race.standings.event.is_a?(Competition)
+    end
   end
 end

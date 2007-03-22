@@ -51,7 +51,7 @@
 
 	<%- if @event.parent -%>
 	<div style="margin-bottom: 1em;">
-		Part of: <%= link_to @event.parent.name, :id => @event.parent.to_param %>
+		Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %>
 	</div>
 	<%- end -%>
 

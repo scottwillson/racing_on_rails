@@ -4,7 +4,7 @@ table.tabs, table.tabs_solo {
 	height: 24px; 
 	text-align: center;
 	margin-top: 0px;
-	margin-bottom: 16px;
+	margin-bottom: 8px;
 	margin-left: 0px;
 	margin-right: 0px;
 }
@@ -16,13 +16,14 @@ table.tabs td, table.tabs_solo td {
 	border-left: 1px solid rgb(225, 225, 225);
 	vertical-align: middle;
 	padding-top: 2px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding-left: 12px;
+	padding-right: 12px;
+	white-space: nowrap;
 }
 
 table.tabs td.first, table.tabs td.first_selected, table.tabs_solo td.first, table.tabs_solo td.first_selected {
 	border-left: none;
-	padding-left: 12px;
+	padding-left: 16px;
 }
 
 table.tabs td.first, table.tabs_solo td.first {
@@ -31,7 +32,7 @@ table.tabs td.first, table.tabs_solo td.first {
 
 table.tabs td.last, table.tabs_solo td.last, table.tabs td.last_selected, table.tabs_solo td.last_selected {
 	background-position: top right;
-	padding-right: 12px;
+	padding-right: 16px;
 }
 
 table.tabs td.last, table.tabs_solo td.last {
@@ -39,7 +40,7 @@ table.tabs td.last, table.tabs_solo td.last {
 }
 
 table.tabs_solo td.last {
-	padding-left: 4px;
+	padding-left: 8px;
 	padding-right: 0px;
 	border-left: none;
 }
@@ -64,7 +65,7 @@ table.tabs td.last_selected, table.tabs_solo td.last_selected {
 }
 
 table.tabs_solo td.last_selected {
-	padding-left: 4px;
+	padding-left: 8px;
 	padding-right: 0px;
 	border-left: none;
 }
@@ -76,19 +77,19 @@ table.tabs td.hover {
 table.tabs td.hover_first, table.tabs_solo td.hover_first {
 	border-left: none;
 	background-image: url(/images/buttons/left_cap_hover.jpg); 
-	padding-left: 12px;
+	padding-left: 16px;
 }
 
 table.tabs td.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
 	background-position: top right;
-	padding-right: 12px;
+	padding-right: 16px;
 }
 
 table.tabs_solo td.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
 	background-position: top right;
-	padding-left: 4px;
+	padding-left: 8px;
 	padding-right: 0px;
 	border-left: none;
 }

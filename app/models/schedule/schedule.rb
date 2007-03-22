@@ -6,7 +6,7 @@ module Schedule
     include ActionView
 
     # 0-based array of Months
-    attr_reader :months
+    attr_reader :months, :year
 
     # Import Schedule from Excel +filename+.
     #
@@ -180,6 +180,7 @@ module Schedule
     end
 
     def initialize(year, events)
+      @year = year.to_i
       @months = []
       for month in 1..12
         @months << Month.new(year, month)

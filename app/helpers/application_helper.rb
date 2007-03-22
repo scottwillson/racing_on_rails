@@ -69,7 +69,7 @@ class Tabs
   def add(name, options = {}, html_options = nil, *parameters_for_method_reference)
     _html_options = {:onmouseover => "hover(this)", :onmouseout => "hoverOut(this)"}
     _html_options.merge(html_options) if html_options
-    @tabs << [name, options, html_options, parameters_for_method_reference]
+    @tabs << [name, options, _html_options, parameters_for_method_reference]
   end
   
   def select(name)
@@ -88,34 +88,34 @@ HTML
     @tabs.each_with_index do |tab, index|
       if index == 0
         if current_page?(tab[1])
-          html << "<td class=\"first_selected\">"
+          html << "      <td class=\"first_selected\">"
         else
-          html << "<td class=\"first\">"
+          html << "      <td class=\"first\">"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab.last)
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
         if @tabs.size < 2
           if current_page?(tab[1])
-            html << "</td>\n<td class=\"last_selected\">"
+            html << "</td>\n      <td class=\"last_selected\">"
           else
-            html << "</td>\n<td class=\"last\">"
+            html << "</td>\n      <td class=\"last\">"
           end
         end
       elsif index == @tabs.size - 1
         if current_page?(tab[1])
-          html << "</td>\n<td class=\"last_selected\">"
+          html << "      <td class=\"last_selected\">"
         else
-          html << "</td>\n<td class=\"last\">"
+          html << "      <td class=\"last\">"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab.last)
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
       else
         if current_page?(tab[1])
-          html << "</td>\n<td class=\"selected\">"
+          html << "      <td class=\"selected\">"
         else
-          html << "</td>\n<td>"
+          html << "      <td>"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab.last)
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
       end
-      html << "</td>"
+      html << "</td>\n"
     end
     end_html = <<HTML
     </tr>

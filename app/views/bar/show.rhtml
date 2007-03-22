@@ -1,11 +1,36 @@
 <% @page_title = "BAR: #{@year}: #{@discipline}" %>
 
-<% delimiter = '' %>
-<% for discipline in @all_disciplines %>
-<%= delimiter %><%= link_to discipline.name, :action => 'show', :year => @year, :discipline => discipline %>
-<% delimiter = ' | ' %>
-<% end %>
+<%= tabs do |tabs|
+  for discipline in @all_disciplines
+	tabs.add(discipline.name, :action => 'show', :year => @year, :discipline => discipline)
+  end
+end -%>
+
+<b><a name="overall"><%= @discipline %> BAR Standings</a></b>
 <br><br>
+
+<% if @standings and !@standings.races.empty? %>
+<%# TODO Encapsulate in a helper method %>
+<table border="0" cellspacing="0" cellpadding="0">
+<% index = 0 %>  
+<% while index < @standings.races.size %>
+  <tr valign="top">
+    <% if index < @standings.races.size %>
+    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+      <% index += 1 %>  
+      <% if index < @standings.races.size %>
+    <td width="16">&nbsp;</td>
+    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+      <% end %>  
+    <% end %>  
+  </tr>
+  <% index += 1 %>  
+<% end %>  
+</table>
+
+<br/>
+<span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
+<br/><br/>
 
 <% if @discipline == 'Overall' %>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -51,31 +76,6 @@
 <br>
 <% end %>
 
-<b><a name="overall"><%= @discipline %> BAR Standings</a></b>
-<br><br>
-
-<% if @standings and !@standings.races.empty? %>
-<%# TODO Encapsulate in a helper method %>
-<table border="0" cellspacing="0" cellpadding="0">
-<% index = 0 %>  
-<% while index < @standings.races.size %>
-  <tr valign="top">
-    <% if index < @standings.races.size %>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
-      <% index += 1 %>  
-      <% if index < @standings.races.size %>
-    <td width="16">&nbsp;</td>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
-      <% end %>  
-    <% end %>  
-  </tr>
-  <% index += 1 %>  
-<% end %>  
-</table>
-
-<br/>
-<span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
-<br/><br/>
 
 <% @standings.races.each_with_index do |race, index| %>
 <% unless race.results.empty? %>
@@ -99,7 +99,10 @@
 
     <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
- <%= link_to(truncate(result.name), "/results/racer/#{result.racer.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
+ <%= link_to(truncate(result.name), 
+    :controller => 'results',
+    :action => 'show',
+    :id => result.id) %><%= ' ' * (30 - truncate(result.name).length) -%>
    <%= truncate(result.racer.team_name, 40).ljust(40) -%>
    <%= number_with_precision(result.points, 1).rjust(6) -%>
 <%- end -%></pre></td>

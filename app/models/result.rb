@@ -250,7 +250,7 @@ class Result < ActiveRecord::Base
       self.racer = Racer.new(:last_name => value)
     end
   end
-
+  
   # racer.name
   def name
     if racer == nil
@@ -258,6 +258,10 @@ class Result < ActiveRecord::Base
     else
       racer.name
     end
+  end
+
+  def racer_name
+    name
   end
 
   # racer.name
@@ -269,6 +273,10 @@ class Result < ActiveRecord::Base
       self.racer = Racer.new
       self.racer.name = value
     end
+  end
+  
+  def racer_name=(value)
+    name = value
   end
   
   def team_name

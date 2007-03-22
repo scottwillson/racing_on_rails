@@ -57,8 +57,11 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/posts/:mailing_list_name/:year/:month",  :controller => "posts", :action => "list"
   map.connect "/posts/:mailing_list_name",               :controller => "posts"
 
+  map.connect "/results/competition/:competition_id/racer/:racer_id", :controller => "results", :action => "competition"
+  map.connect "/results/competition/:competition_id/team/:team_id", :controller => "results", :action => "competition"
+  map.connect "/results/event/:id", :controller => "results", :action => "event"
   map.connect "/results/racer/:id", :controller => "results", :action => "racer"
-  map.connect "/results/show/:id", :controller => "results", :action => "show"
+  map.connect "/results/team/:id", :controller => "results", :action => "team"
   map.connect "/results/:year/:discipline", :controller => "results"
   map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event", :requirements => {:year => /\d\d\d\d/}
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}

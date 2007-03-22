@@ -8,7 +8,7 @@
 		<th>Category</th>
 		<th>Date</th>
 	</tr>
-	<%- for result in @racer.event_results.sort_by {|result| result.race.standings.event.date } -%>
+	<%- for result in @event_results.sort_by {|result| result.race.standings.event.date } -%>
 	<tr class="<%= cycle("even", "odd") %>">
 	  <td class="right" width="24"><%= result.place %></td>
 	  <td width="400"><%= result.race.standings.name %></td>
@@ -18,7 +18,7 @@
 	<%- end -%>
 </table>
 
-<% for result in @racer.competition_results %>
+<% for result in @competition_results %>
 <br/><br/>
 <table class="base">
 	<caption>
