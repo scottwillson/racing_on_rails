@@ -408,34 +408,6 @@ class BarTest < Test::Unit::TestCase
     assert_equal(25, svein_road_bar_result.points, 'Svein Road BAR points')  
   end
   
-  def test_racers_best_result_for_each_race
-    bar = Bar.new
-    scoring_results = []
-    best_results = bar.racers_best_result_for_each_race(scoring_results)
-    assert_equal_enumerables([], best_results, 'Empty results should not change')
-    
-    scoring_results = [results(:tonkin_banana_belt), results(:weaver_kings_valley)]
-    best_results = bar.racers_best_result_for_each_race(scoring_results)
-    assert_equal_enumerables([results(:tonkin_banana_belt), results(:weaver_kings_valley)], best_results, 'No changes with no duplicate results')
-    
-    scoring_results = [results(:tonkin_banana_belt), results(:weaver_kings_valley), results(:weaver_jack_frost)]
-    best_results = bar.racers_best_result_for_each_race(scoring_results)
-    assert_equal_enumerables([results(:tonkin_banana_belt), results(:weaver_kings_valley), results(:weaver_jack_frost)], best_results, 'No changes with no duplicate results')
-    
-    dupe_tonkin_kings_valley = races(:kings_valley_pro_1_2).results.create(:racer => racers(:tonkin), :place => 13)
-    dupe_weaver_kings_valley = races(:kings_valley_pro_1_2).results.create(:racer => racers(:weaver), :place => 13)
-    scoring_results = [
-      results(:tonkin_banana_belt),
-      dupe_tonkin_kings_valley, 
-      results(:tonkin_kings_valley), 
-      results(:weaver_jack_frost),
-      dupe_weaver_kings_valley,
-      results(:weaver_kings_valley)]
-    best_results = bar.racers_best_result_for_each_race(scoring_results)
-    expected = [dupe_tonkin_kings_valley, dupe_weaver_kings_valley, results(:tonkin_banana_belt), results(:weaver_jack_frost)]
-    assert_equal_enumerables(expected, best_results, 'Should remove Tonkin dupe result in 13th')
-  end
-  
   def test_pick_best_juniors_for_overall
     expert_junior_men = categories(:expert_junior_men)
     junior_men = categories(:junior_men)
