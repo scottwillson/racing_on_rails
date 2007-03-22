@@ -46,6 +46,12 @@ class Standings < ActiveRecord::Base
     end
   end
   
+  def place_results_by_points(break_ties = true)
+    for race in races
+      race.place_results_by_points(break_ties)
+    end
+  end
+  
   def race(category)
     return unless category
     for race in races

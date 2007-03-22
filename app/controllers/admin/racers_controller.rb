@@ -334,7 +334,7 @@ class Admin::RacersController < Admin::RecordEditor
       racers << "\n"
       for racer in Racer.find(
         :all,
-        :include => [:team, :race_numbers]
+        :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
         )
         delimiter =''
         for column in columns

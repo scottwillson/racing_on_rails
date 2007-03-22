@@ -7,23 +7,23 @@
 - banana_belt_pro_1_2:
     id: 1
     standings_id: 1
-    category_id: 6
+    category_id: 43
 - kings_valley_pro_1_2:
     id: 2
     standings_id: 2
-    category_id: 6
+    category_id: 43
 - kings_valley_3:
     id: 3
     standings_id: 2
-    category_id: 10
+    category_id: 44
 - kings_valley_women_2004:
     id: 4
     standings_id: 3
-    category_id: 8
+    category_id: 104
 - kings_valley_women_2003:
     id: 5
     standings_id: 2
-    category_id: 8
+    category_id: 104
 - jack_frost_masters_35_plus_women:
     id: 6
     standings_id: 4
@@ -31,8 +31,8 @@
 - jack_frost_pro_1_2:
     id: 7
     standings_id: 4
-    category_id: 6
+    category_id: 43
 - kings_valley_pro_1_2_2004:
     id: 8
     standings_id: 3
-    category_id: 6
+    category_id: 43

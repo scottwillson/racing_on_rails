@@ -256,4 +256,29 @@ class RaceTest < Test::Unit::TestCase
     assert_equal(seventh_competition_result, ironman_race.results[7], '8th result')
     assert_equal('8', ironman_race.results[7].place, '8th result place')
   end
+  
+  def test_competition_category_ids
+    competition = Competition.create
+    senior_men = Category.find_or_create_by_name('Senior Men')
+    competition.competition_categories.create(:category => senior_men)
+
+    men_a = Category.find_or_create_by_name('Men A')
+    competition.competition_categories.create(:category => senior_men, :source_category => men_a)
+
+    # Default for all competitions
+    p_1_2 = Category.find_or_create_by_name('P/1/2')
+    CompetitionCategory.create(:category => senior_men, :source_category => p_1_2)
+    
+    # Different competition
+    other_competition = Competition.create
+    pro = Category.find_or_create_by_name('Pro')
+    other_competition.competition_categories.create(:category => senior_men, :source_category => pro)
+    
+    race = competition.standings.first.races.create(:category => senior_men)
+    assert_equal(3, race.competition_category_ids.size, 'competition_category_ids for Jack Frost Pro/1/2')
+    assert(race.competition_category_ids.include?(senior_men.id), 'competition_category_ids for Jack Frost Pro/1/2 should include senior men')
+    assert(race.competition_category_ids.include?(men_a.id), 'competition_category_ids for Jack Frost Pro/1/2 should include men_a')
+    assert(race.competition_category_ids.include?(p_1_2.id), 'competition_category_ids for Jack Frost Pro/1/2 should include p_1_2')
+    assert(!race.competition_category_ids.include?(pro.id), 'competition_category_ids for Jack Frost Pro/1/2 should not include pro')
+  end
 end

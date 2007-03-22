@@ -179,6 +179,11 @@ class Event < ActiveRecord::Base
     "#{prefix}#{date.month}/#{date.day}#{suffix}"
   end
   
+  def year
+    return nil unless date
+    date.year
+  end
+  
   def city_state
     if !city.blank?
       if !state.blank?

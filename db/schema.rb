@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 12) do
+ActiveRecord::Schema.define(:version => 13) do
 
   create_table "aliases", :force => true do |t|
     t.column "alias", :string
@@ -30,6 +30,11 @@ ActiveRecord::Schema.define(:version => 12) do
   add_index "aliases_disciplines", ["alias"], :name => "idx_alias"
   add_index "aliases_disciplines", ["discipline_id"], :name => "idx_discipline_id"
 
+  create_table "bike_shops", :force => true do |t|
+    t.column "name", :string
+    t.column "phone", :string
+  end
+
   create_table "categories", :force => true do |t|
     t.column "bar_category_id", :integer
     t.column "position", :integer, :default => 0, :null => false
@@ -45,6 +50,20 @@ ActiveRecord::Schema.define(:version => 12) do
   add_index "categories", ["name", "scheme"], :name => "idx_category_name_scheme", :unique => true
   add_index "categories", ["bar_category_id"], :name => "idx_bar_category_id"
   add_index "categories", ["overall_id"], :name => "idx_overall_id"
+
+  create_table "coaches", :force => true do |t|
+    t.column "name", :string
+  end
+
+  create_table "competition_categories", :id => false, :force => true do |t|
+    t.column "competition_id", :integer
+    t.column "category_id", :integer, :null => false
+    t.column "source_category_id", :integer, :null => false
+  end
+
+  add_index "competition_categories", ["competition_id", "category_id", "source_category_id"], :name => "competition_categories_competition_id_index", :unique => true
+  add_index "competition_categories", ["category_id"], :name => "category_id"
+  add_index "competition_categories", ["source_category_id"], :name => "source_category_id"
 
   create_table "discipline_bar_categories", :id => false, :force => true do |t|
     t.column "category_id", :integer, :default => 0, :null => false
@@ -64,6 +83,11 @@ ActiveRecord::Schema.define(:version => 12) do
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
     t.column "numbers", :boolean, :default => false
+  end
+
+  create_table "engine_schema_info", :id => false, :force => true do |t|
+    t.column "engine_name", :string
+    t.column "version", :integer
   end
 
   create_table "events", :force => true do |t|
@@ -212,7 +236,7 @@ ActiveRecord::Schema.define(:version => 12) do
     t.column "time", :float
     t.column "finishers", :integer
     t.column "notes", :string, :default => ""
-    t.column "sanctioned_by", :string, :default => "OBRA"
+    t.column "sanctioned_by", :string, :default => "WSBA"
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
@@ -323,6 +347,10 @@ ActiveRecord::Schema.define(:version => 12) do
 
   add_foreign_key "categories", ["bar_category_id"], "categories", ["id"], :on_delete => :set_null
   add_foreign_key "categories", ["overall_id"], "categories", ["id"], :on_delete => :set_null
+
+  add_foreign_key "competition_categories", ["competition_id"], "events", ["id"], :on_delete => :cascade
+  add_foreign_key "competition_categories", ["category_id"], "categories", ["id"]
+  add_foreign_key "competition_categories", ["source_category_id"], "categories", ["id"]
 
   add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade

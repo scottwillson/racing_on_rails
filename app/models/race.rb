@@ -46,6 +46,18 @@ class Race < ActiveRecord::Base
     end
   end
   
+  def competition_category_ids
+    if standings.event.is_a? Competition
+      ids = CompetitionCategory.connection.select_values(%Q{
+        SELECT distinct source_category_id 
+        FROM competition_categories 
+        WHERE (competition_id is null or competition_id = #{event.id}) and (source_category_id = #{category.id} or category_id = #{category.id})})
+      ids.map {|id| id.to_i}
+    else
+      raise TypeError, "Cannot call competition_category_ids on race that belongs to a #{standings.event.class.name}. Race must belong to a Competition."
+    end
+  end
+
   def category_name=(name)
     if name.blank?
       self.category = nil
@@ -101,6 +113,10 @@ class Race < ActiveRecord::Base
       end
     end
   end
+  
+  def event
+    standings.event
+  end
 
   def has_result(row_hash)
     if !row_hash["place"].blank? and row_hash["place"] != "1" && row_hash["place"] != "0"
@@ -114,7 +130,7 @@ class Race < ActiveRecord::Base
   
   # Sort results by points, assign places
   # Save! each result after place is set
-  def place_results_by_points
+  def place_results_by_points(break_ties = true)
     results.sort! do |x, y| 
       x.compare_by_points(y)
     end
@@ -123,7 +139,7 @@ class Race < ActiveRecord::Base
       if index == 0
         result.place = 1
       else
-        if results[index - 1].compare_by_points(result) == 0
+        if results[index - 1].compare_by_points(result, break_ties) == 0
           result.place = results[index - 1].place
         else
           result.place = index + 1

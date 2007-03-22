@@ -11,7 +11,7 @@
 # have subclasses, but we don't need separate subclasses for different Associations.
 # Though, is it useful to have different schemes for different associations?
 #
-# By default, sheme is set to ASSOCIATION.short_name
+# By default, scheme is set to ASSOCIATION.short_name
 #
 # BAR categories may belong to an Overall BAR category
 #
@@ -23,6 +23,7 @@ class Category < ActiveRecord::Base
   belongs_to :overall, :class_name => "Category", :foreign_key => "overall_id"
   belongs_to :bar_category, :class_name => "Category", :foreign_key => "bar_category_id"
   belongs_to :combined_bar_category, :class_name => "Category", :foreign_key => "combined_bar_category_id"
+  
   has_many :results
   has_many :races
   # BAR categories have other categories mapped to them

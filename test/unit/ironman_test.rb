@@ -26,9 +26,10 @@ class IronmanTest < Test::Unit::TestCase
     results = ironman.standings.first.races.first.results.sort
     assert_equal("1", results[0].place, 'place')
     assert_equal(racers(:mollie), results[0].racer, 'racer')
-    assert_equal(2, results[0].points, 'points')
 
-    assert_equal("2", results[1].place, 'place')
-    assert_equal("3", results[2].place, 'place')
+    assert_equal(2, results[0].points, 'points')
+    for index in 1..4
+      assert_equal('2', results[index].place, "place #{index + 1}")
+    end
   end
 end

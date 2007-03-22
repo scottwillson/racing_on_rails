@@ -645,4 +645,24 @@ class ResultTest < Test::Unit::TestCase
     # Add exact dupes with same numbers
     # Test numbers from different years or disciplines
   end
+  
+  def test_multiple_scores_for_same_race
+    competition = Competition.create(:name => 'KOM')
+    competition_race = competition.standings.first.races.create(:category => categories(:cx_a))
+    competition_result = competition_race.results.create(:racer => racers(:tonkin), :points => 5)
+    
+    standings = standings(:kings_valley_2004)
+    race = standings.races.create(:category => categories(:cx_a))
+    source_result = race.results.create(:racer => racers(:tonkin))
+    
+    assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 10))
+    
+    source_result = races(:jack_frost_pro_1_2).results.build(:racer => racers(:tonkin))    
+    assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 10))
+    
+    source_result = races(:jack_frost_pro_1_2).results.build(:racer => racers(:tonkin))    
+    assert_nil(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 10))
+    
+    # Need a lot more tests
+  end
 end

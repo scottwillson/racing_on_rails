@@ -14,15 +14,15 @@ class OregonCupTest < Test::Unit::TestCase
     assert_equal(2, standings.races.size, 'standings races')
     standings.races.sort!
 
-    sr_p_1_2 = standings.races.first
-    assert_equal('Senior Men', sr_p_1_2.category.name, 'Senior men category')
-    assert_equal(categories(:senior_men_bar), sr_p_1_2.bar_category, 'BAR category')
-    assert(sr_p_1_2.results.empty?, 'Senior men results.empty?')
-
     sr_women = standings.races.last
     assert_equal('Senior Women', sr_women.category.name, 'Senior women category')
     assert_equal(categories(:senior_women_bar), sr_women.bar_category, 'BAR category')
     assert(sr_women.results.empty?, 'Senior women results.empty?')
+
+    sr_p_1_2 = standings.races.first
+    assert_equal('Senior Men', sr_p_1_2.category.name, 'Senior men category')
+    assert_equal(categories(:senior_men_bar), sr_p_1_2.bar_category, 'BAR category')
+    assert(sr_p_1_2.results.empty?, 'Senior men results.empty?')
   end
   
   def test_events
@@ -75,15 +75,20 @@ class OregonCupTest < Test::Unit::TestCase
     kings_valley_pro_1_2.results.create(:racer => matson, :place => 21)
     
     or_cup = OregonCup.create(:date => Date.new(2004))
-    or_cup.events << events(:banana_belt_1)
+    banana_belt_1 = events(:banana_belt_1)
+    or_cup.events << banana_belt_1
     or_cup.events << events(:kings_valley_2004)
+    assert(or_cup.errors.empty?, "Oregon Cup errors #{or_cup.errors.full_messages}")
+    assert(banana_belt_1.errors.empty?, "banana_belt_1 errors #{or_cup.errors.full_messages}")
+    assert_not_nil(banana_belt_1.oregon_cup_id, 'banana_belt_1.oregon_cup_id')
 
-    assert_equal(1, OregonCup.count, "Oregon Cup events before recalculate")
+    assert_equal(1, OregonCup.count, "Oregon Cups before recalculate")
     OregonCup.recalculate(2004)
+    assert_equal(1, OregonCup.count, "Oregon Cup events after recalculate")
     or_cup = OregonCup.find(:first, :conditions => ['date = ?', Date.new(2004)])
     assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')
-    assert_equal(1, OregonCup.count, "Oregon Cup events after recalculate")
     assert_equal(1, or_cup.standings.count, "Oregon Cup standings after recalculate")
+    assert_equal(2, or_cup.events.count, "Oregon Cup events after recalculate")
     results = 0
     for race in or_cup.standings.first.races
       results = results + race.results.size

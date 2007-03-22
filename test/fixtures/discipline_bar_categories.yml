@@ -1,15 +1,15 @@
 senior_men_overall:
   discipline_id: 7
-  category_id: 17
+  category_id: 1
 senior_women_overall:
   discipline_id: 7
-  category_id: 18
+  category_id: 4
 women_4_overall:
   discipline_id: 7
-  category_id: 4
+  category_id: 7
 junior_men_overall:
   discipline_id: 7
-  category_id: 22
+  category_id: 8
   
 cyclocross_a:
   discipline_id: 1
@@ -17,21 +17,21 @@ cyclocross_a:
   
 senior_men_road:
   discipline_id: 4
-  category_id: 17
+  category_id: 1
 senior_women_road:
   discipline_id: 4
-  category_id: 18
+  category_id: 4
 women_4_road:
   discipline_id: 4
-  category_id: 4
+  category_id: 7
   
 criterium_sr_men:
   discipline_id: 2
-  category_id: 17
+  category_id: 1
   
 track_sr_men:
   discipline_id: 6
-  category_id: 17
+  category_id: 1
 
 team_team:
   discipline_id: 10
@@ -39,11 +39,11 @@ team_team:
 
 senior_men_tt:
   discipline_id: 5
-  category_id: 17
+  category_id: 1
 
 senior_women_tt:
   discipline_id: 5
-  category_id: 18
+  category_id: 4
 
 mtb_pro_semipro_elite:
   discipline_id: 3

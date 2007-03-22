@@ -19,7 +19,7 @@ Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  config.load_paths += %W( #{RAILS_ROOT}/app/models/competitions )
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
@@ -70,10 +70,13 @@ unless defined?(ASSOCIATION)
 
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
-APP_SERVER_ROOT = "/" unless defined?(APP_SERVER_ROOT)
+
+include Competitions
 
 # Ensure all STI classes load
 SingleDayEvent
 MultiDayEvent
 Series
 WeeklySeries
+
+APP_SERVER_ROOT = "/" unless defined?(APP_SERVER_ROOT)

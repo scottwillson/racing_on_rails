@@ -18,7 +18,7 @@ class Bar < Competition
   
   attr_accessor :point_schedule
 
-  # Calculate clashs with internal Rails method
+  # Calculate clashes with internal Rails method
   # Destroys existing BAR for the year first.
   # This method could stand some decomposition into smaller, more meaningful methods
   # +bar_point_schedule+ By convention, points are 1-based, and zero-place is included
@@ -45,9 +45,16 @@ class Bar < Competition
         bar.recalculate
       end
     }
-    RACING_ON_RAILS_DEFAULT_LOGGER.info("BAR #{benchmark}")
+    logger.info("BAR #{benchmark}")
     # Don't return the entire populated instance!
     true
+  end
+  
+  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
+  # BarSweeper seems to fire, but does not expire pages?
+  def Bar.expire_cache
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
   end
 
   # TODO Think of better names
@@ -68,7 +75,7 @@ class Bar < Competition
     for discipline in Discipline.find_all_bar
       progress_monitor.increment(1)
       progress_monitor.detail_text = "Find #{discipline.name} results"
-      RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Finding results for #{discipline.name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+      logger.debug("BAR Finding results for #{discipline.name}") if logger.debug?
       # Other operation rely on sort order. Simple numeric sort OK because only 1-15 count for BAR
       scoring_results = Result.find_by_sql(
         %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
@@ -84,12 +91,12 @@ class Bar < Competition
                 and standings.date <= '#{date.year}-12-31') 
             order by results.place asc}
       )
-      RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Found #{scoring_results.size} scoring results") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+      logger.debug("BAR Found #{scoring_results.size} scoring results") if logger.debug?
       
       # Create BAR discipline results for each scoring race result
       scoring_results = racers_best_result_for_each_race(scoring_results)
       for scoring_result in scoring_results
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR #{discipline.name} scoring result: #{scoring_result.race.name} #{scoring_result.place} #{scoring_result.last_name} #{scoring_result.team_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+        logger.debug("BAR #{discipline.name} scoring result: #{scoring_result.race.name} #{scoring_result.place} #{scoring_result.last_name} #{scoring_result.team_name}") if logger.debug?
         racer = scoring_result.racer
         team = scoring_result.team
         races = find_races(scoring_result)
@@ -101,9 +108,9 @@ class Bar < Competition
               raise(RuntimeError, bar_result.errors.full_messages) unless bar_result.errors.empty?
               bar_result.racer = racer
               bar_result.team = team
-              RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Add new BAR result to #{race.name} for #{racer.last_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              logger.debug("BAR Add new BAR result to #{race.name} for #{racer.last_name}") if logger.debug?
             else
-              RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Existing BAR result. #{bar_result.racer.last_name} == #{racer.last_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              logger.debug("BAR Existing BAR result. #{bar_result.racer.last_name} == #{racer.last_name}") if logger.debug?
             end
             score = bar_result.scores.create(
               :source_result => scoring_result, 
@@ -135,7 +142,7 @@ class Bar < Competition
         if bar_standings.name != "Overall" and bar_standings.name != 'Team'
           for discipline_race in bar_standings.races
             for discipline_source_result in discipline_race.results.sort!
-              RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Overall scoring result: '#{discipline_source_result.race.standings.name}' #{discipline_source_result.race.category} #{discipline_source_result.place} #{discipline_source_result.last_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              logger.debug("BAR Overall scoring result: '#{discipline_source_result.race.standings.name}' #{discipline_source_result.race.category} #{discipline_source_result.place} #{discipline_source_result.last_name}") if logger.debug?
               if discipline_source_result.race.category and discipline_source_result.race.category.overall
                 racer = discipline_source_result.racer
                 progress_monitor.detail_text = "#{racer.first_name} #{racer.last_name}"
@@ -146,10 +153,10 @@ class Bar < Competition
                   raise(RuntimeError, overall_bar_result.errors.full_messages) unless overall_bar_result.errors.empty?
                   overall_bar_result.racer = racer
                   overall_bar_result.team = discipline_source_result.team
-                  RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Add new BAR result to #{bar_race.name} for #{racer.last_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+                  logger.debug("BAR Add new BAR result to #{bar_race.name} for #{racer.last_name}") if logger.debug?
                   overall_bar_result.save!
                 else
-                  RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Existing BAR result. #{overall_bar_result.last_name} == #{racer.last_name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+                  logger.debug("BAR Existing BAR result. #{overall_bar_result.last_name} == #{racer.last_name}") if logger.debug?
                 end
                 overall_bar_result.scores.create(
                   :source_result => discipline_source_result, 
@@ -159,7 +166,7 @@ class Bar < Competition
                 raise(RuntimeError, overall_bar_result.errors.full_messages) unless overall_bar_result.errors.empty?
                 overall_bar_result.calculate_points
               else
-                RACING_ON_RAILS_DEFAULT_LOGGER.warn("WARN: #{discipline_source_result.race.name} has no category")
+                logger.warn("WARN: #{discipline_source_result.race.name} has no category")
               end
             end
           end
@@ -192,7 +199,7 @@ class Bar < Competition
     Bar.expire_cache
     progress_monitor.detail_text = ""
     progress_monitor.detail_text = "Idle"
-    RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR BAR progress: #{progress_monitor.progress}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+    logger.debug("BAR BAR progress: #{progress_monitor.progress}") if logger.debug?
   end
   
   # Apply points from @point_schedule, and adjust for field size
@@ -230,28 +237,12 @@ class Bar < Competition
     disciplines = []
     scores.each do |score|
       if disciplines.include?(score.source_result.race.standings.discipline)
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("Multiple #{score.source_result.race.standings.discipline} results for #{score.source_result.racer}")
+        logger.debug("Multiple #{score.source_result.race.standings.discipline} results for #{score.source_result.racer}")
         scores.delete(score)
       else
         disciplines << score.source_result.race.standings.discipline
       end
     end
-  end
-  
-  # If same ride places twice in same race, only highest result counts
-  # This method remove all but highest result
-  # Assume results are sorted by place already
-  # TODO Why do we have both remove_duplicate_discipline_results and racers_best_result_for_each_race?
-  def racers_best_result_for_each_race(scoring_results)
-    best_results = {}
-    scoring_results.each do |result|
-      key = ResultKey.new(result).freeze
-      best_results.rehash
-      unless best_results[key]
-        best_results[key] = result
-      end
-    end
-    best_results.values
   end
   
   def create_team_result(scoring_result)
@@ -267,9 +258,9 @@ class Bar < Competition
           team_bar_result = team_race.results.create
           raise(RuntimeError, team_bar_result.errors.full_messages) unless team_bar_result.errors.empty?
           team_bar_result.team = team
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Add new Team BAR result #{team.name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+          logger.debug("BAR Add new Team BAR result #{team.name}") if logger.debug?
         else
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("BAR Existing Team BAR result. #{team.name}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+          logger.debug("BAR Existing Team BAR result. #{team.name}") if logger.debug?
         end
         points = @point_schedule[scoring_result.place.to_f] / teams.size.to_f
         score = team_bar_result.scores.create(:source_result => scoring_result, :competition_result => team_bar_result, :points => points)
@@ -324,28 +315,25 @@ class Bar < Competition
     bar
   end
   
-  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
-  # BarSweeper seems to fire, but does not expire pages?
-  def Bar.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
-  end
-  
   # Find BAR races that match the discipline and BAR cat of "result's" race
   # Short-cut for spinning through all of a BAR's standings' races
   # May return multiple races: category + combined
   def find_races(result)
-    discipline = result.race.standings.discipline
+    if ASSOCIATION.overall_bar
+      discipline = result.race.standings.discipline
+    else
+      discipline = 'Road'
+    end
     discipline_standings = standings.detect {|s| s.name == discipline}
     if discipline_standings == nil
       raise "Could not find '#{discipline}' standings in #{name}'s standings"
     end
     if result.race.category == nil
-      RACING_ON_RAILS_DEFAULT_LOGGER.warn("WARN: #{result.race.name} has no category")
+      logger.warn("WARN: #{result.race.name} has no category")
       return []
     end
     if result.race.category.bar_category.nil?
-      RACING_ON_RAILS_DEFAULT_LOGGER.warn("WARN: #{result.race.category} has no BAR category")
+      logger.warn("WARN: #{result.race.category} has no BAR category")
       return []
     end
     
@@ -354,13 +342,13 @@ class Bar < Competition
     
     bar_races = discipline_standings.races.select {|bar_race| 
       if bar_race.category.bar_category.nil?
-        RACING_ON_RAILS_DEFAULT_LOGGER.warn("WARN: No #{discipline} BAR race for #{bar_race.category}")
+        logger.warn("WARN: No #{discipline} BAR race for #{bar_race.category}")
         return []
       end
       result.race.bar_category == bar_race.category or result.race.bar_category.combined_bar_category == bar_race.category
     }
     if bar_races == nil or bar_races.empty?
-      RACING_ON_RAILS_DEFAULT_LOGGER.warn("WARN: BAR Could not find '#{discipline}' '#{result.race.category}' standings in #{name}'s races")
+      logger.warn("WARN: BAR Could not find '#{discipline}' '#{result.race.category}' standings in #{name}'s races")
     end
     bar_races
   end
@@ -380,68 +368,8 @@ class Bar < Competition
     raise "Could not find #{bar_category} in #{self}'s races" if race.nil?
     race
   end 
-  
-  def debug_results
-    standings.each {|s|
-      puts("BAR")
-      puts("BAR #{s.name}")
-      s.races.each {|r| 
-        puts("BAR")
-        puts("BAR   #{r.name}")
-        r.results.sort.each {|result|
-          puts("BAR      #{result.to_long_s}")
-          result.scores.each{|score|
-            puts("BAR        #{score.to_s}")
-          }
-        }
-      }
-    }
-    true
-  end
 
   def to_s
     "#<Bar #{id} #{discipline} #{name} #{start_date} #{end_date}>"
-  end
-end
- 
-# Used in Hash of results to sort out duplicate results for same race
-class ResultKey
-  
-  include Comparable
-  
-  attr_reader :race_id, :racer_id
-
-  def initialize(result)
-    @race_id = result.race.id
-    @racer_id = result.racer.id if result.racer
-  end
-  
-  def <=>(other)
-    racer_diff = (@racer_id <=> other.racer_id)
-    if racer_diff != 0
-      racer_diff
-    else
-      @race_id <=> other.race_id
-    end
-  end
-  
-  def hash
-    result = 13
-    if @racer_id
-      result = result + @racer_id * 37     
-    end
-    # Really should always have race_id ...
-    if @race_id
-      result = result + @race_id * 37
-    end
-    result
-  end
-  
-  def eql?(other)
-    self == other
-  end
-  
-  def to_s
-    "#<ResultKey #{@race_id} #{@racer_id}>"
   end
 end

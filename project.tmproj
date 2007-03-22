@@ -3,12 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
+<<<<<<< .mine
+	<string>test/functional/admin/racers_controller_test.rb</string>
+=======
 	<string>local/public/stylesheets/obra2.css</string>
+>>>>>>> .r555
 	<key>documents</key>
 	<array>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>local</string>
 			<key>regexFolderFilter</key>
@@ -92,6 +94,15 @@
 		</dict>
 		<dict>
 			<key>name</key>
+<<<<<<< .mine
+			<string>vendor</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>vendor</string>
+		</dict>
+	</array>
+=======
 			<string>tmp</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
@@ -107,10 +118,42 @@
 			<string>vendor</string>
 		</dict>
 	</array>
+>>>>>>> .r555
 	<key>fileHierarchyDrawerWidth</key>
+<<<<<<< .mine
+	<integer>300</integer>
+=======
 	<integer>305</integer>
+>>>>>>> .r555
 	<key>metaData</key>
 	<dict>
+<<<<<<< .mine
+		<key>app/controllers/admin/racers_controller.rb</key>
+=======
+		<key>app/models/announcement_mailer.rb</key>
+>>>>>>> .r555
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+<<<<<<< .mine
+				<integer>90</integer>
+=======
+				<integer>18</integer>
+>>>>>>> .r555
+				<key>line</key>
+<<<<<<< .mine
+				<integer>336</integer>
+=======
+				<integer>0</integer>
+>>>>>>> .r555
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>332</integer>
+		</dict>
+<<<<<<< .mine
 		<key>app/models/announcement_mailer.rb</key>
 		<dict>
 			<key>caret</key>
@@ -125,6 +168,87 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>app/models/race_number.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>13</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/models/racer.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>138</integer>
+				<key>line</key>
+				<integer>203</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>test/functional/admin/racers_controller_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>799</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>761</integer>
+		</dict>
+		<key>test/unit/race_number_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>73</integer>
+				<key>line</key>
+				<integer>5</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>test/unit/racer_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>16</integer>
+				<key>line</key>
+				<integer>423</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>419</integer>
+		</dict>
+	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>test/functional/admin/racers_controller_test.rb</string>
+		<string>app/models/racer.rb</string>
+		<string>app/models/race_number.rb</string>
+		<string>test/unit/racer_test.rb</string>
+		<string>test/unit/race_number_test.rb</string>
+		<string>app/controllers/admin/racers_controller.rb</string>
+	</array>
+=======
 		<key>local/public/css.html</key>
 		<dict>
 			<key>caret</key>
@@ -159,9 +283,14 @@
 		<string>local/public/css.html</string>
 		<string>local/public/stylesheets/obra2.css</string>
 	</array>
+>>>>>>> .r555
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
+<<<<<<< .mine
+	<string>{{314, 75}, {965, 746}}</string>
+=======
 	<string>{{315, 62}, {961, 770}}</string>
+>>>>>>> .r555
 </dict>
 </plist>

@@ -1,3 +1,19 @@
+module CreateIfBestResultForRaceExtension
+  def create_if_best_result_for_race(attributes)
+    source_result = attributes[:source_result]
+    for score in @owner.scores
+      if score.source_result.race == source_result.race && score.source_result.racer == source_result.racer
+        if attributes[:points] > score.points
+          @owner.scores.delete(score)
+        else
+          return nil
+        end
+      end
+    end
+    create(attributes)
+  end
+end
+
 # Race result
 #
 # Race is the only required attribute -- even +racer+ and +place+ can be blank
@@ -20,7 +36,7 @@ class Result < ActiveRecord::Base
   after_save {|result| result.race.standings.after_result_save}
   after_destroy {|result| result.race.standings.after_result_destroy}
   
-  has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy
+  has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
   belongs_to :category
   belongs_to :race
@@ -127,7 +143,6 @@ class Result < ActiveRecord::Base
   
   # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
-    logger.debug("Result update_racer_number #{self.number} #{number}")
     discipline = Discipline[event.discipline]
     if self.racer and !number.blank? and !RaceNumber.rental?(number, discipline)
       event.number_issuer unless event.number_issuer
@@ -391,9 +406,9 @@ class Result < ActiveRecord::Base
   end
   
   # Highest points first. Break ties by highest placing
-  def compare_by_points(other)
+  def compare_by_points(other, break_ties = true)
     diff = other.points <=> points
-    return diff unless diff == 0
+    return diff if diff != 0 || !break_ties
     scores_by_place = scores.sort do |x, y|
       x.source_result <=> y.source_result
     end
