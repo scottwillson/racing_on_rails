@@ -2,6 +2,9 @@ module Competitions
   
   # WSBA rider rankings. Riders get points for top-10 finishes in any event
   class RiderRankings < Competition
+    def friendly_name
+      'Rider Rankings'
+    end
 
     def points_schedule
       [0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16]

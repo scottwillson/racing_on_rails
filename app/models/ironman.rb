@@ -1,6 +1,9 @@
 # Who has done the most events? Just counts starts/appearences in results. Not pefect -- some events
 # are probably over-counted.
 class Ironman < Competition
+  def friendly_name
+    'Ironman'
+  end
 
   # TODO Can't we just iterate through all of a racer's results? Would need to weed out many results
   def Ironman.years

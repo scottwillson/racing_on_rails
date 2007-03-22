@@ -16,10 +16,11 @@ class Competition < Event
   end
   
   # TODO Validate dates
+  # TODO Use class methods to set things like friendly_name
   
   after_create  :create_standings
   after_save    :expire_cache
-
+  
   def Competition.recalculate(year = Date.today.year)
     benchmark = Benchmark.measure {
       transaction do
@@ -36,7 +37,7 @@ class Competition < Event
     # Don't return the entire populated instance!
     true
   end
-
+  
   def initialize(attributes = nil)
     super
     if self.date.month != 1 or self.date.day != 1
@@ -44,6 +45,10 @@ class Competition < Event
     end
   end
 
+  def friendly_name
+    'Competition'
+  end
+  
   # Same as +date+. Should always be January 1st
   def start_date
     date
@@ -72,10 +77,6 @@ class Competition < Event
   
   def name
     self[:name] || "#{date.year} #{friendly_name}"
-  end
-  
-  def friendly_name
-    self.class.name.demodulize.tableize.humanize.titlecase
   end
   
   def create_standings

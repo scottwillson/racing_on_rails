@@ -16,12 +16,9 @@ class Bar < Competition
   # TODO Move to BarHelper
   POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]] unless defined?(POINTS_AND_LABELS)
   
-  attr_accessor :point_schedule
-
   # Calculate clashes with internal Rails method
   # Destroys existing BAR for the year first.
   # This method could stand some decomposition into smaller, more meaningful methods
-  # +bar_point_schedule+ By convention, points are 1-based, and zero-place is included
   # TODO store in database?
   def Bar.recalculate(year = Date.today.year, progress_monitor = NullProgressMonitor.new)
     # TODO: Use FKs in database to cascade delete`
@@ -57,6 +54,10 @@ class Bar < Competition
     FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
   end
 
+  def points_schedule
+    [0, 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10]
+  end
+
   # TODO Think of better names
   def recalculate(progress_monitor = NullProgressMonitor.new)
     disable_notification!
@@ -83,7 +84,7 @@ class Bar < Competition
             LEFT OUTER JOIN standings ON races.standings_id = standings.id 
             LEFT OUTER JOIN events ON standings.event_id = events.id 
               WHERE (races.category_id is not null 
-                and place between 1 AND #{@point_schedule.size - 1}
+                and place between 1 AND #{point_schedule.size - 1}
                 and (standings.discipline = '#{discipline.name}' or (standings.discipline is null and events.discipline = '#{discipline.name}'))
                 and events.type = 'SingleDayEvent' 
                 and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
@@ -202,12 +203,12 @@ class Bar < Competition
     logger.debug("BAR BAR progress: #{progress_monitor.progress}") if logger.debug?
   end
   
-  # Apply points from @point_schedule, and adjust for field size
+  # Apply points from point_schedule, and adjust for field size
   def points_for(scoring_result)
     field_size = scoring_result.race.field_size
     
     team_size = Result.count(:conditions => ["race_id =? and place = ?", scoring_result.race.id, scoring_result.place])
-    points = @point_schedule[scoring_result.place.to_i] * scoring_result.race.bar_points / team_size
+    points = point_schedule[scoring_result.place.to_i] * scoring_result.race.bar_points / team_size
     if scoring_result.race.standings.name['CoMotion'] and scoring_result.race.category.name == 'Category C Tandem'
       points = points / 2.0
     end
@@ -262,7 +263,7 @@ class Bar < Competition
         else
           logger.debug("BAR Existing Team BAR result. #{team.name}") if logger.debug?
         end
-        points = @point_schedule[scoring_result.place.to_f] / teams.size.to_f
+        points = point_schedule[scoring_result.place.to_f] / teams.size.to_f
         score = team_bar_result.scores.create(:source_result => scoring_result, :competition_result => team_bar_result, :points => points)
         raise(RuntimeError, score.errors.full_messages) unless score.errors.empty?
         team_bar_result.calculate_points
@@ -295,7 +296,7 @@ class Bar < Competition
   
   def Bar.create!(year)
     date = Date.new(year, 1, 1)
-    bar = super(:date => date, :name => "#{year} BAR", :point_schedule => ASSOCIATION.bar_point_schedule)
+    bar = super(:date => date, :name => "#{year} BAR")
     
     for discipline in Discipline.find_all_bar
       unless discipline.name == 'Overall' and !ASSOCIATION.overall_bar
@@ -319,11 +320,7 @@ class Bar < Competition
   # Short-cut for spinning through all of a BAR's standings' races
   # May return multiple races: category + combined
   def find_races(result)
-    if ASSOCIATION.overall_bar
-      discipline = result.race.standings.discipline
-    else
-      discipline = 'Road'
-    end
+    discipline = result.race.standings.discipline
     discipline_standings = standings.detect {|s| s.name == discipline}
     if discipline_standings == nil
       raise "Could not find '#{discipline}' standings in #{name}'s standings"
@@ -368,6 +365,10 @@ class Bar < Competition
     raise "Could not find #{bar_category} in #{self}'s races" if race.nil?
     race
   end 
+
+  def friendly_name
+    'BAR'
+  end
 
   def to_s
     "#<Bar #{id} #{discipline} #{name} #{start_date} #{end_date}>"

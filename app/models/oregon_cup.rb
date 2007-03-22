@@ -6,6 +6,10 @@ class OregonCup < Competition
   # TODO Break ties according to rules on website
   has_many :events
 
+  def friendly_name
+    'Oregon Cup'
+  end
+  
   def points_schedule
     [0, 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10]
   end
