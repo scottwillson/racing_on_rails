@@ -9,7 +9,7 @@ class CombinedMountainBikeStandings < CombinedStandings
   
   # Recreate combine results from source results. Also set source race BAR points to none
   def recalculate
-    logger.debug("CombinedMountainBikeStandings Recalculate")
+    logger.debug("CombinedMountainBikeStandings recalculate")
     create_races if races(true).empty?
     for race in races
       race.results.clear unless race.results.empty?
@@ -17,7 +17,6 @@ class CombinedMountainBikeStandings < CombinedStandings
 
       for source_race in source.races(true)
         if race.category.include?(source_race.category)
-          #include?(source_race.category, race.category)
           combined_results = combined_results + source_race.results
           source_race.update_attribute(:bar_points , 0)
         end
@@ -44,11 +43,6 @@ class CombinedMountainBikeStandings < CombinedStandings
       }
     end
   end
-  
-  def include?(source_category, category)
-    (category == men_combined && men_combined_source_categories.include?(source_category)) ||
-    (category == women_combined && women_combined_source_categories.include?(source_category))
-  end
 
   def create_races
     races.create(:category => men_combined)
@@ -56,19 +50,23 @@ class CombinedMountainBikeStandings < CombinedStandings
   end
   
   def men_combined
-    @men_combined ||= Category.find_by_name('Pro, Semi-Pro, Elite Men')
+    unless defined? @@men_combined
+      @@men_combined = Category.create_or_find_by_name('Pro, Semi-Pro, Elite Men')
+      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Pro Men'))
+      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Semi-Pro Men'))
+      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Elite Men'))
+    end
+    @@men_combined
   end
   
   def women_combined
-    @women_combined ||= Category.find_by_name('Pro, Elite, Expert Women')
-  end
-  
-  def men_combined_source_categories
-    if @men_combined_source_categories.nil?
-      @men_combined_source_categories = []
-      @men_combined_source_categories << Category.find_or_create_by_name('Pro Men')
+    unless defined? @@women_combined
+      @@women_combined = Category.create_or_find_by_name('Pro, Elite, Expert Women')
+      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Pro Women'))
+      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Elite Women'))
+      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.create_or_find_by_name('Expert Women'))
     end
-    @men_combined_source_categories
+    @@men_combined
   end
   
   def to_s

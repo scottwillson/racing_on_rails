@@ -9,14 +9,18 @@ module Competitions
     
     before_validation :set_source_category_if_nil
     
-    # TODO Combine with similar mwthod in Competition
+    # TODO Combine with similar method in Competition
     def CompetitionCategory.create_unless_exists(attributes)
+      _category = attributes[:category] || @owner
+      unless _category && _category.is_a?(Category)
+        raise ArgumentError, "Must provide 'category' of type Category, but was #{_category} of type #{_category.class.name}"
+      end
       if attributes[:source_category]
         existing = find(:first, :conditions => ['competition_id = ? and category_id = ? and source_category_id = ?', 
-                          nil, attributes[:category].id, attributes[:source_category].id])
+                          nil, _category.id, attributes[:source_category].id])
       else
         existing = find(:first, :conditions => ['competition_id = ? and category_id = ?', 
-                          nil, attributes[:category].id])
+                          nil, _category.id])
       end
       return existing unless existing.nil?
       create(attributes)

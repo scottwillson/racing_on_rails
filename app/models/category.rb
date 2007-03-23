@@ -28,6 +28,24 @@ class Category < ActiveRecord::Base
   has_many :races
   # BAR categories have other categories mapped to them
   has_many :categories, :foreign_key => "bar_category_id"
+  has_many :competition_categories do
+    def create_unless_exists(attributes)
+      _attributes = attributes.clone
+      _attributes[:category] = @owner unless _attributes[:category]
+      unless _attributes[:category] && _attributes[:category].is_a?(Category)
+        raise ArgumentError, "Must provide 'category' of type Category, but was #{_attributes[:category]} of type #{_attributes[:category].class.name}"
+      end
+      if _attributes[:source_category]
+        existing = find(:first, :conditions => ['competition_id = ? and category_id = ? and source_category_id = ?', 
+                          nil, _attributes[:category].id, _attributes[:source_category].id])
+      else
+        existing = find(:first, :conditions => ['competition_id = ? and category_id = ?', 
+                          nil, _attributes[:category].id])
+      end
+      return existing unless existing.nil?
+      create(_attributes)
+    end
+  end
  
   validates_presence_of :name, :scheme
  
@@ -36,6 +54,7 @@ class Category < ActiveRecord::Base
   NONE = Category.new(:name => "", :id => nil)
  
   # Find BAR category by name
+  # :deprecated:
   def Category.find_bar(name)
     Category.find_by_name_and_scheme(name, "BAR")
   end
@@ -49,7 +68,7 @@ class Category < ActiveRecord::Base
   # Can't use join because of table name collisions in eager association loading
   def Category.find_with_bar(name)
     category = find_association(name)
-    if category != nil
+    if category && category.bar_category_id
       category.bar_category = Category.find(category.bar_category_id)
     end
     category
@@ -69,6 +88,14 @@ class Category < ActiveRecord::Base
   # 
   # Competitions may have custom category mappings that this method ignores
   def include?(source_category)
+    puts
+    puts("include? #{self} #{source_category}")
+    return true if self == source_category
+    for competition_category in competition_categories
+      puts("#{competition_category.source_category}")
+      return true if competition_category.source_category == source_category
+    end
+    false
   end
 
   def <=>(other)
