@@ -1,5 +1,6 @@
 module Competitions
   class OverallBar < Competition
+  def old_recalc
     # Create overall BAR results based on discipline results
     # overall BAR: Add results from discipline BAR races
     for bar_standings in standings
@@ -49,6 +50,7 @@ module Competitions
       for race in overall_standings.races
         race.results.sort! {|x, y| y.points <=> x.points}
       end
+    end
   end
 
   # if racer has > 4 discipline results, those results are worth 50 points
