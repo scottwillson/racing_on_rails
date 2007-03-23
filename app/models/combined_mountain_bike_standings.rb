@@ -15,9 +15,9 @@ class CombinedMountainBikeStandings < CombinedStandings
       race.results.clear unless race.results.empty?
       combined_results = []
 
-      # FIXME This needs to use CompetitionCategories
       for source_race in source.races(true)
-        if source_race.bar_category == race.category
+        if race.category.include?(source_race.category)
+          #include?(source_race.category, race.category)
           combined_results = combined_results + source_race.results
           source_race.update_attribute(:bar_points , 0)
         end
@@ -44,10 +44,31 @@ class CombinedMountainBikeStandings < CombinedStandings
       }
     end
   end
+  
+  def include?(source_category, category)
+    (category == men_combined && men_combined_source_categories.include?(source_category)) ||
+    (category == women_combined && women_combined_source_categories.include?(source_category))
+  end
 
   def create_races
-    races.create(:category => Category.find_by_name('Pro, Semi-Pro, Elite Men'))
-    races.create(:category => Category.find_by_name('Pro, Elite, Expert Women'))
+    races.create(:category => men_combined)
+    races.create(:category => women_combined)
+  end
+  
+  def men_combined
+    @men_combined ||= Category.find_by_name('Pro, Semi-Pro, Elite Men')
+  end
+  
+  def women_combined
+    @women_combined ||= Category.find_by_name('Pro, Elite, Expert Women')
+  end
+  
+  def men_combined_source_categories
+    if @men_combined_source_categories.nil?
+      @men_combined_source_categories = []
+      @men_combined_source_categories << Category.find_or_create_by_name('Pro Men')
+    end
+    @men_combined_source_categories
   end
   
   def to_s

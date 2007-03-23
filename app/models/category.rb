@@ -61,6 +61,15 @@ class Category < ActiveRecord::Base
       self.scheme = ASSOCIATION.short_name
     end
   end
+  
+  # Does +source_category+ map to this ctageory for competitions?
+  # Example: Senior Men includes Pro Men, Pro/1/2 Men, etc.
+  # 
+  # This method looks in the competition_categories table.
+  # 
+  # Competitions may have custom category mappings that this method ignores
+  def include?(source_category)
+  end
 
   def <=>(other)
     if other

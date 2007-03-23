@@ -275,10 +275,16 @@ class RaceTest < Test::Unit::TestCase
     other_competition.competition_categories.create(:category => senior_men, :source_category => pro)
     
     race = competition.standings.first.races.create(:category => senior_men)
-    assert_equal(3, race.competition_category_ids.size, 'competition_category_ids for Jack Frost Pro/1/2')
+    assert_equal(4, race.competition_category_ids.size, 'competition_category_ids for Jack Frost Pro/1/2')
     assert(race.competition_category_ids.include?(senior_men.id), 'competition_category_ids for Jack Frost Pro/1/2 should include senior men')
     assert(race.competition_category_ids.include?(men_a.id), 'competition_category_ids for Jack Frost Pro/1/2 should include men_a')
     assert(race.competition_category_ids.include?(p_1_2.id), 'competition_category_ids for Jack Frost Pro/1/2 should include p_1_2')
     assert(!race.competition_category_ids.include?(pro.id), 'competition_category_ids for Jack Frost Pro/1/2 should not include pro')
+    
+    # Should not need CompetitionCategory for race category
+    hpv = Category.find_or_create_by_name('Human-Powered Vehicle')
+    race = competition.standings.first.races.create(:category => hpv)
+    assert_equal(1, race.competition_category_ids.size, 'competition_category_ids race category with no CompetitionCategory')
+    assert(race.competition_category_ids.include?(hpv.id), 'race\'s competition_category_ids should include own category')
   end
 end

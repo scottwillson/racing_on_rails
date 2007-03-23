@@ -248,63 +248,6 @@ class BarTest < Test::Unit::TestCase
     assert_equal(25, svein_road_bar_result.points, 'Svein Road BAR points')  
   end
   
-  def test_pick_best_juniors_for_overall
-    expert_junior_men = categories(:expert_junior_men)
-    junior_men = categories(:junior_men)
-    sport_junior_men = categories(:sport_junior_men)
-
-    # Masters too
-    marin_knobular = SingleDayEvent.create(:name => 'Marin Knobular', :date => Date.new(2001, 9, 7), :discipline => 'Mountain Bike')
-    standings = marin_knobular.standings.create
-    race = standings.races.create(:category => expert_junior_men)
-    kc = Racer.create(:name => 'KC Mautner', :member_from => Date.new(2001, 1, 1))
-    vanilla = teams(:vanilla)
-    race.results.create(:racer => kc, :place => 4, :team => vanilla)
-    chris_woods = Racer.create(:name => 'Chris Woods', :member_from => Date.new(2001, 1, 1))
-    gentle_lovers = teams(:gentle_lovers)
-    race.results.create(:racer => chris_woods, :place => 12, :team => gentle_lovers)
-    
-    lemurian = SingleDayEvent.create(:name => 'Lemurian', :date => Date.new(2001, 9, 14), :discipline => 'Mountain Bike')
-    standings = marin_knobular.standings.create
-    race = standings.races.create(:category => sport_junior_men)
-    race.results.create(:racer => chris_woods, :place => 14, :team => gentle_lovers)
-    
-    print_all_results
-    Bar.recalculate(2001)
-    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2001, 1, 1)])
-    assert_not_nil(bar, "2001 Bar after recalculate")
-    assert_equal(1, Bar.count, "Bar events after recalculate")
-    assert_equal(6, bar.standings.count, "Bar standings after recalculate")
-    p bar.inspect
-    # Just missing team result?
-    assert_equal(21, Result.count, "Total count of results in DB")
-
-    mtb_bar = bar.standings.detect do |standings|
-      standings.name == 'Mountain Bike'
-    end
-    expert_junior_men_mtb_bar = mtb_bar.races.detect do |race|
-      race.category == expert_junior_men
-    end
-    expert_junior_men_mtb_bar.results.sort!
-    assert_equal(2, expert_junior_men_mtb_bar.results.size, 'Expert Junior Men BAR results')
-    assert_equal(kc, expert_junior_men_mtb_bar.results.first.racer, 'Expert Junior Men BAR first result')
-    assert_equal(19, expert_junior_men_mtb_bar.results.first.points, 'Expert Junior Men BAR first points')
-    assert_equal(chris_woods, expert_junior_men_mtb_bar.results.last.racer, 'Expert Junior Men BAR last result')
-    assert_equal(4, expert_junior_men_mtb_bar.results.last.points, 'Expert Junior Men BAR last points')
-    
-    sport_junior_men_mtb_bar = mtb_bar.races.detect do |race|
-      race.category == sport_junior_men
-    end
-    assert_equal(1, sport_junior_men_mtb_bar.results.size, 'Sport Junior Men BAR results')
-    assert_equal(chris_woods, sport_junior_men_mtb_bar.results.first.racer, 'Sport Junior Men BAR last result')
-    assert_equal(2, sport_junior_men_mtb_bar.results.last.points, 'Sport Junior Men BAR first points')
-    
-    junior_men_mtb_bar = mtb_bar.races.detect do |race|
-      race.category == junior_men
-    end
-    assert_nil(junior_men_mtb_bar, 'No combined Junior MTB BAR')
-  end
-  
   def test_combined_mtb_standings
     results_from_fixtures = Result.find(:all)
     event = SingleDayEvent.create(:name => 'Reheers', :discipline => 'Mountain Bike')
@@ -313,7 +256,7 @@ class BarTest < Test::Unit::TestCase
     standings = event.standings.create
 
     pro_semi_pro_elite_men = categories(:pro_semi_pro_elite_men)
-    pro_men = Category.create(:name => 'Pro Men', :category => pro_semi_pro_elite_men)
+    pro_men = Category.find_or_create_by_name('Pro Men')
     race = standings.races.create(:category => pro_men)
     tonkin = racers(:tonkin)
     tonkin_result = race.results.create(:place => '1', :racer => tonkin, :time_s => '2:12:34')
@@ -322,7 +265,7 @@ class BarTest < Test::Unit::TestCase
     decker = Racer.create(:name => 'Carl Decker')
     decker_result = race.results.create(:place => '3', :racer => decker, :time_s => '2:18:59')
 
-    semi_pro_men = Category.create(:name => 'Semi-Pro Men', :category => pro_semi_pro_elite_men)
+    semi_pro_men = Category.find_or_create_by_name('Semi-Pro Men')
     race = standings.races.create(:category => semi_pro_men)
     brandt = Racer.create(:name => 'Chris Brandt')
     brandt_result = race.results.create(:place => '1', :racer => brandt, :time_s => '2:13:01')
@@ -331,7 +274,7 @@ class BarTest < Test::Unit::TestCase
     chad = Racer.create(:name => 'Chad Swanson')
     chad_result = race.results.create(:place => '3', :racer => chad, :time_s => '2:32:00')
 
-    elite_men = Category.create(:name => 'Elite Men', :category => pro_semi_pro_elite_men)
+    elite_men = Category.find_or_create_by_name('Elite Men')
     race = standings.races.create(:standings => standings, :category => elite_men)
     chris_myers = Racer.create(:name => 'Chris Myers')
     chris_myers_result = race.results.create(:place => '1', :racer => chris_myers, :time_s => '2:12:45')
@@ -340,8 +283,7 @@ class BarTest < Test::Unit::TestCase
     greg_tyler = Racer.create(:name => 'Greg Tyler')
     greg_tyler_result = race.results.create(:place => '3', :racer => greg_tyler, :time_s => '3:03:01')
 
-    expert_men_bar = Category.create(:name => 'Expert Men', :scheme => 'BAR')
-    expert_men = Category.create(:name => 'Expert Men', :category => expert_men_bar)
+    expert_men = Category.find_or_create_by_name('Expert Men')
     race = standings.races.create(:standings => standings, :category => expert_men)
     weaver = racers(:weaver)
     weaver_result = race.results.create(:place => '1', :racer => weaver, :time_s => '2:15:56')
@@ -351,7 +293,7 @@ class BarTest < Test::Unit::TestCase
     sam_result = race.results.create(:place => '3', :racer => sam, :time_s => '3:01:19')
 
     pro_elite_expert_women = categories(:pro_elite_expert_women)
-    pro_women = Category.create(:name => 'Pro Women', :category => pro_elite_expert_women)
+    pro_women = Category.create(:name => 'Pro Women')
     race = standings.races.create(:standings => standings, :category => pro_women)
     mollie = racers(:mollie)
     mollie_result = race.results.create(:place => '1', :racer => mollie, :time_s => '1:41:37')
@@ -360,7 +302,7 @@ class BarTest < Test::Unit::TestCase
     rita = Racer.create(:name => 'Rita Metermaid')
     rita_result = race.results.create(:place => '3', :racer => rita, :time_s => '2:13:33')
 
-    elite_women = Category.create(:name => 'Elite Women', :category => pro_elite_expert_women)
+    elite_women = Category.find_or_create_by_name('Elite Women')
     race = standings.races.create(:standings => standings, :category => elite_women)
     laurel = Racer.create(:name => 'Laurel')
     laurel_result = race.results.create(:place => '1', :racer => laurel, :time_s => '1:41:38')
@@ -369,7 +311,7 @@ class BarTest < Test::Unit::TestCase
     ann = Racer.create(:name => 'Ann')
     ann_result = race.results.create(:place => '3', :racer => ann, :time_s => '3:03:01')
 
-    expert_women = Category.create(:name => 'Expert Women', :category => pro_elite_expert_women)
+    expert_women = Category.find_or_create_by_name('Expert Women')
     race = standings.races.create(:category => expert_women)
     expert_woman_1 = Racer.create(:name => 'Expert Woman 1')
     expert_woman_1_result = race.results.create(:place => '1', :racer => expert_woman_1, :time_s => '1:00:00')
@@ -378,8 +320,7 @@ class BarTest < Test::Unit::TestCase
     expert_woman_3 = Racer.create(:name => 'Expert Woman 3')
     expert_woman_3_result = race.results.create(:place => '3', :racer => expert_woman_3, :time_s => '3:03:03')
 
-    sport_women_bar = Category.create(:name => 'Sport Women', :scheme => 'BAR')
-    sport_women = Category.create(:name => 'Sport Women', :category => sport_women_bar)
+    sport_women = Category.find_or_create_by_name('Sport Women')
     race = standings.races.create(:category => sport_women)
     sport_woman_1 = Racer.create(:name => 'Sport Woman 1')
     sport_woman_1_result = race.results.create(:place => '1', :racer => sport_woman_1, :time_s => '1:10:00')
@@ -393,6 +334,7 @@ class BarTest < Test::Unit::TestCase
     combined_standings = standings.combined_standings
     assert_equal(false, combined_standings.ironman, 'Ironman')
     combined_standings.recalculate
+    print_all_results
     
     event.reload
     assert_equal(2, event.standings.count, 'Event standings (results + combined standings)')

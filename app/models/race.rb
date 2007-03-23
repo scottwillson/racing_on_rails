@@ -52,7 +52,9 @@ class Race < ActiveRecord::Base
         SELECT distinct source_category_id 
         FROM competition_categories 
         WHERE (competition_id is null or competition_id = #{event.id}) and (source_category_id = #{category.id} or category_id = #{category.id})})
-      ids.map {|id| id.to_i}
+      ids.map! {|id| id.to_i}
+      ids << category.id unless ids.include?(category.id)
+      ids
     else
       raise TypeError, "Cannot call competition_category_ids on race that belongs to a #{standings.event.class.name}. Race must belong to a Competition."
     end
