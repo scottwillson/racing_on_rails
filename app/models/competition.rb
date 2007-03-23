@@ -21,13 +21,19 @@ class Competition < Event
   after_create  :create_standings
   after_save    :expire_cache
   
+  # Calculate clashes with internal Rails method
+  # Destroys existing BAR for the year first.
+  # TODO store in database?
   def Competition.recalculate(year = Date.today.year)
+    # TODO: Use FKs in database to cascade delete`
+    # TODO Use Hashs or class instead of iterating through Arrays!
     benchmark = Benchmark.measure {
       transaction do
         # TODO move to superclass
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
         competition = find_or_create_by_date(date)
+        raise competition.errors.full_messages unless competition.errors.empty?
         competition.destroy_standings
         competition.create_standings
         competition.recalculate
@@ -88,21 +94,22 @@ class Competition < Event
 
   def recalculate
     disable_notification!
-    
-    for race in standings(true).first.races
-      logger.debug("#{self.class.name} Find source results for '#{race.name}'") if logger.debug?
-      results = source_results(race)
-      logger.debug("#{self.class.name} Found #{results.size} source results") if logger.debug?
+    for individual_standings in standings(true)
+      for race in individual_standings.races
+        logger.debug("#{self.class.name} Find source results for '#{race.name}'") if logger.debug?
+        results = source_results(race)
+        logger.debug("#{self.class.name} Found #{results.size} source results") if logger.debug?
       
-      create_competition_results_for(results, race)
-      place_results_by_points
+        create_competition_results_for(results, race)
+        place_results_by_points
+      end
     end
-
+    
     save!
     enable_notification!
   end
   
-  def points_schedule
+  def point_schedule
     []
   end
   

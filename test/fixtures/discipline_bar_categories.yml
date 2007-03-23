@@ -1,16 +1,3 @@
-senior_men_overall:
-  discipline_id: 7
-  category_id: 1
-senior_women_overall:
-  discipline_id: 7
-  category_id: 4
-women_4_overall:
-  discipline_id: 7
-  category_id: 7
-junior_men_overall:
-  discipline_id: 7
-  category_id: 8
-  
 cyclocross_a:
   discipline_id: 1
   category_id: 16

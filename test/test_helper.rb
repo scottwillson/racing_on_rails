@@ -108,4 +108,10 @@ class Test::Unit::TestCase
     end
     return uploaded_file
   end
+  
+  def print_all_results
+    Result.find(:all, :order => :racer_id).each {|result|
+      p "#{result.place} #{result.name} #{result.team} #{result.race.standings.name} #{result.race.name} #{result.race.standings.date}"
+    }
+  end
 end

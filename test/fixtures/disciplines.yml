@@ -28,7 +28,7 @@ track:
 overall:
   id: 7
   name: Overall
-  bar: true
+  bar: false
 tour:
   id: 8
   name: Tour
@@ -40,7 +40,7 @@ circuit_race:
 team:
   id: 10
   name: Team
-  bar: true
+  bar: false
 downhill:
   id: 11
   name: Downhill

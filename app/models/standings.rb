@@ -16,7 +16,7 @@ class Standings < ActiveRecord::Base
   validates_presence_of :event_id
   acts_as_list :scope => :event
   
-  before_save :update_date
+  before_save :update_date, :update_discipline
   after_save :create_or_destroy_combined_standings
   
   belongs_to :event
@@ -80,11 +80,9 @@ class Standings < ActiveRecord::Base
     self[:discipline] || self.event.discipline if self.event
   end
   
-  def discipline=(value)
-    if value == self.event.discipline
+  def update_discipline
+    if event && self[:discipline] == event.discipline
       self[:discipline] = nil
-    else
-      self[:discipline] = value
     end
   end
   

@@ -15,6 +15,7 @@ class CombinedMountainBikeStandings < CombinedStandings
       race.results.clear unless race.results.empty?
       combined_results = []
 
+      # FIXME This needs to use CompetitionCategories
       for source_race in source.races(true)
         if source_race.bar_category == race.category
           combined_results = combined_results + source_race.results
@@ -45,8 +46,8 @@ class CombinedMountainBikeStandings < CombinedStandings
   end
 
   def create_races
-    races.create(:category => Category.find_bar('Pro, Semi-Pro, Elite Men'))
-    races.create(:category => Category.find_bar('Pro, Elite, Expert Women'))
+    races.create(:category => Category.find_by_name('Pro, Semi-Pro, Elite Men'))
+    races.create(:category => Category.find_by_name('Pro, Elite, Expert Women'))
   end
   
   def to_s

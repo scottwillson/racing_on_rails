@@ -1,89 +1,93 @@
 --- !omap
 #
 # Order is import because of foreign key constraints.
-# Insert <%= ASSOCIATION.short_name %> categories after inserting their BAR categories.
+# Insert <%= ASSOCIATION.short_name %> categories after inserting their <%= ASSOCIATION.short_name %> categories.
 # "omap" means "ordered map" in YAML. Very picky about indentation.
 #
-- men_3_bar:
-    id: 15
-    bar_category_id: 15
-    name: Category 3 Men
-    is_overall: true
-    scheme: BAR
-- men_4_bar:
-    id: 3
-    bar_category_id: 3
-    overall_id: 3
-    name: Category 4/5 Men
-    is_overall: true
-    scheme: BAR
-- women_3_bar:
-    id: 6
-    bar_category_id: 6
-    overall_id: 6
-    name: Category 3 Women
-    is_overall: true
-    scheme: BAR
-- women_4_bar:
-    id: 7
-    bar_category_id: 7
-    overall_id: 7
-    name: Category 4 Women
-    is_overall: true
-    scheme: BAR
-- senior_men_bar:
+- senior_men:
     id: 1
     name: Senior Men
-    is_overall: true
-    overall_id: 1
-    bar_category_id: 1
     position: 1
-    scheme: BAR
-- cx_a_bar:
-    id: 16
-    name: Men A
-    is_overall: false
-    overall_id: 1
-    bar_category_id: 16
-    scheme: BAR
-- senior_women_bar:
+    scheme: <%= ASSOCIATION.short_name %>
+- men_4:
+    id: 3
+    name: Category 4/5 Men
+    scheme: <%= ASSOCIATION.short_name %>
+- senior_women:
     id: 4
     name: Senior Women
-    is_overall: true
-    overall_id: 4
-    bar_category_id: 4
     position: 2
-    scheme: BAR
+    scheme: <%= ASSOCIATION.short_name %>
 - masters_35_plus_women:
     id: 5
     name: Masters 35+ Women
     scheme: <%= ASSOCIATION.short_name %>
+- cat_3_women:
+    id: 6
+    name: Category 3 Women
+    scheme: <%= ASSOCIATION.short_name %>
+- cat_4_women:
+    id: 7
+    name: Category 4 Women
+    scheme: <%= ASSOCIATION.short_name %>
+- junior_women:
+    id: 9
+    name: Junior Women
+    scheme: <%= ASSOCIATION.short_name %>
+- masters_men:
+    id: 10
+    name: Masters Men
+    scheme: <%= ASSOCIATION.short_name %>
+- masters_women:
+    id: 11
+    name: Masters Women
+    scheme: <%= ASSOCIATION.short_name %>
+- single_speed:
+    id: 12
+    name: Singlespeed/Fixed
+    scheme: <%= ASSOCIATION.short_name %>
+- tandem:
+    id: 13
+    name: Tandem
+    scheme: <%= ASSOCIATION.short_name %>
+- cat_3:
+    id: 14
+    name: Category 3 Men
+    scheme: <%= ASSOCIATION.short_name %>
+- cx_a:
+    id: 16
+    name: Men A
+    scheme: <%= ASSOCIATION.short_name %>
+- team:
+    id: 19
+    name: Team
+    scheme: <%= ASSOCIATION.short_name %>
+- pro_semi_pro_elite_men:
+    id: 20
+    name: Pro, Semi-Pro, Elite Men
+    scheme: <%= ASSOCIATION.short_name %>
+- pro_elite_expert_women:
+    id: 21
+    name: Pro, Elite, Expert Women
+    scheme: <%= ASSOCIATION.short_name %>
+- junior_men:
+    id: 22
+    name: Junior Men
+    scheme: <%= ASSOCIATION.short_name %>
+- expert_junior_men:
+    id: 23
+    name: Expert Junior Men
+    scheme: <%= ASSOCIATION.short_name %>
+- sport_junior_men:
+    id: 24
+    name: Sport Junior Men
+    scheme: <%= ASSOCIATION.short_name %>
 - sr_p_1_2:
     id: 43
     name: Senior Men Pro 1/2
-    bar_category_id: 1
-    position: 1
-    scheme: <%= ASSOCIATION.short_name %>
-- cx_a:
-    id: 57
-    name: Men A
-    bar_category_id: 16
-    scheme: <%= ASSOCIATION.short_name %>
-- sr_women:
-    id: 8
-    name: Senior Women
-    bar_category_id: 4
-    position: 4
-    scheme: <%= ASSOCIATION.short_name %>
-- women_4:
-    id: 125
-    name: Women 4
-    bar_category_id: 7
-    position: 12
     scheme: <%= ASSOCIATION.short_name %>
 - senior_men_3:
     id: 44
-    bar_category_id: 15
     name: Senior Men 3
     position: 8
     scheme: <%= ASSOCIATION.short_name %>
@@ -95,78 +99,8 @@
     id: 104
     name: Senior Women 1/2/3
     scheme: <%= ASSOCIATION.short_name %>
-- cat_3:
-    id: 14
-    bar_category_id: 15
-    name: Category 3 Men
+- women_4:
+    id: 125
+    name: Women 4
+    position: 12
     scheme: <%= ASSOCIATION.short_name %>
-- team:
-    id: 19
-    name: Team
-    scheme: BAR
-- pro_semi_pro_elite_men:
-    id: 20
-    name: Pro, Semi-Pro, Elite Men
-    overall_id: 1
-    bar_category_id: 20
-    scheme: BAR
-- pro_elite_expert_women:
-    id: 21
-    name: Pro, Elite, Expert Women
-    overall_id: 4
-    bar_category_id: 21
-    scheme: BAR
-- junior_men:
-    id: 22
-    name: Junior Men
-    is_overall: true
-    overall_id: 22
-    bar_category_id: 22
-    scheme: BAR
-- expert_junior_men:
-    id: 23
-    name: Expert Junior Men
-    bar_category_id: 23
-    overall_id: 22
-    scheme: BAR
-- sport_junior_men:
-    id: 24
-    name: Sport Junior Men
-    bar_category_id: 24
-    overall_id: 22
-    scheme: BAR
-- junior_women_bar:
-    id: 9
-    name: Junior Women
-    is_overall: true
-    overall_id: 9
-    bar_category_id: 9
-    scheme: BAR
-- masters_men_bar:
-    id: 10
-    name: Masters Men
-    is_overall: true
-    overall_id: 10
-    bar_category_id: 10
-    scheme: BAR
-- masters_women_bar:
-    id: 11
-    name: Masters Women
-    is_overall: true
-    overall_id: 11
-    bar_category_id: 11
-    scheme: BAR
-- single_speed_bar:
-    id: 12
-    name: Singlespeed/Fixed
-    is_overall: true
-    overall_id: 12
-    bar_category_id: 12
-    scheme: BAR
-- tandem_bar:
-    id: 13
-    name: Tandem
-    is_overall: true
-    overall_id: 13
-    bar_category_id: 13
-    scheme: BAR
