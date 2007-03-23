@@ -1,3 +1,5 @@
+# There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class TeamBarTest < Test::Unit::TestCase

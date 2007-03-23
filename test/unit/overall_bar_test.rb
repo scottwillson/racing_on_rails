@@ -1,3 +1,5 @@
+# There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class OverallBarTest < Test::Unit::TestCase
@@ -437,6 +439,242 @@ class OverallBarTest < Test::Unit::TestCase
     assert_equal(19, team_bar.results.first.points, 'Team BAR first points')
     assert_equal(gentle_lovers, team_bar.results.last.team, 'Team BAR last result')
     assert_equal(6, team_bar.results.last.points, 'Team BAR last points')
+  end
+
+  
+  # Used to only award bonus points for races of five or less, but now all races get equal points
+  def test_field_size
+    for racer in Racer.find(:all)
+      racer.member_to = Date.new(2009, 12, 31)
+      racer.save!
+    end
+    cross_crusade = Series.create!(:name => "Cross Crusade")
+
+    # Large event
+    barton = SingleDayEvent.create!({
+      :name => "Cross Crusade: Barton Park",
+      :discipline => "Cyclocross",
+      :date => Date.new(2009, 11, 7),
+      :parent => cross_crusade
+    })
+    barton_standings = barton.standings.create
+    men_a = Category.find_association("Men A")
+    barton_a = barton_standings.races.create(:category => men_a)
+    barton_a.results.create({
+      :place => 3,
+      :racer => racers(:tonkin)
+    })
+    barton_a.results.create({
+      :place => 15,
+      :racer => racers(:weaver)
+    })
+    barton_a.field_size = 75
+    barton_a.save!
+
+    # Smaller event
+    estacada = SingleDayEvent.create!({
+      :name => "Cross Crusade: Estacada",
+      :discipline => "Cyclocross",
+      :date => Date.new(2009, 11, 14),
+      :parent => cross_crusade
+    })
+    estacada_standings = estacada.standings.create
+    estacada_a = estacada_standings.races.create(:category => men_a)
+    estacada_a.results.create({
+      :place => 1,
+      :racer => racers(:tonkin)
+    })
+    estacada_a.results.create({
+      :place => 8,
+      :racer => racers(:weaver)
+    })
+    estacada_a.field_size = 74
+    estacada_a.save!
+
+    # Large "national" event
+    alpenrose = SingleDayEvent.create!({
+      :name => "Cross Crusade: alpenrose",
+      :discipline => "Cyclocross",
+      :date => Date.new(2009, 11, 14),
+      :parent => cross_crusade
+    })
+    alpenrose_standings = alpenrose.standings.create
+    alpenrose_standings.bar_points = 3
+    alpenrose_standings.save!
+    alpenrose_a = alpenrose_standings.races.create(:category => men_a)
+    alpenrose_a.results.create({
+      :place => 10,
+      :racer => racers(:tonkin)
+    })
+    alpenrose_a.field_size = 75
+    alpenrose_a.save!
+
+    # Too small event
+    dfl = SingleDayEvent.create!({
+      :name => "dfL Outlaw Race",
+      :discipline => "Cyclocross",
+      :date => Date.new(2009, 9, 3)
+    })
+    dfl_standings = dfl.standings.create
+    dfl_a = dfl_standings.races.create(:category => men_a)
+    dfl_a.results.create({
+      :place => 2,
+      :racer => racers(:tonkin)
+    })
+    dfl_a.results.create({
+      :place => 3,
+      :racer => racers(:weaver)
+    })
+    dfl_a.field_size = 4
+    dfl_a.save!
+
+    # Too small event in other discipline
+    ice_breaker = SingleDayEvent.create!({
+      :name => "Ice Breaker",
+      :discipline => "Criterium",
+      :date => Date.new(2009, 2, 21)
+    })
+    ice_breaker_standings = ice_breaker.standings.create
+    ice_breaker_a = ice_breaker_standings.races.create(:category => categories(:sr_p_1_2))
+    ice_breaker_a.results.create({
+      :place => 14,
+      :racer => racers(:tonkin)
+    })
+    ice_breaker_a.field_size = 4
+    ice_breaker_a.save!
+
+    Bar.recalculate(2009)
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2009)])
+    
+    cx_bar = bar.standings.detect do |standings|
+      standings.name == 'Cyclocross'
+    end
+    
+    men_a_bar = cx_bar.races.detect do |race|
+      race.name == 'Men A'
+    end
+    
+    assert_not_nil(men_a_bar, 'Men A Cyclocross BAR')
+    assert_equal(2, men_a_bar.results.size, 'Men A Cyclocross BAR results')
+
+    men_a_bar.results.sort!
+    tonkin_bar_result = men_a_bar.results.first
+    assert_equal(racers(:tonkin), tonkin_bar_result.racer)
+    assert_equal(33 + 30 + 25 + 21, tonkin_bar_result.points, 'Tonkin BAR points')
+    weaver_bar_result = men_a_bar.results.last
+    assert_equal(racers(:weaver), weaver_bar_result.racer)
+    assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
+    
+    overall_bar = bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    
+    overall_sr_men_bar = overall_bar.races.detect do |race|
+      race.name == 'Senior Men'
+    end
+    
+    assert_not_nil(overall_sr_men_bar, 'Senior Men Overall BAR')
+    assert_equal(2, overall_sr_men_bar.results.size, 'Senior Men BAR results')
+
+    overall_sr_men_bar.results.sort!
+    tonkin_bar_result = overall_sr_men_bar.results.first
+    assert_equal(racers(:tonkin), tonkin_bar_result.racer)
+    assert_equal(600, tonkin_bar_result.points, 'Tonkin Overall BAR points')
+    weaver_bar_result = overall_sr_men_bar.results.last
+    assert_equal(racers(:weaver), weaver_bar_result.racer)
+    assert_equal(299, weaver_bar_result.points, 'Weaver Overall BAR points')
+
+    crit_bar = bar.standings.detect do |standings|
+      standings.name == 'Criterium'
+    end
+    
+    sr_men_crit_bar = crit_bar.races.detect do |race|
+      race.name == 'Senior Men'
+    end
+    
+    assert_not_nil(sr_men_crit_bar, 'Senior Men Crit BAR')
+    assert_equal(1, sr_men_crit_bar.results.size, 'Senior Men Crit BAR results')
+
+    tonkin_bar_result = sr_men_crit_bar.results.first
+    assert_equal(racers(:tonkin), tonkin_bar_result.racer)
+    assert_equal(2, tonkin_bar_result.points, 'Tonkin Crit BAR points')
+  end
+  
+  def test_previous_year
+    weaver = racers(:weaver)
+    previous_year = Date.today.year - 1
+    weaver.member_from = Date.new(previous_year, 1, 1)
+    current_year = Date.today.year - 1
+    weaver.member_to = Date.new(current_year, 12, 31)
+    weaver.save!
+    
+    # Create result for previous year
+    previous_year_event = SingleDayEvent.create(:date => Date.new(previous_year, 4, 19), :discipline => 'Road')
+    previous_year_event.reload
+    assert_equal('Road', previous_year_event.discipline, 'Event discipline')
+    previous_year_result = previous_year_event.standings.create.races.create(:category => categories(:sr_p_1_2)).results.create(:place => '3', :racer => weaver)
+    standings = previous_year_event.standings(true)
+    assert_equal(1, standings.size, 'Standings size')
+    assert_equal(previous_year, standings.first.date.year, 'Standings year')
+    assert_equal('Road', standings.first.discipline, 'Standings discipline')
+    assert_equal(1, standings.first.bar_points, 'BAR points')
+    assert_equal(1, standings.first.races(true).size, 'Races size')
+    assert_equal(categories(:sr_p_1_2), standings.first.races(true).first.category, 'Category')
+    assert_not_nil(standings.first.races(true).first.category.category, 'BAR Category')
+    
+    # Calculate previous years' BAR
+    Bar.recalculate(previous_year)
+    previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    
+    # Assert it has results
+    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
+    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    
+    # Create result for this year
+    current_year_event = SingleDayEvent.create(:date => Date.new(current_year, 7, 20), :discipline => 'Road')
+    current_year_event.reload
+    assert_equal('Road', current_year_event.discipline, 'Event discipline')
+    current_year_result = current_year_event.standings.create.races.create(:category => categories(:sr_p_1_2)).results.create(:place => '13', :racer => weaver)
+
+    # Calculate this years' BAR
+    Bar.recalculate(current_year)
+
+    # Assert both BARs have results
+    previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
+    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    
+    current_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    current_year_overall_bar = current_year_bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
+    assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
+
+    # Recalc both BARs
+    Bar.recalculate(previous_year)
+    Bar.recalculate(current_year)
+
+    # Assert both BARs have results
+    previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
+    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    
+    current_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    current_year_overall_bar = current_year_bar.standings.detect do |standings|
+      standings.name == 'Overall'
+    end
+    current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
+    assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
   end
   
 end

@@ -1,3 +1,5 @@
+# There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
+
 require File.dirname(__FILE__) + '/../test_helper'
 require 'bar'
 
@@ -171,7 +173,7 @@ class BarTest < Test::Unit::TestCase
   end
   
   def test_recalculate_tandem
-    tandem = Category.create(:name => "Tandem")
+    tandem = Category.find_or_create_by_name("Tandem")
     crit_discipline = disciplines(:criterium)
     crit_discipline.bar_categories << tandem
     crit_discipline.save!
@@ -293,7 +295,7 @@ class BarTest < Test::Unit::TestCase
     sam_result = race.results.create(:place => '3', :racer => sam, :time_s => '3:01:19')
 
     pro_elite_expert_women = categories(:pro_elite_expert_women)
-    pro_women = Category.create(:name => 'Pro Women')
+    pro_women = Category.find_or_create_by_name('Pro Women')
     race = standings.races.create(:standings => standings, :category => pro_women)
     mollie = racers(:mollie)
     mollie_result = race.results.create(:place => '1', :racer => mollie, :time_s => '1:41:37')
@@ -533,25 +535,6 @@ class BarTest < Test::Unit::TestCase
     weaver_bar_result = men_a_bar.results.last
     assert_equal(racers(:weaver), weaver_bar_result.racer)
     assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
-    
-    overall_bar = bar.standings.detect do |standings|
-      standings.name == 'Overall'
-    end
-    
-    overall_sr_men_bar = overall_bar.races.detect do |race|
-      race.name == 'Senior Men'
-    end
-    
-    assert_not_nil(overall_sr_men_bar, 'Senior Men Overall BAR')
-    assert_equal(2, overall_sr_men_bar.results.size, 'Senior Men BAR results')
-
-    overall_sr_men_bar.results.sort!
-    tonkin_bar_result = overall_sr_men_bar.results.first
-    assert_equal(racers(:tonkin), tonkin_bar_result.racer)
-    assert_equal(600, tonkin_bar_result.points, 'Tonkin Overall BAR points')
-    weaver_bar_result = overall_sr_men_bar.results.last
-    assert_equal(racers(:weaver), weaver_bar_result.racer)
-    assert_equal(299, weaver_bar_result.points, 'Weaver Overall BAR points')
 
     crit_bar = bar.standings.detect do |standings|
       standings.name == 'Criterium'
@@ -589,18 +572,18 @@ class BarTest < Test::Unit::TestCase
     assert_equal(1, standings.first.bar_points, 'BAR points')
     assert_equal(1, standings.first.races(true).size, 'Races size')
     assert_equal(categories(:sr_p_1_2), standings.first.races(true).first.category, 'Category')
-    assert_not_nil(standings.first.races(true).first.category.category, 'BAR Category')
+    assert_not_nil(standings.first.races(true).first.category, 'BAR Category')
     
     # Calculate previous years' BAR
     Bar.recalculate(previous_year)
     previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
     
     # Assert it has results
-    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
-      standings.name == 'Overall'
+    previous_year_road_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Road'
     end
-    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
-    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    previous_year_sr_men_road_bar = previous_year_road_bar.races.detect {|race| race.category == categories(:senior_men)}
+    assert(!previous_year_sr_men_road_bar.results.empty?, 'Previous year BAR should have results')
     
     # Create result for this year
     current_year_event = SingleDayEvent.create(:date => Date.new(current_year, 7, 20), :discipline => 'Road')
@@ -613,18 +596,18 @@ class BarTest < Test::Unit::TestCase
 
     # Assert both BARs have results
     previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
-    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
-      standings.name == 'Overall'
+    previous_year_road_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Road'
     end
-    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
-    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    previous_year_sr_men_road_bar = previous_year_road_bar.races.detect {|race| race.category == categories(:senior_men)}
+    assert(!previous_year_sr_men_road_bar.results.empty?, 'Previous year BAR should have results')
     
     current_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
-    current_year_overall_bar = current_year_bar.standings.detect do |standings|
-      standings.name == 'Overall'
+    current_year_road_bar = current_year_bar.standings.detect do |standings|
+      standings.name == 'Road'
     end
-    current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
-    assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
+    current_year_sr_men_road_bar = current_year_road_bar.races.detect {|race| race.category == categories(:senior_men)}
+    assert(!current_year_sr_men_road_bar.results.empty?, 'Current year BAR should have results')
 
     # Recalc both BARs
     Bar.recalculate(previous_year)
@@ -632,18 +615,18 @@ class BarTest < Test::Unit::TestCase
 
     # Assert both BARs have results
     previous_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
-    previous_year_overall_bar = previous_year_bar.standings.detect do |standings|
-      standings.name == 'Overall'
+    previous_year_road_bar = previous_year_bar.standings.detect do |standings|
+      standings.name == 'Road'
     end
-    previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
-    assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
+    previous_year_sr_men_road_bar = previous_year_road_bar.races.detect {|race| race.category == categories(:senior_men)}
+    assert(!previous_year_sr_men_road_bar.results.empty?, 'Previous year BAR should have results')
     
     current_year_bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
-    current_year_overall_bar = current_year_bar.standings.detect do |standings|
-      standings.name == 'Overall'
+    current_year_road_bar = current_year_bar.standings.detect do |standings|
+      standings.name == 'Road'
     end
-    current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men_bar)}
-    assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
+    current_year_sr_men_road_bar = current_year_road_bar.races.detect {|race| race.category == categories(:senior_men)}
+    assert(!current_year_sr_men_road_bar.results.empty?, 'Current year BAR should have results')
   end
   
   def test_result_key

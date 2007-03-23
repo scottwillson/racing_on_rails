@@ -12,4 +12,11 @@ class CategoryTest < Test::Unit::TestCase
     assert(category.include?(category), 'category should still include itself')
     assert(category.include?(categories(:senior_men)), 'category should include senior men')
   end
+  
+  def test_create_or_find
+    category = Category.find_or_create_by_name('Clydesdale')
+    assert_not_nil(category, 'category')
+    assert(category.errors.empty?, category.errors.full_messages)
+    assert_equal('Clydesdale', category.name, 'category.name')
+  end
 end

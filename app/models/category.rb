@@ -88,11 +88,8 @@ class Category < ActiveRecord::Base
   # 
   # Competitions may have custom category mappings that this method ignores
   def include?(source_category)
-    puts
-    puts("include? #{self} #{source_category}")
     return true if self == source_category
     for competition_category in competition_categories
-      puts("#{competition_category.source_category}")
       return true if competition_category.source_category == source_category
     end
     false
