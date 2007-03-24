@@ -9,8 +9,6 @@ class RiderRankingsTest < Test::Unit::TestCase
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
     assert_equal(12, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
     race = rider_rankings.standings.first.races.first
-    assert_equal(3, race.competition_category_ids.size, 'Race category_ids')
-    assert(race.competition_category_ids.include?(race.category.id), 'Race category_ids should include race category ID')
   end
   
   def test_recalculate
@@ -22,7 +20,7 @@ class RiderRankingsTest < Test::Unit::TestCase
       :parent => cross_crusade
     })
     rider_rankingston_standings = rider_rankingston.standings.create
-    men_a = Category.find_association('Men A')
+    men_a = Category.find_by_name('Men A')
     rider_rankingston_a = rider_rankingston_standings.races.create(:category => men_a, :field_size => 5)
     rider_rankingston_a.results.create({
       :place => 3,
@@ -39,7 +37,7 @@ class RiderRankingsTest < Test::Unit::TestCase
       :date => Date.new(2004, 5, 17),
     })
     swan_island_standings = swan_island.standings.create
-    senior_men = Category.find_association("Senior Men Pro 1/2")
+    senior_men = Category.find_by_name("Senior Men Pro 1/2")
     swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create({
       :place => 8,
@@ -49,7 +47,7 @@ class RiderRankingsTest < Test::Unit::TestCase
       :place => 2,
       :racer => racers(:mollie)
     })
-    senior_women = Category.find_association("Senior Women")
+    senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,

@@ -4,6 +4,7 @@ module Competitions
     belongs_to :category
     belongs_to :source_category, :class_name => 'Category', :foreign_key => :source_category_id
     
+    validates_presence_of :competition_id
     validates_presence_of :category_id
     validates_presence_of :source_category_id
     
@@ -16,7 +17,7 @@ module Competitions
         raise ArgumentError, "Must provide 'category' of type Category, but was #{_category} of type #{_category.class.name}"
       end
       if attributes[:source_category]
-        existing = find(:first, :conditions => ['competition_id = ? and category_id = ? and source_category_id = ?', 
+        existing = find(:first, :conditions => ['competition_id = ? and parent_category_id = ? and category_id = ?', 
                           nil, _category.id, attributes[:source_category].id])
       else
         existing = find(:first, :conditions => ['competition_id = ? and category_id = ?', 

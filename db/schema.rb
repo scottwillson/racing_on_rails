@@ -30,40 +30,27 @@ ActiveRecord::Schema.define(:version => 13) do
   add_index "aliases_disciplines", ["alias"], :name => "idx_alias"
   add_index "aliases_disciplines", ["discipline_id"], :name => "idx_discipline_id"
 
-  create_table "bike_shops", :force => true do |t|
-    t.column "name", :string
-    t.column "phone", :string
-  end
-
   create_table "categories", :force => true do |t|
-    t.column "bar_category_id", :integer
     t.column "position", :integer, :default => 0, :null => false
-    t.column "is_overall", :integer, :default => 0, :null => false
     t.column "name", :string, :limit => 64, :null => false
-    t.column "overall_id", :integer
-    t.column "scheme", :string, :default => ""
     t.column "lock_version", :integer, :default => 0, :null => false
     t.column "created_at", :datetime
     t.column "updated_at", :datetime
+    t.column "parent_id", :integer
   end
 
-  add_index "categories", ["name", "scheme"], :name => "idx_category_name_scheme", :unique => true
-  add_index "categories", ["bar_category_id"], :name => "idx_bar_category_id"
-  add_index "categories", ["overall_id"], :name => "idx_overall_id"
-
-  create_table "coaches", :force => true do |t|
-    t.column "name", :string
-  end
+  add_index "categories", ["parent_id"], :name => "parent_id"
+  add_index "categories", ["name"], :name => "categories_name_index"
 
   create_table "competition_categories", :id => false, :force => true do |t|
-    t.column "competition_id", :integer
+    t.column "competition_id", :integer, :null => false
     t.column "category_id", :integer, :null => false
-    t.column "source_category_id", :integer, :null => false
+    t.column "parent_category_id", :integer, :null => false
   end
 
-  add_index "competition_categories", ["competition_id", "category_id", "source_category_id"], :name => "competition_categories_competition_id_index", :unique => true
+  add_index "competition_categories", ["competition_id", "category_id", "parent_category_id"], :name => "competition_categories_competition_id_index", :unique => true
   add_index "competition_categories", ["category_id"], :name => "category_id"
-  add_index "competition_categories", ["source_category_id"], :name => "source_category_id"
+  add_index "competition_categories", ["parent_category_id"], :name => "parent_category_id"
 
   create_table "discipline_bar_categories", :id => false, :force => true do |t|
     t.column "category_id", :integer, :default => 0, :null => false
@@ -345,12 +332,11 @@ ActiveRecord::Schema.define(:version => 13) do
 
   add_foreign_key "aliases_disciplines", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
 
-  add_foreign_key "categories", ["bar_category_id"], "categories", ["id"], :on_delete => :set_null
-  add_foreign_key "categories", ["overall_id"], "categories", ["id"], :on_delete => :set_null
+  add_foreign_key "categories", ["parent_id"], "categories", ["id"], :on_delete => :set_null
 
   add_foreign_key "competition_categories", ["competition_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "competition_categories", ["category_id"], "categories", ["id"]
-  add_foreign_key "competition_categories", ["source_category_id"], "categories", ["id"]
+  add_foreign_key "competition_categories", ["parent_category_id"], "categories", ["id"]
 
   add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade

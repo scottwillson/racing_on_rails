@@ -118,6 +118,14 @@ class Competition < Event
     []
   end
   
+  # Array of ids (integers)
+  # +race+ category, +race+ category's siblings, and any competition categories
+  def category_ids_for(race)
+    ids = [race.category_id]
+    ids = ids + race.category.children.map {|category| category.id}
+    ids.join(', ')
+  end
+  
   # If same ride places twice in same race, only highest result counts
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)

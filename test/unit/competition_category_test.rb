@@ -60,21 +60,9 @@ class CompetitionCategoryTest < Test::Unit::TestCase
   end
 
   def test_create_unless_exists_no_competition
-    competition = Competition.create
-    senior_men = Category.find_or_create_by_name('Senior Men')
-    competition_category = CompetitionCategory.create_unless_exists(:category => senior_men)
-    assert(competition_category.errors.empty?, "Should have no errors #{competition_category.errors.full_messages}")
-    competition_category = CompetitionCategory.find(:first, :conditions => ['category_id = ?', senior_men.id])
-    assert_equal(nil, competition_category.competition, 'competition_category.competition')
-    assert_equal(senior_men, competition_category.category, 'competition_category.category')
-    assert_equal(senior_men, competition_category.source_category, 'competition_category.source_category')
-    
     senior_women = Category.find_or_create_by_name('Senior Women')
     women_1_2_3 = Category.find_or_create_by_name('Women 1/2/3')
-    competition_category = CompetitionCategory.create_unless_exists(:category => senior_women, :source_category => women_1_2_3)
-    assert(competition_category.errors.empty?, "Should have no errors #{competition_category.errors.full_messages}")
-    competition_category = CompetitionCategory.find(:first, :conditions => ['category_id = ?', senior_women.id])
-    assert_equal(nil, competition_category.competition, 'competition_category.competition')
-    assert_equal(senior_women, competition_category.category, 'competition_category.category')
+    category = CompetitionCategory.create(:category => senior_women, :source_category => women_1_2_3)
+    assert(!category.errors.empty?, 'Should have errors')
   end
 end

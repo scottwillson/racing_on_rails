@@ -8,99 +8,78 @@
     id: 1
     name: Senior Men
     position: 1
-    scheme: <%= ASSOCIATION.short_name %>
 - men_4:
     id: 3
     name: Category 4/5 Men
-    scheme: <%= ASSOCIATION.short_name %>
 - senior_women:
     id: 4
     name: Senior Women
     position: 2
-    scheme: <%= ASSOCIATION.short_name %>
 - masters_35_plus_women:
     id: 5
     name: Masters 35+ Women
-    scheme: <%= ASSOCIATION.short_name %>
 - cat_3_women:
     id: 6
     name: Category 3 Women
-    scheme: <%= ASSOCIATION.short_name %>
 - cat_4_women:
     id: 7
     name: Category 4 Women
-    scheme: <%= ASSOCIATION.short_name %>
 - junior_women:
     id: 9
     name: Junior Women
-    scheme: <%= ASSOCIATION.short_name %>
 - masters_men:
     id: 10
     name: Masters Men
-    scheme: <%= ASSOCIATION.short_name %>
 - masters_women:
     id: 11
     name: Masters Women
-    scheme: <%= ASSOCIATION.short_name %>
 - single_speed:
     id: 12
     name: Singlespeed/Fixed
-    scheme: <%= ASSOCIATION.short_name %>
 - tandem:
     id: 13
     name: Tandem
-    scheme: <%= ASSOCIATION.short_name %>
 - cat_3:
     id: 14
     name: Category 3 Men
-    scheme: <%= ASSOCIATION.short_name %>
 - cx_a:
     id: 16
     name: Men A
-    scheme: <%= ASSOCIATION.short_name %>
+    parent_id: 1
 - team:
     id: 19
     name: Team
-    scheme: <%= ASSOCIATION.short_name %>
 - pro_semi_pro_elite_men:
     id: 20
     name: Pro, Semi-Pro, Elite Men
-    scheme: <%= ASSOCIATION.short_name %>
 - pro_elite_expert_women:
     id: 21
     name: Pro, Elite, Expert Women
-    scheme: <%= ASSOCIATION.short_name %>
 - junior_men:
     id: 22
     name: Junior Men
-    scheme: <%= ASSOCIATION.short_name %>
 - expert_junior_men:
     id: 23
     name: Expert Junior Men
-    scheme: <%= ASSOCIATION.short_name %>
 - sport_junior_men:
     id: 24
     name: Sport Junior Men
-    scheme: <%= ASSOCIATION.short_name %>
 - sr_p_1_2:
     id: 43
     name: Senior Men Pro 1/2
-    scheme: <%= ASSOCIATION.short_name %>
+    parent_id: 1
 - senior_men_3:
     id: 44
     name: Senior Men 3
     position: 8
-    scheme: <%= ASSOCIATION.short_name %>
 - masters_35_plus:
     id: 65
     name: Masters 35+
-    scheme: <%= ASSOCIATION.short_name %>
 - senior_women_1_2_3:
     id: 104
     name: Senior Women 1/2/3
-    scheme: <%= ASSOCIATION.short_name %>
+    parent_id: 4
 - women_4:
     id: 125
     name: Women 4
     position: 12
-    scheme: <%= ASSOCIATION.short_name %>

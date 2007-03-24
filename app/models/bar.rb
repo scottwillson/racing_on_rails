@@ -41,12 +41,6 @@ class Bar < Competition
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
   def source_results(race)
-    competition_category_ids = race.competition_category_ids
-    if competition_category_ids.empty?
-      logger.warn("BAR race #{race.name} competition_category_ids are empty")
-      return []
-    end
-    
     race_discipline = race.standings.discipline
     Result.find_by_sql(
       %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
@@ -54,7 +48,7 @@ class Bar < Competition
           LEFT OUTER JOIN standings ON races.standings_id = standings.id 
           LEFT OUTER JOIN events ON standings.event_id = events.id 
           LEFT OUTER JOIN categories ON races.category_id = categories.id 
-            WHERE (categories.id in (#{competition_category_ids.join(', ')})
+            WHERE (categories.id in (#{category_ids_for(race)})
               and place between 1 AND #{point_schedule.size - 1}
               and (standings.discipline = '#{race_discipline}' or (standings.discipline is null and events.discipline = '#{race_discipline}'))
               and events.type = 'SingleDayEvent' 

@@ -114,4 +114,10 @@ class Test::Unit::TestCase
       p "#{result.place} #{result.name} #{result.team} #{result.race.standings.name} #{result.race.name} #{result.race.standings.date}"
     }
   end
+  
+  def print_all_categories
+    Category.find(:all, :order => 'parent_id, name').each {|category|
+      p "#{category.id} #{category.parent_id} #{category.name}"
+    }
+  end
 end

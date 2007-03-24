@@ -72,13 +72,11 @@ class OregonCupTest < Test::Unit::TestCase
     kings_valley_pro_1_2.results.create(:racer => mollie, :place => 20)
     kings_valley_pro_1_2.results.create(:racer => matson, :place => 21)
     
-    category = Category.find_or_create_by_name_and_scheme('Senior Men', ASSOCIATION.short_name)
-    source_category = Category.find_or_create_by_name_and_scheme('Senior Men Pro 1/2', ASSOCIATION.short_name)
-    CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
+    category = Category.find_or_create_by_name('Senior Men')
+    source_category = Category.find_or_create_by_name('Senior Men Pro 1/2')
     
-    category = Category.find_or_create_by_name_and_scheme('Senior Women', ASSOCIATION.short_name)
-    source_category = Category.find_or_create_by_name_and_scheme('Senior Women 1/2/3', ASSOCIATION.short_name)
-    CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
+    category = Category.find_or_create_by_name('Senior Women')
+    source_category = Category.find_or_create_by_name('Senior Women 1/2/3')
     
     or_cup = OregonCup.create(:date => Date.new(2004))
     banana_belt_1 = events(:banana_belt_1)
@@ -90,7 +88,6 @@ class OregonCupTest < Test::Unit::TestCase
 
     assert_equal(1, OregonCup.count, "Oregon Cups before recalculate")
     OregonCup.recalculate(2004)
-    p or_cup.inspect
     assert_equal(1, OregonCup.count, "Oregon Cup events after recalculate")
     or_cup = OregonCup.find(:first, :conditions => ['date = ?', Date.new(2004)])
     assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')

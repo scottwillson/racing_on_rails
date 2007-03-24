@@ -3,14 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-<<<<<<< .mine
-	<string>test/functional/admin/racers_controller_test.rb</string>
-=======
-	<string>local/public/stylesheets/obra2.css</string>
->>>>>>> .r555
+	<string>test/test_helper.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>local</string>
 			<key>regexFolderFilter</key>
@@ -37,6 +35,8 @@
 			<string>components</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -45,6 +45,8 @@
 			<string>config</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>db</string>
 			<key>regexFolderFilter</key>
@@ -61,6 +63,8 @@
 			<string>doc</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>lib</string>
 			<key>regexFolderFilter</key>
@@ -85,6 +89,8 @@
 			<string>script</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>test</string>
 			<key>regexFolderFilter</key>
@@ -93,23 +99,8 @@
 			<string>test</string>
 		</dict>
 		<dict>
-			<key>name</key>
-<<<<<<< .mine
-			<string>vendor</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>vendor</string>
-		</dict>
-	</array>
-=======
-			<string>tmp</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>tmp</string>
-		</dict>
-		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
@@ -118,42 +109,10 @@
 			<string>vendor</string>
 		</dict>
 	</array>
->>>>>>> .r555
 	<key>fileHierarchyDrawerWidth</key>
-<<<<<<< .mine
 	<integer>300</integer>
-=======
-	<integer>305</integer>
->>>>>>> .r555
 	<key>metaData</key>
 	<dict>
-<<<<<<< .mine
-		<key>app/controllers/admin/racers_controller.rb</key>
-=======
-		<key>app/models/announcement_mailer.rb</key>
->>>>>>> .r555
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-<<<<<<< .mine
-				<integer>90</integer>
-=======
-				<integer>18</integer>
->>>>>>> .r555
-				<key>line</key>
-<<<<<<< .mine
-				<integer>336</integer>
-=======
-				<integer>0</integer>
->>>>>>> .r555
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>332</integer>
-		</dict>
-<<<<<<< .mine
 		<key>app/models/announcement_mailer.rb</key>
 		<dict>
 			<key>caret</key>
@@ -168,129 +127,104 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/race_number.rb</key>
+		<key>app/models/bar.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/racer.rb</key>
+		<key>app/models/category.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>138</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>203</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>test/functional/admin/racers_controller_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>799</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>761</integer>
-		</dict>
-		<key>test/unit/race_number_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>73</integer>
-				<key>line</key>
-				<integer>5</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>test/unit/racer_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>16</integer>
-				<key>line</key>
-				<integer>423</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>419</integer>
-		</dict>
-	</dict>
-	<key>openDocuments</key>
-	<array>
-		<string>test/functional/admin/racers_controller_test.rb</string>
-		<string>app/models/racer.rb</string>
-		<string>app/models/race_number.rb</string>
-		<string>test/unit/racer_test.rb</string>
-		<string>test/unit/race_number_test.rb</string>
-		<string>app/controllers/admin/racers_controller.rb</string>
-	</array>
-=======
-		<key>local/public/css.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>64</integer>
-				<key>line</key>
-				<integer>21</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>3</integer>
-		</dict>
-		<key>local/public/stylesheets/obra2.css</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
 				<integer>53</integer>
-				<key>line</key>
-				<integer>758</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>719</integer>
+			<integer>22</integer>
+		</dict>
+		<key>app/models/combined_mountain_bike_standings.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>80</integer>
+				<key>line</key>
+				<integer>70</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>32</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>36</integer>
+				<key>line</key>
+				<integer>70</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>80</integer>
+				<key>line</key>
+				<integer>70</integer>
+			</dict>
+		</dict>
+		<key>app/models/competition.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>11</integer>
+				<key>line</key>
+				<integer>124</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>103</integer>
+		</dict>
+		<key>test/test_helper.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>118</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>75</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>local/public/css.html</string>
-		<string>local/public/stylesheets/obra2.css</string>
+		<string>test/test_helper.rb</string>
+		<string>app/models/combined_mountain_bike_standings.rb</string>
+		<string>app/models/bar.rb</string>
+		<string>app/models/category.rb</string>
+		<string>app/models/competition.rb</string>
 	</array>
->>>>>>> .r555
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-<<<<<<< .mine
-	<string>{{314, 75}, {965, 746}}</string>
-=======
-	<string>{{315, 62}, {961, 770}}</string>
->>>>>>> .r555
+	<string>{{310, 63}, {967, 769}}</string>
 </dict>
 </plist>

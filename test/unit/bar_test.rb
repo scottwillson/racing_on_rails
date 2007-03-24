@@ -16,7 +16,7 @@ class BarTest < Test::Unit::TestCase
       :parent => cross_crusade
     })
     barton_standings = barton.standings.create
-    men_a = Category.find_association("Men A")
+    men_a = Category.find_by_name("Men A")
     barton_a = barton_standings.races.create(:category => men_a, :field_size => 5)
     barton_a.results.create({
       :place => 3,
@@ -33,7 +33,7 @@ class BarTest < Test::Unit::TestCase
       :date => Date.new(2004, 5, 17),
     })
     swan_island_standings = swan_island.standings.create
-    senior_men = Category.find_association("Senior Men Pro 1/2")
+    senior_men = Category.find_by_name("Senior Men Pro 1/2")
     swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create({
       :place => 12,
@@ -43,7 +43,7 @@ class BarTest < Test::Unit::TestCase
       :place => 2,
       :racer => racers(:mollie)
     })
-    senior_women = Category.find_association("Senior Women")
+    senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
@@ -213,7 +213,7 @@ class BarTest < Test::Unit::TestCase
     crit_tandem_bar = crit_bar.races.detect do |race|
       race.name == 'Tandem'
     end
-    
+
     assert_not_nil(crit_tandem_bar, 'Criterium Tandem BAR')
     assert_equal(2, crit_tandem_bar.results.size, 'Criterium Tandem BAR results')
   end
@@ -336,7 +336,6 @@ class BarTest < Test::Unit::TestCase
     combined_standings = standings.combined_standings
     assert_equal(false, combined_standings.ironman, 'Ironman')
     combined_standings.recalculate
-    print_all_results
     
     event.reload
     assert_equal(2, event.standings.count, 'Event standings (results + combined standings)')
@@ -429,7 +428,7 @@ class BarTest < Test::Unit::TestCase
       :parent => cross_crusade
     })
     barton_standings = barton.standings.create
-    men_a = Category.find_association("Men A")
+    men_a = Category.find_by_name("Men A")
     barton_a = barton_standings.races.create(:category => men_a)
     barton_a.results.create({
       :place => 3,
@@ -535,7 +534,11 @@ class BarTest < Test::Unit::TestCase
     weaver_bar_result = men_a_bar.results.last
     assert_equal(racers(:weaver), weaver_bar_result.racer)
     assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
+<<<<<<< .mine
+    
+=======
 
+>>>>>>> .r570
     crit_bar = bar.standings.detect do |standings|
       standings.name == 'Criterium'
     end
@@ -572,7 +575,7 @@ class BarTest < Test::Unit::TestCase
     assert_equal(1, standings.first.bar_points, 'BAR points')
     assert_equal(1, standings.first.races(true).size, 'Races size')
     assert_equal(categories(:sr_p_1_2), standings.first.races(true).first.category, 'Category')
-    assert_not_nil(standings.first.races(true).first.category, 'BAR Category')
+    assert_not_nil(standings.first.races(true).first.category.parent, 'Parent Category')
     
     # Calculate previous years' BAR
     Bar.recalculate(previous_year)

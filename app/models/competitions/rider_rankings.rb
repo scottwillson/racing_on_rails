@@ -18,25 +18,9 @@ module Competitions
         'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
         'Singlespeed/Fixed', 'Tandem']
 
-        category = Category.find_or_create_by_name_and_scheme(category_name, ASSOCIATION.short_name)
+        category = Category.find_or_create_by_name(category_name)
         root_standings.races.create(:category => category)
-        competition_categories.create_unless_exists(:category => category)
       end
-
-      category = Category.find_or_create_by_name_and_scheme('Senior Men', ASSOCIATION.short_name)
-      source_category = Category.find_or_create_by_name_and_scheme('Men A', ASSOCIATION.short_name)
-      CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
-
-      source_category = Category.find_or_create_by_name_and_scheme('Senior Men Pro 1/2', ASSOCIATION.short_name)
-      CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
-
-      category = Category.find_or_create_by_name_and_scheme('Senior Women', ASSOCIATION.short_name)
-      source_category = Category.find_or_create_by_name_and_scheme('Senior Women 1/2/3', ASSOCIATION.short_name)
-      CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
-
-      category = Category.find_or_create_by_name_and_scheme('Masters Women', ASSOCIATION.short_name)
-      source_category = Category.find_or_create_by_name_and_scheme('Masters 35+ Women', ASSOCIATION.short_name)
-      CompetitionCategory.create_unless_exists(:category => category, :source_category => source_category)
     end
   
     # source_results must be in racer-order
@@ -49,7 +33,7 @@ module Competitions
             LEFT OUTER JOIN categories ON races.category_id = categories.id 
               WHERE (place between 1 AND #{points_schedule.size - 1}
                 and events.type = 'SingleDayEvent' 
-                and categories.id in (#{race.competition_category_ids.join(', ')})
+                and categories.id in (#{category_ids_for(race)})
                 and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
                 and standings.date >= '#{date.year}-01-01' 
                 and standings.date <= '#{date.year}-12-31') 

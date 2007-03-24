@@ -33,7 +33,7 @@ class OregonCup < Competition
               and ((standings.bar_points > 0 and !(standings.name like '%Overall%'))
                    or (standings.bar_points = 0 and standings.name like '%Combined%'))
               and place between 1 and 20
-              and categories.id in (#{race.competition_category_ids.join(', ')})
+              and categories.id in (#{category_ids_for(race)})
               and events.id in (#{event_ids})
          order by racer_id
        }
@@ -43,13 +43,11 @@ class OregonCup < Competition
   def create_standings
     root_standings = standings.create(:event => self)
 
-    category = Category.find_or_create_by_name_and_scheme('Senior Men', ASSOCIATION.short_name)
+    category = Category.find_or_create_by_name('Senior Men')
     root_standings.races.create(:category => category)
-    CompetitionCategory.create_unless_exists(:category => category)
 
-    category = Category.find_or_create_by_name_and_scheme('Senior Women', ASSOCIATION.short_name)
+    category = Category.find_or_create_by_name('Senior Women')
     root_standings.races.create(:category => category)
-    CompetitionCategory.create_unless_exists(:category => category)
   end
   
   def latest_event_with_standings

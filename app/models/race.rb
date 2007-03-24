@@ -45,20 +45,6 @@ class Race < ActiveRecord::Base
       raise ArgumentError, "BAR points must be an integer, but was: #{value}"
     end
   end
-  
-  def competition_category_ids
-    if standings.event.is_a? Competition
-      ids = CompetitionCategory.connection.select_values(%Q{
-        SELECT distinct source_category_id 
-        FROM competition_categories 
-        WHERE (competition_id is null or competition_id = #{event.id}) and (source_category_id = #{category.id} or category_id = #{category.id})})
-      ids.map! {|id| id.to_i}
-      ids << category.id unless ids.include?(category.id)
-      ids
-    else
-      raise TypeError, "Cannot call competition_category_ids on race that belongs to a #{standings.event.class.name}. Race must belong to a Competition."
-    end
-  end
 
   def category_name=(name)
     if name.blank?
@@ -110,7 +96,7 @@ class Race < ActiveRecord::Base
       if category.name.blank?
         self.category = nil
       else
-        existing_category = Category.find_by_name_and_scheme(category.name, category.scheme)
+        existing_category = Category.find_by_name(category.name)
         self.category = existing_category if existing_category
       end
     end

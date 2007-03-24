@@ -16,7 +16,7 @@ class CombinedMountainBikeStandings < CombinedStandings
       combined_results = []
 
       for source_race in source.races(true)
-        if race.category.include?(source_race.category)
+        if race.category.children.include?(source_race.category)
           combined_results = combined_results + source_race.results
           source_race.update_attribute(:bar_points , 0)
         end
@@ -52,9 +52,9 @@ class CombinedMountainBikeStandings < CombinedStandings
   def men_combined
     unless defined? @@men_combined
       @@men_combined = Category.find_or_create_by_name('Pro, Semi-Pro, Elite Men')
-      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Pro Men'))
-      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Semi-Pro Men'))
-      @@men_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Elite Men'))
+      @@men_combined.children << Category.find_or_create_by_name('Pro Men')
+      @@men_combined.children << Category.find_or_create_by_name('Semi-Pro Men')
+      @@men_combined.children << Category.find_or_create_by_name('Elite Men')
     end
     @@men_combined
   end
@@ -62,9 +62,9 @@ class CombinedMountainBikeStandings < CombinedStandings
   def women_combined
     unless defined? @@women_combined
       @@women_combined = Category.find_or_create_by_name('Pro, Elite, Expert Women')
-      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Pro Women'))
-      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Elite Women'))
-      @@women_combined.competition_categories.create_unless_exists(:source_category => Category.find_or_create_by_name('Expert Women'))
+      @@women_combined.children <<  Category.find_or_create_by_name('Pro Women')
+      @@women_combined.children <<  Category.find_or_create_by_name('Elite Women')
+      @@women_combined.children <<  Category.find_or_create_by_name('Expert Women')
     end
     @@women_combined
   end
