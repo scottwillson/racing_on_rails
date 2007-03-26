@@ -534,11 +534,7 @@ class BarTest < Test::Unit::TestCase
     weaver_bar_result = men_a_bar.results.last
     assert_equal(racers(:weaver), weaver_bar_result.racer)
     assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
-<<<<<<< .mine
-    
-=======
 
->>>>>>> .r570
     crit_bar = bar.standings.detect do |standings|
       standings.name == 'Criterium'
     end

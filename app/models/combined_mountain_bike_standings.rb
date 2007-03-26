@@ -16,7 +16,9 @@ class CombinedMountainBikeStandings < CombinedStandings
       combined_results = []
 
       for source_race in source.races(true)
-        if race.category.children.include?(source_race.category)
+        # FIXME Nasty, poorly-tested
+        if race.category.children == source_race.category || race.category.children.include?(source_race.category) ||
+          race.category.children.any?{|first_children| first_children.children.include?(source_race.category)}
           combined_results = combined_results + source_race.results
           source_race.update_attribute(:bar_points , 0)
         end
@@ -62,9 +64,9 @@ class CombinedMountainBikeStandings < CombinedStandings
   def women_combined
     unless defined? @@women_combined
       @@women_combined = Category.find_or_create_by_name('Pro, Elite, Expert Women')
-      @@women_combined.children <<  Category.find_or_create_by_name('Pro Women')
-      @@women_combined.children <<  Category.find_or_create_by_name('Elite Women')
-      @@women_combined.children <<  Category.find_or_create_by_name('Expert Women')
+      @@women_combined.children << Category.find_or_create_by_name('Pro Women')
+      @@women_combined.children << Category.find_or_create_by_name('Elite Women')
+      @@women_combined.children << Category.find_or_create_by_name('Expert Women')
     end
     @@women_combined
   end

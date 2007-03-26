@@ -18,9 +18,9 @@ class OregonCupTest < Test::Unit::TestCase
     assert_equal('Senior Men', sr_p_1_2.category.name, 'Senior men category')
     assert(sr_p_1_2.results.empty?, 'Senior men results.empty?')
 
-    sr_women = standings.races.last
-    assert_equal('Senior Women', sr_women.category.name, 'Senior women category')
-    assert(sr_women.results.empty?, 'Senior women results.empty?')
+    senior_women = standings.races.last
+    assert_equal('Senior Women', senior_women.category.name, 'Senior women category')
+    assert(senior_women.results.empty?, 'Senior women results.empty?')
   end
   
   def test_events
@@ -112,7 +112,6 @@ class OregonCupTest < Test::Unit::TestCase
     
     or_cup.standings.first.races.sort_by {|s| s.name }
     races = or_cup.standings.first.races.sort_by {|s| s.name }
-
     races[0].results.sort!
     assert_equal(racers(:tonkin), races[0].results[0].racer, "Senior Men Oregon Cup results racer")
     assert_equal("1", races[0].results[0].place, "Tonkin Oregon Cup results place")

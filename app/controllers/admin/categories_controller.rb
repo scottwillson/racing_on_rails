@@ -10,7 +10,7 @@ class Admin::CategoriesController < Admin::RecordEditor
   # === Assigns
   # * categories
   def index
-    @categories = Category.find_all_by_scheme(ASSOCIATION.short_name)
+    @categories = Category.find(:all)
   end
   
   # Edit Category name inline
@@ -21,11 +21,11 @@ class Admin::CategoriesController < Admin::RecordEditor
     render(:partial => 'edit')
   end
   
-  # Edit Category BAR Category inline
-  def edit_bar_category
+  # Edit Category parent Category inline
+  def edit_parent_category
     category = Category.find(@params[:id])
-    bar_categories = bar_category_choices()
-    render(:partial => 'edit_bar_category', :locals => {:category => category, :bar_categories => bar_categories})
+    parent_categories = parent_category_choices()
+    render(:partial => 'edit_parent_category', :locals => {:category => category, :parent_categories => parent_categories})
   end
   
   # Update Category name inline
@@ -53,32 +53,32 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
   
-  # Update Category BAR category inline
-  def update_bar_category
+  # Update Category parent category inline
+  def update_parent_category
     begin
       category_id = params[:category][:id]
       @category = Category.find(category_id)
-      bar_category_id = params[:bar_category_id]
-      if bar_category_id.blank?
-        bar_category = nil
+      parent_category_id = params[:parent_id]
+      if parent_category_id.blank?
+        parent_category = nil
       else
-        bar_category = Category.find(params[:bar_category_id])
+        parent_category = Category.find(params[:parent_id])
       end
-      @category.bar_category = bar_category
+      @category.parent = parent_category
       
       saved = @category.save
       if saved
-        render(:partial => 'bar_category', :locals => {:category => @category})
+        render(:partial => 'parent_category', :locals => {:category => @category})
       else
-        @bar_categories = bar_category_choices()
-        render(:partial => 'edit_bar_category', :locals => {:bar_categories => @bar_categories})
+        @parent_categories = parent_category_choices()
+        render(:partial => 'edit_parent_category', :locals => {:parent_categories => @parent_categories})
       end
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")
       RACING_ON_RAILS_DEFAULT_LOGGER.error("#{e}\n#{stack_trace}")
-      @category.errors.add('bar_category', e)
-      @bar_categories = bar_category_choices()
-      render(:partial => 'edit_bar_category', :locals => {:bar_categories => @bar_categories})
+      @category.errors.add('parent_category', e)
+      @parent_categories = parent_category_choices()
+      render(:partial => 'edit_parent_category', :locals => {:parent_categories => @parent_categories})
     end
   end
   
@@ -139,7 +139,8 @@ class Admin::CategoriesController < Admin::RecordEditor
   end
   
   # Blank Category + all BAR Categories. Could handle this on the front-end probably
-  def bar_category_choices
-    [Category::NONE] + Category.find_all_by_scheme('BAR')
+  # FIXME Quick hack now to make this maybe work with simplified categories
+  def parent_category_choices
+    [Category::NONE] + Category.find(:all, :conditions => ['parent_id is null'])
   end
 end

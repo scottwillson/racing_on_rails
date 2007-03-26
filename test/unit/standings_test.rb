@@ -182,8 +182,8 @@ class StandingsTest < Test::Unit::TestCase
     standings.races.create(:category => sr_p_1_2)
     assert(standings.races_with_results.empty?, 'No results')
     
-    sr_women = categories(:sr_women)
-    race_1 = standings.races.create(:category => sr_women)
+    senior_women = categories(:senior_women)
+    race_1 = standings.races.create(:category => senior_women)
     race_1.results.create
     assert_equal([race_1], standings.races_with_results, 'One results')
     

@@ -7,12 +7,6 @@ class TestCompetition < Competition
 end
 
 class CompetitionTest < Test::Unit::TestCase
-
-  def test_competition_category
-    competition = Competition.create
-    assert_equal([], competition.competition_categories, 'competition_categories for new Competition')
-  end
-  
   def test_naming
     assert_equal("Competition", Competition.new.friendly_name, 'Default friendly_name')
     assert_equal('KOM', TestCompetition.new.friendly_name, 'friendly_name')
@@ -20,5 +14,13 @@ class CompetitionTest < Test::Unit::TestCase
     competition = TestCompetition.new
     competition.name = 'QOM'
     assert_equal('QOM', competition.name, 'name')
+  end
+
+  def test_category_ids_for
+    category = Category.create(:name => 'Sandbaggers')
+    competition = Competition.create
+    race = competition.standings.first.races.create(:category => category)
+    assert(competition.category_ids_for(race).include?(category.id.to_s), 'category should include itself')
+    assert(!(competition.category_ids_for(race).include?(categories(:senior_men).id.to_s)), 'category should not include Senior Men')
   end
 end

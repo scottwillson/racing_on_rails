@@ -1,20 +1,6 @@
 # Year-long competition that derive there standings from other Events:
 # BAR, Ironman
 class Competition < Event
-  has_many :competition_categories do
-    def create_unless_exists(attributes)
-      if attributes[:source_category]
-        existing = find(:first, :conditions => ['competition_id = ? and category_id = ? and source_category_id = ?', 
-                          @owner.id, attributes[:category].id, attributes[:source_category].id])
-      else
-        existing = find(:first, :conditions => ['competition_id = ? and category_id = ?', 
-                          @owner.id, attributes[:category].id])
-      end
-      return existing unless existing.nil?
-      create(attributes)
-    end
-  end
-  
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name
   
@@ -87,7 +73,7 @@ class Competition < Event
   
   def create_standings
     new_standings = standings.create
-    category = Category.find_or_create_by_name(self.class.name.demodulize)
+    category = Category.find_or_create_by_name(friendly_name)
     new_standings.races.create(:category => category)
     new_standings
   end
@@ -101,6 +87,7 @@ class Competition < Event
         logger.debug("#{self.class.name} Found #{results.size} source results") if logger.debug?
       
         create_competition_results_for(results, race)
+        after_create_competition_results_for(race)
         place_results_by_points
       end
     end
@@ -137,7 +124,7 @@ class Competition < Event
       if member?(racer, source_result.race.standings.date)
 
         if first_result_for_racer(source_result, competition_result)
-          competition_result = race.results.create(:racer => racer)
+          competition_result = race.results.create(:racer => racer, :team => source_result.team)
         end
 
         competition_result.scores.create_if_best_result_for_race(
@@ -151,6 +138,12 @@ class Competition < Event
     end
   end
   
+  # By default, does nothing. Useful to apply rule like:
+  # * Any results after the first four only get 50-point bonus
+  # * Drop lowest-scoring result
+  def after_create_competition_results_for(race)
+  end
+  
   def place_results_by_points
     for s in standings
       s.place_results_by_points(break_ties?)
@@ -161,18 +154,23 @@ class Competition < Event
     true
   end
   
-  def member?(racer, date)
-    racer && racer.member?(date)
+  def member?(racer_or_team, date)
+    racer_or_team && racer_or_team.member_in_year?(date)
   end
   
   def first_result_for_racer(source_result, competition_result)
     competition_result.nil? || source_result.racer != competition_result.racer
   end
   
-  # Apply points from @point_schedule, and adjust for team size
+  # Apply points from point_schedule, and adjust for team size
   def points_for(source_result)
     team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-    points_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size
+    points = point_schedule[source_result.place.to_i].to_f
+    if points
+      points * source_result.race.bar_points / team_size
+    else
+      0
+    end
   end
 
   def expire_cache

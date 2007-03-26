@@ -26,7 +26,7 @@ class Test::Unit::TestCase
 
   # Add more helper methods to be used by all tests here...
   # Foreign key constraints require very specific fixture order
-  fixtures :teams, :racers, :disciplines, :aliases, :aliases_disciplines, :categories, :competition_categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results, :discipline_bar_categories, :users, :mailing_lists, :posts
+  fixtures :teams, :racers, :disciplines, :aliases, :aliases_disciplines, :categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results, :discipline_bar_categories, :users, :mailing_lists, :posts
 
   # Assert two Enumerable objects contain exactly same object in any order
   def assert_same_elements(expected, actual, message = '')

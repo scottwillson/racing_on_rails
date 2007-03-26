@@ -11,7 +11,7 @@
 		<tr class="<%= cycle("even", "odd") %>">
 			<td>
 				<h3><%= race.name %></h3>
-				<% for category in race.category.categories.sort{|x, y| x.name <=> y.name }.select {|c| c.scheme != 'BAR'} %>
+				<% for category in race.category.children.sort{|x, y| x.name <=> y.name }.select {|c| c.parent_id} %>
 					<%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
 					<br>
 				<% end %>

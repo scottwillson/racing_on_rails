@@ -74,6 +74,10 @@ class Team < ActiveRecord::Base
     end
   end
   
+  def member_in_year?(date = Date.today)
+    member
+  end
+  
   def to_s
     "#<Team #{id} '#{name}'>"
   end

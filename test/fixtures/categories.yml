@@ -61,15 +61,18 @@
 - expert_junior_men:
     id: 23
     name: Expert Junior Men
+    parent_id: 22    
 - sport_junior_men:
     id: 24
     name: Sport Junior Men
+    parent_id: 22    
 - sr_p_1_2:
     id: 43
     name: Senior Men Pro 1/2
     parent_id: 1
 - senior_men_3:
     id: 44
+    parent_id: 14
     name: Senior Men 3
     position: 8
 - masters_35_plus:

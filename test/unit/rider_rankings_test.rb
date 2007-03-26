@@ -164,16 +164,16 @@ class RiderRankingsTest < Test::Unit::TestCase
     senior_men.results.sort!
     assert_equal(racers(:tonkin), senior_men.results[0].racer, "Senior Men rider rankings results racer")
     assert_equal("1", senior_men.results[0].place, "Senior Men rider rankings results place")
-    assert_equal(288, senior_men.results[0].points, "Senior Men rider rankings results points")
+    assert_in_delta(255.333, senior_men.results[0].points, 0.001, "Senior Men rider rankings results points")
 
     assert_equal(racers(:weaver), senior_men.results[1].racer, "Senior Men rider rankings results racer")
     assert_equal("2", senior_men.results[1].place, "Senior Men rider rankings results place")
-    assert_equal(188, senior_men.results[1].points, "Senior Men rider rankings results points")
+    assert_in_delta(155.333, senior_men.results[1].points, 0.001, "Senior Men rider rankings results points")
     assert_equal(4, senior_men.results[1].scores.size, "Weaver rider rankings results scores")
 
     assert_equal(racers(:matson), senior_men.results[3].racer, "Senior Men rider rankings results racer")
     assert_equal("4", senior_men.results[3].place, "Senior Men rider rankings results place")
-    assert_equal(86, senior_men.results[3].points, "Senior Men rider rankings results points")
+    assert_equal(68, senior_men.results[3].points, "Senior Men rider rankings results points")
     
     women = road_rider_rankings.races.detect {|b| b.name == "Senior Women"}
     assert_equal(1, women.results.size, "Senior Women rider rankings results")

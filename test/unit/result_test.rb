@@ -48,7 +48,7 @@ class ResultTest < Test::Unit::TestCase
     event.save!
     standings = Standings.new(:event => event)
     standings.save!
-    category = Category.find_association("Senior Men Pro 1/2")
+    category = Category.find_by_name("Senior Men Pro 1/2")
     race = Race.new(:standings => standings, :category => category)
     race.save!
     assert_equal(0, race.results.size, "Results before save")
@@ -92,7 +92,7 @@ class ResultTest < Test::Unit::TestCase
   def test_find_associated_records
     event = SingleDayEvent.new(:name => "Tabor CR")
     standings = Standings.new(:event => event)
-    category = Category.find_association("Senior Men Pro 1/2")
+    category = Category.find_by_name("Senior Men Pro 1/2")
     race = Race.new(:standings => standings, :category => category)
     result1 = race.results.build(
       :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon"
@@ -149,7 +149,7 @@ class ResultTest < Test::Unit::TestCase
     result = Result.new(attributes)
     assert_equal("", result.category_name, "category_name")
     
-    result.category = Category.find_association("Senior Men Pro 1/2")
+    result.category = Category.find_by_name("Senior Men Pro 1/2")
     assert_equal("Senior Men Pro 1/2", result.category_name, "category_name")
 
     result = Result.new
@@ -182,7 +182,7 @@ class ResultTest < Test::Unit::TestCase
     assert_equal(sorella_forte, result.team, 'result team')
     assert_equal(sorella_forte, racer.team, 'result team')
 
-    race = standings.races.create(:category => categories(:sr_women))
+    race = standings.races.create(:category => categories(:senior_women))
     result = race.results.build(:place => '3', :number => '932')
     result.racer = racer
     new_team = Team.new(:name => 'Bike Gallery')
@@ -664,5 +664,14 @@ class ResultTest < Test::Unit::TestCase
     assert_nil(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 10))
     
     # Need a lot more tests
+    competition_race = competition.standings.first.races.create(:category => categories(:expert_junior_men))
+    race = standings.races.create(:category => categories(:expert_junior_men))
+    source_result = races(:jack_frost_pro_1_2).results.build(:team => teams(:vanilla))    
+    competition_result = competition_race.results.create(:team => teams(:vanilla))
+    assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 10))
+    source_result = races(:jack_frost_pro_1_2).results.build(:team => teams(:vanilla))    
+    assert_not_nil(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 2))
+    source_result = races(:jack_frost_masters_35_plus_women).results.build(:team => teams(:vanilla))    
+    assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 4))
   end
 end

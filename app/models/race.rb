@@ -22,11 +22,13 @@ class Race < ActiveRecord::Base
   belongs_to :standings
   has_many :results, :dependent => :destroy
   
+  # :deprecated:
   def bar_category
-    category.bar_category if category
+    category.parent || category
   end
   
   # Convenience method to get the Race's Category's BAR Category
+  # :deprecated:
   def bar_category_name
     category.bar_category.name if category and category.bar_category
   end

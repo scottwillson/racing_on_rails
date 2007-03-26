@@ -2,7 +2,9 @@ module CreateIfBestResultForRaceExtension
   def create_if_best_result_for_race(attributes)
     source_result = attributes[:source_result]
     for score in @owner.scores
-      if score.source_result.race == source_result.race && score.source_result.racer == source_result.racer
+      same_race =  (score.source_result.race == source_result.race)
+      same_racer = (score.source_result.racer == source_result.racer)
+      if same_race && score.source_result.racer && same_racer
         if attributes[:points] > score.points
           @owner.scores.delete(score)
         else
@@ -69,7 +71,7 @@ class Result < ActiveRecord::Base
       if category.name.blank?
         self.category = nil
       else
-        existing_category = Category.find_by_name_and_scheme(category.name, category.scheme)
+        existing_category = Category.find_by_name(category.name)
         self.category = existing_category if existing_category
       end
     end

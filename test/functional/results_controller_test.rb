@@ -155,7 +155,7 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_template("results/competition")
     assert_not_nil(assigns["results"], "Should assign results")
-    assert_equal(2, assigns["results"].size, "Should assign results")
+    assert_equal(1, assigns["results"].size, "Should assign results")
     assert_equal(assigns["racer"], result.racer, "Should assign racer")
     assert_equal(assigns["competition"], bar, "Should assign competition")
   end
@@ -177,8 +177,9 @@ class ResultsControllerTest < Test::Unit::TestCase
   
   def test_competition_team
     Bar.recalculate(2004)
-    bar = Bar.find(:all).first
-    result = bar.standings.detect {|s| s.name == 'Team'}.races.first.results.first
+    TeamBar.recalculate(2004)
+    bar = TeamBar.find(:all).first
+    result = bar.standings.first.races.first.results.first
     assert_not_nil(result, 'result')
     opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :team_id => result.team.to_param.to_s}
     assert_routing("/results/competition/#{bar.to_param}/team/#{result.team.to_param}", opts)
@@ -186,8 +187,8 @@ class ResultsControllerTest < Test::Unit::TestCase
     get(:competition, :competition_id => bar.to_param.to_s, :team_id => result.team.to_param.to_s)
     assert_response(:success)
     assert_template("results/team_competition")
-    assert_equal(assigns["results"], results, "Should assign results")
-    assert_equal(assigns["team"], result.team, "Should assign team")
-    assert_equal(assigns["competition"], bar, "Should assign competition")
+    assert_equal([result], assigns["results"], "Should assign results")
+    assert_equal(result.team, assigns["team"], "Should assign team")
+    assert_equal(bar, assigns["competition"], "Should assign competition")
   end
 end

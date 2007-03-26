@@ -34,6 +34,6 @@ class BarController < ApplicationController
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
     @bar = Bar.find(:first, :conditions => ['date = ?', date])
-    @excluded_categories = Category.find(:all, :conditions => ['scheme != ? and bar_category_id is null', 'BAR'])
+    @excluded_categories = Category.find(:all, :conditions => ['parent_id is null'])
   end
 end

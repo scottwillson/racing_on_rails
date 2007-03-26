@@ -7,6 +7,7 @@ require 'fileutils'
 # This class implements a number of OBRA-specific rules and should be generalized and simplified.
 # The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
+# FIXME This documentation is out of date
 class Bar < Competition
   include FileUtils
 
@@ -65,15 +66,15 @@ class Bar < Competition
   end
   
   # Apply points from point_schedule, and adjust for field size
-  def points_for(scoring_result)
-    field_size = scoring_result.race.field_size
+  def points_for(source_result)
+    field_size = source_result.race.field_size
     
-    team_size = Result.count(:conditions => ["race_id =? and place = ?", scoring_result.race.id, scoring_result.place])
-    points = point_schedule[scoring_result.place.to_i] * scoring_result.race.bar_points / team_size
-    if scoring_result.race.standings.name['CoMotion'] and scoring_result.race.category.name == 'Category C Tandem'
+    team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+    points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size
+    if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
       points = points / 2.0
     end
-    if scoring_result.race.bar_points == 1 and field_size >= 75
+    if source_result.race.bar_points == 1 and field_size >= 75
       points = points * 1.5
     end
     points
@@ -99,6 +100,6 @@ class Bar < Competition
   end
 
   def to_s
-    "#<Bar #{id} #{discipline} #{name} #{date}>"
+    "#<#{self.class.name} #{id} #{discipline} #{name} #{date}>"
   end
 end

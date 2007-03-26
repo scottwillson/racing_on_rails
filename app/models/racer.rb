@@ -295,6 +295,13 @@ class Racer < ActiveRecord::Base
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
   end
+
+  # Is/was Racer a current member of the bike racing association at any point during +date+'s year?
+  def member_in_year?(date = Date.today)
+    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
+    year = date.year
+    !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
+  end
   
   def member
     member?

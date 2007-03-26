@@ -28,19 +28,32 @@ class BarControllerTest < Test::Unit::TestCase
     get(:show, :year => "2004")
     assert_response(:success)
     assert_template("bar/show")
-    assert_not_nil(assigns["standings"], "Should assign standings")
+    assert_nil(assigns["standings"], "Should assign standings")
+    assert_not_nil(assigns["year"], "Should assign year")
+    assert_not_nil(assigns["discipline"], "Should assign discipline")
+    assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
+  end
+
+  def test_show_empty
+    opts = {:controller => "bar", :action => "show", :year => "2004", :discipline => "Road"}
+    assert_routing("/bar/2004/Road", opts)
+    get(:show, :year => "2004")
+    assert_response(:success)
+    assert_template("bar/show")
+    assert_nil(assigns["standings"], "Should assign road_events")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
   end
 
   def test_show
-    opts = {:controller => "bar", :action => "show", :year => "2004", :discipline => "Road"}
-    assert_routing("/bar/2004/Road", opts)
-    get(:show, :year => "2004")
+    Bar.recalculate(2002)
+    opts = {:controller => "bar", :action => "show", :year => "2002", :discipline => "Road"}
+    assert_routing("/bar/2002/Road", opts)
+    get(:show, :year => "2002")
     assert_response(:success)
     assert_template("bar/show")
-    assert_not_nil(assigns["standings"], "Should assign road_events")
+    assert_nil(assigns["standings"], "Should assign road_events")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")

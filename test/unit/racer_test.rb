@@ -287,6 +287,44 @@ class RacerTest < Test::Unit::TestCase
     assert_equal(false, racer.member?, 'member?')
   end
   
+  def test_member_in_year
+    racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')
+    assert_equal(false, racer.member_in_year?, 'member_in_year')
+    assert_nil(racer.member_from, 'Member from')
+    assert_nil(racer.member_to, 'Member to')
+
+    racer.member = true
+    assert_equal(true, racer.member_in_year?, 'member_in_year')
+    racer.save!
+    racer.reload
+    assert_equal(true, racer.member_in_year?, 'member_in_year')
+    
+    racer.member = false
+    assert_equal(false, racer.member_in_year?, 'member_in_year')
+    racer.save!
+    racer.reload
+    assert_equal(false, racer.member_in_year?, 'member_in_year')
+
+    # From, to in past
+    racer.member_from = Date.new(2001, 1, 1)
+    racer.member_to = Date.new(2001, 12, 31)
+    assert_equal(false, racer.member_in_year?, 'member_in_year?')
+    assert_equal(false, racer.member_in_year?(Date.new(2000, 12, 31)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 1, 1)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 12, 31)), 'member')
+    assert_equal(false, racer.member_in_year?(Date.new(2002, 1, 1)), 'member')
+
+    racer.member_from = Date.new(2001, 4, 2)
+    racer.member_to = Date.new(2001, 6, 10)
+    assert_equal(false, racer.member_in_year?, 'member_in_year?')
+    assert_equal(false, racer.member_in_year?(Date.new(2000, 12, 31)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 4, 1)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 4, 2)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 6, 10)), 'member')
+    assert_equal(true, racer.member_in_year?(Date.new(2001, 6, 11)), 'member')
+    assert_equal(false, racer.member_in_year?(Date.new(2002, 1, 1)), 'member')
+  end
+  
   def test_member_to
     # from = nil, to = nil
     racer = Racer.new(:first_name => 'Dario', :last_name => 'Frederick')

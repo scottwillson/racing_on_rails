@@ -1,7 +1,7 @@
 <tr valign="top" id="category_<%= category.id %>_row">
 	<td>
-    <% unless category.bar_category %>
-		<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :title => 'No BAR category assigned') %>
+    <% unless category.parent %>
+		<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :title => 'No parent category assigned') %>
     <% end %>
 	</td>
 	<td><%= image_tag('/images/icons/category.gif', 
@@ -12,10 +12,10 @@
 		<span id="message_<%= category.id %>" ></span>
 	</td>
 	<td nowrap>
-		<%= render(:partial => 'bar_category', :locals => {:category => category}) %>
-		<span id="bar_category_message_<%= category.id %>" ></span>
+		<%= render(:partial => 'parent_category', :locals => {:category => category}) %>
+		<span id="parent_category_message_<%= category.id %>" ></span>
 	</td>
-    <td><%= category.bar_category.overall.name if category.bar_category and category.bar_category.overall %></td>
+    <td><%= category.parent.parent.name if category.parent and category.parent.parent %></td>
  	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
 		:url => {:action => "destroy", :id => category.id},
 		:confirm => "Really delete #{category.name}?",
