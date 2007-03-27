@@ -67,7 +67,8 @@ unless defined?(ASSOCIATION)
   ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
   ASSOCIATION.short_name = 'CBRA'
   ASSOCIATION.state = 'OR'
-
+  ASSOCIATION.rental_numbers = 51..99 if RAILS_ENV == 'test'
+  
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
 

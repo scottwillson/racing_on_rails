@@ -123,23 +123,12 @@ class ResultsControllerTest < Test::Unit::TestCase
     opts = {:controller => "results", :action => "team", :id => team.id.to_s}
     assert_routing("/results/team/#{team.id}", opts)
 
-    get(:racer, {:controller => "results", :action => "team", :id => team.id.to_s})
+    get(:team, {:controller => "results", :action => "team", :id => team.id.to_s})
     assert_response(:success)
     assert_template("results/team")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(assigns["team"], team, "team")
-    assert_not_nil(assigns["event_results"], "Should assign event_results")
-    assert_not_nil(assigns["competition_results"], "Should assign competition_results")
-  end
-  
-  def test_scores
-    opts = {:controller => "results", :action => "show", :id => '1'}
-    assert_routing("/results/show/1", opts)
-
-    get(:show, {:id => '1'})
-    assert_response(:success)
-    assert_template("results/show")
-    assert_not_nil(assigns["result"], "Should assign result")
+    assert_not_nil(assigns["results"], "Should assign results")
   end
   
   def test_competition

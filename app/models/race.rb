@@ -139,6 +139,29 @@ class Race < ActiveRecord::Base
     end
   end
   
+  # FIXME Almost certainly does not handle mixed member/non-member teams correctly
+  def calculate_members_only_places!
+    standings.event.disable_notification!
+    begin
+      non_members = 0
+      for result in results.sort
+        # Slight optimization. Most of the time, no point in saving a result that hasn't changed
+        place_before = result.members_only_place
+        result.members_only_place = ''
+        if result.place.to_i > 0
+          if result.racer.nil? or (result.racer and result.racer.member?(standings.date))
+            result.members_only_place = (result.place.to_i - non_members).to_s
+          else
+            non_members = non_members + 1
+          end
+        end
+        result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
+      end
+    ensure
+      standings.event.enable_notification!
+    end
+  end
+  
   def <=>other
     category <=> other.category
   end

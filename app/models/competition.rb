@@ -5,6 +5,8 @@ class Competition < Event
   # TODO Use class methods to set things like friendly_name
   
   after_create  :create_standings
+  # return true from before_save callback or Competition won't save
+  before_save   {|competition| competition.notification = false; true}
   after_save    :expire_cache
   
   # Calculate clashes with internal Rails method
@@ -22,6 +24,7 @@ class Competition < Event
         raise competition.errors.full_messages unless competition.errors.empty?
         competition.destroy_standings
         competition.create_standings
+        competition.calculate_members_only_places
         competition.recalculate
       end
     }
@@ -78,8 +81,27 @@ class Competition < Event
     new_standings
   end
 
+  def calculate_members_only_places
+    logger.debug('calculate_members_only_places start')
+    if place_members_only?
+      for race in Race.find_by_sql([%Q{
+        select races.id 
+        from races
+        left outer join standings on standings.id = races.standings_id
+        left outer join events on events.id = standings.event_id
+        where events.type <> ? and events.date between ? and ?},
+        self.class.name.demodulize, start_date, end_date])
+        
+        race = Race.find(:first,
+                         :include => [{:results => :racer}, {:standings => :event}],
+                         :conditions => ['races.id = ?', race.id])
+        race.calculate_members_only_places!
+      end
+    end
+    logger.debug('calculate_members_only_places end')
+  end
+  
   def recalculate
-    disable_notification!
     for individual_standings in standings(true)
       for race in individual_standings.races
         logger.debug("#{self.class.name} Find source results for '#{race.name}'") if logger.debug?
@@ -93,7 +115,6 @@ class Competition < Event
     end
     
     save!
-    enable_notification!
   end
   
   def point_schedule
@@ -118,7 +139,7 @@ class Competition < Event
   def create_competition_results_for(results, race)
     competition_result = nil
     for source_result in results
-      logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+      logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       racer = source_result.racer
       if member?(racer, source_result.race.standings.date)
@@ -154,6 +175,10 @@ class Competition < Event
     true
   end
   
+  def place_members_only?
+    false
+  end
+  
   def member?(racer_or_team, date)
     racer_or_team && racer_or_team.member_in_year?(date)
   end
@@ -165,7 +190,11 @@ class Competition < Event
   # Apply points from point_schedule, and adjust for team size
   def points_for(source_result)
     team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-    points = point_schedule[source_result.place.to_i].to_f
+    if place_members_only?
+      points = point_schedule[source_result.members_only_place.to_i].to_f
+    else
+      points = point_schedule[source_result.place.to_i].to_f
+    end
     if points
       points * source_result.race.bar_points / team_size
     else

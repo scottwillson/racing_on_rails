@@ -150,17 +150,15 @@ class Event < ActiveRecord::Base
     end
     return false
   end
-
+  
   # Update database immediately with save!
   def disable_notification!
-    self.notification = false
-    save!
+    update_attribute('notification', false)
   end
 
   # Update database immediately with save!
   def enable_notification!
-    self.notification = true
-    save!
+    update_attribute('notification', true)
   end
 
   # Child results fire change notifications? Set to false before bulk changes 

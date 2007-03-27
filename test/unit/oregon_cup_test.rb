@@ -9,6 +9,7 @@ class OregonCupTest < Test::Unit::TestCase
   def test_create
     assert_nil(OregonCup.find(:first, :conditions => ['date = ?', Date.new(2003)]), 'Should have no Oregon Cup for 2003')
     or_cup = OregonCup.create(:date => Date.new(2003))
+    assert(or_cup.errors.empty?, "New OR Cup should have no errors, but has: #{or_cup.errors.full_messages}")
     assert_equal(1, or_cup.standings.size, 'Should create standings') 
     standings = or_cup.standings.first
     assert_equal(2, standings.races.size, 'standings races')

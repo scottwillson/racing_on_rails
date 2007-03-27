@@ -6,7 +6,7 @@
     <%- for event in @events -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>
-	<td><%= link_to event.name, :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id %></td>
+	<td><%= link_to event.name, :action => 'event', :id => event.id %></td>
   </tr>
   <% end %>
   <% else %>

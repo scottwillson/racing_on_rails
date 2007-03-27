@@ -15,12 +15,16 @@ module Competitions
     # Apply points from point_schedule, and adjust for team size
     def points_for(source_result)
       team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-      points = point_schedule[source_result.place.to_i].to_f
+      points = point_schedule[source_result.members_only_place.to_i].to_f
       if points
         points / team_size
       else
         0
       end
+    end
+    
+    def place_members_only?
+      true
     end
     
     def create_standings
@@ -37,20 +41,17 @@ module Competitions
     end
   
     # source_results must be in racer-order
+    # TODO Probably should work with fully-populated Events instead
     def source_results(race)
-      Result.find_by_sql(
-        %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
-            LEFT OUTER JOIN races ON races.id = results.race_id 
-            LEFT OUTER JOIN standings ON races.standings_id = standings.id 
-            LEFT OUTER JOIN events ON standings.event_id = events.id 
-            LEFT OUTER JOIN categories ON races.category_id = categories.id 
-              WHERE (place between 1 AND #{point_schedule.size - 1}
-                and events.type = 'SingleDayEvent' 
-                and categories.id in (#{category_ids_for(race)})
-                and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
-                and standings.date >= '#{date.year}-01-01' 
-                and standings.date <= '#{date.year}-12-31') 
-            order by racer_id}
+      Result.find(:all,
+                  :include => [:race, {:race => :category}, {:race => {:standings => :event}}],
+                  :conditions => [%Q{members_only_place between 1 AND #{point_schedule.size - 1}
+                    and events.type = 'SingleDayEvent' 
+                    and categories.id in (#{category_ids_for(race)})
+                    and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
+                    and standings.date >= '#{date.year}-01-01' 
+                    and standings.date <= '#{date.year}-12-31'}],
+                  :order => 'racer_id'
       )
     end
     

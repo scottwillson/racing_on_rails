@@ -20,7 +20,6 @@ class CompetitionTest < Test::Unit::TestCase
     category = Category.create(:name => 'Sandbaggers')
     competition = Competition.create
     race = competition.standings.first.races.create(:category => category)
-    assert(competition.category_ids_for(race).include?(category.id.to_s), 'category should include itself')
-    assert(!(competition.category_ids_for(race).include?(categories(:senior_men).id.to_s)), 'category should not include Senior Men')
+    assert_equal(category.id.to_s, competition.category_ids_for(race), 'category should include itself only')
   end
 end

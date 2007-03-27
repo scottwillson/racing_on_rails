@@ -86,7 +86,11 @@ class Result < ActiveRecord::Base
       end
     end
     
-    if !self.racer.nil? && self.racer.new_record? && self.racer[:member_from].blank?
+    if !self.racer.nil? && 
+       self.racer.new_record? && 
+       self.racer[:member_from].blank? && 
+       !RaceNumber.rental?(number, Discipline[event.discipline])
+       
       self.racer.member_from = Date.today
     end
     
@@ -194,7 +198,7 @@ class Result < ActiveRecord::Base
   def place
     self[:place] || ''
   end
-  
+
   def points
     if self[:points]
       self[:points].to_f

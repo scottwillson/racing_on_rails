@@ -126,6 +126,12 @@ class RiderRankingsTest < Test::Unit::TestCase
     })
     larch_mt_hillclimb_standings = larch_mt_hillclimb.standings.create(:event => larch_mt_hillclimb)
     larch_mt_hillclimb_senior_men = larch_mt_hillclimb_standings.races.create(:category => senior_men, :field_size => 6)
+    # Should bump Tonkin result up one place to fifth. In real life, we'd have all results 1-5, too
+    non_member = Racer.create(:name => "Non Member", :member => false)
+    larch_mt_hillclimb_senior_men.results.create({
+      :place => 3,
+      :racer => non_member
+    })
     larch_mt_hillclimb_senior_men.results.create({
       :place => 6,
       :racer => racers(:tonkin),
@@ -134,13 +140,13 @@ class RiderRankingsTest < Test::Unit::TestCase
   
     results_baseline_count = Result.count
     assert_equal(0, RiderRankings.count, "RiderRankings standings before recalculate")
-    assert_equal(27, Result.count, "Total count of results in DB before RiderRankings recalculate")
+    assert_equal(29, Result.count, "Total count of results in DB before RiderRankings recalculate")
     RiderRankings.recalculate(2004)
     rider_rankings = RiderRankings.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(rider_rankings, "2004 RiderRankings after recalculate")
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
-    assert_equal(33, Result.count, "Total count of results in DB")
+    assert_equal(35, Result.count, "Total count of results in DB")
     # Should delete old RiderRankings
     RiderRankings.recalculate(2004)
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
@@ -150,7 +156,7 @@ class RiderRankingsTest < Test::Unit::TestCase
     assert_equal(Date.new(2004, 1, 1), rider_rankings.date, "2004 RiderRankings date")
     assert_equal("2004 Rider Rankings", rider_rankings.name, "2004 RiderRankings name")
     assert_equal_dates(Date.today, rider_rankings.updated_at, "RiderRankings last updated")
-    assert_equal(33, Result.count, "Total count of results in DB")
+    assert_equal(35, Result.count, "Total count of results in DB")
 
     road_rider_rankings = rider_rankings.standings.first
     assert_equal("2004 Rider Rankings", road_rider_rankings.name, "2004 rider rankings name")
@@ -164,7 +170,7 @@ class RiderRankingsTest < Test::Unit::TestCase
     senior_men.results.sort!
     assert_equal(racers(:tonkin), senior_men.results[0].racer, "Senior Men rider rankings results racer")
     assert_equal("1", senior_men.results[0].place, "Senior Men rider rankings results place")
-    assert_in_delta(255.333, senior_men.results[0].points, 0.001, "Senior Men rider rankings results points")
+    assert_in_delta(259.333, senior_men.results[0].points, 0.001, "Senior Men rider rankings results points")
 
     assert_equal(racers(:weaver), senior_men.results[1].racer, "Senior Men rider rankings results racer")
     assert_equal("2", senior_men.results[1].place, "Senior Men rider rankings results place")
