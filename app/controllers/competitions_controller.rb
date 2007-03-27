@@ -2,6 +2,7 @@ class CompetitionsController < ApplicationController
   session :off
   caches_page :show
 
+  # FIXME Replace hard-coded RiderRankings with eval
   def show
     @year = params['year'] || Date.today.year.to_s
 
@@ -14,11 +15,10 @@ class CompetitionsController < ApplicationController
         :first, 
         :conditions => ['event_id = ?', competition.id])
 
-      unless @standings.nil?
-        @standings.races.reject! do |race|
-          race.results.empty?
-        end
+      @standings.races.reject! do |race|
+        race.results.empty?
       end
     end
+    @standings = @standings || Standings.new
   end
 end

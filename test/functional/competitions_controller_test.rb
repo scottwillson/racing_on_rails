@@ -20,7 +20,7 @@ class CompetitionsControllerTest < Test::Unit::TestCase #:nodoc: all
     get(:show, :competition_type => 'RiderRankings')
     assert_response(:success)
     assert_template("competitions/show")
-    assert_nil(assigns["standings"], "Should assign standings")
+    assert_not_nil(assigns["standings"], "Should assign standings")
     assert_not_nil(assigns["year"], "Should assign year")
   end
 end

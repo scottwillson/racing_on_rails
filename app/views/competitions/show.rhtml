@@ -1,0 +1,79 @@
+<% @page_title = "#{@standings.name} | #{@year}" %>
+
+<br/>
+
+<h3><%= @standings.name %></h3>
+ 
+<p>Points are awarded to WSBA members as follows:	 
+1st = 100, 2nd = 70, 3rd = 50, 4th = 40, 5th = 36, 6th = 32, 7th = 28, 8th = 24, 9th = 20, 10th = 16</p>
+
+<p>If you have questions, please contact marthalwalsh [at] yahoo [dot] com.</p>
+
+<% if !@standings.races.empty? %>
+<%# TODO Encapsulate in a helper method %>
+<table border="0" cellspacing="0" cellpadding="0">
+<% index = 0 %>  
+<% while index < @standings.races.size %>
+  <tr valign="top">
+    <% if index < @standings.races.size %>
+    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+      <% index += 1 %>  
+      <% if index < @standings.races.size %>
+    <td width="16">&nbsp;</td>
+    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+      <% end %>  
+    <% end %>  
+  </tr>
+  <% index += 1 %>  
+<% end %>  
+</table>
+
+<br/>
+<span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
+<br/><br/>
+
+<%- @standings.races.each_with_index do |race, index| -%>
+<%- unless race.results.empty? -%>
+<table class="base" border="0" cellspacing="0" cellpadding="0">
+  <caption>
+    <th><a name="<%= index %>"></a><span class="tablehead"><%= race.name %></span></th>
+  </caption>
+  <tr>
+    <% if @discipline == 'Team' %>
+
+    <td><pre><%- for result in race.results.sort %>
+<%= result.place.rjust(3) -%>
+   <%= link_to(truncate(result.team_name, 40),
+       :controller => 'results',
+       :action => 'competition',
+       :competition_id => result.race.standings.event.to_param,
+       :team_id => result.team.id) %><%= ' ' * (40 - (truncate(result.team_name, 40).length)) -%>
+   <%= number_with_precision(result.points, 1).rjust(6) -%>
+<%- end -%></pre></td>
+
+    <% else %>
+
+    <td><pre><%- for result in race.results.sort %>
+<%= result.place.rjust(3) -%>
+ <%= link_to(truncate(result.name), 
+	 :controller => 'results',
+     :action => 'competition',
+     :competition_id => result.race.standings.event.to_param,
+     :racer_id => result.racer.id) %><%= ' ' * (30 - truncate(result.name).length) -%>
+   <%= truncate(result.racer.team_name, 40).ljust(40) -%>
+   <%= number_with_precision(result.points, 1).rjust(6) -%>
+<%- end -%></pre></td>
+
+    <%- end -%>
+  </tr>
+</table>
+
+<br><br>
+
+<%- end -%>  
+<%- end -%>  
+
+<%- else -%>
+No results for <%= @year %>.
+<br/>
+<%- end -%>
