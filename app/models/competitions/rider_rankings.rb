@@ -4,6 +4,11 @@ module Competitions
   class RiderRankings < Competition
     # FIXME Need to exclude non-members from the standings
     
+    def RiderRankings.expire_cache
+      FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings.html")
+      FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings")
+    end
+
     def friendly_name
       'Rider Rankings'
     end
