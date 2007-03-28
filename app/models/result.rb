@@ -144,6 +144,7 @@ class Result < ActiveRecord::Base
   def update_racer_team 
     if self.racer and self.team and self.racer.team.nil?
       self.racer.team = self.team
+      racer.save!
     end
   end
   

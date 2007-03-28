@@ -48,6 +48,9 @@ class RacersFile < GridFile
     '07 xc'                                  => 'xc_number',
     'mtb #'                                  => 'xc_number',
     '07 dh'                                  => 'dh_number',
+    'singlespeed'                            => 'singlespeed_number'
+    'ss'                                     => 'singlespeed_number'
+    'ss #'                                   => 'singlespeed_number'
     'Membership No'                          => 'license',
     'date joined'                            => 'member_from',
     'card'                                   => 'print_card',

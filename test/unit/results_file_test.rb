@@ -159,6 +159,17 @@ class ResultsFileTest < Test::Unit::TestCase
   def test_import_2006_v2
     expected_races = []
     
+    paul_bourcier = Racer.create!(:first_name => "Paul", :last_name => "Bourcier", :member => true)
+    eweb = Team.create!(:name => 'EWEB Windpower')
+    paul_bourcier.team = eweb
+    paul_bourcier.save!
+    assert(paul_bourcier.errors.empty?)
+    assert(eweb.errors.empty?)
+    assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team')
+    
+    chris_myers = Racer.create(:first_name => "Chris", :last_name => "Myers", :member => true)
+    assert_nil(chris_myers.team(true), 'Chris Myers team')
+    
     race = Race.new(:category => Category.new(:name => "Pro/1/2"))
     race.results << Result.new(:place => "1", :first_name => "Paul", :last_name => "Bourcier", :number =>"146", :team_name =>"Hutch's Eugene", :points => "10.0")
     race.results << Result.new(:place => "2", :first_name => "John", :last_name => "Browning", :number =>"197", :team_name =>"Half Fast Velo", :points => "3.0")
@@ -206,11 +217,17 @@ class ResultsFileTest < Test::Unit::TestCase
         assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-        if result.racer
-          assert(result.racer.member?, "member? for race #{index} result #{result_index}")
+        if result.racer and !RaceNumber.rental?(result.number, Discipline[event.discipline])
+          assert(result.racer.member?, "member? for race #{index} result #{result_index}: #{result.racer.name} #{result.number}")
         end
       end
     end
+    
+    paul_bourcier.reload
+    assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team should not be overwritten by results')
+    chris_myers.reload
+    assert_not_nil(chris_myers.team(true), 'Chris Myers team should be updated by results')
+    assert_equal('Camerati', chris_myers.team(true).name, 'Chris Myers team should be updated by results')
   end
   
   def test_stage_race

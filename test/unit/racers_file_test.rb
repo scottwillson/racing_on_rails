@@ -201,7 +201,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('97701', scott_seaton.zip, 'Scott Seaton ZIP')
     assert_equal('541-389-3721', scott_seaton.home_phone, 'Scott Seaton phone')
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
-    assert_equal('EWEB', scott_seaton.team_name, 'Scott Seaton team')
+    assert_equal('EWEB', scott_seaton.team_name, 'Scott Seaton team should be updated')
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
     assert(!scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
     
