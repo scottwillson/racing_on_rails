@@ -150,17 +150,16 @@ class ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_empty_competition
-    fail('not impl')
-    result = bar.standings.detect {|s| s.name == 'Road'}.races.detect {|r| r.name == 'Senior Women'}.results.first
-    assert_not_nil(result, 'result')
-    opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :racer_id => result.racer.to_param.to_s}
-    assert_routing("/results/competition/#{bar.to_param}/racer/#{result.racer.to_param}", opts)
+    bar = Bar.create
+    racer = Racer.create(:name => 'JP Morgen')
+    opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :racer_id => racer.to_param.to_s}
+    assert_routing("/results/competition/#{bar.to_param}/racer/#{racer.to_param}", opts)
 
-    get(:competition, :competition_id => bar.to_param.to_s, :racer_id => result.racer.to_param.to_s)
+    get(:competition, :competition_id => bar.to_param.to_s, :racer_id => racer.to_param.to_s)
     assert_response(:success)
-    assert_template("results/show")
-    assert_equal(assigns["results"], results, "Should assign results")
-    assert_equal(assigns["racer"], result.racer, "Should assign racer")
+    assert_template("results/competition")
+    assert_equal(assigns["results"], [], "Should assign results")
+    assert_equal(assigns["racer"], racer, "Should assign racer")
     assert_equal(assigns["competition"], bar, "Should assign competition")
   end
   
