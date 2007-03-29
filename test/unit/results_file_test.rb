@@ -226,8 +226,7 @@ class ResultsFileTest < Test::Unit::TestCase
     paul_bourcier.reload
     assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team should not be overwritten by results')
     chris_myers.reload
-    assert_not_nil(chris_myers.team(true), 'Chris Myers team should be updated by results')
-    assert_equal('Camerati', chris_myers.team(true).name, 'Chris Myers team should be updated by results')
+    assert_nil(chris_myers.team(true), 'Chris Myers team should not be updated by results')
   end
   
   def test_stage_race

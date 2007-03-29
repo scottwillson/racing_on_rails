@@ -145,7 +145,7 @@ class Competition < Event
       if member?(racer, source_result.race.standings.date)
 
         if first_result_for_racer(source_result, competition_result)
-          competition_result = race.results.create(:racer => racer, :team => source_result.team)
+          competition_result = race.results.create(:racer => racer, :team => racer.team)
         end
 
         competition_result.scores.create_if_best_result_for_race(

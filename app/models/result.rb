@@ -34,7 +34,7 @@ class Result < ActiveRecord::Base
   
   before_validation :find_associated_records
   before_save :save_racer
-  after_save :update_racer_team, :update_racer_number
+  after_save :update_racer_number
   after_save {|result| result.race.standings.after_result_save}
   after_destroy {|result| result.race.standings.after_result_destroy}
   
@@ -138,14 +138,6 @@ class Result < ActiveRecord::Base
     end
     
     matches
-  end
-  
-  # Set +racer#team+ to +team+ if +racer+ doesn't already have a team
-  def update_racer_team 
-    if self.racer and self.team and self.racer.team.nil?
-      self.racer.team = self.team
-      racer.save!
-    end
   end
   
   # Set +racer#number+ to +number+ if this isn't a rental number
