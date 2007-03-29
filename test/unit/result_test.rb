@@ -176,11 +176,10 @@ class ResultTest < Test::Unit::TestCase
     assert(!racer.new_record?, 'racer new record')
     assert(!team.new_record?, 'team new record')
     assert_equal(team, result.team, 'result team')
-    assert_equal(team, racer.team, 'result team')
-    assert_equal(result.team, racer.team, 'result and racer team')
+    assert_equal(nil, racer.team, 'result team')
     sorella_forte = Team.find_by_name('Sorella Forte')
     assert_equal(sorella_forte, result.team, 'result team')
-    assert_equal(sorella_forte, racer.team, 'result team')
+    assert_equal(nil, racer.team, 'result team')
 
     race = standings.races.create(:category => categories(:senior_women))
     result = race.results.build(:place => '3', :number => '932')
@@ -192,7 +191,7 @@ class ResultTest < Test::Unit::TestCase
     result.save!
     bike_gallery_from_db = Team.find_by_name('Bike Gallery')
     assert_equal(bike_gallery_from_db, result.team, 'result team')
-    assert_equal(sorella_forte, racer.team, 'result team')
+    assert_equal(nil, racer.team, 'result team')
     assert_not_equal(bike_gallery_from_db, racer.team, 'result team')
     
     racer_with_no_team = Racer.create(:last_name => 'Ollerenshaw', :first_name => 'Doug')
@@ -203,7 +202,7 @@ class ResultTest < Test::Unit::TestCase
 
     result.save!
     assert_equal(vanilla, result.team, 'result team')
-    assert_equal(vanilla, racer_with_no_team.team, 'result team')
+    assert_equal(nil, racer_with_no_team.team, 'result team')
   end
   
   def test_event
