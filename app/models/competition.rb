@@ -16,29 +16,20 @@ class Competition < Event
   def Competition.recalculate(year = Date.today.year)
     # TODO: Use FKs in database to cascade delete`
     # TODO Use Hashs or class instead of iterating through Arrays!
-    benchmark = Benchmark.measure {
+    benchmark(name) {
       transaction do
         # TODO move to superclass
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
         competition = find_or_create_by_date(date)
         raise competition.errors.full_messages unless competition.errors.empty?
-        benchmark('Competition destory') {
-          competition.destroy_standings
-        }
-        benchmark('Competition create_standings') {
-          competition.create_standings
-          # Could bluck load all Standings and Races at this point, but hardly seems to matter
-        }
-        benchmark('Competition calculate_members_only_places') {
-          competition.calculate_members_only_places
-        }
-        benchmark('Competition recalculate', Logger::DEBUG, false) {
-          competition.recalculate
-        }
+        competition.destroy_standings
+        competition.create_standings
+        # Could bluck load all Standings and Races at this point, but hardly seems to matter
+        competition.calculate_members_only_places
+        competition.recalculate
       end
     }
-    logger.info("#{self.class.name} #{benchmark}")
     # Don't return the entire populated instance!
     true
   end
@@ -92,7 +83,6 @@ class Competition < Event
   end
 
   def calculate_members_only_places
-    logger.debug('calculate_members_only_places start')
     if place_members_only?
       for race in Race.find_by_sql([%Q{
         select races.id 
@@ -108,14 +98,16 @@ class Competition < Event
         race.calculate_members_only_places!
       end
     end
-    logger.debug('calculate_members_only_places end')
   end
   
   def recalculate
     for individual_standings in standings(true)
       for race in individual_standings.races
         logger.debug("#{self.class.name} Find source results for '#{race.name}'") if logger.debug?
-        results = source_results(race)
+        results = []
+        Competition.benchmark('source_results') {
+          results = source_results(race)
+        }
         logger.debug("#{self.class.name} Found #{results.size} source results") if logger.debug?
       
         create_competition_results_for(results, race)
@@ -161,11 +153,13 @@ class Competition < Event
              :race => race)
          end
  
-        competition_result.scores.create_if_best_result_for_race(
-          :source_result => source_result, 
-          :competition_result => competition_result, 
-          :points => points_for(source_result)
-        )
+        Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
+          competition_result.scores.create_if_best_result_for_race(
+            :source_result => source_result, 
+            :competition_result => competition_result, 
+            :points => points_for(source_result)
+          )
+        }
       end
     end
   end
@@ -185,11 +179,15 @@ class Competition < Event
   end
   
   def member?(racer_or_team, date)
-    racer_or_team && racer_or_team.member_in_year?(date)
+    Competition.benchmark('member?') {
+      racer_or_team && racer_or_team.member_in_year?(date)
+    }
   end
   
   def first_result_for_racer(source_result, competition_result)
-    competition_result.nil? || source_result.racer != competition_result.racer
+    Competition.benchmark('first_result_for_racer') {
+      competition_result.nil? || source_result.racer != competition_result.racer
+    }
   end
   
   # Apply points from point_schedule, and adjust for team size

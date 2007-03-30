@@ -62,16 +62,19 @@ class Bar < Competition
   
   # Apply points from point_schedule, and adjust for field size
   def points_for(source_result)
-    field_size = source_result.race.field_size
-    
-    team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-    points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size
-    if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
-      points = points / 2.0
-    end
-    if source_result.race.bar_points == 1 and field_size >= 75
-      points = points * 1.5
-    end
+    points = 0
+    Competition.benchmark('points_for') {
+      field_size = source_result.race.field_size
+
+      team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+      points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size
+      if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
+        points = points / 2.0
+      end
+      if source_result.race.bar_points == 1 and field_size >= 75
+        points = points * 1.5
+      end
+    }
     points
   end
   

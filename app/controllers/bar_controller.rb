@@ -16,12 +16,16 @@ class BarController < ApplicationController
     if @discipline == 'Overall'
       bar = OverallBar.find(:first, :conditions => ['date = ?', date])
     else
-      bar = Bar.find(:first, :conditions => ['date = ?', date])
+      if @discipline == 'Team'
+        bar = TeamBar.find(:first, :conditions => ['date = ?', date])
+      else
+        bar = Bar.find(:first, :conditions => ['date = ?', date])
+      end
     end
     
     # Huh?
     if bar
-      if @discipline == 'Overall'
+      if @discipline == 'Overall' || @discipline == 'Team'
         @standings = Standings.find(
           :first, 
           :conditions => ['event_id = ?', bar.id])
