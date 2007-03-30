@@ -4,10 +4,14 @@
 <dict>
 	<key>currentDocument</key>
 <<<<<<< .mine
+	<string>local/app/views/results/event.rhtml</string>
+=======
+<<<<<<< .mine
 	<string>app/controllers/results_controller.rb</string>
 =======
 	<string>test/test_helper.rb</string>
 >>>>>>> .r572
+>>>>>>> .r588
 	<key>documents</key>
 	<array>
 		<dict>
@@ -67,8 +71,6 @@
 			<string>doc</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>lib</string>
 			<key>regexFolderFilter</key>
@@ -107,12 +109,19 @@
 			<true/>
 			<key>name</key>
 <<<<<<< .mine
+			<string>vendor</string>
+=======
+<<<<<<< .mine
 			<string>tmp</string>
+>>>>>>> .r588
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>tmp</string>
 		</dict>
+<<<<<<< .mine
+	</array>
+=======
 		<dict>
 			<key>name</key>
 			<string>vendor</string>
@@ -131,8 +140,8 @@
 		</dict>
 	</array>
 >>>>>>> .r572
+>>>>>>> .r588
 	<key>fileHierarchyDrawerWidth</key>
-<<<<<<< .mine
 	<integer>305</integer>
 =======
 	<integer>300</integer>
@@ -140,14 +149,20 @@
 	<key>metaData</key>
 	<dict>
 <<<<<<< .mine
+		<key>app/controllers/admin/racers_controller.rb</key>
+=======
+<<<<<<< .mine
 		<key>app/controllers/results_controller.rb</key>
 =======
 		<key>app/models/announcement_mailer.rb</key>
 >>>>>>> .r572
+>>>>>>> .r588
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+=======
 <<<<<<< .mine
 				<integer>105</integer>
 =======
@@ -157,9 +172,17 @@
 <<<<<<< .mine
 				<integer>77</integer>
 =======
+>>>>>>> .r588
 				<integer>0</integer>
+<<<<<<< .mine
+				<key>line</key>
+				<integer>40</integer>
+=======
 >>>>>>> .r572
+>>>>>>> .r588
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
@@ -167,6 +190,9 @@
 			<integer>47</integer>
 =======
 			<integer>0</integer>
+<<<<<<< .mine
+			<key>selectFrom</key>
+=======
 >>>>>>> .r572
 		</dict>
 <<<<<<< .mine
@@ -176,6 +202,54 @@
 >>>>>>> .r572
 		<dict>
 			<key>caret</key>
+>>>>>>> .r588
+			<dict>
+				<key>column</key>
+<<<<<<< .mine
+				<integer>52</integer>
+=======
+				<integer>0</integer>
+>>>>>>> .r588
+				<key>line</key>
+<<<<<<< .mine
+				<integer>40</integer>
+=======
+				<integer>0</integer>
+>>>>>>> .r588
+			</dict>
+<<<<<<< .mine
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>40</integer>
+			</dict>
+=======
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+>>>>>>> .r588
+		</dict>
+<<<<<<< .mine
+		<key>app/models/racer.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>80</integer>
+				<key>line</key>
+				<integer>59</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>47</integer>
+		</dict>
+		<key>app/views/results/event.rhtml</key>
+		<dict>
+			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
@@ -187,53 +261,83 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-<<<<<<< .mine
+=======
+>>>>>>> .r588
 		<key>app/models/result.rb</key>
+<<<<<<< .mine
+=======
 =======
 		<key>app/models/category.rb</key>
 >>>>>>> .r572
+>>>>>>> .r588
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>16</integer>
 				<key>line</key>
-<<<<<<< .mine
 				<integer>263</integer>
+<<<<<<< .mine
+=======
 =======
 				<integer>53</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
+<<<<<<< .mine
+			<integer>0</integer>
+		</dict>
+=======
 <<<<<<< .mine
 			<integer>219</integer>
 =======
 			<integer>22</integer>
 >>>>>>> .r572
 		</dict>
+>>>>>>> .r588
+<<<<<<< .mine
+		<key>local/app/views/oregon_cup/index.rhtml</key>
+=======
 <<<<<<< .mine
 		<key>app/views/results/competition.rhtml</key>
 =======
 		<key>app/models/combined_mountain_bike_standings.rb</key>
 >>>>>>> .r572
+>>>>>>> .r588
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 <<<<<<< .mine
+				<integer>77</integer>
+=======
+<<<<<<< .mine
 				<integer>47</integer>
 =======
 				<integer>80</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 				<key>line</key>
+<<<<<<< .mine
+				<integer>4</integer>
+=======
 <<<<<<< .mine
 				<integer>26</integer>
 =======
 				<integer>70</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 			</dict>
+<<<<<<< .mine
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+=======
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
@@ -277,18 +381,33 @@
 >>>>>>> .r572
 			<dict>
 				<key>column</key>
+>>>>>>> .r588
 <<<<<<< .mine
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>72</integer>
+=======
 				<integer>18</integer>
 =======
 				<integer>80</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 				<key>line</key>
+<<<<<<< .mine
+				<integer>4</integer>
+=======
 <<<<<<< .mine
 				<integer>20</integer>
 =======
 				<integer>70</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 			</dict>
+<<<<<<< .mine
+			<key>selectTo</key>
+=======
 <<<<<<< .mine
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -304,29 +423,53 @@
 >>>>>>> .r572
 		<dict>
 			<key>caret</key>
+>>>>>>> .r588
 			<dict>
 				<key>column</key>
+<<<<<<< .mine
+				<integer>77</integer>
+=======
 <<<<<<< .mine
 				<integer>20</integer>
 =======
 				<integer>11</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 				<key>line</key>
+<<<<<<< .mine
+				<integer>4</integer>
+=======
 <<<<<<< .mine
 				<integer>11</integer>
 =======
 				<integer>124</integer>
 >>>>>>> .r572
+>>>>>>> .r588
 			</dict>
+<<<<<<< .mine
+=======
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 <<<<<<< .mine
 			<integer>0</integer>
+>>>>>>> .r588
 =======
 			<integer>103</integer>
 >>>>>>> .r572
 		</dict>
+<<<<<<< .mine
+		<key>local/app/views/results/event.rhtml</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>67</integer>
+				<key>line</key>
+				<integer>86</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+=======
 <<<<<<< .mine
 		<key>app/views/results/team_competition.rhtml</key>
 =======
@@ -352,11 +495,14 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 <<<<<<< .mine
+>>>>>>> .r588
 			<integer>0</integer>
 =======
 			<integer>75</integer>
 >>>>>>> .r572
 		</dict>
+<<<<<<< .mine
+=======
 <<<<<<< .mine
 		<key>test/functional/results_controller_test.rb</key>
 		<dict>
@@ -372,12 +518,19 @@
 			<key>firstVisibleLine</key>
 			<integer>93</integer>
 		</dict>
+>>>>>>> .r588
 =======
 >>>>>>> .r572
 	</dict>
 	<key>openDocuments</key>
 	<array>
 <<<<<<< .mine
+		<string>local/app/views/results/event.rhtml</string>
+		<string>app/controllers/admin/racers_controller.rb</string>
+		<string>app/models/racer.rb</string>
+		<string>local/app/views/oregon_cup/index.rhtml</string>
+		<string>app/views/results/index.rhtml</string>
+=======
 		<string>app/views/results/event.rhtml</string>
 		<string>app/views/results/competition.rhtml</string>
 		<string>app/views/results/team_competition.rhtml</string>
@@ -393,14 +546,17 @@
 		<string>app/models/category.rb</string>
 		<string>app/models/competition.rb</string>
 >>>>>>> .r572
+>>>>>>> .r588
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-<<<<<<< .mine
 	<string>{{315, 61}, {961, 770}}</string>
+<<<<<<< .mine
+=======
 =======
 	<string>{{310, 63}, {967, 769}}</string>
 >>>>>>> .r572
+>>>>>>> .r588
 </dict>
 </plist>
