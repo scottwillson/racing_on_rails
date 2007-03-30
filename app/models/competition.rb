@@ -3,6 +3,7 @@
 class Competition < Event
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name
+  # TODO Just how much memory is this thing hanging on to?
   
   after_create  :create_standings
   # return true from before_save callback or Competition won't save
@@ -22,10 +23,19 @@ class Competition < Event
         date = Date.new(year, 1, 1)
         competition = find_or_create_by_date(date)
         raise competition.errors.full_messages unless competition.errors.empty?
-        competition.destroy_standings
-        competition.create_standings
-        competition.calculate_members_only_places
-        competition.recalculate
+        benchmark('Competition destory') {
+          competition.destroy_standings
+        }
+        benchmark('Competition create_standings') {
+          competition.create_standings
+          # Could bluck load all Standings and Races at this point, but hardly seems to matter
+        }
+        benchmark('Competition calculate_members_only_places') {
+          competition.calculate_members_only_places
+        }
+        benchmark('Competition recalculate', Logger::DEBUG, false) {
+          competition.recalculate
+        }
       end
     }
     logger.info("#{self.class.name} #{benchmark}")
@@ -66,7 +76,7 @@ class Competition < Event
 
   def destroy_standings
     for s in standings(true)
-      s.destroy
+      Standings.delete(s.id)
     end
   end
   
@@ -110,7 +120,7 @@ class Competition < Event
       
         create_competition_results_for(results, race)
         after_create_competition_results_for(race)
-        place_results_by_points
+        race.place_results_by_points(break_ties?)
       end
     end
     
@@ -139,22 +149,23 @@ class Competition < Event
   def create_competition_results_for(results, race)
     competition_result = nil
     for source_result in results
-      logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+      logger.debug("#{self.class.name} scoring result: #{source_result.race.standings.date} #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       racer = source_result.racer
-      if member?(racer, source_result.race.standings.date)
-
-        if first_result_for_racer(source_result, competition_result)
-          competition_result = race.results.create(:racer => racer, :team => racer.team)
-        end
-
+       if member?(racer, source_result.race.standings.date)
+ 
+         if first_result_for_racer(source_result, competition_result)
+           competition_result = race.results.create(
+             :racer => racer, 
+             :team => racer.team,
+             :race => race)
+         end
+ 
         competition_result.scores.create_if_best_result_for_race(
           :source_result => source_result, 
           :competition_result => competition_result, 
           :points => points_for(source_result)
         )
-        # TODO Need to do this every time? Maybe before save?
-        competition_result.calculate_points
       end
     end
   end
@@ -163,12 +174,6 @@ class Competition < Event
   # * Any results after the first four only get 50-point bonus
   # * Drop lowest-scoring result
   def after_create_competition_results_for(race)
-  end
-  
-  def place_results_by_points
-    for s in standings
-      s.place_results_by_points(break_ties?)
-    end
   end
   
   def break_ties?
@@ -189,6 +194,8 @@ class Competition < Event
   
   # Apply points from point_schedule, and adjust for team size
   def points_for(source_result)
+    # TODO Consider indexing place
+    # TODO Consider caching/precalculating team size
     team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
     if place_members_only?
       points = point_schedule[source_result.members_only_place.to_i].to_f

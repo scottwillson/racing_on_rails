@@ -29,7 +29,7 @@ class Result < ActiveRecord::Base
   
   include Dirty
   
-  # FIME Make sure names are coerced correctly
+  # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
   before_validation :find_associated_records

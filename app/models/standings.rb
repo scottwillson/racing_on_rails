@@ -120,6 +120,7 @@ class Standings < ActiveRecord::Base
     combined_standings(true)
   end
   
+  # FIXME Just make a separate CompetitionStandings subclass
   def requires_combined_standings?
     (self.discipline == 'Mountain Bike' or self.discipline == 'Time Trial') and !(self.event.is_a?(Competition))
   end
@@ -133,12 +134,12 @@ class Standings < ActiveRecord::Base
   
   # Let +combined_standings+ know that a result changed
   def after_result_save
-    combined_standings.after_source_result_save if self.combined_standings
+    combined_standings.after_source_result_save if requires_combined_standings? and self.combined_standings
   end
 
   # Let +combined_standings+ know that a result was destroyed
   def after_result_destroy
-    combined_standings.after_result_destroy if self.combined_standings
+    combined_standings.after_result_destroy if requires_combined_standings? and self.combined_standings
   end
   
   # Compare by position
