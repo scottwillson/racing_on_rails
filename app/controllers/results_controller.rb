@@ -94,4 +94,8 @@ class ResultsController < ApplicationController
       result.race.standings.event.is_a?(Competition)
     end
   end
+
+  def show
+    @result = Result.find(params[:id])
+  end
 end

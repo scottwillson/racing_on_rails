@@ -14,9 +14,13 @@ class BarController < ApplicationController
 
     date = Date.new(@year.to_i, 1, 1)
     if @discipline == 'Overall'
-      bar = OverallBar.find(:first, :conditions => ['date = ?', date])
+      if @year == '2006'
+        bar = Bar.find(:first, :conditions => ['date = ?', date])
+      else
+        bar = OverallBar.find(:first, :conditions => ['date = ?', date])
+      end
     else
-      if @discipline == 'Team'
+      if @discipline == 'Team' and @year != '2006'
         bar = TeamBar.find(:first, :conditions => ['date = ?', date])
       else
         bar = Bar.find(:first, :conditions => ['date = ?', date])
@@ -26,9 +30,15 @@ class BarController < ApplicationController
     # Huh?
     if bar
       if @discipline == 'Overall' || @discipline == 'Team'
-        @standings = Standings.find(
-          :first, 
-          :conditions => ['event_id = ?', bar.id])
+        if @year == '2006'
+          @standings = Standings.find(
+            :first, 
+            :conditions => ['event_id = ? and name = ?', bar.id, @discipline])
+        else
+          @standings = Standings.find(
+            :first, 
+            :conditions => ['event_id = ?', bar.id])
+        end
       else
         @standings = Standings.find(
           :first, 

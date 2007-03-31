@@ -66,50 +66,6 @@ module Competitions
       end
     end
 
-    def old_recalc
-      # Create overall BAR results based on discipline results
-      # overall BAR: Add results from discipline BAR races
-      for bar_standings in standings
-        if bar_standings.name != "Overall" and bar_standings.name != 'Team'
-          for discipline_race in bar_standings.races
-            for discipline_source_result in discipline_race.results.sort!
-              logger.debug("BAR Overall scoring result: '#{discipline_source_result.race.standings.name}' #{discipline_source_result.race.category} #{discipline_source_result.place} #{discipline_source_result.last_name}") if logger.debug?
-              if discipline_source_result.race.category and discipline_source_result.race.category.overall
-                racer = discipline_source_result.racer
-                progress_monitor.detail_text = "#{racer.first_name} #{racer.last_name}"
-                bar_race = find_overall_race(discipline_source_result)
-                overall_bar_result = bar_race.results.detect {|result| result.racer == racer}
-                if overall_bar_result.nil?
-                  overall_bar_result = bar_race.results.create
-                  raise(RuntimeError, overall_bar_result.errors.full_messages) unless overall_bar_result.errors.empty?
-                  overall_bar_result.racer = racer
-                  overall_bar_result.team = discipline_source_result.team
-                  logger.debug("BAR Add new BAR result to #{bar_race.name} for #{racer.last_name}") if logger.debug?
-                  overall_bar_result.save!
-                else
-                  logger.debug("BAR Existing BAR result. #{overall_bar_result.last_name} == #{racer.last_name}") if logger.debug?
-                end
-                overall_bar_result.scores.create_if_best_result_for_race(
-                  :source_result => discipline_source_result, 
-                  :competition_result => overall_bar_result, 
-                  :points => 301 - discipline_source_result.place.to_i
-                )
-                raise(RuntimeError, overall_bar_result.errors.full_messages) unless overall_bar_result.errors.empty?
-                overall_bar_result.calculate_points
-              else
-                logger.warn("WARN: #{discipline_source_result.race.name} has no category")
-              end
-            end
-          end
-        end
-    
-
-        # sort overall
-        for race in overall_standings.races
-          race.results.sort! {|x, y| y.points <=> x.points}
-        end
-      end
-    end
     def create_standings
       root_standings = standings.create(:event => self)
       for category_name in [

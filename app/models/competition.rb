@@ -16,7 +16,7 @@ class Competition < Event
   def Competition.recalculate(year = Date.today.year)
     # TODO: Use FKs in database to cascade delete`
     # TODO Use Hashs or class instead of iterating through Arrays!
-    benchmark(name) {
+    benchmark(name, Logger::DEBUG, false) {
       transaction do
         # TODO move to superclass
         year = year.to_i if year.is_a?(String)
@@ -179,15 +179,11 @@ class Competition < Event
   end
   
   def member?(racer_or_team, date)
-    Competition.benchmark('member?') {
-      racer_or_team && racer_or_team.member_in_year?(date)
-    }
+    racer_or_team && racer_or_team.member_in_year?(date)
   end
   
   def first_result_for_racer(source_result, competition_result)
-    Competition.benchmark('first_result_for_racer') {
-      competition_result.nil? || source_result.racer != competition_result.racer
-    }
+    competition_result.nil? || source_result.racer != competition_result.racer
   end
   
   # Apply points from point_schedule, and adjust for team size
