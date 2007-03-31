@@ -50,7 +50,7 @@ module Competitions
     # TODO Probably should work with fully-populated Events instead
     def source_results(race)
       Result.find(:all,
-                  :include => [:race, {:race => :category}, {:race => {:standings => :event}}],
+                  :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                   :conditions => [%Q{members_only_place between 1 AND #{point_schedule.size - 1}
                     and events.type = 'SingleDayEvent' 
                     and categories.id in (#{category_ids_for(race)})

@@ -18,18 +18,13 @@ module Competitions
     end
 
     def source_results(race)
-      race_discipline = race.standings.discipline
-      Result.find_by_sql(
-        %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
-            LEFT OUTER JOIN races ON races.id = results.race_id 
-            LEFT OUTER JOIN standings ON races.standings_id = standings.id 
-            LEFT OUTER JOIN events ON standings.event_id = events.id 
-            LEFT OUTER JOIN categories ON races.category_id = categories.id 
-              WHERE (categories.id in (#{category_ids_for(race)})
-                and events.type = 'Bar' 
-                and standings.date >= '#{date.year}-01-01' 
-                and standings.date <= '#{date.year}-12-31') 
-            order by racer_id}
+      Result.find(:all,
+                  :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
+                  :conditions => [%Q{events.type = 'Bar' 
+                    and categories.id in (#{category_ids_for(race)})
+                    and standings.date >= '#{date.year}-01-01' 
+                    and standings.date <= '#{date.year}-12-31'}],
+                  :order => 'racer_id'
       )
     end
 
