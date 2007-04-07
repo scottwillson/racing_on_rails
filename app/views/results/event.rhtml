@@ -49,7 +49,7 @@
 <br />
     <% end %>
 
-	<%- if @event.parent -%>
+	<%- if @event.respond_to?(:parent) and @event.parent -%>
 	<div style="margin-bottom: 1em;">
 		Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %>
 	</div>

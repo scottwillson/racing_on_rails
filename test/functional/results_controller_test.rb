@@ -24,6 +24,18 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_equal(assigns["event"], banana_belt_1, "Banana Belt 1")
   end
   
+  def test_event_rider_rankings
+    rider_rankings = RiderRankings.create
+    opts = {:controller => "results", :action => "event", :id => rider_rankings.id.to_s}
+    assert_routing("/results/event/#{rider_rankings.id}", opts)
+
+    get(:event, {:action => "event", :id => rider_rankings.id.to_s})
+    assert_response(:success)
+    assert_template("results/event")
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert_equal(assigns["event"], rider_rankings, "rider_rankings")
+  end
+  
   def test_event_bar
     bar = Bar.create
     opts = {:controller => "results", :action => "event", :id => bar.id.to_s}

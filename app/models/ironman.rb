@@ -39,4 +39,8 @@ class Ironman < Competition
          ORDER BY racer_id}
     )
   end
+    
+  def expire_cache
+    Ironman.expire_cache
+  end
 end
