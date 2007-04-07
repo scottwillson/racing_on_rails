@@ -16,7 +16,7 @@ class Competition < Event
   def Competition.recalculate(year = Date.today.year)
     # TODO: Use FKs in database to cascade delete`
     # TODO Use Hashs or class instead of iterating through Arrays!
-    benchmark(name, Logger::DEBUG, false) {
+    benchmark(name, Logger::INFO, false) {
       transaction do
         # TODO move to superclass
         year = year.to_i if year.is_a?(String)
