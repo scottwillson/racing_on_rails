@@ -57,14 +57,15 @@
 
 	<%# TODO Encapsulate in a helper method %>
 	<table>
+		<%- results_in_first_column = standings.races_with_results.size / 2 -%>
 		<%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
 		<tr>
 		  <td style="margin-right: 18px;">
-			<a href="#<%= (standings_index * 100) + row_index * 2 %>" class="underlined"><%= row.first.name %></a>
+			<a href="#<%= (standings_index * 100) + row_index %>" class="underlined"><%= row.first.name %></a>
 		  </td>
 		  <td style="margin-left: 18px;">
 			&nbsp;
-			<%- if row.size == 2 -%><a href="#<%= (standings_index * 100) + row_index * 2 + 1%>" class="underlined"><%= row.last.name %></a><%- end -%>
+			<%- if row.size == 2 -%><a href="#<%= (standings_index * 100) + results_in_first_column + row_index %>" class="underlined"><%= row.last.name %></a><%- end -%>
 		  </td>
 		<%- end -%>
 		</tr>
