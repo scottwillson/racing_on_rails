@@ -20,7 +20,7 @@
 
 <% for result in @competition_results %>
 <br/><br/>
-<table class="base">
+<table class="base" border=1>
 	<caption>
 		<%= result.place.to_i.ordinalize %> &mdash; <%= result.race.standings.event.name %> <%= result.race.standings.name unless result.race.standings.event.name == result.race.standings.name %>
 	</caption>

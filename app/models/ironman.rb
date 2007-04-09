@@ -17,6 +17,11 @@ class Ironman < Competition
     years.sort.reverse
   end
   
+  def Ironman.expire_cache
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/ironman.html")
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/ironman")
+  end
+
   def points_for(source_result)
     1
   end
