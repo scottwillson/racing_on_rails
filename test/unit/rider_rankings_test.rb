@@ -7,7 +7,7 @@ class RiderRankingsTest < Test::Unit::TestCase
     assert_not_nil(rider_rankings, "RiderRankings after recalculate")
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
-    assert_equal(11, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
+    assert_equal(19, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
     race = rider_rankings.standings.first.races.first
   end
   
@@ -168,7 +168,7 @@ class RiderRankingsTest < Test::Unit::TestCase
 
     road_rider_rankings = rider_rankings.standings.first
     assert_equal("2004 Rider Rankings", road_rider_rankings.name, "2004 rider rankings name")
-    assert_equal(11, road_rider_rankings.races.size, "2004 rider rankings races")
+    assert_equal(19, road_rider_rankings.races.size, "2004 rider rankings races")
     assert_equal_dates(Date.today, road_rider_rankings.updated_at, "RiderRankings last updated")
     
     senior_men = road_rider_rankings.races.detect {|b| b.category == men_cat_1_2}

@@ -36,6 +36,8 @@ module Competitions
       root_standings = standings.create(:event => self)
       association_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
       for category_name in [
+        'Junior Men A', 'Junior Men B', 'Junior Men C', 'Junior Men D',
+        'Junior Women A', 'Junior Women B', 'Junior Women C', 'Junior Women D',
         'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5', 
         'Masters Men A', 'Masters Men B', 'Masters Men C', 
         'Masters Men D', 'Masters Women A', 'Masters Women B', 
