@@ -103,19 +103,12 @@ class Competition < Event
   def recalculate
     for individual_standings in standings(true)
       for race in individual_standings.races
-        logger.debug("#{self.class.name} Find source results for '#{race.name}'") if logger.debug?
-        results = []
-        Competition.benchmark('source_results') {
-          results = source_results(race)
-        }
-        logger.debug("#{self.class.name} Found #{results.size} source results") if logger.debug?
-      
+        results = source_results_with_benchmark(race)
         create_competition_results_for(results, race)
         after_create_competition_results_for(race)
         race.place_results_by_points(break_ties?)
       end
     end
-    
     save!
   end
   
@@ -132,7 +125,7 @@ class Competition < Event
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
     ids = [race.category_id]
-    ids = ids + race.category.children.map {|category| category.id}
+    ids = ids + race.category.descendants.map {|category| category.id}
     ids.join(', ')
   end
   
@@ -226,5 +219,16 @@ class Competition < Event
 
   def to_s
     "<self.class #{id} #{name} #{start_date} #{end_date}>"
+  end
+  
+  protected
+  
+  def source_results_with_benchmark(race)
+    results = []
+    Competition.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+      results = source_results(race)
+    }
+    logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
+    results
   end
 end

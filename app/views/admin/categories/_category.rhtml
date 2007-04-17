@@ -1,22 +1,15 @@
-<tr valign="top" id="category_<%= category.id %>_row">
-	<td>
-    <% unless category.parent %>
-		<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :title => 'No parent category assigned') %>
-    <% end %>
-	</td>
+<tr class="<%= cycle("even", "odd") %>" id="category_<%= category.id %>_row">
 	<td><%= image_tag('/images/icons/category.gif', 
 					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
 					  :id => "category_#{category.id}") %></td>
-	<td nowrap>
-		<%= attribute(category, 'name') %>
-		<span id="message_<%= category.id %>" ></span>
+	<td><%= attribute(category, 'name') %></td>
+	<td style="padding-left: 24px;">
+		<%- unless category.children.empty? -%>
+			<%= link_to 'Children', :id => category.id %>
+		<%- end -%>
 	</td>
-	<td nowrap>
-		<%= render(:partial => 'parent_category', :locals => {:category => category}) %>
-		<span id="parent_category_message_<%= category.id %>" ></span>
-	</td>
-    <td><%= category.parent.parent.name if category.parent and category.parent.parent %></td>
- 	<td><%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+	<td style="padding-top: 8px;">
+		<%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
 		:url => {:action => "destroy", :id => category.id},
 		:confirm => "Really delete #{category.name}?",
 		:complete => evaluate_remote_response
@@ -25,11 +18,10 @@
 </tr>
 <%= draggable_element("category_#{category.id}", :revert => true) %>
 <%= drop_receiving_element("category_#{category.id}", 
-	:url => { :action => "insert_at", :target_id => category.id }, 
+	:url => { :action => "add_child", :parent_id => category.id }, 
 	:loading => "new Effect.Fade(element.id + '_row')",
 	:complete => evaluate_remote_response) %>
-<%= drop_receiving_element("category_name_#{category.id}", 
-	:url => { :action => "insert_at", :target_id => category.id }, 
+<%= drop_receiving_element("name_#{category.id}", 
+	:url => { :action => "add_child", :parent_id => category.id }, 
 	:loading => "new Effect.Fade(element.id + '_row')",
 	:complete => evaluate_remote_response) %>
-

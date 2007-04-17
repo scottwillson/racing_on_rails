@@ -19,4 +19,30 @@ class CategoryTest < Test::Unit::TestCase
     assert(category.errors.empty?, category.errors.full_messages)
     assert_equal('Clydesdale', category.name, 'category.name')
   end
+  
+  def test_sort
+    categories = Category.find(:all)
+    categories.sort
+  end
+  
+  def test_find_all_unknowns
+    unknown = Category.create(:name => 'Canine')
+    assoc_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
+
+    unknowns = Category.find_all_unknowns
+    assert_not_nil(unknowns, 'Orphans should not be nil')
+    assert(unknowns.include?(unknown), "Orphans should include 'Canine' category")
+    assert(!unknowns.include?(assoc_category), "Orphans should not include '#{ASSOCIATION.short_name}' category")
+  end
+  
+  def test_equal
+    senior_men = Category.find_by_name('Senior Men')
+    senior_men_2 = Category.find_by_name('Senior Men')
+    assert_equal(senior_men, senior_men_2, 'Senior Men instances')
+    assert_equal(senior_men_2, senior_men, 'Senior Men instances')
+
+    senior_men_2.name = ''
+    assert_equal(senior_men, senior_men_2, 'Senior Men instances with different names')
+    assert_equal(senior_men_2, senior_men, 'Senior Men instances with different names')
+  end
 end

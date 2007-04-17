@@ -4,32 +4,42 @@
 # Insert <%= ASSOCIATION.short_name %> categories after inserting their <%= ASSOCIATION.short_name %> categories.
 # "omap" means "ordered map" in YAML. Very picky about indentation.
 #
+- association:
+    id: 200
+    name: <%= ASSOCIATION.short_name %>
 - senior_men:
     id: 1
     name: Senior Men
     position: 1
+    parent_id: 200
 - men_4:
     id: 3
     name: Category 4/5 Men
+    parent_id: 200
 - senior_women:
     id: 4
     name: Senior Women
     position: 2
+    parent_id: 200
 - masters_35_plus_women:
     id: 5
     name: Masters 35+ Women
 - cat_3_women:
     id: 6
     name: Category 3 Women
+    parent_id: 200
 - cat_4_women:
     id: 7
     name: Category 4 Women
+    parent_id: 200
 - junior_women:
     id: 9
     name: Junior Women
+    parent_id: 200
 - masters_men:
     id: 10
     name: Masters Men
+    parent_id: 200
 - masters_women:
     id: 11
     name: Masters Women
@@ -39,9 +49,11 @@
 - tandem:
     id: 13
     name: Tandem
+    parent_id: 200
 - cat_3:
     id: 14
     name: Category 3 Men
+    parent_id: 200
 - cx_a:
     id: 16
     name: Men A
@@ -52,12 +64,15 @@
 - pro_semi_pro_elite_men:
     id: 20
     name: Pro, Semi-Pro, Elite Men
+    parent_id: 200
 - pro_elite_expert_women:
     id: 21
     name: Pro, Elite, Expert Women
+    parent_id: 200
 - junior_men:
     id: 22
     name: Junior Men
+    parent_id: 200
 - expert_junior_men:
     id: 23
     name: Expert Junior Men
@@ -86,3 +101,4 @@
     id: 125
     name: Women 4
     position: 12
+    parent_id: 200

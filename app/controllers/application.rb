@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
   
   RESULTS_LIMIT = 100
   
-  # FIXME: Use conditional to look in local first, RAILS_ROOT second
   def rescue_action_in_public(exception)
   	case exception
     when ActiveRecord::RecordNotFound, ::ActionController::RoutingError, ::ActionController::UnknownAction

@@ -1,39 +1,61 @@
-<% @page_title = 'Admin: Categories' %>
+<% @page_title = 'Admin: Categories: ' + @category.name %>
 
 <%= render "shared/admin/tabs" %>
 
-<div align="center">
-
+<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
 <div class="message" id="message">
-	<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-	<%= flash[:notice] if flash[:notice] %>
+	<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+	<span id='warn_text'><%= flash[:warn] %></span>
+	<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
+	<span id='message_text'><%= flash[:notice] %></span>
 </div>
+<%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
+<%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
 
-<table class="table_with_buttons">
+<table>
 	<tr>
-		<td>
-			<table class="base" id="categories">
-		        <tr>
-					<th></th>
-					<th></th>
-		            <th>Name</th>
-		            <th>BAR Category</th>
-		            <th>Overall BAR Category</th>
-					<th></th>
-		        </tr>
-				<%= render :partial => "category", :collection => @categories.sort %>
-				<% if @categories.empty? %>
-				<tr valign="top">
-					<td colspan="6" width="200" class="not_found">No categories found</td>
-				</tr>
-				<% end %>
-				<tr valign="top" id="new_row">
-					<td colspan="6"></td>
-				</tr>
+		<th>
+			<%- for ancestor in @category.ancestors.reverse -%>
+			<%= link_to ancestor.name, :id => ancestor.id %> | 
+			<%- end -%>
+			<span id="page_category"><%= @category.name %></span>
+		</th>
+		<th id="unknown">Unknown</th>
+	</tr>
+	<tr>
+		<td valign="top" style="padding-right: 12px;">
+			<div class="categories">
+			<table class="base">
+			<%= render :partial => "category", :collection => @category.children.sort_by {|c| c.name} %>
+			<% if @category.children.empty? %><tr><td>No categories</td></tr><% end %>
+			<tr valign="top" id="new_row">
+				<td colspan="4"></td>
+			</tr>
 			</table>
+			</div>
+			<div><%= link_to_remote image_tag('/images/buttons/add.gif', :border => 0, :height => 22, :width => 23), 
+	        {:update => "new_row", 
+	         :url => { :action => "new_inline" },
+			} %></div>
+		</td>
+		<td valign="top" style="padding-left: 12px;">
+			<%- reset_cycle -%>
+			<div class="categories">
+			<table class="base">
+			<%= render :partial => "category", :collection => @unknowns.sort_by {|c| c.name} %>
+			</table>
+			</div>
+			<% if @unknowns.empty? %>None<% end %>
 		</td>
 	</tr>
-	<%= render :partial => "/admin/add_button_row" %>
 </table>
 
-</div>
+<%= drop_receiving_element("unknown", 
+	:url => { :action => "add_child"}, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>
+
+<%= drop_receiving_element("page_category", 
+	:url => { :action => "add_child", :parent_id => @category.id}, 
+	:loading => "new Effect.Fade(element.id + '_row')",
+	:complete => evaluate_remote_response) %>

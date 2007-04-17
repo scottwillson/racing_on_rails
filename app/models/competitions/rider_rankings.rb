@@ -34,13 +34,18 @@ module Competitions
     
     def create_standings
       root_standings = standings.create(:event => self)
+      association_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
       for category_name in [
-        'Senior Men', 'Category 3 Men', 'Category 4/5 Men', 
-        'Senior Women', 'Category 3 Women', 'Category 4 Women', 
-        'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
-        'Singlespeed/Fixed', 'Tandem']
+        'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5', 
+        'Masters Men A', 'Masters Men B', 'Masters Men C', 
+        'Masters Men D', 'Masters Women A', 'Masters Women B', 
+        'Women Cat 1-2-3', 'Women Cat 4']
 
         category = Category.find_or_create_by_name(category_name)
+        unless category.parent
+          category.parent = association_category
+          category.save!
+        end
         root_standings.races.create(:category => category)
       end
     end

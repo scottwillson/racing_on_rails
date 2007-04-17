@@ -10,22 +10,40 @@ class Admin::CategoriesController < Admin::RecordEditor
   # === Assigns
   # * categories
   def index
-    @categories = Category.find(:all)
+    if params[:id]
+      @category = Category.find(params[:id])
+    else
+      @category = Category.find_or_create_by_name(ASSOCIATION.short_name)
+    end
+    @unknowns = Category.find_all_unknowns
   end
   
+  def create
+    begin
+      new_name = params[:name]
+      @association_category = Category.find_by_name(ASSOCIATION.short_name)
+      @category = @association_category.children.create(:name => new_name)
+      
+      saved = @category.save
+      if saved
+        flash[:info] = "Created #{new_name}"
+      end
+    rescue Exception => e
+      stack_trace = e.backtrace.join("\n")
+      logger.error("#{e}\n#{stack_trace}")
+      flash[:error] = e
+    end
+    render :update do |page|
+      page.redirect_to(:action => :index)
+    end
+  end
+
   # Edit Category name inline
   # === Assigns
   # * category
   def edit_name
     @category = Category.find(@params[:id])
     render(:partial => 'edit')
-  end
-  
-  # Edit Category parent Category inline
-  def edit_parent_category
-    category = Category.find(@params[:id])
-    parent_categories = parent_category_choices()
-    render(:partial => 'edit_parent_category', :locals => {:category => category, :parent_categories => parent_categories})
   end
   
   # Update Category name inline
@@ -53,35 +71,6 @@ class Admin::CategoriesController < Admin::RecordEditor
     end
   end
   
-  # Update Category parent category inline
-  def update_parent_category
-    begin
-      category_id = params[:category][:id]
-      @category = Category.find(category_id)
-      parent_category_id = params[:parent_id]
-      if parent_category_id.blank?
-        parent_category = nil
-      else
-        parent_category = Category.find(params[:parent_id])
-      end
-      @category.parent = parent_category
-      
-      saved = @category.save
-      if saved
-        render(:partial => 'parent_category', :locals => {:category => @category})
-      else
-        @parent_categories = parent_category_choices()
-        render(:partial => 'edit_parent_category', :locals => {:parent_categories => @parent_categories})
-      end
-    rescue Exception => e
-      stack_trace = e.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{e}\n#{stack_trace}")
-      @category.errors.add('parent_category', e)
-      @parent_categories = parent_category_choices()
-      render(:partial => 'edit_parent_category', :locals => {:parent_categories => @parent_categories})
-    end
-  end
-  
   # Cancel inline Category edit
   def cancel
     if @params[:id]
@@ -106,41 +95,40 @@ class Admin::CategoriesController < Admin::RecordEditor
       end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
-      message = "Could not delete #{category.name}"
+      logger.error("#{error}\n#{stack_trace}")
+      message = "Could not delete #{category.name}: #{error}"
       render :update do |page|
-        page.replace_html("message_#{category.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
+        page.replace_html(
+          'message', 
+          "#{image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'warn') } #{message}"
+        )
       end
     end
   end
 
-  # Re-order Category via drag and drop
-  def insert_at
+  # Add category as child
+  def add_child
     category_id = @params[:id].gsub('category_', '')
     @category = Category.find(category_id)
-    target_id = params[:target_id]
-    @target = Category.find(target_id)
-    target_position = @target.position
-    @target.increment_position
-    @category.insert_at(target_position)
+    parent_id = params[:parent_id]
+    if parent_id
+      @parent = Category.find(parent_id)
+      @category.parent = @parent    
+    else
+      @category.parent = nil
+    end
     begin
+      @category.save!
       render :update do |page|
-        page.remove("category_#{category_id}_row")
-        page.insert_html(:before, "category_#{target_id}_row", render(:partial => 'category', :locals => {:category => @category }))
+        page.redirect_to(:action => :index)
       end
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
       message = "Could not insert category"
       render :update do |page|
-        page.replace_html("message_category_name_#{target_id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
+        page.replace_html("message_category_name_#{parent_id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
       end
     end
-  end
-  
-  # Blank Category + all BAR Categories. Could handle this on the front-end probably
-  # FIXME Quick hack now to make this maybe work with simplified categories
-  def parent_category_choices
-    [Category::NONE] + Category.find(:all, :conditions => ['parent_id is null'])
   end
 end

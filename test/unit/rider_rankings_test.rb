@@ -7,26 +7,36 @@ class RiderRankingsTest < Test::Unit::TestCase
     assert_not_nil(rider_rankings, "RiderRankings after recalculate")
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
-    assert_equal(12, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
+    assert_equal(11, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
     race = rider_rankings.standings.first.races.first
   end
   
   def test_recalculate
+    senior_men = Category.find_by_name("Senior Men")
+    men_cat_1_2 = Category.create(:name => 'Men Cat 1-2')
+    senior_men.parent = men_cat_1_2
+    senior_men.save!
+
+    senior_women = Category.find_by_name("Senior Women")
+    women_cat_1_2_3 = Category.create(:name => 'Women Cat 1-2-3')
+    senior_women.parent = women_cat_1_2_3
+    senior_women.save!
+
     cross_crusade = Series.create!(:name => "Cross Crusade")
-    rider_rankingston = SingleDayEvent.create!({
+    barton = SingleDayEvent.create!({
       :name => "Cross Crusade: Barton Park",
       :discipline => "Cyclocross",
       :date => Date.new(2004, 11, 7),
       :parent => cross_crusade
     })
-    rider_rankingston_standings = rider_rankingston.standings.create
+    barton_standings = barton.standings.create
     men_a = Category.find_by_name('Men A')
-    rider_rankingston_a = rider_rankingston_standings.races.create(:category => men_a, :field_size => 5)
-    rider_rankingston_a.results.create({
+    barton_a = barton_standings.races.create(:category => men_a, :field_size => 5)
+    barton_a.results.create({
       :place => 3,
       :racer => racers(:tonkin)
     })
-    rider_rankingston_a.results.create({
+    barton_a.results.create({
       :place => 10,
       :racer => racers(:weaver)
     })
@@ -37,7 +47,6 @@ class RiderRankingsTest < Test::Unit::TestCase
       :date => Date.new(2004, 5, 17),
     })
     swan_island_standings = swan_island.standings.create
-    senior_men = Category.find_by_name("Senior Men Pro 1/2")
     swan_island_senior_men = swan_island_standings.races.create(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create({
       :place => 8,
@@ -47,7 +56,6 @@ class RiderRankingsTest < Test::Unit::TestCase
       :place => 2,
       :racer => racers(:mollie)
     })
-    senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
@@ -160,10 +168,10 @@ class RiderRankingsTest < Test::Unit::TestCase
 
     road_rider_rankings = rider_rankings.standings.first
     assert_equal("2004 Rider Rankings", road_rider_rankings.name, "2004 rider rankings name")
-    assert_equal(12, road_rider_rankings.races.size, "2004 rider rankings races")
+    assert_equal(11, road_rider_rankings.races.size, "2004 rider rankings races")
     assert_equal_dates(Date.today, road_rider_rankings.updated_at, "RiderRankings last updated")
     
-    senior_men = road_rider_rankings.races.detect {|b| b.name == "Senior Men"}
+    senior_men = road_rider_rankings.races.detect {|b| b.category == men_cat_1_2}
     assert_equal(5, senior_men.results.size, "Senior Men rider rankings results")
     assert_equal_dates(Date.today, senior_men.updated_at, "RiderRankings last updated")
 
@@ -181,7 +189,7 @@ class RiderRankingsTest < Test::Unit::TestCase
     assert_equal("4", senior_men.results[3].place, "Senior Men rider rankings results place")
     assert_equal(68, senior_men.results[3].points, "Senior Men rider rankings results points")
     
-    women = road_rider_rankings.races.detect {|b| b.name == "Senior Women"}
+    women = road_rider_rankings.races.detect {|b| b.category == women_cat_1_2_3}
     assert_equal(1, women.results.size, "Senior Women rider rankings results")
 
     women.results.sort!

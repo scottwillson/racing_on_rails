@@ -14,13 +14,11 @@
 # Combined BAR categories roll-up multiple discipline BAR categories into one (not currently used)
 class Category < ActiveRecord::Base
 
+  include Comparable
   include Dirty
 
   acts_as_list
   acts_as_tree
-  
-  # :deprecated: Will be removed after migration
-  belongs_to :bar_category, :class_name => "Category", :foreign_key => "bar_category_id"
   
   has_many :results
   has_many :races
@@ -28,20 +26,43 @@ class Category < ActiveRecord::Base
   validates_presence_of :name
    
   NONE = Category.new(:name => "", :id => nil)
+  
+  # All categories with no parent (except root 'association' category)
+  def Category.find_all_unknowns
+    Category.find(:all, :conditions => ['parent_id is null and name <> ?', ASSOCIATION.short_name])
+  end
+  
+  # Default to blank
+  def name
+    self[:name] || ''
+  end
+  
+  # Default to 9999
+  def position
+    self[:position] || 9999
+  end
+  
+  def descendants
+    _descendants = children(true)
+    for child in children
+      _descendants = _descendants + child.descendants
+    end
+    _descendants
+  end
 
+  # Compare by position, then by name
+  # TODO Need this method?
   def <=>(other)
-    if other
-      do1 = position || 9999
-      do2 = other.position || 9999
-      do1 <=> do2
-    elsif !name.nil?
+    return 0 if self[:id] and self[:id] == other[:id]
+    diff = (position <=> other.position)
+    if diff == 0
       name <=> other.name
     else
-      -1
+      diff
     end
   end
     
   def to_s
-    "<Category #{id} #{parent_id} #{position} #{name}>"
+    "#<Category #{id} #{parent_id} #{position} #{name}>"
   end
 end
