@@ -1,6 +1,9 @@
 <table class="base" cellspacing="0" cellpadding="0" width="100%">
 	<caption>Race: <%= race.name %></caption>
 	<tr>
+		<th colspan="<%= race.result_columns_or_default.size + 2 %>"></th>
+	</tr>
+	<tr>
 		<td colspan="<%= race.result_columns_or_default.size + 2 %>">
 			<%= start_form_tag :action => 'update', :id => race.standings.event.id, :standings_id => race.standings.id, :race_id => race.id %>
 			<table cellspacing="0" cellpadding="0">
@@ -41,7 +44,10 @@
 		<td><%= result.send(column.to_sym) if result.respond_to?(column.to_sym) %></td>
 		<% end %>
 		<td style="padding-left: 12px;">
-			<%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+			<%= link_to_remote image_tag('/images/buttons/add.gif', :height => 22, :width => 22, :border => 0),
+			:url => {:action => "insert_result", :id => result.id},
+			:complete => evaluate_remote_response
+			%><%= link_to_remote image_tag('/images/buttons/remove.gif', :height => 22, :width => 22, :border => 0),
 			:url => {:action => "destroy_result", :id => result.id},
 			:complete => evaluate_remote_response
 			%>
@@ -61,11 +67,11 @@
 	<tr>
 		<td align="right">New:</td>
 		<% for column in race.result_columns_or_default %>
-		<td><%= text_field 'result', column, :size => grid_columns(column).size, :autocomplete => 'off' %></td>
+		<td><%= text_field 'result', column, :size => grid_columns(column).size * 0.6, :autocomplete => 'off' %></td>
 		<% end %>
 	</tr>
 	<tr>
-		<td colspan="<%= race.result_columns_or_default.size + 1 %>" align="right">
+		<td colspan="<%= race.result_columns_or_default.size + 2 %>" align="right">
 			<%= submit_tag "Add New Result" %>
 		</td>
 	</tr>

@@ -4,18 +4,18 @@ tonkin_banana_belt:
   racer_id: 1
   team_id: 1
   place: 1
-result_2:
+weaver_banana_belt:
   id: 2
   race_id: 1
   racer_id: 3
   place: 2
-result_3:
+matson_banana_belt:
   id: 3
   race_id: 1
   racer_id: 2
   team_id: 1
   place: 3
-result_4:
+mollie_banana_belt:
   id: 4
   race_id: 1
   racer_id: 4

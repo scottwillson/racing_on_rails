@@ -128,14 +128,14 @@ class Admin::EventsController < ApplicationController
   # * warn: List invalid columns
   # * notice
   def upload
-    uploaded_file = @params[:results_file]
+    uploaded_file = params[:results_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
     File.open(path, File::CREAT|File::WRONLY) do |f|
       f.print(uploaded_file.read)
     end
 
     temp_file = File.new(path)
-    event_id = @params[:id]
+    event_id = params[:id]
     event = Event.find(event_id)
     results_file = ResultsFile.new(temp_file, event)
     begin
@@ -173,7 +173,7 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * notice
   def destroy_event
-    event = Event.find(@params[:id])
+    event = Event.find(params[:id])
     begin
       event.destroy
       flash[:notice] = "Deleted #{event.name}"
@@ -197,7 +197,7 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * notice
   def destroy_standings
-    standings = Standings.find(@params[:id])
+    standings = Standings.find(params[:id])
     begin
       standings.destroy
       flash[:notice] = "Deleted #{standings.name}"
@@ -225,7 +225,7 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * notice
   def destroy_race
-    race = Race.find(@params[:id])
+    race = Race.find(params[:id])
     begin
       race.destroy
       render :update do |page|
@@ -247,13 +247,44 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Insert new Result and redirect to Event
+  # === Params
+  # * id
+  # === Flash
+  # * notice
+  def insert_result
+    begin
+      result = Result.find(params[:id])
+      new_place = result.place
+      results = result.race.results.sort
+      start_index = results.index(result)
+      for index in start_index...(results.size)
+        if results[index].place.to_i > 0
+          results[index].place = results[index].place.to_i + 1
+          results[index].save!
+        end
+      end
+      result.race.results.create(:place => new_place)
+      render :update do |page|
+        page.redirect_to(:action => :show, :id => result.race.standings.event.id, :standings_id => result.race.standings.id, :race_id => result.race.id)
+      end
+    rescue  Exception => error
+      stack_trace = error.backtrace.join("\n")
+      logger.error("#{error}\n#{stack_trace}")
+      message = "Could not insert result"
+      render :update do |page|
+        page.replace_html("message_#{result.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
+      end
+    end
+  end
+  
   # Permanently destroy Results and redirect to Event
   # === Params
   # * id
   # === Flash
   # * notice
   def destroy_result
-    result = Result.find(@params[:id])
+    result = Result.find(params[:id])
     begin
       result.destroy
       render :update do |page|

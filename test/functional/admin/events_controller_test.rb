@@ -13,10 +13,10 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     @controller = Admin::EventsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    @request.session[:user] = users(:candi)
   end
 
   def test_show
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
@@ -35,7 +35,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_show_parent
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_series)
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
@@ -48,7 +47,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_show_no_results
-    @request.session[:user] = users(:candi)
     mt_hood_1 = events(:mt_hood_1)
     opts = {:controller => "admin/events", :action => "show", :id => mt_hood_1.to_param.to_s}
     assert_routing("/admin/events/#{mt_hood_1.to_param}", opts)
@@ -60,7 +58,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_show_with_standings
-    @request.session[:user] = users(:candi)
     kings_valley = events(:kings_valley)
     standings = kings_valley.standings.first
     opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param.to_s, :standings_id => standings.to_param.to_s,}
@@ -73,7 +70,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_show_with_race
-    @request.session[:user] = users(:candi)
     kings_valley = events(:kings_valley)
     standings = kings_valley.standings.first
     kings_valley_3 = races(:kings_valley_3)
@@ -87,7 +83,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_show_with_promoter
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s, :promoter_id => '2'}
     assert_recognizes(opts, "/admin/events/#{banana_belt.to_param}", :promoter_id => '2')
@@ -109,7 +104,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_upload
-    @request.session[:user] = users(:candi)
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
     
@@ -131,7 +125,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_upload_invalid_columns
-    @request.session[:user] = users(:candi)
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
     
@@ -146,7 +139,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
   
   def test_new_single_day_event
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/events", :action => "new", :year => '2008'}
     assert_routing("/admin/events/new/2008", opts)
     get(:new, :year => '2008')
@@ -156,7 +148,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_new_single_day_event_default_year
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/events", :action => "new"}
     assert_generates("/admin/events/new", opts)
     get(:new)
@@ -167,8 +158,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
   
   def test_create_event
-    @request.session[:user] = users(:candi)
-
     opts = {:controller => "admin/events", :action => "create"}
     assert_routing("/admin/events/create", opts)
 
@@ -206,7 +195,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     Racer.create(:name => 'Greg Rodgers', :road_number => '404')
     Racer.create(:name => 'Greg Rodgers', :road_number => '500')
     
-    @request.session[:user] = users(:candi)
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.standings(true).empty?, 'Should have no standings before import')
     
@@ -221,7 +209,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy_race
-    @request.session[:user] = users(:candi)
     kings_valley_women_2003 = races(:kings_valley_women_2003)
     opts = {:controller => "admin/events", :action => "destroy_race", :id => kings_valley_women_2003.to_param.to_s}
     assert_routing("/admin/events/destroy_race/#{kings_valley_women_2003.to_param}", opts)
@@ -231,7 +218,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy_standings
-    @request.session[:user] = users(:candi)
     jack_frost = standings(:jack_frost)
     opts = {:controller => "admin/events", :action => "destroy_standings", :id => jack_frost.to_param.to_s}
     assert_routing("/admin/events/destroy_standings/#{jack_frost.to_param}", opts)
@@ -241,7 +227,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy_result
-    @request.session[:user] = users(:candi)
     tonkin_kings_valley = results(:tonkin_kings_valley)
     opts = {:controller => "admin/events", :action => "destroy_result", :id => tonkin_kings_valley.to_param.to_s}
     assert_routing("/admin/events/destroy_result/#{tonkin_kings_valley.to_param}", opts)
@@ -249,9 +234,91 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_response(:success)
     assert_raise(ActiveRecord::RecordNotFound, 'tonkin_kings_valley should have been destroyed') { Result.find(tonkin_kings_valley.id) }
   end
+  
+  def test_insert_result
+    race = races(:banana_belt_pro_1_2)
+    assert_equal(4, race.results.size, 'Results before insert')
+    tonkin_result = results(:tonkin_banana_belt)
+    weaver_result = results(:weaver_banana_belt)
+    matson_result = results(:matson_banana_belt)
+    mollie_result = results(:mollie_banana_belt)
+    assert_equal('1', tonkin_result.place, 'Tonkin place before insert')
+    assert_equal('2', weaver_result.place, 'Weaver place before insert')
+    assert_equal('3', matson_result.place, 'Matson place before insert')
+    assert_equal('16', mollie_result.place, 'Mollie place before insert')
+
+    opts = {:controller => "admin/events", :action => "insert_result", :id => weaver_result.to_param.to_s}
+    assert_routing("/admin/events/insert_result/#{weaver_result.to_param}", opts)
+
+    post(:insert_result, :id => weaver_result.id)
+    assert_response(:success)
+    assert_equal(5, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    mollie_result.reload
+    assert_equal('1', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('3', weaver_result.place, 'Weaver place after insert')
+    assert_equal('4', matson_result.place, 'Matson place after insert')
+    assert_equal('17', mollie_result.place, 'Mollie place after insert')
+
+    post(:insert_result, :id => tonkin_result.id)
+    assert_response(:success)
+    assert_equal(6, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    mollie_result.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('4', weaver_result.place, 'Weaver place after insert')
+    assert_equal('5', matson_result.place, 'Matson place after insert')
+    assert_equal('18', mollie_result.place, 'Mollie place after insert')
+
+    post(:insert_result, :id => mollie_result.id)
+    assert_response(:success)
+    assert_equal(7, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    mollie_result.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('4', weaver_result.place, 'Weaver place after insert')
+    assert_equal('5', matson_result.place, 'Matson place after insert')
+    assert_equal('19', mollie_result.place, 'Mollie place after insert')
+    
+    dnf = race.results.create(:place => 'DNF')
+    post(:insert_result, :id => weaver_result.id)
+    assert_response(:success)
+    assert_equal(9, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    mollie_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', mollie_result.place, 'Mollie place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    
+    post(:insert_result, :id => dnf.id)
+    assert_response(:success)
+    assert_equal(10, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    mollie_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', mollie_result.place, 'Mollie place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    race.results(true).sort!
+    assert_equal('DNF', race.results.last.place, 'DNF place after insert')
+  end
 
   def test_update_event
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/update/#{banana_belt.to_param}", opts)
@@ -296,7 +363,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_standings
-    @request.session[:user] = users(:candi)
     banana_belt = standings(:banana_belt)
     opts = {:controller => "admin/events", :action => "update", :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/update/#{banana_belt.event.to_param}/#{banana_belt.to_param}", opts)
@@ -321,7 +387,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_discipline_nil
-    @request.session[:user] = users(:candi)
     banana_belt = standings(:banana_belt)
     banana_belt.update_attribute(:discipline, nil)
     assert_nil(banana_belt[:discipline], 'discipline')
@@ -341,7 +406,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_discipline_same_as_parent
-    @request.session[:user] = users(:candi)
     banana_belt = standings(:banana_belt)
     assert_equal('Road', banana_belt[:discipline], 'discipline')
     assert_equal('Road', banana_belt.event.discipline, 'Parent event discipline')
@@ -360,7 +424,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_error
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/update/#{banana_belt.to_param}", opts)
@@ -383,7 +446,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
   
   def test_update_bar_points
-    @request.session[:user] = users(:candi)
     race = races(:banana_belt_pro_1_2)
 
     opts = {:controller => "admin/events", :action => "update_bar_points", :id => race.to_param.to_s}
@@ -406,7 +468,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   def test_save_no_promoter
     assert_nil(SingleDayEvent.find_by_name('Silverton'), 'Silverton should not be in database')
     # New event, no changes, single day, no promoter
-    @request.session[:user] = users(:candi)
     post(:create, 
          "commit"=>"Save", 
          'same_promoter' => 'true',
@@ -422,7 +483,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
   
   def test_save_different_promoter
-    @request.session[:user] = users(:candi)
     banana_belt = events(:banana_belt_1)
     assert_equal(promoters(:brad_ross), banana_belt.promoter, 'Promoter before save')
     
@@ -445,7 +505,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   def test_delete
     tabor_cr = events(:tabor_cr)
 
-    @request.session[:user] = users(:candi)
     post(:update,
          'id' => tabor_cr.to_param,
          "commit"=>"Delete", 
@@ -461,7 +520,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
 
   def test_upcoming_events
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/events", :action => "upcoming"}
     assert_routing("/admin/events/upcoming", opts)
     get(:upcoming)
@@ -470,14 +528,12 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
   end
   
   def test_upcoming_events_refresh
-    @request.session[:user] = users(:candi)
     post(:upcoming, "commit"=>"Refresh", "date"=>{"month"=>"6", "day"=>"25", "year"=>"2004"}, "weeks"=>"6")
     assert_response(:success)
     assert_template("admin/events/upcoming")
   end
   
   def test_first_aid
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/events", :action => "first_aid"}
     assert_routing("/admin/events/first_aid", opts)
     get(:first_aid)

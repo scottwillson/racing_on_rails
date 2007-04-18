@@ -92,7 +92,7 @@ HTML
         else
           html << "      <td class=\"first\">"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
         if @tabs.size < 2
           if current_page?(tab[1])
             html << "</td>\n      <td class=\"last_selected\">"
@@ -106,14 +106,14 @@ HTML
         else
           html << "      <td class=\"last\">"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
       else
         if current_page?(tab[1])
           html << "      <td class=\"selected\">"
         else
           html << "      <td>"
         end
-        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3])
+        html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
       end
       html << "</td>\n"
     end

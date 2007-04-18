@@ -15,7 +15,7 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   def test_destroy
     @request.session[:user] = users(:candi)
     
-    result_2 = results(:result_2)
+    result_2 = results(:weaver_banana_belt)
     race = result_2.race
     event = race.standings.event
     assert_not_nil(result_2, 'Result should exist in DB')
