@@ -30,7 +30,7 @@ class Race < ActiveRecord::Base
   # Convenience method to get the Race's Category's BAR Category
   # :deprecated:
   def bar_category_name
-    category.bar_category.name if category and category.bar_category
+    category.parent.name if category and category.parent
   end
   
   # Defaults to Standings' BAR points
