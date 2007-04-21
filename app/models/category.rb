@@ -24,12 +24,19 @@ class Category < ActiveRecord::Base
   has_many :races
 
   validates_presence_of :name
+  validate :parent_is_not_self
    
   NONE = Category.new(:name => "", :id => nil)
   
   # All categories with no parent (except root 'association' category)
   def Category.find_all_unknowns
     Category.find(:all, :conditions => ['parent_id is null and name <> ?', ASSOCIATION.short_name])
+  end
+  
+  def parent_is_not_self
+    if parent_id && parent_id == id
+      errors.add('parent', 'Category cannot be its own parent')
+    end
   end
   
   # Default to blank

@@ -45,4 +45,10 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal(senior_men, senior_men_2, 'Senior Men instances with different names')
     assert_equal(senior_men_2, senior_men, 'Senior Men instances with different names')
   end
+  
+  def test_no_circular_parents
+    senior_men = Category.find_by_name('Senior Men')
+    senior_men.parent = senior_men
+    assert(!senior_men.valid?, 'Category with itself as parent should not be valid')
+  end
 end
