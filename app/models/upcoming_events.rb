@@ -12,12 +12,14 @@ class UpcomingEvents
   def initialize(date = Date.today, weeks = 2)
     date = date || Date.today
     weeks = weeks || 2
+
     _events = SingleDayEvent.find(
       :all, 
       :conditions => scope_by_sanctioned(['date >= ? and date <= ? and cancelled = ? and parent_id is null', 
                       date.to_time.beginning_of_day, cutoff_date(date, weeks), false]),
       :order => 'date')
 
+    # Exclude Series and WeeklySeries
     _events.concat(MultiDayEvent.find(
         :all, 
         :include => :events,
@@ -25,24 +27,20 @@ class UpcomingEvents
                         date.to_time.beginning_of_day, cutoff_date(date, weeks), 'MultiDayEvent']),
         :order => 'events.date'))
 
-    series_events = (SingleDayEvent.find(
+    _events.concat(SingleDayEvent.find(
         :all, 
         :include => :parent,
-        :conditions => scope_by_sanctioned(['events.date >= ? and events.date <= ? and events.cancelled = ? and events.parent_id is not null', 
-            date.to_time.beginning_of_day, cutoff_date(date, weeks), false]),
+        :conditions => scope_by_sanctioned(['events.date >= ? and events.date <= ? and events.cancelled = ? and events.parent_id is not null and parents_events.type = ?', 
+            date.to_time.beginning_of_day, cutoff_date(date, weeks), false, 'Series']),
         :order => 'events.date'))
-    # Cannot apply condition  with Rails-generated SQL
-    _events.concat(series_events.select {|event| event.parent.is_a?(Series) and !event.parent.is_a?(WeeklySeries)})
     
     weekly_series_events = SingleDayEvent.find(
       :all, 
       :include => :parent,
       :conditions => [
-        'events.date >= ? and events.date <= ? and events.sanctioned_by = ? and events.cancelled = ? and events.parent_id is not null', 
-                      date.to_time.beginning_of_day, cutoff_date(date, weeks), ASSOCIATION.short_name, false],
+        'events.date >= ? and events.date <= ? and events.sanctioned_by = ? and events.cancelled = ? and events.parent_id is not null and parents_events.type = ?', 
+                      date.to_time.beginning_of_day, cutoff_date(date, weeks), ASSOCIATION.short_name, false, 'WeeklySeries'],
       :order => 'events.date')
-      # Cannot apply condition  with Rails' generated SQL
-      weekly_series_events.reject! {|event| !event.parent.is_a?(WeeklySeries)}
     
     for event in weekly_series_events
       event.parent.days_of_week << event.date
