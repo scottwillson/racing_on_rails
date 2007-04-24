@@ -210,4 +210,18 @@ Downhill/Cross Country: Downhill}
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
   end
+  
+  def test_import_duplicates
+    Racer.create(:name => 'Erik Tonkin')
+    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/duplicates.xls")
+    racers_file = RacersFile.new(file)
+    racers_file.import(true)
+    
+    assert_equal(1, racers_file.created, 'Number of racers created')
+    assert_equal(0, racers_file.updated, 'Number of racers updated')
+    assert_equal(1, racers_file.duplicates.size, 'Number of duplicates')
+    
+    # Assert data
+    # Add dupe with number and assert matching
+  end
 end

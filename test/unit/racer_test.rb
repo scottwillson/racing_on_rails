@@ -515,8 +515,69 @@ class RacerTest < Test::Unit::TestCase
     assert_equal_dates('1978-01-01', racer.date_of_birth, 'date_of_birth from 78')
   end
   
+  def test_birthdate
+    racer = Racer.new(:date_of_birth => '1973-10-04')
+    assert_equal_dates('1973-10-04', racer.date_of_birth, 'date_of_birth from 0073-10-04')
+    assert_equal_dates('1973-10-04', racer.birthdate, 'birthdate from 0073-10-04')
+  end
+  
   def test_find_by_number
     racer = Racer.find_by_number('340')
     assert_equal([racers(:matson)], racer, 'Should find Matson')
+  end
+  
+  def test_hometown
+    racer = Racer.new
+    assert_equal('', racer.hometown, 'New Racer hometown')
+    
+    racer.city = 'Newport'
+    assert_equal('Newport', racer.hometown, 'Racer hometown')
+    
+    racer.city = nil
+    racer.state = 'OR'
+    assert_equal('', racer.hometown, 'Racer hometown')
+    
+    racer.city = 'Fossil'
+    racer.state = 'OR'
+    assert_equal('Fossil', racer.hometown, 'Racer hometown')
+    
+    racer.city = nil
+    racer.state = 'NY'
+    assert_equal('NY', racer.hometown, 'Racer hometown')
+    
+    racer.city = 'Petaluma'
+    racer.state = 'CA'
+    assert_equal('Petaluma, CA', racer.hometown, 'Racer hometown')
+    
+    racer = Racer.new
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    racer.hometown = ''
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    racer.hometown = nil
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    
+    racer.hometown = 'Newport'
+    assert_equal('Newport', racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    
+    racer.hometown = 'Newport, RI'
+    assert_equal('Newport', racer.city, 'New Racer city')
+    assert_equal('RI', racer.state, 'New Racer state')
+    
+    racer.hometown = nil
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    
+    racer.hometown = ''
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
+    
+    racer.hometown = 'Newport, RI'
+    racer.hometown = ''
+    assert_equal(nil, racer.city, 'New Racer city')
+    assert_equal(nil, racer.state, 'New Racer state')
   end
 end

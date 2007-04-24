@@ -1,3 +1,5 @@
+<% @page_title = 'Admin: Racers: Preview Import' %>
+
 <%= start_form_tag :action => 'import' %>
 <%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
 <%- unless flash[:warn].blank? -%>

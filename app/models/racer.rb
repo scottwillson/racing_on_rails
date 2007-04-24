@@ -178,6 +178,14 @@ class Racer < ActiveRecord::Base
     super
   end
   
+  def birthdate
+    date_of_birth
+  end
+  
+  def birthdate=(value)
+    self.date_of_birth = value
+  end
+  
   # 30 years old or older
   def master?
     if date_of_birth
@@ -390,6 +398,41 @@ class Racer < ActiveRecord::Base
         zip || ''
       end
     end
+  end
+  
+  def hometown
+    if city.blank?
+      if state.blank?
+        ''
+      else
+        if state == ASSOCIATION.state
+          ''
+        else
+          state
+        end
+      end
+    else
+      if state.blank?
+        city
+      else
+        if state == ASSOCIATION.state
+          city
+        else
+          "#{city}, #{state}"
+        end
+      end
+    end
+  end
+  
+  def hometown=(value)
+    self.city = nil
+    self.state = nil
+    return value if value.blank?
+    parts = value.split(',')
+    if parts.size > 1
+      self.state = parts.last.strip
+    end
+    self.city = parts.first.strip
   end
   
   # Hack around in-place editing

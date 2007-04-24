@@ -670,11 +670,76 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+    assert_nil(session[:duplicates], 'session[:duplicates]')
     assert_response(:redirect)
     assert_redirected_to(:controller => 'admin/racers', :action => 'index')
     
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
     assert(racers_before_import < Racer.count, 'Should have added racers')
+  end
+  
+  def test_import_with_duplicates
+    Racer.create(:name => 'Erik Tonkin')
+    racers_before_import = Racer.count
+
+    file = uploaded_file("test/fixtures/membership/duplicates.xls", "duplicates.xls", "application/vnd.ms-excel")
+    @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/duplicates.xls")
+    post(:import, :commit => 'Import', :update_membership => 'true')
+
+    assert(flash.has_key?(:warn), "flash[:warn] should not be empty")
+    assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+    assert_not_nil(session[:duplicates], 'session[:duplicates]')
+    assert_response(:redirect)
+    assert_redirected_to(:controller => 'admin/racers', :action => 'duplicates')
+    
+    assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
+    assert(racers_before_import < Racer.count, 'Should have added racers')
+  end
+  
+  def test_duplicates
+      opts = {
+        :controller => "admin/racers", 
+        :action => "duplicates"
+      }
+      assert_routing("/admin/racers/duplicates", opts)
+      @request.session[:duplicates] = []
+      get(:duplicates)
+      assert_response(:success)
+      assert_template("admin/racers/duplicates")
+  end
+  
+  def test_resolve_duplicates
+    opts = {
+      :controller => "admin/racers", 
+      :action => "resolve_duplicates"
+    }
+    assert_routing("/admin/racers/resolve_duplicates", opts)
+
+    Racer.create(:name => 'Erik Tonkin')
+    weaver_2 = Racer.create(:name => 'Ryan Weaver', :city => 'Kenton')
+    weaver_3 = Racer.create(:name => 'Ryan Weaver', :city => 'Lake Oswego')
+    alice_2 = Racer.create(:name => 'Alice Pennington', :road_category => '3')
+    racers_before_import = Racer.count
+
+    @request.session[:duplicates] = [
+      Duplicate.new(Racer.new(:name => 'Erik Tonkin'), {:name => 'Erik Tonkin'}, Racer.find(:all, :conditions => ['last_name = ?', 'Tonkin'])),
+      Duplicate.new(Racer.new(:name => 'Ryan Weaver', :city => 'Las Vegas'), {:name => 'Ryan Weaver', :city => 'Las Vegas'}, Racer.find(:all, :conditions => ['last_name = ?', 'Weaver'])),
+      Duplicate.new(Racer.new(:name => 'Alice Pennington', :road_category => '2'), {:name => 'Alice Pennington', :road_category => '2'}, Racer.find(:all, :conditions => ['last_name = ?', 'Pennington']))
+    ]
+    post(:resolve_duplicates, {'0' => 'new', '1' => weaver_3.id.to_s, '2' => alice_2.id.to_s})
+    assert_response(:redirect)
+    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    assert_nil(session[:duplicates], 'session[:duplicates] should be cleared')
+    
+    assert_equal(3, Racer.find(:all, :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
+    assert_equal(3, Racer.find(:all, :conditions => ['last_name = ?', 'Weaver']).size, 'Weaver in database')
+    assert_equal(2, Racer.find(:all, :conditions => ['last_name = ?', 'Pennington']).size, 'Pennington in database')
+    
+    weaver_3.reload
+    assert_equal('Las Vegas', weaver_3.city, 'Weaver city')
+    
+    alice_2.reload
+    assert_equal('2', alice_2.road_category, 'Alice category')
   end
   
   def test_cancel_import

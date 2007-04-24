@@ -155,10 +155,17 @@ class Admin::RacersController < Admin::RecordEditor
     elsif params[:commit] == 'Import'
       begin
         path = session[:racers_file_path]
-        created, updated = RacersFile.new(File.new(path)).import(params[:update_membership])
-        flash[:notice] = "Imported #{pluralize(created, 'new racer')} and updated #{pluralize(updated, 'existing racer')}"
+        racers_file = RacersFile.new(File.new(path))
+        racers_file.import(params[:update_membership])
+        flash[:notice] = "Imported #{pluralize(racers_file.created, 'new racer')} and updated #{pluralize(racers_file.updated, 'existing racer')}"
         session[:racers_file_path] = nil
-        redirect_to(:action => 'index')
+        if racers_file.duplicates.empty?
+          redirect_to(:action => 'index')
+        else
+          flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing racer or create a new racer with the same name.'
+          session[:duplicates] = racers_file.duplicates
+          redirect_to(:action => 'duplicates')
+        end
       rescue Exception => e
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
@@ -171,6 +178,43 @@ class Admin::RacersController < Admin::RecordEditor
 
     else
       raise("Expected 'Import' or 'Cancel'")
+    end
+  end
+  
+  def duplicates
+    @duplicates = session[:duplicates]
+    @duplicates.sort! do |x, y|
+      diff = x.new_record.last_name <=> y.new_record.last_name
+      if diff == 0
+        x.new_record.first_name <=> y.new_record.first_name
+      else
+        diff
+      end
+    end
+  end
+  
+  def resolve_duplicates
+    begin
+      @duplicates = session[:duplicates]
+      @duplicates.each_with_index do |duplicate, index|
+        id = params[index.to_s]
+        if id == 'new'
+          duplicate.new_record.save!
+        else
+          racer = Racer.update(id, duplicate.attributes)
+          unless racer.valid?
+            raise ActiveRecord::RecordNotSaved.new(racer.errors.full_messages.join(', '))
+          end
+        end
+      end
+    
+      session[:duplicates] = nil
+      redirect_to(:action => 'index')
+    rescue Exception => e
+      stack_trace = e.backtrace.join("\n")
+      logger.error("#{e}\n#{stack_trace}")
+      flash[:warn] = e
+      render(:template => 'admin/racers/duplicates')
     end
   end
 

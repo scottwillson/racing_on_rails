@@ -1,0 +1,82 @@
+<% @page_title = 'Admin: Racers: Duplicates' %>
+
+<div class="message">
+	<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+	<span id='warn_text'><%= flash[:warn] %></span>
+	<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
+	<span id='message_text'><%= flash[:notice] %></span>
+</div>
+
+<%= form_tag(:action => 'resolve_duplicates') %>
+<% @duplicates.each_with_index do |duplicate, index| %>
+<table class="base">
+  <caption><%= duplicate.new_record.name %></caption>
+  <tr>
+    <th></th>
+    <th></th>
+    <th>Aliases</th>
+    <th>Team</th>
+    <th>Hometown</th>
+    <th>Birthdate</th>
+    <th align="right">Road</th>
+    <th align="right">MTB</th>
+    <th align="right">DH</th>
+    <th align="right">Cross</th>
+    <th>Created at</th>
+  </tr>
+  <tr class="<%= cycle('even', 'odd') %>">
+    <td></td>
+    <td><strong<%= duplicate.new_record.name %></strong></td>
+    <td></td>
+    <td><strong><%= duplicate.new_record.team_name %></strong></td>
+    <td><strong><%= duplicate.new_record.hometown %></strong></td>
+    <td><strong><%= duplicate.new_record.birthdate.to_formatted_s if duplicate.new_record.birthdate %></strong></td>
+  	<td align="right">
+  		<strong><%= duplicate.new_record.road_number %></strong>
+  	</td>
+  	<td align="right">
+  		<strong><%= duplicate.new_record.xc_number %></strong>
+  	</td>
+  	<td align="right">
+  		<strong><%= duplicate.new_record.dh_number %></strong>
+  	</td>
+  	<td align="right">
+  		<strong><%= duplicate.new_record.ccx_number %></strong>
+  	</td>
+    <td></td>
+  </tr>
+  <tr class="<%= cycle('even', 'odd') %>">
+    <td><%= radio_button_tag index, 'new', true %></td>
+    <td colspan="10">Create new racer</td>
+  </tr>
+  <% for racer in duplicate.existing_records %>
+  <tr class="<%= cycle('even', 'odd') %>">
+    <td><%= radio_button_tag index, racer.id %></td>
+    <td>Merge:</td>
+    <td><%= racer.aliases.collect{|a| a.name}.join(', ') %></td>
+    <td><%= racer.team_name %></td>
+    <td><%= racer.hometown %></td>
+    <td><%= racer.birthdate.to_formatted_s if racer.birthdate %></td>
+  	<td align="right">
+  		<%= racer.road_number %>
+  	</td>
+  	<td align="right">
+  		<%= racer.xc_number %>
+  	</td>
+  	<td align="right">
+  		<%= racer.dh_number %>
+  	</td>
+  	<td align="right">
+  		<%= racer.ccx_number %>
+  	</td>
+    <td>
+    <%= racer.created_at.to_formatted_s(:long) if racer.created_at -%>
+    <%= 'New' unless racer.created_at -%>
+    </td>
+  </tr>
+  <% end %>
+</table>
+<% reset_cycle %>
+<% end %>
+<%= submit_tag 'Done' %>
+<%= end_form_tag %>

@@ -73,6 +73,10 @@ class RacersFile < GridFile
     'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new(:name => 'team_name', :description => 'Team')
   }
   
+  attr_reader :created
+  attr_reader :updated
+  attr_reader :duplicates
+  
   def initialize(source, *options)
     if options.empty?
       options = Hash.new
@@ -86,7 +90,12 @@ class RacersFile < GridFile
       :row_class => Racer,
       :column_map => COLUMN_MAP
     }.merge(options)
+
     super(source, options)
+
+    @created = 0
+    @updated = 0
+    @duplicates = []
   end
 
   def import(update_membership)
@@ -126,9 +135,8 @@ class RacersFile < GridFile
             delete_unwanted_member_from(row_hash, racer)
             add_print_card_and_label(row_hash)
             racer = Racer.create!(row_hash)
-            created = created + 1
-          else
-            logger.warn("RacersFile Found #{racers.size} racers for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") if racers.size > 1
+            @created = @created + 1
+          elsif racers.size == 1
             # Don't want to overwrite existing categories
             delete_blank_categories(row_hash)
             racer = racers.first
@@ -144,7 +152,17 @@ class RacersFile < GridFile
             unless racer.valid?
               raise ActiveRecord::RecordNotSaved.new(racer.errors.full_messages.join(', '))
             end
-            updated = updated + 1
+            @updated = @updated + 1
+          else
+            logger.warn("RacersFile Found #{racers.size} racers for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
+            delete_blank_categories(row_hash)
+            racer = Racer.new(row_hash)
+            delete_unwanted_member_from(row_hash, racer)
+            unless racer.notes.blank?
+              row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+            end
+            add_print_card_and_label(row_hash, racer)
+            duplicates << Duplicate.new(racer, row_hash, racers)
           end
         end
       rescue Exception => e
@@ -152,7 +170,7 @@ class RacersFile < GridFile
         raise
       end
     end
-    return created, updated
+    return @created, @updated
   end
   
   def combine_categories(row_hash)
