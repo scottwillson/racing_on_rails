@@ -45,4 +45,8 @@ class Admin::ResultsController < Admin::RecordEditor
     
     redirect_to(:controller => "/admin/events", :action => :show, :id => event.to_param, :race_id => race.to_param)
   end
+  
+  def racers
+    @racers = Racer.find(:all, :conditions => ['last_name = ?', 'Hickey'])
+  end
 end

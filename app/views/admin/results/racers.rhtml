@@ -1,0 +1,15 @@
+<% @page_title = "Admin: Results: #{@racers.first.name}, #{@racers.last.name}" %>
+
+<% for racer in @racers %>
+<h2><%= racer.name %></h2>
+<div style="max-height: 200px; overflow: auto;">
+  <% for result in racer.results %>
+    <div id="result_<%= result.id %>">
+      <%= result.date %>
+      <%= result.place %>
+      <%= result.race.standings.name %><%= result.race.name %>
+    </div>
+    <script>var dd1 = new YAHOO.util.DD("result_<%= result.id %>");</script>
+  <% end %>
+</div>
+<% end %>
