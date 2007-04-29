@@ -15,4 +15,11 @@ class AliasTest < Test::Unit::TestCase
     team_alias.save!
     assert_equal(team_alias, Alias.find_by_name(team_alias.name), 'alias by name')
   end
+  
+  def test_team_alias_with_racer_name
+    weaver = racers(:weaver)
+    Alias.create(:name => weaver.name, :team => teams(:vanilla))
+    aliases = Alias.find_all_racers_by_name(weaver.name)
+    assert(!aliases.include?(nil), "Alias.find_all_racers_by_name should not return any nils")
+  end
 end

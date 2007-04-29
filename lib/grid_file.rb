@@ -27,8 +27,8 @@ class GridFile < Grid
           is_not_blank = true
           for cell in row
             if cell
-              RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} type: #{cell.type} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-              RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} type: #{cell.type} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
+              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               is_time = TIME_FORMATS.include?(cell.format_no)
               cell_f = cell.to_f if is_time
               if cell.type == :numeric

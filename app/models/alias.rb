@@ -8,7 +8,12 @@ class Alias < ActiveRecord::Base
   validate :racer_or_team
   
   def Alias.find_all_racers_by_name(name)
-    Alias.find_all_by_name(name).collect do |racer_alias|
+    aliases = Alias.find(
+      :all, 
+      :conditions => ['name = ? and racer_id is not null', name],
+      :include => :racer
+    )
+    aliases.collect do |racer_alias|
       racer_alias.racer
     end
   end
