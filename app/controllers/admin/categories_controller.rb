@@ -105,6 +105,13 @@ class Admin::CategoriesController < Admin::RecordEditor
       end
     end
   end
+  
+  def children
+    @categories = Category.find(params[:id]).children.sort
+    render(:update) {|page| 
+      page.insert_html(:top, "children_#{params[:id]}", :partial => 'category', :collection => @categories)
+    }
+  end
 
   # Add category as child
   def add_child
