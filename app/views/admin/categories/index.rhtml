@@ -28,19 +28,25 @@
 
 <table>
   <tr>
-    <td>
-      <h2><%= ASSOCIATION.short_name %></h2>
+    <td id="association_category_td">
+      <h2 id="association_category"><%= ASSOCIATION.short_name %></h2>
       <div class="categories">
       <%= render :partial => "category", :collection => @category.children.sort %>  
       </div>
     </td>
-    <td>
-      <h2>Unknown</h2>
+    <td id="unknown_category_td">
+      <h2 id="unknown_category">Unknown</h2>
       <div class="categories">
       <% for category in @unknowns %>
-        <div><%= category.name %></div>
+        <div class="category" id="category_<%= category.id %>"><%= category.name %></div>
+        <%= draggable_element("category_#{category.id}", :revert => true, :ghosting => true) %>
       <% end %>
       </div>
     </td>
   </tr>
 </table>
+
+<%= drop_receiving_element("association_category", :url => {:action => 'add_child', :parent_id => @category.id}) %>
+<%= drop_receiving_element("association_category_td", :url => {:action => 'add_child', :parent_id => @category.id}) %>
+<%= drop_receiving_element("unknown_category", :url => {:action => 'add_child'}) %>
+<%= drop_receiving_element("unknown_category_td", :url => {:action => 'add_child'}) %>

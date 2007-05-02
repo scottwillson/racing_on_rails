@@ -1,3 +1,4 @@
+<div>
 <table>
   <tr>
       <td class="disclosure">
@@ -5,6 +6,12 @@
         <%= link_to_function(image_tag("/images/icons/collapsed.gif", :class => "collapsed", :id => "disclosure_#{category.id}"), "toggle_disclosure(#{category.id})", :class => 'disclosure') %>
         <%- end -%>
       </td>
-      <td id="td_<%= category.id %>"><%= category.name %><div id="children_<%= category.id %>"></div></td>
+      <td id="td_<%= category.id %>">
+        <span class="category" id="category_<%= category.id %>"><%= category.name %></span>
+        <div id="children_<%= category.id %>"></div>
+      </td>
   </tr>
 </table>
+<%= draggable_element("category_#{category.id}", :revert => true, :ghosting => true, :scroll => 'window') %>
+<%= drop_receiving_element("category_#{category.id}", :url => {:action => 'add_child', :parent_id => category.id}) %>
+</div>
