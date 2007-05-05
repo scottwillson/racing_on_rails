@@ -1,7 +1,7 @@
 class ResultsController < ApplicationController
   model :result, :event, :standings, :race, :racer
   session :off
-  caches_page :index
+  caches_page :index, :event, :competition, :racer, :team, :show
   
   def index
     # TODO Create helper method to return Range of first and last of year
