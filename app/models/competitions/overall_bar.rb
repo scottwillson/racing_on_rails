@@ -69,7 +69,7 @@ module Competitions
     def create_standings
       root_standings = standings.create(:event => self)
       for category_name in [
-        'Senior Men', 'Category 3 Men', 'Category 4/5 Men', 
+        'Senior Men', 'Category 3 Men', 'Category 4 Men', 'Category 5 Men',
         'Senior Women', 'Category 3 Women', 'Category 4 Women', 
         'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
         'Singlespeed/Fixed', 'Tandem']
