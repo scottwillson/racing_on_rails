@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  TIME_FORMATS = [18, 19, 21, 22, 25, 27, 32, 33, 43, 44] unless defined?(TIME_FORMATS)
+  TIME_FORMATS = [18, 19, 21, 22, 23, 24, 25, 27, 32, 33, 43, 44] unless defined?(TIME_FORMATS)
 
   def GridFile.read_excel(file)
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
@@ -30,18 +30,31 @@ class GridFile < Grid
               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} type: #{cell.type} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
               is_time = TIME_FORMATS.include?(cell.format_no)
-              cell_f = cell.to_f if is_time
+              cell_f = cell.to_f
+              cell_i = cell.to_i
               if cell.type == :numeric
                 is_not_blank = true unless cell == 0
-                line << cell.to_i.to_s
+                if cell_f == cell_i
+                  line << cell_i.to_s
+                else
+                  line << cell.to_f.to_s
+                end
               elsif is_time and cell_f < 2 and cell.to_s == cell_f.to_s
                 is_not_blank = true
-                line << (cell_f * 86400).to_s
+                if cell_f == cell_i
+                  line << (cell_i * 86400).to_s
+                else
+                  line << (cell_f * 86400).to_s
+                end
               elsif cell.type == :date
                 is_not_blank = true
                 date = cell.date.to_s
                 if date.blank?
-                  line << (cell.to_f * 86400).to_s
+                  if cell_f == cell_i
+                    line << (cell_i * 86400).to_s
+                  else
+                    line << (cell_f * 86400).to_s
+                  end
                 else
                   line << date
                 end

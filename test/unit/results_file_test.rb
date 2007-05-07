@@ -335,6 +335,18 @@ class ResultsFileTest < Test::Unit::TestCase
     assert_equal(['Bogus Column Name'], results_file.invalid_columns, 'Invalid columns')
   end
   
+  def test_times
+    event = SingleDayEvent.create(:discipline => 'Track')
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/times.xls"), event)
+    standings = results_file.import
+    assert_equal(1, standings.races.size, 'Races')
+    results = standings.races.first.results
+    
+    assert_equal(12.64, results[0].time, 'row 0: 12.64')
+    assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
+    assert_equal(12.64, results[2].time, 'row 2: 00:12.6')
+  end
+  
   def expected_standings(standings)
     expected_races = []
     
