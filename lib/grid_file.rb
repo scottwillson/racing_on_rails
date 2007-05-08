@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  TIME_FORMATS = [18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 32, 33, 34, 35, 43, 44] unless defined?(TIME_FORMATS)
+  TIME_FORMATS = [0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 32, 33, 34, 35, 43, 44] unless defined?(TIME_FORMATS)
 
   def GridFile.read_excel(file)
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
@@ -32,7 +32,7 @@ class GridFile < Grid
               is_time = TIME_FORMATS.include?(cell.format_no)
               cell_f = cell.to_f
               cell_i = cell.to_i
-              if cell.type == :numeric
+              if cell.type == :numeric and cell.format_no != 0
                 is_not_blank = true unless cell == 0
                 if cell_f == cell_i
                   line << cell_i.to_s

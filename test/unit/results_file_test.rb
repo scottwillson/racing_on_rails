@@ -348,6 +348,8 @@ class ResultsFileTest < Test::Unit::TestCase
     assert_equal(390, results[3].time, 'row 3: 0:06:30')
     assert_equal(6236, results[4].time, 'row 4: 1:43:56')
     assert_in_delta(3821, results[5].time, 0.00001, 'row 5: 1:03:41')
+    assert_in_delta(1641, results[6].time, 0.00001, 'row 6: 0:27:21')
+    assert_in_delta(6735, results[7].time, 0.00001, 'row 7: 1:52:15')
   end
   
   def expected_standings(standings)
