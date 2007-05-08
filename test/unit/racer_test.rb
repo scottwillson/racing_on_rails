@@ -409,7 +409,8 @@ class RacerTest < Test::Unit::TestCase
     racer.date_of_birth = Date.new(17.years.ago.year, 1, 1)
     assert(!racer.master?, 'Master?')
 
-    racer.date_of_birth = Date.new(60.years.ago.year, 12, 31)
+    # Greater then 36 or so years in the past will give an ArgumentError on Windows
+    racer.date_of_birth = Date.new(36.years.ago.year, 12, 31)
     assert(racer.master?, 'Master?')
   end
   
