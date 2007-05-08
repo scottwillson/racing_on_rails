@@ -38,7 +38,7 @@
       <h2 id="unknown_category">Unknown</h2>
       <div class="categories">
       <% for category in @unknowns %>
-        <div class="category" id="category_<%= category.id %>"><%= category.name %></div>
+        <div class="category" id="category_<%= category.id %>"><%= category.name %>&nbsp;<%= link_to(image_tag('/images/icons/results_small.gif', :width => 12, :height => 12), {:controller => '/races', :action => 'category', :id => category.id}, {:title => 'View races'}) %></div>
         <%= draggable_element("category_#{category.id}", :revert => true, :ghosting => true) %>
       <% end %>
       </div>

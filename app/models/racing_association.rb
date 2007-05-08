@@ -12,4 +12,8 @@ class RacingAssociation
   def gender_specific_numbers?
     @gender_specific_numbers
   end
+  
+  def to_s
+    "#<RacingAssociation #{short_name} #{name}>"
+  end
 end
