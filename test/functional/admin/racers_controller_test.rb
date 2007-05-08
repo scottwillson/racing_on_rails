@@ -653,9 +653,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template("admin/racers/preview_import")
     assert_not_nil(assigns["racers_file"], "Should assign 'racers_file'")
-    assert_equal(
-      '/tmp/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv', 
-      session[:racers_file_path], 
+    assert(session[:racers_file_path].include?('55612_061202_151958.csv, attachment filename=55612_061202_151958.csv'), 
       'Should store temp file path in session as :racers_file_path')
     
     assert_equal(racers_before_import, Racer.count, 'Should not have added racers')
