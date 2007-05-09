@@ -35,7 +35,7 @@
       <td colspan="2"><%= text_area("mailing_list_post", "body", :rows => "14", :cols => "65") %></td>
     </tr>
     <tr>
-      <td class="updatedon">You must be a subscriber to post</td>
+      <td class="updatedon"><% unless @reply_to %>You must be a subscriber to post<% end %></td>
       <td align="right">
 		<% if @reply_to %>
 	    	<%= submit_tag("Send") %>
