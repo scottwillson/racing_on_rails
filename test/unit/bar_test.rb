@@ -629,55 +629,18 @@ class BarTest < Test::Unit::TestCase
     assert(!current_year_sr_men_road_bar.results.empty?, 'Current year BAR should have results')
   end
   
-  def test_result_key
-    key_1 = ResultKey.new(results(:tonkin_banana_belt))
-    key_2 = ResultKey.new(results(:tonkin_banana_belt))    
-    assert_equal(key_1, key_2, 'Same result')
-    assert_equal(key_1.hash, key_2.hash, 'Same result')
-    assert_equal(0, key_1 <=> key_2, 'same diff')
-    assert(key_1 == key_2)
-    assert(key_1 == key_1)
-    assert(key_2 == key_2)
-    assert(key_1.eql?(key_2))
-    assert(key_2.eql?(key_1))
-    assert(key_1.eql?(key_1))
-    assert(key_2.eql?(key_2))
-
-    hash = {}
-    hash[key_1] = 'key 1 value'
-    assert(hash[key_1])
-    assert(hash[key_2])
-    
-    key_1 = ResultKey.new(results(:tonkin_banana_belt))
-    key_2 = ResultKey.new(results(:weaver_kings_valley))    
-    assert(key_1 != key_2, 'Different results')
-    assert(key_1.hash != key_2.hash, 'Different results')
-    assert((key_1 <=> key_2) != 0, 'Different results')
-    assert(key_1 != key_2)
-    assert(key_1 == key_1)
-    assert(key_2 == key_2)
-    assert(!key_1.eql?(key_2))
-    assert(!key_2.eql?(key_1))
-    assert(key_1.eql?(key_1))
-    assert(key_1.eql?(key_1))
-
-    key_1 = ResultKey.new(results(:tonkin_banana_belt))
-    dupe_tonkin_kings_valley = races(:banana_belt_pro_1_2).results.create(:racer => racers(:tonkin), :place => 13)
-    key_2 = ResultKey.new(dupe_tonkin_kings_valley)    
-    assert_equal(key_1, key_2, 'Same racer and same race')
-    assert_equal(key_1.hash, key_2.hash, 'Same result')
-    assert_equal(0, key_1 <=> key_2, 'same diff')
-    assert(key_1 == key_2)
-    assert(key_1 == key_1)
-    assert(key_2 == key_2)
-    assert(key_1.eql?(key_2))
-    assert(key_2.eql?(key_1))
-    assert(key_1.eql?(key_1))
-    assert(key_2.eql?(key_2))
-
-    hash = {}
-    hash[key_1] = 'key 1 value'
-    assert(hash[key_1])
-    assert(hash[key_2])
+  def test_weekly_series_overall
+    weaver = racers(:weaver)
+    event = WeeklySeries.create(:discipline => 'Circuit')
+    # Need a SingleDayEvent to hold a date in the past
+    event.events.create(:date => Date.new(1999, 5, 8))
+    race = event.standings.create.races.create(:category => categories(:senior_men))
+    race.results.create(:racer => weaver, :place => 4)
+    Bar.recalculate(1999)
+    bar = Bar.find(:first)
+    standings = bar.standings.detect {|s| s.name == 'Road'}
+    race = standings.races.detect {|r| r.name == 'Senior Men'}
+    assert_equal(1, race.results.size, 'Results')
+    assert_equal(19, race.results.first.points, 'BAR result points')
   end
 end

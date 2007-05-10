@@ -11,7 +11,7 @@
 		<td class="field_label">Discipline:</td>
 		<td><%= select 'standings', 'discipline', Discipline.find_all_names %></td>
 		<td class="field_label">BAR Points:</td>
-		<td><%= select 'standings', 'bar_points', Bar::POINTS_AND_LABELS %></td>
+		<td><%= select 'standings', 'bar_points', bar_points_and_labels %></td>
 	</tr>
 	<tr>
 		<td colspan="2"></td>

@@ -16,8 +16,6 @@ class Bar < Competition
   # remove one-day licensees
   
   validate :valid_dates
-  # TODO Move to BarHelper
-  POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]] unless defined?(POINTS_AND_LABELS)
   
   # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
   # BarSweeper seems to fire, but does not expire pages?
@@ -42,17 +40,21 @@ class Bar < Competition
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
   def source_results(race)
-    race_discipline = race.standings.discipline
-      Result.find(:all,
-                  :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
-                  :conditions => [%Q{place between 1 AND #{point_schedule.size - 1}
-                    and events.type in ('SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries')
-                    and categories.id in (#{category_ids_for(race)})
-                    and (standings.discipline = '#{race_discipline}' or (standings.discipline is null and events.discipline = '#{race_discipline}'))
-                    and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
-                    and standings.date >= '#{date.year}-01-01' 
-                    and standings.date <= '#{date.year}-12-31'}],
-                  :order => 'racer_id'
+    if race.standings.discipline == 'Road'
+      race_disciplines = "'Road', 'Circuit'"
+    else
+      race_disciplines = "'#{race.standings.discipline}'"
+    end
+    Result.find(:all,
+                :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
+                :conditions => [%Q{place between 1 AND #{point_schedule.size - 1}
+                  and events.type in ('SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries')
+                  and categories.id in (#{category_ids_for(race)})
+                  and (standings.discipline in (#{race_disciplines}) or (standings.discipline is null and events.discipline in (#{race_disciplines})))
+                  and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
+                  and standings.date >= '#{date.year}-01-01' 
+                  and standings.date <= '#{date.year}-12-31'}],
+                :order => 'racer_id'
       )
   end
 
