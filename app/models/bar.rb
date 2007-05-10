@@ -46,7 +46,7 @@ class Bar < Competition
       Result.find(:all,
                   :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                   :conditions => [%Q{place between 1 AND #{point_schedule.size - 1}
-                    and events.type = 'SingleDayEvent' 
+                    and events.type in ('SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries')
                     and categories.id in (#{category_ids_for(race)})
                     and (standings.discipline = '#{race_discipline}' or (standings.discipline is null and events.discipline = '#{race_discipline}'))
                     and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
