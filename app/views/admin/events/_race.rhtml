@@ -44,9 +44,9 @@
 		<td><%= result.send(column.to_sym) if result.respond_to?(column.to_sym) %></td>
 		<% end %>
 		<td style="padding-left: 12px;">
-			<%= link_to_remote image_tag('buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
-			:url => {:action => "destroy_result", :id => result.id},
-			:complete => evaluate_remote_response
+  		<%= link_to_remote image_tag('/images/buttons/add.gif', :height => 22, :width => 22, :border => 0),
+  		:url => {:action => "insert_result", :id => result.id},
+  		:complete => evaluate_remote_response
 			%><%= link_to_remote image_tag('/images/buttons/remove.gif', :height => 22, :width => 22, :border => 0),
 			:url => {:action => "destroy_result", :id => result.id},
 			:complete => evaluate_remote_response
