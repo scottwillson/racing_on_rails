@@ -203,6 +203,13 @@ class Event < ActiveRecord::Base
     Discipline[discipline].id if Discipline[discipline]
   end
   
+  def flyer(asset_server = nil)
+    if asset_server and self[:flyer][0] == '/'
+      return asset_server + self[:flyer]
+    end
+    self[:flyer]
+  end
+  
   def promoter_name
     promoter.name if promoter
   end

@@ -2,17 +2,14 @@
 <div align="center">
 	<table border="0" cellspacing="0" cellpadding="0" class="base">
 		<caption><%= @year %></caption>
-		<thead>
-			<tr class='column_titles'>
-				<th>Date</th>
-				<th>Event</th>
-				<th>Promoter</th> 
-				<th>Phone</th>
-				<th>Discipline</th>
-				<th>Location</th>
-			</tr>
-		</thead>
-		<tbody>
+		<tr class='column_titles'>
+			<th>Date</th>
+			<th>Event</th>
+			<th>Promoter</th> 
+			<th>Phone</th>
+			<th>Discipline</th>
+			<th>Location</th>
+		</tr>
 	<%- for month in @schedule.months -%>
 		<%- for week in month.weeks -%>
 			<%- for day in week.days -%>
@@ -55,6 +52,5 @@
 			<%- end -%>
 		<%- end -%>
 	<%- end -%>
-	</tbody>
 	</table>
 </div>

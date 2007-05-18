@@ -43,5 +43,9 @@
 <%# TODO Add year param %>
 <div>
 	See all results for <%= link_to(@racer.name, {:action => 'racer', :id => @racer.to_param}, :class => 'obvious') %> or the
-	<%= link_to(@competition.name, {:action => 'event', :id => @competition.to_param}, :class => 'obvious') %>.
+	<% if @competition.is_a?(Ironman) %>
+  	<%= link_to(@competition.name, {:controller => 'ironman', :action => 'index', :year => @competition.date.year}, :class => 'obvious') %>.
+	<% else %>
+	  <%= link_to(@competition.name, {:action => 'event', :id => @competition.to_param}, :class => 'obvious') %>.
+	<% end %>
 </div>
