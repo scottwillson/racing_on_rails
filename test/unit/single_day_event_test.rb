@@ -41,9 +41,9 @@ class SingleDayEventTest < Test::Unit::TestCase
 
   def test_create
     event = SingleDayEvent.create
-    assert_equal('Needed', event.first_aid_provider, "New event first aid provider")
+    assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
 
     event = SingleDayEvent.create(:name => 'Copperopolis')
-    assert_equal('Needed', event.first_aid_provider, "New event first aid provider")
+    assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
   end
 end
