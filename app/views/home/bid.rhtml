@@ -1,0 +1,41 @@
+<div style="text-align: center;">
+EnSelle has generously donated a 54 cm Ridley track frame for an OBRA auction. Send in your bid now! Auction closes June 30, 5:00 PM.
+<br>
+<br>
+Current bid: <%= @highest_bid.name %>, $<%= @highest_bid.amount %>
+<br>
+Time left: <%= distance_of_time_in_words_to_now(DateTime.new(2007, 6, 30, 17, 0, 0)) %>
+<br>
+<br>
+<%= link_to(image_tag('ads/ridley.jpg', :width => 240, :height => 49), 'http://www.ridley-bikes.com/lang/us/') %>
+<br>
+<br>
+
+<%= error_messages_for('bid') %>
+
+<%= start_form_tag :action => 'send_bid' %>
+<div align="center">
+<table class="base" align="center">
+	<tr>
+		<td>Name:</td>
+		<td><%= text_field 'bid', 'name' %></td>
+	</tr>
+	<tr>
+		<td>Email address:</td>
+		<td><%= text_field 'bid', 'email' %></td>
+	</tr>
+	<tr>
+		<td>Phone number:</td>
+		<td><%= text_field 'bid', 'phone' %></td>
+	</tr>
+	<tr>
+		<td>Bid amount ($):</td>
+		<td><%= text_field 'bid', 'amount', :size => 8 %> <span class="updatedon">Please round bids to whole dollars</span></td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: right;"><%= submit_tag 'Submit Bid' %></td>
+	</tr>
+</table>
+</div>
+<%= end_form_tag %>
+</div>

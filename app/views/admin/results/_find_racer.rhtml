@@ -1,0 +1,14 @@
+<%= form_remote_tag :url => {:action => :find_racer}, :update => 'racer_search' %>
+<table class="base" style="width: 100%;">
+  <caption>Move Results To</caption>
+	<tr>
+		<td class="field_label">Name:</td>
+		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name' %></td>
+	</tr>
+	<%- for racer in @racers -%>
+	<tr>
+	  <td colspan="2"><%= racer.name %></td>
+	</tr>
+	<%- end -%>
+</table>
+<%= end_form_tag %>

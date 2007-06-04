@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/stylesheets/obra.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<div style="text-align: center;">
+<strong>Want a sweet <%= link_to 'Ridley track bike', {:action => 'bid'}, {:target => '_top'} %>? </strong>
+<br>
+<strong><%= link_to 'Bid now', {:action => 'bid'}, {:target => '_top'}  %></strong>
+<br>
+Current bid: <%= @bid.name %> $<%= @bid.amount %>
+<br>
+Time left: <%= distance_of_time_in_words_to_now(DateTime.new(2007, 6, 30, 17, 0, 0)) %>
+<br>
+<%= link_to(image_tag('ads/ridley.jpg', :width => 240, :height => 49), 'http://www.ridley-bikes.com/lang/us/') %>
+</div>

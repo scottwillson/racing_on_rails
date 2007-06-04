@@ -30,14 +30,7 @@ class Admin::RacersController < Admin::RecordEditor
     else
       @session['racer_name'] = @name
       cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
-      name_like = "%#{@name}%"
-      @racers = Racer.find(
-        :all, 
-        :conditions => ["concat(first_name, ' ', last_name) like ? or aliases.name like ?", "%#{@name}%", "%#{@name}%"],
-        :include => :aliases,
-        :limit => RESULTS_LIMIT,
-        :order => 'last_name, first_name'
-      )
+      @racers = Racer.find_by_name_like(@name, RESULTS_LIMIT)
       @racers = @racers + Racer.find_by_number(@name)
       if @racers.size == RESULTS_LIMIT
         flash[:notice] = "First #{RESULTS_LIMIT} racers"

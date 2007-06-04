@@ -46,7 +46,19 @@ class Admin::ResultsController < Admin::RecordEditor
     redirect_to(:controller => "/admin/events", :action => :show, :id => event.to_param, :race_id => race.to_param)
   end
   
-  def racers
-    @racers = Racer.find(:all, :conditions => ['last_name = ?', 'Hickey'])
+  def racer
+  	@racer = Racer.find(params[:id])
+  	raise "Could not find racer with id #{params[:id]}" if @racer.nil?
+    @results = Result.find(
+      :all,
+  	  :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
+  	  :conditions => ['racers.id = ?', params[:id]]
+    )
+    @racers = []
+  end
+  
+  def find_racer
+  	@racers = Racer.find_by_name_like(params[:name], 20)
+  	render :partial => 'find_racer'
   end
 end

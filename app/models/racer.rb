@@ -54,6 +54,17 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def Racer.find_by_name_like(name, limit = 100)
+    name_like = "%#{name}%"
+    Racer.find(
+      :all, 
+      :conditions => ["concat(first_name, ' ', last_name) like ? or aliases.name like ?", name_like, name_like],
+      :include => :aliases,
+      :limit => limit,
+      :order => 'last_name, first_name'
+    )
+  end
+  
   def Racer.find_by_number(number)
     Racer.find(:all, 
                :include => :race_numbers,
