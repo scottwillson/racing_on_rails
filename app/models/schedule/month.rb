@@ -17,8 +17,8 @@ module Schedule
       @weeks = []
       @date = Date.new(year, month, 1)
       day = monday_of_week(@date)
-      end_of_month = Date.new(year, month).to_time.at_end_of_month.to_date
-      until day > end_of_month
+      end_of_month = Date.new(year, month).to_time.at_end_of_month
+      until day.to_time > end_of_month
         @weeks << Week.new(self, day)
         day = day + 7
       end

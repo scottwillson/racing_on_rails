@@ -65,7 +65,7 @@ class UpcomingEventsTest < Test::Unit::TestCase
     
       # Monday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 26))
-      assert_equal([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Tuesday
@@ -74,7 +74,7 @@ class UpcomingEventsTest < Test::Unit::TestCase
       assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 1, 0, 0))
-      assert_equal([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 23, 59, 0))
@@ -174,7 +174,7 @@ class UpcomingEventsTest < Test::Unit::TestCase
     
     # Sunday
     upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 17))
-    assert_equal([six_day], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    assert_equal_events([six_day], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
 
     # Next Monday
     upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 18))
@@ -294,5 +294,12 @@ class UpcomingEventsTest < Test::Unit::TestCase
     upcoming_events = UpcomingEvents.new(Date.new(1999, 6, 20))
     assert_equal_enumerables([estacada_tt_2, estacada_tt_3], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     assert_equal_enumerables([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.events[Road]')
+  end
+  
+  def assert_equal_events(expected, actual, message = 'Events not equal')
+    unless expected == actual
+      detailed_message = "#{message}. Expected [#{expected.sort.join(', ')}] but was [#{actual.sort.join(', ')}]"
+      flunk(detailed_message)
+    end
   end
 end
