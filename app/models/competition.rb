@@ -4,6 +4,7 @@ class Competition < Event
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name
   # TODO Just how much memory is this thing hanging on to?
+  attr_accessor :point_schedule
   
   after_create  :create_standings
   # return true from before_save callback or Competition won't save
@@ -113,7 +114,7 @@ class Competition < Event
   end
   
   def point_schedule
-    []
+    @point_schedule = @point_schedule || []
   end
   
   # source_results must be in racer, place ascending order
@@ -179,18 +180,18 @@ class Competition < Event
     competition_result.nil? || source_result.racer != competition_result.racer
   end
   
-  # Apply points from point_schedule, and adjust for team size
-  def points_for(source_result)
+  # Apply points from point_schedule, and split across team
+  def points_for(source_result, team_size = nil)
     # TODO Consider indexing place
     # TODO Consider caching/precalculating team size
-    team_size = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+    team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
     if place_members_only?
       points = point_schedule[source_result.members_only_place.to_i].to_f
     else
       points = point_schedule[source_result.place.to_i].to_f
     end
     if points
-      points * source_result.race.bar_points / team_size
+      points / team_size.to_f
     else
       0
     end

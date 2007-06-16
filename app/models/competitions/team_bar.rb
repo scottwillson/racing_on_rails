@@ -16,34 +16,36 @@ module Competitions
     # less duplicate code
     def source_results(race)
       Result.find_by_sql(
-        %Q{SELECT results.id as id, race_id, racer_id, team_id, place 
+        %Q{SELECT results.points, results.id as id, race_id, racer_id, team_id, place 
             FROM results  
             LEFT OUTER JOIN races ON races.id = results.race_id 
             LEFT OUTER JOIN standings ON races.standings_id = standings.id 
             LEFT OUTER JOIN events ON standings.event_id = events.id 
             LEFT OUTER JOIN categories ON races.category_id = categories.id 
             where results.id in (select source_result_id 
-                         from scores 
-                         LEFT OUTER JOIN results as competition_results 
-                          ON competition_results.id = scores.competition_result_id
-                         LEFT OUTER JOIN races as competition_races 
-                          ON competition_races.id = competition_results.race_id
-                         LEFT OUTER JOIN standings as competition_standings 
-                          ON competition_races.standings_id = competition_standings.id 
-                         LEFT OUTER JOIN events as competition_events 
-                          ON competition_standings.event_id = competition_events.id 
-                         where competition_events.type = 'Bar' 
-                           and competition_standings.date >= '#{date.year}-01-01' 
-                           and competition_standings.date <= '#{date.year}-12-31')
+              from scores 
+              LEFT OUTER JOIN results as competition_results 
+                ON competition_results.id = scores.competition_result_id
+              LEFT OUTER JOIN races as competition_races 
+                ON competition_races.id = competition_results.race_id
+              LEFT OUTER JOIN standings as competition_standings 
+                ON competition_races.standings_id = competition_standings.id 
+              LEFT OUTER JOIN events as competition_events 
+                ON competition_standings.event_id = competition_events.id 
+              where competition_events.type = 'Bar' 
+                and competition_standings.date >= '#{date.year}-01-01' 
+                and competition_standings.date <= '#{date.year}-12-31')
             order by team_id}
       )
     end
 
     # FIXME Check that team size is considered correctly
+    # Duplicate calculation of points here with BAR
+    # Could derive points from competition_result.scores
     def create_competition_results_for(results, race)
       competition_result = nil
       for source_result in results
-        logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+        logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.name} #{source_result.team_name}") if logger.debug?
 
         teams = extract_teams_from(source_result)
         logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
@@ -97,6 +99,26 @@ module Competitions
       competition_result.nil? || source_result.team != competition_result.team
     end
   
+    # Apply points from point_schedule, and adjust for field size
+    def points_for(source_result, team_size = nil)
+      # TODO Consider indexing place
+      # TODO Consider caching/precalculating team size
+      points = 0
+      Bar.benchmark('points_for') {
+        field_size = source_result.race.field_size
+
+        team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+        points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
+        if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
+          points = points / 2.0
+        end
+        if source_result.race.bar_points == 1 and field_size >= 75
+          points = points * 1.5
+        end
+      }
+      points
+    end
+
     # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
     # BarSweeper seems to fire, but does not expire pages?
     def TeamBar.expire_cache

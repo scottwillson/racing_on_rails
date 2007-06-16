@@ -73,6 +73,10 @@ class OregonCupTest < Test::Unit::TestCase
     kings_valley_pro_1_2.results.create(:racer => mollie, :place => 20)
     kings_valley_pro_1_2.results.create(:racer => matson, :place => 21)
     
+    # Set BAR point bonus -- it should be ignored
+    kings_valley_pro_1_2.bar_points = 2
+    kings_valley_pro_1_2.save!
+    
     category = Category.find_or_create_by_name('Senior Men')
     source_category = Category.find_or_create_by_name('Senior Men Pro 1/2')
     

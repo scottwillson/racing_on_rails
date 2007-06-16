@@ -643,4 +643,26 @@ class BarTest < Test::Unit::TestCase
     assert_equal(1, race.results.size, 'Results')
     assert_equal(19, race.results.first.points, 'BAR result points')
   end
+  
+  def test_points_for_team_event
+    event = SingleDayEvent.new
+    standings = Standings.new(:bar_points => 2, :event => event)
+    standings.name = 'Standings'
+    race = Race.new(:standings => standings, :category => categories(:senior_men))
+    result = Result.new(:race => race, :place => 4)
+    competition = Bar.new
+    team_size = 3
+    points = competition.points_for(result, team_size)
+    assert_in_delta(12.666, points, 0.001, 'Points for first place with team of 3 and multiplier of 2')
+
+    event = SingleDayEvent.new
+    standings = Standings.new(:bar_points => 3, :event => event)
+    standings.name = 'Standings'
+    race = Race.new(:standings => standings, :category => categories(:senior_men))
+    result = Result.new(:race => race, :place => 4)
+    competition = Bar.new
+    team_size = 2
+    points = competition.points_for(result, team_size)
+    assert_in_delta(28.5, points, 0.001, 'Points for third place with team of 2 and multiplier of 3')
+  end
 end
