@@ -11,7 +11,7 @@
 	<%- for result in @event_results.sort_by {|result| result.race.standings.event.date } -%>
 	<tr class="<%= cycle("even", "odd") %>">
 	  <td class="right" width="24"><%= result.place %></td>
-	  <td width="400"><%= result.race.standings.name %></td>
+	  <td width="400"><%= link_to(result.race.standings.name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id, :anchor => result.race.id) %></td>
 	  <td width="200"><%= result.race.name %></td>
 	  <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
 	</tr>

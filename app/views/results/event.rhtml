@@ -61,11 +61,11 @@
 		<%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
 		<tr>
 		  <td style="margin-right: 18px;">
-			<a href="#<%= (standings_index * 100) + row_index %>" class="underlined"><%= row.first.name %></a>
+			<a href="#<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
 		  </td>
 		  <td style="margin-left: 18px;">
 			&nbsp;
-			<%- if row.size == 2 -%><a href="#<%= (standings_index * 100) + results_in_first_column + row_index %>" class="underlined"><%= row.last.name %></a><%- end -%>
+			<%- if row.size == 2 -%><a href="#<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
 		  </td>
 		<%- end -%>
 		</tr>
@@ -82,7 +82,7 @@
   <% sorted_races = standings.races_with_results %> 
   <% sorted_races.each_with_index do |race, index| %>
   <table class="base" style="margin-bottom: 32px;">
-    <caption><a name="<%= (standings_index * 100) + index %>"></a><%= race.name %></caption>
+    <caption><a name="<%= race.id %>"></a><%= race.name %></caption>
 	<tr><th></th></tr>
     <tr>
       <td>

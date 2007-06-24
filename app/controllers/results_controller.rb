@@ -45,7 +45,10 @@ class ResultsController < ApplicationController
   end
   
   def event
-    @event = Event.find(params[:id])
+    @event = Event.find(
+      params[:id],
+      :include => [:standings => {:races => {:results => {:racer, :team}}}]
+    )
     if @event.is_a?(Bar)
       redirect_to(:controller => 'bar', :action => 'show', :year => @event.date.year)
     end
