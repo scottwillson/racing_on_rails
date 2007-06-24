@@ -92,12 +92,15 @@ class Admin::RacersController < Admin::RecordEditor
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
           unless number_value.blank?
-            @racer.race_numbers.create(
+            race_number = @racer.race_numbers.create(
               :discipline_id => params[:discipline_id][index], 
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
               :value => number_value
             )
+            unless race_number.errors.empty?
+              @racer.errors.add_to_base(race_number.errors.full_messages)
+            end
           end
         end
       end

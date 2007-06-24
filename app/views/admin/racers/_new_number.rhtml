@@ -9,10 +9,6 @@
 		<select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
 			<%= options_for_select Discipline.find_for_numbers.collect {|discipline| [discipline.name, discipline.id]}, discipline_id %>
 		</select>
-	    <%= observe_field(
-				"discipline_id_#{row_id}", 
-				:url => {:action => 'number_discipline_changed'}, :with => "discipline_id"
-		) %>
 	</td>
 	<td>
 		<%= text_field_tag 'number_value[]', '', :size => 4 %>

@@ -10,19 +10,15 @@
 <% @page_title = "Admin: Racers: #{racer_name}" %>
 
 <div align="center">
-	<%- if flash[:notice] -%>
-		<div class="message" id="message">
-				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-				<%= flash[:notice] %>
-		</div>
-	<%- end -%>
+  <p class="message" id="message" <% "style='visibility: hidden;'" unless flash[:notice] %>>
+    <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+  	<%= flash[:notice] %>
+  </p>
 
-	<%- if flash[:warn] -%>
-		<div class="message" id="warn">
-				<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-				<%= flash[:warn] %>
-		</div>
-	<%- end -%>
+  <p class="message" id="message" <% "style='visibility: hidden;'" unless flash[:warn] %>>
+    <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'warn') %>
+  	<%= flash[:warn] %>
+  </p>
 
 <%= error_messages_for 'racer' %>
 
