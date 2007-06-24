@@ -1,13 +1,28 @@
-<%= form_remote_tag :url => {:action => :find_racer}, :update => 'racer_search' %>
+<%= form_remote_tag :url => {:action => :find_racer}, :update => 'find_racer' %>
 <table class="base" style="width: 100%;">
   <caption>Move Results To</caption>
 	<tr>
-		<td class="field_label">Name:</td>
-		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name' %></td>
+	  <td>
+      <table>
+        <tr>
+      		<td class="field_label">Name:</td>
+      		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name' %></td>
+        </tr>
+      </table>
+    </td>
 	</tr>
 	<%- for racer in @racers -%>
 	<tr>
-	  <td colspan="2"><%= racer.name %></td>
+	  <td>
+      <table>
+        <tr>
+    	    <td><%= link_to racer.name, :action => 'select_racer', :id => racer.id %></td>
+    	    <td><%= link_to racer.team_name, :action => 'select_racer', :id => racer.id %></td>
+    	    <td><%= link_to racer.city, :action => 'select_racer', :id => racer.id %></td>
+    	    <td><%= link_to racer.age, :action => 'select_racer', :id => racer.id %></td>
+        </tr>
+      </table>
+    </td>
 	</tr>
 	<%- end -%>
 </table>

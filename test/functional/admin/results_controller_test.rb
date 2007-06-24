@@ -10,11 +10,11 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     @controller = Admin::ResultsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+
+    @request.session[:user] = users(:candi)    
   end
   
   def test_destroy
-    @request.session[:user] = users(:candi)
-    
     result_2 = results(:weaver_banana_belt)
     race = result_2.race
     event = race.standings.event
@@ -37,8 +37,6 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_create
-    @request.session[:user] = users(:candi)
-    
     kings_valley_pro_1_2 = races(:kings_valley_pro_1_2)
     existing_result_count = kings_valley_pro_1_2.results.size
     kings_valley = events(:kings_valley)
@@ -115,7 +113,6 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
 
   def test_new_inline
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/results", :action => "new_inline"}
     assert_routing("/admin/results/new_inline", opts)
   
@@ -127,8 +124,6 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_edit
-    @request.session[:user] = users(:candi)
-
     weaver_jack_frost = results(:weaver_jack_frost)
     opts = {:controller => "admin/results", :action => "edit", :id => weaver_jack_frost.to_param.to_s}
     assert_routing("/admin/results/edit/#{weaver_jack_frost.to_param}", opts)
@@ -139,8 +134,6 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_update
-    @request.session[:user] = users(:candi)
-    
     weaver_jack_frost = results(:weaver_jack_frost)
     assert_equal('9', weaver_jack_frost.place, 'place')
     assert_equal(0, weaver_jack_frost.points, 'points')
@@ -193,5 +186,27 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
     assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
     assert_equal(team_name, weaver_jack_frost.team_name, 'team_name')
+  end
+  
+  def test_racer
+    weaver = racers(:weaver)
+    opts = {:controller => "admin/results", :action => "racer", :id => weaver.to_param.to_s}
+    assert_routing("/admin/results/racer/#{weaver.to_param}", opts)
+
+    get(:racer, :id => weaver.to_param.to_s)
+    
+    assert_not_nil(assigns["results"], "Should assign results")
+    assert_not_nil(assigns["racer"], "Should assign racer")
+  end
+  
+  def test_find_racer
+    weaver = racers(:weaver)
+    opts = {:controller => "admin/results", :action => "find_racer"}
+    assert_routing("/admin/results/find_racer", opts)
+
+    get(:find_racer, :name => weaver.name)
+    
+    assert_not_nil(assigns["name"], "Should assign name")
+    assert_not_nil(assigns["racers"], "Should assign racers")
   end
 end

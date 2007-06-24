@@ -59,6 +59,7 @@ class Admin::ResultsController < Admin::RecordEditor
   
   def find_racer
   	@racers = Racer.find_by_name_like(params[:name], 20)
+  	@name = params[:name]
   	render :partial => 'find_racer'
   end
 end
