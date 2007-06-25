@@ -49,17 +49,40 @@ class Admin::ResultsController < Admin::RecordEditor
   def racer
   	@racer = Racer.find(params[:id])
   	raise "Could not find racer with id #{params[:id]}" if @racer.nil?
-    @results = Result.find(
-      :all,
-  	  :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
-  	  :conditions => ['racers.id = ?', params[:id]]
-    )
+    # @results = Result.find(
+    #   :all,
+    #       :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
+    #       :conditions => ['racers.id = ?', params[:id]]
+    # )
+  	@results = @racer.event_results
     @racers = []
   end
   
   def find_racer
   	@racers = Racer.find_by_name_like(params[:name], 20)
+  	ignore_id = params[:left_racer_id]
+  	@racers.reject! {|r| r.id.to_s == ignore_id}
   	@name = params[:name]
-  	render :partial => 'find_racer'
+  	if @racers.size == 1
+  	  redirect_to(:action => :select_racer, :name => @name, :id => @racers.first.id)
+	  else
+    	render :partial => 'find_racer', :locals => {:left_racer_id => ignore_id}
+    end
+  end
+  
+  def select_racer
+  	@racer = Racer.find(params[:id])
+  	@name = params[:name]
+  	@results = @racer.event_results
+  	render :partial => 'results'
+  end
+  
+  def move_result
+    result_id = params[:id].to_s
+    result_id = result_id[/result_(.*)/, 1]
+    result = Result.find(result_id)
+    racer = Racer.find(params[:racer_id])
+    result.racer = racer
+    result.save!
   end
 end

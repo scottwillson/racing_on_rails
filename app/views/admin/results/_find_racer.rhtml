@@ -1,4 +1,9 @@
-<%= form_remote_tag :url => {:action => :find_racer}, :update => 'find_racer' %>
+<div id="find_racer">
+<%= form_remote_tag( 
+	:url => {:action => :find_racer, :left_racer_id => left_racer_id}, 
+	:update => 'find_racer',
+	:before => "Element.show('find_progress_icon')"
+) %>
 <table class="base" style="width: 100%;">
   <caption>Move Results To</caption>
 	<tr>
@@ -6,24 +11,30 @@
       <table>
         <tr>
       		<td class="field_label">Name:</td>
-      		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name' %></td>
+      		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name', @name %></td>
+         	<td><%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon', :style => 'display: none;' %></td>
         </tr>
       </table>
     </td>
 	</tr>
-	<%- for racer in @racers -%>
 	<tr>
 	  <td>
-      <table>
-        <tr>
-    	    <td><%= link_to racer.name, :action => 'select_racer', :id => racer.id %></td>
-    	    <td><%= link_to racer.team_name, :action => 'select_racer', :id => racer.id %></td>
-    	    <td><%= link_to racer.city, :action => 'select_racer', :id => racer.id %></td>
-    	    <td><%= link_to racer.age, :action => 'select_racer', :id => racer.id %></td>
+      <table width="100%">
+    	<%- for racer in @racers -%>
+      	<tr class="<%= cycle("even", "odd") %>">
+    	    <td><%= link_to_remote(
+					racer.name, 
+					:url => {:action => "select_racer", :id => racer.id, :name => @name}, 
+					:update => 'find_racer',
+					:before => "Element.show('find_progress_icon')") %>
+				<br>
+				<small><%= [racer.team.blank? ? nil : racer.team.name, racer.city, racer.racing_age].compact.join(', ') %></small>
+			</td>
         </tr>
+      	<%- end -%>
       </table>
     </td>
 	</tr>
-	<%- end -%>
 </table>
 <%= end_form_tag %>
+</div>

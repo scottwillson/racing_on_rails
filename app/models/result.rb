@@ -157,7 +157,7 @@ class Result < ActiveRecord::Base
   
   # Set points from +scores+
   def calculate_points
-    if !scores.empty? and (race.standings.event.is_a?(Competition))
+    if !scores.empty? and competition_result?
       pts = 0
       for score in scores
         pts = pts + score.points
@@ -182,6 +182,10 @@ class Result < ActiveRecord::Base
     end
   end
 
+  def competition_result?
+    self.race.standings.event.is_a?(Competition)
+  end
+  
   def event
     if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
       race.standings.event

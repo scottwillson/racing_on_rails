@@ -1,9 +1,26 @@
-<% @page_title = "Admin: Results: #{@racer.name}" %>
-<table style="width: 100%;">
-  <tr>
-  <td style="width: 50%; vertical-align: top;">
-      <table class="base" style="width: 100%;" id="racer_<%= @racer.id %>">
-      	<caption><%= @racer.name %>	<small><%= [@racer.team.blank? ? nil : @racer.team.name, @racer.city, @racer.racing_age].compact.join(', ') %></small></caption>
+<div  id="find_racer">
+<%= form_remote_tag( 
+	:url => {:action => :find_racer}, 
+	:update => 'find_racer',
+	:before => "Element.show('find_progress_icon')"
+) %>
+<table class="base" style="width: 100%;" id="racer_<%= @racer.id %>">
+	<caption><%= @racer.name %>	<small><%= [@racer.team.blank? ? nil : @racer.team.name, @racer.city, @racer.racing_age].compact.join(', ') %></small>
+	</caption>
+	<tr>
+	  <td>
+      <table>
+        <tr>
+      		<td class="field_label">Name:</td>
+      		<td style="width: 100%; text-align: left;"><%= text_field_tag 'name', @name %></td>
+         	<td><%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon', :style => 'display: none;' %></td>
+        </tr>
+      </table>
+    </td>
+	</tr>
+	<tr>
+	  <td>
+      <table>
       	<tr>
       		<th></th>
       		<th>Race</th>
@@ -22,8 +39,7 @@
       </table>
 		<%= drop_receiving_element("racer_#{@racer.id}", :url => {:action => 'move_result', :racer_id => @racer.id}) %>
     </td>
-    <td style="width: 50%; vertical-align: top;">
-      <%= render :partial => 'find_racer', :locals => {:left_racer_id => @racer.id} %>
-    </td>
-  </tr>
+	</tr>
 </table>
+<%= end_form_tag %>
+</div>

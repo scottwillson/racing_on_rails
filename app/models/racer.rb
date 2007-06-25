@@ -460,14 +460,14 @@ class Racer < ActiveRecord::Base
   # All non-Competition results
   def event_results
     results.reject do |result|
-      result.race.standings.event.is_a?(Competition)
+      result.competition_result?
     end
   end
   
   # BAR, Oregon Cup, Ironman
   def competition_results
     results.select do |result|
-      result.race.standings.event.is_a?(Competition)
+      !result.competition_result?
     end
   end
 
