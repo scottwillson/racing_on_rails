@@ -56,12 +56,14 @@ class Admin::RacersController < Admin::RecordEditor
   # Inline edit
   def edit_name
     @racer = Racer.find(@params[:id])
+    expire_cache
     render(:partial => 'edit')
   end
 
   # Inline edit
   def edit_team_name
     @racer = Racer.find(@params[:id])
+    expire_cache
     render(:partial => 'edit_team_name')
   end
   
@@ -78,6 +80,7 @@ class Admin::RacersController < Admin::RecordEditor
   # New blank numbers are ignored
   def update
     begin
+      expire_cache
       if params[:id].blank?
         @racer = Racer.create(params[:racer])
       else
@@ -162,6 +165,7 @@ class Admin::RacersController < Admin::RecordEditor
           session[:duplicates] = racers_file.duplicates
           redirect_to(:action => 'duplicates')
         end
+        expire_cache
       rescue Exception => e
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
@@ -234,6 +238,7 @@ class Admin::RacersController < Admin::RecordEditor
     
     saved = @racer.save
     if saved
+      expire_cache
       attribute(@racer, 'name')
     else
       render(:partial => 'edit')
@@ -248,6 +253,7 @@ class Admin::RacersController < Admin::RecordEditor
     saved = @racer.save
     begin
       if saved
+        expire_cache
         render(:partial => 'team', :locals => {:racer => @racer})
       else
         render(:partial => 'edit_team_name', :locals => {:racer => @racer})
@@ -287,6 +293,7 @@ class Admin::RacersController < Admin::RecordEditor
           "#{image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') } Deleted #{racer.name}"
         )
       end
+      expire_cache
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
@@ -310,6 +317,7 @@ class Admin::RacersController < Admin::RecordEditor
     @merged_racer_name = racer_to_merge.name
     @existing_racer = Racer.find(@params[:target_id])
     @existing_racer.merge(racer_to_merge)
+    expire_cache
   end
   
   def number_year_changed

@@ -5,8 +5,7 @@
 	:before => "Element.show('find_progress_icon')"
 ) %>
 <table class="base" style="width: 100%;" id="racer_<%= @racer.id %>">
-	<caption><%= @racer.name %>	<small><%= [@racer.team.blank? ? nil : @racer.team.name, @racer.city, @racer.racing_age].compact.join(', ') %></small>
-	</caption>
+	<caption><%= @racer.name %>	<small><%= [@racer.team.blank? ? nil : @racer.team.name, @racer.city, @racer.racing_age].compact.join(', ') %></small></caption>
 	<tr>
 	  <td>
       <table>

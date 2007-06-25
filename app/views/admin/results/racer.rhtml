@@ -1,29 +1,11 @@
 <% @page_title = "Admin: Results: #{@racer.name}" %>
 <table style="width: 100%;">
   <tr>
-  <td style="width: 50%; vertical-align: top;">
-      <table class="base" style="width: 100%;" id="racer_<%= @racer.id %>">
-      	<caption><%= @racer.name %>	<small><%= [@racer.team.blank? ? nil : @racer.team.name, @racer.city, @racer.racing_age].compact.join(', ') %></small></caption>
-      	<tr>
-      		<th></th>
-      		<th>Race</th>
-      		<th>Category</th>
-      		<th>Date</th>
-      	</tr>
-      	<%- for result in @results.sort_by {|result| result.race.standings.event.date } -%>
-      	<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
-      	  <td class="right"><%= result.place %></td>
-      	  <td><%= result.race.standings.name %></td>
-      	  <td><%= result.race.name %></td>
-      	  <td><%= result.race.standings.event.date.strftime("%D") %></td>
-      	</tr>
-		<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') %>
-      	<%- end -%>
-      </table>
-		<%= drop_receiving_element("racer_#{@racer.id}", :url => {:action => 'move_result', :racer_id => @racer.id}) %>
+  	<td style="width: 50%; vertical-align: top;">
+      <%= render :partial => 'racer', :locals => {:id => @racer.id} %>
     </td>
     <td style="width: 50%; vertical-align: top;">
-      <%= render :partial => 'find_racer', :locals => {:left_racer_id => @racer.id} %>
+      <%= render :partial => 'find_racer', :locals => {:ignore_id => @racer.id} %>
     </td>
   </tr>
 </table>

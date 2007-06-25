@@ -17,6 +17,10 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def expire_cache
+    FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
+  end
+  
   protected
   def local_or_default_file(name)
     local_path = File.join(RAILS_ROOT, 'local', 'public', "#{name}")

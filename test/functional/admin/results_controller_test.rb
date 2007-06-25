@@ -133,6 +133,222 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns["result"], "Should assign result")
   end
   
+  def test_update_no_team
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.team = nil
+    weaver_jack_frost.save!
+
+    team_name = ''
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_nil(weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_no_team_to_existing
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.team = nil
+    weaver_jack_frost.save!
+
+    team_name = 'Vanilla'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(teams(:vanilla), weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_no_team_to_new
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.team = nil
+    weaver_jack_frost.save!
+
+    team_name = 'Vanilla'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(teams(:vanilla), weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_no_team_to_alias
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.team = nil
+    weaver_jack_frost.save!
+
+    team_name = 'Gentile Lovers'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(teams(:gentle_lovers), weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_to_no_team
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    team_name = ''
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_nil(weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_to_existing_team
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    team_name = 'Vanilla'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(teams(:vanilla), weaver_jack_frost.team(true), 'team')
+  end
+  
+  def test_update_to_new_team
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    team_name = 'Astana'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(team_name, weaver_jack_frost.team(true).name, 'team name')
+  end
+  
+  def test_update_to_team_alias
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    team_name = 'Gentile Lovers'
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => weaver_jack_frost.first_name,
+        :last_name => weaver_jack_frost.last_name,
+        :team_name => team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(teams(:gentle_lovers), weaver_jack_frost.team(true), 'team')
+  end
+  
   def test_update
     weaver_jack_frost = results(:weaver_jack_frost)
     assert_equal('9', weaver_jack_frost.place, 'place')
@@ -186,6 +402,204 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
     assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
     assert_equal(team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_equal(racers(:weaver), weaver_jack_frost.racer(true), 'racer')
+    assert(racers(:weaver).aliases.empty?)
+  end
+  
+  def test_update_no_racer
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.racer = nil
+    weaver_jack_frost.save!
+
+    first_name = ''
+    last_name = ''
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_nil(weaver_jack_frost.racer(true), 'racer')
+  end
+  
+  def test_update_no_racer_to_existing
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.racer = nil
+    weaver_jack_frost.save!
+
+    first_name = 'Erik'
+    last_name = 'Tonkin'
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_equal(racers(:tonkin), weaver_jack_frost.racer(true), 'racer')
+    assert_equal(1, racers(:tonkin).aliases.size)
+  end
+  
+  def test_update_no_racer_to_alias
+    weaver_jack_frost = results(:weaver_jack_frost)
+    weaver_jack_frost.racer = nil
+    weaver_jack_frost.save!
+
+    first_name = 'Eric'
+    last_name = 'Tonkin'
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal('Erik', weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_equal(racers(:tonkin), weaver_jack_frost.racer(true), 'racer')
+    assert_equal(1, racers(:tonkin).aliases.size)
+  end
+  
+  def test_update_to_no_racer
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    first_name = ''
+    last_name = ''
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_nil(weaver_jack_frost.racer(true), 'racer')
+  end
+  
+  def test_update_to_different_racer
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    first_name = 'Erik'
+    last_name = 'Tonkin'
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal(first_name, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_equal(racers(:tonkin), weaver_jack_frost.racer(true), 'racer')
+    assert_equal(1, racers(:tonkin).aliases.size)
+  end
+  
+  def test_update_to_alias
+    weaver_jack_frost = results(:weaver_jack_frost)
+
+    first_name = 'Eric'
+    last_name = 'Tonkin'
+    original_team_name = weaver_jack_frost.team_name
+    
+    post(:update, 
+      :result => {
+        :id => weaver_jack_frost.to_param.to_s,
+        :place => weaver_jack_frost.place,
+        :number => weaver_jack_frost.number,
+        :first_name => first_name,
+        :last_name => last_name,
+        :team_name => weaver_jack_frost.team_name,
+        :points => weaver_jack_frost.points,
+        :time_s => weaver_jack_frost.time.to_s,
+        :notes => weaver_jack_frost.notes
+      }
+    )
+    
+    assert_response(:redirect)
+    assert(flash.has_key?(:notice))
+
+    weaver_jack_frost.reload
+    assert_equal('Erik', weaver_jack_frost.first_name, 'first_name')
+    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
+    assert_equal(racers(:tonkin), weaver_jack_frost.racer(true), 'racer')
+    assert_equal(1, racers(:tonkin).aliases.size)
   end
   
   def test_racer

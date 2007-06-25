@@ -50,6 +50,7 @@ class Admin::TeamsController < Admin::RecordEditor
   # Inline
   def edit_name
     @team = Team.find(@params[:id])
+    expire_cache
     render(:partial => 'edit')
   end
   
@@ -73,6 +74,7 @@ class Admin::TeamsController < Admin::RecordEditor
       
       saved = @team.save
       if saved
+        expire_cache
         render(:partial => 'team')
       else
         render(:partial => 'edit')
@@ -102,6 +104,7 @@ class Admin::TeamsController < Admin::RecordEditor
     @merged_team_name = team_to_merge.name
     @existing_team = Team.find(@params[:target_id])
     @existing_team.merge(team_to_merge)
+    expire_cache
   end
   
   # Inline
@@ -125,6 +128,7 @@ class Admin::TeamsController < Admin::RecordEditor
           "#{image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') } Deleted #{team.name}"
         )
       end
+      expire_cache
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
