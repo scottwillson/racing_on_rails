@@ -1,0 +1,17 @@
+<table class="base" style="width: 100%;">
+  <caption>Racers</caption>
+	<%- for racer in racers -%>
+	<tr class="<%= cycle("even", "odd") %>">
+	    <td><%= link_to_remote(
+				racer.name, 
+				:url => {:action => "results", :id => racer.id}, 
+				:update => 'find_results',
+				:before => visual_effect(:fade, 'find_results', :to => 0.4),
+				:complete => visual_effect(:appear, 'find_results'))
+			%>
+			<br>
+			<small><%= [racer.team.blank? ? nil : racer.team.name, racer.city, racer.racing_age].compact.join(', ') %></small>
+		</td>
+  </tr>
+	<%- end -%>
+</table>

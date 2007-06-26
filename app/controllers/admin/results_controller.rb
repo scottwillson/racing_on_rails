@@ -48,41 +48,49 @@ class Admin::ResultsController < Admin::RecordEditor
   
   def racer
   	@racer = Racer.find(params[:id])
-  	raise "Could not find racer with id #{params[:id]}" if @racer.nil?
-    # @results = Result.find(
-    #   :all,
-    #       :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
-    #       :conditions => ['racers.id = ?', params[:id]]
-    # )
-  	@results = @racer.event_results
-    @racers = []
+  	@results = Result.find_for(@racer)
   end
   
   def find_racer
-  	@racers = Racer.find_by_name_like(params[:name], 20)
-  	ignore_id = params[:left_racer_id]
-  	@racers.reject! {|r| r.id.to_s == ignore_id}
-  	@name = params[:name]
-  	if @racers.size == 1
-  	  redirect_to(:action => :select_racer, :name => @name, :id => @racers.first.id)
+  	racers = Racer.find_by_name_like(params[:name], 20)
+  	ignore_id = params[:ignore_id]
+  	racers.reject! {|r| r.id.to_s == ignore_id}
+  	if racers.size == 1
+    	racer = racers.first
+    	results = racer.event_results(true)
+      render(:partial => 'racer', :locals => {:racer => racer, :results => results})
 	  else
-    	render :partial => 'find_racer', :locals => {:left_racer_id => ignore_id}
+    	render :partial => 'racers', :locals => {:racers => racers}
     end
   end
   
-  def select_racer
-  	@racer = Racer.find(params[:id])
-  	@name = params[:name]
-  	@results = @racer.event_results
-  	render :partial => 'results'
+  def results
+  	racer = Racer.find(params[:id])
+  	results = racer.event_results(true)
+	  render(:partial => 'racer', :locals => {:racer => racer, :results => results})
+  end
+  
+  def scores
+    @result = Result.find(params[:id])
+    @scores = @result.scores
+    render(:update) {|page|
+      page.insert_html(:after, "result_#{params[:id]}", :partial => 'score', :collection => @scores)
+    }
   end
   
   def move_result
     result_id = params[:id].to_s
     result_id = result_id[/result_(.*)/, 1]
     result = Result.find(result_id)
-    racer = Racer.find(params[:racer_id])
+    original_result_owner = Racer.find(result.racer.id)
+    racer = Racer.find(params[:racer_id].to_s[/racer_(.*)/, 1])
     result.racer = racer
     result.save!
+    render(:update) do |page|
+      page.replace("racer_#{racer.id}", :partial => 'racer', :locals => {:racer => racer, :results => racer.event_results})
+      page.replace("racer_#{original_result_owner.id}", :partial => 'racer', :locals => {:racer => original_result_owner, :results => original_result_owner.event_results})
+      page.visual_effect(:appear, "racers", :duration => 0.6)
+      page.hide('find_progress_icon')
+    end
   end
 end

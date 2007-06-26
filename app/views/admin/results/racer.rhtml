@@ -1,11 +1,34 @@
 <% @page_title = "Admin: Results: #{@racer.name}" %>
-<table style="width: 100%;">
+
+<table style="width: 100%;" id="racers">
   <tr>
-  	<td style="width: 50%; vertical-align: top;">
-      <%= render :partial => 'racer', :locals => {:id => @racer.id} %>
+  	<td class="fullWidth" id="left_racer">
+      <%= render :partial => 'racer', :locals => {:racer => @racer, :results => @results} %>
     </td>
-    <td style="width: 50%; vertical-align: top;">
-      <%= render :partial => 'find_racer', :locals => {:ignore_id => @racer.id} %>
+    <td class="halfWidth" id="find_results" style="display: none;">
     </td>
   </tr>
 </table>
+
+<script type="text/javascript">
+	function dropped_result(dragged, dropped) {
+		Element.show('find_progress_icon');
+		new Effect.Fade($('racers'), {duration:1.0, from:1.0, to:0.4});
+		new Ajax.Request('/admin/results/move_result?racer_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});
+	}
+</script>
+
+<%= form_remote_tag( 
+	:url => {:action => :find_racer, :ignore_id => @racer.id}, 
+	:update => 'find_results',
+	:before => "Element.show('find_progress_icon')",
+	:complete => "$('racers').scrollTo(); $('left_racer').className='halfWidth'; Element.show('find_results'); Element.hide('find_progress_icon')"
+) %>
+<table>
+	<tr>
+		<td class="field_label">Move Results to:</td>
+      	<td><%= text_field_tag 'name' %></td>
+        <td style="width: 16px;"><%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon', :style => 'display: none;', :height => 16, :width => 16 %></td>
+	</tr>
+</table>
+<%= end_form_tag %>

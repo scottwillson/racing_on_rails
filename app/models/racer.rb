@@ -458,7 +458,15 @@ class Racer < ActiveRecord::Base
   end
   
   # All non-Competition results
-  def event_results
+  # reload does an optimized load with joins
+  def event_results(reload = true)
+    if reload
+      return Result.find(
+        :all,
+        :include => [:team, :racer, :scores, :category, {:race => [{:standings => :event}, :category]}],
+        :conditions => ['racers.id = ?', id]
+      ).reject {|r| r.competition_result?}
+    end
     results.reject do |result|
       result.competition_result?
     end
@@ -467,7 +475,7 @@ class Racer < ActiveRecord::Base
   # BAR, Oregon Cup, Ironman
   def competition_results
     results.select do |result|
-      !result.competition_result?
+      result.competition_result?
     end
   end
 

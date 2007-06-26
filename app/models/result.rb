@@ -46,6 +46,19 @@ class Result < ActiveRecord::Base
   belongs_to :team
   
   validates_presence_of :race_id
+  
+  def Result.find_for(racer)
+    if racer.is_a? Racer
+      racer_id = racer.id
+    else
+      racer_id = racer
+    end
+    Result.find(
+      :all,
+      :include => [:team, :racer, :scores, :category, {:race => [{:standings => :event}, :category]}],
+      :conditions => ['racers.id = ?', racer_id]
+    )    
+  end
     
   def attributes=(attributes)
     unless attributes.nil?

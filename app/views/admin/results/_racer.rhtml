@@ -1,0 +1,69 @@
+<table class="base" style="width: 100%;" id="racer_<%= racer.id %>">
+  <caption><%= racer.name %> <small><%= [racer.team.blank? ? nil : racer.team.name, racer.city, racer.racing_age].compact.join(', ') %></small></caption>
+	<tr>
+	  <td>
+		<table id="results_<%= racer.id %>">
+			<tr>
+				<th></th>
+				<th></th>
+				<th>Race</th>
+				<th>Category</th>
+				<th>Date</th>
+				<th>Pts</th>
+			</tr>
+			<%- for result in results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date} -%>
+			<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
+			  <td class="disclosure"><%= 
+				link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 
+				"toggle_disclosure(#{result.id})",
+				:class => 'disclosure') if result.competition_result? %></td>
+			  <td class="right"><%= result.place %></td>
+			  <td><%= result.race.standings.name %></td>
+			  <td><%= result.race.name %></td>
+			  <td><%= result.race.standings.event.date.strftime("%D") %></td>
+			  <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
+			</tr>
+			<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') unless result.competition_result? -%> 
+			<%- end -%>
+
+			<%- if results.empty? -%>
+			<tr>
+			  <td colspan="6">No results</td>
+			</tr>
+			<%- end -%>
+		</table>
+	  </td>
+	</tr>
+</table>
+
+<%= drop_receiving_element(
+	"racer_#{racer.id}", 
+	:onDrop => 'function(dragged, dropped){dropped_result(dragged, dropped)}')
+%>
+
+<script type="text/javascript" charset="utf-8">
+  function toggle_disclosure(id) {
+    var disclosure = $('disclosure_' + id);
+    if (disclosure.className == 'collapsed') {
+      disclosure.src='/images/icons/spinner.gif';
+      new Ajax.Request('/admin/results/' + id + '/scores', 
+        {asynchronous:true, 
+          evalScripts:true, 
+          onComplete:function(request){expand(id)}}); 
+      return false;      
+    }
+    else {
+      disclosure.src = '/images/icons/collapsed.gif';
+      disclosure.className = 'collapsed';
+      $$('tr.scores_' + id).each(function(e) {
+		e.remove();
+      });
+	}
+  }
+  
+  function expand(id) {
+    var disclosure = $('disclosure_' + id);
+    disclosure.src = '/images/icons/expanded.gif';
+    disclosure.className = 'expanded';
+  }
+</script>

@@ -618,11 +618,10 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     opts = {:controller => "admin/results", :action => "find_racer"}
     assert_routing("/admin/results/find_racer", opts)
 
-    post(:find_racer, :name => 'e', :left_racer_id => racers(:tonkin).id)
+    post(:find_racer, :name => 'e', :ignore_id => racers(:tonkin).id)
     
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert_not_nil(assigns["racers"], "Should assign racers")
     assert_response(:success)
+    assert_template('admin/results/_racers')
   end
   
   def test_find_racer_one_result
@@ -630,34 +629,35 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     opts = {:controller => "admin/results", :action => "find_racer"}
     assert_routing("/admin/results/find_racer", opts)
 
-    post(:find_racer, :name => weaver.name, :left_racer_id => racers(:tonkin).id)
+    post(:find_racer, :name => weaver.name, :ignore_id => racers(:tonkin).id)
     
-    assert_response(:redirect)
+    assert_response(:success)
+    assert_template('admin/results/_racer')
   end
   
-  def test_select_racer
-    opts = {:controller => "admin/results", :action => "select_racer"}
-    assert_routing("/admin/results/select_racer", opts)
-
+  def test_results
     weaver = racers(:weaver)
-    get(:select_racer, :id => weaver.id, :name => 'Weaver', :left_racer_id => racers(:tonkin).id)
+    opts = {:controller => "admin/results", :action => "results", :id => weaver.id.to_s}
+    assert_routing("/admin/results/results/#{weaver.id}", opts)
+
+    post(:results, :id => weaver.id)
     
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert_not_nil(assigns["results"], "Should assign results")
     assert_response(:success)
+    assert_template('admin/results/_racer')
   end
   
   def test_move_result
-    opts = {:controller => "admin/results", :action => "move_result"}
-    assert_routing("/admin/results/move_result", opts)
-
     weaver = racers(:weaver)
     tonkin = racers(:tonkin)
     result = results(:tonkin_kings_valley)
+
+    opts = {:controller => "admin/results", :action => "move_result"}
+    assert_routing("/admin/results/move_result", opts)
+
     assert(tonkin.results.include?(result))
     assert(!weaver.results.include?(result))
     
-    get(:move_result, :racer_id => weaver.id, :id => "result_#{result.id}")
+    post(:move_result, :racer_id => "racer_#{weaver.id}", :id => "result_#{result.id}")
     
     assert(!tonkin.results(true).include?(result))
     assert(weaver.results(true).include?(result))

@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   RESULTS_LIMIT = 100
   
   def rescue_action_in_public(exception)
+    logger.error("rescue_action_in_public #{exception}")
   	case exception
     when ActiveRecord::RecordNotFound, ::ActionController::RoutingError, ::ActionController::UnknownAction
       render(:file => local_or_default_file('404.html'), :status => "404 Not Found")

@@ -673,4 +673,15 @@ class ResultTest < Test::Unit::TestCase
     source_result = races(:jack_frost_masters_35_plus_women).results.build(:team => teams(:vanilla))    
     assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 4))
   end
+  
+  def test_find_for_racer
+    mollie = racers(:mollie)
+    results = Result.find_for(mollie)
+    assert_not_nil(results)
+    assert_equal(3, results.size, 'Results')
+    
+    results = Result.find_for(mollie.id)
+    assert_not_nil(results)
+    assert_equal(3, results.size, 'Results')    
+  end
 end
