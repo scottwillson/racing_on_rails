@@ -62,23 +62,30 @@ class Admin::TeamsController < Admin::RecordEditor
       @team = Team.find(@params[:id])
       original_name = @team.name
       @team.name = new_name
-      existing_team = Team.find_by_name_or_alias(new_name)
-      if (existing_team and existing_team != @team)
+      
+      if @team.has_alias?(new_name)
+        @team.destroy_alias(new_name)
+        @team.create_alias(original_name)
+      elsif same_as_other_team?(new_name, @team)
+        existing_team = Team.find_by_name_or_alias(new_name)
         return merge?(original_name, existing_team, @team)
+      elsif same_as_other_alias?(new_name)
+        existing_team = Team.find_by_name_or_alias(new_name)
+        return merge?(original_name, existing_team, @team)
+      elsif different?(original_name, new_name)
+        @team.create_alias(original_name)
       end
-      if (existing_team and existing_team == @team and existing_team.name.casecmp(@team.name) != 0)
-        old_alias = @team.aliases.detect {|a| a.name.casecmp(@team.name) == 0}
-        old_alias.name = existing_team.name
-        old_alias.save!
-      end
+
+      # Just save if new name is the same as original
+      # (case could differ but we don't need a new alias because aliases are case-insensitive)
       
       saved = @team.save
       if saved
-        expire_cache
         render(:partial => 'team')
       else
         render(:partial => 'edit')
       end
+      expire_cache
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")
       RACING_ON_RAILS_DEFAULT_LOGGER.error("#{e}\n#{stack_trace}")
@@ -86,6 +93,18 @@ class Admin::TeamsController < Admin::RecordEditor
       @team.errors.add('name', e)
       render(:partial => 'edit')
     end
+  end
+  
+  def same_as_other_team?(new_name, team)
+    Team.count(:conditions => ['name = ? and id <> ?', new_name, team.id]) > 0
+  end
+  
+  def same_as_other_alias?(new_name)
+    Alias.count(:conditions => ['name = ? and team_id is not null', new_name]) > 0
+  end
+  
+  def different?(original_name, new_name)
+    original_name.casecmp(new_name) != 0
   end
   
   # Inline

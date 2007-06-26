@@ -11,9 +11,11 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @request.host = "localhost"
+    @request.session[:user] = users(:candi)
   end
   
   def test_not_logged_in_index
+    @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
     assert_redirect_url "http://localhost/admin/account/login"
@@ -21,6 +23,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_not_logged_in_edit
+    @request.session[:user] = nil
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
     assert_response(:redirect)
@@ -29,7 +32,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/teams", :action => "index"}
     assert_routing("/admin/teams", opts)
     
@@ -42,7 +44,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_find
-    @request.session[:user] = users(:candi)
     get(:index, :name => 'van')
     assert_response(:success)
     assert_template("admin/teams/index")
@@ -53,7 +54,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_find_nothing
-    @request.session[:user] = users(:candi)
     get(:index, :name => 's7dfnacs89danfx')
     assert_response(:success)
     assert_template("admin/teams/index")
@@ -62,7 +62,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_find_empty_name
-    @request.session[:user] = users(:candi)
     get(:index, :name => '')
     assert_response(:success)
     assert_template("admin/teams/index")
@@ -76,7 +75,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     for i in 0..Admin::TeamsController::RESULTS_LIMIT
       Team.create(:name => "Test Team #{i}")
     end
-    @request.session[:user] = users(:candi)
+    
     get(:index, :name => 'Test')
     assert_response(:success)
     assert_template("admin/teams/index")
@@ -88,7 +87,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_edit_name
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
     assert_response(:success)
@@ -98,7 +96,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_blank_name
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => '')
     assert_response(:success)
@@ -111,7 +108,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_cancel
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     original_name = vanilla.name
     get(:cancel, :id => vanilla.to_param, :name => vanilla.name)
@@ -124,7 +120,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Vaniller')
     assert_response(:success)
@@ -136,7 +131,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_update_same_name
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Vanilla')
     assert_response(:success)
@@ -148,7 +142,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_update_same_name_different_case
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'vanilla')
     assert_response(:success)
@@ -161,7 +154,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   
   def test_update_to_existing_name
     # Should ask to merge
-    @request.session[:user] = users(:candi)
+    
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Kona')
     assert_response(:success)
@@ -177,8 +170,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   def test_update_to_existing_alias
     vanilla_alias = Alias.find_by_name('Vanilla')
     assert_nil(vanilla_alias, 'Alias')
-
-    @request.session[:user] = users(:candi)
+    
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Vanilla Bicycles')
     assert_response(:success)
@@ -197,8 +189,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   def test_update_to_existing_alias_different_case
     vanilla_alias = Alias.find_by_name('Vanilla')
     assert_nil(vanilla_alias, 'Alias')
-
-    @request.session[:user] = users(:candi)
+    
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'vanilla bicycles')
     assert_response(:success)
@@ -215,7 +206,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_update_to_other_team_existing_alias
-    @request.session[:user] = users(:candi)
     kona = teams(:kona)
     post(:update, :id => kona.to_param, :name => 'Vanilla Bicycles')
     assert_response(:success)
@@ -228,8 +218,28 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles not in database')
   end
   
+  def test_update_land_shark_bug
+    landshark = Team.create(:name => 'Landshark')
+    landshark_alias = landshark.aliases.create(:name => 'Landshark')
+    land_shark_alias = landshark.aliases.create(:name => 'Land Shark')
+    team_landshark_alias = landshark.aliases.create(:name => 'Team Landshark')
+    
+    post(:update, :id => landshark.to_param, :name => 'Land Shark')
+    assert_response(:success)
+    assert_not_nil(assigns["team"], "Should assign team")
+    assert(assigns["team"].errors.empty?, assigns["team"].errors.full_messages)
+    assert_template("admin/teams/_team")
+    assert_equal(landshark, assigns['team'], 'Team')
+    landshark.reload
+    assert_equal('Land Shark', landshark.name, 'Updated name')
+    assert_equal(2, landshark.aliases(true).size, 'Aliases')
+    assert(landshark.aliases.any? {|a| a.name == 'Landshark'}, 'Aliases should include Landshark')
+    assert(!landshark.aliases.any? {|a| a.name == 'Land Shark'}, 'Aliases should not include Land Shark')
+    assert(!landshark.aliases.any? {|a| a.name == 'LandTeam Landshark'}, 'Aliases should not include Team Landshark')
+    # try with different cases
+  end
+  
   def test_destroy
-    @request.session[:user] = users(:candi)
     csc = Team.create(:name => 'CSC')
     post(:destroy, :id => csc.id, :commit => 'Delete')
     assert_response(:success)
@@ -237,7 +247,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
   
   def test_merge?
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     kona = teams(:kona)
     get(:update, :name => vanilla.name, :id => kona.to_param)
@@ -254,7 +263,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     old_id = kona.id
     assert(Team.find_by_name('Kona'), 'Kona should be in database')
 
-    @request.session[:user] = users(:candi)
+    
     get(:merge, :id => kona.to_param, :target_id => vanilla.id)
     assert_response(:success)
     assert_template("admin/teams/merge")
@@ -264,7 +273,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_new_inline
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/teams", :action => "new_inline"}
     assert_routing("/admin/teams/new_inline", opts)
   
@@ -276,7 +284,6 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_member
-    @request.session[:user] = users(:candi)
     vanilla = teams(:vanilla)
     assert_equal(true, vanilla.member, 'member before update')
     post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'member')

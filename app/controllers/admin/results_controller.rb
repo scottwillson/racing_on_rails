@@ -8,6 +8,7 @@ class Admin::ResultsController < Admin::RecordEditor
     result = race.results.build(@params[:result])
     result.save!
     flash[:notice] = "Saved new result #{result.place}"
+    expire_cache
     redirect_to(:controller => "/admin/events", :action => :show, :id => race.standings.event.to_param, :race_id => race.to_param)
   end
   
@@ -23,6 +24,7 @@ class Admin::ResultsController < Admin::RecordEditor
     
     if @result.errors.empty?
       flash[:notice] = "Updated result #{@result.place}"
+      expire_cache
       redirect_to(
         :controller => "/admin/events", 
         :action => :show, 
@@ -43,6 +45,7 @@ class Admin::ResultsController < Admin::RecordEditor
     result.destroy
     flash[:notice] = notice
     
+    expire_cache
     redirect_to(:controller => "/admin/events", :action => :show, :id => event.to_param, :race_id => race.to_param)
   end
   
@@ -86,6 +89,7 @@ class Admin::ResultsController < Admin::RecordEditor
     racer = Racer.find(params[:racer_id].to_s[/racer_(.*)/, 1])
     result.racer = racer
     result.save!
+    expire_cache
     render(:update) do |page|
       page.replace("racer_#{racer.id}", :partial => 'racer', :locals => {:racer => racer, :results => racer.event_results})
       page.replace("racer_#{original_result_owner.id}", :partial => 'racer', :locals => {:racer => original_result_owner, :results => original_result_owner.event_results})
