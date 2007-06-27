@@ -296,6 +296,14 @@ class UpcomingEventsTest < Test::Unit::TestCase
     assert_equal_enumerables([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.events[Road]')
   end
   
+  def test_downhill_events
+    super_d = SingleDayEvent.create!(:date => Date.new(2008, 5, 27), :name => 'Super D', :discipline => 'Downhill', :flyer_approved => true)
+
+    upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 26))
+    assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal_events([super_d], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+  end
+  
   def assert_equal_events(expected, actual, message = 'Events not equal')
     unless expected == actual
       detailed_message = "#{message}. Expected [#{expected.sort.join(', ')}] but was [#{actual.sort.join(', ')}]"

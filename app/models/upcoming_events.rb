@@ -58,6 +58,8 @@ class UpcomingEvents
       case event.discipline
       when 'Mountain Bike'
         @events['Mountain Bike'] << event
+      when 'Downhill'
+        @events['Mountain Bike'] << event
       when 'Track'
         @events['Track'] << event
       when'Cyclocross'
@@ -70,6 +72,8 @@ class UpcomingEvents
     for event in unique_weekly_series
       case event.discipline
       when 'Mountain Bike'
+        @weekly_series['Mountain Bike'] << event
+      when 'Downhill'
         @weekly_series['Mountain Bike'] << event
       when 'Track'
         @weekly_series['Track'] << event

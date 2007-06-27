@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
   
   def expire_cache
-    FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
+    FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results')) if perform_caching
   end
   
   protected
