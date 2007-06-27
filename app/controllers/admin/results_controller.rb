@@ -51,7 +51,7 @@ class Admin::ResultsController < Admin::RecordEditor
   
   def racer
   	@racer = Racer.find(params[:id])
-  	@results = Result.find_for(@racer)
+  	@results = Result.find_all_for(@racer)
   end
   
   def find_racer
@@ -60,7 +60,7 @@ class Admin::ResultsController < Admin::RecordEditor
   	racers.reject! {|r| r.id.to_s == ignore_id}
   	if racers.size == 1
     	racer = racers.first
-    	results = racer.event_results(true)
+    	results = Result.find_all_for(@racer)
       render(:partial => 'racer', :locals => {:racer => racer, :results => results})
 	  else
     	render :partial => 'racers', :locals => {:racers => racers}
@@ -69,7 +69,7 @@ class Admin::ResultsController < Admin::RecordEditor
   
   def results
   	racer = Racer.find(params[:id])
-  	results = racer.event_results(true)
+  	results = Result.find_all_for(@racer)
 	  render(:partial => 'racer', :locals => {:racer => racer, :results => results})
   end
   

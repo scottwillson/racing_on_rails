@@ -47,7 +47,7 @@ class Result < ActiveRecord::Base
   
   validates_presence_of :race_id
   
-  def Result.find_for(racer)
+  def Result.find_all_for(racer)
     if racer.is_a? Racer
       racer_id = racer.id
     else
@@ -301,13 +301,12 @@ class Result < ActiveRecord::Base
   end
 
   def team_name=(value)
-    if self.team
-      self.team.name = value
-      self.team.dirty
-    else
+    logger.debug("team_name=(#{value})")
+    if self.team.nil? || self.team.name != value
       self.team = Team.new(:name => value)
+      self.team.dirty
     end
-    if self.racer
+    if self.racer && self.racer.team_name != value
       self.racer.team = self.team
       self.racer.dirty
     end

@@ -674,13 +674,13 @@ class ResultTest < Test::Unit::TestCase
     assert(competition_result.scores.create_if_best_result_for_race(:source_result => source_result, :points => 4))
   end
   
-  def test_find_for_racer
+  def test_find_all_for_racer
     mollie = racers(:mollie)
-    results = Result.find_for(mollie)
+    results = Result.find_all_for(mollie)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')
     
-    results = Result.find_for(mollie.id)
+    results = Result.find_all_for(mollie.id)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')    
   end
