@@ -20,11 +20,13 @@ module ApplicationHelper
       @@grid_columns['license'] = Column.new(:name => 'license', :description => 'Lic', :size => 7)
       @@grid_columns['name'] = Column.new(:name => 'name', :description => 'Name', :size => 30, :fixed_size => true)
       @@grid_columns['name'].link = 'link_to(cell, "#{APP_SERVER_ROOT}results/racer/#{result.racer.id}") if result.racer'
-      @@grid_columns['notes'] = Column.new(:name => 'notes', :size => 12)
+      @@grid_columns['notes'] = Column.new(:name => 'notes', :description => 'Notes', :size => 12)
       @@grid_columns['number'] = Column.new(:name => 'number', :description => 'Num', :size => 4, :fixed_size => true)
       @@grid_columns['number'].link = 'link_to(cell, "#{APP_SERVER_ROOT}results/racer/#{result.racer.id}") if result.racer'
       @@grid_columns['place'] = Column.new(:name => 'place', :description => 'Pl', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points'] = Column.new(:name => 'points', :description => 'Points', :size => 6, :fixed_size => true, :justification => Column::RIGHT)
+      @@grid_columns['points_from_place'] = Column.new(:name => 'points_from_place', :description => 'Finish Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
+      @@grid_columns['points_total'] = Column.new(:name => 'points_total', :description => 'Total Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['state'] = Column.new(:name => 'state', :description => 'ST', :size => 3)
       @@grid_columns['team_name'] = Column.new(:name => 'team_name', :description => 'Team', :size => 40)
       @@grid_columns['time'] = Column.new(:name => 'time', :description => 'Time', :size => 8, :justification => Column::RIGHT)
