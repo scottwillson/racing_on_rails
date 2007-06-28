@@ -134,13 +134,17 @@
 				<table cellspacing="0" cellpadding="0" class="base" id="inline">
 					<caption>Aliases</caption>
 					<%- for name_alias in @racer.aliases -%>
-					<tr>
+					<tr id="alias_<%= name_alias.id %>">
 						<td><%= name_alias.name %></td>
+						<td>
+							<%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
+ 					         :url => { :action => "destroy_alias", :id => @racer.id, :alias_id => name_alias.id}) %>
+						</td>
 					</tr>
 					<%- end -%>
 					<%- if @racer.aliases.empty? %>
 					<tr>
-						<td>None</td>
+						<td colspan="2">None</td>
 					</tr>
 					<%- end -%>
 				</table>

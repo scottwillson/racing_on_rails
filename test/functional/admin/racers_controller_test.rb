@@ -637,6 +637,19 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
   end
   
+  def test_destroy_alias
+    tonkin = racers(:tonkin)
+    assert_equal(1, tonkin.aliases.count, 'Tonkin aliases')
+    eric_tonkin_alias = tonkin.aliases.first
+
+    opts = {:controller => "admin/racers", :action => "destroy_alias", :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s}
+    assert_routing("/admin/racers/#{tonkin.id}/aliases/#{eric_tonkin_alias.id}/destroy", opts)
+    
+    post(:destroy_alias, :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s)
+    assert_response(:success)
+    assert_equal(0, tonkin.aliases(true).count, 'Tonkin aliases after destruction')
+  end
+  
   def test_preview_import
     racers_before_import = Racer.count
 

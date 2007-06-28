@@ -350,6 +350,14 @@ class Admin::RacersController < Admin::RecordEditor
     end
   end
   
+  def destroy_alias
+    alias_id = params[:alias_id]
+    Alias.destroy(alias_id)
+    render :update do |page|
+      page.visual_effect(:puff, "alias_#{alias_id}", :duration => 2)
+    end
+  end
+  
   def cards
     @racers = Racer.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @racers.empty?

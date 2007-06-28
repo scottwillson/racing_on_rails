@@ -25,6 +25,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/admin/racers", :controller => 'admin/racers', :action => "index"
   map.connect "/admin/racers/:id", :controller => 'admin/racers', :action => "show", :requirements => {:id => /\d+/}
+  map.connect "/admin/racers/:id/aliases/:alias_id/destroy", :controller => 'admin/racers', :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
   map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"
 
