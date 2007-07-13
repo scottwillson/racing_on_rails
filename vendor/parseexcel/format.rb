@@ -81,6 +81,10 @@ module Spreadsheet
 				@@fmt_strs.store(idx, fmt_str)
 			end
 			def cell_type(cell)
+        # p("fmt_idx: #{@fmt_idx}")
+        # p("fmt: #{@@fmt_strs[@fmt_idx]}")
+        # p("fmt_strs: #{@@fmt_strs.inspect}")
+        # p("date_pattern: #{@@date_pattern.inspect}")
 				if(cell.numeric)
 					if([0x0E..0x16, 0x2D..0x2F].any? { |range| range.include?(@fmt_idx.to_i) })
 						:date

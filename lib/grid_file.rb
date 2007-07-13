@@ -5,7 +5,7 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  TIME_FORMATS = [0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 32, 33, 34, 35, 43, 44] unless defined?(TIME_FORMATS)
+  TIME_FORMATS = [0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 39, 40, 43, 44, 49, 50] unless defined?(TIME_FORMATS)
 
   def GridFile.read_excel(file)
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
@@ -21,52 +21,20 @@ class GridFile < Grid
     for workbook_index in 0..(workbook.sheet_count - 1)
       worksheet = workbook.worksheet(workbook_index)
       for row in worksheet
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row}")
+        if RACING_ON_RAILS_DEFAULT_LOGGER.debug? && debug?
+          RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
+          RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row}")
+          RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
+        end
         if row
           line = []
-          is_not_blank = true
+          is_blank = true
           for cell in row
-            if cell
-              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("format: #{cell.format_no} type: #{cell.type} to_s: #{cell.to_s} to_f: #{cell.to_f}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-              # RACING_ON_RAILS_DEFAULT_LOGGER.debug("date: #{cell.date}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug?
-              is_time = TIME_FORMATS.include?(cell.format_no)
-              cell_f = cell.to_f
-              cell_i = cell.to_i
-              if cell.type == :numeric and cell.format_no != 0
-                is_not_blank = true unless cell == 0
-                if cell_f == cell_i
-                  line << cell_i.to_s
-                else
-                  line << cell.to_f.to_s
-                end
-              elsif is_time and cell_f < 2 and cell.to_s == cell_f.to_s
-                is_not_blank = true
-                if cell_f == cell_i
-                  line << (cell_i * 86400).to_s
-                else
-                  line << (cell_f * 86400).to_s
-                end
-              elsif cell.type == :date
-                is_not_blank = true
-                date = cell.date.to_s
-                if date.blank?
-                  if cell_f == cell_i
-                    line << (cell_i * 86400).to_s
-                  else
-                    line << (cell_f * 86400).to_s
-                  end
-                else
-                  line << date
-                end
-              else
-                is_not_blank = true unless cell.to_s.strip.blank?
-                line << cell.to_s
-              end
-            else
-              line << ""
-            end
+            is_blank = false if !cell.to_s.strip.blank? || cell != 0
+            _cell = read_cell(cell)
+            line << _cell
           end
-          if !line.empty? && is_not_blank
+          if !line.empty? && !is_blank
             excel_rows << line
           end
         end
@@ -75,7 +43,85 @@ class GridFile < Grid
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
     excel_rows
   end
+  
+  def GridFile.read_cell(cell)
+    if cell
+      if RACING_ON_RAILS_DEFAULT_LOGGER.debug? && debug?
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug('') 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("format_no: #{cell.format_no}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("fmt_idx:   #{cell.format.fmt_idx}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("type:      #{cell.type}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("value:     #{cell.value}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("kind:      #{cell.kind}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("numeric:   #{cell.numeric}")
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("code:      #{cell.code}")
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("to_s:      #{cell.to_s}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("to_f:      #{cell.to_f}") 
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("date:      #{cell.date}")
+        RACING_ON_RAILS_DEFAULT_LOGGER.debug("datetime:  #{cell.datetime.year}-#{cell.datetime.month}-#{cell.datetime.day} #{cell.datetime.hour}:#{cell.datetime.min}.#{cell.datetime.sec} #{cell.datetime.msec}")
+      end
+      
+      cell_f = cell.to_f
+      cell_i = cell.to_i
+      cell_type = cell.type
+      if cell_type == :numeric and cell.format_no != 0
+        if cell_f == cell_i
+          return cell_i.to_s
+        else
+          return cell.to_f.to_s
+        end
+      end
+      
+      is_time = TIME_FORMATS.include?(cell.format_no) && (cell.to_s[/^\d*:\d+\.?\d?$/] || cell.to_s[/^\d*:?\d+\.\d+$/])
+      if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
+        if cell_f == cell_i
+          return (cell_i * 86400).to_s
+        else
+          return (cell_f * 86400).to_s
+        end
+      elsif cell_type == :text && is_time
+        return s_to_time(cell.value).to_s
+      elsif cell_type == :date
+        date = cell.date.to_s
+        if date.blank?
+          if cell_f == cell_i
+            return (cell_i * 86400).to_s
+          else
+            return  (cell_f * 86400).to_s
+          end
+        else
+          return date
+        end
+      else
+        return cell.to_s
+      end
+    end
+    ''
+  end
+  
+  def GridFile.debug?
+    false
+  end
 
+  
+  # TODO Dupe method
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  # This method doesn't handle some typical edge cases very well
+  def GridFile.s_to_time(string)
+    if string.to_s.blank?
+      0.0
+    else
+      string.gsub!(',', '.')
+      parts = string.to_s.split(':')
+      parts.reverse!
+      t = 0.0
+      parts.each_with_index do |part, index|
+        t = t + (part.to_f) * (60.0 ** index)
+      end
+      t
+    end    
+  end
+  
   # source can be String or File
   # accept Tempfile for testing
   # header_row: start_at_row is header
