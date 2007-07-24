@@ -635,6 +635,16 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     assert_template('admin/results/_racer')
   end
   
+  def test_find_racer_no_results
+    opts = {:controller => "admin/results", :action => "find_racer"}
+    assert_routing("/admin/results/find_racer", opts)
+
+    post(:find_racer, :name => 'not a racer in the database', :ignore_id => racers(:tonkin).id)
+    
+    assert_response(:success)
+    assert_template('admin/results/_racers')
+  end
+  
   def test_results
     weaver = racers(:weaver)
     opts = {:controller => "admin/results", :action => "results", :id => weaver.id.to_s}

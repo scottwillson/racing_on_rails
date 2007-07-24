@@ -14,4 +14,12 @@
 		</td>
   </tr>
 	<%- end -%>
+
+	<%- if racers.empty? -%>
+	<tr>
+		<td>
+			No racers found with '<%= params[:name] %>'
+		</td>
+	</tr>
+	<%- end -%>
 </table>
