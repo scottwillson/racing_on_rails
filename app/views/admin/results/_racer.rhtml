@@ -6,6 +6,7 @@
 			<tr>
 				<th></th>
 				<th></th>
+				<th></th>
 				<th>Race</th>
 				<th>Category</th>
 				<th>Date</th>
@@ -18,6 +19,11 @@
 				"toggle_disclosure(#{result.id})",
 				:class => 'disclosure') if result.competition_result? %></td>
 			  <td class="right"><%= result.place %></td>
+			  <td><%= link_to(image_tag('/images/icons/web_page.gif', 
+					:title => 'View public results web page', :alt => 'View public results web page'), 
+					 :controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
+					 :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id) %>
+			  </td>
 			  <td><%= result.race.standings.name %></td>
 			  <td><%= result.race.name %></td>
 			  <td><%= result.race.standings.event.date.strftime("%D") %></td>
@@ -28,7 +34,7 @@
 
 			<%- if results.empty? -%>
 			<tr>
-			  <td colspan="6">No results</td>
+			  <td colspan="7">No results</td>
 			</tr>
 			<%- end -%>
 		</table>
