@@ -24,6 +24,10 @@ class Admin::TeamsController < Admin::RecordEditor
     end
   end
   
+  def show
+    @team = Team.find(params[:id], :include => [:aliases, :racers])
+  end
+  
   def create
     begin
       new_name = params[:name]
@@ -155,6 +159,15 @@ class Admin::TeamsController < Admin::RecordEditor
       render :update do |page|
         page.replace_html("message_#{team.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
       end
+    end
+  end
+
+  # Exact dupe of racers controller
+  def destroy_alias
+    alias_id = params[:alias_id]
+    Alias.destroy(alias_id)
+    render :update do |page|
+      page.visual_effect(:puff, "alias_#{alias_id}", :duration => 2)
     end
   end
 end

@@ -12,6 +12,11 @@
 	<td nowrap>
 		<%= attribute(team, 'member') %>
 	</td>
+	<td align="right" style="white-space: nowrap;">
+    	<%= link_to 'Results', :controller => '/results', :action => 'team', :id => team.id %>
+		|
+		<%= link_to 'View', :action => 'show', :id => team.id %>
+	</td>
  	<td><%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
 		:url => {:action => "destroy", :id => team.id},
 		:confirm => "Really delete #{team.name}?",

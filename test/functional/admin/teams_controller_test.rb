@@ -299,4 +299,29 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     vanilla.reload
     assert_equal(true, vanilla.member, 'member after second update')
   end
+
+  def test_show
+    vanilla = teams(:vanilla)
+    opts = {:controller => "admin/teams", :action => "show", :id => vanilla.to_param.to_s}
+    assert_routing("/admin/teams/#{vanilla.to_param}", opts)
+    
+    get(:show, :id => vanilla.to_param)
+    assert_response(:success)
+    assert_template("admin/teams/show")
+    assert_not_nil(assigns["team"], "Should assign team")
+    assert_equal(vanilla, assigns['team'], 'Should assign Vanilla to team')
+  end
+  
+  def test_destroy_alias
+    vanilla = teams(:vanilla)
+    assert_equal(1, vanilla.aliases.count, 'Vanilla aliases')
+    vanilla_bicycles_alias = vanilla.aliases.first
+
+    opts = {:controller => "admin/teams", :action => "destroy_alias", :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s}
+    assert_routing("/admin/teams/#{vanilla.id}/aliases/#{vanilla_bicycles_alias.id}/destroy", opts)
+    
+    post(:destroy_alias, :id => vanilla_bicycles_alias.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
+    assert_response(:success)
+    assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')
+  end
 end
