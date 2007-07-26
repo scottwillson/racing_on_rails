@@ -5,7 +5,6 @@ require 'mongrel_cluster/recipes'
 
 set :application, "racing_on_rails"
 set :repository, "http://butlerpress.com/var/repos/racing_on_rails/trunk"
-set :user, 'railswsba'
 
 # role :app, "my.server.com"
 # role :db, 'my.server.com', :primary => true
