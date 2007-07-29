@@ -5,9 +5,8 @@ table.tabs, table.tabs_solo {
 	text-align: center;
 	margin-top: 0px;
 	margin-bottom: 8px;
-	margin-left: 0px;
-	margin-right: 0px;
-}
+	margin-left: auto;
+	margin-right: auto;}
 
 table.tabs td, table.tabs_solo td {
 	background-image: url(/images/buttons/background.jpg); 
