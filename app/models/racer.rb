@@ -349,7 +349,12 @@ class Racer < ActiveRecord::Base
     end
 
     date_as_date = date
-    unless date.is_a?(Date)
+    case date_as_date
+    when Date
+      # Nothing to do
+    when DateTime, Time
+      date_as_date = Date.new(date.year, date.month, date.day)
+    else
       date_as_date = Date.parse(date)
     end
 

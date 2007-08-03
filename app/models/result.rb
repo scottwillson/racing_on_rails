@@ -104,7 +104,7 @@ class Result < ActiveRecord::Base
        self.racer[:member_from].blank? && 
        !RaceNumber.rental?(number, Discipline[event.discipline])
        
-      self.racer.member_from = Date.today
+      self.racer.member_from = race.standings.date
     end
     
     if self.team and (team.new_record? or team.dirty?)
@@ -301,7 +301,6 @@ class Result < ActiveRecord::Base
   end
 
   def team_name=(value)
-    logger.debug("team_name=(#{value})")
     if self.team.nil? || self.team.name != value
       self.team = Team.new(:name => value)
       self.team.dirty

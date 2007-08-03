@@ -42,7 +42,7 @@ class ResultsFileTest < Test::Unit::TestCase
   end
   
   def test_import_excel
-    event = SingleDayEvent.new(:discipline => 'Road')
+    event = SingleDayEvent.new(:discipline => 'Road', :date => Date.new(2006, 1, 16))
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
     event.number_issuer = number_issuers(:association)
     event.save!
@@ -57,6 +57,7 @@ class ResultsFileTest < Test::Unit::TestCase
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
+      race_date = actual_race.standings.date
       actual_race.results.sort.each_with_index do |result, result_index|
         expected_result = expected_race.results[result_index]
         assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
@@ -66,9 +67,13 @@ class ResultsFileTest < Test::Unit::TestCase
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
         if result.racer
           if RaceNumber.rental?(result.number, Discipline[event.discipline])
-            assert(!result.racer.member?, "Racer should not be a member because he has a rental number")
+            assert(!result.racer.member?(race_date), "Racer should not be a member because he has a rental number")
           else
-            assert(result.racer.member?, "member? for race #{index} result #{result_index}")
+            assert(result.racer.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.racer.member_from.strftime('%F')} #{result.racer.member_to.strftime('%F')}")
+            assert_not_equal(
+              Date.today, 
+              result.racer.member_from, 
+              "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
           end
         end
       end
