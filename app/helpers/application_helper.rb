@@ -57,6 +57,21 @@ module ApplicationHelper
     yield tabs
     tabs.to_html
   end
+  
+  def image(name)
+    return '' if name.blank?
+    
+    img = Image.find_by_name(name)
+    if img
+      if img.link
+        eval("link_to(image_tag(img.source), #{img.link})")
+      else
+        image_tag(img.source)
+      end
+    else
+      image_tag('clear')
+    end
+  end
 end
 
 class Tabs

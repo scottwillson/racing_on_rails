@@ -1,0 +1,14 @@
+photo:
+  id: 1
+  name: 'Home Page Photo'
+  source: 'http://www.obra.org/images/home_page.jpg'
+photo_with_link:
+  id: 2
+  name: 'Ad'
+  source: 'http://www.obra.org/images/ad.gif'
+  link: ":controller => 'auction', :action => 'home'"
+photo_with_http_link:
+  id: 3
+  name: 'Ad to external site'
+  source: 'http://www.obra.org/images/ad.gif'
+  link: "'http://steelmancycles.com'"
