@@ -10,15 +10,19 @@
 <% @page_title = "Admin: Racers: #{racer_name}" %>
 
 <div align="center">
-  <p class="message" id="message" <% "style='visibility: hidden;'" unless flash[:notice] %>>
-    <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-  	<%= flash[:notice] %>
-  </p>
+	<%- if flash[:notice] -%>
+		<div class="message" id="message">
+				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+				<%= flash[:notice] %>
+		</div>
+	<%- end -%>
 
-  <p class="message" id="message" <% "style='visibility: hidden;'" unless flash[:warn] %>>
-    <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'warn') %>
-  	<%= flash[:warn] %>
-  </p>
+	<%- if flash[:warn] -%>
+		<div class="message" id="warn">
+				<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+				<%= flash[:warn] %>
+		</div>
+	<%- end -%>
 
 <%= error_messages_for 'racer' %>
 
@@ -36,11 +40,17 @@
 		</tr>
 		<tr>
 			<td valign="top" class="field_label">Membership:</td>
-			<td><%= @racer.member_from.strftime('%m/%d/%Y') unless @racer.member_from.nil? %>&nbsp;to 12/31/<%= date_select 'racer', 'member_to', 
-				:discard_day => true, :discard_month => true, :end_year => Date.today.year + 1,  :include_blank => true %>
+			<td><span style="white-space: nowrap;"><%= date_select 'racer', 'member_from', 
+					:order => [:month, :day, :year],
+					:start_year => 1999, :end_year => Date.today.year + 1, 
+					:include_blank => true %>&nbsp;to</span><br>
+				<%= date_select 'racer', 'member_to', 
+						:order => [:month, :day, :year],
+						:end_year => Date.today.year + 1, 
+						:include_blank => true %>
 				
-				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? or @racer.renewed? %>
 				<br>
+				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? or @racer.renewed? %>
 				<span class="updatedon">
 				<%- if @racer.member? -%>
 					Current

@@ -502,7 +502,14 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
     @request.session[:user] = users(:candi)
     
-    post(:update, {"racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, "commit"=>"Save"})
+    post(:update, {"racer"=>{
+                        "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
+                        "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
+                        "work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
+                        "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
+                        "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
+                        "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", 
+                        "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, "commit"=>"Save"})
     
     if assigns['racer']
       assert(assigns['racer'].errors.empty?, assigns['racer'].errors.full_messages)
@@ -513,6 +520,8 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
     assert_redirected_to(:id => knowlsons.first.id)
+    assert_nil(knowlsons.first.member_from, 'member_from after update')
+    assert_nil(knowlsons.first.member_to, 'member_to after update')
   end
 
   def test_create_with_road_number
@@ -523,7 +532,12 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     @request.session[:user] = users(:candi)
     
     post(:update, {
-      "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
+      "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
+        "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
+        "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
+        "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
+        "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
+        "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
       "number_issuer_id"=>["1", "1"], "number_value"=>["8977", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2007',
       "commit"=>"Save"})
     
@@ -552,6 +566,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal('BBB9', race_number.value, 'MTB number value')
     assert_equal(Discipline[:mountain_bike], race_number.discipline, 'MTB number discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'MTB number issuer')
+
+    assert_equal_dates('2004-02-16', knowlsons.first.member_from, 'member_from after update')
+    assert_equal_dates('2004-12-31', knowlsons.first.member_to, 'member_to after update')
   end
   
   def test_update
@@ -561,7 +578,14 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
                    "number"=>{"5"=>{"value"=>"222"}},
                    "racer"=>{
-                     "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+                     "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
+                     "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
+                     "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
+                     "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"", 
+                     "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
+                     "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
+                     "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
+                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
                     }, 
                    "id"=>mollie.to_param}
     )
@@ -570,6 +594,8 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     mollie.reload
     assert_equal('222', mollie.road_number(true), 'Road number should be updated')
     assert_equal(true, mollie.print_card?, 'print_card?')
+    assert_equal_dates('2004-02-16', mollie.member_from, 'member_from after update')
+    assert_equal_dates('2004-12-31', mollie.member_to, 'member_to after update')
   end
 
   def test_update_new_number
@@ -578,10 +604,15 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
                    "number"=>{"5"=>{"value"=>"202"}},
-                   "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", 
+                   "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
+                     "cell_fax"=>"", "zip"=>"97070", 
                    "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
-                   "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "street"=>"31153 SW Willamette Hwy W", 
-                   "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", 
+                   "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
+                   "street"=>"31153 SW Willamette Hwy W", 
+                   "track_category"=>"", "home_phone"=>"503-582-8823", "first_name"=>"Paul", "last_name"=>"Formiller", 
+                   "date_of_birth(1i)"=>"1969", 
+                   "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
+                   "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
                    "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
                    "id"=>mollie.to_param}
     )
@@ -590,6 +621,8 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     mollie.reload
     assert_equal('202', mollie.road_number, 'Road number should not be updated')
     assert_equal('AZY', mollie.xc_number, 'MTB number should be updated')
+    assert_nil(mollie.member_from, 'member_from after update')
+    assert_nil(mollie.member_to, 'member_to after update')
   end
 
   def test_update_error

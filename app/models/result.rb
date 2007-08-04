@@ -199,6 +199,12 @@ class Result < ActiveRecord::Base
     self.race.standings.event.is_a?(Competition)
   end
   
+  def date
+    if (race || race(true)) && (race.standings || race.standings(true))
+      race.standings.date
+    end
+  end
+  
   def event
     if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
       race.standings.event
