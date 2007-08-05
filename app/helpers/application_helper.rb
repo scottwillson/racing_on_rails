@@ -62,14 +62,25 @@ module ApplicationHelper
     return '' if name.blank?
     
     img = Image.find_by_name(name)
-    if img
-      if img.link
-        eval("link_to(image_tag(img.source), #{img.link})")
-      else
-        image_tag(img.source)
-      end
+    return '' unless img
+
+    if img.link
+      eval("link_to(image_tag(img.source #{', ' + img.html_options unless img.html_options.blank? }), #{img.link}, {:class => 'image'})")
     else
-      image_tag('clear')
+      image_tag(img.source)
+    end
+  end
+  
+  def caption(name)
+    return '' if name.blank?
+    
+    img = Image.find_by_name(name)
+    return '' unless img
+
+    if img.caption.blank?
+      ''
+    else
+      eval(img.caption)
     end
   end
 end

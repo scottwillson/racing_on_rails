@@ -48,7 +48,13 @@ class ApplicationHelperControllerTest < Test::Unit::TestCase
   def test_not_found
     get(:index)
     html = image('some bogus name')
-    assert_match('clear', html, 'Should contain clear.gif')
-    assert(!html['href'], 'Should have no link')
+    assert(html.blank?, 'nil name should return blank string')
+  end
+  
+  def test_caption
+    caption('some bogus name')
+    caption('Home Page Photo')
+    caption('Ad')
+    caption('Ad to external site')
   end
 end
