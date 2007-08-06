@@ -116,7 +116,7 @@ class EventTest < Test::Unit::TestCase
     hood_river_crit.reload
     assert_not_nil(hood_river_crit.created_at, "initial hood_river_crit.created_at")
     assert_not_nil(hood_river_crit.updated_at, "initial hood_river_crit.updated_at")
-    assert_equal(hood_river_crit.created_at, hood_river_crit.updated_at, "initial hood_river_crit.updated_at and created_at")
+    assert_in_delta(hood_river_crit.created_at, hood_river_crit.updated_at, 1, "initial hood_river_crit.updated_at and created_at")
     sleep(1)
     hood_river_crit.flyer = "http://foo_bar.org/"
     hood_river_crit.save!

@@ -16,6 +16,8 @@ class HomeController < ApplicationController
       :conditions => ['date > ? and id in (select event_id from standings)', cutoff],
       :order => 'date desc'
     )
+    
+    @news = NewsItem.find(:all)
   end
   
   def auction

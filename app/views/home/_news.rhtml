@@ -1,0 +1,15 @@
+<%- if @news -%>
+<table class="base" id="news">
+	<caption>News</caption>
+	<tr>
+		<th></th>
+		<th></th>
+	</tr>
+	<%- for news_item in @news.sort {|x, y| y.date <=> x.date} -%>
+	<tr>
+		<td class="date"><%= news_item.date.strftime('%D') %></td>
+		<td><%= news_item.text %></td>
+	</tr>
+	<%- end -%>
+</table>
+<%- end -%>
