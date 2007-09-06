@@ -14,5 +14,8 @@ class Admin::HomeController < ApplicationController
     
     @news = NewsItem.find(:all)
     @home_page_photo = Image.find_by_name('home_page_photo')
+    if @home_page_photo.nil?
+      @home_page_photo = Image.create(:name => 'home_page_photo', :source => 'images/spacer.gif')
+    end
   end
 end

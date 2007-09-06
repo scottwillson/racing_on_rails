@@ -37,7 +37,7 @@ class RaceNumberTest < Test::Unit::TestCase
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
-    assert(!RaceNumber.new(:value => '', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Blank value')
+    assert(!RaceNumber.new(:racer => alice, :value => '', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Blank value')
     
     # No racer ID valid when new, but can't save
     no_racer = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
@@ -75,8 +75,8 @@ class RaceNumberTest < Test::Unit::TestCase
       assert(!RaceNumber.new(:racer => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
       assert(RaceNumber.new(:racer => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
     
-      assert(!RaceNumber.rental?(nil), 'Nil number not rental')
-      assert(!RaceNumber.rental?(''), 'Blank number not rental')
+      assert(RaceNumber.rental?(nil), 'Nil number is rental')
+      assert(RaceNumber.rental?(''), 'Blank number is rental')
       assert(!RaceNumber.rental?(' 9 '), '9 not rental')
       assert(RaceNumber.rental?('11'), '11 is rental')
       assert(RaceNumber.rental?('99'), '99 is rental')
