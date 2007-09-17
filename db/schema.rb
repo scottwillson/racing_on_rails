@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 13) do
+ActiveRecord::Schema.define(:version => 26) do
 
   create_table "aliases", :force => true do |t|
     t.column "alias", :string
@@ -30,6 +30,17 @@ ActiveRecord::Schema.define(:version => 13) do
   add_index "aliases_disciplines", ["alias"], :name => "idx_alias"
   add_index "aliases_disciplines", ["discipline_id"], :name => "idx_discipline_id"
 
+  create_table "bids", :force => true do |t|
+    t.column "name", :string, :null => false
+    t.column "email", :string, :null => false
+    t.column "phone", :string, :null => false
+    t.column "amount", :integer, :null => false
+    t.column "approved", :boolean
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
   create_table "categories", :force => true do |t|
     t.column "position", :integer, :default => 0, :null => false
     t.column "name", :string, :limit => 64, :null => false
@@ -39,18 +50,8 @@ ActiveRecord::Schema.define(:version => 13) do
     t.column "parent_id", :integer
   end
 
+  add_index "categories", ["name"], :name => "categories_name_index", :unique => true
   add_index "categories", ["parent_id"], :name => "parent_id"
-  add_index "categories", ["name"], :name => "categories_name_index"
-
-  create_table "competition_categories", :id => false, :force => true do |t|
-    t.column "competition_id", :integer, :null => false
-    t.column "category_id", :integer, :null => false
-    t.column "parent_category_id", :integer, :null => false
-  end
-
-  add_index "competition_categories", ["competition_id", "category_id", "parent_category_id"], :name => "competition_categories_competition_id_index", :unique => true
-  add_index "competition_categories", ["category_id"], :name => "category_id"
-  add_index "competition_categories", ["parent_category_id"], :name => "parent_category_id"
 
   create_table "discipline_bar_categories", :id => false, :force => true do |t|
     t.column "category_id", :integer, :default => 0, :null => false
@@ -60,6 +61,7 @@ ActiveRecord::Schema.define(:version => 13) do
     t.column "updated_at", :datetime
   end
 
+  add_index "discipline_bar_categories", ["category_id", "discipline_id"], :name => "discipline_bar_categories_category_id_index", :unique => true
   add_index "discipline_bar_categories", ["category_id"], :name => "idx_category_id"
   add_index "discipline_bar_categories", ["discipline_id"], :name => "idx_discipline_id"
 
@@ -97,7 +99,7 @@ ActiveRecord::Schema.define(:version => 13) do
     t.column "oregon_cup_id", :integer
     t.column "notification", :boolean, :default => true
     t.column "number_issuer_id", :integer
-    t.column "first_aid_provider", :string, :default => "Needed", :null => false
+    t.column "first_aid_provider", :string, :default => "-------------"
   end
 
   add_index "events", ["date"], :name => "idx_date"
@@ -107,6 +109,19 @@ ActiveRecord::Schema.define(:version => 13) do
   add_index "events", ["type"], :name => "idx_type"
   add_index "events", ["oregon_cup_id"], :name => "oregon_cup_id"
   add_index "events", ["number_issuer_id"], :name => "events_number_issuer_id_index"
+
+  create_table "images", :force => true do |t|
+    t.column "caption", :string
+    t.column "html_options", :string
+    t.column "link", :string
+    t.column "name", :string, :null => false
+    t.column "source", :string, :null => false
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
+  add_index "images", ["name"], :name => "images_name_index", :unique => true
 
   create_table "mailing_lists", :force => true do |t|
     t.column "name", :string, :null => false
@@ -120,6 +135,17 @@ ActiveRecord::Schema.define(:version => 13) do
 
   add_index "mailing_lists", ["name"], :name => "idx_name"
 
+  create_table "news_items", :force => true do |t|
+    t.column "date", :date, :null => false
+    t.column "text", :string, :null => false
+    t.column "lock_version", :integer, :default => 0, :null => false
+    t.column "created_at", :datetime
+    t.column "updated_at", :datetime
+  end
+
+  add_index "news_items", ["date"], :name => "news_items_date_index"
+  add_index "news_items", ["text"], :name => "news_items_text_index"
+
   create_table "number_issuers", :force => true do |t|
     t.column "name", :string, :null => false
     t.column "lock_version", :integer, :default => 0, :null => false
@@ -131,7 +157,7 @@ ActiveRecord::Schema.define(:version => 13) do
 
   create_table "posts", :force => true do |t|
     t.column "body", :text, :null => false
-    t.column "date", :timestamp
+    t.column "date", :timestamp, :null => false
     t.column "sender", :string, :null => false
     t.column "subject", :string, :null => false
     t.column "topica_message_id", :string
@@ -265,6 +291,7 @@ ActiveRecord::Schema.define(:version => 13) do
     t.column "updated_at", :datetime
     t.column "time_total", :float
     t.column "laps", :integer
+    t.column "members_only_place", :string, :limit => 8
   end
 
   add_index "results", ["category_id"], :name => "idx_category_id"
@@ -333,10 +360,6 @@ ActiveRecord::Schema.define(:version => 13) do
   add_foreign_key "aliases_disciplines", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
 
   add_foreign_key "categories", ["parent_id"], "categories", ["id"], :on_delete => :set_null
-
-  add_foreign_key "competition_categories", ["competition_id"], "events", ["id"], :on_delete => :cascade
-  add_foreign_key "competition_categories", ["category_id"], "categories", ["id"]
-  add_foreign_key "competition_categories", ["parent_category_id"], "categories", ["id"]
 
   add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
