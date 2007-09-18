@@ -128,7 +128,7 @@ Check it out: http://www.google.com/\n\n\357\277\274\n}
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{Hey, this is from Bloodhound in the basement.
 
-http://www.obra.org
+http://STATIC_HOST
 
 I am the lonely, forgotten computer.
 
@@ -558,7 +558,7 @@ Content-Transfer-Encoding: quoted-printable
 
 Hey, this is from Bloodhound in the basement.
 
-http://www.obra.org
+http://STATIC_HOST
 
 I am the lonely, forgotten computer.
 
@@ -590,7 +590,7 @@ FONT-FAMILY: Arial, Helvetica
 the <FONT face=3D"Comic Sans MS">basement</FONT>.</FONT></DIV>
 <DIV><FONT face=3DArial color=3D#000000 size=3D2></FONT>&nbsp;</DIV>
 <DIV><FONT color=3D#000000><A=20
-href=3D"http://www.obra.org">http://www.obra.org</A></FONT></DIV>
+href=3D"http://STATIC_HOST">http://STATIC_HOST</A></FONT></DIV>
 <DIV><FONT color=3D#000000></FONT>&nbsp;</DIV>
 <DIV><FONT face=3DArial size=3D2>I am the lonely, forgotten =
 computer.</FONT></DIV>

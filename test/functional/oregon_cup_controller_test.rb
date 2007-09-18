@@ -56,6 +56,6 @@ class OregonCupControllerTest < Test::Unit::TestCase
     obra_event.name = 'Rehearsal Road Race'
     obra_event.flyer = '../../flyers/2006/rehearsal.html'
     link = flyer_link_from_app_server(obra_event)
-    assert_equal('<a href="http://www.obra.org/flyers/2006/rehearsal.html">Rehearsal Road Race</a>', link, 'Link to flyer')
+    assert_equal('<a href="http://STATIC_HOST/flyers/2006/rehearsal.html">Rehearsal Road Race</a>', link, 'Link to flyer')
   end
 end

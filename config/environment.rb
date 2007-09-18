@@ -80,4 +80,4 @@ MultiDayEvent
 Series
 WeeklySeries
 
-APP_SERVER_ROOT = "/" unless defined?(APP_SERVER_ROOT)
+APP_SERVER_ROOT = "http://" unless defined?(APP_SERVER_ROOT)
