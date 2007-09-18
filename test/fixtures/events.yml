@@ -60,7 +60,7 @@
     discipline: Road
     sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 3
-    flyer: http://STATIC_HOST/flyers/2006/tabor_cr.html
+    flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
     flyer_approved: false
     type: SingleDayEvent
 - pir_series:
@@ -70,7 +70,7 @@
     city: Portland
     state: OR
     discipline: Road
-    flyer: http://STATIC_HOST/flyers/2005/pir.html
+    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
     flyer_approved: true
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
@@ -83,7 +83,7 @@
     city: Portland
     state: OR
     discipline: Road
-    flyer: http://STATIC_HOST/flyers/2005/pir.html
+    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
@@ -95,7 +95,7 @@
     city: Portland
     state: OR
     discipline: Road
-    flyer: http://STATIC_HOST/flyers/2005/pir.html
+    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent

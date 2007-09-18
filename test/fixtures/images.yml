@@ -1,17 +1,17 @@
 photo:
   id: 1
   name: 'Home Page Photo'
-  source: 'http://STATIC_HOST/images/home_page.jpg'
-  caption: "'http://STATIC_HOST/results/'"
+  source: "http://<%= STATIC_HOST %>/images/home_page.jpg"
+  caption: "'http://<%= STATIC_HOST %>/results/'"
 photo_with_link:
   id: 2
   name: 'Ad'
-  source: 'http://STATIC_HOST/images/ad.gif'
+  source: "http://<%= STATIC_HOST %>/images/ad.gif"
   link: "{:controller => 'auction', :action => 'home'}"
   caption: "'Shanan Whitlatch celebrates her victory in the Vancouver Courthouse Criterium with Norrene Godfrey and Tina Brubaker (and her coach). &nbsp;&nbsp; Photo courtesy of Jon Kraft'"
 photo_with_http_link:
   id: 3
   name: 'Ad to external site'
-  source: 'http://STATIC_HOST/images/ad.gif'
+  source: "http://<%= STATIC_HOST %>/images/ad.gif"
   link: "'http://steelmancycles.com'"
   html_options: ":height => 380, :width => 285"

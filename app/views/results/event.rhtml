@@ -76,7 +76,7 @@
     
   <% unless standings.is_a?(CombinedStandings)%>
   <div class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
-  <small><a href="http://STATIC_HOST/results/questions.html" class="obvious">Results questions?</a></small>
+  <small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></small>
   <br/><br/>
   
   <% sorted_races = standings.races_with_results %> 
