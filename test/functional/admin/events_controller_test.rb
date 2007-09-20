@@ -351,7 +351,7 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     assert_equal('Banana Belt One', banana_belt.name, 'name')
     assert_equal('Forest Grove', banana_belt.city, 'city')
     assert_equal(Date.new(2006, 03, 12), banana_belt.date, 'date')
-    assert_equal('../../flyers/2006/banana_belt.html', banana_belt.flyer, 'flyer')
+    assert_equal("http://#{STATIC_HOST}/flyers/2006/banana_belt.html", banana_belt.flyer, 'flyer')
     assert_equal('UCI', banana_belt.sanctioned_by, 'sanctioned_by')
     assert_equal(true, banana_belt.flyer_approved, 'flyer_approved')
     assert_equal('Track', banana_belt.discipline, 'discipline')

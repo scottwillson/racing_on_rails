@@ -203,9 +203,13 @@ class Event < ActiveRecord::Base
     Discipline[discipline].id if Discipline[discipline]
   end
   
-  def flyer(asset_server = nil)
-    if asset_server and self[:flyer][0] == '/'
-      return asset_server + self[:flyer]
+  def flyer
+    unless self[:flyer].blank?
+      if self[:flyer][/^\//]
+        return 'http://' + STATIC_HOST + self[:flyer]
+      elsif self[:flyer][/^..\/..\//]
+        return 'http://' + STATIC_HOST + (self[:flyer][/^..\/..(.*)/, 1])
+      end
     end
     self[:flyer]
   end

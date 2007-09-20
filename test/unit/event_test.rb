@@ -205,4 +205,18 @@ class EventTest < Test::Unit::TestCase
     SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
     assert_equal_dates("#{Date.today.year}-06-10", Event.find_max_date_for_current_year)
   end
+  
+  def test_flyer
+    event = SingleDayEvent.new
+    assert_equal(nil, event.flyer, 'Blank event flyer')
+    
+    event.flyer = 'http://veloshop.org/pir.html'
+    assert_equal('http://veloshop.org/pir.html', event.flyer, 'Other site flyer')
+    
+    event.flyer = '/events/pir.html'
+    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Absolute root flyer')
+    
+    event.flyer = '../../events/pir.html'
+    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Relative root flyer')
+  end
 end
