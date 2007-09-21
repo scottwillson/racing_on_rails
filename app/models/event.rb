@@ -256,6 +256,10 @@ class Event < ActiveRecord::Base
     'Event'
   end
 
+  def full_name
+    name
+  end
+  
   def <=>(other)
     date_diff = date <=> other.date
     if date_diff != 0

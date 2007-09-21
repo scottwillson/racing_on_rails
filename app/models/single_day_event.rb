@@ -43,6 +43,18 @@ class SingleDayEvent < Event
   def series_event?
     parent and (parent.is_a?(WeeklySeries))
   end
+  
+  def full_name
+    if parent.nil?
+      name
+    elsif parent.name == name
+      name
+    elsif name[parent.name]
+      name
+    else
+      "#{parent.name} #{name}"
+    end
+  end
 
   def friendly_class_name
     'Single Day Event'

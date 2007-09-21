@@ -335,4 +335,8 @@ class MultiDayEventTest < Test::Unit::TestCase
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
 
+  def test_full_name
+    stage_race = events(:mt_hood)
+    assert_equal('Mt. Hood Classic', stage_race.full_name, 'stage_race full_name')
+  end
 end

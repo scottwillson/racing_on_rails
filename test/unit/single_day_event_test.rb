@@ -46,4 +46,19 @@ class SingleDayEventTest < Test::Unit::TestCase
     event = SingleDayEvent.create(:name => 'Copperopolis')
     assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
   end
+  
+  def test_full_name
+    kings_valley = events(:kings_valley_2004)
+    assert_equal('Kings Valley Road Race', kings_valley.full_name, 'Event with no parent full_name')
+
+    stage = events(:mt_hood_1)
+    assert_equal('Mt. Hood Classic Mount Hood Day 1', stage.full_name, 'stage full_name')
+    
+    stage_race = events(:mt_hood)
+    stage.name = stage_race.name
+    assert_equal('Mt. Hood Classic', stage.full_name, 'stage full_name')
+
+    stage.name = stage_race.name + ' Stage One'
+    assert_equal('Mt. Hood Classic Stage One', stage.full_name, 'stage full_name')
+  end
 end

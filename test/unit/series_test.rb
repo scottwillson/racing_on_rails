@@ -6,5 +6,4 @@ class SeriesTest < Test::Unit::TestCase
     series = Series.new
     series.save!
   end
-  
 end

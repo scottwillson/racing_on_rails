@@ -203,4 +203,30 @@ class StandingsTest < Test::Unit::TestCase
     assert(!race_3.results(true).empty?, 'Combined standings should have results')
     assert_equal([race_2, race_1, race_3], standings.races_with_results, 'Two races with results')
   end
+  
+  def test_full_name
+    event = SingleDayEvent.create!(:name => 'Reheers', :discipline => 'Mountain Bike')
+    standings = event.standings.create    
+    assert_equal('Reheers', standings.full_name, 'full_name when standings name is nil')
+    
+    series = Series.create(:name => 'Bend TT Series')
+    series_event = series.events.create(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19))
+    standings = series_event.standings.create    
+    assert_equal('Bend TT Series', standings.full_name, 'full_name when series standings name is nil')
+    
+    series = Series.create(:name => 'Bend TT Series')
+    series_event = series.events.create(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19))
+    standings = series_event.standings.create(:name => 'Bend TT Series')
+    assert_equal('Bend TT Series', standings.full_name, 'full_name when series standings name is same as event')
+
+    stage_race = events(:mt_hood)
+    stage = stage_race.events.create(:name => stage_race.name)
+    standings = stage.standings.create(:name => 'Cooper Spur Road Race')
+    assert_equal('Mt. Hood Classic: Cooper Spur Road Race', standings.full_name, 'stage race standings full_name')
+
+    stage_race = MultiDayEvent.create(:name => 'Cascade Classic')
+    stage = stage_race.events.create(:name => 'Cascade Classic')
+    standings = stage.standings.create(:name => 'Cascade Classic - Cascade Lakes Road Race')
+    assert_equal('Cascade Classic - Cascade Lakes Road Race', standings.full_name, 'stage race standings full_name')
+  end
 end

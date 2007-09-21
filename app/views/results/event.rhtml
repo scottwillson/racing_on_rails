@@ -23,7 +23,7 @@
 		<%- for standings in single_day_event.standings -%>
 		<tr>
 			<td class="right"><%= link_to standings.date.strftime('%A, %B %d'), :id => standings.event.to_param %></td>
-			<td><%= link_to standings.name, :id => standings.event.to_param %></td>
+			<td style="padding-left: 12px;"><%= link_to standings.name, :id => standings.event.to_param %></td>
 		</tr>
 		<%- end -%>
 	<%- end -%>

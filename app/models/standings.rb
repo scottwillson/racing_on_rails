@@ -104,6 +104,16 @@ class Standings < ActiveRecord::Base
     self[:name] || self.event.name if self.event
   end
 
+  def full_name
+    if name == event.name
+      event.full_name
+    elsif name[event.name]
+      name
+    else
+      "#{event.name}: #{name}"
+    end
+  end
+
   # Adds +combined_standings+ if Mountain Bike or Time Trial Event. 
   # Destroy +combined_standings+ if they exist, but should not
   def create_or_destroy_combined_standings
