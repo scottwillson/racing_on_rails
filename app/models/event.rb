@@ -21,10 +21,9 @@ class Event < ActiveRecord::Base
     
   # Return list of every year that has at least one event
   def Event.find_all_years
-    extract_year_sql = "extract(year from date)"
     years = []
     results = connection.select_all(
-      "select distinct #{extract_year_sql} as year from events"
+      "select distinct extract(year from date) as year from events where date <= '#{Date.today.year}-01-01'"
     )
     results.each do |year|
       years << year.values.first.to_i
