@@ -1,44 +1,79 @@
 /*  Need slightly different style for different tab states: */
 /*  solo, selected, first, last, hover */
+
 table.tabs, table.tabs_solo {
 	height: 24px; 
 	text-align: center;
 	margin-top: 0px;
 	margin-bottom: 8px;
 	margin-left: auto;
-	margin-right: auto;}
+	margin-right: auto;
+	vertical-align: middle;
+}
 
 table.tabs td, table.tabs_solo td {
 	background-image: url(/images/buttons/background.jpg); 
 	background-repeat: no-repeat;
 	background-position: top left;
-	border-left: 1px solid rgb(225, 225, 225);
-	vertical-align: middle;
-	padding-top: 2px;
-	padding-left: 12px;
-	padding-right: 12px;
-	white-space: nowrap;
 }
 
-table.tabs td.first, table.tabs td.first_selected, table.tabs_solo td.first, table.tabs_solo td.first_selected {
+table.tabs div {
+	background-image: url(/images/buttons/background.jpg); 
+	background-repeat: no-repeat;
+	background-position: top left;
+	width: 100%;
+	height: 20px; 
+	padding-top: 4px;
+	padding-left: 12px;
+	padding-right: 12px;
+	border-left: 1px solid rgb(225, 225, 225);
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+table.tabs div.first, table.tabs div.first_selected, table.tabs_solo div.first, table.tabs_solo div.first_selected {
 	border-left: none;
 	padding-left: 16px;
 }
 
-table.tabs td.first, table.tabs_solo td.first {
+table.tabs td.first, table.tabs_solo td.first, table.tabs div.first, table.tabs_solo div.first {
 	background-image: url(/images/buttons/left_cap.jpg); 
 }
 
 table.tabs td.last, table.tabs_solo td.last, table.tabs td.last_selected, table.tabs_solo td.last_selected {
 	background-position: top right;
-	padding-right: 16px;
+	padding-right: 6px;
 }
 
-table.tabs td.last, table.tabs_solo td.last {
+table.tabs div.last, table.tabs_solo div.last, table.tabs div.last_selected, table.tabs_solo div.last_selected {
+	background-position: top right;
+	padding-right: 0px;
+}
+
+table.tabs td.last, table.tabs_solo td.last, table.tabs div.last, table.tabs_solo div.last {
 	background-image: url(/images/buttons/right_cap.jpg); 
+	padding-right: 0px;
 }
 
-table.tabs_solo td.last {
+table.tabs_solo div {
+	padding-top: 4px;
+}
+	
+table.tabs_solo div.last {
+	padding-left: 8px;
+	padding-right: 0px;
+	border-left: none;
+}
+
+table.tabs div.last {
+	background-image: url(/images/buttons/right_cap.jpg); 
+	background-position: top right;
+	padding-right: 0px;
+}
+
+table.tabs_solo div.last {
+	background-image: url(/images/buttons/right_cap.jpg); 
+	background-position: top right;
 	padding-left: 8px;
 	padding-right: 0px;
 	border-left: none;
@@ -46,16 +81,22 @@ table.tabs_solo td.last {
 
 table.tabs td.selected {
 	background-image: url(/images/buttons/selected.jpg); 
+}
+
+table.tabs div.selected {
 	border-left: 1px solid rgb(225, 225, 225);
 	border-right: 1px solid rgb(225, 225, 225);
 }
 
 table.tabs td.first_selected, table.tabs_solo td.first_selected {
 	background-image: url(/images/buttons/left_cap_selected.jpg); 
+}
+
+table.tabs div.first_selected, table.tabs_solo div.first_selected {
 	border-right: 1px solid rgb(225, 225, 225);
 }
 
-table.tabs_solo td.first_selected {
+table.tabs_solo div.first_selected {
 	border-right: none;
 }
 
@@ -63,29 +104,42 @@ table.tabs td.last_selected, table.tabs_solo td.last_selected {
 	background-image: url(/images/buttons/right_cap_selected.jpg); 
 }
 
-table.tabs_solo td.last_selected {
+table.tabs div.last_selected {
+	background-image: url(/images/buttons/right_cap_selected.jpg); 
+}
+
+table.tabs_solo div.last_selected {
 	padding-left: 8px;
 	padding-right: 0px;
 	border-left: none;
+	background-image: url(/images/buttons/right_cap_selected.jpg); 
 }
 
-table.tabs td.hover {
+table.tabs div.selected, table.tabs div.first_selected, table.tabs_solo div.selected, table.tabs_solo div.first_selected  {
+	background-image: url(/images/buttons/selected.jpg); 
+}
+
+table.tabs div.first_selected, table.tabs_solo div.first_selected  {
+	background: none;
+}
+
+table.tabs div.hover {
 	background-image: url(/images/buttons/hover.jpg); 
 }
 
-table.tabs td.hover_first, table.tabs_solo td.hover_first {
+table.tabs div.hover_first, table.tabs_solo div.hover_first {
 	border-left: none;
 	background-image: url(/images/buttons/left_cap_hover.jpg); 
 	padding-left: 16px;
 }
 
-table.tabs td.hover_last {
+table.tabs div.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
 	background-position: top right;
-	padding-right: 16px;
+	padding-right: 0px;
 }
 
-table.tabs_solo td.hover_last {
+table.tabs_solo div.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
 	background-position: top right;
 	padding-left: 8px;
@@ -93,7 +147,7 @@ table.tabs_solo td.hover_last {
 	border-left: none;
 }
 
-table.tabs td a:hover, table.tabs td.hover a:hover, table.tabs_solo td.hover_first a:hover, table.tabs_solo td.first a:hover {
+table.tabs div.hover a:hover, table.tabs_solo div.hover a:hover, table.tabs div.hover_first a:hover, table.tabs_solo div.hover_first a:hover, table.tabs div.hover_last a:hover, table.tabs_solo div.hover_last a:hover {
 	background: none !important;
 	border-bottom: none !important;
 }

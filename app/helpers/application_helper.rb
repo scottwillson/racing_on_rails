@@ -116,32 +116,35 @@ HTML
     @tabs.each_with_index do |tab, index|
       if index == 0
         if current_page?(tab[1])
-          html << "      <td class=\"first_selected\">"
+          html << "      <td class=\"first_selected\"><div class=\"first_selected\">"
         else
-          html << "      <td class=\"first\">"
+          html << "      <td class=\"first\"><div class=\"first\">"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+        html << "</div>"
         if @tabs.size < 2
           if current_page?(tab[1])
-            html << "</td>\n      <td class=\"last_selected\">"
+            html << "</td>\n      <td class=\"last_selected\"><div class=\"last_selected\"></div>"
           else
-            html << "</td>\n      <td class=\"last\">"
+            html << "</td>\n      <td class=\"last\"><div class=\"last\"></div>"
           end
         end
       elsif index == @tabs.size - 1
         if current_page?(tab[1])
-          html << "      <td class=\"last_selected\">"
+          html << "      <td class=\"last_selected\"><div class=\"last_selected\">"
         else
-          html << "      <td class=\"last\">"
+          html << "      <td class=\"last\"><div class=\"last\">"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+        html << "</div>"
       else
         if current_page?(tab[1])
-          html << "      <td class=\"selected\">"
+          html << "      <td class=\"selected\"><div class=\"selected\">"
         else
-          html << "      <td>"
+          html << "      <td><div>"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+        html << "</div>"
       end
       html << "</td>\n"
     end
