@@ -1,6 +1,16 @@
 /*  Need slightly different style for different tab states: */
 /*  solo, selected, first, last, hover */
 
+table.tabs span {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+table.tabs_solo span {
+  padding-left: 8px;
+  padding-right: 0px;
+}
+
 table.tabs, table.tabs_solo {
 	height: 24px; 
 	text-align: center;
@@ -12,20 +22,15 @@ table.tabs, table.tabs_solo {
 }
 
 table.tabs td, table.tabs_solo td {
-	background-image: url(/images/buttons/background.jpg); 
+	background-image: url(/images/buttons/background.jpg);
 	background-repeat: no-repeat;
-	background-position: top left;
+	background-position: top center;
 }
 
-table.tabs div {
-	background-image: url(/images/buttons/background.jpg); 
-	background-repeat: no-repeat;
-	background-position: top left;
+table.tabs div, table.tabs_solo div {
 	width: 100%;
 	height: 20px; 
 	padding-top: 4px;
-	padding-left: 12px;
-	padding-right: 12px;
 	border-left: 1px solid rgb(225, 225, 225);
 	white-space: nowrap;
 	vertical-align: middle;
@@ -33,53 +38,24 @@ table.tabs div {
 
 table.tabs div.first, table.tabs div.first_selected, table.tabs_solo div.first, table.tabs_solo div.first_selected {
 	border-left: none;
-	padding-left: 16px;
 }
 
-table.tabs td.first, table.tabs_solo td.first, table.tabs div.first, table.tabs_solo div.first {
+table.tabs td.first, table.tabs_solo td.first {
+	background-position: top left;
 	background-image: url(/images/buttons/left_cap.jpg); 
 }
 
-table.tabs td.last, table.tabs_solo td.last, table.tabs td.last_selected, table.tabs_solo td.last_selected {
-	background-position: top right;
-	padding-right: 6px;
-}
-
-table.tabs div.last, table.tabs_solo div.last, table.tabs div.last_selected, table.tabs_solo div.last_selected {
-	background-position: top right;
-	padding-right: 0px;
-}
-
-table.tabs td.last, table.tabs_solo td.last, table.tabs div.last, table.tabs_solo div.last {
+table.tabs td.last, table.tabs_solo td.last {
+	background-position: 101% 0%;
 	background-image: url(/images/buttons/right_cap.jpg); 
-	padding-right: 0px;
-}
-
-table.tabs_solo div {
-	padding-top: 4px;
-}
-	
-table.tabs_solo div.last {
-	padding-left: 8px;
-	padding-right: 0px;
-	border-left: none;
-}
-
-table.tabs div.last {
-	background-image: url(/images/buttons/right_cap.jpg); 
-	background-position: top right;
-	padding-right: 0px;
 }
 
 table.tabs_solo div.last {
-	background-image: url(/images/buttons/right_cap.jpg); 
-	background-position: top right;
-	padding-left: 8px;
-	padding-right: 0px;
 	border-left: none;
 }
 
 table.tabs td.selected {
+        background-position: top right;
 	background-image: url(/images/buttons/selected.jpg); 
 }
 
@@ -90,6 +66,7 @@ table.tabs div.selected {
 
 table.tabs td.first_selected, table.tabs_solo td.first_selected {
 	background-image: url(/images/buttons/left_cap_selected.jpg); 
+        background-position: top left;
 }
 
 table.tabs div.first_selected, table.tabs_solo div.first_selected {
@@ -101,26 +78,12 @@ table.tabs_solo div.first_selected {
 }
 
 table.tabs td.last_selected, table.tabs_solo td.last_selected {
-	background-image: url(/images/buttons/right_cap_selected.jpg); 
-}
-
-table.tabs div.last_selected {
+	background-position: 101% 0%;
 	background-image: url(/images/buttons/right_cap_selected.jpg); 
 }
 
 table.tabs_solo div.last_selected {
-	padding-left: 8px;
-	padding-right: 0px;
 	border-left: none;
-	background-image: url(/images/buttons/right_cap_selected.jpg); 
-}
-
-table.tabs div.selected, table.tabs div.first_selected, table.tabs_solo div.selected, table.tabs_solo div.first_selected  {
-	background-image: url(/images/buttons/selected.jpg); 
-}
-
-table.tabs div.first_selected, table.tabs_solo div.first_selected  {
-	background: none;
 }
 
 table.tabs div.hover {
@@ -130,24 +93,21 @@ table.tabs div.hover {
 table.tabs div.hover_first, table.tabs_solo div.hover_first {
 	border-left: none;
 	background-image: url(/images/buttons/left_cap_hover.jpg); 
-	padding-left: 16px;
 }
 
 table.tabs div.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
-	background-position: top right;
-	padding-right: 0px;
+	background-position: 101% 0%;
+	background-repeat: no-repeat;
 }
 
 table.tabs_solo div.hover_last {
 	background-image: url(/images/buttons/right_cap_hover.jpg); 
 	background-position: top right;
-	padding-left: 8px;
-	padding-right: 0px;
 	border-left: none;
 }
 
-table.tabs div.hover a:hover, table.tabs_solo div.hover a:hover, table.tabs div.hover_first a:hover, table.tabs_solo div.hover_first a:hover, table.tabs div.hover_last a:hover, table.tabs_solo div.hover_last a:hover {
+table.tabs span a:hover, table.tabs_solo span a:hover {
 	background: none !important;
 	border-bottom: none !important;
 }

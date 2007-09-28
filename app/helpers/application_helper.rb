@@ -116,35 +116,36 @@ HTML
     @tabs.each_with_index do |tab, index|
       if index == 0
         if current_page?(tab[1])
-          html << "      <td class=\"first_selected\"><div class=\"first_selected\">"
+          html << "      <td class=\"first_selected\"><div class=\"first_selected\"><span>"
         else
-          html << "      <td class=\"first\"><div class=\"first\">"
+          html << "      <td class=\"first\"><div class=\"first\"><span>"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
-        html << "</div>"
+        html << "</span></div>"
         if @tabs.size < 2
           if current_page?(tab[1])
-            html << "</td>\n      <td class=\"last_selected\"><div class=\"last_selected\"></div>"
+            html << "</td>\n      <td class=\"last_selected\"><div class=\"last_selected\">"
+            html << "<span>&nbsp;</span></div>"
           else
-            html << "</td>\n      <td class=\"last\"><div class=\"last\"></div>"
+            html << "</td>\n      <td class=\"last\"><div class=\"last\"><span>&nbsp;</span></div>"
           end
         end
       elsif index == @tabs.size - 1
         if current_page?(tab[1])
-          html << "      <td class=\"last_selected\"><div class=\"last_selected\">"
+          html << "      <td class=\"last_selected\"><div class=\"last_selected\"><span>"
         else
-          html << "      <td class=\"last\"><div class=\"last\">"
+          html << "      <td class=\"last\"><div class=\"last\"><span>"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
-        html << "</div>"
+        html << "</span></div>"
       else
         if current_page?(tab[1])
-          html << "      <td class=\"selected\"><div class=\"selected\">"
+          html << "      <td class=\"selected\"><div class=\"selected\"><span>"
         else
-          html << "      <td><div>"
+          html << "      <td><div><span>"
         end
         html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
-        html << "</div>"
+        html << "</span></div>"
       end
       html << "</td>\n"
     end
