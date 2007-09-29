@@ -18,4 +18,4 @@ config.action_controller.perform_caching             = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-APP_SERVER_ROOT = "http://"
+RAILS_HOST = "localhost:3000"

@@ -80,4 +80,4 @@ MultiDayEvent
 Series
 WeeklySeries
 
-APP_SERVER_ROOT = "http://" unless defined?(APP_SERVER_ROOT)
+RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
