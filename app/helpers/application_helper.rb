@@ -83,6 +83,38 @@ module ApplicationHelper
       eval(img.caption)
     end
   end
+  
+  def results_grid(race)
+    result_grid_columns = race.result_columns_or_default.collect do |column|
+      grid_columns(column)
+    end
+    rows = race.results.sort.collect do |result|
+      row = []
+      for grid_column in result_grid_columns
+        if grid_column.field and result.respond_to?(grid_column.field)
+          cell = result.send(grid_column.field).to_s
+          cell = '' if cell == '0.0'
+          row << cell
+        else
+          row << ''
+        end
+      end
+      row
+    end
+    results_grid = Grid.new(rows, :columns => result_grid_columns)
+    results_grid.truncate
+    results_grid.calculate_padding
+    
+    race.results.sort.each_with_index do |result, row_index|
+      result_grid_columns.each_with_index do |grid_column, index|
+	    if grid_column.link
+		  cell = results_grid[row_index][index]
+		  results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
+        end
+      end
+    end
+    "<pre>#{results_grid.to_s(true)}#{race.notes unless race.notes.blank?}</pre>"
+  end
 end
 
 class Tabs

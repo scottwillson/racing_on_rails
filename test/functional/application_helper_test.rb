@@ -57,4 +57,14 @@ class ApplicationHelperControllerTest < Test::Unit::TestCase
     caption('Ad')
     caption('Ad to external site')
   end
+  
+  def test_results_grid
+    html = results_grid(races(:kings_valley_pro_1_2))
+    assert_not_nil(html)
+    expected = %q{<pre> Pl   Num    Last Name            First Name     Team                                       Points       Time
+ 16          <a href="/results/racer/1">Tonkin</a>               <a href="/results/racer/1">Erik</a>           Kona                                                        
+ 17          <a href="/results/racer/3">Weaver</a>               <a href="/results/racer/3">Ryan</a>                                                                       
+</pre>}
+    assert_equal(expected, html, 'HTML')
+  end
 end

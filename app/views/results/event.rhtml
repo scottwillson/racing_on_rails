@@ -61,11 +61,11 @@
     <%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
     <tr>
       <td style="margin-right: 18px;">
-      <a href="#<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
+      <a href="#race_<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
       </td>
       <td style="margin-left: 18px;">
       &nbsp;
-      <%- if row.size == 2 -%><a href="#<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
+      <%- if row.size == 2 -%><a href="#race_<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
       </td>
     </tr>
   <%- end -%>  
@@ -75,51 +75,20 @@
 
 <% @event.standings.each_with_index do |standings, standings_index| %>
     
-  <h3><%= standings.name -%></h3>
-  <div class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
+  <h2><%= standings.name -%></h2>
+  <div class="updatedon_inline">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
   <% if !standings.is_a?(CombinedStandings) %>
-  <div><small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></div>
+  <div><small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></small></div>
   <%- end -%>
   
   <% standings.races_with_results.each_with_index do |race, index| %>
+  <a name="race_<%= race.id %>" id="race_<%= race.id %>"></a>
   <table class="base">
-    <caption><a name="<%= race.id %>"></a><%= race.name %></caption>
+    <caption><%= race.name %></caption>
   <tr><th></th></tr>
     <tr>
       <td>
-  <%
-    @result_grid_columns = race.result_columns_or_default.collect do |column|
-      grid_columns(column)
-    end
-    rows = race.results.sort.collect do |result|
-      row = []
-      for grid_column in @result_grid_columns
-        if grid_column.field and result.respond_to?(grid_column.field)
-          cell = result.send(grid_column.field).to_s
-          cell = '' if cell == '0.0'
-          row << cell
-        else
-          row << ''
-        end
-      end
-      row
-    end
-    results_grid = Grid.new(rows, :columns => @result_grid_columns)
-    results_grid.truncate
-    results_grid.calculate_padding
-    
-    race.results.sort.each_with_index do |result, row_index|
-      @result_grid_columns.each_with_index do |grid_column, index|
-	    if grid_column.link
-		  cell = results_grid[row_index][index]
-		  results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
-        end
-      end
-    end
-  %>
-  
-  <pre><%= results_grid.to_s(true) -%>
-<%= race.notes unless race.notes.blank? -%></pre>
+  <%= results_grid(race) -%>
   </td>
     </tr>
   </table>
