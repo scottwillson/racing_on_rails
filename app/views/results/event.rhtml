@@ -11,79 +11,80 @@
 <%= @event.date.to_formatted_s(:long) %>
 <%- end -%>
 
-<%- unless @event.notes.blank? -%>
+<%- if !@event.notes.blank? -%>
 <div><%= @event.notes -%></div>
 <%- end -%>
 </div>
 
-<%- if @event.respond_to?(:events) -%>
+<%- if @event.respond_to?(:parent) and @event.parent -%>
 <div style="margin-bottom: 1em;">
-	<table>
-	<%- for single_day_event in @event.events -%>
-		<%- for standings in single_day_event.standings -%>
-		<tr>
-			<td class="right"><%= link_to standings.date.strftime('%A, %B %d'), :id => standings.event.to_param %></td>
-			<td style="padding-left: 12px;"><%= link_to standings.name, :id => standings.event.to_param %></td>
-		</tr>
-		<%- end -%>
-	<%- end -%>
-	</table>
+  Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %>
 </div>
 <%- end -%>
 
+<%- if @event.respond_to?(:events) -%>
+<div style="margin-bottom: 1em;">
+  <table>
+  <%- for single_day_event in @event.events -%>
+    <%- for standings in single_day_event.standings -%>
+    <tr>
+      <td class="right"><%= link_to standings.date.strftime('%A, %B %d'), :id => standings.event.to_param %></td>
+      <td style="padding-left: 12px;"><%= link_to standings.name, :id => standings.event.to_param %></td>
+    </tr>
+    <%- end -%>
+  <%- end -%>
+  </table>
+</div>
+<%- end -%>
 
-<div align="center">
+<div>
+
 <%- @event.standings.each_with_index do |standings, standings_index| -%>
-  <%- unless standings.is_a?(CombinedStandings) -%>
-
-    <%- if standings.name != @event.name -%>
-<%= standings.name -%><br />
+    <%- if @event.standings.size > 1 -%>
+  <h3><%= standings.name -%></h3>
     <%- end -%>
 
-    <%- unless standings.notes.blank? -%>
-<%= standings.notes -%><br />
-    <%- end -%>
+    <%- if !standings.is_a?(CombinedStandings) -%>
+      <%- if !standings.notes.blank? -%>
+  <div><%= standings.notes -%></div>
+      <%- end -%>
 
-    <%- if standings.date.strftime('%B %d, %Y') != @event.date.strftime('%B %d, %Y') -%>
-<%= standings.date.strftime('%B %d, %Y') -%>
-<br />
-    <% end %>
+	  <%# Rails 1.1.6 bug prevents us from just using date != date %>
+      <%- if standings.date.strftime('%B %d, %Y') != @event.date.strftime('%B %d, %Y') -%>
+  <div><%= standings.date.strftime('%B %d, %Y') -%> <%= standings.date.class %> <%= @event.date.class %></div>
+      <%- end -%>
+    <%- end -%>  
 
-	<%- if @event.respond_to?(:parent) and @event.parent -%>
-	<div style="margin-bottom: 1em;">
-		Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %>
-	</div>
-	<%- end -%>
-
-	<%# TODO Encapsulate in a helper method %>
-	<table>
-		<%- results_in_first_column = standings.races_with_results.size / 2 -%>
-		<%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
-		<tr>
-		  <td style="margin-right: 18px;">
-			<a href="#<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
-		  </td>
-		  <td style="margin-left: 18px;">
-			&nbsp;
-			<%- if row.size == 2 -%><a href="#<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
-		  </td>
-		<%- end -%>
-		</tr>
-	<%- end -%>  
-	</table>
+  <%# TODO Encapsulate in a helper method %>
+  <table>
+    <%- results_in_first_column = standings.races_with_results.size / 2 -%>
+    <%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
+    <tr>
+      <td style="margin-right: 18px;">
+      <a href="#<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
+      </td>
+      <td style="margin-left: 18px;">
+      &nbsp;
+      <%- if row.size == 2 -%><a href="#<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
+      </td>
+    </tr>
+  <%- end -%>  
+  </table>
+  
+<%- end -%>  
 
 <% @event.standings.each_with_index do |standings, standings_index| %>
     
-  <% unless standings.is_a?(CombinedStandings)%>
+  <h3><%= standings.name -%></h3>
   <div class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
-  <small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></small>
-  <br/><br/>
+  <% if !standings.is_a?(CombinedStandings) %>
+  <div><small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></div>
+  <%- end -%>
   
-  <% sorted_races = standings.races_with_results %> 
-  <% sorted_races.each_with_index do |race, index| %>
-  <table class="base" style="margin-bottom: 32px;">
+  <% standings.races_with_results.each_with_index do |race, index| %>
+  <table class="base">
     <caption><a name="<%= race.id %>"></a><%= race.name %></caption>
-	<tr><th></th></tr>
+  <tr><th></th></tr>
     <tr>
       <td>
   <%
@@ -93,13 +94,13 @@
     rows = race.results.sort.collect do |result|
       row = []
       for grid_column in @result_grid_columns
-      if grid_column.field and result.respond_to?(grid_column.field)
-        cell = result.send(grid_column.field).to_s
-        cell = '' if cell == '0.0'
-        row << cell
-      else
-        row << ''
-      end
+        if grid_column.field and result.respond_to?(grid_column.field)
+          cell = result.send(grid_column.field).to_s
+          cell = '' if cell == '0.0'
+          row << cell
+        else
+          row << ''
+        end
       end
       row
     end
@@ -109,23 +110,20 @@
     
     race.results.sort.each_with_index do |result, row_index|
       @result_grid_columns.each_with_index do |grid_column, index|
-      if grid_column.link
-        cell = results_grid[row_index][index]
-        results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
-      end
+	    if grid_column.link
+		  cell = results_grid[row_index][index]
+		  results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
+        end
       end
     end
   %>
   
   <pre><%= results_grid.to_s(true) -%>
-<%- unless race.notes.blank? -%>
-<%= race.notes %><%- end -%></pre>
+<%= race.notes unless race.notes.blank? -%></pre>
   </td>
     </tr>
   </table>
   <br><br>
-  <% end %>
-<% end %>
-<% end %>
-<% end %>
+<%- end -%>
+<%- end -%>
 </div>
