@@ -41,7 +41,7 @@
 
 <%- @event.standings.each_with_index do |standings, standings_index| -%>
     <%- if @event.standings.size > 1 -%>
-  <h3><%= standings.name -%></h3>
+  <h3><%= link_to(standings.name, :anchor => "standings_#{standings.id}") -%></h3>
     <%- end -%>
 
     <%- if !standings.is_a?(CombinedStandings) -%>

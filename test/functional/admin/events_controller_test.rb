@@ -21,12 +21,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
     
-    # expose old bug
-    race = banana_belt.standings.first.races.first
-    race.result_columns = race.result_columns_or_default
-    race.result_columns << 'hometown'
-    race.save(false)
-    
     get(:show, :id => banana_belt.to_param.to_s)
     assert_response(:success)
     assert_template("admin/events/show")
@@ -86,12 +80,6 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s, :promoter_id => '2'}
     assert_recognizes(opts, "/admin/events/#{banana_belt.to_param}", :promoter_id => '2')
-    
-    # expose old bug
-    race = banana_belt.standings.first.races.first
-    race.result_columns = race.result_columns_or_default
-    race.result_columns << 'hometown'
-    race.save(false)
     
     assert_not_equal(promoters(:candi_murray), banana_belt.promoter, 'Promoter before show with promoter ID')
 

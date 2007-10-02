@@ -12,8 +12,8 @@ class ResultsController < ApplicationController
     
     @discipline = Discipline[params[:discipline]]
     if @discipline
-      discipline_clause = 'events.discipline = ? and '
-      conditions = [@discipline.name, first_of_year, first_of_next_year, first_of_year, first_of_next_year]
+      discipline_clause = 'events.discipline in (?) and '
+      conditions = [@discipline.names, first_of_year, first_of_next_year, first_of_year, first_of_next_year]
     else
       discipline_clause = ''
       conditions = [first_of_year, first_of_next_year, first_of_year, first_of_next_year]

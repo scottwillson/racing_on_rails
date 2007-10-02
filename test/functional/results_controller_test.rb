@@ -101,7 +101,7 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
-    assert_equal(assigns["discipline"], Discipline[:time_trial], "discipline")
+    assert_equal(Discipline[:time_trial], assigns["discipline"], "discipline")
   end
   
   def test_racer

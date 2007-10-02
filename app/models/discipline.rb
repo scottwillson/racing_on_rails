@@ -2,19 +2,20 @@
 class Discipline < ActiveRecord::Base
 
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
+  
 
   NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
-  @@aliases = nil
+  @@all_aliases = nil
   
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def Discipline.[](name)
     return nil unless name
-    load_aliases unless @@aliases
+    load_aliases unless @@all_aliases
     if name.is_a?(Symbol)
-      @@aliases[name]
+      @@all_aliases[name]
     else
       return nil if name.blank?
-      @@aliases[name.underscore.gsub(' ', '_').to_sym]
+      @@all_aliases[name.underscore.gsub(' ', '_').to_sym]
     end
   end
 
@@ -32,25 +33,33 @@ class Discipline < ActiveRecord::Base
   end
 
   def Discipline.load_aliases
-    @@aliases = {}
+    @@all_aliases = {}
     results = connection.select_all(
       "SELECT discipline_id, alias FROM aliases_disciplines"
     )
     for result in results
-      @@aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
+      @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
     for discipline in Discipline.find_all
-      @@aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
+      @@all_aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
     end
   end
   
-  # Clear out cached aliases
+  # Clear out cached @@aliases
   def Discipline.reset
-    @@aliases = nil
+    @@all_aliases = nil
   end
   
   def Discipline.find_all_names
     [''] + Discipline.find_all.collect {|discipline| discipline.name}
+  end
+  
+  def names
+    if name == 'Road'
+      ['Road', 'Circuit']
+    else
+      [name]
+    end
   end
   
   def to_param
