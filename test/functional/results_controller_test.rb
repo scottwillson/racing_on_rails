@@ -191,4 +191,45 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_equal(result.team, assigns["team"], "Should assign team")
     assert_equal(bar, assigns["competition"], "Should assign competition")
   end
+
+  def test_show_racer_result
+    result = results(:tonkin_kings_valley)
+    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    assert_routing("/results/show/#{result.id}", opts)
+
+    get(:show, {:controller => "results", :id => result.id.to_s})
+    assert_response(:redirect)
+    assert_redirected_to(
+      :controller => "results", 
+      :action => "competition", 
+      :competition_id => result.event.to_param, 
+      :racer_id => result.racer.to_param)
+  end  
+
+  def test_show_team_result
+    result = races(:kings_valley_3).results.create(:team => teams(:vanilla))
+    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    assert_routing("/results/show/#{result.id}", opts)
+
+    get(:show, {:controller => "results", :id => result.id.to_s})
+    assert_response(:redirect)
+    assert_redirected_to(
+      :controller => "results", 
+      :action => "competition", 
+      :competition_id => result.event.to_param, 
+      :team_id => teams(:vanilla).to_param)
+  end
+  
+  def test_show_result_no_team_no_racer
+    result = races(:kings_valley_3).results.create
+    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    assert_routing("/results/show/#{result.id}", opts)
+
+    get(:show, {:controller => "results", :id => result.id.to_s})
+    assert_response(:redirect)
+    assert_redirected_to(
+      :controller => "results", 
+      :action => "competition", 
+      :competition_id => result.event.to_param)
+  end
 end
