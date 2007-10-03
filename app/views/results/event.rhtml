@@ -4,8 +4,8 @@
 
 <div style="margin-bottom: 1em;">
 <%= @event.city_state %>
-<br/>
-<%- if @event.respond_to?(:events) -%>
+<br>
+<%- if @event.respond_to?(:events) && !@event.is_a?(OregonCup) -%>
 <%= @event.date_range_long_s %>
 <%- else -%>
 <%= @event.date.to_formatted_s(:long) %>
@@ -74,15 +74,17 @@
 <%- end -%>  
 
 <% @event.standings.each_with_index do |standings, standings_index| %>
-    
+  <%- if @event.standings.size > 1 -%>
   <h2><%= standings.name -%></h2>
-  <div class="updatedon_inline">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
+  <%- end -%>
+
+  <div class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></div>
   <% if !standings.is_a?(CombinedStandings) %>
   <div><small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></small></div>
   <%- end -%>
   
   <% standings.races_with_results.each_with_index do |race, index| %>
-  <a name="race_<%= race.id %>" id="race_<%= race.id %>"></a>
+  <a name="race_<%= race.id %>" id="race_<%= race.id %>" />
   <table class="base">
     <caption><%= race.name %></caption>
   <tr><th></th></tr>
