@@ -39,8 +39,8 @@ class Ironman < Competition
          WHERE (races.category_id is not null 
            and events.type = 'SingleDayEvent' 
            and standings.ironman = true 
-           and standings.date >= '#{year}-01-01' 
-           and standings.date <= '#{year}-12-31')
+           and events.date >= '#{year}-01-01' 
+           and events.date <= '#{year}-12-31')
          ORDER BY racer_id}
     )
   end

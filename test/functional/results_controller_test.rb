@@ -104,6 +104,79 @@ class ResultsControllerTest < Test::Unit::TestCase
     assert_equal(Discipline[:time_trial], assigns["discipline"], "discipline")
   end
   
+  def test_index_all_subclasses
+    SingleDayEvent.create!(:name => 'In past', :date => Date.new(2008, 12, 31)).standings.create
+    SingleDayEvent.create!(:name => 'In future', :date => Date.new(2010, 1, 1)).standings.create
+    SingleDayEvent.create!(:name => 'SingleDayEvent no standings', :date => Date.new(2009, 4, 12))
+    single_day_event = SingleDayEvent.create!(:name => 'SingleDayEvent', :date => Date.new(2009, 4, 15))
+    single_day_event.standings.create
+    
+    MultiDayEvent.create!(:name => 'In past', :date => Date.new(2008, 12, 31)).standings.create
+    MultiDayEvent.create!(:name => 'In future', :date => Date.new(2010, 1, 1)).standings.create
+    MultiDayEvent.create!(:name => 'MultiDayEvent no standings', :date => Date.new(2009, 1, 12))
+    
+    multi_day_event_with_children = MultiDayEvent.create!(:name => 'MultiDayEvent with children, no standings', :date => Date.new(2009, 5, 15))
+    multi_day_event_with_children.events.create!(:date => Date.new(2009, 5, 15))
+    
+    multi_day_event_with_standings = MultiDayEvent.create!(:name => 'MultiDayEvent with standings, no children', :date => Date.new(2009, 6, 12))
+    multi_day_event_with_standings.standings.create
+    
+    multi_day_event_with_child_standings = MultiDayEvent.create!(:name => 'MultiDayEvent with children standings', :date => Date.new(2009, 6, 17))
+    multi_day_event_with_child_standings_child = multi_day_event_with_child_standings.events.create!(:date => Date.new(2009, 6, 17))
+    multi_day_event_with_child_standings_child.standings.create
+        
+    Series.create!(:name => 'In past', :date => Date.new(2008, 12, 31)).standings.create
+    Series.create!(:name => 'In future', :date => Date.new(2010, 1, 1)).standings.create
+    Series.create!(:name => 'Series no standings', :date => Date.new(2009, 1, 12))
+    
+    series_with_children = Series.create!(:name => 'Series with children, no standings', :date => Date.new(2009, 2, 15))
+    series_with_children.events.create!(:date => Date.new(2009, 2, 15))
+    
+    series_with_standings = Series.create!(:name => 'Series with standings, no children', :date => Date.new(2009, 3, 12))
+    series_with_standings.standings.create
+    
+    series_with_child_standings = Series.create!(:name => 'Series with children standings', :date => Date.new(2009, 4, 17))
+    series_with_child_standings_child = series_with_child_standings.events.create!(:date => Date.new(2009, 4, 17))
+    series_with_child_standings_child.standings.create
+    
+    series_with_standings_and_child_standings = Series.create!(:name => 'Series with standings and  with children standings', :date => Date.new(2009, 11, 1))
+    series_with_standings_and_child_standings.standings.create
+    series_with_standings_and_child_standings_child = series_with_child_standings.events.create!(:date => Date.new(2009, 11, 11))
+    series_with_standings_and_child_standings_child.standings.create
+    
+    WeeklySeries.create!(:name => 'In past', :date => Date.new(2008, 12, 31)).standings.create
+    WeeklySeries.create!(:name => 'In future', :date => Date.new(2010, 1, 1)).standings.create
+    WeeklySeries.create!(:name => 'WeeklySeries no standings', :date => Date.new(2009, 1, 12))
+
+    weekly_series_with_children = WeeklySeries.create!(:name => 'WeeklySeries with children, no standings', :date => Date.new(2009, 8, 2))
+    weekly_series_with_children.events.create!(:date => Date.new(2009, 8, 2))
+
+    weekly_series_with_standings = WeeklySeries.create!(:name => 'WeeklySeries with standings, no children', :date => Date.new(2009, 9, 22))
+    weekly_series_with_standings.standings.create
+
+    weekly_series_with_child_standings = WeeklySeries.create!(:name => 'WeeklySeries with children standings', :date => Date.new(2009, 3, 5))
+    weekly_series_with_child_standings_child = weekly_series_with_child_standings.events.create!(:date => Date.new(2009, 3, 5))
+    weekly_series_with_child_standings_child.standings.create
+
+    weekly_series_with_standings_and_child_standings = WeeklySeries.create!(:name => 'WeeklySeries with standings and children standings', :date => Date.new(2009, 12, 2))
+    weekly_series_with_standings_and_child_standings.standings.create
+    weekly_series_with_standings_and_child_standings_child = weekly_series_with_child_standings.events.create!(:date => Date.new(2009, 12, 2))
+    weekly_series_with_standings_and_child_standings_child.standings.create
+    
+    get(:index, :year => '2009')
+    assert_response(:success)
+    
+    assert_not_nil(assigns['events'], "Should assign 'events'")
+    expected = [series_with_standings, single_day_event, series_with_child_standings, multi_day_event_with_standings, 
+                multi_day_event_with_child_standings, series_with_standings_and_child_standings]
+    assert_equal_events(expected, assigns['events'], 'Events')
+
+    assert_not_nil(assigns['weekly_series'], "Should assign 'weekly_series'")
+    expected = [weekly_series_with_standings, weekly_series_with_child_standings, weekly_series_with_standings_and_child_standings]
+    assert_equal_events(expected, assigns['weekly_series'], 'weekly_series')
+    assert_nil(assigns['discipline'], 'discipline')
+  end
+  
   def test_racer
   	weaver = racers(:weaver)
     opts = {:controller => "results", :action => "racer", :id => weaver.id.to_s}

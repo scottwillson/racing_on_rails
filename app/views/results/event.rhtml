@@ -61,11 +61,11 @@
     <%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
     <tr>
       <td style="margin-right: 18px;">
-      <a href="#race_<%= row.first.id %>" class="underlined"><%= row.first.name %></a>
+      <a href="#race_<%= row.first.id %>"><%= row.first.name %></a>
       </td>
       <td style="margin-left: 18px;">
       &nbsp;
-      <%- if row.size == 2 -%><a href="#race_<%= row.last.id %>" class="underlined"><%= row.last.name %></a><%- end -%>
+      <%- if row.size == 2 -%><a href="#race_<%= row.last.id %>"><%= row.last.name %></a><%- end -%>
       </td>
     </tr>
   <%- end -%>  

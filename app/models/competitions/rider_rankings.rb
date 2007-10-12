@@ -61,8 +61,8 @@ module Competitions
                     and events.type = 'SingleDayEvent' 
                     and categories.id in (#{category_ids_for(race)})
                     and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
-                    and standings.date >= '#{date.year}-01-01' 
-                    and standings.date <= '#{date.year}-12-31'}],
+                    and events.date >= '#{date.year}-01-01' 
+                    and events.date <= '#{date.year}-12-31'}],
                   :order => 'racer_id'
       )
     end

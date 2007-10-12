@@ -303,11 +303,4 @@ class UpcomingEventsTest < Test::Unit::TestCase
     assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     assert_equal_events([super_d], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
   end
-  
-  def assert_equal_events(expected, actual, message = 'Events not equal')
-    unless expected == actual
-      detailed_message = "#{message}. Expected [#{expected.sort.join(', ')}] but was [#{actual.sort.join(', ')}]"
-      flunk(detailed_message)
-    end
-  end
 end

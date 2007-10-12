@@ -5,8 +5,6 @@
 #
 # Calculate start_date, end_date, and date from events. 
 # date = start_date
-# MultiDayEvents with no events default to start_date of Jan 1st and end_date of Dec 31
-# Save date to database, though this is a slight denormalization.
 #
 # Cannot have a parent event
 #
@@ -99,7 +97,7 @@ class MultiDayEvent < Event
   
   def initialize(attributes = nil)
     super
-    self.date = Time.new.beginning_of_year
+    self.date = Time.new.beginning_of_year unless self[:date]
   end
   
   # Update child events from parents' attributes if child attribute has the
@@ -137,7 +135,6 @@ class MultiDayEvent < Event
     
     minimum_date = MultiDayEvent.connection.select_value("select min(date) from events where parent_id = #{id}")
     unless minimum_date.blank? || minimum_date == self.date.to_s
-      logger.debug("updating date from #{self.date} to #{minimum_date.to_s}. Equal? #{minimum_date == self.date.to_s}")
       MultiDayEvent.connection.execute("update events set date = '#{minimum_date}' where id = #{id}")
       self.date = minimum_date
     end
@@ -152,8 +149,12 @@ class MultiDayEvent < Event
     if !events(true).empty?
       events.last.date
     else
-      date = Date.new(Date.today.year, 12, 31)
+      start_date
     end
+  end
+  
+  def end_date_s
+    "#{end_date.month}/#{end_date.day}"
   end
   
   def date_range_s

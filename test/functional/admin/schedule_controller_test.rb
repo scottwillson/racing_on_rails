@@ -66,7 +66,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
     before_import_after_schedule_start_date = Event.count("date > '2005-01-01'")
     assert_equal(7, before_import_after_schedule_start_date, "2005 events count before import")
     before_import_all = Event.count
-    assert_equal(14, before_import_all, "All events count before import")
+    assert_equal(15, before_import_all, "All events count before import")
 
     post :upload, :schedule_file => file
 
@@ -78,7 +78,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
     after_import_after_schedule_start_date = Event.count("date > '2005-01-01'")
     assert_equal(83, after_import_after_schedule_start_date, "2005 events count after import")
     after_import_all = Event.count
-    assert_equal(90, after_import_all, "All events count after import")
+    assert_equal(91, after_import_all, "All events count after import")
   end
   
   # TODO dupe methods

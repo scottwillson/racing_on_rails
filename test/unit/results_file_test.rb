@@ -57,7 +57,7 @@ class ResultsFileTest < Test::Unit::TestCase
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
-      race_date = actual_race.standings.date
+      race_date = actual_race.date
       actual_race.results.sort.each_with_index do |result, result_index|
         expected_result = expected_race.results[result_index]
         assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")

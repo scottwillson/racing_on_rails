@@ -61,6 +61,12 @@ class Race < ActiveRecord::Base
     category.name if category
   end
   
+  def date
+    if standings || standings(true)
+      standings.date
+    end
+  end
+  
   # FIXME: Incorrectly doubles tandem and other team events' field sizes
   def field_size
     if self[:field_size] and self[:field_size] > 0
@@ -154,7 +160,7 @@ class Race < ActiveRecord::Base
         place_before = result.members_only_place
         result.members_only_place = ''
         if result.place.to_i > 0
-          if result.racer.nil? or (result.racer and result.racer.member?(standings.date))
+          if result.racer.nil? or (result.racer and result.racer.member?(result.date))
             result.members_only_place = (result.place.to_i - non_members).to_s
           else
             non_members = non_members + 1

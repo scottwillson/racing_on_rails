@@ -69,7 +69,7 @@ class ScheduleTest < Test::Unit::TestCase
     before_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
     assert_equal(1, before_import_after_schedule_start_date, "2006 events count before import")
     before_import_all = Event.count
-    assert_equal(17, before_import_all, "All events count before import")
+    assert_equal(18, before_import_all, "All events count before import")
     
     filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
     Schedule::Schedule.import(filename)
@@ -77,7 +77,7 @@ class ScheduleTest < Test::Unit::TestCase
     after_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
     assert_equal(74, after_import_after_schedule_start_date, "2006 events count after import")
     after_import_all = Event.count
-    assert_equal(91, after_import_all, "All events count after import")
+    assert_equal(92, after_import_all, "All events count after import")
     
     assert(SingleDayEvent.exists?(event_before.id), 'Event before schedule start')
     assert(!SingleDayEvent.exists?(event_on.id), 'Event on schedule start')

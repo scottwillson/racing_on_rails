@@ -221,18 +221,18 @@ class BarTest < Test::Unit::TestCase
   
   def test_standings_discipline
     mt_hood_1 = events(:mt_hood_1)
-    tt_stage = mt_hood_1.standings.create(:name => 'Rowena Time Trial', :event => mt_hood_1, :discipline => 'Time Trial', :date => Date.new(2005, 7))
+    tt_stage = mt_hood_1.standings.create(:name => 'Rowena Time Trial', :event => mt_hood_1, :discipline => 'Time Trial')
     womens_tt = tt_stage.races.create(:standings => tt_stage, :category => categories(:senior_women), :field_size => 6)
     leah = Racer.create(:name => 'Leah Goodchek', :member_from => Date.new(2005, 1, 1))
     womens_tt.results.create(:racer => leah, :place => '3')
     
-    road_stage = mt_hood_1.standings.create(:name => 'Cooper Spur RR', :event => mt_hood_1, :date => Date.new(2005, 7))
+    road_stage = mt_hood_1.standings.create(:name => 'Cooper Spur RR', :event => mt_hood_1)
     senior_men_road_stage = road_stage.races.create(:standings => road_stage, :category => categories(:sr_p_1_2))
     tuft = Racer.create(:name => 'Svein Tuft', :member_from => Date.new(2005, 1, 1))
     senior_men_road_stage.results.create(:racer => tuft, :place => '2')
     
     mt_hood_2 = events(:mt_hood_2)
-    womens_road_stage = mt_hood_2.standings.create(:name => 'Womens Cooper Spur RR', :event => mt_hood_2, :discipline => 'Road', :date => Date.new(2005, 7))
+    womens_road_stage = mt_hood_2.standings.create(:name => 'Womens Cooper Spur RR', :event => mt_hood_2, :discipline => 'Road')
     senior_women_road_stage = road_stage.races.create(:standings => womens_road_stage, :category => categories(:senior_women))
     senior_women_road_stage.results.create(:racer => leah, :place => '15')
     

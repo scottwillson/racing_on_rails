@@ -3,9 +3,7 @@
 	<%= start_form_tag :action => 'update', :id => standings.event.id, :standings_id => standings.id %>
 	<tr>
 		<td class="field_label">Name:</td>
-		<td><%= text_field 'standings', 'name' %></td>
-		<td class="field_label">Date:</td>
-		<td><%= standings.date.strftime('%A, %B %d, %Y') %></td>
+		<td colspan="3"><%= text_field 'standings', 'name' %></td>
 	</tr>
 	<tr>
 		<td class="field_label">Discipline:</td>

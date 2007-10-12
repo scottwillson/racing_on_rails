@@ -98,6 +98,17 @@ class Test::Unit::TestCase
     raise("#{message} \nExpected #{expected} \nbut was #{formatted_actual}") unless expected == formatted_actual
   end
 
+  def assert_equal_events(expected, actual, message = 'Events not equal')
+    expected_sorted = expected.sort
+    actual_sorted = actual.sort
+    unless expected_sorted == actual_sorted
+      expected_formatted = expected_sorted.join("\n")
+      actual_formatted = actual_sorted.join("\n")
+      detailed_message = "#{message}. Expected:\n#{expected_formatted} \nbut was:\n#{actual_formatted}"
+      flunk(detailed_message)
+    end
+  end
+
   def uploaded_file(path, original_filename, content_type)
     file_contents = File.new(File.expand_path("#{RAILS_ROOT}/#{path}")).read
     uploaded_file = StringIO.new(file_contents);
@@ -109,9 +120,15 @@ class Test::Unit::TestCase
     return uploaded_file
   end
   
+  def print_all_events
+    Event.find(:all, :order => :date).each {|event|
+      p "#{event.date} #{event.name} #{event.parent_id}"
+    }
+  end
+  
   def print_all_results
     Result.find(:all, :order => :racer_id).each {|result|
-      p "#{result.place} #{result.name} #{result.team} #{result.race.standings.name} #{result.race.name} #{result.race.standings.date}"
+      p "#{result.place} #{result.name} #{result.team} #{result.race.standings.name} #{result.race.name} #{result.date}"
     }
   end
   

@@ -21,11 +21,7 @@ class CombinedStandings < Standings
   end
 
   def name
-    if self.source
-      "#{self.source.name} Combined"
-    else
-      "Combined"
-    end
+    'Combined'
   end
   
   def ironman

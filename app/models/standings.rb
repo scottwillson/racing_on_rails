@@ -26,7 +26,6 @@ class Standings < ActiveRecord::Base
           :dependent => :destroy
   
   # TODO validate Event type
-  # TODO Remove redundant date attribute -- it always should be equal to parent SingleDayEvent's date
   # TODO Move Event-specific methods to Event.standings.create
   def initialize(attributes = nil)
     super
@@ -87,7 +86,7 @@ class Standings < ActiveRecord::Base
   end
   
   def date
-    self[:date] || self.event.date if self.event
+    self.event.date if self.event
   end
   
   def short_date

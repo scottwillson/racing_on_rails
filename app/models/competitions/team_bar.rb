@@ -33,8 +33,8 @@ module Competitions
               LEFT OUTER JOIN events as competition_events 
                 ON competition_standings.event_id = competition_events.id 
               where competition_events.type = 'Bar' 
-                and competition_standings.date >= '#{date.year}-01-01' 
-                and competition_standings.date <= '#{date.year}-12-31')
+                and competition_events.date >= '#{date.year}-01-01' 
+                and competition_events.date <= '#{date.year}-12-31')
             order by team_id}
       )
     end
@@ -50,7 +50,7 @@ module Competitions
         teams = extract_teams_from(source_result)
         logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
         for team in teams
-          if member?(team, source_result.race.standings.date)
+          if member?(team, source_result.date)
 
             if first_result_for_team(source_result, competition_result)
               # Bit of a hack here, because we split tandem team results into two results,

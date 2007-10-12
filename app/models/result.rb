@@ -104,7 +104,7 @@ class Result < ActiveRecord::Base
        self.racer[:member_from].blank? && 
        !RaceNumber.rental?(number, Discipline[event.discipline])
        
-      self.racer.member_from = race.standings.date
+      self.racer.member_from = race.date
     end
     
     if self.team and (team.new_record? or team.dirty?)
@@ -200,8 +200,8 @@ class Result < ActiveRecord::Base
   end
   
   def date
-    if (race || race(true)) && (race.standings || race.standings(true))
-      race.standings.date
+    if race || race(true)
+      race.date
     end
   end
   

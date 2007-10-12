@@ -135,10 +135,10 @@ class Competition < Event
   def create_competition_results_for(results, race)
     competition_result = nil
     for source_result in results
-      logger.debug("#{self.class.name} scoring result: #{source_result.race.standings.date} #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+      logger.debug("#{self.class.name} scoring result: #{source_result.date} #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       racer = source_result.racer
-       if member?(racer, source_result.race.standings.date)
+       if member?(racer, source_result.date)
  
          if first_result_for_racer(source_result, competition_result)
            competition_result = race.results.create(

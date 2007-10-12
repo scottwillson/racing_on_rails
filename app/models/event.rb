@@ -18,6 +18,8 @@ class Event < ActiveRecord::Base
            :class_name => "Standings", 
            :dependent => :destroy, 
            :order => 'position'
+           
+  include Comparable
     
   # Return list of every year that has at least one event
   def Event.find_all_years
@@ -41,7 +43,7 @@ class Event < ActiveRecord::Base
   def initialize(attributes = nil)
     super
     if state == nil then write_attribute(:state, ASSOCIATION.state) end
-    if date.nil?
+    if self.date.nil?
       self.date = Date.today
     end
     if name == nil || name == ""
@@ -197,7 +199,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # TODO move to model class
   def discipline_id
     Discipline[discipline].id if Discipline[discipline]
   end
@@ -260,7 +261,12 @@ class Event < ActiveRecord::Base
   end
   
   def <=>(other)
-    date_diff = date <=> other.date
+    return -1 if other.nil?
+    
+    date_diff = 0
+    if !date.nil? && !other.date.nil?
+      date <=> other.date
+    end 
     if date_diff != 0
       date_diff
     else

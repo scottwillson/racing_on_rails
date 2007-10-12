@@ -22,8 +22,8 @@ class EventTest < Test::Unit::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal(3, years.size, "Should find 3 years")
-    assert_equal([2005, 2004, 2003], years, "Years")
+    assert_equal(4, years.size, "Should find 3 years")
+    assert_equal([2005, 2004, 2003, 2002], years, "Years")
   end
   
   def test_load_associations
@@ -218,5 +218,9 @@ class EventTest < Test::Unit::TestCase
     
     event.flyer = '../../events/pir.html'
     assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Relative root flyer')
+  end
+  
+  def test_sort
+    [SingleDayEvent.create, MultiDayEvent.create].sort
   end
 end

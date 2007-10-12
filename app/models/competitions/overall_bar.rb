@@ -22,8 +22,8 @@ module Competitions
                   :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                   :conditions => [%Q{events.type = 'Bar' 
                     and categories.id in (#{category_ids_for(race)})
-                    and standings.date >= '#{date.year}-01-01' 
-                    and standings.date <= '#{date.year}-12-31'}],
+                    and events.date >= '#{date.year}-01-01' 
+                    and events.date <= '#{date.year}-12-31'}],
                   :order => 'racer_id'
       )
     end

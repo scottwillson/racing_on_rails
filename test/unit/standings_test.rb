@@ -52,7 +52,7 @@ class StandingsTest < Test::Unit::TestCase
   end
   
   def test_combined_tt
-    jack_frost = events(:jack_frost)
+    jack_frost = events(:jack_frost_2002)
     assert_equal(1, jack_frost.standings.size, 'standings.size')
     categorized_standings = jack_frost.standings.first
     assert_equal(2, categorized_standings.races.size, 'races')
@@ -64,7 +64,7 @@ class StandingsTest < Test::Unit::TestCase
     
     assert_equal(false, combined_standings.ironman, 'Ironman')
     
-    assert_equal('Jack Frost Combined', combined_standings.name, 'name')
+    assert_equal('Combined', combined_standings.name, 'name')
     assert_equal(0, combined_standings.bar_points, 'bar points')
     assert_equal(1, combined_standings.races.size, 'combined_standings.races')
     combined = combined_standings.races.first

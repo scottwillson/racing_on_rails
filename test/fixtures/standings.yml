@@ -6,7 +6,6 @@
     id: 1
     event_id: 2
     name: Banana Belt I
-    date: 2004-01-01
     bar_points: 1
     discipline: Road
     updated_at: 2004-01-05
@@ -15,7 +14,6 @@
     id: 2
     event_id: 5
     name: Kings Valley Road Race
-    date: 2003-12-31
     bar_points: 1
     updated_at: 2004-01-01
     type: Standings
@@ -23,18 +21,14 @@
     id: 3
     event_id: 15
     name: Kings Valley Road Race
-    date: 2004-12-31
     bar_points: 1
     updated_at: 2004-12-31
     type: Standings
-
-# Event is actually in 2004
 - jack_frost:
     id: 4
-    event_id: 11
+    event_id: 16
     name: Jack Frost
-    date: 2002-01-15
     bar_points: 1
-    updated_at: 2002-12-31
+    updated_at: 2004-01-15
     type: Standings
         
