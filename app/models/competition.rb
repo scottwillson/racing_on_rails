@@ -200,7 +200,7 @@ class Competition < Event
   def expire_cache
   end
   
-  def inspect
+  def inspect_debug
     standings.each {|s|
       puts(self.class.name)
       puts("#{self.class.name} #{s.name}")

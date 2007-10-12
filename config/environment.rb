@@ -79,5 +79,11 @@ SingleDayEvent
 MultiDayEvent
 Series
 WeeklySeries
+Bar
+OverallBar
+RiderRankings
+TeamBar
+OregonCup
+Ironman
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)

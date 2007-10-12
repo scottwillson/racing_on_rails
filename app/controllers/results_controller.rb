@@ -55,7 +55,7 @@ class ResultsController < ApplicationController
 	  else
       @events = Event.find(
           :all,
-          :include => :standings, 
+          :include => :standings,
           :conditions => [%Q{
               events.date between ? and ? 
               and events.id in (select event_id from standings where events.date between ? and ?)
@@ -87,7 +87,17 @@ class ResultsController < ApplicationController
           :order => 'events.date desc'
       )
 	  end
-    @competitions = @events.reject {|event| event === Competition}
+    
+    @events.reject! {|event| event.is_a?(Competition)}
+    @competitions = Competition.find(
+        :all,
+        :include => :standings, 
+        :conditions => [%Q{
+            events.date = ? 
+            and events.parent_id is null
+            }, first_of_year],
+        :order => 'events.date desc'
+    )
   end
   
   def event
