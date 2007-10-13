@@ -38,3 +38,5 @@ alice:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

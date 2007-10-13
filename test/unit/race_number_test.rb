@@ -62,6 +62,54 @@ class RaceNumberTest < Test::Unit::TestCase
     race_number.save!
   end
   
+
+  def test_create_cyclocross
+    alice = racers(:alice)
+    elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
+    race_number = RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
+    assert_equal(alice, race_number.racer, 'New number racer')
+    assert_equal(2001, race_number.year, 'New number year')
+    assert_equal(elkhorn, race_number.number_issuer, 'New number_issuer racer')
+    assert_equal(disciplines(:cyclocross), race_number.discipline, 'New number discipline')
+    
+    # One field different
+    RaceNumber.create!(:racer => alice, :value => 'A104', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
+    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2002, :number_issuer => elkhorn, :discipline => disciplines(:road))
+    obra = NumberIssuer.find_or_create_by_name('OBRA')
+    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:cyclocross))
+    RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
+    
+    # dupes always OK with cyclocross, even if different racer 
+    assert(RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Same racer, same value')
+    assert(RaceNumber.new(:racer => racers(:mollie), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Different racers, same value')
+    
+    # invalid because missing fields
+    assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'No value')
+    assert(!RaceNumber.new(:racer => alice, :value => '', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Blank value')
+    
+    # No racer ID valid when new, but can't save
+    no_racer = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
+    assert(no_racer.valid?, 'No racer')
+    assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
+    
+    no_racer = RaceNumber.new(:value => '1009', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
+    assert(no_racer.valid?, 'No racer')
+    assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
+    
+    # Defaults
+    race_number = RaceNumber.new(:racer => alice, :value => 'A1', :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
+    assert(race_number.valid?, 'No year')
+    race_number.save!
+    
+    race_number = RaceNumber.new(:racer => alice, :value => '9000', :year => 2001, :discipline => disciplines(:cyclocross))
+    assert(race_number.valid?, "no issuer: #{race_number.errors.full_messages}")
+    race_number.save!
+    
+    race_number = RaceNumber.new(:racer => alice, :value => '9103', :year => 2001, :number_issuer => elkhorn)
+    assert(race_number.valid?, "No discipline: #{race_number.errors.full_messages}")
+    race_number.save!
+  end
+  
   def test_rental
     alice = racers(:alice)
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')

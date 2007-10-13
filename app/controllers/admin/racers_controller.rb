@@ -385,7 +385,7 @@ class Admin::RacersController < Admin::RecordEditor
 
     # A grid might be handy here, but not sure it matters
     begin
-      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes}
+      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes created_at updated_at}
       racers = columns.join("\t")
       racers << "\n"
       for racer in Racer.find(

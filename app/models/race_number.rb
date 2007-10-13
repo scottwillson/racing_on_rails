@@ -107,7 +107,7 @@ class RaceNumber < ActiveRecord::Base
       return false 
     end
     
-    return true if racer.nil?
+    return true if racer.nil? || _discipline == Discipline[:cyclocross]
   
     if ASSOCIATION.gender_specific_numbers && !racer.gender.blank?
       existing_numbers = RaceNumber.find_by_sql([%q{

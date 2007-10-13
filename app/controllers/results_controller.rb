@@ -89,15 +89,6 @@ class ResultsController < ApplicationController
 	  end
     
     @events.reject! {|event| event.is_a?(Competition)}
-    @competitions = Competition.find(
-        :all,
-        :include => :standings, 
-        :conditions => [%Q{
-            events.date = ? 
-            and events.parent_id is null
-            }, first_of_year],
-        :order => 'events.date desc'
-    )
   end
   
   def event
