@@ -379,6 +379,20 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def export
+    members_only = (params['include'] == 'members_only')
+    if params['format'] == 'excel'
+      racers = export_to_excel(members_only)
+    elsif params['format'] == 'finish_lynx'
+      racers = export_to_finish_lynx(members_only)
+    else
+      raise("Unknown format: #{params['format']}")
+    end
+    
+    headers['Content-Length'] = racers.size
+    render :text => racers
+  end
+  
+  def export_to_excel(members_only)
     headers['Content-Type'] = 'application/vnd.ms-excel'
     today = Date.today
     headers['Content-Disposition'] = "filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\""
@@ -388,10 +402,21 @@ class Admin::RacersController < Admin::RecordEditor
       columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes created_at updated_at}
       racers = columns.join("\t")
       racers << "\n"
-      for racer in Racer.find(
-        :all,
-        :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
-        )
+      
+      if (members_only)
+        racers_from_db = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
+          :conditions => ['member_to >= ?', today]
+          )
+      else
+        racers_from_db = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
+          )
+      end
+      
+      for racer in racers_from_db
         delimiter =''
         for column in columns
           racers << delimiter
@@ -417,14 +442,52 @@ class Admin::RacersController < Admin::RecordEditor
         end
         racers << "\n"
       end
+      racers
     rescue Exception => e
       racer_name = 'nil'
       racer_name = racer.name if racer
       raise "Could not export #{column}: '#{value}' for #{racer_name}: #{e}"
     end
-    
-    headers['Content-Length'] = racers.size
-    render :text => racers
+  end
+  
+  def export_to_finish_lynx(members_only)
+    headers['Content-Type'] = 'application/vnd.ms-excel'
+    today = Date.today
+    headers['Content-Disposition'] = "filename=\"lynx.ppl\""
+
+    # A grid might be handy here, but not sure it matters
+    begin
+      columns = ['number', 'last name', 'first name', 'team', '"category,gender,age"']
+      racers = columns.join(",")
+      racers << "\n"
+      
+      if (members_only)
+        racers_from_db = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
+          :conditions => ['member_to >= ?', today]
+          )
+      else
+        racers_from_db = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
+          )
+      end
+
+      for racer in racers_from_db
+        racers << "#{racer.road_number},#{fl_escape(racer.last_name)},#{fl_escape(racer.first_name)},#{fl_escape(racer.team_name)},\"#{fl_escape(racer.road_category)},#{racer.gender},#{racer.racing_age}\""
+        racers << "\n"
+      end
+      racers
+    rescue Exception => e
+      racer_name = 'nil'
+      racer_name = racer.name if racer
+      raise "Could not export #{racer}: #{e}"
+    end
+  end
+  
+  def fl_escape(text)
+    text.gsub(',', '\""') if text
   end
 
   def rescue_action_in_public(exception)

@@ -2,7 +2,11 @@
 # Application-wide Racing on Rails helper code is in RacingOnRailsControllerHelper
 module ApplicationHelper
   @@grid_columns = nil
-  
+    
+  def focus(form_field_name)
+    @focus = form_field_name
+  end
+
   # Class-scope Hash of Columns, keyed by field
   # Used to display results in a grid
   # TODO Rewrite this a bit smarter

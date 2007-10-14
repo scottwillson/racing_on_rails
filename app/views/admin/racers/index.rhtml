@@ -2,29 +2,29 @@
 
 <%= render "shared/admin/tabs" %>
 
-<div align="center">
-
+<div style="margin-top: 16px; margin-bottom: 16px;">
 <%= start_form_tag({}, {:method => 'get'}) %>
 	<span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
 
 	<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
-	<div class="message">
+	<p class="message">
 		<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
 		<span id='warn_text'><%= flash[:warn] %></span>
 		<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
 		<span id='message_text'><%= flash[:notice] %></span>
-	</div>
+	</p>
 	<%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
 	<%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
 <%= end_form_tag %>
+</div>
 
 <table>
 	<tr>
 		<td>
-			<table class="base">
+			<table class="base" style="margin-bottom: 2px;">
 		        <tr>
 					<th></th>
-			        <th>Name</th>
+			        <th style="width: 200px;">Name</th>
 		            <th>Team</th>
 		            <th>Aliases</th>
 		            <th align="right">Road</th>
@@ -49,24 +49,35 @@
 					<td colspan="11"></td>
 				</tr>
 			</table>
-			
-			<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
-				<table width="100%">
-					<tr>
-						<td><%=  link_image_to '/images/buttons/add.gif', :action => 'new' %></td>
-						<td style="text-align: right;">
-							<span class="field_label">Import New Members:</span>
-							<%= file_field_tag "racers_file" %>
-							<%= submit_tag 'Import' %>
-						</td>
-						<td><%= link_to 'Print Cards', :action => 'cards' %></td>
-						<td><%= link_to 'Print Mailing Labels', :action => 'mailing_labels' %></td>
-						<td><%= link_to 'Export to Excel', :action => 'export' %></td>
-					</tr>
-				</table>
-			<%= end_form_tag %>
+			<div><%= link_image_to '/images/buttons/add.gif', :action => 'new' %></div>
+
+			<div style="text-align: center;">
+				<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
+					<%= submit_tag 'Import' %>
+					<%= file_field_tag "racers_file" %>
+				<%= end_form_tag %>
+		
+				<%= form_tag(:action => 'export') %>
+					<%= submit_tag 'Export' %> 
+					<select name="include">
+						<option value="all">All</option>
+						<option value="members_only" selected>Current Members Only</option>
+					</select>
+					to
+					<select name="format">
+						<option value="excel" selected>Excel</option>
+						<option value="finish_lynx">FinishLynx</option>
+					</select>
+				<%= end_form_tag %>
+			</div>
+		
+			<div class="tabs" style="margin-top: 24px;">
+				<%= 
+					link_to('Print Cards', :action => 'cards') 
+				%> | <%= 
+					link_to('Print Mailing Labels', :action => 'mailing_labels') 
+				%>
+			</div>
 		</td>
 	</tr>
 </table>
-
-</div>
