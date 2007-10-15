@@ -310,11 +310,11 @@ class ResultsFileTest < Test::Unit::TestCase
   end
   
   def test_mtb
-    pro_semi_pro_elite_men = categories(:pro_semi_pro_elite_men)
-    pro_semi_pro_elite_men.children.create(:name => 'Pro/Elite Men')
-    pro_semi_pro_elite_men.children.create(:name => 'Expert Men')
-    pro_elite_expert_women = categories(:pro_elite_expert_women)
-    pro_elite_expert_women.children.create(:name => 'Pro/Elite/Expert Women')
+    pro_semi_pro_men = categories(:pro_semi_pro_men)
+    pro_semi_pro_men.children.create(:name => 'Pro Men')
+    pro_semi_pro_men.children.create(:name => 'Expert Men')
+    pro_expert_women = categories(:pro_expert_women)
+    pro_expert_women.children.create(:name => 'Pro/Expert Women')
     
     event = SingleDayEvent.create(:discipline => 'Mountain Bike')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/mtb.xls"), event)

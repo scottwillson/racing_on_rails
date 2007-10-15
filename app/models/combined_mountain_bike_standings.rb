@@ -1,4 +1,4 @@
-# OBRA combines Pro, Semi-Pro, Elite Men and Pro, Elite, Expert Women into two sets of combined standings.
+# OBRA combines Pro, Semi-Pro, Men and Pro, Expert Women into two sets of combined standings.
 # The combined standings are used for the BAR. Combined results are placed by time. Results without times 
 # are placed last in non-determinate order. (They should be placed by category and place)
 class CombinedMountainBikeStandings < CombinedStandings
@@ -53,19 +53,17 @@ class CombinedMountainBikeStandings < CombinedStandings
   
   def men_combined
     unless defined? @@men_combined
-      @@men_combined = Category.find_or_create_by_name('Pro, Semi-Pro, Elite Men')
+      @@men_combined = Category.find_or_create_by_name('Pro, Semi-Pro Men')
       @@men_combined.children << Category.find_or_create_by_name('Pro Men')
       @@men_combined.children << Category.find_or_create_by_name('Semi-Pro Men')
-      @@men_combined.children << Category.find_or_create_by_name('Elite Men')
     end
     @@men_combined
   end
   
   def women_combined
     unless defined? @@women_combined
-      @@women_combined = Category.find_or_create_by_name('Pro, Elite, Expert Women')
+      @@women_combined = Category.find_or_create_by_name('Pro, Expert Women')
       @@women_combined.children << Category.find_or_create_by_name('Pro Women')
-      @@women_combined.children << Category.find_or_create_by_name('Elite Women')
       @@women_combined.children << Category.find_or_create_by_name('Expert Women')
     end
     @@women_combined

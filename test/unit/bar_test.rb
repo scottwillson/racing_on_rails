@@ -258,7 +258,7 @@ class BarTest < Test::Unit::TestCase
     assert(event.errors.empty?, event.errors.full_messages)
     standings = event.standings.create
 
-    pro_semi_pro_elite_men = categories(:pro_semi_pro_elite_men)
+    pro_semi_pro_men = categories(:pro_semi_pro_men)
     pro_men = Category.find_or_create_by_name('Pro Men')
     race = standings.races.create(:category => pro_men)
     tonkin = racers(:tonkin)
@@ -277,15 +277,6 @@ class BarTest < Test::Unit::TestCase
     chad = Racer.create(:name => 'Chad Swanson')
     chad_result = race.results.create(:place => '3', :racer => chad, :time_s => '2:32:00')
 
-    elite_men = Category.find_or_create_by_name('Elite Men')
-    race = standings.races.create(:standings => standings, :category => elite_men)
-    chris_myers = Racer.create(:name => 'Chris Myers')
-    chris_myers_result = race.results.create(:place => '1', :racer => chris_myers, :time_s => '2:12:45')
-    matt_braun = Racer.create(:name => 'Mathew Braun')
-    matt_braun_result = race.results.create(:place => '2', :racer => matt_braun, :time_s => '2:24:31')
-    greg_tyler = Racer.create(:name => 'Greg Tyler')
-    greg_tyler_result = race.results.create(:place => '3', :racer => greg_tyler, :time_s => '3:03:01')
-
     expert_men = Category.find_or_create_by_name('Expert Men')
     race = standings.races.create(:standings => standings, :category => expert_men)
     weaver = racers(:weaver)
@@ -295,7 +286,7 @@ class BarTest < Test::Unit::TestCase
     sam = Racer.create(:name => 'Sam Richardson')
     sam_result = race.results.create(:place => '3', :racer => sam, :time_s => '3:01:19')
 
-    pro_elite_expert_women = categories(:pro_elite_expert_women)
+    pro_expert_women = categories(:pro_expert_women)
     pro_women = Category.find_or_create_by_name('Pro Women')
     race = standings.races.create(:standings => standings, :category => pro_women)
     molly = racers(:molly)
@@ -304,15 +295,6 @@ class BarTest < Test::Unit::TestCase
     alice_result = race.results.create(:place => '2', :racer => alice, :time_s => '1:43:55')
     rita = Racer.create(:name => 'Rita Metermaid')
     rita_result = race.results.create(:place => '3', :racer => rita, :time_s => '2:13:33')
-
-    elite_women = Category.find_or_create_by_name('Elite Women')
-    race = standings.races.create(:standings => standings, :category => elite_women)
-    laurel = Racer.create(:name => 'Laurel')
-    laurel_result = race.results.create(:place => '1', :racer => laurel, :time_s => '1:41:38')
-    shari = Racer.create(:name => 'Shari')
-    shari_result = race.results.create(:place => '2', :racer => shari, :time_s => '2:24:31')
-    ann = Racer.create(:name => 'Ann')
-    ann_result = race.results.create(:place => '3', :racer => ann, :time_s => '3:03:01')
 
     expert_women = Category.find_or_create_by_name('Expert Women')
     race = standings.races.create(:category => expert_women)
@@ -341,42 +323,36 @@ class BarTest < Test::Unit::TestCase
     event.reload
     assert_equal(2, event.standings.count, 'Event standings (results + combined standings)')
     assert_equal(2, event.standings.count, 'Event standings (results + combined standings)')
-    assert_not_nil(combined_standings, 'Combined Pro, Semi-Pro, Elite, Expert standings')
+    assert_not_nil(combined_standings, 'Combined Pro, Semi-Pro, Expert standings')
     assert_equal(2, combined_standings.races.size, 'Combined Standings races')
 
-    mens_combined = combined_standings.races.detect {|race| race.category == categories(:pro_semi_pro_elite_men)}
+    mens_combined = combined_standings.races.detect {|race| race.category == categories(:pro_semi_pro_men)}
     assert_not_nil(mens_combined, "Mens combined race")
     expected = [
       tonkin_result,
-      chris_myers_result,
       larsen_result,
       brandt_result,
       bear_result,
       decker_result,
-      matt_braun_result,
       chad_result,
-      greg_tyler_result
     ]
     assert_results(expected, mens_combined.results(true), mens_combined.name)
     assert_equal(1, mens_combined.bar_points, 'Mens combined BAR points')
     original_standings = event.standings.detect {|standings| !standings.name['Combined']}
     for race in original_standings.races
-      if race.category == pro_semi_pro_elite_men || race.category == pro_elite_expert_women
-        assert_equal(0, race.bar_points, 'Original pro and elite races BAR points')
+      if race.category == pro_semi_pro_men || race.category == pro_expert_women
+        assert_equal(0, race.bar_points, 'Original pro and semi-pro races BAR points')
       end
     end
 
-    women_combined = combined_standings.races.detect {|race| race.category == categories(:pro_elite_expert_women)}
+    women_combined = combined_standings.races.detect {|race| race.category == categories(:pro_expert_women)}
     assert_not_nil(women_combined, "Women combined race")
     expected = [
       expert_woman_1_result,
       molly_result,
-      laurel_result,
       alice_result,
       expert_woman_2_result,
       rita_result,
-      shari_result,
-      ann_result,
       expert_woman_3_result
     ]
     assert_results(expected, women_combined.results(true))
@@ -387,7 +363,7 @@ class BarTest < Test::Unit::TestCase
     event.reload
     assert_equal(2, event.standings.count, 'Event standings (results + combined standings)')
     combined_standings = event.standings.detect {|standings| standings.name['Combined']}
-    assert_not_nil(combined_standings, 'Combined Pro, Semi-Pro, Elite standings')
+    assert_not_nil(combined_standings, 'Combined Pro, Semi-Pro standings')
     assert_equal(2, combined_standings.races.size, 'Combined Standings races')
 
     # Potential changes

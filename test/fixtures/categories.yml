@@ -61,13 +61,13 @@
 - team:
     id: 19
     name: Team
-- pro_semi_pro_elite_men:
+- pro_semi_pro_men:
     id: 20
-    name: Pro, Semi-Pro, Elite Men
+    name: Pro, Semi-Pro Men
     parent_id: 200
-- pro_elite_expert_women:
+- pro_expert_women:
     id: 21
-    name: Pro, Elite, Expert Women
+    name: Pro, Expert Women
     parent_id: 200
 - junior_men:
     id: 22

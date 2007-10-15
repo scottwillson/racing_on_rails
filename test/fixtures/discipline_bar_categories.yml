@@ -32,7 +32,7 @@ senior_women_tt:
   discipline_id: 5
   category_id: 4
 
-mtb_pro_semipro_elite:
+mtb_pro_semipro:
   discipline_id: 3
   category_id: 20
 mtb_expert_junior_men:

@@ -1,4 +1,4 @@
-# Standings derived from other standings: all categories in a time trail; Pro, Elite, Expert Women mountain biking
+# Standings derived from other standings: all categories in a time trail; Pro, Expert Women mountain biking
 class CombinedStandings < Standings
   after_create {|standings| standings.recalculate}
   belongs_to :source, 
