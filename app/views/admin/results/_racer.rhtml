@@ -29,7 +29,7 @@
 			  <td><%= result.race.standings.event.date.strftime("%D") %></td>
 			  <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
 			</tr>
-			<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') unless result.competition_result? -%> 
+			<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') -%> 
 			<%- end -%>
 
 			<%- if results.empty? -%>

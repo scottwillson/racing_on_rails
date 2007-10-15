@@ -93,8 +93,8 @@ class Admin::ResultsController < Admin::RecordEditor
     result.save!
     expire_cache
     render(:update) do |page|
-      page.replace("racer_#{racer.id}", :partial => 'racer', :locals => {:racer => racer, :results => racer.event_results})
-      page.replace("racer_#{original_result_owner.id}", :partial => 'racer', :locals => {:racer => original_result_owner, :results => original_result_owner.event_results})
+      page.replace("racer_#{racer.id}", :partial => 'racer', :locals => {:racer => racer, :results => racer.results})
+      page.replace("racer_#{original_result_owner.id}", :partial => 'racer', :locals => {:racer => original_result_owner, :results => original_result_owner.results})
       page.visual_effect(:appear, "racers", :duration => 0.6)
       page.hide('find_progress_icon')
     end
