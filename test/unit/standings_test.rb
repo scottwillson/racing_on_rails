@@ -72,7 +72,7 @@ class StandingsTest < Test::Unit::TestCase
 
     result = combined.results[0]
     assert_equal('1', result.place, 'place')
-    assert_equal(racers(:mollie), result.racer, 'racer')
+    assert_equal(racers(:molly), result.racer, 'racer')
     assert_equal(categories(:masters_35_plus_women), result.category, 'category')
     assert_equal('30:00.00', result.time_s, 'time_s')
 

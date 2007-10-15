@@ -5,7 +5,7 @@
 	 	:success => 'document.location.reload(true)') %>
 		<%= text_field_tag 'name', @racer.name, :size => 40 %>
 	<br>
-	<%= @existing_racers.first.name %> already exists.
+	<%= @existing_racers.first.name %> <%= aka(@existing_racers.first) %> already exists.
 	<br>
 	Delete <%= @original_name %> and move results to <%= @existing_racers.first.name %>?
 	<div align="right" style="padding-right: 2px;">

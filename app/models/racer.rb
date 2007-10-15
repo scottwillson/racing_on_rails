@@ -8,6 +8,8 @@ class Racer < ActiveRecord::Base
 
   before_validation :find_associated_records
   validate :membership_dates
+  before_save :destroy_shadowed_aliases
+  after_save :add_alias_for_old_name
   after_save :save_numbers
 
   belongs_to :team
@@ -54,7 +56,7 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def Racer.find_by_name_like(name, limit = 100)
+  def Racer.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
     Racer.find(
       :all, 
@@ -62,6 +64,13 @@ class Racer < ActiveRecord::Base
       :include => :aliases,
       :limit => limit,
       :order => 'last_name, first_name'
+    )
+  end
+  
+  def Racer.find_by_name(name)
+    Racer.find(
+      :first, 
+      :conditions => ["concat(first_name, ' ', last_name) = ?", name]
     )
   end
   
@@ -101,10 +110,12 @@ class Racer < ActiveRecord::Base
   def name
     Racer.full_name(first_name, last_name)
   end
-  
-  # Tries to split +name+ into +first_name+ and +last_name+
+
+    # Tries to split +name+ into +first_name+ and +last_name+
   # TODO Handle name, Jr.
-  def name=(value)
+  def name=(value)  
+    logger.debug("name=#{name}")
+    @old_name = name unless @old_name
     if value.blank?
       self.first_name = ''
       self.last_name = ''
@@ -130,6 +141,18 @@ class Racer < ActiveRecord::Base
         end
       end
     end
+  end
+  
+  def first_name=(value)
+    logger.debug("first_name=#{name}")
+    @old_name = name unless @old_name
+    self[:first_name] = value
+  end
+  
+  def last_name=(value)
+    logger.debug("last_name=#{name}")
+    @old_name = name unless @old_name
+    self[:last_name] = value
   end
 
   def team_name
@@ -230,7 +253,6 @@ class Racer < ActiveRecord::Base
   end
   
   def add_number(value, discipline, association = nil, year = nil)
-    logger.debug("add_number #{value} #{discipline} #{association} #{year}")
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
     year = Date.today.year if year.nil?
     
@@ -537,6 +559,18 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  # If name changes to match existing alias, destroy the alias
+  def destroy_shadowed_aliases
+    Alias.destroy_all(['name = ?', name])
+  end
+  
+  def add_alias_for_old_name
+    logger.debug("add_alias_for_old_name self[:name] #{self[:name]} @old_name: #{@old_name} -> name: #{name}")
+    if !@old_name.blank? && !name.blank? && @old_name.casecmp(name) != 0 && !Alias.exists?(['name = ? and racer_id = ?', @old_name, id])
+      Alias.create!(:name => @old_name, :racer => self)
+    end
+  end
+
   def <=>(other)
     self.id <=> other.id
   end

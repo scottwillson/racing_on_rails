@@ -12,7 +12,7 @@ Senior Men Pro 1/2
   1         Erik Tonkin                 Kona                        
   2         Ryan Weaver                                             
   3         Mark Matson                 Kona                        
- 16         Mollie Cameron              Vanilla
+ 16         Molly Cameron               Vanilla
 END
     assert_equal(expected, results_email.text, "results email text")
   end

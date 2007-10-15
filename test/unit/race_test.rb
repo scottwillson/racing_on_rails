@@ -272,7 +272,7 @@ class RaceTest < Test::Unit::TestCase
     race.results.create(:place => '1', :racer => non_members[0])
     race.results.create(:place => '2', :racer => racers(:weaver))
     race.results.create(:place => '3', :racer => non_members[1])
-    race.results.create(:place => '4', :racer => racers(:mollie))
+    race.results.create(:place => '4', :racer => racers(:molly))
     race.results.create(:place => '5', :racer => non_members[2])
     
     race.reload.results(true)
@@ -291,7 +291,7 @@ class RaceTest < Test::Unit::TestCase
     
     assert_equal('4', race.results[3].place, 'Result 3 place')
     assert_equal('2', race.results[3].members_only_place, 'Result 3 place')
-    assert_equal(racers(:mollie), race.results[3].racer, 'Result 3 racer')
+    assert_equal(racers(:molly), race.results[3].racer, 'Result 3 racer')
     
     assert_equal('5', race.results[4].place, 'Result 4 place')    
     assert_equal('', race.results[4].members_only_place, 'Result 4 place')

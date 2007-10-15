@@ -6,6 +6,13 @@ module ApplicationHelper
   def focus(form_field_name)
     @focus = form_field_name
   end
+  
+  def aka(racer)
+    unless racer.aliases.empty?
+      aliases = racer.aliases.collect {|a| a.name}
+      "(a.k.a. #{aliases.join(', ')})"
+    end
+  end
 
   # Class-scope Hash of Columns, keyed by field
   # Used to display results in a grid

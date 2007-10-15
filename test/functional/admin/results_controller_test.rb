@@ -350,6 +350,7 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_update
+    assert(racers(:weaver).aliases(true).empty?)
     weaver_jack_frost = results(:weaver_jack_frost)
     assert_equal('9', weaver_jack_frost.place, 'place')
     assert_equal(0, weaver_jack_frost.points, 'points')
@@ -403,7 +404,7 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
     assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
     assert_equal(team_name, weaver_jack_frost.team_name, 'team_name')
     assert_equal(racers(:weaver), weaver_jack_frost.racer(true), 'racer')
-    assert(racers(:weaver).aliases.empty?)
+    assert_equal(1,racers(:weaver).aliases.count, 'aliases')
   end
   
   def test_update_no_racer
@@ -539,6 +540,7 @@ class Admin::ResultsControllerTest < Test::Unit::TestCase
   end
   
   def test_update_to_different_racer
+    assert_equal(1, racers(:tonkin).aliases.size)
     weaver_jack_frost = results(:weaver_jack_frost)
 
     first_name = 'Erik'

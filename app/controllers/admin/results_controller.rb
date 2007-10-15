@@ -55,7 +55,7 @@ class Admin::ResultsController < Admin::RecordEditor
   end
   
   def find_racer
-  	racers = Racer.find_by_name_like(params[:name], 20)
+  	racers = Racer.find_all_by_name_like(params[:name], 20)
   	ignore_id = params[:ignore_id]
   	racers.reject! {|r| r.id.to_s == ignore_id}
   	if racers.size == 1

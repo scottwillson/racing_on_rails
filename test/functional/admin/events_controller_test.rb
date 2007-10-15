@@ -229,11 +229,11 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     tonkin_result = results(:tonkin_banana_belt)
     weaver_result = results(:weaver_banana_belt)
     matson_result = results(:matson_banana_belt)
-    mollie_result = results(:mollie_banana_belt)
+    molly_result = results(:molly_banana_belt)
     assert_equal('1', tonkin_result.place, 'Tonkin place before insert')
     assert_equal('2', weaver_result.place, 'Weaver place before insert')
     assert_equal('3', matson_result.place, 'Matson place before insert')
-    assert_equal('16', mollie_result.place, 'Mollie place before insert')
+    assert_equal('16', molly_result.place, 'Molly place before insert')
 
     opts = {:controller => "admin/events", :action => "insert_result", :id => weaver_result.to_param.to_s}
     assert_routing("/admin/events/insert_result/#{weaver_result.to_param}", opts)
@@ -244,11 +244,11 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     tonkin_result.reload
     weaver_result.reload
     matson_result.reload
-    mollie_result.reload
+    molly_result.reload
     assert_equal('1', tonkin_result.place, 'Tonkin place after insert')
     assert_equal('3', weaver_result.place, 'Weaver place after insert')
     assert_equal('4', matson_result.place, 'Matson place after insert')
-    assert_equal('17', mollie_result.place, 'Mollie place after insert')
+    assert_equal('17', molly_result.place, 'Molly place after insert')
 
     post(:insert_result, :id => tonkin_result.id)
     assert_response(:success)
@@ -256,23 +256,23 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     tonkin_result.reload
     weaver_result.reload
     matson_result.reload
-    mollie_result.reload
+    molly_result.reload
     assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
     assert_equal('4', weaver_result.place, 'Weaver place after insert')
     assert_equal('5', matson_result.place, 'Matson place after insert')
-    assert_equal('18', mollie_result.place, 'Mollie place after insert')
+    assert_equal('18', molly_result.place, 'Molly place after insert')
 
-    post(:insert_result, :id => mollie_result.id)
+    post(:insert_result, :id => molly_result.id)
     assert_response(:success)
     assert_equal(7, race.results.size, 'Results after insert')
     tonkin_result.reload
     weaver_result.reload
     matson_result.reload
-    mollie_result.reload
+    molly_result.reload
     assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
     assert_equal('4', weaver_result.place, 'Weaver place after insert')
     assert_equal('5', matson_result.place, 'Matson place after insert')
-    assert_equal('19', mollie_result.place, 'Mollie place after insert')
+    assert_equal('19', molly_result.place, 'Molly place after insert')
     
     dnf = race.results.create(:place => 'DNF')
     post(:insert_result, :id => weaver_result.id)
@@ -281,12 +281,12 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     tonkin_result.reload
     weaver_result.reload
     matson_result.reload
-    mollie_result.reload
+    molly_result.reload
     dnf.reload
     assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
     assert_equal('5', weaver_result.place, 'Weaver place after insert')
     assert_equal('6', matson_result.place, 'Matson place after insert')
-    assert_equal('20', mollie_result.place, 'Mollie place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
     assert_equal('DNF', dnf.place, 'DNF place after insert')
     
     post(:insert_result, :id => dnf.id)
@@ -295,12 +295,12 @@ class Admin::EventsControllerTest < Test::Unit::TestCase
     tonkin_result.reload
     weaver_result.reload
     matson_result.reload
-    mollie_result.reload
+    molly_result.reload
     dnf.reload
     assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
     assert_equal('5', weaver_result.place, 'Weaver place after insert')
     assert_equal('6', matson_result.place, 'Matson place after insert')
-    assert_equal('20', mollie_result.place, 'Mollie place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
     assert_equal('DNF', dnf.place, 'DNF place after insert')
     race.results(true).sort!
     assert_equal('DNF', race.results.last.place, 'DNF place after insert')

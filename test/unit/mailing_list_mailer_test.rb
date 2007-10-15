@@ -19,15 +19,15 @@ class MailingListMailerTest < Test::Unit::TestCase
   def test_post
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"
-    @expected.from = "Mollie <mollie@veloshop.com>"
+    @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
     @expected.date = Time.now
     @expected.body = read_fixture("post")
 
     post = Post.new
     post.mailing_list = obra_chat
-    post.from_email_address = 'mollie@veloshop.com'
-    post.from_name = 'Mollie'
+    post.from_email_address = 'molly@veloshop.com'
+    post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
     post.date = @expected.date
@@ -38,14 +38,14 @@ class MailingListMailerTest < Test::Unit::TestCase
   def test_post_private_reply
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"
-    @expected.from = "Mollie <mollie@veloshop.com>"
+    @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = "Scout <scout@butlerpress.com>"
     @expected.date = Time.now
     @expected.body = read_fixture("reply")
 
     post = Post.new
-    post.from_email_address = 'mollie@veloshop.com'
-    post.from_name = 'Mollie'
+    post.from_email_address = 'molly@veloshop.com'
+    post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
     post.date = @expected.date

@@ -39,13 +39,13 @@ class OverallBarTest < Test::Unit::TestCase
     })
     swan_island_senior_men.results.create({
       :place => 2,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     # No BAR points
     senior_women_swan_island.bar_points = 0
@@ -91,7 +91,7 @@ class OverallBarTest < Test::Unit::TestCase
     })
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     team_track_senior_men.results.create({
       :place => 5,
@@ -180,7 +180,7 @@ class OverallBarTest < Test::Unit::TestCase
     assert_equal(898, senior_men_overall_bar.results[1].points, "Senior Men Overall BAR results points")
     assert_equal(3, senior_men_overall_bar.results[1].scores.size, "Weaver Overall BAR results scores")
 
-    assert_equal(racers(:mollie), senior_men_overall_bar.results[2].racer, "Senior Men Overall BAR results racer")
+    assert_equal(racers(:molly), senior_men_overall_bar.results[2].racer, "Senior Men Overall BAR results racer")
     assert_equal("3", senior_men_overall_bar.results[2].place, "Senior Men Overall BAR results place")
     assert_equal(598, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
     
@@ -195,10 +195,10 @@ class OverallBarTest < Test::Unit::TestCase
     assert_equal("1", women_overall_bar.results[0].place, "Senior Women Overall BAR results place")
     assert_equal(300, women_overall_bar.results[0].points, "Senior Women Overall BAR results points")
 
-    assert_equal(racers(:mollie), women_overall_bar.results[1].racer, "Senior Women Overall BAR results racer")
+    assert_equal(racers(:molly), women_overall_bar.results[1].racer, "Senior Women Overall BAR results racer")
     assert_equal("2", women_overall_bar.results[1].place, "Senior Women Overall BAR results place")
     assert_equal(299, women_overall_bar.results[1].points, "Senior Women Overall BAR results points")
-    assert_equal(1, women_overall_bar.results[1].scores.size, "Mollie Women Overall BAR results scores")
+    assert_equal(1, women_overall_bar.results[1].scores.size, "Molly Women Overall BAR results scores")
   end
   
   def test_recalculate_tandem

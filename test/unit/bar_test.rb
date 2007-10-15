@@ -42,13 +42,13 @@ class BarTest < Test::Unit::TestCase
     })
     swan_island_senior_men.results.create({
       :place => 2,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     # No BAR points
     senior_women_swan_island.bar_points = 0
@@ -94,7 +94,7 @@ class BarTest < Test::Unit::TestCase
     })
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     team_track_senior_men.results.create({
       :place => 5,
@@ -159,10 +159,10 @@ class BarTest < Test::Unit::TestCase
     assert_equal("1", women_road_bar.results[0].place, "Senior Women Road BAR results place")
     assert_equal(25, women_road_bar.results[0].points, "Senior Women Road BAR results points")
 
-    assert_equal(racers(:mollie), women_road_bar.results[1].racer, "Senior Women Road BAR results racer")
+    assert_equal(racers(:molly), women_road_bar.results[1].racer, "Senior Women Road BAR results racer")
     assert_equal("2", women_road_bar.results[1].place, "Senior Women Road BAR results place")
     assert_equal(1, women_road_bar.results[1].points, "Senior Women Road BAR results points")
-    assert_equal(1, women_road_bar.results[1].scores.size, "Mollie Women Road BAR results scores")
+    assert_equal(1, women_road_bar.results[1].scores.size, "Molly Women Road BAR results scores")
     
     track_bar = bar.standings.detect {|standings| standings.name == 'Track'}
     assert_not_nil(track_bar, 'Track BAR')
@@ -298,8 +298,8 @@ class BarTest < Test::Unit::TestCase
     pro_elite_expert_women = categories(:pro_elite_expert_women)
     pro_women = Category.find_or_create_by_name('Pro Women')
     race = standings.races.create(:standings => standings, :category => pro_women)
-    mollie = racers(:mollie)
-    mollie_result = race.results.create(:place => '1', :racer => mollie, :time_s => '1:41:37')
+    molly = racers(:molly)
+    molly_result = race.results.create(:place => '1', :racer => molly, :time_s => '1:41:37')
     alice = racers(:alice)
     alice_result = race.results.create(:place => '2', :racer => alice, :time_s => '1:43:55')
     rita = Racer.create(:name => 'Rita Metermaid')
@@ -370,7 +370,7 @@ class BarTest < Test::Unit::TestCase
     assert_not_nil(women_combined, "Women combined race")
     expected = [
       expert_woman_1_result,
-      mollie_result,
+      molly_result,
       laurel_result,
       alice_result,
       expert_woman_2_result,

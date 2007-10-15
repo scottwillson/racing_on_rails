@@ -675,12 +675,12 @@ class ResultTest < Test::Unit::TestCase
   end
   
   def test_find_all_for_racer
-    mollie = racers(:mollie)
-    results = Result.find_all_for(mollie)
+    molly = racers(:molly)
+    results = Result.find_all_for(molly)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')
     
-    results = Result.find_all_for(mollie.id)
+    results = Result.find_all_for(molly.id)
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')    
   end

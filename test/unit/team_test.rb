@@ -72,12 +72,34 @@ class TeamTest < Test::Unit::TestCase
     assert(!dupe.valid?, 'Dupe Vanilla should not be valid')
   end
   
+  def test_create_and_override_alias
+    assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
+    assert_not_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should exist')
+    assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should not exist')
+
+    dupe = Team.create!(:name => 'Vanilla Bicycles')
+    assert(dupe.valid?, 'Dupe Vanilla should be valid')
+    
+    assert_not_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should exist')
+    assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
+    assert_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should not exist')
+    assert_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should not exist')
+  end
+  
   def test_update_to_alias
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
-    assert_not_nil(Team.find_by_name_or_alias('Vanilla Bicycles'), 'Vanilla Bicycles alias should exist')
+    assert_not_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should exist')
     assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should not exist')
-    dupe = Team.new(:name => 'Vanilla Bicycles')
-    assert(dupe.valid?, 'Dupe Vanilla should be valid')
+
+    vanilla = teams(:vanilla)
+    vanilla.name = 'Vanilla Bicycles'
+    vanilla.save!
+    assert(vanilla.valid?, 'Renamed Vanilla should be valid')
+    
+    assert_not_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles should exist')
+    assert_nil(Team.find_by_name('Vanilla'), 'Vanilla should not exist')
+    assert_nil(Alias.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles alias should not exist')
+    assert_not_nil(Alias.find_by_name('Vanilla'), 'Vanilla alias should exist')
   end
   
   def test_update_name_different_case

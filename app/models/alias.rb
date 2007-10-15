@@ -6,6 +6,8 @@ class Alias < ActiveRecord::Base
   
   validates_presence_of :name
   validate :racer_or_team
+  validate :cannot_shadow_racer
+  validate :cannot_shadow_team
   
   def Alias.find_all_racers_by_name(name)
     aliases = Alias.find(
@@ -21,6 +23,18 @@ class Alias < ActiveRecord::Base
   def racer_or_team
     unless (racer and !team) or (!racer and team)
       errors.add('racer or team', 'Must have exactly one racer or team')
+    end
+  end
+  
+  def cannot_shadow_racer
+    if Racer.count(["trim(concat(first_name, ' ', last_name)) = ?", name]) > 0
+      errors.add('name', "Racer named '#{name}' already exists")
+    end
+  end
+  
+  def cannot_shadow_team
+    if Team.count(['name = ?', name]) > 0
+      errors.add('name', "Team named '#{name}' already exists")
     end
   end
 

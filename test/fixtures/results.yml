@@ -15,7 +15,7 @@ matson_banana_belt:
   racer_id: 2
   team_id: 1
   place: 3
-mollie_banana_belt:
+molly_banana_belt:
   id: 4
   race_id: 1
   racer_id: 4
@@ -44,7 +44,7 @@ weaver_kings_valley:
   race_id: 2
   racer_id: 3
   place: 17
-mollie_jack_frost:
+molly_jack_frost:
   id: 9
   race_id: 6
   racer_id: 4

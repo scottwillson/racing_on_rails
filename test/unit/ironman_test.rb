@@ -25,7 +25,7 @@ class IronmanTest < Test::Unit::TestCase
     
     results = ironman.standings.first.races.first.results.sort
     assert_equal("1", results[0].place, 'place')
-    assert_equal(racers(:mollie), results[0].racer, 'racer')
+    assert_equal(racers(:molly), results[0].racer, 'racer')
 
     assert_equal(2, results[0].points, 'points')
     for index in 1..4

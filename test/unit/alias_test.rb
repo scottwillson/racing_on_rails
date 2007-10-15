@@ -22,4 +22,22 @@ class AliasTest < Test::Unit::TestCase
     aliases = Alias.find_all_racers_by_name(weaver.name)
     assert(!aliases.include?(nil), "Alias.find_all_racers_by_name should not return any nils")
   end
+  
+  def test_alias_cannot_shadow_team_name
+    a = Alias.create(:name => teams(:vanilla).name, :team => teams(:vanilla))
+    assert(!a.valid?, 'Alias should be invalid')
+  end
+  
+  def test_alias_cannot_shadow_racer_name
+    a = Alias.create(:name => racers(:weaver).name, :racer => racers(:weaver))
+    assert(!a.valid?, 'Alias should be invalid')
+  end
+  
+  def test_no_dupe_racers
+    assert_raise(ActiveRecord::StatementInvalid, 'Alias should be invalid') {Alias.create(:name => 'Gentile Lovers', :team => teams(:vanilla))}
+  end
+  
+  def test_no_dupe_teams
+    assert_raise(ActiveRecord::StatementInvalid, 'Alias should be invalid') {Alias.create(:name => 'Mollie Cameron', :racer => racers(:weaver))}
+  end
 end

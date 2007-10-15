@@ -54,12 +54,12 @@ class RiderRankingsTest < Test::Unit::TestCase
     })
     swan_island_senior_men.results.create({
       :place => 2,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     senior_women_swan_island = swan_island_standings.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     # No points
     senior_women_swan_island.bar_points = 0
@@ -105,7 +105,7 @@ class RiderRankingsTest < Test::Unit::TestCase
     })
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:mollie)
+      :racer => racers(:molly)
     })
     team_track_senior_men.results.create({
       :place => 5,

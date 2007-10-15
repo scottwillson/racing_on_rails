@@ -123,9 +123,10 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Vaniller')
     assert_response(:success)
-    assert_template("admin/teams/_team")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(vanilla, assigns['team'], 'Team')
+    assert(assigns['team'].errors.empty?, assigns['team'].errors.full_messages)
+    assert_template("admin/teams/_team")
     vanilla.reload
     assert_equal('Vaniller', vanilla.name, 'Team name after update')
   end
@@ -174,8 +175,9 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     vanilla = teams(:vanilla)
     post(:update, :id => vanilla.to_param, :name => 'Vanilla Bicycles')
     assert_response(:success)
-    assert_template("admin/teams/_team")
     assert_not_nil(assigns["team"], "Should assign team")
+    assert(assigns["team"].errors.empty?, assigns["team"].errors.full_messages)
+    assert_template("admin/teams/_team")
     assert_equal(vanilla, assigns['team'], 'Team')
     vanilla.reload
     assert_equal('Vanilla Bicycles', vanilla.name, 'Team name after cancel')

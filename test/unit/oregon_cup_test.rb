@@ -40,37 +40,37 @@ class OregonCupTest < Test::Unit::TestCase
     # 1. Tonkin
     # 2. Weaver
     # 3. Matson
-    # 16. Mollie
+    # 16. Molly
     
     # Kings Valley Pro 1/2 (2004, same as 2003)
     # 16. Tonkin (not fixture)
     # 17. Weaver (not fixture)
-    # 20. Mollie (not fixture)
+    # 20. Molly (not fixture)
     # 21. Matson (not fixture)
     
     # Kings Valley women
     # 2. Alice
-    # 15. Mollie
+    # 15. Molly
     
     # Oregon Cup
     # Men
     # 1. Tonkin     114
     # 2. Weaver      88
     # 3. Matson      60
-    # 4. Mollie      15
+    # 4. Molly      15
     
     # Women
     # 1. Alice       75
-    # 2. Mollie      15
+    # 2. Molly      15
     
     kings_valley_pro_1_2 = races(:kings_valley_pro_1_2_2004)
     matson = racers(:matson)
     tonkin = racers(:tonkin)
     weaver = racers(:weaver)
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     kings_valley_pro_1_2.results.create(:racer => tonkin, :place => 16)
     kings_valley_pro_1_2.results.create(:racer => weaver, :place => 17)
-    kings_valley_pro_1_2.results.create(:racer => mollie, :place => 20)
+    kings_valley_pro_1_2.results.create(:racer => molly, :place => 20)
     kings_valley_pro_1_2.results.create(:racer => matson, :place => 21)
     
     # Set BAR point bonus -- it should be ignored
@@ -133,10 +133,10 @@ class OregonCupTest < Test::Unit::TestCase
     assert_equal(60, races[0].results[2].points, "Matson Oregon Cup results points")
     assert_equal(1, races[0].results[2].scores.size, "Matson Oregon Cup results scores")
 
-    assert_equal(racers(:mollie), races[0].results[3].racer, "Senior Men Oregon Cup results racer")
-    assert_equal("4", races[0].results[3].place, "Mollie Oregon Cup results place")
-    assert_equal(24, races[0].results[3].points, "Mollie Oregon Cup results points")
-    assert_equal(2, races[0].results[3].scores.size, "Mollie Oregon Cup results scores")
+    assert_equal(racers(:molly), races[0].results[3].racer, "Senior Men Oregon Cup results racer")
+    assert_equal("4", races[0].results[3].place, "Molly Oregon Cup results place")
+    assert_equal(24, races[0].results[3].points, "Molly Oregon Cup results points")
+    assert_equal(2, races[0].results[3].scores.size, "Molly Oregon Cup results scores")
 
     races[1].results.sort!
     assert_equal(racers(:alice), races[1].results[0].racer, "Senior Women Oregon Cup results racer")
@@ -144,10 +144,10 @@ class OregonCupTest < Test::Unit::TestCase
     assert_equal(75, races[1].results[0].points, "Alice Oregon Cup results points")
     assert_equal(1, races[1].results[0].scores.size, "Alice Oregon Cup results scores")
 
-    assert_equal(racers(:mollie), races[1].results[1].racer, "Senior Women Oregon Cup results racer")
-    assert_equal("2", races[1].results[1].place, "Mollie Oregon Cup results place")
-    assert_equal(15, races[1].results[1].points, "Mollie Oregon Cup results points")
-    assert_equal(1, races[1].results[1].scores.size, "Mollie Oregon Cup results scores")
+    assert_equal(racers(:molly), races[1].results[1].racer, "Senior Women Oregon Cup results racer")
+    assert_equal("2", races[1].results[1].place, "Molly Oregon Cup results place")
+    assert_equal(15, races[1].results[1].points, "Molly Oregon Cup results points")
+    assert_equal(1, races[1].results[1].scores.size, "Molly Oregon Cup results scores")
   end
   
   def test_latest_event_with_standings

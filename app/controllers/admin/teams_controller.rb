@@ -67,17 +67,14 @@ class Admin::TeamsController < Admin::RecordEditor
       original_name = @team.name
       @team.name = new_name
       
-      if @team.has_alias?(new_name)
-        @team.destroy_alias(new_name)
-        @team.create_alias(original_name)
-      elsif same_as_other_team?(new_name, @team)
-        existing_team = Team.find_by_name_or_alias(new_name)
-        return merge?(original_name, existing_team, @team)
-      elsif same_as_other_alias?(new_name)
-        existing_team = Team.find_by_name_or_alias(new_name)
-        return merge?(original_name, existing_team, @team)
-      elsif different?(original_name, new_name)
-        @team.create_alias(original_name)
+      unless @team.has_alias?(new_name)
+        if same_as_other_team?(new_name, @team)
+          existing_team = Team.find_by_name_or_alias(new_name)
+          return merge?(original_name, existing_team, @team)
+        elsif same_as_other_alias?(new_name)
+          existing_team = Team.find_by_name_or_alias(new_name)
+          return merge?(original_name, existing_team, @team)
+        end
       end
 
       # Just save if new name is the same as original

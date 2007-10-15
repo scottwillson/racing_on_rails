@@ -7,6 +7,9 @@ class Team < ActiveRecord::Base
 
   include Dirty
   
+  before_save :destroy_shadowed_aliases
+  after_save :add_alias_for_old_name
+  
   validates_presence_of :name
   validate :no_duplicates
   
@@ -33,37 +36,43 @@ class Team < ActiveRecord::Base
     team
   end
   
-  # TODO Consider aliases
   def no_duplicates
-    existing_team = Team.find_by_name_or_alias(name)
+    existing_team = Team.find_by_name(name)
     if existing_team and ((existing_team.id == id and existing_team.name.casecmp(name) != 0) or (existing_team.id != id and name == existing_team.name))
       errors.add('name', "'#{name}' already exists")
     end
   end
   
-  def has_alias?(alias_name)
-    aliases.detect {|a| a.name.casecmp(alias_name) == 0}
+  # If name changes to match existing alias, destroy the alias
+  def destroy_shadowed_aliases
+    Alias.destroy_all(['name = ?', name])
   end
   
-  def destroy_alias(alias_name)
-    old_alias = aliases.detect{|a| a.name.casecmp(alias_name) == 0}
-    old_alias.destroy
-  end
-  
-  def create_alias(alias_name)
-    old_alias = aliases.detect{|a| a.name.casecmp(alias_name) == 0}
-    aliases.delete(old_alias) if old_alias
-
-    # Alias may belong to a different team
-    old_alias = Alias.find(:first, :conditions => ['name = ? and racer_id is null', alias_name])
-    old_alias.destroy if old_alias
-    
-    new_alias = aliases.create(:name => alias_name)
-    for error in new_alias.errors
-      errors.add('aliases', error)
+  def add_alias_for_old_name
+    if @old_name && name && @old_name.casecmp(name) != 0 && !Alias.exists?(['name = ? and team_id = ?', @old_name, id])
+      Alias.create!(:name => @old_name, :team => self)
     end
   end
   
+  # def create_alias(alias_name)
+  #   old_alias = aliases.detect {|a| a.name.casecmp(alias_name) == 0}
+  #   aliases.delete(old_alias) if old_alias
+  # 
+  #   # Alias may belong to a different team
+  #   old_alias = Alias.find(:first, :conditions => ['name = ? and racer_id is null', alias_name])
+  #   old_alias.destroy if old_alias
+  #   
+  #   new_alias = aliases.create(:name => alias_name)
+  #   for error in new_alias.errors
+  #     errors.add('aliases', error)
+  #   end
+  # end
+  # 
+
+  def has_alias?(alias_name)
+    aliases.detect {|a| a.name.casecmp(alias_name) == 0}
+  end
+
   # Moves another Team's aliases, results, and racers to this Team,
   # and delete the other Team.
   # Also adds the other Team's name as a new alias
@@ -99,6 +108,11 @@ class Team < ActiveRecord::Base
   
   def member_in_year?(date = Date.today)
     member
+  end
+  
+  def name=(value)
+    @old_name = name unless @old_name
+    self[:name] = value
   end
   
   def to_s

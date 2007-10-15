@@ -30,7 +30,7 @@ class Admin::RacersController < Admin::RecordEditor
     else
       @session['racer_name'] = @name
       cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
-      @racers = Racer.find_by_name_like(@name, RESULTS_LIMIT)
+      @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
       @racers = @racers + Racer.find_by_number(@name)
       if @racers.size == RESULTS_LIMIT
         flash[:notice] = "First #{RESULTS_LIMIT} racers"
@@ -229,11 +229,6 @@ class Admin::RacersController < Admin::RecordEditor
     existing_racers.reject! {|racer| racer == @racer}
     if existing_racers.size > 0
       return merge?(original_name, existing_racers, @racer)
-    end
-    old_alias = @racer.aliases.detect {|a| a.name.casecmp(new_name) == 0}
-    if old_alias
-      old_alias.name = original_name
-      old_alias.save!
     end
     
     saved = @racer.save

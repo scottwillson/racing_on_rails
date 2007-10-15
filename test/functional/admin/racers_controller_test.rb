@@ -113,84 +113,84 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
   def test_blank_name
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => '')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => '')
     assert_response(:success)
     racer = assigns["racer"]
     assert_not_nil(racer, "Should assign racer")
     assert(racer.errors.empty?, "Should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("/admin/_attribute")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('', mollie.first_name, 'Racer first_name after update')
-    assert_equal('', mollie.last_name, 'Racer last_name after update')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('', molly.first_name, 'Racer first_name after update')
+    assert_equal('', molly.last_name, 'Racer last_name after update')
   end
 
   def test_cancel
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    original_name = mollie.name
-    get(:cancel, :id => mollie.to_param, :name => mollie.name)
+    molly = racers(:molly)
+    original_name = molly.name
+    get(:cancel, :id => molly.to_param, :name => molly.name)
     assert_response(:success)
     assert_template("/admin/_attribute")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal(original_name, mollie.name, 'Racer name after cancel')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal(original_name, molly.name, 'Racer name after cancel')
   end
 
   def test_update_name
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => 'Molly Cameron')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
     assert_template("/admin/_attribute")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('Molly', mollie.first_name, 'Racer first_name after update')
-    assert_equal('Cameron', mollie.last_name, 'Racer last_name after update')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('Mollie', molly.first_name, 'Racer first_name after update')
+    assert_equal('Cameron', molly.last_name, 'Racer last_name after update')
   end
   
   def test_update_same_name
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => 'Mollie Cameron')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => 'Molly Cameron')
     assert_response(:success)
     assert_template("/admin/_attribute")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('Mollie', mollie.first_name, 'Racer first_name after update')
-    assert_equal('Cameron', mollie.last_name, 'Racer last_name after update')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('Molly', molly.first_name, 'Racer first_name after update')
+    assert_equal('Cameron', molly.last_name, 'Racer last_name after update')
   end
   
   def test_update_same_name_different_case
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => 'mollie cameron')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => 'molly cameron')
     assert_response(:success)
     assert_template("/admin/_attribute")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('mollie', mollie.first_name, 'Racer first_name after update')
-    assert_equal('cameron', mollie.last_name, 'Racer last_name after update')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('molly', molly.first_name, 'Racer first_name after update')
+    assert_equal('cameron', molly.last_name, 'Racer last_name after update')
   end
   
   def test_update_to_existing_name
     # Should ask to merge
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => 'Erik Tonkin')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => 'Erik Tonkin')
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    assert_not_nil(Racer.find_all_by_name('Mollie Cameron'), 'Mollie still in database')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    assert_not_nil(Racer.find_all_by_name('Molly Cameron'), 'Molly still in database')
     assert_not_nil(Racer.find_all_by_name('Erik Tonkin'), 'Tonkin still in database')
-    mollie.reload
-    assert_equal('Mollie Cameron', mollie.name, 'Racer name after cancel')
+    molly.reload
+    assert_equal('Molly Cameron', molly.name, 'Racer name after cancel')
   end
   
   def test_update_to_existing_alias
@@ -214,54 +214,62 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_update_to_existing_alias_different_case
-    mollie_alias = Alias.find_by_name('Mollie Cameron')
-    assert_nil(mollie_alias, 'Alias')
     molly_alias = Alias.find_by_name('Molly Cameron')
-    assert_not_nil(molly_alias, 'Alias')
+    assert_nil(molly_alias, 'Alias')
+    mollie_alias = Alias.find_by_name('Mollie Cameron')
+    assert_not_nil(mollie_alias, 'Alias')
 
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_name, :id => mollie.to_param, :name => 'molly cameron')
+    molly = racers(:molly)
+    post(:update_name, :id => molly.to_param, :name => 'mollie cameron')
     assert_response(:success)
     assert_template("/admin/_attribute")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('molly cameron', mollie.name, 'Racer name after update')
-    mollie_alias = Alias.find_by_name('Mollie Cameron')
-    assert_not_nil(mollie_alias, 'Alias')
-    assert_equal(mollie, mollie_alias.racer, 'Alias racer')
-    molly_alias = Alias.find_by_name('molly cameron')
-    assert_nil(molly_alias, 'Alias')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('mollie cameron', molly.name, 'Racer name after update')
+    molly_alias = Alias.find_by_name('Molly Cameron')
+    assert_not_nil(molly_alias, 'Alias')
+    assert_equal(molly, molly_alias.racer, 'Alias racer')
+    mollie_alias = Alias.find_by_name('mollie cameron')
+    assert_nil(mollie_alias, 'Alias')
   end
   
   def test_update_to_other_racer_existing_alias
     @request.session[:user] = users(:candi)
     tonkin = racers(:tonkin)
-    post(:update_name, :id => tonkin.to_param, :name => 'Molly Cameron')
+    post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
-    assert_equal([racers(:mollie)], assigns['existing_racers'], 'existing_racers')
-    assert(!Alias.find_all_racers_by_name('Molly Cameron').empty?, 'Molly still in database')
-    assert(!Racer.find_all_by_name('Mollie Cameron').empty?, 'Mollie still in database')
+    assert_equal([racers(:molly)], assigns['existing_racers'], 'existing_racers')
+    assert(!Alias.find_all_racers_by_name('Mollie Cameron').empty?, 'Mollie still in database')
+    assert(!Racer.find_all_by_name('Molly Cameron').empty?, 'Molly still in database')
     assert(!Racer.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
   end
   
   def test_update_to_other_racer_existing_alias_and_duplicate_names
     @request.session[:user] = users(:candi)
     tonkin = racers(:tonkin)
-    mollie_with_different_road_number = Racer.create(:name => 'Molly Cameron', :road_number => '1009')
-    post(:update_name, :id => tonkin.to_param, :name => 'Molly Cameron')
+    molly_with_different_road_number = Racer.create!(:name => 'Molly Cameron', :road_number => '1009')
+
+    assert_equal(0, Racer.count(['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
+    assert_equal(2, Racer.count(['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
+    assert_equal(1, Racer.count(['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
+    assert_equal(1, Alias.count(['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
+
+    post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
-    assert_equal(2, assigns['existing_racers'].size, 'existing_racers')
-    assert(!Racer.find_all_by_name('Molly Cameron').empty?, 'Molly still in database')
-    assert(!Racer.find_all_by_name('Mollie Cameron').empty?, 'Mollie still in database')
-    assert(!Racer.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
+    assert_equal(1, assigns['existing_racers'].size, "existing_racers: #{assigns['existing_racers']}")
+
+    assert_equal(0, Racer.count(['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
+    assert_equal(2, Racer.count(['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
+    assert_equal(1, Racer.count(['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
+    assert_equal(1, Alias.count(['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
   end
   
   def test_destroy
@@ -274,30 +282,30 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   
   def test_merge?
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     tonkin = racers(:tonkin)
-    get(:update_name, :name => mollie.name, :id => tonkin.to_param)
+    get(:update_name, :name => molly.name, :id => tonkin.to_param)
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
-    assert_equal(mollie.name, assigns['racer'].name, 'Unsaved Tonkin name should be Mollie')
-    assert_equal([mollie], assigns['existing_racers'], 'existing_racers')
+    assert_equal(molly.name, assigns['racer'].name, 'Unsaved Tonkin name should be Molly')
+    assert_equal([molly], assigns['existing_racers'], 'existing_racers')
   end
   
   def test_merge
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     tonkin = racers(:tonkin)
     old_id = tonkin.id
     assert(Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should be in database')
 
     @request.session[:user] = users(:candi)
-    get(:merge, :id => tonkin.to_param, :target_id => mollie.id)
+    get(:merge, :id => tonkin.to_param, :target_id => molly.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
 
-    assert(Racer.find_all_by_name('Mollie Cameron'), 'Mollie should be in database')
+    assert(Racer.find_all_by_name('Molly Cameron'), 'Molly should be in database')
     assert_equal([], Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should not be in database')
   end
 
@@ -326,133 +334,133 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   def test_update_team_name_to_new_team
     assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    post(:update_team_name, :id => mollie.to_param, :team_name => 'Velo Slop')
+    molly = racers(:molly)
+    post(:update_team_name, :id => molly.to_param, :team_name => 'Velo Slop')
     assert_response(:success)
     assert_template("admin/racers/_team")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('Velo Slop', mollie.team_name, 'Racer team name after update')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('Velo Slop', molly.team_name, 'Racer team name after update')
     assert_not_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should be in database')
   end
   
   def test_update_team_name_to_existing_team
-    mollie = racers(:mollie)
-    assert_equal(Team.find_by_name('Vanilla'), mollie.team, 'Mollie should be on Vanilla')
+    molly = racers(:molly)
+    assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
     @request.session[:user] = users(:candi)
-    post(:update_team_name, :id => mollie.to_param, :team_name => 'Gentle Lovers')
+    post(:update_team_name, :id => molly.to_param, :team_name => 'Gentle Lovers')
     assert_response(:success)
     assert_template("admin/racers/_team")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('Gentle Lovers', mollie.team_name, 'Racer team name after update')
-    assert_equal(Team.find_by_name('Gentle Lovers'), mollie.team, 'Mollie should be on Gentle Lovers')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('Gentle Lovers', molly.team_name, 'Racer team name after update')
+    assert_equal(Team.find_by_name('Gentle Lovers'), molly.team, 'Molly should be on Gentle Lovers')
   end
 
   def test_update_team_name_to_blank
-    mollie = racers(:mollie)
-    assert_equal(Team.find_by_name('Vanilla'), mollie.team, 'Mollie should be on Vanilla')
+    molly = racers(:molly)
+    assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
     @request.session[:user] = users(:candi)
-    post(:update_team_name, :id => mollie.to_param, :team_name => '')
+    post(:update_team_name, :id => molly.to_param, :team_name => '')
     assert_response(:success)
     assert_template("admin/racers/_team")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal('', mollie.team_name, 'Racer team name after update')
-    assert_nil(mollie.team, 'Mollie should have no team')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal('', molly.team_name, 'Racer team name after update')
+    assert_nil(molly.team, 'Molly should have no team')
   end
     
   def test_cancel_edit_team_name
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    original_name = mollie.name
-    get(:cancel_edit_team_name, :id => mollie.to_param, :name => mollie.name)
+    molly = racers(:molly)
+    original_name = molly.name
+    get(:cancel_edit_team_name, :id => molly.to_param, :name => molly.name)
     assert_response(:success)
     assert_template("admin/racers/_team")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Racer')
-    mollie.reload
-    assert_equal(original_name, mollie.name, 'Racer name after cancel')
+    assert_equal(molly, assigns['racer'], 'Racer')
+    molly.reload
+    assert_equal(original_name, molly.name, 'Racer name after cancel')
   end
 
   def test_update_member
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    assert_equal(true, mollie.member, 'member before update')
-    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'member')
+    molly = racers(:molly)
+    assert_equal(true, molly.member, 'member before update')
+    post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
-    mollie.reload
-    assert_equal(false, mollie.member, 'member after update')
+    molly.reload
+    assert_equal(false, molly.member, 'member after update')
 
-    mollie = racers(:mollie)
-    post(:toggle_attribute, :id => mollie.to_param, :attribute => 'member')
+    molly = racers(:molly)
+    post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
     assert_response(:success)
     assert_template("/admin/_attribute")
-    mollie.reload
-    assert_equal(true, mollie.member, 'member after second update')
+    molly.reload
+    assert_equal(true, molly.member, 'member after second update')
   end
   
   def test_dupes_merge?
     RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? start')
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    mollie_with_different_road_number = Racer.create(:name => 'Mollie Cameron', :road_number => '987123')
+    molly = racers(:molly)
+    molly_with_different_road_number = Racer.create(:name => 'Molly Cameron', :road_number => '987123')
     tonkin = racers(:tonkin)
-    get(:update_name, :name => mollie.name, :id => tonkin.to_param)
+    get(:update_name, :name => molly.name, :id => tonkin.to_param)
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
-    assert_equal(mollie.name, assigns['racer'].name, 'Unsaved Tonkin name should be Mollie')
+    assert_equal(molly.name, assigns['racer'].name, 'Unsaved Tonkin name should be Molly')
     existing_racers = assigns['existing_racers'].sort {|x, y| x.id <=> y.id}
-    assert_equal([mollie, mollie_with_different_road_number], existing_racers, 'existing_racers')
+    assert_equal([molly, molly_with_different_road_number], existing_racers, 'existing_racers')
     RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? end')
   end
   
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
-    mollie.ccx_number = '2'
-    mollie.save!
-    mollie_with_different_cross_number = Racer.create(:name => 'Mollie Cameron', :ccx_number => '810', :road_number => '1009')
+    molly = racers(:molly)
+    molly.ccx_number = '2'
+    molly.save!
+    molly_with_different_cross_number = Racer.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
     tonkin = racers(:tonkin)
-    get(:update_name, :name => mollie.name, :id => tonkin.to_param)
+    get(:update_name, :name => molly.name, :id => tonkin.to_param)
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
-    assert_equal(mollie.name, assigns['racer'].name, 'Unsaved Tonkin name should be Mollie')
+    assert_equal(molly.name, assigns['racer'].name, 'Unsaved Tonkin name should be Molly')
     existing_racers = assigns['existing_racers'].collect do |racer|
       "#{racer.name} ##{racer.id}"
     end
     existing_racers = existing_racers.join(', ')
-    assert(assigns['existing_racers'].include?(mollie), "existing_racers should include Mollie ##{mollie.id}, but has #{existing_racers}")
-    assert(assigns['existing_racers'].include?(mollie_with_different_cross_number), 'existing_racers')
+    assert(assigns['existing_racers'].include?(molly), "existing_racers should include Molly ##{molly.id}, but has #{existing_racers}")
+    assert(assigns['existing_racers'].include?(molly_with_different_cross_number), 'existing_racers')
     assert_equal(2, assigns['existing_racers'].size, 'existing_racers')
   end
   
   def test_dupes_merge_alias?
     @request.session[:user] = users(:candi)
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     tonkin = racers(:tonkin)
-    get(:update_name, :name => 'Eric Tonkin', :id => mollie.to_param)
+    get(:update_name, :name => 'Eric Tonkin', :id => molly.to_param)
     assert_response(:success)
-    assert_equal(mollie, assigns['racer'], 'Racer')
+    assert_equal(molly, assigns['racer'], 'Racer')
     racer = assigns['racer']
     assert(racer.errors.empty?, "Racer should have no errors, but had: #{racer.errors.full_messages}")
     assert_template("admin/racers/_merge_confirm")
-    assert_equal('Eric Tonkin', assigns['racer'].name, 'Unsaved Mollie name should be Eric Tonkin alias')
+    assert_equal('Eric Tonkin', assigns['racer'].name, 'Unsaved Molly name should be Eric Tonkin alias')
     assert_equal([tonkin], assigns['existing_racers'], 'existing_racers')
   end
   
   def test_dupe_merge
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     tonkin = racers(:tonkin)
     tonkin_with_different_road_number = Racer.create(:name => 'Erik Tonkin', :road_number => 'YYZ')
     assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages}")
@@ -461,11 +469,11 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal(2, Racer.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
     @request.session[:user] = users(:candi)
-    get(:merge, :id => tonkin.to_param, :target_id => mollie.id)
+    get(:merge, :id => tonkin.to_param, :target_id => molly.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
 
-    assert(Racer.find_all_by_name('Mollie Cameron'), 'Mollie should be in database')
+    assert(Racer.find_all_by_name('Molly Cameron'), 'Molly should be in database')
     tonkins_after_merge = Racer.find_all_by_name('Erik Tonkin')
     assert_equal(1, tonkins_after_merge.size, tonkins_after_merge)
   end
@@ -572,7 +580,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_update
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     post(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
@@ -587,19 +595,19 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                      "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
                      "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
                     }, 
-                   "id"=>mollie.to_param}
+                   "id"=>molly.to_param}
     )
     assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
     assert_response(:redirect)
-    mollie.reload
-    assert_equal('222', mollie.road_number(true), 'Road number should be updated')
-    assert_equal(true, mollie.print_card?, 'print_card?')
-    assert_equal_dates('2004-02-16', mollie.member_from, 'member_from after update')
-    assert_equal_dates('2004-12-31', mollie.member_to, 'member_to after update')
+    molly.reload
+    assert_equal('222', molly.road_number(true), 'Road number should be updated')
+    assert_equal(true, molly.print_card?, 'print_card?')
+    assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
+    assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
   end
 
   def test_update_new_number
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     post(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
@@ -614,33 +622,33 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
                    "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
                    "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
                    "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
-                   "id"=>mollie.to_param}
+                   "id"=>molly.to_param}
     )
     assert_response(:redirect)
     assert(flash.empty?, 'flash empty?')
-    mollie.reload
-    assert_equal('202', mollie.road_number, 'Road number should not be updated')
-    assert_equal('AZY', mollie.xc_number, 'MTB number should be updated')
-    assert_nil(mollie.member_from, 'member_from after update')
-    assert_nil(mollie.member_to, 'member_to after update')
+    molly.reload
+    assert_equal('202', molly.road_number, 'Road number should not be updated')
+    assert_equal('AZY', molly.xc_number, 'MTB number should be updated')
+    assert_nil(molly.member_from, 'member_from after update')
+    assert_nil(molly.member_to, 'member_to after update')
   end
 
   def test_update_error
-    mollie = racers(:mollie)
+    molly = racers(:molly)
     post(:update, 
-    :id => mollie.to_param, 
+    :id => molly.to_param, 
       :racer => {
-        :first_name => 'Mollie', :last_name => 'Cameron', :road_number => '123123612333', "member_to(1i)" => "AZZZ", :team_id => "-9"
+        :first_name => 'Molly', :last_name => 'Cameron', :road_number => '123123612333', "member_to(1i)" => "AZZZ", :team_id => "-9"
     })
     assert_response(:success)
     assert_template("admin/racers/show")
     assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(mollie, assigns['racer'], 'Should assign Alice to racer')
+    assert_equal(molly, assigns['racer'], 'Should assign Alice to racer')
     assert(!flash.empty?, 'flash not empty?')
   end
   
   def test_number_year_changed
-    racer = racers(:mollie)
+    racer = racers(:molly)
     
     opts = {:controller => "admin/racers", :action => "number_year_changed", :id => racer.to_param.to_s}
     assert_routing("/admin/racers/number_year_changed/#{racer.to_param}", opts)

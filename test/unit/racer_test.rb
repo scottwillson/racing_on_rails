@@ -127,12 +127,12 @@ class RacerTest < Test::Unit::TestCase
   end
  
   def test_merge
-    racer_to_keep = racers(:mollie)
+    racer_to_keep = racers(:molly)
     racer_to_merge = racers(:tonkin)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
-    assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollies's aliases")
+    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
+    assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollys's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should be in DB")
     assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
@@ -141,11 +141,11 @@ class RacerTest < Test::Unit::TestCase
     racer_to_keep.merge(racer_to_merge)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
     aliases = Alias.find_all_by_racer_id(racer_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
-    assert_not_nil(erik_alias, 'Mollie should have Erik Tonkin alias')
-    assert_equal(3, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's aliases")
+    assert_not_nil(erik_alias, 'Molly should have Erik Tonkin alias')
+    assert_equal(3, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Molly's aliases")
     
     assert_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should not be in DB")
     assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
@@ -153,13 +153,13 @@ class RacerTest < Test::Unit::TestCase
   end
   
   def test_merge_no_alias_dup_names
-    racer_to_keep = racers(:mollie)
+    racer_to_keep = racers(:molly)
     racer_to_merge = racers(:tonkin)
     racer_same_name_as_merged = Racer.create(:name => racer_to_merge.name, :road_number => 'YYZ')
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
-    assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollies's aliases")
+    assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
+    assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollys's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should be in DB")
     assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
@@ -168,11 +168,11 @@ class RacerTest < Test::Unit::TestCase
     racer_to_keep.merge(racer_to_merge)
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
-    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's results")
+    assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
     aliases = Alias.find_all_by_racer_id(racer_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
-    assert_nil(erik_alias, 'Mollie should not have Erik Tonkin alias because there is another Erik Tonkin')
-    assert_equal(2, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollie's aliases")
+    assert_nil(erik_alias, 'Molly should not have Erik Tonkin alias because there is another Erik Tonkin')
+    assert_equal(2, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Molly's aliases")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should still be in DB")
     assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
@@ -581,4 +581,34 @@ class RacerTest < Test::Unit::TestCase
     assert_equal(nil, racer.city, 'New Racer city')
     assert_equal(nil, racer.state, 'New Racer state')
   end
+
+  def test_create_and_override_alias
+    assert_not_nil(Racer.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
+    assert_not_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should exist')
+    assert_nil(Racer.find_by_name('Mollie Cameron'), 'Mollie Cameron should not exist')
+
+    dupe = Racer.create!(:name => 'Mollie Cameron')
+    assert(dupe.valid?, 'Dupe Mollie Cameron should be valid')
+    
+    assert_not_nil(Racer.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
+    assert_not_nil(Racer.find_by_name('Mollie Cameron'), 'Ryan Weaver should exist')
+    assert_nil(Alias.find_by_name('Molly Cameron'), 'Molly Cameron alias should not exist')
+    assert_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should not exist')
+  end
+  
+  def test_update_to_alias
+    assert_not_nil(Racer.find_by_name('Molly Cameron'), 'Molly Cameron should exist')
+    assert_not_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should exist')
+    assert_nil(Racer.find_by_name('Mollie Cameron'), 'Mollie Cameron should not exist')
+
+    molly = racers(:molly)
+    molly.name = 'Mollie Cameron'
+    molly.save!
+    assert(molly.valid?, 'Renamed Mollie Cameron should be valid')
+    
+    assert_not_nil(Racer.find_by_name('Mollie Cameron'), 'Mollie Cameron should exist')
+    assert_nil(Racer.find_by_name('Molly Cameron'), 'Molly Cameron should not exist')
+    assert_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should not exist')
+    assert_not_nil(Alias.find_by_name('Molly Cameron'), 'Molly Cameron alias should exist')
+  end  
 end
