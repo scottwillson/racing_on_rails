@@ -17,6 +17,7 @@ class CombinedStandings < Standings
     self.event.standings << self
     self[:discipline] = self.source.discipline
     self.ironman = false
+    self.bar_points = 0
     logger.debug("New #{to_s}") if logger.debug?
   end
 

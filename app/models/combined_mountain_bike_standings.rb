@@ -3,6 +3,11 @@
 # are placed last in non-determinate order. (They should be placed by category and place)
 class CombinedMountainBikeStandings < CombinedStandings
 
+  def initialize(attributes = nil)
+    super
+    self.bar_points = source.bar_points
+  end
+
   def discipline
     'Mountain Bike'
   end
