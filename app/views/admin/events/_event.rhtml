@@ -115,7 +115,7 @@
 				</tr>
 				<tr>
 					<td>
-						<table cellspacing="0" cellpadding="0">
+						<table>
 							<tr>
 								<td class="field_label">Sanctioned by:</td>
 								<td><%= select 'event', 'sanctioned_by', SANCTIONING_ORGANIZATIONS %></td>
@@ -127,7 +127,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2">
+		<td>
 			<table>
 				<tr>
 					<td class="field_label" width="100">Notes:</td>
@@ -143,15 +143,17 @@
 				</tr>
 			</table>
 		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
+		<td>
 			<table>
 				<tr>
 					<td class="field_label" width="100">Pre-Event Fees Paid:</td>
 					<td width="100%"><%= text_field 'event', 'pre_event_fees', :size => 9 %></td>
+				</tr>
+				<tr>
 					<td class="field_label" width="100">Post-Event Fees Paid:</td>
 					<td width="100%"><%= text_field 'event', 'post_event_fees', :size => 9 %></td>
+				</tr>
+				<tr>
 					<td class="field_label" width="100">Flyer Ad Paid:</td>
 					<td width="100%"><%= text_field 'event', 'flyer_ad_fee', :size => 9 %></td>
 				</tr>
