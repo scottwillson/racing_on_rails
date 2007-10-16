@@ -81,3 +81,15 @@
 		</td>
 	</tr>
 </table>
+
+<%- for racer in @racers -%>
+	<%= draggable_element("racer_#{racer.id}", :revert => true) %>
+	<%= drop_receiving_element("racer_#{racer.id}", 
+		:url => { :action => "merge", :target_id => racer.id }, 
+		:loading => "new Effect.Fade(element.id + '_row')",
+		:complete => evaluate_remote_response) %>
+	<%= drop_receiving_element("name_#{racer.id}", 
+		:url => { :action => "merge", :target_id => racer.id }, 
+		:loading => "new Effect.Fade(element.id + '_row')",
+		:complete => evaluate_remote_response) %>
+<%- end -%>

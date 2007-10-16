@@ -1,11 +1,11 @@
 <% @page_title = "Admin: Results: #{@racer.name}" %>
 
-<table style="width: 100%;" id="racers">
+<table class="full_width" id="racers">
   <tr>
-  	<td class="fullWidth" id="left_racer">
+  	<td id="left_racer">
       <%= render :partial => 'racer', :locals => {:racer => @racer, :results => @results} %>
     </td>
-    <td class="halfWidth" id="find_results" style="display: none;">
+    <td class="full_width" id="find_results">
     </td>
   </tr>
 </table>

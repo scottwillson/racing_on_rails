@@ -1,46 +1,43 @@
-<table class="base" style="width: 100%;" id="racer_<%= racer.id %>">
+<table class="base" id="racer_<%= racer.id %>">
   <caption><%= racer.name %> <small><%= [racer.team.blank? ? nil : racer.team.name, racer.city, racer.racing_age].compact.join(', ') %></small></caption>
 	<tr>
-	  <td>
-		<table id="results_<%= racer.id %>">
-			<tr>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th>Race</th>
-				<th>Category</th>
-				<th>Date</th>
-				<th>Pts</th>
-			</tr>
-			<%- for result in results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date} -%>
-			<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
-			  <td class="disclosure"><%= 
-				link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 
-				"toggle_disclosure(#{result.id})",
-				:class => 'disclosure') if result.competition_result? %></td>
-			  <td class="right"><%= result.place %></td>
-			  <td><%= link_to(image_tag('/images/icons/web_page.gif', 
-					:title => 'View public results web page', :alt => 'View public results web page'), 
-					 :controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
-					 :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id) %>
-			  </td>
-			  <td><%= result.race.standings.name %></td>
-			  <td><%= result.race.name %></td>
-			  <td><%= result.race.standings.event.date.strftime("%D") %></td>
-			  <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
-			</tr>
-			<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') -%> 
-			<%- end -%>
-
-			<%- if results.empty? -%>
-			<tr>
-			  <td colspan="7">No results</td>
-			</tr>
-			<%- end -%>
-		</table>
-	  </td>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th>Race</th>
+		<th>Category</th>
+		<th>Date</th>
+		<th>Pts</th>
 	</tr>
+	<%- for result in results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date} -%>
+	<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
+	  <td class="disclosure"><%= 
+		link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 
+		"toggle_disclosure(#{result.id})",
+		:class => 'disclosure') if result.competition_result? %></td>
+	  <td><%= result.place %></td>
+	  <td><%= link_to(image_tag('/images/icons/web_page.gif', 
+			:title => 'View public results web page', :alt => 'View public results web page'), 
+			 :controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
+			 :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id) %>
+	  </td>
+	  <td><%= result.race.standings.name %></td>
+	  <td><%= result.race.name %></td>
+	  <td><%= result.race.standings.event.date.strftime("%D") %></td>
+	  <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
+	</tr>
+	<%- end -%>
+
+	<%- if results.empty? -%>
+	<tr>
+	  <td colspan="7">No results</td>
+	</tr>
+	<%- end -%>
 </table>
+
+<%- for result in results -%>
+	<%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') -%> 
+<%- end -%>
 
 <%= drop_receiving_element(
 	"racer_#{racer.id}", 

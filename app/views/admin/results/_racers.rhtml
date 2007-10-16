@@ -1,5 +1,6 @@
-<table class="base" style="width: 100%;">
+<table class="base">
   <caption>Racers</caption>
+	<th></th>
 	<%- for racer in racers -%>
 	<tr class="<%= cycle("even", "odd") %>">
 	    <td><%= link_to_remote(
