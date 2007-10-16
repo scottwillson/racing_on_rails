@@ -5,7 +5,7 @@ class RemoveBadAliases < ActiveRecord::Migration
       Alias.destroy(bad_alias)
     end
 
-    bad_aliases = Alias.connection.select_values('select aliases.id from aliases, racers where trim(concat(first_name, ' ', last_name)) = aliases.name')
+    bad_aliases = Alias.connection.select_values("select aliases.id from aliases, racers where trim(concat(first_name, ' ', last_name)) = aliases.name")
     for bad_alias in bad_aliases
       Alias.destroy(bad_alias)
     end
