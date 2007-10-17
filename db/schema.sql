@@ -1,8 +1,8 @@
--- MySQL dump 10.10
+-- MySQL dump 10.11
 --
--- Host: localhost    Database: racing_on_rails_development
+-- Host: localhost    Database: obra_development
 -- ------------------------------------------------------
--- Server version	5.0.24-standard
+-- Server version	5.0.45
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -36,7 +36,7 @@ CREATE TABLE `aliases` (
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `aliases_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3120 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `aliases_disciplines`
@@ -55,28 +55,41 @@ CREATE TABLE `aliases_disciplines` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `bids`
+--
+
+DROP TABLE IF EXISTS `bids`;
+CREATE TABLE `bids` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `email` varchar(255) NOT NULL default '',
+  `phone` varchar(255) NOT NULL default '',
+  `amount` int(11) NOT NULL default '0',
+  `approved` tinyint(1) default NULL,
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `categories`
 --
 
 DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL auto_increment,
-  `bar_category_id` int(11) default NULL,
   `position` int(11) NOT NULL default '0',
-  `is_overall` int(11) NOT NULL default '0',
   `name` varchar(64) NOT NULL default '',
-  `overall_id` int(11) default NULL,
-  `scheme` varchar(255) default '',
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `parent_id` int(11) default NULL,
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `idx_category_name_scheme` (`name`,`scheme`),
-  KEY `idx_bar_category_id` (`bar_category_id`),
-  KEY `idx_overall_id` (`overall_id`),
-  CONSTRAINT `categories_ibfk_1` FOREIGN KEY (`bar_category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `categories_ibfk_2` FOREIGN KEY (`overall_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  UNIQUE KEY `categories_name_index` (`name`),
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `categories_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1511 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `discipline_bar_categories`
@@ -89,6 +102,7 @@ CREATE TABLE `discipline_bar_categories` (
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  UNIQUE KEY `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
   KEY `idx_category_id` (`category_id`),
   KEY `idx_discipline_id` (`discipline_id`),
   CONSTRAINT `discipline_bar_categories_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
@@ -107,18 +121,9 @@ CREATE TABLE `disciplines` (
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
   `updated_at` datetime default NULL,
+  `numbers` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `engine_schema_info`
---
-
-DROP TABLE IF EXISTS `engine_schema_info`;
-CREATE TABLE `engine_schema_info` (
-  `engine_name` varchar(255) default NULL,
-  `version` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `events`
@@ -146,6 +151,10 @@ CREATE TABLE `events` (
   `oregon_cup_id` int(11) default NULL,
   `notification` tinyint(1) default '1',
   `number_issuer_id` int(11) default NULL,
+  `first_aid_provider` varchar(255) default '-------------',
+  `pre_event_fees` float default NULL,
+  `post_event_fees` float default NULL,
+  `flyer_ad_fee` float default NULL,
   PRIMARY KEY  (`id`),
   KEY `idx_date` (`date`),
   KEY `idx_disciplined` (`discipline`),
@@ -159,7 +168,26 @@ CREATE TABLE `events` (
   CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11159 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `images`
+--
+
+DROP TABLE IF EXISTS `images`;
+CREATE TABLE `images` (
+  `id` int(11) NOT NULL auto_increment,
+  `caption` varchar(255) default NULL,
+  `html_options` varchar(255) default NULL,
+  `link` varchar(255) default NULL,
+  `name` varchar(255) NOT NULL default '',
+  `source` varchar(255) NOT NULL default '',
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `images_name_index` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `mailing_lists`
@@ -180,6 +208,23 @@ CREATE TABLE `mailing_lists` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `news_items`
+--
+
+DROP TABLE IF EXISTS `news_items`;
+CREATE TABLE `news_items` (
+  `id` int(11) NOT NULL auto_increment,
+  `date` date NOT NULL default '0000-00-00',
+  `text` varchar(255) NOT NULL default '',
+  `lock_version` int(11) NOT NULL default '0',
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `news_items_date_index` (`date`),
+  KEY `news_items_text_index` (`text`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `number_issuers`
 --
 
@@ -192,7 +237,7 @@ CREATE TABLE `number_issuers` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `number_issuers_name_index` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `posts`
@@ -236,7 +281,7 @@ CREATE TABLE `promoters` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `promoter_info` (`name`,`email`,`phone`),
   KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `race_numbers`
@@ -261,7 +306,7 @@ CREATE TABLE `race_numbers` (
   CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `race_numbers_ibfk_2` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
   CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26814 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `racers`
@@ -272,12 +317,10 @@ CREATE TABLE `racers` (
   `id` int(11) NOT NULL auto_increment,
   `first_name` varchar(64) default NULL,
   `last_name` varchar(255) default NULL,
-  `member` tinyint(1) default '1',
-  `age` int(11) default NULL,
   `city` varchar(128) default NULL,
   `date_of_birth` date default NULL,
   `license` varchar(64) default NULL,
-  `notes` varchar(255) default NULL,
+  `notes` text,
   `state` varchar(64) default NULL,
   `team_id` int(11) default NULL,
   `lock_version` int(11) NOT NULL default '0',
@@ -297,12 +340,15 @@ CREATE TABLE `racers` (
   `track_category` varchar(255) default NULL,
   `work_phone` varchar(255) default NULL,
   `zip` varchar(255) default NULL,
+  `member_to` date default NULL,
+  `print_card` tinyint(1) default '0',
+  `print_mailing_label` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `idx_last_name` (`last_name`),
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18134 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `races`
@@ -332,7 +378,7 @@ CREATE TABLE `races` (
   KEY `idx_standings_id` (`standings_id`),
   CONSTRAINT `races_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `races_ibfk_2` FOREIGN KEY (`standings_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=84533 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `results`
@@ -371,6 +417,7 @@ CREATE TABLE `results` (
   `updated_at` datetime default NULL,
   `time_total` double default NULL,
   `laps` int(11) default NULL,
+  `members_only_place` varchar(8) default NULL,
   PRIMARY KEY  (`id`),
   KEY `idx_category_id` (`category_id`),
   KEY `idx_race_id` (`race_id`),
@@ -380,7 +427,7 @@ CREATE TABLE `results` (
   CONSTRAINT `results_ibfk_3` FOREIGN KEY (`race_id`) REFERENCES `races` (`id`) ON DELETE CASCADE,
   CONSTRAINT `results_ibfk_4` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`),
   CONSTRAINT `results_ibfk_5` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5635287 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `schema_info`
@@ -408,7 +455,7 @@ CREATE TABLE `scores` (
   KEY `scores_source_result_id_index` (`source_result_id`),
   CONSTRAINT `scores_ibfk_1` FOREIGN KEY (`competition_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE,
   CONSTRAINT `scores_ibfk_2` FOREIGN KEY (`source_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17601266 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `standings`
@@ -419,7 +466,6 @@ CREATE TABLE `standings` (
   `id` int(11) NOT NULL auto_increment,
   `event_id` int(11) NOT NULL default '0',
   `bar_points` int(11) default '1',
-  `date` datetime default NULL,
   `name` varchar(255) default NULL,
   `lock_version` int(11) NOT NULL default '0',
   `created_at` datetime default NULL,
@@ -431,13 +477,12 @@ CREATE TABLE `standings` (
   `source_id` int(11) default NULL,
   `type` varchar(32) default NULL,
   PRIMARY KEY  (`id`),
-  KEY `idx_date` (`date`),
   KEY `event_id` (`event_id`),
   KEY `source_id` (`source_id`),
   CONSTRAINT `standings_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9445 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `teams`
@@ -456,7 +501,7 @@ CREATE TABLE `teams` (
   `member` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4993 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `users`
@@ -473,7 +518,7 @@ CREATE TABLE `users` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -484,3 +529,6 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2007-10-17 17:47:49
+
+insert into schema_info(version) values(32);

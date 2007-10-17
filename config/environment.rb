@@ -87,3 +87,4 @@ OregonCup
 Ironman
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
+STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
