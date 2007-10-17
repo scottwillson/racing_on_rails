@@ -1,6 +1,8 @@
 class AddCxBarCategory < ActiveRecord::Migration
   def self.up
     cx = Discipline.find_by_name('Cyclocross')
+    return if cx.nil?
+    
     beginner = Category.find_by_name('Beginner Men')
     return unless cx && beginner
     
