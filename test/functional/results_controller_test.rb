@@ -43,7 +43,7 @@ class ResultsControllerTest < Test::Unit::TestCase
 
     get(:event, :id => bar.id.to_s)
     assert_response(:redirect)
-    assert_redirect_url "http://test.host/bar/#{bar.date.year}"
+    assert_redirected_to(:controller => 'bar', :year => bar.date.year)
   end
   
   def test_event_with_discipline

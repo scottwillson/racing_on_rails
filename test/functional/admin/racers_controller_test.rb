@@ -18,7 +18,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
   
@@ -27,7 +27,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 
@@ -254,10 +254,10 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     tonkin = racers(:tonkin)
     molly_with_different_road_number = Racer.create!(:name => 'Molly Cameron', :road_number => '1009')
 
-    assert_equal(0, Racer.count(['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
-    assert_equal(2, Racer.count(['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
-    assert_equal(1, Racer.count(['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
-    assert_equal(1, Alias.count(['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
+    assert_equal(0, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
+    assert_equal(2, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
+    assert_equal(1, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
+    assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
 
     post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
@@ -266,10 +266,10 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal(tonkin, assigns['racer'], 'Racer')
     assert_equal(1, assigns['existing_racers'].size, "existing_racers: #{assigns['existing_racers']}")
 
-    assert_equal(0, Racer.count(['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
-    assert_equal(2, Racer.count(['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
-    assert_equal(1, Racer.count(['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
-    assert_equal(1, Alias.count(['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
+    assert_equal(0, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
+    assert_equal(2, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
+    assert_equal(1, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
+    assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
   end
   
   def test_destroy
@@ -724,7 +724,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_nil(session[:duplicates], 'session[:duplicates]')
     assert_response(:redirect)
-    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    assert_redirected_to(:action => 'index')
     
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
     assert(racers_before_import < Racer.count, 'Should have added racers')
@@ -742,7 +742,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_not_nil(session[:duplicates], 'session[:duplicates]')
     assert_response(:redirect)
-    assert_redirected_to(:controller => 'admin/racers', :action => 'duplicates')
+    assert_redirected_to(:action => 'duplicates')
     
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
     assert(racers_before_import < Racer.count, 'Should have added racers')
@@ -780,7 +780,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     ]
     post(:resolve_duplicates, {'0' => 'new', '1' => weaver_3.id.to_s, '2' => alice_2.id.to_s})
     assert_response(:redirect)
-    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    assert_redirected_to(:action => 'index')
     assert_nil(session[:duplicates], 'session[:duplicates] should be cleared')
     
     assert_equal(3, Racer.find(:all, :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
@@ -802,7 +802,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_routing("/admin/racers/import", opts)
     post(:import, :commit => 'Cancel', :update_membership => 'false')
     assert_response(:redirect)
-    assert_redirected_to(:controller => 'admin/racers', :action => 'index')
+    assert_redirected_to(:action => 'index')
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
   end
   
@@ -919,7 +919,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -935,7 +935,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -951,7 +951,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -967,7 +967,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
 end

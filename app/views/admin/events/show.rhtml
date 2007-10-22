@@ -78,7 +78,7 @@
 					<td colspan="4" style="white-space: nowrap;">
 			            <%= form_tag({:controller => 'events', :action => 'upload', :id => @event.to_param}, { :multipart => true }) %>
 							<%= file_field_tag "results_file" %><%= submit_tag 'Import' %>
-			            <%= end_form_tag %>
+			            </form>
 					</td>
 				</tr>
 			</table>
@@ -90,9 +90,9 @@
 			<% elsif @standings %>
 				<%= render :partial => "standings" %>
 			<% else %>
-				<%= start_form_tag({:action => 'update', :id => @event.id}) %>
+				<%= form_tag({:action => 'update', :id => @event.id}) %>
 					<%= render(:partial => "event") %>
-				<% end_form_tag %>
+				</form>
 				<%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
 			<% end %>
 		</td>

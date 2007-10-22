@@ -18,7 +18,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
   
@@ -27,7 +27,7 @@ class Admin::TeamsControllerTest < Test::Unit::TestCase
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 

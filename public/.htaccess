@@ -1,5 +1,5 @@
 # General Apache options
-#AddHandler fastcgi-script .fcgi
+AddHandler fastcgi-script .fcgi
 AddHandler cgi-script .cgi
 Options +FollowSymLinks +ExecCGI
 
@@ -17,7 +17,6 @@ Options +FollowSymLinks +ExecCGI
 #
 # Example:
 #   RewriteRule ^(.*)$ dispatch.fcgi [QSA,L]
-
 RewriteEngine On
 
 # If your Rails application is accessed via an Alias directive,

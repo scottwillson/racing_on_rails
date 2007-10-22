@@ -1,14 +1,13 @@
 class Admin::TeamsController < Admin::RecordEditor
 
-  model :team
   edits :team
   
   def index
-    @name = @params['name'] || @session['team_name'] || cookies[:team_name] || ''
+    @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
     if @name.blank?
       @teams = []
     else
-      @session['team_name'] = @name
+      session['team_name'] = @name
       cookies[:team_name] = {:value => @name, :expires => Time.now + 36000}
       name_like = "%#{@name}%"
       @teams = Team.find(
@@ -53,7 +52,7 @@ class Admin::TeamsController < Admin::RecordEditor
   
   # Inline
   def edit_name
-    @team = Team.find(@params[:id])
+    @team = Team.find(params[:id])
     expire_cache
     render(:partial => 'edit')
   end
@@ -62,8 +61,8 @@ class Admin::TeamsController < Admin::RecordEditor
   def update
     begin
       new_name = params[:name]
-      team_id = @params[:id]
-      @team = Team.find(@params[:id])
+      team_id = params[:id]
+      @team = Team.find(params[:id])
       original_name = @team.name
       @team.name = new_name
       
@@ -119,18 +118,18 @@ class Admin::TeamsController < Admin::RecordEditor
   
   # Inline
   def merge
-    team_to_merge_id = @params[:id].gsub('team_', '')
+    team_to_merge_id = params[:id].gsub('team_', '')
     team_to_merge = Team.find(team_to_merge_id)
     @merged_team_name = team_to_merge.name
-    @existing_team = Team.find(@params[:target_id])
+    @existing_team = Team.find(params[:target_id])
     @existing_team.merge(team_to_merge)
     expire_cache
   end
   
   # Inline
   def cancel
-    if @params[:id]
-      @team = Team.find(@params[:id])
+    if params[:id]
+      @team = Team.find(params[:id])
       render(:partial => 'team')
     else
       render(:text => '<tr><td colspan=4></td></tr>')

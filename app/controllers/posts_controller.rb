@@ -1,7 +1,4 @@
 class PostsController < ApplicationController
-
-  model :post
-
   session :only => [:show, :post, :confirm]
   
   def index

@@ -1,5 +1,4 @@
 class ResultsController < ApplicationController
-  model :result, :event, :standings, :race, :racer
   session :off
   caches_page :index, :event, :competition, :racer, :team, :show
   

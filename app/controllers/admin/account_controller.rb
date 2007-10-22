@@ -1,8 +1,6 @@
 # User authentication
 # See also LoginModule
 class Admin::AccountController < ApplicationController
-  
-  model :user
   layout 'admin/application'
 
   # Show login page and do login. If login succeeds, put an instance of User in session

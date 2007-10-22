@@ -41,7 +41,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
   def test_not_logged_in
     get(:index, :year => "2004")
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
   
@@ -63,7 +63,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
     }
     assert_routing("/admin/schedule/upload", opts)
 
-    before_import_after_schedule_start_date = Event.count("date > '2005-01-01'")
+    before_import_after_schedule_start_date = Event.count(:conditions => "date > '2005-01-01'")
     assert_equal(7, before_import_after_schedule_start_date, "2005 events count before import")
     before_import_all = Event.count
     assert_equal(15, before_import_all, "All events count before import")
@@ -75,7 +75,7 @@ class AdminScheduleControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => :index, :year => 2006)
     assert(flash.has_key?(:notice))
 
-    after_import_after_schedule_start_date = Event.count("date > '2005-01-01'")
+    after_import_after_schedule_start_date = Event.count(:conditions => "date > '2005-01-01'")
     assert_equal(83, after_import_after_schedule_start_date, "2005 events count after import")
     after_import_all = Event.count
     assert_equal(91, after_import_all, "All events count after import")

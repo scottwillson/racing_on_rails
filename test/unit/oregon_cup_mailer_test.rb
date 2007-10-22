@@ -20,6 +20,7 @@ class OregonCupMailerTest < Test::Unit::TestCase
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
     expected.body = read_fixture("kickoff")
+    expected.mime_version = '1.0'
 
     or_cup = OregonCup.create(:date => Date.new(2004))
     or_cup.events << events(:banana_belt_1)
@@ -38,6 +39,7 @@ class OregonCupMailerTest < Test::Unit::TestCase
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
     expected.body = read_fixture("standings")
+    expected.mime_version = '1.0'
 
     kings_valley_2004 = events(:kings_valley_2004)
     or_cup = OregonCup.create(:date => Date.new(2004))
@@ -57,6 +59,7 @@ class OregonCupMailerTest < Test::Unit::TestCase
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
     expected.body = read_fixture("final_standings")
+    expected.mime_version = '1.0'
 
     or_cup = OregonCup.create(:date => Date.new(2004))
     or_cup.events << events(:banana_belt_1)

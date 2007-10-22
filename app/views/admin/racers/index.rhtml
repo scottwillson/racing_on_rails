@@ -3,7 +3,7 @@
 <%= render "shared/admin/tabs" %>
 
 <div style="margin-top: 16px; margin-bottom: 16px;">
-<%= start_form_tag({}, {:method => 'get'}) %>
+<%= form_tag({}, {:method => 'get'}) %>
 	<span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
 
 	<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
@@ -15,7 +15,7 @@
 	</p>
 	<%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
 	<%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
-<%= end_form_tag %>
+</form>
 </div>
 
 <table>
@@ -49,13 +49,13 @@
 					<td colspan="11"></td>
 				</tr>
 			</table>
-			<div><%= link_image_to '/images/buttons/add.gif', :action => 'new' %></div>
+			<div><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
 
 			<div style="text-align: center;">
 				<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
 					<%= submit_tag 'Import' %>
 					<%= file_field_tag "racers_file" %>
-				<%= end_form_tag %>
+				</form>
 		
 				<%= form_tag(:action => 'export') %>
 					<%= submit_tag 'Export' %> 
@@ -68,7 +68,7 @@
 						<option value="excel" selected>Excel</option>
 						<option value="finish_lynx">FinishLynx</option>
 					</select>
-				<%= end_form_tag %>
+				</form>
 			</div>
 		
 			<div class="tabs" style="margin-top: 24px;">

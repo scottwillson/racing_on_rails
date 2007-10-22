@@ -40,7 +40,7 @@ class Admin::CategoriesControllerTest < Test::Unit::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 
@@ -49,7 +49,7 @@ class Admin::CategoriesControllerTest < Test::Unit::TestCase
     senior_women = categories(:senior_women)
     get(:edit_name, :id => senior_women.to_param)
     assert_response(:redirect)
-    assert_redirect_url "http://localhost/admin/account/login"
+    assert_redirected_to(:controller => '/admin/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 

@@ -27,13 +27,13 @@ class Alias < ActiveRecord::Base
   end
   
   def cannot_shadow_racer
-    if Racer.count(["trim(concat(first_name, ' ', last_name)) = ?", name]) > 0
+    if Racer.count(:conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]) > 0
       errors.add('name', "Racer named '#{name}' already exists")
     end
   end
   
   def cannot_shadow_team
-    if Team.count(['name = ?', name]) > 0
+    if Team.count(:name, :conditions => ['name = ?', name]) > 0
       errors.add('name', "Team named '#{name}' already exists")
     end
   end

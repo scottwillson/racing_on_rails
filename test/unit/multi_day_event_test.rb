@@ -60,7 +60,7 @@ class MultiDayEventTest < Test::Unit::TestCase
   end
   
   def test_new
-    series = MultiDayEvent.new
+    series = MultiDayEvent.create
     today = Date.today
     assert_equal_dates(today, series.date, "PIR series date")
     assert_equal_dates(today, series.start_date, "PIR series start date")
@@ -80,8 +80,7 @@ class MultiDayEventTest < Test::Unit::TestCase
     sql_results = series.connection.select_one("select date from events where id=#{series.id}")
     assert_equal("2001-06-19", sql_results["date"], "Series date column from DB")
     
-    new_series_event = SingleDayEvent.new(:parent => series, :date => Date.new(2001, 6, 23))
-    series.events << new_series_event
+    series.events.create(:date => Date.new(2001, 6, 23))
     series.save!
     assert_equal_dates("2001-06-19", series.date, "PIR series date")
     assert_equal_dates("2001-06-19", series.start_date, "PIR series start date")

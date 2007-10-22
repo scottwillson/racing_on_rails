@@ -1,6 +1,6 @@
 <table class="base" cellspacing="0" cellpadding="0" width="100%">
 	<caption colspan="4">Standings: <%= standings.name %></caption>
-	<%= start_form_tag :action => 'update', :id => standings.event.id, :standings_id => standings.id %>
+	<%= form_tag :action => 'update', :id => standings.event.id, :standings_id => standings.id %>
 	<tr>
 		<td class="field_label">Name:</td>
 		<td colspan="3"><%= text_field 'standings', 'name' %></td>
@@ -33,5 +33,5 @@
 			<%= submit_tag "Save" %>
 		</td>
 	</tr>
-	<%= end_form_tag %>
+	</form>
 </table>

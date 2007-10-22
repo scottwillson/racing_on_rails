@@ -6,9 +6,8 @@ class StandingsTest < Test::Unit::TestCase
     bb3 = events(:banana_belt_3)
     standings = bb3.standings.create
     assert(standings.races.empty?, "Standings should have empty races")
-    assert_equal(bb3.date, standings.date, "New standings should have event date")
-    assert_equal(bb3.date, standings[:date], "New standings should have copy of event date after save")
-    assert_equal(bb3.name, standings.name, "race name")
+    assert_equal_dates(bb3.date, standings.date, "New standings should have event date")
+    assert_equal_dates(bb3.name, standings.name, "race name")
   end
  
   def test_relationships
@@ -23,13 +22,13 @@ class StandingsTest < Test::Unit::TestCase
   
   def test_position
     bb3 = events(:banana_belt_3)
-    standings_1 = bb3.standings.build(:event => bb3)
-    standings_2 = bb3.standings.build(:event => bb3)
-    standings_3 = bb3.standings.build(:event => bb3)
+    standings_1 = bb3.standings.create(:event => bb3)
+    standings_2 = bb3.standings.create(:event => bb3)
+    standings_3 = bb3.standings.create(:event => bb3)
     
-    assert_equal(0, standings_1.position, 'Standings 1 position')
-    assert_equal(0, standings_2.position, 'Standings 2 position')
-    assert_equal(0, standings_3.position, 'Standings 3 position')
+    assert_equal(1, standings_1.position, 'Standings 1 position')
+    assert_equal(2, standings_2.position, 'Standings 2 position')
+    assert_equal(3, standings_3.position, 'Standings 3 position')
     
     bb3.standings.sort!
     assert_equal(standings_1, bb3.standings[0], 'Standings 1')

@@ -4,8 +4,6 @@
 class ScheduleController < ApplicationController
 
     session :off
-    model :event, :single_day_event
-
     caches_page :index, :list
 
     # Default calendar format

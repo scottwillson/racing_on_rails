@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.1.6'
+RAILS_GEM_VERSION = '1.2.5' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -18,8 +18,11 @@ Rails::Initializer.run do |config|
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   config.frameworks -= [ :action_web_service ]
 
+  # Only load the plugins named here, by default all plugins in vendor/plugins are loaded
+  # config.plugins = %W( exception_notification ssl_requirement )
+
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/app/models/competitions )
+  config.load_paths += %W( #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/sweepers )
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
@@ -88,3 +91,7 @@ Ironman
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
+
+# Add new mime types for use in respond_to blocks:
+# Mime::Type.register "text/richtext", :rtf
+# Mime::Type.register "application/x-mobile", :mobile

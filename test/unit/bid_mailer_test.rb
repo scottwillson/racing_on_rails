@@ -3,7 +3,7 @@ require 'bid_mailer'
 
 class BidMailerTest < Test::Unit::TestCase
   FIXTURES_PATH = File.dirname(__FILE__) + '/../fixtures'
-  CHARSET = "utf-8"
+  CHARSET = 'utf-8'
 
   include ActionMailer::Quoting
 
@@ -13,7 +13,8 @@ class BidMailerTest < Test::Unit::TestCase
     ActionMailer::Base.deliveries = []
 
     @expected = TMail::Mail.new
-    @expected.set_content_type "text", "plain", { "charset" => CHARSET }
+    @expected.set_content_type 'text', 'plain', { 'charset' => CHARSET }
+    @expected.mime_version = '1.0'
   end
 
   def test_created
@@ -23,7 +24,7 @@ class BidMailerTest < Test::Unit::TestCase
     @expected.to = 'cmurray@obra.org'
     
     bid = Bid.new(:name => 'Ryan Weaver', :amount => 2400, :email => 'ryan@weaver.com', :phone => '411')
-    assert_equal @expected.encoded, BidMailer.create_created(bid).encoded
+    assert_equal(@expected.encoded, BidMailer.create_created(bid).encoded)
   end
 
   private

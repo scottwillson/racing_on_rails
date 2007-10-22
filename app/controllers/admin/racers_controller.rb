@@ -4,7 +4,6 @@ class Admin::RacersController < Admin::RecordEditor
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
 
-  model :racer
   edits :racer
   
   layout 'admin/application', :except => [:cards, :mailing_labels]
@@ -24,11 +23,11 @@ class Admin::RacersController < Admin::RecordEditor
   # === Assigns
   # * racer: Array of Racers
   def index
-    @name = @params['name'] || @session['racer_name'] || cookies[:racer_name] || ''
+    @name = params['name'] || session['racer_name'] || cookies[:racer_name] || ''
     if @name.blank?
       @racers = []
     else
-      @session['racer_name'] = @name
+      session['racer_name'] = @name
       cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
       @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
       @racers = @racers + Racer.find_by_number(@name)
@@ -43,7 +42,7 @@ class Admin::RacersController < Admin::RecordEditor
     @year = Date.today.year
     @race_numbers = []
     @years = (2005..(@year + 1)).to_a.reverse
-    render('/admin/racers/show')
+    render(:template => '/admin/racers/show')
   end
   
   def show
@@ -55,14 +54,14 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Inline edit
   def edit_name
-    @racer = Racer.find(@params[:id])
+    @racer = Racer.find(params[:id])
     expire_cache
     render(:partial => 'edit')
   end
 
   # Inline edit
   def edit_team_name
-    @racer = Racer.find(@params[:id])
+    @racer = Racer.find(params[:id])
     expire_cache
     render(:partial => 'edit_team_name')
   end
@@ -127,7 +126,7 @@ class Admin::RacersController < Admin::RecordEditor
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || Date.today.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
-    render('admin/racers/show')
+    render(:template => 'admin/racers/show')
   end
   
   # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
@@ -242,7 +241,7 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Inline
   def update_team_name
-    @racer = Racer.find(@params[:id])
+    @racer = Racer.find(params[:id])
     new_name = params[:team_name]
     @racer.team_name = new_name
     saved = @racer.save
@@ -263,8 +262,8 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Cancel inline editing
   def cancel
-    if @params[:id]
-      @racer = Racer.find(@params[:id])
+    if params[:id]
+      @racer = Racer.find(params[:id])
       attribute(@racer, 'name')
     else
       render(:text => '<tr><td colspan=4></td></tr>')
@@ -273,7 +272,7 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Cancel inline editing
   def cancel_edit_team_name
-    @racer = Racer.find(@params[:id])
+    @racer = Racer.find(params[:id])
     render(:partial => 'team', :locals => {:racer => @racer})
   end
   
@@ -307,10 +306,10 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def merge
-    racer_to_merge_id = @params[:id].gsub('racer_', '')
+    racer_to_merge_id = params[:id].gsub('racer_', '')
     racer_to_merge = Racer.find(racer_to_merge_id)
     @merged_racer_name = racer_to_merge.name
-    @existing_racer = Racer.find(@params[:target_id])
+    @existing_racer = Racer.find(params[:target_id])
     @existing_racer.merge(racer_to_merge)
     expire_cache
   end

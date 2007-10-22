@@ -20,7 +20,7 @@ class Discipline < ActiveRecord::Base
   end
 
   def Discipline.find_all_bar
-    Discipline.find_all("bar = true")
+    Discipline.find(:all, :conditions => ["bar = true"])
   end
 
   def Discipline.find_via_alias(name)
@@ -40,7 +40,7 @@ class Discipline < ActiveRecord::Base
     for result in results
       @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
-    for discipline in Discipline.find_all
+    for discipline in Discipline.find(:all)
       @@all_aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
     end
   end
@@ -51,7 +51,7 @@ class Discipline < ActiveRecord::Base
   end
   
   def Discipline.find_all_names
-    [''] + Discipline.find_all.collect {|discipline| discipline.name}
+    [''] + Discipline.find(:all).collect {|discipline| discipline.name}
   end
   
   def names

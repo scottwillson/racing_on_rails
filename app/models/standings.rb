@@ -16,7 +16,7 @@ class Standings < ActiveRecord::Base
   validates_presence_of :event_id
   acts_as_list :scope => :event
   
-  before_save :update_date, :update_discipline
+  before_save :update_discipline
   after_save :create_or_destroy_combined_standings
   
   belongs_to :event
@@ -92,11 +92,6 @@ class Standings < ActiveRecord::Base
   def short_date
     return '' unless date
     "#{date.month}/#{date.day}"
-  end
-
-  # Set date to the parent event's date
-  def update_date
-    self[:date] = self.event.date
   end
   
   def name

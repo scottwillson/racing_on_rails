@@ -5,7 +5,7 @@
 	</tr>
 	<tr>
 		<td colspan="<%= race.result_columns_or_default.size + 2 %>">
-			<%= start_form_tag :action => 'update', :id => race.standings.event.id, :standings_id => race.standings.id, :race_id => race.id %>
+			<%= form_tag :action => 'update', :id => race.standings.event.id, :standings_id => race.standings.id, :race_id => race.id %>
 			<table cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="field_label" valign="top" style="padding-top: 8px;">BAR Points:</td>
@@ -26,7 +26,7 @@
 					<td align="right"><%= submit_tag "Save" %></td>
 				</tr>
 			</table>
-			<%= end_form_tag %>
+			</form>
 		</td>
 	</tr>
 	<tr>
@@ -36,7 +36,7 @@
 		<% end %>
 		<th></th>
 	</tr>
-	<%= start_form_tag %>
+	<%= form_tag %>
 	<% for result in race.results.sort %>
 	<tr id="result_<%= result.id %>_row">
 		<td><%= link_to 'Edit', :controller => 'results', :action => 'edit', :id => result.to_param %></td>
@@ -62,7 +62,7 @@
 		<% end %>
 		<th></th>
 	</tr>
-	<%= end_form_tag %>
+	</form>
 	<%= form_tag({:controller => 'results', :action => 'create', :id => race.to_param}) %>
 	<tr>
 		<td align="right">New:</td>
@@ -75,5 +75,5 @@
 			<%= submit_tag "Add New Result" %>
 		</td>
 	</tr>
-	<%= end_form_tag %>
+	</form>
 </table>

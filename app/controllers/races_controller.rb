@@ -1,5 +1,4 @@
 class RacesController < ApplicationController
-  model :race, :category
 
   # Show Races for a Category
   # === Params

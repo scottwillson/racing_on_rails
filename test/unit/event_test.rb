@@ -62,7 +62,7 @@ class EventTest < Test::Unit::TestCase
     assert_not_nil(event.promoter, "Event promoter before save")
     event.save!
     assert_not_nil(event.promoter, "Event promoter after save")
-    assert_equal(1, Promoter.count("name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
+    assert_equal(1, Promoter.count(:conditions => "name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
 
     event = SingleDayEvent.new({
       :name => "State Criterium",
@@ -73,7 +73,7 @@ class EventTest < Test::Unit::TestCase
     assert_not_nil(event.promoter, "Event promoter before save")
     event.save!
     assert_not_nil(event.promoter, "Event promoter after save")
-    assert_equal(1, Promoter.count("name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
+    assert_equal(1, Promoter.count(:conditions => "name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
   end
   
   def test_new_add_promoter
@@ -149,7 +149,7 @@ class EventTest < Test::Unit::TestCase
 
   def test_to_param
     tabor_cr = events(:tabor_cr)
-    assert_equal(6, tabor_cr.to_param, "to_param")
+    assert_equal('6', tabor_cr.to_param, "to_param")
   end
   
   def test_short_date

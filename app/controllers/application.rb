@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   include LoginSystem
   
   RESULTS_LIMIT = 100
+
+  # Pick a unique cookie name to distinguish our session data from others'
+  session :session_key => '_racing_on_rails_session_id'
   
   def rescue_action_in_public(exception)
     logger.error("rescue_action_in_public #{exception}")

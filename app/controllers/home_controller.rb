@@ -1,6 +1,5 @@
 # Homepage
 class HomeController < ApplicationController
-  model :discipline
   caches_page :index
         
   # Show homepage

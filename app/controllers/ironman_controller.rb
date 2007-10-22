@@ -1,6 +1,4 @@
 class IronmanController < ApplicationController
-  
-  model :ironman
   session :off
 
   def index

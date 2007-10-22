@@ -14,6 +14,7 @@ class MailingListMailerTest < Test::Unit::TestCase
 
     @expected = TMail::Mail.new
     @expected.set_content_type "text", "plain", { "charset" => CHARSET }
+    @expected.mime_version = '1.0'
   end
 
   def test_post
@@ -54,7 +55,7 @@ class MailingListMailerTest < Test::Unit::TestCase
   end
   
   def test_receive_simple
-    assert(Post.find_all.empty?, "No posts in database")
+    assert_equal(0, Post.count, "No posts in database")
   
     subject = "Test Email"
     from = "scott@yahoo.com"
@@ -71,7 +72,7 @@ class MailingListMailerTest < Test::Unit::TestCase
     
     MailingListMailer.receive(email.encoded)
     
-    posts = Post.find_all
+    posts = Post.find(:all)
     assert_equal(1, posts.size, "One new post in DB")
     post_from_db = posts.first
     assert_equal(subject, post_from_db.subject, "Subject")
@@ -82,11 +83,11 @@ class MailingListMailerTest < Test::Unit::TestCase
   end
   
   def test_receive
-    assert(Post.find_all.empty?, "No posts in database")
+    assert_equal(0, Post.count, "No posts in database")
   
     MailingListMailer.receive(email_to_archive)
     
-    posts = Post.find_all
+    posts = Post.find(:all)
     assert_equal(1, posts.size, "One new post in DB")
     post_from_db = posts.first
     assert_equal("[Fwd:  For the Archives]", post_from_db.subject, "Subject")
@@ -97,11 +98,11 @@ class MailingListMailerTest < Test::Unit::TestCase
   end
   
   def test_receive_rich_text
-    assert(Post.find_all.empty?, "No posts in database")
+    assert_equal(0, Post.count, "No posts in database")
   
     MailingListMailer.receive(rich_email_text)
     
-    posts = Post.find_all
+    posts = Post.find(:all)
     assert_equal(1, posts.size, "One new post in DB")
     post_from_db = posts.first
     assert_equal("Rich Text", post_from_db.subject, "Subject")
@@ -115,11 +116,11 @@ Check it out: http://www.google.com/\n\n\357\277\274\n}
   end
   
   def test_receive_outlook
-    assert(Post.find_all.empty?, "No posts in database")
+    assert_equal(0, Post.count, "No posts in database")
   
     MailingListMailer.receive(outlook_email)
     
-    posts = Post.find_all
+    posts = Post.find(:all)
     assert_equal(1, posts.size, "One new post in DB")
     post_from_db = posts.first
     assert_equal("Stinky Outlook Email", post_from_db.subject, "Subject")
@@ -143,11 +144,11 @@ Still loyal:
   end
   
   def test_receive_html
-    assert(Post.find_all.empty?, "No posts in database")
+    assert_equal(0, Post.count, "No posts in database")
   
     MailingListMailer.receive(html_email)
     
-    posts = Post.find_all
+    posts = Post.find(:all)
     assert_equal(1, posts.size, "One new post in DB")
     post_from_db = posts.first
     assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")

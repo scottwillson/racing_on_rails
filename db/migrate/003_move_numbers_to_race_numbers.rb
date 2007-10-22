@@ -3,7 +3,7 @@ class MoveNumbersToRaceNumbers < ActiveRecord::Migration
     Discipline.create(:name => 'Downhill', :bar => false)
     Discipline.load_aliases
     association = NumberIssuer.create(:name => ASSOCIATION.short_name)
-    for racer in Racer.find_all
+    for racer in Racer.find(:all)
       RaceNumber.create(:value => racer[:ccx_number], :number_issuer => association, :discipline => Discipline[:cyclocross], :year => 2006, :racer => racer) unless racer[:ccx_number].blank?
       RaceNumber.create(:value => racer[:dh_number], :number_issuer => association, :discipline => Discipline[:downhill], :year => 2006, :racer => racer)  unless racer[:dh_number].blank?
       RaceNumber.create(:value => racer[:xc_number], :number_issuer => association, :discipline => Discipline[:mountain_bike], :year => 2006, :racer => racer) unless racer[:xc_number].blank?

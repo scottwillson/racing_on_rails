@@ -1,6 +1,4 @@
 class OregonCupController < ApplicationController
-
-  model :oregon_cup
   session :off
   
   def index

@@ -3,7 +3,6 @@ class Admin::CategoriesController < Admin::RecordEditor
 
   include ApplicationHelper
 
-  model :category
   edits :category
 
   # Show all Association Categories
@@ -42,7 +41,7 @@ class Admin::CategoriesController < Admin::RecordEditor
   # === Assigns
   # * category
   def edit_name
-    @category = Category.find(@params[:id])
+    @category = Category.find(params[:id])
     render(:partial => 'edit')
   end
   
@@ -50,8 +49,8 @@ class Admin::CategoriesController < Admin::RecordEditor
   def update
     begin
       new_name = params[:name]
-      category_id = @params[:id]
-      @category = Category.find(@params[:id])
+      category_id = params[:id]
+      @category = Category.find(params[:id])
       original_name = @category.name
       @category.name = new_name
       existing_category = Category.find_by_name(new_name)
@@ -73,8 +72,8 @@ class Admin::CategoriesController < Admin::RecordEditor
   
   # Cancel inline Category edit
   def cancel
-    if @params[:id]
-      category = Category.find(@params[:id])
+    if params[:id]
+      category = Category.find(params[:id])
       attribute(category, 'name')
     else
       render(:text => '<tr><td colspan=5></td></tr>')
@@ -115,7 +114,7 @@ class Admin::CategoriesController < Admin::RecordEditor
 
   # Add category as child
   def add_child
-    category_id = @params[:id].gsub('category_', '')
+    category_id = params[:id].gsub('category_', '')
     @category = Category.find(category_id)
     parent_id = params[:parent_id]
     if parent_id

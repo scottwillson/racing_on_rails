@@ -11,6 +11,9 @@
 # By convention, only SingleDayEvents have Standings and Results -- MultiDayEvents do not. 
 # Final standings like Overall GC are associated with the last day's SingleDayEvent.
 #
+# Building large object trees of events and children and memory may not work correctly.
+# Prefer +create+ over +new+ and +build+
+#
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 

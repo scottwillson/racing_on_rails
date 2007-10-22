@@ -2,7 +2,6 @@
 class Admin::EventsController < ApplicationController
   
   before_filter :login_required
-  model :event, :single_day_event, :multi_day_event, :weekly_series, :series, :standings, :combined_standings, :combined_mountain_bike_standings, :combined_time_trial_standings
   layout 'admin/application'
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :destroy_standings, :upload]
   in_place_edit_for :event, :first_aid_provider
@@ -25,7 +24,7 @@ class Admin::EventsController < ApplicationController
       @standings = Standings.find(params[:standings_id])
     end
 
-    @disciplines = [''] + Discipline.find_all.collect do |discipline|
+    @disciplines = [''] + Discipline.find(:all).collect do |discipline|
       discipline.name
     end
     @disciplines.sort!

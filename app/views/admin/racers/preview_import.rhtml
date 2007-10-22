@@ -1,6 +1,6 @@
 <% @page_title = 'Admin: Racers: Preview Import' %>
 
-<%= start_form_tag :action => 'import' %>
+<%= form_tag :action => 'import' %>
 <%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
 <%- unless flash[:warn].blank? -%>
 <div align="center">
@@ -14,7 +14,7 @@
 <br>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>
-<%= end_form_tag %>
+</form>
 <table class="base">
 	<thead>
 		<tr>

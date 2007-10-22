@@ -8,18 +8,18 @@ A <%= @exception.class %> occurred in
 Request information:
 -------------------------------
 
-  * URL: <%= @request.protocol %><%= @host %><%= @request.request_uri %>
-  * Parameters: <%= @request.parameters.inspect %>
+  * URL: <%= request.protocol %><%= @host %><%= request.request_uri %>
+  * Parameters: <%= request.parameters.inspect %>
   * Rails root: <%= @rails_root %>
 
 -------------------------------
 Session dump:
 -------------------------------
 
-<% for variable in @request.session.instance_variables -%>
+<% for variable in request.session.instance_variables -%>
 <% next if variable =~ /^@db/ -%>
   * <%= variable %>: 
-    <%= PP.pp(@request.session.instance_variable_get(variable),"").
+    <%= PP.pp(request.session.instance_variable_get(variable),"").
            gsub(/\n/, "\n    ").strip %>
 <% end -%>
 
@@ -27,7 +27,7 @@ Session dump:
 Environment:
 -------------------------------
 
-<% for key, value in @request.env -%>
+<% for key, value in request.env -%>
   * <%= key %>: <%= value.to_s.strip %>
 <% end -%>
 

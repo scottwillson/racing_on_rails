@@ -66,7 +66,7 @@ class ScheduleTest < Test::Unit::TestCase
     event_on = SingleDayEvent.create(:name => 'On Schedule Start', :date => Date.new(2006, 1, 20))
     event_after = SingleDayEvent.create(:name => 'After Schedule Start', :date => Date.new(2006, 1, 21))
     
-    before_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
+    before_import_after_schedule_start_date = Event.count(:conditions => "date > '2006-01-20'")
     assert_equal(1, before_import_after_schedule_start_date, "2006 events count before import")
     before_import_all = Event.count
     assert_equal(18, before_import_all, "All events count before import")
@@ -74,7 +74,7 @@ class ScheduleTest < Test::Unit::TestCase
     filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
     Schedule::Schedule.import(filename)
     
-    after_import_after_schedule_start_date = Event.count("date > '2006-01-20'")
+    after_import_after_schedule_start_date = Event.count(:conditions => "date > '2006-01-20'")
     assert_equal(74, after_import_after_schedule_start_date, "2006 events count after import")
     after_import_all = Event.count
     assert_equal(92, after_import_all, "All events count after import")
@@ -87,7 +87,7 @@ class ScheduleTest < Test::Unit::TestCase
     fast_twitch_fridays = []
     la_world_cup = nil
     road_nationals = nil
-    for event in Event.find_all("date >= 2005-01-01")
+    for event in Event.find(:all, :conditions => 'date >= 2005-01-01')
       assert_not_nil(event.date, "#{event.name} date")
       if event.name == "Cascade Cream Puff MTB"
         cream_puff = event
@@ -140,7 +140,7 @@ class ScheduleTest < Test::Unit::TestCase
       assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "Fast Twitch sanctioned_by")
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
     end
-    assert_equal(1, Promoter.count("name = 'Jen Featheringill'"), "Jen Featheringill should only be listed once in promoters")
+    assert_equal(1, Promoter.count(:conditions => "name = 'Jen Featheringill'"), "Jen Featheringill should only be listed once in promoters")
     
     assert_not_nil(jack_frost, "Should have imported Jack Frost")
     assert_equal("Vancouver", jack_frost.city, "Jack Frost city")

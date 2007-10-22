@@ -8,7 +8,7 @@
 
 <% if @user %>
 
-<%= start_form_tag :action=> "login" %>
+<%= form_tag :action=> "login" %>
 <table class="base" id="login">
 	<caption>Logged In</caption>
 	<tr>
@@ -18,11 +18,11 @@
 		<td><input type="submit" name="logout" value="Logout"/></td>
 	</tr>
 </table>
-<%= end_form_tag %>
+</form>
 
 <% else %>
 
-<%= start_form_tag :action=> "login" %>
+<%= form_tag :action=> "login" %>
 <table class="base" id="login">
 	<caption>Login</caption>
 	<tr><th colspan="2"></tr>
@@ -38,7 +38,7 @@
 		<td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
 	</tr>
 </table>
-<%= end_form_tag %>
+</form>
 
 <% end %>
 

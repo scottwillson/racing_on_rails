@@ -1,11 +1,10 @@
 class Admin::ResultsController < Admin::RecordEditor
 
-  model :result
   edits :result
 
   def create
-    race = Race.find(@params[:id])
-    result = race.results.build(@params[:result])
+    race = Race.find(params[:id])
+    result = race.results.build(params[:result])
     result.save!
     flash[:notice] = "Saved new result #{result.place}"
     expire_cache
@@ -13,14 +12,14 @@ class Admin::ResultsController < Admin::RecordEditor
   end
   
   def edit
-    @result = Result.find(@params[:id])
+    @result = Result.find(params[:id])
   end
   
   # Editing the Racer or Team name will update the Result's current Racer's or Team's name, which 
   # may not be what you want. If you need to change the Racer or Team, and not just correct a misspelling,
   # Delete the Result and create a new one
   def update
-    @result = Result.update(@params[:result][:id], @params[:result])
+    @result = Result.update(params[:result][:id], params[:result])
     
     if @result.errors.empty?
       flash[:notice] = "Updated result #{@result.place}"
@@ -37,7 +36,7 @@ class Admin::ResultsController < Admin::RecordEditor
   
   def destroy
     # Get data _before_ delete
-    result = Result.find(@params[:id])
+    result = Result.find(params[:id])
     race = result.race
     event = race.standings.event    
     notice = "Deleted result #{result.place}"

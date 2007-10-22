@@ -3,12 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/unit/results_file_test.rb</string>
+	<string>test/functional/admin/racers_controller_test.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>app</string>
 			<key>regexFolderFilter</key>
@@ -25,8 +23,6 @@
 			<string>components</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -87,24 +83,24 @@
 			<string>script</string>
 		</dict>
 		<dict>
+			<key>name</key>
+			<string>test</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>test</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>tmp</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>tmp</string>
+		</dict>
+		<dict>
 			<key>expanded</key>
 			<true/>
-			<key>name</key>
-			<string>test</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>test</string>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>tmp</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>tmp</string>
-		</dict>
-		<dict>
 			<key>name</key>
 			<string>vendor</string>
 			<key>regexFolderFilter</key>
@@ -122,37 +118,21 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>149</integer>
+				<integer>128</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>133</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>138</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>150</integer>
-			</dict>
+			<integer>109</integer>
 		</dict>
 		<key>app/models/result.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>27</integer>
+				<integer>9</integer>
 				<key>line</key>
 				<integer>149</integer>
 			</dict>
@@ -205,27 +185,25 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>test/unit/results_file_test.rb</key>
+		<key>test/functional/admin/racers_controller_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>13</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>485</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>28</integer>
+			<integer>465</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
+		<string>test/functional/admin/racers_controller_test.rb</string>
 		<string>app/controllers/admin/racers_controller.rb</string>
-		<string>test/unit/results_file_test.rb</string>
-		<string>test/fixtures/racers.yml</string>
-		<string>test/fixtures/race_numbers.yml</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

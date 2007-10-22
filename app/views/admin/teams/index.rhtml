@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<%= start_form_tag({}, {:method => 'get'}) %>
+<%= form_tag({}, {:method => 'get'}) %>
 	Name: <%= text_field_tag 'name', @name, :size => 30 %>
 
 	<%# Nasty code required to show consisten meesages with and without AJAX. At least it could be in a helper. %>
@@ -16,7 +16,7 @@
 	</div>
 	<%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
 	<%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
-<%= end_form_tag %>
+</form>
 
 <table>
 	<tr>

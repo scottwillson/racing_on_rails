@@ -26,7 +26,7 @@
 
 <%= error_messages_for 'racer' %>
 
-<%= start_form_tag({:action => 'update', :id => @racer.id}) %>
+<%= form_tag({:action => 'update', :id => @racer.id}) %>
 	<table class="base" cellspacing="0" cellpadding="0">
 		<caption><%= racer_name %></caption>
 		<tr><th colspan="6"></th></tr>
@@ -173,6 +173,6 @@
 			</td>
 		</tr>
 	</table>
-<% end_form_tag %>
+</form>
 
 </div>

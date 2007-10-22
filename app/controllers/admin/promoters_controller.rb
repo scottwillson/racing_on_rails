@@ -3,7 +3,6 @@
 # Promoter information shows up on the schedules
 class Admin::PromotersController < ApplicationController
 
-  model :promoter
   layout 'admin/application'
   before_filter :login_required
   cache_sweeper :schedule_sweeper, :only => [:update]

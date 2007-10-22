@@ -4,7 +4,7 @@
 
   <%= error_messages_for "mailing_list_post" %>
 
-  <%= start_form_tag :action => "post" %>
+  <%= form_tag :action => "post" %>
   <%= hidden_field("mailing_list_post", "mailing_list_id") %>
   <%= hidden_field("reply_to", 'id') %>
   
@@ -45,7 +45,7 @@
 	  </td>
     </tr>
   </table>  
-  <%= end_form_tag %>
+  </form>
   
   <br/>
 

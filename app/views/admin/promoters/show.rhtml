@@ -19,7 +19,7 @@
 
 <%= error_messages_for 'promoter' %>
 
-<%= start_form_tag({:action => 'update', :id => @promoter.id}) %>
+<%= form_tag({:action => 'update', :id => @promoter.id}) %>
 	<table class="base">
 		<caption><%= @promoter.name %></caption>
 		<tr><th colspan="3"></th></tr>
@@ -70,6 +70,6 @@
 	<br>
 	<%= link_to("Back to #{@event.name}", :controller => 'events', :action => 'show', :id => @event.id, :promoter_id => @promoter.id) if @event %>
 	<%= hidden_field_tag('event_id', @event.id) if @event %>
-<% end_form_tag %>
+</form>
 
 </div>
