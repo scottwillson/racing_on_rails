@@ -75,13 +75,15 @@ unless defined?(ASSOCIATION)
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
 
-include Competitions
-
 # Ensure all STI classes load
+Event
 SingleDayEvent
 MultiDayEvent
 Series
 WeeklySeries
+
+include Competitions
+Competition
 Bar
 OverallBar
 RiderRankings
