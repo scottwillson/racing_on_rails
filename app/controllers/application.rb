@@ -22,7 +22,15 @@ class ApplicationController < ActionController::Base
   end
   
   def expire_cache
-    FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results')) if perform_caching
+    if perform_caching
+      FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'bar'))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'schedule'))
+      FileUtils.rm(File.join(RAILS_ROOT, 'public', 'results.html'), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, 'public', 'schedule.html'), :force =>true)
+      FileUtils.rm(File.join(RAILS_ROOT, 'public', 'index.html'), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, 'public', 'bar.html'), :force => true)
+    end
   end
   
   protected
