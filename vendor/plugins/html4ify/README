@@ -1,0 +1,38 @@
+= Html4ify
+
+A plugin to help you get rid of the self-closing HTML-tags that Rails' tag helpers keep throwing at you.This is useful when you want to keep your generated HTML-code HTML 4 compliant, hence the name of the plugin.
+
+
+== Usage
+
+Use Rails' tag helpers like you're used to do. This plugin overwrites some standard methods to do its magic, you don't need to worry about a thing. In addition this plugin provides a method +doctype+ to generate a Document Type Declaration. To use it in your views, simply type:
+
+  <%= doctype %>
+
+This will generate a standard HTML 4.01 Strict doctype-declaration. Optionally, you can pass in an argument to specify the type op DTD, like this:
+
+  <%= doctype :loose %>
+
+yields:
+
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+and:
+
+  <%= doctype :frameset %>
+  
+yields:
+
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+
+
+== Authors
+
+R.W. van 't Veer
+
+M.A. de Graaf
+
+
+== Copyright
+
+Copyright (c) 2007, R.W. van 't Veer & M.A. de Graaf
