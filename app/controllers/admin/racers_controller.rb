@@ -375,7 +375,14 @@ class Admin::RacersController < Admin::RecordEditor
   def export
     members_only = (params['include'] == 'members_only')
     if params['format'] == 'excel'
-      racers = export_to_excel(members_only)
+      today = Date.today
+      file_name = "racers_#{today.year}_#{today.month}_#{today.day}.xls"
+      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes created_at updated_at}
+      racers = export_to_excel(members_only, file_name, columns)
+    elsif params['format'] == 'scoring_sheet'
+      file_name = 'scoring_sheet.xls'
+      columns = %w{ road_number last_name first_name street city zip racing_age team road_category }
+      racers = export_to_excel(members_only, file_name, columns)
     elsif params['format'] == 'finish_lynx'
       racers = export_to_finish_lynx(members_only)
     else
@@ -386,14 +393,15 @@ class Admin::RacersController < Admin::RecordEditor
     render :text => racers
   end
   
-  def export_to_excel(members_only)
+  def export_to_excel(members_only, file_name, columns)
+    raise(ArgumentError, 'file_name cannot be nil') if file_name.blank?
+    raise(ArgumentError, 'columns cannot be nil or empty') if columns.nil? || columns.empty?
+
     headers['Content-Type'] = 'application/vnd.ms-excel'
-    today = Date.today
-    headers['Content-Disposition'] = "filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\""
+    headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
     # A grid might be handy here, but not sure it matters
     begin
-      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes created_at updated_at}
       racers = columns.join("\t")
       racers << "\n"
       
@@ -401,7 +409,7 @@ class Admin::RacersController < Admin::RecordEditor
         racers_from_db = Racer.find(
           :all,
           :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-          :conditions => ['member_to >= ?', today]
+          :conditions => ['member_to >= ?', Date.today]
           )
       else
         racers_from_db = Racer.find(
@@ -446,7 +454,6 @@ class Admin::RacersController < Admin::RecordEditor
   
   def export_to_finish_lynx(members_only)
     headers['Content-Type'] = 'application/vnd.ms-excel'
-    today = Date.today
     headers['Content-Disposition'] = "filename=\"lynx.ppl\""
 
     # A grid might be handy here, but not sure it matters
@@ -459,7 +466,7 @@ class Admin::RacersController < Admin::RecordEditor
         racers_from_db = Racer.find(
           :all,
           :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-          :conditions => ['member_to >= ?', today]
+          :conditions => ['member_to >= ?', Date.today]
           )
       else
         racers_from_db = Racer.find(

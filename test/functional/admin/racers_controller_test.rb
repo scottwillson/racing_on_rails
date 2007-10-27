@@ -955,7 +955,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
-  def test_export_members_only_o_finish_lynx
+  def test_export_members_only_to_finish_lynx
     opts = {
       :controller => "admin/racers", 
       :action => "export"
@@ -967,6 +967,22 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
+  
+  def test_export_members_only_to_scoring_sheet
+    opts = {
+      :controller => "admin/racers", 
+      :action => "export"
+    }
+    assert_routing("/admin/racers/export", opts)
+
+    get(:export, :format => 'scoring_sheet', :include => 'members_only')
+
+    assert_response(:success)
+    today = Date.today
+    assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
