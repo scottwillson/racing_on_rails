@@ -1,5 +1,7 @@
 # Year-long competition that derive there standings from other Events:
-# BAR, Ironman
+# BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
+#
+# 
 class Competition < Event
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name
@@ -11,11 +13,12 @@ class Competition < Event
   before_save   {|competition| competition.notification = false; true}
   after_save    :expire_cache
   
-  # Calculate clashes with internal Rails method
-  # Destroys existing BAR for the year first.
-  # TODO store in database?
+  # Update results based on source event results.
+  # (Calculate clashes with internal Rails method)
+  # Destroys existing Competition for the year first.
+  # TODO store intermeditate results in database?
   def Competition.recalculate(year = Date.today.year)
-    # TODO: Use FKs in database to cascade delete`
+    # TODO: Use FKs in database to cascade delete
     # TODO Use Hashs or class instead of iterating through Arrays!
     benchmark(name, Logger::INFO, false) {
       transaction do
@@ -26,7 +29,7 @@ class Competition < Event
         raise competition.errors.full_messages unless competition.errors.empty?
         competition.destroy_standings
         competition.create_standings
-        # Could bluck load all Standings and Races at this point, but hardly seems to matter
+        # Could bulk load all Standings and Races at this point, but hardly seems to matter
         competition.calculate_members_only_places
         competition.recalculate
       end
@@ -134,18 +137,20 @@ class Competition < Event
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
     competition_result = nil
-    for source_result in results
+    results.each_with_index do |source_result, index|
       logger.debug("#{self.class.name} scoring result: #{source_result.date} #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       racer = source_result.racer
-       if member?(racer, source_result.date)
+      if member?(racer, source_result.date)
  
-         if first_result_for_racer(source_result, competition_result)
-           competition_result = race.results.create(
+        if first_result_for_racer(source_result, competition_result)
+          # Intentionally not using results association create method. No need to hang on to all competition results.
+          # In fact, this could cause serious memory issues with the Ironman
+          competition_result = Result.create!(
              :racer => racer, 
              :team => racer.team,
              :race => race)
-         end
+        end
  
         Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
           competition_result.scores.create_if_best_result_for_race(
@@ -155,6 +160,15 @@ class Competition < Event
           )
         }
       end
+      
+      # Aggressive memory management. If competition has a race with many results, the results 
+      # array could become a large, uneeded, structure
+      results[index] = nil
+      if index > 0 && index % 1000 == 0
+        logger.debug("GC start after record #{index}")
+        GC.start
+      end
+      
     end
   end
   

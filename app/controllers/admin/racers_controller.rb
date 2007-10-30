@@ -381,7 +381,7 @@ class Admin::RacersController < Admin::RecordEditor
       racers = export_to_excel(members_only, file_name, columns)
     elsif params['format'] == 'scoring_sheet'
       file_name = 'scoring_sheet.xls'
-      columns = %w{ road_number last_name first_name street city zip racing_age team road_category }
+      columns = %w{ road_number last_name first_name street city zip racing_age team_name road_category }
       racers = export_to_excel(members_only, file_name, columns)
     elsif params['format'] == 'finish_lynx'
       racers = export_to_finish_lynx(members_only)
