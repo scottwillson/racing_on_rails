@@ -21,6 +21,8 @@ class BarController < ApplicationController
     else
       if @discipline == 'Team' and @year != '2006'
         bar = TeamBar.find(:first, :conditions => ['date = ?', date])
+      elsif @discipline == 'Age Graded'
+        bar = AgeGradedBar.find(:first, :conditions => ['date = ?', date])
       else
         bar = Bar.find(:first, :conditions => ['date = ?', date])
       end
@@ -38,6 +40,8 @@ class BarController < ApplicationController
             :first, 
             :conditions => ['event_id = ?', bar.id])
         end
+      elsif @discipline == 'Age Graded'
+        @standings = bar.standings(true).first
       else
         @standings = Standings.find(
           :first, 

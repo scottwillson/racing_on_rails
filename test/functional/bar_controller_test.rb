@@ -53,19 +53,22 @@ class BarControllerTest < Test::Unit::TestCase
     get(:show, :year => "2002")
     assert_response(:success)
     assert_template("bar/show")
-    assert_nil(assigns["standings"], "Should assign road_events")
+    assert_nil(assigns["standings"], "Should not assign standings")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
   end
   
   def test_show_age_graded
-    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2002"}
-    assert_routing("/bar/2002/age_graded", opts)
-    get(:show, :discipline => 'age_graded', :year => "2002")
+    Bar.recalculate(2004)
+    OverallBar.recalculate(2004)
+    AgeGradedBar.recalculate(2004)
+    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2004"}
+    assert_routing("/bar/2004/age_graded", opts)
+    get(:show, :discipline => 'age_graded', :year => "2004")
     assert_response(:success)
     assert_template("bar/show")
-    assert_nil(assigns["standings"], "Should assign standings")
+    assert_not_nil(assigns["standings"], "Should assign standings")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
