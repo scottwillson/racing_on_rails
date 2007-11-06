@@ -32,8 +32,26 @@ module Competitions
     
     def create_categories
       if CATEGORIES.empty?
-        CATEGORIES << Category.new(:name => 'Masters Men 30-34', :ages => 30..34, :parent => Category.new(:name => 'Masters Men'))
-        CATEGORIES << Category.new(:name => 'Masters Men 35-39', :ages => 35..39, :parent => Category.new(:name => 'Masters Men'))
+        30.step(65, 5) do |age|
+          CATEGORIES << Category.new(:name => "Masters Men #{age}-#{age + 4}", :ages => (age)..(age + 4), :parent => Category.new(:name => 'Masters Men'))
+        end
+        CATEGORIES << Category.new(:name => 'Masters Men 70+', :ages => 70..999, :parent => Category.new(:name => 'Masters Men'))
+        
+        30.step(55, 5) do |age|
+          CATEGORIES << Category.new(:name => "Masters Women #{age}-#{age + 4}", :ages => (age)..(age + 4), :parent => Category.new(:name => 'Masters Women'))
+        end
+        CATEGORIES << Category.new(:name => 'Masters Women 60+', :ages => 60..999, :parent => Category.new(:name => 'Masters Women'))
+        
+        CATEGORIES << Category.new(:name => "Junior Men 10-12", :ages => 10..12, :parent => Category.new(:name => 'Junior Men'))
+        CATEGORIES << Category.new(:name => "Junior Men 13-14", :ages => 13..14, :parent => Category.new(:name => 'Junior Men'))
+        CATEGORIES << Category.new(:name => "Junior Men 15-16", :ages => 15..16, :parent => Category.new(:name => 'Junior Men'))
+        CATEGORIES << Category.new(:name => "Junior Men 17-18", :ages => 17..18, :parent => Category.new(:name => 'Junior Men'))
+        
+        CATEGORIES << Category.new(:name => "Junior Women 10-12", :ages => 10..12, :parent => Category.new(:name => 'Junior Women'))
+        CATEGORIES << Category.new(:name => "Junior Women 13-14", :ages => 13..14, :parent => Category.new(:name => 'Junior Women'))
+        CATEGORIES << Category.new(:name => "Junior Women 15-16", :ages => 15..16, :parent => Category.new(:name => 'Junior Women'))
+        CATEGORIES << Category.new(:name => "Junior Women 17-18", :ages => 17..18, :parent => Category.new(:name => 'Junior Women'))
+
         for category in CATEGORIES
           if Category.exists?(:name => category.parent.name)
             category.parent = Category.find_by_name(category.parent.name)
@@ -41,8 +59,13 @@ module Competitions
             category.parent.save!
           end
           
-          unless Category.exists?(:name => category.name)
+          existing_category = Category.find_by_name(category.name)
+          if existing_category.nil?
             category.save!
+          elsif existing_category.ages != category.ages || existing_category.parent != category.parent
+            existing_category.ages = category.ages
+            existing_category.parent = category.parent
+            existing_category.save!
           end          
         end
       end

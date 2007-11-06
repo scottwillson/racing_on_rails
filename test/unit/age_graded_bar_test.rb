@@ -32,7 +32,7 @@ class AgeGradedBarTest < Test::Unit::TestCase
     weaver.save!    
     banana_belt_standings = standings(:banana_belt)
     masters_men = categories(:masters_men)
-    masters_30_34 = Category.create!(:name => 'Masters Men 30-34', :ages => 30..34, :parent => masters_men)
+    masters_30_34 = Category.create!(:name => 'Masters Men 30-34', :parent => masters_men)
     banana_belt_masters_30_34 = banana_belt_standings.races.create!(:category => masters_30_34)
     banana_belt_masters_30_34.results.create!(:racer => weaver, :place => '10')
     
