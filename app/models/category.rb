@@ -49,6 +49,15 @@ class Category < ActiveRecord::Base
     self[:position] || 9999
   end
   
+  def ages
+    self.ages_begin..ages_end
+  end
+  
+  def ages=(value)
+    self.ages_begin = value.begin
+    self.ages_end = value.end
+  end
+  
   def descendants
     _descendants = children(true)
     for child in children

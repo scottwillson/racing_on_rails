@@ -565,7 +565,6 @@ class Racer < ActiveRecord::Base
   end
   
   def add_alias_for_old_name
-    logger.debug("add_alias_for_old_name self[:name] #{self[:name]} @old_name: #{@old_name} -> name: #{name}")
     if !@old_name.blank? && !name.blank? && @old_name.casecmp(name) != 0 && !Alias.exists?(['name = ? and racer_id = ?', @old_name, id])
       Alias.create!(:name => @old_name, :racer => self)
     end

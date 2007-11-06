@@ -61,10 +61,15 @@ class Race < ActiveRecord::Base
     category.name if category
   end
   
+  # Range of dates_of_birth of racers in this race
+  def dates_of_birth
+    raise(ArgumentError, 'Need category to calculate dates of birth') unless category
+    Date.new(date.year - category.ages.end, 1, 1)..Date.new(date.year - category.ages.begin, 12, 31)
+  end
+  
   def date
-    if standings || standings(true)
-      standings.date
-    end
+    raise(ArgumentError, 'Need standings to get date') unless standings
+    standings.date
   end
   
   # FIXME: Incorrectly doubles tandem and other team events' field sizes

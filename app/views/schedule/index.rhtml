@@ -7,6 +7,10 @@
 <%= links_to_years %>
 <br>
 
+<% if Date.today < Date.new(@year, 2) %>
+<div>Tentative. Dates are subject to change.</div>
+<% end %>
+
 <%- for month in @schedule.months -%>
 <div align="center">
 	<table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">

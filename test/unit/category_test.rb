@@ -51,4 +51,22 @@ class CategoryTest < Test::Unit::TestCase
     senior_men.parent = senior_men
     assert(!senior_men.valid?, 'Category with itself as parent should not be valid')
   end
+  
+  def test_ages
+    cat = Category.create(:name => 'Not a Masters Category')
+    assert_equal(0, cat.ages_begin, 'ages_begin')
+    assert_equal(999, cat.ages_end, 'ages_end is 999')
+    assert_equal(0..999, cat.ages, 'Default age range is 0 to 999')
+    
+    cat.ages = 12..15
+    assert_equal(12, cat.ages_begin, 'ages_begin')
+    assert_equal(15, cat.ages_end, 'ages_end')
+    assert_equal(12..15, cat.ages, 'Default age range')
+    
+    cat.save!
+    cat.reload
+    assert_equal(12, cat.ages_begin, 'ages_begin')
+    assert_equal(15, cat.ages_end, 'ages_end')
+    assert_equal(12..15, cat.ages, 'Default age range')
+  end
 end

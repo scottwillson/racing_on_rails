@@ -11,6 +11,9 @@ senior_women_road:
 women_4_road:
   discipline_id: 4
   category_id: 7
+masters_men_road:
+  discipline_id: 4
+  category_id: 10
   
 criterium_sr_men:
   discipline_id: 2

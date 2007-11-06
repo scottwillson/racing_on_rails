@@ -297,4 +297,18 @@ class RaceTest < Test::Unit::TestCase
     assert_equal('', race.results[4].members_only_place, 'Result 4 place')
     assert_equal(non_members[2], race.results[4].racer, 'Result 4 racer')
   end
+  
+  def test_dates_of_birth
+    event = SingleDayEvent.create!(:date => Date.today)
+    standings = event.standings.create!
+    race = standings.races.create!(:category => categories(:senior_men))
+    assert_equal_dates(Date.new(Date.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
+    assert_equal_dates(Date.new(Date.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+    
+    event = SingleDayEvent.create!(:date => Date.new(2000, 9, 8))
+    standings = event.standings.create!
+    race = standings.races.create!(:category => Category.new(:name =>'Espoirs', :ages => 18..23))
+    assert_equal_dates(Date.new(1977, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
+    assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+  end
 end
