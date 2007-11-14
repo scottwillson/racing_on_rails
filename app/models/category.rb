@@ -22,8 +22,11 @@ class Category < ActiveRecord::Base
   
   has_many :results
   has_many :races
+  
+  before_validation {|record| record.friendly_param = record.to_friendly_param}
 
   validates_presence_of :name
+  validates_presence_of :friendly_param
   validate :parent_is_not_self
    
   NONE = Category.new(:name => "", :id => nil)
@@ -31,6 +34,18 @@ class Category < ActiveRecord::Base
   # All categories with no parent (except root 'association' category)
   def Category.find_all_unknowns
     Category.find(:all, :conditions => ['parent_id is null and name <> ?', ASSOCIATION.short_name])
+  end
+  
+  def Category.find_by_friendly_param(param)
+    category_count = Category.count(:conditions => ['friendly_param = ?', param])
+    case category_count
+    when 0
+      nil
+    when 1
+      Category.find(:first, :conditions => ['friendly_param = ?', param])
+    else
+      raise AmbiguousParamException, "#{category_count} occurrences of #{param}"
+    end
   end
   
   def parent_is_not_self
@@ -42,6 +57,10 @@ class Category < ActiveRecord::Base
   # Default to blank
   def name
     self[:name] || ''
+  end
+  
+  def short_name
+    self[:name].gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp')
   end
   
   # Default to 9999
@@ -78,7 +97,14 @@ class Category < ActiveRecord::Base
     end
   end
     
+  def to_friendly_param
+    self.name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
+  end
+
   def to_s
     "#<Category #{id} #{parent_id} #{position} #{name}>"
   end
+end
+
+class AmbiguousParamException < Exception
 end

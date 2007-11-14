@@ -55,7 +55,7 @@ table.tabs_solo div.last {
 }
 
 table.tabs td.selected {
-        background-position: top right;
+	background-position: top right;
 	background-image: url(/images/buttons/selected.jpg); 
 }
 
@@ -66,7 +66,7 @@ table.tabs div.selected {
 
 table.tabs td.first_selected, table.tabs_solo td.first_selected {
 	background-image: url(/images/buttons/left_cap_selected.jpg); 
-        background-position: top left;
+	background-position: top left;
 }
 
 table.tabs div.first_selected, table.tabs_solo div.first_selected {

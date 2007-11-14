@@ -23,9 +23,21 @@ class BarControllerTest < Test::Unit::TestCase
   end
 
   def test_index
-    opts = {:controller => "bar", :action => "show", :year => "2004"}
+    opts = {:controller => "bar", :action => "index"}
+    assert_routing("/bar", opts)
+    get(:index)
+    assert_response(:success)
+    assert_template("bar/index")
+    assert_nil(assigns["standings"], "Should not assign standings")
+    assert_not_nil(assigns["year"], "Should  assign year")
+    assert_nil(assigns["discipline"], "Should assign not discipline")
+    assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
+  end
+
+  def test_defaults
+    opts = {:controller => "bar", :action => 'show', :year => "2004", :discipline => 'overall', :category => 'senior_men'}
     assert_routing("/bar/2004", opts)
-    get(:show, :year => "2004")
+    get(:show, :year => "2004", :discipline => 'overall', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should assign standings")
@@ -35,9 +47,9 @@ class BarControllerTest < Test::Unit::TestCase
   end
 
   def test_show_empty
-    opts = {:controller => "bar", :action => "show", :year => "2004", :discipline => "Road"}
-    assert_routing("/bar/2004/Road", opts)
-    get(:show, :year => "2004")
+    opts = {:controller => "bar", :action => 'show', :year => "2004", :discipline => 'road', :category => 'senior_men'}
+    assert_routing("/bar/2004/road", opts)
+    get(:show, :year => "2004", :discipline => 'road', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should assign road_events")
@@ -48,9 +60,9 @@ class BarControllerTest < Test::Unit::TestCase
 
   def test_show
     Bar.recalculate(2002)
-    opts = {:controller => "bar", :action => "show", :year => "2002", :discipline => "Road"}
-    assert_routing("/bar/2002/Road", opts)
-    get(:show, :year => "2002")
+    opts = {:controller => "bar", :action => "show", :year => "2002", :discipline => "road", :category => 'senior_women'}
+    assert_routing("/bar/2002/road/senior_women", opts)
+    get(:show, :year => "2002", :discipline => "road", :category => 'senior_women')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should not assign standings")
@@ -60,18 +72,36 @@ class BarControllerTest < Test::Unit::TestCase
   end
   
   def test_show_age_graded
-    Bar.recalculate(2004)
-    OverallBar.recalculate(2004)
-    AgeGradedBar.recalculate(2004)
-    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2004"}
-    assert_routing("/bar/2004/age_graded", opts)
-    get(:show, :discipline => 'age_graded', :year => "2004")
+    weaver = racers(:weaver)
+    weaver.date_of_birth = Date.new(1975)
+    weaver.save!    
+    banana_belt_standings = standings(:banana_belt)
+    banana_belt_standings.event.date = Date.new(2007, 3, 20)
+    banana_belt_standings.event.save!
+    masters_men = categories(:masters_men)
+    masters_30_34 = categories(:masters_men_30_34)
+    banana_belt_masters_30_34 = banana_belt_standings.races.create!(:category => masters_30_34)
+    banana_belt_masters_30_34.results.create!(:racer => weaver, :place => '10')
+
+    Bar.recalculate(2007)
+    OverallBar.recalculate(2007)
+    AgeGradedBar.recalculate(2007)
+    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2007", :category => 'masters_men_30_34'}
+    assert_routing("/bar/2007/age_graded/masters_men_30_34", opts)
+    get(:show, :discipline => "age_graded", :year => "2007", :category => 'masters_men_30_34')
     assert_response(:success)
-    assert_template("bar/show")
-    assert_not_nil(assigns["standings"], "Should assign standings")
-    assert_not_nil(assigns["year"], "Should assign year")
-    assert_not_nil(assigns["discipline"], "Should assign discipline")
-    assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
+    assert_template('bar/show')
+    assert_not_nil(assigns['race'], 'Should assign race')
+    assert_not_nil(assigns['year'], 'Should assign year')
+    assert_not_nil(assigns['discipline'], 'Should assign discipline')
+    assert_not_nil(assigns['all_disciplines'], 'Should assign all_disciplines')
+  end
+  
+  def test_show_age_graded_redirect
+    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2004", :category => 'masters_men_30_34'}
+    assert_routing("/bar/2004/age_graded/masters_men_30_34", opts)
+    get(:show, :discipline => "age_graded", :year => "2004", :category => 'masters_men_30_34')
+    assert_response(:redirect)
   end
   
   def test_categories
@@ -82,6 +112,27 @@ class BarControllerTest < Test::Unit::TestCase
     assert_template("bar/categories")
     assert_not_nil(assigns["bar"], "Should assign bar")
     assert_not_nil(assigns["excluded_categories"], "Should assign excluded_categories")
+  end
+  
+  def test_bad_discipline
+    get(:show, :discipline => "badbadbad", :year => "2004", :category => 'masters_men_30_34')
+    assert_response(:success)
+    assert_template('bar/not_found')
+    assert(!flash.empty?, 'flash.empty?')
+  end
+  
+  def test_bad_year
+    get(:show, :discipline => "overall", :year => "19", :category => 'masters_men_30_34')
+    assert_response(:success)
+    assert_template('bar/not_found')
+    assert(!flash.empty?, 'flash.empty?')
+  end
+  
+  def test_bad_category
+    get(:show, :discipline => 'overall', :year => "2004", :category => 'dhaskjdhal')
+    assert_response(:success)
+    assert_template('bar/not_found')
+    assert(!flash.empty?, 'flash.empty?')
   end
   
   # Broken lib implementation!

@@ -51,3 +51,8 @@ singlespeed:
   name: Singlespeed
   bar: false
   numbers: true
+age_graded:
+  id: 13
+  name: Age Graded
+  bar: true
+  numbers: false

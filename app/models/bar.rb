@@ -84,7 +84,8 @@ class Bar < Competition
   
   def create_standings
     raise errors.full_messages unless errors.empty?
-    for discipline in Discipline.find_all_bar
+    # Age Graded BAR and Overall BAR do their own calculations
+    for discipline in Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}
       discipline_standings = standings.create(
         :name => discipline.name,
         :discipline => discipline.name

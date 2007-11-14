@@ -69,4 +69,31 @@ class CategoryTest < Test::Unit::TestCase
     assert_equal(15, cat.ages_end, 'ages_end')
     assert_equal(12..15, cat.ages, 'Default age range')
   end
+  
+  def test_to_friendly_param
+    assert_equal('senior_men', categories(:senior_men).to_friendly_param, 'senior_men friendly_param')
+    assert_equal('pro_expert_women', categories(:pro_expert_women).to_friendly_param, 'pro_expert_women friendly_param')
+    assert_equal('category_4_5_men', categories(:men_4).to_friendly_param, 'men_4 param')
+    assert_equal('singlespeed_fixed', categories(:single_speed).to_friendly_param, 'single_speed_fixed friendly_param')
+    assert_equal('masters_35_plus', categories(:masters_35_plus).to_friendly_param, 'masters_35_plus friendly_param')
+    assert_equal('pro_semi_pro_men', categories(:pro_semi_pro_men).to_friendly_param, 'pro_semi_pro_men friendly_param')
+    assert_equal('category_3_200m_tt', Category.new(:name => 'Category 3 - 200m TT').to_friendly_param, 'Category 3 - 200m TT friendly_param')
+    assert_equal('jr_varisty_15_18_beginner', Category.new(:name => 'Jr Varisty 15 -18 Beginner').to_friendly_param, 'Jr Varisty 15 -18 Beginner friendly_param')
+    assert_equal('tandem_mixed_co_ed', Category.new(:name => 'Tandem - Mixed (Co-Ed)').to_friendly_param, 'Tandem - Mixed (Co-Ed) friendly_param')
+    assert_equal('tandem', Category.new(:name => '(Tandem)').to_friendly_param, '(Tandem) friendly_param')
+  end
+  
+  def test_find_by_friendly_param
+    for category in Category.find(:all)
+      assert_equal(category, Category.find_by_friendly_param(category.friendly_param), "#{category.name} #{category.friendly_param} find_by_friendly_param")
+    end
+  end
+  
+  def test_ambiguous_find_by_param
+    senior_men_2 = Category.create!(:name => 'Senior/Men')
+    senior_men = categories(:senior_men)
+    assert_equal('senior_men', senior_men.friendly_param)
+    assert_equal('senior_men', senior_men_2.friendly_param)
+    assert_raises(AmbiguousParamException) {Category.find_by_friendly_param('senior_men')}
+  end
 end

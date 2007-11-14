@@ -35,9 +35,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/bar/categories", :controller => "bar", :action => 'categories'
   map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
-  map.connect "/bar/:year/:discipline", :controller => "bar", :action => "show", :requirements => {:year => /\d+/}
-  map.connect "/bar/:year", :controller => "bar", :action => "show", :requirements => {:year => /\d+/}
-  map.connect "/bar", :controller => "bar", :action => "show"
+  map.connect "/bar", :controller => "bar", :action => "index"
+  map.connect "/bar/:year/:discipline/:category", 
+              :controller => "bar", :action => "show", 
+              :requirements => {:year => /\d+/}, 
+              :defaults => {:discipline => 'overall', :category => 'senior_men'}
 
   map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}

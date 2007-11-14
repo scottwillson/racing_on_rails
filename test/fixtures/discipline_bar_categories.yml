@@ -44,4 +44,11 @@ mtb_expert_junior_men:
 mtb_sport_junior_men:
   discipline_id: 3
   category_id: 24
-  
+
+senior_men_overall:
+  discipline_id: 7
+  category_id: 1
+
+age_graded_masters_men_30_34:
+  discipline_id: 13
+  category_id: 126

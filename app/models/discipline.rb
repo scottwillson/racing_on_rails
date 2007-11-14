@@ -1,9 +1,8 @@
 # Road, track, criterium, time trial ...
 class Discipline < ActiveRecord::Base
 
-  has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
+  has_and_belongs_to_many :bar_categories, :class_name => 'Category', :join_table => 'discipline_bar_categories'
   
-
   NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
   @@all_aliases = nil
   

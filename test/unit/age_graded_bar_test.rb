@@ -32,7 +32,7 @@ class AgeGradedBarTest < Test::Unit::TestCase
     weaver.save!    
     banana_belt_standings = standings(:banana_belt)
     masters_men = categories(:masters_men)
-    masters_30_34 = Category.create!(:name => 'Masters Men 30-34', :parent => masters_men)
+    masters_30_34 = Category.find_by_name('Masters Men 30-34')
     banana_belt_masters_30_34 = banana_belt_standings.races.create!(:category => masters_30_34)
     banana_belt_masters_30_34.results.create!(:racer => weaver, :place => '10')
     
@@ -91,7 +91,10 @@ class AgeGradedBarTest < Test::Unit::TestCase
     assert_equal_dates(Date.today, bar.updated_at, "AgeGradedBar last updated")
     assert_equal(42, Result.count, "Total count of results in DB")
     
-    race = bar.standings.first.races.detect {|race| race.category == masters_30_34}
+    bar_standings = bar.standings.first
+    assert_equal('Age Graded', bar_standings.discipline, 'Age Graded BAR standings discipline')    
+    
+    race = bar_standings.races.detect {|race| race.category == masters_30_34}
     assert_not_nil(race, 'Age Graded BAR should have Men 30-34 race')
     assert_equal(1, race.results.size, 'Men 30-34 should have one result')
     result = race.results.first
@@ -99,7 +102,7 @@ class AgeGradedBarTest < Test::Unit::TestCase
     assert_equal(weaver, result.racer, 'Racer')
     assert_equal(299, result.points, 'Points')
     
-    race = bar.standings.first.races.detect {|race| race.category == masters_35_39}
+    race = bar_standings.races.detect {|race| race.category == masters_35_39}
     assert_not_nil(race, 'Age Graded BAR should have Men 35-39 race')
     assert_equal(3, race.results.size, 'Men 35-39 results')
     race.results.sort!

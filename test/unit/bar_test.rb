@@ -136,7 +136,7 @@ class BarTest < Test::Unit::TestCase
     bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after recalculate")
     assert_equal(1, Bar.count, "Bar events after recalculate")
-    assert_equal(6, bar.standings.count, "Bar standings after recalculate")
+    assert_equal(6, bar.standings.count, "Bar standings after recalculate " + bar.standings.collect {|s| s.name}.join(', '))
     assert_equal(42, Result.count, "Total count of results in DB")
     # Should delete old BAR
     Bar.recalculate(2004)

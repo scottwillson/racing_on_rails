@@ -45,4 +45,10 @@ class DisciplineTest < Test::Unit::TestCase
     discipline = Discipline.create(:name => 'Unicycle', :numbers => true)
     assert_equal(true, discipline.numbers, 'Unicycle used for numbers')
   end
+  
+  def test_bar_categories
+    cx_bar_cats = disciplines(:cyclocross).bar_categories
+    assert_not_nil(cx_bar_cats, 'Cyclocross BAR categories')
+    assert(!cx_bar_cats.empty?, 'Cyclocross BAR categories not empty')
+  end
 end
