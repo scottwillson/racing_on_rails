@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/functional/admin/racers_controller_test.rb</string>
+	<string>config/environment.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>app</string>
 			<key>regexFolderFilter</key>
@@ -23,6 +25,8 @@
 			<string>components</string>
 		</dict>
 		<dict>
+			<key>expanded</key>
+			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -127,6 +131,20 @@
 			<key>firstVisibleLine</key>
 			<integer>109</integer>
 		</dict>
+		<key>app/controllers/application.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>2</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>app/models/result.rb</key>
 		<dict>
 			<key>caret</key>
@@ -140,6 +158,34 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>129</integer>
+		</dict>
+		<key>config/boot.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>39</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>2</integer>
+		</dict>
+		<key>config/environment.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>2</integer>
+				<key>line</key>
+				<integer>10</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>test/fixtures/race_numbers.yml</key>
 		<dict>
@@ -203,6 +249,9 @@
 	<key>openDocuments</key>
 	<array>
 		<string>test/functional/admin/racers_controller_test.rb</string>
+		<string>app/controllers/application.rb</string>
+		<string>config/boot.rb</string>
+		<string>config/environment.rb</string>
 		<string>app/controllers/admin/racers_controller.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
