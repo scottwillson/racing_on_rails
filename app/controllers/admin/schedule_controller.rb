@@ -34,6 +34,7 @@ class Admin::ScheduleController < ApplicationController
       end
 
       date = Schedule::Schedule.import(path)
+      expire_cache
       flash[:notice] = "Uploaded schedule from #{uploaded_file.original_filename}"
       redirect_path = {
         :controller => "/admin/schedule", 
