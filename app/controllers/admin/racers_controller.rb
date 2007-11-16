@@ -38,8 +38,8 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def new
-    @racer = Racer.new
     @year = Date.today.year
+    @racer = Racer.new(:member_from => Date.new(@year))
     @race_numbers = []
     @years = (2005..(@year + 1)).to_a.reverse
     render(:template => '/admin/racers/show')
