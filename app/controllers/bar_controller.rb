@@ -25,7 +25,10 @@ class BarController < ApplicationController
     end
     
     if @year < 2007 && @discipline == Discipline[:age_graded]
-      redirect_to("/bar/#{@year}/overall_by_age.html")
+      redirect_to("http://#{STATIC_HOST}/bar/#{@year}/overall_by_age.html")
+      return    
+    elsif @year < 2006
+      redirect_to("http://#{STATIC_HOST}/bar/#{@year}")
       return
     end
     
@@ -43,7 +46,7 @@ class BarController < ApplicationController
         return render(:action => 'not_found')
       end
 
-      equivalent_category = @discipline.bar_categories.detect {|cat| cat.parent == @category} || @discipline.bar_categories.detect {|cat| cat == @category.parent} || @discipline.bar_categories.first
+      equivalent_category = @discipline.bar_categories.detect {|cat| cat.parent == @category} || @discipline.bar_categories.detect {|cat| cat == @category.parent} || @discipline.bar_categories.sort.first
       raise "Could not find equivalent category for #{@category.name} in #{@discipline.name}" unless equivalent_category
       redirect_to(:category => equivalent_category.friendly_param)
       return
@@ -51,19 +54,34 @@ class BarController < ApplicationController
     raise "Could not find category '#{params['category']}'" unless @category
     
     if @discipline == Discipline[:overall]
-      bar_type = 'OverallBar'
+        @race = Race.find(:first,
+                          :include => [{:standings => :event}],
+                          :conditions => ['category_id = ? and events.date = ? and events.type = ?',
+                                          @category.id, Date.new(@year), 'OverallBar'])
+
     elsif @discipline == Discipline[:team]
-      bar_type = 'TeamBar'
+      @race = Race.find(:first,
+                        :include => [{:standings => :event}],
+                        :conditions => ['events.date = ? and events.type = ?', 
+                                        Date.new(@year), 'TeamBar'])
+      @results = Result.find(:all, 
+                             :include => [:team],
+                             :conditions => ['race_id = ?', @race.id]
+      ) if @race
+      return
+
     elsif @discipline == Discipline[:age_graded]
-      bar_type = 'AgeGradedBar'
+      @race = Race.find(:first,
+                        :include => [{:standings => :event}],
+                        :conditions => ['category_id = ? and events.date = ? and events.type = ?',
+                                        @category.id, Date.new(@year), 'AgeGradedBar'])
+
     else
-      bar_type = 'Bar'
+      @race = Race.find(:first,
+                        :include => [{:standings => :event}],
+                        :conditions => ['category_id = ? and events.date = ? and events.type = ? and (standings.discipline = ? or (standings.discipline is null and events.discipline = ?))', 
+                                        @category.id, Date.new(@year), 'Bar', @discipline.name, @discipline.name])
     end
-    
-    @race = Race.find(:first,
-                      :include => [{:standings => :event}],
-                      :conditions => ['category_id = ? and events.date = ? and events.type = ? and standings.discipline = ?', 
-                                      @category.id, Date.new(@year), bar_type, @discipline.name])
     
     # Optimization
     @results = Result.find(:all, 

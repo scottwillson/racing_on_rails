@@ -110,10 +110,17 @@ class ResultsController < ApplicationController
     	)
     	@racer = Racer.find(params[:racer_id])
   	else
-    	@results = Result.find(
+  	  @results = Result.find(
     	  :all,
-    	  :include => [:team, {:race => {:standings => :event}}],
+    	  :include => [{:race => {:standings => :event}}, :team],
     	  :conditions => ['events.id = ? and teams.id = ?', params[:competition_id], params[:team_id]]
+    	)
+    	
+    	result_ids = @results.collect {|result| result.id}
+    	@scores = Score.find(
+    	  :all,
+    	  :include => [{:source_result => [:racer, {:race => [:category, {:standings => :event}]}]}],
+    	  :conditions => ['competition_result_id in (?)', result_ids]
     	)
     	@team = Team.find(params[:team_id])
     	return render(:template => 'results/team_competition')

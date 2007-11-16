@@ -76,7 +76,7 @@ class Competition < Event
   end
   
   def name
-    self[:name] || "#{date.year} #{friendly_name}"
+    self[:name] ||= "#{date.year} #{friendly_name}"
   end
   
   def create_standings

@@ -35,9 +35,9 @@ class BarControllerTest < Test::Unit::TestCase
   end
 
   def test_defaults
-    opts = {:controller => "bar", :action => 'show', :year => "2004", :discipline => 'overall', :category => 'senior_men'}
-    assert_routing("/bar/2004", opts)
-    get(:show, :year => "2004", :discipline => 'overall', :category => 'senior_men')
+    opts = {:controller => "bar", :action => 'show', :year => "#{Date.today.year}", :discipline => 'overall', :category => 'senior_men'}
+    assert_routing("/bar/#{Date.today.year}", opts)
+    get(:show, :year => "#{Date.today.year}", :discipline => 'overall', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should assign standings")
@@ -47,9 +47,9 @@ class BarControllerTest < Test::Unit::TestCase
   end
 
   def test_show_empty
-    opts = {:controller => "bar", :action => 'show', :year => "2004", :discipline => 'road', :category => 'senior_men'}
-    assert_routing("/bar/2004/road", opts)
-    get(:show, :year => "2004", :discipline => 'road', :category => 'senior_men')
+    opts = {:controller => "bar", :action => 'show', :year => "#{Date.today.year}", :discipline => 'road', :category => 'senior_men'}
+    assert_routing("/bar/#{Date.today.year}/road", opts)
+    get(:show, :year => "#{Date.today.year}", :discipline => 'road', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should assign road_events")
@@ -59,10 +59,10 @@ class BarControllerTest < Test::Unit::TestCase
   end
 
   def test_show
-    Bar.recalculate(2002)
-    opts = {:controller => "bar", :action => "show", :year => "2002", :discipline => "road", :category => 'senior_women'}
-    assert_routing("/bar/2002/road/senior_women", opts)
-    get(:show, :year => "2002", :discipline => "road", :category => 'senior_women')
+    Bar.recalculate(Date.today.year)
+    opts = {:controller => "bar", :action => "show", :year => "#{Date.today.year}", :discipline => "road", :category => 'senior_women'}
+    assert_routing("/bar/#{Date.today.year}/road/senior_women", opts)
+    get(:show, :year => "#{Date.today.year}", :discipline => "road", :category => 'senior_women')
     assert_response(:success)
     assert_template("bar/show")
     assert_nil(assigns["standings"], "Should not assign standings")
@@ -97,11 +97,20 @@ class BarControllerTest < Test::Unit::TestCase
     assert_not_nil(assigns['all_disciplines'], 'Should assign all_disciplines')
   end
   
-  def test_show_age_graded_redirect
-    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2004", :category => 'masters_men_30_34'}
-    assert_routing("/bar/2004/age_graded/masters_men_30_34", opts)
-    get(:show, :discipline => "age_graded", :year => "2004", :category => 'masters_men_30_34')
+  def test_show_age_graded_redirect_2006
+    opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2006", :category => 'masters_men_30_34'}
+    assert_routing("/bar/2006/age_graded/masters_men_30_34", opts)
+    get(:show, :discipline => "age_graded", :year => "2006", :category => 'masters_men_30_34')
     assert_response(:redirect)
+    assert_redirected_to("http://#{STATIC_HOST}/bar/2006/overall_by_age.html")
+  end
+  
+  def test_show_redirect_before_2006
+    opts = {:controller => "bar", :action => 'show', :discipline => "overall", :year => "2003", :category => 'masters_men_30_34'}
+    assert_routing('/bar/2003/overall/masters_men_30_34', opts)
+    get(:show, :discipline => 'overall', :year => "2003", :category => 'masters_men_30_34')
+    assert_response(:redirect)
+    assert_redirected_to("http://#{STATIC_HOST}/bar/2003")
   end
   
   def test_categories
@@ -129,7 +138,7 @@ class BarControllerTest < Test::Unit::TestCase
   end
   
   def test_bad_category
-    get(:show, :discipline => 'overall', :year => "2004", :category => 'dhaskjdhal')
+    get(:show, :discipline => 'overall', :year => "2009", :category => 'dhaskjdhal')
     assert_response(:success)
     assert_template('bar/not_found')
     assert(!flash.empty?, 'flash.empty?')

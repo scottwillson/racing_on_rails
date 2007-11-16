@@ -14,6 +14,15 @@ class CompetitionTest < Test::Unit::TestCase
     competition = TestCompetition.new
     competition.name = 'QOM'
     assert_equal('QOM', competition.name, 'name')
+    competition.save!
+    name_in_db = Competition.connection.select_value("select name from events where id = #{competition.id}")
+    assert_equal("QOM", name_in_db, 'Name in database')
+  end
+  
+  def test_name_after_create
+    competition = TestCompetition.create!
+    name_in_db = Competition.connection.select_value("select name from events where id = #{competition.id}")
+    assert_equal("#{Date.today.year} KOM", name_in_db, 'Name in database')
   end
 
   def test_category_ids_for

@@ -25,7 +25,7 @@ class Event < ActiveRecord::Base
   def Event.find_all_years
     years = []
     results = connection.select_all(
-      "select distinct extract(year from date) as year from events where date <= '#{Date.today.year}-01-01'"
+      "select distinct extract(year from date) as year from events"
     )
     results.each do |year|
       years << year.values.first.to_i

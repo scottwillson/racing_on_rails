@@ -7,8 +7,8 @@
 <table class="base">
 	<caption>
 	  <%= result.place.to_i.ordinalize %> &mdash; 
-      <%= link_to(@competition.name, :action => 'event', :id => @competition.to_param) %> 
-      <%= link_to(result.race.standings.name, :action => 'event', :id => @competition.to_param) unless @competition.name == result.race.standings.name %>
+      <%= link_to(@competition.name + ' ', :action => 'event', :id => @competition.to_param) %>
+      <%= link_to(result.race.standings.name + ' ', :action => 'event', :id => @competition.to_param) unless @competition.name == result.race.standings.name %>
       <%= link_to(result.race.name, :action => 'event', :id => @competition.to_param) unless result.race.name == result.race.standings.name %></th>
 	</caption>
 	<tr>
@@ -19,7 +19,7 @@
 		<th>Date</th>
 		<th class="right">Points</th>
 	</tr>
-	<% for score in result.scores %>
+	<% for score in @scores %>
 	<tr class="<%= cycle("even", "odd") %>">
 		<td class="right" width="24"><%= score.source_result.place %></td>
 		<td width="400"><%= score.source_result.race.standings.name %></td>

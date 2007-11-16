@@ -67,7 +67,7 @@ module Competitions
     end
 
     def create_standings
-      root_standings = standings.create(:event => self)
+      root_standings = standings.create(:event => self, :discipline => Discipline[:overall])
       for category_name in [
         'Senior Men', 'Category 3 Men', 'Category 4 Men', 'Category 5 Men',
         'Senior Women', 'Category 3 Women', 'Category 4 Women', 
