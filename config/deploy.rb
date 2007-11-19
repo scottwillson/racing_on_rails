@@ -25,7 +25,8 @@ task :deploy do
   end
 end
 
-desc "Restart the web server"
-task :restart, :roles => :app do
-  restart_mongrel_cluster
+namespace :deploy do
+  task :restart, :roles => :app do
+    restart_mongrel_cluster
+  end
 end
