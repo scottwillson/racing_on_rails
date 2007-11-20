@@ -1,4 +1,4 @@
-# Filters added to this controller will be run for all controllers in the application.
+# Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
   include LoginSystem
@@ -7,9 +7,10 @@ class ApplicationController < ActionController::Base
   local_addresses.clear
   
   RESULTS_LIMIT = 100
-
+  
   # Pick a unique cookie name to distinguish our session data from others'
   session :session_key => '_racing_on_rails_session_id'
+  protect_from_forgery
   
   def expire_cache
     if perform_caching

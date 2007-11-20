@@ -6,6 +6,15 @@ require 'bar'
 
 class BarTest < Test::Unit::TestCase
   
+  def test_find_or_create_by_date
+    date = Date.today(2006)
+    bar = Bar.find_or_create_by_date(date)
+    assert_not_nil(bar, 'Should create BAR')
+
+    bar = Bar.find_or_create_by_date(date)
+    assert_not_nil(bar, 'Should find BAR')
+  end
+  
   def test_recalculate
     # Lot of set-up for BAR. Keep it out of fixtures and do one-time here.
     

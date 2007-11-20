@@ -70,24 +70,26 @@ class MultiDayEvent < Event
     
     first_event = events.first
     length = events.last.date - first_event.date
+
+    new_event_attributes = {
+      :city => first_event.city,
+      :discipline => first_event.discipline,
+      :flyer => first_event.flyer,
+      :name => first_event.name,
+      :promoter => first_event.promoter,
+      :sanctioned_by => first_event.sanctioned_by,
+      :state => first_event.state
+    }
+
     if events.size - 1 == length
-      multi_day_event = MultiDayEvent.new
+      multi_day_event = MultiDayEvent.create!(new_event_attributes)
     else
       if first_event.date.wday == 0 or first_event.date.wday == 6
-        multi_day_event = Series.new
+        multi_day_event = Series.create!(new_event_attributes)
       else
-        multi_day_event = WeeklySeries.new
+        multi_day_event = WeeklySeries.create!(new_event_attributes)
       end
     end
-
-    multi_day_event.city = first_event.city
-    multi_day_event.discipline = first_event.discipline
-    multi_day_event.flyer = first_event.flyer
-    multi_day_event.name = first_event.name
-    multi_day_event.promoter = first_event.promoter
-    multi_day_event.sanctioned_by = first_event.sanctioned_by
-    multi_day_event.state = first_event.state
-    multi_day_event.create
     
     for event in events
       event.parent = multi_day_event

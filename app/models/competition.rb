@@ -25,7 +25,7 @@ class Competition < Event
         # TODO move to superclass
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
-        competition = find_or_create_by_date(date)
+        competition = self.find_or_create_by_date(date)
         raise competition.errors.full_messages unless competition.errors.empty?
         competition.destroy_standings
         competition.create_standings
