@@ -4,20 +4,25 @@ load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
-module ActionView
-  class Base
-    private
-      def full_template_path(template_path, extension)
-        # Check to see if the partial exists in our 'local' folder first
-        local_path = File.join(RAILS_ROOT, 'local', 'app', 'views', "#{template_path}.#{extension}")
-        if File.exist?(local_path)
-          local_path
-        else
-          "#{@base_path}/#{template_path}.#{extension}"
-        end
-      end
-  end
-end
+#
+# There are now better options in Rails, and this approach should be changed
+
+ActionController::Base.view_paths << File.expand_path("#{RAILS_ROOT}/local/app/views")
+
+# module ActionView
+#   class Base
+#     private
+#       def full_template_path(template_path, extension)
+#         # Check to see if the partial exists in our 'local' folder first
+#         local_path = File.join(RAILS_ROOT, 'local', 'app', 'views', "#{template_path}.#{extension}")
+#         if File.exist?(local_path)
+#           local_path
+#         else
+#           "#{@base_path}/#{template_path}.#{extension}"
+#         end
+#       end      
+#   end
+# end
 
 # Scoop up both the base's migration files (those that should apply to ALL sites), plus
 # the site-specific migration files.  Sort them.  Apply them in turn.

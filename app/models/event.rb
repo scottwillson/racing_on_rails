@@ -60,35 +60,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # Automatically applies value in promoter key to promoter.
-  # Hack for OBRA legacy format: truis to guess sanctioning body from 'notes' key if sanctioned_by is missing.
-  # def attributes=(attributes)
-  #   unless attributes.nil?
-  #      if attributes[:promoter] and attributes[:promoter].is_a?(Hash)
-  #       attributes[:promoter] = Promoter.new(attributes[:promoter])
-  #       if attributes[:promoter_name]
-  #         self.promoter_name = attributes[:promoter_name]
-  #       end 
-  #       if attributes[:promoter_email]
-  #         self.promoter_email = attributes[:promoter_email]
-  #       end 
-  #       if attributes[:promoter_phone]
-  #         self.promoter_phone = attributes[:promoter_phone]
-  #       end                     
-  #     end
-  #                                      
-  #     # Shouldn't be this tricky
-  #     if !attributes.has_key?(:sanctioned_by)
-  #       if attributes[:notes] == "national"
-  #         attributes[:sanctioned_by] = "USA Cycling"
-  #       elsif attributes[:notes] == "international"
-  #         attributes[:sanctioned_by] = "UCI"
-  #       end
-  #     end
-  #   end
-  #   super(attributes)
-  # end
-
   # Assert that we're not trying to save an abstract class
   def validate_type
     if instance_of?(Event)
@@ -212,6 +183,23 @@ class Event < ActiveRecord::Base
       end
     end
     self[:flyer]
+  end
+  
+  def promoter=(value)
+    if value and attributes[:promoter].is_a?(Hash)
+      self[:promoter] = Promoter.new(value[:promoter])
+      if value[:promoter_name]
+        self.promoter_name = value[:promoter_name]
+      end 
+      if value[:promoter_email]
+        self.promoter_email = value[:promoter_email]
+      end 
+      if value[:promoter_phone]
+        self.promoter_phone = value[:promoter_phone]
+      end
+    else
+      self[:promoter] = value
+    end
   end
   
   def promoter_name

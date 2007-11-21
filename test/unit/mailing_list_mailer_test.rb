@@ -1,22 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'mailing_list_mailer'
 
-class MailingListMailerTest < Test::Unit::TestCase
+class MailingListMailerTest < ActionMailer::TestCase
   
-  CHARSET = "utf-8"
-
-  include ActionMailer::Quoting
-
-  def setup
-    ActionMailer::Base.delivery_method = :test
-    ActionMailer::Base.perform_deliveries = true
-    ActionMailer::Base.deliveries = []
-
-    @expected = TMail::Mail.new
-    @expected.set_content_type "text", "plain", { "charset" => CHARSET }
-    @expected.mime_version = '1.0'
-  end
-
   def test_post
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"
@@ -62,7 +47,7 @@ class MailingListMailerTest < Test::Unit::TestCase
     date = Time.now
     body = "Some message for the mailing list"
     email = TMail::Mail.new
-    email.set_content_type "text", "plain", { "charset" => CHARSET }
+    email.set_content_type "text", "plain", { "charset" => 'utf-8' }
     email.subject = subject
     email.from = from
     email.date = date
@@ -194,14 +179,6 @@ Still loyal:
   
   
   private
-    def read_fixture(action)
-      fixtures_path = File.dirname(__FILE__) + '/../fixtures'
-      IO.readlines("#{fixtures_path}/mailing_list_mailer/#{action}")
-    end
-
-    def encode(subject)
-      quoted_printable(subject, CHARSET)
-    end
     
     def email_to_archive
       return %Q{From scott@butlerpress.com  Mon Jan 23 15:52:43 2006

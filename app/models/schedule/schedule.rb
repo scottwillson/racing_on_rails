@@ -1,3 +1,13 @@
+# Sanctioned-by code
+# if !attributes.has_key?(:sanctioned_by)
+#   if attributes[:notes] == "national"
+#     attributes[:sanctioned_by] = "USA Cycling"
+#   elsif attributes[:notes] == "international"
+#     attributes[:sanctioned_by] = "UCI"
+#   end
+# end
+
+
 module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule

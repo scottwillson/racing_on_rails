@@ -1,21 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'oregon_cup_mailer'
 
 # Test email for first race
 
-class OregonCupMailerTest < Test::Unit::TestCase
-  CHARSET = "utf-8"
-  include ActionMailer::Quoting
-
-  def setup
-    ActionMailer::Base.delivery_method = :test
-    ActionMailer::Base.perform_deliveries = true
-    ActionMailer::Base.deliveries = []
-  end
+class OregonCupMailerTest < ActionMailer::TestCase
 
   def test_kickoff
     expected = TMail::Mail.new
-    expected.set_content_type "text", "plain", { "charset" => CHARSET }
+    expected.set_content_type "text", "plain", { "charset" => 'utf-8' }
     expected.subject = "Oregon Cup Starts This Weekend"
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
@@ -34,7 +25,7 @@ class OregonCupMailerTest < Test::Unit::TestCase
 
   def test_standings
     expected = TMail::Mail.new
-    expected.set_content_type "text", "plain", { "charset" => CHARSET }
+    expected.set_content_type "text", "plain", { "charset" => 'utf-8' }
     expected.subject = "Oregon Cup Standings"
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
@@ -54,7 +45,7 @@ class OregonCupMailerTest < Test::Unit::TestCase
 
   def test_final_standings
     expected = TMail::Mail.new
-    expected.set_content_type "text", "plain", { "charset" => CHARSET }
+    expected.set_content_type "text", "plain", { "charset" => 'utf-8' }
     expected.subject = "Oregon Cup Standings"
     expected.from = "Scott Willson <scott@butlerpress.com>"
     expected.to = 'obra@list.obra.org'
@@ -70,10 +61,4 @@ class OregonCupMailerTest < Test::Unit::TestCase
     
     assert_equal(expected.encoded, standings_email.encoded)
   end
-
-  def read_fixture(action)
-    fixtures_path = File.dirname(__FILE__) + '/../fixtures'
-    IO.readlines("#{fixtures_path}/oregon_cup_mailer/#{action}")
-  end
-
 end
