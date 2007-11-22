@@ -8,6 +8,6 @@ class User < ActiveRecord::Base
   validates_presence_of :name, :username, :password, :password_confirmation
 
   def self.authenticate(username, pass)
-    find_first(["username = ? AND password = ?", username, pass])
+    find(:first, :conditions => ["username = ? AND password = ?", username, pass])
   end  
 end

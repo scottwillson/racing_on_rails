@@ -1,21 +1,18 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require 'admin/schedule_controller'
 
+include Admin::ScheduleHelper
+include ActionView::Helpers::TagHelper
+include ActionView::Helpers::UrlHelper
+include ActionView::Helpers::TextHelper
+include ActionView::Helpers::CaptureHelper
+
 # :stopdoc:
 class Admin::ScheduleController
   def rescue_action(e) raise e end
 end
 
-# TODO More elegant way to handle this?
-module Admin::ScheduleHelper
- include ActionView::Helpers::UrlHelper
- include ERB::Util
-end
-
 class AdminScheduleControllerTest < Test::Unit::TestCase
-  
-  include Admin::ScheduleHelper
-  
   def setup
     @controller = Admin::ScheduleController.new
     @request    = ActionController::TestRequest.new

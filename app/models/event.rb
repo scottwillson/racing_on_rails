@@ -20,7 +20,7 @@ class Event < ActiveRecord::Base
            :order => 'position'
            
   include Comparable
-    
+  
   # Return list of every year that has at least one event
   def Event.find_all_years
     years = []
@@ -183,23 +183,6 @@ class Event < ActiveRecord::Base
       end
     end
     self[:flyer]
-  end
-  
-  def promoter=(value)
-    if value and attributes[:promoter].is_a?(Hash)
-      self[:promoter] = Promoter.new(value[:promoter])
-      if value[:promoter_name]
-        self.promoter_name = value[:promoter_name]
-      end 
-      if value[:promoter_email]
-        self.promoter_email = value[:promoter_email]
-      end 
-      if value[:promoter_phone]
-        self.promoter_phone = value[:promoter_phone]
-      end
-    else
-      self[:promoter] = value
-    end
   end
   
   def promoter_name

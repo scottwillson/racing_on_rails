@@ -1,6 +1,8 @@
 # @columns.first.name = 'place' if !@columns.empty? and @columns.first.name.blank?
 
 class Grid
+  include ActionView::Helpers::TextHelper
+
   attr_accessor :columns, :rows, :invalid_columns
   attr_reader :column_count, :padding, :delimiter, :quoted, :column_map
 
@@ -224,7 +226,7 @@ class Grid
 
   def to_s(include_columns = true)
     unless truncated?
-  	  truncate
+  	  truncate_rows
 	  end
 	  unless calculated_padding?
 	    calculate_padding
@@ -256,7 +258,7 @@ class Grid
         end
       end
       if padding < 0
-        cell = truncate_obra(cell, column_size(index))
+        cell = truncate(cell, column_size(index))
       end
       text = text + cell
       unless index + 1 == row.size
@@ -283,13 +285,13 @@ class Grid
     text + "\n"
   end
 
-  def truncate
+  def truncate_rows
     @truncated = true
     for row in rows
       for index in 0..(column_count - 1)
         cell = row[index] || ''
         if cell.size > column_size(index)
-          row[index] = truncate_obra(cell, column_size(index))
+          row[index] = truncate(cell, column_size(index))
         end
       end
     end
@@ -319,18 +321,6 @@ class Grid
 
   def calculated_padding?
     @calculated_padding
-  end
-
-  # TODO Just redefine helper method
-  def truncate_obra(text, length = 30, truncate_string = "...")
-    if text.nil? then return end
-
-    if $KCODE == "NONE"
-      text.length > length ? text[0..(length - 4)] + truncate_string : text
-    else
-      chars = text.split(//)
-      chars.length > length ? chars[0..(length - 4)].join + truncate_string : text
-    end
   end
 
   def delete_blank_rows

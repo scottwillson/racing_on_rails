@@ -55,9 +55,7 @@ class EventTest < Test::Unit::TestCase
     assert_nil(Promoter.find_by_name(promoter_name), "Promoter #{promoter_name} should not be in DB")
     event = SingleDayEvent.new({
       :name => "Silverton",
-      :promoter => {
-        :name => promoter_name
-      }
+      :promoter => Promoter.new(:name => promoter_name)
     })
     assert_not_nil(event.promoter, "Event promoter before save")
     event.save!
@@ -66,9 +64,7 @@ class EventTest < Test::Unit::TestCase
 
     event = SingleDayEvent.new({
       :name => "State Criterium",
-      :promoter => {
-        :name => promoter_name
-      }
+      :promoter => Promoter.new(:name => promoter_name)
     })
     assert_not_nil(event.promoter, "Event promoter before save")
     event.save!
@@ -108,6 +104,14 @@ class EventTest < Test::Unit::TestCase
     assert_equal(nate_hobson, event.promoter, "New event promoter after save")
     event.reload
     assert_equal(nate_hobson, event.promoter, "New event promoter after reload")
+  end
+  
+  def test_set_promoter
+    event = SingleDayEvent.new
+    promoter = Promoter.new(:name => 'Toni Kic')
+    event.promoter = promoter
+    assert_not_nil(event.promoter, 'event.promoter')
+    assert_equal('Toni Kic', event.promoter.name, 'event.promoter.name')
   end
 
   def test_timestamps

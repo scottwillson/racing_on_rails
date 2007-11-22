@@ -1,5 +1,6 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+
   @@grid_columns = nil
     
   def focus(form_field_name)
@@ -112,7 +113,7 @@ module ApplicationHelper
       row
     end
     results_grid = Grid.new(rows, :columns => result_grid_columns)
-    results_grid.truncate
+    results_grid.truncate_rows
     results_grid.calculate_padding
     
     race.results.sort.each_with_index do |result, row_index|
@@ -136,10 +137,10 @@ class Tabs
     @tabs = []
   end
   
-  def add(name, options = {}, html_options = nil, *parameters_for_method_reference)
+  def add(name, options = {}, html_options = {}, &block)
     _html_options = {:onmouseover => "hover(this)", :onmouseout => "hoverOut(this)"}
     _html_options.merge(html_options) if html_options
-    @tabs << [name, options, _html_options, parameters_for_method_reference]
+    @tabs << [name, options, _html_options]
   end
   
   def select(name)
@@ -163,9 +164,9 @@ HTML
           html << "      <td class=\"first\"><div class=\"first\"><span>"
         end
         if select_current_page
-          html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to_unless_current(tab.first, tab[1], tab[2]).to_s
         else
-          html << link_to(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to(tab.first, tab[1], tab[2]).to_s
         end
         html << "</span></div>"
         if @tabs.size < 2
@@ -183,9 +184,9 @@ HTML
           html << "      <td class=\"last\"><div class=\"last\"><span>"
         end
         if select_current_page
-          html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to_unless_current(tab.first, tab[1], tab[2]).to_s
         else
-          html << link_to(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to(tab.first, tab[1], tab[2]).to_s
         end
         html << "</span></div>"
       else
@@ -195,9 +196,9 @@ HTML
           html << "      <td><div><span>"
         end
         if select_current_page
-          html << link_to_unless_current(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to_unless_current(tab.first, tab[1], tab[2]).to_s
         else
-          html << link_to(tab.first, tab[1], tab[2], tab[3]).to_s
+          html << link_to(tab.first, tab[1], tab[2]).to_s
         end
         html << "</span></div>"
       end

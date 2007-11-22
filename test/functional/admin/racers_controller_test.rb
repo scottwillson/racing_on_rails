@@ -310,10 +310,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
 
   def test_new_inline
-    @request.session[:user] = users(:candi)
-    opts = {:controller => "admin/racers", :action => "new_inline"}
-    assert_routing("/admin/racers/new_inline", opts)
-  
     get(:new_inline)
     assert_response(:success)
     assert_template("/admin/_new_inline")
@@ -405,7 +401,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_dupes_merge?
-    RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? start')
     @request.session[:user] = users(:candi)
     molly = racers(:molly)
     molly_with_different_road_number = Racer.create(:name => 'Molly Cameron', :road_number => '987123')
@@ -419,7 +414,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
     assert_equal(molly.name, assigns['racer'].name, 'Unsaved Tonkin name should be Molly')
     existing_racers = assigns['existing_racers'].sort {|x, y| x.id <=> y.id}
     assert_equal([molly, molly_with_different_road_number], existing_racers, 'existing_racers')
-    RAILS_DEFAULT_LOGGER.debug('test_dupes_merge? end')
   end
   
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
@@ -504,13 +498,10 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_create
-    opts = {:controller => "admin/racers", :action => "update"}
-    assert_routing("/admin/racers/update", opts)
-
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
     @request.session[:user] = users(:candi)
     
-    post(:update, {"racer"=>{
+    post(:create, {"racer"=>{
                         "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
                         "member_to(1i)"=>"", "member_to(2i)"=>"", "member_to(3i)"=>"", 
                         "work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
@@ -533,13 +524,10 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
 
   def test_create_with_road_number
-    opts = {:controller => "admin/racers", :action => "update"}
-    assert_routing("/admin/racers/update", opts)
-
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
     @request.session[:user] = users(:candi)
     
-    post(:update, {
+    post(:create, {
       "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
         "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
         "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
@@ -581,7 +569,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   
   def test_update
     molly = racers(:molly)
-    post(:update, {"commit"=>"Save", 
+    put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
                    "number"=>{"5"=>{"value"=>"222"}},
@@ -608,7 +596,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
   def test_update_new_number
     molly = racers(:molly)
-    post(:update, {"commit"=>"Save", 
+    put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
                    "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
                    "number"=>{"5"=>{"value"=>"202"}},
@@ -635,7 +623,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
 
   def test_update_error
     molly = racers(:molly)
-    post(:update, 
+    put(:update, 
     :id => molly.to_param, 
       :racer => {
         :first_name => 'Molly', :last_name => 'Cameron', :road_number => '123123612333', "member_to(1i)" => "AZZZ", :team_id => "-9"
@@ -692,13 +680,9 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_preview_import
-    racers_before_import = Racer.count
+    assert_recognizes({:controller => "admin/racers", :action => "preview_import"}, {:path => "/admin/racers/preview_import", :method => :post})
 
-    opts = {
-      :controller => "admin/racers", 
-      :action => "preview_import"
-    }
-    assert_routing("/admin/racers/preview_import", opts)
+    racers_before_import = Racer.count
 
     file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     post :preview_import, :racers_file => file
@@ -714,6 +698,7 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_import
+    assert_recognizes({:controller => "admin/racers", :action => "import"}, {:path => "/admin/racers/import", :method => :post})
     racers_before_import = Racer.count
 
     file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
@@ -749,24 +734,13 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_duplicates
-      opts = {
-        :controller => "admin/racers", 
-        :action => "duplicates"
-      }
-      assert_routing("/admin/racers/duplicates", opts)
-      @request.session[:duplicates] = []
-      get(:duplicates)
-      assert_response(:success)
-      assert_template("admin/racers/duplicates")
+    @request.session[:duplicates] = []
+    get(:duplicates)
+    assert_response(:success)
+    assert_template("admin/racers/duplicates")
   end
   
   def test_resolve_duplicates
-    opts = {
-      :controller => "admin/racers", 
-      :action => "resolve_duplicates"
-    }
-    assert_routing("/admin/racers/resolve_duplicates", opts)
-
     Racer.create(:name => 'Erik Tonkin')
     weaver_2 = Racer.create(:name => 'Ryan Weaver', :city => 'Kenton')
     weaver_3 = Racer.create(:name => 'Ryan Weaver', :city => 'Lake Oswego')
@@ -795,11 +769,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_cancel_import
-    opts = {
-      :controller => "admin/racers", 
-      :action => "import"
-    }
-    assert_routing("/admin/racers/import", opts)
     post(:import, :commit => 'Cancel', :update_membership => 'false')
     assert_response(:redirect)
     assert_redirected_to(:action => 'index')
@@ -807,11 +776,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_print_no_cards
-    opts = {
-      :controller => "admin/racers", 
-      :action => "cards"
-    }
-    assert_routing("/admin/racers/cards", opts)
     get(:cards)
     assert_response(:success)
     assert_template("admin/racers/no_cards")
@@ -819,12 +783,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_print_cards
-    opts = {
-      :controller => "admin/racers", 
-      :action => "cards"
-    }
-    assert_routing("/admin/racers/cards", opts)
-
     tonkin = racers(:tonkin)
     tonkin.print_card = true
     tonkin.save!
@@ -858,11 +816,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_print_no_mailing_labels
-    opts = {
-      :controller => "admin/racers", 
-      :action => "mailing_labels"
-    }
-    assert_routing("/admin/racers/mailing_labels", opts)
     get(:mailing_labels)
     assert_response(:success)
     assert_template("admin/racers/no_mailing_labels")
@@ -870,12 +823,6 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_print_mailing_labels
-    opts = {
-      :controller => "admin/racers", 
-      :action => "mailing_labels"
-    }
-    assert_routing("/admin/racers/mailing_labels", opts)
-
     tonkin = racers(:tonkin)
     tonkin.print_mailing_label = true
     tonkin.save!
@@ -908,82 +855,58 @@ class Admin::RacersControllerTest < Test::Unit::TestCase
   end
   
   def test_export_to_excel
-    opts = {
-      :controller => "admin/racers", 
-      :action => "export"
-    }
-    assert_routing("/admin/racers/export", opts)
-
-    get(:export, :format => 'excel', :include => 'all')
+    get(:index, :format => 'xls', :include => 'all')
 
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
   def test_export_members_only_to_excel
-    opts = {
-      :controller => "admin/racers", 
-      :action => "export"
-    }
-    assert_routing("/admin/racers/export", opts)
-
-    get(:export, :format => 'excel', :include => 'members_only')
+    get(:index, :format => 'xls', :include => 'members_only')
 
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
   def test_export_to_finish_lynx
     opts = {
       :controller => "admin/racers", 
-      :action => "export"
+      :action => "index",
+      :format => 'ppl'
     }
-    assert_routing("/admin/racers/export", opts)
-
-    get(:export, :format => 'finish_lynx', :include => 'all')
+    assert_routing("/admin/racers.ppl", opts)
+    get(:index, :format => 'ppl', :include => 'all')
 
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
   def test_export_members_only_to_finish_lynx
-    opts = {
-      :controller => "admin/racers", 
-      :action => "export"
-    }
-    assert_routing("/admin/racers/export", opts)
-
-    get(:export, :format => 'finish_lynx', :include => 'members_only')
+    get(:index, :format => 'ppl', :include => 'members_only')
 
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
   def test_export_members_only_to_scoring_sheet
-    opts = {
-      :controller => "admin/racers", 
-      :action => "export"
-    }
-    assert_routing("/admin/racers/export", opts)
-
-    get(:export, :format => 'scoring_sheet', :include => 'members_only')
+    get(:index, :format => 'xls', :include => 'members_only', :excel_layout => 'scoring_sheet')
 
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
 end

@@ -1,0 +1,13 @@
+road_number	last_name	first_name	street	city	zip	racing_age	team_name	road_category
+<%- for racer in @racers -%>
+<%= racer.license -%>
+	<%= racer.road_number -%>
+	<%= racer.last_name -%>
+	<%= racer.first_name -%>
+	<%= racer.street -%>
+	<%= racer.city -%>
+	<%= racer.zip -%>
+	<%= racer.racing_age -%>
+	<%= racer.team_name -%>
+	<%= racer.road_category -%>
+<%- end -%>

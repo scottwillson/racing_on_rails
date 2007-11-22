@@ -58,7 +58,7 @@ class Admin::EventsController < ApplicationController
   # * warn
   def create
     @event = SingleDayEvent.new(params[:event])
-    if @event.create
+    if @event.save
       redirect_to(:action => :show, :id => @event.to_param)
     else
       flash[:warn] = @event.errors.full_messages
@@ -138,7 +138,7 @@ class Admin::EventsController < ApplicationController
     event = Event.find(event_id)
     results_file = ResultsFile.new(temp_file, event)
     begin
-      standings = results_file.import(event)
+      standings = results_file.import
       flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
       unless results_file.invalid_columns.empty?
         flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"

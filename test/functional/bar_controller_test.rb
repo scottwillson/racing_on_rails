@@ -4,8 +4,10 @@ require 'bar_controller'
 class BarController; def rescue_action(e) raise e end; end
 
 class BarControllerTest < Test::Unit::TestCase
-
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::CaptureHelper
 
   def setup
     @controller = BarController.new
@@ -144,7 +146,7 @@ class BarControllerTest < Test::Unit::TestCase
     assert(!flash.empty?, 'flash.empty?')
   end
   
-  # Broken lib implementation!
+  # Lib implementation was broken at one point...
   def test_truncate
     name = 'Broadmark'
     truncated = truncate(name, 5)

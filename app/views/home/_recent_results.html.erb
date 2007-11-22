@@ -1,0 +1,18 @@
+<table class="base" id="home_page_results">
+	<caption><%= link_to 'Results', :only_path  => false, :host => RAILS_HOST, :controller => 'results' %></caption>
+	<tr><th></th></tr>
+	<%- for event in @recent_results -%>
+	<tr>
+		<td><%= link_to event.full_name, :only_path  => false, :host => RAILS_HOST, :controller => 'results', :action => 'event', :id => event.id %></td>
+	</tr>
+	<%- end -%>
+	<%- if @recent_results.empty? -%>
+	<tr>
+		<td>No results in the last two weeks</td>
+	</tr>
+	<%- end -%>
+	<tr>
+		<td style="padding-top: 16px;"><%= link_to 'More &hellip;',
+	:only_path  => false, :host => RAILS_HOST, :controller => 'results' %></td>
+	</tr>
+</table>

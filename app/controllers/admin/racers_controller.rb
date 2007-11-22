@@ -7,6 +7,7 @@ class Admin::RacersController < Admin::RecordEditor
   edits :racer
   
   layout 'admin/application', :except => [:cards, :mailing_labels]
+  exempt_from_layout 'xls.erb', 'ppl.erb'
   
   # Search for Racers by name. This is a 'like' search on the concatenated 
   # first and last name, and aliases. E.g.,:
@@ -23,9 +24,40 @@ class Admin::RacersController < Admin::RecordEditor
   # === Assigns
   # * racer: Array of Racers
   def index
+    @racers = []
     @name = params['name'] || session['racer_name'] || cookies[:racer_name] || ''
     if @name.blank?
-      @racers = []
+      if params['format'] == 'ppl' || params['format'] == 'xls'
+        today = Date.today
+        if params['excel_layout'] == 'scoring_sheet'
+          file_name = 'scoring_sheet.xls'
+        elsif params['format'] == 'ppl'
+          file_name = 'lynx.ppl'
+        else
+          file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
+        end
+        headers['Content-Disposition'] = "filename=\"#{file_name}\""
+        if params['include'] == 'members_only'
+          @racers = Racer.find(
+            :all,
+            :limit => 10,
+            :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
+            :conditions => ['member_to >= ?', Date.today]
+            )
+        else
+          @racers = Racer.find(
+            :all,
+            :limit => 10,
+            :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
+            )
+        end
+      end
+      respond_to do |format|
+        format.html
+        format.ppl
+        format.xls {render :template => 'admin/racers/scoring_sheet.xls.erb' if params['excel_layout'] == 'scoring_sheet'}
+      end
+      
     else
       session['racer_name'] = @name
       cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
@@ -66,7 +98,51 @@ class Admin::RacersController < Admin::RecordEditor
     render(:partial => 'edit_team_name')
   end
   
-  # Create new Racer or update existing. 
+  # Create new Racer
+  # 
+  # Existing RaceNumbers are updated from a Hash:
+  # :number => {'race_number_id' => {:value => 'new_value'}}
+  #
+  # New numbers are created from arrays:
+  # :number_value => [...]
+  # :discipline_id => [...]
+  # :number_issuer_id => [...]
+  # :number_year => year (not array)
+  # New blank numbers are ignored
+  def create
+    begin
+      expire_cache
+      @racer = Racer.create(params[:racer])
+      
+      if params[:number_value]
+        params[:number_value].each_with_index do |number_value, index|
+          unless number_value.blank?
+            race_number = @racer.race_numbers.create(
+              :discipline_id => params[:discipline_id][index], 
+              :number_issuer_id => params[:number_issuer_id][index], 
+              :year => params[:number_year],
+              :value => number_value
+            )
+            unless race_number.errors.empty?
+              @racer.errors.add_to_base(race_number.errors.full_messages)
+            end
+          end
+        end
+      end
+      if @racer.errors.empty?
+        return redirect_to(:action => :show, :id => @racer.to_param)
+      end
+    rescue Exception => e
+      stack_trace = e.backtrace.join("\n")
+      logger.error("#{e}\n#{stack_trace}")
+      flash[:warn] = e
+    end
+    @years = (2005..(Date.today.year + 1)).to_a.reverse
+    @year = params[:year] || Date.today.year
+    render(:template => 'admin/racers/show')
+  end
+  
+  # Update existing Racer.
   # 
   # Existing RaceNumbers are updated from a Hash:
   # :number => {'race_number_id' => {:value => 'new_value'}}
@@ -80,14 +156,10 @@ class Admin::RacersController < Admin::RecordEditor
   def update
     begin
       expire_cache
-      if params[:id].blank?
-        @racer = Racer.create(params[:racer])
-      else
-        @racer = Racer.update(params[:id], params[:racer])
-        if params[:number]
-          for id in params[:number].keys
-            RaceNumber.update(id, params[:number][id])
-          end
+      @racer = Racer.update(params[:id], params[:racer])
+      if params[:number]
+        for id in params[:number].keys
+          RaceNumber.update(id, params[:number][id])
         end
       end
       
@@ -112,7 +184,7 @@ class Admin::RacersController < Admin::RecordEditor
     rescue Exception => e
       begin
         # try to redisplay racer
-        @racer = Racer.find(params[:id]) if params[:id]
+        @racer = Racer.find(params[:id])
         @racer = Racer.new unless @racer
         @years = (2005..(Date.today.year + 1)).to_a.reverse
         @year = params[:year] || Date.today.year
@@ -372,125 +444,6 @@ class Admin::RacersController < Admin::RecordEditor
     end
   end
   
-  def export
-    members_only = (params['include'] == 'members_only')
-    if params['format'] == 'excel'
-      today = Date.today
-      file_name = "racers_#{today.year}_#{today.month}_#{today.day}.xls"
-      columns = %w{ license first_name last_name team_name member_from member_to print_card print_mailing_label date_of_birth occupation street city state zip email home_phone work_phone cell_fax gender road_category track_category ccx_category mtb_category dh_category ccx_number dh_number road_number singlespeed_number track_number xc_number notes created_at updated_at}
-      racers = export_to_excel(members_only, file_name, columns)
-    elsif params['format'] == 'scoring_sheet'
-      file_name = 'scoring_sheet.xls'
-      columns = %w{ road_number last_name first_name street city zip racing_age team_name road_category }
-      racers = export_to_excel(members_only, file_name, columns)
-    elsif params['format'] == 'finish_lynx'
-      racers = export_to_finish_lynx(members_only)
-    else
-      raise("Unknown format: #{params['format']}")
-    end
-    
-    headers['Content-Length'] = racers.size
-    render :text => racers
-  end
-  
-  def export_to_excel(members_only, file_name, columns)
-    raise(ArgumentError, 'file_name cannot be nil') if file_name.blank?
-    raise(ArgumentError, 'columns cannot be nil or empty') if columns.nil? || columns.empty?
-
-    headers['Content-Type'] = 'application/vnd.ms-excel'
-    headers['Content-Disposition'] = "filename=\"#{file_name}\""
-
-    # A grid might be handy here, but not sure it matters
-    begin
-      racers = columns.join("\t")
-      racers << "\n"
-      
-      if (members_only)
-        racers_from_db = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-          :conditions => ['member_to >= ?', Date.today]
-          )
-      else
-        racers_from_db = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
-          )
-      end
-      
-      for racer in racers_from_db
-        delimiter =''
-        for column in columns
-          racers << delimiter
-          value = racer.send(column)
-          case value
-          when String
-            if column['category'] and !value[/^Cat|cat/]
-              racers << 'Cat '
-            end
-              racers << value
-          when NilClass
-            # Skip
-          when Date, Time
-            racers << value.strftime('%m/%d/%Y')
-          when TrueClass
-            racers << '1'
-          when FalseClass
-            racers << '0'
-          else
-            racers << value.to_s
-          end
-          delimiter = "\t"
-        end
-        racers << "\n"
-      end
-      racers
-    rescue Exception => e
-      racer_name = 'nil'
-      racer_name = racer.name if racer
-      raise "Could not export #{column}: '#{value}' for #{racer_name}: #{e}"
-    end
-  end
-  
-  def export_to_finish_lynx(members_only)
-    headers['Content-Type'] = 'application/vnd.ms-excel'
-    headers['Content-Disposition'] = "filename=\"lynx.ppl\""
-
-    # A grid might be handy here, but not sure it matters
-    begin
-      columns = ['number', 'last name', 'first name', 'team', '"category,gender,age"']
-      racers = columns.join(",")
-      racers << "\n"
-      
-      if (members_only)
-        racers_from_db = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-          :conditions => ['member_to >= ?', Date.today]
-          )
-      else
-        racers_from_db = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
-          )
-      end
-
-      for racer in racers_from_db
-        racers << "#{racer.road_number},#{fl_escape(racer.last_name)},#{fl_escape(racer.first_name)},#{fl_escape(racer.team_name)},\"#{fl_escape(racer.road_category)},#{racer.gender},#{racer.racing_age}\""
-        racers << "\n"
-      end
-      racers
-    rescue Exception => e
-      racer_name = 'nil'
-      racer_name = racer.name if racer
-      raise "Could not export #{racer}: #{e}"
-    end
-  end
-  
-  def fl_escape(text)
-    text.gsub(',', '\""') if text
-  end
-
   def rescue_action_in_public(exception)
 		headers.delete("Content-Disposition")
     super

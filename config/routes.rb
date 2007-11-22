@@ -23,8 +23,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/admin/promoters", :controller => 'admin/promoters', :action => "index"
   map.connect "/admin/promoters/:id", :controller => 'admin/promoters', :action => "show", :requirements => {:id => /\d+/}
 
-  map.connect "/admin/racers", :controller => 'admin/racers', :action => "index"
-  map.connect "/admin/racers/:id", :controller => 'admin/racers', :action => "show", :requirements => {:id => /\d+/}
+  map.namespace(:admin) do |admin|
+    admin.resources :racers
+  end
+  
   map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
   map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"

@@ -83,7 +83,7 @@ class ResultsFile < GridFile
     end
   end
 
-  def import(progress_monitor = NullProgressMonitor.new)
+  def import
     RACING_ON_RAILS_DEFAULT_LOGGER.info("import results")
 
     standings = nil
@@ -165,7 +165,6 @@ class ResultsFile < GridFile
             RACING_ON_RAILS_DEFAULT_LOGGER.debug("No race. Skip.")
           end
         end
-        progress_monitor.increment(1)
       end
       @event.enable_notification!
       # TODO Not so clean

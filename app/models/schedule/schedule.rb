@@ -1,13 +1,3 @@
-# Sanctioned-by code
-# if !attributes.has_key?(:sanctioned_by)
-#   if attributes[:notes] == "national"
-#     attributes[:sanctioned_by] = "USA Cycling"
-#   elsif attributes[:notes] == "international"
-#     attributes[:sanctioned_by] = "UCI"
-#   end
-# end
-
-
 module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
@@ -134,6 +124,15 @@ module Schedule
             row_hash[:discipline] = nil
           end
         end
+        
+        if !row_hash.has_key?(:sanctioned_by)
+          if row_hash[:notes] == 'national'
+            row_hash[:sanctioned_by] = 'USA Cycling'
+          elsif row_hash[:notes] == 'international'
+            row_hash[:sanctioned_by] = 'UCI'
+          end
+        end
+
         event = SingleDayEvent.new(row_hash)
         if logger.debug? then logger.debug("Add #{event.name} to schedule") end
       end

@@ -14,13 +14,8 @@ No results for <%= @year %>
 <% end %>
 
 <% unless @ironman.nil? or @ironman.races.empty? or @ironman.races.first.results.empty? %>
-<%= tabs do |tabs|
-	tabs.add('Previous', :page => @pages.current.previous)
-	for page in @pages
-		tabs.add(page.number, :page => page.number)
-	end
-	tabs.add('Next', :page => @pages.current.next)
-end -%>
+
+<%= will_paginate @results %>
 
 <div class="updatedon">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
 
@@ -41,11 +36,6 @@ end -%>
 <%- end -%></pre></td>
   </tr>
 </table>
-<br>
-<%= link_to "[Previous]", { :page => @pages.current.previous } if @pages.current.previous %>
-<%= "[Previous]" unless @pages.current.previous %>
-<%= pagination_links @pages, :window_size => 50 %>
-<%= link_to "[Next]", { :page => @pages.current.next } if @pages.current.next %>
-<%= "[Next]" unless @pages.current.next %>
-<br>
+
+<%= will_paginate @results %>
 <% end %>  
