@@ -10,8 +10,6 @@ RAILS_GEM_VERSION = '1.99.0' unless defined? RAILS_GEM_VERSION
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
-LOCAL_ROOT = File.join(RAILS_ROOT, 'local')
-
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
   
@@ -56,9 +54,14 @@ Rails::Initializer.run do |config|
   end
 end
 
-# Include your application configuration below
+# Local config customization
+load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
+load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
 
-require 'localize'
+# Prefer local templates, partials etc. if they exist.  Otherwise, use the base
+# application's generic files.
+ActionController::Base.view_paths.insert(0, File.expand_path("#{RAILS_ROOT}/local/app/views"))
+
 require 'array'
 
 ActiveRecord::Base.colorize_logging = false
@@ -75,25 +78,21 @@ unless defined?(ASSOCIATION)
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
 
-# Ensure all STI classes load
-Event
-SingleDayEvent
-MultiDayEvent
-Series
-WeeklySeries
-
+# # Ensure all STI classes load
+# Event
+# SingleDayEvent
+# MultiDayEvent
+# Series
+# WeeklySeries
+# 
 include Competitions
-Competition
-Bar
-OverallBar
-RiderRankings
-TeamBar
-OregonCup
-Ironman
+# Competition
+# Bar
+# OverallBar
+# RiderRankings
+# TeamBar
+# OregonCup
+# Ironman
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
-
-# Add new mime types for use in respond_to blocks:
-# Mime::Type.register "text/richtext", :rtf
-# Mime::Type.register "application/x-mobile", :mobile
