@@ -572,7 +572,7 @@ class Racer < ActiveRecord::Base
   end
 
   def <=>(other)
-    self.id <=> other.id
+    id <=> other.id
   end
   
   def to_s

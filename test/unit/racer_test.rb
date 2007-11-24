@@ -610,5 +610,19 @@ class RacerTest < ActiveSupport::TestCase
     assert_nil(Racer.find_by_name('Molly Cameron'), 'Molly Cameron should not exist')
     assert_nil(Alias.find_by_name('Mollie Cameron'), 'Mollie Cameron alias should not exist')
     assert_not_nil(Alias.find_by_name('Molly Cameron'), 'Molly Cameron alias should exist')
-  end  
+  end
+  
+  def test_sort
+    r1 = Racer.new
+    r1.id = 1
+    r2 = Racer.new
+    r2.id = 2
+    r3 = Racer.new
+    r3.id = 3
+    
+    racers = [r2, r1, r3]
+    racers.sort!
+    
+    assert_equal([r1, r2, r3], racers, 'sorted')
+  end
 end
