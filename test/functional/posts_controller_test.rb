@@ -10,7 +10,7 @@ class PostsController
 end
 
 # FIXME Navigation tests are weak. Need to do more than just not blow up
-class PostsControllerTest < Test::Unit::TestCase
+class PostsControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = PostsController.new

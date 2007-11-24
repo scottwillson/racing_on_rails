@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class SeriesTest < Test::Unit::TestCase
+class SeriesTest < ActiveSupport::TestCase
   
   def test_new
     series = Series.new

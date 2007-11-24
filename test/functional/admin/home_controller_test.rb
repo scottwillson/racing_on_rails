@@ -5,7 +5,7 @@ require 'admin/home_controller'
 # Re-raise errors caught by the controller.
 class Admin::HomeController; def rescue_action(e) raise e end; end
 
-class Admin::HomeControllerTest < Test::Unit::TestCase
+class Admin::HomeControllerTest < ActiveSupport::TestCase
   def setup
     @controller = Admin::HomeController.new
     @request    = ActionController::TestRequest.new

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RaceTest < Test::Unit::TestCase
+class RaceTest < ActiveSupport::TestCase
   
   def test_new_from_hash
     race = Race.new({

@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 require 'schedule/month'
 require 'schedule/day'
 
-class DayTest < Test::Unit::TestCase
+class DayTest < ActiveSupport::TestCase
   def test_other_month
     month = Schedule::Month.new(2007, 1)
     

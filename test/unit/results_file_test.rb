@@ -3,7 +3,7 @@ require "tempfile"
 
 # FIXME DNF's not handled correctly
 
-class ResultsFileTest < Test::Unit::TestCase
+class ResultsFileTest < ActiveSupport::TestCase
 
   def test_has_results?
     file = ResultsFile.new("text \t results", SingleDayEvent.new)

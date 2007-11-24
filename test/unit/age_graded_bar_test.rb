@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class AgeGradedBarTest < Test::Unit::TestCase
+class Competitions::AgeGradedBarTest < ActiveSupport::TestCase
   
   def test_recalculate_no_results
     results_baseline_count = Result.count

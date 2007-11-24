@@ -4,7 +4,7 @@ require 'mailing_lists_controller'
 # Re-raise errors caught by the controller.
 class MailingListsController; def rescue_action(e) raise e end; end
 
-class MailingListsControllerTest < Test::Unit::TestCase
+class MailingListsControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = MailingListsController.new

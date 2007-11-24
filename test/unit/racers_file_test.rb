@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RacerFileTest < Test::Unit::TestCase  
+class RacerFileTest < ActiveSupport::TestCase  
   def test_import
     tonkin = Racer.find(1)
     tonkin.member=(false)

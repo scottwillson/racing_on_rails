@@ -5,7 +5,7 @@ require_or_load 'admin/events_controller'
 # Re-raise errors caught by the controller.
 class Admin::EventsController; def rescue_action(e) raise e end; end
 
-class Admin::EventsControllerTest < Test::Unit::TestCase
+class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   include ApplicationHelper
 

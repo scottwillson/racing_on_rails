@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class AliasTest < Test::Unit::TestCase
+class AliasTest < ActiveSupport::TestCase
 
   def test_new
     weaver = racers(:weaver)

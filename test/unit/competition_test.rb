@@ -6,7 +6,7 @@ class TestCompetition < Competition
   end
 end
 
-class CompetitionTest < Test::Unit::TestCase
+class CompetitionTest < ActiveSupport::TestCase
   def test_naming
     assert_equal("Competition", Competition.new.friendly_name, 'Default friendly_name')
     assert_equal('KOM', TestCompetition.new.friendly_name, 'friendly_name')

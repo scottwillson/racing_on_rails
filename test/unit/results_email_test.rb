@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ResultsEmailTest < Test::Unit::TestCase
+class ResultsEmailTest < ActiveSupport::TestCase
 
   def test_render
     results_email = ResultsEmail.new(Standings.find(1))

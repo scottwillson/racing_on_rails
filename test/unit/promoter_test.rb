@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class PromoterTest < Test::Unit::TestCase
+class PromoterTest < ActiveSupport::TestCase
   
   def test_find_by_info
     assert_equal(promoters(:brad_ross), Promoter.find_by_info("Brad ross"))

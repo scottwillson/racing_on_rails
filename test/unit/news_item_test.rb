@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NewsItemTest < Test::Unit::TestCase
+class NewsItemTest < ActiveSupport::TestCase
   fixtures :news_items
 
   def test_create

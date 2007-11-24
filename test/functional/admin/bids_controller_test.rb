@@ -3,7 +3,7 @@ require 'admin/bids_controller'
 
 class Admin::BidsController; def rescue_action(e) raise e end; end
 
-class Admin::BidsControllerTest < Test::Unit::TestCase
+class Admin::BidsControllerTest < ActiveSupport::TestCase
   def setup
     @controller = Admin::BidsController.new
     @request    = ActionController::TestRequest.new

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class OregonCupTest < Test::Unit::TestCase
+class OregonCupTest < ActiveSupport::TestCase
   
   def test_new
     OregonCup.new

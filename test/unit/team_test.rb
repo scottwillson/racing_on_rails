@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class TeamTest < Test::Unit::TestCase
+class TeamTest < ActiveSupport::TestCase
 
   def test_find_by_name_or_alias_or_create
     assert_equal(teams(:gentle_lovers), Team.find_by_name_or_alias_or_create('Gentle Lovers'), 'Gentle Lovers')

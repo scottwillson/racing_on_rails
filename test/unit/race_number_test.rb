@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RaceNumberTest < Test::Unit::TestCase
+class RaceNumberTest < ActiveSupport::TestCase
   def test_defaults
     assert_not_nil(NumberIssuer.find_by_name(ASSOCIATION.short_name), 'Number issuer exists')
     race_number = RaceNumber.new(:value => '999', :racer => racers(:alice))

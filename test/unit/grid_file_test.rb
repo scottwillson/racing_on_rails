@@ -5,7 +5,7 @@ require 'parseexcel/format'
 require 'parseexcel/workbook'
 require 'parseexcel/worksheet'
 
-class GridFileTest < Test::Unit::TestCase
+class GridFileTest < ActiveSupport::TestCase
 
   def test_new
     assert_raise(ArgumentError) {GridFile.new(nil)}

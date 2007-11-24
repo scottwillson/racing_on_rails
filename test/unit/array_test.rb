@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ArrayTest < Test::Unit::TestCase
+class ArrayTest < ActiveSupport::TestCase
   def test_each_row_with_index
     assert_equal([[], 0], [].each_row_with_index {|row, index|}, 'rows with index')
     assert_equal([[[1]], 0], [1].each_row_with_index {|row, index|}, 'rows with index')

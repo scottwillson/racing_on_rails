@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class UpcomingEventsTest < Test::Unit::TestCase
+class UpcomingEventsTest < ActiveSupport::TestCase
 
   # Default to next two weeks (spec start date and range)
   # Sub-categorize by weekly series or not (WeeklySeries, Series, MultiDayEvent)

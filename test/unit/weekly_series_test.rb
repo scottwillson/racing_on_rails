@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class WeeklySeriesTest < Test::Unit::TestCase
+class WeeklySeriesTest < ActiveSupport::TestCase
   
   def test_new
     pir = WeeklySeries.create!(

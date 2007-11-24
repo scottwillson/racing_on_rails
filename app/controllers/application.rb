@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
   
   # Pick a unique cookie name to distinguish our session data from others'
   session :session_key => '_racing_on_rails_session_id'
-  protect_from_forgery
   
   def expire_cache
     if perform_caching

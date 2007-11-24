@@ -1,7 +1,5 @@
 # Year-long competition that derive there standings from other Events:
 # BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
-#
-# 
 class Competition < Event
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name

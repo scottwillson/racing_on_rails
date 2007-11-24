@@ -4,7 +4,7 @@ require 'admin/teams_controller'
 # :stopdoc:
 class Admin::TeamsController; def rescue_action(e) raise e end; end
 
-class Admin::TeamsControllerTest < Test::Unit::TestCase
+class Admin::TeamsControllerTest < ActiveSupport::TestCase
   
   def setup
     @controller = Admin::TeamsController.new

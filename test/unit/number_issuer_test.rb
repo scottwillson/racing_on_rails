@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class NumberIssuerTest < Test::Unit::TestCase
+class NumberIssuerTest < ActiveSupport::TestCase
 
   def test_create
     NumberIssuer.create(:name => 'Elkhorn Classic SR')

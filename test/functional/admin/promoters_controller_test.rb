@@ -4,7 +4,7 @@ require 'admin/promoters_controller'
 # :stopdoc:
 class Admin::PromotersController; def rescue_action(e) raise e end; end
 
-class Admin::PromotersControllerTest < Test::Unit::TestCase
+class Admin::PromotersControllerTest < ActiveSupport::TestCase
   def setup
     @controller = Admin::PromotersController.new
     @request    = ActionController::TestRequest.new

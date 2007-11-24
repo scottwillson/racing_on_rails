@@ -3,7 +3,7 @@ require 'oregon_cup_controller'
 
 class OregonCupController; def rescue_action(e) raise e end; end
 
-class OregonCupControllerTest < Test::Unit::TestCase
+class OregonCupControllerTest < ActiveSupport::TestCase
 
   include OregonCupHelper
   

@@ -3,7 +3,7 @@ require 'bar_controller'
 
 class BarController; def rescue_action(e) raise e end; end
 
-class BarControllerTest < Test::Unit::TestCase
+class BarControllerTest < ActiveSupport::TestCase
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TextHelper

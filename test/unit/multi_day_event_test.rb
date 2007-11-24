@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 # TODO Test updated_at and created_at
 # TODO Test name cannot be null
 
-class MultiDayEventTest < Test::Unit::TestCase
+class MultiDayEventTest < ActiveSupport::TestCase
   
   def test_update_events_promoter
     pir_july_2 = events(:pir)

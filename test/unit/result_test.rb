@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ResultTest < Test::Unit::TestCase
+class ResultTest < ActiveSupport::TestCase
 
   def setup
     # Discipline class may have loaded earlier with no aliases in database

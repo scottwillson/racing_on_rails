@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class RiderRankingsTest < Test::Unit::TestCase
+class Competitions::RiderRankingsTest < ActiveSupport::TestCase
   def test_new
     RiderRankings.recalculate
     rider_rankings = RiderRankings.find(:first, :conditions => ['date = ?', Date.new(Date.today.year, 1, 1)])

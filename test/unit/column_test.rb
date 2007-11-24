@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class ColumnTest < Test::Unit::TestCase
+class ColumnTest < ActiveSupport::TestCase
   
   def test_create
     column = Column.new(:name => "place")

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class DisciplineTest < Test::Unit::TestCase
+class DisciplineTest < ActiveSupport::TestCase
   
   def teardown
     # Discipline class may have loaded earlier with no aliases in database

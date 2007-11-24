@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CombinedStandingsTest < Test::Unit::TestCase
+class CombinedStandingsTest < ActiveSupport::TestCase
   def test_time_trial_ironman
     jack_frost = standings(:jack_frost)
     jack_frost.discipline = 'Time Trial'

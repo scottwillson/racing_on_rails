@@ -3,7 +3,7 @@ require 'ironman_controller'
 
 class IronmanController; def rescue_action(e) raise e end; end
 
-class IronmanControllerTest < Test::Unit::TestCase
+class IronmanControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = IronmanController.new

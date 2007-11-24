@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 # :stopdoc:
-class ApplicationHelperControllerTest < Test::Unit::TestCase
+class ApplicationHelperControllerTest < ActiveSupport::TestCase
   
   include ApplicationHelper
   include ActionView::Helpers::AssetTagHelper

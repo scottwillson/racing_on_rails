@@ -4,7 +4,7 @@ require 'admin/racers_controller'
 # :stopdoc:
 class Admin::RacersController; def rescue_action(e) raise e end; end
 
-class Admin::RacersControllerTest < Test::Unit::TestCase
+class Admin::RacersControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = Admin::RacersController.new

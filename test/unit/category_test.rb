@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class CategoryTest < Test::Unit::TestCase
+class CategoryTest < ActiveSupport::TestCase
   
   def test_acts_as_tree
     senior_men = Category.find_by_name('Senior Men')

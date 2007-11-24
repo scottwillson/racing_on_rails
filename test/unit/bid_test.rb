@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class BidTest < Test::Unit::TestCase
+class BidTest < ActiveSupport::TestCase
   def test_create
     Bid.create(:name => 'Craig', :email => 'craig@yahoo.com', :phone => '411', :amount => 20)
   end

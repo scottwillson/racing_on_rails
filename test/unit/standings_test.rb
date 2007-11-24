@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class StandingsTest < Test::Unit::TestCase
+class StandingsTest < ActiveSupport::TestCase
   
   def test_new
     bb3 = events(:banana_belt_3)

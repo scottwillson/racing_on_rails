@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class TeamRankingsTest < Test::Unit::TestCase
+class TeamRankingsTest < ActiveSupport::TestCase
 
   def test_recalculate
     # FIXME Implement

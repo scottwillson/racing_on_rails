@@ -5,7 +5,7 @@ require_or_load 'home_controller'
 # Re-raise errors caught by the controller.
 class HomeController; def rescue_action(e) raise e end; end
 
-class HomeControllerTest < Test::Unit::TestCase
+class HomeControllerTest < ActiveSupport::TestCase
   def setup
     @controller = HomeController.new
     @request    = ActionController::TestRequest.new

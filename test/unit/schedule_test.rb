@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 # TODO Handle multiple emails per promoters
 # TODO Recognize Series and WeeklySeries
 
-class ScheduleTest < Test::Unit::TestCase
+class ScheduleTest < ActiveSupport::TestCase
   
   def setup
     # Discipline class may have loaded earlier with no aliases in database

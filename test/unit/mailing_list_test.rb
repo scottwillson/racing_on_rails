@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class MailingListTest < Test::Unit::TestCase
+class MailingListTest < ActiveSupport::TestCase
 
   def test_save
     mailing_list = MailingList.new

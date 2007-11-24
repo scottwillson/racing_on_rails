@@ -20,7 +20,7 @@ Rails::Initializer.run do |config|
   # config.plugins = %W( exception_notification ssl_requirement )
 
   # Add additional load paths for your own custom dirs
-  config.load_paths += %W( #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/sweepers )
+  config.load_paths += %W( #{RAILS_ROOT}/app/models/sweepers )
 
   # Force all environments to use the same logger level 
   # (by default production uses :info, the others :debug)
@@ -64,8 +64,6 @@ ActionController::Base.view_paths.insert(0, File.expand_path("#{RAILS_ROOT}/loca
 
 require 'array'
 
-ActiveRecord::Base.colorize_logging = false
-
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
 unless defined?(ASSOCIATION)
@@ -77,22 +75,6 @@ unless defined?(ASSOCIATION)
   
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
-
-# # Ensure all STI classes load
-# Event
-# SingleDayEvent
-# MultiDayEvent
-# Series
-# WeeklySeries
-# 
-include Competitions
-# Competition
-# Bar
-# OverallBar
-# RiderRankings
-# TeamBar
-# OregonCup
-# Ironman
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)

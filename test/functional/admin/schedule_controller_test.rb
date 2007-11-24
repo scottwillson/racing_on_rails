@@ -12,7 +12,7 @@ class Admin::ScheduleController
   def rescue_action(e) raise e end
 end
 
-class AdminScheduleControllerTest < Test::Unit::TestCase
+class AdminScheduleControllerTest < ActiveSupport::TestCase
   def setup
     @controller = Admin::ScheduleController.new
     @request    = ActionController::TestRequest.new

@@ -3,7 +3,7 @@ require_or_load 'races_controller'
 
 class RacesController; def rescue_action(e) raise e end; end
 
-class RacesControllerTest < Test::Unit::TestCase
+class RacesControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = RacesController.new

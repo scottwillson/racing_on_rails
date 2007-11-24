@@ -40,14 +40,12 @@ class Admin::RacersController < Admin::RecordEditor
         if params['include'] == 'members_only'
           @racers = Racer.find(
             :all,
-            :limit => 10,
             :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
             :conditions => ['member_to >= ?', Date.today]
             )
         else
           @racers = Racer.find(
             :all,
-            :limit => 10,
             :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
             )
         end

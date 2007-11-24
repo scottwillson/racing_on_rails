@@ -2,7 +2,8 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class TeamTeamBarTest < Test::Unit::TestCase
+class Competitions::TeamBarTest < ActiveSupport::TestCase
+  
   def test_recalculate_tandem
     tandem = Category.find_or_create_by_name("Tandem")
     crit_discipline = disciplines(:criterium)
@@ -102,7 +103,7 @@ class TeamTeamBarTest < Test::Unit::TestCase
     
     cross_crusade = Series.create!(:name => "Cross Crusade")
     barton = SingleDayEvent.create!({
-      :name => "Cross Crusade: TeamBarton Park",
+      :name => "Cross Crusade: Barton Park",
       :discipline => "Cyclocross",
       :date => Date.new(2004, 11, 7),
       :parent => cross_crusade

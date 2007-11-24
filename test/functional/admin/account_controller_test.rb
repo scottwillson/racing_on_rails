@@ -6,7 +6,7 @@ class Admin::AccountController
   def rescue_action(e) raise e end
 end
 
-class AdminAccountControllerTest < Test::Unit::TestCase
+class AdminAccountControllerTest < ActiveSupport::TestCase
   
   include Admin::ScheduleHelper
   

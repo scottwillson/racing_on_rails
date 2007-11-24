@@ -4,7 +4,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'bar'
 
-class BarTest < Test::Unit::TestCase
+class BarTest < ActiveSupport::TestCase
   
   def test_find_or_create_by_date
     date = Date.today(2006)

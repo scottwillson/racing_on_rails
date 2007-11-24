@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class GridTest < Test::Unit::TestCase
+class GridTest < ActiveSupport::TestCase
 
   def test_new
     Grid.new

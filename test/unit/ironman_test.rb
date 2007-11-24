@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class IronmanTest < Test::Unit::TestCase
+class IronmanTest < ActiveSupport::TestCase
   
   def test_recalculate
     results_baseline_count = Result.count

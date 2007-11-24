@@ -4,7 +4,7 @@ require_or_load 'results_controller'
 # Re-raise errors caught by the controller.
 class ResultsController; def rescue_action(e) raise e end; end
 
-class ResultsControllerTest < Test::Unit::TestCase
+class ResultsControllerTest < ActiveSupport::TestCase
 
   def setup
     @controller = ResultsController.new
