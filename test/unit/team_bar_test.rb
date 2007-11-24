@@ -2,7 +2,7 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class Competitions::TeamBarTest < ActiveSupport::TestCase
+class TeamBarTest < ActiveSupport::TestCase
   
   def test_recalculate_tandem
     tandem = Category.find_or_create_by_name("Tandem")

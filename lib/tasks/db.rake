@@ -1,3 +1,13 @@
+desc 'Dump development schema'
+task :dump_schema do
+  load 'config/environment.rb'
+  abcs = ActiveRecord::Base.configurations
+  password_clause = "-p #{abcs[RAILS_ENV]["password"]}" unless abcs[RAILS_ENV]["password"].blank?
+  puts(`mysqldump -u #{abcs[RAILS_ENV]["username"]} #{password_clause} --no-data #{abcs[RAILS_ENV]["database"]} > db/schema.sql`)
+  schema_version = `mysql -u #{abcs[RAILS_ENV]["username"]} #{password_clause} #{abcs[RAILS_ENV]["database"]} --batch -N -e 'select version from schema_info'`
+  puts(`echo "insert into schema_info values(#{schema_version.strip});" >> db/schema.sql`)
+end
+
 # 
 # # desc 'Dump development schema'
 # # task :dump_schema do

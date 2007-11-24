@@ -36,7 +36,7 @@ CREATE TABLE `aliases` (
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `aliases_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3268 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3269 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `aliases_disciplines`
@@ -172,7 +172,7 @@ CREATE TABLE `events` (
   CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12941 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12939 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `images`
@@ -310,7 +310,7 @@ CREATE TABLE `race_numbers` (
   CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `race_numbers_ibfk_2` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
   CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28147 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=28146 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `racers`
@@ -352,7 +352,7 @@ CREATE TABLE `racers` (
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18791 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18788 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `races`
@@ -533,4 +533,5 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-11-22 23:18:11
+-- Dump completed on 2007-11-24 15:33:00
+insert into schema_info values(40);

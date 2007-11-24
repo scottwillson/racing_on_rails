@@ -2,7 +2,7 @@
 
 require File.dirname(__FILE__) + '/../test_helper'
 
-class Competitions::OverallBarTest < ActiveSupport::TestCase
+class OverallBarTest < ActiveSupport::TestCase
   def test_recalculate
     # Lot of set-up for BAR. Keep it out of fixtures and do one-time here.
     

@@ -2,7 +2,6 @@
 # FIXME Assert correct team names on BAR results
 
 require File.dirname(__FILE__) + '/../test_helper'
-require 'bar'
 
 class BarTest < ActiveSupport::TestCase
   
