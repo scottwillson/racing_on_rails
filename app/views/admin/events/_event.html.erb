@@ -120,6 +120,10 @@
 								<td class="field_label">Sanctioned by:</td>
 								<td><%= select 'event', 'sanctioned_by', SANCTIONING_ORGANIZATIONS %></td>
 							</tr>
+							<tr>
+								<td class="field_label">Number Issuer:</td>
+								<td><%= select('event', 'number_issuer_id', NumberIssuer.find(:all).collect {|i| [i.name, i.id]}) %></td>
+							</tr>
 						</table>
 					</td>
 				</tr>

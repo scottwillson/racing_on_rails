@@ -323,6 +323,8 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_not_equal('Track', banana_belt.discipline, 'discipline')
     assert_not_equal(true, banana_belt.cancelled, 'cancelled')
     assert_not_equal('OR', banana_belt.state, 'state')
+    norba = NumberIssuer.create!(:name => 'NORBA')
+    assert_not_equal(norba, banana_belt.number_issuer, 'number_issuer')
 
     post(:update, 
          "commit"=>"Save", 
@@ -330,7 +332,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                  'promoter_id' => '1'}
+                  'promoter_id' => '1', 'number_issuer_id' => norba.to_param}
     )
     assert_response(:redirect)
     assert_redirected_to(:action => :show, :id => banana_belt.to_param.to_s)
@@ -348,6 +350,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal('Brad Ross', banana_belt.promoter_name, 'promoter_name')
     assert_nil(banana_belt.promoter_phone, 'promoter_phone')
     assert_nil(banana_belt.promoter_email, 'promoter_email')
+    assert_equal(norba, banana_belt.number_issuer, 'number_issuer')
   end
 
   def test_update_standings
