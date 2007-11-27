@@ -10,6 +10,7 @@
     promoter_id: 1
     date: 2004-01-01
     type: Series
+    number_issuer_id: 2
 - banana_belt_1:
     id: 2
     parent_id: 1
@@ -21,6 +22,7 @@
     number_issuer_id: 1
     date: 2004-01-01
     type: SingleDayEvent
+    number_issuer_id: 2
 - banana_belt_2:
     id: 3
     parent_id: 1
@@ -30,6 +32,7 @@
     promoter_id: 1
     date: 2004-01-08
     type: SingleDayEvent
+    number_issuer_id: 2
 - banana_belt_3:
     id: 4
     parent_id: 1
@@ -39,12 +42,13 @@
     promoter_id: 1
     date: 2004-01-15
     type: SingleDayEvent
+    number_issuer_id: 2
 - jack_frost:
     id: 11
     name: Jack Frost
     date: 2004-01-15
     discipline: Time Trial
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: SingleDayEvent
 - jack_frost_2002:
     id: 16
@@ -60,6 +64,7 @@
     discipline: Road
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
+    number_issuer_id: 2
 - tabor_cr:
     id: 6
     name: Mt. Tabor Circuit Race
@@ -70,6 +75,7 @@
     flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
     flyer_approved: false
     type: SingleDayEvent
+    number_issuer_id: 2
 - pir_series:
     id: 7
     date: 2005-07-02
@@ -82,6 +88,7 @@
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: WeeklySeries
+    number_issuer_id: 2
 - pir:
     id: 8
     parent_id: 7
@@ -94,6 +101,7 @@
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
+    number_issuer_id: 2
 - pir_2:
     id: 9
     parent_id: 7
@@ -106,13 +114,14 @@
     promoter_id: 2
     sanctioned_by: <%= ASSOCIATION.short_name %>
     type: SingleDayEvent
+    number_issuer_id: 2
 - kings_valley_2004:
     id: 10
     name: Kings Valley Road Race
     date: 2004-12-31
     discipline: Road
     sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: SingleDayEvent
 - mt_hood:
     id: 12
@@ -124,7 +133,7 @@
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: MultiDayEvent
 - mt_hood_1:
     id: 13
@@ -137,7 +146,7 @@
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
     city: Hood River
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: SingleDayEvent
 - mt_hood_2:
     id: 14
@@ -150,7 +159,7 @@
     flyer: http://www.hoodriversr.net/
     promoter_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: SingleDayEvent
 - kings_valley_2004:
     id: 15
@@ -159,6 +168,6 @@
     discipline: Road
     number_issuer_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 1
+    number_issuer_id: 2
     type: SingleDayEvent
     

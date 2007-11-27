@@ -156,11 +156,12 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  'promoter_id' => '3'}
+                  'promoter_id' => '3', 'type' => 'SingleDayEvent'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
     assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
+    assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
     
     assert_response(:redirect)
     assert_redirected_to(:action => :show, :id => skull_hollow.to_param)
@@ -175,6 +176,28 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal(true, skull_hollow.cancelled, 'cancelled')
     assert_equal('KY', skull_hollow.state, 'state')
     assert_equal(promoters(:nate_hobson), skull_hollow.promoter, 'promoter')
+  end
+  
+  def test_create_series
+    opts = {:controller => "admin/events", :action => "create"}
+    assert_routing("/admin/events/create", opts)
+
+    assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
+
+    post(:create, 
+         "commit"=>"Save", 
+         "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+                   "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                   "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+                  'promoter_id' => '3', 'type' => 'Series'}
+    )
+    
+    skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
+    assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
+    assert(skull_hollow.is_a?(Series), 'Skull Hollow should be a series')
+    
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => skull_hollow.to_param)
   end
   
   def test_upload_dupe_racers
@@ -212,6 +235,15 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     post(:destroy_standings, :id => jack_frost.id, :commit => 'Delete')
     assert_response(:success)
     assert_raise(ActiveRecord::RecordNotFound, 'jack_frost should have been destroyed') { Standings.find(jack_frost.id) }
+  end
+
+  def test_destroy_event
+    jack_frost = events(:jack_frost)
+    opts = {:controller => "admin/events", :action => "destroy_event", :id => jack_frost.to_param.to_s}
+    assert_routing("/admin/events/destroy_event/#{jack_frost.to_param}", opts)
+    post(:destroy_event, :id => jack_frost.id, :commit => 'Delete')
+    assert_response(:success)
+    assert_raise(ActiveRecord::RecordNotFound, 'jack_frost should have been destroyed') { Event.find(jack_frost.id) }
   end
 
   def test_destroy_result
@@ -463,6 +495,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          "commit"=>"Save", 
          'same_promoter' => 'true',
          "event"=>{"name"=>"Silverton",
+                  'type' => 'SingleDayEvent',
                   'promoter_id' => ""}
     )
     assert_response(:redirect)
@@ -482,7 +515,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          :id => banana_belt.to_param.to_s,
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
-                   "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+                   "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR", 'type' => 'SingleDayEvent',
                   'promoter_id' => '3'}
     )
     assert_nil(flash[:warn], 'flash[:warn]')
@@ -493,23 +526,6 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal(promoters(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
   end
   
-  def test_delete
-    tabor_cr = events(:tabor_cr)
-
-    post(:update,
-         'id' => tabor_cr.to_param,
-         "commit"=>"Delete", 
-         'same_promoter' => 'false',
-         "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                   "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
-                   "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  'promoter' => {"name"=>"Tim Plummer",  "phone"=>"503-913-7676", "email"=>"tplummer@gmail.com"}}
-    )
-    assert_response(:redirect)
-    
-    assert(!Event.exists?(tabor_cr.id), "Tabor should be deleted")
-  end
-
   def test_upcoming_events
     opts = {:controller => "admin/events", :action => "upcoming"}
     assert_routing("/admin/events/upcoming", opts)
@@ -532,5 +548,191 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_template("admin/events/first_aid")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
+  end
+  
+  def test_update_single_day_to_multi_day
+    for type in [MultiDayEvent, Series, WeeklySeries]
+      event = events(:banana_belt_1)
+
+      post(:update, 
+           "commit"=>"Save", 
+           :id => event.to_param.to_s,
+           "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
+                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
+                     "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+                    'promoter_id' => '1', 'number_issuer_id' => '1', 'type' => type.to_s}
+      )
+      assert_response(:redirect)
+      assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+      event = Event.find(event.id)
+      assert(event.is_a?(type), "#{event.name} should be a #{type}")
+    end
+  end
+  
+  def test_update_multi_day_to_single_day
+    event = events(:mt_hood)
+    original_attributes = event.attributes.clone
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => event.to_param.to_s,
+         "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day","date"=>event.date,
+                   "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                   "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+                  'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    event = Event.find(event.id)
+    assert(event.is_a?(SingleDayEvent), "Mt Hood should be a SingleDayEvent")
+
+    assert_nil(events(:mt_hood_1).parent(true), "Original child's parent")
+    assert_nil(events(:mt_hood_2).parent(true), "Original child's parent")
+
+    assert_equal("Mt. Hood One Day", event.name, 'name')
+    assert_equal(original_attributes["date"], event.date, 'date')
+    assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+    assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
+    assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+    assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
+    assert_equal(original_attributes["state"], event.state, 'state')
+    assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
+    assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+  end
+  
+  # MultiDayEvent -> Series
+  def test_update_multi_day_to_series
+    event = events(:mt_hood)
+    original_attributes = event.attributes.clone
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => event.to_param.to_s,
+         "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date,
+                   "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                   "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+                  'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'Series'}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    event = Event.find(event.id)
+    assert(event.is_a?(Series), "Mt Hood should be a Series")
+
+    assert_equal(event, events(:mt_hood_1).parent(true), "Original child's parent")
+    assert_equal(event, events(:mt_hood_2).parent(true), "Original child's parent")
+
+    assert_equal("Mt. Hood Series", event.name, 'name')
+    assert_equal(original_attributes["date"], event.date, 'date')
+    assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+    assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
+    assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+    assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
+    assert_equal(original_attributes["state"], event.state, 'state')
+    assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
+    assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+  end
+  
+  # MultiDayEvent -> WeeklySeries
+  def test_update_multi_day_to_weekly_series
+    event = events(:mt_hood)
+    original_attributes = event.attributes.clone
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => event.to_param.to_s,
+         "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date,
+                   "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                   "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+                  'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    event = Event.find(event.id)
+    assert(event.is_a?(WeeklySeries), "Mt Hood should be a WeeklySeries")
+
+    assert_equal(event, events(:mt_hood_1).parent(true), "Original child's parent")
+    assert_equal(event, events(:mt_hood_2).parent(true), "Original child's parent")
+
+    assert_equal("Mt. Hood Series", event.name, 'name')
+    assert_equal(original_attributes["date"], event.date, 'date')
+    assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+    assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
+    assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+    assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
+    assert_equal(original_attributes["state"], event.state, 'state')
+    assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
+    assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+  end
+  
+  def test_update_series_to_weekly_series
+    event = events(:banana_belt_series)
+    original_attributes = event.attributes.clone
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => event.to_param.to_s,
+         "event"=>{"city"=>event.city, "name"=>"BB Weekly Series","date"=>event.date,
+                   "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                   "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+                  'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    event = Event.find(event.id)
+    assert(event.is_a?(WeeklySeries), "BB should be a WeeklySeries")
+
+    assert_equal(event, events(:banana_belt_1).parent(true), "Original child's parent")
+    assert_equal(event, events(:banana_belt_2).parent(true), "Original child's parent")
+
+    assert_equal("BB Weekly Series", event.name, 'name')
+    assert_equal(original_attributes["date"], event.date, 'date')
+    assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+    assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
+    assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+    assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
+    assert_equal(original_attributes["state"], event.state, 'state')
+    assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
+    assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+  end
+  
+  def test_update_weekly_series_to_single_day
+    event = events(:pir_series)
+    original_attributes = event.attributes.clone
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => event.to_param.to_s,
+         "event"=>{"city"=>event.city, "name"=>"PIR One Day","date"=>event.date,
+                   "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
+                   "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
+                  'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    event = Event.find(event.id)
+    assert(event.is_a?(SingleDayEvent), "PIR should be a SingleDayEvent")
+
+    assert_nil(events(:pir).parent(true), "Original child's parent")
+    assert_nil(events(:pir_2).parent(true), "Original child's parent")
+
+    assert_equal("PIR One Day", event.name, 'name')
+    assert_equal(original_attributes["date"], event.date, 'date')
+    assert_equal(original_attributes["flyer"], event.flyer, 'flyer')
+    assert_equal(original_attributes["sanctioned_by"], event.sanctioned_by, 'sanctioned_by')
+    assert_equal(original_attributes["flyer_approved"], event.flyer_approved, 'flyer_approved')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
+    assert_equal(original_attributes["cancelled"], event.cancelled, 'cancelled')
+    assert_equal(original_attributes["state"], event.state, 'state')
+    assert_equal(original_attributes["promoter_id"], event.promoter_id, 'promoter_id')
+    assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
+    assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
   end
 end

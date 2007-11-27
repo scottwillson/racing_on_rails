@@ -1,33 +1,35 @@
-<% @page_title = "Admin: Racers: #{@racer.name}" %>
-
-<%= render "shared/admin/tabs" %>
-
 <% if @racer.new_record? 
      racer_name = 'New Racer' 
    else
 	 racer_name = @racer.name
    end %>
-<% @page_title = "Admin: Racers: #{racer_name}" %>
+<% @page_title = "Admin: Racers: #{@racer.name}" %>
+
+<%= render "shared/admin/tabs" %>
 
 <div align="center">
-	<%- if flash[:notice] -%>
-		<div class="message" id="message">
-				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-				<%= flash[:notice] %>
-		</div>
-	<%- end -%>
+<%- if flash[:notice] -%>
+	<div class="message" id="message">
+			<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:notice] %>
+	</div>
+<%- end -%>
 
-	<%- if flash[:warn] -%>
-		<div class="message" id="warn">
-				<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-				<%= flash[:warn] %>
-		</div>
-	<%- end -%>
+<%- if flash[:warn] -%>
+	<div class="message" id="warn">
+			<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+			<%= flash[:warn] %>
+	</div>
+<%- end -%>
 
 <%= error_messages_for 'racer' %>
 
-<%= form_tag({:action => 'update', :id => @racer.id}) %>
-	<table class="base" cellspacing="0" cellpadding="0">
+<%- if @racer.new_record? -%>
+<%= form_tag({:action => 'create'}) %>
+<%- else -%>
+<%= form_tag({:action => 'update', :id => @racer.id}, {:method => :put }) %>
+<%- end -%>
+	<table class="base">
 		<caption><%= racer_name %></caption>
 		<tr><th colspan="6"></th></tr>
 		<tr>
@@ -176,3 +178,5 @@
 </form>
 
 </div>
+
+<% focus('racer_first_name') if @racer.new_record? %>

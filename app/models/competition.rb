@@ -24,7 +24,7 @@ class Competition < Event
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
         competition = self.find_or_create_by_date(date)
-        raise competition.errors.full_messages unless competition.errors.empty?
+        raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
         competition.destroy_standings
         competition.create_standings
         # Could bulk load all Standings and Races at this point, but hardly seems to matter

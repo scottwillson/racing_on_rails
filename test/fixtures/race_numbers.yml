@@ -1,49 +1,49 @@
 tonkin_road_number_2004:
   id: 1
   racer_id: 1
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: 2004
   value: 104
 tonkin_road_number:
   id: 2
   racer_id: 1
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: <%= Date.today.year %>
   value: 102
 matson_road_number:
   id: 3
   racer_id: 2
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: <%= Date.today.year %>
   value: 340
 weaver_road_number:
   id: 4
   racer_id: 3
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: <%= Date.today.year %>
   value: 341
 molly_road_number:
   id: 5
   racer_id: 4
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: <%= Date.today.year %>
   value: 202
 alice_road_number:
   id: 6
   racer_id: 5
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 4
   year: <%= Date.today.year %>
   value: 230
 weaver_mtb_number:
   id: 7
   racer_id: 3
-  number_issuer_id: 1
+  number_issuer_id: 2
   discipline_id: 3
   year: <%= Date.today.year %>
   value: 437

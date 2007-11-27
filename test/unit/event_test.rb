@@ -40,7 +40,7 @@ class EventTest < ActiveSupport::TestCase
     assert_not_nil(event.promoter, "event.promoter")
   end
   
-  def test_new_defaults
+  def test_defaults
     event = SingleDayEvent.new
     assert_equal(Date.today, event.date, "New event should have today's date")
     formatted_date = Date.today.strftime("%m-%d-%Y")
@@ -48,6 +48,9 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(ASSOCIATION.state, event.state, "event.state")
     assert_nil(event.discipline, "event.discipline")
     assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "New event sanctioned_by default")
+    event.save!
+    number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
   end
   
   def test_new_with_promoters
@@ -191,8 +194,6 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_number_issuer
-    assert_nil(events(:kings_valley).number_issuer, 'Kings Valley number issuer')
-    
     kings_valley = events(:kings_valley_2004)
     assert_equal(number_issuers(:association), kings_valley.number_issuer, '2004 Kings Valley NumberIssuer')
   end

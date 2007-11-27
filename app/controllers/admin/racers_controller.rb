@@ -133,7 +133,8 @@ class Admin::RacersController < Admin::RecordEditor
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")
       logger.error("#{e}\n#{stack_trace}")
-      flash[:warn] = e
+      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+      flash[:warn] = e.to_s
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || Date.today.year
@@ -190,7 +191,8 @@ class Admin::RacersController < Admin::RecordEditor
       ensure
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
-        flash[:warn] = e
+        ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+        flash[:warn] = e.to_s
       end
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
@@ -238,7 +240,7 @@ class Admin::RacersController < Admin::RecordEditor
       rescue Exception => e
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
-        flash[:warn] = e
+        flash[:warn] = e.to_s
         temp_file = File.new(path)
         @racers_file = RacersFile.new(temp_file)
         @year = params[:year]
@@ -282,7 +284,7 @@ class Admin::RacersController < Admin::RecordEditor
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")
       logger.error("#{e}\n#{stack_trace}")
-      flash[:warn] = e
+      flash[:warn] = e.to_s
       render(:template => 'admin/racers/duplicates')
     end
   end

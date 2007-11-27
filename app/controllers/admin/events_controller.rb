@@ -47,6 +47,8 @@ class Admin::EventsController < ApplicationController
       date = Date.new(year.to_i)
     end
     @event = SingleDayEvent.new(:date => date, :discipline => 'Road')
+    association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    @event.number_issuer_id = association_number_issuer.id
   end
   
   # Create new SingleDayEvent
@@ -57,7 +59,9 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * warn
   def create
-    @event = SingleDayEvent.new(params[:event])
+    event_type = params[:event][:type]
+    raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+    @event = eval(event_type).new(params[:event])
     if @event.save
       redirect_to(:action => :show, :id => @event.to_param)
     else
@@ -75,9 +79,6 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * warn
   def update
-    if params[:commit] == 'Delete'
-      return destroy_event
-    end
     if params[:race_id]
       @race = Race.update(params[:race_id], params[:race])
       if @race.errors.empty?
@@ -99,6 +100,14 @@ class Admin::EventsController < ApplicationController
         # TODO consolidate code
         event_params = params[:event].clone
         @event = Event.update(params[:id], event_params)
+        event_type = params[:event][:type]
+        if !event_type.blank? && event_type != @event.type
+          raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+          @event.events.clear if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
+          @event.save!
+          Event.connection.execute("update events set type = '#{event_type}' where id = #{@event.id}")
+          @event = Event.find(@event.id)
+        end
       rescue Exception => e
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
@@ -107,7 +116,7 @@ class Admin::EventsController < ApplicationController
       end
       
       if @event.errors.empty?
-        @event.update_events(original_event_attributes) if @event.is_a?(MultiDayEvent)
+        @event.update_events(original_event_attributes) if @event.is_a?(MultiDayEvent) && original_event_attributes
         redirect_to(:action => :show, :id => params[:id])
       else
         render(:action => :show)
@@ -176,17 +185,17 @@ class Admin::EventsController < ApplicationController
     begin
       event.destroy
       flash[:notice] = "Deleted #{event.name}"
-      redirect_to(
-          :controller => "/admin/schedule", 
-          :action => "index",
-          :year => event.date.year
-        )
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       logger.error("#{error}\n#{stack_trace}")
-      message = "Could not delete #{event.name}"
-      @event = Event.find(params[:id])
-      return render(:action => 'show')
+      flash[:notice] =  "Could not delete #{event.name}"
+    end
+    render :update do |page|
+      page.redirect_to(
+          :controller => "/admin/schedule", 
+          :action => "index",
+          :year => event.date.year
+        )      
     end
   end
   

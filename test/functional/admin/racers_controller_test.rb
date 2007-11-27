@@ -534,7 +534,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
         "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
         "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
         "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
-      "number_issuer_id"=>["1", "1"], "number_value"=>["8977", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2007',
+      "number_issuer_id"=>["2", "2"], "number_value"=>["8977", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2007',
       "commit"=>"Save"})
     
     if assigns['racer']
@@ -571,7 +571,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
-                   "number_issuer_id"=>["1"], "number_value"=>[""], "discipline_id"=>["1"],
+                   "number_issuer_id"=>["2"], "number_value"=>[""], "discipline_id"=>["1"],
                    "number"=>{"5"=>{"value"=>"222"}},
                    "racer"=>{
                      "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
@@ -598,7 +598,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
-                   "number_issuer_id"=>["1"], "number_value"=>["AZY"], "discipline_id"=>["3"],
+                   "number_issuer_id"=>["2"], "number_value"=>["AZY"], "discipline_id"=>["3"],
                    "number"=>{"5"=>{"value"=>"202"}},
                    "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
                      "cell_fax"=>"", "zip"=>"97070", 

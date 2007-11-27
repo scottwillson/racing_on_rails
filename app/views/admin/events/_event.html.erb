@@ -8,7 +8,7 @@
 			<table>
 				<tr>
 					<td class="field_label">Name:</td>
-					<td><%= text_field 'event', 'name', :style => 'width: 100%;' %></td>
+					<td><%= text_field 'event', 'name', :size => 60 %></td>
 				</tr>
 				<%- if event.is_a?(SingleDayEvent) and event.parent -%>
 				<tr>
@@ -16,10 +16,18 @@
 					<td>
 						<%= link_to event.parent.name, 
 							{:action => 'show', :id =>  event.parent.to_param}, 
-							:style => 'color: red' %> (<%= event.parent.friendly_class_name %>) 						
+							:class => 'obvious' %> (<%= event.parent.friendly_class_name %>) 						
 					</td>
 				</tr>
 				<%- end -%>
+				<tr>
+					<td class="field_label">Type:</td>
+					<td><%= select 'event', 'type', 
+						[['Single Day Event (most events)', 'SingleDayEvent'],
+					     ['MultiDayEvent (event over consecutive days: stage races, AVC)', 'MultiDayEvent'], 
+					     ['Series (weekend events with full BAR points: Cross Crusade)', 'Series'], 
+					     ['WeeklySeries (weeknight, BAR points only for final standings: PIR)', 'WeeklySeries']] %></td>
+				</tr>
 			</table>
 		</td>
 	</tr>
@@ -122,7 +130,7 @@
 							</tr>
 							<tr>
 								<td class="field_label">Number Issuer:</td>
-								<td><%= select('event', 'number_issuer_id', NumberIssuer.find(:all).collect {|i| [i.name, i.id]}) %></td>
+								<td><%= number_issuers %></td>
 							</tr>
 						</table>
 					</td>
@@ -167,7 +175,7 @@
 	<tr class="buttons">
 		<td class="updatedon">Updated: <%= @event.updated_at.to_formatted_s(:long) unless @event.updated_at.nil? %></td>
 		<td class="right">
-			<%= submit_tag "Delete" %>
+			<%= link_to_remote('Delete', {:url => { :action => "destroy_event", :id => @event.id }}, {:class => 'obvious'}) unless @event.new_record? %>
 			<%= submit_tag "Save" %>
 		</td>
 	</tr>

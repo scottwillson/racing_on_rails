@@ -4,4 +4,8 @@ module Admin::EventsHelper
   def bar_points_and_labels
     BAR_POINTS_AND_LABELS
   end
+  
+  def number_issuers
+    select('event', 'number_issuer_id', NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})
+  end
 end
