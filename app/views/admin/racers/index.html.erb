@@ -51,27 +51,6 @@
 			</table>
 			<div><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
 
-			<div style="text-align: center;">
-				<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
-					<%= submit_tag 'Import' %> 
-					<%= file_field_tag "racers_file" %>
-				</form>
-		
-				<%= form_tag({}, {:method => 'get', :id => 'export_form'}) %>
-					<%= button_to_function 'Export', 'submit_export(this)' %>
-					<select name="include" id="include">
-						<option value="all">All</option>
-						<option value="members_only" selected>Current Members Only</option>
-					</select>
-					to
-					<select name="format" id="format">
-						<option value="xls" selected>Excel</option>
-						<option value="ppl">FinishLynx</option>
-						<option value="scoring_sheet">Scoring Sheet</option>
-					</select>
-				</form>
-			</div>
-		
 			<div class="tabs" style="margin-top: 24px;">
 				<%= 
 					link_to('Print Cards', :action => 'cards') 
@@ -86,10 +65,10 @@
 <script type="text/javascript" charset="utf-8">
 	function submit_export() {
 		if ($F('format') == 'scoring_sheet') {
-			this.location = '/admin/racers?format=xls&excel_layout=scoring_sheet&include=' + $F('include')
+			this.location = '/admin/racers.xls?excel_layout=scoring_sheet&include=' + $F('include')
 		}
 		else {
-			$('export_form').submit();			
+			this.location = '/admin/racers.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
 		}
 	}
 </script>

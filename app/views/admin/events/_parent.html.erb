@@ -1,0 +1,35 @@
+<%- if event.missing_parent -%>
+<tr>
+	<td></td>
+	<td>
+		This event has no parent.  
+		<%= link_to "Add it to the #{link_to event.missing_parent.friendly_class_name}", 
+			{:action => 'add_child', :parent_id => event.missing_parent.id, :child_id => event.id}, 
+			:class => 'obvious' %>?
+	</td>
+</tr>
+
+<%- elsif event.missing_children? -%>
+<tr>
+	<td></td>
+	<td>
+		There are <%= pluralize(event.missing_children_count, 'event') %> named <%= event.name %> that aren't part of this 
+		<% event.potential_parent.friendly_class_name %>. 
+		<%= link_to "Add it", 
+			{:action => 'add_child', :parent_id => event.missing_parent.id, :child_id => event.id}, 
+			:class => 'obvious' %>?
+	</td>
+</tr>
+<%- end -%>
+
+<%- if event.multi_day_event_children_with_no_parent? -%>
+<tr>
+	<td></td>
+	<td>
+		Found <%= pluralize(event.multi_day_event_children_with_no_parent_count, 'event') %> named <%= event.name %>. 
+		<%= link_to "Make them into a #{MultiDayEvent.guess_type(event).friendly_class_name}?", 
+			{:action => 'create_from_events', :id => event.id}, 
+			:class => 'obvious' %>?
+	</td>
+</tr>
+<%- end -%>

@@ -231,18 +231,40 @@ class Event < ActiveRecord::Base
     name
   end
   
+  def same_name_with_no_parent?
+    !potential_parent.nil?
+  end
+  
+  def same_name_with_no_parent_count
+  end
+  
+  def multi_day_event_children_with_no_parent?
+    multi_day_event_children_with_no_parent_count > 0
+  end
+  
+  def multi_day_event_children_with_no_parent_count
+    _count = SingleDayEvent.count(:all, :conditions => [
+        'parent_id is null and name = ? and extract(year from date) = ?',
+         self.name, self.date.year])
+    if _count > 1
+      _count
+    else
+      0
+    end
+  end
+  
+  def missing_parent
+    nil
+  end
+  
   def <=>(other)
     return -1 if other.nil?
     
-    date_diff = 0
-    if !date.nil? && !other.date.nil?
-      date <=> other.date
-    end 
-    if date_diff != 0
-      date_diff
+    if self.date && other.date
+      self.date <=> other.date
     else
-      name <=> other.name
-    end
+      0
+    end 
   end
 
   def to_s

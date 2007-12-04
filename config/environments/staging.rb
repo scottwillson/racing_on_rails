@@ -15,6 +15,6 @@ config.action_view.debug_rjs                         = true
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = true
-config.action_mailer.delivery_method = :test
+# config.action_mailer.delivery_method = :test
 
 RAILS_HOST = "localhost:3000"

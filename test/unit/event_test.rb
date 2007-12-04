@@ -226,6 +226,100 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_sort
-    [SingleDayEvent.create, MultiDayEvent.create].sort
+    jan_event = SingleDayEvent.new(:date => Date.new(1998, 1, 4))
+    march_event = MultiDayEvent.new(:date => Date.new(1998, 3, 2))
+    nov_event = Series.new(:date => Date.new(1998, 11, 20))
+    events = [jan_event, march_event, nov_event]
+    
+    assert_equal([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
+    march_event.date = Date.new(1999)
+    assert_equal([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
+    
+    events.each {|e| e.save!}
+    assert_equal([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
+    march_event.date = Date.new(1998, 3, 2)
+    assert_equal([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+  end
+  
+  # def test_same_name_no_parent
+  #   event = SingleDayEvent.create!(:name => 'PIR')
+  #   assert(!event.same_name_with_no_parent?)
+  #   assert_nil(event.potential_parent)
+  #   
+  #   assert_no_orphans(events(:kings_valley_2004))
+  #   
+  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+  #   assert(!event.same_name_with_no_parent?)
+  # 
+  #   assert(!events(:banana_belt_series).same_name_with_no_parent?)
+  #   assert(!events(:banana_belt_1).same_name_with_no_parent?)
+  #   assert(!events(:banana_belt_2).same_name_with_no_parent?)
+  #   assert(!events(:banana_belt_3).same_name_with_no_parent?)
+  # 
+  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+  #   assert_no_orphans(pir_1)
+  #   assert(!pir_1.same_name_with_no_parent?)
+  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+  #   assert(!pir_1.same_name_with_no_parent?)
+  #   assert(!pir_2.same_name_with_no_parent?)
+  #   
+  #   assert(!events(:mt_hood).same_name_with_no_parent?)
+  #   assert(!events(:mt_hood_1).same_name_with_no_parent?)
+  #   assert(!events(:mt_hood_2).same_name_with_no_parent?)
+  # 
+  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+  #   assert(events(:mt_hood).same_name_with_no_parent?)
+  #   assert_equal(events(:mt_hood), events(:mt_hood).potential_parent)
+  #   assert(!events(:mt_hood_1).same_name_with_no_parent?)
+  #   assert(!events(:mt_hood_2).same_name_with_no_parent?)
+  #   assert(mt_hood_3.same_name_with_no_parent?)
+  #   assert_equal(events(:mt_hood), mt_hood_3.potential_parent)
+  # end
+  # 
+  # def test_missing_parent
+  #   fail
+  # end
+  # 
+  # def test_found_orphans
+  #   event = SingleDayEvent.create!(:name => 'PIR')
+  #   assert_no_orphans(event)
+  #   
+  #   assert_no_orphans(events(:kings_valley_2004))
+  #   
+  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+  #   assert_orphans(2, event)
+  # 
+  #   assert_no_orphans(events(:banana_belt_series))
+  #   assert_no_orphans(events(:banana_belt_1))
+  #   assert_no_orphans(events(:banana_belt_2))
+  #   assert_no_orphans(events(:banana_belt_3))
+  # 
+  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+  #   assert_no_orphans(pir_1)
+  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+  #   assert_no_orphans(pir_1)
+  #   assert_no_orphans(pir_2)
+  #   
+  #   assert_no_orphans(events(:mt_hood))
+  #   assert_no_orphans(events(:mt_hood_1))
+  #   assert_no_orphans(events(:mt_hood_2))
+  # 
+  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+  #   assert_no_orphans(events(:mt_hood))
+  #   assert_no_orphans(events(:mt_hood_1))
+  #   assert_no_orphans(events(:mt_hood_2))
+  #   assert_no_orphans(mt_hood_3)
+  # end
+  # 
+  private
+  
+  def assert_orphans(count, event)
+    assert(event.found_orphans?, "Should find orphans for #{event.name}")
+    assert_equal(count, event.orphan_count, "#{event.name} orphan count")
+  end
+  
+  def assert_no_orphans(event)
+    assert(!event.found_orphans?, "No orphans for #{event.name}")
+    assert_equal(0, event.orphan_count, "#{event.name} orphan count")
   end
 end

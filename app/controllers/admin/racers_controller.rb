@@ -26,29 +26,27 @@ class Admin::RacersController < Admin::RecordEditor
   def index
     @racers = []
     @name = params['name'] || session['racer_name'] || cookies[:racer_name] || ''
-    if @name.blank?
-      if params['format'] == 'ppl' || params['format'] == 'xls'
-        today = Date.today
-        if params['excel_layout'] == 'scoring_sheet'
-          file_name = 'scoring_sheet.xls'
-        elsif params['format'] == 'ppl'
-          file_name = 'lynx.ppl'
-        else
-          file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
-        end
-        headers['Content-Disposition'] = "filename=\"#{file_name}\""
-        if params['include'] == 'members_only'
-          @racers = Racer.find(
-            :all,
-            :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-            :conditions => ['member_to >= ?', Date.today]
-            )
-        else
-          @racers = Racer.find(
-            :all,
-            :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
-            )
-        end
+    if params['format'] == 'ppl' || params['format'] == 'xls'
+      today = Date.today
+      if params['excel_layout'] == 'scoring_sheet'
+        file_name = 'scoring_sheet.xls'
+      elsif params['format'] == 'ppl'
+        file_name = 'lynx.ppl'
+      else
+        file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
+      end
+      headers['Content-Disposition'] = "filename=\"#{file_name}\""
+      if params['include'] == 'members_only'
+        @racers = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
+          :conditions => ['member_to >= ?', Date.today]
+          )
+      else
+        @racers = Racer.find(
+          :all,
+          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
+          )
       end
       respond_to do |format|
         format.html
@@ -59,8 +57,12 @@ class Admin::RacersController < Admin::RecordEditor
     else
       session['racer_name'] = @name
       cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
-      @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
-      @racers = @racers + Racer.find_by_number(@name)
+      if @name.blank?
+        @racers = []
+      else
+        @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
+        @racers = @racers + Racer.find_by_number(@name)
+      end
       if @racers.size == RESULTS_LIMIT
         flash[:notice] = "First #{RESULTS_LIMIT} racers"
       end
@@ -224,6 +226,7 @@ class Admin::RacersController < Admin::RecordEditor
 
     elsif params[:commit] == 'Import'
       begin
+        Duplicate.delete_all
         path = session[:racers_file_path]
         racers_file = RacersFile.new(File.new(path))
         racers_file.import(params[:update_membership])

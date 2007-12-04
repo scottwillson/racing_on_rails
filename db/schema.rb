@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 40) do
+ActiveRecord::Schema.define(:version => 42) do
 
   create_table "aliases", :force => true do |t|
     t.string   "alias"
@@ -84,6 +84,18 @@ ActiveRecord::Schema.define(:version => 40) do
     t.datetime "updated_at"
     t.boolean  "numbers",                    :default => false
   end
+
+  create_table "duplicates", :force => true do |t|
+    t.text "new_racer"
+  end
+
+  create_table "duplicates_racers", :force => true do |t|
+    t.integer "racer_id"
+    t.integer "duplicate_id"
+  end
+
+  add_index "duplicates_racers", ["racer_id"], :name => "racer_id"
+  add_index "duplicates_racers", ["duplicate_id"], :name => "duplicate_id"
 
   create_table "events", :force => true do |t|
     t.integer  "promoter_id"
@@ -369,6 +381,9 @@ ActiveRecord::Schema.define(:version => 40) do
 
   add_foreign_key "discipline_bar_categories", ["category_id"], "categories", ["id"], :on_delete => :cascade
   add_foreign_key "discipline_bar_categories", ["discipline_id"], "disciplines", ["id"], :on_delete => :cascade
+
+  add_foreign_key "duplicates_racers", ["racer_id"], "racers", ["id"]
+  add_foreign_key "duplicates_racers", ["duplicate_id"], "duplicates", ["id"]
 
   add_foreign_key "events", ["parent_id"], "events", ["id"], :on_delete => :cascade
   add_foreign_key "events", ["promoter_id"], "promoters", ["id"], :on_delete => :set_null

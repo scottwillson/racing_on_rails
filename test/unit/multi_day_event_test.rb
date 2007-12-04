@@ -345,4 +345,35 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(2002, 6, 12), event.date, 'event date')
     assert_equal_dates(Date.new(2002, 6, 12), standings.date, 'standings date')
   end
+  
+  # def test_same_name_with_no_parent
+  #   event = SingleDayEvent.create!(:name => 'PIR')
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(event))
+  #   
+  #   assert(MultiDayEvent.same_name_and_year_exists?(events(:kings_valley_2004)))
+  #   
+  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+  #   assert(!(MultiDayEvent.same_name_and_year_exists?(event)))
+  # 
+  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_series))))
+  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_1))))
+  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_2))))
+  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_3))))
+  # 
+  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(pir_1))
+  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+  #   assert(MultiDayEvent.same_name_and_year_exists?(pir_1))
+  #   assert(MultiDayEvent.same_name_and_year_exists?(pir_2))
+  #   
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood)))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_1)))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_2)))
+  # 
+  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood)))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_1)))
+  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_2)))
+  #   assert(MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_3)))
+  # end
 end

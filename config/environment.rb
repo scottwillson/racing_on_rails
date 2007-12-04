@@ -76,5 +76,5 @@ unless defined?(ASSOCIATION)
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
 
-RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
+RAILS_HOST = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)

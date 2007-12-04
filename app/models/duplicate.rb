@@ -1,11 +1,7 @@
 # TODO: +new_record+ and +attributes+ are somewhat redundant
-class Duplicate
-  
-  attr_accessor :new_record, :existing_records, :attributes
-  
-  def initialize(new_record, new_attributes, existing_records)
-    @new_record = new_record
-    @attributes = new_attributes
-    @existing_records = existing_records
-  end
+class Duplicate < ActiveRecord::Base
+  serialize :new_racer
+  validates_presence_of :new_racer
+
+  has_and_belongs_to_many :racers
 end

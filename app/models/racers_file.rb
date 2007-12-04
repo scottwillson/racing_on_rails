@@ -162,7 +162,7 @@ class RacersFile < GridFile
               row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
             add_print_card_and_label(row_hash, racer)
-            duplicates << Duplicate.new(racer, row_hash, racers)
+            duplicates << Duplicate.new(:new_racer => row_hash, :racers => racers)
           end
         end
       rescue Exception => e

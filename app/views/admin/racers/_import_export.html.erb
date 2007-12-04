@@ -1,0 +1,21 @@
+<div style="text-align: center;">
+	<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
+		<%= submit_tag 'Import' %> 
+		<%= file_field_tag "racers_file" %>
+	</form>
+
+	<%= form_tag({}, {:id => 'export_form'}) %>
+		<%= button_to_function 'Export', 'submit_export(this)' %>
+		<select name="include" id="include">
+			<option value="all">All</option>
+			<option value="members_only" selected>Current Members Only</option>
+		</select>
+		to
+		<select name="format" id="format">
+			<option value="xls" selected>Excel</option>
+			<option value="ppl">FinishLynx</option>
+			<option value="scoring_sheet">Scoring Sheet</option>
+		</select>
+	</form>
+</div>
+

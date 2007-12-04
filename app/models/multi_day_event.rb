@@ -69,8 +69,6 @@ class MultiDayEvent < Event
     end
     
     first_event = events.first
-    length = events.last.date - first_event.date
-
     new_event_attributes = {
       :city => first_event.city,
       :discipline => first_event.discipline,
@@ -80,17 +78,10 @@ class MultiDayEvent < Event
       :sanctioned_by => first_event.sanctioned_by,
       :state => first_event.state
     }
-
-    if events.size - 1 == length
-      multi_day_event = MultiDayEvent.create!(new_event_attributes)
-    else
-      if first_event.date.wday == 0 or first_event.date.wday == 6
-        multi_day_event = Series.create!(new_event_attributes)
-      else
-        multi_day_event = WeeklySeries.create!(new_event_attributes)
-      end
-    end
     
+    new_multi_day_event_class = MultiDayEvent.guess_type(events)
+    multi_day_event = new_multi_day_event_class.create!(new_event_attributes)
+
     for event in events
       event.parent = multi_day_event
       event.save!
@@ -98,6 +89,28 @@ class MultiDayEvent < Event
 
     multi_day_event.events(true)
     multi_day_event
+  end
+  
+  def MultiDayEvent.guess_type(name, date)
+    events = SingleDayEvent.find(:all, :conditions => ['name = ? and extract(year from date) = ?', name, date])
+    MultiDayEvent.guess_type(events)
+  end
+  
+  def MultiDayEvent.guess_type(events)
+    length = events.last.date - events.first.date
+    if events.size - 1 == length
+     MultiDayEvent
+    else
+      if events.first.date.wday == 0 or events.first.date.wday == 6
+        Series
+      else
+        WeeklySeries
+      end
+    end
+  end
+  
+  def MultiDayEvent.same_name_and_year(event)
+    MultiDayEvent.find(:first, :conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
   
   def initialize(attributes = nil)
