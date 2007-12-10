@@ -3,7 +3,7 @@
 <%= render "shared/admin/tabs" %>
 
 <div style="margin-top: 16px; margin-bottom: 16px;">
-<%= form_tag({}, {:method => 'get'}) %>
+<%= form_tag({}, {:method => 'get', :id => 'search_form'}) %>
 	<span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
 
 	<%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
@@ -50,6 +50,8 @@
 				</tr>
 			</table>
 			<div><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
+			
+			<%= render :partial => 'import_export' %>
 
 			<div class="tabs" style="margin-top: 24px;">
 				<%= 

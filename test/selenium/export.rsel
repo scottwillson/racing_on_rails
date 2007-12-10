@@ -1,0 +1,62 @@
+setup :fixtures => :all
+
+delete_cookie '_racing_on_rails_session_id', '/'
+
+open '/admin/racers'
+assert_text_not_present 'error'
+assert_location '*/account/login'
+assert_text_present 'Login'
+assert_element_present 'username'
+assert_element_present 'user_password'
+
+type 'username', 'candi'
+type 'user_password', 'candi_password'
+click_and_wait 'name=login'
+
+assert_text_not_present 'error'
+assert_location '*/admin/racers'
+assert_element_present 'export_button'
+assert_element_present 'include'
+assert_value 'include', 'members_only'
+assert_element_present 'format'
+assert_value 'format', 'xls'
+
+click 'export_button'
+pause 10000
+assert_text_not_present 'error'
+
+open '/admin/teams'
+assert_text_not_present 'error'
+assert_location '*/admin/teams'
+
+open '/admin/racers'
+assert_text_not_present 'error'
+assert_location '*/admin/racers'
+
+type 'name', 'tonkin'
+submit 'search_form'
+assert_text_not_present 'error'
+assert_text_present 'Erik Tonkin'
+assert_text_present 'Kona'
+assert_text_present '102'
+assert_value 'name', 'tonkin'
+
+type 'include', 'all'
+type 'format', 'ppl'
+click 'export_button'
+pause 10000
+assert_text_not_present 'error'
+
+type 'include', 'members_only'
+type 'format', 'scoring_sheet'
+click 'export_button'
+pause 10000
+assert_text_not_present 'error'
+
+type 'name', 'tonkin'
+submit 'search_form'
+assert_text_not_present 'error'
+assert_text_present 'Erik Tonkin'
+assert_text_present 'Kona'
+assert_text_present '102'
+assert_value 'name', 'tonkin'

@@ -37,5 +37,6 @@ class Admin::AccountController < ApplicationController
   # Remove User from session. There is no link to this action, yet.
   def logout
     session[:user] = nil
+    redirect_to '/'
   end
 end
