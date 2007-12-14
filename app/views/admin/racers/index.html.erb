@@ -64,17 +64,6 @@
 	</tr>
 </table>
 
-<script type="text/javascript" charset="utf-8">
-	function submit_export() {
-		if ($F('format') == 'scoring_sheet') {
-			this.location = '/admin/racers.xls?excel_layout=scoring_sheet&include=' + $F('include')
-		}
-		else {
-			this.location = '/admin/racers.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
-		}
-	}
-</script>
-
 <%- for racer in @racers -%>
 	<%= draggable_element("racer_#{racer.id}", :revert => true) %>
 	<%= drop_receiving_element("racer_#{racer.id}", 

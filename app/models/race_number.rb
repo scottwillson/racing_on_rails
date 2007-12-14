@@ -1,14 +1,12 @@
-# Number used to indentify a Racer during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
+# Number used to identify a Racer during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
 # which is usually a racing Association, but sometimes an Event. RaceNumbers are also restricted
 # by Discipline and year.
 #
-# +Value+ is the number on the physical number. RaceNumber values can have letters and numbers
+# +Value+ is the number on the physical number plate. RaceNumber values can have letters and numbers
 #
 # This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
 # and associations. RacerNumbers are also used to differentiate between Racers with the same name, and 
 # to identify racer results with misspelled names.
-#
-# TODO Add same(other) method that compares significatn fields
 class RaceNumber < ActiveRecord::Base
   before_validation :defaults
   validates_presence_of :discipline_id
@@ -53,6 +51,7 @@ class RaceNumber < ActiveRecord::Base
     end
   end
   
+  # Different disciplines have different rules about what is a rental number
   def RaceNumber.rental?(number, discipline = Discipline[:road])
     if ASSOCIATION.rental_numbers.nil?
       return false

@@ -10,7 +10,7 @@
 <%= form_tag(:action => 'resolve_duplicates') %>
 <% @duplicates.each_with_index do |duplicate, index| %>
 <table class="base">
-  <caption><%= duplicate.new_record.name %></caption>
+  <caption><%= duplicate.racer.name %></caption>
   <tr>
     <th></th>
     <th></th>
@@ -26,22 +26,22 @@
   </tr>
   <tr class="<%= cycle('even', 'odd') %>">
     <td></td>
-    <td><strong<%= duplicate.new_record.name %></strong></td>
+    <td><strong<%= duplicate.racer.name %></strong></td>
     <td></td>
-    <td><strong><%= duplicate.new_record.team_name %></strong></td>
-    <td><strong><%= duplicate.new_record.hometown %></strong></td>
-    <td><strong><%= duplicate.new_record.birthdate.to_formatted_s if duplicate.new_record.birthdate %></strong></td>
+    <td><strong><%= duplicate.racer.team_name %></strong></td>
+    <td><strong><%= duplicate.racer.hometown %></strong></td>
+    <td><strong><%= duplicate.racer.birthdate.to_formatted_s if duplicate.racer.birthdate %></strong></td>
   	<td align="right">
-  		<strong><%= duplicate.new_record.road_number %></strong>
+  		<strong><%= duplicate.racer.road_number %></strong>
   	</td>
   	<td align="right">
-  		<strong><%= duplicate.new_record.xc_number %></strong>
+  		<strong><%= duplicate.racer.xc_number %></strong>
   	</td>
   	<td align="right">
-  		<strong><%= duplicate.new_record.dh_number %></strong>
+  		<strong><%= duplicate.racer.dh_number %></strong>
   	</td>
   	<td align="right">
-  		<strong><%= duplicate.new_record.ccx_number %></strong>
+  		<strong><%= duplicate.racer.ccx_number %></strong>
   	</td>
     <td></td>
   </tr>
@@ -49,7 +49,7 @@
     <td><%= radio_button_tag index, 'new', true %></td>
     <td colspan="10">Create new racer</td>
   </tr>
-  <% for racer in duplicate.existing_records %>
+  <% for racer in duplicate.racers %>
   <tr class="<%= cycle('even', 'odd') %>">
     <td><%= radio_button_tag index, racer.id %></td>
     <td>Merge:</td>

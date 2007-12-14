@@ -1,7 +1,7 @@
 class AddDuplicates < ActiveRecord::Migration
   def self.up
     create_table :duplicates do |t|
-      t.text  :new_racer
+      t.text  :new_attributes
     end
     
     create_table :duplicates_racers do |t|

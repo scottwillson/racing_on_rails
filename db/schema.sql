@@ -36,7 +36,7 @@ CREATE TABLE `aliases` (
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `aliases_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3269 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3273 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `aliases_disciplines`
@@ -130,6 +130,33 @@ CREATE TABLE `disciplines` (
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `duplicates`
+--
+
+DROP TABLE IF EXISTS `duplicates`;
+CREATE TABLE `duplicates` (
+  `id` int(11) NOT NULL auto_increment,
+  `new_racer` text,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `duplicates_racers`
+--
+
+DROP TABLE IF EXISTS `duplicates_racers`;
+CREATE TABLE `duplicates_racers` (
+  `id` int(11) NOT NULL auto_increment,
+  `racer_id` int(11) default NULL,
+  `duplicate_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `racer_id` (`racer_id`),
+  KEY `duplicate_id` (`duplicate_id`),
+  CONSTRAINT `duplicates_racers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`),
+  CONSTRAINT `duplicates_racers_ibfk_2` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `events`
 --
 
@@ -172,7 +199,7 @@ CREATE TABLE `events` (
   CONSTRAINT `events_ibfk_3` FOREIGN KEY (`oregon_cup_id`) REFERENCES `events` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_ibfk_4` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_ibfk_5` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12939 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12942 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `images`
@@ -241,7 +268,7 @@ CREATE TABLE `number_issuers` (
   `updated_at` datetime default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `number_issuers_name_index` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `posts`
@@ -352,7 +379,7 @@ CREATE TABLE `racers` (
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18788 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18803 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `races`
@@ -505,7 +532,21 @@ CREATE TABLE `teams` (
   `member` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `idx_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5136 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5137 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `txt_messages`
+--
+
+DROP TABLE IF EXISTS `txt_messages`;
+CREATE TABLE `txt_messages` (
+  `id` int(11) NOT NULL auto_increment,
+  `phone_number` varchar(10) default NULL,
+  `network` varchar(255) default NULL,
+  `received_at` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `keyword` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `users`
@@ -533,5 +574,5 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-11-24 15:33:00
-insert into schema_info values(40);
+-- Dump completed on 2007-12-11 20:18:39
+insert into schema_info values(42);

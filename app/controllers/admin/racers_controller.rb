@@ -236,7 +236,6 @@ class Admin::RacersController < Admin::RecordEditor
           redirect_to(:action => 'index')
         else
           flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing racer or create a new racer with the same name.'
-          session[:duplicates] = racers_file.duplicates
           redirect_to(:action => 'duplicates')
         end
         expire_cache
@@ -256,11 +255,11 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def duplicates
-    @duplicates = session[:duplicates]
+    @duplicates = Duplicate.find(:all)
     @duplicates.sort! do |x, y|
-      diff = x.new_record.last_name <=> y.new_record.last_name
+      diff = x.new_racer.last_name <=> y.new_racer.last_name
       if diff == 0
-        x.new_record.first_name <=> y.new_record.first_name
+        x.new_record.new_racer <=> y.new_racer.first_name
       else
         diff
       end
@@ -269,20 +268,20 @@ class Admin::RacersController < Admin::RecordEditor
   
   def resolve_duplicates
     begin
-      @duplicates = session[:duplicates]
+      @duplicates = Duplicate.find(:all)
       @duplicates.each_with_index do |duplicate, index|
         id = params[index.to_s]
         if id == 'new'
-          duplicate.new_record.save!
+          duplicate.racer.save!
         else
-          racer = Racer.update(id, duplicate.attributes)
+          racer = Racer.update(id, duplicate.new_attributes)
           unless racer.valid?
             raise ActiveRecord::RecordNotSaved.new(racer.errors.full_messages.join(', '))
           end
         end
       end
     
-      session[:duplicates] = nil
+      Duplicate.delete_all
       redirect_to(:action => 'index')
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")

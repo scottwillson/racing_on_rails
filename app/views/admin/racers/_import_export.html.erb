@@ -1,8 +1,8 @@
 <div style="text-align: center;">
-	<%# form_tag({:action => 'preview_import'}, { :multipart => true }) %>
-		<%# submit_tag 'Import' %> 
-		<%# file_field_tag "racers_file" %>
-	<!--/form-->
+	<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
+		<%= submit_tag 'Import' %> 
+		<%= file_field_tag "racers_file" %>
+	</form>
 
 	<%= form_tag({}, {:id => 'export_form'}) %>
 		<%= button_to_function 'Export', 'submit_export(this)', :id => 'export_button' %>
@@ -19,3 +19,13 @@
 	</form>
 </div>
 
+<script type="text/javascript" charset="utf-8">
+	function submit_export() {
+		if ($F('format') == 'scoring_sheet') {
+			this.location = '/admin/racers.xls?excel_layout=scoring_sheet&include=' + $F('include')
+		}
+		else {
+			this.location = '/admin/racers.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
+		}
+	}
+</script>
