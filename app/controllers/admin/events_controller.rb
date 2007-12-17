@@ -382,24 +382,32 @@ class Admin::EventsController < ApplicationController
       :conditions => ['date >= CURDATE()'], 
       :order => 'date asc')
 
-      rows = events.collect do |event|
-      	[event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
-      end
-      grid = Grid.new(rows)
-      grid.truncate
-      grid.calculate_padding
-      
-      headers['Content-Type'] = 'text/plain'
-
-      render :text => grid.to_s(false)
+    rows = events.collect do |event|
+    	[event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
     end
+    grid = Grid.new(rows)
+    grid.truncate
+    grid.calculate_padding
+    
+    headers['Content-Type'] = 'text/plain'
+
+    render :text => grid.to_s(false)
+  end
+  
+  def set_parent
+    child = Event.find(params[:child_id])
+    parent = Event.find(params[:parent_id])
+    child.parent = parent
+    child.save!
+    redirect_to(:action => :show, :id => child)
+  end
   
   # :nodoc
   def update_promoter(promoter, params)
-     if promoter and (params[:name] != promoter.name or params[:email] != promoter.email or params[:phone] != promoter.phone)
-       promoter.name = params[:name]
-       promoter.email = params[:email]
-       promoter.phone = params[:phone]
-     end
-   end
+    if promoter and (params[:name] != promoter.name or params[:email] != promoter.email or params[:phone] != promoter.phone)
+      promoter.name = params[:name]
+      promoter.email = params[:email]
+      promoter.phone = params[:phone]
+    end
+  end
 end

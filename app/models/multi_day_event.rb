@@ -110,6 +110,7 @@ class MultiDayEvent < Event
   end
   
   def MultiDayEvent.same_name_and_year(event)
+    raise ArgumentError, "'event' cannot be nil" if event.nil?
     MultiDayEvent.find(:first, :conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
   

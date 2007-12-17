@@ -735,4 +735,17 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal(original_attributes["number_issuer_id"], event.number_issuer_id, 'number_issuer_id')
     assert_equal(original_attributes["discipline"], event.discipline, 'discipline')
   end
+  
+  def test_set_parent
+    event = events(:lost_series_child)
+    assert_nil(event.parent)
+    
+    parent = events(:series_parent)
+    post(:set_parent, :parent_id => parent, :child_id => event)
+    
+    event.reload
+    assert_equal(parent, event.parent)
+    assert_response(:redirect)
+    assert_redirected_to(:action => :show, :id => event)
+  end
 end

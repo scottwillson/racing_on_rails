@@ -61,4 +61,11 @@ class SingleDayEventTest < ActiveSupport::TestCase
     stage.name = stage_race.name + ' Stage One'
     assert_equal('Mt. Hood Classic Stage One', stage.full_name, 'stage full_name')
   end
+  
+  def test_missing_parent
+    assert(events(:lost_series_child).missing_parent?, 'missing_parent?')
+    assert_equal(events(:series_parent), events(:lost_series_child).missing_parent, 'missing_parent')
+    assert(!(events(:mt_hood_1).missing_parent?), 'missing_parent?')
+    assert_nil(events(:mt_hood_1).missing_parent, 'missing_parent')
+  end
 end

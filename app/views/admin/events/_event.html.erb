@@ -22,6 +22,12 @@
 				<%- end -%>
 				
 				<tr>
+					<td></td>
+					<td>
+						<%= render :partial => 'parent', :locals => {:event => event} %>						
+					</td>
+				</tr>
+				<tr>
 					<td class="field_label">Type:</td>
 					<td><%= select 'event', 'type', 
 						[['Single Day Event (most events)', 'SingleDayEvent'],

@@ -22,8 +22,8 @@ class EventTest < ActiveSupport::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal(4, years.size, "Should find 3 years")
-    assert_equal([2005, 2004, 2003, 2002], years, "Years")
+    assert_equal(5, years.size, "Should find all years with events")
+    assert_equal([Date.today.year, 2005, 2004, 2003, 2002], years, "Years")
   end
   
   def test_load_associations
@@ -206,6 +206,7 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_find_max_date_for_current_year
+    Event.delete_all
     assert_nil(Event.find_max_date_for_current_year)
     SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
     assert_equal_dates("#{Date.today.year}-06-10", Event.find_max_date_for_current_year)
@@ -275,11 +276,7 @@ class EventTest < ActiveSupport::TestCase
   #   assert(mt_hood_3.same_name_with_no_parent?)
   #   assert_equal(events(:mt_hood), mt_hood_3.potential_parent)
   # end
-  # 
-  # def test_missing_parent
-  #   fail
-  # end
-  # 
+
   # def test_found_orphans
   #   event = SingleDayEvent.create!(:name => 'PIR')
   #   assert_no_orphans(event)

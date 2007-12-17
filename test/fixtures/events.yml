@@ -170,4 +170,22 @@
     sanctioned_by: <%= ASSOCIATION.short_name %>
     number_issuer_id: 2
     type: SingleDayEvent
-    
+- series_parent:
+    id: 101
+    name: Lost Series
+    discipline: Road
+    sanctioned_by: <%= ASSOCIATION.short_name %>
+    promoter_id: 1
+    date: <%= Date.today %>
+    type: Series
+    number_issuer_id: 2
+- lost_series_child:
+    id: 102
+    name: Lost Series
+    discipline: Road
+    sanctioned_by: <%= ASSOCIATION.short_name %>
+    promoter_id: 1
+    number_issuer_id: 1
+    date: <%= Date.today %>
+    type: SingleDayEvent
+    number_issuer_id: 2

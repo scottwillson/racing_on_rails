@@ -67,9 +67,9 @@ class ScheduleTest < ActiveSupport::TestCase
     event_after = SingleDayEvent.create(:name => 'After Schedule Start', :date => Date.new(2006, 1, 21))
     
     before_import_after_schedule_start_date = Event.count(:conditions => "date > '2006-01-20'")
-    assert_equal(1, before_import_after_schedule_start_date, "2006 events count before import")
+    assert_equal(3, before_import_after_schedule_start_date, "2006 events count before import")
     before_import_all = Event.count
-    assert_equal(18, before_import_all, "All events count before import")
+    assert_equal(20, before_import_all, "All events count before import")
     
     filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
     Schedule::Schedule.import(filename)

@@ -1,0 +1,24 @@
+setup :fixtures => :all
+
+delete_cookie '_racing_on_rails_session_id', '/'
+
+open '/admin/schedule'
+assert_text_not_present 'error'
+assert_location '*/account/login'
+assert_text_present 'Login'
+assert_element_present 'username'
+assert_element_present 'user_password'
+
+type 'username', 'candi'
+type 'user_password', 'candi_password'
+click_and_wait 'name=login'
+
+assert_text_not_present 'error'
+assert_location '*/admin/schedule'
+
+open '/admin/events/102'
+assert_text_present 'has no parent'
+click_and_wait 'set_parent'
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'
+assert_text_not_present 'has no parent'

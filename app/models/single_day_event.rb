@@ -43,9 +43,17 @@ class SingleDayEvent < Event
   def series_event?
     parent and (parent.is_a?(WeeklySeries))
   end
+
+  def missing_parent?
+    !missing_parent.nil?
+  end
   
   def missing_parent
-    self.parent.nil? && MultiDayEvent.same_name_and_year(self)
+    if self.parent_id.nil? 
+      MultiDayEvent.same_name_and_year(self)
+    else
+      nil
+    end
   end
   
   def full_name

@@ -61,9 +61,9 @@ class AdminScheduleControllerTest < ActiveSupport::TestCase
     assert_routing("/admin/schedule/upload", opts)
 
     before_import_after_schedule_start_date = Event.count(:conditions => "date > '2005-01-01'")
-    assert_equal(7, before_import_after_schedule_start_date, "2005 events count before import")
+    assert_equal(9, before_import_after_schedule_start_date, "2005 events count before import")
     before_import_all = Event.count
-    assert_equal(15, before_import_all, "All events count before import")
+    assert_equal(17, before_import_all, "All events count before import")
 
     post :upload, :schedule_file => file
 

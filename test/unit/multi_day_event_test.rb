@@ -376,4 +376,11 @@ class MultiDayEventTest < ActiveSupport::TestCase
   #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_2)))
   #   assert(MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_3)))
   # end
+  
+  def test_missing_parent
+    assert(!events(:series_parent).missing_parent?, 'missing_parent?')
+    assert_nil(events(:series_parent).missing_parent, 'missing_parent')
+    assert(!events(:mt_hood).missing_parent?, 'missing_parent?')
+    assert_nil(events(:mt_hood).missing_parent, 'missing_parent')
+  end
 end
