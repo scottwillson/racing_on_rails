@@ -257,9 +257,9 @@ class Admin::RacersController < Admin::RecordEditor
   def duplicates
     @duplicates = Duplicate.find(:all)
     @duplicates.sort! do |x, y|
-      diff = x.new_racer.last_name <=> y.new_racer.last_name
+      diff = x.racer.last_name <=> y.racer.last_name
       if diff == 0
-        x.new_record.new_racer <=> y.new_racer.first_name
+        x.racer.first_name <=> y.racer.first_name
       else
         diff
       end

@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-	<%= form_tag({:action => 'preview_import'}, { :multipart => true }) %>
+	<%= form_tag({:action => 'preview_import'}, { :multipart => true, :id => 'import_button' }) %>
 		<%= submit_tag 'Import' %> 
 		<%= file_field_tag "racers_file" %>
 	</form>
