@@ -17,6 +17,4 @@ assert_text_not_present 'error'
 assert_location '*/admin/racers'
 assert_element_present 'import_button'
 
-set_element_value 'racers_file', 'test/fixtures/membership/duplicates.xls'
-click 'import_button'
-assert_text_not_present 'error'
+# Can't do a file upload with Selenium
