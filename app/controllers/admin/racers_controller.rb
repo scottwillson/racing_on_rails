@@ -269,11 +269,11 @@ class Admin::RacersController < Admin::RecordEditor
   def resolve_duplicates
     begin
       @duplicates = Duplicate.find(:all)
-      @duplicates.each_with_index do |duplicate, index|
-        id = params[index.to_s]
+      @duplicates.each do |duplicate|
+        id = params[duplicate.to_param]
         if id == 'new'
           duplicate.racer.save!
-        else
+        elsif !id.blank?
           racer = Racer.update(id, duplicate.new_attributes)
           unless racer.valid?
             raise ActiveRecord::RecordNotSaved.new(racer.errors.full_messages.join(', '))

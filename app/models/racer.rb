@@ -144,13 +144,11 @@ class Racer < ActiveRecord::Base
   end
   
   def first_name=(value)
-    logger.debug("first_name=#{name}")
     @old_name = name unless @old_name
     self[:first_name] = value
   end
   
   def last_name=(value)
-    logger.debug("last_name=#{name}")
     @old_name = name unless @old_name
     self[:last_name] = value
   end

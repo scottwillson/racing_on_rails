@@ -8,7 +8,7 @@
 </div>
 
 <%= form_tag(:action => 'resolve_duplicates') %>
-<% @duplicates.each_with_index do |duplicate, index| %>
+<% @duplicates.each do |duplicate| %>
 <table class="base">
   <caption><%= duplicate.racer.name %></caption>
   <tr>
@@ -46,12 +46,12 @@
     <td></td>
   </tr>
   <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= radio_button_tag index, 'new', true %></td>
+    <td><%= radio_button_tag duplicate.id, 'new', true %></td>
     <td colspan="10">Create new racer</td>
   </tr>
   <% for racer in duplicate.racers %>
   <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= radio_button_tag index, racer.id %></td>
+    <td><%= radio_button_tag duplicate.id, racer.id %></td>
     <td>Merge:</td>
     <td><%= racer.aliases.collect{|a| a.name}.join(', ') %></td>
     <td><%= racer.team_name %></td>

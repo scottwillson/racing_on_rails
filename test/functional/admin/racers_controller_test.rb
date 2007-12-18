@@ -751,10 +751,10 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     alice_2 = Racer.create!(:name => 'Alice Pennington', :road_category => '3')
     racers_before_import = Racer.count
   
-    Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Tonkin']))
-    Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Weaver']))
-    Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Pennington']))
-    post(:resolve_duplicates, {'0' => 'new', '1' => weaver_3.id.to_s, '2' => alice_2.id.to_s})
+    tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Tonkin']))
+    ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Weaver']))
+    alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :racers => Racer.find(:all, :conditions => ['last_name = ?', 'Pennington']))
+    post(:resolve_duplicates, {tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param})
     assert_response(:redirect)
     assert_redirected_to(:action => 'index')
     assert_equal(0, Duplicate.count, 'Should have no duplicates')
