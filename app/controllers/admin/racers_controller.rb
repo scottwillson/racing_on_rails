@@ -427,13 +427,21 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def cards
-    @racers = Racer.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
+    @racers = Racer.find(:all, :conditions => ['first_name = ?', 'eric'], :order => 'last_name, first_name')
     if @racers.empty?
       render(:action => :no_cards)
     else
       render(:template => 'admin/racers/cards')
       Racer.update_all("print_card=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
+  end
+  
+  def print_one_card
+    @racer = Racer.find(params[:id])
+    @racers = [@racer]
+    render(:template => 'admin/racers/cards')
+    @racer.print_card = false
+    @racer.save!
   end
   
   def mailing_labels

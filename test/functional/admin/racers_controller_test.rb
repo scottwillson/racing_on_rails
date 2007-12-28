@@ -802,7 +802,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   def test_many_print_cards
     racers = []
     for i in 1..4
-      racers << Racer.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_card => true)
+      racers << Racer.create!(:first_name => 'First Name', :last_name => "Last #{i}", :print_card => true)
     end
 
     get(:cards)
