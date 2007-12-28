@@ -719,6 +719,44 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal(0, Duplicate.count, 'Should have no duplicates')
   end
   
+  def test_import_next_year
+    existing_duplicate = Duplicate.new(:new_attributes => Racer.new(:name => 'Erik Tonkin'))
+    existing_duplicate.racers << racers(:tonkin)
+    existing_duplicate.save!
+    assert_recognizes({:controller => "admin/racers", :action => "import"}, {:path => "/admin/racers/import", :method => :post})
+    racers_before_import = Racer.count
+  
+    file = uploaded_file("test/fixtures/membership/database.xls", "duplicates.xls", "application/vnd.ms-excel")
+    @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/database.xls")
+    next_year = Date.today.year + 1
+    post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
+  
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
+    assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+    assert_nil(session[:duplicates], 'session[:duplicates]')
+    assert_response(:redirect)
+    assert_redirected_to(:action => 'index')
+    
+    assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
+    assert(racers_before_import < Racer.count, 'Should have added racers')
+    assert_equal(0, Duplicate.count, 'Should have no duplicates')
+    
+    rene = Racer.find_by_name('Rene Babi')
+    assert_not_nil(rene, 'Rene Babi should have been imported and created')
+    road_number = rene.race_numbers.detect {|n| n.year == next_year && n.discipline == Discipline['road']}
+    assert_not_nil(road_number, "Rene should have road number for #{next_year}")
+
+    assert(rene.member?(Date.today), 'Should be a member for this year')
+    assert(rene.member?(Date.new(next_year - 1, 12, 31)), 'Should be a member for this year')
+    assert(rene.member?(Date.new(next_year, 1, 1)), 'Should be a member for next year')
+
+    heidi = Racer.find_by_name('Heidi Babi')
+    assert_not_nil(heidi, 'Heidi Babi should have been imported and created')
+    assert(heidi.member?(Date.today), 'Should be a member for this year')
+    assert(heidi.member?(Date.new(next_year - 1, 12, 31)), 'Should be a member for this year')
+    assert(heidi.member?(Date.new(next_year, 1, 1)), 'Should be a member for next year')
+  end
+  
   def test_import_with_duplicates
     Racer.create(:name => 'Erik Tonkin')
     racers_before_import = Racer.count

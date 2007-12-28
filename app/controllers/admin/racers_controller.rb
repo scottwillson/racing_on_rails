@@ -213,12 +213,10 @@ class Admin::RacersController < Admin::RecordEditor
 
     temp_file = File.new(path)
     @racers_file = RacersFile.new(temp_file)
-    @year = params[:year]
-
+    assign_years
     session[:racers_file_path] = temp_file.path
   end
   
-  # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
   def import
     if params[:commit] == 'Cancel'
       session[:racers_file_path] = nil
@@ -229,7 +227,7 @@ class Admin::RacersController < Admin::RecordEditor
         Duplicate.delete_all
         path = session[:racers_file_path]
         racers_file = RacersFile.new(File.new(path))
-        racers_file.import(params[:update_membership])
+        racers_file.import(params[:update_membership], params[:year])
         flash[:notice] = "Imported #{pluralize(racers_file.created, 'new racer')} and updated #{pluralize(racers_file.updated, 'existing racer')}"
         session[:racers_file_path] = nil
         if racers_file.duplicates.empty?
@@ -243,9 +241,12 @@ class Admin::RacersController < Admin::RecordEditor
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
         flash[:warn] = e.to_s
-        temp_file = File.new(path)
-        @racers_file = RacersFile.new(temp_file)
-        @year = params[:year]
+        if path
+          temp_file = File.new(path)
+          @racers_file = RacersFile.new(temp_file)
+        end
+        assign_years
+        @year = params[:year] if params[:year]
         render(:template => 'admin/racers/preview_import')
       end
 
@@ -462,5 +463,15 @@ class Admin::RacersController < Admin::RecordEditor
   def rescue_action_locally(exception)
 		headers.delete("Content-Disposition")
     super
+  end
+  
+  def assign_years
+    today = Date.today
+    if today.month == 12
+      @year = today.year + 1
+    else
+      @year = today.year
+    end
+    @years = [today.year, today.year + 1]
   end
 end

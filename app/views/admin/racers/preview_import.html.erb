@@ -10,7 +10,8 @@
 	</div>
 </div>
 <%- end -%>
-<%= check_box_tag 'update_membership', true, true %> Make all imported racers current members
+<%= check_box_tag 'update_membership', true, true %> Make all imported racers current members for 
+<select name="year"><%= options_for_select @years, @year %></select>
 <br>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>

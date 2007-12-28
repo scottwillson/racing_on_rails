@@ -439,7 +439,7 @@ class ResultTest < ActiveSupport::TestCase
   
   def test_save_number
     results = races(:kings_valley_pro_1_2_2004).results
-    result = results.create(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
+    result = results.create!(:place => 1, :first_name => 'Clara', :last_name => 'Willson', :number => '300')
     assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
     assert_nil(result.racer(true).road_number(true), 'Current road number')
     road_number_2004 = result.racer.race_numbers.detect{|number| number.year == 2004}

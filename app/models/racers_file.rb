@@ -98,30 +98,33 @@ class RacersFile < GridFile
     @duplicates = []
   end
 
-  def import(update_membership)
+  # +year+ for RaceNumbers
+  # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
+  def import(update_membership, year = nil)
     logger.debug("RacersFile import update_membership: #{update_membership}")
     @update_membership = update_membership
     @has_print_column = columns.any? do |column|
       column.field == :print_card
     end
-    logger.debug("RacersFile has_print_column: #{@has_print_column}")
+    year = year.to_i if year
     
     logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
     if @update_membership
-      max_date_for_current_year = Event.find_max_date_for_current_year
-      if max_date_for_current_year.nil? || (max_date_for_current_year and Date.today <= Event.find_max_date_for_current_year)
-        @member_to_for_imported_racers = Date.new(Date.today.year, 12, 31)
+      if year && year > Date.today.year
+        @member_from_imported_racers = Date.new(year, 1, 1)
       else
-        @member_to_for_imported_racers = Date.new(Date.today.year + 1, 12, 31)
+        @member_from_imported_racers = Date.today
       end
+      @member_to_for_imported_racers = Date.new(year || Date.today.year, 12, 31)
     end
     
     Racer.transaction do
       begin
         for row in rows
           row_hash = row.to_hash
+          row_hash[:year] = year if year
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
           

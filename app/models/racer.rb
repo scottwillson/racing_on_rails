@@ -1,6 +1,8 @@
 # A rider who either appears in race results or who is added as a member of a racing association
 #
 # Names are _not_ unique
+#
+# New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
 class Racer < ActiveRecord::Base
 
   include Comparable
@@ -16,6 +18,8 @@ class Racer < ActiveRecord::Base
   has_many :aliases
   has_many :race_numbers, :include => [:discipline, :number_issuer]
   has_many :results
+  
+  attr_accessor :year
   
   CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
 
@@ -251,9 +255,10 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def add_number(value, discipline, association = nil, year = nil)
+  # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
+  def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
-    year = Date.today.year if year.nil?
+    _year = Date.today.year if _year.nil?
     
     if value.blank?
       unless new_record?
@@ -261,7 +266,7 @@ class Racer < ActiveRecord::Base
         # FIXME Delete number individually in UI
         RaceNumber.destroy_all(
           ['racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-          self.id, discipline.id, year, association.id])
+          self.id, discipline.id, _year, association.id])
       end
     else
       self.dirty
