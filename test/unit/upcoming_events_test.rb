@@ -303,4 +303,12 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     assert_equal_events([super_d], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
   end
+  
+  def test_empty
+    upcoming_events = UpcomingEvents.new(Date.new(1990, 6, 7))
+    assert(upcoming_events.empty?)
+
+    upcoming_events = UpcomingEvents.new
+    assert(!upcoming_events.empty?)
+  end
 end

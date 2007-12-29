@@ -105,6 +105,10 @@ class UpcomingEvents
     end
   end
   
+  def empty?
+    events.values.all? {|discipline| discipline.empty?} && weekly_series.values.all? {|discipline| discipline.empty?}
+  end
+  
   private
   
   # Awkward method to add sanctioned_by to conditions

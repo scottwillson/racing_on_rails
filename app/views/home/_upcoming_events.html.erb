@@ -1,5 +1,10 @@
 <table class="base" id="upcoming_events">
 	<caption><%= link_to 'Schedule', :only_path  => false, :host => RAILS_HOST, :controller => 'schedule' %></caption>
+	<%- if @upcoming_events.empty? %>
+	<tr><th></th></tr>
+	<tr><td>No upcoming events in the next two weeks</td></tr>
+	<% end -%>
+	
 	<%- for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross'] -%>
 	<%- unless @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
 	<tr>
