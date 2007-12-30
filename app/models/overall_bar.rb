@@ -20,6 +20,7 @@ class OverallBar < Competition
     Result.find(:all,
                 :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
+                  and place between 1 and 300
                   and categories.id in (#{category_ids_for(race)})
                   and events.date >= '#{date.year}-01-01' 
                   and events.date <= '#{date.year}-12-31'}],

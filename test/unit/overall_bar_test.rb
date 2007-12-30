@@ -125,17 +125,23 @@ class OverallBarTest < ActiveSupport::TestCase
       :racer => racers(:tonkin),
       :team => teams(:kona)
     })
-  
+      
     results_baseline_count = Result.count
     assert_equal(0, Bar.count, "Bar standings before recalculate")
     assert_equal(27, Result.count, "Total count of results in DB before BAR recalculate")
     Bar.recalculate(2004)
+    
+    # Discipline BAR results past 300 don't count -- add fake result
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    sr_men_road_bar = bar.standings.detect {|s| s.name == 'Road'}.races.detect {|r| r.category == categories(:senior_men)}
+    sr_men_road_bar.results.create!(:place => 305, :racer => racers(:alice))
+    
     OverallBar.recalculate(2004)
     bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after recalculate")
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
     assert_equal(1, bar.standings.count, "Bar standings after recalculate")
-    assert_equal(49, Result.count, "Total count of results in DB")
+    assert_equal(50, Result.count, "Total count of results in DB")
     # Should delete old BAR
     OverallBar.recalculate(2004)
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
@@ -145,7 +151,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Bar date")
     assert_equal("2004 Overall BAR", bar.name, "2004 Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
-    assert_equal(49, Result.count, "Total count of results in DB")
+    assert_equal(50, Result.count, "Total count of results in DB")
 
     overall_bar = bar.standings.detect do |standings|
       standings.name == '2004 Overall BAR'
