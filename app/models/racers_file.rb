@@ -28,6 +28,7 @@ class RacersFile < GridFile
     'category'                               => 'road_category',
     'road cat'                               => 'road_category',
     'Cat.'                                   => 'road_category',
+    'cat'                                    => 'road_category',
     'Road Category - '                       => 'road_category',
     'Road Age Group - '                      => 'road_category',
     'USCF Category'                          => 'road_category',
