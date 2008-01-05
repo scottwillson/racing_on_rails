@@ -44,6 +44,7 @@ class RacersFile < GridFile
     'Downhill Mountain Bike Category - '     => 'dh_category',
     'dh cat'                                 => 'dh_category',
     'Downhill Mountain Bike Age Group -'     => 'dh_category',
+    'number'                                 => 'road_number',
     '2007 road'                              => 'road_number',
     'WSBA #'                                 => 'road_number',
     '07 xc'                                  => 'xc_number',
