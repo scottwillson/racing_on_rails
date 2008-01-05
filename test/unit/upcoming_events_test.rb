@@ -47,72 +47,72 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert("PIR new?", !pir.new_record?)
     
       # Way, wayback
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 1, 1))
-      assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.new(Date.new(2005, 1, 1))
+      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wayback
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 11))
-      assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-      assert_equal([pir], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
+      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([pir], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
     
       # Sunday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 25))
-      assert_equal([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Monday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 26))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Tuesday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 27))
-      assert_equal([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 1, 0, 0))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 23, 59, 0))
-      assert_equal([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wednesday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 28))
-      assert_equal([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Sunday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 1))
-      assert_equal([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Monday
       upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 2))
-      assert_equal([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Monday after all events
       upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 10))
-      assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Big range
       upcoming_events = UpcomingEvents.new(Date.new(2008, 5, 26), 16)
-      assert_equal([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     
       # Small range
       upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27), 1)
-      assert_equal([may_day_rr, lucky_lab_tt], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([may_day_rr, lucky_lab_tt], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     
       # Include ALL events regardless of sanctioned_by
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
       upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 25))
-      assert_equal([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     ensure
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end

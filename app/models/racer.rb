@@ -272,16 +272,16 @@ class Racer < ActiveRecord::Base
       self.dirty
       if new_record?
         existing_number = race_numbers.any? do |number|
-          number.value == value && number.discipline == discipline && number.association == association && number.year == year
+          number.value == value && number.discipline == discipline && number.association == association && number.year == _year
         end
-        race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association) unless existing_number
+        race_numbers.build(:racer => self, :value => value, :discipline => discipline, :year => _year, :number_issuer => association) unless existing_number
       else
         race_number = RaceNumber.find(
           :first,
           :conditions => ['value=? and racer_id=? and discipline_id=? and year=? and number_issuer_id=?', 
-                           value, self.id, discipline.id, year, association.id])
+                           value, self.id, discipline.id, _year, association.id])
         unless race_number
-          race_numbers.create(:racer => self, :value => value, :discipline => discipline, :year => year, :number_issuer => association)
+          race_numbers.create(:racer => self, :value => value, :discipline => discipline, :year => _year, :number_issuer => association)
         end
       end
     end
