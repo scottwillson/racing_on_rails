@@ -6,9 +6,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 class MultiDayEventTest < ActiveSupport::TestCase
   
   def test_update_events_promoter
-    pir_july_2 = events(:pir)
-    pir_july_7 = events(:pir_2)
-    promoter = pir_july_2.promoter
+    pir_july_5 = events(:pir)
+    pir_july_12 = events(:pir_2)
+    promoter = pir_july_5.promoter
 
     promoter.name = "Nathan Hobson"
     promoter.phone = "411-9292"
@@ -16,33 +16,33 @@ class MultiDayEventTest < ActiveSupport::TestCase
     promoter.save!
     
     pir_series = events(:pir_series)
-    pir_series.update_events(pir_july_2)
+    pir_series.update_events(pir_july_5)
     
-    pir_july_2.reload
-    assert_equal("Tuesday Night PIR", pir_july_2.name, "name")
-    assert_equal("Portland", pir_july_2.city, "city")
-    assert_equal("OR", pir_july_2.state, "state")
-    assert_equal_dates("2005-07-02", pir_july_2.date, "date")
-    assert_equal("Road", pir_july_2.discipline, "discipline")
-    assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_2.flyer, "flyer")
-    assert_equal(promoter, pir_july_2.promoter, "promoter")
-    assert_equal(ASSOCIATION.short_name, pir_july_2.sanctioned_by, "sanctioned_by")
-    assert_equal("Nathan Hobson", pir_july_2.promoter.name, "promoter name")
-    assert_equal("411-9292", pir_july_2.promoter.phone, "promoter phone")
-    assert_equal("sixhobson@hotmail.com", pir_july_2.promoter.email, "promoter email")
+    pir_july_5.reload
+    assert_equal("Tuesday Night PIR", pir_july_5.name, "name")
+    assert_equal("Portland", pir_july_5.city, "city")
+    assert_equal("OR", pir_july_5.state, "state")
+    assert_equal_dates("2005-07-05", pir_july_5.date, "date")
+    assert_equal("Road", pir_july_5.discipline, "discipline")
+    assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_5.flyer, "flyer")
+    assert_equal(promoter, pir_july_5.promoter, "promoter")
+    assert_equal(ASSOCIATION.short_name, pir_july_5.sanctioned_by, "sanctioned_by")
+    assert_equal("Nathan Hobson", pir_july_5.promoter.name, "promoter name")
+    assert_equal("411-9292", pir_july_5.promoter.phone, "promoter phone")
+    assert_equal("sixhobson@hotmail.com", pir_july_5.promoter.email, "promoter email")
 
-    pir_july_7.reload
-    assert_equal("Tuesday Night PIR", pir_july_7.name, "name")
-    assert_equal("Portland", pir_july_7.city, "city")
-    assert_equal("OR", pir_july_7.state, "state")
-    assert_equal_dates("2005-07-07", pir_july_7.date, "date")
-    assert_equal("Road", pir_july_7.discipline, "discipline")
-    assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_7.flyer, "flyer")
-    assert_equal(promoter, pir_july_7.promoter, "promoter")
-    assert_equal(ASSOCIATION.short_name, pir_july_7.sanctioned_by, "sanctioned_by")
-    assert_equal("Nathan Hobson", pir_july_7.promoter.name, "promoter name")
-    assert_equal("411-9292", pir_july_7.promoter.phone, "promoter phone")
-    assert_equal("sixhobson@hotmail.com", pir_july_7.promoter.email, "promoter email")
+    pir_july_12.reload
+    assert_equal("Tuesday Night PIR", pir_july_12.name, "name")
+    assert_equal("Portland", pir_july_12.city, "city")
+    assert_equal("OR", pir_july_12.state, "state")
+    assert_equal_dates("2005-07-12", pir_july_12.date, "date")
+    assert_equal("Road", pir_july_12.discipline, "discipline")
+    assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_12.flyer, "flyer")
+    assert_equal(promoter, pir_july_12.promoter, "promoter")
+    assert_equal(ASSOCIATION.short_name, pir_july_12.sanctioned_by, "sanctioned_by")
+    assert_equal("Nathan Hobson", pir_july_12.promoter.name, "promoter name")
+    assert_equal("411-9292", pir_july_12.promoter.phone, "promoter phone")
+    assert_equal("sixhobson@hotmail.com", pir_july_12.promoter.email, "promoter email")
   end
 
   def test_timestamps
@@ -55,8 +55,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
 
   def test_start_end_dates
-    assert_equal_dates("2005-07-02", events(:pir_series).start_date, "PIR series start date")
-    assert_equal_dates("2005-07-07", events(:pir_series).end_date, "PIR series end date")
+    assert_equal_dates("2005-07-05", events(:pir_series).start_date, "PIR series start date")
+    assert_equal_dates("2005-07-12", events(:pir_series).end_date, "PIR series end date")
   end
   
   def test_new
@@ -346,41 +346,50 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(2002, 6, 12), standings.date, 'standings date')
   end
   
-  # def test_same_name_with_no_parent
-  #   event = SingleDayEvent.create!(:name => 'PIR')
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(event))
-  #   
-  #   assert(MultiDayEvent.same_name_and_year_exists?(events(:kings_valley_2004)))
-  #   
-  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-  #   assert(!(MultiDayEvent.same_name_and_year_exists?(event)))
-  # 
-  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_series))))
-  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_1))))
-  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_2))))
-  #   assert(!(MultiDayEvent.same_name_and_year_exists?(events(:banana_belt_3))))
-  # 
-  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(pir_1))
-  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
-  #   assert(MultiDayEvent.same_name_and_year_exists?(pir_1))
-  #   assert(MultiDayEvent.same_name_and_year_exists?(pir_2))
-  #   
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood)))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_1)))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_2)))
-  # 
-  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood)))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_1)))
-  #   assert(!MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_2)))
-  #   assert(MultiDayEvent.same_name_and_year_exists?(events(:mt_hood_3)))
-  # end
+  def test_multi_day_event_children_with_no_parent
+    event = SingleDayEvent.create!(:name => 'PIR')
+    assert(!event.multi_day_event_children_with_no_parent?)
+    
+    assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
+    
+    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    assert(event.multi_day_event_children_with_no_parent?)
+  
+    assert(!events(:banana_belt_series).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
+  
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year + 1, 9, 5))
+    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year + 1, 9, 12))
+    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert(!pir_2.multi_day_event_children_with_no_parent?)
+    
+    assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
+  end
+  
+  def test_multi_day_event_children_with_no_parent_stage_race
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+    assert(events(:mt_hood).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
+    assert(mt_hood_3.multi_day_event_children_with_no_parent?)
+  end
   
   def test_missing_parent
     assert(!events(:series_parent).missing_parent?, 'missing_parent?')
     assert_nil(events(:series_parent).missing_parent, 'missing_parent')
     assert(!events(:mt_hood).missing_parent?, 'missing_parent?')
     assert_nil(events(:mt_hood).missing_parent, 'missing_parent')
+  end
+  
+  def test_guess_type
+    assert_equal(MultiDayEvent, MultiDayEvent.guess_type([events(:mt_hood_1), events(:mt_hood_2)]), 'MultiDayEvent')
+    assert_equal(Series, MultiDayEvent.guess_type([events(:banana_belt_1), events(:banana_belt_2), events(:banana_belt_3)]), 'Series')
+    assert_equal(WeeklySeries, MultiDayEvent.guess_type([events(:pir), events(:pir_2)]), 'WeeklySeries')
   end
 end

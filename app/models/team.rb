@@ -54,21 +54,6 @@ class Team < ActiveRecord::Base
     end
   end
   
-  # def create_alias(alias_name)
-  #   old_alias = aliases.detect {|a| a.name.casecmp(alias_name) == 0}
-  #   aliases.delete(old_alias) if old_alias
-  # 
-  #   # Alias may belong to a different team
-  #   old_alias = Alias.find(:first, :conditions => ['name = ? and racer_id is null', alias_name])
-  #   old_alias.destroy if old_alias
-  #   
-  #   new_alias = aliases.create(:name => alias_name)
-  #   for error in new_alias.errors
-  #     errors.add('aliases', error)
-  #   end
-  # end
-  # 
-
   def has_alias?(alias_name)
     aliases.detect {|a| a.name.casecmp(alias_name) == 0}
   end

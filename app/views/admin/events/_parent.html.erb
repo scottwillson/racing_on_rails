@@ -13,9 +13,9 @@
 <tr>
 	<td></td>
 	<td>
-		There are <%= pluralize(event.missing_children_count, 'event') %> named <%= event.name %> that aren't children of this 
+		There are <%= pluralize(event.missing_children.size, 'event') %> named <%= event.name %> that aren't children of this 
 		<% event.potential_parent.friendly_class_name %>. 
-		<%= link_to "Add #{pluralize(event.missing_children_count, 'child')}", 
+		<%= link_to "Add #{pluralize(event.missing_children.size, 'child')}", 
 			{:action => 'add_children', :parent_id => event.id,}, 
 			:class => 'obvious' %>.
 	</td>
@@ -26,8 +26,8 @@
 <tr>
 	<td></td>
 	<td>
-		Found <%= pluralize(event.multi_day_event_children_with_no_parent_count, 'event') %> named <%= event.name %>. 
-		<%= link_to "Make a parent #{MultiDayEvent.guess_type(event).friendly_class_name}", 
+		Found <%= pluralize(event.multi_day_event_children_with_no_parent.size, 'event') %> named <%= event.name %>. 
+		<%= link_to "Make a parent #{MultiDayEvent.guess_type(event.multi_day_event_children_with_no_parent).friendly_class_name}", 
 			{:action => 'create_from_events', :id => event.id}, 
 			:class => 'obvious' %>.
 	</td>

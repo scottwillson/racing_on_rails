@@ -242,31 +242,29 @@ class Event < ActiveRecord::Base
   # children, but implementing missing_children? here allows clients to just call the method
   # without first checking that it exists
   def missing_children?
-    false
+    !missing_children.empty?
   end
   
-  def same_name_with_no_parent?
-    !potential_parent.nil?
-  end
-  
-  def same_name_with_no_parent_count
+  # Only MultiDayEvent subclass has children -- this abstract class, Event, does not have 
+  # children, but implementing missing_children? here allows clients to just call the method
+  # without first checking that it exists
+  def missing_children
+    []
   end
   
   def multi_day_event_children_with_no_parent?
-    multi_day_event_children_with_no_parent_count > 0
+    !multi_day_event_children_with_no_parent.empty?
   end
   
-  def multi_day_event_children_with_no_parent_count
-    _count = SingleDayEvent.count(:all, :conditions => [
-        'parent_id is null and name = ? and extract(year from date) = ?',
-         self.name, self.date.year])
-    if _count > 1
-      _count
-    else
-      0
-    end
+  def multi_day_event_children_with_no_parent
+    @multi_day_event_children_with_no_parent ||= SingleDayEvent.find(
+      :all, 
+      :conditions => [
+        "parent_id is null and name = ? and extract(year from date) = ? 
+         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) > 0)",
+         self.name, self.date.year, self.name, self.date.year])
   end
-  
+    
   def missing_parent
     nil
   end

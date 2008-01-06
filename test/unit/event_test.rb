@@ -242,81 +242,83 @@ class EventTest < ActiveSupport::TestCase
     assert_equal([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
   end
   
-  # def test_same_name_no_parent
-  #   event = SingleDayEvent.create!(:name => 'PIR')
-  #   assert(!event.same_name_with_no_parent?)
-  #   assert_nil(event.potential_parent)
-  #   
-  #   assert_no_orphans(events(:kings_valley_2004))
-  #   
-  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-  #   assert(!event.same_name_with_no_parent?)
-  # 
-  #   assert(!events(:banana_belt_series).same_name_with_no_parent?)
-  #   assert(!events(:banana_belt_1).same_name_with_no_parent?)
-  #   assert(!events(:banana_belt_2).same_name_with_no_parent?)
-  #   assert(!events(:banana_belt_3).same_name_with_no_parent?)
-  # 
-  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
-  #   assert_no_orphans(pir_1)
-  #   assert(!pir_1.same_name_with_no_parent?)
-  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
-  #   assert(!pir_1.same_name_with_no_parent?)
-  #   assert(!pir_2.same_name_with_no_parent?)
-  #   
-  #   assert(!events(:mt_hood).same_name_with_no_parent?)
-  #   assert(!events(:mt_hood_1).same_name_with_no_parent?)
-  #   assert(!events(:mt_hood_2).same_name_with_no_parent?)
-  # 
-  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
-  #   assert(events(:mt_hood).same_name_with_no_parent?)
-  #   assert_equal(events(:mt_hood), events(:mt_hood).potential_parent)
-  #   assert(!events(:mt_hood_1).same_name_with_no_parent?)
-  #   assert(!events(:mt_hood_2).same_name_with_no_parent?)
-  #   assert(mt_hood_3.same_name_with_no_parent?)
-  #   assert_equal(events(:mt_hood), mt_hood_3.potential_parent)
-  # end
+  def test_multi_day_event_children_with_no_parent
+    event = SingleDayEvent.create!(:name => 'PIR')
+    assert(!event.multi_day_event_children_with_no_parent?)
+    assert_nil(event.missing_parent)
+    
+    assert_no_orphans(events(:kings_valley_2004))
+    
+    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    assert(event.multi_day_event_children_with_no_parent?)
+  
+    assert(!events(:banana_belt_series).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
+    assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
+  
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+    assert_no_orphans(pir_1)
+    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert(!pir_2.multi_day_event_children_with_no_parent?)
+    
+    assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
+  
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+    assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
+    assert_nil(events(:mt_hood).missing_parent)
+    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
+    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
+    assert(mt_hood_3.multi_day_event_children_with_no_parent?)
+    assert_equal(events(:mt_hood), mt_hood_3.missing_parent)
+  end
 
-  # def test_found_orphans
-  #   event = SingleDayEvent.create!(:name => 'PIR')
-  #   assert_no_orphans(event)
-  #   
-  #   assert_no_orphans(events(:kings_valley_2004))
-  #   
-  #   event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-  #   assert_orphans(2, event)
-  # 
-  #   assert_no_orphans(events(:banana_belt_series))
-  #   assert_no_orphans(events(:banana_belt_1))
-  #   assert_no_orphans(events(:banana_belt_2))
-  #   assert_no_orphans(events(:banana_belt_3))
-  # 
-  #   pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
-  #   assert_no_orphans(pir_1)
-  #   pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
-  #   assert_no_orphans(pir_1)
-  #   assert_no_orphans(pir_2)
-  #   
-  #   assert_no_orphans(events(:mt_hood))
-  #   assert_no_orphans(events(:mt_hood_1))
-  #   assert_no_orphans(events(:mt_hood_2))
-  # 
-  #   mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
-  #   assert_no_orphans(events(:mt_hood))
-  #   assert_no_orphans(events(:mt_hood_1))
-  #   assert_no_orphans(events(:mt_hood_2))
-  #   assert_no_orphans(mt_hood_3)
-  # end
-  # 
+  def test_missing_children
+    event = SingleDayEvent.create!(:name => 'PIR')
+    assert_no_orphans(event)
+    
+    assert_no_orphans(events(:kings_valley_2004))
+    
+    SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    event = MultiDayEvent.create!(:name => 'PIR')
+    assert_orphans(2, event)
+  
+    assert_no_orphans(events(:banana_belt_series))
+    assert_no_orphans(events(:banana_belt_1))
+    assert_no_orphans(events(:banana_belt_2))
+    assert_no_orphans(events(:banana_belt_3))
+  
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+    assert_no_orphans(pir_1)
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+    assert_no_orphans(pir_1)
+    assert_no_orphans(pir_2)
+    
+    assert_no_orphans(events(:mt_hood))
+    assert_no_orphans(events(:mt_hood_1))
+    assert_no_orphans(events(:mt_hood_2))
+  
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+    assert_no_orphans(events(:mt_hood))
+    assert_no_orphans(events(:mt_hood_1))
+    assert_no_orphans(events(:mt_hood_2))
+    assert_no_orphans(mt_hood_3)
+  end
+  
   private
   
   def assert_orphans(count, event)
-    assert(event.found_orphans?, "Should find orphans for #{event.name}")
-    assert_equal(count, event.orphan_count, "#{event.name} orphan count")
+    assert(event.missing_children?, "Should find missing children for #{event.name}")
+    assert_equal(count, event.missing_children.size, "#{event.name} missing children")
   end
   
   def assert_no_orphans(event)
-    assert(!event.found_orphans?, "No orphans for #{event.name}")
-    assert_equal(0, event.orphan_count, "#{event.name} orphan count")
+    assert(!event.missing_children?, "No missing children for #{event.name}")
+    assert_equal(0, event.missing_children.size, "#{event.name} missing children count")
   end
 end
