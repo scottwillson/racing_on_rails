@@ -355,17 +355,22 @@ class Admin::RacersController < Admin::RecordEditor
     racer = Racer.find(params[:id])
     begin
       racer.destroy
-      render :update do |page|
-        page.visual_effect(:puff, "racer_#{racer.id}_row", :duration => 2)
-        page.replace_html(
-          'message', 
-          "#{image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') } Deleted #{racer.name}"
-        )
+      respond_to do |format|
+        format.html {redirect_to admin_racers_path}
+        format.js {
+          render :update do |page|
+            page.visual_effect(:puff, "racer_#{racer.id}_row", :duration => 2)
+            page.replace_html(
+              'message', 
+              "#{image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') } Deleted #{racer.name}"
+            )
+          end          
+        }
       end
       expire_cache
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{error}\n#{stack_trace}")
+      logger.error("#{error}\n#{stack_trace}")
       message = "Could not delete #{racer.name}"
       render :update do |page|
         page.replace_html("message_#{racer.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))

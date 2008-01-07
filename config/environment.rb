@@ -62,8 +62,10 @@ load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("
 # application's generic files.
 ActionController::Base.view_paths.insert(0, File.expand_path("#{RAILS_ROOT}/local/app/views"))
 
-PDF::Writer::FONT_PATH << "./app/views/fonts"
-PDF::Writer::FontMetrics::METRICS_PATH << "./app/views/fonts"
+PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/app/views/fonts"
+PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
+PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/app/views/fonts"
+PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
 
 require 'array'
 

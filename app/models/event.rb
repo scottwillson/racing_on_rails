@@ -38,6 +38,10 @@ class Event < ActiveRecord::Base
     # TODO Make this better
     maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])
   end
+  
+  def Event.friendly_class_name
+    name.humanize
+  end
 
   # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
   def initialize(attributes = nil)

@@ -274,10 +274,44 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   
   def test_destroy
     @request.session[:user] = users(:candi)
-    csc = Racer.create(:name => 'CSC')
-    post(:destroy, :id => csc.id, :commit => 'Delete')
+    racer = racers(:no_results)
+    delete :destroy, :id => racer.id
+    assert_response(:redirect)
+    assert_redirected_to(admin_racers_path)
+    assert_raise(ActiveRecord::RecordNotFound, 'Racer should have been destroyed') { Racer.find(racer.id) }
+  end
+  
+  def test_ajax_destroy
+    @request.session[:user] = users(:candi)
+    racer = racers(:no_results)
+    delete :destroy, :id => racer.id, :format => 'js'
     assert_response(:success)
-    assert_raise(ActiveRecord::RecordNotFound, 'CSC should have been destroyed') { Racer.find(csc.id) }
+    assert_raise(ActiveRecord::RecordNotFound, 'Racer should have been destroyed') { Racer.find(racer.id) }
+  end
+  
+  def test_destroy_number
+    assert_not_nil(RaceNumber.find(5), 'RaceNumber with ID 5 should exist')
+    
+    opts = {:controller => "admin/racers", :action => "destroy_number", :id => '5'}
+    assert_routing("/admin/racers/destroy_number/5", opts)
+
+    post(:destroy_number, :id => '5')
+    assert_response(:success)
+    
+    assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
+  end
+  
+  def test_destroy_alias
+    tonkin = racers(:tonkin)
+    assert_equal(1, tonkin.aliases.count, 'Tonkin aliases')
+    eric_tonkin_alias = tonkin.aliases.first
+
+    opts = {:controller => "admin/racers", :action => "destroy_alias", :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s}
+    assert_routing("/admin/racers/#{tonkin.id}/aliases/#{eric_tonkin_alias.id}/destroy", opts)
+    
+    post(:destroy_alias, :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s)
+    assert_response(:success)
+    assert_equal(0, tonkin.aliases(true).count, 'Tonkin aliases after destruction')
   end
   
   def test_merge?
@@ -652,31 +686,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal('2010', assigns["year"], "Should assign selected year as 'year'")
     assert_not_nil(assigns["years"], "Should assign range of years as 'years'")
     assert(assigns["years"].size >= 2, "Should assign range of years as 'years', but was: #{assigns[:years]}")
-  end
-  
-  def test_destroy_number
-    assert_not_nil(RaceNumber.find(5), 'RaceNumber with ID 5 should exist')
-    
-    opts = {:controller => "admin/racers", :action => "destroy_number", :id => '5'}
-    assert_routing("/admin/racers/destroy_number/5", opts)
-
-    post(:destroy_number, :id => '5')
-    assert_response(:success)
-    
-    assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
-  end
-  
-  def test_destroy_alias
-    tonkin = racers(:tonkin)
-    assert_equal(1, tonkin.aliases.count, 'Tonkin aliases')
-    eric_tonkin_alias = tonkin.aliases.first
-
-    opts = {:controller => "admin/racers", :action => "destroy_alias", :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s}
-    assert_routing("/admin/racers/#{tonkin.id}/aliases/#{eric_tonkin_alias.id}/destroy", opts)
-    
-    post(:destroy_alias, :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s)
-    assert_response(:success)
-    assert_equal(0, tonkin.aliases(true).count, 'Tonkin aliases after destruction')
   end
   
   def test_preview_import
