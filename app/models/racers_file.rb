@@ -146,8 +146,6 @@ class RacersFile < GridFile
             delete_blank_categories(row_hash)
             racer = racers.first
             delete_unwanted_member_from(row_hash, racer)
-            row_hash.delete(:team)
-            row_hash.delete(:team_name)
             unless racer.notes.blank?
               row_hash[:notes] = "#{racers.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end

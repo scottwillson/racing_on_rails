@@ -29,7 +29,7 @@ class RacerFileTest < ActiveSupport::TestCase
     assert_equal('A', tonkin.ccx_category, 'Cross cat')
     assert_equal('Expert Junior', tonkin.mtb_category, 'MTB cat')
     assert_equal('Physician', tonkin.occupation, 'occupation')
-    assert_equal('Kona', tonkin.team_name, 'Team')
+    assert_equal('Sorella Forte', tonkin.team_name, 'Team')
     notes = %Q{Spent Christmans in Belgium
 Receipt Code: 2R2T6R7
 Confirmation Code: 462TLJ7
@@ -99,7 +99,7 @@ Downhill/Cross Country: Downhill}
     rene.reload
     assert_equal('190A', rene.road_number(true), 'Rene existing DH number')
     
-    scott = Racer.create(
+    scott = Racer.create!(
       :last_name =>'Seaton',
       :first_name => 'Scott',
       :gender => 'M',
@@ -201,7 +201,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('97701', scott_seaton.zip, 'Scott Seaton ZIP')
     assert_equal('541-389-3721', scott_seaton.home_phone, 'Scott Seaton phone')
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
-    assert_equal('EWEB', scott_seaton.team_name, 'Scott Seaton team should be updated')
+    assert_equal("Hutch's Bend", scott_seaton.team_name, 'Scott Seaton team should be updated')
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
     assert(!scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
     
