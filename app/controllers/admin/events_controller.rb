@@ -386,7 +386,7 @@ class Admin::EventsController < ApplicationController
     	[event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
     end
     grid = Grid.new(rows)
-    grid.truncate
+    grid.truncate_rows
     grid.calculate_padding
     
     headers['Content-Type'] = 'text/plain'
