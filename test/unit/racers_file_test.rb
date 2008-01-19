@@ -150,7 +150,7 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('2004-02-23', brian_abers.member_from, 'Brian Abers member from')
     assert_equal_dates(Date.new(Date.today.year, 12, 31), brian_abers.member_to, 'Brian Abers member to')
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
-    assert_equal("Existing notes\nr\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
+    assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
     assert_equal('825', brian_abers.road_number, 'Brian Abers road_number')
     assert(!brian_abers.print_card?, 'sautter.print_card? after import')
