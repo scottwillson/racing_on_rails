@@ -1,6 +1,19 @@
 <% @page_title = "Results: #{@year}" %>
 
 <table class="base" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+<%= tabs do |tabs|
+		tabs.add('2008', :controller => 'results', :year => nil)
+		tabs.add('2007', :controller => 'results', :year => 2007)
+	end  %>
+		</td>
+	</tr>
+</table>
+
+<p>
+
+<table class="base" border="0" cellspacing="0" cellpadding="0">
 	<caption><%= @year %> Results</caption>
   	<% unless @events.empty? %> 
     <%- for event in @events -%>
