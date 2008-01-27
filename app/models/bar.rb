@@ -1,5 +1,3 @@
-require 'fileutils'
-
 # Best All-around Rider Competition. Assigns points for each top-15 placing in major Disciplines: road, track, etc.
 # Calculates a BAR for each Discipline, and an Overall BAR that combines all the discipline BARs.
 # Also calculates a team BAR.
@@ -9,7 +7,6 @@ require 'fileutils'
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 # FIXME This documentation is out of date
 class Bar < Competition
-  include FileUtils
 
   # TODO Add add_child(...) to Race
   # check placings for ties

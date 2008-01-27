@@ -1,6 +1,10 @@
+require 'fileutils'
+
 # Year-long competition that derive there standings from other Events:
 # BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
 class Competition < Event
+  include FileUtils
+
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name
   # TODO Just how much memory is this thing hanging on to?
