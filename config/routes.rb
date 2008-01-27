@@ -43,6 +43,10 @@ ActionController::Routing::Routes.draw do |map|
               :requirements => {:year => /\d+/}, 
               :defaults => {:discipline => 'overall', :category => 'senior_men'}
 
+  map.connect "/cat4_womens_race_series/:year/:discipline", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
+  map.connect "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
+  map.connect "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
+
   map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
