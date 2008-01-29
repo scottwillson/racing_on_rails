@@ -158,7 +158,7 @@ class OverallBarTest < ActiveSupport::TestCase
     end
 
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Overall Bar name")
-    assert_equal(13, overall_bar.races.size, "2004 Overall Bar races")
+    assert_equal(12, overall_bar.races.size, "2004 Overall Bar races")
     assert_equal_dates(Date.today, overall_bar.updated_at, "BAR last updated")
     
     senior_men_overall_bar = overall_bar.races.detect do |b|

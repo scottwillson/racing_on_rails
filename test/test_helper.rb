@@ -73,6 +73,11 @@ class Test::Unit::TestCase
     unless diff.empty?
       fail("#{message}. Did not expect #{diff.join(', ')} in #{actual.join(', ')}")
     end
+    
+    expected.each_with_index do |expected_member, index|
+      actual_member = actual[index]
+      assert_equal(expected_member, actual_member, "Expected #{expected_member} at index #{index}, but was #{actual_member}")
+    end
   end
   
   # Assert Arrays of Results are the same. Only considers place, Racer, and time
