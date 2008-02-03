@@ -17,6 +17,9 @@ class HomeControllerTest < ActiveSupport::TestCase
     assert_not_nil(assigns['upcoming_events'], 'Should assign upcoming_events')
     assert_not_nil(assigns['recent_results'], 'Should assign recent_results')
     assert_not_nil(assigns['news'], 'Should assign news')
+    
+    assert(!assigns["recent_results"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["recent_results"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
   end
   
   def test_auction

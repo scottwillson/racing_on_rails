@@ -12,7 +12,7 @@ class HomeController < ApplicationController
     cutoff = Date.today - 14
     @recent_results = SingleDayEvent.find(
       :all,
-      :conditions => ['date > ? and id in (select event_id from standings)', cutoff],
+      :conditions => ['date > ? and id in (select event_id from standings) and sanctioned_by = ?', cutoff, ASSOCIATION.short_name],
       :order => 'date desc'
     )
     
