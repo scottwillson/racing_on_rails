@@ -50,6 +50,12 @@ class ScheduleControllerTest < ActiveSupport::TestCase #:nodoc: all
     end
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
     assert(!html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
-    
+  end
+  
+  def test_index_only_shows_visible_events
+    get :index
+    html = @response.body
+    assert(!html[events(:future_usa_cycling_event).name], "Schedule should only show events sanctioned by Association")
+    assert(!html[events(:usa_cycling_event_with_results).name], "Schedule should only show events sanctioned by Association")
   end
 end

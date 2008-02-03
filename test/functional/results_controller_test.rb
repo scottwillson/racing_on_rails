@@ -78,6 +78,23 @@ class ResultsControllerTest < ActiveSupport::TestCase
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
+    
+    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
+  end
+  
+  def test_index_only_shows_sanctioned_events
+    opts = {:controller => "results", :action => "index"}
+    assert_routing("/results", opts)
+
+    get(:index)
+    assert_response(:success)
+    assert_template("results/index")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+    
+    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
   end
   
   def test_index_road

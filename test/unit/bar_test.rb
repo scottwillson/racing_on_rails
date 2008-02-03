@@ -139,13 +139,13 @@ class BarTest < ActiveSupport::TestCase
   
     results_baseline_count = Result.count
     assert_equal(0, Bar.count, "Bar standings before recalculate")
-    assert_equal(27, Result.count, "Total count of results in DB before BAR recalculate")
+    original_results_count = Result.count
     Bar.recalculate(2004)
     bar = Bar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after recalculate")
     assert_equal(1, Bar.count, "Bar events after recalculate")
     assert_equal(6, bar.standings.count, "Bar standings after recalculate " + bar.standings.collect {|s| s.name}.join(', '))
-    assert_equal(42, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 15, Result.count, "Total count of results in DB")
     # Should delete old BAR
     Bar.recalculate(2004)
     assert_equal(1, Bar.count, "Bar events after recalculate")
@@ -155,7 +155,7 @@ class BarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Bar date")
     assert_equal("2004 BAR", bar.name, "2004 Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
-    assert_equal(42, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 15, Result.count, "Total count of results in DB")
     
     road_bar = bar.standings.detect {|s| s.name == "Road" }
     women_road_bar = road_bar.races.detect {|b| b.name == "Senior Women" }
@@ -260,7 +260,7 @@ class BarTest < ActiveSupport::TestCase
   end
   
   def test_combined_mtb_standings
-    results_from_fixtures = Result.find(:all)
+    original_results_count = Result.count
     event = SingleDayEvent.create(:name => 'Reheers', :discipline => 'Mountain Bike')
     event.disable_notification!
     assert(event.errors.empty?, event.errors.full_messages)
@@ -394,7 +394,7 @@ class BarTest < ActiveSupport::TestCase
 
     Bar.recalculate
     results_after_bar_recalc = Result.find(:all)
-    assert_equal(results_from_fixtures.size, results_after_bar_recalc.size, 'Should have no new results')
+    assert_equal(original_results_count, results_after_bar_recalc.size, 'Should have no new results')
   end
   
   # Used to only award bonus points for races of five or less, but now all races get equal points

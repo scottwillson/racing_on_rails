@@ -87,7 +87,7 @@ class ResultsController < ApplicationController
       )
 	  end
     
-    @events.reject! {|event| event.is_a?(Competition)}
+    @events.reject! {|event| event.is_a?(Competition) || (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)}
   end
   
   def event

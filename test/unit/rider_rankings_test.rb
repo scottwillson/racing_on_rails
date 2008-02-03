@@ -146,15 +146,14 @@ class RiderRankingsTest < ActiveSupport::TestCase
       :team => teams(:kona)
     })
   
-    results_baseline_count = Result.count
+    original_results_count = Result.count
     assert_equal(0, RiderRankings.count, "RiderRankings standings before recalculate")
-    assert_equal(29, Result.count, "Total count of results in DB before RiderRankings recalculate")
     RiderRankings.recalculate(2004)
     rider_rankings = RiderRankings.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(rider_rankings, "2004 RiderRankings after recalculate")
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
-    assert_equal(35, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 6, Result.count, "Total count of results in DB")
     # Should delete old RiderRankings
     RiderRankings.recalculate(2004)
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
@@ -164,7 +163,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), rider_rankings.date, "2004 RiderRankings date")
     assert_equal("2004 Rider Rankings", rider_rankings.name, "2004 RiderRankings name")
     assert_equal_dates(Date.today, rider_rankings.updated_at, "RiderRankings last updated")
-    assert_equal(35, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 6, Result.count, "Total count of results in DB")
 
     road_rider_rankings = rider_rankings.standings.first
     assert_equal("2004 Rider Rankings", road_rider_rankings.name, "2004 rider rankings name")

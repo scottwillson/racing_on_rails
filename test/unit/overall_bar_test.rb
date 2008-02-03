@@ -128,7 +128,7 @@ class OverallBarTest < ActiveSupport::TestCase
       
     results_baseline_count = Result.count
     assert_equal(0, Bar.count, "Bar standings before recalculate")
-    assert_equal(27, Result.count, "Total count of results in DB before BAR recalculate")
+    original_results_count = Result.count
     Bar.recalculate(2004)
     
     # Discipline BAR results past 300 don't count -- add fake result
@@ -141,7 +141,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_not_nil(bar, "2004 Bar after recalculate")
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
     assert_equal(1, bar.standings.count, "Bar standings after recalculate")
-    assert_equal(50, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
     # Should delete old BAR
     OverallBar.recalculate(2004)
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
@@ -151,7 +151,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Bar date")
     assert_equal("2004 Overall BAR", bar.name, "2004 Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
-    assert_equal(50, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
 
     overall_bar = bar.standings.detect do |standings|
       standings.name == '2004 Overall BAR'
@@ -273,13 +273,14 @@ class OverallBarTest < ActiveSupport::TestCase
     race = standings.races.create(:category => sport_junior_men)
     race.results.create(:racer => chris_woods, :place => 14, :team => gentle_lovers)
     
+    original_results_count = Result.count
     Bar.recalculate(2001)
     OverallBar.recalculate(2001)
     bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2001, 1, 1)])
     assert_not_nil(bar, "2001 OverallBar after recalculate")
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
     assert_equal(1, bar.standings.count, "Bar standings after recalculate")
-    assert_equal(19, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 5, Result.count, "Total count of results in DB")
 
     overall_bar = bar.standings.first
     overall_junior_men_mtb_bar = overall_bar.races.detect do |race|

@@ -7,6 +7,7 @@ class RacingAssociation
   
   def initialize
     @show_license = true
+    @show_only_association_sanctioned_races_on_calendar = true
   end
 
   def gender_specific_numbers?

@@ -1,0 +1,13 @@
+setup :fixtures => :all
+
+open '/'
+assert_text_not_present 'Copperopolis'
+assert_text_not_present 'USA Cycling Event'
+
+open '/schedule'
+assert_text_not_present 'Copperopolis'
+assert_text_not_present 'USA Cycling Event'
+
+open '/results'
+assert_text_not_present 'Copperopolis'
+assert_text_not_present 'USA Cycling Event'

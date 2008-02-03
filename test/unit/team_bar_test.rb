@@ -223,7 +223,7 @@ class TeamBarTest < ActiveSupport::TestCase
   
     results_baseline_count = Result.count
     assert_equal(0, TeamBar.count, "TeamBar standings before recalculate")
-    assert_equal(27, Result.count, "Total count of results in DB before BAR recalculate")
+    original_results_count = Result.count
     Bar.recalculate(2004)
     TeamBar.recalculate(2004)
     assert_equal(1, TeamBar.count, "TeamBar events after recalculate")
@@ -233,7 +233,7 @@ class TeamBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 TeamBar date")
     assert_equal("2004 Team BAR", bar.name, "2004 Team Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
-    assert_equal(45, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 18, Result.count, "Total count of results in DB")
     
     team_standings = bar.standings.first
     assert_equal(1, team_standings.races.size, 'Should have only one team BAR standings race')

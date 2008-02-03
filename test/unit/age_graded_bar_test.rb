@@ -5,13 +5,13 @@ class AgeGradedBarTest < ActiveSupport::TestCase
   def test_recalculate_no_results
     results_baseline_count = Result.count
     assert_equal(0, AgeGradedBar.count, "AgeGradedBar standings before recalculate")
-    assert_equal(11, Result.count, "Total count of results in DB before AgeGradedBar recalculate")
+    original_results_count = Result.count
     AgeGradedBar.recalculate(2004)
     bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after recalculate")
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after recalculate")
     assert_equal(1, bar.standings.count, "AgeGradedBar standings after recalculate")
-    assert_equal(11, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count, Result.count, "Total count of results in DB")
     # Should delete old AgeGradedBar
     AgeGradedBar.recalculate(2004)
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after recalculate")
@@ -21,7 +21,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 AgeGradedBar date")
     assert_equal("2004 Age Graded BAR", bar.name, "2004 Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "AgeGradedBar last updated")
-    assert_equal(11, Result.count, "Total count of results in DB")    
+    assert_equal(original_results_count, Result.count, "Total count of results in DB")    
   end
   
   def test_recalculate
@@ -73,13 +73,13 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     
     results_baseline_count = Result.count
     assert_equal(0, AgeGradedBar.count, "AgeGradedBar standings before recalculate")
-    assert_equal(38, Result.count, "Total count of results in DB before AgeGradedBar recalculate")
+    original_results_count = Result.count
     AgeGradedBar.recalculate(2004)
     bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after recalculate")
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after recalculate")
     assert_equal(1, bar.standings.count, "AgeGradedBar standings after recalculate")
-    assert_equal(42, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 4, Result.count, "Total count of results in DB")
     # Should delete old AgeGradedBar
     AgeGradedBar.recalculate(2004)
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after recalculate")
@@ -89,7 +89,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 AgeGradedBar date")
     assert_equal("2004 Age Graded BAR", bar.name, "2004 Bar name")
     assert_equal_dates(Date.today, bar.updated_at, "AgeGradedBar last updated")
-    assert_equal(42, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 4, Result.count, "Total count of results in DB")
     
     bar_standings = bar.standings.first
     assert_equal('Age Graded', bar_standings.discipline, 'Age Graded BAR standings discipline')    

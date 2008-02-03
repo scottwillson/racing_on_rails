@@ -31,4 +31,8 @@
     bar_points: 1
     updated_at: 2004-01-15
     type: Standings
-        
+- copperopolis:
+    id: 5
+    event_id: 104
+    name: Copperopolis
+    type: Standings

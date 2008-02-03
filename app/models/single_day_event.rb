@@ -11,26 +11,14 @@ class SingleDayEvent < Event
              :foreign_key => 'parent_id', 
              :class_name => 'Event'
   
-  def SingleDayEvent.find_all_by_year_month(year, month)
-    start_of_month = Date.new(year, month, 1)
-    # TODO Better way to do this?
-    end_of_month = start_of_month >> 1
-    end_of_month = end_of_month - 1
-    find(
-      :all,
-      :conditions => ["date >= ? and date <= ?", start_of_month, end_of_month],
-      :order => "date"
-    )
-  end
-  
   def SingleDayEvent.find_all_by_year(year)
     if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
       SingleDayEvent.find(
         :all,
-        :conditions => ["date >= ? and date <= ? and sanctioned_by = ?",
+        :conditions => ["date between ? and ? and sanctioned_by = ?",
                         "#{year}-01-01", "#{year}-12-31", ASSOCIATION.short_name])
     else
-      SingleDayEvent.find(:all, :conditions => ["date >= ? and date <= ?", "#{year}-01-01", "#{year}-12-31"])
+      SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"])
     end
   end
   

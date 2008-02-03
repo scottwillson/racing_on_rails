@@ -57,6 +57,7 @@ class RiderRankings < Competition
                 :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                 :conditions => [%Q{members_only_place between 1 AND #{point_schedule.size - 1}
                   and events.type = 'SingleDayEvent' 
+                  and events.sanctioned_by = "#{ASSOCIATION.short_name}"
                   and categories.id in (#{category_ids_for(race)})
                   and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
                   and events.date >= '#{date.year}-01-01' 

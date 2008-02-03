@@ -62,4 +62,8 @@ weaver_jack_frost:
   racer_id: 3
   place: 9
   time: 1801
-  
+weaver_copperopolis:
+  id: 12
+  race_id: 9
+  racer_id: 3
+  place: 13

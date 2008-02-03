@@ -166,7 +166,6 @@
     name: Kings Valley Road Race
     date: 2004-12-31
     discipline: Road
-    number_issuer_id: 1
     sanctioned_by: <%= ASSOCIATION.short_name %>
     number_issuer_id: 2
     type: SingleDayEvent
@@ -185,7 +184,21 @@
     discipline: Road
     sanctioned_by: <%= ASSOCIATION.short_name %>
     promoter_id: 1
-    number_issuer_id: 1
     date: <%= Date.today %>
     type: SingleDayEvent
     number_issuer_id: 2
+- future_usa_cycling_event:
+    id: 103
+    name: USA Cycling Event
+    discipline: Road
+    sanctioned_by: USA Cycling
+    date: <%= Date.today + 3 %>
+    type: SingleDayEvent
+- usa_cycling_event_with_results:
+    id: 104
+    name: Copperopolis Road Race
+    discipline: Road
+    sanctioned_by: NCNCA
+    date: <%= Date.today - 4 %>
+    type: SingleDayEvent
+    
