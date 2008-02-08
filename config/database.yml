@@ -13,7 +13,7 @@
 development:
   adapter: mysql
   database: racing_on_rails_development
-  username: root
+  username: ror_development
   password:
   host: localhost
   encoding: latin1
@@ -24,7 +24,7 @@ development:
 test:
   adapter: mysql
   database: racing_on_rails_test
-  username: root
+  username: ror_test
   password:
   host: localhost
   encoding: latin1
