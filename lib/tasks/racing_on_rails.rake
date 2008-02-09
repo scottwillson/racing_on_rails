@@ -162,3 +162,6 @@ namespace :racing_on_rails do
     p.package_files.include(files)
   end
 end
+
+desc 'Just run the tests' 
+task :cruise => [:test]
