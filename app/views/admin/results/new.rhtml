@@ -1,0 +1,19 @@
+<% form_for([:admin, Result.new]) do |f| %>
+  <table class="base">
+  	<tr>
+		<th>Place</th>
+		<th>Number</th>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>Team</th>
+	</tr>
+  	<tr>
+		<td><%= f.text_field :place %></td>
+		<td><%= f.text_field :number %></td>
+		<td><%= f.text_field :first_name %></td>
+		<td><%= f.text_field :last_name %></td>
+		<td><%= f.text_field :team_name %></td>
+	</tr>
+  </table>
+  <%= submit_tag "Save" %><%= link_to "Cancel" %>
+<% end %>
