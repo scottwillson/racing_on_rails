@@ -551,7 +551,7 @@ class Result < ActiveRecord::Base
         return id <=> other.id
       end
     rescue ArgumentError => error
-      RAILS_DEFAULT_LOGGER.error("Error in Result.<=> #{error} comparing #{self} with #{other}")
+      logger.error("Error in Result.<=> #{error} comparing #{self} with #{other}")
       throw error
     end
   end
