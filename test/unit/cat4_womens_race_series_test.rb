@@ -45,7 +45,15 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     # ... but not DNFs, DQs, etc...
     kv_category_4_women.results.create!(:racer => racers(:matson), :place => 'DQ')
     
-    # Non-WSBA results count
+    # WSBA results count for participation points
+    other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
+    race = other_wsba_event.standings.create!.races.create!(:category => category_4_women)
+    race.results.create!(:racer => molly, :place => "8")    
+    
+    # Non-WSBA results count for participation points
+    non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
+    race = non_wsba_event.standings.create!.races.create!(:category => category_4_women)
+    race.results.create!(:racer => alice, :place => "56")
     
     # Other categories don't count
     category_3_women = categories(:cat_3_women)
@@ -81,10 +89,10 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     race.results.sort!
     assert_equal('1', race.results[0].place, 'Place')
     assert_equal(alice, race.results[0].racer, 'Racer')
-    assert_equal(72, race.results[0].points, 'Points')
+    assert_equal(87, race.results[0].points, 'Points')
 
     assert_equal('2', race.results[1].place, 'Place')
     assert_equal(molly, race.results[1].racer, 'Racer')
-    assert_equal(50, race.results[1].points, 'Points')
+    assert_equal(65, race.results[1].points, 'Points')
   end
 end

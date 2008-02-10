@@ -16,10 +16,6 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def source_results(race)
-    return [] if events(true).empty?
-    
-    event_ids = events.collect { |e| e.id }.join(', ')
-    
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
           LEFT OUTER JOIN races ON races.id = results.race_id 
@@ -28,18 +24,25 @@ class Cat4WomensRaceSeries < Competition
           LEFT OUTER JOIN events ON standings.event_id = events.id 
           WHERE place > 0
             and categories.id in (#{category_ids_for(race)})
-            and events.id in (#{event_ids})
           order by racer_id
        }
     )
   end
 
   def points_for(source_result, team_size = nil)
+    event_ids = events.collect { |e| e.id }
     place = source_result.place.to_i
-    if place > 15
-      25
+
+    if event_ids.include?(source_result.event_id)
+      if place > 15
+        25
+      else
+        point_schedule[source_result.place.to_i]
+      end
+    elsif place > 0
+      15
     else
-      point_schedule[source_result.place.to_i]
+      0
     end
   end
 
