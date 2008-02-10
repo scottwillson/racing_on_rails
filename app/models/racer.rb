@@ -245,6 +245,10 @@ class Racer < ActiveRecord::Base
   
   def number(discipline, reload = false)
     raise 'discipline cannot be nil' if discipline.nil?
+
+    if discipline.is_a?(Symbol)
+      discipline = Discipline[discipline]
+    end
     number = race_numbers(reload).detect do |race_number|
       race_number.year == Date.today.year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
     end
@@ -258,7 +262,8 @@ class Racer < ActiveRecord::Base
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
-    _year = Date.today.year if _year.nil?
+    _year ||= Date.today.year
+    discipline ||= Discipline[:road] 
     
     if value.blank?
       unless new_record?

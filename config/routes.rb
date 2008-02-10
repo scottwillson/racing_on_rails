@@ -1,13 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  # The priority is based upon order of creation: first created -> highest priority.
-  
-  # Sample of regular route:
-  # map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  # map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
   map.connect "/admin/events/update_bar_points/:id", :controller => "admin/events", :action => "update_bar_points"
   map.connect "/admin/events/upcoming", :controller => "admin/events", :action => "upcoming"
   map.connect "/admin/events/update/:id/:standings_id", :controller => "admin/events", :action => "update", :requirements => {:id => /\d+/, :standings_id => /\d+/}
@@ -46,6 +37,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/cat4_womens_race_series/:year/:discipline", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
   map.connect "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
   map.connect "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
+
+  map.connect "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
+  map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
 
   map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
