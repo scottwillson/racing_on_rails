@@ -226,6 +226,10 @@ class Event < ActiveRecord::Base
     "#{date.month}/#{date.day}"
   end
 
+  def date_range_long_s
+    date.strftime('%a, %B %d')
+  end
+  
   # For display in UI
   def friendly_class_name
     'Event'
