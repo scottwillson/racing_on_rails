@@ -205,6 +205,12 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def event_id
+    if (race || race(true)) && (race.standings || race.standings(true))
+      race.standings.event_id
+    end
+  end
+  
   def event
     if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
       race.standings.event
