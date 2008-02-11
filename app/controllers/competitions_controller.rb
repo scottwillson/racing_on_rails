@@ -14,16 +14,18 @@ class CompetitionsController < ApplicationController
     else
       return render(:file => "#{RAILS_ROOT}/public/404.html", :status => 404)
     end
-    competition = competition_class.find(:first, :conditions => ['date = ?', date])
+    @competition = competition_class.find(:first, :conditions => ['date = ?', date])
     
-    if competition
+    if @competition
       @standings = Standings.find(
         :first, 
-        :conditions => ['event_id = ?', competition.id])
+        :conditions => ['event_id = ?', @competition.id])
 
       @standings.races.reject! do |race|
         race.results.empty?
       end
+    else
+      @competition = competition_class.new
     end
     @standings = @standings || Standings.new
   end
