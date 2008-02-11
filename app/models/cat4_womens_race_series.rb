@@ -18,12 +18,13 @@ class Cat4WomensRaceSeries < Competition
   def source_results(race)
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
-          LEFT OUTER JOIN races ON races.id = results.race_id 
-          LEFT OUTER JOIN categories ON categories.id = races.category_id 
-          LEFT OUTER JOIN standings ON races.standings_id = standings.id 
-          LEFT OUTER JOIN events ON standings.event_id = events.id 
+          LEFT JOIN races ON races.id = results.race_id 
+          LEFT JOIN categories ON categories.id = races.category_id 
+          LEFT JOIN standings ON races.standings_id = standings.id 
+          LEFT JOIN events ON standings.event_id = events.id 
           WHERE place > 0
             and categories.id in (#{category_ids_for(race)})
+            and events.date between '#{year}-01-01' and '#{year}-12-31'
           order by racer_id
        }
     )
@@ -35,15 +36,18 @@ class Cat4WomensRaceSeries < Competition
 
     if event_ids.include?(source_result.event_id)
       if place > 15
-        25
+        return 25
       else
-        point_schedule[source_result.place.to_i]
+        return point_schedule[source_result.place.to_i] || 0
       end
     elsif place > 0
-      15
-    else
-      0
+      return 15
     end
+    0
+  end
+
+  def members_only?
+    false
   end
 
   def create_standings

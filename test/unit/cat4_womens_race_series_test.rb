@@ -45,6 +45,15 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     # ... but not DNFs, DQs, etc...
     kv_category_4_women.results.create!(:racer => racers(:matson), :place => 'DQ')
     
+    # ... and not results in different years
+    wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2003-12-31")
+    race = wrong_year_event.standings.create!.races.create!(:category => category_4_women)
+    race.results.create!(:racer => molly, :place => "1")    
+
+    wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2005-01-01")
+    race = wrong_year_event.standings.create!.races.create!(:category => category_4_women)
+    race.results.create!(:racer => alice, :place => "2")
+    
     # WSBA results count for participation points
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
     race = other_wsba_event.standings.create!.races.create!(:category => category_4_women)
