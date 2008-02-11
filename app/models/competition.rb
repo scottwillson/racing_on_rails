@@ -140,10 +140,11 @@ class Competition < Event
   def create_competition_results_for(results, race)
     competition_result = nil
     results.each_with_index do |source_result, index|
-      logger.debug("#{self.class.name} scoring result: #{source_result.date} #{source_result.race.name} #{source_result.place} #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+      logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race.name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       racer = source_result.racer
-      if member?(racer, source_result.date)
+      points = points_for(source_result)
+      if points > 0.0 && (!members_only? || member?(racer, source_result.date))
  
         if first_result_for_racer(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
@@ -158,13 +159,13 @@ class Competition < Event
           competition_result.scores.create_if_best_result_for_race(
             :source_result => source_result, 
             :competition_result => competition_result, 
-            :points => points_for(source_result)
+            :points => points
           )
         }
       end
       
-      # Aggressive memory management. If competition has a race with many results, the results 
-      # array could become a large, uneeded, structure
+      # Aggressive memory management. If competition has a race with many results, 
+      # the results array can become a large, uneeded, structure
       results[index] = nil
       if index > 0 && index % 1000 == 0
         logger.debug("GC start after record #{index}")
@@ -184,8 +185,14 @@ class Competition < Event
     true
   end
   
+  # Use the recorded place with all finishers? Or only place with just Assoication member finishers?
   def place_members_only?
     false
+  end
+  
+  # Only members can score points?
+  def members_only?
+    true 
   end
   
   def member?(racer_or_team, date)
