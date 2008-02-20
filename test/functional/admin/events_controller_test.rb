@@ -748,4 +748,35 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_response(:redirect)
     assert_redirected_to(:action => :show, :id => event)
   end
+  
+  def test_missing_parent
+    event = events(:lost_series_child)
+    assert(event.missing_parent?, "Event should be missing parent")
+    get(:show, :id => event.to_param)
+    assert_response(:success)
+    assert_template("admin/events/show")
+  end
+  
+  def test_missing_children
+    event = events(:series_parent)
+    assert(event.missing_children?, "Event should be missing children")
+    assert_not_nil(event.missing_children, "Event should be missing children")
+    get(:show, :id => event.to_param)
+    assert_response(:success)
+    assert_template("admin/events/show")
+  end
+  
+  def test_multi_day_event_children_with_no_parent
+    SingleDayEvent.create!(:name => "PIR Short Track")
+    SingleDayEvent.create!(:name => "PIR Short Track")
+    SingleDayEvent.create!(:name => "PIR Short Track")
+    event = SingleDayEvent.create!(:name => "PIR Short Track")
+
+    assert(event.multi_day_event_children_with_no_parent?, "multi_day_event_children_with_no_parent?")
+    assert_not_nil(event.multi_day_event_children_with_no_parent, "multi_day_event_children_with_no_parent")
+    assert(!(event.multi_day_event_children_with_no_parent).empty?, "multi_day_event_children_with_no_parent")
+    get(:show, :id => event.to_param)
+    assert_response(:success)
+    assert_template("admin/events/show")
+  end
 end

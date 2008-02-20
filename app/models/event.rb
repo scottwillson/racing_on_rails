@@ -269,8 +269,13 @@ class Event < ActiveRecord::Base
       :all, 
       :conditions => [
         "parent_id is null and name = ? and extract(year from date) = ? 
-         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) > 0)",
+         and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
          self.name, self.date.year, self.name, self.date.year])
+    # Could do this in SQL
+    if @multi_day_event_children_with_no_parent.size == 1
+      @multi_day_event_children_with_no_parent = []
+    end
+    @multi_day_event_children_with_no_parent
   end
     
   def missing_parent

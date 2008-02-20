@@ -245,25 +245,40 @@ class EventTest < ActiveSupport::TestCase
   def test_multi_day_event_children_with_no_parent
     event = SingleDayEvent.create!(:name => 'PIR')
     assert(!event.multi_day_event_children_with_no_parent?)
-    assert_nil(event.missing_parent)
+    assert(event.multi_day_event_children_with_no_parent.empty?)
     
-    assert_no_orphans(events(:kings_valley_2004))
+    assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
+    assert(events(:kings_valley_2004).multi_day_event_children_with_no_parent.empty?)
     
     MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
     event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-    assert(event.multi_day_event_children_with_no_parent?)
-  
+    assert(!(event.multi_day_event_children_with_no_parent?))
+    assert(event.multi_day_event_children_with_no_parent.empty?)
+      
     assert(!events(:banana_belt_series).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_1).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
-  
+      
     pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
-    assert_no_orphans(pir_1)
     assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(!pir_2.multi_day_event_children_with_no_parent?)
+    assert(pir_1.multi_day_event_children_with_no_parent.empty?)
+    assert(pir_2.multi_day_event_children_with_no_parent.empty?)
+
+    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 17))
+    # Need to completely reset state
+    pir_1 = SingleDayEvent.find(pir_1.id)
+    pir_2 = SingleDayEvent.find(pir_2.id)
+    assert(!pir_1.multi_day_event_children_with_no_parent?)
+    assert(pir_2.multi_day_event_children_with_no_parent?)
+    assert(pir_3.multi_day_event_children_with_no_parent?)
+    assert(pir_1.multi_day_event_children_with_no_parent.empty?)
+    assert(!(pir_2.multi_day_event_children_with_no_parent.empty?))
+    assert(!(pir_3.multi_day_event_children_with_no_parent.empty?))
     
     assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
@@ -271,11 +286,10 @@ class EventTest < ActiveSupport::TestCase
   
     mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
     assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
-    assert_nil(events(:mt_hood).missing_parent)
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
-    assert(mt_hood_3.multi_day_event_children_with_no_parent?)
-    assert_equal(events(:mt_hood), mt_hood_3.missing_parent)
+    assert(!(mt_hood_3.multi_day_event_children_with_no_parent?))
+    assert(mt_hood_3.multi_day_event_children_with_no_parent.empty?)
   end
 
   def test_missing_children

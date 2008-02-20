@@ -346,40 +346,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(2002, 6, 12), standings.date, 'standings date')
   end
   
-  def test_multi_day_event_children_with_no_parent
-    event = SingleDayEvent.create!(:name => 'PIR')
-    assert(!event.multi_day_event_children_with_no_parent?)
-    
-    assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
-    
-    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-    assert(event.multi_day_event_children_with_no_parent?)
-  
-    assert(!events(:banana_belt_series).multi_day_event_children_with_no_parent?)
-    assert(!events(:banana_belt_1).multi_day_event_children_with_no_parent?)
-    assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
-    assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
-  
-    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year + 1, 9, 5))
-    assert(!pir_1.multi_day_event_children_with_no_parent?)
-    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year + 1, 9, 12))
-    assert(!pir_1.multi_day_event_children_with_no_parent?)
-    assert(!pir_2.multi_day_event_children_with_no_parent?)
-    
-    assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
-    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
-    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
-  end
-  
-  def test_multi_day_event_children_with_no_parent_stage_race
-    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
-    assert(events(:mt_hood).multi_day_event_children_with_no_parent?)
-    assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
-    assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
-    assert(mt_hood_3.multi_day_event_children_with_no_parent?)
-  end
-  
   def test_missing_parent
     assert(!events(:series_parent).missing_parent?, 'missing_parent?')
     assert_nil(events(:series_parent).missing_parent, 'missing_parent')
