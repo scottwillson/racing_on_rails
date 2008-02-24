@@ -39,7 +39,7 @@ class RiderRankings < Competition
       'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5', 
       'Masters Men A', 'Masters Men B', 'Masters Men C', 
       'Masters Men D', 'Masters Women A', 'Masters Women B', 
-      'Women Cat 1-2-3', 'Women Cat 4']
+      'Women Cat 1-2', 'Women Cat 3', 'Women Cat 4']
 
       category = Category.find_or_create_by_name(category_name)
       unless category.parent

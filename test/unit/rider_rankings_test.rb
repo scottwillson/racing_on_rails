@@ -7,8 +7,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_not_nil(rider_rankings, "RiderRankings after recalculate")
     assert_equal(1, RiderRankings.count, "RiderRankings events after recalculate")
     assert_equal(1, rider_rankings.standings.count, "RiderRankings standings after recalculate")
-    assert_equal(19, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
-    race = rider_rankings.standings.first.races.first
+    assert_equal(20, rider_rankings.standings.first.races.count, "RiderRankings races after recalculate")
   end
   
   def test_recalculate
@@ -18,8 +17,8 @@ class RiderRankingsTest < ActiveSupport::TestCase
     senior_men.save!
 
     senior_women = Category.find_by_name("Senior Women")
-    women_cat_1_2_3 = Category.create(:name => 'Women Cat 1-2-3')
-    senior_women.parent = women_cat_1_2_3
+    women_cat_3 = Category.create(:name => 'Women Cat 3')
+    senior_women.parent = women_cat_3
     senior_women.save!
 
     cross_crusade = Series.create!(:name => "Cross Crusade")
@@ -167,7 +166,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
 
     road_rider_rankings = rider_rankings.standings.first
     assert_equal("2004 Rider Rankings", road_rider_rankings.name, "2004 rider rankings name")
-    assert_equal(19, road_rider_rankings.races.size, "2004 rider rankings races")
+    assert_equal(20, road_rider_rankings.races.size, "2004 rider rankings races")
     assert_equal_dates(Date.today, road_rider_rankings.updated_at, "RiderRankings last updated")
     
     senior_men = road_rider_rankings.races.detect {|b| b.category == men_cat_1_2}
@@ -188,7 +187,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_equal("4", senior_men.results[3].place, "Senior Men rider rankings results place")
     assert_equal(68, senior_men.results[3].points, "Senior Men rider rankings results points")
     
-    women = road_rider_rankings.races.detect {|b| b.category == women_cat_1_2_3}
+    women = road_rider_rankings.races.detect {|b| b.category == women_cat_3}
     assert_equal(1, women.results.size, "Senior Women rider rankings results")
 
     women.results.sort!
