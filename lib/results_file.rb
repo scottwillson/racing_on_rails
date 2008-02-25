@@ -5,6 +5,7 @@ class ResultsFile < GridFile
   attr_accessor :invalid_columns
 
   COLUMN_MAP = {
+    "placing" => "place",
     "#" => "number",
     "wsba#" => "number",
     "rider_#" => "number",
