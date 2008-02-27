@@ -24,6 +24,7 @@ class Cat4WomensRaceSeries < Competition
           LEFT JOIN events ON standings.event_id = events.id 
           WHERE place > 0
             and categories.id in (#{category_ids_for(race)})
+            and events.type = "SingleDayEvent"
             and events.date between '#{year}-01-01' and '#{year}-12-31'
           order by racer_id
        }
@@ -52,7 +53,7 @@ class Cat4WomensRaceSeries < Competition
 
   def create_standings
     root_standings = standings.create(:event => self)
-    category = Category.find_or_create_by_name('Category 4 Women')
+    category = Category.find_or_create_by_name('Women Cat 4')
     root_standings.races.create(:category => category)
   end
 
