@@ -9,13 +9,15 @@ class ResultsController < ApplicationController
   	first_of_year = Date.new(@year, 1, 1)
   	last_of_year = Date.new(@year + 1, 1, 1) - 1
   	
+  	# Ideally, SQL shouldn't pull out duplicate Events
+  	@events = Set.new
   	@discipline = Discipline[params['discipline']]
   	if @discipline
   	  discipline_names = [@discipline.name]
   	  if @discipline == Discipline['road']
   	    discipline_names << 'Circuit'
 	    end
-      @events = Event.find(
+      @events = @events + Event.find(
           :all,
           :include => :standings, 
           :conditions => [%Q{
@@ -52,7 +54,7 @@ class ResultsController < ApplicationController
       )
 
 	  else
-      @events = Event.find(
+      @events = @events + Event.find(
           :all,
           :include => :standings,
           :conditions => [%Q{
@@ -87,6 +89,7 @@ class ResultsController < ApplicationController
       )
 	  end
     
+    @events = @events.to_a
     @events.reject! {|event| event.is_a?(Competition) || (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)}
   end
   

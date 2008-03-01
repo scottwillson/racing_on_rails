@@ -155,10 +155,12 @@ class ResultsControllerTest < ActiveSupport::TestCase
     series_with_child_standings = Series.create!(:name => 'Series with children standings', :date => Date.new(2009, 4, 17))
     series_with_child_standings_child = series_with_child_standings.events.create!(:date => Date.new(2009, 4, 17))
     series_with_child_standings_child.standings.create
+    series_with_child_standings_child.standings.create
     
     series_with_standings_and_child_standings = Series.create!(:name => 'Series with standings and  with children standings', :date => Date.new(2009, 11, 1))
     series_with_standings_and_child_standings.standings.create
     series_with_standings_and_child_standings_child = series_with_child_standings.events.create!(:date => Date.new(2009, 11, 11))
+    series_with_standings_and_child_standings_child.standings.create
     series_with_standings_and_child_standings_child.standings.create
     
     WeeklySeries.create!(:name => 'In past', :date => Date.new(2008, 12, 31)).standings.create
