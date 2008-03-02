@@ -14,7 +14,7 @@
 	<td></td>
 	<td>
 		There are <%= pluralize(event.missing_children.size, 'event') %> named <%= event.name %> that aren't children of this 
-		<% event.friendly_class_name %>. 
+		<%= event.friendly_class_name %>. 
 		<%= link_to "Add #{pluralize(event.missing_children.size, 'child')}", 
 			{:action => 'add_children', :parent_id => event.id,}, 
 			:class => 'obvious' %>.

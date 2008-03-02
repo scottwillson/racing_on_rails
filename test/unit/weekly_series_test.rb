@@ -50,4 +50,13 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal('M/Tu/Th/F', weekly_series.days_of_week_s, 'Days of week as String')
   end
   
+  def test_friendly_class_name
+    event = WeeklySeries.new
+    assert_equal("Weekly Series", event.friendly_class_name, "friendly_class_name")
+  end
+  
+  def test_missing_children
+    assert(!events(:pir_series).missing_children?, "PIR should have no missing children")
+    assert(events(:pir_series).missing_children.empty?, "PIR should have no missing children")
+  end
 end

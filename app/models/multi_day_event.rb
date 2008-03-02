@@ -197,14 +197,12 @@ class MultiDayEvent < Event
   end
   
   def missing_children
-   @missing_children ||=  SingleDayEvent.find(:all, :conditions => ['name = ? and extract(year from date) = ?', self.name, self.date.year]) 
+   @missing_children ||= SingleDayEvent.find(:all, 
+                          :conditions => ['parent_id is null and name = ? and extract(year from date) = ?', 
+                                          self.name, self.date.year]) 
   end
 
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size}>"
-  end
-  
-  def friendly_class_name
-    "Multi-Day Event"
   end
 end

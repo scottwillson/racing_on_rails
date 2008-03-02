@@ -40,7 +40,7 @@ class Event < ActiveRecord::Base
   end
   
   def Event.friendly_class_name
-    name.humanize
+    name.underscore.humanize.titleize
   end
 
   # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
@@ -229,11 +229,6 @@ class Event < ActiveRecord::Base
   def date_range_long_s
     date.strftime('%a, %B %d')
   end
-  
-  # For display in UI
-  def friendly_class_name
-    'Event'
-  end
 
   def full_name
     name
@@ -280,6 +275,10 @@ class Event < ActiveRecord::Base
     
   def missing_parent
     nil
+  end
+  
+  def friendly_class_name
+    self.class.friendly_class_name
   end
   
   def <=>(other)

@@ -36,10 +36,6 @@ class WeeklySeries < Series
     end
   end
 
-  def friendly_class_name
-    "Weekly Series"
-  end
-
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size} #{earliest_day_of_week}>"
   end

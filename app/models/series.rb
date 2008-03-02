@@ -18,8 +18,4 @@ class Series < MultiDayEvent
       :order => "date"
     )
   end
-
-  def friendly_class_name
-    "Series"
-  end
 end
