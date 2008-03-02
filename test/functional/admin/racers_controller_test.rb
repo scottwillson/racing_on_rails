@@ -627,6 +627,28 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
   end
+  
+  def test_update_bad_member_from_date
+    racer = racers(:weaver)
+    put(:update, "commit"=>"Save", "racer"=>{
+                 "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",  
+                 "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River", 
+                 "work_phone"=>"541-387-8883 x 213", "occupation"=>"Sales Territory Manager", "cell_fax"=>"541-387-8884",
+                 "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg", "print_mailing_label"=>"1", 
+                 "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M", 
+                 "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1", 
+                 "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3", 
+                 "track_category"=>"5", "first_name"=>"Karsten", "last_name"=>"Hagen", 
+                 "member_to(1i)"=>"2008", "member_to(2i)"=>"12", "email"=>"khagen69@hotmail.com", "date_of_birth(1i)"=>"1969",  
+                 "state"=>"OR"}, "number"=>{"30532"=>{"value"=>"1453"}, "30533"=>{"value"=>"373"}}, "id"=>racer.to_param, 
+                 "number_year"=>"2008"
+    )
+    assert_not_nil(assigns(:racer), "@racer")
+    assert(!assigns(:racer).errors.empty?, "Should have errors")
+    assert(assigns(:racer).errors.on(:member_from), "Should have errors on 'member_from'")
+    assert(flash.empty?, "Expected flash.empty?")
+    assert_response :success
+  end
 
   def test_update_new_number
     molly = racers(:molly)

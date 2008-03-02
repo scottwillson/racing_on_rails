@@ -157,7 +157,8 @@ class Admin::RacersController < Admin::RecordEditor
   def update
     begin
       expire_cache
-      @racer = Racer.update(params[:id], params[:racer])
+      @racer = Racer.find(params[:id])
+      @racer.update_attributes(params[:racer])
       if params[:number]
         for id in params[:number].keys
           RaceNumber.update(id, params[:number][id])
@@ -182,15 +183,12 @@ class Admin::RacersController < Admin::RecordEditor
       if @racer.errors.empty?
         return redirect_to(:action => :show, :id => @racer.to_param)
       end
+    rescue ActiveRecord::MultiparameterAssignmentErrors => e
+      e.errors.each do |multi_param_error|
+        @racer.errors.add(multi_param_error.attribute)
+      end
     rescue Exception => e
       begin
-        # try to redisplay racer
-        @racer = Racer.find(params[:id])
-        @racer = Racer.new unless @racer
-        @years = (2005..(Date.today.year + 1)).to_a.reverse
-        @year = params[:year] || Date.today.year
-        @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
-      ensure
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
         ExceptionNotifier.deliver_exception_notification(e, self, request, {})
