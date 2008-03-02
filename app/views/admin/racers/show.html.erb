@@ -170,8 +170,8 @@
 		<tr class="buttons">
 			<td class="updatedon" colspan="2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></td>
 			<td class="right" colspan="4">
-				<%= submit_tag "Delete" %>
-				<%= submit_tag "Save" %>
+				<%= link_to "Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete' %>
+				<%= submit_tag "Save", :id => "save" %>
 			</td>
 		</tr>
 	</table>

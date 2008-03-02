@@ -19,7 +19,8 @@
 		<td><%= link_to_remote(
 				  image_tag('/images/buttons/remove_solo.gif'),
    				  :url => { :action => "destroy_number", :id => @number.id},
-				  :complete => evaluate_remote_response
+				  :complete => evaluate_remote_response,
+				  :html => { :id => "destroy_number_#{@number.id}" }
 		          )
 		 %></td>
 	</tr>
