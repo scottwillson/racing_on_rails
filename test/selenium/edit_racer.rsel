@@ -12,15 +12,14 @@ click_and_wait 'name=login'
 assert_text_not_present 'error'
 assert_location '*/admin'
 
-open '/admin/racers/6'
-assert_text_present 'Non Results'
-click_and_wait 'delete'
+open '/admin/racers/2'
+assert_text_present 'Mark Matson'
+click 'destroy_number_3'
+pause 300
+click_and_wait 'save'
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
 assert_text_not_present 'has no parent'
+assert_text_not_present "Couldn't find RaceNumber"
 
-assert_location '*/admin/racers'
-type 'name', 'no results'
-submit 'search_form'
-assert_text_not_present 'error'
-assert_text_not_present 'Non Results'
+assert_location '*/admin/racers/2'

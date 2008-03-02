@@ -1,6 +1,4 @@
-setup :fixtures => :all
-
-delete_cookie '_racing_on_rails_session_id', '/'
+include_partial 'fixtures'
 
 open '/admin/schedule'
 assert_text_not_present 'error'

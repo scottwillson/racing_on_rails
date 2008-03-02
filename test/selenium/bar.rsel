@@ -1,4 +1,4 @@
-setup :fixtures => :all
+include_partial 'fixtures'
 
 open '/bar'
 assert_text_not_present 'error'
