@@ -70,6 +70,17 @@ class Admin::EventsController < ApplicationController
     end
   end
   
+  # Create new MultiDayEvent from 'prototype' SingleDayEvent
+  # === Params
+  # * id: SingleDayEvent
+  # === Flash
+  # * warn
+  def create_from_events
+    single_day_event = Event.find(params[:id])
+    new_parent = MultiDayEvent.create_from_events(single_day_event.multi_day_event_children_with_no_parent)
+    redirect_to(:action => :show, :id => new_parent.to_param)
+  end
+  
   # Update existing Event
   # === Params
   # * id

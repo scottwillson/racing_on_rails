@@ -200,6 +200,19 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_redirected_to(:action => :show, :id => skull_hollow.to_param)
   end
   
+  def test_create_from_events
+    lost_child = SingleDayEvent.create!(:name => "Alameda Criterium")
+    SingleDayEvent.create!(:name => "Alameda Criterium")
+    opts = {:controller => "admin/events", :action => "create_from_events", :id => lost_child.to_param}
+    assert_routing("/admin/events/create_from_events/#{lost_child.id}", opts)
+    
+    post(:create_from_events, :id => lost_child.to_param)
+
+    assert_response(:redirect)
+    new_parent = MultiDayEvent.find_by_name(lost_child.name)
+    assert_redirected_to(:action => :show, :id => new_parent.to_param)
+  end
+  
   def test_upload_dupe_racers
     # Two racers with different name, same numbers
     # Excel file has Greg Rodgers with no number
