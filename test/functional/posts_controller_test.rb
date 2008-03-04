@@ -511,4 +511,39 @@ class PostsControllerTest < ActiveSupport::TestCase
     assert_response(:redirect)
     assert_redirected_to(:id => post_2004_12_31.id.to_s)
   end
+  
+  def test_list_with_no_lists
+    MailingList.delete_all
+    get(:list, :month => Date.today.month, :year => Date.today.year)
+    assert_response(:success)
+    assert_template('404')
+    assert(!flash.empty?, "Should have flash")
+  end
+  
+  def test_list_with_bad_name
+    get(:list, :month => Date.today.month, :year => Date.today.year, :mailing_list_name => "Masters Racing")
+    assert_response(:success)
+    assert_template('404')
+    assert(!flash.empty?, "Should have flash")
+  end
+  
+  def test_list_with_bad_month
+    get(:list, :month => 14, :year => Date.today.year, :mailing_list_name => mailing_lists(:obra_race).name)
+    assert_redirected_to(
+      :action => "list", 
+      :mailing_list_name => "obrarace", 
+      :month => Date.today.month, 
+      :year => Date.today.year
+    )
+  end
+  
+  def test_list_with_bad_year
+    get(:list, :month => 12, :year => 560, :mailing_list_name => mailing_lists(:obra_race).name)
+    assert_redirected_to(
+      :action => "list", 
+      :mailing_list_name => "obrarace", 
+      :month => Date.today.month, 
+      :year => Date.today.year
+    )
+  end
 end

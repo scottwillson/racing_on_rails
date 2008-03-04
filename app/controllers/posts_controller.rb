@@ -17,27 +17,45 @@ class PostsController < ApplicationController
     # Could do SQL join instead, but paginate doesn't play nice or secure
     mailing_list_name = params["mailing_list_name"]
     @mailing_list = MailingList.find_by_name(mailing_list_name)
+    if @mailing_list    
+      requested_year = params["year"]
+      requested_month = params["month"]
+      begin
+        if requested_year and requested_month
+          month_start = Time.local(requested_year.to_i, requested_month.to_i, 1)
+        end
+      rescue
+        month_start = Time.now.beginning_of_month
+        return redirect_to(
+          :action => "list", 
+          :month => month_start.month, 
+          :year => month_start.year, 
+          :mailing_list_name => mailing_list_name)
+      end
     
-    requested_year = params["year"]
-    requested_month = params["month"]
-    if requested_year and requested_month
-      month_start = Time.local(requested_year.to_i, requested_month.to_i, 1)
+      if params["previous"]
+        month_start = month_start.months_ago(1)
+        return redirect_to(:year => month_start.year, :month => month_start.month)
+      elsif params["next"]
+        month_start = month_start.next_month
+        return redirect_to(:year => month_start.year, :month => month_start.month)
+      end
+    
+      # end_of_month sets to 00:00
+      month_end = month_start.end_of_month.change(:hour => 23, :min => 59, :sec => 59, :usec => 999999)
+      @year = month_start.year
+      @month = month_start.month
+    
+      @posts = Post.find_for_dates(@mailing_list, month_start, month_end)
+    else
+      @mailing_lists = MailingList.find(:all)
+      if mailing_list_name.blank?
+        flash[:warn] = "Mailing list is required."
+      else
+        flash[:warn] = "Could not find mailing list named '#{mailing_list_name}.'"
+      end
+      render(:template => 'posts/404')
     end
-    
-    if params["previous"]
-      month_start = month_start.months_ago(1)
-      return redirect_to(:year => month_start.year, :month => month_start.month)
-    elsif params["next"]
-      month_start = month_start.next_month
-      return redirect_to(:year => month_start.year, :month => month_start.month)
-    end
-    
-    # end_of_month sets to 00:00
-    month_end = month_start.end_of_month.change(:hour => 23, :min => 59, :sec => 59, :usec => 999999)
-    @year = month_start.year
-    @month = month_start.month
-    
-    @posts = Post.find_for_dates(@mailing_list, month_start, month_end)
   end
   
   def show
