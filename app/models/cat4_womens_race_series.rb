@@ -3,8 +3,8 @@ class Cat4WomensRaceSeries < Competition
 
   # Expire Cat4WomensRaceSeries web pages from cache. Expires *all* Cat4WomensRaceSeries pages.
   def Cat4WomensRaceSeries.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat_4_womens_race_series.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat_4_womens_race_series")
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat4_womens_race_series.html")
+    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat4_womens_race_series")
   end
 
   def friendly_name
