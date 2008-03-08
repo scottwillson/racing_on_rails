@@ -152,10 +152,8 @@ class ResultsFile < GridFile
         			result.place = result.place
         		elsif !result.place.blank?
         			result.place = result.place.upcase
-        		elsif !previous_place.blank?
-        		  result.place = 'DNF'
-        		else
-              result.place = previous_place
+        		elsif !previous_place.blank? && previous_place.to_i == 0
+        		  result.place = previous_place
         		end
             previous_place = result.place
 

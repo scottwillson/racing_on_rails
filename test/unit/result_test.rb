@@ -100,7 +100,6 @@ class ResultTest < ActiveSupport::TestCase
     result2 = race.results.build(
       :first_name => "Paulo", :last_name => "Bettini", :team_name => "Davitamon"
     )
-    RACING_ON_RAILS_DEFAULT_LOGGER.debug("Result.transaction")
     Result.transaction do
       event.save!
       standings.save!
@@ -321,10 +320,11 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('1', results[0].place, 'result 0 place')
     assert_equal('3', results[1].place, 'result 1 place')
     assert_equal('11', results[2].place, 'result 2 place')
-    assert_equal('DNF', results[3].place, 'result 3 place')
-    assert_equal('DNS', results[4].place, 'result 4 place')
+    assert(results[3].place.blank?, 'result 3 place blank')
+    assert(results[4].place.blank?, 'result 4 place blank')
     assert(results[5].place.blank?, 'result 5 place blank')
-    assert(results[6].place.blank?, 'result 6 place blank')
+    assert_equal('DNF', results[6].place, 'result 6 place')
+    assert_equal('DNS', results[7].place, 'result 7 place')
 
     results = [
      Result.new(:place => '1'),
@@ -339,9 +339,9 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('1', results[0].place, 'result 0 place')
     assert_equal('2', results[1].place, 'result 1 place')
     assert_equal('11', results[2].place, 'result 2 place')
-    assert_equal('DNF', results[3].place, 'result 3 place')
+    assert(results[3].place.blank?, 'result 3 place blank')
     assert(results[4].place.blank?, 'result 4 place blank')
-    assert(results[5].place.blank?, 'result 5 place blank')
+    assert_equal('DNF', results[5].place, 'result 5 place')
 
     results = [
      Result.new(:place => '1'),
@@ -356,9 +356,9 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('1', results[0].place, 'result 0 place')
     assert_equal('2', results[1].place, 'result 1 place')
     assert_equal('11', results[2].place, 'result 2 place')
-    assert_equal('DNF', results[3].place, 'result 4 place')
-    assert_equal('DQ', results[4].place, 'result 3 place')
-    assert(results[5].place.blank?, 'result 5 place blank')
+    assert(results[3].place.blank?, 'result 3 place blank')
+    assert_equal('DNF', results[4].place, 'result 4 place')
+    assert_equal('DQ', results[5].place, 'result 5 place')
 
     result_5 = Result.new(:place => '5')
     result_dnf = Result.new(:place => 'DNF')

@@ -472,89 +472,36 @@ class Result < ActiveRecord::Base
     end
   end
   
-  # All numbered places first, followed by DNF, DQ, and DNS
+  # Poor name. For comparison, we sort by placed, finished, DNF, etc
+  def major_place
+    if place.to_i > 0
+      0
+    elsif place.blank?
+      1
+    elsif place.upcase == 'DNF'
+      2
+    elsif place.upcase == 'DQ'
+      3
+    elsif place.upcase == 'DNS'
+      4
+    else
+      5
+    end
+  end
+  
+  # All numbered places first, then blanks, followed by DNF, DQ, and DNS
   def <=>(other)
+    # Figure out the major position by place first, then break it down further if 
     begin
-      if place.blank?
-        place_as_int = 0
+      major_difference = (major_place <=> other.major_place)
+      return major_difference if major_difference != 0
+      
+      if place.to_i > 0
+        place.to_i <=> other.place.to_i
+      elsif self.id
+        self.id <=> other.id
       else
-        place_as_int = place.to_i
-      end
-      if other.place.blank?
-        other_place_as_int = 0
-      else
-        other_place_as_int = other.place.to_i
-      end
-    
-      if place_as_int > 0
-        if other_place_as_int == 0
-          return -1
-        elsif place_as_int != other_place_as_int
-          return place_as_int <=> other_place_as_int
-        end
-      elsif place == 'DNF'
-        if other_place_as_int > 0
-          return 1
-        elsif other.place == 'DNF'
-          if id.nil?
-            return 0
-          else
-            return id <=> other.id
-          end
-        elsif other.place == 'DQ'
-          return -1
-        else
-          return -1
-        end
-      elsif place == 'DQ'
-        if other_place_as_int > 0
-          return 1
-        elsif other.place == 'DNF'
-          return 1
-        elsif other.place == 'DQ'
-          if id.nil?
-            return 0
-          else
-            return id <=> other.id
-          end
-        else
-          return -1
-        end
-      elsif place == 'DNS'
-        if other_place_as_int > 0
-          return 1
-        elsif other.place == 'DNF'
-          return 1
-        elsif other.place == 'DQ'
-          return 1
-        elsif other.place == 'DNS'
-          if id.nil?
-            return 0
-          else
-            return id <=> other.id
-          end
-        else
-          return -1
-        end
-      elsif place.blank?
-        if other_place_as_int > 0
-          return 1
-        elsif other.place == 'DNF'
-          return 1
-        elsif other.place == 'DNS'
-          return 1
-        else
-          if id.nil?
-            return 0
-          else
-            return id <=> other.id
-          end
-        end
-      end
-      if id.nil?
-        return 0
-      else
-        return id <=> other.id
+        0
       end
     rescue ArgumentError => error
       logger.error("Error in Result.<=> #{error} comparing #{self} with #{other}")

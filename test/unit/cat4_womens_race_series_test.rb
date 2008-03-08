@@ -58,6 +58,9 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
     race = other_wsba_event.standings.create!.races.create!(:category => women_cat_4)
     race.results.create!(:racer => molly, :place => "18")    
+
+    # Blank results count -- finished, but don't know where
+    race.results.create!(:racer => alice, :place => "")
     
     # Non-WSBA results count for participation points
     non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
@@ -101,7 +104,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     race.results.sort!
     assert_equal('1', race.results[0].place, 'Place')
     assert_equal(alice, race.results[0].racer, 'Racer')
-    assert_equal(87, race.results[0].points, 'Points')
+    assert_equal(102, race.results[0].points, 'Points')
 
     assert_equal('2', race.results[1].place, 'Place')
     assert_equal(molly, race.results[1].racer, 'Racer')

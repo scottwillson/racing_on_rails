@@ -459,7 +459,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "40", :first_name => "Ryan", :last_name => "Thomson", :number =>"557", :team_name =>"Gentle Lovers")
     race.results << Result.new(:place => "41", :first_name => "Carl", :last_name => "Hoefer", :number =>"194", :team_name =>"Team Rubicon")
     race.results << Result.new(:place => "42", :first_name => "Jon", :last_name => "Myers", :number =>"117", :team_name =>"Team S&M")
-    race.results << Result.new(:place => "43", :first_name => "Yann", :last_name => "Blindert", :number =>"177", :team_name =>"Bike Gallery")
+    race.results << Result.new(:place => "", :first_name => "Yann", :last_name => "Blindert", :number =>"177", :team_name =>"Bike Gallery")
     race.results << Result.new(:place => "DNF", :first_name => "Jeff", :last_name => "Mitchem", :number =>"151", :team_name =>"Casa Bruno")
     race.results << Result.new(:place => "DNF", :first_name => "Craig", :last_name => "Broberg", :number =>"500", :team_name =>"FredMeyer Cycling Team")
     race.results << Result.new(:place => "DNF", :first_name => "Bradley", :last_name => "Ganz", :number =>"770")

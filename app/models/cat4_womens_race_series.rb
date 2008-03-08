@@ -22,7 +22,7 @@ class Cat4WomensRaceSeries < Competition
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN standings ON races.standings_id = standings.id 
           LEFT JOIN events ON standings.event_id = events.id 
-          WHERE place > 0
+          WHERE (place > 0 or place is null or place = '')
             and categories.id in (#{category_ids_for(race)})
             and events.type = "SingleDayEvent"
             and events.date between '#{year}-01-01' and '#{year}-12-31'
@@ -32,6 +32,9 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def points_for(source_result, team_size = nil)
+    # If it's a finish without a number, it's always 15 points
+    return 15 if source_result.place.blank?
+    
     event_ids = events.collect { |e| e.id }
     place = source_result.place.to_i
 
