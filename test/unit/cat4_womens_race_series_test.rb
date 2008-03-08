@@ -57,7 +57,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     # WSBA results count for participation points
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
     race = other_wsba_event.standings.create!.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => molly, :place => "8")    
+    race.results.create!(:racer => molly, :place => "18")    
     
     # Non-WSBA results count for participation points
     non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
@@ -106,5 +106,34 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal('2', race.results[1].place, 'Place')
     assert_equal(molly, race.results[1].racer, 'Racer')
     assert_equal(65, race.results[1].points, 'Points')
+  end
+  
+  def test_points_for
+    series = Cat4WomensRaceSeries.create!
+    event = SingleDayEvent.create!
+    series.events << event
+    standings = event.standings.create!
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    race = standings.races.create!(:category => women_cat_4)
+
+    source_result = race.results.create!(:place => "1")
+    points = series.points_for(source_result)
+    assert_equal(100, points, "Points for 1st")
+
+    source_result = race.results.create!(:place => "10")
+    points = series.points_for(source_result)
+    assert_equal(66, points, "Points for 10th")
+
+    source_result = race.results.create!(:place => "15")
+    points = series.points_for(source_result)
+    assert_equal(56, points, "Points for 15th")
+
+    source_result = race.results.create!(:place => "16")
+    points = series.points_for(source_result)
+    assert_equal(25, points, "Points for 16th")
+
+    source_result = race.results.create!(:place => "17")
+    points = series.points_for(source_result)
+    assert_equal(25, points, "Points for 17th")
   end
 end

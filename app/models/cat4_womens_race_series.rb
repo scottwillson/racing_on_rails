@@ -12,7 +12,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def point_schedule
-    [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 64, 62, 60, 58, 56 ]
+    [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
   end
 
   def source_results(race)
