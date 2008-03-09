@@ -584,7 +584,11 @@ class Racer < ActiveRecord::Base
   end
 
   def <=>(other)
-    id <=> other.id
+    if other
+      id <=> other.id
+    else
+      -1
+    end
   end
   
   def to_s

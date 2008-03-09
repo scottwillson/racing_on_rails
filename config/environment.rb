@@ -47,6 +47,10 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
+
+  # Ugh. Make config accessible to overrides
+  @config = config
+  load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
   
   # See Rails::Configuration for more options
   if File.exists?("#{RAILS_ROOT}/local/config/database.yml")
@@ -56,7 +60,6 @@ end
 
 # Local config customization
 load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
-load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
