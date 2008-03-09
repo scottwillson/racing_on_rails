@@ -335,6 +335,42 @@ class PostsControllerTest < ActiveSupport::TestCase
     assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
   end
   
+  def test_post_invalid_reply
+    obra_chat = mailing_lists(:obra_chat)
+    subject = "Spynergy for Sale"
+    from_name = "Tim Schauer"
+    from_email_address = "tim.schauer@butlerpress.com"
+    body = "Barely used"
+    reply_to_post = Post.create!(
+      :mailing_list => obra_chat,
+      :subject => "Schedule Changes",
+      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :from_name => "Scout",
+      :from_email_address => "scout@obra.org",
+      :body => "This is a test message."
+    )
+
+    post(:post, 
+        :mailing_list_name => obra_chat.name,
+        :mailing_list_post => {
+          :mailing_list_id => obra_chat.id,
+          :subject => "Re: #{subject}", 
+          :from_name => "",
+          :from_email_address => "",
+          :body => ""},
+        :reply_to => {:id => reply_to_post.id},
+        :commit => "Send"
+    )
+    
+    assert_template("posts/new")
+    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
+    mailing_list_post = assigns["mailing_list_post"]
+    assert_not_nil(mailing_list_post, "Should assign mailing_list_post")
+    assert_equal(reply_to_post, assigns["reply_to"], "Should assign reply_to")
+    assert_equal("Re: #{subject}", mailing_list_post.subject, 'Prepopulated subject')
+    assert_equal(obra_chat, mailing_list_post.mailing_list, "Post's mailing list")
+  end
+  
   def test_confirm
     obra_race = mailing_lists(:obra_race)
     path = {:controller => "posts", :action => "confirm", :mailing_list_name => obra_race.name }

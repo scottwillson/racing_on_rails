@@ -80,13 +80,14 @@ class PostsController < ApplicationController
   
   def post_private_reply
     @reply_to = Post.find(params[:reply_to][:id])
-    @private_reply = Post.new(params[:mailing_list_post])
-    if @private_reply.valid?
-      private_reply_email = MailingListMailer.create_private_reply(@private_reply, @reply_to.sender)
+    @mailing_list_post = Post.new(params[:mailing_list_post])
+    if @mailing_list_post.valid?
+      private_reply_email = MailingListMailer.create_private_reply(@mailing_list_post, @reply_to.sender)
       MailingListMailer.deliver(private_reply_email)
-      flash[:notice] = "Sent private reply '#{@private_reply.subject}' to #{private_reply_email.to}"
+      flash[:notice] = "Sent private reply '#{@mailing_list_post.subject}' to #{private_reply_email.to}"
       redirect_to(:action => "confirm_private_reply", :mailing_list_name => params[:mailing_list_name])
     else
+      @mailing_list = MailingList.find_by_name(params[:mailing_list_name])
       render(:action => "new", :reply_to => @reply_to.id)
     end
   end
