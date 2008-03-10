@@ -462,7 +462,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.racer.member?, "Racer should be member")
 
     # Rental
-    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '50')
+    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
     assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
     road_number = result.racer(true).race_numbers(true).detect{|number| number.year == Date.today.year}
     assert_nil(road_number, 'Current road number')

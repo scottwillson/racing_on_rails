@@ -37,7 +37,7 @@ class RacerTest < ActiveSupport::TestCase
   end
 
   def test_new
-    racer = Racer.create(
+    racer = Racer.create!(
       :date_of_birth => '1970-12-31',
       :cell_fax => '(315) 342-1313',
       :city => "Santa Rosa", 

@@ -49,7 +49,13 @@ class Team < ActiveRecord::Base
   end
   
   def add_alias_for_old_name
-    if @old_name && name && @old_name.casecmp(name) != 0 && !Alias.exists?(['name = ? and team_id = ?', @old_name, id])
+    if !new_record? && 
+      !@old_name.blank? && 
+      !name.blank? && 
+      @old_name.casecmp(name) != 0 && 
+      !Alias.exists?(['name = ? and team_id = ?', @old_name, id]) &&
+      !Team.exists?(["name = ?", @old_name])
+
       Alias.create!(:name => @old_name, :team => self)
     end
   end
