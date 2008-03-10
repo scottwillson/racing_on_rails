@@ -447,6 +447,26 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal('300', road_number_2004.value, '2004 road number')
     assert(result.racer.ccx_number.blank?, 'Cyclocross number')
     assert(result.racer.xc_number.blank?, 'MTB number')
+
+    event = SingleDayEvent.create!(:discipline => "Road")
+    standings = event.standings.create!
+    race = standings.races.create!(:category => categories(:senior_women))
+    result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
+    assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
+    road_number = result.racer(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    assert_not_nil(road_number, 'Current road number')
+    assert_equal('200', road_number.value, 'road number')
+    assert_equal(Date.today.year, road_number.year, 'road number year')
+    assert(result.racer.ccx_number.blank?, 'Cyclocross number')
+    assert(result.racer.xc_number.blank?, 'MTB number')
+    assert(result.racer.member?, "Racer should be member")
+
+    # Rental
+    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '50')
+    assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
+    road_number = result.racer(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    assert_nil(road_number, 'Current road number')
+    assert(!result.racer.member?, "Racer with rental number should not be member")
   end
   
   def test_find_associated_records
