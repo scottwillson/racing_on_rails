@@ -32,5 +32,6 @@ license	first_name	last_name	team_name	member_from	member_to	print_card	print_ma
 	<%= racer.xc_number -%>
 	<%= racer.notes.gsub(/[\n\r\t]/, ' ') if racer.notes -%>
 	<%= racer.created_at.strftime('%m/%d/%Y') if racer.created_at -%>
-	<%= racer.updated_at.strftime('%m/%d/%Y') if racer.updated_at %>
+<%# Last column is slightly different to ensure a line break -%>
+	<%= if racer.updated_at then racer.updated_at.strftime('%m/%d/%Y') else "" end %>
 <%- end -%>
