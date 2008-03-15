@@ -16,7 +16,7 @@
 <table class="base" border="0" cellspacing="0" cellpadding="0">
 	<caption><%= @year %> Results</caption>
   	<% unless @events.empty? %> 
-    <%- for event in @events -%>
+    <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>
 	<td><%= link_to event.name, :action => 'event', :id => event.id %></td>
