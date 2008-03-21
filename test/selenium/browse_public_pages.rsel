@@ -1,0 +1,13 @@
+include_partial 'fixtures'
+
+open '/'
+assert_text_not_present 'error'
+assert_text_present "Home"
+
+click "link=Schedule"
+assert_text_not_present 'error'
+assert_text_present "Schedule"
+
+click "link=Results"
+assert_text_not_present 'error'
+assert_text_present "Results"
