@@ -71,6 +71,8 @@ PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/app/views/fonts"
 PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
 
 require 'array'
+require 'nil_class'
+require 'string'
 
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
