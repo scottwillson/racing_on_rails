@@ -11,7 +11,8 @@
 <%= form_tag :action=> "login" %>
 <table class="base" id="login">
 	<caption>Logged In</caption>
-	<tr>
+	<tr><th colspan="2">&nbsp;</th></tr>
+s	<tr>
 		<td>You are logged-in as <%= @user.name %></td>
 	</tr>
 	<tr>
@@ -25,7 +26,7 @@
 <%= form_tag :action=> "login" %>
 <table class="base" id="login">
 	<caption>Login</caption>
-	<tr><th colspan="2"></tr>
+	<tr><th colspan="2">&nbsp;</th></tr>
 	<tr>
 		<td class="field_label">Username:</td>
 		<td><input type="text" name="username" id="user_login" size="30" value=""/></td>
