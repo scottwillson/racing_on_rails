@@ -172,6 +172,14 @@ class Racer < ActiveRecord::Base
       self.team = Team.find_or_create_by_name(value)
     end
   end
+
+  def gender_pronoun
+    if gender == "F"
+      "herself"
+    else
+      "himself"
+    end
+  end
   
   def gender=(value)
     value.upcase!
@@ -523,8 +531,9 @@ class Racer < ActiveRecord::Base
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
     if other_racer == self
-      raise(IllegalArgumentError, 'Cannot merge racer onto itself')
+      raise "Cannot merge racer onto #{gender_pronoun}"
     end
+
     Racer.transaction do
       events = other_racer.results.collect do |result|
         event = result.race.standings.event
@@ -542,12 +551,15 @@ class Racer < ActiveRecord::Base
           aliases.create(:name => other_racer.name) 
         end
       ensure
-        events.each do |event|
-          event.reload
-          event.enable_notification!
+        if events
+          events.each do |event|
+            event.reload
+            event.enable_notification!
+          end
         end
       end
     end
+    true
   end
   
   # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team

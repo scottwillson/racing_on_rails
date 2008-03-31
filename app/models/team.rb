@@ -89,9 +89,11 @@ class Team < ActiveRecord::Base
         aliases.create(:name => team.name) unless existing_alias or Alias.find_by_name(team.name) 
         save!
       ensure
-        events.each do |event|
-          event.reload
-          event.enable_notification!
+        if events
+          events.each do |event|
+            event.reload
+            event.enable_notification!
+          end
         end
       end
     end
