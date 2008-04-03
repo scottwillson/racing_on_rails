@@ -181,6 +181,11 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  # Non-nil for happier sorting
+  def gender
+    self[:gender] || ''
+  end
+  
   def gender=(value)
     value.upcase!
     case value
