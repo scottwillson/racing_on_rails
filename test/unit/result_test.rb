@@ -571,7 +571,7 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '6')
     assert_equal([tonkin], result.find_racers(event).to_a, 'cross number (not in DB), first_name, last_name')
     
-    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '1')
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '100')
     assert_equal([tonkin], result.find_racers(event).to_a, 'Different number')
     
     # TODO make null racer and list this match as a possibility
@@ -583,7 +583,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal([], result.find_racers(event).to_a, 'Tonkin\'s number, different last name')
 
     tonkin_clone = Racer.create(:first_name => 'Erik', :last_name => 'Tonkin')
-    RaceNumber.create(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '1')
+    RaceNumber.create(:racer => tonkin_clone, :number_issuer => number_issuers(:association), :discipline => Discipline[:road], :year => 2004, :value => '100')
     unless tonkin_clone.valid?
       flunk(tonkin_clone.errors.full_messages)
     end
@@ -609,10 +609,10 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '104')
     assert_equal([tonkin], result.find_racers(event).to_a, 'road number, first_name, last_name')
 
-    result = race.results.new(:number => '1')
+    result = race.results.new(:number => '100')
     assert_equal([tonkin_clone], result.find_racers(event).to_a, 'road number')
 
-    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '1')
+    result = race.results.new(:first_name => 'Erik', :last_name => 'Tonkin', :number => '100')
     assert_equal([tonkin_clone], result.find_racers(event).to_a, 'road number, first_name, last_name')
 
     # team_name -- consider last
@@ -657,7 +657,7 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.new(:first_name => '', :last_name => '')
     assert_same_elements([], result.find_racers(event).to_a, 'blank name with no blank names')
 
-    blank_name_racer = Racer.create(:name => '', :dh_number => '1')
+    blank_name_racer = Racer.create(:name => '', :dh_number => '100')
     result = race.results.new(:first_name => '', :last_name => '')
     assert_same_elements([blank_name_racer], result.find_racers(event).to_a, 'blank names')
 

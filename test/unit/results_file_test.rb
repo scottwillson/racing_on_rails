@@ -81,9 +81,9 @@ class ResultsFileTest < ActiveSupport::TestCase
   end
   
   def test_import_time_trial_racers_with_same_name
-    bruce_9 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
+    bruce_109 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
-    bruce_9.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '9')
+    bruce_109.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '109')
     
     bruce_1300 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     bruce_1300.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
@@ -129,12 +129,12 @@ class ResultsFileTest < ActiveSupport::TestCase
     
     # Existing racers, same name, different numbers
     bruce_1300 = remote_standings.races.first.results[6].racer
-    bruce_9 = remote_standings.races.last.results[2].racer
+    bruce_109 = remote_standings.races.last.results[2].racer
     assert_not_nil(bruce_1300, 'bruce_1300')
-    assert_not_nil(bruce_9, 'bruce_9')
-    assert_equal(bruce_1300.name.downcase, bruce_9.name.downcase, "Bruces with different numbers should have same name")
-    assert_not_equal(bruce_1300, bruce_9, "Bruces with different numbers should be different racers")
-    assert_not_equal(bruce_1300.id, bruce_9.id, "Bruces with different numbers should have different IDs")
+    assert_not_nil(bruce_109, 'bruce_109')
+    assert_equal(bruce_1300.name.downcase, bruce_109.name.downcase, "Bruces with different numbers should have same name")
+    assert_not_equal(bruce_1300, bruce_109, "Bruces with different numbers should be different racers")
+    assert_not_equal(bruce_1300.id, bruce_109.id, "Bruces with different numbers should have different IDs")
     
     # New racer, same name, different number
     scott_90 = remote_standings.races.first.results[5].racer

@@ -9,7 +9,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
 
-    race_number = RaceNumber.create!(:racer => racers(:alice), :value => '7')
+    race_number = RaceNumber.create!(:racer => racers(:alice), :value => '100')
     assert_equal(Date.today.year, race_number.year, 'year default')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')

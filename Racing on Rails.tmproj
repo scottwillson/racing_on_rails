@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>config/environment.rb</string>
+	<string>test/unit/results_file_test.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>expanded</key>
 			<true/>
 			<key>name</key>
-			<string>app</string>
+			<string>obra_local_trunk</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
-			<string>app</string>
+			<string>../obra_local_trunk</string>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>components</string>
+			<string>app</string>
 			<key>regexFolderFilter</key>
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
-			<string>components</string>
+			<string>app</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -117,28 +115,14 @@
 	<integer>305</integer>
 	<key>metaData</key>
 	<dict>
-		<key>app/controllers/admin/racers_controller.rb</key>
+		<key>../obra_local_trunk/config/environment.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>12</integer>
+				<integer>30</integer>
 				<key>line</key>
-				<integer>128</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>109</integer>
-		</dict>
-		<key>app/controllers/application.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
-				<key>line</key>
-				<integer>8</integer>
+				<integer>4</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -158,34 +142,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>129</integer>
-		</dict>
-		<key>config/boot.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>39</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>2</integer>
-		</dict>
-		<key>config/environment.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
 		</dict>
 		<key>test/fixtures/race_numbers.yml</key>
 		<dict>
@@ -231,32 +187,59 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>test/functional/admin/racers_controller_test.rb</key>
+		<key>test/unit/race_number_test.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>77</integer>
 				<key>line</key>
-				<integer>485</integer>
+				<integer>11</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>465</integer>
+			<integer>0</integer>
+		</dict>
+		<key>test/unit/result_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>92</integer>
+				<key>line</key>
+				<integer>573</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>535</integer>
+		</dict>
+		<key>test/unit/results_file_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>102</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>117</integer>
+			<key>firstVisibleLine</key>
+			<integer>71</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>test/functional/admin/racers_controller_test.rb</string>
-		<string>app/controllers/application.rb</string>
-		<string>config/boot.rb</string>
-		<string>config/environment.rb</string>
-		<string>app/controllers/admin/racers_controller.rb</string>
+		<string>../obra_local_trunk/config/environment.rb</string>
+		<string>test/unit/race_number_test.rb</string>
+		<string>test/unit/result_test.rb</string>
+		<string>test/unit/results_file_test.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{315, 254}, {965, 578}}</string>
+	<string>{{408, 256}, {965, 578}}</string>
 </dict>
 </plist>

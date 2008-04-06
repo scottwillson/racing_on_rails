@@ -453,7 +453,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
     @request.session[:user] = users(:candi)
     molly = racers(:molly)
-    molly.ccx_number = '2'
+    molly.ccx_number = '102'
     molly.save!
     molly_with_different_cross_number = Racer.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
     tonkin = racers(:tonkin)
