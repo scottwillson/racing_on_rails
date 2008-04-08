@@ -13,8 +13,8 @@ class HomeController < ApplicationController
     @recent_results = Standings.find(
       :all,
       :include => :event,
-      :conditions => ['date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
-      :order => 'date desc'
+      :conditions => ['events.date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
+      :order => 'events.date desc'
     )
     
     @news = NewsItem.find(:all)
