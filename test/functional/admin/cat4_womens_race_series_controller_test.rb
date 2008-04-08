@@ -59,7 +59,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
 
     assert_equal(1, standings.races.count, "New event standings should have one race")
     race = standings.races.first
-    assert_equal(categories(:cat_4_women), race.category)
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    assert_equal(women_cat_4, race.category)
 
     assert_equal(1, race.results.count, "New event race should have one result")
     result = race.results.first    
@@ -72,7 +73,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
   end
   
   def test_create_result_for_existing_race_and_racers
-    existing_race = standings(:banana_belt).races.create!(:category => categories(:cat_4_women))
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    existing_race = standings(:banana_belt).races.create!(:category => women_cat_4)
     existing_race.results.create!(:place => "1", :racer => racers(:alice))
     molly = racers(:molly)
     event = standings(:banana_belt).event
@@ -99,7 +101,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
     assert_equal("Banana Belt I", standings.name)
 
     assert_equal(2, standings.races.count, "New event standings should have one race: #{standings.races}")
-    race = standings.races.detect {|race| race.category == categories(:cat_4_women) }
+    race = standings.races.detect {|race| race.category == women_cat_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(2, race.results.count, "race results")
@@ -136,7 +138,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
     assert_equal("San Ardo Road Race", standings.name)
 
     assert_equal(1, standings.races.count, "New event standings should have one race: #{standings.races}")
-    race = standings.races.detect {|race| race.category == categories(:cat_4_women) }
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    race = standings.races.detect {|race| race.category == women_cat_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(1, race.results.count, "race results")
@@ -154,7 +157,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
 
   def test_create_result_for_existing_race_with_different_category
     sr_women_4 = Category.create!(:name => "Sr. Wom 4")
-    categories(:cat_4_women).children << sr_women_4
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    women_cat_4.children << sr_women_4
     existing_race = standings(:banana_belt).races.create!(:category => sr_women_4)
     existing_race.results.create!(:place => "1", :racer => racers(:alice))
     molly = racers(:molly)

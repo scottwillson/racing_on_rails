@@ -24,7 +24,7 @@ class Admin::Cat4WomensRaceSeriesController < ApplicationController
         @standings = @event.standings.create! 
       end
       
-      cat_4_women = Category.find_by_name("Category 4 Women")
+      cat_4_women = Category.find_or_create_by_name("Women Cat 4")
       @race = @standings.races.detect do |r|
         r.category == cat_4_women || cat_4_women.descendants.include?(r.category)
       end

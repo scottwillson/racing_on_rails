@@ -3,19 +3,19 @@
 <%= render "shared/admin/tabs" %>
 
 <div align="center">
-<%- if flash[:notice] -%>
 	<div class="message" id="message">
+    <%- if flash[:notice] -%>
 			<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
 			<%= flash[:notice] %>
+    <%- end -%>
 	</div>
-<%- end -%>
 
-<%- if flash[:warn] -%>
-	<div class="message" id="message">
-			<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+	<div class="message" id="warn">
+    <%- if flash[:warn] -%>
+			<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn') %>
 			<%= flash[:warn] %>
+    <%- end -%>
 	</div>
-<%- end -%>
 
 <%= error_messages_for 'event' %>
 
