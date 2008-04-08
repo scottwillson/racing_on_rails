@@ -38,6 +38,7 @@ module SeleniumOnRails::FixtureLoader
     fixtures.reject! {|f| f.blank? }
 
     if fixtures.any?
+      Fixtures.reset_cache
       Fixtures.create_fixtures fixtures_path, fixtures
     end
     fixtures
