@@ -10,9 +10,10 @@ class HomeController < ApplicationController
     @upcoming_events = UpcomingEvents.new
     
     cutoff = Date.today - 14
-    @recent_results = SingleDayEvent.find(
+    @recent_results = Standings.find(
       :all,
-      :conditions => ['date > ? and id in (select event_id from standings) and sanctioned_by = ?', cutoff, ASSOCIATION.short_name],
+      :include => :event,
+      :conditions => ['date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
       :order => 'date desc'
     )
     
