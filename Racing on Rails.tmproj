@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/unit/results_file_test.rb</string>
+	<string>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -112,7 +112,7 @@
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>305</integer>
+	<integer>154</integer>
 	<key>metaData</key>
 	<dict>
 		<key>../obra_local_trunk/config/environment.rb</key>
@@ -187,6 +187,20 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>test/functional/admin/racers_controller_test.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>441</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>437</integer>
+		</dict>
 		<key>test/unit/race_number_test.rb</key>
 		<dict>
 			<key>caret</key>
@@ -220,14 +234,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>138</integer>
 				<key>line</key>
-				<integer>102</integer>
+				<integer>85</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
-			<integer>117</integer>
+			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>71</integer>
+			<integer>136</integer>
+		</dict>
+		<key>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>45</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>17</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -236,10 +264,12 @@
 		<string>test/unit/race_number_test.rb</string>
 		<string>test/unit/result_test.rb</string>
 		<string>test/unit/results_file_test.rb</string>
+		<string>test/functional/admin/racers_controller_test.rb</string>
+		<string>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{408, 256}, {965, 578}}</string>
+	<string>{{408, 140}, {956, 694}}</string>
 </dict>
 </plist>
