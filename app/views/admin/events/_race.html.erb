@@ -15,7 +15,7 @@
 				</tr>
 				<tr>
 					<td class="field_label">BAR Category:</td>
-					<td><%= race.category.parent %></td>
+					<td><%= race.category.parent ? race.category.parent.name : race.category.name %></td>
 					<td class="field_label">Field Size:</td>
 					<td><%= text_field 'race', 'field_size' %>&nbsp;(<%= race.results.size %>)</td>
 				</tr>
