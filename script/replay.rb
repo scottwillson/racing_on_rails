@@ -16,6 +16,7 @@ if ARGV[1] == "parse"
   end
 end
 
+previous_memory = 0
 File.open("history",  "w") do |history|
   File.readlines("urls").each do |line|
     url = URI.parse(line.gsub(/app.obra.org|list.obra.org/, "0.0.0.0:3000"))
@@ -26,8 +27,10 @@ File.open("history",  "w") do |history|
         http.request(req)
       }
       memory = `ps aux | grep mongrel | grep -v grep`
-      memory = memory[/\w+[ ]+\d+[ ]+\d+.\d+[ ]+\d+.\d+[ ]+\d+[ ]+(\d+)/, 1]
-      history << "#{memory} #{url}\n"
+      memory = memory[/\w+[ ]+\d+[ ]+\d+.\d+[ ]+\d+.\d+[ ]+\d+[ ]+(\d+)/, 1].to_i
+      delta = previous_memory - memory
+      previous_memory = memory 
+	history << "#{delta}\t#{memory} \t#{url}\n"
     end
   end
 end

@@ -19,7 +19,7 @@ count.times do
     http.read_timeout = 600
     http.request(req)
   }
-  memory = `ps aux | grep mongrel | grep -v grep`
+  memory = `ps aux | grep script/server | grep -v grep`
   memory = memory[/\w+[ ]+\d+[ ]+\d+.\d+[ ]+\d+.\d+[ ]+\d+[ ]+(\d+)/, 1]
   p "#{memory} #{url}\n"
 end
