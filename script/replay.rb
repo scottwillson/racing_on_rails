@@ -2,7 +2,7 @@
 
 require 'net/http'
 
-if ARGV[1] == "parse"
+if ARGV[0] == "parse"
   File.open("urls",  "w") do |urls|
     Dir["/Users/sw/logs/*"].each do |path|
       File.readlines(path).each do |line|
@@ -28,9 +28,9 @@ File.open("history",  "w") do |history|
       }
       memory = `ps aux | grep mongrel | grep -v grep`
       memory = memory[/\w+[ ]+\d+[ ]+\d+.\d+[ ]+\d+.\d+[ ]+\d+[ ]+(\d+)/, 1].to_i
-      delta = previous_memory - memory
+      delta = memory - previous_memory
       previous_memory = memory 
-	history << "#{delta}\t#{memory} \t#{url}\n"
+      history << "#{delta}\t#{memory} \t#{url}\n"
     end
   end
 end
