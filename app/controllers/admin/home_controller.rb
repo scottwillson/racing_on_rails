@@ -6,10 +6,11 @@ class Admin::HomeController < ApplicationController
     @upcoming_events = UpcomingEvents.new
     
     cutoff = Date.today - 14
-    @recent_results = SingleDayEvent.find(
+    @recent_results = Standings.find(
       :all,
-      :conditions => ['date > ? and id in (select event_id from standings)', cutoff],
-      :order => 'date desc'
+      :include => :event,
+      :conditions => ['events.date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
+      :order => 'events.date desc'
     )
     
     @news = NewsItem.find(:all)
