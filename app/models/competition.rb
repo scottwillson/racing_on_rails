@@ -151,7 +151,7 @@ class Competition < Event
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
              :racer => racer, 
-             :team => racer.team,
+             :team => (racer ? racer.team : nil),
              :race => race)
         end
  
