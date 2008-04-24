@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</string>
+	<string>app/controllers/admin/record_editor.rb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -115,14 +115,28 @@
 	<integer>154</integer>
 	<key>metaData</key>
 	<dict>
-		<key>../obra_local_trunk/config/environment.rb</key>
+		<key>../obra_local_trunk/config/database.yml</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>30</integer>
+				<integer>10</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/controllers/admin/record_editor.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>7</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -187,85 +201,11 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>test/functional/admin/racers_controller_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>32</integer>
-				<key>line</key>
-				<integer>441</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>437</integer>
-		</dict>
-		<key>test/unit/race_number_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>77</integer>
-				<key>line</key>
-				<integer>11</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>test/unit/result_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>92</integer>
-				<key>line</key>
-				<integer>573</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>535</integer>
-		</dict>
-		<key>test/unit/results_file_test.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>138</integer>
-				<key>line</key>
-				<integer>85</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>136</integer>
-		</dict>
-		<key>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>45</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>17</integer>
-		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>../obra_local_trunk/config/environment.rb</string>
-		<string>test/unit/race_number_test.rb</string>
-		<string>test/unit/result_test.rb</string>
-		<string>test/unit/results_file_test.rb</string>
-		<string>test/functional/admin/racers_controller_test.rb</string>
-		<string>vendor/plugins/selenium-on-rails/lib/selenium_on_rails/fixture_loader.rb</string>
+		<string>../obra_local_trunk/config/database.yml</string>
+		<string>app/controllers/admin/record_editor.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

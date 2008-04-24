@@ -168,6 +168,12 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def validate_racer_name
+    if first_name.blank? && last_name.blank?
+      errors.add(:first_name, "and last name cannot both be blank")
+    end
+  end
+  
   # Set points from +scores+
   def calculate_points
     if !scores.empty? and competition_result?
@@ -306,10 +312,20 @@ class Result < ActiveRecord::Base
   def racer_name=(value)
     name = value
   end
-  
+
+  # Team name when result was created
   def team_name
     return '' if team.nil?
     team.name || ''
+  end
+  
+  # Racer's current team name
+  def racer_team_name
+    if racer
+      racer.team_name
+    else
+      ""
+    end
   end
 
   def team_name=(value)

@@ -32,17 +32,23 @@ class Admin::Cat4WomensRaceSeriesController < ApplicationController
         @race = @standings.races.create!(:category => cat_4_women)
       end
       
-      @result = @race.results.create!(params[:result])
-      
-      flash[:info] = "Created result for #{@result.name} in #{@event.name}"
-      redirect_to(:action => "new_result", :result => { 
-                                                        :first_name => params[:result][:first_name],
-                                                        :last_name => params[:result][:last_name],
-                                                        :team_name => params[:result][:team_name],
-                                                         })
+      @result = @race.results.new(params[:result])
+      @result.validate_racer_name
+      if @result.errors.empty?
+        @result.save!
+        flash[:info] = "Created result for #{@result.name} in #{@event.name}"
+        redirect_to(:action => "new_result", :result => { 
+                                                          :first_name => params[:result][:first_name],
+                                                          :last_name => params[:result][:last_name],
+                                                          :team_name => params[:result][:team_name],
+                                                           })
+      else
+        render(:action => "new_result")        
+      end
     rescue Exception => e
       logger.debug(e)
       logger.debug(e.backtrace.join("\n")) if logger.debug?
+      @result.errors.add_to_base(e.message)
       render(:action => "new_result")
     end
   end

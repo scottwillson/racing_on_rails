@@ -201,4 +201,37 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
     
     assert_not_nil(flash[:info], "Should have success message in flash")
   end
+
+  
+  def test_create_result_no_racer_name
+    assert_routing('/admin/cat4_womens_race_series/results', 
+                   {:controller => 'admin/cat4_womens_race_series', :action => 'create_result'},
+                   {:method => "post"})
+
+    post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
+                                        :first_name => "", :last_name => "" },
+                           :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 
+                                       :sanctioned_by => ASSOCIATION.short_name},
+                           :commit => "Save" 
+                         }
+
+    assert_response :success
+    
+    new_event = SingleDayEvent.find_by_name("Mount Hamilton Road Race")
+    assert_not_nil(new_event, "Should have created Mount Hamilton Road Race")
+    assert_equal_dates("2009-04-01", new_event.date, "New event date")
+    assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
+
+    assert_equal(1, new_event.standings.count, "New event should have one Standings")
+    standings = new_event.standings.first
+    assert_equal("Mount Hamilton Road Race", standings.name)
+
+    assert_equal(1, standings.races.count, "New event standings should have one race")
+    race = standings.races.first
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    assert_equal(women_cat_4, race.category)
+
+    assert_equal(0, race.results.count, "New event race should have no results")
+    assert(assigns["result"].errors.on(:first_name), "Should have errors on first name")
+  end
 end

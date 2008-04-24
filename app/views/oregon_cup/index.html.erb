@@ -25,7 +25,7 @@
 			    <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
  <%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
-<%= truncate(result.racer.team_name, 40).ljust(40) -%>
+<%= truncate(result.racer_team_name, 40).ljust(40) -%>
 <%= format("%0.0f",result.points).rjust(6) -%>
 <%- end -%></pre></td>
 			  </tr>

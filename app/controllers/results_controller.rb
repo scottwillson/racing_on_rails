@@ -157,7 +157,7 @@ class ResultsController < ApplicationController
   def show
     result = Result.find(params[:id])
     if result.racer
-      redirect_to(:action => 'competition', :competition_id => result.event.id, :racer_id => result.racer.id)    
+      redirect_to(:action => 'competition', :competition_id => result.event.id, :racer_id => result.racer_id)    
     elsif result.team
       redirect_to(:action => 'competition', :competition_id => result.event.id, :team_id => result.team.id)    
     else

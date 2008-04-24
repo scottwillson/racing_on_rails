@@ -45,7 +45,7 @@
        :controller => 'results',
        :action => 'competition',
        :competition_id => result.race.standings.event.to_param,
-       :team_id => result.team.id) %><%= ' ' * (40 - (truncate(result.team_name, 40).length)) -%>
+       :team_id => result.team_id) %><%= ' ' * (40 - (truncate(result.team_name, 40).length)) -%>
    <%= number_with_precision(result.points, 1).rjust(6) -%>
 <%- end -%></pre></td>
 
@@ -57,8 +57,8 @@
 	 :controller => 'results',
      :action => 'competition',
      :competition_id => result.race.standings.event.to_param,
-     :racer_id => result.racer.id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer.team_name, 40).ljust(40) -%>
+     :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
+   <%= truncate(result.racer_team_name, 40).ljust(40) -%>
    <%= number_with_precision(result.points, 1).rjust(6) -%>
 <%- end -%></pre></td>
 

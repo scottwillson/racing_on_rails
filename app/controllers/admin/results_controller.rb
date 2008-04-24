@@ -86,7 +86,7 @@ class Admin::ResultsController < Admin::RecordEditor
     result_id = params[:id].to_s
     result_id = result_id[/result_(.*)/, 1]
     result = Result.find(result_id)
-    original_result_owner = Racer.find(result.racer.id)
+    original_result_owner = Racer.find(result.racer_id)
     racer = Racer.find(params[:racer_id].to_s[/racer_(.*)/, 1])
     result.racer = racer
     result.save!

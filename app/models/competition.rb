@@ -15,6 +15,10 @@ class Competition < Event
   before_save   {|competition| competition.notification = false; true}
   after_save    :expire_cache
   
+  def self.find_for_year(year = Date.today.year)
+    self.find_by_date(Date.new(year, 1, 1))
+  end
+  
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
   # Destroys existing Competition for the year first.
