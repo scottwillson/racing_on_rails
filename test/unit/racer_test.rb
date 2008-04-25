@@ -535,11 +535,11 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal('Newport', racer.hometown, 'Racer hometown')
     
     racer.city = nil
-    racer.state = 'OR'
+    racer.state = ASSOCIATION.state
     assert_equal('', racer.hometown, 'Racer hometown')
     
     racer.city = 'Fossil'
-    racer.state = 'OR'
+    racer.state = ASSOCIATION.state
     assert_equal('Fossil', racer.hometown, 'Racer hometown')
     
     racer.city = nil
