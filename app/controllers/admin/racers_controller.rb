@@ -211,8 +211,12 @@ class Admin::RacersController < Admin::RecordEditor
 
     temp_file = File.new(path)
     @racers_file = RacersFile.new(temp_file)
-    assign_years
-    session[:racers_file_path] = temp_file.path
+    if @racers_file
+      assign_years
+      session[:racers_file_path] = temp_file.path
+    else
+      redirect_to(:action => :index)
+    end
   end
   
   def import
