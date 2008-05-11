@@ -1,0 +1,6 @@
+--- 
+:backgroundrb: 
+  :port: 11006
+  :ip: 0.0.0.0
+  :lazy_load: false
+  :debug_log: true

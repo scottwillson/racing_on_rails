@@ -98,6 +98,21 @@ class Racer < ActiveRecord::Base
     ''
   end
   
+  def Racer.find_all_current_email_addresses
+    Racer.connection.select_rows(%Q{ 
+      select first_name, last_name, email 
+      from racers 
+      where member_to > NOW() and email is not null and email != '' 
+      order by last_name, first_name, email
+    }).collect do |first_name, last_name, email|
+      if first_name.blank? && last_name.blank?
+        email
+      else
+        "#{first_name} #{last_name} <#{email}>"
+      end
+    end
+  end
+  
   def attributes=(attributes)
     unless attributes.nil?
       if attributes["member_to(1i)"] && !attributes["member_to(2i)"]

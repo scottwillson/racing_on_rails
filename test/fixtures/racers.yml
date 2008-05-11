@@ -14,6 +14,7 @@ matson:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
+  email: mcfatson@gentlelovers.com
 weaver:
   id: 3
   first_name: Ryan
@@ -22,6 +23,7 @@ weaver:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
+  email: hotwheels@yahoo.com
 molly:
   id: 4
   first_name: Molly

@@ -1,0 +1,27 @@
+<% @page_title = "Email: New" %>
+
+<% form_for :email, @email, :url => { :action => "create" } do |f| %>
+  <h2>Really send this email to all <%= number_with_delimiter(@members_count) %> current members?</h2>
+  <table>
+    <tr>
+      <td class="field_label">From:</td>
+      <td style="padding-top: 4px;"><%= @email.from %></td>
+    </tr>
+    <tr>
+      <td class="field_label">Subject:</td>
+      <td style="padding-top: 4px;"><%= @email.subject %></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="padding-top: 4px;"><%= simple_format(@email.body) %></td>
+    </tr>
+    <tr class="buttons">
+      <td colspan="2" class="right">
+        <%= link_to "Cancel", {:action => :new}, {:class => "obvious"} %>
+        <%= submit_tag("Send") %>
+      </td>
+    </tr>
+  </table>
+  <%= f.hidden_field :from %>
+  <%= f.hidden_field :subject %>
+  <%= f.hidden_field :body %>
+<% end -%>

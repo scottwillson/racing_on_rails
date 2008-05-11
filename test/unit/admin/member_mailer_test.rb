@@ -3,11 +3,10 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::MemberMailerTest < ActionMailer::TestCase
   tests Admin::MemberMailer
   def test_email
-    @expected.subject = 'Admin::MemberMailer#email'
     @expected.body    = read_fixture('email')
-    @expected.date    = Time.now
+    @expected.to = ["training_wheels@yahoo.com"]
 
-    assert_equal @expected.encoded, Admin::MemberMailer.create_email(@expected.date).encoded
+    assert_equal @expected.encoded, Admin::MemberMailer.create_email("training_wheels@yahoo.com").encoded
   end
 
 end

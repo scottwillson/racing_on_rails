@@ -625,4 +625,13 @@ class RacerTest < ActiveSupport::TestCase
     
     assert_equal([r1, r2, r3], racers, 'sorted')
   end
+  
+  def test_find_all_current_email_addresses
+    email = Racer.find_all_current_email_addresses
+    expected = [
+      "Mark Matson <mcfatson@gentlelovers.com>",
+      "Ryan Weaver <hotwheels@yahoo.com>"
+    ]
+    assert_equal(expected, email, "email addresses")
+  end
 end

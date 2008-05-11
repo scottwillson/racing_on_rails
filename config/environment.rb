@@ -50,7 +50,10 @@ Rails::Initializer.run do |config|
 
   # Ugh. Make config accessible to overrides
   @config = config
-  load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb") if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
+  
+  if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
+    load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
+  end
   
   # See Rails::Configuration for more options
   if File.exists?("#{RAILS_ROOT}/local/config/database.yml")
