@@ -351,6 +351,7 @@ tr.buttons td.right {
 }
 
 .right {
+	text-align: right;
 	padding-left: 8px;
 }
 
