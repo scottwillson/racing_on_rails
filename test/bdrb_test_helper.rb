@@ -36,6 +36,7 @@ module BackgrounDRb
     def debug(data)
     end
   end
+  
   class MetaWorker
     attr_accessor :logger
     attr_accessor :thread_pool
@@ -55,6 +56,15 @@ module BackgrounDRb
   class ThreadPool
     def defer(args,&block)
       yield args
+    end
+  end
+  
+  class WorkerProxy
+    def self.init
+      new
+    end
+
+    def initialize
     end
   end
 end

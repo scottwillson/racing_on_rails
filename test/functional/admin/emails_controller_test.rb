@@ -1,4 +1,6 @@
+require File.dirname(__FILE__) + '/../../bdrb_test_helper'
 require File.dirname(__FILE__) + '/../../test_helper'
+require "workers/mailer_worker"
 require 'admin/emails_controller'
 
 class Admin::EmailsController; def rescue_action(e) raise e end; end
