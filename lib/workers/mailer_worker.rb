@@ -7,17 +7,14 @@ class MailerWorker < BackgrounDRb::MetaWorker
   end
   
   def email_members(args)
-    logger.info("Emailing #{args[:subject]} to all members")    
-    # recipients = Racer.find_all_current_email_addresses
-    recipients = Racer.find(:all, :conditions => ["email is not null and email != ''"]).map do |racer|
-      racer.email.gsub(/@.*$/, "@butlerpress.com")
+    logger.info("Emailing #{args[:subject]} to all members")
+    Racer.find_all_current_email_addresses.each do |email_address|
+      email = Admin::MemberMailer.create_email([email_address])
+      logger.debug("create email to #{email_address}")
+      email.from = args[:from]
+      email.subject = args[:subject]
+      email.body = args[:body] || ""
+      Admin::MemberMailer.deliver(email)
     end
-    email = Admin::MemberMailer.create_email(recipients)
-    logger.debug("create email")
-    email.from = args[:from]
-    email.subject = args[:subject]
-    email.body = args[:body] || ""
-    Admin::MemberMailer.deliver(email)
-    logger.debug("delivered")
   end
 end
