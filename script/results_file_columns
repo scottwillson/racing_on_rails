@@ -1,0 +1,39 @@
+#!./script/runner
+
+columns = Hash.new
+columns["age"] = ["age"]
+columns["category_name"] = ["category_name"]
+columns["city"] = ["city"]
+columns["date_of_birth"] = ["date_of_birth"]
+columns["first_name"] = ["first_name"]
+columns["laps"] = ["laps"]
+columns["last_name"] = ["last_name"]
+columns["license"] = ["license"]
+columns["notes"] = ["notes"]
+columns["number"] = ["number"]
+columns["place"] = ["place"]
+columns["place_in_category"] = ["place_in_category"]
+columns["points"] = ["points"]
+columns["points_from_place"] = ["points_from_place"]
+columns["points_bonus_penalty"] = ["points_bonus_penalty"]
+columns["points_total"] = ["points_total"]
+columns["state"] = ["state"]
+columns["team_name"] = ["team_name"]
+columns["time"] = ["time"]
+columns["time_bonus_penalty"] = ["time_bonus_penalty"]
+columns["time_gap_to_leader"] = ["time_gap_to_leader"]
+columns["time_gap_to_previous"] = ["time_gap_to_previous"]
+columns["time_gap_to_winner"] = ["time_gap_to_winner"]
+columns["time_total"] = ["time_total"]
+
+ResultsFile::COLUMN_MAP.each do |key, value|
+  keys = columns[value] || []
+  keys << key
+  columns[value] = keys
+end
+
+p "Column                   : keys"
+p "----------------------------------------------------------------------------------"
+columns.keys.sort.each do |key|
+  p "#{key.humanize.ljust(25)}: #{columns[key].join(', ')}"
+end
