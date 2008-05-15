@@ -18,7 +18,7 @@
 </form>
 </div>
 
-<table>
+<table class="centered">
   <tr>
     <td>
       <table class="base" style="margin-bottom: 2px;">
@@ -45,11 +45,8 @@
           <%- end -%>
         </tr>
         <% end %>
-        <tr valign="top" id="new_row">
-          <td colspan="11"></td>
-        </tr>
       </table>
-      <div><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
+      <div style="text-align: left;"><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
       
       <%= render :partial => 'import_export' %>
 

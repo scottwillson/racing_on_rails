@@ -11,7 +11,10 @@ div.frame {
 
 div.content {
 	text-align: center;
-	margin: 16px 16px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .shadow_1 {
@@ -353,6 +356,11 @@ tr.buttons td.right {
 .right {
 	text-align: right;
 	padding-left: 8px;
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .updatedon
