@@ -108,7 +108,8 @@ class Standings < ActiveRecord::Base
   def create_or_destroy_combined_standings
     if !requires_combined_standings? or (combined_standings(true) and combined_standings.discipline != discipline)
       destroy_combined_standings
-    end    
+    end
+    
     if requires_combined_standings? and combined_standings(true).nil?
       if discipline == 'Mountain Bike'
         combined_standings = CombinedMountainBikeStandings.create!(:source => self)

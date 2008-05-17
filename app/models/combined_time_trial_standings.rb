@@ -18,7 +18,7 @@ class CombinedTimeTrialStandings < CombinedStandings
     combined_race = recreate_races
     for race in source.races
       for result in race.results
-        if result.place.to_i > 0
+        if result.place.to_i > 0 && result.time && result.time > 0
           new_combined_result = combined_race.results.create(
             :racer => result.racer,
             :team => result.team,

@@ -2,6 +2,11 @@
 # The combined standings are used for the BAR. Combined results are placed by time. Results without times 
 # are placed last in non-determinate order. (They should be placed by category and place)
 class CombinedMountainBikeStandings < CombinedStandings
+  
+  def self.reset
+    @@men_combined = nil
+    @@women_combined = nil
+  end
 
   def initialize(attributes = nil)
     super
@@ -57,7 +62,7 @@ class CombinedMountainBikeStandings < CombinedStandings
   end
   
   def men_combined
-    unless defined? @@men_combined
+    if !defined?(@@men_combined) || @@men_combined.nil?
       @@men_combined = Category.find_or_create_by_name('Pro, Semi-Pro Men')
       @@men_combined.children << Category.find_or_create_by_name('Pro Men')
       @@men_combined.children << Category.find_or_create_by_name('Semi-Pro Men')
@@ -66,7 +71,7 @@ class CombinedMountainBikeStandings < CombinedStandings
   end
   
   def women_combined
-    unless defined? @@women_combined
+    if !defined?(@@women_combined) || @@women_combined.nil?
       @@women_combined = Category.find_or_create_by_name('Pro, Expert Women')
       @@women_combined.children << Category.find_or_create_by_name('Pro Women')
       @@women_combined.children << Category.find_or_create_by_name('Expert Women')
