@@ -67,11 +67,6 @@ class Standings < ActiveRecord::Base
       !race.results.empty?
     }
     races_copy.sort!
-    if combined_standings
-      races_copy = races_copy + combined_standings.races.select {|race|
-        !race.results.empty?
-      }
-    end
     races_copy
   end
   

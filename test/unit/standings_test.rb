@@ -200,7 +200,7 @@ class StandingsTest < ActiveSupport::TestCase
     race_3 = combined_standings.races.first
     race_3.results.create
     assert(!race_3.results(true).empty?, 'Combined standings should have results')
-    assert_equal([race_2, race_1, race_3], standings.races_with_results, 'Two races with results')
+    assert_equal([race_2, race_1], standings.races_with_results, 'Two races with results')
   end
   
   def test_full_name
