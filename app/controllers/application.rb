@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   # Pick a unique cookie name to distinguish our session data from others'
   session :session_key => '_racing_on_rails_session_id'
   
+  filter_parameter_logging "password"
+  
   def expire_cache
     if perform_caching
       FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
