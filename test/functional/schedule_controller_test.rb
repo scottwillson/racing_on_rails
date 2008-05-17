@@ -58,4 +58,9 @@ class ScheduleControllerTest < ActiveSupport::TestCase #:nodoc: all
     assert(!html[events(:future_usa_cycling_event).name], "Schedule should only show events sanctioned by Association")
     assert(!html[events(:usa_cycling_event_with_results).name], "Schedule should only show events sanctioned by Association")
   end
+  
+  def test_list
+    get :list
+    assert_response :success
+  end
 end

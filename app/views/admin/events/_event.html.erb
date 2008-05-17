@@ -71,6 +71,14 @@
 					<td class="field_label">State:</td>
 					<td><%= text_field 'event', 'state' %></td>
 				</tr>
+        <tr>
+          <td class="field_label">Velodrome:</td>
+          <td><%= text_field 'event', 'velodrome' %></td>
+        </tr>
+        <tr>
+          <td class="field_label">Prize List:</td>
+          <td><%= text_field 'event', 'prize_list' %></td>
+        </tr>
 			</table>
 		</td>
 		<td>
@@ -172,10 +180,10 @@
 					<td class="field_label" width="100">Post-Event Fees Paid:</td>
 					<td width="100%"><%= text_field 'event', 'post_event_fees', :size => 9 %></td>
 				</tr>
-				<tr>
-					<td class="field_label" width="100">Flyer Ad Paid:</td>
-					<td width="100%"><%= text_field 'event', 'flyer_ad_fee', :size => 9 %></td>
-				</tr>
+        <tr>
+          <td class="field_label" width="100">Flyer Ad Paid:</td>
+          <td width="100%"><%= text_field 'event', 'flyer_ad_fee', :size => 9 %></td>
+        </tr>
 			</table>
 		</td>
 	</tr>
