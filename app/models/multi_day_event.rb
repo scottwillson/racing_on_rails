@@ -24,6 +24,7 @@ class MultiDayEvent < Event
   validate_on_update {:parent.nil?}
   
   before_save :update_date
+  before_save :update_events
   
   has_many :events, 
            :class_name => 'SingleDayEvent',
@@ -32,6 +33,7 @@ class MultiDayEvent < Event
              def create!(attributes = {})
                attributes[:parent_id] = @owner.id
                attributes[:parent] = @owner
+               PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
                event.parent = @owner
                event.save!
@@ -41,6 +43,7 @@ class MultiDayEvent < Event
              def create(attributes = {})
                attributes[:parent_id] = @owner.id
                attributes[:parent] = @owner
+               PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
                event.parent = @owner
                event.save
@@ -121,11 +124,14 @@ class MultiDayEvent < Event
   
   # Update child events from parents' attributes if child attribute has the
   # same value as the parent before update
-  def update_events(original_event_attributes)
+  def update_events
+    return if new_record?
+    
+    original_values = MultiDayEvent.connection.select_one("select #{PROPOGATED_ATTRIBUTES.join(', ')} from events where id = #{self.id}")
     for attribute in PROPOGATED_ATTRIBUTES
-      original_value = original_event_attributes[attribute]
+      original_value = original_values[attribute]
       new_value = self[attribute]
-      RACING_ON_RAILS_DEFAULT_LOGGER.debug("#{attribute}, #{original_value}, #{new_value}")
+      RACING_ON_RAILS_DEFAULT_LOGGER.debug("MultiDayEvent update_events #{attribute}, #{original_value}, #{new_value}")
       if original_value.nil?
         SingleDayEvent.update_all(
           ["#{attribute}=?", new_value], 

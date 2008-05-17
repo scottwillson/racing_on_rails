@@ -110,7 +110,6 @@ class Admin::EventsController < ApplicationController
     else
       begin
         @event = Event.find(params[:id])
-        original_event_attributes = @event.attributes.clone if @event.is_a?(MultiDayEvent)
         # TODO consolidate code
         event_params = params[:event].clone
         @event = Event.update(params[:id], event_params)
@@ -130,7 +129,6 @@ class Admin::EventsController < ApplicationController
       end
       
       if @event.errors.empty?
-        @event.update_events(original_event_attributes) if @event.is_a?(MultiDayEvent) && original_event_attributes
         redirect_to(:action => :show, :id => params[:id])
       else
         render(:action => :show)

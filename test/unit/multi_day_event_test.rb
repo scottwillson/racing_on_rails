@@ -16,7 +16,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     promoter.save!
     
     pir_series = events(:pir_series)
-    pir_series.update_events(pir_july_5)
     
     pir_july_5.reload
     assert_equal("Tuesday Night PIR", pir_july_5.name, "name")
@@ -216,10 +215,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("NY", results["state"], "MultiDayEvent state")
 
     # change only name, all children should change
-    original_attributes = multi_day_event.attributes.clone
     multi_day_event.name = "FIAC Stage Race Championship"
     multi_day_event.save!
-    multi_day_event.update_events(original_attributes)
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("FIAC Stage Race Championship", results["name"], "SingleDayEvent name")
@@ -234,7 +231,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.reload
     multi_day_event.name = "Elkhorn Stage Race"
     multi_day_event.save
-    original_attributes = multi_day_event.attributes.clone
     multi_day_event.cancelled = true
     multi_day_event.city = "Boise"
     multi_day_event.state = "ID"
@@ -248,7 +244,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.sanctioned_by = "UCI"
     assert_not_nil(multi_day_event.promoter, "event.promoter")
     multi_day_event.save!
-    multi_day_event.update_events(original_attributes)
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -297,7 +292,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.sanctioned_by = ASSOCIATION.short_name
     single_event_1.save!
     
-    original_attributes = multi_day_event.attributes.clone
     multi_day_event.cancelled = true
     multi_day_event.city = "Cazenovia"
     multi_day_event.state = "CT"
@@ -309,7 +303,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.promoter_email = brad_ross.email
     multi_day_event.promoter_phone = brad_ross.phone
     multi_day_event.save!
-    multi_day_event.update_events(original_attributes)
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
