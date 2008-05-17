@@ -63,6 +63,7 @@ class Admin::EventsController < ApplicationController
     raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
     @event = eval(event_type).new(params[:event])
     if @event.save
+      expire_cache
       redirect_to(:action => :show, :id => @event.to_param)
     else
       flash[:warn] = @event.errors.full_messages
@@ -78,6 +79,7 @@ class Admin::EventsController < ApplicationController
   def create_from_events
     single_day_event = Event.find(params[:id])
     new_parent = MultiDayEvent.create_from_events(single_day_event.multi_day_event_children_with_no_parent)
+    expire_cache
     redirect_to(:action => :show, :id => new_parent.to_param)
   end
   
@@ -90,6 +92,7 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * warn
   def update
+    expire_cache
     if params[:race_id]
       @race = Race.update(params[:race_id], params[:race])
       if @race.errors.empty?
@@ -159,6 +162,7 @@ class Admin::EventsController < ApplicationController
     results_file = ResultsFile.new(temp_file, event)
     begin
       standings = results_file.import
+      expire_cache
       flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
       unless results_file.invalid_columns.empty?
         flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"
@@ -195,6 +199,7 @@ class Admin::EventsController < ApplicationController
     event = Event.find(params[:id])
     begin
       event.destroy
+      expire_cache
       flash[:notice] = "Deleted #{event.name}"
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
@@ -219,6 +224,7 @@ class Admin::EventsController < ApplicationController
     standings = Standings.find(params[:id])
     begin
       standings.destroy
+      expire_cache
       flash[:notice] = "Deleted #{standings.name}"
       render :update do |page|
         page.visual_effect(:puff, "standings_#{standings.id}_row", :duration => 2)
