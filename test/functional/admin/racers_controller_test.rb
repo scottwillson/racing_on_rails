@@ -615,7 +615,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
                      "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
                      "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
                      "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
-                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
+                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1"
                     }, 
                    "id"=>molly.to_param}
     )
@@ -626,6 +626,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal(true, molly.print_card?, 'print_card?')
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
+    assert_equal(true, molly.ccx_only?, 'ccx_only?')
   end
   
   def test_update_bad_member_from_date

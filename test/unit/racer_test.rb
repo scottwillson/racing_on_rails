@@ -93,6 +93,8 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal(false, racer.print_card?, 'print_card?')
     assert_equal(false, racer.print_mailing_label, 'print_mailing_label')
     assert_equal(false, racer.print_mailing_label?, 'print_mailing_label?')
+    assert_equal(false, racer.ccx_only, 'ccx_only')
+    assert_equal(false, racer.ccx_only?, 'ccx_only?')
     
     for number in racer.race_numbers(true)
       assert(number.valid?, "#{number}: #{number.errors.full_messages}")
