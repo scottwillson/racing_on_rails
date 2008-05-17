@@ -226,24 +226,6 @@ class Competition < Event
 
   def expire_cache
   end
-  
-  def inspect_debug
-    standings.each {|s|
-      puts(self.class.name)
-      puts("#{self.class.name} #{s.name}")
-      s.races.each {|r| 
-        puts(self.class.name)
-        puts("#{self.class.name}   #{r.name}")
-        r.results.sort.each {|result|
-          puts("#{self.class.name}      #{result.to_long_s}")
-          result.scores.each{|score|
-            puts("#{self.class.name}         #{score.source_result.place} #{score.source_result.race.standings.name}  #{score.source_result.race.name} #{score.points}")
-          }
-        }
-      }
-    }
-    true
-  end
 
   def to_s
     "<self.class #{id} #{name} #{start_date} #{end_date}>"

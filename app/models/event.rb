@@ -290,9 +290,26 @@ class Event < ActiveRecord::Base
       0
     end 
   end
+  
+  def inspect_debug
+    standings(true).each {|s|
+      puts(self.class.name)
+      puts("#{self.class.name} #{s.name}")
+      s.races(true).each {|r| 
+        puts(self.class.name)
+        puts("#{self.class.name}   #{r.name}")
+        r.results(true).sort.each {|result|
+          puts("#{self.class.name}      #{result.to_long_s}")
+          result.scores(true).each{|score|
+            puts("#{self.class.name}         #{score.source_result.place} #{score.source_result.race.standings.name}  #{score.source_result.race.name} #{score.points}")
+          }
+        }
+      }
+    }
+    true
+  end
 
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date}>"
   end
-
 end
