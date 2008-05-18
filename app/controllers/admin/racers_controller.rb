@@ -24,48 +24,83 @@ class Admin::RacersController < Admin::RecordEditor
   # === Assigns
   # * racer: Array of Racers
   def index
+    if params['format'] == 'ppl' || params['format'] == 'xls'
+      return export
+    end
+    
     @racers = []
     @name = params['name'] || session['racer_name'] || cookies[:racer_name] || ''
-    if params['format'] == 'ppl' || params['format'] == 'xls'
-      today = Date.today
-      if params['excel_layout'] == 'scoring_sheet'
-        file_name = 'scoring_sheet.xls'
-      elsif params['format'] == 'ppl'
-        file_name = 'lynx.ppl'
-      else
-        file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
-      end
-      headers['Content-Disposition'] = "filename=\"#{file_name}\""
-      if params['include'] == 'members_only'
-        @racers = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}],
-          :conditions => ['member_to >= ?', Date.today]
-          )
-      else
-        @racers = Racer.find(
-          :all,
-          :include => [:team, {:race_numbers => :discipline, :race_numbers => :number_issuer}]
-          )
-      end
-      respond_to do |format|
-        format.html
-        format.ppl
-        format.xls {render :template => 'admin/racers/scoring_sheet.xls.erb' if params['excel_layout'] == 'scoring_sheet'}
-      end
-      
+    session['racer_name'] = @name
+    cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
+    if @name.blank?
+      @racers = []
     else
-      session['racer_name'] = @name
-      cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
-      if @name.blank?
-        @racers = []
-      else
-        @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
-        @racers = @racers + Racer.find_by_number(@name)
-      end
-      if @racers.size == RESULTS_LIMIT
-        flash[:notice] = "First #{RESULTS_LIMIT} racers"
-      end
+      @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
+      @racers = @racers + Racer.find_by_number(@name)
+    end
+    if @racers.size == RESULTS_LIMIT
+      flash[:notice] = "First #{RESULTS_LIMIT} racers"
+    end
+  end
+  
+  def export
+    today = Date.today
+    if params['excel_layout'] == 'scoring_sheet'
+      file_name = 'scoring_sheet.xls'
+    elsif params['format'] == 'ppl'
+      file_name = 'lynx.ppl'
+    else
+      file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
+    end
+    headers['Content-Disposition'] = "filename=\"#{file_name}\""
+
+    if params['include'] == 'members_only'
+      where_clause = "WHERE (member_to >= \'#{today.strftime('%Y-%m-%d')}\')"
+    end
+    association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
+    @racers = Racer.connection.select_all(%Q{
+      SELECT license, first_name, last_name, teams.name as team_name, racers.notes,
+             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
+             print_card, print_mailing_label, DATE_FORMAT(date_of_birth, '%m/%d/%Y') as date_of_birth, occupation, 
+             street, racers.city, racers.state, zip, email, home_phone, work_phone, cell_fax, gender, 
+             road_category, track_category, mtb_category, dh_category, CEILING(#{today.year} - YEAR(date_of_birth)) as racing_age,
+             ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
+             singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
+             DATE_FORMAT(racers.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(racers.updated_at, '%m/%d/%Y') as updated_at
+      FROM racers
+      LEFT OUTER JOIN teams ON teams.id = racers.team_id 
+      LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.racer_id = racers.id 
+                      and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and ccx_numbers.year = #{today.year} 
+                      and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
+      LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.racer_id = racers.id 
+                      and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and dh_numbers.year = #{today.year} 
+                      and dh_numbers.discipline_id = #{Discipline[:downhill].id}
+      LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.racer_id = racers.id 
+                      and road_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and road_numbers.year = #{today.year} 
+                      and road_numbers.discipline_id = #{Discipline[:road].id}
+      LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.racer_id = racers.id 
+                      and singlespeed_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and singlespeed_numbers.year = #{today.year} 
+                      and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}
+      LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.racer_id = racers.id 
+                      and track_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and track_numbers.year = #{today.year} 
+                      and track_numbers.discipline_id = #{Discipline[:track].id}
+      LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.racer_id = racers.id 
+                      and xc_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and xc_numbers.year = #{today.year} 
+                      and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
+      #{where_clause}
+      ORDER BY last_name, first_name
+    })
+
+    respond_to do |format|
+      format.html
+      format.ppl
+      format.xls {render :template => 'admin/racers/scoring_sheet.xls.erb' if params['excel_layout'] == 'scoring_sheet'}
     end
   end
   

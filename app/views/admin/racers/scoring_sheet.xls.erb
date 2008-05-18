@@ -1,14 +1,14 @@
 license	road_number	last_name	first_name	street	city	zip	racing_age	team_name	road_category
 <%- for racer in @racers -%>
-<%= racer.license.to_excel -%>
-	<%= racer.road_number -%>
-	<%= racer.last_name.to_excel -%>
-	<%= racer.first_name.to_excel -%>
-	<%= racer.street.to_excel -%>
-	<%= racer.city.to_excel -%>
-	<%= racer.zip.to_excel -%>
-	<%= racer.racing_age -%>
-	<%= racer.team_name.to_excel -%>
+<%= racer["license"].to_excel -%>
+	<%= racer["road_number"] -%>
+	<%= racer["last_name"].to_excel -%>
+	<%= racer["first_name"].to_excel -%>
+	<%= racer["street"].to_excel -%>
+	<%= racer["city"].to_excel -%>
+	<%= racer["zip"].to_excel -%>
+	<%= racer["racing_age"] -%>
+	<%= racer["team_name"].to_excel -%>
   <%# Last column is slightly different to ensure a line break -%>
-	<%= racer.road_category.to_excel %>
+	<%= racer["road_category"].to_excel %>
 <%- end -%>
