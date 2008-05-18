@@ -56,3 +56,8 @@ age_graded:
   name: Age Graded
   bar: true
   numbers: false
+bmx:
+  id: 14
+  name: BMX
+  bar: false
+  numbers: false

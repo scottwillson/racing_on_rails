@@ -14,7 +14,8 @@ class DisciplineTest < ActiveSupport::TestCase
     assert_equal(disciplines(:cyclocross), Discipline.find_by_name("Cyclocross"), "Cyclocross by name")
     assert_equal(disciplines(:cyclocross), Discipline.find_by_name("cyclocross"), "cyclocross by name")
     assert_equal(nil, Discipline.find_by_name("cx"), "Cyclocross by name")
-    assert_equal(disciplines(:mountain_bike), Discipline.find_by_name("Mountain Bike"), "Road by name")
+    assert_equal(disciplines(:mountain_bike), Discipline.find_by_name("Mountain Bike"), "MTB by name")
+    assert_equal(disciplines(:bmx), Discipline.find_by_name("BMX"), "BMX by name")
   end
   
   def test_find_by_symbol
@@ -23,6 +24,7 @@ class DisciplineTest < ActiveSupport::TestCase
     assert_equal(disciplines(:mountain_bike), Discipline[:mountain_bike], "mountain_bike")
     assert_equal(disciplines(:time_trial), Discipline[:time_trial], "time_trial")
     assert_equal(disciplines(:cyclocross), Discipline[:cx], "cx")
+    assert_equal(disciplines(:bmx), Discipline[:bmx], "bmx")
   end
   
   def test_find_via_alias
