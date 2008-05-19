@@ -128,7 +128,6 @@ class RacersFile < GridFile
       begin
         for row in rows
           row_hash = row.to_hash
-          row_hash[:updated_by] = "Excel file"
           row_hash[:year] = year if year
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?

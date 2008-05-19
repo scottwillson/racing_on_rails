@@ -32,8 +32,6 @@ class Result < ActiveRecord::Base
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
-  attr_accessor :updated_by
-  
   before_validation :find_associated_records
   before_save :save_racer
   after_save :update_racer_number

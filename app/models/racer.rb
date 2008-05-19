@@ -19,7 +19,6 @@ class Racer < ActiveRecord::Base
   has_many :race_numbers, :include => [:discipline, :number_issuer]
   has_many :results
   
-  attr_accessor :updated_by
   attr_accessor :year
   
   CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]

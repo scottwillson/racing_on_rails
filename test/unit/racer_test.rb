@@ -81,7 +81,7 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal("M", racer.gender, "gender")
     assert_equal("125162", racer.license, "license")
     assert_equal("Andy Hampsten", racer.name, "name")
-    assert(racer.notes["Won Giro"], "notes")
+    assert_equal("Won Giro", racer.notes, "notes")
     assert_not_nil(racer.road_number, "road_number")
     assert_equal("300", racer.road_number, "road_number")
     assert_equal("CA", racer.state, "state")
@@ -119,7 +119,7 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal("M", racer.gender, "gender")
     assert_equal("125162", racer.license, "license")
     assert_equal("Andy Hampsten", racer.name, "name")
-    assert(racer.notes["Won Giro"], "notes")
+    assert_equal("Won Giro", racer.notes, "notes")
     assert_equal("300", racer.road_number(true), "road_number")
     assert_equal("CA", racer.state, "state")
     assert_equal("5 Burr Street", racer.street, "street")
@@ -499,17 +499,12 @@ class RacerTest < ActiveSupport::TestCase
   end
   
   def test_update
-    racer = racers(:alice)
     Racer.update(
-    racer.id,
-    "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", :updated_by => "Candi Murray"
+    racers(:alice).id,
+    "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "member_from(1i)"=>"2005", "dh_category"=>"", "member_from(2i)"=>"12", "member_from(3i)"=>"17", "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", "dh_number"=>"917", "road_number"=>"2051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR"
     )
-    racer.reload
-    assert_equal('917', racer.dh_number, 'downhill_number')
-    assert_equal('112', racer.ccx_number, 'ccx_number')
-    assert(racer.notes["rm"], "Should have notes")
-    assert(racer.notes["Downhill number 917 added by Candi Murray"], "Should have DH number audit trail in #{racer.notes}")
-    assert(racer.notes["Cyclocross number 112 added by Candi Murray"], "Should have CCX number audit trail in #{racer.notes}")
+    assert_equal('917', racers(:alice).dh_number, 'downhill_number')
+    assert_equal('112', racers(:alice).ccx_number, 'ccx_number')
   end
   
   def test_date

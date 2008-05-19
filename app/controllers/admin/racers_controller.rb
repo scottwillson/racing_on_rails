@@ -148,7 +148,6 @@ class Admin::RacersController < Admin::RecordEditor
     begin
       expire_cache
       @racer = Racer.create(params[:racer])
-      @racer.updated_by = session[:user].name
       
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
@@ -194,7 +193,6 @@ class Admin::RacersController < Admin::RecordEditor
     begin
       expire_cache
       @racer = Racer.find(params[:id])
-      @racer.updated_by = session[:user].name
       @racer.update_attributes(params[:racer])
       if params[:number]
         for id in params[:number].keys
