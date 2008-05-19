@@ -16,9 +16,10 @@ class Racer < ActiveRecord::Base
 
   belongs_to :team
   has_many :aliases
-  has_many :race_numbers, :include => [:discipline, :number_issuer]
+  has_many :race_numbers, :include => [:discipline, :number_issuer], :after_add => :add_note
   has_many :results
   
+  attr_accessor :updated_by
   attr_accessor :year
   
   CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
@@ -366,6 +367,15 @@ class Racer < ActiveRecord::Base
   
   def xc_number=(value)
     add_number(value, Discipline[:mountain_bike])
+  end
+  
+  def add_note(race_number)
+    if self.notes.blank?
+      self.notes = ""
+    else
+      self.notes = "#{self.notes}\n"
+    end
+    self.notes << "#{race_number.discipline.name} number #{race_number.value} added by #{updated_by} on #{Time.now.to_formatted_s(:long)}"
   end
   
   # Is Racer a current member of the bike racing association?

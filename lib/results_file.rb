@@ -107,6 +107,7 @@ class ResultsFile < GridFile
       rows.each_with_index do |row, index|
         continue if row.blank?
         row_hash = row.to_hash
+        row_hash[:updated_by] = @event.name
         RACING_ON_RAILS_DEFAULT_LOGGER.debug("import #{row_hash.inspect}") if RACING_ON_RAILS_DEFAULT_LOGGER.debug? 
         if new_race?(row_hash, index)
           if @cyclocross_workbook
