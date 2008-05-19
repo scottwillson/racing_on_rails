@@ -627,7 +627,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
     assert_equal(true, molly.ccx_only?, 'ccx_only?')
-    p molly.notes
     assert(molly.notes["Downhill number 917 added by Candi Murray"], "Should have DH number audit trail in #{molly.notes}")
   end
   

@@ -17,6 +17,7 @@ class RaceNumber < ActiveRecord::Base
   
   before_save :get_racer_id
   before_save :validate_year
+  after_create :update_racers_notes
   
   belongs_to :discipline
   belongs_to :number_issuer
@@ -88,6 +89,15 @@ class RaceNumber < ActiveRecord::Base
   
   def validate_year
     self.year > 1800
+  end
+  
+  def update_racers_notes
+    if racer.notes.blank?
+      racer.notes = ""
+    else
+      racer.notes = "#{racer.notes}\n"
+    end
+    racer.notes << "#{self.discipline.name} number #{self.value} added by #{racer.updated_by} on #{Time.now.to_formatted_s(:long)}"
   end
   
   # Checks that another Racer doesn't already have this number.
