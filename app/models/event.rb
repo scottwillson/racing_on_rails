@@ -72,6 +72,7 @@ class Event < ActiveRecord::Base
   end
 
   # TODO Could be replaced with a select join if too slow
+  # TODO Use has_results?
   def validate_no_results
     for s in standings(true)
       for race in s.races(true)
@@ -82,6 +83,10 @@ class Event < ActiveRecord::Base
       end
     end
     true
+  end
+  
+  def has_results?
+    standings(true).any? { |s| s.races(true).any? { |r| !r.results(true).empty? } }
   end
   
   # ASSOCIATION.short_name

@@ -173,7 +173,7 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   # Look at source results for tie-breaking
-  # Intentional nonsene in some results and points to test sorting
+  # Intentional nonsense in some results and points to test sorting
   def test_competition_place_results_by_points
     race = standings(:jack_frost).races.create(:category_name => "Masters Men 50+")
 

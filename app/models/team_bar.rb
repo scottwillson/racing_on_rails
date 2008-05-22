@@ -53,7 +53,7 @@ class TeamBar < Competition
 
           if first_result_for_team(source_result, competition_result)
             # Bit of a hack here, because we split tandem team results into two results,
-            # we can't gurantee that results are in team-order.
+            # we can't guarantee that results are in team-order.
             # So 'first result' really means 'not the same as last result'
             competition_result = race.results.detect {|result| result.team == team}
             competition_result = race.results.create(:team => team) if competition_result.nil?
@@ -64,8 +64,6 @@ class TeamBar < Competition
             :competition_result => competition_result, 
             :points => points_for(source_result).to_f / teams.size
           )
-          # TODO Need to do this every time? Maybe before save?
-          competition_result.calculate_points
         end
       end
     end

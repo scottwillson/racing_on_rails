@@ -171,11 +171,7 @@ class Competition < Event
       # Aggressive memory management. If competition has a race with many results, 
       # the results array can become a large, uneeded, structure
       results[index] = nil
-      if index > 0 && index % 1000 == 0
-        logger.debug("GC start after record #{index}")
-        GC.start
-      end
-      
+      GC.start if index > 0 && index % 1000 == 0
     end
   end
   

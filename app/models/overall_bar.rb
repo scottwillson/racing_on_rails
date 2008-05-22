@@ -34,7 +34,6 @@ class OverallBar < Competition
   def after_create_competition_results_for(race)
     for result in race.results
       set_bonus_points_for_extra_disciplines(result.scores)
-      result.calculate_points
     end
   end
 

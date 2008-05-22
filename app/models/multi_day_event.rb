@@ -50,7 +50,7 @@ class MultiDayEvent < Event
                event
              end
            end
-
+  
   def MultiDayEvent.find_all_by_year(year)
     # Workaround Rails class loader behavior
     WeeklySeries
@@ -207,8 +207,17 @@ class MultiDayEvent < Event
                           :conditions => ['parent_id is null and name = ? and extract(year from date) = ?', 
                                           self.name, self.date.year]) 
   end
-
+  
+  # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
+  # The results page should show the results in that case, and TaborSeriesStandings would just create an empty Standings.
+  def has_results_with_children?
+    has_results_without_children? || events(true).any? { |event| event.has_results? }
+  end
+  
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size}>"
   end
+
+  alias_method_chain :has_results?, :children
+
 end

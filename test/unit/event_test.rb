@@ -324,6 +324,18 @@ class EventTest < ActiveSupport::TestCase
     assert_no_orphans(mt_hood_3)
   end
   
+  def test_has_results
+    assert(!Event.new.has_results?, "New Event should not have results")
+    
+    event = SingleDayEvent.create!
+    standings = event.standings.create!
+    race = standings.races.create!(:category => categories(:senior_men))
+    assert(!event.has_results?, "Event with race, but no results should not have results")
+    
+    race.results.create!(:place => 200, :racer => racers(:matson))
+    assert(event.has_results?, "Event with one result should not have results")
+  end
+  
   private
   
   def assert_orphans(count, event)
