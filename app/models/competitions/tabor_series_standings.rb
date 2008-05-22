@@ -4,6 +4,7 @@ class TaborSeriesStandings < Standings
               :first, 
               :conditions => ["name = ? and date between ? and ?", "Mt Tabor Series", Date.new(year, 1, 1), Date.new(year, 12, 31)])
     if series && series.has_results?
+      TaborSeriesStandings.destroy_all(:event_id => series.id)
       standings = TaborSeriesStandings.create!(:name => "Overall", :event => series)
       standings.create_races
       standings.recalculate
@@ -117,6 +118,15 @@ class TaborSeriesStandings < Standings
   # * Any results after the first four only get 50-point bonus
   # * Drop lowest-scoring result
   def after_create_competition_results_for(race)
+    race.results.each do |result|
+      if result.scores.size > 5
+        result.scores.sort! { |x, y| y.points <=> x.points }
+        lowest_score = result.scores.last
+        result.scores.destroy(lowest_score)
+        # Rails destroys Score in database, but doesn't update the current association
+        result.scores(true)
+      end
+    end
   end
   
   def break_ties?

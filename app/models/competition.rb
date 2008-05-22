@@ -75,6 +75,7 @@ class Competition < Event
     end
   end
 
+  # TODO Is this really good Rails API usage?
   def destroy_standings
     for s in standings(true)
       Standings.delete(s.id)

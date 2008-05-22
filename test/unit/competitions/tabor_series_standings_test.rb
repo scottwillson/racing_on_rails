@@ -26,8 +26,21 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     masters_race.results.create!(:place => 15, :racer => racers(:alice))
     masters_race.results.create!(:place => 16, :racer => racers(:molly))
     
+    # Previous year should be ignored
+    previous_event_standings = WeeklySeries.create!(:name => "Mt Tabor Series").events.create!(:date => Date.new(2006)).standings.create!
+    previous_event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 9, :racer => racers(:weaver))
+    
+    # Following year should be ignored
+    following_event_standings = WeeklySeries.create!(:name => "Mt Tabor Series").events.create!(:date => Date.new(2008)).standings.create!
+    following_event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 10, :racer => racers(:weaver))
+    
     TaborSeriesStandings.recalculate(2007)
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series")
+    overall_standings = series.standings.first
+    assert_equal(8, overall_standings.races.size, "Overall races")
+    
+    TaborSeriesStandings.recalculate(2007)
+    assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series after deleting old standings")
     overall_standings = series.standings.first
     assert_equal(8, overall_standings.races.size, "Overall races")
 
@@ -53,9 +66,38 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(racers(:alice), result.racer, "Masters Women first result racer")
   end
   
-  # Ensure skips races from different years
-  # test replaces previous standings
-  # best 5 of 6
-  # Competitive module?
-  # Outer joins to inner joins?
+  def test_best_5_of_6_count
+    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 6)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 13)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 19)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 27)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 7, 4)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 7, 11)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 11, :racer => racers(:weaver))
+    
+    TaborSeriesStandings.recalculate(2007)
+    
+    overall_standings = series.standings.first
+    cat_3_overall_race = overall_standings.races.detect { |race| race.category == categories(:cat_3) }
+    assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
+    assert_equal(1, cat_3_overall_race.results.size, "Cat 3 race results")
+    cat_3_overall_race.results(true).sort!
+    result = cat_3_overall_race.results.first
+    assert_equal("1", result.place, "place")
+    assert_equal(5, result.scores.size, "Scores")
+    assert_equal(100 + 12 + 50 + 36 + 15, result.points, "points")
+    assert_equal(racers(:weaver), result.racer, "racer")
+  end
 end
