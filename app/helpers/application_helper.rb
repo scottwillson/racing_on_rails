@@ -25,15 +25,15 @@ module ApplicationHelper
       @@grid_columns['city'] = Column.new(:name => 'city', :description => 'City', :size => 15, :fixed_size => true)
       @@grid_columns['date_of_birth'] = Column.new(:name => 'date_of_birth', :description => 'Date of Birth', :size => 15)
       @@grid_columns['first_name'] = Column.new(:name => 'first_name', :description => 'First Name', :size => 12, :fixed_size => true)
-      @@grid_columns['first_name'].link = 'link_to(cell, "/results/racer/#{result.racer.id}") if result.racer'
+      @@grid_columns['first_name'].link = 'link_to_result(cell, result)'
       @@grid_columns['last_name'] = Column.new(:name => 'last_name', :description => 'Last Name', :size => 18, :fixed_size => true)
-      @@grid_columns['last_name'].link = 'link_to(cell, "/results/racer/#{result.racer.id}") if result.racer'
+      @@grid_columns['last_name'].link = 'link_to_result(cell, result)'
       @@grid_columns['license'] = Column.new(:name => 'license', :description => 'Lic', :size => 7)
       @@grid_columns['name'] = Column.new(:name => 'name', :description => 'Name', :size => 30, :fixed_size => true)
-      @@grid_columns['name'].link = 'link_to(cell, "/results/racer/#{result.racer.id}") if result.racer'
+      @@grid_columns['name'].link = 'link_to_result(cell, result)'
       @@grid_columns['notes'] = Column.new(:name => 'notes', :description => 'Notes', :size => 12)
       @@grid_columns['number'] = Column.new(:name => 'number', :description => 'Num', :size => 4, :fixed_size => true)
-      @@grid_columns['number'].link = 'link_to(cell, "/results/racer/#{result.racer.id}") if result.racer'
+      @@grid_columns['number'].link = 'link_to_result(cell, result)'
       @@grid_columns['place'] = Column.new(:name => 'place', :description => 'Pl', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points'] = Column.new(:name => 'points', :description => 'Points', :size => 6, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points_from_place'] = Column.new(:name => 'points_from_place', :description => 'Finish Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
@@ -55,6 +55,20 @@ module ApplicationHelper
       @@grid_columns[column] = grid_column
     end
     grid_column
+  end
+  
+  def link_to_result(cell, result)
+    return unless result.racer
+
+    if result.competition_result?
+      link_to(cell, 
+        :controller => 'results',
+        :action => 'competition',
+        :competition_id => result.race.standings.event.to_param,
+        :racer_id => result.racer_id)
+    else
+      link_to(cell, "/results/racer/#{result.racer.id}")
+    end
   end
 
   # Should field from model object displayed by a RecordEditor
@@ -118,9 +132,9 @@ module ApplicationHelper
     
     race.results.sort.each_with_index do |result, row_index|
       result_grid_columns.each_with_index do |grid_column, index|
-	    if grid_column.link
-		  cell = results_grid[row_index][index]
-		  results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
+      if grid_column.link
+      cell = results_grid[row_index][index]
+      results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
         end
       end
     end
