@@ -11,8 +11,14 @@ class TaborSeriesStandings < Standings
   end
 
   def create_races
-    races.create!(:category => Category.find_or_create_by_name('Category 3 Men'))
-    races.create!(:category => Category.find_or_create_by_name('Masters Women 35+'))
+    races.create!(:category => Category.find_or_create_by_name("Fixed Gear"))
+    races.create!(:category => Category.find_or_create_by_name("Category 4 Women"))
+    races.create!(:category => Category.find_or_create_by_name("Women Masters 40+"))
+    races.create!(:category => Category.find_or_create_by_name("Senior Women"))
+    races.create!(:category => Category.find_or_create_by_name("Men Masters 40+"))
+    races.create!(:category => Category.find_or_create_by_name("Category 4/5 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Category 3 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Senior Men"))
   end
 
   # Race#place_results_by_points saves each Result
