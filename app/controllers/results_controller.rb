@@ -4,19 +4,19 @@ class ResultsController < ApplicationController
   
   def index
     # TODO Create helper method to return Range of first and last of year
-  	@year = params['year'].to_i
-  	@year = Date.today.year if @year == 0
-  	first_of_year = Date.new(@year, 1, 1)
-  	last_of_year = Date.new(@year + 1, 1, 1) - 1
-  	
-  	# Ideally, SQL shouldn't pull out duplicate Events
-  	@events = Set.new
-  	@discipline = Discipline[params['discipline']]
-  	if @discipline
-  	  discipline_names = [@discipline.name]
-  	  if @discipline == Discipline['road']
-  	    discipline_names << 'Circuit'
-	    end
+    @year = params['year'].to_i
+    @year = Date.today.year if @year == 0
+    first_of_year = Date.new(@year, 1, 1)
+    last_of_year = Date.new(@year + 1, 1, 1) - 1
+    
+    # Ideally, SQL shouldn't pull out duplicate Events
+    @events = Set.new
+    @discipline = Discipline[params['discipline']]
+    if @discipline
+      discipline_names = [@discipline.name]
+      if @discipline == Discipline['road']
+        discipline_names << 'Circuit'
+      end
       @events = @events + Event.find(
           :all,
           :include => :standings, 
@@ -53,7 +53,7 @@ class ResultsController < ApplicationController
           :order => 'events.date desc'
       )
 
-	  else
+    else
       @events = @events + Event.find(
           :all,
           :include => :standings,
@@ -87,7 +87,7 @@ class ResultsController < ApplicationController
               }, first_of_year, last_of_year],
           :order => 'events.date desc'
       )
-	  end
+    end
     
     @events = @events.to_a
     @events.reject! {|event| event.is_a?(Competition) || (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)}
@@ -104,38 +104,38 @@ class ResultsController < ApplicationController
   end
 
   def competition
-  	@competition = Event.find(params[:competition_id])
+    @competition = Event.find(params[:competition_id])
     if !params[:racer_id].blank?
-    	@results = Result.find(
-    	  :all,
-    	  :include => [:racer, {:race => {:standings => :event}}],
-    	  :conditions => ['events.id = ? and racers.id = ?', params[:competition_id], params[:racer_id]]
-    	)
-    	@racer = Racer.find(params[:racer_id])
-  	else
-  	  @results = Result.find(
-    	  :all,
-    	  :include => [{:race => {:standings => :event}}, :team],
-    	  :conditions => ['events.id = ? and teams.id = ?', params[:competition_id], params[:team_id]]
-    	)
-    	
-    	result_ids = @results.collect {|result| result.id}
-    	@scores = Score.find(
-    	  :all,
-    	  :include => [{:source_result => [:racer, {:race => [:category, {:standings => :event}]}]}],
-    	  :conditions => ['competition_result_id in (?)', result_ids]
-    	)
-    	@team = Team.find(params[:team_id])
-    	return render(:template => 'results/team_competition')
-	  end
+      @results = Result.find(
+        :all,
+        :include => [:racer, {:race => {:standings => :event}}],
+        :conditions => ['events.id = ? and racers.id = ?', params[:competition_id], params[:racer_id]]
+      )
+      @racer = Racer.find(params[:racer_id])
+    else
+      @results = Result.find(
+        :all,
+        :include => [{:race => {:standings => :event}}, :team],
+        :conditions => ['events.id = ? and teams.id = ?', params[:competition_id], params[:team_id]]
+      )
+      
+      result_ids = @results.collect {|result| result.id}
+      @scores = Score.find(
+        :all,
+        :include => [{:source_result => [:racer, {:race => [:category, {:standings => :event}]}]}],
+        :conditions => ['competition_result_id in (?)', result_ids]
+      )
+      @team = Team.find(params[:team_id])
+      return render(:template => 'results/team_competition')
+    end
   end
   
   def racer
-  	@racer = Racer.find(params[:id])
+    @racer = Racer.find(params[:id])
     results = Result.find(
       :all,
-  	  :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
-  	  :conditions => ['racers.id = ?', params[:id]]
+      :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
+      :conditions => ['racers.id = ?', params[:id]]
     )
     @competition_results, @event_results = results.partition do |result|
       result.race.standings.event.is_a?(Competition)
@@ -146,8 +146,8 @@ class ResultsController < ApplicationController
     @team = Team.find(params[:id])
     @results = Result.find(
       :all,
-  	  :include => [:team, :racer, :category, {:race => {:standings => :event}}],
-  	  :conditions => ['teams.id = ?', params[:id]]
+      :include => [:team, :racer, :category, {:race => {:standings => :event}}],
+      :conditions => ['teams.id = ?', params[:id]]
     )
     @results.reject! do |result|
       result.race.standings.event.is_a?(Competition)
