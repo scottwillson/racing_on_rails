@@ -2,36 +2,31 @@
 
 <%= render "shared/admin/tabs" %>
 
-<div style="margin-top: 16px; margin-bottom: 16px;">
 <%= form_tag({}, {:method => 'get', :id => 'search_form'}) %>
-  <span class="field_label">Name:</span> <%= text_field_tag 'name', @name, :size => 30 %>
-
-  <%# Nasty code required to show consistent messages with and without AJAX. At least it could be in a helper. %>
-  <p class="message" id="message">
-    <%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
-    <span id='warn_text'><%= flash[:warn] %></span>
-    <%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
-    <span id='message_text'><%= flash[:notice] %></span>
-  </p>
-  <%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
-  <%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
+  <table style="margin-top: 16px; margin-bottom: 16px">
+    <tr>
+      <td class="field_label">Name:</td>
+      <td><%= text_field_tag 'name', @name, :size => 30 %></td>
+    </tr>
+  </table>
 </form>
-</div>
 
-<table class="centered">
-  <tr>
-    <td>
-      <table class="base" style="margin-bottom: 2px;">
+<p class="message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><%= flash[:notice] %></p>
+<p class="message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><%= flash[:warn] %></p>
+
+<table style="position: relative;">
+  <tr style="position: relative;">
+    <td style="position: relative;">
+      <table class="base" id="racers" style="position: relative;">
         <tr>
-          <th></th>
-          <th style="width: 200px;">Name</th>
-          <th>Team</th>
-          <th>Aliases</th>
-          <th align="right">Road</th>
-          <th align="right">MTB</th>
-          <th align="right">DH</th>
-          <th align="right">Cross</th>
-          <th align="center">Member</th>
+          <th class="name">Name</th>
+          <th class="team">Team</th>
+          <th class="aliases">Aliases</th>
+          <th class="right">Road</th>
+          <th class="right">MTB</th>
+          <th class="right">DH</th>
+          <th class="right">Cross</th>
+          <th class="center">Member</th>
           <th></th>
           <th></th>
         </tr>
@@ -39,35 +34,55 @@
         <% if @racers.empty? %>
         <tr valign="top">
           <%- if @name.blank? -%>
-          <td colspan="11" width="200" class="not_found">Enter part of a racer's name</td>
+          <td colspan="10" width="200" class="not_found">Enter part of a racer's name</td>
           <%- else -%>
-          <td colspan="11" width="200" class="not_found">No racers found</td>
+          <td colspan="10" width="200" class="not_found">No racers found</td>
           <%- end -%>
         </tr>
         <% end %>
       </table>
-      <div style="text-align: left;"><%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %></div>
       
+      <table style="width: 100%;">
+        <tr>
+          <td><%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %></td>
+          <td style="text-align: right; padding-top: 8px;"><%= link_to('Print Cards', :action => 'cards') %> |
+              <%= link_to('Print Mailing Labels', :action => 'mailing_labels') %>
+          </td>
+        </tr>
+      </table>
+
       <%= render :partial => 'import_export' %>
 
-      <div class="tabs" style="margin-top: 24px;">
-        <%= 
-          link_to('Print Cards', :action => 'cards') 
-        %> | <%= 
-          link_to('Print Mailing Labels', :action => 'mailing_labels') 
-        %>
-      </div>
     </td>
   </tr>
 </table>
 
+<% focus('name') %>
+
 <%- for racer in @racers -%>
-  <%= draggable_element("racer_#{racer.id}", :revert => true) %>
-  <%= drop_receiving_element("racer_#{racer.id}", 
-    :url => { :action => "merge", :target_id => racer.id }, 
-    :loading => "new Effect.Fade(element.id + '_row')") %>
-  <%= drop_receiving_element("name_#{racer.id}", 
-    :url => { :action => "merge", :target_id => racer.id }, 
-    :onHover => "new Effect.Fade(element.id + '_row')",
-    :loading => "new Effect.Fade(element.id + '_row')") %>
+  <%= draggable_element("racer_#{racer.id}", :revert => true, :delay => 100,
+                        :onStart => "function() { Droppables.remove('racer_#{racer.id}_row') }", 
+                        :onEnd => "function() { Droppables.add('racer_#{racer.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/racers/merge?target_id=#{racer.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
+  %>
+  <%= drop_receiving_element("racer_#{racer.id}_row", 
+    :url => { :action => "merge", :target_id => racer.id },
+    :onDrop => "function(element){$('racer_#{racer.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/racers/merge?target_id=#{racer.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('racer_#{racer.id}_row') }",
+    :hoverclass => 'hovering' ) %>
 <%- end -%>
+
+<script type="text/javascript" charset="utf-8">
+  function restripeTable() {
+    index = 0;
+    $A($('racers').rows).each(function(row) {
+      if (row.className == 'even' || row.className == 'odd') {
+        if (index % 2 == 0) {
+          row.className = 'even';
+        }
+        else {
+          row.className = 'odd';
+        }
+        index = index + 1;
+      }
+    });
+  }
+</script>

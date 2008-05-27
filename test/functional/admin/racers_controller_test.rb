@@ -119,7 +119,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     racer = assigns["racer"]
     assert_not_nil(racer, "Should assign racer")
     assert(racer.errors.empty?, "Should have no errors, but had: #{racer.errors.full_messages}")
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
     assert_equal('', molly.first_name, 'Racer first_name after update')
@@ -132,7 +132,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     original_name = molly.name
     get(:cancel, :id => molly.to_param, :name => molly.name)
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -144,7 +144,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -157,7 +157,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'Molly Cameron')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -170,7 +170,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'molly cameron')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -201,7 +201,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     tonkin = racers(:tonkin)
     post(:update_name, :id => tonkin.to_param, :name => 'Eric Tonkin')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
     tonkin.reload
@@ -223,7 +223,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'mollie cameron')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/racers/_racer_name")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -676,6 +676,8 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal('AZY', molly.xc_number, 'MTB number should be updated')
     assert_nil(molly.member_from, 'member_from after update')
     assert_nil(molly.member_to, 'member_to after update')
+    assert_nil(RaceNumber.find(5).updated_by, "updated_by")
+    assert_equal("Candi Murray", RaceNumber.find_by_value("AZY").updated_by, "updated_by")
   end
 
   def test_update_error
@@ -927,6 +929,18 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_export_to_excel
+    tonkin = racers(:tonkin)
+    tonkin.singlespeed_number = "409"
+    tonkin.track_number = "765"
+    tonkin.save!
+    
+    RaceNumber.create!(:racer => tonkin, :discipline => Discipline[:singlespeed], :value => "410")
+
+    weaver = racers(:weaver)
+    RaceNumber.create!(:racer => weaver, :discipline => Discipline[:road], :value => "888")
+    RaceNumber.create!(:racer => weaver, :discipline => Discipline[:road], :value => "999")
+    assert_equal(4, weaver.race_numbers(true).size, "Weaver numbers")
+    
     get(:index, :format => 'xls', :include => 'all')
 
     assert_response(:success)
@@ -934,6 +948,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+    assert_equal(6, assigns['racers'].size, "Racers export size")
   end
   
   def test_export_members_only_to_excel

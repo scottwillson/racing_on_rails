@@ -1,26 +1,29 @@
-<table cellspacing="0" cellpadding="0" class="yellow" id="inline">
+<table class="inline">
   <tr>
     <th colspan="3">Numbers</th>
     <th><select name='number_year' id='number_year'><%= options_for_select years, year %></select></th>
   </tr>
   <% if ASSOCIATION.show_license %>
   <tr>
-    <td><%= ASSOCIATION.short_name %></td>
-    <td>Membership</td>
+    <td class="field_value"><%= ASSOCIATION.short_name %></td>
+    <td class="field_value">Membership</td>
     <td><%= text_field 'racer', 'license', :size => 10 %></td>
     <td></td>
   </tr>
   <% end %>
   <% for @number in race_numbers %>
   <tr id="<%= "number_#{@number.id}_row" %>">
-    <td><%= @number.number_issuer.name %></td>
-    <td><%= @number.discipline.name %></td>
-    <td><%= text_field 'number[]', 'value', :size => 4 %></td>
+    <td class="field_value"><%= @number.number_issuer.name %></td>
+    <td class="field_value"><%= @number.discipline.name %></td>
+    <td>
+      <%= text_field 'number[]', 'value', :size => 4 %><%= link_to(image_tag("icons/info.gif"), "#", 
+        :title => "Updated #{time_ago_in_words(@number.updated_at, true)} ago #{('by ' + @number.updated_by) if @number.updated_by}", :class => "image") %>
+    </td>
     <td><%= link_to_remote(
-              image_tag('/images/buttons/remove_solo.gif'),
-                :url => { :action => "destroy_number", :id => @number.id},
-                :complete => evaluate_remote_response,
-                :html => { :id => "destroy_number_#{@number.id}" }
+          image_tag('/images/buttons/remove_solo.gif'),
+            :url => { :action => "destroy_number", :id => @number.id},
+          :complete => evaluate_remote_response,
+          :html => { :id => "destroy_number_#{@number.id}" }
               )
      %></td>
   </tr>

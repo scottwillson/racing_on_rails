@@ -1,6 +1,6 @@
 <% @page_title = "Admin: Login" %>
 
-<div align="center">
+<div>
     
 <% if flash['notice'] %>
   <div id="message"><%= flash['notice'] %></div>
@@ -10,14 +10,14 @@
 
 <%= form_tag :action=> "login" %>
 <table class="base" id="login">
-	<caption>Logged In</caption>
-	<tr><th colspan="2">&nbsp;</th></tr>
-s	<tr>
-		<td>You are logged-in as <%= @user.name %></td>
-	</tr>
-	<tr>
-		<td><input type="submit" name="logout" value="Logout"/></td>
-	</tr>
+  <caption>Logged In</caption>
+  <tr><th colspan="2">&nbsp;</th></tr>
+  <tr>
+    <td>You are logged-in as <%= @user.name %></td>
+  </tr>
+  <tr>
+    <td><input type="submit" name="logout" value="Logout"/></td>
+  </tr>
 </table>
 </form>
 
@@ -25,19 +25,19 @@ s	<tr>
 
 <%= form_tag :action=> "login" %>
 <table class="base" id="login">
-	<caption>Login</caption>
-	<tr><th colspan="2">&nbsp;</th></tr>
-	<tr>
-		<td class="field_label">Username:</td>
-		<td><input type="text" name="username" id="user_login" size="30" value=""/></td>
-	</tr>
-	<tr>
-		<td class="field_label">Password:</td>
-		<td><input type="password" name="user_password" id="user_password" size="30"/></td>
-	</tr>
-	<tr class="buttons">
-		<td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
-	</tr>
+  <caption>Login</caption>
+  <tr><th colspan="2">&nbsp;</th></tr>
+  <tr>
+    <td class="field_label">Username:</td>
+    <td><input type="text" name="username" id="user_login" size="30" value=""/></td>
+  </tr>
+  <tr>
+    <td class="field_label">Password:</td>
+    <td><input type="password" name="user_password" id="user_password" size="30"/></td>
+  </tr>
+  <tr class="buttons">
+    <td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
+  </tr>
 </table>
 </form>
 

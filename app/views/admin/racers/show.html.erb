@@ -1,7 +1,7 @@
 <% if @racer.new_record? 
      racer_name = 'New Racer' 
    else
-	 racer_name = @racer.name
+   racer_name = @racer.name
    end %>
 <% @page_title = "Admin: Racers: #{@racer.name}" %>
 
@@ -9,17 +9,17 @@
 
 <div align="center">
 <%- if flash[:notice] -%>
-	<div class="message" id="message">
-			<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-			<%= flash[:notice] %>
-	</div>
+  <div class="message" id="message">
+      <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:notice] %>
+  </div>
 <%- end -%>
 
 <%- if flash[:warn] -%>
-	<div class="message" id="warn">
-			<%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-			<%= flash[:warn] %>
-	</div>
+  <div class="message" id="warn">
+      <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:warn] %>
+  </div>
 <%- end -%>
 
 <%= error_messages_for 'racer' %>
@@ -29,152 +29,152 @@
 <%- else -%>
 <%= form_tag({:action => 'update', :id => @racer.id}, {:method => :put }) %>
 <%- end -%>
-	<table class="base">
-		<caption><%= racer_name %></caption>
-		<tr><th colspan="6"></th></tr>
-		<tr>
-			<td class="field_label">First Name:</td>
-			<td><%= text_field 'racer', 'first_name' %></td>
-			<td class="field_label">Last Name:</td>
-			<td><%= text_field 'racer', 'last_name' %></td>
-			<td class="field_label">Team:</td>
-			<td><%= text_field 'racer', 'team_name' %></td>
-		</tr>
-		<tr>
-			<td valign="top" class="field_label">Membership:</td>
-			<td><span style="white-space: nowrap;"><%= date_select 'racer', 'member_from', 
-					:order => [:month, :day, :year],
-					:start_year => 1999, :end_year => Date.today.year + 1, 
-					:include_blank => true %>&nbsp;to</span><br>
-				<%= date_select 'racer', 'member_to', 
-						:order => [:month, :day, :year],
-						:end_year => Date.today.year + 1, 
-						:include_blank => true %>
-				
-				<br>
-				<%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? or @racer.renewed? %>
-				<span class="updatedon">
-				<%- if @racer.member? -%>
-					Current
-				<%- elsif @racer.renewed? -%>
-					Renewed
-				<%- else -%>
-					Not current
-				<%- end -%>
-				</span>
-			</td>
-			<td valign="top" class="field_label">Notes:</td>
-			<td valign="top" rowspan="2"colspan="3"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
-		</tr>
- 		<tr>
-			<td></td>
-			<td>
-				<%= check_box_tag 'card_printed' %> Print card<br/>
-				<%= check_box_tag 'mailing_label_printed' %> Print mailing label
-			</td>
-		</tr>
-		<tr>
-			<td class="field_label">Email:</td>
-			<td><%= text_field 'racer', 'email' %></td>
-			<td class="field_label">Street:</td>
-			<td><%= text_field 'racer', 'street' %></td>
-			<td class="field_label">Date of Birth:</td>
-			<td><%= date_select 'racer', 'date_of_birth', 
-					:order => [:month, :day, :year], 
-					:start_year => 1900, :end_year => Date.today.year, 
-					:include_blank => true %>
-			</td>
-		</tr>
-		<tr>
-			<td class="field_label">Home Phone:</td>
-			<td><%= text_field 'racer', 'home_phone' %></td>
-			<td class="field_label">City, ST, ZIP:</td>
-			<td><%= text_field 'racer', 'city', :size => 15 %>, <%= text_field 'racer', 'state', :size => 2 %> <%= text_field 'racer', 'zip', :size => 5 %></td>
-			<td class="field_label">Racing Age:</td>
-			<td>
-				<%= @racer.racing_age %>
-				<%= " (Master)" if @racer.master? -%>
-				<%= " (Junior)" if @racer.junior? -%>
-			</td>
-		</tr>
-		<tr>
-			<td class="field_label">Work Phone:</td>
-			<td><%= text_field 'racer', 'work_phone' %></td>
-			<td class="field_label">Occupation:</td>
-			<td><%= text_field 'racer', 'occupation' %></td>
-			<td class="field_label">Gender:</td>
-			<td><%= select('racer', 'gender', ['', 'F', 'M']) %></td>
-		</tr>
-		<tr>
-			<td class="field_label">Cell/Fax:</td>
-			<td><%= text_field 'racer', 'cell_fax' %></td>
-			<td class="field_label"></td>
-			<td></td>
-			<td class="field_label"></td>
-			<td></td>
-		</tr>
-		<tr valign="top">
-			<td colspan="2" id="numbers">
-				<%= render :partial => 'numbers', :locals => {:year => @year, :years => @years, :racer => @racer, :race_numbers => @race_numbers} %>
-			</td>
-			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="base" id="inline">
-					<caption>Categories</caption>
-					<tr>
-						<td class="field_label">Cyclocross:</td>
-						<td><%= text_field 'racer', 'ccx_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Downhill:</td>
-						<td><%= text_field 'racer', 'dh_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Mountain Bike:</td>
-						<td><%= text_field 'racer', 'mtb_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Road:</td>
-						<td><%= text_field 'racer', 'road_category', :size => 20 %></td>
-					</tr>
-					<tr>
-						<td class="field_label">Track:</td>
-						<td><%= text_field 'racer', 'track_category', :size => 20 %></td>
-					</tr>
-				</table>
-			</td>
-			<td colspan="2">
-				<table cellspacing="0" cellpadding="0" class="base" id="inline">
-					<caption>Aliases</caption>
-					<%- for name_alias in @racer.aliases -%>
-					<tr id="alias_<%= name_alias.id %>">
-						<td><%= name_alias.name %></td>
-						<td>
-							<%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
- 					         :url => { :action => "destroy_alias", :id => @racer.id, :alias_id => name_alias.id}) %>
-						</td>
-					</tr>
-					<%- end -%>
-					<%- if @racer.aliases.empty? %>
-					<tr>
-						<td colspan="2">None</td>
-					</tr>
-					<%- end -%>
-				</table>
-			</td>
-		</tr>
+  <table class="base">
+    <caption><%= racer_name %></caption>
+    <tr><th colspan="6">>&nbsp;</th></tr>
+    <tr>
+      <td class="field_label">First Name:</td>
+      <td><%= text_field 'racer', 'first_name' %></td>
+      <td class="field_label">Last Name:</td>
+      <td><%= text_field 'racer', 'last_name' %></td>
+      <td class="field_label">Team:</td>
+      <td><%= text_field 'racer', 'team_name' %></td>
+    </tr>
+    <tr>
+      <td valign="top" class="field_label">Membership:</td>
+      <td><span style="white-space: nowrap;"><%= date_select 'racer', 'member_from', 
+          :order => [:month, :day, :year],
+          :start_year => 1999, :end_year => Date.today.year + 1, 
+          :include_blank => true %>&nbsp;to</span><br>
+        <%= date_select 'racer', 'member_to', 
+            :order => [:month, :day, :year],
+            :end_year => Date.today.year + 1, 
+            :include_blank => true %>
+        
+        <br>
+        <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11) if @racer.member? or @racer.renewed? %>
+        <span class="updatedon">
+        <%- if @racer.member? -%>
+          Current
+        <%- elsif @racer.renewed? -%>
+          Renewed
+        <%- else -%>
+          Not current
+        <%- end -%>
+        </span>
+      </td>
+      <td valign="top" class="field_label">Notes:</td>
+      <td valign="top" rowspan="2"colspan="3"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <%= check_box_tag 'card_printed' %> Print card<br/>
+        <%= check_box_tag 'mailing_label_printed' %> Print mailing label
+      </td>
+    </tr>
+    <tr>
+      <td class="field_label">Email:</td>
+      <td><%= text_field 'racer', 'email' %></td>
+      <td class="field_label">Street:</td>
+      <td><%= text_field 'racer', 'street' %></td>
+      <td class="field_label">Date of Birth:</td>
+      <td><%= date_select 'racer', 'date_of_birth', 
+          :order => [:month, :day, :year], 
+          :start_year => 1900, :end_year => Date.today.year, 
+          :include_blank => true %>
+      </td>
+    </tr>
+    <tr>
+      <td class="field_label">Home Phone:</td>
+      <td><%= text_field 'racer', 'home_phone' %></td>
+      <td class="field_label">City, ST, ZIP:</td>
+      <td><%= text_field 'racer', 'city', :size => 15 %>, <%= text_field 'racer', 'state', :size => 2 %> <%= text_field 'racer', 'zip', :size => 5 %></td>
+      <td class="field_label">Racing Age:</td>
+      <td>
+        <%= @racer.racing_age %>
+        <%= " (Master)" if @racer.master? -%>
+        <%= " (Junior)" if @racer.junior? -%>
+      </td>
+    </tr>
+    <tr>
+      <td class="field_label">Work Phone:</td>
+      <td><%= text_field 'racer', 'work_phone' %></td>
+      <td class="field_label">Occupation:</td>
+      <td><%= text_field 'racer', 'occupation' %></td>
+      <td class="field_label">Gender:</td>
+      <td><%= select('racer', 'gender', ['', 'F', 'M']) %></td>
+    </tr>
+    <tr>
+      <td class="field_label">Cell/Fax:</td>
+      <td><%= text_field 'racer', 'cell_fax' %></td>
+      <td class="field_label"></td>
+      <td></td>
+      <td class="field_label"></td>
+      <td></td>
+    </tr>
+    <tr valign="top">
+      <td colspan="2" id="numbers">
+        <%= render :partial => 'numbers', :locals => {:year => @year, :years => @years, :racer => @racer, :race_numbers => @race_numbers} %>
+      </td>
+      <td colspan="2">
+        <table cellspacing="0" cellpadding="0" class="base" id="inline">
+          <caption>Categories</caption>
+          <tr>
+            <td class="field_label">Cyclocross:</td>
+            <td><%= text_field 'racer', 'ccx_category', :size => 20 %></td>
+          </tr>
+          <tr>
+            <td class="field_label">Downhill:</td>
+            <td><%= text_field 'racer', 'dh_category', :size => 20 %></td>
+          </tr>
+          <tr>
+            <td class="field_label">Mountain Bike:</td>
+            <td><%= text_field 'racer', 'mtb_category', :size => 20 %></td>
+          </tr>
+          <tr>
+            <td class="field_label">Road:</td>
+            <td><%= text_field 'racer', 'road_category', :size => 20 %></td>
+          </tr>
+          <tr>
+            <td class="field_label">Track:</td>
+            <td><%= text_field 'racer', 'track_category', :size => 20 %></td>
+          </tr>
+        </table>
+      </td>
+      <td colspan="2">
+        <table cellspacing="0" cellpadding="0" class="base" id="inline">
+          <caption>Aliases</caption>
+          <%- for name_alias in @racer.aliases -%>
+          <tr id="alias_<%= name_alias.id %>">
+            <td><%= name_alias.name %></td>
+            <td>
+              <%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
+                   :url => { :action => "destroy_alias", :id => @racer.id, :alias_id => name_alias.id}) %>
+            </td>
+          </tr>
+          <%- end -%>
+          <%- if @racer.aliases.empty? %>
+          <tr>
+            <td colspan="2">None</td>
+          </tr>
+          <%- end -%>
+        </table>
+      </td>
+    </tr>
         <tr>
-	        <td colspan="6">
-	        	<%= link_to 'Move Results', :controller => '/admin/results', :action => 'racer', :id => @racer.id %>
-	        </td>
+          <td colspan="6">
+            <%= link_to 'Move Results', :controller => '/admin/results', :action => 'racer', :id => @racer.id %>
+          </td>
         </tr>
-		<tr class="buttons">
-			<td class="updatedon" colspan="2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></td>
-			<td class="right" colspan="4">
-				<%= link_to "Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete' %>
-				<%= submit_tag "Save", :id => "save" %>
-			</td>
-		</tr>
-	</table>
+    <tr class="buttons">
+      <td class="updatedon" colspan="2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></td>
+      <td class="right" colspan="4">
+        <%= link_to "Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete' %>
+        <%= submit_tag "Save", :id => "save" %>
+      </td>
+    </tr>
+  </table>
 </form>
 
 </div>

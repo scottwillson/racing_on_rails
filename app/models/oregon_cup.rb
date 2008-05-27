@@ -23,7 +23,7 @@ class OregonCup < Competition
     end
     event_ids = event_ids.join(', ')    
     
-    Result.find_by_sql(
+    results = Result.find_by_sql(
       %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
         LEFT OUTER JOIN races ON races.id = results.race_id 
           LEFT OUTER JOIN categories ON categories.id = races.category_id 
@@ -38,6 +38,15 @@ class OregonCup < Competition
          order by racer_id
        }
     )
+    remove_separate_women_1_2_results(results)
+    results
+  end
+  
+  # Unfortunate workaround for Rehearsal Road Race
+  def remove_separate_women_1_2_results(results)
+    results.delete_if do |result|
+      result.race.name == "Women 1/2" && result.race.standings.name = "Rehearsal Road Race"
+    end
   end
   
   def create_standings

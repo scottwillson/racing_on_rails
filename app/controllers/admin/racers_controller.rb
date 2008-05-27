@@ -5,6 +5,7 @@ class Admin::RacersController < Admin::RecordEditor
   include ActionView::Helpers::TextHelper
 
   edits :racer
+  in_place_edit_for :racer, "name"
   
   layout 'admin/application', :except => [:cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
@@ -30,6 +31,7 @@ class Admin::RacersController < Admin::RecordEditor
     
     @racers = []
     @name = params['name'] || session['racer_name'] || cookies[:racer_name] || ''
+    @name.strip!
     session['racer_name'] = @name
     cookies[:racer_name] = {:value => @name, :expires => Time.now + 36000}
     if @name.blank?
@@ -59,7 +61,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
     @racers = Racer.connection.select_all(%Q{
-      SELECT license, first_name, last_name, teams.name as team_name, racers.notes,
+      SELECT racers.id, license, first_name, last_name, teams.name as team_name, racers.notes,
              DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
              print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/%d/%Y') as date_of_birth, occupation, 
              street, racers.city, racers.state, zip, email, home_phone, work_phone, cell_fax, gender, 
@@ -94,9 +96,19 @@ class Admin::RacersController < Admin::RecordEditor
                       and xc_numbers.year = #{today.year} 
                       and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
       #{where_clause}
-      ORDER BY last_name, first_name
+      ORDER BY last_name, first_name, racers.id
     })
-
+    
+    last_racer = nil
+    @racers.reject! do |racer|
+      if last_racer && last_racer["id"] == racer["id"]
+        true
+      else
+        last_racer = racer
+        false
+      end
+    end
+    
     respond_to do |format|
       format.html
       format.ppl
@@ -156,7 +168,8 @@ class Admin::RacersController < Admin::RecordEditor
               :discipline_id => params[:discipline_id][index], 
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
-              :value => number_value
+              :value => number_value,
+              :updated_by => session[:user].name
             )
             unless race_number.errors.empty?
               @racer.errors.add_to_base(race_number.errors.full_messages)
@@ -193,10 +206,16 @@ class Admin::RacersController < Admin::RecordEditor
     begin
       expire_cache
       @racer = Racer.find(params[:id])
+      params[:racer][:updated_by] = session[:user].name
       @racer.update_attributes(params[:racer])
       if params[:number]
-        for id in params[:number].keys
-          RaceNumber.update(id, params[:number][id])
+        for number_id in params[:number].keys
+          number = RaceNumber.find(number_id)
+          number_params = params[:number][number_id]
+          if number.value != params[:number][number_id][:value]
+            number_params[:updated_by] = session[:user].name
+            RaceNumber.update(number_id, number_params)
+          end
         end
       end
       
@@ -207,7 +226,8 @@ class Admin::RacersController < Admin::RecordEditor
               :discipline_id => params[:discipline_id][index], 
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
-              :value => number_value
+              :value => number_value,
+              :updated_by => session[:user].name
             )
             unless race_number.errors.empty?
               @racer.errors.add_to_base(race_number.errors.full_messages)
@@ -334,52 +354,71 @@ class Admin::RacersController < Admin::RecordEditor
     new_name = params[:name]
     racer_id = params[:id]
     @racer = Racer.find(racer_id)
-    original_name = @racer.name
-    @racer.name = new_name
-    existing_racers = Racer.find_all_by_name(new_name) | Alias.find_all_racers_by_name(new_name)
-    existing_racers.reject! {|racer| racer == @racer}
-    if existing_racers.size > 0
-      return merge?(original_name, existing_racers, @racer)
-    end
-    
-    saved = @racer.save
-    if saved
-      expire_cache
-      attribute(@racer, 'name')
-    else
-      render(:partial => 'edit')
+    begin
+      original_name = @racer.name
+      @racer.name = new_name
+      existing_racers = Racer.find_all_by_name(new_name) | Alias.find_all_racers_by_name(new_name)
+      existing_racers.reject! {|racer| racer == @racer}
+      if existing_racers.size > 0
+        return merge?(original_name, existing_racers, @racer)
+      end
+
+      if @racer.save
+        expire_cache
+        render :update do |page| page.replace_html("racer_#{@racer.id}_name", :partial => 'racer_name', :locals => { :racer => @racer }) end
+      else
+        render :update do |page|
+          page.replace_html("racer_#{@racer.id}_name", :partial => 'edit', :locals => { :racer => @racer })
+          @racer.errors.full_messages.each do |message|
+            page.insert_html(:after, "racer_#{@racer.id}_row", :partial => 'error', :locals => { :error => message })
+          end
+        end
+      end
+    rescue Exception => e
+      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+      render :update do |page|
+        if @racer
+          page.insert_html(:after, "racer_#{@racer.id}_row", :partial => 'error', :locals => { :error => e })
+        else
+          page.alert(e.message)
+        end
+      end
     end
   end
   
   # Inline
   def update_team_name
     @racer = Racer.find(params[:id])
-    new_name = params[:team_name]
-    @racer.team_name = new_name
-    saved = @racer.save
     begin
-      if saved
+      new_name = params[:team_name]
+      @racer.team_name = new_name
+      if @racer.save
         expire_cache
-        render(:partial => 'team', :locals => {:racer => @racer})
+        render :update do |page| page.replace_html("racer_#{@racer.id}_team_name", :partial => 'team', :locals => { :racer => @racer }) end
       else
-        render(:partial => 'edit_team_name', :locals => {:racer => @racer})
+        render :update do |page|
+          page.replace_html("racer_#{@racer.id}_team_name", :partial => 'edit_team_name', :locals => { :racer => @racer })
+          @racer.errors.full_messages.each do |message|
+            page.insert_html(:after, "racer_#{@racer.id}_row", :partial => 'error', :locals => { :error => message })
+          end
+        end
       end
     rescue Exception => e
-      stack_trace = e.backtrace.join("\n")
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("#{e}\n#{stack_trace}")
-      @racer.errors.add('team_name', e)
-      render(:partial => 'edit_team_name', :locals => {:racer => @racer})
+      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+      render :update do |page|
+        if @racer
+          page.insert_html(:after, "racer_#{@racer.id}_row", :partial => 'error', :locals => { :error => e })
+        else
+          page.alert(e.message)
+        end
+      end
     end
   end
   
   # Cancel inline editing
   def cancel
-    if params[:id]
-      @racer = Racer.find(params[:id])
-      attribute(@racer, 'name')
-    else
-      render(:text => '<tr><td colspan=4></td></tr>')
-    end
+    @racer = Racer.find(params[:id])
+    render(:partial => 'racer_name', :locals => {:racer => @racer})
   end
   
   # Cancel inline editing
@@ -402,7 +441,9 @@ class Admin::RacersController < Admin::RecordEditor
       logger.error("#{error}\n#{stack_trace}")
       message = "Could not delete #{@racer.name}"
       render :update do |page|
-        page.replace_html("message_#{@racer.id}", render(:partial => '/admin/error', :locals => {:message => message, :error => error }))
+        page.replace_html("warn", message)
+        page.hide('notice')
+        page.show('warn')
       end
     end
   end
@@ -411,16 +452,26 @@ class Admin::RacersController < Admin::RecordEditor
     @racer = racer
     @existing_racers = existing_racers
     @original_name = original_name
-    render(:partial => 'merge_confirm')
+    render :update do |page| 
+      page.replace_html("racer_#{@racer.id}_name", :partial => 'merge_confirm', :locals => { :racer => @racer })
+    end
   end
   
   def merge
-    racer_to_merge_id = params[:id].gsub('racer_', '')
-    racer_to_merge = Racer.find(racer_to_merge_id)
-    @merged_racer_name = racer_to_merge.name
-    @existing_racer = Racer.find(params[:target_id])
-    @existing_racer.merge(racer_to_merge)
-    expire_cache
+    begin
+      racer_to_merge_id = params[:id].gsub('racer_', '')
+      @racer_to_merge = Racer.find(racer_to_merge_id)
+      @merged_racer_name = @racer_to_merge.name
+      @existing_racer = Racer.find(params[:target_id])
+      @existing_racer.merge(@racer_to_merge)
+      expire_cache
+    rescue Exception => e
+      render :update do |page|
+        page.visual_effect(:highlight, "racer_#{@existing_racer.id}_row", :startcolor => "#ff0000", :endcolor => "#FFDE14") if @existing_racer
+        page.alert("Could not merge racers.\n#{e}")
+      end
+      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+    end
   end
   
   def number_year_changed
@@ -491,12 +542,12 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def rescue_action_in_public(exception)
-		headers.delete("Content-Disposition")
+    headers.delete("Content-Disposition")
     super
   end
 
   def rescue_action_locally(exception)
-		headers.delete("Content-Disposition")
+    headers.delete("Content-Disposition")
     super
   end
   

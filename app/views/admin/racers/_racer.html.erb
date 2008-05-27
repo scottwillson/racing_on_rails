@@ -1,41 +1,42 @@
-<tr valign="top" id="racer_<%= racer.id %>_row" class="<%= cycle("even", "odd") %>">
-	<td><%= image_tag('/images/icons/person.gif', 
-					  :height => 16, :width => 16, :border => 0, :align => "absbottom", 
-					  :id => "racer_#{racer.id}") %></td>
-	<td nowrap>
-		<%= attribute(racer, 'name') %>
-		<span id="message_<%= racer.id %>" ></span>
-	</td>
-	<td nowrap>
-		<%= render(:partial => 'team', :locals => { :racer => racer }) %>
-	</td>
-	<td width="200">
-		<%= render(:partial => 'aliases', :locals => { :racer => racer }) %>
-	</td>
-	<td align="right">
-		<%= racer.road_number %>
-	</td>
-	<td align="right">
-		<%= racer.xc_number %>
-	</td>
-	<td align="right">
-		<%= racer.dh_number %>
-	</td>
-	<td align="right">
-		<%= racer.ccx_number %>
-	</td>
-	<td align="center">
-		<%= attribute(racer, 'member') %>
-	</td>
-	<td align="right" style="white-space: nowrap;">
-    	<%= link_to 'Results', :controller => '/admin/results', :action => 'racer', :id => racer.id %>
-		|
-		<%= link_to 'Edit', :action => 'show', :id => racer.id %>
-	</td>
- 	<td><%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
-		:url => admin_racer_url(racer), :method => :delete,
-		:confirm => "Really delete #{racer.name}?"
-        %>
+<tr class="<%= cycle("even", "odd") %>" id="racer_<%= racer.id %>_row">
+  <td class="name">
+    <%- @racer = racer -%>
+    <div class="editable" id="racer_<%= racer.id %>" style="background-image: url(/images/icons/person.gif); background-repeat: no-repeat;">
+      <span id="racer_<%= racer.id %>_name" style="padding-left: 24px;"><%= render(:partial => 'racer_name', :locals => { :racer => racer }) %></span>
+    </div>
+  </td>
+  <td class="team">
+    <div class="editable" id="racer_<%= racer.id %>_team_name">
+      <%= render(:partial => 'team', :locals => { :racer => racer }) %>
+    </div>
+  </td>
+  <td class="aliases">
+    <%= render(:partial => 'aliases', :locals => { :racer => racer }) %>
+  </td>
+  <td class="right">
+    <%= racer.road_number %>
+  </td>
+  <td class="right">
+    <%= racer.xc_number %>
+  </td>
+  <td class="right">
+    <%= racer.dh_number %>
+  </td>
+  <td class="right">
+    <%= racer.ccx_number %>
+  </td>
+  <td class="member">
+      <%= check_box_tag "racer_member_#{racer.id}", "1", racer.member?, 
+              :onchange => "new Ajax.Request('/admin/racers/toggle_attribute/#{racer.id}?attribute=member', 
+                            {asynchronous:true, evalScripts:true})" %>
+  </td>
+  <td class="right" style="white-space: nowrap;">
+      <%= link_to 'Results', :controller => '/admin/results', :action => 'racer', :id => racer.id %>
+    |
+    <%= link_to 'Edit', :action => 'show', :id => racer.id %>
+  </td>
+   <td class="icon"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif', :height => 16, :width => 16),
+                          { :url => admin_racer_url(racer), :method => :delete, :confirm => "Really delete #{racer.name}?" },
+                          { :class => "image" } %>
     </td>
 </tr>
-
