@@ -129,6 +129,7 @@ class RacersFile < GridFile
         for row in rows
           row_hash = row.to_hash
           row_hash[:year] = year if year
+          row_hash[:updated_by] = "Membership import"          
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
           
@@ -141,7 +142,8 @@ class RacersFile < GridFile
           if racers.empty?
             delete_unwanted_member_from(row_hash, racer)
             add_print_card_and_label(row_hash)
-            racer = Racer.create!(row_hash)
+            racer = Racer.new(row_hash)
+            racer.save!
             @created = @created + 1
           elsif racers.size == 1
             # Don't want to overwrite existing categories

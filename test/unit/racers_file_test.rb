@@ -117,7 +117,7 @@ Downhill/Cross Country: Downhill}
     number = RaceNumber.find(:first, :conditions => ['racer_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
-			
+
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
     racers = RacersFile.new(file).import(true)
     
@@ -139,6 +139,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('503-768-3822', quinn_jackson.home_phone, 'Quinn Jackson phone')
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
     assert_equal('120', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
+    number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
+    assert_equal("Membership import", number.updated_by, "updated_by")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     
