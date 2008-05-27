@@ -131,6 +131,7 @@ class ResultsFile < GridFile
         elsif has_results?(row_hash)
           if race
             result = race.results.build(row_hash)
+            result.updated_by = @event.name
             if race.nil? and result.place and result.place.to_i == 1
               race = standings.races.create(:category => category)
               result.race = race
@@ -149,12 +150,12 @@ class ResultsFile < GridFile
             end
         
             if result.place.to_i > 0
-        			result.place = result.place
-        		elsif !result.place.blank?
-        			result.place = result.place.upcase
-        		elsif !previous_place.blank? && previous_place.to_i == 0
-        		  result.place = previous_place
-        		end
+              result.place = result.place
+            elsif !result.place.blank?
+              result.place = result.place.upcase
+            elsif !previous_place.blank? && previous_place.to_i == 0
+              result.place = previous_place
+            end
             previous_place = result.place
 
             result.cleanup

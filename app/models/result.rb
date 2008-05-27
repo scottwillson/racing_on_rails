@@ -32,6 +32,8 @@ class Result < ActiveRecord::Base
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
+  attr_accessor :updated_by
+  
   before_validation :find_associated_records
   before_save :save_racer
   after_save :update_racer_number
@@ -157,6 +159,7 @@ class Result < ActiveRecord::Base
   def update_racer_number
     discipline = Discipline[event.discipline]
     if self.racer and !number.blank? and !RaceNumber.rental?(number, discipline)
+      self.racer.updated_by = self.updated_by
       event.number_issuer unless event.number_issuer
       self.racer.add_number(number, discipline, event.number_issuer, event.date.year)
     end
