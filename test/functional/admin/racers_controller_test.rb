@@ -601,6 +601,30 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal_dates('2004-12-31', knowlsons.first.member_to, 'member_to after update')
   end
   
+  def test_create_with_duplicate_road_number
+    assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
+    @request.session[:user] = users(:candi)
+    
+    post(:create, {
+      "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
+        "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
+        "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
+        "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
+        "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
+        "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
+      "number_issuer_id"=>["2", "2"], "number_value"=>["104", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2004',
+      "commit"=>"Save"})
+    
+    assert_response(:success)
+    assert_not_nil(assigns['racer'], "Should assign racer")
+    assert(!assigns['racer'].errors.empty?, "Racer should have errors")
+    
+    knowlson = Racer.find(:first, :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
+    assert_not_nil(knowlson, 'Knowlson should not have be created')
+    race_numbers = knowlson.race_numbers
+    assert_equal(1, race_numbers.size, 'Knowlson race numbers')
+  end
+    
   def test_update
     molly = racers(:molly)
     put(:update, {"commit"=>"Save", 

@@ -188,6 +188,7 @@ class Admin::RacersController < Admin::RecordEditor
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || Date.today.year
+    @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     render(:template => 'admin/racers/show')
   end
   
@@ -439,7 +440,7 @@ class Admin::RacersController < Admin::RecordEditor
     rescue  Exception => error
       stack_trace = error.backtrace.join("\n")
       logger.error("#{error}\n#{stack_trace}")
-      message = "Could not delete #{@racer.name}"
+      message = "Could not delete #{@racer.name}: #{error}"
       render :update do |page|
         page.replace_html("warn", message)
         page.hide('notice')
