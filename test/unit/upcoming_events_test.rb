@@ -18,26 +18,26 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = true
       
       # Tuesday
-      may_day_rr =      SingleDayEvent.create!(:date => Date.new(2008, 5, 27), :name => 'May Day Road Race', :discipline => 'Road', :flyer_approved => true)
+      may_day_rr =      SingleDayEvent.create!(:date => Date.new(2007, 5, 22), :name => 'May Day Road Race', :discipline => 'Road', :flyer_approved => true)
       # Wednesday
-      lucky_lab_tt =    SingleDayEvent.create!(:date => Date.new(2008, 5, 28), :name => 'Lucky Lab Road Race', :discipline => 'Time Trial', :flyer_approved => true)
-      not_obra =        SingleDayEvent.create!(:date => Date.new(2008, 5, 28), :name => 'USA RR', :discipline => 'Road', :sanctioned_by => 'USA Cycling', :flyer_approved => true)
+      lucky_lab_tt =    SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'Lucky Lab Road Race', :discipline => 'Time Trial', :flyer_approved => true)
+      not_obra =        SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'USA RR', :discipline => 'Road', :sanctioned_by => 'USA Cycling', :flyer_approved => true)
       # Sunday of next full week
-      woodland_rr =     SingleDayEvent.create!(:date => Date.new(2008, 6, 8), :name => 'Woodland Road Race', :discipline => 'Road', :flyer_approved => true)
-      tst_rr =          SingleDayEvent.create!(:date => Date.new(2008, 6, 8), :name => 'Tahuya-Seabeck-Tahuya', :discipline => 'Road', :flyer_approved => true)
+      woodland_rr =     SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Woodland Road Race', :discipline => 'Road', :flyer_approved => true)
+      tst_rr =          SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Tahuya-Seabeck-Tahuya', :discipline => 'Road', :flyer_approved => true)
       # Monday after that
-      not_upcoming_rr = SingleDayEvent.create!(:date => Date.new(2008, 6, 9), :name => 'Not Upcoming Road Race', :discipline => 'Road', :flyer_approved => true)
-      chain_breaker   = SingleDayEvent.create!(:date => Date.new(2008, 6, 9), :name => 'Chainbreaker', :discipline => 'Mountain Bike', :flyer_approved => true)
+      not_upcoming_rr = SingleDayEvent.create!(:date => Date.new(2007, 6, 4), :name => 'Not Upcoming Road Race', :discipline => 'Road', :flyer_approved => true)
+      chain_breaker   = SingleDayEvent.create!(:date => Date.new(2007, 6, 4), :name => 'Chainbreaker', :discipline => 'Mountain Bike', :flyer_approved => true)
       # Monday before all other races (to test ordering)
-      saltzman_hc =     SingleDayEvent.create!(:date => Date.new(2008, 5, 26), :name => 'Saltzman Hillclimb', :discipline => 'Road', :flyer_approved => true)
+      saltzman_hc =     SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Saltzman Hillclimb', :discipline => 'Road', :flyer_approved => true)
     
-      SingleDayEvent.create!(:date => Date.new(2008, 5, 26), :name => 'Cancelled', :discipline => 'Road', :flyer_approved => true, :cancelled => true)
+      SingleDayEvent.create!(:date => Date.new(2007, 5, 21), :name => 'Cancelled', :discipline => 'Road', :flyer_approved => true, :cancelled => true)
     
       # Weekly Series
       pir = WeeklySeries.create!(
-        :date => Date.new(2008, 4, 1), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
+        :date => Date.new(2007, 4, 3), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
       )
-      Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) {|date|
+      Date.new(2007, 4, 3).step(Date.new(2007, 10, 23), 7) {|date|
         individual_pir = pir.events.create(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
         assert("PIR valid?", individual_pir.valid?)
         assert("PIR new?", !individual_pir.new_record?)
@@ -53,65 +53,65 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wayback
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 11))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 6))
       assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
       assert_equal_events([pir], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
     
       # Sunday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 25))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 20))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Monday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 26))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 21))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Tuesday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 27))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 22))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
-      upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 1, 0, 0))
+      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22, 1, 0, 0))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
-      upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27, 23, 59, 0))
+      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22, 23, 59, 0))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wednesday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 28))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 23))
       assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Sunday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 1))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 29))
       assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Monday
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 2))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 30))
       assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Monday after all events
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 06, 10))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 06, 5))
       assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Big range
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 5, 26), 16)
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 21), 16)
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     
       # Small range
-      upcoming_events = UpcomingEvents.new(DateTime.new(2008, 05, 27), 1)
+      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22), 1)
       assert_equal_events([may_day_rr, lucky_lab_tt], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     
       # Include ALL events regardless of sanctioned_by
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
-      upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 25))
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 20))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     ensure
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
@@ -297,9 +297,9 @@ class UpcomingEventsTest < ActiveSupport::TestCase
   end
   
   def test_downhill_events
-    super_d = SingleDayEvent.create!(:date => Date.new(2008, 5, 27), :name => 'Super D', :discipline => 'Downhill', :flyer_approved => true)
+    super_d = SingleDayEvent.create!(:date => Date.new(2007, 5, 27), :name => 'Super D', :discipline => 'Downhill', :flyer_approved => true)
 
-    upcoming_events = UpcomingEvents.new(Date.new(2008, 05, 26))
+    upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 26))
     assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
     assert_equal_events([super_d], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
   end
