@@ -1,8 +1,12 @@
 body {
-	color: black;
-	font: 11px Verdana, sans-serif;
 	text-align: center;
 	min-width: 600px;
+	font-size: 12px;
+	line-height: 1.33em;
+	font-family: Verdana, sans-serif;
+	text-align: left;
+	color: black;
+	overflow: auto;
 }
 
 div.frame {
@@ -113,7 +117,7 @@ div.nav#top {
 
 div.nav#bottom {
 	text-align: left;
-	border: 0px none; !important;
+	border: 0px none !important;
 	height: 23px;
 	background-image: url(/images/backgrounds/bar_low.gif);
 	border-top: 1px solid #6D6D6D;
@@ -125,6 +129,7 @@ div.nav h1 {
 	margin-left: 10px;
 	padding-top: 6px;
 	text-align: left;
+	line-height: 24px;
 }
 
 div.nav h1 a {
@@ -150,6 +155,58 @@ div.breadcrumb a {
 	border-bottom: none;
 }
 
+form {
+  margin: 0px;
+  padding: 0px;
+}
+
+form td {
+  padding-top: 0px;
+}
+
+input {
+  font-family: "MS Shell Dlg", Verdana, Helvetica, sans-serif;
+  font-size: 13.333px;
+  line-height: normal;
+}
+
+textarea
+{
+  padding-top: 2px;
+}
+
+td input
+{
+  margin: 0px;
+  padding-top: 2px;
+  padding-bottom: 0px;
+  padding-left: 2px;
+  margin-right: 8px;
+}
+
+table
+{
+	border: 0px;
+	border-style: none;
+	padding: 0px;
+	margin: 0px;
+	border-collapse: collapse; 
+	border-spacing: 0px 0px; 
+	empty-cells: show;
+	display: inline-table;
+  margin-left: auto; 
+  margin-right: auto
+}
+
+td
+{
+	font-family: Verdana, sans-serif;
+	text-align: left;
+	vertical-align: top;
+	color: black;
+	padding: 0px;
+}
+
 table#left_nav {
 	font-size: 8pt;
 }
@@ -170,10 +227,14 @@ table#left_nav td.icon_padding {
 
 table.base
 {
+	width: 100%;
 	border-style: solid;
 	border-width: 1px;
 	border-color: #B3B3B3;
-	margin: 0px;
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-bottom: 4px;
+	margin-bottom: 16px;
 }
 
 table.base caption
@@ -191,8 +252,8 @@ table.base caption
 	line-height: 21px;
 	height: 21px;
 	padding: 0px 0px 0px 8px;
-/*	Safari only
-	margin-right: -2px;*/
+/*	Safari only */
+/*  margin-right: -17px; */
 }
 
 table.base th.caption
@@ -284,6 +345,11 @@ td.day_from_other_month div.number
 {
 	font-style: italic;
 	text-align: left;
+}
+
+table.base#login
+{
+	width: 300px;
 }
 
 tr.discipline_upcoming_events {
@@ -379,4 +445,227 @@ tr.buttons td.right {
 	font-style: italic;
 	text-align: center;
 	width: 160px;
+}
+.message
+{
+	width: 400px;
+	font-size: 8pt;
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #666666;
+	white-space: normal;
+	text-align: left;
+	padding-left: 16px;
+	padding-right: 8px;
+	padding-top: 8px;
+	padding-bottom: 4px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#notice
+{
+	background-image: url(/images/icons/confirmed.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 9px;
+}
+
+#warn
+{
+	color: red;
+	background-image: url(/images/icons/warn.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 9px;
+}
+
+.inline_error
+{
+	padding-top: 4px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 4px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	font-size: 8pt;
+	font-family: Verdana, Helvetica, sans-serif;
+	color: #C6413E;
+	white-space: normal;
+}
+.fieldWithErrors
+{
+	border-color: red;
+}
+
+#errorExplanation
+{
+	width: 400px;
+	border: 2px solid red;
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+#errorExplanation h2
+{
+	text-align: left;
+	font-weight: bold;
+	padding: 5px 5px 5px 15px;
+	font-size: 12px;
+	margin: -7px;
+	background-color: #c00;
+	color: #fff;
+}
+
+#errorExplanation p
+{
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#errorExplanation ul li
+{
+	font-size: 12px;
+	list-style: square;
+}
+
+.cancelled
+{
+	text-decoration: line-through;
+}
+
+div.categories {
+	width: 350px;
+	border: 1px solid rgb(190, 190, 190);
+	padding-left: 4px;
+	padding-right: 4px;
+	min-height: 200px;
+	margin-right: 24px;
+}
+
+td.disclosure
+{
+	width: 20px;
+	padding-right: 8px;
+	text-align: right;
+	float: right;
+}
+
+.category
+{
+	cursor: move;
+}
+
+table.full_width {
+	width: 100%;
+}
+
+table.half_width {
+	width: 48%;
+}
+
+td#left_racer {
+	padding-right: 16px;
+}
+
+.hovering, table.base tr.hovering {
+  background-color: #D0FA30;
+}
+
+table.base#racers {
+  margin-bottom: 0px;
+}
+
+table.base#racers th.name {
+ width: 200px;
+ padding-left: 40px;
+}
+
+table.base#racers td.name {
+  width: 240px;
+  white-space: nowrap;
+}
+
+table.base#racers td div.editable {
+  white-space: nowrap;
+}
+
+table.base#racers td div.editable input {
+  position: relative;
+  top: -4px;
+  width: 150px;
+}
+
+table.base#racers td div.editable input.button {
+  top: 0px;
+  width: auto;
+}
+
+table.base#racers th.team, table.base#racers td.team {
+  width: 200px;
+  margin: 0px;
+}
+
+table.base#racers th.aliases, table.base#racers td.aliases {
+  width: 200px;
+}
+
+table.base#racers img.icon {
+  float: left;
+  position: relative;
+  top: -2px;
+  padding-left: 4px;
+  padding-right: 8px;
+}
+
+table.base#racers td.icon a:hover {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+table.base#racers td.icon  {
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 0px;
+}
+
+table.base#racers td.icon img {
+  border: 0px;
+}
+
+table.base#racers td img.cancel {
+  width: 16px;
+  height: 16px;
+  margin-left: -6px;
+}
+
+table.base#racers td.name a.cancel {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+table.base#racers td.member {
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+table.base tr.error td {
+  color: rgb(250, 50, 50);
+  font-weight: bold;
+}
+
+table.base tr.error td img.icon {
+  padding-top: 1px;
+}
+
+form#export_form {
+  padding-top: 12px;
+  margin: 0px;
 }
