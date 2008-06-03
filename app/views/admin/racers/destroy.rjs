@@ -1,5 +1,4 @@
 page.visual_effect(:puff, "racer_#{@racer.id}_row", :duration => 2)
-page.replace_html(
-  'message', 
-  "#{image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') } Deleted #{@racer.name}"
-)
+page.replace_html('notice', "Deleted #{@racer.name}")
+page.show('notice')
+page.hide('warn')
