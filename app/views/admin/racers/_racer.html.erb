@@ -37,6 +37,6 @@
   </td>
    <td class="icon"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif', :height => 16, :width => 16),
                           { :url => admin_racer_url(racer), :method => :delete, :confirm => "Really delete #{racer.name}?" },
-                          { :class => "image" } %>
+                          { :class => "image", :id => "delete_racer_#{racer.id}" } %>
     </td>
 </tr>

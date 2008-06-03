@@ -28,8 +28,9 @@
 					<%= link_to @event.name, :id => @event.to_param, :standings_id => nil, :race_id => nil %>
 					<span style="padding-left: 15px;">	
 						<%= link_to(image_tag('/images/icons/web_page.gif', :title => 'View public results web page', :alt => 'View public results web page'), 
-							 :controller => '/results', :action => 'event', :year => @event.date.year, 
-							 :discipline => @event.discipline, :id => @event.id) unless @event.standings.empty? %>
+							 {:controller => '/results', :action => 'event', :year => @event.date.year, 
+							 :discipline => @event.discipline, :id => @event.id},
+							 {:id => "delete_event_#{@event.id}"}) unless @event.standings.empty? %>
 					</span>
 				</caption>
 				<tr>

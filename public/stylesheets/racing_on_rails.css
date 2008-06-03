@@ -117,8 +117,8 @@ div.nav#top {
 
 div.nav#bottom {
 	text-align: left;
-	border: 0px none !important;
 	height: 23px;
+	line-height: 23px;
 	background-image: url(/images/backgrounds/bar_low.gif);
 	border-top: 1px solid #6D6D6D;
 }
@@ -146,7 +146,7 @@ div.breadcrumb {
 }
 
 div.nav#bottom div.breadcrumb {
-	margin-top: 7px;
+	margin-top: 0px;
 }
 
 div.breadcrumb a {
@@ -365,10 +365,9 @@ tr.discipline_upcoming_events td.info {
 	padding-right:  24px;
 }
 
-table.base#inline
+table.inline
 {
-	border-left: 1px solid #B3B3B3;
-	border-right: 1px solid #B3B3B3;
+	border: 1px solid #B3B3B3;
 	width: 100%;
 }
 
@@ -460,6 +459,8 @@ tr.buttons td.right {
 	padding-bottom: 4px;
   margin-top: 0px;
   margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #notice

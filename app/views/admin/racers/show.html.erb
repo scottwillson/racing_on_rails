@@ -118,7 +118,7 @@
         <%= render :partial => 'numbers', :locals => {:year => @year, :years => @years, :racer => @racer, :race_numbers => @race_numbers} %>
       </td>
       <td colspan="2">
-        <table cellspacing="0" cellpadding="0" class="base" id="inline">
+        <table class="inline">
           <caption>Categories</caption>
           <tr>
             <td class="field_label">Cyclocross:</td>
@@ -143,7 +143,7 @@
         </table>
       </td>
       <td colspan="2">
-        <table cellspacing="0" cellpadding="0" class="base" id="inline">
+        <table class="inline">
           <caption>Aliases</caption>
           <%- for name_alias in @racer.aliases -%>
           <tr id="alias_<%= name_alias.id %>">
