@@ -755,6 +755,14 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal(racers_before_import, Racer.count, 'Should not have added racers')
   end
   
+  def test_preview_import_with_no_file
+    post(:preview_import, :commit => 'Import', :racers_file => "")
+  
+    assert(flash.has_key?(:warn), "should have flash[:warn]")
+    assert_response(:redirect)
+    assert_redirected_to(:action => 'index')
+  end
+  
   def test_import
     existing_duplicate = Duplicate.new(:new_attributes => Racer.new(:name => 'Erik Tonkin'))
     existing_duplicate.racers << racers(:tonkin)
@@ -831,6 +839,14 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
     assert(racers_before_import < Racer.count, 'Should have added racers')
+  end
+  
+  def test_import_with_no_file
+    post(:import, :commit => 'Import', :update_membership => 'true')
+  
+    assert(flash.has_key?(:warn), "should have flash[:warn]")
+    assert_response(:redirect)
+    assert_redirected_to(:action => 'index')
   end
   
   def test_duplicates

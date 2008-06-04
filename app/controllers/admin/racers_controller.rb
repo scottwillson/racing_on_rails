@@ -259,10 +259,14 @@ class Admin::RacersController < Admin::RecordEditor
   
   # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
   def preview_import
-    uploaded_file = params[:racers_file]
-    path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
+    if params[:racers_file].blank?
+      flash[:warn] = "Choose a file of racers to import first"
+      return redirect_to(:action => :index) 
+    end
+
+    path = "#{Dir.tmpdir}/#{params[:racers_file].original_filename}"
     File.open(path, File::CREAT|File::WRONLY) do |f|
-      f.print(uploaded_file.read)
+      f.print(params[:racers_file].read)
     end
 
     temp_file = File.new(path)
@@ -284,6 +288,7 @@ class Admin::RacersController < Admin::RecordEditor
       begin
         Duplicate.delete_all
         path = session[:racers_file_path]
+        raise "No import file" if path.blank?
         racers_file = RacersFile.new(File.new(path))
         racers_file.import(params[:update_membership], params[:year])
         flash[:notice] = "Imported #{pluralize(racers_file.created, 'new racer')} and updated #{pluralize(racers_file.updated, 'existing racer')}"
@@ -299,13 +304,7 @@ class Admin::RacersController < Admin::RecordEditor
         stack_trace = e.backtrace.join("\n")
         logger.error("#{e}\n#{stack_trace}")
         flash[:warn] = e.to_s
-        if path
-          temp_file = File.new(path)
-          @racers_file = RacersFile.new(temp_file)
-        end
-        assign_years
-        @year = params[:year] if params[:year]
-        render(:template => 'admin/racers/preview_import')
+        redirect_to(:action => "index")
       end
 
     else
