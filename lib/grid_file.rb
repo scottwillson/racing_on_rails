@@ -5,8 +5,6 @@ require 'parseexcel/parseexcel'
 
 class GridFile < Grid
   
-  TIME_FORMATS = [0, 18, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 33, 34, 35, 39, 40, 43, 44, 49, 50, 72, 76] unless defined?(TIME_FORMATS)
-
   def GridFile.read_excel(file)
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
     if File::Stat.new(file.path).size == 0
@@ -72,7 +70,7 @@ class GridFile < Grid
         end
       end
       
-      is_time = TIME_FORMATS.include?(cell.format_no) && (cell.to_s[/^\d*:\d+\.?\d?$/] || cell.to_s[/^\d*:?\d+\.\d+$/])
+      is_time = (cell.format_no == 0 || cell.format_no >= 18) && (cell.to_s[/^\d*:\d+\.?\d?$/] || cell.to_s[/^\d*:?\d+\.\d+$/])
       if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
         if cell_f == cell_i
           return (cell_i * 86400).to_s
