@@ -3,7 +3,7 @@
 class RacingAssociation
 
   attr_accessor :name, :gender_specific_numbers, :rental_numbers, :short_name, :show_license, :state
-  attr_accessor :show_only_association_sanctioned_races_on_calendar
+  attr_accessor :show_only_association_sanctioned_races_on_calendar, :flyers_in_new_window
   
   def initialize
     @show_license = true
@@ -12,6 +12,10 @@ class RacingAssociation
 
   def gender_specific_numbers?
     @gender_specific_numbers
+  end
+  
+  def flyers_in_new_window?
+    @flyers_in_new_window
   end
   
   def to_s

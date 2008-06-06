@@ -13,7 +13,7 @@
 
 <%- for month in @schedule.months -%>
 <div align="center">
-	<table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">
+	<table class="base" id="calendar">
 		<caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
 		<thead>
 			<tr>
@@ -40,7 +40,7 @@
 					<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
 				<%- else -%>
 		            <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-					    <a href="<%= event.flyer -%>"><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+					    <a href="<%= event.flyer -%>" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
 		          MTB
 		            <%- end -%></a>
 							  <%- else -%>

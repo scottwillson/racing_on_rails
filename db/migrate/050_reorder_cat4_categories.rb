@@ -1,6 +1,6 @@
 class ReorderCat4Categories < ActiveRecord::Migration
   def self.up
-    return unless ASSOCIATION.short_name = "OBRA"
+    return unless ASSOCIATION.short_name == "OBRA"
     
     Category.transaction do 
       obra = Category.find_by_name("OBRA")
