@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 44) do
+ActiveRecord::Schema.define(:version => 51) do
 
   create_table "aliases", :force => true do |t|
     t.string   "alias"
@@ -123,6 +123,8 @@ ActiveRecord::Schema.define(:version => 44) do
     t.float    "post_event_fees"
     t.float    "flyer_ad_fee"
     t.integer  "cat4_womens_race_series_id"
+    t.string   "velodrome"
+    t.string   "prize_list"
   end
 
   add_index "events", ["date"], :name => "idx_date"
@@ -218,6 +220,7 @@ ActiveRecord::Schema.define(:version => 44) do
     t.integer  "lock_version",     :default => 0,  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "updated_by"
   end
 
   add_index "race_numbers", ["racer_id"], :name => "racer_id"
@@ -254,6 +257,9 @@ ActiveRecord::Schema.define(:version => 44) do
     t.date     "member_to"
     t.boolean  "print_card",                         :default => false
     t.boolean  "print_mailing_label",                :default => false
+    t.boolean  "ccx_only",                           :default => false, :null => false
+    t.string   "updated_by"
+    t.string   "bmx_category"
   end
 
   add_index "racers", ["last_name"], :name => "idx_last_name"

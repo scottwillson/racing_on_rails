@@ -2,12 +2,17 @@
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
 
-  attr_accessor :name, :gender_specific_numbers, :rental_numbers, :short_name, :show_license, :state
-  attr_accessor :show_only_association_sanctioned_races_on_calendar, :flyers_in_new_window
+  attr_accessor :name, :short_name, :state
+  attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers
+  attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :flyers_in_new_window
   
   def initialize
     @show_license = true
     @show_only_association_sanctioned_races_on_calendar = true
+  end
+  
+  def bmx_numbers?
+    @bmx_numbers
   end
 
   def gender_specific_numbers?

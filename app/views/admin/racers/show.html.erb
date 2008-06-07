@@ -120,6 +120,12 @@
       <td colspan="2">
         <table class="inline">
           <caption>Categories</caption>
+          <%- if ASSOCIATION.bmx_numbers? -%>
+          <tr>
+            <td class="field_label">BMX:</td>
+            <td><%= text_field 'racer', 'bmx_category', :size => 20 %></td>
+          </tr>
+          <%- end -%>
           <tr>
             <td class="field_label">Cyclocross:</td>
             <td><%= text_field 'racer', 'ccx_category', :size => 20 %></td>

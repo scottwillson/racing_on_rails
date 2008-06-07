@@ -21,7 +21,7 @@ class Racer < ActiveRecord::Base
   
   attr_accessor :year
   
-  CATEGORY_FIELDS = [:ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
+  CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
 
   # Does not consider Aliases
   def Racer.find_all_by_name(name)
@@ -326,6 +326,10 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def bmx_number(reload = false)
+    number(Discipline[:bmx], reload)
+  end
+  
   def ccx_number(reload = false)
     number(Discipline[:cyclocross], reload)
   end
@@ -348,6 +352,10 @@ class Racer < ActiveRecord::Base
   
   def xc_number(reload = false)
     number(Discipline[:mountain_bike], reload)
+  end
+  
+  def bmx_number=(value)
+    add_number(value, Discipline[:bmx])
   end
   
   def ccx_number=(value)

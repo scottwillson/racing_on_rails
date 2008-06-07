@@ -61,7 +61,6 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(race_number.valid?, "No discipline: #{race_number.errors.full_messages}")
     race_number.save!
   end
-  
 
   def test_create_cyclocross
     alice = racers(:alice)
@@ -154,6 +153,16 @@ class RaceNumberTest < ActiveSupport::TestCase
     ensure
       ASSOCIATION.rental_numbers = original_rental_numbers
     end
+  end
+  
+  def test_create_bmx
+    alice = racers(:alice)
+    elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
+    race_number = RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:bmx))
+    assert_equal(alice, race_number.racer, 'New number racer')
+    assert_equal(2001, race_number.year, 'New number year')
+    assert_equal(elkhorn, race_number.number_issuer, 'New number_issuer racer')
+    assert_equal(disciplines(:bmx), race_number.discipline, 'New number discipline')
   end
   
   def test_gender

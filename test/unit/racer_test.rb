@@ -453,6 +453,13 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal(28, racer.racing_age, 'racing_age')
   end
   
+  def test_bmx_category
+    racer = racers(:weaver)
+    assert_nil(racer.bmx_category, "BMX category")
+    racer.bmx_category = "H100"
+    assert_equal("H100", racer.bmx_category, "BMX category")
+  end
+  
   def test_blank_numbers
     racer = Racer.new
     assert_nil(racer.ccx_number, 'cross number after new')
@@ -496,6 +503,8 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal('102', tonkin.road_number)
     assert_nil(tonkin.dh_number)
     assert_nil(tonkin.ccx_number)
+    tonkin.bmx_number = "U89"
+    assert_equal("U89", tonkin.bmx_number)
   end
   
   def test_update
