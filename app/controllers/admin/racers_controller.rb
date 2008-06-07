@@ -65,7 +65,8 @@ class Admin::RacersController < Admin::RecordEditor
              DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
              print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/%d/%Y') as date_of_birth, occupation, 
              street, racers.city, racers.state, zip, email, home_phone, work_phone, cell_fax, gender, 
-             road_category, track_category, mtb_category, dh_category, CEILING(#{today.year} - YEAR(date_of_birth)) as racing_age,
+             ccx_category, road_category, track_category, mtb_category, dh_category, 
+             CEILING(#{today.year} - YEAR(date_of_birth)) as racing_age,
              ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
              singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
              DATE_FORMAT(racers.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(racers.updated_at, '%m/%d/%Y') as updated_at
