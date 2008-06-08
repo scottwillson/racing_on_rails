@@ -363,4 +363,198 @@ class OverallBarTest < ActiveSupport::TestCase
     assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
   end
   
+  def test_drop_cat_5_discipline_results
+    category_4_5_men = Category.find_or_create_by_name("Category 4/5 Men")
+    category_4_men = Category.find_or_create_by_name("Category 4 Men")
+    category_5_men = Category.find_or_create_by_name("Category 5 Men")
+    category_4_men.parent = category_4_5_men
+    category_4_men.save!
+    category_5_men.parent = category_4_5_men
+    category_5_men.save!
+    
+    road = disciplines(:road)
+    road.bar_categories << category_4_men
+    road.bar_categories << category_5_men
+    road.save!
+
+    overall = disciplines(:overall)
+    overall.bar_categories << category_4_5_men
+    overall.save!
+
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    cat_4_race = standings.races.create(:category => category_4_men)
+    weaver = racers(:weaver)
+    matson = racers(:matson)
+    cat_4_race.results.create(:place => '4', :racer => weaver)
+    cat_4_race.results.create(:place => '5', :racer => matson)
+
+    cat_5_race = standings.races.create(:category => category_5_men)
+    cat_5_race.results.create(:place => '6', :racer => matson)
+    tonkin = racers(:tonkin)
+    cat_5_race.results.create(:place => '15', :racer => tonkin)
+    
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    cat_5_race = standings.races.create(:category => category_5_men)
+    cat_5_race.results.create(:place => '15', :racer => tonkin)
+
+    Bar.recalculate
+    OverallBar.recalculate
+    
+    current_year = Date.today.year
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    road_bar_standings = bar.standings.detect { |standings| standings.discipline == "Road" }
+    cat_4_road_bar = road_bar_standings.races.detect { |race| race.category == category_4_men }
+    assert_equal(2, cat_4_road_bar.results.size, "Cat 4 Overall BAR results")
+    cat_5_road_bar = road_bar_standings.races.detect { |race| race.category == category_5_men }
+    assert_equal(2, cat_5_road_bar.results.size, "Cat 5 Overall BAR results")
+    
+    overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    overall_bar_standings = overall_bar.standings.first
+    cat_4_5_overall_bar = overall_bar_standings.races.detect { |race| race.category == category_4_5_men }
+    assert_equal(3, cat_4_5_overall_bar.results.size, "Cat 4/5 Overall BAR results")
+    cat_4_5_overall_bar.results.sort!
+
+    weaver_result = cat_4_5_overall_bar.results.detect { |result| result.racer == weaver }
+    assert_equal("1", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
+    assert_equal(300, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
+    assert_equal(1, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
+
+    matson_result = cat_4_5_overall_bar.results.detect { |result| result.racer == matson }
+    assert_equal("2", matson_result.place, "Matson Cat 4/5 Overall BAR place")
+    assert_equal(299, matson_result.points, "Matson Cat 4/5 Overall BAR points")
+    assert_equal(1, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
+    matson_score = matson_result.scores.first
+    assert_equal(category_4_men, matson_score.source_result.race.category, "Matson source result category")
+
+    assert_equal(tonkin, cat_4_5_overall_bar.results[2].racer, "Cat 4/5 Overall BAR 2nd place racer")
+    assert_equal(299, cat_4_5_overall_bar.results[2].points, "Cat 4/5 Overall BAR 2nd place points")
+    assert_equal(1, cat_4_5_overall_bar.results[2].scores.size, "Cat 4/5 Overall BAR 2nd place scores")
+  end
+  
+  def test_remove_duplicate_discipline_results
+    # No scores
+    bar = OverallBar.new
+    scores = []
+    bar.remove_duplicate_discipline_results(scores)
+    assert_equal([], scores, "Empty scores")
+    
+    # One score
+    scores = []
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    category_4_men = Category.find_or_create_by_name("Category 4 Men")
+    race = standings.races.create(:category => category_4_men)
+    racer = racers(:molly)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    score = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << score
+    bar.remove_duplicate_discipline_results(scores)
+    assert_equal([score], scores, "Should keep single score")
+    
+    # Multiple scores
+    scores = []
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    road_score = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << road_score
+    
+    standings = SingleDayEvent.create!(:discipline => 'Cyclocross').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    cx_score = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << cx_score
+    
+    standings = SingleDayEvent.create!(:discipline => 'Track').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    track_score = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << track_score
+
+    scores.sort! {|x, y| y.points.to_i <=> x.points.to_i}
+    bar.remove_duplicate_discipline_results(scores)
+    assert_equal([road_score, cx_score, track_score], scores, 
+      "Should keep three scores from different disciplines")
+      
+    # Duplicate disciplines
+    scores = []
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    road_score_10 = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 10
+    )    
+    scores << road_score_10
+    
+    standings = SingleDayEvent.create!(:discipline => 'Cyclocross').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    cx_score_1 = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << cx_score_1
+    
+    standings = SingleDayEvent.create!(:discipline => 'Cyclocross').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "2", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    cx_score_2 = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 2
+    )    
+    scores << cx_score_2
+    
+    standings = SingleDayEvent.create!(:discipline => 'Track').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    track_score = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << track_score
+
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    race = standings.races.create(:category => category_4_men)
+    source_result = race.results.create!(:place => "1", :racer => racer)
+    competition_result = Result.create!(:racer => racer, :race => race)
+    road_score_1 = competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result => competition_result, 
+      :points => 1
+    )    
+    scores << road_score_1
+    
+    scores.sort! {|x, y| y.points.to_i <=> x.points.to_i}
+    bar.remove_duplicate_discipline_results(scores)
+    assert_equal([road_score_10, cx_score_2, track_score], scores, 
+      "Should keep three scores from different disciplines")      
+  end
 end

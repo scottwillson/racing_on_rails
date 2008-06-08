@@ -13,7 +13,7 @@
     friendly_param: senior_men
     position: 1
     parent_id: 200
-- men_4:
+- men_4_5:
     id: 3
     name: Category 4/5 Men
     friendly_param: category_men_4_5_men

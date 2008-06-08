@@ -2,7 +2,7 @@ module CreateIfBestResultForRaceExtension
   def create_if_best_result_for_race(attributes)
     source_result = attributes[:source_result]
     for score in @owner.scores
-      same_race =  (score.source_result.race == source_result.race)
+      same_race  = (score.source_result.race  == source_result.race)
       same_racer = (score.source_result.racer == source_result.racer)
       if same_race && score.source_result.racer && same_racer
         if attributes[:points] > score.points

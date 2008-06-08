@@ -73,7 +73,7 @@ class CategoryTest < ActiveSupport::TestCase
   def test_to_friendly_param
     assert_equal('senior_men', categories(:senior_men).to_friendly_param, 'senior_men friendly_param')
     assert_equal('pro_expert_women', categories(:pro_expert_women).to_friendly_param, 'pro_expert_women friendly_param')
-    assert_equal('category_4_5_men', categories(:men_4).to_friendly_param, 'men_4 param')
+    assert_equal('category_4_5_men', categories(:men_4_5).to_friendly_param, 'men_4 param')
     assert_equal('singlespeed_fixed', categories(:single_speed).to_friendly_param, 'single_speed_fixed friendly_param')
     assert_equal('masters_35_plus', categories(:masters_35_plus).to_friendly_param, 'masters_35_plus friendly_param')
     assert_equal('pro_semi_pro_men', categories(:pro_semi_pro_men).to_friendly_param, 'pro_semi_pro_men friendly_param')
