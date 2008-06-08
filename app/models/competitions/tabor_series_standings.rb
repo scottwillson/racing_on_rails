@@ -17,7 +17,8 @@ class TaborSeriesStandings < Standings
     races.create!(:category => Category.find_or_create_by_name("Women Masters 40+"))
     races.create!(:category => Category.find_or_create_by_name("Senior Women"))
     races.create!(:category => Category.find_or_create_by_name("Men Masters 40+"))
-    races.create!(:category => Category.find_or_create_by_name("Category 4/5 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Category 4 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Category 5 Men"))
     races.create!(:category => Category.find_or_create_by_name("Category 3 Men"))
     races.create!(:category => Category.find_or_create_by_name("Senior Men"))
   end

@@ -37,12 +37,12 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     TaborSeriesStandings.recalculate(2007)
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series")
     overall_standings = series.standings.first
-    assert_equal(8, overall_standings.races.size, "Overall races")
+    assert_equal(9, overall_standings.races.size, "Overall races")
     
     TaborSeriesStandings.recalculate(2007)
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series after deleting old standings")
     overall_standings = series.standings.first
-    assert_equal(8, overall_standings.races.size, "Overall races")
+    assert_equal(9, overall_standings.races.size, "Overall races")
 
     cat_3_overall_race = overall_standings.races.detect { |race| race.category == categories(:cat_3) }
     assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
