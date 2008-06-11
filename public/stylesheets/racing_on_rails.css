@@ -245,7 +245,6 @@ table.base caption
 	border-bottom-width: 0px;
 	border-left-width: 1px;
 	border-color: #B3B3B3;
-	background-image: url(/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -264,7 +263,6 @@ table.base th.caption
 	border-bottom-width: 1px;
 	border-left-width: 0px;
 	border-color: #B3B3B3;
-	background-image: url(/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -278,33 +276,6 @@ table.base th.caption
 table.base th.invalid
 {
 	color: red;
-}
-
-table.base thead tr
-{
-	background-image: url(/images/backgrounds/table_column_titles.jpg);
-	height: 20px;
-}
-
-table.base thead th {
-	padding: 0px 6px 0px 6px;
-	color: #6D6D6D;
-	text-align: center;
-	font-size: 8pt;
-	line-height: 20px;
-	text-align: center;
-	border-bottom: solid;
-	border-width: 1px;
-	border-color: #B3B3B3;
-}
-
-table.base tbody td {
-	padding: 4px 6px;
-	text-align: left;
-}
-
-table.base tbody tr.even {
-	background: #F4FDBF;
 }
 
 table.base#calendar
