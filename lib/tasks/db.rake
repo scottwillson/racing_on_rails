@@ -106,3 +106,17 @@ end
 #     remote_db_cleanup
 #   end
 # end
+
+desc <<DESC
+Backup remote database from primary server.
+DESC
+task :remote_backup, :roles => :db, :only => { :primary => true } do
+  filename = "dump.#{Time.now.strftime '%Y%m%dT%:%H%M%S'}.sql" 
+  on_rollback { delete "/tmp/#{filename}" }
+  run "mysqldump -uusername -ppassword database_name > \n
+/tmp/#{filename}" do |channel, stream, data|
+    puts data
+  end
+  get "/tmp/#{filename}", "c:/backup/#{filename}" 
+  delete "/tmp/#{filename}" 
+end

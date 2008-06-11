@@ -1,8 +1,14 @@
 /*  Need slightly different style for different tab states: */
 /*  solo, selected, first, last, hover */
 
+table.tabs {
+  width: auto;
+}
+
 table.tabs td {
   font-size: 10pt;
+  line-height: 16px;
+  padding: 0px;
 }
 
 table.tabs span {
