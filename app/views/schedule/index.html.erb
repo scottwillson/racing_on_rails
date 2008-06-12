@@ -1,7 +1,6 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information
-<br><br>
+<div><p><%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p></div>
 
 <%= links_to_months @schedule %>
 <%= links_to_years %>
@@ -12,10 +11,8 @@
 <% end %>
 
 <%- for month in @schedule.months -%>
-<div align="center">
 	<table class="base" id="calendar">
-		<caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
-		<thead>
+		<caption><%= month.name %> <%= @year %><a name="<%= month.name %>"></a></caption>
 			<tr>
 				<th>Sunday</th>
 				<th>Monday</th>
@@ -25,40 +22,35 @@
 				<th>Friday</th>
 				<th>Saturday</th>
 			</tr>
-		</thead>
-		<tbody>
 		<%- for week in month.weeks -%>
-	      <tr class="month">
-	      <%- for day in week.days -%>
-	        <%- if day.other_month? -%>
-	        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
-				  <%- else -%>
-	        <td class="day">
-	          <div class="number"><%= day.day_of_month -%></div>
-					  <%- for event in day.events -%>
-				<%- if event.cancelled %>
-					<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
-				<%- else -%>
-		            <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-					    <a href="<%= event.flyer -%>" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-		          MTB
-		            <%- end -%></a>
-							  <%- else -%>
-					    <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-		          MTB
-		            <%- end -%>
-							  <%- end -%>
-				<%- end -%>
-            
-				    <br>
-					  <%- end -%>
+      <tr class="month">
+      <%- for day in week.days -%>
+        <%- if day.other_month? -%>
+        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+			  <%- else -%>
+        <td class="day">
+          <div class="number"><%= day.day_of_month -%></div>
+				  <%- for event in day.events -%>
+			<%- if event.cancelled %>
+				<span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
+			<%- else -%>
+	            <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
+				    <a href="<%= event.flyer -%>" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%></a>
+						  <%- else -%>
+				    <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+	          MTB
+	            <%- end -%>
+						  <%- end -%>
+			<%- end -%>
+          
+			    <br>
 				  <%- end -%>
-			    </td>
 			  <%- end -%>
-	      </tr>
+		    </td>
+		  <%- end -%>
+      </tr>
 	    <%- end -%>
-		</tbody>
-	    </table>
-	</div>
-	<br><br>
+  </table>
 <% end %>
