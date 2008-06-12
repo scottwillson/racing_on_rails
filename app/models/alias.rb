@@ -20,6 +20,17 @@ class Alias < ActiveRecord::Base
     end
   end
   
+  def Alias.find_all_teams_by_name(name)
+    aliases = Alias.find(
+      :all, 
+      :conditions => ['aliases.name = ? and team_id is not null', name],
+      :include => :team
+    )
+    aliases.collect do |team_alias|
+      team_alias.team
+    end
+  end
+  
   def racer_or_team
     unless (racer and !team) or (!racer and team)
       errors.add('racer or team', 'Must have exactly one racer or team')

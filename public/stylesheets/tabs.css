@@ -1,7 +1,7 @@
 /*  Need slightly different style for different tab states: */
 /*  solo, selected, first, last, hover */
 
-table.tabs {
+table.tabs td, table.tabs_solo td {
   width: auto;
 }
 

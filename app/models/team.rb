@@ -68,26 +68,25 @@ class Team < ActiveRecord::Base
   # and delete the other Team.
   # Also adds the other Team's name as a new alias
   def merge(team)
-    if team == self
-      raise(ArgumentError, 'Cannot merge team onto itself')
-    end
-    if team.nil?
-      raise(ArgumentError, 'Cannot merge nil team')
-    end
+    raise(ArgumentError, 'Cannot merge nil team') unless team
+    raise(ArgumentError, 'Cannot merge team onto itself') if team == self
+
     Team.transaction do
+      events = team.results.collect do |result|
+        event = result.race.standings.event
+        event.disable_notification!
+        event
+      end
       begin
-        events = team.results.collect do |result|
-          event = result.race.standings.event
-          event.disable_notification!
-          event
-        end
+        save!
         aliases << team.aliases
         results << team.results
         racers << team.racers
         Team.delete(team.id)
-        existing_alias = aliases.detect{|a| a.name == team.name}
-        aliases.create(:name => team.name) unless existing_alias or Alias.find_by_name(team.name) 
-        save!
+        existing_alias = aliases.detect{|a| a.name.casecmp(team.name) == 0}
+        if existing_alias.nil? and Team.find_all_by_name(team.name).empty?
+          aliases.create(:name => team.name) 
+        end
       ensure
         if events
           events.each do |event|

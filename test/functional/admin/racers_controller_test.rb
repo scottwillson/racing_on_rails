@@ -278,7 +278,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     delete :destroy, :id => racer.id
     assert_response(:redirect)
     assert_redirected_to(admin_racers_path)
-    assert_raise(ActiveRecord::RecordNotFound, 'Racer should have been destroyed') { Racer.find(racer.id) }
+    assert(!Racer.exists?(racer.id), 'Racer should have been destroyed')
   end
   
   def test_ajax_destroy
@@ -343,14 +343,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal([], Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should not be in database')
   end
 
-  def test_new_inline
-    get(:new_inline)
-    assert_response(:success)
-    assert_template("/admin/_new_inline")
-    assert_not_nil(assigns["record"], "Should assign category as 'record'")
-    assert_not_nil(assigns["icon"], "Should assign 'icon'")
-  end
-  
   def test_edit_team_name
     @request.session[:user] = users(:candi)
     weaver = racers(:weaver)

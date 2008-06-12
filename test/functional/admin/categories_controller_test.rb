@@ -134,17 +134,6 @@ class Admin::CategoriesControllerTest < ActiveSupport::TestCase
     assert_raise(ActiveRecord::RecordNotFound, 'Unicycle should have been destroyed') { Category.find(unicycle.id) }
   end
 
-  def test_new_inline
-    opts = {:controller => "admin/categories", :action => "new_inline"}
-    assert_routing("/admin/categories/new_inline", opts)
-  
-    get(:new_inline)
-    assert_response(:success)
-    assert_template("/admin/_new_inline")
-    assert_not_nil(assigns["record"], "Should assign category as 'record'")
-    assert_not_nil(assigns["icon"], "Should assign 'icon'")
-  end
-  
   def test_create
     opts = {:controller => "admin/categories", :action => "create"}
     assert_routing("/admin/categories/create", opts)

@@ -9,12 +9,15 @@
 	<tr valign="top">
 		<td>
 		<%- for racer in @team.racers.sort_by {|r| r.last_name} -%>
-			<%= racer.name %><br>
+			<%= link_to racer.name, admin_racer_path(racer) %><br>
 		<%- end -%>
 		</td>
 		<td>
-			<table cellspacing="0" cellpadding="0" class="base" id="inline">
-				<caption>Aliases</caption>
+			<table class="inline">
+				<tr>
+				  <th>Aliases</th>
+				  <th></th>
+				</tr>
 				<%- for name_alias in @team.aliases.sort_by {|a| a.name} -%>
 				<tr id="alias_<%= name_alias.id %>">
 					<td><%= name_alias.name %></td>

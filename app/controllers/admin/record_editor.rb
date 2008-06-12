@@ -18,12 +18,6 @@ class Admin::RecordEditor < ApplicationController
     end
     
     class_eval <<END
-    def new_inline
-      @record = #{@@record_class_name}.new(:name => 'New #{@@record_class_name}')
-      @icon = @@icon
-      render(:partial => '/admin/new_inline')
-    end
-    
     def toggle_attribute
       record = #{@@record_class_name}.find(params[:id])
       attribute = params[:attribute]

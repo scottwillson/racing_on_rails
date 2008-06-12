@@ -112,17 +112,6 @@ class Admin::ResultsControllerTest < ActiveSupport::TestCase
     assert_equal(existing_result_count + 2, kings_valley_pro_1_2.results.size, 'Kings Valley 1/2 race results')
   end
 
-  def test_new_inline
-    opts = {:controller => "admin/results", :action => "new_inline"}
-    assert_routing("/admin/results/new_inline", opts)
-  
-    get(:new_inline)
-    assert_response(:success)
-    assert_template("/admin/_new_inline")
-    assert_not_nil(assigns["record"], "Should assign result as 'record'")
-    assert_not_nil(assigns["icon"], "Should assign 'icon'")
-  end
-  
   def test_edit
     weaver_jack_frost = results(:weaver_jack_frost)
     opts = {:controller => "admin/results", :action => "edit", :id => weaver_jack_frost.to_param.to_s}

@@ -564,9 +564,8 @@ class Racer < ActiveRecord::Base
     # TODO Consider just using straight SQL for this --
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
-    if other_racer == self
-      raise "Cannot merge racer onto #{gender_pronoun}"
-    end
+    raise(ArgumentError, 'Cannot merge nil racer') unless other_racer
+    raise(ArgumentError, 'Cannot merge racer onto itself') if other_racer == self
 
     Racer.transaction do
       events = other_racer.results.collect do |result|

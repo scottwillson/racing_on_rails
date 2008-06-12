@@ -16,6 +16,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.namespace(:admin) do |admin|
     admin.resources :racers, :collection => { :cards => :get,  :duplicates => :get }
+    admin.resources :teams
   end
   
   map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
