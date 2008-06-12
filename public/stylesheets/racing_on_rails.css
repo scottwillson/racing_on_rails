@@ -245,6 +245,7 @@ table.base caption
 	border-bottom-width: 0px;
 	border-left-width: 1px;
 	border-color: #B3B3B3;
+  background-image: url(/images/backgrounds/table_head.jpg);
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
@@ -263,6 +264,7 @@ table.base th.caption
 	border-bottom-width: 1px;
 	border-left-width: 0px;
 	border-color: #B3B3B3;
+  background-image: url(/images/backgrounds/table_head.jpg); 
 	text-align: left;
 	font-weight: bold;
 	font-size: 8pt;
