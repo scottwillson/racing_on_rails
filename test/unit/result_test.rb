@@ -462,11 +462,17 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.racer.member?, "Racer should be member")
 
     # Rental
-    result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
-    assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
-    road_number = result.racer(true).race_numbers(true).detect{|number| number.year == Date.today.year}
-    assert_nil(road_number, 'Current road number')
-    assert(!result.racer.member?, "Racer with rental number should not be member")
+    begin
+      original_rental_numbers = ASSOCIATION.rental_numbers
+      ASSOCIATION.rental_numbers = 0..99
+      result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
+      assert(result.racer.errors.empty?, "Racers should have no errors, but had: #{result.racer.errors.full_messages}")
+      road_number = result.racer(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+      assert_nil(road_number, 'Current road number')
+      assert(!result.racer.member?, "Racer with rental number should not be member")
+    ensure
+      ASSOCIATION.rental_numbers = original_rental_numbers
+    end
   end
   
   def test_find_associated_records
