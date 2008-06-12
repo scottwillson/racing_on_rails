@@ -121,7 +121,7 @@ module Schedule
           if discipline != nil
             row_hash[:discipline] = discipline.name
           else
-            row_hash[:discipline] = nil
+            row_hash[:discipline] = ASSOCIATION.default_discipline
           end
         end
         

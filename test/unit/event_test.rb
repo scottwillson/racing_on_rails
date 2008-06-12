@@ -51,6 +51,7 @@ class EventTest < ActiveSupport::TestCase
     event.save!
     number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
+    assert_equal(nil, event.discipline, "New event discipline default")
   end
   
   def test_new_with_promoters

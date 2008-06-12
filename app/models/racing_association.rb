@@ -3,7 +3,7 @@
 class RacingAssociation
 
   attr_accessor :name, :short_name, :state
-  attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers
+  attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :flyers_in_new_window
   
   def initialize
@@ -13,6 +13,10 @@ class RacingAssociation
   
   def bmx_numbers?
     @bmx_numbers
+  end
+  
+  def default_discipline
+    @default_discipline ||= "Road"
   end
 
   def gender_specific_numbers?
