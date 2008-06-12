@@ -17,7 +17,9 @@
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 
-  PROPOGATED_ATTRIBUTES = ['cancelled', "city", "discipline", "flyer", "flyer_approved", "name", "promoter_id", "sanctioned_by", "state"] unless defined?(PROPOGATED_ATTRIBUTES)
+  PROPOGATED_ATTRIBUTES = %w{cancelled city discipline flyer flyer_approved name promoter_id 
+                             prize_list velodrome sanctioned_by state
+                             } unless defined?(PROPOGATED_ATTRIBUTES)
 
   validates_presence_of :name, :date
   validate_on_create {:parent.nil?}
@@ -78,8 +80,10 @@ class MultiDayEvent < Event
       :flyer => first_event.flyer,
       :name => first_event.name,
       :promoter => first_event.promoter,
+      :prize_list => first_event.prize_list,
       :sanctioned_by => first_event.sanctioned_by,
-      :state => first_event.state
+      :state => first_event.state,
+      :velodrome => first_event.velodrome
     }
     
     new_multi_day_event_class = MultiDayEvent.guess_type(events)
