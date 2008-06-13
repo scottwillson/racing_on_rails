@@ -13,6 +13,11 @@ module ApplicationHelper
       "(a.k.a. #{aliases.join(', ')})"
     end
   end
+  
+  # Wrap +text+ in div tags, unless +text+ is blank
+  def div(text)
+    "<div>#{text}</div>" unless text.blank?
+  end
 
   # Class-scope Hash of Columns, keyed by field
   # Used to display results in a grid

@@ -67,4 +67,10 @@ class ApplicationHelperControllerTest < ActiveSupport::TestCase
 </pre>}
     assert_equal(expected, html, 'HTML')
   end
+  
+  def test_div
+    assert_equal(nil, div(nil), "nil")
+    assert_equal(nil, div(""), "''")
+    assert_equal("<div>Text</div>", div("Text"), "Text")
+  end
 end

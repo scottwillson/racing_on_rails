@@ -425,4 +425,13 @@ class Admin::EventsController < ApplicationController
       promoter.phone = params[:phone]
     end
   end
+  
+  def add_children
+    parent = Event.find(params[:parent_id])
+    parent.missing_children.each do |child|
+      child.parent = parent
+      child.save!
+      redirect_to(:action => :show, :id => parent.id)
+    end
+  end
 end
