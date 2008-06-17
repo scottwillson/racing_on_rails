@@ -50,7 +50,13 @@ class TaborSeriesStandings < Standings
     event_ids = event.events.collect do |event|
       event.id
     end
-    event_ids = event_ids.join(', ')    
+    event_ids = event_ids.join(', ')
+    category_ids = category_ids_for(race)
+    
+    # Special case for 2008 series changing categories in second race
+    if race.category == Category.find_by_name("Category 4 Men")
+      category_ids << ", #{Category.find_by_name("Category 4/5 Men").id}"
+    end
     
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
@@ -60,7 +66,7 @@ class TaborSeriesStandings < Standings
           JOIN events ON standings.event_id = events.id 
           WHERE (standings.type = 'TaborSeriesStandings' or standings.type is null)
               and place between 1 and 15
-              and categories.id in (#{category_ids_for(race)})
+              and categories.id in (#{category_ids})
               and events.id in (#{event_ids})
           order by racer_id
        }
