@@ -25,8 +25,8 @@ class OregonCup < Competition
     
     results = Result.find_by_sql(
       %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
-        LEFT OUTER JOIN races ON races.id = results.race_id 
-          LEFT OUTER JOIN categories ON categories.id = races.category_id 
+          LEFT OUTER JOIN races ON races.id = results.race_id 
+          LEFT OUTER JOIN categories ON categories.id = races.category_id
           LEFT OUTER JOIN standings ON races.standings_id = standings.id 
           LEFT OUTER JOIN events ON standings.event_id = events.id 
             WHERE races.category_id is not null 
@@ -34,6 +34,7 @@ class OregonCup < Competition
                    or (standings.bar_points = 0 and standings.name like '%Combined%'))
               and place between 1 and 20
               and categories.id in (#{category_ids_for(race)})
+              and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
               and events.id in (#{event_ids})
          order by racer_id
        }
@@ -42,10 +43,11 @@ class OregonCup < Competition
     results
   end
   
-  # Unfortunate workaround for Rehearsal Road Race
+  # Unfortunate workaround for Rehearsal Road Race and Tabor
   def remove_separate_women_1_2_results(results)
     results.delete_if do |result|
       result.race.name == "Women 1/2" && result.race.standings.name = "Rehearsal Road Race"
+      result.race.name == "Senior Women" && result.race.standings.name = "Mount Tabor Circuit Race"
     end
   end
   
