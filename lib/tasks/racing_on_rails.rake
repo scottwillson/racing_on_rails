@@ -10,8 +10,8 @@ namespace :racing_on_rails do
   
   desc 'Copy release package to web server' 
   task :deploy_release do
-    puts(`scp pkg/racing_on_rails-0.0.6.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.6.zip`)
-    puts(`scp pkg/racing_on_rails-0.0.6.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.6.tar.gz`)
+    puts(`scp pkg/racing_on_rails-0.0.7.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.7.zip`)
+    puts(`scp pkg/racing_on_rails-0.0.7.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.7.tar.gz`)
   end
 
   desc "Package, deploy new app from scratch. Test."
@@ -21,18 +21,18 @@ namespace :racing_on_rails do
   desc "User acceptence test for end users and developers"
   task :acceptence => [:create_app] do
     puts('acceptence_user')
-    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.6'))
+    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.7'))
     puts('customize')
     customize
     puts('acceptence_developer')
-    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.6'))
+    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.7'))
   end
 
   task :create_app do
-    app_path = File.expand_path('~/racing_on_rails-0.0.6')
+    app_path = File.expand_path('~/racing_on_rails-0.0.7')
     rm_rf app_path
   
-    puts(`tar zxf pkg/racing_on_rails-0.0.6.tar.gz -C ~`)
+    puts(`tar zxf pkg/racing_on_rails-0.0.7.tar.gz -C ~`)
     `mysql -u root racing_on_rails_development < /db/schema.sql`
   end
 
@@ -56,7 +56,7 @@ namespace :racing_on_rails do
     # Override instance and class methods of AR
     # And in superclasses, then reference in subclass
 
-    path = File.expand_path('~/racing_on_rails-0.0.6')
+    path = File.expand_path('~/racing_on_rails-0.0.7')
     puts(`#{path}/script/generate model BikeShop`)
     puts(`#{path}/script/generate controller BikeShops list`)
     customize('script/create_bike_shops_table.rb')
@@ -112,9 +112,9 @@ namespace :racing_on_rails do
   end
 
   def customize(fixture_path)
-    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.6/#{fixture_path}")))
+    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.7/#{fixture_path}")))
     cp(File.expand_path("/test/fixtures/#{fixture_path}"),
-       File.expand_path("~/racing_on_rails-0.0.6/#{fixture_path}"))
+       File.expand_path("~/racing_on_rails-0.0.7/#{fixture_path}"))
   end
 
   def web_test
@@ -143,7 +143,7 @@ namespace :racing_on_rails do
     end
   end
   
-  Rake::PackageTask.new("racing_on_rails", "0.0.6") do |p|
+  Rake::PackageTask.new("racing_on_rails", "0.0.7") do |p|
     p.need_tar_gz = true
     p.need_zip = true
     files = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f| 
