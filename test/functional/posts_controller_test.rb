@@ -26,13 +26,13 @@ class PostsControllerTest < ActiveSupport::TestCase
       {:controller => "posts", :action => "show", :mailing_list_name => "obrarace", :id => "25621"}, 
       "posts/show/obrarace/25621"
     )
-
+  
     assert_recognizes(
       {:controller => "posts", :action => "new", :mailing_list_name => "obra"}, 
       "posts/new/obra"
     )
   end
-
+  
   def test_new
     obra_chat = mailing_lists(:obra_chat)
     get(:new, :mailing_list_name => obra_chat.name)
@@ -60,7 +60,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     })
-
+  
     get(:new, :mailing_list_name => obra_race.name, :reply_to => original_post.id)
     assert_response(:success)
     assert_template("posts/new")
@@ -108,7 +108,7 @@ class PostsControllerTest < ActiveSupport::TestCase
         :body => "This is a test message #{index}"
       })
     end
-
+  
     obra_race = mailing_lists(:obra_race)
     Post.create({
       :mailing_list => obra_race,
@@ -255,16 +255,16 @@ class PostsControllerTest < ActiveSupport::TestCase
   
   def test_post
     assert(MailingListMailer.deliveries.empty?, "Should have no email deliveries")
-
+  
     obra_chat = mailing_lists(:obra_chat)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
     from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
-
+  
     path = {:controller => "posts", :action => "post", :mailing_list_name => 'obra'}
     assert_routing("posts/obra/post", path)
-
+  
     post(:post, 
         :mailing_list_name => obra_chat.name,
         :reply_to => {:id => ''},
@@ -292,7 +292,7 @@ class PostsControllerTest < ActiveSupport::TestCase
   
   def test_post_reply
     assert(MailingListMailer.deliveries.empty?, "Should have no email deliveries")
-
+  
     obra_chat = mailing_lists(:obra_chat)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
@@ -306,10 +306,10 @@ class PostsControllerTest < ActiveSupport::TestCase
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     })
-
+  
     path = {:controller => "posts", :action => "post", :mailing_list_name => 'obra'}
     assert_routing("posts/obra/post", path)
-
+  
     post(:post, 
         :mailing_list_name => obra_chat.name,
         :mailing_list_post => {
@@ -349,7 +349,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
-
+  
     post(:post, 
         :mailing_list_name => obra_chat.name,
         :mailing_list_post => {
@@ -375,7 +375,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     obra_race = mailing_lists(:obra_race)
     path = {:controller => "posts", :action => "confirm", :mailing_list_name => obra_race.name }
     assert_routing("posts/obrarace/confirm", path)
-
+  
     get(:confirm, :mailing_list_name => obra_race.name)
     assert_response(:success)
     assert_template("posts/confirm")
@@ -386,7 +386,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     obra_race = mailing_lists(:obra_race)
     path = {:controller => "posts", :action => "confirm_private_reply", :mailing_list_name => obra_race.name }
     assert_routing("posts/obrarace/confirm_private_reply", path)
-
+  
     get(:confirm_private_reply, :mailing_list_name => obra_race.name)
     assert_response(:success)
     assert_template("posts/confirm_private_reply")
@@ -404,10 +404,10 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     })
     new_post.save!
-
+  
     path = {:controller => "posts", :action => "show", :mailing_list_name => obra_race.name, :id => new_post.id.to_s }
     assert_routing("posts/obrarace/show/#{new_post.id}", path)
-
+  
     get(:show, :mailing_list_name => obra_race.name, :id => new_post.id)
     assert_response(:success)
     assert_not_nil(assigns["post"], "Should assign post")
@@ -418,7 +418,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     # No posts
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "12")
     assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
-
+  
     # One post
     obra_race = mailing_lists(:obra_race)
     new_post = Post.create({
@@ -431,7 +431,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     })
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "12")
     assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
-
+  
     # Two months
     obra_race = mailing_lists(:obra_race)
     new_post = Post.create({
@@ -445,7 +445,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "11")
     assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
   end
-
+  
   def test_post_navigation
     # One post
     obra_race = mailing_lists(:obra_race)
@@ -458,7 +458,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     })
     get(:show, :mailing_list_name => obra_race.name, :id => post_2004_12_31.id)
-
+  
     # Two months
     post_2004_11_07 = Post.create({
       :mailing_list => obra_race,
@@ -469,7 +469,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     })
     get(:show, :mailing_list_name => obra_race.name, :id => post_2004_12_31.id)
-
+  
     # Three months
     post_2004_11_03 = Post.create({
       :mailing_list => obra_race,

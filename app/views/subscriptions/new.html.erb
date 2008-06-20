@@ -1,0 +1,36 @@
+<% @page_title = "Press: Subscribe"%>
+
+<div class="span-12 prepend-6 append-5 last subscribe" style="padding-bottom: 18px;">
+  <p>Please join our ATRA email list to receive important announcements about track racing in North America.</p>
+
+  <%= "<p class='notice'>#{flash[:notice]}</p>" if flash[:notice] %>
+  <%= error_messages_for :subscription %>
+
+  <% form_for(:subscription, @subscription, :url => { :action => "create" }) do |f| %>
+    <%= f.label :name, "Name" %><%= f.text_field :name %>
+    <%= f.label :email, "Email" %><%= f.text_field :email %>
+    <%= f.label :phone, "Phone" %><%= f.text_field :phone %>
+    <%= f.label :address, "Address" %><%= f.text_field :address %>
+    <%= f.label :city, "City" %><%= f.text_field :city %>
+    <%= f.label :state, "State" %><%= f.text_field :state %>
+    <%= f.label :zip, "ZIP" %><%= f.text_field :zip %>
+    <%= f.label :comments, "Comments" %><%= f.text_area :comments %>
+    
+    <p style="margin-top: 18px;">Please check the boxes that best correspond to your interests.</p>
+    <fieldset class="check_boxes">
+      <legend>Information</legend>
+      <%= f.check_box :youth_programs %><%= f.label :youth_programs, "Youth Programs" %>
+      <%= f.check_box :racer_info %><%= f.label :racer_info, "Racer Info" %>
+      <%= f.check_box :race_results %><%= f.label :race_results, "Race Results" %>
+    </fieldset>
+
+    <fieldset class="check_boxes">
+      <legend>Help Out</legend>
+      <%= f.check_box :volunteer %><%= f.label :volunteer, "Volunteer" %>
+      <%= f.check_box :sponsorship %><%= f.label :sponsorship, "Sponsorship" %>
+      <%= f.check_box :contribution %><%= f.label :contribution, "Contribution" %>
+    </fieldset>
+    
+    <%= f.submit "Send", :disable_with => 'Sending...', :class => "submit" %>
+  <% end -%>
+</div>
