@@ -7,9 +7,9 @@
 <%= @subscription.comments %>
 
 Interests:
-<%= "Youth programs" if @subscription.youth_programs %>
-<%= "Racer info" if @subscription.racer_info %>
-<%= "Race results" if @subscription.race_results %>
-<%= "Volunteer" if @subscription.volunteer %>
-<%= "Sponsorship" if @subscription.sponsorship %>
-<%= "Contribution" if @subscription.contribution %>
+<%= "Youth programs" unless @subscription.youth_programs.blank? %>
+<%= "Racer info"     unless @subscription.racer_info.blank? %>
+<%= "Race results"   unless @subscription.race_results.blank? %>
+<%= "Volunteer"      unless @subscription.volunteer.blank? %>
+<%= "Sponsorship"    unless @subscription.sponsorship.blank? %>
+<%= "Contribution"   unless @subscription.contribution.blank? %>
