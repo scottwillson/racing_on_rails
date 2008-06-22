@@ -128,7 +128,7 @@ class MultiDayEvent < Event
   
   # Update child events from parents' attributes if child attribute has the
   # same value as the parent before update
-  def update_events
+  def update_events(force = false)
     return if new_record?
     
     original_values = MultiDayEvent.connection.select_one("select #{PROPOGATED_ATTRIBUTES.join(', ')} from events where id = #{self.id}")
@@ -136,7 +136,12 @@ class MultiDayEvent < Event
       original_value = original_values[attribute]
       new_value = self[attribute]
       RACING_ON_RAILS_DEFAULT_LOGGER.debug("MultiDayEvent update_events #{attribute}, #{original_value}, #{new_value}")
-      if original_value.nil?
+      if force
+        SingleDayEvent.update_all(
+          ["#{attribute}=?", new_value], 
+          ["parent_id=?", self[:id]]
+        )
+      elsif original_value.nil?
         SingleDayEvent.update_all(
           ["#{attribute}=?", new_value], 
           ["#{attribute} is null and parent_id=?", self[:id]]
