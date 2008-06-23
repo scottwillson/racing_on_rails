@@ -209,6 +209,15 @@ class Result < ActiveRecord::Base
     self.race.standings.is_a?(TaborSeriesStandings) || self.race.standings.event.is_a?(Competition)
   end
   
+  # Does this result belong to the last event in a MultiDayEvent?
+  def last_event?
+    return false unless event
+    return false unless event.respond_to?(:parent)
+    return true unless event.parent
+    
+    !(event && event.parent && (event.parent.end_date != date))
+  end
+  
   def date
     if race || race(true)
       race.date

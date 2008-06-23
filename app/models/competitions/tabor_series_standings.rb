@@ -151,19 +151,11 @@ class TaborSeriesStandings < Standings
   
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
-    # TODO Consider indexing place
-    # TODO Consider caching/precalculating team size
-    team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-    if place_members_only?
-      points = point_schedule[source_result.members_only_place.to_i].to_f
-    else
-      points = point_schedule[source_result.place.to_i].to_f
+    points = point_schedule[source_result.place.to_i].to_f
+    if source_result.last_event?
+      points = points * 2
     end
-    if points
-      points / team_size.to_f
-    else
-      0
-    end
+    points
   end
   
   # Only members can score points?

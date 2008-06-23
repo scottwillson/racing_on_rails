@@ -710,4 +710,31 @@ class ResultTest < ActiveSupport::TestCase
     assert_not_nil(results)
     assert_equal(3, results.size, 'Results')    
   end
+  
+  def test_last_event?
+    result = Result.new
+    assert(!result.last_event?, "New result should not be last event")
+
+    event = SingleDayEvent.new(:name => "Tabor CR", :discipline => 'Road')
+    event.save!
+    standings = Standings.new(:event => event)
+    standings.save!
+    category = Category.find_by_name("Senior Men Pro 1/2")
+    race = Race.new(:standings => standings, :category => category)
+    race.save!
+    result = race.results.build
+    assert(result.last_event?, "Only event should be last event")
+    
+    # Series standings
+    series_result = events(:banana_belt_series).standings.create!.races.create!(:category => category).results.create!
+    assert(!series_result.last_event?, "Series result should not be last event")
+    
+    # First event
+    first_result = events(:banana_belt_1).standings.create!.races.create!(:category => category).results.create!
+    assert(!first_result.last_event?, "First result should not be last event")
+    
+    # Second (and last) event
+    second_result = events(:banana_belt_2).standings.create!.races.create!(:category => category).results.create!
+    assert(result.last_event?, "Last event should be last event")    
+  end
 end

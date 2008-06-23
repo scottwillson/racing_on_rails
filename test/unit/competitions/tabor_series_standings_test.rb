@@ -50,11 +50,11 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     cat_3_overall_race.results(true).sort!
     result = cat_3_overall_race.results.first
     assert_equal("1", result.place, "Cat 3 first result place")
-    assert_equal(100, result.points, "Cat 3 first result points")
+    assert_equal(200, result.points, "Cat 3 first result points (double points for last result)")
     assert_equal(racers(:weaver), result.racer, "Cat 3 first result racer")
     result = cat_3_overall_race.results.last
     assert_equal("2", result.place, "Cat 3 second result place")
-    assert_equal(50, result.points, "Cat 3 second result points")
+    assert_equal(100, result.points, "Cat 3 second result points (double points for last result)")
     assert_equal(racers(:tonkin), result.racer, "Cat 3 second result racer")
 
     masters_40_plus_women_overall_race = overall_standings.races.detect { |race| race.category == masters_40_plus_women_category }
@@ -62,7 +62,7 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(1, masters_40_plus_women_overall_race.results.size, "Masters Women race results")
     result = masters_40_plus_women_overall_race.results.first
     assert_equal("1", result.place, "Masters Women first result place")
-    assert_equal(11, result.points, "Masters Women first result points")
+    assert_equal(22, result.points, "Masters Women first result points  (double points for last result)")
     assert_equal(racers(:alice), result.racer, "Masters Women first result racer")
   end
   
@@ -97,7 +97,42 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     result = cat_3_overall_race.results.first
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
-    assert_equal(100 + 12 + 50 + 36 + 15, result.points, "points")
+    assert_equal(100 + 12 + 50 + 36 + (15 * 2), result.points, "points")
+    assert_equal(racers(:weaver), result.racer, "racer")
+  end
+  
+  def test_double_ponts_for_final_event
+    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 6)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 13)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 19)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 6, 27)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 7, 4)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 13, :racer => racers(:weaver))
+
+    event_standings = series.events.create!(:date => Date.new(2007, 7, 11)).standings.create!
+    event_standings.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+    
+    TaborSeriesStandings.recalculate(2007)
+    
+    overall_standings = series.standings.first
+    cat_3_overall_race = overall_standings.races.detect { |race| race.category == categories(:cat_3) }
+    assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
+    assert_equal(1, cat_3_overall_race.results.size, "Cat 3 race results")
+    cat_3_overall_race.results(true).sort!
+    result = cat_3_overall_race.results.first
+    assert_equal("1", result.place, "place")
+    assert_equal(5, result.scores.size, "Scores")
+    assert_equal(100 + 0 + 50 + 36 + 13 + (12 * 2), result.points, "points")
     assert_equal(racers(:weaver), result.racer, "racer")
   end
 end
