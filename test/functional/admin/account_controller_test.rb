@@ -8,13 +8,10 @@ end
 
 class AdminAccountControllerTest < ActiveSupport::TestCase
   
-  include Admin::ScheduleHelper
-  
   def setup
     @controller = Admin::AccountController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    @request.host = "localhost"
   end
 
   def test_login

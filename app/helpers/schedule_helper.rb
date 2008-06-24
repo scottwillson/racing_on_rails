@@ -3,10 +3,10 @@ module ScheduleHelper
     years = Event.find_all_years
     return unless years.size > 1
     
-    links = Builder::XmlMarkup.new(:indent => 4)
+    links = Builder::XmlMarkup.new(:indent => 2)
     links.div(:class => 'horizontal_links') {
       separator = ''
-      for year in Event.find_all_years
+      years.each do |year|
         links.text!(separator)
         links.a(year, :href => url_for(:year => year))
         separator = ' | '
@@ -16,7 +16,7 @@ module ScheduleHelper
   end
 
   def links_to_months(schedule)
-    links = Builder::XmlMarkup.new(:indent => 4)
+    links = Builder::XmlMarkup.new(:indent => 2)
     links.div(:class => 'horizontal_links') {
       separator = ''
       for month in @schedule.months
