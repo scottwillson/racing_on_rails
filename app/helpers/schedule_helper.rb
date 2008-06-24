@@ -1,5 +1,8 @@
 module ScheduleHelper
   def links_to_years
+    years = Event.find_all_years
+    return unless years.size > 1
+    
     links = Builder::XmlMarkup.new(:indent => 4)
     links.div(:class => 'horizontal_links') {
       separator = ''
