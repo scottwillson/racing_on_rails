@@ -224,6 +224,10 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def distance
+    race && race.distance
+  end
+  
   def event_id
     if (race || race(true)) && (race.standings || race.standings(true))
       race.standings.event_id
@@ -234,6 +238,10 @@ class Result < ActiveRecord::Base
     if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
       race.standings.event
     end
+  end
+  
+  def laps
+    self[:laps] || (race && race.laps)
   end
   
   def place

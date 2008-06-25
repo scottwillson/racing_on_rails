@@ -34,24 +34,18 @@ class CombinedMountainBikeStandings < CombinedStandings
         end
       end
       
-      if !combined_results.empty? and combined_results.first.time and combined_results.first.time > 0
-        combined_results.delete_if {|result| result.time.nil? or result.time <= 0}
-        # TODO Move to Result
-        combined_results = combined_results.sort {|x, y| 
-          if x.time.nil?
-            1
-          else
-            x.time <=> y.time
-          end
-        }
-      else
-        # Sort by place, not time
-        # Should consider category, too
-        combined_results = combined_results.sort
+      if combined_results.any? { |result| result.time.to_i > 0 }
+        combined_results.delete_if { |result| result.time.to_i == 0 }
       end
-      combined_results.delete_if {|result| result.place.to_i == 0}
-      combined_results.each_with_index {|result, i|
-        race.results.create(:place => (i + 1), :racer => result.racer, :team => result.team, :time => result.time)
+      
+      combined_results = combined_results.stable_sort_by(:place).
+                                          stable_sort_by(:category).
+                                          stable_sort_by(:time).
+                                          stable_sort_by(:laps, :desc).
+                                          stable_sort_by(:distance, :desc)
+      
+      combined_results.each_with_index { |result, i|
+        race.results.create!(:place => (i + 1), :racer => result.racer, :team => result.team, :time => result.time)
       }
     end
   end
