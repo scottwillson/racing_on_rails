@@ -1,6 +1,10 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.name}" %>
 
+<%- if @event.flyer.blank? -%>
 <h1><%= @event.name %></h1>
+<%- else -%>
+<h1><%= link_to @event.name, @event.flyer %></h1>
+<%- end -%>
 
 <div style="margin-bottom: 1em;">
 <%= @event.city_state %>
