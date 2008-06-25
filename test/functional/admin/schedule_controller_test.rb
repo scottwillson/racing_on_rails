@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 require 'admin/schedule_controller'
 
-include Admin::ScheduleHelper
+include ::ScheduleHelper
 include ActionView::Helpers::TagHelper
 include ActionView::Helpers::UrlHelper
 include ActionView::Helpers::TextHelper
