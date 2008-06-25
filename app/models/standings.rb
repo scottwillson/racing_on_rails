@@ -122,7 +122,9 @@ class Standings < ActiveRecord::Base
   
   # FIXME Just make a separate CompetitionStandings subclass
   def requires_combined_standings?
-    (self.discipline == 'Mountain Bike' or self.discipline == 'Time Trial') and !(self.event.is_a?(Competition))
+    auto_combined_standings? &&
+    (self.discipline == 'Mountain Bike' || self.discipline == 'Time Trial') && 
+    !(self.event.is_a?(Competition))
   end
 
   def destroy_combined_standings

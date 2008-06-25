@@ -29,6 +29,10 @@ class CombinedStandings < Standings
     false
   end
   
+  def requires_combined_standings?
+    false
+  end
+  
   # Do nothing -- combined_standings do not have combined_standings
   def create_or_destroy_combined_standings; end
   
