@@ -143,7 +143,7 @@ class Admin::TeamsController < Admin::RecordEditor
         format.js
       end
       expire_cache
-    rescue  Exception => error
+    rescue  Exception => e
       render :update do |page|
         page.visual_effect(:highlight, "team_#{@team.id}_row", :startcolor => "#ff0000", :endcolor => "#FFDE14") if @existing_team
         page.alert("Could not delete #{@team.name}.\n#{e}")
