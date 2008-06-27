@@ -1,5 +1,5 @@
 module ScheduleHelper
-  def links_to_years
+  def links_to_years(discipline = nil)
     years = Event.find_all_years
     return unless years.size > 1
     
@@ -8,7 +8,7 @@ module ScheduleHelper
       separator = ''
       years.each do |year|
         links.text!(separator)
-        links.a(year, :href => url_for(:year => year))
+        links.a(year, :href => url_for(:year => year, :discipline => discipline))
         separator = ' | '
       end
     }

@@ -75,11 +75,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/results/:discipline", :controller => "results"
 
+  map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
   map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:year/list", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:year/:discipline", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:year", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/list", :controller => "schedule", :action => "list"
+  map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
   
   map.resources :subscriptions, :collection => { :subscribed => :get }
 

@@ -1,10 +1,10 @@
 <%= tabs do |tabs|
-		tabs.add('All', :discipline => nil)
-		tabs.add('Criterium', :discipline => 'criterium')
-		tabs.add('Cyclocross', :discipline => 'cyclocross')
-		tabs.add('Downhill', :discipline => 'downhill')
-		tabs.add('Mountain Bike (XC)', :discipline => 'mountain_bike')
-		tabs.add('Road', :discipline => 'road')
-		tabs.add('Time Trial', :discipline => 'time_trial')
-		tabs.add('Track', :discipline => 'track')
+		tabs.add('All', :discipline => nil, :year => @year)
+		tabs.add('Criterium', :discipline => 'criterium', :year => @year)
+		tabs.add('Cyclocross', :discipline => 'cyclocross', :year => @year)
+		tabs.add('Downhill', :discipline => 'downhill', :year => @year)
+		tabs.add('Mountain Bike (XC)', :discipline => 'mountain_bike', :year => @year)
+		tabs.add('Road', :discipline => 'road', :year => @year)
+		tabs.add('Time Trial', :discipline => 'time_trial', :year => @year)
+		tabs.add('Track', :discipline => 'track', :year => @year)
 	end  %>

@@ -3,8 +3,8 @@
 <div><p><%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p></div>
 
 <%= links_to_months @schedule %>
-<%= links_to_years %>
-<%= render :partial => "disciplines" %>
+<%= links_to_years @discipline %>
+<%= render :partial => "disciplines", :locals => { :year => @year } %>
 <br>
 
 <% if Date.today < Date.new(@year, 2) %>
