@@ -209,6 +209,13 @@ class Result < ActiveRecord::Base
     self.race.standings.is_a?(TaborSeriesStandings) || self.race.standings.event.is_a?(Competition)
   end
   
+  # Not blank, DNF, DNS, DQ.
+  def finished?
+    return false if place.blank?
+    return false if ["DNF", "DNS", "DQ"].include?(place)
+    place.to_i > 0
+  end
+  
   # Does this result belong to the last event in a MultiDayEvent?
   def last_event?
     return false unless event

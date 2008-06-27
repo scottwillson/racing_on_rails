@@ -37,6 +37,8 @@ class CombinedMountainBikeStandings < CombinedStandings
       if combined_results.any? { |result| result.time.to_i > 0 }
         combined_results.delete_if { |result| result.time.to_i == 0 }
       end
+
+      combined_results.delete_if { |result| !result.finished? }
       
       combined_results = combined_results.stable_sort_by(:place).
                                           stable_sort_by(:category).

@@ -737,4 +737,42 @@ class ResultTest < ActiveSupport::TestCase
     second_result = events(:banana_belt_2).standings.create!.races.create!(:category => category).results.create!
     assert(result.last_event?, "Last event should be last event")    
   end
+  
+  def test_finished?
+    category = Category.find_by_name("Senior Men Pro 1/2")
+    race = SingleDayEvent.create!.standings.create!.races.create!(:category => category)
+    
+    result = race.results.create!(:place => "1")
+    assert(result.finished?, "'1' should be a finisher")
+    
+    result = race.results.create!(:place => nil)
+    assert(!result.finished?, "nil should not be a finisher")
+    
+    result = race.results.create!(:place => "")
+    assert(!result.finished?, "'' should not be a finisher")
+    
+    result = race.results.create!(:place => "1000")
+    assert(result.finished?, "'1000' should be a finisher")
+    
+    result = race.results.create!(:place => "DNF")
+    assert(!result.finished?, "'DNF' should not be a finisher")
+    
+    result = race.results.create!(:place => "dnf")
+    assert(!result.finished?, "'dnf' should not be a finisher")
+    
+    result = race.results.create!(:place => "DQ")
+    assert(!result.finished?, "'DNF' should not be a finisher")
+    
+    result = race.results.create!(:place => "some_non_numeric_place")
+    assert(!result.finished?, "'some_non_numeric_place' should not be a finisher")
+    
+    result = race.results.create!(:place => "some_non_numeric_place_9")
+    assert(!result.finished?, "'some_non_numeric_place_9' should not be a finisher")
+    
+    result = race.results.create!(:place => "1st")
+    assert(result.finished?, "'1st' should be a finisher")
+    
+    result = race.results.create!(:place => "4th")
+    assert(result.finished?, "'4th' should not be a finisher")
+  end
 end

@@ -23,6 +23,9 @@ class CombinedStandingsTest < ActiveSupport::TestCase
     pro_men_race.results.create!(:place => '4', :racer => racers(:weaver), :time => 1200)
     # Results with no time should not be included
     pro_men_race.results.create!(:place => '3', :racer => racers(:molly))
+
+    # DNF should not be included
+    pro_men_race.results.create!(:place => 'DNF', :racer => racers(:alice), :time => 300)
     
     # Trigger CombinedStandings logic
     standings.save!
