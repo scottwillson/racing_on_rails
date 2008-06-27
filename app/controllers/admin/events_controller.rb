@@ -64,7 +64,8 @@ class Admin::EventsController < ApplicationController
     @event = eval(event_type).new(params[:event])
     if @event.save
       expire_cache
-      redirect_to(:action => :show, :id => @event.to_param)
+      flash[:notice] = "Created #{@event.name}"
+      redirect_to(:action => :new)
     else
       flash[:warn] = @event.errors.full_messages
       "new"
