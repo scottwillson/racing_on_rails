@@ -1,6 +1,7 @@
 <% @page_title = "Schedule: #{@year}" %>
 
 <%= links_to_years %>
+<%= render :partial => "disciplines" %>
 
 <% if Date.today < Date.new(@year, 2) %>
 <div>Tentative. Dates are subject to change.</div>

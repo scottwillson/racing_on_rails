@@ -4,6 +4,7 @@
 
 <%= links_to_months @schedule %>
 <%= links_to_years %>
+<%= render :partial => "disciplines" %>
 <br>
 
 <% if Date.today < Date.new(@year, 2) %>

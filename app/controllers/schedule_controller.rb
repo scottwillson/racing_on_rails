@@ -9,13 +9,15 @@ class ScheduleController < ApplicationController
     # Default calendar format
     # === Params
     # * year: default to current year
+    # * discipline
     # === Assigns
     # * year
     # * schedule: instance of year's Schedule::Schedule
     def index
       @year = params["year"].to_i
       @year = Date.today.year if @year == 0
-      events = SingleDayEvent.find_all_by_year(@year)
+      @discipline = Discipline[params["discipline"]]
+      events = SingleDayEvent.find_all_by_year(@year, @discipline)
       @schedule = Schedule::Schedule.new(@year, events)
     end
 
@@ -28,7 +30,8 @@ class ScheduleController < ApplicationController
     def list
       @year = params["year"].to_i
       @year = Date.today.year if @year == 0
-      events = SingleDayEvent.find_all_by_year(@year)
+      @discipline = Discipline[params["discipline"]]
+      events = SingleDayEvent.find_all_by_year(@year, @discipline)
       @schedule = Schedule::Schedule.new(@year, events)
     end
 end
