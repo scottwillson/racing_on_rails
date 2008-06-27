@@ -66,6 +66,11 @@ class ApplicationHelperControllerTest < ActiveSupport::TestCase
  17          <a href="/results/racer/3">Weaver</a>               <a href="/results/racer/3">Ryan</a>                                                                       
 </pre>}
     assert_equal(expected, html, 'HTML')
+    
+    # Sizes set in previous use of column should not affect subsequent callers
+    grid_columns('team_name').size = 120
+    html = results_grid(races(:kings_valley_pro_1_2))
+    assert_equal(expected, html, 'HTML')
   end
   
   def test_div

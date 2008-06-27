@@ -59,7 +59,9 @@ module ApplicationHelper
       grid_column = Column.new(:name => column)
       @@grid_columns[column] = grid_column
     end
-    grid_column
+    
+    # Return a copy so callers can modify column attributes without affecting other clients
+    grid_column.dup
   end
   
   def link_to_result(cell, result)
