@@ -164,7 +164,8 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => skull_hollow.to_param)
+    assert_redirected_to(:action => :new)
+    assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
     assert_equal('Smith Rock', skull_hollow.city, 'city')
@@ -197,7 +198,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert(skull_hollow.is_a?(Series), 'Skull Hollow should be a series')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => skull_hollow.to_param)
+    assert_redirected_to(:action => :new)
   end
   
   def test_create_from_events
@@ -516,7 +517,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_not_nil(silverton, 'Silverton should be in database')
     assert(!silverton.new_record?, "Silverton should be saved")
     assert_nil(silverton.promoter, "Silverton Promoter")
-    assert_redirected_to(:action => :show, :id => silverton.to_param)
+    assert_redirected_to(:action => :new)
   end
   
   def test_save_different_promoter
