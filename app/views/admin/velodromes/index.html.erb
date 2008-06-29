@@ -1,0 +1,65 @@
+<% @page_title = 'Admin: Velodromes' %>
+
+<div align="center">
+
+  <p class="message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><%= flash[:notice] %></p>
+  <p class="message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><%= flash[:warn] %></p>
+
+  <table style="position: relative;">
+    <tr style="position: relative;">
+      <td style="position: relative;">
+        <table class="base" id="velodromes" style="position: relative;">
+          <tr>
+            <th class="name">Name</th>
+            <th>Aliases</th>
+            <th class="center">Member</th>
+            <th></th>
+            <th></th>
+          </tr>
+          <%= render :partial => "velodrome", :collection => @velodromes %>
+          <% if @velodromes.empty? %>
+          <tr valign="top">
+            <td colspan="5" width="200" class="not_found">No velodromes found</td>
+          </tr>
+          <% end %>
+        </table>
+
+        <table style="width: 100%;">
+          <tr>
+            <td><%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <% focus('name') %>
+
+          <%- for velodrome in @velodromes -%>
+            <%= draggable_element("velodrome_#{velodrome.id}", :revert => true, :delay => 100,
+                                  :onStart => "function() { Droppables.remove('velodrome_#{velodrome.id}_row') }", 
+                                  :onEnd => "function() { Droppables.add('velodrome_#{velodrome.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/velodromes/merge?target_id=#{velodrome.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
+            %>
+            <%= drop_receiving_element("velodrome_#{velodrome.id}_row", 
+              :url => { :action => "merge", :target_id => velodrome.id },
+              :onDrop => "function(element){$('velodrome_#{velodrome.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/velodromes/merge?target_id=#{velodrome.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('velodrome_#{velodrome.id}_row') }",
+              :hoverclass => 'hovering' ) %>
+          <%- end -%>
+
+          <script type="text/javascript" charset="utf-8">
+            function restripeTable() {
+              index = 0;
+              $A($('velodromes').rows).each(function(row) {
+                if (row.className == 'even' || row.className == 'odd') {
+                  if (index % 2 == 0) {
+                    row.className = 'even';
+                  }
+                  else {
+                    row.className = 'odd';
+                  }
+                  index = index + 1;
+                }
+              });
+            }
+          </script>
+</div>
