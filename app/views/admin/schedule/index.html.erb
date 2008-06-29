@@ -1,78 +1,77 @@
 <% @page_title = "Admin: Schedule: #{@year}" %>
 
-<%= render "shared/admin/tabs" %>
 <%= links_to_years %>
 <%= links_to_months @schedule %>
 
 <div class="message">
-	<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
-	<span id='warn_text'><%= flash[:warn] %></span>
-	<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
-	<span id='message_text'><%= flash[:notice] %></span>
+  <%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+  <span id='warn_text'><%= flash[:warn] %></span>
+  <%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
+  <span id='message_text'><%= flash[:notice] %></span>
 </div>
 <%= update_page_tag {|page| page.hide('message_icon')} unless flash[:notice] -%>
 <%= update_page_tag {|page| page.hide('warn_icon')} unless flash[:warn] -%>
 
 <table style="width: 100%; margin-bottom: 12px;">
-	<tr>
-		<td>
-			<%= form_tag({:action => 'upload'}, { :multipart => true }) %>
-			<table>
-				<tr>
-					<td>
-						<span class="field_label" id="left">Import Schedule:</span>
-						<%= file_field_tag "schedule_file" %>
-					</td>
-					<td>
-						<%= submit_tag 'Import' %>
-					</td>
-				</tr>
-			</table>
-			</form>
-		</td>
-		<td>
-			<table align="right">
-				<tr>
-					<td align="right">
-						<%= button_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, :align => 'right' %>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
+  <tr>
+    <td>
+      <%= form_tag({:action => 'upload'}, { :multipart => true }) %>
+      <table>
+        <tr>
+          <td>
+            <span class="field_label" id="left">Import Schedule:</span>
+            <%= file_field_tag "schedule_file" %>
+          </td>
+          <td>
+            <%= submit_tag 'Import' %>
+          </td>
+        </tr>
+      </table>
+      </form>
+    </td>
+    <td>
+      <table align="right">
+        <tr>
+          <td align="right">
+            <%= button_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, :align => 'right' %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 </table>
 
 
 <%- for month in @schedule.months -%>
 <div align="center">
-	<table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">
-		<caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
-		<tr class='column_titles'>
-			<th>Sunday</th>
-			<th>Monday</th>
-			<th>Tuesday</th>
-			<th>Wednesday</th>
-			<th>Thursday</th>
-			<th>Friday</th>
-			<th>Saturday</th>
-		</tr>
-		<%- for week in month.weeks -%>
-	      <tr class="month">
-	      <%- for day in week.days -%>
-	        <%- if day.other_month? -%>
-	        <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
-				  <%- else -%>
-	        <td class="day">
-	          <div class="number	"><%= day.day_of_month -%></div>
-					  <%- for event in day.events -%>
-					<div class="event"><%= link_to event.name, :controller => 'events', :action => 'show', :id => event %></div>
-					  <%- end -%>
-				  <%- end -%>
-			    </td>
-			  <%- end -%>
-	      </tr>
-	    <%- end -%>
-	    </table>
-	</div>
-	<br><br>
+  <table border="0" cellspacing="0" cellpadding="2" class="base" id="calendar">
+    <caption><a name="<%= month.name %>"><%= month.name %> <%= @year %></a></caption>
+    <tr class='column_titles'>
+      <th>Sunday</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>Wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+      <th>Saturday</th>
+    </tr>
+    <%- for week in month.weeks -%>
+        <tr class="month">
+        <%- for day in week.days -%>
+          <%- if day.other_month? -%>
+          <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+          <%- else -%>
+          <td class="day">
+            <div class="number  "><%= day.day_of_month -%></div>
+            <%- for event in day.events -%>
+          <div class="event"><%= link_to event.name, :controller => 'events', :action => 'show', :id => event %></div>
+            <%- end -%>
+          <%- end -%>
+          </td>
+        <%- end -%>
+        </tr>
+      <%- end -%>
+      </table>
+  </div>
+  <br><br>
 <% end %>

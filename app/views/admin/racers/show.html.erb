@@ -1,11 +1,9 @@
 <% if @racer.new_record? 
      racer_name = 'New Racer' 
    else
-   racer_name = @racer.name
+     racer_name = @racer.name
    end %>
 <% @page_title = "Admin: Racers: #{@racer.name}" %>
-
-<%= render "shared/admin/tabs" %>
 
 <div align="center">
 <%- if flash[:notice] -%>
