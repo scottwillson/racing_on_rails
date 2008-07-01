@@ -14,6 +14,7 @@ class Event < ActiveRecord::Base
 
   belongs_to :number_issuer
   belongs_to :promoter, :foreign_key => "promoter_id"
+  belongs_to :velodrome
   has_many :standings, 
            :class_name => "Standings", 
            :dependent => :destroy, 

@@ -51,4 +51,11 @@ class SingleDayEventTest < ActiveSupport::TestCase
     assert(!(events(:mt_hood_1).missing_parent?), 'missing_parent?')
     assert_nil(events(:mt_hood_1).missing_parent, 'missing_parent')
   end
+  
+  def test_velodrome
+    event = events(:kings_valley_2004)
+    event.velodrome = velodromes(:alpenrose)
+    event.save!
+    assert_equal(velodromes(:alpenrose), event.velodrome(true), "Should associate velodrome with event")
+  end
 end

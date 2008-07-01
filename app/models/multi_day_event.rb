@@ -18,7 +18,7 @@
 class MultiDayEvent < Event
 
   PROPOGATED_ATTRIBUTES = %w{cancelled city discipline flyer flyer_approved name promoter_id 
-                             prize_list velodrome sanctioned_by state
+                             prize_list sanctioned_by state  velodrome_id
                              } unless defined?(PROPOGATED_ATTRIBUTES)
 
   validates_presence_of :name, :date

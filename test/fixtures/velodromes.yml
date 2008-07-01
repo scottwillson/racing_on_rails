@@ -1,7 +1,9 @@
 alpenrose:
+  id: 1
   name: Alpenrose Dairy
   website: http://www.obra.org/track/
 
 trexlertown:
+  id: 2
   name: Valley Preferred Cycling Center
   website: http://www.lvvelo.org/
