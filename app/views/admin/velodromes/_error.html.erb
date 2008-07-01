@@ -1,0 +1,4 @@
+<%- row_id = rand * 100_000 -%>
+<tr class="error" id="error_<%= row_id %>">
+  <td colspan="4"><%= link_to_function(image_tag('/images/icons/cancelled.gif', :height => 16, :width => 16, :class => "icon"), "Element.hide('error_#{row_id}')") %><%= error %></td>
+</tr>

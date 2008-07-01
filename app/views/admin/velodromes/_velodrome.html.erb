@@ -1,0 +1,20 @@
+<tr class="<%= cycle("even", "odd") %>" id="velodrome_<%= velodrome.id %>_row">
+  <td class="name">
+    <%- @velodrome = velodrome -%>
+    <div class="editable" id="velodrome_<%= velodrome.id %>" style="background-image: url(/images/icons/checkered_flag.gif); background-repeat: no-repeat;">
+      <span id="velodrome_<%= velodrome.id %>_name" style="padding-left: 24px;"><%= render(:partial => 'name', :locals => { :velodrome => velodrome }) %></span>
+    </div>
+  </td>
+  <td class="website">
+    <div class="editable" id="velodrome_<%= velodrome.id %>_website">
+      <%= render(:partial => 'website', :locals => { :velodrome => velodrome }) %>
+    </div>
+  </td>
+  <td class="right" style="white-space: nowrap;">
+    <%= link_to 'Edit', edit_admin_velodrome_path(velodrome) %>
+  </td>
+   <td class="icon"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif', :height => 16, :width => 16),
+                          { :url => admin_velodrome_url(velodrome), :method => :delete, :confirm => "Really delete #{velodrome.name}?" },
+                          { :class => "image", :id => "delete_velodrome_#{velodrome.id}" } %>
+    </td>
+</tr>

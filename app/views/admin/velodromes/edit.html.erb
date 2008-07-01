@@ -1,0 +1,51 @@
+<% if @velodrome.new_record? 
+     velodrome_name = 'New Velodrome' 
+   else
+     velodrome_name = @velodrome.name
+   end %>
+<% @page_title = "Admin: Velodromes: #{@velodrome.name}" %>
+
+<div align="center">
+<%- if flash[:notice] -%>
+  <div class="message" id="message">
+      <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:notice] %>
+  </div>
+<%- end -%>
+
+<%- if flash[:warn] -%>
+  <div class="message" id="warn">
+      <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:warn] %>
+  </div>
+<%- end -%>
+
+<%= error_messages_for 'velodrome' %>
+
+<% form_for([:admin, @velodrome]) do |f| -%>
+  <table class="base">
+    <caption><%= velodrome_name %></caption>
+    <tr>
+      <th></th>
+      <th></th>
+    </tr>
+    <tr>
+      <td class="field_label">Name:</td>
+      <td class=""><%= f.text_field :name %></td>
+    </tr>
+    <tr>
+      <td class="field_label">Website:</td>
+      <td class=""><%= f.text_field :website %></td>
+    </tr>
+    <tr class="buttons">
+      <td class="updatedon" colspan="2"><%= "Updated: #{time_ago_in_words(@velodrome.updated_at, true)} ago" unless @velodrome.updated_at.nil? %></td>
+      <td class="right" colspan="4">
+        <%= link_to("Delete", admin_velodrome_path(@velodrome), 
+                    :method => :delete, :class => 'obvious', :id => 'delete') unless @velodrome.new_record? %>
+        <%= submit_tag "Save", :id => "save" %>
+      </td>
+    </tr>
+  </table>
+<% end -%>
+
+<% focus('velodrome_name') %>

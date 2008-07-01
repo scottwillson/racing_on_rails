@@ -135,14 +135,12 @@ class Admin::RacersController < Admin::RecordEditor
   # Inline edit
   def edit_name
     @racer = Racer.find(params[:id])
-    expire_cache
     render(:partial => 'edit')
   end
 
   # Inline edit
   def edit_team_name
     @racer = Racer.find(params[:id])
-    expire_cache
     render(:partial => 'edit_team_name')
   end
   

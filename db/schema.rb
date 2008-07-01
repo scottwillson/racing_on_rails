@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 51) do
+ActiveRecord::Schema.define(:version => 53) do
 
   create_table "aliases", :force => true do |t|
     t.string   "alias"
@@ -180,6 +180,15 @@ ActiveRecord::Schema.define(:version => 51) do
 
   add_index "number_issuers", ["name"], :name => "number_issuers_name_index", :unique => true
 
+  create_table "pages", :force => true do |t|
+    t.string   "title"
+    t.text     "body"
+    t.text     "path"
+    t.integer  "parent_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "posts", :force => true do |t|
     t.text      "body",                              :null => false
     t.timestamp "date",                              :null => false
@@ -339,18 +348,19 @@ ActiveRecord::Schema.define(:version => 51) do
   add_index "scores", ["source_result_id"], :name => "scores_source_result_id_index"
 
   create_table "standings", :force => true do |t|
-    t.integer  "event_id",                   :default => 0,    :null => false
-    t.integer  "bar_points",                 :default => 1
+    t.integer  "event_id",                              :default => 0,    :null => false
+    t.integer  "bar_points",                            :default => 1
     t.string   "name"
-    t.integer  "lock_version",               :default => 0,    :null => false
+    t.integer  "lock_version",                          :default => 0,    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "ironman",                    :default => true
-    t.integer  "position",                   :default => 0
-    t.string   "discipline",   :limit => 32
-    t.string   "notes",                      :default => ""
+    t.boolean  "ironman",                               :default => true
+    t.integer  "position",                              :default => 0
+    t.string   "discipline",              :limit => 32
+    t.string   "notes",                                 :default => ""
     t.integer  "source_id"
-    t.string   "type",         :limit => 32
+    t.string   "type",                    :limit => 32
+    t.boolean  "auto_combined_standings",               :default => true
   end
 
   add_index "standings", ["event_id"], :name => "event_id"
@@ -379,5 +389,13 @@ ActiveRecord::Schema.define(:version => 51) do
   end
 
   add_index "users", ["username"], :name => "idx_alias", :unique => true
+
+  create_table "velodromes", :force => true do |t|
+    t.string   "name"
+    t.string   "website"
+    t.integer  "lock_version", :default => 0, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

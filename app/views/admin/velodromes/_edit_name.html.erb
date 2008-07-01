@@ -1,0 +1,11 @@
+<%= form_remote_tag(:url => {:action => 'update_name', :id => @velodrome.to_param}) %>
+  <%= text_field_tag 'name', @velodrome.name, :size => 30, 
+        :class => 'edit_in_place_text_field', 
+        :style => "margin-left: 24px;",
+        :id => "velodrome_#{@velodrome.id}_name_text_field" %><%= link_to_remote image_tag('/images/buttons/small_cancel.gif', :class => "cancel"), 
+      { :update => "velodrome_#{@velodrome.id}_name", 
+        :url => { :action => "test_cancel_edit_name", :id => @velodrome.to_param} },
+      { :class => "cancel" } %></form>
+<script type="text/javascript" charset="utf-8">
+  $('velodrome_<%= @velodrome.id %>_name_text_field').select();
+</script>
