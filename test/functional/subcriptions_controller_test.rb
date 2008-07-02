@@ -20,7 +20,7 @@ class SubscriptionsControllerTest < ActiveSupport::TestCase
   end
   
   def test_create
-    @request.env["HTTP_REFERER"] = "http://app.atra.obra.org/subscriptions/new"
+    @request.env["HTTP_REFERER"] = "http://raceatra.com/subscriptions/new"
     post(:create, :subscription => {"name"=>"Scott Willson", "city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "racer_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "email"=>"scott@butlerpress.com", "state"=>"OR"})
     
     assert_redirected_to :action => "subscribed"

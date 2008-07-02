@@ -10,7 +10,7 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.new(params[:subscription])
     
     uri = URI.parse(request.env["HTTP_REFERER"])
-    unless %w{ app.atra.obra.org localhost app.americantrackracing.com}.include?(uri.host)
+    unless %w{ app.atra.obra.org localhost app.americantrackracing.com raceatra.com www.raceatra.com}.include?(uri.host)
       flash[:notice] = "Cannot send request from '#{uri.host}'"
       return render(:action => "new")
     end
