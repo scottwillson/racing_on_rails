@@ -1,37 +1,37 @@
 <% @page_title = "Results: #{@year}" %>
 
 <table class="base" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td>
+  <tr>
+    <td>
 <%= tabs do |tabs|
-		tabs.add('2008', :controller => 'results', :year => nil)
-		tabs.add('2007', :controller => 'results', :year => 2007)
-	end  %>
+    tabs.add('2008', :controller => 'results', :year => nil)
+    tabs.add('2007', :controller => 'results', :year => 2007)
+  end  %>
 
 <%= tabs do |tabs|
-		tabs.add('All', :discipline => nil)
-		tabs.add('Road', :discipline => 'road')
-		tabs.add('Criterium', :discipline => 'criterium')
-		tabs.add('Time Trial', :discipline => 'time_trial')
-		tabs.add('Track', :discipline => 'track')
-		tabs.add('Cyclocross', :discipline => 'cyclocross')
-		tabs.add('Mountain Bike (XC)', :discipline => 'mountain_bike')
-		tabs.add('Downhill', :discipline => 'downhill')
-	end  %>
+    tabs.add('All', :discipline => nil)
+    tabs.add('Road', :discipline => 'road')
+    tabs.add('Criterium', :discipline => 'criterium')
+    tabs.add('Time Trial', :discipline => 'time_trial')
+    tabs.add('Track', :discipline => 'track')
+    tabs.add('Cyclocross', :discipline => 'cyclocross')
+    tabs.add('Mountain Bike (XC)', :discipline => 'mountain_bike')
+    tabs.add('Downhill', :discipline => 'downhill')
+  end  %>
 
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
 
 <p>
 
 <table class="base" border="0" cellspacing="0" cellpadding="0">
-	<caption><%= @year %> Results</caption>
-  	<% unless @events.empty? %> 
+  <caption><%= @year %> Results</caption>
+    <% unless @events.empty? %> 
     <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>
-	<td><%= link_to event.name, :action => 'event', :id => event.id %></td>
+  <td><%= link_to event.name, :action => 'event', :id => event.id %></td>
   </tr>
   <% end %>
   <% else %>
