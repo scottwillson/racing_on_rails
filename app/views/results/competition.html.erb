@@ -3,7 +3,7 @@
 <%# TODO Use helper/partial? %>
 <h1><%= link_to(@racer.name, :action => 'racer', :id => @racer.to_param) %></h1>
 
-<%- for result in @results -%>
+<%- for result in @results.sort { |x, y| y.source_result.date <=> x.source_result.date } -%>
 <table class="base">
 	<caption>
 	  <%= result.place.to_i.ordinalize %> &mdash; 
@@ -19,7 +19,7 @@
 		<th>Date</th>
 		<th class="right">Points</th>
 	</tr>
-	<% for score in result.scores %>
+	<% for score in result.scores.sort { |x, y| y.source_result.date <=> x.source_result.date } %>
 	<tr class="<%= cycle("even", "odd") %>">
 		<td class="right" width="24"><%= score.source_result.place %></td>
 		<td width="400">
