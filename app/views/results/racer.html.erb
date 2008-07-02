@@ -1,52 +1,52 @@
 <% @page_title = "Results: #{@racer.name}" %>
 
 <table class="base">
-	<caption><%= @racer.name %></caption>
-	<tr>
-		<th></th>
-		<th>Race</th>
-		<th>Category</th>
-		<th>Date</th>
-	</tr>
-	<%- for result in @event_results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date } -%>
-	<tr class="<%= cycle("even", "odd") %>">
-	  <td class="right" width="24"><%= result.place %></td>
-	  <td width="400"><%= link_to(result.race.standings.full_name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id, :anchor => result.race.id) %></td>
-	  <td width="200"><%= result.race.name %></td>
-	  <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
-	</tr>
-	<%- end -%>
+  <caption><%= @racer.name %></caption>
+  <tr>
+    <th></th>
+    <th>Race</th>
+    <th>Category</th>
+    <th>Date</th>
+  </tr>
+  <%- for result in @event_results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date } -%>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td class="right" width="24"><%= result.place %></td>
+    <td width="400"><%= link_to(result.race.standings.full_name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id, :anchor => result.race.id) %></td>
+    <td width="200"><%= result.race.name %></td>
+    <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
+  </tr>
+  <%- end -%>
 </table>
 
 <% for result in @competition_results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date } %>
 <br/><br/>
 <table class="base">
-	<caption>
-		<%= result.place.to_i.ordinalize %> &mdash; <%= result.race.standings.full_name %>
-	</caption>
-	<tr>
-		<th></th>
-		<th>Race</th>
-		<th>Category</th>
-		<th>Date</th>
-		<th class="right">Points</th>
-	</tr>
-	<% for score in result.scores.sort {|x, y| y.source_result.race.standings.event.date <=> x.source_result.race.standings.event.date } %>
-	<tr class="<%= cycle("even", "odd") %>">
-		<td class="right" width="24"><%= score.source_result.place %></td>
-		<td width="400">
-			<%= link_to(score.source_result.race.standings.full_name, :controller => 'results', :action => 'event', :id => score.source_result.race.standings.event.id, :anchor => score.source_result.race.id) unless score.source_result.race.standings.event.is_a?(Competition) %>
-			<%= link_to(score.source_result.race.standings.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.race.standings.event.id, :racer_id => @racer.id) if score.source_result.race.standings.event.is_a?(Competition)%></td>
-		<td width="200"><%= score.source_result.race.name %></td>
-		<td width="100"><%= score.source_result.race.standings.event.date.strftime("%D") %></td>
-		<td class="right" width="50"><%= number_with_precision(score.points, 1) %></td>
-	</tr>
-	<% end %>
-	<tr>
-		<td width="24"></td>
-		<td width="400"></td>
-		<td width="200"></td>
-		<td colspan="2" width="150" class="right"><span class="total">TOTAL</span><%= number_with_precision(result.points, 1) %></td>
-	</tr>
+  <caption>
+    <%= result.place.to_i.ordinalize %> &mdash; <%= result.race.standings.full_name %>
+  </caption>
+  <tr>
+    <th></th>
+    <th>Race</th>
+    <th>Category</th>
+    <th>Date</th>
+    <th class="right">Points</th>
+  </tr>
+  <% for score in result.scores.sort {|x, y| y.source_result.race.standings.event.date <=> x.source_result.race.standings.event.date } %>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td class="right" width="24"><%= score.source_result.place %></td>
+    <td width="400">
+      <%= link_to(score.source_result.race.standings.full_name, :controller => 'results', :action => 'event', :id => score.source_result.race.standings.event.id, :anchor => score.source_result.race.id) unless score.source_result.race.standings.event.is_a?(Competition) %>
+      <%= link_to(score.source_result.race.standings.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.race.standings.event.id, :racer_id => @racer.id) if score.source_result.race.standings.event.is_a?(Competition)%></td>
+    <td width="200"><%= score.source_result.race.name %></td>
+    <td width="100"><%= score.source_result.race.standings.event.date.strftime("%D") %></td>
+    <td class="right" width="50"><%= number_with_precision(score.points, 1) %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <td width="24"></td>
+    <td width="400"></td>
+    <td width="200"></td>
+    <td colspan="2" width="150" class="right"><span class="total">TOTAL</span><%= number_with_precision(result.points, 1) %></td>
+  </tr>
 </table>
 <% end %>
