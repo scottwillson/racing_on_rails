@@ -176,6 +176,19 @@ class EventTest < ActiveSupport::TestCase
     assert_equal('10/10', event.short_date, 'Short date')    
   end
   
+  def test_date_range_s_long
+    mt_hood = events(:mt_hood)
+    assert_equal("07/11/2005-07/12/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
+    mt_hood.events.last.date = Date.new(2005, 8, 1)
+    mt_hood.events.last.save!
+    mt_hood.save!
+    mt_hood.reload
+    assert_equal("07/11/2005-08/01/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
+
+    kings_valley = events(:kings_valley)
+    assert_equal("12/31/2003", kings_valley.date_range_s(:long), "date_range_s(long)")
+  end
+
   def test_cancelled
     pir_july_2 = events(:pir)
     assert(!pir_july_2.cancelled, 'cancelled')

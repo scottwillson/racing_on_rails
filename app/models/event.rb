@@ -228,8 +228,12 @@ class Event < ActiveRecord::Base
     self.promoter.phone = value
   end
 
-  def date_range_s
-    "#{date.month}/#{date.day}"
+  def date_range_s(format = :short)
+    if format == :long
+      date.strftime('%m/%d/%Y')
+    else
+      "#{date.month}/#{date.day}"
+    end
   end
 
   def date_range_long_s

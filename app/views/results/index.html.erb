@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@year}" %>
 
-<table class="base" border="0" cellspacing="0" cellpadding="0">
+<table class="base">
   <tr>
     <td>
 <%= tabs do |tabs|
@@ -25,16 +25,16 @@
 
 <p>
 
-<table class="base" border="0" cellspacing="0" cellpadding="0">
+<table class="base">
   <caption><%= @year %> Results</caption>
     <% unless @events.empty? %> 
-    <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
+      <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>
-  <td><%= link_to event.name, :action => 'event', :id => event.id %></td>
+    <td><%= link_to event.name, :action => 'event', :id => event.id %></td>
   </tr>
-  <% end %>
-  <% else %>
+      <% end %>
+    <% else %>
   <tr><td>Results will be posted when available</td></tr>
-  <%- end -%>
+    <%- end -%>
 </table>

@@ -123,8 +123,8 @@ ActiveRecord::Schema.define(:version => 53) do
     t.float    "post_event_fees"
     t.float    "flyer_ad_fee"
     t.integer  "cat4_womens_race_series_id"
-    t.string   "velodrome"
     t.string   "prize_list"
+    t.integer  "velodrome_id"
   end
 
   add_index "events", ["date"], :name => "idx_date"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(:version => 53) do
   add_index "events", ["type"], :name => "idx_type"
   add_index "events", ["oregon_cup_id"], :name => "oregon_cup_id"
   add_index "events", ["number_issuer_id"], :name => "events_number_issuer_id_index"
+  add_index "events", ["velodrome_id"], :name => "velodrome_id"
 
   create_table "images", :force => true do |t|
     t.string   "caption"
@@ -179,15 +180,6 @@ ActiveRecord::Schema.define(:version => 53) do
   end
 
   add_index "number_issuers", ["name"], :name => "number_issuers_name_index", :unique => true
-
-  create_table "pages", :force => true do |t|
-    t.string   "title"
-    t.text     "body"
-    t.text     "path"
-    t.integer  "parent_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "posts", :force => true do |t|
     t.text      "body",                              :null => false
