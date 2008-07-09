@@ -291,7 +291,10 @@ class Racer < ActiveRecord::Base
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
     _year ||= Date.today.year
-    discipline ||= Discipline[:road] 
+
+    if discipline.nil? || !discipline.numbers?
+      discipline = Discipline[:road]
+    end
     
     if value.blank?
       unless new_record?

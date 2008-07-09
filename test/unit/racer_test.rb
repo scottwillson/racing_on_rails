@@ -503,8 +503,8 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal('102', tonkin.road_number)
     assert_nil(tonkin.dh_number)
     assert_nil(tonkin.ccx_number)
-    tonkin.bmx_number = "U89"
-    assert_equal("U89", tonkin.bmx_number)
+    tonkin.ccx_number = "U89"
+    assert_equal("U89", tonkin.ccx_number)
   end
   
   def test_update
@@ -644,5 +644,19 @@ class RacerTest < ActiveSupport::TestCase
       "Ryan Weaver <hotwheels@yahoo.com>"
     ]
     assert_equal(expected, email, "email addresses")
+  end
+  
+  def test_add_number
+    racer = Racer.create!
+    racer.add_number("7890", nil)
+    assert_equal("7890", racer.road_number, "Road number after add with nil discipline")    
+  end
+  
+  def test_add_number_from_non_number_discipline
+    racer = Racer.create!
+    circuit_race = Discipline[:circuit]
+    racer.add_number("7890", circuit_race)
+    assert_equal("7890", racer.road_number, "Road number after add with nil discipline")
+    assert_equal(nil, racer.number(circuit_race), "Circuit race number after add with nil discipline")
   end
 end

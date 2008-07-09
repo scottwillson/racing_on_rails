@@ -179,7 +179,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "1", :first_name => "Paul", :last_name => "Bourcier", :number =>"146", :team_name =>"Hutch's Eugene", :points => "10.0")
     race.results << Result.new(:place => "2", :first_name => "John", :last_name => "Browning", :number =>"197", :team_name =>"Half Fast Velo", :points => "3.0")
     race.results << Result.new(:place => "3", :first_name => "Seth", :last_name => "Hosmer", :number =>"158", :team_name =>"CMG Racing", :points => "")
-    race.results << Result.new(:place => "4", :first_name => "Sam", :last_name => "Johnson", :number =>"826", :team_name =>"Broadmark Berman/Hagens LLC", :points => "")
+    race.results << Result.new(:place => "4", :first_name => "Sam", :last_name => "Johnson", :number =>"836", :team_name =>"Broadmark Berman/Hagens LLC", :points => "")
     race.results << Result.new(:place => "5", :first_name => "Mark", :last_name => "Steger", :number =>"173", :team_name =>"CMG Racing", :points => "3.0")
     race.results << Result.new(:place => "6", :first_name => "Nick", :last_name => "Skenzick", :number =>"114", :team_name =>"Hutch's Eugene", :points => "")
     race.results << Result.new(:place => "7", :first_name => "Chris", :last_name => "Myers", :number =>"812", :team_name =>"Camerati", :points => "")
@@ -203,7 +203,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "4", :first_name => "Brady", :last_name => "Brady", :number =>"415", :team_name =>"Team Oregon/River City Bicycles", :points => "")
 		expected_races << race
 
-    event = SingleDayEvent.new(:discipline => 'Road')
+    event = SingleDayEvent.new(:discipline => 'Circuit')
     standings = event.standings.build(:event => event)
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
@@ -223,7 +223,11 @@ class ResultsFileTest < ActiveSupport::TestCase
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
         if result.racer and !RaceNumber.rental?(result.number, Discipline[event.discipline])
+          assert_equal(expected_result.number, result.racer.road_number, "Road number for #{result.racer.name}")
           assert(result.racer.member?, "member? for race #{index} result #{result_index}: #{result.racer.name} #{result.number}")
+        end
+        if result.racer and RaceNumber.rental?(result.number, Discipline[event.discipline])
+          assert_equal(nil, result.racer.road_number, "Road number")
         end
       end
     end
