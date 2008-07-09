@@ -1,10 +1,10 @@
 <% @page_title = 'Admin: Racers: Duplicates' %>
 
 <div class="message">
-	<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
-	<span id='warn_text'><%= flash[:warn] %></span>
-	<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
-	<span id='message_text'><%= flash[:notice] %></span>
+  <%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
+  <span id='warn_text'><%= flash[:warn] %></span>
+  <%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
+  <span id='message_text'><%= flash[:notice] %></span>
 </div>
 
 <%= form_tag(:action => 'resolve_duplicates') %>
@@ -31,18 +31,18 @@
     <td><strong><%= duplicate.racer.team_name %></strong></td>
     <td><strong><%= duplicate.racer.hometown %></strong></td>
     <td><strong><%= duplicate.racer.birthdate.to_formatted_s if duplicate.racer.birthdate %></strong></td>
-  	<td align="right">
-  		<strong><%= duplicate.racer.road_number %></strong>
-  	</td>
-  	<td align="right">
-  		<strong><%= duplicate.racer.xc_number %></strong>
-  	</td>
-  	<td align="right">
-  		<strong><%= duplicate.racer.dh_number %></strong>
-  	</td>
-  	<td align="right">
-  		<strong><%= duplicate.racer.ccx_number %></strong>
-  	</td>
+    <td align="right">
+      <strong><%= duplicate.racer.road_number %></strong>
+    </td>
+    <td align="right">
+      <strong><%= duplicate.racer.xc_number %></strong>
+    </td>
+    <td align="right">
+      <strong><%= duplicate.racer.dh_number %></strong>
+    </td>
+    <td align="right">
+      <strong><%= duplicate.racer.ccx_number %></strong>
+    </td>
     <td></td>
   </tr>
   <tr class="<%= cycle('even', 'odd') %>">
@@ -57,18 +57,18 @@
     <td><%= racer.team_name %></td>
     <td><%= racer.hometown %></td>
     <td><%= racer.birthdate.to_formatted_s if racer.birthdate %></td>
-  	<td align="right">
-  		<%= racer.road_number %>
-  	</td>
-  	<td align="right">
-  		<%= racer.xc_number %>
-  	</td>
-  	<td align="right">
-  		<%= racer.dh_number %>
-  	</td>
-  	<td align="right">
-  		<%= racer.ccx_number %>
-  	</td>
+    <td align="right">
+      <%= racer.road_number %>
+    </td>
+    <td align="right">
+      <%= racer.xc_number %>
+    </td>
+    <td align="right">
+      <%= racer.dh_number %>
+    </td>
+    <td align="right">
+      <%= racer.ccx_number %>
+    </td>
     <td>
     <%= racer.created_at.to_formatted_s(:long) if racer.created_at -%>
     <%= 'New' unless racer.created_at -%>

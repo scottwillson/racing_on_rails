@@ -6,36 +6,36 @@
   
   pdf.select_font 'Helvetica'
   pdf.pointer = 742.8 - ((index % 3) * 268.4)
-	pdf.text '2007 Member', :justification => :center, :font_size => 12, :absolute_left => 46, :absolute_right => 311.4
+  pdf.text '2007 Member', :justification => :center, :font_size => 12, :absolute_left => 46, :absolute_right => 311.4
 
   pdf.rectangle(31, 584.8 - ((index % 3) * 268.4), 288, 162).stroke
   
   pdf.pointer = 689.8 - ((index % 3) * 268.4)
   pdf.select_font 'Helvetica-Bold'
   pdf.text '2007 Membership Card', :justification => :center, :font_size => 12, :absolute_left => 336.4, :absolute_right => 579.5
-	pdf.text(racer.name || '', :justification => :left, :font_size => 10, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.text(racer.name || '', :justification => :left, :font_size => 10, :absolute_left => 348, :absolute_right => 579.5)
 
-	previous_y = pdf.y
-	pdf.text("Road Cat: #{racer.road_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
-	pdf.pointer = previous_y
-	pdf.text("Road # #{racer.road_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
+  previous_y = pdf.y
+  pdf.text("Road Cat: #{racer.road_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.pointer = previous_y
+  pdf.text("Road # #{racer.road_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
 
-	previous_y = pdf.y
-	pdf.text("CCX Cat: #{racer.ccx_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
-	pdf.pointer = previous_y
-	pdf.text("Track Cat: #{racer.track_category}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
+  previous_y = pdf.y
+  pdf.text("CCX Cat: #{racer.ccx_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.pointer = previous_y
+  pdf.text("Track Cat: #{racer.track_category}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
 
-	previous_y = pdf.y
-	pdf.text("Mtn Cat: #{racer.mtb_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
-	pdf.pointer = previous_y
-	pdf.text("Mtn # #{racer.xc_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
+  previous_y = pdf.y
+  pdf.text("Mtn Cat: #{racer.mtb_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.pointer = previous_y
+  pdf.text("Mtn # #{racer.xc_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
 
-	previous_y = pdf.y
-	pdf.text("Downhill Cat: #{racer.dh_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
-	pdf.pointer = previous_y
-	pdf.text("SS # #{racer.singlespeed_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
+  previous_y = pdf.y
+  pdf.text("Downhill Cat: #{racer.dh_category}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.pointer = previous_y
+  pdf.text("SS # #{racer.singlespeed_number}", :justification => :left, :font_size => 9, :absolute_left => 458, :absolute_right => 579.5)
 
-	pdf.text("Racing Age: #{racer.racing_age}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
+  pdf.text("Racing Age: #{racer.racing_age}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
 
   pdf.select_font 'Helvetica'
   pdf.text 'Membership expires 12/31/2007', :justification => :center, :font_size => 8, :absolute_left => 336.4, :absolute_right => 579.5

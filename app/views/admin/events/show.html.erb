@@ -1,100 +1,100 @@
 <% @page_title = "Admin: Events: #{@event.name}" %>
 
 <div align="center">
-	<div class="message" id="message">
+  <div class="message" id="message">
     <%- if flash[:notice] -%>
-			<%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-			<%= flash[:notice] %>
+      <%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:notice] %>
     <%- end -%>
-	</div>
+  </div>
 
-	<div class="message" id="warn">
+  <div class="message" id="warn">
     <%- if flash[:warn] -%>
-			<%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn') %>
-			<%= flash[:warn] %>
+      <%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn') %>
+      <%= flash[:warn] %>
     <%- end -%>
-	</div>
+  </div>
 
 <%= error_messages_for 'event' %>
 
 <table>
-	<tr>
-		<td valign="top" style="padding-right: 20px;">
-			<!-- standing + races tree -->
-			<table class="base" id="left_nav">
-				<caption class="small">
-					<%= link_to @event.name, :id => @event.to_param, :standings_id => nil, :race_id => nil %>
-					<span style="padding-left: 15px;">	
-						<%= link_to(image_tag('/images/icons/web_page.gif', :title => 'View public results web page', :alt => 'View public results web page'), 
-							 {:controller => '/results', :action => 'event', :year => @event.date.year, 
-							 :discipline => @event.discipline, :id => @event.id},
-							 {:id => "delete_event_#{@event.id}"}) unless @event.standings.empty? %>
-					</span>
-				</caption>
-				<tr>
-					<th colspan="4"></th>
-				</tr>
-				<% for standings in @event.standings %>
-				<tr id="standings_<%= standings.id %>_row">
-					<td class="icon"><%= image_tag '/images/icons/results.gif' %></td>
-					<td colspan="2" class="text"><%= link_to standings.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => nil %></td>
-					<td style="padding-left: 12px;">
-						<%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
-						:url => {:action => "destroy_standings", :id => standings.id},
-						:confirm => "Really delete #{standings.name}?",
-						:complete => evaluate_remote_response
-						%>
-						<span id="message_<%= standings.id %>" ></span>
-					</td>
-				</tr>
-				<% for race in standings.races %>
-				<tr id="race_<%= race.id %>_row">
-					<td class="icon_padding"></td>
-					<td class="icon"><%= image_tag '/images/icons/category.gif' %></td>
-					<td class="text">
-						<%= link_to race.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => race.to_param %>
-						<%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
-					</td>
-					<td style="padding-left: 12px;">
-						<%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
-						:url => {:action => "destroy_race", :id => race.id},
-						:complete => evaluate_remote_response
-						%>
-						<span id="message_<%= race.id %>" ></span>
-					</td>
-				</tr>
-				<% end %>
-				<% end %>
-				<% if @event.standings.empty? %>
-				<tr>
-					<td colspan="4"><i>No results</i></td>
-				</tr>
-				<% end %>
-				<tr>
-					<th colspan="4" class="caption">Import Results</th>
-				</tr>
-				<tr>
-					<td colspan="4" style="white-space: nowrap;">
-			            <%= form_tag({:controller => 'events', :action => 'upload', :id => @event.to_param}, { :multipart => true }) %>
-							<%= file_field_tag "results_file" %><%= submit_tag 'Import' %>
-			            </form>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td valign="top" width="100%">
-			<!-- results -->
-			<% if @race %>
-				<%= render :partial => "race" %>
-			<% elsif @standings %>
-				<%= render :partial => "standings" %>
-			<% else %>
-				<%= form_tag({:action => 'update', :id => @event.id}) %>
-					<%= render(:partial => "event") %>
-				</form>
-				<%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
-			<% end %>
-		</td>
-	</tr>
+  <tr>
+    <td valign="top" style="padding-right: 20px;">
+      <!-- standing + races tree -->
+      <table class="base" id="left_nav">
+        <caption class="small">
+          <%= link_to @event.name, :id => @event.to_param, :standings_id => nil, :race_id => nil %>
+          <span style="padding-left: 15px;">  
+            <%= link_to(image_tag('/images/icons/web_page.gif', :title => 'View public results web page', :alt => 'View public results web page'), 
+               {:controller => '/results', :action => 'event', :year => @event.date.year, 
+               :discipline => @event.discipline, :id => @event.id},
+               {:id => "delete_event_#{@event.id}"}) unless @event.standings.empty? %>
+          </span>
+        </caption>
+        <tr>
+          <th colspan="4"></th>
+        </tr>
+        <% for standings in @event.standings %>
+        <tr id="standings_<%= standings.id %>_row">
+          <td class="icon"><%= image_tag '/images/icons/results.gif' %></td>
+          <td colspan="2" class="text"><%= link_to standings.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => nil %></td>
+          <td style="padding-left: 12px;">
+            <%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+            :url => {:action => "destroy_standings", :id => standings.id},
+            :confirm => "Really delete #{standings.name}?",
+            :complete => evaluate_remote_response
+            %>
+            <span id="message_<%= standings.id %>" ></span>
+          </td>
+        </tr>
+        <% for race in standings.races %>
+        <tr id="race_<%= race.id %>_row">
+          <td class="icon_padding"></td>
+          <td class="icon"><%= image_tag '/images/icons/category.gif' %></td>
+          <td class="text">
+            <%= link_to race.name, :id => @event.to_param, :standings_id => standings.to_param, :race_id => race.to_param %>
+            <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
+          </td>
+          <td style="padding-left: 12px;">
+            <%= link_to_remote image_tag('/images/buttons/remove_solo.gif', :height => 22, :width => 22, :border => 0),
+            :url => {:action => "destroy_race", :id => race.id},
+            :complete => evaluate_remote_response
+            %>
+            <span id="message_<%= race.id %>" ></span>
+          </td>
+        </tr>
+        <% end %>
+        <% end %>
+        <% if @event.standings.empty? %>
+        <tr>
+          <td colspan="4"><i>No results</i></td>
+        </tr>
+        <% end %>
+        <tr>
+          <th colspan="4" class="caption">Import Results</th>
+        </tr>
+        <tr>
+          <td colspan="4" style="white-space: nowrap;">
+                  <%= form_tag({:controller => 'events', :action => 'upload', :id => @event.to_param}, { :multipart => true }) %>
+              <%= file_field_tag "results_file" %><%= submit_tag 'Import' %>
+                  </form>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" width="100%">
+      <!-- results -->
+      <% if @race %>
+        <%= render :partial => "race" %>
+      <% elsif @standings %>
+        <%= render :partial => "standings" %>
+      <% else %>
+        <%= form_tag({:action => 'update', :id => @event.id}) %>
+          <%= render(:partial => "event") %>
+        </form>
+        <%= render(:partial => "events") if @event.is_a?(MultiDayEvent) %>
+      <% end %>
+    </td>
+  </tr>
 </table>
 </div>

@@ -1,12 +1,12 @@
 <span class="bar_points">
-	<%= form_remote_tag(:url => {:action => 'update_bar_points', :id => race.to_param}, :update => "bar_points") %>
-	<select name="bar_points" 
-		onchange="new Ajax.Updater(
-			'bar_points', 
-			'/admin/events/update_bar_points', 
-			{asynchronous:true, evalScripts:true, parameters:Form.serialize(this.form)}); return false;">
-	  <%= options_for_select bar_points_and_labels, race.bar_points %>
-	  <%= hidden_field_tag 'id', race.id %>
-	</select>
-	</form>
+  <%= form_remote_tag(:url => {:action => 'update_bar_points', :id => race.to_param}, :update => "bar_points") %>
+  <select name="bar_points" 
+    onchange="new Ajax.Updater(
+      'bar_points', 
+      '/admin/events/update_bar_points', 
+      {asynchronous:true, evalScripts:true, parameters:Form.serialize(this.form)}); return false;">
+    <%= options_for_select bar_points_and_labels, race.bar_points %>
+    <%= hidden_field_tag 'id', race.id %>
+  </select>
+  </form>
 </span>

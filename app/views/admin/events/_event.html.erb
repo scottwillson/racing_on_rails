@@ -1,189 +1,189 @@
 <table class="base">
-	<caption><%= event.friendly_class_name %>: <%= event.name %></caption>
-	<tr>
-		<th colspan="4"></th>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<table>
-				<tr>
-					<td class="field_label">Name:</td>
-					<td><%= text_field 'event', 'name', :size => 60 %></td>
-				</tr>
-				<%- if event.is_a?(SingleDayEvent) and event.parent -%>
-				<tr>
-					<td class="field_label">Parent:</td>
-					<td>
-						<%= link_to event.parent.name, 
-							{:action => 'show', :id =>  event.parent.to_param}, 
-							:class => 'obvious' %> (<%= event.parent.friendly_class_name %>) 						
-					</td>
-				</tr>
-				<%- end -%>
-				
-				<tr>
-					<td></td>
-					<td>
-						<%= render :partial => 'parent', :locals => {:event => event} %>						
-					</td>
-				</tr>
-				<tr>
-					<td class="field_label">Type:</td>
-					<td><%= select 'event', 'type', 
-						[['Single Day Event (most events)', 'SingleDayEvent'],
-					     ['Multi Day Event (event over consecutive days: stage races, AVC)', 'MultiDayEvent'], 
-					     ['Series (weekend events with full BAR points: Cross Crusade)', 'Series'], 
-					     ['Weekly Series (weeknight, BAR points only for final standings: PIR)', 'WeeklySeries']] %></td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td>
-			<table>
-				<tr>
-					<td class="field_label">Date:</td>
-					<td>
-						<%- if @event.is_a?(SingleDayEvent) -%>
-						<%= text_field 'event', 'date' %>
-						<%- else -%>
-							<%= event.start_date.strftime('%A, %B %d, %Y') -%>
-							<%- if event.start_date != event.end_date -%>
-								 &nbsp;to <br>
-								<%= event.end_date.strftime('%A, %B %d, %Y') -%>
-							<%- end -%>
-						<%- end -%>
-					</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td class="field_label" id="left"><%= check_box 'event', 'cancelled' %> Cancelled</td>
-				</tr>
-				<tr>
-					<td class="field_label">Discipline:</td>
-					<td><%= select 'event', 'discipline', Discipline.find_all_names %></td>
-				</tr>
-				<tr>
-					<td class="field_label">City:</td>
-					<td><%= text_field 'event', 'city' %></td>
-				</tr>
-				<tr>
-					<td class="field_label">State:</td>
-					<td><%= text_field 'event', 'state' %></td>
-				</tr>
-			</table>
-		</td>
-		<td>
-			<table>
-				<tr>
-					<td>
-						<table class="base" id="inline">
-							<tr>
-								<th colspan="2">Promoter</th>
-							</tr>
-							<tr>
-								<td class="field_label">Name:</td>
-								<td><%= select("event", 
-											   "promoter_id", 
-											   Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
-											   { :include_blank => true}) %>
-								    <%= observe_field(
-											'event_promoter_id', 
-											:url => {:action => 'promoter_changed', :id => @event.id}, :with => 'promoter_id',
-											:before => update_page {|page|
-																		page.visual_effect(:fade, 'promoter_email', :duration => 0.5)
-																		page.visual_effect(:fade, 'promoter_phone', :duration => 0.5)
-																		page.visual_effect(:fade, 'edit_promoter_link', :duration => 0.5)
-																	},
-											:success => evaluate_remote_response
-									) %>
-								</td>
-							</tr>
-							<tr>
-								<td class="field_label">Email:</td>
-								<td id="promoter_email"><%= event.promoter_email %></td>
-							</tr>
-							<tr>
-								<td class="field_label">Phone:</td>
-								<td id="promoter_phone"><%= event.promoter_phone %></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td style="text-align: right;">
-									<span id="edit_promoter_link">
-									<%= link_to(
-												'Edit', 
-												:controller => 'promoters', 
-												:action => 'show', 
-												:id => @event.promoter.id,
-												:event_id => @event.id) if @event.promoter %>
-									</span>
-									&nbsp;<%= link_to(
-												'New', 
-												:controller => 'promoters', 
-												:action => 'new', 
-												:event_id => @event.id) %>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<table>
-							<tr>
-								<td class="field_label">Sanctioned by:</td>
-								<td><%= select 'event', 'sanctioned_by', SANCTIONING_ORGANIZATIONS %></td>
-							</tr>
-							<tr>
-								<td class="field_label">Number Issuer:</td>
-								<td><%= number_issuers %></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table>
-				<tr>
-					<td class="field_label" width="100">Notes:</td>
-					<td width="100%"><%= text_field 'event', 'notes', :style => 'width: 100%;' %></td>
-				</tr>
-				<tr>
-					<td class="field_label" width="100">Flyer URL:</td>
-					<td width="100%"><%= text_field 'event', 'flyer', :style => 'width: 100%;' %></td>
-				</tr>
-				<tr>
-					<td width="100"></td>
-					<td width="100%" class="field_label" id="left"><%= check_box 'event', 'flyer_approved' %> Flyer Approved</td>
-				</tr>
-			</table>
-		</td>
-		<td>
-			<table>
-				<tr>
-					<td class="field_label" width="100">Pre-Event Fees Paid:</td>
-					<td width="100%"><%= text_field 'event', 'pre_event_fees', :size => 9 %></td>
-				</tr>
-				<tr>
-					<td class="field_label" width="100">Post-Event Fees Paid:</td>
-					<td width="100%"><%= text_field 'event', 'post_event_fees', :size => 9 %></td>
-				</tr>
+  <caption><%= event.friendly_class_name %>: <%= event.name %></caption>
+  <tr>
+    <th colspan="4"></th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table>
+        <tr>
+          <td class="field_label">Name:</td>
+          <td><%= text_field 'event', 'name', :size => 60 %></td>
+        </tr>
+        <%- if event.is_a?(SingleDayEvent) and event.parent -%>
+        <tr>
+          <td class="field_label">Parent:</td>
+          <td>
+            <%= link_to event.parent.name, 
+              {:action => 'show', :id =>  event.parent.to_param}, 
+              :class => 'obvious' %> (<%= event.parent.friendly_class_name %>)            
+          </td>
+        </tr>
+        <%- end -%>
+        
+        <tr>
+          <td></td>
+          <td>
+            <%= render :partial => 'parent', :locals => {:event => event} %>            
+          </td>
+        </tr>
+        <tr>
+          <td class="field_label">Type:</td>
+          <td><%= select 'event', 'type', 
+            [['Single Day Event (most events)', 'SingleDayEvent'],
+               ['Multi Day Event (event over consecutive days: stage races, AVC)', 'MultiDayEvent'], 
+               ['Series (weekend events with full BAR points: Cross Crusade)', 'Series'], 
+               ['Weekly Series (weeknight, BAR points only for final standings: PIR)', 'WeeklySeries']] %></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td>
+      <table>
+        <tr>
+          <td class="field_label">Date:</td>
+          <td>
+            <%- if @event.is_a?(SingleDayEvent) -%>
+            <%= text_field 'event', 'date' %>
+            <%- else -%>
+              <%= event.start_date.strftime('%A, %B %d, %Y') -%>
+              <%- if event.start_date != event.end_date -%>
+                 &nbsp;to <br>
+                <%= event.end_date.strftime('%A, %B %d, %Y') -%>
+              <%- end -%>
+            <%- end -%>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="field_label" id="left"><%= check_box 'event', 'cancelled' %> Cancelled</td>
+        </tr>
+        <tr>
+          <td class="field_label">Discipline:</td>
+          <td><%= select 'event', 'discipline', Discipline.find_all_names %></td>
+        </tr>
+        <tr>
+          <td class="field_label">City:</td>
+          <td><%= text_field 'event', 'city' %></td>
+        </tr>
+        <tr>
+          <td class="field_label">State:</td>
+          <td><%= text_field 'event', 'state' %></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td>
+            <table class="base" id="inline">
+              <tr>
+                <th colspan="2">Promoter</th>
+              </tr>
+              <tr>
+                <td class="field_label">Name:</td>
+                <td><%= select("event", 
+                         "promoter_id", 
+                         Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
+                         { :include_blank => true}) %>
+                    <%= observe_field(
+                      'event_promoter_id', 
+                      :url => {:action => 'promoter_changed', :id => @event.id}, :with => 'promoter_id',
+                      :before => update_page {|page|
+                                    page.visual_effect(:fade, 'promoter_email', :duration => 0.5)
+                                    page.visual_effect(:fade, 'promoter_phone', :duration => 0.5)
+                                    page.visual_effect(:fade, 'edit_promoter_link', :duration => 0.5)
+                                  },
+                      :success => evaluate_remote_response
+                  ) %>
+                </td>
+              </tr>
+              <tr>
+                <td class="field_label">Email:</td>
+                <td id="promoter_email"><%= event.promoter_email %></td>
+              </tr>
+              <tr>
+                <td class="field_label">Phone:</td>
+                <td id="promoter_phone"><%= event.promoter_phone %></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td style="text-align: right;">
+                  <span id="edit_promoter_link">
+                  <%= link_to(
+                        'Edit', 
+                        :controller => 'promoters', 
+                        :action => 'show', 
+                        :id => @event.promoter.id,
+                        :event_id => @event.id) if @event.promoter %>
+                  </span>
+                  &nbsp;<%= link_to(
+                        'New', 
+                        :controller => 'promoters', 
+                        :action => 'new', 
+                        :event_id => @event.id) %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table>
+              <tr>
+                <td class="field_label">Sanctioned by:</td>
+                <td><%= select 'event', 'sanctioned_by', SANCTIONING_ORGANIZATIONS %></td>
+              </tr>
+              <tr>
+                <td class="field_label">Number Issuer:</td>
+                <td><%= number_issuers %></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <td class="field_label" width="100">Notes:</td>
+          <td width="100%"><%= text_field 'event', 'notes', :style => 'width: 100%;' %></td>
+        </tr>
+        <tr>
+          <td class="field_label" width="100">Flyer URL:</td>
+          <td width="100%"><%= text_field 'event', 'flyer', :style => 'width: 100%;' %></td>
+        </tr>
+        <tr>
+          <td width="100"></td>
+          <td width="100%" class="field_label" id="left"><%= check_box 'event', 'flyer_approved' %> Flyer Approved</td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td class="field_label" width="100">Pre-Event Fees Paid:</td>
+          <td width="100%"><%= text_field 'event', 'pre_event_fees', :size => 9 %></td>
+        </tr>
+        <tr>
+          <td class="field_label" width="100">Post-Event Fees Paid:</td>
+          <td width="100%"><%= text_field 'event', 'post_event_fees', :size => 9 %></td>
+        </tr>
         <tr>
           <td class="field_label" width="100">Flyer Ad Paid:</td>
           <td width="100%"><%= text_field 'event', 'flyer_ad_fee', :size => 9 %></td>
         </tr>
-			</table>
-		</td>
-	</tr>
-	<tr class="buttons">
-		<td class="updatedon">Updated: <%= @event.updated_at.to_formatted_s(:long) unless @event.updated_at.nil? %></td>
-		<td class="right">
-			<%= link_to_remote('Delete', {:url => { :action => "destroy_event", :id => @event.id }}, {:class => 'obvious'}) unless @event.new_record? %>
-			<%= submit_tag "Save" %>
-		</td>
-	</tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="buttons">
+    <td class="updatedon">Updated: <%= @event.updated_at.to_formatted_s(:long) unless @event.updated_at.nil? %></td>
+    <td class="right">
+      <%= link_to_remote('Delete', {:url => { :action => "destroy_event", :id => @event.id }}, {:class => 'obvious'}) unless @event.new_record? %>
+      <%= submit_tag "Save" %>
+    </td>
+  </tr>
 </table>

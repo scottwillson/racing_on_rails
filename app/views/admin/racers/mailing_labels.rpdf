@@ -12,10 +12,10 @@ row = 0
   column = index % 3
   left_margin = 29 + column * 198
   right_margin = 193 + column * 198
-	pdf.text racer.name || '', :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
-	pdf.text racer.street || '', :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
-	pdf.text racer.city_state_zip, :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
-	if column == 2
-	  row = row + 1
+  pdf.text racer.name || '', :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
+  pdf.text racer.street || '', :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
+  pdf.text racer.city_state_zip, :justification => :left, :font_size => 10, :absolute_left => left_margin, :absolute_right => right_margin
+  if column == 2
+    row = row + 1
   end
 end
