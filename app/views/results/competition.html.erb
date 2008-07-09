@@ -3,7 +3,7 @@
 <%# TODO Use helper/partial? %>
 <h1><%= link_to(@racer.name, :action => 'racer', :id => @racer.to_param) %></h1>
 
-<%- for result in @results.sort { |x, y| y.source_result.date <=> x.source_result.date } -%>
+<%- for result in @results.sort { |x, y| y.date <=> x.date } -%>
 <table class="base">
 	<caption>
 	  <%= result.place.to_i.ordinalize %> &mdash; 
