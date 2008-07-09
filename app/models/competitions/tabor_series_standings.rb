@@ -126,7 +126,7 @@ class TaborSeriesStandings < Standings
   # * Drop lowest-scoring result
   def after_create_competition_results_for(race)
     race.results.each do |result|
-      if result.scores.size > 5
+      if result.scores.size > 5 || (result.scores.size > 4 && race.category.name == "Category 4 Men")
         result.scores.sort! { |x, y| y.points <=> x.points }
         lowest_score = result.scores.last
         result.scores.destroy(lowest_score)
