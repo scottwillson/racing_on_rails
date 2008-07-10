@@ -135,4 +135,56 @@ class TaborSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(100 + 0 + 50 + 36 + 13 + (12 * 2), result.points, "points")
     assert_equal(racers(:weaver), result.racer, "racer")
   end
+  
+  def test_many_results
+    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    masters = Category.find_or_create_by_name("Men Masters 40+")
+    senior_men = categories(:senior_men)
+    racer = Racer.create!(:name => "John Browning")
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 6, 4)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 6, 11)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 6, 18)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 2, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 5, :racer => racer)
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 6, 25)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 7, 2)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 2, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 1, :racer => racer)
+    
+    event_standings = series.events.create!(:date => Date.new(2008, 7, 9)).standings.create!
+    event_standings.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
+    event_standings.races.create!(:category => senior_men).results.create!(:place => 20, :racer => racer)
+
+    TaborSeriesStandings.recalculate(2008)
+    
+    overall_standings = series.standings.first
+    masters_overall_race = overall_standings.races.detect { |race| race.category == masters }
+    assert_not_nil(masters_overall_race, "Should have Masters overall race")
+    masters_overall_race.results(true).sort!
+    result = masters_overall_race.results.first
+    assert_equal("1", result.place, "place")
+    assert_equal(5, result.scores.size, "Scores")
+    assert_equal(100 + 100 + 70 + 100 + 0 + (100 * 2), result.points, "points")
+    assert_equal(racer, result.racer, "racer")
+
+    senior_men_overall_race = overall_standings.races.detect { |race| race.category == senior_men }
+    assert_not_nil(senior_men_overall_race, "Should have Senior Men overall race")
+    senior_men_overall_race.results(true).sort!
+    result = senior_men_overall_race.results.first
+    assert_equal("1", result.place, "place")
+    assert_equal(5, result.scores.size, "Scores")
+    assert_equal(70 + 70 + 36 + 70 + 100 + (0 * 2), result.points, "points")
+    assert_equal(racer, result.racer, "racer")
+  end
 end
