@@ -29,6 +29,10 @@ class CombinedStandings < Standings
     false
   end
   
+  def calculate_combined_standings?
+    false
+  end
+  
   def requires_combined_standings?
     false
   end

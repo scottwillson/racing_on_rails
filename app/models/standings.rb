@@ -106,11 +106,11 @@ class Standings < ActiveRecord::Base
   # Adds +combined_standings+ if Mountain Bike or Time Trial Event. 
   # Destroy +combined_standings+ if they exist, but should not
   def create_or_destroy_combined_standings
-    if !requires_combined_standings? or (combined_standings(true) and combined_standings.discipline != discipline)
+    if !calculate_combined_standings? or (combined_standings(true) and combined_standings.discipline != discipline)
       destroy_combined_standings
     end
     
-    if requires_combined_standings? and combined_standings(true).nil?
+    if calculate_combined_standings? and combined_standings(true).nil?
       if discipline == 'Mountain Bike'
         combined_standings = CombinedMountainBikeStandings.create!(:source => self)
       elsif discipline == 'Time Trial'
@@ -121,10 +121,12 @@ class Standings < ActiveRecord::Base
   end
   
   # FIXME Just make a separate CompetitionStandings subclass
+  def calculate_combined_standings?
+    auto_combined_standings? && requires_combined_standings?
+  end
+  
   def requires_combined_standings?
-    auto_combined_standings? &&
-    (self.discipline == 'Mountain Bike' || self.discipline == 'Time Trial') && 
-    !(self.event.is_a?(Competition))
+    (self.discipline == 'Mountain Bike' || self.discipline == 'Time Trial') && !(self.event.is_a?(Competition))
   end
 
   def destroy_combined_standings
@@ -136,12 +138,12 @@ class Standings < ActiveRecord::Base
   
   # Let +combined_standings+ know that a result changed
   def after_result_save
-    combined_standings.after_source_result_save if requires_combined_standings? and self.combined_standings
+    combined_standings.after_source_result_save if calculate_combined_standings? and self.combined_standings
   end
 
   # Let +combined_standings+ know that a result was destroyed
   def after_result_destroy
-    combined_standings.after_result_destroy if requires_combined_standings? and self.combined_standings
+    combined_standings.after_result_destroy if calculate_combined_standings? and self.combined_standings
   end
   
   # Compare by position
