@@ -106,11 +106,11 @@ class Standings < ActiveRecord::Base
   # Adds +combined_standings+ if Mountain Bike or Time Trial Event. 
   # Destroy +combined_standings+ if they exist, but should not
   def create_or_destroy_combined_standings
-    if !calculate_combined_standings? or (combined_standings(true) and combined_standings.discipline != discipline)
+    if !calculate_combined_standings? || (combined_standings(true) && combined_standings.discipline != discipline)
       destroy_combined_standings
     end
     
-    if calculate_combined_standings? and combined_standings(true).nil?
+    if calculate_combined_standings? && combined_standings(true).nil?
       if discipline == 'Mountain Bike'
         combined_standings = CombinedMountainBikeStandings.create!(:source => self)
       elsif discipline == 'Time Trial'
@@ -130,7 +130,7 @@ class Standings < ActiveRecord::Base
   end
 
   def destroy_combined_standings
-    if combined_standings
+    if combined_standings(true)
       self.combined_standings.destroy
       self.combined_standings = nil
     end
