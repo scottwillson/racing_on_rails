@@ -533,6 +533,10 @@ class Result < ActiveRecord::Base
     end
   end
   
+  def place_as_integer
+    place.to_i
+  end
+  
   # All numbered places first, then blanks, followed by DNF, DQ, and DNS
   def <=>(other)
     # Figure out the major position by place first, then break it down further if 
