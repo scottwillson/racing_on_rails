@@ -159,6 +159,11 @@ class Event < ActiveRecord::Base
     "#{prefix}#{date.month}/#{date.day}#{suffix}"
   end
   
+  # Same as start_date for single-day events
+  def end_date
+    date
+  end
+  
   def year
     return nil unless date
     date.year

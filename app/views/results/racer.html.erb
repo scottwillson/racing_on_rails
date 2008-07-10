@@ -8,7 +8,7 @@
     <th>Category</th>
     <th>Date</th>
   </tr>
-  <%- for result in @event_results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date } -%>
+  <%- for result in @event_results.sort {|x, y| y.race.standings.event.end_date <=> x.race.standings.event.end_date } -%>
   <tr class="<%= cycle("even", "odd") %>">
     <td class="right" width="24"><%= result.place %></td>
     <td width="400"><%= link_to(result.race.standings.full_name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id, :anchor => result.race.id) %></td>
@@ -18,7 +18,7 @@
   <%- end -%>
 </table>
 
-<% for result in @competition_results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date } %>
+<% for result in @competition_results.sort {|x, y| y.race.standings.event.end_date <=> x.race.standings.event.end_date } %>
 <br/><br/>
 <table class="base">
   <caption>
