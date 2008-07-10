@@ -228,4 +228,24 @@ class StandingsTest < ActiveSupport::TestCase
     standings = stage.standings.create(:name => 'Cascade Classic - Cascade Lakes Road Race')
     assert_equal('Cascade Classic - Cascade Lakes Road Race', standings.full_name, 'stage race standings full_name')
   end
+  
+  def test_combined_standings_defaults
+    road_event = SingleDayEvent.create!(:discipline => "Road")
+    standings = road_event.standings.create!
+    assert(standings.auto_combined_standings?, "auto_combined_standings? default")
+    assert(!standings.requires_combined_standings?, "requires_combined_standings? default")
+    assert(!standings.calculate_combined_standings?, "calculate_combined_standings? default")
+    
+    mtb_event = SingleDayEvent.create!(:discipline => "Mountain Bike")
+    standings = mtb_event.standings.create!
+    assert(standings.auto_combined_standings?, "auto_combined_standings? default")
+    assert(standings.requires_combined_standings?, "requires_combined_standings? default")
+    assert(standings.calculate_combined_standings?, "calculate_combined_standings? default")
+    
+    tt_event = SingleDayEvent.create!(:discipline => "Time Trial")
+    standings = tt_event.standings.create!
+    assert(standings.auto_combined_standings?, "auto_combined_standings? default")
+    assert(standings.requires_combined_standings?, "requires_combined_standings? default")
+    assert(standings.calculate_combined_standings?, "calculate_combined_standings? default")
+  end
 end

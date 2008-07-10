@@ -793,4 +793,27 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_response(:success)
     assert_template("admin/events/show")
   end
+  
+  def test_update_existing_combined_standings
+    
+    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
+    standings = event.standings.create!
+    
+    semi_pro_men = Category.find_or_create_by_name('Semi-Pro Men')
+    semi_pro_men_race = standings.races.create!(:category => semi_pro_men, :distance => 40, :laps => 2)
+    semi_pro_men_1st_place = semi_pro_men_race.results.create!(:place => 1, :time => 300, 
+      :racer => Racer.create!(:name => "semi_pro_men_1st_place"))
+    standings.save!
+    
+    post(:update, "standings_id"=> standings.id, 
+                  "id" => event.id, 
+                  "standings"=>{ "auto_combined_standings"=>"1", 
+                                  "name"=>"Portland MTB Short Track Series", 
+                                  "bar_points"=>"0", 
+                                  "ironman"=>"1", 
+                                  "discipline"=>"Mountain Bike"})
+    
+    assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
+    assert_response(:redirect)
+  end
 end

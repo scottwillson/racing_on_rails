@@ -168,4 +168,66 @@ class CombinedStandingsTest < ActiveSupport::TestCase
     assert_equal(pro_men_1st_place.racer, men_combined_race.results[2].racer, 'Combined standings men race results racer')
     assert_equal(pro_men_2nd_place.racer, men_combined_race.results[3].racer, 'Combined standings men race results racer')
   end
+  
+  def test_should_replace_existing_standings
+    CombinedMountainBikeStandings.reset
+
+    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
+    standings = event.standings.create!
+    
+    semi_pro_men = Category.find_or_create_by_name('Semi-Pro Men')
+    semi_pro_men_race = standings.races.create!(:category => semi_pro_men, :distance => 40, :laps => 2)
+    semi_pro_men_1st_place = semi_pro_men_race.results.create!(:place => 1, :time => 300, 
+      :racer => Racer.create!(:name => "semi_pro_men_1st_place"))
+
+    combined_standings = standings.combined_standings(true)
+    assert_not_nil(combined_standings, 'MTB standings should have combined standings')
+    
+    standings.auto_combined_standings = false
+    standings.save!
+    
+    combined_standings = standings.combined_standings(true)
+    assert_nil(combined_standings, 'MTB standings should not have combined standings')
+    
+    standings.auto_combined_standings = true
+    standings.save!
+
+    combined_standings = standings.combined_standings(true)
+    assert_not_nil(combined_standings, 'MTB standings should have combined standings')
+  end
+
+  def test_should_not_scramble_results_when_laps_are_same
+    CombinedMountainBikeStandings.reset
+    event = SingleDayEvent.create!(:discipline => "Mountain Bike")
+    standings = event.standings.create!
+
+    pro_men = Category.find_or_create_by_name('Pro Men')
+    pro_men_race = standings.races.create!(:category => pro_men)
+    results = []
+    results << pro_men_race.results.create!(:place => 1, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 2, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 3, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 4, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 5, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 6, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 7, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 8, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 9, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 10, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => 11, :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => "DNF", :racer => Racer.create!, :laps => 9)
+    results << pro_men_race.results.create!(:place => "DNF", :racer => Racer.create!, :laps => 9)
+    
+    standings.save!
+    
+    combined_standings = standings.combined_standings(true)
+    men_combined_race = combined_standings.races(true).detect {|race| race.category == Category.find_by_name("Pro, Semi-Pro Men")}
+    assert_not_nil(men_combined_race, 'men_combined_race')
+    assert_equal(11, men_combined_race.results(true).size, 'Combined standings men race results')
+
+    combined_results = men_combined_race.results.sort
+    for index in 0..10
+      assert_equal(results[index].racer, combined_results[index].racer, "Combined standings men race results racer #{index}")
+    end
+  end
 end
