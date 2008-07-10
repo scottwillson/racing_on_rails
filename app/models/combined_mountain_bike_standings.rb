@@ -40,21 +40,22 @@ class CombinedMountainBikeStandings < CombinedStandings
 
       combined_results.delete_if { |result| !result.finished? }
       
-      combined_results = combined_results.stable_sort_by(:place).
+      combined_results = combined_results.stable_sort_by(:place_as_integer).
                                           stable_sort_by(:category).
                                           stable_sort_by(:time).
                                           stable_sort_by(:laps, :desc).
                                           stable_sort_by(:distance, :desc)
       
       combined_results.each_with_index { |result, i|
-        race.results.create!(:place => (i + 1), :racer => result.racer, :team => result.team, :time => result.time)
+        race.results.create!(:place => (i + 1), :racer => result.racer, :team => result.team, 
+                             :time => result.time, :laps => result.laps)
       }
     end
   end
 
   def create_races
-    races.create(:category => men_combined)
-    races.create(:category => women_combined)
+    races.create(:category => men_combined, :result_columns => %W{place number last_name first_name team_name laps time})
+    races.create(:category => women_combined, :result_columns => %W{place number last_name first_name team_name laps time})
   end
   
   def men_combined
