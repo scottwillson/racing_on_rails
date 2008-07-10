@@ -1,4 +1,4 @@
-# Standings derived from other standings: all categories in a time trail; Pro, Expert Women mountain biking
+# Standings derived from other standings: all categories in a time trial; Pro, Expert Women mountain biking
 class CombinedStandings < Standings
   after_create {|standings| standings.recalculate}
   belongs_to :source, 
@@ -6,7 +6,7 @@ class CombinedStandings < Standings
              :foreign_key => 'source_id'
   validates_presence_of :source_id
   validates_uniqueness_of :source_id, :message => "Cannot more than one CombinedStandings for same source Standings"
-  validate {|standings| standings.combined_standings.nil?}
+  validate { |standings| standings.combined_standings.nil? }
 
   # TODO: validate no combined_standings
 
