@@ -2,7 +2,7 @@
 # and Standings must belong to a SingleDayEvent or a Competition.
 # TODO Use Discipline class, not String
 #
-#  Races only have some of their attributes populated. These attributes are listed in the +result_columns+ Array
+# Races only have some of their attributes populated. These attributes are listed in the +result_columns+ Array.
 class Race < ActiveRecord::Base
 
   include Comparable
