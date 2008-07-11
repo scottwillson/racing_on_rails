@@ -13,6 +13,9 @@ No results for <%= @year %>
 <br/>
 <% end %>
 
+<p>The Ironman Competition is a 'just for fun' record of the number of events riders do.<br>
+There is no prize just identification of riders who need to get a life.</p>
+
 <% unless @ironman.nil? or @ironman.races.empty? or @ironman.races.first.results.empty? %>
 
 <%= will_paginate @results %>
