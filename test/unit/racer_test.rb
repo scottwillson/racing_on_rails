@@ -538,6 +538,22 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal([racers(:matson)], racer, 'Should find Matson')
   end
   
+  def test_find_all_by_name_like
+    assert_equal([], Racer.find_all_by_name_like("foo123"), "foo123 should find no names")
+    weaver = racers(:weaver)
+    assert_equal([weaver], Racer.find_all_by_name_like("eav"), "'eav' should find Weaver")
+
+    weaver.last_name = "O'Weaver"
+    weaver.save!
+    assert_equal([weaver], Racer.find_all_by_name_like("eav"), "'eav' should find O'Weaver")
+    assert_equal([weaver], Racer.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver")
+
+    weaver.last_name = "Weaver"
+    weaver.save!
+    Alias.create!(:name => "O'Weaver", :racer => weaver)
+    assert_equal([weaver], Racer.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
+  end
+  
   def test_hometown
     racer = Racer.new
     assert_equal('', racer.hometown, 'New Racer hometown')
