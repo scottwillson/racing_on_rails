@@ -14,6 +14,7 @@ class PostsController < ApplicationController
   end
 
   def list
+    # TODO Refactor shaky if/else and date parsing logic
     # Could do SQL join instead, but paginate doesn't play nice or secure
     mailing_list_name = params["mailing_list_name"]
     @mailing_list = MailingList.find_by_name(mailing_list_name)
@@ -21,6 +22,9 @@ class PostsController < ApplicationController
       requested_year = params["year"]
       requested_month = params["month"]
       begin
+        raise "Invalid year" unless (1990..2099).include?(requested_year.to_i )
+        raise "Invalid month" unless (1..12).include?(requested_month.to_i )
+        
         if requested_year and requested_month
           month_start = Time.local(requested_year.to_i, requested_month.to_i, 1)
         end
