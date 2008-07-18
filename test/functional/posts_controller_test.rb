@@ -574,7 +574,7 @@ class PostsControllerTest < ActiveSupport::TestCase
   end
   
   def test_list_with_bad_year
-    get(:list, :month => 12, :year => 560, :mailing_list_name => mailing_lists(:obra_race).name)
+    get(:list, :month => 12, :year => 9_116_560, :mailing_list_name => mailing_lists(:obra_race).name)
     assert_redirected_to(
       :action => "list", 
       :mailing_list_name => "obrarace", 
