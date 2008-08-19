@@ -1,0 +1,29 @@
+include_partial 'fixtures'
+include_partial 'admin_login'
+
+open '/admin/teams'
+assert_text_present "Enter part of a team's name"
+type "name", "e"
+submit_and_wait("search_form")
+
+assert_text "warn", ""
+assert_text "notice", ""
+
+assert_table "teams", 1, 0, "Gentle Lovers"
+assert_table "teams", 2, 0, "Team dFL"
+assert_table "teams", 3, 0, "Vanilla"
+
+assert_table "teams", 1, 1, "Gentile Lovers"
+assert_table "teams", 2, 1, ""
+assert_table "teams", 3, 1, "Vanilla Bicycles"
+
+assert_checked "team_member_2"
+assert_checked "team_member_4"
+assert_checked "team_member_3"
+
+click_and_wait "css=a[href='/results/team/4']"
+assert_title "*Results: Team dFL"
+
+open '/admin/teams'
+click_and_wait "css=a[href='/admin/teams/3']"
+assert_title "*Admin: Teams: Vanilla"
