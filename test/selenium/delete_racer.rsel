@@ -1,16 +1,5 @@
 include_partial 'fixtures'
-
-open '/admin/account/login'
-assert_text_not_present 'error'
-assert_location '*/admin/account/login'
-assert_text_present 'Login'
-assert_element_present 'username'
-assert_element_present 'user_password'
-type 'username', 'candi'
-type 'user_password', 'candi_password'
-click_and_wait 'name=login'
-assert_text_not_present 'error'
-assert_location '*/admin'
+include_partial 'admin_login'
 
 open '/admin/racers/6'
 assert_text_present 'Non Results'

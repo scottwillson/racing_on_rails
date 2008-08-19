@@ -1,4 +1,5 @@
 setup :fixtures => [:teams, :racers, :duplicates, :duplicates_racers, :disciplines, :aliases, :aliases_disciplines, :categories, :number_issuers, :race_numbers, :promoters, :events, :standings, :races, :results, :discipline_bar_categories, :users, :mailing_lists, :posts]
 
 delete_cookie '_racing_on_rails_session_id', '/'
+delete_cookie 'racer_name', '/'
 

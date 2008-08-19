@@ -1,0 +1,65 @@
+include_partial 'fixtures'
+include_partial 'admin_login'
+
+open '/admin/racers'
+assert_text_present "Enter part of a racer's name"
+type "name", "a"
+submit_and_wait("search_form")
+
+assert_text "warn", ""
+assert_text "notice", ""
+
+assert_table "racers", 1, 0, "Molly Cameron"
+assert_table "racers", 2, 0, "Mark Matson"
+assert_table "racers", 3, 0, "Alice Pennington"
+assert_table "racers", 4, 0, "Ryan Weaver"
+
+assert_table "racers", 1, 1, "Vanilla"
+assert_table "racers", 2, 1, "Kona"
+assert_table "racers", 3, 1, "Gentle Lovers"
+assert_table "racers", 4, 1, "Gentle Lovers"
+
+assert_table "racers", 1, 2, "Mollie Cameron"
+assert_table "racers", 2, 2, ""
+assert_table "racers", 3, 2, ""
+assert_table "racers", 4, 2, ""
+
+assert_table "racers", 1, 3, "202"
+assert_table "racers", 2, 3, "340"
+assert_table "racers", 3, 3, "230"
+assert_table "racers", 4, 3, "341"
+
+assert_table "racers", 1, 4, ""
+assert_table "racers", 2, 4, ""
+assert_table "racers", 3, 4, ""
+assert_table "racers", 4, 4, "437"
+
+assert_table "racers", 1, 5, ""
+assert_table "racers", 2, 5, ""
+assert_table "racers", 3, 5, ""
+assert_table "racers", 4, 5, ""
+
+assert_table "racers", 1, 6, ""
+assert_table "racers", 2, 6, ""
+assert_table "racers", 3, 6, ""
+assert_table "racers", 4, 6, ""
+
+assert_checked "racer_member_4"
+assert_checked "racer_member_2"
+assert_checked "racer_member_5"
+assert_checked "racer_member_3"
+
+click_and_wait "css=a[href='/admin/results/racer/4']"
+assert_title "*Admin: Results: Molly Cameron"
+
+open '/admin/racers'
+click_and_wait "css=a[href='/admin/results/racer/3']"
+assert_title "*Admin: Results: Ryan Weaver"
+
+open '/admin/racers'
+click_and_wait "css=a[href='/admin/racers/2']"
+assert_title "*Admin: Racers: Mark Matson"
+
+open '/admin/racers'
+click_and_wait "css=a[href='/admin/racers/new']"
+assert_title "*Admin: Racers: New Racer"
