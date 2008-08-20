@@ -164,7 +164,7 @@ namespace :racing_on_rails do
 end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
-task :cruise => "db:migrate" do
+task :cruise do
   ENV['RAILS_ENV'] = 'test'
 
   Rake::Task["db:test:purge"].invoke
