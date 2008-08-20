@@ -162,3 +162,10 @@ namespace :racing_on_rails do
     p.package_files.include(files)
   end
 end
+
+desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
+task :cruise => "db:migrate" do
+  Rake::Task["db:test:purge"].invoke
+  Rake::Task["db:test:prepare"].invoke
+  Rake::Task["test"].invoke
+end
