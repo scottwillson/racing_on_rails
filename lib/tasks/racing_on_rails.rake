@@ -167,11 +167,11 @@ desc "Override default cc.rb task, mainly to NOT try and recreate the test DB fr
 task :cruise do
   ENV['RAILS_ENV'] = 'test'
 
-  Rake::Task["db:test:purge"].invoke
-  Rake::Task["db:test:prepare"].invoke
-  if Rake.application.lookup('db:migrate')
-    CruiseControl::reconnect
-    CruiseControl::invoke_rake_task 'db:migrate'
-  end
+  # Rake::Task["db:test:purge"].invoke
+  # Rake::Task["db:test:prepare"].invoke
+  # if Rake.application.lookup('db:migrate')
+  #   CruiseControl::reconnect
+  #   CruiseControl::invoke_rake_task 'db:migrate'
+  # end
   Rake::Task["default"].invoke
 end
