@@ -173,5 +173,6 @@ task :cruise do
   #   CruiseControl::reconnect
   #   CruiseControl::invoke_rake_task 'db:migrate'
   # end
-  Rake::Task["default"].invoke
+  Rake::Task["test:units"].invoke
+  Rake::Task["test:functionals"].invoke
 end
