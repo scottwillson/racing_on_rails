@@ -12,7 +12,7 @@ case project_name
 when "racing_on_rails"
   exec("rake cruise")
 when "aba"
-  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/aba/trunk ../../local/aba && ln -s ../../local/aba local && rake cruise")
+  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/aba/trunk local && rake cruise")
 when "atra"
   exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/atra/trunk local && rake cruise")
 when "obra"
