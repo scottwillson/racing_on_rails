@@ -10,9 +10,15 @@ project_name = ARGV.first
 
 case project_name
 when "racing_on_rails"
-  # Nothing else to get
+  exec("rake cruise")
+when "aba"
+  exec("svn co svn+ssh://butlerpress.com/var/repos/aba/trunk local && rake cruise")
 when "atra"
   exec("svn co svn+ssh://butlerpress.com/var/repos/atra/trunk local && rake cruise")
+when "obra"
+  exec("svn co svn+ssh://butlerpress.com/var/repos/obra/trunk local && rake cruise")
+when "wsba"
+  exec("svn co svn+ssh://butlerpress.com/var/repos/wsba/trunk local && rake cruise")
 else
   raise "Don't know how to build project named: '#{project_name}'"
 end
