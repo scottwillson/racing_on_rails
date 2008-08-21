@@ -1,10 +1,4 @@
-require 'net/http'
-require 'rubygems'
-require 'test/unit'
-require 'yaml'
 require 'rake/packagetask'
-
-include Test::Unit::Assertions
 
 namespace :racing_on_rails do
   
@@ -16,16 +10,6 @@ namespace :racing_on_rails do
 
   desc "Package, deploy new app from scratch. Test."
   task :dist => [:dump_schema, :repackage, :create_app, :acceptence] do
-  end
-
-  desc "User acceptence test for end users and developers"
-  task :acceptence => [:create_app] do
-    puts('acceptence_user')
-    run_acceptence_user(File.expand_path('~/racing_on_rails-0.0.7'))
-    puts('customize')
-    customize
-    puts('acceptence_developer')
-    run_acceptence_developer(File.expand_path('~/racing_on_rails-0.0.7'))
   end
 
   task :create_app do
@@ -64,85 +48,6 @@ namespace :racing_on_rails do
     customize("app/views/bike_shops/list.rhtml")
   end
 
-  task :acceptence_developer do
-    web_test do
-      response = Net::HTTP.get('127.0.0.1', '/', 3000)
-      assert_match('Northern California/Nevada Cycling Association', response, "Association name on homepage in \n#{response}")
-      assert_no_match(/Error/, response, "No error on homepage \n#{response}")
-      assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
-      assert_no_match(/<a href="results"/, response, "No results link in \n#{response}")
-      assert_match('<a href="/schedule/2006"', response, "2006 schedule link should be available in \n#{response}")
-      assert_match('<a href="/schedule/2005"', response, "2005 schedule link should be available in \n#{response}")
-      assert_match('<a href="/schedule/2004"', response, "2004 schedule link should be available in \n#{response}")
-      assert_match('Flash message from customized controller', response, "Custom controller flash message in \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.1', '/schedule/', 3000)
-      assert_no_match(/Error/, response, "No error on homepage \n#{response}")
-      assert_no_match(/Application Trace/, response, "No error on homepage \n#{response}")
-      assert_match('January', response, "Months on schedule page \n#{response}")
-      assert_match('December', response, "Months on schedule page \n#{response}")
-      assert_match('until the 2010 Cherry Pie Road Race!!!', response, "Cherry Pie coutdown \n#{response}")
-      assert_match('Custom Finder Event', response, "Custom Finder Event from cutomized SingleDayEvent class \n#{response}")
-      assert_match('<i>Custom Finder Event</i>', response, "Custom Finder Event name from cutomized SingleDayEvent class \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.1', '/bike_shops/list', 3000)
-      assert_match('Sellwood Cycle Repair', response, "Sellwood on bike shops list page \n#{response}")
-    end
-  end
-
-  desc "Start Webrick and web interface"
-  task :acceptence_user do
-    web_test do
-      response = Net::HTTP.get('127.0.0.1', '/', 3000)
-      assert_match('Cascadia Bicycle Racing Association', response, "Homepage should be available in \n#{response}")
-      assert_match('<a href="/schedule"', response, "Schedule link should be available in \n#{response}")
-      assert_match('Upcoming Events', response, "Upcoming Events should be available in \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.1', '/schedule', 3000)
-      assert_match('Schedule', response, "Schedule should be available in \n#{response}")
-      assert_match('January', response, "Schedule should be available in \n#{response}")
-      assert_match('December', response, "Schedule should be available in \n#{response}")
-
-      response = Net::HTTP.get('127.0.0.1', '/schedule/list', 3000)
-
-      # TODO Run unit and functional tests
-      # TODO move above assertions into tests
-      # TODO Validate HTML
-    end
-  end
-
-  def customize(fixture_path)
-    mkpath(File.dirname(File.expand_path("~/racing_on_rails-0.0.7/#{fixture_path}")))
-    cp(File.expand_path("/test/fixtures/#{fixture_path}"),
-       File.expand_path("~/racing_on_rails-0.0.7/#{fixture_path}"))
-  end
-
-  def web_test
-    begin
-      `mongrel_rails start -d`
-      sleep 5
-      yield
-    ensure
-      `mongrel_rails stop`
-    end
-  end
-  
-  def run_acceptence_developer(project_root = nil)
-    if project_root
-      exec("rake --rakefile #{project_root}/Rakefile racing_on_rails:acceptence_developer")
-    else
-      acceptence_developer
-    end
-  end
-  
-  def run_acceptence_user(project_root = nil)
-    if project_root
-      exec("rake --rakefile #{project_root}/Rakefile racing_on_rails:acceptence_user")
-    else
-      acceptence_user
-    end
-  end
-  
   Rake::PackageTask.new("racing_on_rails", "0.0.7") do |p|
     p.need_tar_gz = true
     p.need_zip = true
@@ -165,14 +70,7 @@ end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
-  ENV['RAILS_ENV'] = 'test'
-
-  # Rake::Task["db:test:purge"].invoke
-  # Rake::Task["db:test:prepare"].invoke
-  # if Rake.application.lookup('db:migrate')
-  #   CruiseControl::reconnect
-  #   CruiseControl::invoke_rake_task 'db:migrate'
-  # end
-  # Rake::Task["test:units"].invoke
-  # Rake::Task["test:functionals"].invoke
+  Rake::Task["db:migrate"].invoke
+  Rake::Task["test:units"].invoke
+  Rake::Task["test:functionals"].invoke
 end
