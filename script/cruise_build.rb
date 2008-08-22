@@ -11,7 +11,7 @@ case project_name
 when "racing_on_rails"
   exec("rake cruise")
 when "aba", "atra", "obra", "wsba"
-  exec(%Q{svn propset "svn:externals" "local svn+ssh://butlerpress.com/var/repos/#{project}/trunk" . && rake cruise})
+  exec(%Q{svn propset "svn:externals" "local svn+ssh://butlerpress.com/var/repos/#{project_name}/trunk" . && rake cruise})
 else
   raise "Don't know how to build project named: '#{project_name}'"
 end
