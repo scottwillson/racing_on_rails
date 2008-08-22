@@ -18,6 +18,9 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_show
     banana_belt = events(:banana_belt_1)
+    banana_belt.velodrome = velodromes(:trexlertown)
+    banana_belt.save!
+    
     opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
     
@@ -26,6 +29,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_template("admin/events/show")
     assert_not_nil(assigns["event"], "Should assign event")
     assert_nil(assigns["race"], "Should not assign race")
+    assert(!@response.body["#&lt;Velodrome:"], "Should not have model in text field")
   end
 
   def test_show_parent
