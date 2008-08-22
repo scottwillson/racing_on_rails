@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-# Yes, this could be more abstracted, etc. Choosing explicitness for now.
-# svn co and rake co need to be in same exec, or cruise just ends build after svn returns
+# The svn:externals is a bit of a hack, but seems like the easiest solution to pulling in different projects
 #
 # Intentionally doing svn co and rake cruise in separate processes to ensure that all of the
 # local overrides are loaded by Rake.
@@ -11,14 +10,8 @@ project_name = ARGV.first
 case project_name
 when "racing_on_rails"
   exec("rake cruise")
-when "aba"
-  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/aba/trunk local && rake cruise")
-when "atra"
-  exec('svn propset "svn:externals" "local svn+ssh://butlerpress.com/var/repos/atra/trunk" . && rake cruise')
-when "obra"
-  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/obra/trunk local && rake cruise")
-when "wsba"
-  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/wsba/trunk local && rake cruise")
+when "aba", "atra", "obra", "wsba"
+  exec(%Q{svn propset "svn:externals" "local svn+ssh://butlerpress.com/var/repos/#{project}/trunk" . && rake cruise})
 else
   raise "Don't know how to build project named: '#{project_name}'"
 end
