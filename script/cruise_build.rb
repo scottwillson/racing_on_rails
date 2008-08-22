@@ -14,7 +14,7 @@ when "racing_on_rails"
 when "aba"
   exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/aba/trunk local && rake cruise")
 when "atra"
-  exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/atra/trunk local && rake cruise")
+  exec('svn propset "svn:externals" "local svn+ssh://butlerpress.com/var/repos/atra/trunk" . && rake cruise')
 when "obra"
   exec("svn co svn+ssh://cruise@butlerpress.com/var/repos/obra/trunk local && rake cruise")
 when "wsba"
