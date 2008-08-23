@@ -10,6 +10,6 @@ assert_text_not_present 'has no parent'
 
 assert_location '*/admin/racers'
 type 'name', 'no results'
-submit 'search_form'
+submit_and_wait 'search_form'
 assert_text_not_present 'error'
 assert_text_not_present 'Non Results'
