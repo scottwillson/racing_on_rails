@@ -70,7 +70,29 @@ end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
+  if RUBY_PLATFORM[/freebsd/]
+    ENV['DISPLAY'] = "localhost:1"
+    exec("Xvfb :1 &")
+  end
+  
   Rake::Task["db:migrate"].invoke
   Rake::Task["test:units"].invoke
   Rake::Task["test:functionals"].invoke
+  
+  # Use fork or Mongrel start script will cause _this_ Rake process to exit
+  mongrel_pid = fork do
+    exec("mongrel_rails start -d -e test")
+  end
+  Process.detach(mongrel_pid)
+  sleep 5
+
+  begin
+    Rake::Task["test:acceptance"].invoke
+  ensure
+    fork do
+      exec("mongrel_rails stop")
+    end
+    # Wait for Mongrel stop script to complete before exiting
+    Process.wait
+  end
 end
