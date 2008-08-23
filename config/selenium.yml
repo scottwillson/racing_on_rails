@@ -1,0 +1,23 @@
+environments:
+  - test
+
+browsers:
+  <% if RUBY_PLATFORM[/darwin/] %>
+
+  # Mac OS X
+  firefox: '/Applications/Firefox.app/Contents/MacOS/firefox-bin'
+  safari: '/Applications/Safari.app/Contents/MacOS/Safari'
+
+  <% elsif RUBY_PLATFORM[/freebsd/] %>
+
+  # FreeBSD
+  firefox: '/usr/local/bin/firefox'
+
+  <% else %>
+
+  # Windows
+  firefox: 'c:\Program Files\Mozilla Firefox\firefox.exe'
+  ie: 'c:\Program Files\Internet Explorer\iexplore.exe'
+
+  <% end %>
+
