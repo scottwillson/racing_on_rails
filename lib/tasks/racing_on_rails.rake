@@ -72,7 +72,7 @@ desc "Override default cc.rb task, mainly to NOT try and recreate the test DB fr
 task :cruise do
   if RUBY_PLATFORM[/freebsd/]
     ENV['DISPLAY'] = "localhost:1"
-    exec("Xvfb :1 &")
+    begin exec("Xvfb :1 &") rescue nil
   end
   
   Rake::Task["db:migrate"].invoke
