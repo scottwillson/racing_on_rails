@@ -11,7 +11,7 @@ browsers:
   <% elsif RUBY_PLATFORM[/freebsd/] %>
 
   # FreeBSD
-  firefox: '/usr/local/bin/firefox'
+  firefox: '/usr/local/lib/firefox/firefox-bin'
 
   <% else %>
 
