@@ -14,21 +14,26 @@
     <%= javascript_include_tag :defaults %>
   </head>
   <body>
-	<div class="shadow_2">
-		<div class="shadow_1">
-		 	<div class="frame">
-				<div class="nav" id="top">
-					<h1><%= link_to ASSOCIATION.name, :controller => 'home', :action => 'index' %></h1>
-					<div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
-			 	</div>
-			 	<div class="content" align="center">
+  <div class="shadow_2">
+    <div class="shadow_1">
+      <div class="frame">
+        <div class="nav" id="top">
+          <h1><%= link_to ASSOCIATION.name, :controller => 'home', :action => 'index' %></h1>
+          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
+        </div>
+        <div class="content" align="center">
 <%= yield %>
-			 	</div>
-			 	<div class="nav" id="bottom">
-					<div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
-			 	</div>
-		 	</div>
-		</div>
-	</div>
+        </div>
+
+          <div class="nav" id="bottom">
+          <div class="breadcrumb">
+            <%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %> |
+            <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
+            <%= link_to "Schedule", { :controller => "schedule" }, { :id => "schedule_link" } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </body>
 </html>

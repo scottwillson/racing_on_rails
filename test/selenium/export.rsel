@@ -32,7 +32,7 @@ assert_text_not_present 'error'
 assert_location '*/admin/racers'
 
 type 'name', 'tonkin'
-submit 'search_form'
+submit_and_wait 'search_form'
 pause 1000
 assert_text_not_present 'error'
 assert_text_present 'Erik Tonkin'
@@ -53,7 +53,7 @@ pause 10000
 assert_text_not_present 'error'
 
 type 'name', 'tonkin'
-submit 'search_form'
+submit_and_wait 'search_form'
 assert_text_not_present 'error'
 assert_text_present 'Erik Tonkin'
 assert_text_present 'Kona'
