@@ -1,0 +1,7 @@
+<% @page_title = "Admin: Teams: #{@team.name}" %>
+
+<% form_for [:admin, @team]  do |f| -%>
+  <%= render :partial => "form", :locals => { :f => f, :team => @team } %>
+<% end -%>
+
+<% focus("team_name") %>

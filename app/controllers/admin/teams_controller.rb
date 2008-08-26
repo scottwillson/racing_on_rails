@@ -23,25 +23,51 @@ class Admin::TeamsController < Admin::RecordEditor
     end
   end
   
-  def show
+  def edit
     @team = Team.find(params[:id], :include => [:aliases, :racers])
+  end
+  
+  def new
+    @team = Team.new
   end
   
   def create
     begin
-      expire_cache
-      @team = Team.create(params[:team])
-      
-      if @team.errors.empty?
-        return redirect_to(:action => :show, :id => @team.to_param)
+      @team = Team.new(params[:team])
+
+      if @team.save
+        expire_cache
+        flash[:notice] = "Created #{@team.name}"
+        redirect_to(edit_admin_team_path(@team))
+      else
+        render :action => "edit"
       end
     rescue Exception => e
       stack_trace = e.backtrace.join("\n")
       logger.error("#{e}\n#{stack_trace}")
       ExceptionNotifier.deliver_exception_notification(e, self, request, {})
       flash[:warn] = e.to_s
+      render :action => "edit"
     end
-    render(:template => 'admin/teams/show')
+  end
+  
+  def update
+    begin
+      @team = Team.find(params[:id])
+
+      if @team.update_attributes(params[:team])
+        expire_cache
+        redirect_to(edit_admin_team_path(@team))
+      else
+        render :action => "new"
+      end
+    rescue Exception => e
+      stack_trace = e.backtrace.join("\n")
+      logger.error("#{e}\n#{stack_trace}")
+      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+      flash[:warn] = e.to_s
+      render :action => "new"
+    end
   end
   
   # Inline

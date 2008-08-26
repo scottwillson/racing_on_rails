@@ -291,14 +291,14 @@ class Admin::TeamsControllerTest < ActiveSupport::TestCase
     assert_equal(true, vanilla.member, 'member after second update')
   end
 
-  def test_show
+  def test_edit
     vanilla = teams(:vanilla)
-    opts = {:controller => "admin/teams", :action => "show", :id => vanilla.to_param.to_s}
-    assert_routing("/admin/teams/#{vanilla.to_param}", opts)
+    opts = {:controller => "admin/teams", :action => "edit", :id => vanilla.to_param.to_s}
+    assert_routing("/admin/teams/#{vanilla.to_param}/edit", opts)
     
-    get(:show, :id => vanilla.to_param)
+    get(:edit, :id => vanilla.to_param)
     assert_response(:success)
-    assert_template("admin/teams/show")
+    assert_template("admin/teams/edit")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(vanilla, assigns['team'], 'Should assign Vanilla to team')
   end
@@ -314,5 +314,26 @@ class Admin::TeamsControllerTest < ActiveSupport::TestCase
     post(:destroy_alias, :id => vanilla_bicycles_alias.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
     assert_response(:success)
     assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')
+  end
+  
+  def test_new
+    get(:new)
+    assert_response(:success)
+    assert_not_nil(assigns(:team), "@team")
+  end
+  
+  def test_create
+    post(:create, :team => { :name => "My Fancy New Bike Team" })
+    team = Team.find_by_name("My Fancy New Bike Team")
+    assert_not_nil(team, "Should create new team")
+    assert_redirected_to(edit_admin_team_path(team))
+  end
+  
+  def test_update
+    team = teams(:vanilla)
+    post(:update, :id => team.to_param, :team => { :name => "Speedvagen" })
+    assert_redirected_to(edit_admin_team_path(team))
+    team.reload
+    assert_equal("Speedvagen", team.name, "Name should be updated")
   end
 end

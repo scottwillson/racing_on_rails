@@ -1,0 +1,62 @@
+<div align="center">
+<%- if flash[:notice] -%>
+  <div class="message" id="message">
+      <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:notice] %>
+  </div>
+<%- end -%>
+
+<%- if flash[:warn] -%>
+  <div class="message" id="warn">
+      <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
+      <%= flash[:warn] %>
+  </div>
+<%- end -%>
+
+<%= error_messages_for "team" %>
+  
+<table class="base">
+  <tr>
+    <th colspan="2"><%= @team.name %></th>
+  </tr>
+  <tr>
+    <td class="field_label">Name:</td>
+    <td><%= f.text_field :name %></td>
+  </tr>
+  <tr valign="top">
+    <td>
+    <%- for racer in @team.racers.sort_by {|r| r.last_name} -%>
+      <%= link_to racer.name, admin_racer_path(racer) %><br>
+    <%- end -%>
+    </td>
+    <td>
+      <table class="inline">
+        <tr>
+          <th>Aliases</th>
+          <th></th>
+        </tr>
+        <%- @team.aliases.sort_by {|a| a.name}.each do |name_alias| -%>
+        <tr id="alias_<%= name_alias.id %>">
+          <td><%= name_alias.name %></td>
+          <td>
+            <%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
+                 :url => { :action => "destroy_alias", :id => @team.id, :alias_id => name_alias.id}) %>
+          </td>
+        </tr>
+        <%- end -%>
+        <%- if @team.aliases.empty? %>
+        <tr>
+          <td colspan="2">None</td>
+        </tr>
+        <%- end -%>
+      </table>
+    </td>
+  </tr>
+  <tr class="buttons">
+    <td class="updatedon" colspan="2"><%= "Updated: #{time_ago_in_words(@team.updated_at, true)} ago" unless @team.updated_at.nil? %></td>
+    <td class="right">
+      <%= link_to "Delete", admin_team_path(@team), :method => :delete, :class => 'obvious', :id => 'delete' %>
+      <%= submit_tag "Save", :id => "save" %>
+    </td>
+  </tr>
+</table>

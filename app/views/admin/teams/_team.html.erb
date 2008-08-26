@@ -16,7 +16,7 @@
   <td class="right" style="white-space: nowrap;">
       <%= link_to 'Results', :controller => '/results', :action => 'team', :id => team.id %>
     |
-    <%= link_to 'Edit', :action => 'show', :id => team.id %>
+    <%= link_to 'Edit', edit_admin_team_path(team) %>
   </td>
    <td class="icon"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif', :height => 16, :width => 16),
                           { :url => admin_team_url(team), :method => :delete, :confirm => "Really delete #{team.name}?" },
