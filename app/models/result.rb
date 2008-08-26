@@ -101,9 +101,11 @@ class Result < ActiveRecord::Base
       end
     end
     
+    # This logic should be in Racer
     if !self.racer.nil? && 
        self.racer.new_record? && 
        self.racer[:member_from].blank? && 
+       event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
        
       self.racer.member_from = race.date

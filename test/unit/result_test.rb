@@ -775,4 +775,31 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.create!(:place => "4th")
     assert(result.finished?, "'4th' should not be a finisher")
   end
+  
+  def test_make_member_if_association_number
+    standings = SingleDayEvent.create!(:name => "Tabor CR").standings.create!
+    race = standings.races.create!(:category => Category.find_by_name("Senior Men Pro 1/2"))
+    result = race.results.create!(
+      :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+    )
+    
+    racer = result.racer
+    racer.reload
+    
+    assert(racer.member?, "Finisher with racing association number should be member")
+  end
+  
+  def test_do_not_make_member_if_not_association_number
+    number_issuer = NumberIssuer.create!(:name => "Tabor")
+    standings = SingleDayEvent.create!(:name => "Tabor CR", :number_issuer => number_issuer).standings.create!
+    race = standings.races.create!(:category => Category.find_by_name("Senior Men Pro 1/2"))
+    result = race.results.create!(
+      :first_name => "Tom", :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+    )
+    
+    racer = result.racer
+    racer.reload
+    
+    assert(!racer.member?, "Finisher with event (not racing association) number should be member")
+  end
 end
