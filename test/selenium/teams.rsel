@@ -22,8 +22,12 @@ assert_checked "team_member_4"
 assert_checked "team_member_3"
 
 click_and_wait "css=a[href='/results/team/4']"
-assert_title "*Results: Team dFL"
+assert_text_present "Team dFL"
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'
 
 open '/admin/teams'
 click_and_wait "css=a[href='/admin/teams/3']"
-assert_title "*Admin: Teams: Vanilla"
+assert_text_present "Vanilla"
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'

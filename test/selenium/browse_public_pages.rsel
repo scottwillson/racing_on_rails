@@ -3,10 +3,10 @@ include_partial 'fixtures'
 open '/'
 assert_text_not_present 'error'
 
-click_and_wait "schedule_link"
+open '/schedule'
 assert_text_not_present 'error'
 assert_text_present "Schedule"
 
-click_and_wait "results_link"
+open '/results'
 assert_text_not_present 'error'
 assert_text_present "Results"
