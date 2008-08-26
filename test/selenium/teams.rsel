@@ -1,4 +1,13 @@
 include_partial 'fixtures'
+
+open '/teams'
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'
+
+click_and_wait "css=a[href='/teams/2']"
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'
+
 include_partial 'admin_login'
 
 open '/admin/teams'

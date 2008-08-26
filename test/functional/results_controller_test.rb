@@ -228,11 +228,7 @@ class ResultsControllerTest < ActiveSupport::TestCase
     assert_routing("/results/team/#{team.id}", opts)
 
     get(:team, {:controller => "results", :action => "team", :id => team.id.to_s})
-    assert_response(:success)
-    assert_template("results/team")
-    assert_not_nil(assigns["team"], "Should assign team")
-    assert_equal(assigns["team"], team, "team")
-    assert_not_nil(assigns["results"], "Should assign results")
+    assert_redirected_to(team_path(team))
   end
   
   def test_competition

@@ -1,0 +1,17 @@
+<% @page_title = "Teams" %>
+
+<p align="left">These are OBRA registered teams in the Oregon/SW Washington region.</p>
+
+<p align="left">A list of <%= link_to "clubs rides", "http://#{STATIC_HOST}/rides.html", :class => "obvious" %> is available if you're looking for a group ride.</p>
+
+<table class="base" id="teams">
+  <caption>Teams</caption>
+  <tr>
+    <th>Club Name</td>
+    <th>Website</td>
+    <th>Sponsors</td>
+    <th>Contact Name</td>
+    <th>Phone</td>
+  </tr>
+  <%= render :partial => "team", :collection => @teams.sort { |x, y| x.name.downcase <=> y.name.downcase || x <=> y } %>
+</table>

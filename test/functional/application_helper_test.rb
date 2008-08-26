@@ -8,8 +8,6 @@ class ApplicationHelperControllerTest < ActiveSupport::TestCase
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper
   
-  fixtures :images
-  
   def setup
     @controller = HomeController.new
     @request    = ActionController::TestRequest.new

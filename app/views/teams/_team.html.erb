@@ -1,0 +1,15 @@
+<tr>
+  <td class="club_name">
+    <%= link_to(team.name, team_path(team)) -%>
+  </td>
+  <td>
+    <%= team.website %>
+  </td>
+  <td>
+    <%= team.sponsors %>
+  </td>
+  <td>
+    <%= link_to_contact(team) %>
+  </td>
+  <td><%= team.contact_phone %></td>
+</tr>

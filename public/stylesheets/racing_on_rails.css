@@ -643,3 +643,8 @@ form#export_form {
   padding-top: 12px;
   margin: 0px;
 }
+
+/* public teams page */
+table.base#teams td.club_name {
+  white-space: nowrap;
+}

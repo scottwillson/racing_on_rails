@@ -1,0 +1,21 @@
+<% @page_title = "Results: #{@team.name}" %>
+
+<table class="base">
+  <caption><%= @team.name %></caption>
+  <tr>
+    <th></th>
+    <th>Race</th>
+    <th>Category</th>
+    <th>Racer</th>
+    <th>Date</th>
+  </tr>
+  <%- @results.sort { |x, y| y.race.event.end_date <=> x.race.event.end_date }.each do |result| -%>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td class="right" width="24"><%= result.place %></td>
+    <td width="400"><%= link_to(result.race.standings.full_name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id) %></td>
+    <td width="200"><%= link_to(result.race.name, :controller => 'results', :action => 'event', :id => result.race.standings.event.id, :anchor => "race_#{result.race.id}") %></td>
+    <td width="200"><%= link_to_result(result.racer_name, result) %></td>
+    <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
+  </tr>
+  <%- end -%>
+</table>

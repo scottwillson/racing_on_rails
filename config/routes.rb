@@ -19,6 +19,8 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :teams
     admin.resources :velodromes
   end
+
+  map.resources :teams
   
   map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
