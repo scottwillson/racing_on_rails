@@ -27,7 +27,13 @@ assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
 
 open '/admin/teams'
-click_and_wait "css=a[href='/admin/teams/3']"
+click_and_wait "css=a[href='/admin/teams/3/edit']"
 assert_text_present "Vanilla"
+assert_text_not_present 'error'
+assert_text_not_present 'Unknown action'
+
+type "team_name", "SpeedVagen"
+click_and_wait("save")
+assert_text_present "SpeedVagen"
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
