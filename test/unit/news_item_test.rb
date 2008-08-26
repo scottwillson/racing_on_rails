@@ -1,8 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class NewsItemTest < ActiveSupport::TestCase
-  fixtures :news_items
-
   def test_create
     news_item = NewsItem.create!(:text => 'The British are coming')
     assert_equal_dates(Date.today, news_item.date, 'Date should default to today')
