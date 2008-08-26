@@ -5,7 +5,7 @@ assert_text_not_present 'error'
 
 open '/schedule'
 assert_text_not_present 'error'
-assert_text_present "Schedule"
+assert_text_present "regex:Schedule|Calendar"
 
 open '/results'
 assert_text_not_present 'error'
