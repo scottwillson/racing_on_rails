@@ -13,10 +13,6 @@ class CombinedMountainBikeStandings < CombinedStandings
     self.bar_points = source.bar_points
   end
 
-  def discipline
-    'Mountain Bike'
-  end
-  
   # Recreate combine results from source results. Also set source race BAR points to none
   def recalculate
     logger.debug("CombinedMountainBikeStandings recalculate")
@@ -40,6 +36,7 @@ class CombinedMountainBikeStandings < CombinedStandings
 
       combined_results.delete_if { |result| !result.finished? }
       
+      # Downhill probably only needs to consider place and time
       combined_results = combined_results.stable_sort_by(:place_as_integer).
                                           stable_sort_by(:category).
                                           stable_sort_by(:time).

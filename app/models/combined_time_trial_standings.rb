@@ -7,7 +7,7 @@ class CombinedTimeTrialStandings < CombinedStandings
   end
 
   def discipline
-    'Time Trial'
+    "Time Trial"
   end
 
   # Return transient Standings with results from all races sorted by time

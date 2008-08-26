@@ -1,6 +1,6 @@
 # Standings derived from other standings: all categories in a time trial; Pro, Expert Women mountain biking
 class CombinedStandings < Standings
-  after_create {|standings| standings.recalculate}
+  after_create { |standings| standings.recalculate }
   belongs_to :source, 
              :class_name => 'Standings', 
              :foreign_key => 'source_id'

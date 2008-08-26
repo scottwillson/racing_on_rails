@@ -32,8 +32,46 @@ class CombinedStandingsTest < ActiveSupport::TestCase
     
     combined_standings = standings.combined_standings(true)
     assert_not_nil(combined_standings, 'MTB standings should have combined standings')
+    assert_equal("Mountain Bike", combined_standings.discipline, "Combined standings discipline")
     assert(standings.ironman, 'MTB standings should get ironman points')
     assert(!combined_standings.ironman, 'MTB standings combined standings should not get ironman points')
+    assert_equal(2, combined_standings.races.size, 'Combined standings races')
+
+    men_combined_race = combined_standings.races(true).detect {|race| race.category == Category.find_by_name("Pro, Semi-Pro Men")}
+    assert_not_nil(men_combined_race, 'men_combined_race')
+    assert_equal(1, men_combined_race.results(true).size, 'Combined standings men race results')
+    assert_equal(racers(:weaver), men_combined_race.results.first.racer, 'Combined standings men race results racer')
+
+    other_combined_race = combined_standings.races.detect {|race| race.category != combined_standings.men_combined}
+    assert_not_nil(other_combined_race, 'other_combined_race')
+    assert_equal(0, other_combined_race.results.size, 'Combined standings other race results')
+
+    assert_equal(3, combined_standings.bar_points, 'Combined standings BAR points should match parent')
+  end
+  
+  # Same as MTB
+  def test_dh
+    CombinedMountainBikeStandings.reset
+    event = SingleDayEvent.create!(:discipline => "Downhill")
+    standings = event.standings.create!(:bar_points => 3)
+
+    pro_men = Category.find_or_create_by_name('Pro Men')
+    pro_men_race = standings.races.create!(:category => pro_men)
+    pro_men_race.results.create!(:place => '4', :racer => racers(:weaver), :time => 1200)
+    # Results with no time should not be included
+    pro_men_race.results.create!(:place => '3', :racer => racers(:molly))
+
+    # DNF should not be included
+    pro_men_race.results.create!(:place => 'DNF', :racer => racers(:alice), :time => 300)
+    
+    # Trigger CombinedStandings logic
+    standings.save!
+    
+    combined_standings = standings.combined_standings(true)
+    assert_not_nil(combined_standings, 'DH standings should have combined standings')
+    assert_equal("Downhill", combined_standings.discipline, "Combined standings discipline")
+    assert(standings.ironman, 'MTB standings should get ironman points')
+    assert(!combined_standings.ironman, 'DH standings combined standings should not get ironman points')
     assert_equal(2, combined_standings.races.size, 'Combined standings races')
 
     men_combined_race = combined_standings.races(true).detect {|race| race.category == Category.find_by_name("Pro, Semi-Pro Men")}
