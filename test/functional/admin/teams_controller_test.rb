@@ -331,9 +331,22 @@ class Admin::TeamsControllerTest < ActiveSupport::TestCase
   
   def test_update
     team = teams(:vanilla)
-    post(:update, :id => team.to_param, :team => { :name => "Speedvagen" })
+    post(:update, :id => team.to_param, :team => { :name => "Speedvagen", 
+                                                   :website => "http://speedvagen.net",
+                                                   :sponsors => %Q{<a href="http://stumptowncoffeeroasters">Stumptown</a>},
+                                                   :contact_name => "Sacha White",
+                                                   :contact_email => "sacha@speedvagen.net",
+                                                   :contact_phone => "14115555",
+                                                   :member => true
+                                                 })
     assert_redirected_to(edit_admin_team_path(team))
     team.reload
     assert_equal("Speedvagen", team.name, "Name should be updated")
+    assert_equal("http://speedvagen.net", team.website, "website should be updated")
+    assert_equal( %Q{<a href="http://stumptowncoffeeroasters">Stumptown</a>}, team.sponsors, "sponsors should be updated")
+    assert_equal("Sacha White", team.contact_name, "contact_name should be updated")
+    assert_equal("sacha@speedvagen.net", team.contact_email, "contact_email should be updated")
+    assert_equal("14115555", team.contact_phone, "contact_phone should be updated")
+    assert(team.member?, "member should be updated")
   end
 end

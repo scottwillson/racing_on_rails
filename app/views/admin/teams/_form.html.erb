@@ -17,19 +17,38 @@
   
 <table class="base">
   <tr>
-    <th colspan="2"><%= @team.name %></th>
+    <th colspan="4"><%= @team.name %></th>
   </tr>
   <tr>
     <td class="field_label">Name:</td>
     <td><%= f.text_field :name %></td>
+    <td class="field_label"></td>
+    <td><%= f.check_box :member %> Member?</td>
+  </tr>
+  <tr>
+    <td class="field_label">Contact Name:</td>
+    <td><%= f.text_field :contact_name %></td>
+    <td class="field_label"></td>
+    <td>Sponsors</td>
+  </tr>
+  <tr>
+    <td class="field_label">Contact Email:</td>
+    <td><%= f.text_field :contact_email %></td>
+    <td class="field_label"></td>
+    <td rowspan="2"><%= f.text_area :sponsors %></td>
+  </tr>
+  <tr>
+    <td class="field_label">Contact Phone:</td>
+    <td><%= f.text_field :contact_phone %></td>
+    <td class="field_label"></td>
   </tr>
   <tr valign="top">
-    <td>
+    <td colspan="2">
     <%- for racer in @team.racers.sort_by {|r| r.last_name} -%>
       <%= link_to racer.name, admin_racer_path(racer) %><br>
     <%- end -%>
     </td>
-    <td>
+    <td colspan="2">
       <table class="inline">
         <tr>
           <th>Aliases</th>
@@ -53,7 +72,7 @@
     </td>
   </tr>
   <tr class="buttons">
-    <td class="updatedon" colspan="2"><%= "Updated: #{time_ago_in_words(@team.updated_at, true)} ago" unless @team.updated_at.nil? %></td>
+    <td class="updatedon" colspan="3"><%= "Updated: #{time_ago_in_words(@team.updated_at, true)} ago" unless @team.updated_at.nil? %></td>
     <td class="right">
       <%= link_to "Delete", admin_team_path(@team), :method => :delete, :class => 'obvious', :id => 'delete' %>
       <%= submit_tag "Save", :id => "save" %>
