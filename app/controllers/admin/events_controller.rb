@@ -432,7 +432,7 @@ class Admin::EventsController < ApplicationController
     parent.missing_children.each do |child|
       child.parent = parent
       child.save!
-      redirect_to(:action => :show, :id => parent.id)
     end
+    redirect_to(:action => :show, :id => parent.id)
   end
 end
