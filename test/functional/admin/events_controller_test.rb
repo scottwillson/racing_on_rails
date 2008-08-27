@@ -820,4 +820,10 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
     assert_response(:redirect)
   end
+  
+  def test_add_children
+    event = events(:series_parent)
+    post(:add_children, :parent_id => event.to_param)
+    assert_redirected_to(:action => :show, :id => event.to_param)
+  end
 end
