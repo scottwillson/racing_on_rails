@@ -21,3 +21,4 @@ browsers:
 
   <% end %>
 
+max_browser_duration: 300
