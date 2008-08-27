@@ -1,0 +1,62 @@
+<% @page_title = "Alpenrose Velodrome" %>
+
+<div class="tabs">
+<%= link_to "Track Home", "http://#{STATIC_HOST}/track/index.html" %> |
+<%= link_to "History", "http://#{STATIC_HOST}/track/history/index.html" %> |
+<%= link_to "Information", "http://#{STATIC_HOST}/track/information/index.html" %> |
+<%= link_to "Records", "http://#{STATIC_HOST}/track/records/index.html" %> |
+<%= link_to "Schedule", "http://#{STATIC_HOST}/track/schedule/#{Date.today.year}/index.html" %> |
+</div>
+
+
+<table style="margin-left: auto; margin-right: auto;">
+  <tr valign="top">
+    <td style="padding-right: 12px;">
+      <!-- Left-side cell for main content -->
+      
+      <table bgcolor="#000000" cellspacing="0" border="0" cellpadding="1" width="300">
+       
+        <tr>
+          <td colspan="3">
+            <%= image_tag "http://#{STATIC_HOST}/track/images/photos/avc_missandout.jpg", :border => 0, :size => "300x222", :alt => "AVC Miss and Out" %>
+          </td>
+            </tr>
+            <tr bgcolor="black">
+              <td>&nbsp;</td>
+              <td><small><font color="#cccccc">Marty Nothstein leads the field during the Miss and Out competition of the Alpenrose Challenge.</font></small>
+          </td>
+              <td>&nbsp;</td>
+        </tr>
+
+      </table>
+
+    </td>
+    <td style="padding-left: 12px;">
+        <table class="base">
+      <caption><a href="http://#{STATIC_HOST}/schedule/2008/index.html">Velodrome Schedule</a></caption>
+      <tr>
+        <th colspan="2"></th>
+      </tr>
+      <tr>
+            <td colspan="2"><strong>Weekly Schedule 2008</strong></td>
+      <tr>
+        <td>Tuesday</td> <td>Masters/Juniors Track Races (6/3 - 8/26)&nbsp;</td>
+      </tr>
+      <tr>
+        <td>Wednesday</td> <td>Track Development Class (4/30 - 8/27)</td>
+      </tr>
+      <tr>
+        <td>Thursday</td> <td>Weekly Series (5/1 - 9/25)</td>
+      </tr>
+      <tr>
+        <td>Friday</td> <td>Fast Twitch Fridays (5/2 - 8/31)</td>
+      </tr>
+      <tr>
+        <td colspan="2"><small>Please check the <a href="http://#{STATIC_HOST}/track/schedule/2008/index.html">schedule page</a> details and exceptions.</small></td>          
+      </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div><%= image_tag "http://#{STATIC_HOST}/track/images/logos/alpenrose_logo.gif", :border => 0, :size => "200x65", :alt => "Alpenrose" %></div>
