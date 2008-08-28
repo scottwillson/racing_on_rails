@@ -802,4 +802,18 @@ class ResultTest < ActiveSupport::TestCase
     
     assert(!racer.member?, "Finisher with event (not racing association) number should be member")
   end
+  
+  def test_stable_name_on_old_results
+    team = Team.create!(:name => "Tecate-Una Mas")
+
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    old_result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.names.create!(:name => "Twin Peaks", :year => 1.years.ago.year)
+    
+    event = SingleDayEvent.create!(:date => Date.today)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)    
+    
+    assert_equal("Tecate-Una Mas", result.team_name, "Team name on this year's result")
+    assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
+  end
 end

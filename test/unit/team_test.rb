@@ -132,4 +132,67 @@ class TeamTest < ActiveSupport::TestCase
     team.reload
     assert_equal(true, team.member, 'member')
   end
+  
+  def test_name_with_date
+    team = Team.create!(:name => "Tecate-Una Mas")
+    assert_equal(0, team.names(true).size, "names")
+    
+    team.names.create!(:name => "Team Tecate", :date => 1.years.ago)
+    assert_equal(1, team.names(true).size, "names")
+    
+    team.names.create!(:name => "Twin Peaks", :date => 2.years.ago)
+    assert_equal(2, team.names(true).size, "names")
+    
+    assert_equal("Tecate-Una Mas", team.name)
+    assert_equal("Tecate-Una Mas", team.name(Date.today))
+    assert_equal("Team Tecate", team.name(1.years.ago))
+    assert_equal("Twin Peaks", team.name(2.years.ago))
+    assert_equal("Tecate-Una Mas", team.name(Date.today.next_year))
+  end
+  
+  def test_create_new_name_if_there_are_results_from_previous_year
+    team = Team.create!(:name => "Twin Peaks")
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    old_result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
+    
+    event = SingleDayEvent.create!(:date => Date.today)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    assert_equal("Twin Peaks", result.team_name, "Team name on new result")
+    assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
+    
+    team.name = "Tecate-Una Mas"
+    team.save!
+
+    assert_equal(1, team.names(true).size, "names")
+
+    assert_equal("Twin Peaks", old_result.team_name, "Team name should stay the same on old result")
+    assert_equal("Tecate-Una Mas", result.team_name, "Team name should change on this year's result")
+  end
+  
+  def test_results_before_this_year
+    team = Team.create!(:name => "Twin Peaks")
+    assert(!team.results_before_this_year?, "results_before_this_year? with no results")
+    
+    event = SingleDayEvent.create!(:date => Date.today)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    assert(!team.results_before_this_year?, "results_before_this_year? with results in this year")
+    
+    result.destroy
+    
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.results_before_this_year?
+    assert(team.results_before_this_year?, "results_before_this_year? with results only a year ago")
+    
+    event = SingleDayEvent.create!(:date => 2.years.ago)
+    event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.results_before_this_year?
+    assert(team.results_before_this_year?, "results_before_this_year? with several old results")
+
+    event = SingleDayEvent.create!(:date => Date.today)
+    event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.results_before_this_year?
+    assert(team.results_before_this_year?, "results_before_this_year? with results in many years")
+  end
 end

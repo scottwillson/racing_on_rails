@@ -345,8 +345,11 @@ class Result < ActiveRecord::Base
 
   # Team name when result was created
   def team_name
-    return '' if team.nil?
-    team.name || ''
+    if self.team
+      team.name(date) || ""
+    else
+      ""
+    end
   end
   
   # Racer's current team name

@@ -7,13 +7,16 @@ class Team < ActiveRecord::Base
 
   include Dirty
   
+  before_save :add_old_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
+  after_save :reset_old_name
   
   validates_presence_of :name
   validate :no_duplicates
   
   has_many :aliases
+  has_many :names
   has_many :racers
   has_many :results
 
@@ -42,6 +45,26 @@ class Team < ActiveRecord::Base
       errors.add('name', "'#{name}' already exists")
     end
   end
+
+  # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
+  # TODO This is a bit naive, needs validation, and more tests
+  def add_old_name
+    if !@old_name.blank? && results_before_this_year?
+      self.names.create(:name => @old_name, :year => Date.today.year - 1)
+    end
+  end
+  
+  def results_before_this_year?
+    # Exists? doesn't support joins
+    count = Team.count_by_sql([%Q{
+      select results.id from teams, results, races, standings, events 
+      where teams.id = ? and teams.id = results.team_id 
+        and results.race_id = races.id
+        and races.standings_id  = standings.id
+        and standings.event_id = events.id and events.date < ? limit 1
+    }, self.id, Date.today.beginning_of_year])
+    count > 0
+  end
   
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
@@ -58,6 +81,11 @@ class Team < ActiveRecord::Base
 
       Alias.create!(:name => @old_name, :team => self)
     end
+  end
+  
+  # Otherwise, if we change name in memory more than once, @old_name will be out of date
+  def reset_old_name
+    @old_name = name
   end
   
   def has_alias?(alias_name)
@@ -100,6 +128,19 @@ class Team < ActiveRecord::Base
   
   def member_in_year?(date = Date.today)
     member
+  end
+  
+  # Team names change over time
+  def name(date = nil)
+    return read_attribute(:name) unless date
+    
+    # TODO Tune this
+    name_for_date = self.names.detect { |n| n.year == date.year }
+    if name_for_date
+      name_for_date.name
+    else
+      read_attribute(:name)
+    end
   end
   
   def name=(value)
