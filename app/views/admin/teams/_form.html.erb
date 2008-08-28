@@ -16,39 +16,52 @@
 <%= error_messages_for "team" %>
   
 <table class="base">
+  <caption><%= @team.name %></caption>
   <tr>
-    <th colspan="4"><%= @team.name %></th>
+    <th colspan="4">&nbsp;</th>
   </tr>
   <tr>
     <td class="field_label">Name:</td>
     <td><%= f.text_field :name %></td>
-    <td class="field_label"></td>
-    <td><%= f.check_box :member %> Member?</td>
+    <td class="field_label left">Sponsors</td>
+    <td></td>
   </tr>
   <tr>
     <td class="field_label">Contact Name:</td>
     <td><%= f.text_field :contact_name %></td>
-    <td class="field_label"></td>
-    <td>Sponsors</td>
+    <td rowspan="4" colspan="2"><%= f.text_area :sponsors %></td>
   </tr>
   <tr>
     <td class="field_label">Contact Email:</td>
     <td><%= f.text_field :contact_email %></td>
-    <td class="field_label"></td>
-    <td rowspan="2"><%= f.text_area :sponsors %></td>
   </tr>
   <tr>
     <td class="field_label">Contact Phone:</td>
     <td><%= f.text_field :contact_phone %></td>
+  </tr>
+  <tr>
     <td class="field_label"></td>
+    <td><%= f.check_box :member %> Member?</td>
   </tr>
   <tr valign="top">
     <td colspan="2">
-    <%- for racer in @team.racers.sort_by {|r| r.last_name} -%>
-      <%= link_to racer.name, admin_racer_path(racer) %><br>
-    <%- end -%>
+      <table class="inline">
+        <tr>
+          <th>Racers</th>
+        </tr>
+        <%- @team.racers.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |racer| -%>
+        <tr>
+          <td><%= link_to racer.name, admin_racer_path(racer) %><br></td>
+        </tr>
+        <%- end -%>
+        <%- if @team.racers.empty? %>
+        <tr>
+          <td colspan="2">None</td>
+        </tr>
+        <%- end -%>
+      </table>
     </td>
-    <td colspan="2">
+    <td>
       <table class="inline">
         <tr>
           <th>Aliases</th>
@@ -64,6 +77,30 @@
         </tr>
         <%- end -%>
         <%- if @team.aliases.empty? %>
+        <tr>
+          <td colspan="2">None</td>
+        </tr>
+        <%- end -%>
+      </table>
+    </td>
+    <td>
+      <table class="inline">
+        <tr>
+          <th>Historical Names</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <%- @team.historical_names.each do |historical_name| -%>
+        <tr id="historical_name_<%= historical_name.id %>">
+          <td><%= historical_name.name %></td>
+          <td><%= historical_name.year %></td>
+          <td>
+            <%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
+                 :url => { :action => "destroy_historical_name", :id => @team.id, :alias_id => historical_name.id}) %>
+          </td>
+        </tr>
+        <%- end -%>
+        <%- if @team.historical_names.empty? %>
         <tr>
           <td colspan="2">None</td>
         </tr>
