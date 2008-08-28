@@ -633,6 +633,7 @@ class Racer < ActiveRecord::Base
     end
   end
 
+  # TODO Any reason not to change this to last name, first name?
   def <=>(other)
     if other
       id <=> other.id
