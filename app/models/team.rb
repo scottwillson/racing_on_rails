@@ -7,7 +7,7 @@ class Team < ActiveRecord::Base
 
   include Dirty
   
-  before_save :add_old_name
+  before_save :add_historical_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   after_save :reset_old_name
@@ -16,7 +16,7 @@ class Team < ActiveRecord::Base
   validate :no_duplicates
   
   has_many :aliases
-  has_many :names
+  has_many :historical_names, :order => "year"
   has_many :racers
   has_many :results
 
@@ -43,14 +43,6 @@ class Team < ActiveRecord::Base
     existing_team = Team.find_by_name(name)
     if existing_team and ((existing_team.id == id and existing_team.name.casecmp(name) != 0) or (existing_team.id != id and name == existing_team.name))
       errors.add('name', "'#{name}' already exists")
-    end
-  end
-
-  # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
-  # TODO This is a bit naive, needs validation, and more tests
-  def add_old_name
-    if !@old_name.blank? && results_before_this_year?
-      self.names.create(:name => @old_name, :year => Date.today.year - 1)
     end
   end
   
@@ -80,6 +72,15 @@ class Team < ActiveRecord::Base
       !Team.exists?(["name = ?", @old_name])
 
       Alias.create!(:name => @old_name, :team => self)
+    end
+  end
+
+  # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
+  # TODO This is a bit naive, needs validation, and more tests
+  def add_historical_name
+    last_year = Date.today.year - 1
+    if !@old_name.blank? && results_before_this_year? && !self.historical_names.any? { |name| name.year == last_year }
+      self.historical_names.create(:name => @old_name, :year => last_year)
     end
   end
   
@@ -131,13 +132,26 @@ class Team < ActiveRecord::Base
   end
   
   # Team names change over time
-  def name(date = nil)
-    return read_attribute(:name) unless date
+  def name(date_or_year = nil)
+    return read_attribute(:name) unless date_or_year && !self.historical_names.empty?
     
     # TODO Tune this
-    name_for_date = self.names.detect { |n| n.year == date.year }
-    if name_for_date
-      name_for_date.name
+    if date_or_year.is_a? Integer
+      year = date_or_year
+    else
+      year = date_or_year.year
+    end
+    
+    # Assume historical_names always sorted
+    if year <= self.historical_names.first.year
+      return self.historical_names.first.name
+    elsif year >= self.historical_names.last.year && year < Date.today.year
+      return self.historical_names.last.name
+    end
+    
+    name_for_year = self.historical_names.detect { |n| n.year == year }
+    if name_for_year
+      name_for_year.name
     else
       read_attribute(:name)
     end

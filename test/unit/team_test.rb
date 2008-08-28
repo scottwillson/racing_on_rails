@@ -135,13 +135,13 @@ class TeamTest < ActiveSupport::TestCase
   
   def test_name_with_date
     team = Team.create!(:name => "Tecate-Una Mas")
-    assert_equal(0, team.names(true).size, "names")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
     
-    team.names.create!(:name => "Team Tecate", :date => 1.years.ago)
-    assert_equal(1, team.names(true).size, "names")
+    team.historical_names.create!(:name => "Team Tecate", :date => 1.years.ago)
+    assert_equal(1, team.historical_names(true).size, "historical_names")
     
-    team.names.create!(:name => "Twin Peaks", :date => 2.years.ago)
-    assert_equal(2, team.names(true).size, "names")
+    team.historical_names.create!(:name => "Twin Peaks", :date => 2.years.ago)
+    assert_equal(2, team.historical_names(true).size, "historical_names")
     
     assert_equal("Tecate-Una Mas", team.name)
     assert_equal("Tecate-Una Mas", team.name(Date.today))
@@ -164,7 +164,7 @@ class TeamTest < ActiveSupport::TestCase
     team.name = "Tecate-Una Mas"
     team.save!
 
-    assert_equal(1, team.names(true).size, "names")
+    assert_equal(1, team.historical_names(true).size, "historical_names")
 
     assert_equal("Twin Peaks", old_result.team_name, "Team name should stay the same on old result")
     assert_equal("Tecate-Una Mas", result.team_name, "Team name should change on this year's result")
@@ -195,4 +195,51 @@ class TeamTest < ActiveSupport::TestCase
     team.results_before_this_year?
     assert(team.results_before_this_year?, "results_before_this_year? with results in many years")
   end
+  
+  def test_rename_multiple_times
+    team = Team.create!(:name => "Twin Peaks")    
+    event = SingleDayEvent.create!(:date => 3.years.ago)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    
+    team.name = "Tecate"
+    team.save!
+    assert_equal(1, team.historical_names(true).size, "historical_names")
+    
+    team.name = "Tecate Una Mas"
+    team.save!
+    assert_equal(1, team.historical_names(true).size, "historical_names")
+    
+    team.name = "Tecate-¡Una Mas!"
+    team.save!
+    assert_equal(1, team.historical_names(true).size, "historical_names")
+    
+    assert_equal("Tecate-¡Una Mas!", team.name, "New team name")
+    assert_equal("Twin Peaks", team.historical_names.first.name, "Old team name")
+    assert_equal(Date.today.year - 1, team.historical_names.first.year, "Old team name year")
+  end
+
+  def test_historical_name_date_or_year
+    team = teams(:vanilla)
+    HistoricalName.create!(:team_id => team.id, :name => "Sacha's Team", :year => 2001)
+    assert_equal("Sacha's Team", team.name(Date.new(2001, 12, 31)), "name for 2001-12-31")
+    assert_equal("Sacha's Team", team.name(Date.new(2001)), "name for 2001-01-01")
+    assert_equal("Sacha's Team", team.name(2001), "name for 2001")
+  end
+
+ def test_multiple_historical_names
+   team = teams(:vanilla)
+   HistoricalName.create!(:team_id => team.id, :name => "Mapei", :year => 2001)
+   HistoricalName.create!(:team_id => team.id, :name => "Mapei-Clas", :year => 2002)
+   HistoricalName.create!(:team_id => team.id, :name => "Quick Step", :year => 2003)
+   assert_equal(3, team.historical_names.size, "Historical names")
+   assert_equal("Mapei", team.name(2000), "Historical name 2000")
+   assert_equal("Mapei", team.name(2001), "Historical name 2001")
+   assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
+   assert_equal("Quick Step", team.name(2003), "Historical name 2003")
+   assert_equal("Quick Step", team.name(2003), "Historical name 2004")
+   assert_equal("Quick Step", team.name(Date.today.year - 1), "Historical name last year")
+   assert_equal("Vanilla", team.name(Date.today.year), "Name this year")
+   assert_equal("Vanilla", team.name(Date.today.year + 1), "Name next year")
+ end
 end
