@@ -311,9 +311,20 @@ class Admin::TeamsControllerTest < ActiveSupport::TestCase
     opts = {:controller => "admin/teams", :action => "destroy_alias", :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s}
     assert_routing("/admin/teams/#{vanilla.id}/aliases/#{vanilla_bicycles_alias.id}/destroy", opts)
     
-    post(:destroy_alias, :id => vanilla_bicycles_alias.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
+    post(:destroy_alias, :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
     assert_response(:success)
     assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')
+  end
+  
+  def test_destroy_historical_name
+    vanilla = teams(:vanilla)
+    vanilla.historical_names.create!(:name => "Generic Team", :year => 1990)
+    assert_equal(1, vanilla.historical_names.count, "Vanilla historical_names")
+    historical_name = vanilla.historical_names.first
+
+    post(:destroy_historical_name, :id => vanilla.to_param, :historical_name_id => historical_name.to_param)
+    assert_response(:success)
+    assert_equal(0, vanilla.historical_names(true).count, 'Vanilla historical_names after destruction')
   end
   
   def test_new

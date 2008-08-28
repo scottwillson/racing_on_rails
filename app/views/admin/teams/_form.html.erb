@@ -96,7 +96,7 @@
           <td><%= historical_name.year %></td>
           <td>
             <%= link_to_remote(image_tag('/images/buttons/remove_solo.gif', :border => 0, :height => 22, :width => 23), 
-                 :url => { :action => "destroy_historical_name", :id => @team.id, :alias_id => historical_name.id}) %>
+                 :url => { :action => "destroy_historical_name", :id => @team.id, :historical_name_id => historical_name.id}) %>
           </td>
         </tr>
         <%- end -%>
