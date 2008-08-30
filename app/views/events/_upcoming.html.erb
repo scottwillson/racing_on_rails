@@ -1,14 +1,14 @@
 <table class="base" id="upcoming_events">
-  <caption><%= link_to 'Schedule', :only_path  => false, :host => RAILS_HOST, :controller => 'schedule' %></caption>
+  <caption><%= caption %></caption>
   <%- if @upcoming_events.empty? %>
   <tr><th></th></tr>
   <tr><td>No upcoming events in the next two weeks</td></tr>
   <% end -%>
   
-  <%- for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross'] -%>
+  <%-  @upcoming_events.disciplines.each do |discipline| -%>
   <%- unless @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
   <tr>
-    <th colspan="2"><%= discipline.upcase %></th>
+    <th colspan="2"><%= discipline.upcase unless @upcoming_events.disciplines.size <= 1 %></th>
   </tr>
   <%- for event in @upcoming_events.events[discipline].sort {|x, y| x.date <=> y.date} -%>
   <tr>
@@ -55,7 +55,6 @@
   <%- end -%>
   <%- end -%>
   <tr>
-    <td colspan="2"><%= link_to 'More &hellip;', :only_path  =>
-  false, :host => RAILS_HOST, :controller => 'schedule' %></td>
+    <td colspan="2"><%= footer %></td>
   </tr>
 </table>

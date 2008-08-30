@@ -89,6 +89,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
   map.track "track", :controller => "track"
+  map.track_schedule "track/schedule", :controller => "track", :action => "schedule"
 
   map.connect '', :controller => "home"
 

@@ -55,6 +55,10 @@
         <td colspan="2"><small>Please check the <a href="http://#{STATIC_HOST}/track/schedule/2008/index.html">schedule page</a> details and exceptions.</small></td>          
       </tr>
       </table>
+      <br/>
+      <%= upcoming_events(link_to("Velodrome Schedule", track_schedule_path), 
+                          "Please check the #{link_to("schedule page", track_schedule_path)} details and exceptions.")
+      %>
     </td>
   </tr>
 </table>

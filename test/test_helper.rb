@@ -105,7 +105,7 @@ class Test::Unit::TestCase
 
   def assert_equal_events(expected, actual, message = 'Events not equal')
     expected_sorted = expected.sort
-    actual_sorted = actual.sort
+    actual_sorted = actual ? actual.sort : []
     unless expected_sorted == actual_sorted
       expected_formatted = expected_sorted.join("\n")
       actual_formatted = actual_sorted.join("\n")

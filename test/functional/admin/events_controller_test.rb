@@ -544,20 +544,6 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal(promoters(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
   end
   
-  def test_upcoming_events
-    opts = {:controller => "admin/events", :action => "upcoming"}
-    assert_routing("/admin/events/upcoming", opts)
-    get(:upcoming)
-    assert_response(:success)
-    assert_template("admin/events/upcoming")
-  end
-  
-  def test_upcoming_events_refresh
-    post(:upcoming, "commit"=>"Refresh", "date"=>{"month"=>"6", "day"=>"25", "year"=>"2004"}, "weeks"=>"6")
-    assert_response(:success)
-    assert_template("admin/events/upcoming")
-  end
-  
   def test_first_aid
     opts = {:controller => "admin/events", :action => "first_aid"}
     assert_routing("/admin/events/first_aid", opts)

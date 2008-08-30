@@ -54,8 +54,15 @@ class Discipline < ActiveRecord::Base
   end
   
   def names
-    if name == 'Road'
+    case name
+    when "Circuit"
       ['Road', 'Circuit']
+    when "Road"
+      ['Road', 'Circuit']
+    when "Downhill"
+      ['Downhill', 'Mountain Bike']
+    when "Mountain Bike"
+      ['Downhill', 'Mountain Bike']
     else
       [name]
     end

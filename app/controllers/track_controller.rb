@@ -1,5 +1,5 @@
 class TrackController < ApplicationController
   def index
-    @weekly_schedule = []
+    @upcoming_events = UpcomingEvents.new(Date.today, 6, "Track")    
   end
 end

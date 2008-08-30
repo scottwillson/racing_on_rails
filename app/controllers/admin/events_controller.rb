@@ -338,26 +338,6 @@ class Admin::EventsController < ApplicationController
     render(:partial => 'bar_points', :locals => {:race => race, :bar_points => bar_points})
   end
   
-  # Upcoming Events. Delegates to UpcomingEvents class
-  # === Params
-  # * date: Show all Events from this day onward. Optional -- defaults to today
-  # * weeks: optional, defaults to 2
-  # === Assigns
-  # * upcoming_events: instance of UpcomingEvents
-  def upcoming
-    if params['date'].blank?
-      @date = Date.today
-    else
-      @date = Date.new(params['date']['year'].to_i, params['date']['month'].to_i, params['date']['day'].to_i)
-    end
-    if params['weeks'].blank?
-      @weeks = 2
-    else
-      @weeks = params['weeks']
-    end
-    @upcoming_events = UpcomingEvents.new(@date, @weeks)
-  end
-  
   # AJAX method: update promoter's contact information when different promoter selected
   # === Params
   # * promoter_id

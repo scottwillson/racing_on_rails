@@ -91,6 +91,11 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
       assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
+      # Next Sunday -- Mountain Bike only
+      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 29), 2, "Mountain Bike")
+      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+
       # Next Monday
       upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 30))
       assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
@@ -116,6 +121,15 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     ensure
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end
+  end
+  
+  def test_discipline
+    upcoming_events = UpcomingEvents.new
+    assert_equal(nil, upcoming_events.discipline, "default discipline")
+    
+    date = 1.year.ago
+    upcoming_events = UpcomingEvents.new(date, 4, "Track")
+    assert_equal("Track", upcoming_events.discipline, "discipline")
   end
   
   def test_midweek_multiday_event

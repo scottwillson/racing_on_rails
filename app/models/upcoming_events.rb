@@ -5,41 +5,48 @@
 #
 # Does not simply add +weeks+ to date when selecting events -- applies a week boundary on Monday
 class UpcomingEvents
+  # TODO Apply some OO loving
   
-  attr_reader :events, :weekly_series
+  attr_reader :discipline, :disciplines, :events, :weekly_series
   
   # Date = start date. Defaults to today
-  def initialize(date = Date.today, weeks = 2)
+  def initialize(date = Date.today, weeks = 2, discipline = nil)
+    @discipline = discipline
+    if discipline
+      @disciplines = [discipline]
+    else
+      @disciplines = ['Road', 'Mountain Bike', 'Track', 'Cyclocross']
+    end
     date = Date.new(date.year, date.month, date.day) || Date.today
     weeks = weeks || 2
 
     _events = SingleDayEvent.find(
       :all, 
-      :conditions => scope_by_sanctioned(['date >= ? and date <= ? and cancelled = ? and parent_id is null', 
-                      date, cutoff_date(date, weeks), false]),
+      :conditions => scope_by_sanctioned(scope_by_discipline(['date >= ? and date <= ? and cancelled = ? and parent_id is null', 
+                      date, cutoff_date(date, weeks), false])),
       :order => 'date')
 
     # Exclude Series and WeeklySeries
     _events.concat(MultiDayEvent.find(
         :all, 
         :include => :events,
-        :conditions => scope_by_sanctioned(['events_events.date >= ? and events_events.date <= ? and events.type = ?', 
-                        date, cutoff_date(date, weeks), 'MultiDayEvent']),
+        :conditions => scope_by_sanctioned(scope_by_discipline(['events_events.date >= ? and events_events.date <= ? and events.type = ?', 
+                        date, cutoff_date(date, weeks), 'MultiDayEvent'])),
         :order => 'events.date'))
 
     _events.concat(SingleDayEvent.find(
         :all, 
         :include => :parent,
-        :conditions => scope_by_sanctioned(['events.date >= ? and events.date <= ? and events.cancelled = ? and events.parent_id is not null and parents_events.type = ?', 
-            date, cutoff_date(date, weeks), false, 'Series']),
+        :conditions => scope_by_sanctioned(scope_by_discipline(['events.date >= ? and events.date <= ? and events.cancelled = ? and events.parent_id is not null and parents_events.type = ?', 
+            date, cutoff_date(date, weeks), false, 'Series'])),
         :order => 'events.date'))
     
     weekly_series_events = SingleDayEvent.find(
       :all, 
       :include => :parent,
-      :conditions => [
+      :conditions => scope_by_sanctioned(scope_by_discipline([
         'events.date >= ? and events.date <= ? and events.sanctioned_by = ? and events.cancelled = ? and events.parent_id is not null and parents_events.type = ?', 
-                      date, cutoff_date(date, weeks), ASSOCIATION.short_name, false, 'WeeklySeries'],
+                      date, cutoff_date(date, weeks), ASSOCIATION.short_name, false, 'WeeklySeries'])),
       :order => 'events.date')
     
     for event in weekly_series_events
@@ -49,9 +56,9 @@ class UpcomingEvents
     @weekly_series = Hash.new
     unique_weekly_series = weekly_series_events.collect {|event| event.parent}.to_set
     
-    for discipline in ['Road', 'Mountain Bike', 'Track', 'Cyclocross']
-      @events[discipline] = []
-      @weekly_series[discipline] = []
+    @disciplines.each do |d|
+      @events[d] = []
+      @weekly_series[d] = []
     end
 
     for event in _events
@@ -116,6 +123,15 @@ class UpcomingEvents
     if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
       conditions[0] = conditions.first + ' and events.sanctioned_by = ?'
       conditions << ASSOCIATION.short_name
+    else
+      conditions
+    end
+  end
+  
+  def scope_by_discipline(conditions)
+    if @discipline
+      conditions[0] = conditions.first + ' and events.discipline = ?'
+      conditions << discipline
     else
       conditions
     end
