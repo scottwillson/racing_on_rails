@@ -42,7 +42,9 @@ class ResultsFile < GridFile
     "total_time" => "time_total",
     "down" => "time_gap_to_leader",
     "gap" => "time_gap_to_leader",
-    "pts" => "points"
+    "pts" => "points",
+    "bonus points" => "points_bonus",
+    "penalty points" => "points_penalty"
   }
 
   def ResultsFile.cyclocross_workbook?(source, event)

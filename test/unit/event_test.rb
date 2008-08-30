@@ -350,6 +350,12 @@ class EventTest < ActiveSupport::TestCase
     assert(event.has_results?, "Event with one result should not have results")
   end
   
+  def test_inspect
+    event = SingleDayEvent.create!
+    event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:place => 1)
+    event.inspect
+  end
+  
   private
   
   def assert_orphans(count, event)

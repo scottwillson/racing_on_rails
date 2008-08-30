@@ -48,12 +48,12 @@ class ResultsFileTest < ActiveSupport::TestCase
     event.save!
     standings = event.standings.build(:event => event)
     
-    remote_standings = results_file.import
+    imported_standings = results_file.import
 
     expected_races = get_expected_races
-    assert_equal(expected_races.size, remote_standings.races.size, "remote_standings races")
+    assert_equal(expected_races.size, imported_standings.races.size, "imported_standings races")
     expected_races.each_with_index do |expected_race, index|
-      actual_race = remote_standings.races[index]
+      actual_race = imported_standings.races[index]
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
@@ -80,6 +80,36 @@ class ResultsFileTest < ActiveSupport::TestCase
     end
   end
   
+  def test_combined_separate_bonus_and_penalty_points
+    rows = [ ["Masters Men 30-39", "", "", "", "", "", "", "", ""],
+             ["1.0", "", "Masters Men 30-39", "", "Rosier", "Todd", "Team Rose City", "12", "", "12"],
+             ["2.0", "", "Masters Men 30-39", "", "Davidson", "Casey", "MAC", "14", "-3", "11"],
+             ["3.0", "", "Masters Men 30-39", "", "brown", "kurt", "Unattached", "", "-7", "-7"],
+    ]
+    event = SingleDayEvent.create!
+    results_file = ResultsFile.new(
+                                    rows, 
+                                    event, 
+                                    :columns => ['place', 'membership', 'category', 'city', 'last_name', 
+                                                 'first_name', "team_name", "points_bonus", "points_penalty", "points"],     
+                                    :header_row => false
+    )
+    standings = results_file.import
+    results = standings.races.first.results
+    
+    assert_equal(12, results[0].points_bonus, "results[0].points_bonus")
+    assert_equal(0, results[0].points_penalty, "results[0].points_penalty")
+    assert_equal(12, results[0].points, "results[0].points")
+
+    assert_equal(14, results[1].points_bonus, "results[1].points_bonus")
+    assert_equal(-3, results[1].points_penalty, "results[1].points_penalty")
+    assert_equal(11, results[1].points, "results[1].points")
+
+    assert_equal(0, results[2].points_bonus, "results[2].points_bonus")
+    assert_equal(-7, results[2].points_penalty, "results[2].points_penalty")
+    assert_equal(-7, results[2].points, "results[2].points")
+  end
+  
   def test_import_time_trial_racers_with_same_name
     bruce_109 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
@@ -93,7 +123,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     event.save!
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"), event)
-    remote_standings = results_file.import
+    imported_standings = results_file.import
 
     assert_equal(10, results_file.columns.size, 'Columns size')
     assert_equal('license', results_file.columns[0].name, 'Column 0 name')
@@ -102,17 +132,17 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(:place, results_file.columns[2].field, 'Column 2 field')
     assert_equal(2, Racer.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
     
-    assert_equal(2, remote_standings.races(true).size, "remote_standings races")
-    assert_equal(7, remote_standings.races[0].results.size, "Results")
-    sorted_results = remote_standings.races[0].results.sort
+    assert_equal(2, imported_standings.races(true).size, "imported_standings races")
+    assert_equal(7, imported_standings.races[0].results.size, "Results")
+    sorted_results = imported_standings.races[0].results.sort
     assert_equal("1", sorted_results.first.place, "First result place")
     assert_in_delta(2252.0, sorted_results.first.time, 0.0001, "First result time")
     assert_equal("7", sorted_results.last.place, "Last result place")
     assert_in_delta(2762.0, sorted_results.last.time, 0.0001, "Last result time")
 
-    assert_kind_of(Standings, remote_standings, 'remote_standings')
-    assert(!remote_standings.races.empty?, 'standings.races should not be empty')
-    for race in remote_standings.races
+    assert_kind_of(Standings, imported_standings, 'imported_standings')
+    assert(!imported_standings.races.empty?, 'standings.races should not be empty')
+    for race in imported_standings.races
       assert_kind_of(Race, race, 'race')
       assert_kind_of(Category, race.category, 'race.category')
       for result in race.results.sort
@@ -128,8 +158,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     end
     
     # Existing racers, same name, different numbers
-    bruce_1300 = remote_standings.races.first.results[6].racer
-    bruce_109 = remote_standings.races.last.results[2].racer
+    bruce_1300 = imported_standings.races.first.results[6].racer
+    bruce_109 = imported_standings.races.last.results[2].racer
     assert_not_nil(bruce_1300, 'bruce_1300')
     assert_not_nil(bruce_109, 'bruce_109')
     assert_equal(bruce_1300.name.downcase, bruce_109.name.downcase, "Bruces with different numbers should have same name")
@@ -137,27 +167,27 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_not_equal(bruce_1300.id, bruce_109.id, "Bruces with different numbers should have different IDs")
     
     # New racer, same name, different number
-    scott_90 = remote_standings.races.first.results[5].racer
-    scott_400 = remote_standings.races.last.results[3].racer
+    scott_90 = imported_standings.races.first.results[5].racer
+    scott_400 = imported_standings.races.last.results[3].racer
     assert_equal(scott_90.name.downcase, scott_400.name.downcase, "New racers with different numbers should have same name")
     assert_equal(scott_90, scott_400, "New racers with different numbers should be same racers")
     assert_equal(scott_90.id, scott_400.id, "New racers with different numbers should have same IDs")
 
     # Existing racer, same name, different number
     existing_weaver = racers(:weaver)
-    new_weaver = remote_standings.races.last.results.first.racer
+    new_weaver = imported_standings.races.last.results.first.racer
     assert_equal(existing_weaver.name, new_weaver.name, "Weavers with different numbers should have same name")
     assert_equal(existing_weaver, new_weaver, "Weavers with different numbers should be same racers")
     assert_equal(existing_weaver.id, new_weaver.id, "Weavers with different numbers should have same IDs")
 
     # New racer, different name, same number
-    kurt = remote_standings.races.first.results[2].racer
-    alan = remote_standings.races.first.results[3].racer
+    kurt = imported_standings.races.first.results[2].racer
+    alan = imported_standings.races.first.results[3].racer
     assert_not_equal(kurt, alan, "Racer with different names, same numbers should be different racers")
 
     # Existing racer, different name, same number
     existing_matson = racers(:matson)
-    new_matson = remote_standings.races.first.results.first.racer
+    new_matson = imported_standings.races.first.results.first.racer
     assert_not_equal(existing_matson, new_matson, "Racer with different numbers should be different racers")
   end
   
@@ -207,11 +237,11 @@ class ResultsFileTest < ActiveSupport::TestCase
     standings = event.standings.build(:event => event)
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
-    remote_standings = results_file.import
+    imported_standings = results_file.import
 
-    assert_equal(expected_races.size, remote_standings.races.size, "standings races")
+    assert_equal(expected_races.size, imported_standings.races.size, "standings races")
     expected_races.each_with_index do |expected_race, index|
-      actual_race = remote_standings.races[index]
+      actual_race = imported_standings.races[index]
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results size for race #{index}")

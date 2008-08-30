@@ -321,7 +321,7 @@ class Event < ActiveRecord::Base
         }
       }
     }
-    true
+  ""
   end
 
   def to_s

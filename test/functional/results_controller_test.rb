@@ -320,4 +320,22 @@ class ResultsControllerTest < ActiveSupport::TestCase
       :action => "competition", 
       :competition_id => result.event.to_param)
   end
+  
+  def test_column_headers_display_correctly
+    event = events(:banana_belt_1)
+    race = event.standings.first.races.first
+    race.results.create!(:points_bonus => 8, :points_penalty => -2, :laps => 9)
+    race.result_columns = Race::DEFAULT_RESULT_COLUMNS.dup
+    race.result_columns << "points_bonus"
+    race.result_columns << "points_penalty"
+    race.result_columns << "laps"
+    race.save!
+    
+    get(:event, :id => event.to_param)
+    assert_response(:success)
+    
+    assert(@response.body["Bonus"], "Should format points_bonus correctly")
+    assert(@response.body["Penalty"], "Should format points_penalty correctly")
+    assert(@response.body["Laps"], "Should format laps correctly")
+  end
 end

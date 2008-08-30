@@ -83,7 +83,7 @@ class Race < ActiveRecord::Base
   
   # Default columns if empty
   def result_columns_or_default
-    self.result_columns || DEFAULT_RESULT_COLUMNS.clone
+    self.result_columns || DEFAULT_RESULT_COLUMNS.dup
   end
   
   # Are there are +result_columns+ that don't map to a Result attribute
