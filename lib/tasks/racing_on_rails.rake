@@ -93,6 +93,9 @@ task :cruise do
     fork do
       exec("mongrel_rails stop")
     end
+    fork do
+      exec("killall firefox-bin")
+    end
     # Wait for Mongrel stop script to complete before exiting
     Process.wait
   end
