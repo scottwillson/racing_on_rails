@@ -53,4 +53,10 @@ class DisciplineTest < ActiveSupport::TestCase
     assert_not_nil(cx_bar_cats, 'Cyclocross BAR categories')
     assert(!cx_bar_cats.empty?, 'Cyclocross BAR categories not empty')
   end
+  
+  def test_names
+    assert_equal(%w{ Circuit }, Discipline[:circuit].names, "Circuit names")
+    assert_equal(["Downhill", "Mountain Bike"], Discipline[:mountain_bike].names, "Mountain Bike names")
+    assert_equal(["Downhill"], Discipline[:downhill].names, "Downhill names")
+  end
 end

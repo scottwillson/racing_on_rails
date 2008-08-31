@@ -14,8 +14,6 @@ class TrackControllerTest < ActiveSupport::TestCase
   def test_index
     get(:index)
     assert_response(:success)
-    assert_not_nil(assigns["upcoming_events"], 'Should assign @upcoming_events')
-    assert_equal("Track", assigns["upcoming_events"].discipline, "Upcoming events discipline")
-    assert_equal(["Track"], assigns["upcoming_events"].disciplines, "Upcoming events disciplines")
+    assert_not_nil(assigns["upcoming_events"], 'Should assign @disciplines')
   end
 end

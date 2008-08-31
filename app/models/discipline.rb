@@ -1,5 +1,7 @@
 # Road, track, criterium, time trial ...
+# TODO Add parent-child. Example: Road is parent for Criterium, Time Trial
 class Discipline < ActiveRecord::Base
+  include UpcomingEvents::DisciplineExtensions
 
   has_and_belongs_to_many :bar_categories, :class_name => 'Category', :join_table => 'discipline_bar_categories'
   
@@ -55,19 +57,15 @@ class Discipline < ActiveRecord::Base
   
   def names
     case name
-    when "Circuit"
-      ['Road', 'Circuit']
     when "Road"
-      ['Road', 'Circuit']
-    when "Downhill"
-      ['Downhill', 'Mountain Bike']
+      [nil, "", 'Circuit', "Criterium", "Road", "Time Trial", "Singlespeed", "Tour"]
     when "Mountain Bike"
       ['Downhill', 'Mountain Bike']
     else
       [name]
     end
   end
-  
+    
   def to_param
     @param || @param = name.underscore.gsub(' ', '_')
   end

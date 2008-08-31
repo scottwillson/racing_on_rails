@@ -9,9 +9,18 @@ module Admin::EventsHelper
     select('event', 'number_issuer_id', NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})
   end
   
-  def upcoming_events(caption = nil, footer = nil)
+  def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
     caption ||= link_to("Schedule", :only_path  => false, :host => RAILS_HOST, :controller => 'schedule')
     footer ||= link_to('More &hellip;', :only_path => false, :host => RAILS_HOST, :controller => 'schedule')
-    render :partial => 'events/upcoming', :locals => { :caption => caption, :footer => footer }
+    render :partial => 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption, :footer => footer }
+  end
+  
+  def discipline_upcoming_events(discipline, upcoming_events)
+    if upcoming_events.disciplines.size > 1
+      caption = discipline.name.upcase
+    else
+      caption = nil
+    end
+    render :partial => 'events/discipline_upcoming', :locals => { :discipline => discipline, :dates => upcoming_events.dates, :caption => caption }
   end
 end

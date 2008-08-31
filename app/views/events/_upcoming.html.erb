@@ -1,59 +1,15 @@
 <table class="base" id="upcoming_events">
   <caption><%= caption %></caption>
-  <%- if @upcoming_events.empty? %>
+
+  <%- if upcoming_events.empty? -%>
   <tr><th></th></tr>
-  <tr><td>No upcoming events in the next two weeks</td></tr>
+  <tr><td>No upcoming events in the next <%= pluralize(upcoming_events.weeks, "week") %> </td></tr>
+  <%- end -%>
+
+  <%- upcoming_events.disciplines.each do |discipline| -%>
+    <%= discipline_upcoming_events(discipline, upcoming_events) %>
   <% end -%>
-  
-  <%-  @upcoming_events.disciplines.each do |discipline| -%>
-  <%- unless @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
-  <tr>
-    <th colspan="2"><%= discipline.upcase unless @upcoming_events.disciplines.size <= 1 %></th>
-  </tr>
-  <%- for event in @upcoming_events.events[discipline].sort {|x, y| x.date <=> y.date} -%>
-  <tr>
-    <td class="date"><%= event.date_range_s %></td>
-    <td class="info"><%= link_to(event.full_name, event.flyer) unless event.flyer.blank? -%><%= event.full_name if event.flyer.blank? -%></td>
-  </tr>
-  <%- end -%>
-  <%- end -%>
-  <%- unless @upcoming_events.weekly_series[discipline].empty? -%>
-  <tr>
-    <td colspan="2"><h4>Weekly</h4></td>
-  </tr>
-  <%- for event in @upcoming_events.weekly_series[discipline].sort {|a, b|
-      wday_diff = a.earliest_day_of_week.wday <=> b.earliest_day_of_week.wday
-      if wday_diff == 0
-        date_diff = a.date <=> b.date
-        if date_diff == 0
-          a.name <=> b.name
-        else
-          date_diff
-        end
-      else
-        wday_diff
-      end
-  } -%>
-  <tr>
-    <td class="date"><%= event.days_of_week_s -%></td>
-    <td class="info">
-      <%- if event.flyer.blank? -%>
-        <%= event.full_name %> <small>(<%= event.start_date.strftime("%m/%d") %> - <%= event.end_date.strftime("%m/%d") -%>)</small>
-      <%- else -%>
-        <%= link_to(event.full_name, event.flyer)  -%> <small>(<%=
-          link_to(event.start_date.strftime("%m/%d"), event.flyer) %> - 
-      <%= link_to(event.end_date.strftime("%m/%d"), event.flyer) %>)</small>
-      <%- end -%>
-    </td>
-  </tr>
-  <%- end -%>
-  <%- end -%>
-  <%- unless @upcoming_events.events[discipline].empty? and @upcoming_events.weekly_series[discipline].empty? -%>
-  <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-  <%- end -%>
-  <%- end -%>
+
   <tr>
     <td colspan="2"><%= footer %></td>
   </tr>

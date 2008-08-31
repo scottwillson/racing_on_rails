@@ -27,11 +27,6 @@ class SingleDayEvent < Event
     SingleDayEvent.find(:all, :conditions => conditions)
   end
   
-  def initialize(attributes = nil)
-    super
-    @days_of_week = Set.new
-  end
-  
   # Child/single day of MultiDayEvent?
   def series_event?
     parent and (parent.is_a?(WeeklySeries))

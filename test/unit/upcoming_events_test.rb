@@ -1,9 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UpcomingEventsTest < ActiveSupport::TestCase
-
-  # Default to next two weeks (spec start date and range)
-  # Sub-categorize by weekly series or not (WeeklySeries, Series, MultiDayEvent)
   # Moved/cancelled?
   # Notes?
   # Other non-events?
@@ -13,6 +10,17 @@ class UpcomingEventsTest < ActiveSupport::TestCase
   # Remove stage races from weekly section
   
   def test_new
+    upcoming_events = UpcomingEvents::Base.new(Date.today, 2, nil)
+    assert_equal(nil, upcoming_events.discipline, "default discipline")
+    assert_equal(2, upcoming_events.weeks, "default weeks")
+    
+    date = 1.year.ago
+    upcoming_events = UpcomingEvents::Base.new(date, 4, "Track")
+    assert_equal("Track", upcoming_events.discipline, "discipline")
+    assert_equal(4, upcoming_events.weeks, "weeks")
+  end
+
+  def test_different_dates
     begin
       show_only_association_sanctioned_races_on_calendar = ASSOCIATION.show_only_association_sanctioned_races_on_calendar
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = true
@@ -47,89 +55,79 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert("PIR new?", !pir.new_record?)
     
       # Way, wayback
-      upcoming_events = UpcomingEvents.new(Date.new(2005, 1, 1))
-      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2005, 1, 1))
+      assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wayback
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 6))
-      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-      assert_equal_events([pir], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 6))
+      assert_equal([], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal_events([pir], upcoming_events['Road'].upcoming_weekly_series, 'UpcomingEvents.upcoming_weekly_series[Road]')
     
       # Sunday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 20))
-      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Monday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 21))
-      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 21))
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Tuesday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 22))
-      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 22))
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
-      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22, 1, 0, 0))
-      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => DateTime.new(2007, 05, 22, 1, 0, 0))
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
-      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22, 23, 59, 0))
-      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => DateTime.new(2007, 05, 22, 23, 59, 0))
+      assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Wednesday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 23))
-      assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 23))
+      assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Sunday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 29))
-      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29))
+      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Sunday -- Mountain Bike only
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 29), 2, "Mountain Bike")
-      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29), :weeks => 2, :discipline => "Mountain Bike")
+      assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
 
       # Next Monday
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 30))
-      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([chain_breaker], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 30))
+      assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal_events([chain_breaker], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
 
       # Monday after all events
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 06, 5))
-      assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-      assert_equal_events([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 06, 5))
+      assert_equal_events([], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
     
       # Big range
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 5, 21), 16)
-      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 21), :weeks => 16)
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr, not_upcoming_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
     
       # Small range
-      upcoming_events = UpcomingEvents.new(DateTime.new(2007, 05, 22), 1)
-      assert_equal_events([may_day_rr, lucky_lab_tt], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      upcoming_events = UpcomingEvents.find_all(:date => DateTime.new(2007, 05, 22), :weeks => 1)
+      assert_equal_events([may_day_rr, lucky_lab_tt], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
     
       # Include ALL events regardless of sanctioned_by
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
-      upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 20))
-      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
+      upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
+      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
     ensure
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end
-  end
-  
-  def test_discipline
-    upcoming_events = UpcomingEvents.new
-    assert_equal(nil, upcoming_events.discipline, "default discipline")
-    
-    date = 1.year.ago
-    upcoming_events = UpcomingEvents.new(date, 4, "Track")
-    assert_equal("Track", upcoming_events.discipline, "discipline")
   end
   
   def test_midweek_multiday_event
@@ -149,68 +147,98 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(2006, 6, 17), six_day.end_date, 'Six Day end date')
     
     # Way, wayback
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 1, 1))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 1, 1))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Wayback
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 5, 28))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 5, 28))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Monday
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 05, 29))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 05, 29))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Tuesday
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 05, 30))
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 05, 30))
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 06, 2))
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 06, 2))
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 3))
-    assert_equal_enumerables([six_day], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 3))
+    assert_equal_enumerables([six_day], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
     
     # Saturday
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 16))
-    assert_equal([six_day], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 16))
+    assert_equal([six_day], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
     
     # Sunday
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 17))
-    assert_equal_events([six_day], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 17))
+    assert_equal_events([six_day], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
 
     # Next Monday
-    upcoming_events = UpcomingEvents.new(Date.new(2006, 6, 18))
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 18))
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
   end
 
   def test_cutoff_date
-    upcoming_events = UpcomingEvents.new
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 24), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 25), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 26), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 27), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 28), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 29), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date(Date.new(2008, 5, 30), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date(Date.new(2008, 5, 31), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date(Date.new(2008, 6, 1), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date(Date.new(2008, 6, 2), 2), 'Cutoff date')
-    assert_equal_dates(Date.new(2009, 1, 11), upcoming_events.cutoff_date(Date.new(2008, 12, 31), 2), 'Cutoff date')
-    # bad tests
-    assert_equal_dates(Date.new(2008, 6, 1), upcoming_events.cutoff_date(Date.new(2008, 5, 24), 1), 'Cutoff date')
-    assert_equal_dates(Date.new(2009, 12, 27), upcoming_events.cutoff_date(Date.new(2008, 12, 31), 52), 'Cutoff date')
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 24), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 25), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 26), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 27), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 28), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 29), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 30), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 31), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 6, 1), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 6, 2), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 6, 1), 2, nil)
+    assert_equal_dates(Date.new(2008, 6, 15), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 12, 31), 2, nil)
+    assert_equal_dates(Date.new(2009, 1, 11), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 24), 1, nil)
+    assert_equal_dates(Date.new(2008, 6, 1), upcoming_events.cutoff_date, 'Cutoff date')
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 12, 31), 52, nil)
+    assert_equal_dates(Date.new(2009, 12, 27), upcoming_events.cutoff_date, 'Cutoff date')
+  end
+  
+  def test_dates
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 5, 24), 2, nil)
+    assert_equal_dates(Date.new(2008, 5, 24), upcoming_events.dates.begin, "Dates.begin")
+    assert_equal_dates(Date.new(2008, 6, 8), upcoming_events.dates.end, "Dates.end")
+
+    upcoming_events = UpcomingEvents::Base.new(Date.new(2008, 12, 31), 2, nil)
+    assert_equal_dates(Date.new(2008, 12, 31), upcoming_events.dates.begin, "Dates.begin")
+    assert_equal_dates(Date.new(2009, 1, 11), upcoming_events.dates.end, "Dates.end")
   end
   
   def test_weekly_series
@@ -230,48 +258,41 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(1999, 7, 27), six_day.end_date, 'Six Day end date')
     
     # Way, wayback
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 1, 1))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 1, 1))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Wayback
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 5, 24))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 5, 24))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Monday
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 05, 25))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 05, 25))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
     # Tuesday
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 6, 7))
-    assert_equal_enumerables([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal_enumerables([six_day], upcoming_events.weekly_series['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 7))
+    assert_equal_enumerables([], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
+    assert_equal_enumerables([six_day], upcoming_events["Track"].upcoming_weekly_series, 'UpcomingEvents.events[Track]')
     
     # Saturday
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 5, 29))
-    assert_equal_enumerables([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([six_day], upcoming_events.weekly_series['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 5, 29))
+    assert_equal_enumerables([], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
+    assert_equal([six_day], upcoming_events["Track"].upcoming_weekly_series, 'UpcomingEvents.events[Track]')
     
     # Sunday
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 5, 30))
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal_enumerables([six_day], upcoming_events.weekly_series['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 5, 30))
+    assert_equal([], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
+    assert_equal_enumerables([six_day], upcoming_events["Track"].upcoming_weekly_series, 'UpcomingEvents.events[Track]')
 
     # Afterward
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 7, 28))
-    assert_equal_enumerables([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.events[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 7, 28))
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
   end
   
   def test_series
@@ -294,35 +315,49 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     assert_equal_dates(Date.new(1999, 6, 24), estacada_tt.end_date, 'estacada_tt end date')
 
     # Way, wayback
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 1, 1))
-    assert_equal([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.weekly_series[Road]')
-    assert_equal([], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal([], upcoming_events.events['Track'], 'UpcomingEvents.events[Track]')
-    assert_equal([], upcoming_events.weekly_series['Track'], 'UpcomingEvents.weekly_series[Track]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 1, 1))
+    assert_equal(nil, upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
 
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 6, 7))
-    assert_equal_enumerables([estacada_tt_1], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal_enumerables([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.events[Road]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 7))
+    assert_equal_enumerables([estacada_tt_1], upcoming_events["Road"].upcoming_events, 'UpcomingEvents.events[Road]')
+    assert_equal_enumerables([], upcoming_events['Road'].upcoming_weekly_series, 'UpcomingEvents.events[Road]')
 
-    upcoming_events = UpcomingEvents.new(Date.new(1999, 6, 20))
-    assert_equal_enumerables([estacada_tt_2, estacada_tt_3], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal_enumerables([], upcoming_events.weekly_series['Road'], 'UpcomingEvents.events[Road]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 20))
+    assert_equal_enumerables([estacada_tt_2, estacada_tt_3], upcoming_events["Road"].upcoming_events, 'UpcomingEvents.events[Road]')
+    assert_equal_enumerables([], upcoming_events['Road'].upcoming_weekly_series, 'UpcomingEvents.events[Road]')
   end
   
   def test_downhill_events
     super_d = SingleDayEvent.create!(:date => Date.new(2007, 5, 27), :name => 'Super D', :discipline => 'Downhill', :flyer_approved => true)
 
-    upcoming_events = UpcomingEvents.new(Date.new(2007, 05, 26))
-    assert_equal_events([], upcoming_events.events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal_events([super_d], upcoming_events.events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 26))
+    assert_nil(upcoming_events['Road'], 'UpcomingEvents.events[Road]')
+    assert_equal_events([super_d], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
+  end
+  
+  def test_disciplines
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1990, 6, 7))
+    assert(upcoming_events.disciplines.empty?, "Disciplines")
+    
+    upcoming_events = UpcomingEvents.find_all
+    assert_equal([Discipline[:road]], upcoming_events.disciplines, "Disciplines")    
+    
+    SingleDayEvent.create!(:discipline => "Downhill", :date => Date.today.advance(:days => 1))
+    upcoming_events = UpcomingEvents.find_all
+    assert_equal([Discipline[:road], Discipline[:mountain_bike]], upcoming_events.disciplines, "Disciplines")    
+    
+    SingleDayEvent.create!(:discipline => "Track", :date => Date.today.advance(:days => 4))
+    upcoming_events = UpcomingEvents.find_all(:discipline => "track")
+    assert_equal([Discipline[:track]], upcoming_events.disciplines, "Disciplines")    
   end
   
   def test_empty
-    upcoming_events = UpcomingEvents.new(Date.new(1990, 6, 7))
+    upcoming_events = UpcomingEvents.find_all(:date => Date.new(1990, 6, 7))
     assert(upcoming_events.empty?)
 
-    upcoming_events = UpcomingEvents.new
+    upcoming_events = UpcomingEvents.find_all
     assert(!upcoming_events.empty?)
   end
 end

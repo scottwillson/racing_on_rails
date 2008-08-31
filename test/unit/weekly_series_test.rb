@@ -28,24 +28,53 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal(Date.new(2008, 10, 21), pir.end_date, 'PIR end date')
   end
   
-  def test_days_of_week
-    weekly_series = WeeklySeries.new
-    weekly_series.days_of_week << Date.new(2006, 7, 3)
-    assert_same_elements([Date.new(2006, 7, 3)], weekly_series.days_of_week, 'Days of week')
-    assert_equal('Mon', weekly_series.days_of_week_s, 'Days of week as String')
+  def test_days_of_week_as_string
+    weekly_series = WeeklySeries.create!
+    weekly_series.events.create!(:date => Date.new(2006, 7, 3))
+    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
+    assert_equal('Mon', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
 
-    weekly_series.days_of_week << Date.new(2006, 7, 4)
-    assert_same_elements([Date.new(2006, 7, 3), Date.new(2006, 7, 4)], weekly_series.days_of_week, 'Days of week')
-    assert_equal('M/Tu', weekly_series.days_of_week_s, 'Days of week as String')
+    weekly_series.events.create!(:date => Date.new(2006, 7, 4))
+    assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
 
-    weekly_series.days_of_week << Date.new(2006, 7, 10)
-    assert_same_elements([Date.new(2006, 7, 3), Date.new(2006, 7, 4), Date.new(2006, 7, 10)], weekly_series.days_of_week, 'Days of week')
-    assert_equal('M/Tu', weekly_series.days_of_week_s, 'Days of week as String')
+    weekly_series.events.create!(:date => Date.new(2006, 7, 10))
+    assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
 
-    weekly_series.days_of_week << Date.new(2006, 7, 7)
-    weekly_series.days_of_week << Date.new(2006, 7, 6)
-    assert_same_elements([Date.new(2006, 7, 3), Date.new(2006, 7, 4), Date.new(2006, 7, 10), Date.new(2006, 7, 6), Date.new(2006, 7, 7)], weekly_series.days_of_week, 'Days of week')
-    assert_equal('M/Tu/Th/F', weekly_series.days_of_week_s, 'Days of week as String')
+    weekly_series.events.create!(:date => Date.new(2006, 7, 7))
+    weekly_series.events.create!(:date => Date.new(2006, 7, 6))
+    assert_equal('M/Tu/Th/F', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
+
+    dates = Date.new(2006, 1, 1)..Date.new(2006, 6, 15)
+    assert_equal('', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
+
+    dates = Date.new(2006, 8, 1)..Date.new(2006, 8, 15)
+    assert_equal('', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
+
+    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 5)
+    assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates, true), 'Days of week as String')
+    assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates, false), 'Days of week as String')
+    assert_equal('M/Tu', weekly_series.days_of_week_as_string(dates), 'Days of week as String')
+  end
+  
+  def test_earliest_day_of_week
+    weekly_series = WeeklySeries.create!
+    weekly_series.events.create!(:date => Date.new(2006, 7, 3))
+    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
+    assert_equal(1, weekly_series.earliest_day_of_week(dates, true), 'earliest_day_of_week')
+
+    weekly_series.events.create!(:date => Date.new(2006, 7, 5))
+    dates = Date.new(2006, 7, 4)..Date.new(2006, 7, 15)
+    assert_equal(3, weekly_series.earliest_day_of_week(dates, true), 'earliest_day_of_week')
+
+    weekly_series.events.create!(:date => Date.new(2006, 7, 10))
+    weekly_series.events.create!(:date => Date.new(2006, 7, 11))
+    weekly_series.events.create!(:date => Date.new(2006, 7, 12))
+    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
+    assert_equal(1, weekly_series.earliest_day_of_week(dates, true), 'earliest_day_of_week')
+    dates = Date.new(2006, 7, 4)..Date.new(2006, 7, 9)
+    assert_equal(3, weekly_series.earliest_day_of_week(dates, true), 'earliest_day_of_week')
+
+    assert_equal(-1, weekly_series.earliest_day_of_week(Date.new(2006, 7, 1)..Date.new(2006, 7, 2), true), 'earliest_day_of_week')
   end
   
   def test_friendly_class_name
