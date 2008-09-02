@@ -1,69 +1,57 @@
 tonkin_banana_belt:
-  id: 1
-  race_id: 1
-  racer_id: 1
-  team_id: 1
+  race: banana_belt_pro_1_2
+  racer: tonkin
+  team: kona
   place: 1
 weaver_banana_belt:
-  id: 2
-  race_id: 1
-  racer_id: 3
+  race: banana_belt_pro_1_2
+  racer: weaver
   place: 2
 matson_banana_belt:
-  id: 3
-  race_id: 1
-  racer_id: 2
-  team_id: 1
+  race: banana_belt_pro_1_2
+  racer: matson
+  team: kona
   place: 3
 molly_banana_belt:
-  id: 4
-  race_id: 1
-  racer_id: 4
-  team_id: 3
+  race: banana_belt_pro_1_2
+  racer: molly
+  team: vanilla
   place: 16
-result_5:
-  id: 5
-  race_id: 4
-  racer_id: 5
-  team_id: 2
+alice_kings_valley_women_2004:
+  race: kings_valley_women_2004
+  racer: alice
+  team: gentle_lovers
   place: 2
-result_6:
-  id: 6
-  race_id: 4
-  racer_id: 4
-  team_id: 3
+molly_kings_valley_women_2004:
+  race: kings_valley_women_2004
+  racer: molly
+  team: vanilla
   place: 15
 tonkin_kings_valley:
-  id: 7
-  race_id: 2
-  racer_id: 1
-  team_id: 1
+  race: kings_valley_pro_1_2
+  racer: tonkin
+  team: kona
   place: 16
 weaver_kings_valley:
-  id: 8
-  race_id: 2
-  racer_id: 3
+  race: kings_valley_pro_1_2
+  racer: weaver
   place: 17
 molly_jack_frost:
-  id: 9
-  race_id: 6
-  racer_id: 4
+  race: jack_frost_masters_35_plus_women
+  racer: molly
   place: 1
   time: 1800
 alice_jack_frost:
-  id: 10
-  race_id: 6
-  racer_id: 5
+  race: jack_frost_masters_35_plus_women
+  racer: alice
   place: 2
   time: 2112
 weaver_jack_frost:
-  id: 11
-  race_id: 7
-  racer_id: 3
+  race: jack_frost_pro_1_2
+  racer: weaver
   place: 9
   time: 1801
 weaver_copperopolis:
-  id: 12
-  race_id: 9
-  racer_id: 3
+  race: copperopolis_pro_1_2
+  racer: weaver
   place: 13

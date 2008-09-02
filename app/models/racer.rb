@@ -81,7 +81,7 @@ class Racer < ActiveRecord::Base
   def Racer.find_by_number(number)
     Racer.find(:all, 
                :include => :race_numbers,
-               :conditions => ['year = ? and value = ?', Date.today.year, number])
+               :conditions => ['race_numbers.year = ? and race_numbers.value = ?', Date.today.year, number])
   end
 
   def Racer.full_name(first_name, last_name)
@@ -130,7 +130,7 @@ class Racer < ActiveRecord::Base
     Racer.full_name(first_name, last_name)
   end
 
-    # Tries to split +name+ into +first_name+ and +last_name+
+  # Tries to split +name+ into +first_name+ and +last_name+
   # TODO Handle name, Jr.
   def name=(value)  
     logger.debug("name=#{name}")

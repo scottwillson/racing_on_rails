@@ -128,6 +128,7 @@ class MultiDayEvent < Event
   
   # Update child events from parents' attributes if child attribute has the
   # same value as the parent before update
+  # TODO original_values is duplicating Rails 2.1's dirty
   def update_events(force = false)
     return if new_record?
     

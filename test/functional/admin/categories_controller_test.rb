@@ -79,7 +79,7 @@ class Admin::CategoriesControllerTest < ActiveSupport::TestCase
     original_name = senior_women.name
     get(:cancel, :id => senior_women.to_param, :name => senior_women.name)
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     senior_women.reload
     assert_equal(original_name, senior_women.name, 'Category name after cancel')
   end
@@ -88,7 +88,7 @@ class Admin::CategoriesControllerTest < ActiveSupport::TestCase
     senior_women = categories(:senior_women)
     post(:update, :id => senior_women.to_param, :name => 'Senior Chiquas')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     assert_not_nil(assigns["category"], "Should assign category")
     assert_equal(senior_women, assigns['category'], 'Category')
     senior_women.reload
@@ -99,7 +99,7 @@ class Admin::CategoriesControllerTest < ActiveSupport::TestCase
     senior_women = categories(:senior_women)
     post(:update, :id => senior_women.to_param, :name => 'Senior Women')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     assert_not_nil(assigns["category"], "Should assign category")
     assert_equal(senior_women, assigns['category'], 'Category')
     senior_women.reload
@@ -110,7 +110,7 @@ class Admin::CategoriesControllerTest < ActiveSupport::TestCase
     senior_women = categories(:senior_women)
     post(:update, :id => senior_women.to_param, :name => 'senior women')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     assert_not_nil(assigns["category"], "Should assign category")
     assert_equal(senior_women, assigns['category'], 'Category')
     senior_women.reload

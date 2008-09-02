@@ -43,8 +43,8 @@
       <table style="width: 100%;">
         <tr>
           <td><%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %></td>
-          <td style="text-align: right; padding-top: 8px;"><%= link_to('Print Cards', :action => 'cards') %> |
-              <%= link_to('Print Mailing Labels', :action => 'mailing_labels') %>
+          <td style="text-align: right; padding-top: 8px;"><%= link_to('Print Cards',  formatted_cards_admin_racers_path("pdf")) %> |
+              <%= link_to('Print Mailing Labels', formatted_mailing_labels_admin_racers_path("pdf")) %>
           </td>
         </tr>
       </table>

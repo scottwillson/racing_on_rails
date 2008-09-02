@@ -1,48 +1,40 @@
 tonkin:
-  id: 1
   first_name: Erik
   last_name: Tonkin
-  team_id: 1
+  team: kona
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
 matson:
-  id: 2
   first_name: Mark
   last_name: Matson
-  team_id: 1
+  team: kona
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
   email: mcfatson@gentlelovers.com
 weaver:
-  id: 3
   first_name: Ryan
   last_name: Weaver
-  team_id: 2
+  team: gentle_lovers
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
   email: hotwheels@yahoo.com
 molly:
-  id: 4
   first_name: Molly
   last_name: Cameron
-  team_id: 3
+  team: vanilla
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
 alice:
-  id: 5
   first_name: Alice
   last_name: Pennington
-  team_id: 2
+  team: gentle_lovers
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
-  created_at: <%= Time.now %>
-  updated_at: <%= Time.now %>
 no_results:
-  id: 6
   first_name: Non
   last_name: Results

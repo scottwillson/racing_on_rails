@@ -14,7 +14,7 @@ click_and_wait 'name=login'
 assert_text_not_present 'error'
 assert_location '*/admin/schedule'
 
-open '/admin/events/102'
+open "/admin/events/#{SingleDayEvent.find_by_name('Lost Series').id}"
 assert_text_present 'has no parent'
 click_and_wait 'set_parent'
 assert_text_not_present 'error'

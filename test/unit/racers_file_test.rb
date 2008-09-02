@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class RacerFileTest < ActiveSupport::TestCase  
   def test_import
-    tonkin = Racer.find(1)
+    tonkin = racers(:tonkin)
     tonkin.member=(false)
     tonkin.ccx_category = 'A'
     tonkin.notes = 'Spent Christmans in Belgium'

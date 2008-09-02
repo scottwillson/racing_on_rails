@@ -1,42 +1,27 @@
---- !omap
-#
-# Order is import because of foreign key constraints.
-# Insert association categories after inserting their BAR categories.
-# "omap" means "ordered map" in YAML. Very picky about indentation.
-#
-- banana_belt_pro_1_2:
-    id: 1
-    standings_id: 1
-    category_id: 43
-- kings_valley_pro_1_2:
-    id: 2
-    standings_id: 2
-    category_id: 43
-- kings_valley_3:
-    id: 3
-    standings_id: 2
-    category_id: 44
-- kings_valley_women_2004:
-    id: 4
-    standings_id: 3
-    category_id: 104
-- kings_valley_women_2003:
-    id: 5
-    standings_id: 2
-    category_id: 104
-- jack_frost_masters_35_plus_women:
-    id: 6
-    standings_id: 4
-    category_id: 5
-- jack_frost_pro_1_2:
-    id: 7
-    standings_id: 4
-    category_id: 43
-- kings_valley_pro_1_2_2004:
-    id: 8
-    standings_id: 3
-    category_id: 43
-- copperopolis_pro_1_2:
-    id: 9
-    standings_id: 5
-    category_id: 43
+banana_belt_pro_1_2:
+  standings: banana_belt
+  category: sr_p_1_2
+kings_valley_pro_1_2:
+  standings: kings_valley
+  category: sr_p_1_2
+kings_valley_3:
+  standings: kings_valley
+  category: senior_men_3
+kings_valley_women_2004:
+  standings: kings_valley_2004
+  category: senior_women_1_2_3
+kings_valley_women_2003:
+  standings: kings_valley_2004
+  category: senior_women_1_2_3
+jack_frost_masters_35_plus_women:
+  standings: jack_frost
+  category: masters_35_plus_women
+jack_frost_pro_1_2:
+  standings: jack_frost
+  category: sr_p_1_2
+kings_valley_pro_1_2_2004:
+  standings: kings_valley_2004
+  category: sr_p_1_2
+copperopolis_pro_1_2:
+  standings: copperopolis
+  category: sr_p_1_2

@@ -1,6 +1,4 @@
 stage_race:
-  id: 1
   name: 'Elkhorn Stage Race'
 association:
-  id: 2
   name: <%= ASSOCIATION.short_name %>

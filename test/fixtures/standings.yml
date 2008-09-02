@@ -1,38 +1,24 @@
---- !omap
-#
-# Order is import because of foreign key constraints.
-#
-- banana_belt:
-    id: 1
-    event_id: 2
-    name: Banana Belt I
-    bar_points: 1
-    discipline: Road
-    updated_at: 2004-01-05
-    type: Standings
-- kings_valley:
-    id: 2
-    event_id: 5
-    name: Kings Valley Road Race
-    bar_points: 1
-    updated_at: 2004-01-01
-    type: Standings
-- kings_valley_2004:
-    id: 3
-    event_id: 15
-    name: Kings Valley Road Race
-    bar_points: 1
-    updated_at: 2004-12-31
-    type: Standings
-- jack_frost:
-    id: 4
-    event_id: 16
-    name: Jack Frost
-    bar_points: 1
-    updated_at: 2004-01-15
-    type: Standings
-- copperopolis:
-    id: 5
-    event_id: 104
-    name: Copperopolis
-    type: Standings
+banana_belt:
+  event: banana_belt_1
+  name: Banana Belt I
+  bar_points: 1
+  discipline: Road
+  updated_at: 2004-01-05
+kings_valley:
+  event: kings_valley
+  name: Kings Valley Road Race
+  bar_points: 1
+  updated_at: 2004-01-01
+kings_valley_2004:
+  event: kings_valley_2004
+  name: Kings Valley Road Race
+  bar_points: 1
+  updated_at: 2004-12-31
+jack_frost:
+  event: jack_frost_2002
+  name: Jack Frost
+  bar_points: 1
+  updated_at: 2004-01-15
+copperopolis:
+  event: usa_cycling_event_with_results
+  name: Copperopolis

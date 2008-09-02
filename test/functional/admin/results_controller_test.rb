@@ -1,16 +1,9 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/results_controller'
 
-# Re-raise errors caught by the controller.
-class Admin::ResultsController; def rescue_action(e) raise e end; end
-
-class Admin::ResultsControllerTest < ActiveSupport::TestCase
+class Admin::ResultsControllerTest < ActionController::TestCase
 
   def setup
-    @controller = Admin::ResultsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
+    super
     @request.session[:user] = users(:candi)    
   end
   

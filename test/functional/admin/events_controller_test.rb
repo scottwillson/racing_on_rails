@@ -1,18 +1,12 @@
 # :stopdoc:
 require File.dirname(__FILE__) + '/../../test_helper'
-require_or_load 'admin/events_controller'
 
-# Re-raise errors caught by the controller.
-class Admin::EventsController; def rescue_action(e) raise e end; end
-
-class Admin::EventsControllerTest < ActiveSupport::TestCase
+class Admin::EventsControllerTest < ActionController::TestCase
 
   include ApplicationHelper
 
   def setup
-    @controller = Admin::EventsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+    super
     @request.session[:user] = users(:candi)
   end
 
@@ -21,10 +15,10 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     banana_belt.velodrome = velodromes(:trexlertown)
     banana_belt.save!
     
-    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
     
-    get(:show, :id => banana_belt.to_param.to_s)
+    get(:show, :id => banana_belt.to_param)
     assert_response(:success)
     assert_template("admin/events/show")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -34,10 +28,10 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_show_parent
     banana_belt = events(:banana_belt_series)
-    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param}
     assert_routing("/admin/events/#{banana_belt.to_param}", opts)
     
-    get(:show, :id => banana_belt.to_param.to_s)
+    get(:show, :id => banana_belt.to_param)
     assert_response(:success)
     assert_template("admin/events/show")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -46,9 +40,9 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_show_no_results
     mt_hood_1 = events(:mt_hood_1)
-    opts = {:controller => "admin/events", :action => "show", :id => mt_hood_1.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "show", :id => mt_hood_1.to_param}
     assert_routing("/admin/events/#{mt_hood_1.to_param}", opts)
-    get(:show, :id => mt_hood_1.to_param.to_s)
+    get(:show, :id => mt_hood_1.to_param)
     assert_response(:success)
     assert_template("admin/events/show")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -58,7 +52,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
   def test_show_with_standings
     kings_valley = events(:kings_valley)
     standings = kings_valley.standings.first
-    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param.to_s, :standings_id => standings.to_param.to_s,}
+    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param, :standings_id => standings.to_param,}
     assert_routing("/admin/events/#{kings_valley.to_param}/#{standings.to_param}", opts)
     get(:show, :id => kings_valley.to_param, :standings_id => standings.to_param)
     assert_response(:success)
@@ -71,7 +65,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     kings_valley = events(:kings_valley)
     standings = kings_valley.standings.first
     kings_valley_3 = races(:kings_valley_3)
-    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param.to_s, :standings_id => standings.to_param.to_s, :race_id => kings_valley_3.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "show", :id => kings_valley.to_param, :standings_id => standings.to_param, :race_id => kings_valley_3.to_param}
     assert_routing("/admin/events/#{kings_valley.to_param}/#{standings.to_param}/#{kings_valley_3.to_param}", opts)
     get(:show, :id => kings_valley.to_param, :standings_id => standings.to_param, :race_id => kings_valley_3.to_param)
     assert_response(:success)
@@ -82,12 +76,12 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_show_with_promoter
     banana_belt = events(:banana_belt_1)
-    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param.to_s, :promoter_id => '2'}
+    opts = {:controller => "admin/events", :action => "show", :id => banana_belt.to_param, :promoter_id => '2'}
     assert_recognizes(opts, "/admin/events/#{banana_belt.to_param}", :promoter_id => '2')
     
     assert_not_equal(promoters(:candi_murray), banana_belt.promoter, 'Promoter before show with promoter ID')
 
-    get(:show, :id => banana_belt.to_param.to_s)
+    get(:show, :id => banana_belt.to_param)
     assert_response(:success)
     assert_template("admin/events/show")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -103,7 +97,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     opts = {
       :controller => "admin/events", 
       :action => "upload",
-      :id => mt_hood_1.to_param.to_s
+      :id => mt_hood_1.to_param
     }
     assert_routing("/admin/events/upload/#{mt_hood_1.to_param}", opts)
 
@@ -160,7 +154,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  'promoter_id' => '3', 'type' => 'SingleDayEvent'}
+                  'promoter_id' => promoters(:nate_hobson).to_param, 'type' => 'SingleDayEvent'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -194,7 +188,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
          "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  'promoter_id' => '3', 'type' => 'Series'}
+                  "promoter_id"  => promoters(:nate_hobson).to_param, 'type' => 'Series'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -239,7 +233,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_destroy_race
     kings_valley_women_2003 = races(:kings_valley_women_2003)
-    opts = {:controller => "admin/events", :action => "destroy_race", :id => kings_valley_women_2003.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "destroy_race", :id => kings_valley_women_2003.to_param}
     assert_routing("/admin/events/destroy_race/#{kings_valley_women_2003.to_param}", opts)
     post(:destroy_race, :id => kings_valley_women_2003.id, :commit => 'Delete')
     assert_response(:success)
@@ -248,7 +242,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_destroy_standings
     jack_frost = standings(:jack_frost)
-    opts = {:controller => "admin/events", :action => "destroy_standings", :id => jack_frost.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "destroy_standings", :id => jack_frost.to_param}
     assert_routing("/admin/events/destroy_standings/#{jack_frost.to_param}", opts)
     post(:destroy_standings, :id => jack_frost.id, :commit => 'Delete')
     assert_response(:success)
@@ -257,7 +251,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_destroy_event
     jack_frost = events(:jack_frost)
-    opts = {:controller => "admin/events", :action => "destroy_event", :id => jack_frost.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "destroy_event", :id => jack_frost.to_param}
     assert_routing("/admin/events/destroy_event/#{jack_frost.to_param}", opts)
     post(:destroy_event, :id => jack_frost.id, :commit => 'Delete')
     assert_response(:success)
@@ -266,7 +260,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_destroy_result
     tonkin_kings_valley = results(:tonkin_kings_valley)
-    opts = {:controller => "admin/events", :action => "destroy_result", :id => tonkin_kings_valley.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "destroy_result", :id => tonkin_kings_valley.to_param}
     assert_routing("/admin/events/destroy_result/#{tonkin_kings_valley.to_param}", opts)
     post(:destroy_result, :id => tonkin_kings_valley.id, :commit => 'Delete')
     assert_response(:success)
@@ -285,7 +279,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     assert_equal('3', matson_result.place, 'Matson place before insert')
     assert_equal('16', molly_result.place, 'Molly place before insert')
 
-    opts = {:controller => "admin/events", :action => "insert_result", :id => weaver_result.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "insert_result", :id => weaver_result.to_param}
     assert_routing("/admin/events/insert_result/#{weaver_result.to_param}", opts)
 
     post(:insert_result, :id => weaver_result.id)
@@ -358,7 +352,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_update_event
     banana_belt = events(:banana_belt_1)
-    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param}
     assert_routing("/admin/events/update/#{banana_belt.to_param}", opts)
 
     assert_not_equal('Banana Belt One', banana_belt.name, 'name')
@@ -378,14 +372,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.to_param.to_s,
+         :id => banana_belt.to_param,
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                  'promoter_id' => '1', 'number_issuer_id' => norba.to_param}
+                  "promoter_id" => promoters(:brad_ross).to_param, 'number_issuer_id' => norba.to_param}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => banana_belt.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => banana_belt.to_param)
 
     banana_belt.reload
     assert_equal('Banana Belt One', banana_belt.name, 'name')
@@ -405,7 +399,7 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_update_standings
     banana_belt = standings(:banana_belt)
-    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.event.to_param, :standings_id => banana_belt.to_param}
     assert_routing("/admin/events/update/#{banana_belt.event.to_param}/#{banana_belt.to_param}", opts)
 
     assert_not_equal('Banana Belt One', banana_belt.name, 'name')
@@ -414,12 +408,12 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.event.to_param.to_s,
-         :standings_id => banana_belt.to_param.to_s,
+         :id => banana_belt.event.to_param,
+         :standings_id => banana_belt.to_param,
          "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param, :standings_id => banana_belt.to_param)
 
     banana_belt.reload
     assert_equal('Banana Belt One', banana_belt.name, 'name')
@@ -435,12 +429,12 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.event.to_param.to_s,
-         :standings_id => banana_belt.to_param.to_s,
+         :id => banana_belt.event.to_param,
+         :standings_id => banana_belt.to_param,
          "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param, :standings_id => banana_belt.to_param)
 
     banana_belt.reload
     assert_nil(banana_belt[:discipline], 'discipline')
@@ -453,12 +447,12 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.event.to_param.to_s,
-         :standings_id => banana_belt.to_param.to_s,
+         :id => banana_belt.event.to_param,
+         :standings_id => banana_belt.to_param,
          "standings"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param.to_s, :standings_id => banana_belt.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => banana_belt.event.to_param, :standings_id => banana_belt.to_param)
 
     banana_belt.reload
     assert_nil(banana_belt[:discipline], 'discipline')
@@ -466,14 +460,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
   def test_update_error
     banana_belt = events(:banana_belt_1)
-    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "update", :id => banana_belt.to_param}
     assert_routing("/admin/events/update/#{banana_belt.to_param}", opts)
 
     assert_equal('Banana Belt I', banana_belt.name, 'name')
 
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.to_param.to_s,
+         :id => banana_belt.to_param,
          "event"=>{"city"=>"Forest Grove", "name"=>"", "promoter_d"=>"", "date"=>"99822sasa!",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>ASSOCIATION.short_name, "flyer_approved"=>"1",
                   "discipline"=>"Road", "cancelled"=>"1", "state"=>"OR"}
@@ -489,14 +483,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
   def test_update_bar_points
     race = races(:banana_belt_pro_1_2)
 
-    opts = {:controller => "admin/events", :action => "update_bar_points", :id => race.to_param.to_s}
+    opts = {:controller => "admin/events", :action => "update_bar_points", :id => race.to_param}
     assert_routing("/admin/events/update_bar_points/#{race.to_param}", opts)
 
     assert_equal(nil, race[:bar_points], ':bar_points')
     assert_equal(1, race.bar_points, 'BAR points')
 
     post(:update_bar_points, 
-         :id => race.to_param.to_s,
+         :id => race.to_param,
          :bar_points => '2'
     )
     assert_response(:success)
@@ -530,15 +524,15 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
     
     post(:update, 
          "commit"=>"Save", 
-         :id => banana_belt.to_param.to_s,
+         :id => banana_belt.to_param,
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR", 'type' => 'SingleDayEvent',
-                  'promoter_id' => '3'}
+                  "promoter_id"  => promoters(:nate_hobson).to_param}
     )
     assert_nil(flash[:warn], 'flash[:warn]')
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => banana_belt.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => banana_belt.to_param)
     
     banana_belt.reload
     assert_equal(promoters(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
@@ -560,14 +554,17 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
       post(:update, 
            "commit"=>"Save", 
-           :id => event.to_param.to_s,
+           :id => event.to_param,
            "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
+                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", 
+                     "flyer_approved"=>"1", 
                      "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                    'promoter_id' => '1', 'number_issuer_id' => '1', 'type' => type.to_s}
+                     "promoter_id" => promoters(:nate_hobson).to_param, 
+                     'number_issuer_id' => number_issuers(:stage_race).to_param,
+                     'type' => type.to_s}
       )
       assert_response(:redirect)
-      assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+      assert_redirected_to(:action => :show, :id => event.to_param)
       event = Event.find(event.id)
       assert(event.is_a?(type), "#{event.name} should be a #{type}")
     end
@@ -579,14 +576,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => event.to_param.to_s,
+         :id => event.to_param,
          "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day","date"=>event.date,
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => event.to_param)
     event = Event.find(event.id)
     assert(event.is_a?(SingleDayEvent), "Mt Hood should be a SingleDayEvent")
 
@@ -613,14 +610,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => event.to_param.to_s,
+         :id => event.to_param,
          "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date,
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'Series'}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => event.to_param)
     event = Event.find(event.id)
     assert(event.is_a?(Series), "Mt Hood should be a Series")
 
@@ -647,14 +644,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => event.to_param.to_s,
+         :id => event.to_param,
          "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date,
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => event.to_param)
     event = Event.find(event.id)
     assert(event.is_a?(WeeklySeries), "Mt Hood should be a WeeklySeries")
 
@@ -680,14 +677,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => event.to_param.to_s,
+         :id => event.to_param,
          "event"=>{"city"=>event.city, "name"=>"BB Weekly Series","date"=>event.date,
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => event.to_param)
     event = Event.find(event.id)
     assert(event.is_a?(WeeklySeries), "BB should be a WeeklySeries")
 
@@ -713,14 +710,14 @@ class Admin::EventsControllerTest < ActiveSupport::TestCase
 
     post(:update, 
          "commit"=>"Save", 
-         :id => event.to_param.to_s,
+         :id => event.to_param,
          "event"=>{"city"=>event.city, "name"=>"PIR One Day","date"=>event.date,
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
     )
     assert_response(:redirect)
-    assert_redirected_to(:action => :show, :id => event.to_param.to_s)
+    assert_redirected_to(:action => :show, :id => event.to_param)
     event = Event.find(event.id)
     assert(event.is_a?(SingleDayEvent), "PIR should be a SingleDayEvent")
 

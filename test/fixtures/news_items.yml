@@ -1,4 +1,0 @@
-team_renewal:
-  id: 1
-  date: <%= Date.today.year %>-02-03
-  text: Teams, please check club ride list. Email with additions or corrections for 2007. 

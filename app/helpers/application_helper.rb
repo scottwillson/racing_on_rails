@@ -93,32 +93,6 @@ module ApplicationHelper
     tabs.to_html(select_current_page)
   end
   
-  def image(name)
-    return '' if name.blank?
-    
-    img = Image.find_by_name(name)
-    return '' unless img
-
-    if img.link
-      eval("link_to(image_tag(img.source #{', ' + img.html_options unless img.html_options.blank? }), #{img.link}, {:class => 'image'})")
-    else
-      image_tag(img.source)
-    end
-  end
-  
-  def caption(name)
-    return '' if name.blank?
-    
-    img = Image.find_by_name(name)
-    return '' unless img
-
-    if img.caption.blank?
-      ''
-    else
-      eval(img.caption)
-    end
-  end
-  
   def results_grid(race)
     result_grid_columns = race.result_columns_or_default.collect do |column|
       grid_columns(column)

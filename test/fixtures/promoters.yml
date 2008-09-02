@@ -1,13 +1,10 @@
 brad_ross:
-  id: 1
   name: Brad Ross
 candi_murray:
-  id: 2
   name: Candi Murray
   email: candi@obra.org
   phone: (503) 555-1212
 nate_hobson:
-  id: 3
   email: sixhobsons@comcast.net
   phone: (503) 223-3343
 

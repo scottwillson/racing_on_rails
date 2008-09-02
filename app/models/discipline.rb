@@ -3,7 +3,8 @@
 class Discipline < ActiveRecord::Base
   include UpcomingEvents::DisciplineExtensions
 
-  has_and_belongs_to_many :bar_categories, :class_name => 'Category', :join_table => 'discipline_bar_categories'
+  has_many :discipline_aliases
+  has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
   
   NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
   @@all_aliases = nil
@@ -36,7 +37,7 @@ class Discipline < ActiveRecord::Base
   def Discipline.load_aliases
     @@all_aliases = {}
     results = connection.select_all(
-      "SELECT discipline_id, alias FROM aliases_disciplines"
+      "SELECT discipline_id, alias FROM discipline_aliases"
     )
     for result in results
       @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)

@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -66,8 +66,10 @@ load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
-ActionController::Base.view_paths.insert(0, File.expand_path("#{RAILS_ROOT}/local/app/views"))
+ActionController::Base.prepend_view_path(File.expand_path("#{RAILS_ROOT}/local/app/views"))
 
+require "action_view/template_handlers/pdf_writer"
+ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
 PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/app/views/fonts"
 PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
 PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/app/views/fonts"

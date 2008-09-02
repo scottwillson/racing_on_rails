@@ -1,63 +1,58 @@
 cyclocross:
-  id: 1
   name: Cyclocross
   bar: true
   numbers: true
+  bar_categories: cx_a
 criterium:
-  id: 2
   name: Criterium
   bar: true
+  bar_categories: senior_men
 mountain_bike:
-  id: 3
   name: Mountain Bike
   bar: true
   numbers: true
+  bar_categories: pro_semi_pro_men, expert_junior_men, sport_junior_men
 road:
-  id: 4
   name: Road
   bar: true
   numbers: true
+  bar_categories: senior_men, senior_women, cat_4_women, masters_men
 time_trial:
-  id: 5
   name: Time Trial
   bar: true
+  bar_categories: senior_men, senior_women
 track:
-  id: 6
   name: Track
   bar: true
+  bar_categories: senior_men
 overall:
-  id: 7
   name: Overall
   bar: false
+  bar_categories: senior_men
 tour:
-  id: 8
   name: Tour
   bar: false
 circuit_race:
-  id: 9
   name: Circuit
   bar: false
 team:
-  id: 10
   name: Team
   bar: false
+  bar_categories: team
 downhill:
-  id: 11
   name: Downhill
   bar: false
   numbers: true
 singlespeed:
-  id: 12
   name: Singlespeed
   bar: false
   numbers: true
 age_graded:
-  id: 13
   name: Age Graded
   bar: true
   numbers: false
+  bar_categories: masters_men_30_34
 bmx:
-  id: 14
   name: BMX
   bar: false
   numbers: false

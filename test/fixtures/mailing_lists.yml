@@ -1,10 +1,8 @@
 obra_chat:
-  id: 1
   name: obra
   friendly_name: OBRA Chat
   subject_line_prefix: OBRA Chat
 obra_race:
-  id: 2
   name: obrarace
   friendly_name: OBRA Race
   subject_line_prefix: OBRA Race

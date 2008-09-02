@@ -1,7 +1,7 @@
 include_partial 'fixtures'
 include_partial 'admin_login'
 
-open '/admin/racers/6'
+open "/admin/racers/#{Racer.find_by_name("Non Results").id}"
 assert_text_present 'Non Results'
 click_and_wait 'delete'
 assert_text_not_present 'error'

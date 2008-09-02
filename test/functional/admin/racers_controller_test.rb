@@ -1,16 +1,9 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/racers_controller'
 
-# :stopdoc:
-class Admin::RacersController; def rescue_action(e) raise e end; end
-
-class Admin::RacersControllerTest < ActiveSupport::TestCase
+class Admin::RacersControllerTest < ActionController::TestCase
 
   def setup
-    @controller = Admin::RacersController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    @request.host = "localhost"
+    super
     @request.session[:user] = users(:candi)
   end
 
@@ -45,7 +38,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_find
-    @request.session[:user] = users(:candi)
     get(:index, :name => 'weav')
     assert_response(:success)
     assert_template("admin/racers/index")
@@ -56,7 +48,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_find_by_number
-    @request.session[:user] = users(:candi)
     get(:index, :name => '102')
     assert_response(:success)
     assert_template("admin/racers/index")
@@ -67,7 +58,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_find_nothing
-    @request.session[:user] = users(:candi)
     get(:index, :name => 's7dfnacs89danfx')
     assert_response(:success)
     assert_template("admin/racers/index")
@@ -76,7 +66,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_find_empty_name
-    @request.session[:user] = users(:candi)
     get(:index, :name => '')
     assert_response(:success)
     assert_template("admin/racers/index")
@@ -90,7 +79,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     for i in 0..Admin::RacersController::RESULTS_LIMIT
       Racer.create(:name => "Test Racer #{i}")
     end
-    @request.session[:user] = users(:candi)
     get(:index, :name => 'Test')
     assert_response(:success)
     assert_template("admin/racers/index")
@@ -102,7 +90,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_edit_name
-    @request.session[:user] = users(:candi)
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:success)
@@ -112,7 +99,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_blank_name
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => '')
     assert_response(:success)
@@ -127,7 +113,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_cancel
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     original_name = molly.name
     get(:cancel, :id => molly.to_param, :name => molly.name)
@@ -140,7 +125,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_update_name
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
@@ -153,7 +137,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_update_same_name
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'Molly Cameron')
     assert_response(:success)
@@ -166,7 +149,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_update_same_name_different_case
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'molly cameron')
     assert_response(:success)
@@ -180,7 +162,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   
   def test_update_to_existing_name
     # Should ask to merge
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'Erik Tonkin')
     assert_response(:success)
@@ -197,7 +178,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     erik_alias = Alias.find_by_name('Eric Tonkin')
     assert_not_nil(erik_alias, 'Alias')
 
-    @request.session[:user] = users(:candi)
     tonkin = racers(:tonkin)
     post(:update_name, :id => tonkin.to_param, :name => 'Eric Tonkin')
     assert_response(:success)
@@ -219,7 +199,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     mollie_alias = Alias.find_by_name('Mollie Cameron')
     assert_not_nil(mollie_alias, 'Alias')
 
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_name, :id => molly.to_param, :name => 'mollie cameron')
     assert_response(:success)
@@ -236,7 +215,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_update_to_other_racer_existing_alias
-    @request.session[:user] = users(:candi)
     tonkin = racers(:tonkin)
     post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
     assert_response(:success)
@@ -250,7 +228,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_update_to_other_racer_existing_alias_and_duplicate_names
-    @request.session[:user] = users(:candi)
     tonkin = racers(:tonkin)
     molly_with_different_road_number = Racer.create!(:name => 'Molly Cameron', :road_number => '1009')
 
@@ -273,7 +250,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_destroy
-    @request.session[:user] = users(:candi)
     racer = racers(:no_results)
     delete :destroy, :id => racer.id
     assert_response(:redirect)
@@ -282,7 +258,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_ajax_destroy
-    @request.session[:user] = users(:candi)
     racer = racers(:no_results)
     delete :destroy, :id => racer.id, :format => 'js'
     assert_response(:success)
@@ -290,15 +265,16 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_destroy_number
-    assert_not_nil(RaceNumber.find(5), 'RaceNumber with ID 5 should exist')
+    race_number = race_numbers(:molly_road_number)
+    assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
     
-    opts = {:controller => "admin/racers", :action => "destroy_number", :id => '5'}
-    assert_routing("/admin/racers/destroy_number/5", opts)
+    opts = {:controller => "admin/racers", :action => "destroy_number", :id => race_number.to_param}
+    assert_routing("/admin/racers/destroy_number/#{race_number.to_param}", opts)
 
-    post(:destroy_number, :id => '5')
+    post(:destroy_number, :id => race_number.to_param)
     assert_response(:success)
     
-    assert_raise(ActiveRecord::RecordNotFound, 'Should delete RaceNumber with ID of 5') {RaceNumber.find(5)}
+    assert_raise(ActiveRecord::RecordNotFound, "Should delete RaceNumber") {RaceNumber.find(race_number.id)}
   end
   
   def test_destroy_alias
@@ -315,7 +291,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_merge?
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     tonkin = racers(:tonkin)
     get(:update_name, :name => molly.name, :id => tonkin.to_param)
@@ -334,7 +309,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     old_id = tonkin.id
     assert(Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should be in database')
 
-    @request.session[:user] = users(:candi)
     get(:merge, :id => tonkin.to_param, :target_id => molly.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
@@ -344,7 +318,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_edit_team_name
-    @request.session[:user] = users(:candi)
     weaver = racers(:weaver)
     get(:edit_team_name, :id => weaver.to_param)
     assert_response(:success)
@@ -355,7 +328,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   
   def test_update_team_name_to_new_team
     assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     post(:update_team_name, :id => molly.to_param, :team_name => 'Velo Slop')
     assert_response(:success)
@@ -370,7 +342,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   def test_update_team_name_to_existing_team
     molly = racers(:molly)
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
-    @request.session[:user] = users(:candi)
     post(:update_team_name, :id => molly.to_param, :team_name => 'Gentle Lovers')
     assert_response(:success)
     assert_template("admin/racers/_team")
@@ -384,7 +355,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   def test_update_team_name_to_blank
     molly = racers(:molly)
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
-    @request.session[:user] = users(:candi)
     post(:update_team_name, :id => molly.to_param, :team_name => '')
     assert_response(:success)
     assert_template("admin/racers/_team")
@@ -396,7 +366,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
     
   def test_cancel_edit_team_name
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     original_name = molly.name
     get(:cancel_edit_team_name, :id => molly.to_param, :name => molly.name)
@@ -409,25 +378,23 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
 
   def test_update_member
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     assert_equal(true, molly.member, 'member before update')
     post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     molly.reload
     assert_equal(false, molly.member, 'member after update')
 
     molly = racers(:molly)
     post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     molly.reload
     assert_equal(true, molly.member, 'member after second update')
   end
   
   def test_dupes_merge?
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     molly_with_different_road_number = Racer.create(:name => 'Molly Cameron', :road_number => '987123')
     tonkin = racers(:tonkin)
@@ -443,7 +410,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     molly.ccx_number = '102'
     molly.save!
@@ -466,7 +432,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_dupes_merge_alias?
-    @request.session[:user] = users(:candi)
     molly = racers(:molly)
     tonkin = racers(:tonkin)
     get(:update_name, :name => 'Eric Tonkin', :id => molly.to_param)
@@ -488,7 +453,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     old_id = tonkin.id
     assert_equal(2, Racer.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
-    @request.session[:user] = users(:candi)
     get(:merge, :id => tonkin.to_param, :target_id => molly.id)
     assert_response(:success)
     assert_template("admin/racers/merge")
@@ -499,19 +463,17 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   end
   
   def test_new
-    @request.session[:user] = users(:candi)
     opts = {:controller => "admin/racers", :action => "new"}
     assert_routing("/admin/racers/new", opts)
   
     get(:new)
     assert_response(:success)
-    assert_template("/admin/racers/show")
+    assert_template("admin/racers/show")
     assert_not_nil(assigns["racer"], "Should assign racer as 'racer'")
     assert_not_nil(assigns["race_numbers"], "Should assign racer's number for current year as 'race_numbers'")
   end
 
   def test_show
-    @request.session[:user] = users(:candi)
     alice = racers(:alice)
     opts = {:controller => "admin/racers", :action => "show", :id => alice.to_param.to_s}
     assert_routing("/admin/racers/#{alice.to_param}", opts)
@@ -525,7 +487,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   
   def test_create
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    @request.session[:user] = users(:candi)
     
     post(:create, {"racer"=>{
                         "member_from(1i)"=>"", "member_from(2i)"=>"", "member_from(3i)"=>"", 
@@ -551,7 +512,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
 
   def test_create_with_road_number
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    @request.session[:user] = users(:candi)
     
     post(:create, {
       "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
@@ -560,7 +520,8 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
         "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
         "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
         "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
-      "number_issuer_id"=>["2", "2"], "number_value"=>["8977", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2007',
+        "number_issuer_id"=>[number_issuers(:association).to_param, number_issuers(:association).to_param], "number_value"=>["8977", "BBB9"],
+        "discipline_id"=>[disciplines(:road).id, disciplines(:mountain_bike).id], :number_year => '2007',
       "commit"=>"Save"})
     
     if assigns['racer']
@@ -595,7 +556,6 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
   
   def test_create_with_duplicate_road_number
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
-    @request.session[:user] = users(:candi)
     
     post(:create, {
       "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
@@ -621,8 +581,8 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
-                   "number_issuer_id"=>["2"], "number_value"=>[""], "discipline_id"=>["1"],
-                   "number"=>{"5"=>{"value"=>"222"}},
+                   "number_issuer_id"=>number_issuers(:association).to_param, "number_value"=>[""], "discipline_id"=>disciplines(:cyclocross).to_param,
+                   "number"=>{race_numbers(:molly_road_number).to_param=>{"value"=>"222"}},
                    "racer"=>{
                      "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
                      "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
@@ -671,10 +631,10 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     molly = racers(:molly)
     put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
-                   "number_issuer_id"=>["2"], "number_value"=>["AZY"], "discipline_id"=>["3"],
-                   "number"=>{"5"=>{"value"=>"202"}},
+                   "number_issuer_id"=>[number_issuers(:association).to_param], "number_value"=>["AZY"], "discipline_id" => [disciplines(:mountain_bike).id],
+                   "number"=>{race_numbers(:molly_road_number).to_param =>{"value"=>"202"}},
                    "racer"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
-                     "cell_fax"=>"", "zip"=>"97070", 
+                   "cell_fax"=>"", "zip"=>"97070", 
                    "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"",
                    "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
                    "street"=>"31153 SW Willamette Hwy W", 
@@ -692,7 +652,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_equal('AZY', molly.xc_number, 'MTB number should be updated')
     assert_nil(molly.member_from, 'member_from after update')
     assert_nil(molly.member_to, 'member_to after update')
-    assert_nil(RaceNumber.find(5).updated_by, "updated_by")
+    assert_nil(RaceNumber.find(race_numbers(:molly_road_number).to_param ).updated_by, "updated_by")
     assert_equal("Candi Murray", RaceNumber.find_by_value("AZY").updated_by, "updated_by")
   end
 
@@ -721,7 +681,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
          :year => '2010'
     )
     assert_response(:success)
-    assert_template("/admin/racers/_numbers")
+    assert_template("admin/racers/_numbers")
     assert_not_nil(assigns["race_numbers"], "Should assign 'race_numbers'")
     assert_not_nil(assigns["year"], "Should assign today's year as 'year'")
     assert_equal('2010', assigns["year"], "Should assign selected year as 'year'")
@@ -881,8 +841,24 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     assert_nil(session[:racers_file_path], 'Should remove temp file path from session')
   end
   
-  def test_print_no_cards
-    get(:cards)
+  def test_one_print_card
+    tonkin = racers(:tonkin)
+
+    get(:card, :format => "pdf", :id => tonkin.to_param)
+
+    assert_response(:success)
+    assert_equal(tonkin, assigns['racer'], 'Should assign racer')
+    tonkin.reload
+    assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
+  end
+  
+  def test_print_no_cards_pending
+    get(:cards, :format => "pdf")
+    assert_redirected_to(formatted_no_cards_admin_racers_path("html"))
+  end
+  
+  def test_no_cards
+    get(:no_cards)
     assert_response(:success)
     assert_template("admin/racers/no_cards")
     assert_equal('layouts/admin/application', @controller.active_layout)
@@ -893,7 +869,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     tonkin.print_card = true
     tonkin.save!
 
-    get(:cards)
+    get(:cards, :format => "pdf")
 
     assert_response(:success)
     assert_template("admin/racers/cards")
@@ -909,7 +885,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
       racers << Racer.create!(:first_name => 'First Name', :last_name => "Last #{i}", :print_card => true)
     end
 
-    get(:cards)
+    get(:cards, :format => "pdf")
 
     assert_response(:success)
     assert_template("admin/racers/cards")
@@ -921,8 +897,13 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     end
   end
   
+  def test_print_no_mailing_labels_pending
+    get(:mailing_labels, :format => "pdf")
+    assert_redirected_to(formatted_no_mailing_labels_admin_racers_path("html"))
+  end
+  
   def test_print_no_mailing_labels
-    get(:mailing_labels)
+    get(:no_mailing_labels)
     assert_response(:success)
     assert_template("admin/racers/no_mailing_labels")
     assert_equal('layouts/admin/application', @controller.active_layout)
@@ -933,7 +914,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
     tonkin.print_mailing_label = true
     tonkin.save!
 
-    get(:mailing_labels)
+    get(:mailing_labels, :format => "pdf")
 
     assert_response(:success)
     assert_template("admin/racers/mailing_labels")
@@ -949,7 +930,7 @@ class Admin::RacersControllerTest < ActiveSupport::TestCase
       racers << Racer.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_mailing_label => true)
     end
 
-    get(:mailing_labels)
+    get(:mailing_labels, :format => "pdf")
 
     assert_response(:success)
     assert_template("admin/racers/mailing_labels")

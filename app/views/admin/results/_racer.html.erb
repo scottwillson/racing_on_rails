@@ -9,7 +9,7 @@
     <th>Date</th>
     <th>Pts</th>
   </tr>
-  <%- for result in results.sort {|x, y| y.race.standings.event.date <=> x.race.standings.event.date} -%>
+  <%- for result in results.sort { |x, y| y.date <=> x.date } -%>
   <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
     <td class="disclosure"><%= 
     link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 

@@ -44,20 +44,24 @@ assert_table "racers", 2, 6, ""
 assert_table "racers", 3, 6, ""
 assert_table "racers", 4, 6, ""
 
-assert_checked "racer_member_4"
-assert_checked "racer_member_2"
-assert_checked "racer_member_5"
-assert_checked "racer_member_3"
+@molly_id = Racer.find_by_name("Molly Cameron").id
+@weaver_id = Racer.find_by_name("Ryan Weaver").id
+@matson_id = Racer.find_by_name("Mark Matson").id
+@alice_id = Racer.find_by_name("Alice Pennington").id
+assert_checked "racer_member_#{@molly_id}"
+assert_checked "racer_member_#{@weaver_id}"
+assert_checked "racer_member_#{@matson_id}"
+assert_checked "racer_member_#{@alice_id}"
 
-click_and_wait "css=a[href='/admin/results/racer/4']"
+click_and_wait "css=a[href='/admin/results/racer/#{@molly_id}']"
 assert_title "*Admin: Results: Molly Cameron"
 
 open '/admin/racers'
-click_and_wait "css=a[href='/admin/results/racer/3']"
+click_and_wait "css=a[href='/admin/results/racer/#{@weaver_id}']"
 assert_title "*Admin: Results: Ryan Weaver"
 
 open '/admin/racers'
-click_and_wait "css=a[href='/admin/racers/2']"
+click_and_wait "css=a[href='/admin/racers/#{@matson_id}']"
 assert_title "*Admin: Racers: Mark Matson"
 
 open '/admin/racers'

@@ -1,23 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require_or_load 'results_controller'
 
-# Re-raise errors caught by the controller.
-class ResultsController; def rescue_action(e) raise e end; end
-
-class ResultsControllerTest < ActiveSupport::TestCase
-
-  def setup
-    @controller = ResultsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-  
+class ResultsControllerTest < ActionController::TestCase
   def test_event
     banana_belt_1 = events(:banana_belt_1)
-    opts = {:controller => "results", :action => "event", :id => banana_belt_1.id.to_s}
-    assert_routing("/results/event/2", opts)
+    opts = {:controller => "results", :action => "event", :id => banana_belt_1.to_param}
+    assert_routing("/results/event/#{banana_belt_1.to_param}", opts)
 
-    get(:event, {:action => "event", :id => banana_belt_1.id.to_s})
+    get(:event, {:action => "event", :id => banana_belt_1.to_param})
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -26,10 +15,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
   
   def test_event_rider_rankings
     rider_rankings = RiderRankings.create
-    opts = {:controller => "results", :action => "event", :id => rider_rankings.id.to_s}
+    opts = {:controller => "results", :action => "event", :id => rider_rankings.to_param}
     assert_routing("/results/event/#{rider_rankings.id}", opts)
 
-    get(:event, {:action => "event", :id => rider_rankings.id.to_s})
+    get(:event, {:action => "event", :id => rider_rankings.to_param})
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -38,10 +27,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
   
   def test_event_bar
     bar = Bar.create
-    opts = {:controller => "results", :action => "event", :id => bar.id.to_s}
+    opts = {:controller => "results", :action => "event", :id => bar.to_param}
     assert_routing("/results/event/#{bar.id}", opts)
 
-    get(:event, :id => bar.id.to_s)
+    get(:event, :id => bar.to_param)
     assert_response(:redirect)
     assert_redirected_to(:controller => 'bar', :year => bar.date.year)
   end
@@ -51,10 +40,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
     big_team = Team.create(:name => "T" * 60)
     big_racer = Racer.create(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     banana_belt_1.standings.first.races.first.results.create(:place => 20, :racer => big_racer, :team => big_team, :number => '')
-    opts = {:controller => "results", :action => "event", :year => "2004", :discipline => "road", :id => banana_belt_1.id.to_s}
-    assert_routing("/results/2004/road/2", opts)
+    opts = {:controller => "results", :action => "event", :year => "2004", :discipline => "road", :id => banana_belt_1.to_param}
+    assert_routing("/results/2004/road/#{banana_belt_1.to_param}", opts)
 
-    get(:event, {:year => "2004", :discipline => "road", :id => banana_belt_1.id.to_s})
+    get(:event, {:year => "2004", :discipline => "road", :id => banana_belt_1.to_param})
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -198,10 +187,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
   
   def test_racer
   	weaver = racers(:weaver)
-    opts = {:controller => "results", :action => "racer", :id => weaver.id.to_s}
+    opts = {:controller => "results", :action => "racer", :id => weaver.to_param}
     assert_routing("/results/racer/#{weaver.id}", opts)
 
-    get(:racer, {:controller => "results", :action => "racer", :id => weaver.id.to_s})
+    get(:racer, {:controller => "results", :action => "racer", :id => weaver.to_param})
     assert_response(:success)
     assert_template("results/racer")
     assert_not_nil(assigns["racer"], "Should assign racer")
@@ -213,7 +202,7 @@ class ResultsControllerTest < ActiveSupport::TestCase
     big_racer = Racer.create(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     events(:banana_belt_1).standings.first.races.first.results.create(:racer => big_racer, :team => big_team, :place => 2, :number => '99')
 
-    get(:racer, {:controller => "results", :action => "racer", :id => big_racer.id.to_s})
+    get(:racer, {:controller => "results", :action => "racer", :id => big_racer.to_param})
     assert_response(:success)
     assert_template("results/racer")
     assert_not_nil(assigns["racer"], "Should assign racer")
@@ -224,10 +213,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
   
   def test_team
   	team = teams(:vanilla)
-    opts = {:controller => "results", :action => "team", :id => team.id.to_s}
+    opts = {:controller => "results", :action => "team", :id => team.to_param}
     assert_routing("/results/team/#{team.id}", opts)
 
-    get(:team, {:controller => "results", :action => "team", :id => team.id.to_s})
+    get(:team, {:controller => "results", :action => "team", :id => team.to_param})
     assert_redirected_to(team_path(team))
   end
   
@@ -282,10 +271,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
 
   def test_show_racer_result
     result = results(:tonkin_kings_valley)
-    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    opts = {:controller => "results", :action => "show", :id => result.to_param}
     assert_routing("/results/show/#{result.id}", opts)
 
-    get(:show, {:controller => "results", :id => result.id.to_s})
+    get(:show, {:controller => "results", :id => result.to_param})
     assert_response(:redirect)
     assert_redirected_to(
       :controller => "results", 
@@ -296,10 +285,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
 
   def test_show_team_result
     result = races(:kings_valley_3).results.create(:team => teams(:vanilla))
-    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    opts = {:controller => "results", :action => "show", :id => result.to_param}
     assert_routing("/results/show/#{result.id}", opts)
 
-    get(:show, {:controller => "results", :id => result.id.to_s})
+    get(:show, {:controller => "results", :id => result.to_param})
     assert_response(:redirect)
     assert_redirected_to(
       :controller => "results", 
@@ -310,10 +299,10 @@ class ResultsControllerTest < ActiveSupport::TestCase
   
   def test_show_result_no_team_no_racer
     result = races(:kings_valley_3).results.create
-    opts = {:controller => "results", :action => "show", :id => result.id.to_s}
+    opts = {:controller => "results", :action => "show", :id => result.to_param}
     assert_routing("/results/show/#{result.id}", opts)
 
-    get(:show, {:controller => "results", :id => result.id.to_s})
+    get(:show, {:controller => "results", :id => result.to_param})
     assert_response(:redirect)
     assert_redirected_to(
       :controller => "results", 

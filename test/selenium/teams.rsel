@@ -4,7 +4,8 @@ open '/teams'
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
 
-click_and_wait "css=a[href='/teams/2']"
+@gl_id = Team.find_by_name("Gentle Lovers").id
+click_and_wait "css=a[href='/teams/#{@gl_id}']"
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
 
@@ -26,17 +27,19 @@ assert_table "teams", 1, 1, "Gentile Lovers"
 assert_table "teams", 2, 1, ""
 assert_table "teams", 3, 1, "Vanilla Bicycles"
 
-assert_checked "team_member_2"
-assert_checked "team_member_4"
-assert_checked "team_member_3"
+@dfl_id = Team.find_by_name("Team dFL").id
+@vanilla_id = Team.find_by_name("Vanilla").id
+assert_checked "team_member_#{@dfl_id}"
+assert_checked "team_member_#{@vanilla_id}"
+assert_checked "team_member_#{@gl_id}"
 
-click_and_wait "css=a[href='/results/team/4']"
+click_and_wait "css=a[href='/results/team/#{@dfl_id}']"
 assert_text_present "Team dFL"
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'
 
 open '/admin/teams'
-click_and_wait "css=a[href='/admin/teams/3/edit']"
+click_and_wait "css=a[href='/admin/teams/#{@vanilla_id}/edit']"
 assert_text_present "Vanilla"
 assert_text_not_present 'error'
 assert_text_not_present 'Unknown action'

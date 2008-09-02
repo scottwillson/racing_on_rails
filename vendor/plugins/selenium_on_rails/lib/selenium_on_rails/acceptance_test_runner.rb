@@ -128,6 +128,7 @@ module SeleniumOnRails
       end
       
       def log_file browser
+        FileUtils.mkdir_p(log_path(''))
         (0..100).each do |i|
           name = browser + (i==0 ? '' : "(#{i})") + '.yml'
           return name unless File.exist?(log_path(name))

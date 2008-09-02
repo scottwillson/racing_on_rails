@@ -26,20 +26,6 @@ class EventTest < ActiveSupport::TestCase
     assert_equal([Date.today.year, 2005, 2004, 2003, 2002], years, "Years")
   end
   
-  def test_load_associations
-    event = Event.find(5)
-    assert_nil(event.promoter, "event.promoter")
-  
-    event = Event.find(1)
-    assert_not_nil(event.promoter, "event.promoter")
-  
-    event = Event.find(2)
-    assert_not_nil(event.promoter, "event.promoter")
-  
-    event = Event.find(4)
-    assert_not_nil(event.promoter, "event.promoter")
-  end
-  
   def test_defaults
     event = SingleDayEvent.new
     assert_equal(Date.today, event.date, "New event should have today's date")
@@ -155,11 +141,6 @@ class EventTest < ActiveSupport::TestCase
     assert_not_nil(Event.find(kings_valley.id), "Kings Valley should not be deleted")
   end
 
-  def test_to_param
-    tabor_cr = events(:tabor_cr)
-    assert_equal('6', tabor_cr.to_param, "to_param")
-  end
-  
   def test_short_date
     event = Event.new
 

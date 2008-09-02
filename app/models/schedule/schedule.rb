@@ -48,6 +48,7 @@ module Schedule
       Date.parse(date)
     end
     
+    # Events with results _will not_ be destroyed
     def Schedule.delete_all_future_events(date)
       logger.debug("Delete all events after #{date}")
       Event.destroy_all(["date >= ?", date])

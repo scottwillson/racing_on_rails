@@ -1,9 +1,0 @@
-mtb:
-  discipline_id: 3
-  alias: mtb
-cx:
-  discipline_id: 1
-  alias: cx
-ccx:
-  discipline_id: 1
-  alias: ccx

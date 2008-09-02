@@ -1,14 +1,8 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/promoters_controller'
 
-# :stopdoc:
-class Admin::PromotersController; def rescue_action(e) raise e end; end
-
-class Admin::PromotersControllerTest < ActiveSupport::TestCase
+class Admin::PromotersControllerTest < ActionController::TestCase
   def setup
-    @controller = Admin::PromotersController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+    super
     @request.session[:user] = users(:candi)
   end
   
@@ -24,10 +18,10 @@ class Admin::PromotersControllerTest < ActiveSupport::TestCase
   end
   
   def test_show
-    path = {:controller => "admin/promoters", :action => 'show', :id => '1'}
-    assert_routing("/admin/promoters/1", path)
+    path = {:controller => "admin/promoters", :action => 'show', :id => promoters(:brad_ross).to_param}
+    assert_routing("/admin/promoters/#{promoters(:brad_ross).to_param}", path)
     
-    get(:show, :id => '1')
+    get(:show, :id => promoters(:brad_ross).to_param)
     assert_equal(promoters(:brad_ross), assigns['promoter'], "Should assign 'promoter'")
     assert_nil(assigns['event'], "Should not assign 'event'")
     assert_template("admin/promoters/show")
@@ -35,10 +29,11 @@ class Admin::PromotersControllerTest < ActiveSupport::TestCase
 
   def test_show_with_event
     kings_valley = events(:kings_valley)
-    path = {:controller => "admin/promoters", :action => 'show', :id => '1', :event_id => kings_valley.to_param.to_s}
-    assert_recognizes(path, "/admin/promoters/1", :event_id => kings_valley.to_param.to_s)
+    path = {:controller => "admin/promoters", :action => 'show', :id => promoters(:brad_ross).to_param, :event_id => kings_valley.to_param.to_s}
+    assert_recognizes(path, "/admin/promoters/#{promoters(:brad_ross).to_param}", 
+      :event_id => kings_valley.to_param.to_s)
     
-    get(:show, :id => '1', :event_id => kings_valley.to_param.to_s)
+    get(:show, :id => promoters(:brad_ross).to_param, :event_id => kings_valley.to_param.to_s)
     assert_equal(promoters(:brad_ross), assigns['promoter'], "Should assign 'promoter'")
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
     assert_template("admin/promoters/show")

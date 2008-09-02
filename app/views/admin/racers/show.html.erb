@@ -67,8 +67,10 @@
     <tr>
       <td></td>
       <td>
-        <%= check_box_tag 'card_printed' %> Print card<br/>
-        <%= check_box_tag 'mailing_label_printed' %> Print mailing label
+        <%= check_box 'racer', 'print_card', :tabindex => 6 %> Print card 
+        (<%= link_to 'Print one card now', formatted_card_admin_racer_path(@racer, "pdf"), {:class => 'obvious'} %>)
+        <br>
+        <%= check_box 'racer', 'print_mailing_label', :tabindex => 7 %> Print mailing label
       </td>
     </tr>
     <tr>

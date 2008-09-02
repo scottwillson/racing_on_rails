@@ -66,16 +66,43 @@ class ScheduleTest < ActiveSupport::TestCase
     event_on = SingleDayEvent.create(:name => 'On Schedule Start', :date => Date.new(2006, 1, 20))
     event_after = SingleDayEvent.create(:name => 'After Schedule Start', :date => Date.new(2006, 1, 21))
     
-    before_import_after_schedule_start_date = Event.count(:conditions => "date > '2006-01-20'")
-    assert_equal(5, before_import_after_schedule_start_date, "events after 2006 count before import")
+    before_import_after_schedule_start_date = Event.count(:conditions => "date >= '2006-01-20'")
+    assert_equal(6, before_import_after_schedule_start_date, "events after 2006 count before import")
     before_import_all = Event.count
     assert_equal(22, before_import_all, "All events count before import")
     
     filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
     Schedule::Schedule.import(filename)
+        
+    expected = {
+      "12 Mile Endurance DH"           => 1,
+      "12/24 Hr MTN"                   => 1,
+      "Banana Belt Road Race Series"   => 3,
+      "Beaverton Grand Prix"           => 1,
+      "Cascade Cream Puff MTB"         => 1,
+      "CCX Race"                       => 1,
+      "Cherry Pie Road Race"           => 1,
+      "Collegiate Track Nationals"     => 5,
+      "Columbia Plateau Stage Race"    => 3,
+      "CoMotion Criterium"             => 1,
+      "CoMotion Tandem Stage Race"     => 5,
+      "Crawfish Criterium"             => 1,
+      "Criterium Championships"        => 1,
+      "Cross Crusade"                  => 8,
+      "Fast Twitch Fridays"            => 16,
+      "Healthnet Criterium"            => 1,
+      "High Desert Omnium"             => 3,
+      "Hood River CCX"                 => 1,
+      "Jack Frost Time Trial"          => 1,
+      "LA World Cup"                   => 3,
+      "Track Development Class"        => 16,
+      "Vancouver Courthouse Criterium" => 1,
+      "Veloshop CCX"                   => 1
+    }
+    assert_equal(76, expected.inject(0) { |sum, e| sum + e.last }, "New events")
     
-    after_import_after_schedule_start_date = Event.count(:conditions => "date > '2006-01-20'")
-    assert_equal(75, after_import_after_schedule_start_date, "2006 events count after import")
+    after_import_after_schedule_start_date = Event.count(:conditions => "date >= '2006-01-20'")
+    assert_equal(77, after_import_after_schedule_start_date, "2006 events count after import")
     after_import_all = Event.count
     assert_equal(93, after_import_all, "All events count after import")
     

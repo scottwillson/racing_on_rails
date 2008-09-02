@@ -7,7 +7,7 @@ class Admin::RacersController < Admin::RecordEditor
   edits :racer
   in_place_edit_for :racer, "name"
   
-  layout 'admin/application', :except => [:cards, :mailing_labels]
+  layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
   
   # Search for Racers by name. This is a 'like' search on the concatenated 
@@ -515,17 +515,15 @@ class Admin::RacersController < Admin::RecordEditor
   def cards
     @racers = Racer.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @racers.empty?
-      render(:action => :no_cards)
+      redirect_to(formatted_no_cards_admin_racers_path("html"))
     else
-      render(:template => 'admin/racers/cards')
       Racer.update_all("print_card=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
   end
   
-  def print_one_card
+  def card
     @racer = Racer.find(params[:id])
     @racers = [@racer]
-    render(:template => 'admin/racers/cards')
     @racer.print_card = false
     @racer.save!
   end
@@ -533,9 +531,8 @@ class Admin::RacersController < Admin::RecordEditor
   def mailing_labels
     @racers = Racer.find(:all, :conditions => ['print_mailing_label=?', true], :order => 'last_name, first_name')
     if @racers.empty?
-      render(:action => :no_mailing_labels)
+      redirect_to(formatted_no_mailing_labels_admin_racers_path("html"))
     else
-      render(:template => 'admin/racers/mailing_labels')
       Racer.update_all("print_mailing_label=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
   end

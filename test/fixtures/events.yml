@@ -1,204 +1,179 @@
---- !omap
-#
-# Order is import because of foreign key constraints.
-#
-- banana_belt_series:
-    id: 1
-    name: Banana Belt Series
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    date: 2004-01-04
-    type: Series
-    number_issuer_id: 2
-- banana_belt_1:
-    id: 2
-    parent_id: 1
-    name: Banana Belt I
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    updated_at: 2004-01-05
-    number_issuer_id: 1
-    date: 2004-01-04
-    type: SingleDayEvent
-    number_issuer_id: 2
-- banana_belt_2:
-    id: 3
-    parent_id: 1
-    name: Banana Belt II
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    date: 2004-01-11
-    type: SingleDayEvent
-    number_issuer_id: 2
-- banana_belt_3:
-    id: 4
-    parent_id: 1
-    name: Banana Belt III
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    date: 2004-01-18
-    type: SingleDayEvent
-    number_issuer_id: 2
-- jack_frost:
-    id: 11
-    name: Jack Frost
-    date: 2004-01-15
-    discipline: Time Trial
-    number_issuer_id: 2
-    type: SingleDayEvent
-- jack_frost_2002:
-    id: 16
-    name: Jack Frost
-    date: 2002-01-17
-    discipline: Time Trial
-    number_issuer_id: 1
-    type: SingleDayEvent
-- kings_valley:
-    id: 5
-    name: Kings Valley Road Race
-    date: 2003-12-31
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    type: SingleDayEvent
-    number_issuer_id: 2
-- tabor_cr:
-    id: 6
-    name: Mt. Tabor Circuit Race
-    date: 2005-07-01
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 3
-    flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
-    flyer_approved: false
-    type: SingleDayEvent
-    number_issuer_id: 2
-- pir_series:
-    id: 7
-    date: 2005-07-05
-    name: Tuesday Night PIR
-    city: Portland
-    state: OR
-    discipline: Road
-    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-    flyer_approved: true
-    promoter_id: 2
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    type: WeeklySeries
-    number_issuer_id: 2
-- pir:
-    id: 8
-    parent_id: 7
-    date: 2005-07-05
-    name: Tuesday Night PIR
-    city: Portland
-    state: OR
-    discipline: Road
-    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-    promoter_id: 2
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    type: SingleDayEvent
-    number_issuer_id: 2
-- pir_2:
-    id: 9
-    parent_id: 7
-    date: 2005-07-12
-    name: Tuesday Night PIR
-    city: Portland
-    state: OR
-    discipline: Road
-    flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-    promoter_id: 2
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    type: SingleDayEvent
-    number_issuer_id: 2
-- kings_valley_2004:
-    id: 10
-    name: Kings Valley Road Race
-    date: 2004-12-31
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 2
-    type: SingleDayEvent
-- mt_hood:
-    id: 12
-    date: 2005-07-11
-    name: Mt. Hood Classic
-    city: Hood River
-    state: OR
-    discipline: Road
-    flyer: http://www.hoodriversr.net/
-    promoter_id: 1
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 2
-    type: MultiDayEvent
-- mt_hood_1:
-    id: 13
-    parent_id: 12
-    date: 2005-07-11
-    name: Mount Hood Day 1
-    state: OR
-    discipline: Road
-    flyer: http://www.hoodriversr.net/
-    promoter_id: 1
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    city: Hood River
-    number_issuer_id: 2
-    type: SingleDayEvent
-- mt_hood_2:
-    id: 14
-    parent_id: 12
-    date: 2005-07-12
-    name: Mount Hood Day 2
-    city: Cloud Cap
-    state: OR
-    discipline: Road
-    flyer: http://www.hoodriversr.net/
-    promoter_id: 1
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 2
-    type: SingleDayEvent
-- kings_valley_2004:
-    id: 15
-    name: Kings Valley Road Race
-    date: 2004-12-31
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    number_issuer_id: 2
-    type: SingleDayEvent
-- series_parent:
-    id: 101
-    name: Lost Series
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    date: <%= Date.today %>
-    type: Series
-    number_issuer_id: 2
-- lost_series_child:
-    id: 102
-    name: Lost Series
-    discipline: Road
-    sanctioned_by: <%= ASSOCIATION.short_name %>
-    promoter_id: 1
-    date: <%= Date.today %>
-    type: SingleDayEvent
-    number_issuer_id: 2
-- future_usa_cycling_event:
-    id: 103
-    name: USA Cycling Event
-    discipline: Road
-    sanctioned_by: USA Cycling
-    date: <%= Date.today + 3 %>
-    type: SingleDayEvent
-- usa_cycling_event_with_results:
-    id: 104
-    name: Copperopolis Road Race
-    discipline: Road
-    sanctioned_by: NCNCA
-    date: <%= Date.today - 4 %>
-    type: SingleDayEvent
-    
+banana_belt_series:
+  name: Banana Belt Series
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  date: 2004-01-04
+  type: Series
+  number_issuer: association
+banana_belt_1:
+  parent: banana_belt_series
+  name: Banana Belt I
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  updated_at: 2004-01-05
+  number_issuer: stag_race
+  date: 2004-01-04
+  type: SingleDayEvent
+  number_issuer: association
+banana_belt_2:
+  parent: banana_belt_series
+  name: Banana Belt II
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  date: 2004-01-11
+  type: SingleDayEvent
+  number_issuer: association
+banana_belt_3:
+  parent: banana_belt_series
+  name: Banana Belt III
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  date: 2004-01-18
+  type: SingleDayEvent
+  number_issuer: association
+jack_frost:
+  name: Jack Frost
+  date: 2004-01-15
+  discipline: Time Trial
+  number_issuer: association
+  type: SingleDayEvent
+jack_frost_2002:
+  name: Jack Frost
+  date: 2002-01-17
+  discipline: Time Trial
+  number_issuer: stage_race
+  type: SingleDayEvent
+kings_valley:
+  name: Kings Valley Road Race
+  date: 2003-12-31
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  type: SingleDayEvent
+  number_issuer: association
+tabor_cr:
+  name: Mt. Tabor Circuit Race
+  date: 2005-07-01
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: nate_hobson
+  flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
+  flyer_approved: false
+  type: SingleDayEvent
+  number_issuer: association
+pir_series:
+  date: 2005-07-05
+  name: Tuesday Night PIR
+  city: Portland
+  state: OR
+  discipline: Road
+  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  flyer_approved: true
+  promoter: candi_murray
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  type: WeeklySeries
+  number_issuer: association
+pir:
+  parent: pir_series
+  date: 2005-07-05
+  name: Tuesday Night PIR
+  city: Portland
+  state: OR
+  discipline: Road
+  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  promoter: candi_murray
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  type: SingleDayEvent
+  number_issuer: association
+pir_2:
+  parent: pir_series
+  date: 2005-07-12
+  name: Tuesday Night PIR
+  city: Portland
+  state: OR
+  discipline: Road
+  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  promoter: candi_murray
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  type: SingleDayEvent
+  number_issuer: association
+kings_valley_2004:
+  name: Kings Valley Road Race
+  date: 2004-12-31
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  number_issuer: association
+  type: SingleDayEvent
+mt_hood:
+  date: 2005-07-11
+  name: Mt. Hood Classic
+  city: Hood River
+  state: OR
+  discipline: Road
+  flyer: http://www.hoodriversr.net/
+  promoter: brad_ross
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  number_issuer: association
+  type: MultiDayEvent
+mt_hood_1:
+  parent: mt_hood
+  date: 2005-07-11
+  name: Mount Hood Day 1
+  state: OR
+  discipline: Road
+  flyer: http://www.hoodriversr.net/
+  promoter: brad_ross
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  city: Hood River
+  number_issuer: association
+  type: SingleDayEvent
+mt_hood_2:
+  parent: mt_hood
+  date: 2005-07-12
+  name: Mount Hood Day 2
+  city: Cloud Cap
+  state: OR
+  discipline: Road
+  flyer: http://www.hoodriversr.net/
+  promoter: brad_ross
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  number_issuer: association
+  type: SingleDayEvent
+kings_valley_2004:
+  name: Kings Valley Road Race
+  date: 2004-12-31
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  number_issuer: association
+  type: SingleDayEvent
+series_parent:
+  name: Lost Series
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  date: <%= Date.today %>
+  type: Series
+  number_issuer: association
+lost_series_child:
+  name: Lost Series
+  discipline: Road
+  sanctioned_by: <%= ASSOCIATION.short_name %>
+  promoter: brad_ross
+  date: <%= Date.today %>
+  type: SingleDayEvent
+  number_issuer: association
+future_usa_cycling_event:
+  name: USA Cycling Event
+  discipline: Road
+  sanctioned_by: USA Cycling
+  date: <%= Date.today + 3 %>
+  type: SingleDayEvent
+usa_cycling_event_with_results:
+  name: Copperopolis Road Race
+  discipline: Road
+  sanctioned_by: NCNCA
+  date: <%= Date.today - 4 %>
+  type: SingleDayEvent

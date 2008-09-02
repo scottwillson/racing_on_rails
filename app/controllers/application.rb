@@ -9,9 +9,6 @@ class ApplicationController < ActionController::Base
   
   RESULTS_LIMIT = 100
   
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_racing_on_rails_session_id'
-  
   filter_parameter_logging "password"
   
   def expire_cache

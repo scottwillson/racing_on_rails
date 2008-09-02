@@ -279,14 +279,14 @@ class Admin::TeamsControllerTest < ActiveSupport::TestCase
     assert_equal(true, vanilla.member, 'member before update')
     post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'member')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     vanilla.reload
     assert_equal(false, vanilla.member, 'member after update')
 
     vanilla = teams(:vanilla)
     post(:toggle_attribute, :id => vanilla.to_param, :attribute => 'member')
     assert_response(:success)
-    assert_template("/admin/_attribute")
+    assert_template("admin/_attribute")
     vanilla.reload
     assert_equal(true, vanilla.member, 'member after second update')
   end

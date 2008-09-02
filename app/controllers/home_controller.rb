@@ -16,8 +16,6 @@ class HomeController < ApplicationController
       :conditions => ['events.date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
       :order => 'events.date desc'
     )
-    
-    @news = NewsItem.find(:all)
   end
   
   def auction

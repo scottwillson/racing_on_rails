@@ -1,16 +1,12 @@
 kona:
-  id: 1
   name: Kona
   member: true
 gentle_lovers:
-  id: 2
   name: Gentle Lovers
   member: true
 vanilla:
-  id: 3
   name: Vanilla
   member: true
 dfl:
-  id: 4
   name: Team dFL
   member: true

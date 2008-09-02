@@ -1,9 +1,10 @@
 include_partial 'fixtures'
 include_partial 'admin_login'
 
-open '/admin/racers/2'
+@matson = Racer.find_by_name('Mark Matson')
+open "/admin/racers/#{@matson.id}"
 assert_text_present 'Mark Matson'
-click 'destroy_number_3'
+click "destroy_number_#{@matson.race_numbers.first.id}"
 pause 300
 click_and_wait 'save'
 assert_text_not_present 'error'
@@ -11,4 +12,4 @@ assert_text_not_present 'Unknown action'
 assert_text_not_present 'has no parent'
 assert_text_not_present "Couldn't find RaceNumber"
 
-assert_location '*/admin/racers/2'
+assert_location "*/admin/racers/#{@matson.id}"

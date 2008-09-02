@@ -1,16 +1,12 @@
 vanilla_bicycles:
-  id: 1
   name: Vanilla Bicycles
-  team_id: 3
+  team: vanilla
 gentile_lovers:
-  id: 2
   name: Gentile Lovers
-  team_id: 2
+  team: gentle_lovers
 mollie:
-  id: 3
   name: Mollie Cameron
-  racer_id: 4
+  racer: molly
 erik_tonkin:
-  id: 4
   name: Eric Tonkin
-  racer_id: 1
+  racer: tonkin
