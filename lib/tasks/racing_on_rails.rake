@@ -77,6 +77,7 @@ task :cruise do
   end
   
   Rake::Task["db:migrate"].invoke
+  Rake::Task["db:test:prepare"].invoke
   Rake::Task["test:units"].invoke
   Rake::Task["test:functionals"].invoke
   
@@ -89,6 +90,9 @@ task :cruise do
 
   begin
     Rake::Task["test:acceptance"].invoke
+    # Clean up downloads
+    exec("~cruise/rm *.ppl")
+    exec("~cruise/rm *.xls")
   ensure
     fork do
       exec("mongrel_rails stop")
