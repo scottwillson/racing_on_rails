@@ -91,8 +91,8 @@ task :cruise do
   begin
     Rake::Task["test:acceptance"].invoke
     # Clean up downloads
-    exec("~cruise/rm *.ppl")
-    exec("~cruise/rm *.xls")
+    exec("rm ~cruise/*.ppl")
+    exec("rm ~cruise/*.xls")
   ensure
     fork do
       exec("mongrel_rails stop")
