@@ -426,9 +426,12 @@ class OverallBarTest < ActiveSupport::TestCase
     matson_score = matson_result.scores.first
     assert_equal(category_4_men, matson_score.source_result.race.category, "Matson source result category")
 
-    assert_equal(tonkin, cat_4_5_overall_bar.results[2].racer, "Cat 4/5 Overall BAR 2nd place racer")
-    assert_equal(299, cat_4_5_overall_bar.results[2].points, "Cat 4/5 Overall BAR 2nd place points")
-    assert_equal(1, cat_4_5_overall_bar.results[2].scores.size, "Cat 4/5 Overall BAR 2nd place scores")
+    tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.racer == tonkin }
+    assert_equal("2", tonkin_result.place, "Tonkin Cat 4/5 Overall BAR place")
+    assert_equal(299, tonkin_result.points, "Tonkin Cat 4/5 Overall BAR points")
+    assert_equal(1, tonkin_result.scores.size, "Tonkin Cat 4/5 Overall BAR 1st place scores")
+    tonkin_score = tonkin_result.scores.first
+    assert_equal(category_5_men, tonkin_score.source_result.race.category, "Tonkin source result category")
   end
   
   def test_remove_duplicate_discipline_results
