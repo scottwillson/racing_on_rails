@@ -73,7 +73,10 @@ task :cruise do
   if RUBY_PLATFORM[/freebsd/]
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
-      exec("Xvfb :1 -screen 0 1024x768x324 &") rescue nil
+      xvfb_pid = fork do
+        exec("Xvfb :1 -screen 0 1024x768x324 &")
+      end
+      Process.detach(xvfb_pid)
     end
   end
   
