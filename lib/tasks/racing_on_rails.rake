@@ -74,7 +74,7 @@ task :cruise do
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
       xvfb_pid = fork do
-        exec("Xvfb :1 -screen 0 1024x768x324 &")
+        exec("Xvfb :1 -screen 0 1024x768x24")
       end
       Process.detach(xvfb_pid)
     end
