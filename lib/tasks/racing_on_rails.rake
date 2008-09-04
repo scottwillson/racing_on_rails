@@ -71,8 +71,8 @@ end
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
   if RUBY_PLATFORM[/freebsd/]
-    ENV['DISPLAY'] = "192.168.0.7:0"
-    # ENV['DISPLAY'] = "localhost:1"
+    # ENV['DISPLAY'] = "192.168.0.7:0"
+    ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
       xvfb_pid = fork do
         exec("Xvfb :1 -screen 0 1024x768x24")
@@ -86,11 +86,6 @@ task :cruise do
   # Rake::Task["test:units"].invoke
   # Rake::Task["test:functionals"].invoke
   
-  # Use fork or Mongrel start script will cause _this_ Rake process to exit
-  # mongrel_pid = fork do
-  #   exec("mongrel_rails start -d -e test")
-  # end
-  # Process.detach(mongrel_pid)
   sleep 5
 
   begin
@@ -104,15 +99,13 @@ task :cruise do
     # exec("rm #{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
     # exec("rm #{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure
-    # fork do
-    #   exec("mongrel_rails stop")
-    # end
     if RUBY_PLATFORM[/freebsd/]
-      # fork do
-      #   exec("killall firefox-bin")
-      # end
+      # Rake task doesn't seem to quit Firefox correctly
+      fork do
+        exec("killall firefox-bin")
+      end
     end
-    # Wait for Mongrel stop script to complete before exiting
-    # Process.wait
+    # Wait for Firefox to exit
+    Process.wait
   end
 end
