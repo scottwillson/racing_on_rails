@@ -71,13 +71,14 @@ end
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
   if RUBY_PLATFORM[/freebsd/]
+    ENV['DISPLAY'] = "192.168.0.7:0"
     # ENV['DISPLAY'] = "localhost:1"
-    # if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
-    #   xvfb_pid = fork do
-    #     exec("Xvfb :1 -screen 0 1024x768x24")
-    #   end
-    #   Process.detach(xvfb_pid)
-    # end
+    if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
+      xvfb_pid = fork do
+        exec("Xvfb :1 -screen 0 1024x768x24")
+      end
+      Process.detach(xvfb_pid)
+    end
   end
   
   # Rake::Task["db:migrate"].invoke
@@ -90,10 +91,10 @@ task :cruise do
   #   exec("mongrel_rails start -d -e test")
   # end
   # Process.detach(mongrel_pid)
-  # sleep 5
+  sleep 5
 
   begin
-    Rake::Task["test:acceptance"].invoke
+    # Rake::Task["test:acceptance"].invoke
     # Clean up downloads
     # exec("rm #{File.expand_path('~')}/lynx*.ppl")
     # exec("rm #{File.expand_path('~')}/racers*.xls")
