@@ -71,40 +71,47 @@ end
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
   if RUBY_PLATFORM[/freebsd/]
-    ENV['DISPLAY'] = "localhost:1"
-    if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
-      xvfb_pid = fork do
-        exec("Xvfb :1 -screen 0 1024x768x24")
-      end
-      Process.detach(xvfb_pid)
-    end
+    # ENV['DISPLAY'] = "localhost:1"
+    # if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
+    #   xvfb_pid = fork do
+    #     exec("Xvfb :1 -screen 0 1024x768x24")
+    #   end
+    #   Process.detach(xvfb_pid)
+    # end
   end
   
-  Rake::Task["db:migrate"].invoke
-  Rake::Task["db:test:prepare"].invoke
-  Rake::Task["test:units"].invoke
-  Rake::Task["test:functionals"].invoke
+  # Rake::Task["db:migrate"].invoke
+  # Rake::Task["db:test:prepare"].invoke
+  # Rake::Task["test:units"].invoke
+  # Rake::Task["test:functionals"].invoke
   
   # Use fork or Mongrel start script will cause _this_ Rake process to exit
-  mongrel_pid = fork do
-    exec("mongrel_rails start -d -e test")
-  end
-  Process.detach(mongrel_pid)
-  sleep 5
+  # mongrel_pid = fork do
+  #   exec("mongrel_rails start -d -e test")
+  # end
+  # Process.detach(mongrel_pid)
+  # sleep 5
 
   begin
     Rake::Task["test:acceptance"].invoke
     # Clean up downloads
-    exec("rm ~cruise/*.ppl")
-    exec("rm ~cruise/*.xls")
+    # exec("rm #{File.expand_path('~')}/lynx*.ppl")
+    # exec("rm #{File.expand_path('~')}/racers*.xls")
+    # exec("rm #{File.expand_path('~')}/scoring_sheet*.xls")
+    # exec("rm #{File.expand_path('~')}/lynx*.xls")
+    # exec("rm #{File.expand_path('~')}/Downloads/racers*.xls")
+    # exec("rm #{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
+    # exec("rm #{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure
-    fork do
-      exec("mongrel_rails stop")
-    end
-    fork do
-      exec("killall firefox-bin")
+    # fork do
+    #   exec("mongrel_rails stop")
+    # end
+    if RUBY_PLATFORM[/freebsd/]
+      # fork do
+      #   exec("killall firefox-bin")
+      # end
     end
     # Wait for Mongrel stop script to complete before exiting
-    Process.wait
+    # Process.wait
   end
 end

@@ -5,7 +5,7 @@ browsers:
   <% if RUBY_PLATFORM[/darwin/] %>
 
   # Mac OS X
-  firefox: '/Applications/Firefox.app/Contents/MacOS/firefox-bin'
+  # firefox: '/Applications/Firefox.app/Contents/MacOS/firefox-bin'
   safari: '/Applications/Safari.app/Contents/MacOS/Safari'
 
   <% elsif RUBY_PLATFORM[/freebsd/] %>
@@ -22,3 +22,6 @@ browsers:
   <% end %>
 
 max_browser_duration: 300
+resultDir: test_results
+start_server: true
+reuse_existing_server: false
