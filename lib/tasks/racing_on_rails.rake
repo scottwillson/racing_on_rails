@@ -94,7 +94,7 @@ task :cruise do
   sleep 5
 
   begin
-    # Rake::Task["test:acceptance"].invoke
+    Rake::Task["test:acceptance"].invoke
     # Clean up downloads
     # exec("rm #{File.expand_path('~')}/lynx*.ppl")
     # exec("rm #{File.expand_path('~')}/racers*.xls")
