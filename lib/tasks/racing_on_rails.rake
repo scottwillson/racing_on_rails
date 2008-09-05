@@ -71,7 +71,6 @@ end
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
   if RUBY_PLATFORM[/freebsd/]
-    # ENV['DISPLAY'] = "192.168.0.7:0"
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
       xvfb_pid = fork do
@@ -81,23 +80,22 @@ task :cruise do
     end
   end
   
-  # Rake::Task["db:migrate"].invoke
-  # Rake::Task["db:test:prepare"].invoke
-  # Rake::Task["test:units"].invoke
-  # Rake::Task["test:functionals"].invoke
+  Rake::Task["db:migrate"].invoke
+  Rake::Task["db:test:prepare"].invoke
+  Rake::Task["test:units"].invoke
+  Rake::Task["test:functionals"].invoke
   
-  sleep 5
-
   begin
     Rake::Task["test:acceptance"].invoke
     # Clean up downloads
-    # exec("rm #{File.expand_path('~')}/lynx*.ppl")
-    # exec("rm #{File.expand_path('~')}/racers*.xls")
-    # exec("rm #{File.expand_path('~')}/scoring_sheet*.xls")
-    # exec("rm #{File.expand_path('~')}/lynx*.xls")
-    # exec("rm #{File.expand_path('~')}/Downloads/racers*.xls")
-    # exec("rm #{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
-    # exec("rm #{File.expand_path('~')}/Downloads/lynx*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/racers*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/racers*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure
     if RUBY_PLATFORM[/freebsd/]
       # Rake task doesn't seem to quit Firefox correctly
