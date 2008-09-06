@@ -7,11 +7,11 @@
 <table class="base" id="teams">
   <caption>Teams</caption>
   <tr>
-    <th>Club Name</td>
-    <th>Website</td>
-    <th>Sponsors</td>
-    <th>Contact Name</td>
-    <th>Phone</td>
+    <th>Name</th>
+    <th>Sponsors</th>
+    <th>Website</th>
+    <th>Contact</th>
+    <th></th>
   </tr>
   <%= render :partial => "team", :collection => @teams.sort { |x, y| x.name.downcase <=> y.name.downcase || x <=> y } %>
 </table>

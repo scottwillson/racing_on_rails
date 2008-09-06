@@ -3,10 +3,10 @@
     <%= link_to(team.name, team_path(team)) -%>
   </td>
   <td>
-    <%= link_to(team.website, team.website) unless team.website.blank? %>
+    <%= team.sponsors %>
   </td>
   <td>
-    <%= team.sponsors %>
+    <%= link_to(team.website, team.website) unless team.website.blank? %>
   </td>
   <td class="contact">
     <%= link_to_contact(team) %>
