@@ -68,7 +68,7 @@ module ApplicationHelper
   end
   
   def link_to_result(cell, result)
-    return unless result.racer
+    return cell unless result.racer
 
     if result.competition_result?
       link_to(cell, 
@@ -116,9 +116,9 @@ module ApplicationHelper
     
     race.results.sort.each_with_index do |result, row_index|
       result_grid_columns.each_with_index do |grid_column, index|
-      if grid_column.link
-      cell = results_grid[row_index][index]
-      results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
+        if grid_column.link
+          cell = results_grid[row_index][index]
+          results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
         end
       end
     end
