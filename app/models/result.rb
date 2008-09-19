@@ -208,7 +208,7 @@ class Result < ActiveRecord::Base
 
   # TODO refactor to something like act_as_competitive or create CompetitionResult
   def competition_result?
-    self.race.standings.is_a?(TaborSeriesStandings) || self.race.standings.event.is_a?(Competition)
+    self.race.standings.is_a?(CrossCrusadeSeriesStandings) || self.race.standings.is_a?(TaborSeriesStandings) || self.race.standings.event.is_a?(Competition)
   end
   
   # Not blank, DNF, DNS, DQ.

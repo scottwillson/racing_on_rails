@@ -40,7 +40,7 @@ class OverallBar < Competition
   # if racer has > 4 discipline results, those results are worth 50 points
   # E.g., racer had top-15 results in road, track, cyclocross, mountain bike, and criteriums
   def set_bonus_points_for_extra_disciplines(scores)
-    # For the Category 4/5 Overall BAR, if a racer has both a Cat 4 and Cat 5 for the same discipline,
+    # For the Category 4/5 Overall BAR, if a racer has both a Cat 4 and Cat 5 result for the same discipline,
     # we only count the Cat 4 result
     cat_5 = Category.find_by_name("Category 5 Men")
     scores.sort! do |x, y|
