@@ -72,7 +72,7 @@ Downhill/Cross Country: Downhill}
   
   def test_excel_file_database
     # Pre-existing racers
-    brian = Racer.create(
+    brian = Racer.create!(
       :last_name =>'Abers',
       :first_name => 'Brian',
       :gender => 'M',
@@ -80,11 +80,11 @@ Downhill/Cross Country: Downhill}
       :member_from => '2004-02-23',
       :member_to => Date.new(Date.today.year + 1, 12, 31),
       :date_of_birth => '1965-10-02',
-      :notes => 'Existing notes'
+      :notes => 'Existing notes',
+      :road_number => '825'
     )
-    assert(brian.valid?, brian.errors.full_messages)
 
-    rene = Racer.create(
+    rene = Racer.create!(
       :last_name =>'Babi',
       :first_name => 'Rene',
       :gender => 'M',
@@ -95,7 +95,6 @@ Downhill/Cross Country: Downhill}
       :road_number => '190A',
       :date_of_birth => '1899-07-14'
     )
-    assert(rene.valid?, rene.errors.full_messages)
     rene.reload
     assert_equal('190A', rene.road_number(true), 'Rene existing DH number')
     
@@ -155,8 +154,8 @@ Downhill/Cross Country: Downhill}
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
     assert_equal('825', brian_abers.road_number, 'Brian Abers road_number')
-    assert(!brian_abers.print_card?, 'sautter.print_card? after import')
-    assert(!brian_abers.print_mailing_label?, 'sautter.mailing_label? after import')
+    assert(!brian_abers.print_card?, 'brian_abers.print_card? after import')
+    assert(!brian_abers.print_mailing_label?, 'brian_abers.mailing_label? after import')
     
     all_heidi_babi = Racer.find_all_by_name('heidi babi')
     assert_equal(1, all_heidi_babi.size, 'Heidi Babi in database after import')
