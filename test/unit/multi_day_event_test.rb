@@ -374,4 +374,35 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(Series, MultiDayEvent.guess_type([events(:banana_belt_1), events(:banana_belt_2), events(:banana_belt_3)]), 'Series')
     assert_equal(WeeklySeries, MultiDayEvent.guess_type([events(:pir), events(:pir_2)]), 'WeeklySeries')
   end
+  
+  def test_events_with_results
+    event = MultiDayEvent.create!
+    assert_equal(0, event.events_with_results, "events_with_results: no child")
+
+    event.events.create!
+    assert_equal(0, event.events_with_results, "events_with_results: child with no results")
+
+    event.events.create!.standings.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(0, event.events_with_results, "cached: events_with_results: 1 children with results")
+    assert_equal(1, event.events_with_results(true), "refresh cache: events_with_results: 1 children with results")
+
+    event.events.create!.standings.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(2, event.events_with_results(true), "refresh cache: events_with_results: 2 children with results")
+  end
+  
+  def test_completed
+    parent_event = MultiDayEvent.create!
+    assert(!parent_event.completed?, "New event should not be completed")
+    
+    parent_event.events.create!
+    parent_event.events.create!
+    parent_event.events.create!
+    assert(!parent_event.completed?(true), "Event with all children with no results should not be completed")
+    
+    parent_event.events.first.standings.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert(!parent_event.completed?(true), "Event with only one child with results should not be completed")
+    
+    parent_event.events.each { |event| event.standings.create!.races.create!(:category => categories(:cat_4_women)).results.create! }
+    assert(parent_event.completed?(true), "Event with all children with results should be completed")
+  end
 end

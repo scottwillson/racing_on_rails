@@ -232,6 +232,15 @@ class MultiDayEvent < Event
     has_results_without_children? || events(true).any? { |event| event.has_results? }
   end
   
+  # Number of child events with results
+  def events_with_results(reload = false)
+    events(reload).inject(0) { |count, event| event.has_results? ? count + 1 : count }
+  end
+  
+  def completed?(reload = false)
+    events.count(reload) > 0 && (events_with_results(reload) == events.count)
+  end
+  
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size}>"
   end
