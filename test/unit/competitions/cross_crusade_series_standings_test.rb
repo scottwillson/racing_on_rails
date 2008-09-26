@@ -229,4 +229,18 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     assert(overall_standings.raced_minimum_events?(molly, category_a_overall_race), "Four events. Molly has raced minimum")
     assert(!overall_standings.raced_minimum_events?(racers(:alice), category_a_overall_race), "Four events. Alice has not raced minimum")
   end
+  
+  def test_minimum_events_should_handle_results_without_racer
+      series = Series.create!(:name => "Cross Crusade")
+      cat_a = Category.find_or_create_by_name("Category A")
+      event = series.events.create!(:date => Date.new(2007, 10, 7))
+
+      cat_a_race = event.standings.create!.races.create!(:category => cat_a)
+      cat_a_race.results.create!(:place => 17, :racer => racers(:alice))
+
+      CrossCrusadeSeriesStandings.recalculate(2007)
+      overall_standings = series.standings.first
+      category_a_overall_race = overall_standings.races.detect { |race| race.category == cat_a }
+      assert(!overall_standings.raced_minimum_events?(nil, category_a_overall_race), "Nil racer should never have mnimum events")
+  end
 end

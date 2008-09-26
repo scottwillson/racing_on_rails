@@ -186,7 +186,7 @@ class CrossCrusadeSeriesStandings < Standings
   end
   
   def raced_minimum_events?(racer, race)
-    return false if event.events.empty?
+    return false if event.events.empty? || racer.nil?
     
     event_ids = event.events.collect do |event|
       event.id
