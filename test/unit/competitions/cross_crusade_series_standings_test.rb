@@ -48,6 +48,8 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series after deleting old standings")
     overall_standings = series.standings.first
     assert_equal(17, overall_standings.races.size, "Overall races")
+    
+    assert(!overall_standings.notes.blank?, "Should have notes about rules")
 
     cx_a_overall_race = overall_standings.races.detect { |race| race.category == cat_a }
     assert_not_nil(cx_a_overall_race, "Should have Men A overall race")

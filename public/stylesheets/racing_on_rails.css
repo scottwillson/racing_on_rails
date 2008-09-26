@@ -648,3 +648,7 @@ form#export_form {
 table.base#teams td.club_name {
   white-space: nowrap;
 }
+
+table.base a.preliminary {
+  font-style: italic;
+}

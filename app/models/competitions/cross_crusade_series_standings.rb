@@ -7,7 +7,8 @@ class CrossCrusadeSeriesStandings < Standings
               :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
     if series && series.has_results?
       CrossCrusadeSeriesStandings.destroy_all(:event_id => series.id)
-      standings = CrossCrusadeSeriesStandings.create!(:name => "Overall", :event => series)
+      notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
+      standings = CrossCrusadeSeriesStandings.create!(:name => "Overall", :event => series, :notes => notes)
       standings.create_races
       standings.recalculate
     end
