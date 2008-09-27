@@ -7,8 +7,16 @@ senior_men:
   parent: association
 men_4_5:
   name: Category 4/5 Men
-  friendly_param: category_men_4_5_men
+  friendly_param: category_4_5_men
   parent: association
+category_4_men:
+  name: Category 4 Men
+  friendly_param: category_4
+  parent: men_4_5
+category_5_men:
+  name: Category 5 Men
+  friendly_param: category_5
+  parent: men_4_5
 senior_women:
   name: Senior Women
   friendly_param: senior_women
@@ -99,3 +107,7 @@ masters_men_30_34:
   name: Masters Men 30-34
   friendly_param: masters_men_30_34
   parent: masters_men
+beginner_men:
+  name: Beginner Men
+  friendly_param: beginner_men
+  parent: category_5_men

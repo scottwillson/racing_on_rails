@@ -38,20 +38,9 @@ class OverallBar < Competition
   end
 
   # if racer has > 4 discipline results, those results are worth 50 points
-  # E.g., racer had top-15 results in road, track, cyclocross, mountain bike, and criteriums
+  # E.g., racer had top-15 results in road, track, cyclocross, mountain bike, and criterium
   def set_bonus_points_for_extra_disciplines(scores)
-    # For the Category 4/5 Overall BAR, if a racer has both a Cat 4 and Cat 5 result for the same discipline,
-    # we only count the Cat 4 result
-    cat_5 = Category.find_by_name("Category 5 Men")
-    scores.sort! do |x, y|
-      if x.source_result.race.category == cat_5 && y.source_result.race.category != cat_5
-        1
-      elsif x.source_result.race.category != cat_5 && y.source_result.race.category == cat_5
-        -1
-      else
-        y.points.to_i <=> x.points.to_i
-      end
-    end
+    scores.sort! { |x, y| y.points.to_i <=> x.points.to_i }
     remove_duplicate_discipline_results(scores)
     if scores.size > 4
       for score in scores[4..(scores.size - 1)]
@@ -64,7 +53,30 @@ class OverallBar < Competition
   # count only highest-placing category.
   # This typically happens for age-based categories like Masters and Juniors
   # Assume scores sorted in preferred order (usually by points descending)
+  # For the Category 4/5 Overall BAR, if a racer has both a Cat 4 and Cat 5 result for the same discipline,
+  # we only count the Cat 4 result
   def remove_duplicate_discipline_results(scores)
+    cat_4 = Category.find_by_name("Category 4 Men")
+    cat_5 = Category.find_by_name("Category 5 Men")
+    scores_to_delete = []
+    cat_4_disciplines = []
+
+    scores.each do |score|
+      race = score.source_result.race
+      if race.category == cat_4 
+        cat_4_disciplines << race.standings.discipline
+      end
+    end
+
+    scores.each do |score|
+      race = score.source_result.race
+      if race.category == cat_5 && cat_4_disciplines.include?(race.standings.discipline)
+        logger.debug("Cat 4 result already exists: #{race.standings.discipline} results for #{score.source_result.racer}: #{race.category.name}")
+        scores_to_delete << score
+      end
+    end
+    scores_to_delete.each { |score| scores.delete(score) }
+    
     scores_to_delete = []
     disciplines = []
     scores.each do |score|
@@ -79,7 +91,7 @@ class OverallBar < Competition
   end
 
   def create_standings
-    root_standings = standings.create(:event => self, :discipline => Discipline[:overall])
+    root_standings = standings.create(:event => self, :discipline => Discipline[:overall].name)
     for category_name in [
       'Senior Men', 'Category 3 Men', 'Category 4/5 Men',
       'Senior Women', 'Category 3 Women', 'Category 4 Women', 

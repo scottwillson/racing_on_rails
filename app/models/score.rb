@@ -19,6 +19,10 @@ class Score < ActiveRecord::Base
   validates_presence_of :source_result, :competition_result, :points
   validates_numericality_of :points
   
+  def discipline
+    self.competition_result.race.standings.discipline
+  end
+  
   # Compare by points
   def <=>(other)
     other.points <=> points
