@@ -42,12 +42,12 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     CrossCrusadeSeriesStandings.recalculate(2007)
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series")
     overall_standings = series.standings.first
-    assert_equal(17, overall_standings.races.size, "Overall races")
+    assert_equal(18, overall_standings.races.size, "Overall races")
     
     CrossCrusadeSeriesStandings.recalculate(2007)
     assert_equal(1, series.standings(true).size, "Should add new Standings to parent Series after deleting old standings")
     overall_standings = series.standings.first
-    assert_equal(17, overall_standings.races.size, "Overall races")
+    assert_equal(18, overall_standings.races.size, "Overall races")
     
     assert(!overall_standings.notes.blank?, "Should have notes about rules")
 

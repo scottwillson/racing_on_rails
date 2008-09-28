@@ -29,9 +29,10 @@ class CrossCrusadeSeriesStandings < Standings
     races.create!(:category => Category.find_or_create_by_name("Beginner Women"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 35+"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 45+"))
-    races.create!(:category => Category.find_or_create_by_name("Beginner"))
+    races.create!(:category => Category.find_or_create_by_name("Beginner Men CCX"))
     races.create!(:category => Category.find_or_create_by_name("Singlespeed"))
     races.create!(:category => Category.find_or_create_by_name("Unicycle"))
+    races.create!(:category => Category.find_or_create_by_name("Clydesdale"))
   end
 
   # Race#place_results_by_points saves each Result
