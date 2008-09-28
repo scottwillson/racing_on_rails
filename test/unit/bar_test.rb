@@ -649,4 +649,29 @@ class BarTest < ActiveSupport::TestCase
     points = competition.points_for(result, team_size)
     assert_in_delta(28.5, points, 0.001, 'Points for third place with team of 2 and multiplier of 3')
   end
+
+  def test_count_category_4_5_results
+    category_4_5_men = categories(:men_4_5)
+    category_4_men = categories(:category_4_men)
+    category_5_men = categories(:category_5_men)
+
+    standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
+    cat_4_5_race = standings.races.create!(:category => category_4_5_men)
+    weaver = racers(:weaver)
+    cat_4_5_race.results.create!(:place => '4', :racer => weaver)
+    
+    Bar.recalculate
+    
+    current_year = Date.today.year
+    bar = Bar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    road_bar_standings = bar.standings.detect { |standings| standings.discipline == "Road" }
+    cat_4_road_bar = road_bar_standings.races.detect { |race| race.category == category_4_men }
+    assert_equal(1, cat_4_road_bar.results.size, "Cat 4 Overall BAR results")
+    cat_5_road_bar = road_bar_standings.races.detect { |race| race.category == category_5_men }
+    assert_equal(0, cat_5_road_bar.results.size, "Cat 5 Overall BAR results")
+    
+    weaver_result = cat_4_road_bar.results.detect { |result| result.racer == weaver }
+    assert_equal("1", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
+    assert_equal(1, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
+  end
 end

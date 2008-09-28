@@ -42,12 +42,21 @@ class Bar < Competition
     else
       race_disciplines = "'#{race.standings.discipline}'"
     end
+    
+    # Cat 4/5 is a special case. Can't config in database because it's a circular relationship.
+    category_ids = category_ids_for(race)
+    category_4_5_men = Category.find_by_name("Category 4/5 Men")
+    category_4_men = Category.find_by_name("Category 4 Men")
+    if category_4_5_men && category_4_men && race.category == category_4_men
+      category_ids << ", #{category_4_5_men.id}"
+    end
+    
     Result.find(:all,
                 :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                 :conditions => [%Q{place between 1 AND #{point_schedule.size - 1}
                   and events.type in ('SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries')
                   and events.sanctioned_by = "#{ASSOCIATION.short_name}"
-                  and categories.id in (#{category_ids_for(race)})
+                  and categories.id in (#{category_ids})
                   and (standings.discipline in (#{race_disciplines}) or (standings.discipline is null and events.discipline in (#{race_disciplines})))
                   and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
                   and events.date >= '#{date.year}-01-01' 
