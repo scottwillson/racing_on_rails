@@ -53,16 +53,20 @@ class MultiDayEvent < Event
              end
            end
   
-  def MultiDayEvent.find_all_by_year(year)
-    # Workaround Rails class loader behavior
-    WeeklySeries
-    start_of_year = Date.new(year, 1, 1)
-    end_of_year = Date.new(year, 12, 31)
-    return MultiDayEvent.find(
-      :all,
-      :conditions => ["date >= ? and date <= ? and type = ?", start_of_year, end_of_year, "MultiDayEvent"],
-      :order => "date"
-    )
+  def MultiDayEvent.find_all_by_year(year, discipline = nil)
+    conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
+
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      conditions.first << " and sanctioned_by = ?"
+      conditions << ASSOCIATION.short_name
+    end
+    
+    if discipline
+      conditions.first << " and discipline = ?"
+      conditions << discipline.name
+    end
+
+    MultiDayEvent.find(:all, :conditions => conditions, :order => "date")
   end
 
   # Create MultiDayEvent from several SingleDayEvents.

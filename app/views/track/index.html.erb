@@ -32,30 +32,6 @@
 
     </td>
     <td style="padding-left: 12px;">
-        <table class="base">
-      <caption><a href="http://#{STATIC_HOST}/schedule/2008/index.html">Velodrome Schedule</a></caption>
-      <tr>
-        <th colspan="2"></th>
-      </tr>
-      <tr>
-            <td colspan="2"><strong>Weekly Schedule 2008</strong></td>
-      <tr>
-        <td>Tuesday</td> <td>Masters/Juniors Track Races (6/3 - 8/26)&nbsp;</td>
-      </tr>
-      <tr>
-        <td>Wednesday</td> <td>Track Development Class (4/30 - 8/27)</td>
-      </tr>
-      <tr>
-        <td>Thursday</td> <td>Weekly Series (5/1 - 9/25)</td>
-      </tr>
-      <tr>
-        <td>Friday</td> <td>Fast Twitch Fridays (5/2 - 8/31)</td>
-      </tr>
-      <tr>
-        <td colspan="2"><small>Please check the <a href="http://#{STATIC_HOST}/track/schedule/2008/index.html">schedule page</a> details and exceptions.</small></td>          
-      </tr>
-      </table>
-      <br/>
       <%= upcoming_events_table(@upcoming_events,
                                 link_to("Velodrome Schedule", track_schedule_path), 
                                 "Please check the #{link_to("schedule page", track_schedule_path)} details and exceptions.")
