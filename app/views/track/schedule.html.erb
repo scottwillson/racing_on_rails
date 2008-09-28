@@ -1,0 +1,408 @@
+<% @page_title = "Alpenrose Velodrome Schedule" %>
+
+<div class="tabs">
+<%= link_to "Track Home", "http://#{STATIC_HOST}/track/index.html" %> |
+<%= link_to "History", "http://#{STATIC_HOST}/track/history/index.html" %> |
+<%= link_to "Information", "http://#{STATIC_HOST}/track/information/index.html" %> |
+<%= link_to "Records", "http://#{STATIC_HOST}/track/records/index.html" %> |
+<%= link_to "Schedule", "http://#{STATIC_HOST}/track/schedule/#{Date.today.year}/index.html" %> |
+</div>
+
+<!-- main content (2 columns + 1 empty column) -->
+<table cellspacing="0" border="0" cellpadding="0">
+  <tr valign="top">
+    <td align="center">
+      
+      <!-- Left-side cell for main content -->
+      <table bgcolor="#000000" cellspacing="0" border="0" cellpadding="1" width="300">
+        <tr>
+          <td colspan="3">
+             <%= image_tag "http://#{STATIC_HOST}/track/images/photos/points_qualifier.jpg", :border => 0, :size => "300x222", :alt => "AVC points qualifier" %>
+          </td>
+            </tr>
+            <tr bgcolor="black">
+              <td>&nbsp;</td>
+              <td><small><font color="#cccccc">Points qualifer during the 2001 Alpenrose Challenge.</font></small>
+          </td>
+              <td>&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+    <td width="24">&nbsp;</td>
+    <td>
+
+      <!-- Right-side -->
+      <!-- Velodrome Schedule -->
+      
+      <table cellspacing="0" class="base" border="0" cellpadding="0" align="center" class="base">
+        <caption>Schedule</caption>
+        <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Contact</th> 
+            <th>Phone</th>
+        </tr>
+        <% if !@events.blank? %>
+          <% @events.select { |e| (!e.respond_to?(:parent) || e.parent.nil?) && (e.class == SingleDayEvent || e.class == MultiDayEvent) }.sort_by(&:date).each do |event| %>
+            <tr>
+              <td><%= event.date_range_s(:short) %></td>
+              <td>
+                <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
+                <%= event.name unless event.flyer? %>
+              </td>
+              <td>
+                <%= link_to(event.promoter_name, event.promoter_email) if event.promoter_email %>
+                <%= event.promoter_name unless event.promoter_email %>
+              </td>
+              <td><%= event.promoter_phone %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td colspan="4"><small>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>.<br>
+            Call the velodrome during event hours to check on weather cancellations: 503-246-0330.</small></td>
+          </tr>
+        <% else %>
+          <tr>
+            <th colspan="4">
+              No events
+            </th>
+          </tr>
+        <% end %>        
+      </table>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3"><img src="http://#{STATIC_HOST}/../images/spacer.gif" height="6" width="1" /></td>
+  </tr>
+</table>
+
+
+<br /><br />
+<!-- Weekly Schedule -->
+      <table cellspacing="0" class="base" border="0" cellpadding="0" align="center" class="base">
+      
+    <caption>Weekly Racing Schedule</caption>
+  <tr>
+     <th>Day</th> <th width="12">&#160;</th> <th width="200">Event</th> <th width="12">&#160;</th> <th width="160">Time</th> <th width="12">&#160;</th> <th width="100">Contact</th> <th width="12">&#160;</th> <th width="100">Phone</th> <th width="12">&#160;</th> <th width="300">Notes</th>
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+     <td>Tuesday</td> <td width="12">&#160;</td> <td><a href="http://www.obra.org/track/flyers/2008/jr_masters_tues.html" class="obvious">Masters/Jr Track Races</a></td> <td width="12">&#160;</td> <td>6:30 pm until dusk</td> <td width="12">&#160;</td> <td><a href="mailto:steve@digitaldjservice.com">Steve Truesdale</a></td> <td width="12">&#160;</td> <td>503-232-1704 </td> <td width="12">&#160;</td> <td><small>June 3 through August 26 except 6/24 which falls during the Sixday</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+
+  <tr>
+     <td>Thursday</td> <td width="12">&#160;</td> <td><a href="http://www.obra.org/track/flyers/2008/thursdays.html" class="obvious">Alpenrose Thursday Series</a></td> <td width="12">&#160;</td> <td>6:30 pm until dusk</td> <td width="12">&#160;</td> <td><a href="mailto:mike.murray@obra.org">Mike Murray</a></td> <td width="12">&#160;</td> <td>503-661-5874</td> <td width="12">&#160;</td> <td><small>May 1 through September 25</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+     <td>Friday</td> <td width="12">&#160;</td> <td><a href="http://www.obra.org/track/flyers/2008/fast_twitch_fridays.html" class="obvious">Fast Twitch Fridays</a></td> <td width="12">&#160;</td> <td>6:30 pm until dusk</td> <td width="12">&#160;</td> <td><a href="mailto:bike-central@bike-central.com">Jen Featheringill</a></td> <td width="12">&#160;</td> <td>503-227-4439</td> <td width="12">&#160;</td> <td><small>May 2 through August 29 except 6/27, 7/11, 7/18, 8/8 which fall during the Sixday, OBRA Championships, Alpenrose Challenge and the Portland Twilight Criterium respectively</small></td>
+  </tr>
+
+
+</table>
+<br /><br />
+  
+  
+
+
+      <table cellspacing="0" class="base" border="0" cellpadding="0" align="center">
+  <caption>Weekly Instruction Schedule</caption>
+    <tr>
+      
+    <th width="75">Day</th>
+    <th width="12">&#160;</th>
+    <th width="200">Event</th>
+    <th width="12">&#160;</th>
+    <th width="160">Time</th>
+    <th width="12">&#160;</th>
+    <th width="100">Contact</th>
+    <th width="12">&#160;</th>
+    <th width="100">Phone</th>
+    <th width="12">&#160;</th>
+    <th width="300">Notes</th>
+  </tr> 
+<!-- 
+  <tr>
+    
+  </tr>
+  <tr>
+     <td>Monday</td> <td width="12">&#160;</td> <td>Kids on Track</td> <td width="12">&#160;</td> <td>10:00 am until 11:30 am</td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td><small>June 16 through July 7</small></td>
+  </tr>
+ -->
+<!-- 
+  <tr>
+    
+  </tr> 
+  <tr>
+     <td>Wednesday</td> <td width="12">&#160;</td> <td>Kids on Track</td> <td width="12">&#160;</td> <td>10:00 am until 11:30 am</td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td><small>June 18 through July 9</small></td>
+  </tr>
+ -->
+  <tr>
+    
+  </tr>
+
+  <tr>
+     <td>Wednesday</td> <td width="12">&#160;</td> <td><a href="http://www.obra.org/track/flyers/2008/wednesdays.html" class="obvious">Track Development Class</a></td> <td width="12">&#160;</td> <td>6:00 pm until dusk</td> <td width="12">&#160;</td> <td><a href="mailto:velodromeracing@yahoo.com">Steve Garcia</a></td> <td width="12">&#160;</td> <td>503-293-7247</td> <td width="12">&#160;</td> <td><small>April 30 through August 27 except 6/25 which falls during the Sixday</small></td>
+  </tr>
+ 
+<!-- 
+  <tr>
+    
+  </tr>
+  <tr>
+     <td>Friday</td> <td width="12">&#160;</td> <td>Kids on Track</td> <td width="12">&#160;</td> <td>10:00 am until 11:30 am</td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td><small>June 20 through July 11</small></td>
+  </tr>
+ -->
+
+
+</tr></table>
+<br /><br />
+
+
+      <table cellspacing="0" class="base" border="0" cellpadding="0" align="center">
+  <caption>Weekly Training Schedule</caption>
+    <tr>
+      
+    <th width="75">Day</th>
+    <th width="12">&#160;</th>
+    <th width="200">Event</th>
+    <th width="12">&#160;</th>
+    <th width="160">Time</th>
+    <th width="12">&#160;</th>
+    <th width="100">Contact</th>
+    <th width="12">&#160;</th>
+    <th width="100">Phone</th>
+    <th width="12">&#160;</th>
+    <th width="300">Notes</th>
+  </tr> 
+  <tr>
+    
+  </tr>
+  <tr>
+    
+    <td>Sunday</td>
+    <td width="12">&#160;</td>
+    <td>Brian Abers training</td>
+    <td width="12">&#160;</td>
+    <td>9:00 am to 10:30 am</td>
+    <td>&#160;</td>
+    <td><a href="mailto:thekilomonster@verizon.net">Brian Abers</a></td>
+    <td width="12">&#160;</td>
+    <td>503-591-1792</td>
+    <td width="12">&#160;</td>
+    <td><small> </small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+    
+    <td>Sunday</td>
+    <td width="12">&#160;</td>
+    <td>Bike Central training</td>
+    <td width="12">&#160;</td>
+    <td>10:30 am &ndash; 2:00 pm</td>
+    <td>&#160;</td>
+    <td><a href="mailto:msteven9751@yahoo.com">Mark Godfrey</a></td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>Year round</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+    <tr>
+    
+    <td>Sunday</td>
+    <td width="12">&#160;</td>
+    <td>Open training</td>
+    <td width="12">&#160;</td>
+    <td>2:30 pm &ndash; dusk</td>
+    <td>&#160;</td>
+    <td> </td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small> </small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+
+  <tr>
+    
+    <td>Monday</td>
+    <td width="12">&#160;</td>
+    <td><a href="http://www.bbcbike.com">BBC</a> practice</td>
+    <td width="12">&#160;</td>
+    <td>5:30 pm &ndash; dusk</td>
+    <td>&#160;</td>
+    <td><a href="mailto:phil@bbcbike.com">Phil Sanders</a></td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>April through Labor Day</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+    
+    <td>Monday</td>
+    <td width="12">&#160;</td>
+    <td>Team Rubicon training</td>
+    <td width="12">&#160;</td>
+    <td>5:00 pm &ndash; dusk</td>
+    <td>&#160;</td>
+    <td>Norrene Godfrey</td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>September</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+
+  <tr>
+    
+    <td>Tuesday</td>
+    <td width="12">&#160;</td>
+    <td>Bike Central training</td>
+    <td width="12">&#160;</td>
+    <td>5:00 pm until dusk</td>
+    <td>&#160;</td>
+    <td><a href="mailto:msteven9751@yahoo.com">Mark Godfrey</a></td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>May and September</small></td>
+  </tr>
+
+  <tr>
+    
+  </tr>
+
+  
+  <tr>
+     <td>Wednesday</td> <td width="12">&#160;</td> <td>Sum Bike Team</td> <td width="12">&#160;</td> <td>3:30 pm to 5:30 pm</td> <td width="12">&#160;</td> <td><a href="mailto:NRKnodel@aol.com">NRKnodel@aol.com</a></td> <td width="12">&#160;</td> <td></td> <td width="12">&#160;</td> <td><small>March through May</small></td>
+  </tr>
+
+
+  <tr>
+    
+  </tr>
+
+ 
+  <tr>
+    
+    <td>Wednesday</td>
+    <td width="12">&#160;</td>
+    <td>Team Rubicon training</td>
+    <td width="12">&#160;</td>
+    <td>5:00 pm &ndash; dusk</td>
+    <td>&#160;</td>
+    <td>Norrene Godfrey</td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>September</small></td>
+  </tr>
+  
+  <tr>
+    
+  </tr>
+
+  <tr>
+    
+    <td>Saturday</td>
+    <td width="12">&#160;</td>
+    <td><a href="http://www.bbcbike.com">BBC</a> practice</td>
+    <td width="12">&#160;</td>
+    <td>9:00 AM to 11:30 AM</td>
+    <td>&#160;</td>
+    <td><a href="mailto:phil@bbcbike.com">Phil Sanders</a></td>
+    <td width="12">&#160;</td>
+    <td>&#160;</td>
+    <td width="12">&#160;</td>
+    <td><small>April through Labor Day</small></td>
+  </tr>
+  <tr>
+    
+  </tr>
+
+  <tr>
+    
+    <td>Saturday</td>
+    <td width="12">&#160;</td>
+    <td>Madison training</td>
+    <td width="12">&#160;</td>
+    <td>11:30 AM to 1:00 PM</td>
+    <td>&#160;</td>
+    <td></td>
+    <td width="12">&#160;</td>
+    <td></td>
+    <td width="12">&#160;</td>
+    <td><small> </small></td>
+
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+    
+    <td>Saturday</td>
+    <td width="12">&#160;</td>
+    <td>Brian Abers training</td>
+    <td width="12">&#160;</td>
+    <td>1:00 PM to 3:00 PM</td>
+    <td>&#160;</td>
+    <td><a href="mailto:thekilomonster@verizon.net">Brian Abers</a></td>
+    <td width="12">&#160;</td>
+    <td>503-591-1792</td>
+    <td width="12">&#160;</td>
+    <td><small> </small></td>
+
+  </tr>
+  <tr>
+    
+  </tr>
+  <tr>
+    
+    <td>Saturday</td>
+    <td width="12">&#160;</td>
+    <td>CMG training</td>
+    <td width="12">&#160;</td>
+    <td>3:00 PM to 4:30 PM</td>
+    <td>&#160;</td>
+    <td> </td>
+    <td width="12">&#160;</td>
+    <td></td>
+    <td width="12">&#160;</td>
+    <td><small>May through Labor Day</small></td>
+  </tr>
+  <tr>
+    <td>Saturday</td>
+    <td width="12">&#160;</td>
+    <td>Cyclisme</td>
+    <td width="12">&#160;</td>
+    <td>4:30 PM to dusk</td>
+    <td>&#160;</td>
+    <td><a href="mailto:jfbenenate@yahoo.com">John Benenate</a></td>
+    <td width="12">&#160;</td>
+    <td></td>
+    <td width="12">&#160;</td>
+    <td></td>
+  </tr>
+
+</tr></table>
+  
