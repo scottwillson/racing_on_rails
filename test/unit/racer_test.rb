@@ -402,10 +402,10 @@ class RacerTest < ActiveSupport::TestCase
     racer = Racer.new
     assert(!racer.master?, 'Master?')
     
-    racer.date_of_birth = Date.new(29.years.ago.year, 1, 1)
+    racer.date_of_birth = Date.new((ASSOCIATION.masters_age - 1).years.ago.year, 1, 1)
     assert(!racer.master?, 'Master?')
 
-    racer.date_of_birth = Date.new(30.years.ago.year, 12, 31)
+    racer.date_of_birth = Date.new(ASSOCIATION.masters_age.years.ago.year, 12, 31)
     assert(racer.master?, 'Master?')
     
     racer.date_of_birth = Date.new(17.years.ago.year, 1, 1)

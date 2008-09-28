@@ -1,9 +1,9 @@
 --- 
-result: 
-numTestPasses: 
-numTestFailures: 
-numCommandFailures: 
-numCommandPasses: 
-numCommandErrors: 
-resultDir: ./vendor/plugins/selenium_on_rails/test/../test_result/default
-totalTime: 
+result: failed
+numTestPasses: "9"
+numTestFailures: "1"
+numCommandFailures: "0"
+numCommandPasses: "137"
+numCommandErrors: "1"
+resultDir: 
+totalTime: "54"

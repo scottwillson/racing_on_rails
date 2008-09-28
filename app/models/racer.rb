@@ -253,7 +253,7 @@ class Racer < ActiveRecord::Base
   # 30 years old or older
   def master?
     if date_of_birth
-      date_of_birth <= Date.new(30.years.ago.year, 12, 31)
+      date_of_birth <= Date.new(ASSOCIATION.masters_age.years.ago.year, 12, 31)
     end
   end
   
