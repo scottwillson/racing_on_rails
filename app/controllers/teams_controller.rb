@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   def index
-    @teams = Team.find(:all, :conditions => { :member => true })
+    @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
   end
   
   def show

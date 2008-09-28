@@ -14,4 +14,10 @@
     <th></th>
   </tr>
   <%= render :partial => "team", :collection => @teams.sort { |x, y| x.name.downcase <=> y.name.downcase || x <=> y } %>
+  
+  <% if @teams.empty? %>
+  <tr>
+    <td colspan="5">No members teams visible</td>
+  </tr>
+  <% end -%>
 </table>
