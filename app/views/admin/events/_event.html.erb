@@ -56,12 +56,24 @@
           </td>
         </tr>
         <tr>
+          <td class="field_label">Time:</td>
+          <td><%= text_field 'event', 'time' %></td>
+        </tr>
+        <tr>
           <td></td>
-          <td class="field_label" id="left"><%= check_box 'event', 'cancelled' %> Cancelled</td>
+          <td class="field_label left"><%= check_box 'event', 'cancelled' %> Cancelled</td>
         </tr>
         <tr>
           <td class="field_label">Discipline:</td>
           <td><%= select 'event', 'discipline', Discipline.find_all_names %></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="field_label left"><%= check_box 'event', 'instructional' %> Instructional</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td class="field_label left"><%= check_box 'event', 'practice' %> Practice</td>
         </tr>
         <tr>
           <td class="field_label">City:</td>
@@ -158,7 +170,7 @@
         </tr>
         <tr>
           <td width="100"></td>
-          <td width="100%" class="field_label" id="left"><%= check_box 'event', 'flyer_approved' %> Flyer Approved</td>
+          <td width="100%" class="field_label left"><%= check_box 'event', 'flyer_approved' %> Flyer Approved</td>
         </tr>
       </table>
     </td>

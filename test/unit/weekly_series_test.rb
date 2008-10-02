@@ -77,6 +77,18 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert_equal(-1, weekly_series.earliest_day_of_week(Date.new(2006, 7, 1)..Date.new(2006, 7, 2), true), 'earliest_day_of_week')
   end
   
+  def test_day_of_week
+    weekly_series = WeeklySeries.create!
+    weekly_series.events.create!(:date => Date.new(2006, 7, 3))
+    dates = Date.new(2006, 7, 1)..Date.new(2006, 7, 15)
+    assert_equal(1, weekly_series.day_of_week, 'day_of_week')
+
+    weekly_series.events.create!(:date => Date.new(2006, 7, 10))
+    weekly_series.events.create!(:date => Date.new(2006, 7, 11))
+    weekly_series.events.create!(:date => Date.new(2006, 7, 12))
+    assert_equal(1, weekly_series.day_of_week, 'day_of_week')
+  end
+  
   def test_friendly_class_name
     event = WeeklySeries.new
     assert_equal("Weekly Series", event.friendly_class_name, "friendly_class_name")

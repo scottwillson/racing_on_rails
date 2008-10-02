@@ -5,6 +5,9 @@
 #
 # Event subclasses all share the same database table via single table inheritence, 
 # so Event is not a true ActiveRecord abstract class. Event.abstract_class? returns false
+#
+# instructional: class or clinc
+# practice: training session
 class Event < ActiveRecord::Base
   before_validation :find_associated_records
   validate_on_create :validate_type

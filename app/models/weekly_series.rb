@@ -2,9 +2,18 @@
 # Final standings like Overall GC are associated with the parent WeeklySeries.
 class WeeklySeries < Series
   
-  # TODO Is this duplicaqted from Ruby core and standard lib?
+  # TODO Is this duplicated from Ruby core and standard lib?
   DAYS_OF_WEEK = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'] unless defined?(DAYS_OF_WEEK)
 
+  # 0-based. Doesn't handle multiple days of the week. Method names here are confusing.
+  def day_of_week
+    if events.empty?
+      -1
+    else
+      events.sort_by(&:date).first.date.wday
+    end
+  end
+  
   def earliest_day_of_week(date_range, reload = false)
     days_of_week(date_range, reload).min || -1
   end

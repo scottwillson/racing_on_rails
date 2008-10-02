@@ -17,8 +17,9 @@
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
 
-  PROPOGATED_ATTRIBUTES = %w{cancelled city discipline flyer flyer_approved name promoter_id 
-                             prize_list sanctioned_by state  velodrome_id
+  PROPOGATED_ATTRIBUTES = %w{ cancelled city discipline flyer flyer_approved 
+                              instructional name practice promoter_id 
+                              prize_list sanctioned_by state time velodrome_id
                              } unless defined?(PROPOGATED_ATTRIBUTES)
 
   validates_presence_of :name, :date

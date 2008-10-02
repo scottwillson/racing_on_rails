@@ -1,5 +1,6 @@
 module Admin::EventsHelper
   BAR_POINTS_AND_LABELS = [['None', 0], ['Normal', 1], ['Double', 2], ['Triple', 3]] unless defined?(BAR_POINTS_AND_LABELS)
+  LONG_DAYS_OF_WEEK = %w{ Sunday Monday Tuesday Wednesday Thursday Friday Saturday } unless defined?(LONG_DAYS_OF_WEEK)
   
   def bar_points_and_labels
     BAR_POINTS_AND_LABELS
@@ -22,5 +23,9 @@ module Admin::EventsHelper
       caption = nil
     end
     render :partial => 'events/discipline_upcoming', :locals => { :discipline => discipline, :dates => upcoming_events.dates, :caption => caption }
+  end
+  
+  def long_day_of_week(index)
+    LONG_DAYS_OF_WEEK[index]
   end
 end

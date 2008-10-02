@@ -1,0 +1,30 @@
+<% if !weekly_events.empty? %>
+  <table cellspacing="0" class="base">
+    <caption><%= caption %></caption>
+    <tr>
+       <th>Day</th>
+       <th width="200">Event</th>
+       <th width="160">Time</th>
+       <th width="100">Contact</th>
+       <th width="100">Phone</th>
+       <th width="300">Notes</th>
+    </tr>
+    <% weekly_events.sort_by(&:day_of_week).each do |event| %>
+    <tr>
+       <td><%= long_day_of_week(event.day_of_week) %></td>
+       <td>
+         <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
+         <%= event.name unless event.flyer? %>
+       </td>
+       <td><%= event.time %></td>
+       <td>
+         <%= link_to(event.promoter_name, event.promoter_email) if event.promoter_email %>
+         <%= event.promoter_name unless event.promoter_email %>
+       </td>
+       <td><%= event.promoter_phone %></td>
+       <td><small><%= event.notes %></small></td>
+    </tr>
+    <tr>
+    <% end -%>
+  </table>
+<% end -%>
