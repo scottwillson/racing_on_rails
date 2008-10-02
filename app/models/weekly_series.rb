@@ -8,7 +8,7 @@ class WeeklySeries < Series
   # 0-based. Doesn't handle multiple days of the week. Method names here are confusing.
   def day_of_week
     if events.empty?
-      -1
+      date.wday
     else
       events.sort_by(&:date).first.date.wday
     end

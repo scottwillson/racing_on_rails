@@ -87,6 +87,9 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     weekly_series.events.create!(:date => Date.new(2006, 7, 11))
     weekly_series.events.create!(:date => Date.new(2006, 7, 12))
     assert_equal(1, weekly_series.day_of_week, 'day_of_week')
+    
+    weekly_series = WeeklySeries.create!(:date => Date.new(2006, 7, 4))
+    assert_equal(2, weekly_series.day_of_week, "day_of_week with no children")
   end
   
   def test_friendly_class_name
