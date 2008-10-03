@@ -1,11 +1,11 @@
 <% @page_title = "Alpenrose Velodrome Schedule" %>
 
 <div class="tabs">
-<%= link_to "Track Home", "http://#{STATIC_HOST}/track/index.html" %> |
-<%= link_to "History", "http://#{STATIC_HOST}/track/history/index.html" %> |
-<%= link_to "Information", "http://#{STATIC_HOST}/track/information/index.html" %> |
-<%= link_to "Records", "http://#{STATIC_HOST}/track/records/index.html" %> |
-<%= link_to "Schedule", "http://#{STATIC_HOST}/track/schedule/#{Date.today.year}/index.html" %> |
+  <%= link_to "Track Home", track_path %> |
+  <%= link_to "History", "http://#{STATIC_HOST}/track/history/index.html" %> |
+  <%= link_to "Information", "http://#{STATIC_HOST}/track/information/index.html" %> |
+  <%= link_to "Records", "http://#{STATIC_HOST}/track/records/index.html" %> |
+  <%= link_to "Schedule", track_schedule_path %> |
 </div>
 
 <!-- main content (2 columns + 1 empty column) -->
@@ -71,9 +71,6 @@
       </table>
     </td>
     <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td colspan="3"><img src="http://#{STATIC_HOST}/../images/spacer.gif" height="6" width="1" /></td>
   </tr>
 </table>
 
