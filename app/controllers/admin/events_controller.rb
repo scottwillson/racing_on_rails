@@ -354,22 +354,28 @@ class Admin::EventsController < ApplicationController
         page.replace_html("promoter_phone", promoter.phone)
         page.replace_html("edit_promoter_link", 
           link_to(
-							'Edit', 
-							:controller => 'promoters', 
-							:action => 'show', 
-							:id => promoter.id,
-							:event_id => params['id'])
-					)
-				page.visual_effect(:appear, 'promoter_email', :duration => 0.5)
-				page.visual_effect(:appear, 'promoter_phone', :duration => 0.5)
-				page.visual_effect(:appear, 'edit_promoter_link', :duration => 0.5)
+              'Edit', 
+              :controller => 'promoters', 
+              :action => 'show', 
+              :id => promoter.id,
+              :event_id => params['id'])
+          )
+        page.visual_effect(:appear, 'promoter_email', :duration => 0.5)
+        page.visual_effect(:appear, 'promoter_phone', :duration => 0.5)
+        page.visual_effect(:appear, 'edit_promoter_link', :duration => 0.5)
       end
     end
   end
   
   def first_aid
     @year = Date.today.year
-    @events = SingleDayEvent.find(:all, :conditions => ['date >= CURDATE()'], :order => 'date asc')
+    @past_events = params[:past_events] || false
+    if @past_events
+      conditions = ['date >= ?', Date.today.beginning_of_year]
+    else
+      conditions = ['date >= CURDATE()']
+    end
+    @events = SingleDayEvent.find(:all, :conditions => conditions, :order => 'date asc')
   end
   
   def first_aid_provider_email
@@ -379,7 +385,7 @@ class Admin::EventsController < ApplicationController
       :order => 'date asc')
 
     rows = events.collect do |event|
-    	[event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
+      [event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
     end
     grid = Grid.new(rows)
     grid.truncate_rows

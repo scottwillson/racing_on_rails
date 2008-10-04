@@ -1,5 +1,9 @@
 <% @page_title = 'First Aid' %>
 
+<% form_tag({}, { :method => :get }) do %>
+  <%= check_box_tag "past_events", "true", @past_events, :onclick => "form.submit();" %>&nbsp;Show past events
+<% end -%>
+
 <%= table :events, "#{Date.today.year} First Aid" do |t|
   t.column :first_aid_provider, :title => "Provider", :editable => true
   t.column :date, :format => :short_with_week_day

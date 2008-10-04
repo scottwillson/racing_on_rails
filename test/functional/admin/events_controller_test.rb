@@ -546,6 +546,16 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_template("admin/events/first_aid")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
+    assert_equal(false, assigns["past_events"], "past_events")
+  end
+  
+  def test_first_aid_update_options
+    get(:first_aid, :past_events => true)
+    assert_response(:success)
+    assert_template("admin/events/first_aid")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+    assert_equal(true, assigns["past_events"], "past_events")
   end
   
   def test_update_single_day_to_multi_day
