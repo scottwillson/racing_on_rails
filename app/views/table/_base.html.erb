@@ -1,17 +1,30 @@
-<%- unless collection.empty? %>
 <table class="base">
-  <% collection.each do |member| %>
+  <caption><%= caption %></caption>
   <tr>
-    <td><%= member.name %></td>
+    <%- columns.each do |column| %>
+    <th><%= column.title %></th>
+    <% end -%>
+  </tr>
+  <% collection.each do |record| %>
+  <tr class="<%= cycle("even", "odd") %>">
+    <%- columns.each do |column| -%>
+    <td><%= if column.format
+              record.send(column.attribute).to_s(column.format)
+            else
+              if column.link?
+                link_to(record.send(column.attribute), eval("admin_#{record_symbol}_path(record)"))
+              elsif column.editable?
+                eval("@#{record_symbol} = record"); in_place_editor_field record_symbol, column.attribute
+              else
+                record.send(column.attribute)
+              end
+            end -%></td>
+    <%- end -%>
+  </tr>
+  <% end -%>
+  <%- if collection.empty? %>
+  <tr>
+    <td colspan="<%= columns.size %>">Empty</td>
   </tr>
   <% end -%>
 </table>
-<% end -%>
-
-<%- if collection.empty? %>
-<table class="base">
-  <tr>
-    <td>Empty</td>
-  </tr>
-</table>
-<% end -%>

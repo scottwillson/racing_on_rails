@@ -1,36 +1,12 @@
 <% @page_title = 'First Aid' %>
 
-<%#= table :events do |t|
-  t.column "Date"
+<%= table :events, "#{Date.today.year} First Aid" do |t|
+  t.column :first_aid_provider, :title => "Provider", :editable => true
+  t.column :date, :format => :short_with_week_day
+  t.column :name, :link => true
+  t.column :city_state, :title => "Location"
 end -%>
 
 <div>
   <%= link_to 'Email', :action => 'first_aid_provider_email' %>
 </div>
-<table cellspacing="0" class="base">
-  <caption><%= @year %> First Aid</caption>
-    <tr class='column_titles'>
-      <th>Provider</th>
-      <th>Date</th>
-      <th>Event</th>
-      <th>Location</th>
-    </tr>
-<%- @events.each do |event| -%>
-  <tr class="<%= cycle("even", "odd") %>">
-    <%- if event.first_aid_provider == 'Needed' -%>
-    <td style="font-weight: bold;">
-    <%- else -%>
-    <td>
-    <%- end -%>
-      <%= @event = event; in_place_editor_field :event, 'first_aid_provider' %>
-    </td>
-    <td>
-      <%= event.date.strftime("%a %m/%d") if event.date -%>
-    </td> 
-    <td class="link">
-      <%= link_to event.name, :action => 'show', :id => @event.id %>
-    </td> 
-    <td><%= event.city_state -%></td>
-  </tr>
-<%- end -%>
-</table>

@@ -15,6 +15,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/admin/promoters/:id", :controller => 'admin/promoters', :action => "show", :requirements => {:id => /\d+/}
 
   map.namespace(:admin) do |admin|
+    admin.resources :events
     admin.resources :racers, :collection => { :cards => :get, :duplicates => :get, :mailing_labels => :get, :no_mailing_labels => :get, :no_cards => :get }, 
                              :member => { :card => :get }
     admin.resources :teams

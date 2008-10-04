@@ -1,0 +1,1 @@
+Date::DATE_FORMATS[:short_with_week_day] = "%a %m/%d"
