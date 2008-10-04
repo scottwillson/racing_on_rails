@@ -205,14 +205,17 @@ class TeamTest < ActiveSupport::TestCase
     team.name = "Tecate"
     team.save!
     assert_equal(1, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "aliases")
     
     team.name = "Tecate Una Mas"
     team.save!
     assert_equal(1, team.historical_names(true).size, "historical_names")
+    assert_equal(2, team.aliases(true).size, "aliases")
     
     team.name = "Tecate-¡Una Mas!"
     team.save!
     assert_equal(1, team.historical_names(true).size, "historical_names")
+    assert_equal(3, team.aliases(true).size, "aliases")
     
     assert_equal("Tecate-¡Una Mas!", team.name, "New team name")
     assert_equal("Twin Peaks", team.historical_names.first.name, "Old team name")

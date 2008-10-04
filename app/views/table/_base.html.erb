@@ -1,0 +1,17 @@
+<%- unless collection.empty? %>
+<table class="base">
+  <% collection.each do |member| %>
+  <tr>
+    <td><%= member.name %></td>
+  </tr>
+  <% end -%>
+</table>
+<% end -%>
+
+<%- if collection.empty? %>
+<table class="base">
+  <tr>
+    <td>Empty</td>
+  </tr>
+</table>
+<% end -%>
