@@ -3,7 +3,7 @@
   <tr>
     <%- table.columns.each do |column| %>
     <th><%= link_to_function(column.title) do |page|
-      page.redirect_to(eval("admin_#{controller.controller_name}_path(:order => '#{column.order_param}')"))
+      page.redirect_to(eval("admin_#{controller.controller_name}_path(:overwrite_params => { :order => '#{column.order_param}' })"))
     end %></th>
     <% end -%>
   </tr>

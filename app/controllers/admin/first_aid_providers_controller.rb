@@ -17,17 +17,12 @@ class Admin::FirstAidProvidersController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.js { render :partial => "table" }
+      format.text { email }
     end
   end
 
   def email
-    events = SingleDayEvent.find(
-      :all, 
-      :conditions => ['date >= CURDATE()'], 
-      :order => 'date asc')
-
-    rows = events.collect do |event|
+    rows = @events.collect do |event|
       [event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
     end
     grid = Grid.new(rows)

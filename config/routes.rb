@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :first_aid_providers
     admin.resources :racers, :collection => { :cards => :get, :duplicates => :get, :mailing_labels => :get, :no_mailing_labels => :get, :no_cards => :get }, 
                              :member => { :card => :get }
-    (admin.resource :table) if RAILS_ENV == "test"
+    admin.resources(:tables) if RAILS_ENV == "test"
     admin.resources :teams
     admin.resources :velodromes
   end

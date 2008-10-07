@@ -1,15 +1,15 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require File.dirname(__FILE__) + "/table_controller"
+require File.dirname(__FILE__) + "/tables_controller"
 
 # Need some shenanigans to set up proper context for the helper.
 module TableHelper
   class TableHelperTest < ActionController::TestCase
-    tests TableController
-  
+    tests Admin::TablesController
+    
     def test_empty_table
       use_assigns([])
       use_inline_template("<%= table(:events) %>")
-      get(:table)
+      get(:index)
       assert_tag(:tag => "table", :children => { :count => 2, :only => { :tag => "tr" } })
       assert(@response.body["Empty"], "Empty table should include 'empty'")
     end
@@ -17,7 +17,7 @@ module TableHelper
     def test_one_row
       use_assigns([SingleDayEvent.create!])
       use_inline_template("<%= table(:events) %>")
-      get(:table)
+      get(:index)
       assert_tag(:tag => "table", :children => { :count => 2, :only => { :tag => "tr" } })
       assert(!@response.body["Empty"], "Empty table should not include 'empty'")
     end
@@ -29,7 +29,7 @@ module TableHelper
       ]
       use_assigns(events)
       use_inline_template("<%= table(:events) do |t| t.column :name end %>")
-      get(:table)
+      get(:index)
       assert_tag(:tag => "table", :children => { :count => 3, :only => { :tag => "tr" } })
       assert_tag(:tag => "tr", :children => { :count => 1, :only => { :tag => "td" } })
       assert_tag(:tag => "th", :content => "Name")
@@ -51,7 +51,7 @@ module TableHelper
                                    t.column :city_state, :title => 'Location'
                                  end %>}
       )
-      get(:table)
+      get(:index)
       assert_tag(:tag => "table", :children => { :count => 3, :only => { :tag => "tr" } })
       assert_tag(:tag => "tr", :children => { :count => 4, :only => { :tag => "td" } })
       assert_tag(:tag => "th", :content => "Provider")
@@ -70,7 +70,7 @@ module TableHelper
     def test_caption
       use_assigns([])
       use_inline_template("<%= table(:events, 'My Table Caption') %>")
-      get(:table)
+      get(:index)
       assert_tag(:tag => "caption", :content => "My Table Caption")
     end
   
