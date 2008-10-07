@@ -538,26 +538,6 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal(promoters(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
   end
   
-  def test_first_aid
-    opts = {:controller => "admin/events", :action => "first_aid"}
-    assert_routing("/admin/events/first_aid", opts)
-    get(:first_aid)
-    assert_response(:success)
-    assert_template("admin/events/first_aid")
-    assert_not_nil(assigns["events"], "Should assign events")
-    assert_not_nil(assigns["year"], "Should assign year")
-    assert_equal(false, assigns["past_events"], "past_events")
-  end
-  
-  def test_first_aid_update_options
-    get(:first_aid, :past_events => true)
-    assert_response(:success)
-    assert_template("admin/events/first_aid")
-    assert_not_nil(assigns["events"], "Should assign events")
-    assert_not_nil(assigns["year"], "Should assign year")
-    assert_equal(true, assigns["past_events"], "past_events")
-  end
-  
   def test_update_single_day_to_multi_day
     for type in [MultiDayEvent, Series, WeeklySeries]
       event = events(:banana_belt_1)
@@ -818,5 +798,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
     event = events(:series_parent)
     post(:add_children, :parent_id => event.to_param)
     assert_redirected_to(:action => :show, :id => event.to_param)
+  end
+  
+  def test_index
+    get(:index)
+    assert_response(:success)
+    assert_not_nil(assigns("events"), "Should assign :events")
   end
 end

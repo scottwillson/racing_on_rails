@@ -1,20 +1,23 @@
-<table class="base">
-  <caption><%= caption %></caption>
+<table class="base" id="<%= table.collection_symbol %>">
+  <caption><%= table.caption %></caption>
   <tr>
-    <%- columns.each do |column| %>
-    <th><%= column.title %></th>
+    <%- table.columns.each do |column| %>
+    <th><%= link_to_function(column.title) do |page|
+      page.redirect_to(eval("admin_#{controller.controller_name}_path(:order => '#{column.order_param}')"))
+    end %></th>
     <% end -%>
   </tr>
-  <% collection.each do |record| %>
+
+  <% table.collection.each do |record| %>
   <tr class="<%= cycle("even", "odd") %>">
-    <%- columns.each do |column| -%>
+    <%- table.columns.each do |column| -%>
     <td><%= if column.format
               record.send(column.attribute).to_s(column.format)
             else
-              if column.link?
-                link_to(record.send(column.attribute), eval("admin_#{record_symbol}_path(record)"))
+              if column.link? || column.attribute == :name
+                link_to(record.send(column.attribute), eval("admin_#{table.record_symbol}_path(record)"))
               elsif column.editable?
-                eval("@#{record_symbol} = record"); in_place_editor_field record_symbol, column.attribute
+                eval("@#{table.record_symbol} = record"); in_place_editor_field table.record_symbol, column.attribute
               else
                 record.send(column.attribute)
               end
@@ -22,9 +25,11 @@
     <%- end -%>
   </tr>
   <% end -%>
-  <%- if collection.empty? %>
+
+  <%- if table.collection.empty? %>
   <tr>
-    <td colspan="<%= columns.size %>">Empty</td>
+    <td colspan="<%= table.columns.size %>">Empty</td>
   </tr>
   <% end -%>
+
 </table>
