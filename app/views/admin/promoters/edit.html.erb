@@ -38,7 +38,7 @@
         </table>
       </td>
       <td>
-        <%= table(:events, :collection => @promoter.events(true), :sort_by => :date, :embedded => true) do |t|
+        <%= table(:events, :collection => @promoter.events(true), :sort_by => :date, :sort_direction => "desc", :embedded => true) do |t|
           t.column :date, :format => :long
           t.column :name
         end -%>
