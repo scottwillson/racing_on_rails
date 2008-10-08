@@ -567,14 +567,15 @@ class Admin::RacersControllerTest < ActionController::TestCase
       "number_issuer_id"=>["2", "2"], "number_value"=>["104", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2004',
       "commit"=>"Save"})
     
-    assert_response(:success)
+    assert_response(:redirect)
     assert_not_nil(assigns['racer'], "Should assign racer")
-    assert(!assigns['racer'].errors.empty?, "Racer should have errors")
+    assert(assigns['racer'].errors.empty?, "Racer should not have errors")
     
-    knowlson = Racer.find(:first, :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
-    assert_not_nil(knowlson, 'Knowlson should not have be created')
-    race_numbers = knowlson.race_numbers
-    assert_equal(1, race_numbers.size, 'Knowlson race numbers')
+    knowlsons = Racer.find(:all, :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
+    assert_equal(1, knowlsons.size, "Should have two Knowlsons")
+    knowlsons.each do |knowlson|
+      assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
+    end
   end
     
   def test_update

@@ -1,6 +1,8 @@
 # Number used to identify a Racer during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
-# which is usually a racing Association, but sometimes an Event. RaceNumbers are also restricted
-# by Discipline and year.
+# which is usually a racing Association, but sometimes an Event.
+#
+# In the past, RaceNumbers had to be unique for NumberIssuer, Discipline and year. But we allow 
+# duplicates now.
 #
 # +Value+ is the number on the physical number plate. RaceNumber values can have letters and numbers
 #
@@ -90,9 +92,9 @@ class RaceNumber < ActiveRecord::Base
     self.year > 1800
   end
   
-  # Checks that another Racer doesn't already have this number.
+  # Checks that Racer doesn't already have this number.
   #
-  # Numbers are unique by value, Discipline, NumberIssuer, and year.
+  # Numbers are unique by value, Racer, Discipline, NumberIssuer, and year.
   #
   # Skips check if +racer+ is not set. Typically, this happens when
   # importing a Result that has a +number+, but no +racer+
@@ -106,38 +108,24 @@ class RaceNumber < ActiveRecord::Base
       return false 
     end
     
-    return true if racer.nil? || _discipline == Discipline[:cyclocross]
+    return true if racer.nil?
   
-    if ASSOCIATION.gender_specific_numbers && !racer.gender.blank?
-      existing_numbers = RaceNumber.find_by_sql([%q{
-        SELECT *
-        FROM race_numbers 
-        join racers ON racers.id = race_numbers.racer_id 
-        WHERE (value=? and discipline_id=? and number_issuer_id=? and year=? and racers.gender=? and racers.id <> ?)}, 
-        value, discipline.id, number_issuer.id, year, racer.gender, racer.id]
-      )
+    if new_record?
+      existing_numbers = RaceNumber.find(
+        :all,
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id = ?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], racer.id])
     else
-      if new_record?
-        existing_numbers = RaceNumber.find(
-          :all,
-          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id <> ?', 
-          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], racer.id])
-      else
-        existing_numbers = RaceNumber.find(
-          :all,
-          :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>?', 
-          self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id])
-      end
+      existing_numbers = RaceNumber.find(
+        :all,
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and racer_id = ?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, racer.id])
     end
       
     unless existing_numbers.empty?
-      if racer
-        racer_id = racer.id
-      else
-        racer_id = nil
-      end
-      errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number for #{existing_numbers.first.racer.name}.")
-      racer.errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number for #{existing_numbers.first.racer.name}.")
+      racer_id = racer.id
+      errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
+      racer.errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
       if existing_numbers.size > 1
         logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
       end

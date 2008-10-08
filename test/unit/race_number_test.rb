@@ -31,9 +31,9 @@ class RaceNumberTest < ActiveSupport::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => disciplines(:road))
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
-    # dupes not OK if different racer 
-    assert(RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Same racer, same value')
-    assert(!RaceNumber.new(:racer => racers(:molly), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Different racers, same value')
+    # dupes OK if different racer 
+    assert(RaceNumber.new(:racer => alice, :value => '999', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Same racer, same value')
+    assert(RaceNumber.new(:racer => racers(:molly), :value => '999', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'Different racers, same value')
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?, 'No value')
@@ -62,8 +62,18 @@ class RaceNumberTest < ActiveSupport::TestCase
     race_number.save!
   end
 
+  def test_cannot_create_exact_same_number_for_racer
+    alice = racers(:alice)
+    obra = NumberIssuer.find_or_create_by_name('OBRA')
+
+    RaceNumber.create!(:racer => alice, :value => '876', :year => 2001, :number_issuer => obra, :discipline => disciplines(:cyclocross))
+    number = RaceNumber.create(:racer => alice, :value => '876', :year => 2001, :number_issuer => obra, :discipline => disciplines(:cyclocross))
+    assert(!number.valid?, "Should not be able to create two of the exact same numbers")
+  end  
+
   def test_create_cyclocross
     alice = racers(:alice)
+    
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     race_number = RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
     assert_equal(alice, race_number.racer, 'New number racer')
@@ -79,8 +89,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     RaceNumber.create!(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:track))
     
     # dupes always OK with cyclocross, even if different racer 
-    assert(RaceNumber.new(:racer => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Same racer, same value')
-    assert(RaceNumber.new(:racer => racers(:molly), :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Different racers, same value')
+    assert(RaceNumber.new(:racer => alice, :value => '9000', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Same racer, same value')
+    assert(RaceNumber.new(:racer => racers(:molly), :value => '9000', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'Different racers, same value')
     
     # invalid because missing fields
     assert(!RaceNumber.new(:racer => alice, :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross)).valid?, 'No value')
@@ -180,7 +190,7 @@ class RaceNumberTest < ActiveSupport::TestCase
       assert(race_number.valid?, "Default non-gender-specific number: #{race_number.errors.full_messages}")
 
       race_number = RaceNumber.new(:racer => alice, :value => '200')
-      assert(!race_number.valid?, 'Dupe number for different gender should not be valid')
+      assert(race_number.valid?, 'Dupe number for different gender should be valid')
 
       original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
       ASSOCIATION.gender_specific_numbers = true
@@ -189,7 +199,7 @@ class RaceNumberTest < ActiveSupport::TestCase
       assert(race_number.valid?, 'Dupe number for different gender should be valid')
 
       race_number = RaceNumber.new(:racer => racers(:molly), :value => '200')
-      assert(!race_number.valid?, 'Dupe number for same gender should not be valid')
+      assert(race_number.valid?, 'Dupe number for same gender should be valid')
     ensure
       ASSOCIATION.gender_specific_numbers = original_gender_specific_numbers
     end
