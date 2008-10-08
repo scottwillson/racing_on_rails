@@ -24,4 +24,13 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
     assert_not_nil(assigns["year"], "Should assign year")
     assert_equal(true, assigns["past_events"], "past_events")
   end
+
+  def test_index_sorting
+    get(:index, :sort_by => "promoter_name", :sort_direction => "desc")
+    assert_response(:success)
+    assert_template("admin/first_aid_providers/index")
+    assert_not_nil(assigns["events"], "Should assign events")
+    assert_not_nil(assigns["year"], "Should assign year")
+    assert_equal(false, assigns["past_events"], "past_events")
+  end
 end

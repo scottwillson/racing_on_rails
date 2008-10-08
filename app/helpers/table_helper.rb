@@ -34,10 +34,11 @@ module TableHelper
       return if sort_by.blank?
       
       sort_by.split(",").each do |sort_attribute|
-        @collection = collection.sort_by(&sort_attribute.to_sym)
+        sort_attribute_symbol = sort_attribute.to_sym
+        collection.sort! { |x, y| (x.send(sort_attribute_symbol) || "") <=> (y.send(sort_attribute_symbol) || "") }
       end
         
-      @collection.reverse! if sort_direction == "desc"
+      collection.reverse! if sort_direction == "desc"
     end
   end
 
