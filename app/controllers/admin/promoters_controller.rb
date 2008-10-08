@@ -18,7 +18,7 @@ class Admin::PromotersController < ApplicationController
   # * id
   # === Assigns
   # * promoter
-  def show
+  def edit
     @promoter = Promoter.find(params['id'])
     remember_event
   end
@@ -26,32 +26,48 @@ class Admin::PromotersController < ApplicationController
   def new
     @promoter = Promoter.new
     remember_event
-    render(:template => 'admin/promoters/show')
+    render(:action => :edit)
   end
 
+  def create
+    begin
+      remember_event
+      @promoter = Promoter.create(params['promoter'])
+      if @promoter.errors.empty?
+        if @event
+          redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
+        else
+          redirect_to(edit_admin_promoter_path(@promoter))
+        end
+      else
+        render(:action => :edit)
+      end
+    rescue Exception => e
+      logger.error(e)
+      flash['warn'] = e.message
+      render(:action => :edit)
+    end
+  end
+  
   # Update new (no :id param) or existing Promoter
   # No duplicate names
   def update
     begin
       remember_event
-      if params['id'].blank?
-        @promoter = Promoter.create(params['promoter'])
-      else
-        @promoter = Promoter.update(params['id'], params['promoter'])
-      end
+      @promoter = Promoter.update(params['id'], params['promoter'])
       if @promoter.errors.empty?
         if @event
-          redirect_to(:action => :show, :id => @promoter.id, :event_id => @event.id)
+          redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
         else
-          redirect_to(:action => :show, :id => @promoter.id)
+          redirect_to(edit_admin_promoter_path(@promoter))
         end
       else
-        render(:template => 'admin/promoters/show')
+        render(:action => :edit)
       end
     rescue Exception => e
       logger.error(e)
       flash['warn'] = e.message
-      render(:template => 'admin/promoters/show')
+      render(:action => :edit)
     end
   end
   

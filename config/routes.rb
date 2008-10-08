@@ -11,12 +11,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/admin/categories/:id", :controller => "admin/categories", :action => "index", :requirements => {:id => /\d+/}
 
-  map.connect "/admin/promoters", :controller => 'admin/promoters', :action => "index"
-  map.connect "/admin/promoters/:id", :controller => 'admin/promoters', :action => "show", :requirements => {:id => /\d+/}
-
   map.namespace(:admin) do |admin|
     admin.resources :events
     admin.resources :first_aid_providers
+    admin.resources :promoters
     admin.resources :racers, :collection => { :cards => :get, :duplicates => :get, :mailing_labels => :get, :no_mailing_labels => :get, :no_cards => :get }, 
                              :member => { :card => :get }
     admin.resources(:tables) if RAILS_ENV == "test"

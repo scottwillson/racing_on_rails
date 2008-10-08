@@ -9,7 +9,7 @@ module TableHelper
     end
       
     def test_new_with_args
-      table = Table.new(:racers, "Members")
+      table = Table.new(:racers, [], :caption => "Members")
       assert_not_nil(table.columns, "columns")
       assert_equal(:racers, table.collection_symbol, "collection_symbol")
       assert_equal(:racer, table.record_symbol, "record_symbol")

@@ -1,32 +1,9 @@
-<% @page_title = 'Admin: Promoters' %>
+<%= table do |t|
+  t.column :name, :link_to => :edit
+  t.column :phone
+  t.column :email
+end -%>
 
-<div align="center">
-
-<table>
-  <tr>
-    <td>
-      <table class="base">
-            <tr>
-          <th></th>
-              <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-            </tr>
-        <%= render :partial => "promoter", :collection => @promoters %>
-        <% if @promoters.empty? %>
-        <tr valign="top">
-          <td colspan="4" width="200" class="not_found">No promoters found</td>
-        </tr>
-        <% end %>
-        <tr valign="top" id="new_row">
-          <td colspan="4"></td>
-        </tr>
-      </table>
-      <div align="left">
-        <%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %>
-      </div>
-    </td>
-  </tr>
-</table>
-
+<div align="left">
+  <%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %>
 </div>

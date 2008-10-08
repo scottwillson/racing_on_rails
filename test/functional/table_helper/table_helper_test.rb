@@ -69,12 +69,11 @@ module TableHelper
     # TODO test bad params raise helpful error
     def test_caption
       use_assigns([])
-      use_inline_template("<%= table(:events, 'My Table Caption') %>")
+      use_inline_template("<%= table(:events, :caption => 'My Table Caption') %>")
       get(:index)
       assert_tag(:tag => "caption", :content => "My Table Caption")
     end
-  
-  
+    
     def use_assigns(test_assigns)
       @controller.test_assigns = test_assigns
     end

@@ -6,7 +6,7 @@
   <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
 <% end -%>
 
-<%= table(:events, "#{Date.today.year} First Aid") do |t|
+<%= table(:events, :caption => "#{Date.today.year} First Aid") do |t|
   t.column :first_aid_provider, :title => "Provider", :editable => true
   t.column :date, :format => :short_with_week_day
   t.column :name

@@ -1,20 +1,36 @@
-<table class="base" id="<%= table.collection_symbol %>">
-  <caption><%= table.caption %></caption>
+<table class="<%= 
+  if table.embedded?
+    "embedded #{controller.controller_name}_#{table.collection_symbol}"
+  else
+    "base #{table.collection_symbol}"
+  end
+%>">
+  <% unless table.embedded? %><caption><%= table.caption %></caption><% end %>
   <tr>
     <%- table.columns.each do |column| %>
-    <th><%= link_to_function(column.title) do |page|
+    <th class="<%= column.attribute %>"><%= link_to_function(column.title) do |page|
       page.redirect_to(eval("admin_#{controller.controller_name}_path(:overwrite_params => { :sort_by => '#{column.sort_by.join(',')}', :sort_direction => '#{column.sort_direction}' })"))
-    end %></th>
+    end unless table.embedded? -%>
+    <%= if table.embedded?
+          if column.attribute == :name
+            table.record_symbol.to_s.titleize
+          else
+            column.title 
+          end 
+        end
+    -%></th>
     <% end -%>
   </tr>
 
   <% table.collection.each do |record| %>
-  <tr class="<%= cycle("even", "odd") %>">
+  <tr class="<%= cycle("even", "odd") %>" id="<%= "#{table.record_symbol}_#{record.id}_row" %>">
     <%- table.columns.each do |column| -%>
-    <td><%= if column.format
+    <td class="<%= column.attribute %>"><%= if column.format
               record.send(column.attribute).to_s(column.format)
             else
-              if column.link? || column.attribute == :name
+              if column.link_to_edit?
+                link_to(record.send(column.attribute), eval("edit_admin_#{table.record_symbol}_path(record)"))
+              elsif column.link_to_show?
                 link_to(record.send(column.attribute), eval("admin_#{table.record_symbol}_path(record)"))
               elsif column.editable?
                 eval("@#{table.record_symbol} = record"); in_place_editor_field table.record_symbol, column.attribute

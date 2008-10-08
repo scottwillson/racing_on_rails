@@ -1,21 +1,23 @@
 module TableHelper
-  def table(collection_symbol, caption = nil, &block)
-    table = Table.new(collection_symbol, assigns[collection_symbol.to_s], caption, params[:sort_by] || "", params[:sort_direction])
+  def table(collection_symbol = controller.controller_name.to_sym, options = {}, &block)
+    table = Table.new(collection_symbol, options[:collection] || assigns[collection_symbol.to_s], options)
     yield(table) if block
     table.sort!
     render(:partial => "table/base", :locals => { :table => table })
   end  
   
   class Table
-    attr_reader :caption, :columns, :collection, :collection_symbol, :record_symbol, :sort_by, :sort_direction
+    attr_reader :caption, :columns, :collection, :collection_symbol, :embedded, :record_symbol, :sort_by, :sort_direction
     
-    def initialize(collection_symbol, collection = [], caption = collection_symbol.to_s.titleize, sort_by = "", sort_direction = "")
-      @caption = caption
+    def initialize(collection_symbol, collection = [], options = {})
+      @caption = options[:caption] || collection_symbol.to_s.titleize
       @collection = collection
       @collection_symbol = collection_symbol
+      @embedded = options[:embedded] || false
       @record_symbol = collection_symbol.to_s.singularize.to_sym
-      @sort_by = sort_by
-      @sort_direction = sort_direction
+      @sort_by = options[:sort_by] || ""
+      @sort_by = sort_by.to_s
+      @sort_direction = options[:sort_direction] || ""
     end
     
     def column(attribute, *options)
@@ -28,6 +30,10 @@ module TableHelper
       else
         @columns ||= []
       end
+    end
+    
+    def embedded?
+      @embedded
     end
     
     def sort!
@@ -43,14 +49,18 @@ module TableHelper
   end
 
   class Column
-    attr_reader :attribute, :editable, :format, :link, :sort_by, :style_class, :table, :title
+    attr_reader :attribute, :editable, :format, :link_to, :sort_by, :style_class, :table, :title
 
     def initialize(table, attribute, *options)
       options = options.extract_options!
       @attribute = attribute
       @editable = options[:editable] || false
       @format = options[:format]
-      @link = options[:link] || false
+      if options.include?(:link_to)
+        @link_to = options[:link_to]
+      elsif attribute == :name
+        @link_to = :show
+      end
       @sort_by = [options[:sort_by] || attribute]
       sort_by.flatten!
       @style_class = options[:style_class] || attribute.to_s
@@ -62,8 +72,12 @@ module TableHelper
       @editable
     end
     
-    def link?
-      @link
+    def link_to_edit?
+      link_to == :edit
+    end
+    
+    def link_to_show?
+      link_to == :show
     end
     
     def sort_direction

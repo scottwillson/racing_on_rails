@@ -1,6 +1,5 @@
 <% @page_title = "Admin: Promoters: #{@promoter.name}" %>
 
-<div align="center">
 <%- if flash[:notice] -%>
   <div class="message" id="message">
       <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
@@ -17,7 +16,7 @@
 
 <%= error_messages_for 'promoter' %>
 
-<%= form_tag({:action => 'update', :id => @promoter.id}) %>
+<% form_for([:admin, @promoter]) do |f| %>
   <table class="base">
     <caption><%= @promoter.name %></caption>
     <tr><th colspan="3"></th></tr>
@@ -26,36 +25,23 @@
         <table>
           <tr>
             <td class="field_label">Name:</td>
-            <td><%= text_field 'promoter', 'name' %></td>
+            <td><%= f.text_field :name %></td>
           </tr>
           <tr>
             <td class="field_label">Phone:</td>
-            <td><%= text_field 'promoter', 'phone' %></td>
+            <td><%= f.text_field :phone %></td>
           </tr>
           <tr>
             <td class="field_label">Email:</td>
-            <td><%= text_field 'promoter', 'email' %></td>
+            <td><%= f.text_field :email %></td>
           </tr>
         </table>
       </td>
       <td>
-        <table class="base" id="inline">
-          <tr>
-            <th>Date</th>
-            <th>Event</th>
-          </tr>
-          <%- for event in @promoter.events(true).sort_by {|event| event.date} -%>
-          <tr>
-            <td><%= event.date %></td>
-            <td><%= link_to event.name, :action => 'show', :id => event.id %></td>
-          </tr>
-          <%- end -%>
-          <%- if @promoter.events.empty? %>
-          <tr>
-            <td>None</td>
-          </tr>
-          <%- end -%>
-        </table>
+        <%= table(:events, :collection => @promoter.events(true), :sort_by => :date, :embedded => true) do |t|
+          t.column :date, :format => :long
+          t.column :name
+        end -%>
       </td>
     </tr>
     <tr class="buttons">
@@ -68,6 +54,4 @@
   <br>
   <%= link_to("Back to #{@event.name}", :controller => 'events', :action => 'show', :id => @event.id, :promoter_id => @promoter.id) if @event %>
   <%= hidden_field_tag('event_id', @event.id) if @event %>
-</form>
-
-</div>
+<% end -%>
