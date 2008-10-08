@@ -13,7 +13,7 @@ class Admin::FirstAidProvidersController < ApplicationController
     else
       conditions = ['date >= CURDATE()']
     end
-    @events = SingleDayEvent.find(:all, :conditions => conditions, :order => params[:order])
+    @events = SingleDayEvent.find(:all, :conditions => conditions)
     
     respond_to do |format|
       format.html

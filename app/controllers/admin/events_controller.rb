@@ -8,7 +8,7 @@ class Admin::EventsController < ApplicationController
   def index
     @year = Date.today.year
     @past_events = params[:past_events] || false
-    @events = SingleDayEvent.find(:all, :order => params[:order])
+    @events = SingleDayEvent.find(:all)
   end
 
   # Show results for Event

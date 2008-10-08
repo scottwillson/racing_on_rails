@@ -2,16 +2,18 @@
 
 <% form_tag({}, { :method => :get }) do %>
   <%= check_box_tag "past_events", "true", @past_events, :onclick => "form.submit();" %>&nbsp;<label for="past_events">Show past events</label>
-  <%= hidden_field_tag "order", params[:order] %>
+  <%= hidden_field_tag "sort_by", params[:sort_by] %>
+  <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
 <% end -%>
 
 <%= table(:events, "#{Date.today.year} First Aid") do |t|
   t.column :first_aid_provider, :title => "Provider", :editable => true
   t.column :date, :format => :short_with_week_day
   t.column :name
-  t.column :city_state, :title => "Location", :order => [:city, :state]
+  t.column :promoter_name, :title => "Promoter"
+  t.column :city_state, :title => "Location", :sort_by => [:city, :state]
 end -%>
 
 <div>
-  <%= link_to "Email", formatted_admin_first_aid_providers_path("txt", :order => params[:order], :past_events => @past_events) %>
+  <%= link_to "Email", formatted_admin_first_aid_providers_path("txt", :sort_by => params[:sort_by], :sort_direction => params[:sort_direction], :past_events => @past_events) %>
 </div>

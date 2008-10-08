@@ -1,21 +1,21 @@
 module TableHelper
   def table(collection_symbol, caption = nil, &block)
-    table = Table.new(collection_symbol, assigns[collection_symbol.to_s], caption, params[:order] || "")
+    table = Table.new(collection_symbol, assigns[collection_symbol.to_s], caption, params[:sort_by] || "", params[:sort_direction])
     yield(table) if block
+    table.sort!
     render(:partial => "table/base", :locals => { :table => table })
   end  
   
   class Table
-    attr_reader :caption, :columns, :collection, :collection_symbol, :order, :record_symbol
+    attr_reader :caption, :columns, :collection, :collection_symbol, :record_symbol, :sort_by, :sort_direction
     
-    def initialize(collection_symbol, collection = [], caption = collection_symbol.to_s.titleize, order_param = "")
+    def initialize(collection_symbol, collection = [], caption = collection_symbol.to_s.titleize, sort_by = "", sort_direction = "")
       @caption = caption
       @collection = collection
       @collection_symbol = collection_symbol
-      @order = order_param.split(",").collect do |param|
-        [param.split.first, param.split.last]
-      end
       @record_symbol = collection_symbol.to_s.singularize.to_sym
+      @sort_by = sort_by
+      @sort_direction = sort_direction
     end
     
     def column(attribute, *options)
@@ -29,10 +29,20 @@ module TableHelper
         @columns ||= []
       end
     end
+    
+    def sort!
+      return if sort_by.blank?
+      
+      sort_by.split(",").each do |sort_attribute|
+        @collection = collection.sort_by(&sort_attribute.to_sym)
+      end
+        
+      @collection.reverse! if sort_direction == "desc"
+    end
   end
 
   class Column
-    attr_reader :attribute, :editable, :format, :link, :order, :style_class, :table, :title
+    attr_reader :attribute, :editable, :format, :link, :sort_by, :style_class, :table, :title
 
     def initialize(table, attribute, *options)
       options = options.extract_options!
@@ -40,8 +50,8 @@ module TableHelper
       @editable = options[:editable] || false
       @format = options[:format]
       @link = options[:link] || false
-      @order = [options[:order] || attribute]
-      @order.flatten!
+      @sort_by = [options[:sort_by] || attribute]
+      sort_by.flatten!
       @style_class = options[:style_class] || attribute.to_s
       @table = table
       @title = options[:title] || @attribute.to_s.titlecase
@@ -55,13 +65,12 @@ module TableHelper
       @link
     end
     
-    def order_param
-      if !table.order.empty? && table.order.first.first == order.first.to_s && table.order.first.last == "asc"
-        direction = "desc"
+    def sort_direction
+      if table.sort_by == sort_by.join(",") && table.sort_direction == "asc"
+        "desc"
       else
-        direction = "asc"
+        "asc"
       end
-      order.inject([]) { |param, order_attribute| param << "#{order_attribute} #{direction}" }.join(", ")
     end
   end
 end
