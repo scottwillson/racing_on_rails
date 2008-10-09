@@ -10,8 +10,8 @@
     <%- table.columns.each do |column| %>
     <th class="<%= column.attribute %>"><%= link_to_function(column.title) do |page|
       page.redirect_to(eval("admin_#{controller.controller_name}_path(:overwrite_params => { :sort_by => '#{column.sort_by.join(',')}', :sort_direction => '#{column.sort_direction}' })"))
-    end unless table.embedded? -%>
-    <%= if table.embedded?
+    end unless table.embedded? -%><%= 
+        if table.embedded?
           if column.attribute == :name
             table.record_symbol.to_s.titleize
           else
