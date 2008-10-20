@@ -1,5 +1,5 @@
-<tr class="<%= cycle("even", "odd") %>" id="racer_<%= racer.id %>_row">
-  <td class="name">
+<tr class="<%= cycle("even", "odd") %>" id="racer_<%= racer.id %>_row" style="position: relative;">
+  <td class="name" style="position: relative;">
     <%- @racer = racer -%>
     <div class="editable" id="racer_<%= racer.id %>" style="background-image: url(/images/icons/person.gif); background-repeat: no-repeat;">
       <span id="racer_<%= racer.id %>_name" style="padding-left: 24px;"><%= render(:partial => 'racer_name', :locals => { :racer => racer }) %></span>
