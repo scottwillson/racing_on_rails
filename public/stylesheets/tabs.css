@@ -22,102 +22,102 @@ table.tabs_solo span {
 }
 
 table.tabs, table.tabs_solo {
-	height: 24px; 
-	text-align: center;
-	margin-top: 0px;
-	margin-bottom: 8px;
-	margin-left: auto;
-	margin-right: auto;
-	vertical-align: middle;
+  height: 24px; 
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  vertical-align: middle;
 }
 
 table.tabs td, table.tabs_solo td {
-	background-image: url(/images/buttons/background.jpg);
-	background-repeat: no-repeat;
-	background-position: top center;
+  background-image: url(/images/buttons/background.jpg);
+  background-repeat: no-repeat;
+  background-position: top center;
 }
 
 table.tabs div, table.tabs_solo div {
-	width: 100%;
-	height: 20px; 
-	padding-top: 4px;
-	border-left: 1px solid rgb(225, 225, 225);
-	white-space: nowrap;
-	vertical-align: middle;
+  width: 100%;
+  height: 20px; 
+  padding-top: 4px;
+  border-left: 1px solid rgb(225, 225, 225);
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 table.tabs div.first, table.tabs div.first_selected, table.tabs_solo div.first, table.tabs_solo div.first_selected {
-	border-left: none;
+  border-left: none;
 }
 
 table.tabs td.first, table.tabs_solo td.first {
-	background-position: top left;
-	background-image: url(/images/buttons/left_cap.jpg); 
+  background-position: top left;
+  background-image: url(/images/buttons/left_cap.jpg); 
 }
 
 table.tabs td.last, table.tabs_solo td.last {
-	background-position: 101% 0%;
-	background-image: url(/images/buttons/right_cap.jpg); 
+  background-position: 101% 0%;
+  background-image: url(/images/buttons/right_cap.jpg); 
 }
 
 table.tabs_solo div.last {
-	border-left: none;
+  border-left: none;
 }
 
 table.tabs td.selected {
-	background-position: top right;
-	background-image: url(/images/buttons/selected.jpg); 
+  background-position: top right;
+  background-image: url(/images/buttons/selected.jpg); 
 }
 
 table.tabs div.selected {
-	border-left: 1px solid rgb(225, 225, 225);
-	border-right: 1px solid rgb(225, 225, 225);
+  border-left: 1px solid rgb(225, 225, 225);
+  border-right: 1px solid rgb(225, 225, 225);
 }
 
 table.tabs td.first_selected, table.tabs_solo td.first_selected {
-	background-image: url(/images/buttons/left_cap_selected.jpg); 
-	background-position: top left;
+  background-image: url(/images/buttons/left_cap_selected.jpg); 
+  background-position: top left;
 }
 
 table.tabs div.first_selected, table.tabs_solo div.first_selected {
-	border-right: 1px solid rgb(225, 225, 225);
+  border-right: 1px solid rgb(225, 225, 225);
 }
 
 table.tabs_solo div.first_selected {
-	border-right: none;
+  border-right: none;
 }
 
 table.tabs td.last_selected, table.tabs_solo td.last_selected {
-	background-position: 101% 0%;
-	background-image: url(/images/buttons/right_cap_selected.jpg); 
+  background-position: 101% 0%;
+  background-image: url(/images/buttons/right_cap_selected.jpg); 
 }
 
 table.tabs_solo div.last_selected {
-	border-left: none;
+  border-left: none;
 }
 
 table.tabs div.hover {
-	background-image: url(/images/buttons/hover.jpg); 
+  background-image: url(/images/buttons/hover.jpg); 
 }
 
 table.tabs div.hover_first, table.tabs_solo div.hover_first {
-	border-left: none;
-	background-image: url(/images/buttons/left_cap_hover.jpg); 
+  border-left: none;
+  background-image: url(/images/buttons/left_cap_hover.jpg); 
 }
 
 table.tabs div.hover_last {
-	background-image: url(/images/buttons/right_cap_hover.jpg); 
-	background-position: 101% 0%;
-	background-repeat: no-repeat;
+  background-image: url(/images/buttons/right_cap_hover.jpg); 
+  background-position: 101% 0%;
+  background-repeat: no-repeat;
 }
 
 table.tabs_solo div.hover_last {
-	background-image: url(/images/buttons/right_cap_hover.jpg); 
-	background-position: top right;
-	border-left: none;
+  background-image: url(/images/buttons/right_cap_hover.jpg); 
+  background-position: top right;
+  border-left: none;
 }
 
 table.tabs span a:hover, table.tabs_solo span a:hover {
-	background: none !important;
-	border-bottom: none !important;
+  background: none !important;
+  border-bottom: none !important;
 }
