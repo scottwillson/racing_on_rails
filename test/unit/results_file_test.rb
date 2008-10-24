@@ -381,14 +381,18 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(1, standings.races.size, 'Races')
     results = standings.races.first.results
     
-    assert_equal(12.64, results[0].time, 'row 0: 12.64st')
-    assert_equal(12.64, results[1].time, 'row 1: 0:12.64 st')
+    assert_equal(12.64, results[0].time, 'row 0: 12.64')
+    assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
     assert_equal(12.64, results[2].time, 'row 2: 00:12.6')
     assert_equal(390, results[3].time, 'row 3: 0:06:30')
     assert_equal(6236, results[4].time, 'row 4: 1:43:56')
     assert_in_delta(3821, results[5].time, 0.00001, 'row 5: 1:03:41')
     assert_in_delta(1641, results[6].time, 0.00001, 'row 6: 0:27:21')
     assert_in_delta(6735, results[7].time, 0.00001, 'row 7: 1:52:15')
+    assert_in_delta(6735, results[8].time, 0.00001, 'row 8: st')
+    assert_in_delta(6735, results[9].time, 0.00001, 'row 9: st')
+    assert_in_delta(7440, results[10].time, 0.00001, 'row 10: 2:04')
+    assert_in_delta(7440, results[11].time, 0.00001, 'row 11: 2:04')
   end
   
   def expected_standings(standings)

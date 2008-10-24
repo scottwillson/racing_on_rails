@@ -108,6 +108,7 @@ class ResultsFile < GridFile
       category = nil
       race = nil
       previous_place = nil
+      previous_time = nil
       rows.each_with_index do |row, index|
         continue if row.blank?
         row_hash = row.to_hash
@@ -143,6 +144,9 @@ class ResultsFile < GridFile
             if row_hash[:time] and !row_hash[:time].include?(':')
               result.time = result.time.to_f
             end
+            if row_hash[:time] and (row_hash[:time].downcase.include?('st') || row_hash[:time].downcase.include?('s.t.'))
+              result.time = previous_time
+            end
             if row_hash[:time_bonus_penalty] and !row_hash[:time_bonus_penalty].include?(':')
               result.time_bonus_penalty = result.time_bonus_penalty.to_f
             end
@@ -161,7 +165,8 @@ class ResultsFile < GridFile
               result.place = previous_place
             end
             previous_place = result.place
-
+            previous_time = result.time
+            
             result.cleanup
             result.save!
             RACING_ON_RAILS_DEFAULT_LOGGER.debug("#{race} #{result.place}")
