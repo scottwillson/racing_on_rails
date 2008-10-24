@@ -381,8 +381,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(1, standings.races.size, 'Races')
     results = standings.races.first.results
     
-    assert_equal(12.64, results[0].time, 'row 0: 12.64')
-    assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
+    assert_equal(12.64, results[0].time, 'row 0: 12.64st')
+    assert_equal(12.64, results[1].time, 'row 1: 0:12.64 st')
     assert_equal(12.64, results[2].time, 'row 2: 00:12.6')
     assert_equal(390, results[3].time, 'row 3: 0:06:30')
     assert_equal(6236, results[4].time, 'row 4: 1:43:56')

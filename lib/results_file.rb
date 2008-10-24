@@ -34,6 +34,8 @@ class ResultsFile < GridFile
     "club/team" => "team_name",
     "hometown" => 'city',
     "stage_time" => "time",
+    "st" => "time",
+    "stop time" => "time",
     "bonus" => "time_bonus_penalty",
     "penalty" => "time_bonus_penalty",
     "stage_+_penalty" => "time_total",
