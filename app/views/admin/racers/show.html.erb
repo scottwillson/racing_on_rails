@@ -62,7 +62,7 @@
         </span>
       </td>
       <td valign="top" class="field_label">Notes:</td>
-      <td valign="top" rowspan="2"colspan="3"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
+      <td valign="top" colspan="3"><%= text_area 'racer', 'notes', 'rows' => 4, 'cols' => 60 %></td>
     </tr>
     <tr>
       <td></td>
@@ -72,6 +72,13 @@
         <br>
         <%= check_box 'racer', 'print_mailing_label', :tabindex => 7 %> Print mailing label
       </td>
+      <td></td>
+      <td>
+        <%= check_box :racer, :wants_mail %> Wants mail<br/>
+        <%= check_box :racer, :wants_email %> Wants email
+      </td>
+      <td></td>
+      <td></td>
     </tr>
     <tr>
       <td class="field_label">Email:</td>
