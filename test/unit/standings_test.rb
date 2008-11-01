@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class StandingsTest < ActiveSupport::TestCase
-  
+class StandingsTest < ActiveSupport::TestCase  
   def test_new
     bb3 = events(:banana_belt_3)
     standings = bb3.standings.create
@@ -247,5 +246,25 @@ class StandingsTest < ActiveSupport::TestCase
     assert(standings.auto_combined_standings?, "auto_combined_standings? default")
     assert(standings.requires_combined_standings?, "requires_combined_standings? default")
     assert(standings.calculate_combined_standings?, "calculate_combined_standings? default")
+  end
+  
+  def test_destroy_should_destroy_related_racers
+    mathew_braun = Racer.create!(:name => "Mathew Braun", :email => "mtb@example.com")
+    event = SingleDayEvent.create!
+    standings = event.standings.create!
+    race = standings.races.create!(:category => categories(:masters_35_plus_women))
+    race.results.create!(:place => "1", :racer => racers(:weaver))
+    race.results.create!(:place => "2", :racer => Racer.new(:name => "Jonah Braun"))
+    race.results.create!(:place => "3", :racer => mathew_braun)
+    assert(Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been created")
+
+    standings.reload
+    standings.destroy
+    assert(!Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been deleted")
+    assert(Racer.exists?(:first_name => "Ryan", :last_name => "Weaver"), "Existing racer Ryan Weaver should not be deleted")
+    assert(Racer.exists?(:first_name => "Mathew", :last_name => "Braun"), "Existing racer with no results Mathew Braun should not be deleted")
+
+    # TODO Manually-created racers that only have this result
+    # TODO Teams
   end
 end

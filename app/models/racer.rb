@@ -469,6 +469,12 @@ class Racer < ActiveRecord::Base
     self.print_card
   end
   
+  # Educated guess. If most fields are blank, it's probably from results.
+  # Should be set explicity.
+  def created_from_result?
+    self.email.blank? && self.street.blank? && self.home_phone.blank?
+  end
+  
   def state=(value)
     if value and value.size == 2
       value.upcase!

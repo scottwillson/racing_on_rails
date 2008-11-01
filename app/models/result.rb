@@ -38,7 +38,8 @@ class Result < ActiveRecord::Base
   before_save :save_racer
   after_save :update_racer_number
   after_save {|result| result.race.standings.after_result_save}
-  after_destroy {|result| result.race.standings.after_result_destroy}
+  after_destroy { |result| result.race.standings.after_result_destroy }
+  after_destroy :destroy_racers
   
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
@@ -173,6 +174,14 @@ class Result < ActiveRecord::Base
     end
   end
   
+  # Destroy Racers that only exist because they were created by importing results
+  def destroy_racers
+    if racer && racer.results.count == 0 && racer.created_from_result?
+      racer.destroy
+    end
+  end
+  
+  # Only used for manual entry of Cat 4 Womens Series Results
   def validate_racer_name
     if first_name.blank? && last_name.blank?
       errors.add(:first_name, "and last name cannot both be blank")
@@ -191,11 +200,7 @@ class Result < ActiveRecord::Base
   end
   
   def category_name
-    if self.category
-      self.category.name
-    else
-      ''
-    end
+    (self.category && category.name) || ""
   end
   
   def category_name=(name)

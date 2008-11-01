@@ -675,4 +675,24 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal("7890", racer.road_number, "Road number after add with nil discipline")
     assert_equal(nil, racer.number(circuit_race), "Circuit race number after add with nil discipline")
   end
+  
+  def test_created_from_result?
+    racer = Racer.create!
+    assert(racer.created_from_result?, "created_from_result? for blank Racer")
+
+    racer = Racer.create!(:name => "Some Racer")
+    assert(racer.created_from_result?, "created_from_result? for Racer with just name")
+
+    racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers))
+    assert(racer.created_from_result?, "created_from_result? for Racer with just name and team")
+
+    racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers), :email => "racer@example.com")
+    assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and email")
+
+    racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers), :home_phone => "911")
+    assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and phone")
+
+    racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers), :street => "10 Main Street")
+    assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and street")
+  end
 end
