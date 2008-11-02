@@ -802,6 +802,23 @@ class ResultTest < ActiveSupport::TestCase
     assert(!racer.member?, "Finisher with event (not racing association) number should be member")
   end
   
+  def test_only_make_member_if_full_name
+    standings = SingleDayEvent.create!(:name => "Tabor CR").standings.create!
+    race = standings.races.create!(:category => Category.find_by_name("Senior Men Pro 1/2"))
+    result = race.results.create!(
+      :first_name => "Tom", :team_name => "Davitamon", :number => "702"
+    )
+    result_2 = race.results.create!(
+      :last_name => "Boonen", :team_name => "Davitamon", :number => "702"
+    )
+    
+    result.racer.reload
+    assert(!result.racer.member?, "Finisher with only first_name should be not member")
+    
+    result_2.racer.reload
+    assert(!result_2.racer.member?, "Finisher with only last_name should be not member")
+  end
+  
   def test_stable_name_on_old_results
     team = Team.create!(:name => "Tecate-Una Mas")
 
