@@ -35,6 +35,11 @@ class BarTest < ActiveSupport::TestCase
       :place => 15,
       :racer => racers(:weaver)
     })
+    barton_a.results.create({
+      :place => 2,
+      :racer => racers(:alice),
+      :bar => false
+    })
     
     swan_island = SingleDayEvent.create!({
       :name => "Swan Island",

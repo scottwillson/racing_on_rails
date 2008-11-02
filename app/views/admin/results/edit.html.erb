@@ -8,11 +8,13 @@
     <% for column in @result.race.result_columns_or_default %>
     <th><%= column %></th>
     <% end %>
+    <th>BAR?</th>
   </tr>
   <tr>
     <% for column in @result.race.result_columns_or_default %>
     <td><%= text_field('result', column, :size => grid_columns(column).size, :autocomplete => 'off') if @result.respond_to?(grid_columns(column).field) %></td>
     <% end %>
+    <td><%= check_box :result, :bar %></td>
   </tr>
   <tr>
     <td colspan="<%= @result.race.result_columns_or_default.size %>" align="right">

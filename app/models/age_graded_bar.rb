@@ -8,6 +8,7 @@ class AgeGradedBar < Competition
     Result.find(:all,
                 :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                 :conditions => [%Q{events.type = 'OverallBar' 
+                  and bar = true
                   and events.sanctioned_by = "#{ASSOCIATION.short_name}"
                   and categories.id = #{race.category.parent(true).id}
                   and racers.date_of_birth between '#{race.dates_of_birth.begin}' and '#{race.dates_of_birth.end}'

@@ -832,4 +832,15 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("Tecate-Una Mas", result.team_name, "Team name on this year's result")
     assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
   end
+  
+  def test_bar
+    standings = SingleDayEvent.create!(:name => "Tabor CR").standings.create!
+    race = standings.races.create!(:category => Category.find_by_name("Senior Men Pro 1/2"))
+    result = race.results.create!(
+      :first_name => "Tom", :team_name => "Davitamon", :number => "702"
+    )
+    assert(result.bar?, "By default, results should count toward BAR")
+    result.bar = false
+    assert(!result.bar?, "Result bar?")
+  end
 end
