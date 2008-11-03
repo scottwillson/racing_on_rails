@@ -1,5 +1,7 @@
 module TableHelper
   def table(collection_symbol = controller.controller_name.to_sym, options = {}, &block)
+    options[:sort_by] = options[:sort_by] || params[:sort_by]
+    options[:sort_direction] = options[:sort_direction] || params[:sort_direction]
     table = Table.new(collection_symbol, options[:collection] || assigns[collection_symbol.to_s], options)
     yield(table) if block
     table.sort!
