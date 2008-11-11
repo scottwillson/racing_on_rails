@@ -233,16 +233,66 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   end
   
   def test_minimum_events_should_handle_results_without_racer
-      series = Series.create!(:name => "Cross Crusade")
-      cat_a = Category.find_or_create_by_name("Category A")
-      event = series.events.create!(:date => Date.new(2007, 10, 7))
+    series = Series.create!(:name => "Cross Crusade")
+    cat_a = Category.find_or_create_by_name("Category A")
+    event = series.events.create!(:date => Date.new(2007, 10, 7))
 
-      cat_a_race = event.standings.create!.races.create!(:category => cat_a)
-      cat_a_race.results.create!(:place => 17, :racer => racers(:alice))
+    cat_a_race = event.standings.create!.races.create!(:category => cat_a)
+    cat_a_race.results.create!(:place => 17, :racer => racers(:alice))
 
-      CrossCrusadeSeriesStandings.recalculate(2007)
-      overall_standings = series.standings.first
-      category_a_overall_race = overall_standings.races.detect { |race| race.category == cat_a }
-      assert(!overall_standings.raced_minimum_events?(nil, category_a_overall_race), "Nil racer should never have mnimum events")
+    CrossCrusadeSeriesStandings.recalculate(2007)
+    overall_standings = series.standings.first
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == cat_a }
+    assert(!overall_standings.raced_minimum_events?(nil, category_a_overall_race), "Nil racer should never have mnimum events")
+  end
+  
+  def test_count_six_best_results
+    series = WeeklySeries.create!(:name => "Cross Crusade")
+    category_a = Category.find_or_create_by_name("Category A")
+    racer = Racer.create!(:name => "Kevin Hulick")
+
+    date = Date.new(2008, 10, 19)
+    [8, 3, 10, 7, 8, 7, 8].each do |place|
+      series.events.create!(:date => date).standings.create!.races.create!(:category => category_a).results.create!(:place => place, :racer => racer)
+      date = date + 7
+    end
+    
+    # Simulate 7 of 8 events. Last, double-point event still in future
+    series.events.create!(:date => date).standings.create!.races.create!(:category => category_a)
+    
+    CrossCrusadeSeriesStandings.recalculate(2008)
+    
+    overall_standings = series.standings.first
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == category_a }
+    assert_not_nil(category_a_overall_race, "Should have Category A overall race")
+    category_a_overall_race.results(true).sort!
+    result = category_a_overall_race.results.first
+    assert_equal(6, result.scores.size, "Scores")
+    assert_equal(16 + 12 + 12 + 11 + 11 + 11, result.points, "points")
+  end
+  
+  def test_ensure_dnf_sorted_correctly
+    series = WeeklySeries.create!(:name => "Cross Crusade")
+    category_a = Category.find_or_create_by_name("Category A")
+    racer = Racer.create!(:name => "Kevin Hulick")
+
+    date = Date.new(2008, 10, 19)
+    [8, 3, 10, "DNF", 8, 7, 8].each do |place|
+      series.events.create!(:date => date).standings.create!.races.create!(:category => category_a).results.create!(:place => place, :racer => racer)
+      date = date + 7
+    end
+    
+    # Simulate 7 of 8 events. Last, double-point, event, still in future
+    series.events.create!(:date => date).standings.create!.races.create!(:category => category_a)
+    
+    CrossCrusadeSeriesStandings.recalculate(2008)
+    
+    overall_standings = series.standings.first
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == category_a }
+    assert_not_nil(category_a_overall_race, "Should have Category A overall race")
+    category_a_overall_race.results(true).sort!
+    result = category_a_overall_race.results.first
+    assert_equal(6, result.scores.size, "Scores")
+    assert_equal(16 + 12 + 11 + 11 + 11 + 9, result.points, "points")
   end
 end

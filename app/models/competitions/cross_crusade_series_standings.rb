@@ -137,7 +137,7 @@ class CrossCrusadeSeriesStandings < Standings
     race.results.each do |result|
       # Don't bother sorting scores unless we need to drop some
       if result.scores.size > 6
-        result.scores.sort! { |x, y| x.source_result.place <=> y.source_result.place }
+        result.scores.sort! { |x, y| x.source_result.place.to_i <=> y.source_result.place.to_i }
         lowest_scores = result.scores[6, 2]
         lowest_scores.each do |lowest_score|
           result.scores.destroy(lowest_score)
