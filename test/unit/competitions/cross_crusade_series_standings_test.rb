@@ -122,7 +122,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(false, result.preliminary?, "Preliminary?")
     assert_equal("1", result.place, "place")
     assert_equal(6, result.scores.size, "Scores")
-    assert_equal(26 + 26 + 20 + 26 + 0 + 26 + 26 + (0 * 2), result.points, "points")
+    assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 26 + (16 * 2), result.points, "points")
     assert_equal(racer, result.racer, "racer")
 
     category_a_overall_race = overall_standings.races.detect { |race| race.category == category_a }
@@ -269,6 +269,28 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     result = category_a_overall_race.results.first
     assert_equal(6, result.scores.size, "Scores")
     assert_equal(16 + 12 + 12 + 11 + 11 + 11, result.points, "points")
+  end
+  
+  def test_choose_best_results_by_points_not_place
+    series = WeeklySeries.create!(:name => "Cross Crusade")
+    category_a = Category.find_or_create_by_name("Category A")
+    racer = Racer.create!(:name => "Kevin Hulick")
+
+    date = Date.new(2008, 10, 19)
+    [8, 8, 8, 7, 6, 8, 7, 9].each do |place|
+      series.events.create!(:date => date).standings.create!.races.create!(:category => category_a).results.create!(:place => place, :racer => racer)
+      date = date + 7
+    end
+
+    CrossCrusadeSeriesStandings.recalculate(2008)
+    
+    overall_standings = series.standings.first
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == category_a }
+    assert_not_nil(category_a_overall_race, "Should have Category A overall race")
+    category_a_overall_race.results(true).sort!
+    result = category_a_overall_race.results.first
+    assert_equal(6, result.scores.size, "Scores")
+    assert_equal(11 + 12 + 13 + 11 + 12 + 20, result.points, "points")
   end
   
   def test_ensure_dnf_sorted_correctly
