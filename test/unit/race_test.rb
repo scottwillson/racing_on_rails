@@ -257,6 +257,119 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal('8', ironman_race.results[7].place, '8th result place')
   end
   
+  def test_most_recent_placing_should_break_tie
+    races = []
+    races << SingleDayEvent.create!(:date => Date.new(2006, 1)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 2)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 3)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 4)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+
+    ironman = Ironman.create(:date => Date.today)
+    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+
+    first_competition_result = ironman_race.results.create!
+    first_competition_result.scores.create!(:source_result => races[3].results.create!(:place => 15), :competition_result => first_competition_result, :points => 2)
+
+    second_competition_result = ironman_race.results.create!
+    second_competition_result.scores.create!(:source_result => races[0].results.create!(:place => 15), :competition_result => second_competition_result, :points => 2)
+
+    third_competition_result = ironman_race.results.create!
+    third_competition_result.scores.create!(:source_result => races[1].results.create!(:place => 15), :competition_result => third_competition_result, :points => 2)
+
+    fourth_competition_result = ironman_race.results.create!
+    fourth_competition_result.scores.create!(:source_result => races[2].results.create!(:place => 15), :competition_result => fourth_competition_result, :points => 2)
+
+    ironman_race.results(true)
+    ironman_race.results.each do |result|
+      result.calculate_points
+      result.save!
+    end
+    ironman_race.place_results_by_points
+    ironman_race.results(true).sort!
+    
+    assert_equal("1", ironman_race.results[0].place, "First result place")
+    assert_equal(first_competition_result, ironman_race.results[0], "First result")
+    
+    assert_equal("2", ironman_race.results[1].place, "Second result place")
+    assert_equal(fourth_competition_result, ironman_race.results[1], "Second result")
+    
+    assert_equal("3", ironman_race.results[2].place, "Third result place")
+    assert_equal(third_competition_result, ironman_race.results[2], "Third result")
+    
+    assert_equal("4", ironman_race.results[3].place, "Fourth result place")
+    assert_equal(second_competition_result, ironman_race.results[3], "Fourth result")
+  end
+  
+  def test_highest_placing_in_last_race_should_break_tie
+    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+
+    ironman = Ironman.create(:date => Date.today)
+    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+
+    first_competition_result = ironman_race.results.create!
+    first_competition_result.scores.create!(:source_result => race.results.create!(:place => 3), :competition_result => first_competition_result, :points => 30)
+    first_competition_result.scores.create!(:source_result => second_race.results.create!(:place => 4), :competition_result => first_competition_result, :points => 20)
+
+    second_competition_result = ironman_race.results.create!
+    second_competition_result.scores.create!(:source_result => race.results.create!(:place => 4), :competition_result => second_competition_result, :points => 20)
+    second_competition_result.scores.create!(:source_result => second_race.results.create!(:place => 3), :competition_result => second_competition_result, :points => 30)
+
+    ironman_race.results(true)
+    ironman_race.results.each do |result|
+      result.calculate_points
+      result.save!
+    end
+    ironman_race.place_results_by_points
+    ironman_race.results(true).sort!
+    
+    assert_equal("1", ironman_race.results[0].place, "First result place")
+    assert_equal(second_competition_result, ironman_race.results[0], "First result")
+    
+    assert_equal("2", ironman_race.results[1].place, "Second result place")
+    assert_equal(first_competition_result, ironman_race.results[1], "Second result")
+  end
+  
+  def test_highest_placing_in_most_recent_race_should_break_tie
+    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    third_race = SingleDayEvent.create!(:date => Date.new(2006, 12)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+
+    ironman = Ironman.create(:date => Date.today)
+    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+
+    first_competition_result = ironman_race.results.create!
+    first_competition_result.scores.create!(:source_result => race.results.create!(:place => 4), :competition_result => first_competition_result, :points => 20)
+    first_competition_result.scores.create!(:source_result => second_race.results.create!(:place => 2), :competition_result => first_competition_result, :points => 30)
+    first_competition_result.scores.create!(:source_result => third_race.results.create!(:place => 10), :competition_result => first_competition_result, :points => 1)
+
+    second_competition_result = ironman_race.results.create!
+    second_competition_result.scores.create!(:source_result => race.results.create!(:place => 2), :competition_result => second_competition_result, :points => 30)
+    second_competition_result.scores.create!(:source_result => second_race.results.create!(:place => 4), :competition_result => second_competition_result, :points => 20)
+    second_competition_result.scores.create!(:source_result => third_race.results.create!(:place => 10), :competition_result => second_competition_result, :points => 1)
+
+    third_competition_result = ironman_race.results.create!
+    third_competition_result.scores.create!(:source_result => second_race.results.create!(:place => 1), :competition_result => third_competition_result, :points => 50)
+    third_competition_result.scores.create!(:source_result => third_race.results.create!(:place => 10), :competition_result => third_competition_result, :points => 1)
+
+    ironman_race.results(true)
+    ironman_race.results.each do |result|
+      result.calculate_points
+      result.save!
+    end
+    ironman_race.place_results_by_points
+    ironman_race.results(true).sort!
+
+    assert_equal("1", ironman_race.results[0].place, "First result place")
+    assert_equal(third_competition_result, ironman_race.results[0], "First result")
+
+    assert_equal("2", ironman_race.results[1].place, "Second result place")
+    assert_equal(first_competition_result, ironman_race.results[1], "2nd result")
+
+    assert_equal("3", ironman_race.results[2].place, "Third result place")
+    assert_equal(second_competition_result, ironman_race.results[2], "3rd result")
+  end
+  
   def test_calculate_members_only_places!
     standings = standings(:banana_belt)
     race = standings.races.create(:category => categories(:senior_men))

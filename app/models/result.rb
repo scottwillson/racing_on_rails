@@ -495,10 +495,26 @@ class Result < ActiveRecord::Base
     name = name.gsub(/ *\/ */, '/')
   end
   
-  # Highest points first. Break ties by highest placing
-  def compare_by_points(other, break_ties = true)
+  # Highest points first. Break ties by numbershighest placing
+  # OBRA rules: 
+  # * The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;
+  # * The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.
+  #
+  # Fairly complicated and procedural, but in nearly all cases, it short-circuits after comparing points
+ def compare_by_points(other, break_ties = true)
     diff = other.points <=> points
     return diff if diff != 0 || !break_ties
+
+    diff = compare_by_highest_place(other)
+    return diff if diff != 0
+
+    diff = compare_by_most_recent_place(other)
+    return diff if diff != 0
+
+    0
+  end
+  
+  def compare_by_highest_place(other)
     scores_by_place = scores.sort do |x, y|
       x.source_result <=> y.source_result
     end
@@ -514,6 +530,24 @@ class Result < ActiveRecord::Base
         return -1
       else
         diff = scores_by_place[index].source_result.place <=> other_scores_by_place[index].source_result.place
+        return diff if diff != 0
+      end
+    end
+    0
+  end
+  
+  def compare_by_most_recent_place(other)
+    dates = Set.new(scores + other.scores) { |score| score.source_result.date }.to_a
+    dates.sort!.reverse!
+    dates.each do |date|
+      score = scores.detect { |s| s.source_result.event.date == date }
+      other_score = other.scores.detect { |s| s.source_result.event.date == date }
+      if score && !other_score
+        return -1
+      elsif !score && other_score
+        return 1
+      else
+        diff = score.source_result.place <=> other_score.source_result.place
         return diff if diff != 0
       end
     end
