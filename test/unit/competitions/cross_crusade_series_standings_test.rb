@@ -77,7 +77,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   end
 
   def test_many_results
-    series = WeeklySeries.create!(:name => "Cross Crusade")
+    series = Series.create!(:name => "Cross Crusade")
     masters = Category.find_or_create_by_name("Masters 35+ A")
     category_a = Category.find_or_create_by_name("Category A")
     singlespeed = Category.find_or_create_by_name("Singlespeed")
@@ -238,7 +238,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     event = series.events.create!(:date => Date.new(2007, 10, 7))
 
     cat_a_race = event.standings.create!.races.create!(:category => cat_a)
-    cat_a_race.results.create!(:place => 17, :racer => racers(:alice))
+    cat_a_race.results.create!(:place => 17)
 
     CrossCrusadeSeriesStandings.recalculate(2007)
     overall_standings = series.standings.first
@@ -247,7 +247,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   end
   
   def test_count_six_best_results
-    series = WeeklySeries.create!(:name => "Cross Crusade")
+    series = Series.create!(:name => "Cross Crusade")
     category_a = Category.find_or_create_by_name("Category A")
     racer = Racer.create!(:name => "Kevin Hulick")
 
@@ -272,7 +272,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   end
   
   def test_choose_best_results_by_points_not_place
-    series = WeeklySeries.create!(:name => "Cross Crusade")
+    series = Series.create!(:name => "Cross Crusade")
     category_a = Category.find_or_create_by_name("Category A")
     racer = Racer.create!(:name => "Kevin Hulick")
 
@@ -294,7 +294,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   end
   
   def test_ensure_dnf_sorted_correctly
-    series = WeeklySeries.create!(:name => "Cross Crusade")
+    series = Series.create!(:name => "Cross Crusade")
     category_a = Category.find_or_create_by_name("Category A")
     racer = Racer.create!(:name => "Kevin Hulick")
 
@@ -316,5 +316,25 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     result = category_a_overall_race.results.first
     assert_equal(6, result.scores.size, "Scores")
     assert_equal(16 + 12 + 11 + 11 + 11 + 9, result.points, "points")
+  end
+
+  def test_ignore_age_graded_standings
+    series = Series.create!(:name => "Cross Crusade")
+    cat_a = Category.find_or_create_by_name("Category A")
+    series.events.create!(:date => Date.new(2007, 10, 7))
+    event = series.events.create!(:date => Date.new(2007, 10, 14))
+
+    cat_a_race = event.standings.create!.races.create!(:category => cat_a)
+    cat_a_race.results.create!(:place => 17, :racer => racers(:alice))
+
+    age_graded_race = event.standings.create!(:name => "Age Graded Results for BAR/Championships").races.create!(:category => cat_a)
+    age_graded_race.results.create!(:place => 1, :racer => racers(:alice))
+
+    CrossCrusadeSeriesStandings.recalculate(2007)
+    
+    overall_standings = series.standings.first
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == cat_a }
+    assert_equal(1, category_a_overall_race.results.size, "Cat A results")
+    assert_equal(1, category_a_overall_race.results.first.scores.size, "Should ignore age-graded standings")
   end
 end

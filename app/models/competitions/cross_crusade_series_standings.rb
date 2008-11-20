@@ -65,13 +65,15 @@ class CrossCrusadeSeriesStandings < Standings
     event_ids = event_ids.join(', ')
     category_ids = category_ids_for(race)
     
+    # Nasty hack to skip Age Graded standings
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
-          JOIN standings ON races.standings_id = standings.id 
+          JOIN standings ON races.standings_id = standings.id
           JOIN events ON standings.event_id = events.id 
           WHERE (standings.type = 'Standings' or standings.type is null)
+              and standings.name is null
               and place between 1 and 18
               and categories.id in (#{category_ids})
               and events.id in (#{event_ids})
