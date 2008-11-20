@@ -73,7 +73,7 @@ class CrossCrusadeSeriesStandings < Standings
           JOIN standings ON races.standings_id = standings.id
           JOIN events ON standings.event_id = events.id 
           WHERE (standings.type = 'Standings' or standings.type is null)
-              and standings.name is null
+              and (standings.name is null or standings.name not like "Age Graded%")
               and place between 1 and 18
               and categories.id in (#{category_ids})
               and events.id in (#{event_ids})

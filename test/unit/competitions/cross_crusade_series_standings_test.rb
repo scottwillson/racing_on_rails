@@ -11,7 +11,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
   def test_recalc_with_one_event
     series = Series.create!(:name => "Cross Crusade")
     event = series.events.create!(:date => Date.new(2007, 10, 7))
-    event_standings = event.standings.create!
+    event_standings = event.standings.create!(:name => "Cross Crusade #4")
 
     series.events.create!(:date => Date.new(2007, 10, 14))
     series.events.create!(:date => Date.new(2007, 10, 21))
@@ -32,7 +32,7 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     masters_race.results.create!(:place => 19, :racer => racers(:molly))
     
     # Previous year should be ignored
-    previous_event_standings = Series.create!(:name => "Cross Crusade").events.create!(:date => Date.new(2006)).standings.create!
+    previous_event_standings = Series.create!(:name => "Cross Crusade").events.create!(:date => Date.new(2006)).standings.create!(:name => "Cross Crusade #3")
     previous_event_standings.races.create!(:category => cat_a).results.create!(:place => 6, :racer => racers(:weaver))
     
     # Following year should be ignored
