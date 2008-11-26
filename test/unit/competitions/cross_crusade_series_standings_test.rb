@@ -337,4 +337,20 @@ class CrossCrusadeSeriesStandingsTest < ActiveSupport::TestCase
     assert_equal(1, category_a_overall_race.results.size, "Cat A results")
     assert_equal(1, category_a_overall_race.results.first.scores.size, "Should ignore age-graded standings")
   end
+
+  def test_should_not_count_for_bar_nor_ironman
+    series = Series.create!(:name => "Cross Crusade")
+    category_a = Category.find_or_create_by_name("Category A")
+    series.events.create!(:date => Date.new(2008)).standings.create!.races.create!(:category => category_a).results.create!(:place => "4", :racer => racers(:tonkin))
+
+    CrossCrusadeSeriesStandings.recalculate(2008)
+    series.reload
+    
+    overall_standings = series.standings.first
+    assert(!overall_standings.ironman, "Standings Ironman")
+    assert_equal(0, overall_standings.bar_points, "Standings BAR points")
+
+    category_a_overall_race = overall_standings.races.detect { |race| race.category == category_a }
+    assert_equal(0, category_a_overall_race.bar_points, "Race BAR points")
+  end  
 end

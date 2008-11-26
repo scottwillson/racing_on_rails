@@ -8,7 +8,7 @@ class CrossCrusadeSeriesStandings < Standings
     if series && series.has_results?
       CrossCrusadeSeriesStandings.destroy_all(:event_id => series.id)
       notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
-      standings = CrossCrusadeSeriesStandings.create!(:name => "Overall", :event => series, :notes => notes)
+      standings = CrossCrusadeSeriesStandings.create!(:name => "Overall", :event => series, :notes => notes, :ironman => false, :bar_points => 0)
       standings.create_races
       standings.recalculate
     end
