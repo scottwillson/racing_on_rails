@@ -8,16 +8,7 @@
     tabs.add('2007', :controller => 'results', :year => 2007)
   end  %>
 
-<%= tabs do |tabs|
-    tabs.add('All', :discipline => nil)
-    tabs.add('Road', :discipline => 'road')
-    tabs.add('Criterium', :discipline => 'criterium')
-    tabs.add('Time Trial', :discipline => 'time_trial')
-    tabs.add('Track', :discipline => 'track')
-    tabs.add('Cyclocross', :discipline => 'cyclocross')
-    tabs.add('Mountain Bike (XC)', :discipline => 'mountain_bike')
-    tabs.add('Downhill', :discipline => 'downhill')
-  end  %>
+<%= render :partial => 'disciplines' %>
 
     </td>
   </tr>
