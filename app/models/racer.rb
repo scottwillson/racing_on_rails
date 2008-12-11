@@ -272,7 +272,7 @@ class Racer < ActiveRecord::Base
   end
   
   def number(discipline, reload = false)
-    raise 'discipline cannot be nil' if discipline.nil?
+    return nil if discipline.nil?
 
     if discipline.is_a?(Symbol)
       discipline = Discipline[discipline]

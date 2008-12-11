@@ -1,6 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RacerTest < ActiveSupport::TestCase
+  def teardown
+    # Discipline class may have loaded earlier with no aliases in database
+    Discipline.reset
+  end
 
   def test_save
     assert_nil(Racer.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
@@ -694,5 +698,13 @@ class RacerTest < ActiveSupport::TestCase
 
     racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers), :street => "10 Main Street")
     assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and street")
+  end
+  
+  def test_dh_number_with_no_downhill_discipline
+   Discipline.find_by_name("Downhill").destroy
+   Discipline.reset
+   
+   assert(!Discipline.exists?(:name => "Downhill"), "Downhill should be deleted")
+   assert_nil(racers(:alice).dh_number, "DH number")
   end
 end
