@@ -1,4 +1,4 @@
-license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	print_mailing_label	date_of_birth	occupation	street	city	state	zip	email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	created_at	updated_at
+license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	print_mailing_label	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	created_at	updated_at
 <%- for racer in @racers -%>
 <%= racer["license"].to_excel -%>
 	<%= racer["first_name"].to_excel -%>
@@ -15,7 +15,9 @@ license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card
 	<%= racer["city"].to_excel -%>
 	<%= racer["state"].to_excel -%>
 	<%= racer["zip"].to_excel -%>
+	<%= racer["wants_mail"].to_excel -%>
 	<%= racer["email"].to_excel -%>
+	<%= racer["wants_email"].to_excel -%>
 	<%= racer["home_phone"].to_excel -%>
 	<%= racer["work_phone"].to_excel -%>
 	<%= racer["cell_fax"].to_excel -%>
