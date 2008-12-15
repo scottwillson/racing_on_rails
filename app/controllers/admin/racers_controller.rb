@@ -63,7 +63,7 @@ class Admin::RacersController < Admin::RecordEditor
     @racers = Racer.connection.select_all(%Q{
       SELECT racers.id, license, first_name, last_name, teams.name as team_name, racers.notes,
              DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
-             print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/%d/%Y') as date_of_birth, occupation, 
+             print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation, 
              street, racers.city, racers.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
              volunteer_interest, official_interest, race_promotion_interest, team_interest,
