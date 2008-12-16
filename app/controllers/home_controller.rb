@@ -9,7 +9,7 @@ class HomeController < ApplicationController
   def index
     @upcoming_events = UpcomingEvents.find_all
     
-    cutoff = Date.today - 14
+    cutoff = Date.today - 31
     @recent_results = Standings.find(
       :all,
       :include => :event,
