@@ -7,9 +7,9 @@ class HomeController < ApplicationController
   # * upcoming_events: instance of UpcomingEvents with default parameters
   # * recent_results: Events with Results within last two weeks
   def index
-    @upcoming_events = UpcomingEvents.find_all
+    @upcoming_events = UpcomingEvents.find_all(:weeks => 5)
     
-    cutoff = Date.today - 31
+    cutoff = Date.today - 14
     @recent_results = Standings.find(
       :all,
       :include => :event,
