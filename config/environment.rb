@@ -70,10 +70,6 @@ ActionController::Base.prepend_view_path(File.expand_path("#{RAILS_ROOT}/local/a
 
 require "action_view/template_handlers/pdf_writer"
 ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
-PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/app/views/fonts"
-PDF::Writer::FONT_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
-PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/app/views/fonts"
-PDF::Writer::FontMetrics::METRICS_PATH << "#{RAILS_ROOT}/local/app/views/fonts"
 
 require 'array'
 require 'nil_class'
