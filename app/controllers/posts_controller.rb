@@ -75,6 +75,10 @@ class PostsController < ApplicationController
   # archiver to store posts. This strategy gives spam filters a change to reject
   # bogus posts.
   def post
+    unless params[:reply_to]
+      return redirect_to(:action => :new, :mailing_list_name => params[:mailing_list_name])
+    end
+    
     if params[:reply_to][:id].blank?
       post_to_list
     else

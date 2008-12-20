@@ -582,4 +582,16 @@ class PostsControllerTest < ActiveSupport::TestCase
       :year => Date.today.year
     )
   end
+  
+  def test_spam_post_should_not_cause_error
+    obra_chat = mailing_lists(:obra_chat)
+    post(:post, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
+                  "mailing_list_post" => { "from_name"=>"strap", 
+                                           "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
+                                           "subject"=>"onstrapdildo@mail.com", 
+                                           "from_email_address"=>"onstrapdildo@mail.com", 
+                                           "mailing_list_id" => obra_chat.to_param }
+    })
+    assert_response(:redirect)
+  end
 end
