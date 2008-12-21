@@ -599,7 +599,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
     assert_response(:redirect)
     molly.reload
-    assert_equal('222', molly.road_number(true), 'Road number should be updated')
+    assert_equal('222', molly.road_number(true, Date.today.year), 'Road number should be updated')
     assert_equal(true, molly.print_card?, 'print_card?')
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
@@ -649,8 +649,8 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:redirect)
     assert(flash.empty?, 'flash empty?')
     molly.reload
-    assert_equal('202', molly.road_number, 'Road number should not be updated')
-    assert_equal('AZY', molly.xc_number, 'MTB number should be updated')
+    assert_equal('202', molly.road_number(true, Date.today.year), 'Road number should not be updated')
+    assert_equal('AZY', molly.xc_number(true, Date.today.year), 'MTB number should be updated')
     assert_nil(molly.member_from, 'member_from after update')
     assert_nil(molly.member_to, 'member_to after update')
     assert_nil(RaceNumber.find(race_numbers(:molly_road_number).to_param ).updated_by, "updated_by")

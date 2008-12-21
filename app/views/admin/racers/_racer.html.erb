@@ -14,16 +14,16 @@
     <%= render(:partial => 'aliases', :locals => { :racer => racer }) %>
   </td>
   <td class="right">
-    <%= racer.road_number %>
+    <%= racer.road_number(false, @current_year) %>
   </td>
   <td class="right">
-    <%= racer.xc_number %>
+    <%= racer.xc_number(false, @current_year) %>
   </td>
   <td class="right">
-    <%= racer.dh_number %>
+    <%= racer.dh_number(false, @current_year) %>
   </td>
   <td class="right">
-    <%= racer.ccx_number %>
+    <%= racer.ccx_number(false, @current_year) %>
   </td>
   <td class="member">
       <%= check_box_tag "racer_member_#{racer.id}", "1", racer.member?, 

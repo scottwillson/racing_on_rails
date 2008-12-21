@@ -43,21 +43,24 @@ class Admin::RacersController < Admin::RecordEditor
     if @racers.size == RESULTS_LIMIT
       flash[:notice] = "First #{RESULTS_LIMIT} racers"
     end
+    
+    @current_year = current_date.year
   end
   
   def export
-    today = Date.today
+    date = current_date
+
     if params['excel_layout'] == 'scoring_sheet'
       file_name = 'scoring_sheet.xls'
     elsif params['format'] == 'ppl'
       file_name = 'lynx.ppl'
     else
-      file_name = "racers_#{today.year}_#{today.month}_#{today.day}.#{params['format']}"
+      file_name = "racers_#{current_date.year}_#{current_date.month}_#{current_date.day}.#{params['format']}"
     end
     headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
     if params['include'] == 'members_only'
-      where_clause = "WHERE (member_to >= \'#{today.strftime('%Y-%m-%d')}\')"
+      where_clause = "WHERE (member_to >= \'#{date.strftime('%Y-%m-%d')}\')"
     end
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
     @racers = Racer.connection.select_all(%Q{
@@ -67,7 +70,7 @@ class Admin::RacersController < Admin::RecordEditor
              street, racers.city, racers.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
              volunteer_interest, official_interest, race_promotion_interest, team_interest,
-             CEILING(#{today.year} - YEAR(date_of_birth)) as racing_age,
+             CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
              ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
              singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
              DATE_FORMAT(racers.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(racers.updated_at, '%m/%d/%Y') as updated_at
@@ -75,27 +78,27 @@ class Admin::RacersController < Admin::RecordEditor
       LEFT OUTER JOIN teams ON teams.id = racers.team_id 
       LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.racer_id = racers.id 
                       and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and ccx_numbers.year = #{today.year} 
+                      and ccx_numbers.year = #{date.year} 
                       and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
       LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.racer_id = racers.id 
                       and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and dh_numbers.year = #{today.year} 
+                      and dh_numbers.year = #{date.year} 
                       and dh_numbers.discipline_id = #{Discipline[:downhill].id}
       LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.racer_id = racers.id 
                       and road_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and road_numbers.year = #{today.year} 
+                      and road_numbers.year = #{date.year} 
                       and road_numbers.discipline_id = #{Discipline[:road].id}
       LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.racer_id = racers.id 
                       and singlespeed_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and singlespeed_numbers.year = #{today.year} 
+                      and singlespeed_numbers.year = #{date.year} 
                       and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}
       LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.racer_id = racers.id 
                       and track_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and track_numbers.year = #{today.year} 
+                      and track_numbers.year = #{date.year} 
                       and track_numbers.discipline_id = #{Discipline[:track].id}
       LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.racer_id = racers.id 
                       and xc_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and xc_numbers.year = #{today.year} 
+                      and xc_numbers.year = #{date.year} 
                       and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
       #{where_clause}
       ORDER BY last_name, first_name, racers.id
@@ -119,7 +122,7 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def new
-    @year = Date.today.year
+    @year = current_date.year
     @racer = Racer.new(:member_from => Date.new(@year))
     @race_numbers = []
     @years = (2005..(@year + 1)).to_a.reverse
@@ -128,7 +131,7 @@ class Admin::RacersController < Admin::RecordEditor
   
   def show
     @racer = Racer.find(params[:id])
-    @year = Date.today.year
+    @year = current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     @years = (2005..(@year + 1)).to_a.reverse
   end
@@ -187,7 +190,7 @@ class Admin::RacersController < Admin::RecordEditor
       flash[:warn] = e.to_s
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
-    @year = params[:year] || Date.today.year
+    @year = params[:year] || current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     render(:template => 'admin/racers/show')
   end
@@ -252,7 +255,7 @@ class Admin::RacersController < Admin::RecordEditor
       end
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
-    @year = params[:year] || Date.today.year
+    @year = params[:year] || current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
     render(:template => 'admin/racers/show')
   end
@@ -475,7 +478,7 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def number_year_changed
-    @year = params[:year] || Date.today.year
+    @year = params[:year] || current_date.year
     if params[:id]
       @racer = Racer.find(params[:id])
       @race_numbers = RaceNumber.find(:all, :conditions => ['racer_id=? and year=?', @racer.id, @year], :order => 'number_issuer_id, discipline_id')
@@ -549,12 +552,21 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def assign_years
-    today = Date.today
+    today = current_date
     if today.month == 12
       @year = today.year + 1
     else
       @year = today.year
     end
     @years = [today.year, today.year + 1]
+  end
+  
+  def current_date
+    date = Date.today
+    max_date_for_current_year = Event.find_max_date_for_current_year
+    if max_date_for_current_year && (date > max_date_for_current_year)
+      date = Date.new(date.year + 1)
+    end
+    date
   end
 end

@@ -271,14 +271,15 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def number(discipline, reload = false)
+  def number(discipline, reload = false, year = nil)
     return nil if discipline.nil?
 
+    year = year || Date.today.year
     if discipline.is_a?(Symbol)
       discipline = Discipline[discipline]
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == Date.today.year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
+      race_number.year == year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
     end
     if number
       number.value
@@ -329,32 +330,32 @@ class Racer < ActiveRecord::Base
     end
   end
   
-  def bmx_number(reload = false)
-    number(Discipline[:bmx], reload)
+  def bmx_number(reload = false, year = nil)
+    number(Discipline[:bmx], reload, year)
   end
   
-  def ccx_number(reload = false)
-    number(Discipline[:cyclocross], reload)
+  def ccx_number(reload = false, year = nil)
+    number(Discipline[:cyclocross], reload, year)
   end
   
-  def dh_number(reload = false)
-    number(Discipline[:downhill], reload)
+  def dh_number(reload = false, year = nil)
+    number(Discipline[:downhill], reload, year)
   end
   
-  def road_number(reload = false)
-    number(Discipline[:road], reload)
+  def road_number(reload = false, year = nil)
+    number(Discipline[:road], reload, year)
   end
   
-  def singlespeed_number(reload = false)
-    number(Discipline[:singlespeed], reload)
+  def singlespeed_number(reload = false, year = nil)
+    number(Discipline[:singlespeed], reload, year)
   end
 
-  def track_number(reload = false)
-    number(Discipline[:track], reload)
+  def track_number(reload = false, year = nil)
+    number(Discipline[:track], reload, year)
   end
   
-  def xc_number(reload = false)
-    number(Discipline[:mountain_bike], reload)
+  def xc_number(reload = false, year = nil)
+    number(Discipline[:mountain_bike], reload, year)
   end
   
   def bmx_number=(value)
