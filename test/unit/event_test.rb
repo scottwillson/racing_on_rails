@@ -22,8 +22,8 @@ class EventTest < ActiveSupport::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal(5, years.size, "Should find all years with events")
-    assert_equal([Date.today.year, 2005, 2004, 2003, 2002], years, "Years")
+    assert_equal(6, years.size, "Should find all years with events")
+    assert_equal([Date.today.year, 2008, 2005, 2004, 2003, 2002], years, "Years")
   end
   
   def test_defaults
