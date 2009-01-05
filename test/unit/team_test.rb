@@ -245,4 +245,15 @@ class TeamTest < ActiveSupport::TestCase
    assert_equal("Vanilla", team.name(Date.today.year), "Name this year")
    assert_equal("Vanilla", team.name(Date.today.year + 1), "Name next year")
  end
+ 
+  def test_rename_to_old_name
+    team = teams(:vanilla)
+    HistoricalName.create!(:team_id => team.id, :name => "Sacha's Team", :year => 2001)
+    assert_equal(1, team.historical_names.size, "Historical names")
+    assert_equal("Sacha's Team", team.name(2001), "Historical name 2001")
+    team.name = "Sacha's Team"
+    team.save!
+    
+    assert_equal("Sacha's Team", team.name, "New name")
+  end
 end

@@ -4,8 +4,10 @@
   <tr>
     <td>
 <%= tabs do |tabs|
-    tabs.add('2008', :controller => 'results', :year => nil)
-    tabs.add('2007', :controller => 'results', :year => 2007)
+    tabs.add(Date.today.year, :controller => 'results', :year => nil)
+    (Date.today.year - 1).downto(2007) do |year|
+      tabs.add(year, :controller => 'results', :year => year)
+    end
   end  %>
 
 <%= render :partial => 'disciplines' %>
