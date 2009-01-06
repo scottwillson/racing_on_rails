@@ -50,6 +50,18 @@ class AdminScheduleControllerTest < ActiveSupport::TestCase
     assert_match('href="/admin/schedule/2005', html, 'Should link to 2005')
   end
 
+  def test_links_to_years_only_past_year_has_events
+    Event.delete_all
+    current_year = Date.today.year
+    last_year = current_year - 1
+    SingleDayEvent.create!(:date => Date.new(last_year))
+    
+    get(:index, :year => current_year)
+    html = links_to_years
+    assert_match("href=\"/admin/schedule/#{last_year}", html, "Should link to last year: #{last_year}")
+    assert_match("href=\"/admin/schedule/#{current_year}", html, "Should link to current year: #{current_year}")
+  end
+
   def test_upload_schedule
     @request.session[:user] = users(:candi)
         

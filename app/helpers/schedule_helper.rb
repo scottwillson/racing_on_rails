@@ -1,6 +1,13 @@
 module ScheduleHelper
   def links_to_years(discipline = nil)
     years = Event.find_all_years
+    current_year = Date.today.year
+    
+    unless years.include?(current_year)
+      years << current_year
+      years.sort!.reverse!
+    end
+    
     return unless years.size > 1
     
     links = Builder::XmlMarkup.new(:indent => 2)
