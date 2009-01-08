@@ -965,6 +965,17 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_equal(6, assigns['racers'].size, "Racers export size")
   end
   
+  def test_export_to_excel_with_date
+    get(:index, :format => 'xls', :include => 'all', :date => "12/31/2008")
+
+    assert_response(:success)
+    today = Date.today
+    assert_equal("filename=\"racers_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+    assert_equal(6, assigns['racers'].size, "Racers export size")
+  end
+  
   def test_export_members_only_to_excel
     get(:index, :format => 'xls', :include => 'members_only')
 

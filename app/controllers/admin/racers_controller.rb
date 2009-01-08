@@ -55,7 +55,7 @@ class Admin::RacersController < Admin::RecordEditor
     elsif params['format'] == 'ppl'
       file_name = 'lynx.ppl'
     else
-      file_name = "racers_#{current_date.year}_#{current_date.month}_#{current_date.day}.#{params['format']}"
+      file_name = "racers_#{date.year}_#{date.month}_#{date.day}.#{params['format']}"
     end
     headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
@@ -562,7 +562,11 @@ class Admin::RacersController < Admin::RecordEditor
   end
   
   def current_date
-    date = Date.today
+    if params[:date].blank?
+      date = Date.today
+    else
+      date = Date.parse(params[:date])
+    end
     max_date_for_current_year = Event.find_max_date_for_current_year
     if max_date_for_current_year && (date > max_date_for_current_year)
       date = Date.new(date.year + 1)
