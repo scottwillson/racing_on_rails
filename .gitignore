@@ -1,0 +1,9 @@
+db/*.db
+db/dumps/*
+local/*
+log/*.log
+pkg
+tmp/**/*
+.DS_Store
+._*
+tmp/*
