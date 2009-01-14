@@ -100,4 +100,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
+  
+  # Static content needs it's own directory in views for nested layouts.
+  map.connect '*path', :controller => 'static'
 end
