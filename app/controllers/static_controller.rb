@@ -1,5 +1,7 @@
 class StaticController < ApplicationController
   
+  NO_CACHE = []
+  
     def index
       if template_exists? path = 'static/' + params[:path].join('/')
         render_cached path
