@@ -1,7 +1,7 @@
 # There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
 # FIXME Assert correct team names on BAR results
 
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 class BarTest < ActiveSupport::TestCase
   
