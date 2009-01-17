@@ -670,6 +670,38 @@ class ResultTest < ActiveSupport::TestCase
     # Test numbers from different years or disciplines
   end
   
+  def test_assign_results_to_existing_racer_with_same_name_instead_of_creating_a_new_one
+    new_tonkin = Racer.create!(:name => "Erik Tonkin")
+    assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Racer.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+
+    # A very old result
+    SingleDayEvent.create!(:date => Date.new(1980)).standings.create!.races.create!(:category => categories(:cx_a)).results.create!(:racer => new_tonkin)
+    
+    kings_valley_2004 = events(:kings_valley_2004)
+    results = races(:kings_valley_pro_1_2_2004).results
+    result = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin')
+
+    assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should not create new Tonkin")
+    assert_equal(racers(:tonkin), result.racer, "Should use racer with most recent result")
+  end
+  
+  def test_most_recent_racer_if_no_results
+    new_tonkin = Racer.create!(:name => "Erik Tonkin")
+    assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Racer.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+
+    tonkin = racers(:tonkin)
+    tonkin.results.clear
+    
+    kings_valley_2004 = events(:kings_valley_2004)
+    results = races(:kings_valley_pro_1_2_2004).results
+    result = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin')
+
+    assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should not create new Tonkin")
+    assert_equal(new_tonkin, result.racer, "Should use most recently-updated racer if can't decide otherwise")
+  end
+  
   def test_multiple_scores_for_same_race
     competition = Competition.create(:name => 'KOM')
     competition_race = competition.standings.first.races.create(:category => categories(:cx_a))

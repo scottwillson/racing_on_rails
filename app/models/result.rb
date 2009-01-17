@@ -98,7 +98,17 @@ class Result < ActiveRecord::Base
         self.racer = nil
       else
         existing_racers = find_racers
-        self.racer = existing_racers.to_a.first if existing_racers.size == 1
+        if existing_racers.size == 1
+          self.racer = existing_racers.to_a.first 
+        elsif existing_racers.size > 1
+          results = existing_racers.to_a.inject([]) { |results, racer| results + racer.results }
+          if results.empty?
+            self.racer = existing_racers.to_a.sort_by(&:updated_at).last
+          else
+            results = results.sort_by(&:date)
+            self.racer = results.last.racer
+          end
+        end
       end
     end
     
@@ -148,7 +158,7 @@ class Result < ActiveRecord::Base
       end
       return matches if matches.size == 1
     end
-    
+        
     # team
     unless team_name.blank?
       team = Team.find_by_name_or_alias(team_name)

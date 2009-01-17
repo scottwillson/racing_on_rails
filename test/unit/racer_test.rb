@@ -707,4 +707,10 @@ class RacerTest < ActiveSupport::TestCase
    assert(!Discipline.exists?(:name => "Downhill"), "Downhill should be deleted")
    assert_nil(racers(:alice).dh_number, "DH number")
   end
+  
+  def test_find_all_by_name_or_alias
+    new_tonkin = Racer.create!(:name => "Erik Tonkin")
+    assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Racer.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+  end
 end

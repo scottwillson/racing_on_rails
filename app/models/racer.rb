@@ -44,7 +44,7 @@ class Racer < ActiveRecord::Base
         :all,
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
-      
+            
     elsif last_name.blank?
       Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
       
