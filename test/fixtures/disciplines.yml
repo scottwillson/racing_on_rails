@@ -11,7 +11,7 @@ mountain_bike:
   name: Mountain Bike
   bar: true
   numbers: true
-  bar_categories: pro_semi_pro_men, expert_junior_men, sport_junior_men, beginner_men
+  bar_categories: pro_semi_pro_men, junior_men, junior_men, beginner_men
 road:
   name: Road
   bar: true
@@ -43,7 +43,7 @@ downhill:
   name: Downhill
   bar: true
   numbers: true
-  bar_categories: pro_semi_pro_men, expert_junior_men, sport_junior_men, beginner_men
+  bar_categories: pro_semi_pro_men, junior_men, junior_men, beginner_men
 singlespeed:
   name: Singlespeed
   bar: false

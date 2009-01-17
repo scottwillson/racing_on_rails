@@ -280,7 +280,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_not_nil(bar, "2001 OverallBar after recalculate")
     assert_equal(1, OverallBar.count, "Bar events after recalculate")
     assert_equal(1, bar.standings.count, "Bar standings after recalculate")
-    assert_equal(original_results_count + 5, Result.count, "Total count of results in DB")
+    assert_equal(original_results_count + 4, Result.count, "Total count of results in DB")
 
     overall_bar = bar.standings.first
     overall_junior_men_mtb_bar = overall_bar.races.detect do |race|
@@ -291,7 +291,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(kc, overall_junior_men_mtb_bar.results.first.racer, 'Overall Junior Men BAR first result')
     assert_equal(chris_woods, overall_junior_men_mtb_bar.results.last.racer, 'Overall Junior Men BAR last result')
     assert_equal(300, overall_junior_men_mtb_bar.results.first.points, 'Overall Junior Men BAR first points')
-    assert_equal(300, overall_junior_men_mtb_bar.results.last.points, 'Overall Junior Men BAR last points')
+    assert_equal(299, overall_junior_men_mtb_bar.results.last.points, 'Overall Junior Men BAR last points')
   end
   
   def test_previous_year
