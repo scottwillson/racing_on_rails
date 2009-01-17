@@ -2,20 +2,26 @@ class ConsolidateBarAgeCategories < ActiveRecord::Migration
   def self.up
     ["Mountain Bike", "Downhill"].each do |discipline_name|
       discipline = Discipline[discipline_name]
-      discipline.bar_categories.clear
       
-      discipline.bar_categories << Category.find_by_name("Singlespeed/Fixed")
-      discipline.bar_categories << Category.find_by_name("Pro, Semi-Pro Men")
-      discipline.bar_categories << Category.find_by_name("Expert Men")
-      discipline.bar_categories << Category.find_by_name("Sport Men")
-      discipline.bar_categories << Category.find_by_name("Beginner Men")
-      discipline.bar_categories << Category.find_by_name("Pro, Expert Women")
-      discipline.bar_categories << Category.find_by_name("Sport Women")
-      discipline.bar_categories << Category.find_by_name("Beginner Women")
-      discipline.bar_categories << Category.find_by_name("Junior Men")
-      discipline.bar_categories << Category.find_by_name("Junior Women")
-      discipline.bar_categories << Category.find_by_name("Masters Men")
-      discipline.bar_categories << Category.find_by_name("Masters Women")
+      if discipline
+        discipline.bar_categories.clear
+        
+        [ "Singlespeed/Fixed",
+          "Pro, Semi-Pro Men",
+          "Expert Men",
+          "Sport Men",
+          "Beginner Men",
+          "Pro, Expert Women",
+          "Sport Women",
+          "Beginner Women",
+          "Junior Men",
+          "Junior Women",
+          "Masters Men",
+          "Masters Women"  ].each do |category_name|
+          category = Category.find_by_name(category_name)
+          (discipline.bar_categories << category) if category
+        end
+      end
     end
   end
 
