@@ -1,14 +1,25 @@
 <% @page_title = "Admin: Results: #{@racer.name}" %>
 
-<table class="full_width" id="racers">
-  <tr>
-    <td id="left_racer">
-      <%= render :partial => 'racer', :locals => {:racer => @racer, :results => @results} %>
-    </td>
-    <td class="full_width" id="find_results">
-    </td>
-  </tr>
-</table>
+<%= form_remote_tag( 
+  :url => {:action => :find_racer, :ignore_id => @racer.id}, 
+  :update => 'right_racer',
+  :before => "Element.show('find_progress_icon')",
+  :complete => "$('left_racer').scrollTo(); $('left_racer').removeClassName('full_width'); $('left_racer').addClassName('half_width'); Element.show('right_racer'); Element.hide('find_progress_icon')"
+) %>
+  <div class="buttons centered">
+    <%= label_tag :name, "Move Results to Racer" %>
+    <%= text_field_tag :name %>
+    <%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon' %>
+  </div>
+</form>
+
+<div class="racers clear last" id="racers">
+  <div class="full_width" id="left_racer">
+    <%= render :partial => 'racer', :locals => {:racer => @racer, :results => @results} %>
+  </div>
+
+  <div class="half_width last" id="right_racer"></div>
+</div>
 
 <script type="text/javascript">
   function dropped_result(dragged, dropped) {
@@ -17,18 +28,3 @@
     new Ajax.Request('/admin/results/move_result?racer_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});
   }
 </script>
-
-<%= form_remote_tag( 
-  :url => {:action => :find_racer, :ignore_id => @racer.id}, 
-  :update => 'find_results',
-  :before => "Element.show('find_progress_icon')",
-  :complete => "$('racers').scrollTo(); $('left_racer').className='halfWidth'; Element.show('find_results'); Element.hide('find_progress_icon')"
-) %>
-<table>
-  <tr>
-    <td class="field_label">Move Results to:</td>
-        <td><%= text_field_tag 'name' %></td>
-        <td style="width: 16px;"><%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon', :style => 'display: none;', :height => 16, :width => 16 %></td>
-  </tr>
-</table>
-</form>

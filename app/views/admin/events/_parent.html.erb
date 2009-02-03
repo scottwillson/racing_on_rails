@@ -1,35 +1,31 @@
+<%- if event.is_a?(SingleDayEvent) && event.parent -%>
+  <%= f.labelled_text :parent, %Q{ #{link_to(truncate(event.parent.name, 20), edit_admin_event_path(event.parent), :class => "obvious" )}
+          (#{event.parent.friendly_class_name}) } %> 
+<%- end -%>
+
 <%- if event.missing_parent? -%>
-<tr>
-  <td></td>
-  <td>
-    This event has no parent.  
-    <%= link_to"Set it to the #{event.missing_parent.friendly_class_name} #{event.missing_parent.name}", 
-      {:action => 'set_parent', :parent_id => event.missing_parent.id, :child_id => event.id}, 
-      :class => 'obvious', :id => 'set_parent' %>.
-  </td>
-</tr>
+  <p>
+  This event has no parent.  <br/>
+  <%= link_to"Set it to the #{event.missing_parent.friendly_class_name} #{event.missing_parent.name}", 
+    {:action => 'set_parent', :parent_id => event.missing_parent.id, :child_id => event.id}, 
+    :class => 'obvious', :id => 'set_parent' %>.
+  </p>
 
 <%- elsif event.missing_children? -%>
-<tr>
-  <td></td>
-  <td>
-    There are <%= pluralize(event.missing_children.size, 'event') %> named <%= event.name %> that aren't children of this 
-    <%= event.friendly_class_name %>. 
-    <%= link_to "Add #{pluralize(event.missing_children.size, 'child')}", 
-      {:action => 'add_children', :parent_id => event.id,}, 
-      :class => 'obvious' %>.
-  </td>
-</tr>
+  <p>
+  There are <%= pluralize(event.missing_children.size, 'event') %> named <%= event.name %> that aren't children of this 
+  <%= event.friendly_class_name %>. <br/>
+  <%= link_to "Add #{pluralize(event.missing_children.size, 'child')}", 
+    {:action => 'add_children', :parent_id => event.id,}, 
+    :class => 'obvious' %>.
+  </p>
 <%- end -%>
 
 <%- if event.multi_day_event_children_with_no_parent? -%>
-<tr>
-  <td></td>
-  <td>
-    Found <%= pluralize(event.multi_day_event_children_with_no_parent.size, 'event') %> named <%= event.name %>. 
-    <%= link_to "Make a parent #{MultiDayEvent.guess_type(event.multi_day_event_children_with_no_parent).friendly_class_name}", 
-      {:action => 'create_from_events', :id => event.id}, 
-      :class => 'obvious' %>.
-  </td>
-</tr>
+  <p>
+  Found <%= pluralize(event.multi_day_event_children_with_no_parent.size, 'event') %> named <%= event.name %>.<br/>
+  <%= link_to "Make a parent #{MultiDayEvent.guess_type(event.multi_day_event_children_with_no_parent).friendly_class_name}", 
+    {:action => 'create_from_events', :id => event.id}, 
+    :class => 'obvious' %>.
+  </p>
 <%- end -%>

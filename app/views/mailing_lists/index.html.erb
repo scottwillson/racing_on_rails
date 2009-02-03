@@ -1,7 +1,6 @@
 <% @page_title = "Mailing Lists" %>
 
-<div align="center">
-<table class="yellow" border="0" cellspacing="0" cellpadding="0">
+<% table do %>
   <% for mailing_list in @mailing_lists %>
   <tr valign="top">
     <td style="padding-right: 12px;"><b><a href="/mailman/listinfo/<%= mailing_list.name %>"><%= mailing_list.friendly_name %></a><b></td>
@@ -9,32 +8,25 @@
     <%= render("shared/mailing_list_links", :mailing_list => mailing_list) %>
   </tr>
   <% end %>
-</table>
-</div>
+<% end -%>
 
-<table width=400 align=center>
-  <tr>
-    <td>
-    <p>Having trouble? Please don't email the entire list. Contact the 
-    <a href="mailto:mailman@list.obra.org">administrator</a> at mailman@list.obra.org.</p>
-    
-    <p>Forgot your password?
-      <ol>
-        <li>Go to the <a href="http://list.obra.org/mailman/listinfo/obra">subscriber options</a> page</li>
-        <li>Enter your email address and click the 'Unsubscribe or edit options' button</li>
-        <li>Click the 'Remind' button -- your password will be emailed to you</li>
-      </ol>
-    </p>
-    
-    <p>You must subscribe and <b>confirm</b> before you can post. The system may 
-    take a few minutes to process your confirmation.</p>
-    
-    <p><b>AOL and Netscape Subscribers</b><br>
-      AOL is unfriendly towards mailing lists like OBRA. Occasionally, AOL will 
-      stop accepting OBRA list email. In the future, AOL may attempt to charge us 
-      to deliver mail to you. Consider <a href="http://mail.yahoo.com">Yahoo!</a> or 
-      <a href="http://gmail.com">Google GMail</a> for free email.
-    </p>
-    </td>
-  </tr>
-</table>
+<p>Having trouble? Please don't email the entire list. Contact the 
+<a href="mailto:mailman@list.obra.org">administrator</a> at mailman@list.obra.org.</p>
+
+<p>Forgot your password?
+  <ol>
+    <li>Go to the <a href="http://list.obra.org/mailman/listinfo/obra">subscriber options</a> page</li>
+    <li>Enter your email address and click the 'Unsubscribe or edit options' button</li>
+    <li>Click the 'Remind' button -- your password will be emailed to you</li>
+  </ol>
+</p>
+
+<p>You must subscribe and <b>confirm</b> before you can post. The system may 
+take a few minutes to process your confirmation.</p>
+
+<p><b>AOL and Netscape Subscribers</b><br>
+  AOL is unfriendly towards mailing lists like OBRA. Occasionally, AOL will 
+  stop accepting OBRA list email. In the future, AOL may attempt to charge us 
+  to deliver mail to you. Consider <a href="http://mail.yahoo.com">Yahoo!</a> or 
+  <a href="http://gmail.com">Google GMail</a> for free email.
+</p>

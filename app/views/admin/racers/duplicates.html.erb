@@ -1,12 +1,5 @@
 <% @page_title = 'Admin: Racers: Duplicates' %>
 
-<div class="message">
-  <%= image_tag('/images/icons/warn.gif', :height => 11, :width => 11, :id => 'warn_icon') %>
-  <span id='warn_text'><%= flash[:warn] %></span>
-  <%= image_tag('/images/icons/confirmed.gif', :height => 11, :width => 11, :id => 'message_icon') %>
-  <span id='message_text'><%= flash[:notice] %></span>
-</div>
-
 <%= form_tag(:action => 'resolve_duplicates') %>
 <% @duplicates.each do |duplicate| %>
 <table class="base">

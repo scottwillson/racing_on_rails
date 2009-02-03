@@ -1,17 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'mailing_lists_controller'
 
-# Re-raise errors caught by the controller.
-class MailingListsController; def rescue_action(e) raise e end; end
-
-class MailingListsControllerTest < ActiveSupport::TestCase
-
-  def setup
-    @controller = MailingListsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-  
+class MailingListsControllerTest < ActionController::TestCase
   def test_index
     opts = {:controller => "mailing_lists", :action => "index"}
     assert_routing("/mailing_lists", opts)

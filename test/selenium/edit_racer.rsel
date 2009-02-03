@@ -1,15 +1,15 @@
-include_partial 'fixtures'
-include_partial 'admin_login'
+include_partial "fixtures"
+include_partial "admin_login"
 
-@matson = Racer.find_by_name('Mark Matson')
-open "/admin/racers/#{@matson.id}"
-assert_text_present 'Mark Matson'
+@matson = Racer.find_by_name("Mark Matson")
+open "/admin/racers/#{@matson.id}/edit"
+assert_text_present "Mark Matson"
 click "destroy_number_#{@matson.race_numbers.first.id}"
-pause 300
-click_and_wait 'save'
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
-assert_text_not_present 'has no parent'
+wait_for_condition %Q{ selenium.page().bodyText().indexOf('destroy_number_#{@matson.race_numbers.first.id}') == -1; }, 500
+click "save"
+pause 100
+assert_text_not_present "error"
+assert_text_not_present "Unknown action"
 assert_text_not_present "Couldn't find RaceNumber"
 
-assert_location "*/admin/racers/#{@matson.id}"
+assert_location "*/admin/racers/#{@matson.id}/edit"

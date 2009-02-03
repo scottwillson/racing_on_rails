@@ -1,8 +1,5 @@
 page.remove "racer_#{@racer_to_merge.id}_row"
 page.replace_html "racer_#{@existing_racer.id}_aliases", render(:partial => 'aliases', :locals => { :racer => @existing_racer })
-page.hide('warn')
-page.replace_html('notice', "Merged #{@merged_racer_name} into #{@existing_racer.name}")
-page.show('notice')
-page << "Droppables.add('racer_#{@existing_racer.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/racers/merge?target_id=#{@existing_racer.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('racer_#{@existing_racer.id}_row') }});"
-page << "$('racer_#{@existing_racer.id}').src='/images/icons/person.gif';"
-page << "restripeTable();"
+page.call(:flash, "notice", "Merged #{@merged_racer_name} into #{@existing_racer.name}")
+page.call :restripeTable, :racers_table
+page.call :resetTableColumnWidths, :racers_table

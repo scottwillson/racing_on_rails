@@ -1,0 +1,20 @@
+<div class="in_place_editable" id="<%= record_symbol %>_<%= record.id %>_<%= attribute_symbol %>"><%= 
+  if truncate_to
+    truncate(record.send(attribute_symbol), truncate_to)
+  else
+    record.send(attribute_symbol)
+  end
+%></div>
+<script type="text/javascript">
+//<![CDATA[
+
+new Ajax.InPlaceEditor("<%= record_symbol %>_<%= record.id %>_<%= attribute_symbol %>", 
+                       "/admin/<%= record_symbol %>s/set_<%= record_symbol %>_<%= attribute_symbol %>/<%= record.id %>", 
+                       { okControl: false, cancelControl: 'button', cancelText: '', clickToEditText: '', hoverClassName: 'hovering', 
+                         savingText: '&nbsp;', htmlResponse: <%= !script %>,
+                         onComplete: function(ipe) {},
+                         onEnterHover: function(ipe) {},
+                         onLeaveHover: function(ipe) {}
+                     })
+// ]]>
+</script>

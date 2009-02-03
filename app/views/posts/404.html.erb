@@ -1,12 +1,6 @@
 <% @page_title = "Mailing Lists: Not Found" %>
 
-<div align="center">
-<%= flash[:warn] %>
-<br>
-
 <h3>Mailing Lists</h3>
 <%- @mailing_lists.each do |mailing_list| -%>
 <div><%= link_to mailing_list.name, :action => 'index', :mailing_list_name => mailing_list.name %></div>
 <%- end -%>
-
-</div>

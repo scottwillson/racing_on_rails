@@ -1,46 +1,44 @@
 <% @page_title = "Category 4 Womens Race Series | New Result" %>
 
-<%- if flash[:info] -%>
-<div class="info"><%= image_tag "icons/confirmed.gif" %> <%= flash[:info] %></div>
-<%- end -%>
-
 <%= error_messages_for "event" -%>
 <%= error_messages_for "standings" -%>
 <%= error_messages_for "race" -%>
 <%= error_messages_for "result" -%>
 
-<% form_for(:result, :url => { :controller => "cat4_womens_race_series", :action => "results" }) do |f| %>
+<% form_for(:result, 
+            :url => { :controller => "cat4_womens_race_series", :action => "results" },
+            :html => { :autocomplete => "off", :class => "cat4_womens_race_series" }) do |f| %>
 
-<div>
-  <label for="[event]name">Event:</label><%= text_field "event", "name", :size => 60, :autocomplete => 'off' %>
-  <%= check_box "event", "sanctioned_by" -%><label 
-    for="event[sanctioned_by]"  class="check_box_label"><%= ASSOCIATION.short_name %>?</label>
-</div>
 
-<div>
-  <label for="[event]date">Date:</label><%= date_select "event", "date", :order => [:month, :day, :year]%>
-</div>
+<div class="column_grid_container">
+  <div class="span-6 last">
+    <%= label(:event, :name, "Event") %><%= text_field :event, :name, :autocomplete => "off" %>
+    <%= label(:event, :date, "Date") %><%= date_select "event", "date", :order => [:month, :day, :year]%>
+    <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{ASSOCIATION.short_name}?", :class => "check_box") %>
+  </div>
 
-<div style="margin-top: 16px;"> 
-  <table class="base">
+  <% table :class => "clear racers", :id => :racers do %>
     <tr>
-    <th>Place</th>
-    <th>Number</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Team</th>
-  </tr>
+      <th class="span-1">Place</th>
+      <th class="span-1">Number</th>
+      <th class="span-3">First Name</th>
+      <th class="span-3">Last Name</th>
+      <th class="span-3 last">Team Name</th>
+    </tr>
     <tr>
-    <td><%= f.text_field :place, :size => grid_columns("place").size, :autocomplete => 'off' %></td>
-    <td><%= f.text_field :number, :size => grid_columns("number").size, :autocomplete => 'off' %></td>
-    <td><%= f.text_field :first_name, :size => grid_columns("first_name").size, :autocomplete => 'off' %></td>
-    <td><%= f.text_field :last_name, :size => grid_columns("last_name").size, :autocomplete => 'off' %></td>
-    <td><%= f.text_field :team_name, :size => grid_columns("team_name").size, :autocomplete => 'off' %></td>
-  </tr>
-  </table>
-</div>  
+      <td class="span-1"><%= f.text_field :place %></td>
+      <td class="span-1"><%= f.text_field :number %></td>
+      <td class="span-3"><%= f.text_field :first_name %></td>
+      <td class="span-3"><%= f.text_field :last_name %></td>
+      <td class="span-3 last"><%= f.text_field :team_name %></td>
+    </tr>
+  <% end -%>
 
-<div style="margin-top: 16px;"> 
-  <%= submit_tag "Save" %> <%= link_to "Cancel" %>
-</div>  
+  <div class="page_buttons span-6 last">
+    <div class="right span-6 last">
+      <%= link_to "Cancel" %>
+      <%= submit_tag "Save", :id => "save" %>
+    </div>
+  </div>
+</div>
 <% end %>

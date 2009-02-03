@@ -1,6 +1,4 @@
 class PostsController < ApplicationController
-  session :only => [:show, :post, :confirm]
-  
   def index
     mailing_list_name = params["mailing_list_name"]
     month_start = Time.now.beginning_of_month
@@ -74,11 +72,10 @@ class PostsController < ApplicationController
   # Send email to local mail program. Don't save to database. Use mailing list's
   # archiver to store posts. This strategy gives spam filters a change to reject
   # bogus posts.
-  def post
+  def create
     unless params[:reply_to]
       return redirect_to(:action => :new, :mailing_list_name => params[:mailing_list_name])
     end
-    
     if params[:reply_to][:id].blank?
       post_to_list
     else
@@ -88,11 +85,11 @@ class PostsController < ApplicationController
   
   def post_private_reply
     @reply_to = Post.find(params[:reply_to][:id])
-    @mailing_list_post = Post.new(params[:mailing_list_post])
-    if @mailing_list_post.valid?
-      private_reply_email = MailingListMailer.create_private_reply(@mailing_list_post, @reply_to.sender)
+    @post = Post.new(params[:mailing_list_post])
+    if @post.valid?
+      private_reply_email = MailingListMailer.create_private_reply(@post, @reply_to.sender)
       MailingListMailer.deliver(private_reply_email)
-      flash[:notice] = "Sent private reply '#{@mailing_list_post.subject}' to #{private_reply_email.to}"
+      flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
       redirect_to(:action => "confirm_private_reply", :mailing_list_name => params[:mailing_list_name])
     else
       @mailing_list = MailingList.find_by_name(params[:mailing_list_name])
@@ -101,13 +98,13 @@ class PostsController < ApplicationController
   end
   
   def post_to_list
-    @mailing_list_post = Post.new(params[:mailing_list_post])
-    @mailing_list = MailingList.find(@mailing_list_post.mailing_list_id)
-    @mailing_list_post.mailing_list = @mailing_list
-    if @mailing_list_post.valid?
-      post_email = MailingListMailer.create_post(@mailing_list_post)
+    @post = Post.new(params[:post])
+    @mailing_list = MailingList.find(@post.mailing_list_id)
+    @post.mailing_list = @mailing_list
+    if @post.valid?
+      post_email = MailingListMailer.create_post(@post)
       MailingListMailer.deliver(post_email)
-      flash[:notice] = "Submitted new post: #{@mailing_list_post.subject}"
+      flash[:notice] = "Submitted new post: #{@post.subject}"
       redirect_to(:action => "confirm", :mailing_list_name => @mailing_list.name)
     else
       render(:action => "new")
@@ -117,11 +114,11 @@ class PostsController < ApplicationController
   def new
     mailing_list_name = params["mailing_list_name"]
     @mailing_list = MailingList.find_by_name(mailing_list_name)
-    @mailing_list_post = Post.new(:mailing_list => @mailing_list)
-    reply_to_id = params[:reply_to]
-    if reply_to_id
-      @reply_to = Post.find(reply_to_id)
-      @mailing_list_post.subject = "Re: #{@reply_to.subject}"
+    @post = Post.new(:mailing_list => @mailing_list)
+    @reply_to_id = params[:reply_to]
+    if @reply_to_id
+      @reply_to = Post.find(@reply_to_id)
+      @post.subject = "Re: #{@reply_to.subject}"
     end
   end
   

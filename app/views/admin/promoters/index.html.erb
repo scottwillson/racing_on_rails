@@ -1,9 +1,18 @@
-<%= table do |t|
-  t.column :name, :link_to => :edit
-  t.column :phone
-  t.column :email
-end -%>
+<% table :class => "promoters", :id => :promoters do %>
+  <tr>
+    <th class="name">Name</th>
+    <th class="phone">Phone</th>
+    <th class="email">Email</th>
+    <th class="actions last"></th>
+  </tr>
+  <%= render :partial => "promoter", :collection => @promoters %>
+<% end -%>
 
-<div align="left">
-  <%= link_to(image_tag('/images/buttons/add.gif'), :action => 'new') %>
+<div class="buttons container">
+  <%= link_to(image_tag('/images/buttons/add.gif'), new_admin_promoter_path, :class => "image") %>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+  // Otherwise, in-place editing jumps table around
+  fixTableColumnWidths('promoters_table');
+</script>

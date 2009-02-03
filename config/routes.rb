@@ -1,50 +1,50 @@
 ActionController::Routing::Routes.draw do |map|
-  map.connect "/admin/events/update_bar_points/:id", :controller => "admin/events", :action => "update_bar_points"
-  map.connect "/admin/events/upcoming", :controller => "admin/events", :action => "upcoming"
-  map.connect "/admin/events/update/:id/:standings_id", :controller => "admin/events", :action => "update", :requirements => {:id => /\d+/, :standings_id => /\d+/}
-  map.connect "/admin/events/:id/:standings_id/:race_id", :controller => "admin/events", :action => "show"
-  map.connect "/admin/events/:id/:standings_id", :controller => "admin/events", :action => "show", :requirements => {:id => /\d+/, :standings_id => /\d+/}
-  map.connect "/admin/events/:id", :controller => "admin/events", :action => "show", :requirements => {:id => /\d+/}
-  map.connect "/admin/events/new/:year", :controller => "admin/events", :action => 'new', :requirements => {:year => /\d+/}
-  map.connect "/admin/events/:action/:id", :controller => "admin/events"
-  map.connect "/admin/events/:action", :controller => "admin/events"
-
-  map.connect "/admin/categories/:id", :controller => "admin/categories", :action => "index", :requirements => {:id => /\d+/}
+  map.resources :teams
 
   map.namespace(:admin) do |admin|
-    admin.resources :events
+    admin.resources :categories do |category|
+      category.resources :children, :controller => :categories
+    end
+    admin.resources :events, :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
     admin.resources :first_aid_providers
     admin.resources :promoters
-    admin.resources :racers, :collection => { :cards => :get, :duplicates => :get, :mailing_labels => :get, :no_mailing_labels => :get, :no_cards => :get }, 
-                             :member => { :card => :get }
+    admin.resources :racers, :collection => { :cards => :get, 
+                                              :duplicates => :get, 
+                                              :mailing_labels => :get, 
+                                              :no_mailing_labels => :get, 
+                                              :no_cards => :get, 
+                                              :preview_import => :get },
+                             :member => { :card => :get, :toggle_member => :post }
+    admin.resources :single_day_events, :as => "events"
+    admin.resources :standings, :has_many => :races
+    admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
+    admin.resources :results
     admin.resources(:tables) if RAILS_ENV == "test"
-    admin.resources :teams
+    admin.resources :teams, :member => { :toggle_member => :post }
     admin.resources :velodromes
   end
 
-  map.resources :teams
-  
+  map.resources :categories, :has_many => :races
+
   map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
   map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"
 
-  map.connect "/admin/schedule/:year/:action", :controller => "admin/schedule", :requirements => {:year => /\d+/}
-  map.connect "/admin/schedule/:year", :controller => "admin/schedule", :action => "index", :requirements => {:year => /\d+/}
-  map.connect "/admin", :controller => "admin/schedule", :action => "index"
+  map.admin_home "/admin", :controller => "admin/home", :action => "index"
 
   map.connect "/bar/categories", :controller => "bar", :action => 'categories'
   map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
   map.connect "/bar", :controller => "bar", :action => "index"
-  map.connect "/bar/:year/:discipline/:category", 
-              :controller => "bar", :action => "show", 
-              :requirements => {:year => /\d+/}, 
+  map.connect "/bar/:year/:discipline/:category",
+              :controller => "bar", :action => "show",
+              :requirements => {:year => /\d+/},
               :defaults => {:discipline => 'overall', :category => 'senior_men'}
 
   map.connect "/cat4_womens_race_series/:year/:discipline", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
   map.connect "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
-  map.connect "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
+  map.cat4_womens_race_series "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
 
-  map.connect "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
+  map.new_admin_cat4_womens_race_series_result "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
   map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
 
   map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
@@ -68,6 +68,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/posts/:mailing_list_name/confirm_private_reply", :controller => "posts", :action => "confirm_private_reply"
   map.connect "/posts/:mailing_list_name/:year/:month",  :controller => "posts", :action => "list"
   map.connect "/posts/:mailing_list_name",               :controller => "posts"
+  map.resources :posts
 
   map.connect "/results/competition/:competition_id/racer/:racer_id", :controller => "results", :action => "competition"
   map.connect "/results/competition/:competition_id/team/:team_id", :controller => "results", :action => "competition"
@@ -87,7 +88,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/schedule/:year", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/list", :controller => "schedule", :action => "list"
   map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
-  
+  map.schedule "/schedule", :controller => "schedule"
+
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
   map.track "/track", :controller => "track"
@@ -100,7 +102,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
-  
+
   # Static content needs it's own directory in views for nested layouts.
   map.connect '*path', :controller => 'static'
 end

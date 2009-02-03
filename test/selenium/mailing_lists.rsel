@@ -1,0 +1,22 @@
+include_partial "fixtures"
+
+open "/mailing_lists"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+open "/posts/obra"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+open "/posts/obra/new"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+type "post_from_name", "Scott"
+type "post_from_email_address", "scott@butlerpress.com"
+type "post_subject", "Test Message"
+type "post_body", "This is a test message"
+
+click_and_wait("post")
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"

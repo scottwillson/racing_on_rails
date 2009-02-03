@@ -6,8 +6,7 @@ class RacesController < ApplicationController
   # === Assigns
   # * races
   # * category
-  def category
-    @category = Category.find(params[:id])
+  def index
+    @category = Category.find(params[:category_id])
   end
-
 end

@@ -1,8 +1,6 @@
-class Admin::FirstAidProvidersController < ApplicationController
-  
+class Admin::FirstAidProvidersController < ApplicationController  
   before_filter :login_required
   helper :table
-  in_place_edit_for :event, :first_aid_provider
   layout "admin/application"
 
   def index

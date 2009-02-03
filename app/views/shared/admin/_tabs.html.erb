@@ -1,0 +1,12 @@
+          <%- if show_tabs.nil? || show_tabs -%>
+          <div class="tabs">
+            <%= link_to('Schedule', admin_events_path) %> |
+            <%= link_to('First Aid', admin_first_aid_providers_path) %> |
+            <%= link_to('Racers', admin_racers_path) %> |
+            <%= link_to('Teams', admin_teams_path) %> |
+            <%= link_to('Promoters', admin_promoters_path) %> |
+            <%= link_to('Velodromes', admin_velodromes_path) %> |
+            <%= link_to('Categories', admin_categories_path) %> |
+            <%= link_to('Cat 4 Womens Series', new_admin_cat4_womens_race_series_result_path) %>
+          </div>
+          <%- end -%>

@@ -1,18 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'schedule_controller'
 
 # :stopdoc:
-# Re-raise errors caught by the controller.
-class ScheduleController; def rescue_action(e) raise e end; end #:nodoc: all
-
-class ScheduleControllerTest < ActiveSupport::TestCase #:nodoc: all
-
-  def setup
-    @controller = ScheduleController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-
+class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_index
     events = []
     year = 2006

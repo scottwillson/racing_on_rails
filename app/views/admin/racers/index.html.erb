@@ -1,59 +1,42 @@
-<% @page_title = 'Admin: Racers' %>
+<% @page_title = "Admin: Racers" %>
 
-<%= form_tag({}, {:method => 'get', :id => 'search_form'}) %>
-  <table style="margin-top: 16px; margin-bottom: 16px">
-    <tr>
-      <td class="field_label">Name:</td>
-      <td><%= text_field_tag 'name', @name, :size => 30 %></td>
-    </tr>
-  </table>
-</form>
+<%= render :partial => "shared/search", :locals => { :name => @name } %>
 
-<p class="message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><%= flash[:notice] %></p>
-<p class="message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><%= flash[:warn] %></p>
-
-<table style="position: relative;">
-  <tr style="position: relative;">
-    <td style="position: relative;">
-      <table class="base" id="racers" style="position: relative;">
-        <tr>
-          <th class="name">Name</th>
-          <th class="team">Team</th>
-          <th class="aliases">Aliases</th>
-          <th class="right">Road</th>
-          <th class="right">MTB</th>
-          <th class="right">DH</th>
-          <th class="right">Cross</th>
-          <th class="center">Member</th>
-          <th></th>
-          <th></th>
-        </tr>
-        <%= render :partial => "racer", :collection => @racers %>
-        <% if @racers.empty? %>
-        <tr valign="top">
-          <%- if @name.blank? -%>
-          <td colspan="10" width="200" class="not_found">Enter part of a racer's name</td>
-          <%- else -%>
-          <td colspan="10" width="200" class="not_found">No racers found</td>
-          <%- end -%>
-        </tr>
-        <% end %>
-      </table>
-      
-      <table style="width: 100%;">
-        <tr>
-          <td><%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %></td>
-          <td style="text-align: right; padding-top: 8px;"><%= link_to('Print Cards',  formatted_cards_admin_racers_path("pdf")) %> |
-              <%= link_to('Print Mailing Labels', formatted_mailing_labels_admin_racers_path("pdf")) %>
-          </td>
-        </tr>
-      </table>
-
-      <%= render :partial => 'import_export' %>
-
-    </td>
+<% table :class => "racers", :id => :racers do %>
+  <tr>
+    <th class="name">Name</th>
+    <th class="team">Team</th>
+    <th class="aliases">Aliases</th>
+    <th class="number">Road</th>
+    <th class="number">MTB</th>
+    <th class="number">DH</th>
+    <th class="number">Cross</th>
+    <th class="check_box">Member</th>
+    <th class="actions last"></th>
   </tr>
-</table>
+  <%= render :partial => "racer", :collection => @racers %>
+  <% if @racers.empty? %>
+  <tr valign="top">
+    <%- if @name.blank? -%>
+    <td colspan="10" width="200" class="not_found">Enter part of a racer's name</td>
+    <%- else -%>
+    <td colspan="10" width="200" class="not_found">No racers found</td>
+    <%- end -%>
+  </tr>
+  <% end %>
+<% end -%>
+
+<div class="buttons container">
+  <div class="updatedon">
+    <%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image new" }) %>
+  </div>
+  <div class="right">
+    <%= link_to('Print Cards',  formatted_cards_admin_racers_path("pdf")) %> |
+    <%= link_to('Print Mailing Labels', formatted_mailing_labels_admin_racers_path("pdf")) %>
+  </div>
+</div>
+
+<%= render :partial => 'import_export' %>
 
 <% focus('name') %>
 
@@ -69,18 +52,6 @@
 <%- end -%>
 
 <script type="text/javascript" charset="utf-8">
-  function restripeTable() {
-    index = 0;
-    $A($('racers').rows).each(function(row) {
-      if (row.className == 'even' || row.className == 'odd') {
-        if (index % 2 == 0) {
-          row.className = 'even';
-        }
-        else {
-          row.className = 'odd';
-        }
-        index = index + 1;
-      }
-    });
-  }
+  // Otherwise, in-place editing jumps table around
+  fixTableColumnWidths('racers_table');
 </script>

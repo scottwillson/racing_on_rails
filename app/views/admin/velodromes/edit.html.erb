@@ -5,47 +5,25 @@
    end %>
 <% @page_title = "Admin: Velodromes: #{@velodrome.name}" %>
 
-<div align="center">
-<%- if flash[:notice] -%>
-  <div class="message" id="message">
-      <%= image_tag('icons/confirmed.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-      <%= flash[:notice] %>
+<%= error_messages_for "velodrome" %>
+
+<h2><%= @velodrome.name %></h2>
+
+<div class="column_grid_container">
+  <% form_for([:admin, @velodrome]) do |f| -%>
+  <div class="prepend-1 span-3 append-2 last">
+    <%= f.labelled_text_field :name %>
+    <%= f.labelled_text_field :website %>
   </div>
-<%- end -%>
 
-<%- if flash[:warn] -%>
-  <div class="message" id="warn">
-      <%= image_tag('icons/warn.gif', :height => 11, :width => 11, :id => 'confirmed') %>
-      <%= flash[:warn] %>
+  <div class="page_buttons clear span-4 last">
+    <div class="updatedon span-2"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, true) + " ago" unless @velodrome.updated_at.nil? %>&nbsp;</div>
+    <div class="right span-2 last">
+      <%= link_to("Delete", admin_velodrome_path(@velodrome), :method => :delete, :class => 'obvious', :id => 'delete') unless @velodrome.new_record? %>
+      <%= submit_tag "Save", :id => "save" %>
+    </div>
   </div>
-<%- end -%>
-
-<%= error_messages_for 'velodrome' %>
-
-<% form_for([:admin, @velodrome]) do |f| -%>
-  <table class="base">
-    <caption><%= velodrome_name %></caption>
-    <tr>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <td class="field_label">Name:</td>
-      <td class=""><%= f.text_field :name %></td>
-    </tr>
-    <tr>
-      <td class="field_label">Website:</td>
-      <td class=""><%= f.text_field :website %></td>
-    </tr>
-    <tr class="buttons">
-      <td class="updatedon" colspan="2"><%= "Updated: #{time_ago_in_words(@velodrome.updated_at, true)} ago" unless @velodrome.updated_at.nil? %></td>
-      <td class="right" colspan="4">
-        <%= link_to("Delete", admin_velodrome_path(@velodrome), 
-                    :method => :delete, :class => 'obvious', :id => 'delete') unless @velodrome.new_record? %>
-        <%= submit_tag "Save", :id => "save" %>
-      </td>
-    </tr>
-  </table>
-<% end -%>
+  <% end -%>
+</div>
 
 <% focus('velodrome_name') %>

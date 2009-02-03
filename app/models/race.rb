@@ -178,6 +178,43 @@ class Race < ActiveRecord::Base
     end
   end
   
+  def create_result_before(result_id)
+    results.sort!
+    if results.empty?
+      return results.create(:place => "1")
+    end
+    
+    if result_id
+      result = Result.find(result_id)
+    else
+      result = results.last
+    end
+    
+    place = result.place
+    start_index = results.index(result)
+    for index in start_index...(results.size)
+      if results[index].place.to_i > 0
+        results[index].place = (results[index].place.to_i + 1).to_s
+        results[index].save!
+      end
+    end
+    
+    results.create(:place => place)
+  end
+  
+  def destroy_result(result)
+    place = result.place
+    results.sort!
+    start_index = results.index(result) + 1
+    for index in start_index...(results.size)
+      if results[index].place.to_i > 0
+        results[index].place = results[index].place.to_i - 1
+        results[index].save!
+      end
+    end
+    result.destroy
+  end
+  
   def <=>other
     category <=> other.category
   end

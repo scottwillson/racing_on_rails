@@ -1,0 +1,17 @@
+<%= tabs do |tabs|
+  years = Event.find_all_years
+  current_year = Date.today.year
+  
+  unless years.include?(current_year)
+    years << current_year
+    years.sort!.reverse!
+  end
+
+  years.each do |year|
+    if year == @year
+      tabs.add(year.to_s, :year => nil, :discipline => @discipline)
+    else
+      tabs.add(year.to_s, :year => year, :discipline => @discipline)
+    end
+  end
+end -%>

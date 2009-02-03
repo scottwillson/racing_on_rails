@@ -1,58 +1,42 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<div align="center">
+<%= error_messages_for :post %>
 
-  <%= error_messages_for "mailing_list_post" %>
+<% form_for @post do |f| %>
+  <div class="column_grid_container">
+    <%= f.hidden_field(:mailing_list_id) %>
+    <%= hidden_field_tag("reply_to", @reply_to_id) %>
 
-  <%= form_tag :action => "post" %>
-  <%= hidden_field("mailing_list_post", "mailing_list_id") %>
-  <%= hidden_field("reply_to", 'id') %>
-  
-  <table>
-    <tr>
-      <td class="field_label">To:</td>
-      <td>
-		<% if @reply_to %>
-		<%= h(@reply_to.sender_obscured) %>
-		<% else %>
-		<%= @mailing_list.friendly_name %>
-		<% end %>
-	  </td>
-    </tr>
-    <tr>
-      <td class="field_label">Your Name:</td>
-      <td><%= text_field("mailing_list_post", "from_name", :size => "40") %></td>
-    </tr>
-    <tr>
-      <td class="field_label">Your Email Address:</td>
-      <td><%= text_field("mailing_list_post", "from_email_address", :size => "40") %></td>
-    </tr>
-    <tr>
-      <td class="field_label">Subject:</td>
-      <td><%= text_field("mailing_list_post", "subject", :size => "40") %></td>
-    </tr>
-    <tr>
-      <td colspan="2"><%= text_area("mailing_list_post", "body", :rows => "14", :cols => "65") %></td>
-    </tr>
-    <tr>
-      <td class="updatedon"><% unless @reply_to %>You must be a subscriber to post<% end %></td>
-      <td align="right">
-		<% if @reply_to %>
-	    	<%= submit_tag("Send") %>
-		<% else %>
-    	<%= submit_tag("Post") %>
-		<% end %>
-	  </td>
-    </tr>
-  </table>  
-  </form>
-  
-  <br/>
+    <div class="span-3">
+      <% if @reply_to %>
+      <%= f.labelled_text :to, h(@reply_to.sender_obscured) %>
+      <% else %>
+      <%= f.labelled_text :to, @mailing_list.friendly_name %>
+      <% end %>
 
-  <table>
-    <tr>
-      <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
-    </tr>
-  </table>
+      <%= f.labelled_text_field(:from_name, "Your Name", :size => "40") %>
+      <%= f.labelled_text_field(:from_email_address, "Your Email Address", :size => "40") %>
+      <%= f.labelled_text_field(:subject, nil, :size => "40") %>
+    </div>
+    <div class="span-3 last">
+      <%= f.labelled_text_area(:body) %>
+    </div>
+    
+    <div class="page_buttons clear span-6 last">
+      <div class="updatedon span-5 right"><% unless @reply_to %>You must be a subscriber to post<% end %></div>
+      <div class="right span-1 last">
+    <% if @reply_to %>
+        <%= submit_tag("Send") %>
+    <% else %>
+      <%= submit_tag("Post", :id => "post") %>
+    <% end %>
+      </div>
+    </div>
+  </div>
+<% end -%>
 
-</div>
+<table class="top_margin centered">
+  <tr>
+    <%= render("shared/mailing_list_links", :mailing_list => @mailing_list) %>
+  </tr>
+</table>

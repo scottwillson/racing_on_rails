@@ -1,17 +1,10 @@
 <% @page_title = "Admin: Login" %>
 <% @show_tabs = false %>
 
-<div>
-    
-<% if flash['notice'] %>
-  <div id="message"><%= flash['notice'] %></div>
-<% end %>
-
 <% if session[:user] %>
 
 <%= form_tag :action=> "login" %>
-<table class="base" id="login">
-  <caption>Logged In</caption>
+<% table :caption => "Logged In", :id => "login" do %>
   <tr><th colspan="2">&nbsp;</th></tr>
   <tr>
     <td>You are logged-in as <%= session[:user].name %></td>
@@ -19,31 +12,24 @@
   <tr>
     <td><input type="submit" name="logout" value="Logout"/></td>
   </tr>
-</table>
+<% end -%>
 </form>
 
 <% else %>
 
-<%= form_tag :action=> "login" %>
-<table class="base" id="login">
-  <caption>Login</caption>
-  <tr><th colspan="2">&nbsp;</th></tr>
-  <tr>
-    <td class="field_label">Username:</td>
-    <td><input type="text" name="username" id="user_login" size="30" value=""/></td>
-  </tr>
-  <tr>
-    <td class="field_label">Password:</td>
-    <td><input type="password" name="user_password" id="user_password" size="30"/></td>
-  </tr>
-  <tr class="buttons">
-    <td colspan="2" class="right"><input type="submit" name="login" value="Login"/></td>
-  </tr>
-</table>
-</form>
+<h2>Welcome</h2>
 
+<%= form_tag :action => "login" %>
+  <div class="login centered">
+    <%= labelled_text_field_tag "username", "Username", "" %><br/>
+    <%= label_tag "user_password", "Password" %>
+    <%= password_field_tag "user_password", "" %>
+    <div class="clear page_buttons">
+      <div class="right"><input type="submit" name="login" value="Login"/></div>
+    </div>
+  </div>
+</form>
+  
 <% end %>
 
-</div>
-
-<% focus('user_login') %>
+<% focus('username') %>

@@ -1,59 +1,60 @@
 <% if @existing_racers.size == 1 %>
-<%= form_remote_tag(
-  :url => {:action => 'merge', :id => "racer_#{@racer.to_param}", :target_id => @existing_racers.first.id},
-  :success => 'document.location.reload(true)') %>
-  <%= text_field_tag 'name', @racer.name, :size => 40, :style => "margin-left: 24px;" %>
-<div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
-<%= @existing_racers.first.name %> <%= aka(@existing_racers.first) %> already exists.
-</div>
-<div style="padding-left: 24px; width: 300px; white-space: normal;">
-Delete <%= @original_name %> and move results to <%= @existing_racers.first.name %>?
-</div>
-<div style="padding-right: 2px; width: 300px; margin-left: auto; text-align: right;">
-  <%= link_to_remote( 
-        image_tag('/images/buttons/small/cancel.gif', :height => 22, :width => 44), 
-        :update => "racer_#{@racer.id}_name", 
-        :url => { :action => "cancel", :id => @racer.to_param },
-        :html => { :class => "image" }
-      )
-   %>
-  <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
-</div>
-</form>
+
+<td>
+  <%= form_remote_tag(:url => {:action => 'merge', :id => @racer.id, :target_id => @existing_racers.first.id}) %>
+    <div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
+      <%= @existing_racers.first.name %> <%= aka(@existing_racers.first) %> already exists.
+    </div>
+    <div style="padding-left: 24px; width: 300px; white-space: normal;">
+      Delete <%= @original_name %> and move results to <%= @existing_racers.first.name %>?
+    </div>
+    <div style="padding-right: 2px; width: 300px; margin-left: auto; text-align: right;">
+      <%= link_to_remote( 
+            image_tag('/images/buttons/cancel.gif', :height => 22, :width => 44), 
+            :url => { :action => "cancel_in_place_edit", :id => @racer.to_param },
+            :html => { :class => "image" }
+          )
+       %>
+      <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
+    </div>
+  </form>
+</td>
+<td colspan="9">&nbsp;</td>
 
 <% else %>
 
-<%= form_remote_tag(:url => {:action => 'merge'}, :success => 'document.location.reload(true)') %>
-  <%= text_field_tag 'name', @racer.name, :size => 40, :style => "margin-left: 24px;" %>
-  <div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
-  <%= @existing_racers.first.name %> already exists.
-  </div>
-  <div style="padding-left: 24px; width: 300px; white-space: normal;">
-    Delete <%= @original_name %> and move results to:
-  </div>
-<% for existing_racer in @existing_racers %>
-  <%= radio_button_tag "id", "racer_#{@racer.to_param}", false, :style => "width: auto;" %> 
-  <%= existing_racer.name %> 
-  <%= existing_racer.team_name if existing_racer.team %>
-  <% unless existing_racer.road_number.blank? %>Road # <%= existing_racer.road_number %><% end %>
-  <% unless existing_racer.xc_number.blank? %>MTB # <%= existing_racer.xc_number %><% end %>
-  <% unless existing_racer.dh_number.blank? %>DH # <%= existing_racer.dh_number %><% end %>
-  <% unless existing_racer.ccx_number.blank? %>CX # <%= existing_racer.ccx_number %><% end %>
-  <br>
-<% end %>
+<td>
+  <%= form_remote_tag(:url => {:action => 'merge'}) %>
+    <div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
+      <%= @existing_racers.first.name %> already exists.
+    </div>
+    <div style="padding-left: 24px; width: 300px; white-space: normal;">
+      Delete <%= @original_name %> and move results to:
+    </div>
+  <% for existing_racer in @existing_racers %>
+    <%= radio_button_tag "id", "racer_#{@racer.to_param}", false, :style => "width: auto;" %> 
+    <%= existing_racer.name %> 
+    <%= existing_racer.team_name if existing_racer.team %>
+    <% unless existing_racer.road_number.blank? %>Road # <%= existing_racer.road_number %><% end %>
+    <% unless existing_racer.xc_number.blank? %>MTB # <%= existing_racer.xc_number %><% end %>
+    <% unless existing_racer.dh_number.blank? %>DH # <%= existing_racer.dh_number %><% end %>
+    <% unless existing_racer.ccx_number.blank? %>CX # <%= existing_racer.ccx_number %><% end %>
+    <br>
+  <% end %>
 
-<%= hidden_field_tag "target_id", @existing_racers.first.id %>
+  <%= hidden_field_tag "target_id", @existing_racers.first.id %>
 
-<div align="right" style="padding-right: 2px;">
-  <%= link_to_remote( 
-        image_tag('/images/buttons/small/cancel.gif', :height => 22, :width => 44), 
-        :update => "racer_#{@racer.id}_name", 
-        :url => { :action => "cancel", :id => @racer.to_param },
-        :html => { :class => "image" }
+  <div align="right" style="padding-right: 2px;">
+    <%= link_to_remote( 
+      image_tag('/images/buttons/cancel.gif', :height => 22, :width => 44), 
+      :url => { :action => "cancel_in_place_edit", :id => @racer.to_param },
+      :html => { :class => "image" }
       )
-   %>
-  <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
-</div>
-</form>
+     %>
+    <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
+  </div>
+  </form>
+</td>
+<td colspan="9">&nbsp;</td>
 
 <% end %>

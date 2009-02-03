@@ -1,37 +1,14 @@
 <% @page_title = 'Admin: Velodromes' %>
 
-<div align="center">
+<% table :class => :velodromes, :id => :velodromes do %>
+  <tr>
+    <th class="name">Name</th>
+    <th>Website</th>
+    <th></th>
+  </tr>
+  <%= render :partial => "velodrome", :collection => @velodromes %>
+<% end -%>
 
-  <p class="message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><%= flash[:notice] %></p>
-  <p class="message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><%= flash[:warn] %></p>
-
-  <table style="position: relative;">
-    <tr style="position: relative;">
-      <td style="position: relative;">
-        <table class="base" id="velodromes" style="position: relative;">
-          <tr>
-            <th class="name">Name</th>
-            <th>Website</th>
-            <th></th>
-            <th></th>
-          </tr>
-          <%= render :partial => "velodrome", :collection => @velodromes %>
-          <% if @velodromes.empty? %>
-          <tr valign="top">
-            <td colspan="4" width="200" class="not_found">No velodromes found</td>
-          </tr>
-          <% end %>
-        </table>
-
-        <table style="width: 100%;">
-          <tr>
-            <td><%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-
-  <% focus('name') %>
-
+<div class="buttons container">
+  <%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %>
 </div>

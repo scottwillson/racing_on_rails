@@ -44,7 +44,7 @@ class Racer < ActiveRecord::Base
         :all,
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_racers_by_name(Racer.full_name(first_name, last_name))
-            
+      
     elsif last_name.blank?
       Racer.find_all_by_first_name(first_name) | Alias.find_all_racers_by_name(first_name)
       
@@ -111,6 +111,12 @@ class Racer < ActiveRecord::Base
         "#{first_name} #{last_name} <#{email}>"
       end
     end
+  end
+  
+  def racers_with_same_name
+    racers = Racer.find_all_by_name(self.name) | Alias.find_all_racers_by_name(self.name)
+    racers.reject! { |racer| racer == self }
+    racers
   end
   
   def attributes=(attributes)
@@ -475,7 +481,7 @@ class Racer < ActiveRecord::Base
   def created_from_result?
     self.email.blank? && self.street.blank? && self.home_phone.blank?
   end
-  
+
   def state=(value)
     if value and value.size == 2
       value.upcase!

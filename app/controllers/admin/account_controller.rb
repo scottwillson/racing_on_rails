@@ -24,11 +24,10 @@ class Admin::AccountController < ApplicationController
     @user = User.authenticate(params[:username], params[:user_password])
     if @user
       session[:user] = @user
-      flash['notice']  = "Login successful"
-      redirect_back_or_default :controller => 'schedule', :action => "index"
+      redirect_back_or_default(admin_home_path)
     else
       if !params[:username].blank? or !params[:user_password].blank? 
-        flash.now['notice']  = "Login unsuccessful"
+        flash.now[:warn]  = "Login unsuccessful"
       end
       @login = params[:username]
     end

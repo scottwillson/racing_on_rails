@@ -16,18 +16,11 @@
   </tr>
 </table>
 
-<p>
-
-<table class="base">
-  <caption><%= @year %> Results</caption>
-    <% unless @events.empty? %> 
-      <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
+<% table :caption => "#{@year}&nbsp;Results" do %>
+  <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>
     <td><%= link_to event.name, :action => 'event', :id => event.id %></td>
   </tr>
-      <% end %>
-    <% else %>
-  <tr><td>Results will be posted when available</td></tr>
-    <%- end -%>
-</table>
+  <% end -%>
+<% end -%>

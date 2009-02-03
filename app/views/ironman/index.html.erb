@@ -18,14 +18,11 @@ There is no prize just identification of riders who need to get a life.</p>
 
 <% unless @ironman.nil? or @ironman.races.empty? or @ironman.races.first.results.empty? %>
 
-<%= will_paginate @results %>
+<p><%= will_paginate @results %></p>
 
-<div class="updatedon">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
+<div class="updatedon centered">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
 
-<table class="base">
-  <tr>
-    <th><%= @ironman.date.year %> Ironman</th>
-  </tr>
+<% table :caption => "#{@ironman.date.year} Ironman" do %>
   <tr>
     <td><pre><%- for result in @results %>
 <%= result.place.rjust(3) -%>
@@ -38,7 +35,7 @@ There is no prize just identification of riders who need to get a life.</p>
    <%= number_with_precision(result.points, 0).rjust(6) -%>
 <%- end -%></pre></td>
   </tr>
-</table>
+<% end -%>
 
-<%= will_paginate @results %>
+<p><%= will_paginate @results %></p>
 <% end %>  

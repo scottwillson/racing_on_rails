@@ -1,0 +1,10 @@
+<% @page_title = "Races: #{@category.name}" %>
+
+<% table :caption => @category.name do %>
+  <tr><th></th></tr>
+  <% for race in @category.races %>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td><%= link_to race.standings.event.name, :controller => 'results', :action => 'event', :year => race.standings.event.date.year, :discipline => race.standings.event.discipline, :id => race.standings.event.id %></td>
+  </tr>
+  <% end %>
+<% end %>

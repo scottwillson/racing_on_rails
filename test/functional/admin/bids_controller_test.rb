@@ -1,13 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/bids_controller'
 
-class Admin::BidsController; def rescue_action(e) raise e end; end
-
-class Admin::BidsControllerTest < ActiveSupport::TestCase
+class Admin::BidsControllerTest < ActionController::TestCase
   def setup
-    @controller = Admin::BidsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     @request.session[:user] = users(:candi)
   end
 

@@ -1,0 +1,101 @@
+<% @page_title = "Admin: Events: #{@event.name}" %>
+
+<%= error_messages_for "event" %>
+
+<h2><%= @event.name %></h2>
+
+<div class="column_grid_container">
+  <div class="box-3">
+    <%= render :partial => "admin/events/nav", :locals => { :event => @event } %>
+  </div>
+  <div class="span-3 last">
+
+    <%# form_for needs help with namespace + STI  %>
+     <% form_for(:event, @event, :url => admin_event_path(@event), :html => { :method => form_method_for(@event) }) do |f| -%>
+      <div class="span-3 last no_top_margin">
+        <%= f.labelled_text_field :name %>
+
+        <%= render :partial => 'parent', :locals => {:event => @event, :f => f } %>
+
+        <%= f.label :type %>
+        <%= f.select(:type, [['Single Day Event', 'SingleDayEvent'],
+                             ['Multi Day Event', 'MultiDayEvent'], 
+                             ['Series', 'Series'], 
+                             ['Weekly Series', 'WeeklySeries']], {}, 
+           { :title => "Single day event: most events. 
+    \nMulti day event: event over consecutive days (stage races, AVC). 
+    \nSeries: weekend events with full BAR points (Cross Crusade). 
+    \nWeekly series: weeknight, BAR points only for final standings (PIR)" }) %>
+
+        <%- if @event.is_a?(SingleDayEvent) -%>
+          <%= f.label :date_1i, "Date" %>
+          <%= f.date_select :date, :order => [:month, :day, :year] %>
+        <%- else -%>
+          <%- if @event.start_date == @event.end_date -%>
+            <%= f.labelled_text(:date, @event.start_date.strftime('%A, %B %d, %Y')) %>
+          <%- else -%>
+            <%= f.labelled_text(:date, "#{@event.start_date.strftime('%a %m/%d/%Y')} to #{@event.end_date.strftime('%a %m/%d/%Y')}") %>
+          <%- end -%>
+        <%- end -%>
+
+        <%= f.label :discipline %>
+        <%= f.select :discipline, Discipline.find_all_names.sort %>
+
+        <%= f.label :city, "City, State" %>
+        <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
+        <%= f.label :velodrome_id, "Velodrome" %>
+        <%= f.select(:velodrome_id, 
+                 Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, 
+                 { :include_blank => true }) %>
+        <%= f.labelled_text_field :time %>
+        <%= f.labelled_check_box :cancelled %>
+        <%= f.labelled_check_box :instructional %>
+        <%= f.labelled_check_box :practice %>
+      </div>
+
+      <div class="span-3 last top_margin">
+        <%= f.label :promoter_id, "Promoter" %>
+        <%= f.select(:promoter_id, 
+                 Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
+                 { :include_blank => true }) %>
+
+        <div class="prepend-1 span-2 right">
+          <span id="edit_promoter_link">
+            <%= link_to("Edit", edit_admin_promoter_path(@event.promoter, :event_id => @event.id)) if @event.promoter %>
+          </span>
+          <%= link_to("New", new_admin_promoter_path(:event_id => @event.id)) %>
+         </div>
+       </div>
+
+       <div class="span-3 last top_margin">
+        <%= f.label :sanctioned_by %>
+        <%= f.select :sanctioned_by, SANCTIONING_ORGANIZATIONS %>
+
+        <%= f.label :number_issuer_id, "Number Issuer" %>
+        <%= f.select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})  %>
+
+        <%= f.labelled_text_field :flyer %>
+        <%= f.labelled_check_box :flyer_approved %>
+
+        <%= f.labelled_text_field :pre_event_fees %>
+        <%= f.labelled_text_field :post_event_fees %>
+        <%= f.labelled_text_field :flyer_ad_fee %>
+
+        <%= f.labelled_text_area :notes %>
+      </div>
+
+      <%= render(:partial => "events", :locals => { :events => @event.events }) if @event.is_a?(MultiDayEvent) %>
+
+      <div class="span-3 page_buttons last">
+        <div class="updatedon span-1">Updated: <%= time_ago_in_words(@event.updated_at, true) + " ago" unless @event.updated_at.nil? %></div>
+        <div class="right span-2 last">
+          <%= link_to "Delete", admin_event_path(@event), :method => :delete, :class => 'obvious', :id => 'delete' %>
+          <%= submit_tag "Save", :id => "save" %>
+        </div>
+      </div>
+    <% end -%>
+
+  </div>
+</div>
+
+<% focus("event_name") if @event.new_record? %>

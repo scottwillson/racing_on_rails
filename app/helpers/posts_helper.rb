@@ -4,7 +4,7 @@ module PostsHelper
   def archive_navigation(mailing_list, month, year)
     if mailing_list.dates
       nav = Builder::XmlMarkup.new(:indent=>2)
-      nav.div({:class => "archive_navigation"}) {
+      nav.div({:class => "archive_navigation centered"}) { |nav|
         nav.div {
           for y in (mailing_list.dates.first.year)..(mailing_list.dates.last.year)
             if y != year
@@ -22,7 +22,7 @@ module PostsHelper
             end
           end
         }
-        nav.div {
+        nav.div({ :class => "centered" }) {
           if has_previous(month, year, mailing_list)
             y = year
             m = month - 1
@@ -75,7 +75,6 @@ module PostsHelper
         nav.text!("[Next]")
       }
     end
-    return nav
   end
   
   def has_previous(month, year, mailing_list)

@@ -18,6 +18,8 @@ module InPlaceEditing
       define_method("set_#{object}_#{attribute}") do
         @item = object.to_s.camelize.constantize.find(params[:id])
         @item.update_attribute(attribute, params[:value])
+        # HACK! FIXME
+        expire_cache
         render :text => @item.send(attribute).to_s
       end
     end

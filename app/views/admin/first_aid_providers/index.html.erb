@@ -1,19 +1,28 @@
 <% @page_title = 'First Aid' %>
 
 <% form_tag({}, { :method => :get }) do %>
-  <%= check_box_tag "past_events", "true", @past_events, :onclick => "form.submit();" %>&nbsp;<label for="past_events">Show past events</label>
-  <%= hidden_field_tag "sort_by", params[:sort_by] %>
-  <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
+  <div class="container">
+      <label for="past_events" class="check_box left"><%= check_box_tag "past_events", "true", @past_events, :onclick => "form.submit();" %>Show past events</label>
+      <%= hidden_field_tag "sort_by", params[:sort_by] %>
+      <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
+  </div>
 <% end -%>
 
-<%= table(:events, :caption => "#{Date.today.year} First Aid") do |t|
-  t.column :first_aid_provider, :title => "Provider", :editable => true
-  t.column :date, :format => :short_with_week_day
-  t.column :name
-  t.column :promoter_name, :title => "Promoter"
-  t.column :city_state, :title => "Location", :sort_by => [:city, :state]
-end -%>
+<% table :caption => "#{Date.today.year} First Aid", :class => "first_aid_providers", :id => :events, :collection => @events do %>
+  <tr>
+    <%= th(:first_aid_provider, :title => "Provider", :class => "name", :sort_params => { :past_events => @past_events }) %>
+    <%= th(:date, :sort_params => { :past_events => @past_events }) %>
+    <%= th(:name, :class => "event_name", :sort_params => { :past_events => @past_events }) %>
+    <%= th(:promoter_name, :title => "Promoter", :sort_params => { :past_events => @past_events }) %>
+    <%= th(:location, :class => "last", :sort_params => { :past_events => @past_events }) %>
+  </tr>
+  <%= render :partial => "event", :collection => sort_rows(@events) %>
+<% end -%>
 
-<div>
-  <%= link_to "Email", formatted_admin_first_aid_providers_path("txt", :sort_by => params[:sort_by], :sort_direction => params[:sort_direction], :past_events => @past_events) %>
-</div>
+<p>
+  <%= link_to "Email", formatted_admin_first_aid_providers_path("txt", :sort_by => params[:sort_by], 
+                                                                       :sort_direction => params[:sort_direction], 
+                                                                       :past_events => @past_events),
+              { :class => :image }
+  %>
+</p>

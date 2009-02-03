@@ -1,15 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'ironman_controller'
 
-class IronmanController; def rescue_action(e) raise e end; end
-
-class IronmanControllerTest < ActiveSupport::TestCase
-
-  def setup
-    @controller = IronmanController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
+class IronmanControllerTest < ActionController::TestCase
+  def test_index
     big_team = Team.create(:name => "T" * 60)
     weaver = racers(:weaver)
     weaver.team = big_team
@@ -19,9 +11,7 @@ class IronmanControllerTest < ActiveSupport::TestCase
 
     Ironman.recalculate(2004)
     Ironman.recalculate
-  end
 
-  def test_index
     opts = {:controller => "ironman", :action => "index", :year => "2004"}
     assert_routing("/ironman/2004", opts)
     opts = {:controller => "ironman", :action => "index"}

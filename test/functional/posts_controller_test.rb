@@ -1,23 +1,9 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'posts_controller'
 require 'mailing_list_mailer'
 
-# Re-raise errors caught by the controller.
-class PostsController
-  def rescue_action(e)
-    raise e
-  end
-end
-
 # FIXME Navigation tests are weak. Need to do more than just not blow up
-class PostsControllerTest < ActiveSupport::TestCase
-
+class PostsControllerTest < ActionController::TestCase
   def setup
-    @controller = PostsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    ActionMailer::Base.delivery_method = :test
-    ActionMailer::Base.perform_deliveries = true
     ActionMailer::Base.deliveries = []
   end
   
@@ -39,14 +25,14 @@ class PostsControllerTest < ActiveSupport::TestCase
     assert_response(:success)
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["mailing_list_post"], "Should assign mailing_list_post")
-    mailing_list_post = assigns["mailing_list_post"]
-    assert_equal(obra_chat, mailing_list_post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "mailing_list_post[mailing_list_id]", :value => obra_chat.id})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[from_email_address]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[from_name]"})
-    assert_tag(:tag => "textarea", :attributes => {:name => "mailing_list_post[body]"})
+    assert_not_nil(assigns["post"], "Should assign post")
+    post = assigns["post"]
+    assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
+    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "post[mailing_list_id]", :value => obra_chat.id})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
+    assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
     assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Post"})
   end
   
@@ -65,16 +51,16 @@ class PostsControllerTest < ActiveSupport::TestCase
     assert_response(:success)
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    mailing_list_post = assigns["mailing_list_post"]
-    assert_not_nil(mailing_list_post, "Should assign mailing_list_post")
+    post = assigns["post"]
+    assert_not_nil(post, "Should assign post")
     assert_equal(original_post, assigns["reply_to"], "Should assign reply_to")
-    assert_equal("Re: Only OBRA Race Message", mailing_list_post.subject, 'Prepopulated subject')
-    assert_equal(obra_race, mailing_list_post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "mailing_list_post[mailing_list_id]", :value => obra_race.id})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[from_email_address]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "mailing_list_post[from_name]"})
-    assert_tag(:tag => "textarea", :attributes => {:name => "mailing_list_post[body]"})
+    assert_equal("Re: Only OBRA Race Message", post.subject, 'Prepopulated subject')
+    assert_equal(obra_race, post.mailing_list, "Post's mailing list")
+    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "post[mailing_list_id]", :value => obra_race.id})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
+    assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
     assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Send"})
   end
   
@@ -265,10 +251,10 @@ class PostsControllerTest < ActiveSupport::TestCase
     path = {:controller => "posts", :action => "post", :mailing_list_name => 'obra'}
     assert_routing("posts/obra/post", path)
   
-    post(:post, 
+    post(:create, 
         :mailing_list_name => obra_chat.name,
         :reply_to => {:id => ''},
-        :mailing_list_post => {
+        :post => {
           :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
@@ -310,7 +296,7 @@ class PostsControllerTest < ActiveSupport::TestCase
     path = {:controller => "posts", :action => "post", :mailing_list_name => 'obra'}
     assert_routing("posts/obra/post", path)
   
-    post(:post, 
+    post(:create, 
         :mailing_list_name => obra_chat.name,
         :mailing_list_post => {
           :mailing_list_id => obra_chat.id,
@@ -350,7 +336,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     )
   
-    post(:post, 
+    post(:create, 
         :mailing_list_name => obra_chat.name,
         :mailing_list_post => {
           :mailing_list_id => obra_chat.id,
@@ -364,11 +350,11 @@ class PostsControllerTest < ActiveSupport::TestCase
     
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    mailing_list_post = assigns["mailing_list_post"]
-    assert_not_nil(mailing_list_post, "Should assign mailing_list_post")
+    post = assigns["post"]
+    assert_not_nil(post, "Should assign post")
     assert_equal(reply_to_post, assigns["reply_to"], "Should assign reply_to")
-    assert_equal("Re: #{subject}", mailing_list_post.subject, 'Prepopulated subject')
-    assert_equal(obra_chat, mailing_list_post.mailing_list, "Post's mailing list")
+    assert_equal("Re: #{subject}", post.subject, 'Prepopulated subject')
+    assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
   end
   
   def test_confirm
@@ -430,7 +416,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     })
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "12")
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
+    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation centered"})
   
     # Two months
     obra_race = mailing_lists(:obra_race)
@@ -443,7 +429,7 @@ class PostsControllerTest < ActiveSupport::TestCase
       :body => "This is a test message."
     })
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "11")
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
+    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation centered"})
   end
   
   def test_post_navigation
@@ -582,10 +568,10 @@ class PostsControllerTest < ActiveSupport::TestCase
       :year => Date.today.year
     )
   end
-  
+
   def test_spam_post_should_not_cause_error
     obra_chat = mailing_lists(:obra_chat)
-    post(:post, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
+    post(:create, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
                   "mailing_list_post" => { "from_name"=>"strap", 
                                            "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
                                            "subject"=>"onstrapdildo@mail.com", 

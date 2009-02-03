@@ -1,24 +1,21 @@
-<table class="yellow" id="results" border="0" cellspacing="0" cellpadding="0" width="100%">
-  <tr bgcolor="#ffde14">
-    <th><%= @oregon_cup.date.year %> Races</th>
-  </tr>
+<% table :caption => "#{@oregon_cup.date.year} Races" do %>
+  <tr><th></th></tr>
+  <%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
+  <%- for event in @oregon_cup.events.sort -%>
   <tr>
+    <td><%= event.date.strftime("%B %d") %></td>
     <td>
-		<%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
-<pre><%- for event in @oregon_cup.events.sort -%>
-<%- if event.standings.empty? -%>
-<%- if event.flyer_approved? and !event.flyer.blank? -%>
-<%= event.date.strftime("%B %d").ljust(15) %><%= flyer_link_from_app_server(event) %>
-<%- else -%>
-<%= event.date.strftime("%B %d").ljust(15) %><%= event.name %>
-<%- end -%>
-<%- else -%>
-<%= event.date.strftime("%B %d").ljust(15) %><%= link_to event.name, :controller => 'results', :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id  %>
-<%- end -%>
-<%- end -%></pre>
-<% else %>
-Not scheduled
-<%- end -%>
+      <%- if event.standings.empty? -%>
+      <%- if event.flyer_approved? and !event.flyer.blank? -%>
+      <%= flyer_link_from_app_server(event) %>
+      <%- else -%>
+      <%= event.name %>
+      <%- end -%>
+      <%- else -%>
+      <%= link_to event.name, :controller => 'results', :action => 'event', :year => @year, :discipline => event.discipline, :id => event.id  %>
+      <%- end -%>
     </td>
   </tr>
-</table>
+    <%- end -%>
+  <%- end -%>
+<% end -%>

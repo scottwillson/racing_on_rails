@@ -39,6 +39,12 @@ class Team < ActiveRecord::Base
     team
   end
   
+  def teams_with_same_name
+    teams = Team.find_all_by_name(self.name) | Alias.find_all_teams_by_name(self.name)
+    teams.reject! { |team| team == self }
+    teams
+  end
+  
   def no_duplicates
     existing_team = Team.find_by_name(name)
     if existing_team and ((existing_team.id == id and existing_team.name.casecmp(name) != 0) or (existing_team.id != id and name == existing_team.name))
@@ -165,5 +171,4 @@ class Team < ActiveRecord::Base
   def to_s
     "#<Team #{id} '#{name}'>"
   end
-
 end

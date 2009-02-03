@@ -1,22 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'oregon_cup_controller'
 
-class OregonCupController; def rescue_action(e) raise e end; end
-
-class OregonCupControllerTest < ActiveSupport::TestCase
-
+class OregonCupControllerTest < ActionController::TestCase
   include OregonCupHelper
-  
-  def setup
-    @controller = OregonCupController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-  
-  def test_routing
-    assert_routing("/oregon_cup", {:controller => "oregon_cup", :action => "index"})
-    assert_routing("/oregon_cup/2003", {:controller => "oregon_cup", :action => "index", :year => '2003'})
-  end
 
   def test_index
     OregonCup.create(:date => Date.new(2004))
@@ -31,18 +16,6 @@ class OregonCupControllerTest < ActiveSupport::TestCase
     assert_response(:success)
     assert_template("oregon_cup/index")
     assert_not_nil(assigns["oregon_cup"], "Should assign oregon_cup")
-  end
-
-  def test_races
-    get(:races, :year => "2004")
-    assert_response(:redirect)
-    assert_redirected_to(:action => :index)
-  end
-  
-  def test_rules
-    get(:rules)
-    assert_response(:redirect)
-    assert_redirected_to(:action => :index)
   end
   
   def test_flyer_link_from_app_server

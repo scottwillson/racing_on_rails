@@ -1,124 +1,76 @@
-<% @page_title = "BAR: #{@year}: #{@discipline}" %>
+<% @page_title = "BAR: #{@year}: #{@discipline.name}" %>
 
 <%= tabs do |tabs|
   for discipline in @all_disciplines
-	tabs.add(discipline.name, :action => 'show', :year => @year, :discipline => discipline)
+  tabs.add(discipline.name, :action => 'show', :year => @year, :discipline => discipline)
   end
 end -%>
 
-<b><a name="overall"><%= @discipline %> BAR Standings</a></b>
-<br><br>
-
-<% if @standings and @standings.races.size > 1 %>
-<%# TODO Encapsulate in a helper method %>
-<table border="0" cellspacing="0" cellpadding="0">
-<% index = 0 %>  
-<% while index < @standings.races.size %>
-  <tr valign="top">
-    <% if index < @standings.races.size %>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
-      <% index += 1 %>  
-      <% if index < @standings.races.size %>
-    <td width="16">&nbsp;</td>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
-      <% end %>  
-    <% end %>  
-  </tr>
-  <% index += 1 %>  
-<% end %>  
-</table>
-
-<br/>
-<span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
-<br/><br/>
-
-<% if @discipline == 'Overall' %>
-<table border="0" cellspacing="0" cellpadding="0">
-	<tr valign="top">
-		<td width="24" rowspan="6">&nbsp;</td>
-		<td rowspan="6">
-  		<span class="type">
-		  Oregon Best All-Around Rider (BAR) a year-round, multi-discipline
-		  competition. We maintain six separate rankings, one each for
-
-		  Road, Track, Criterium, Time Trial, Cyclocross and Mountain Bike. This
-		  way you can see how you perform in any separate one. Points are
-
-		  given out to the top 15 in each class &ndash; 30, 25, 22, 19, 17, 15, 			
-		  13, 11, 9, 7, 5, 4, 3, 2, 1. State Championships are worth double 
-		  points.  National caliber races (Cascade, Mt Hood, AVC) are worth 
-		  triple points.
-		  <br><br>
-
-
-		  The points are tallied and then the riders are ranked in order of
-		  points in each discipline. At that time a ranking number is assigned 
-		  from 300, 299, 298, 297 etc. This way no one discipline gets more 
-		  weight than any
-		  other. These ranking numbers are then added and a score is given.
-		  This also means that as riders move up or down in the rankings
-		  that their points can actually decrease.
-		  <br><br>
-		  
-		  A rider who has points in more then 4 disciplines get a bonus 50 
-		  points for each discipline over 4.  This means that there is a total 
-		  1200 points possible with a possible additional bonus of 100.  Riders 
-		  must compete in 4 disciplines in order to qualify for the end of the 
-		  year trophies. 
-			<br><br>
-
-		  
-		  The Team BAR is the sum of the accrued points before rankings.
-		  </span>
-		</td>
-	</tr>
-</table>
-<br>
-<% end %>
-
-
-<% @standings.races.each_with_index do |race, index| %>
-<% unless race.results.empty? %>
-<table class="yellow" border="0" cellspacing="0" cellpadding="0">
-  <tr bgcolor="#ffde14">
-    <th><a name="<%= index %>"></a><span class="tablehead"><%= race.name %></span></th>
-  </tr>
+<%- if @discipline.bar_categories.sort.size > 1 %>
+<table class="centered top_margin">
+  <%- @discipline.bar_categories.sort.each_row_with_index do |row, row_index| -%>
   <tr>
-    <% if @discipline == 'Team' %>
+    <td style="margin-right: 18px;">
+    <%= link_to row.first.name, :action => 'show', :category => row.first.friendly_param, :year => @year, :discipline => @discipline %>
+    </td>
+    <td style="margin-left: 18px;">
+    &nbsp;
+    <%- if row.size == 2 -%>
+      <%= link_to row.last.name, :action => 'show', :category => row.last.friendly_param, :year => @year, :discipline => @discipline %></a>
+    <%- end -%>
+    </td>
+  </tr>
+<%- end -%>  
+</table>
+<%- end -%>  
 
-    <td><pre><%- for result in race.results.sort %>
+<h2><%= @year %> <%= @discipline.name %> BAR</h2>
+
+<% if @race.nil? || @race.results.empty? %>
+No results for <%= @year %>
+<% else %>
+
+<div class="updatedon centered">Updated <%= @race.updated_at.to_formatted_s(:long) %></div>
+
+<% table :caption => @race.name do %>
+  <tr><th></th></tr>
+  <tr>
+    <% if @discipline == Discipline[:team] %>
+
+    <td><pre><%- for result in @results.sort %>
 <%= result.place.rjust(3) -%>
    <%= link_to(truncate(result.team_name, 40),
        :controller => 'results',
        :action => 'competition',
-       :competition_id => result.race.standings.event.to_param,
+       :competition_id => @race.standings.event.to_param,
        :team_id => result.team.id) %><%= ' ' * (40 - (truncate(result.team_name, 40).length)) -%>
    <%= number_with_precision(result.points, 1).rjust(6) -%>
 <%- end -%></pre></td>
 
     <% else %>
 
-    <td><pre><%- for result in race.results.sort %>
-<%= result.place.rjust(3) -%>
+    <td><pre><%- 
+  previous_place = nil
+  for result in @results.sort %>
+<%= 
+  if previous_place != result.place 
+    result.place.rjust(3) 
+  else
+    '   '
+  end
+-%>
+ <%- previous_place = result.place -%>
  <%= link_to(truncate(result.name), 
-	 :controller => 'results',
+   :controller => 'results',
      :action => 'competition',
-     :competition_id => result.race.standings.event.to_param,
+     :competition_id => @race.standings.event.to_param,
      :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer_team_name, 40).ljust(40) -%>
+   <%= truncate(result.team_name, 40).ljust(40) -%>
    <%= number_with_precision(result.points, 1).rjust(6) -%>
 <%- end -%></pre></td>
 
     <% end %>
   </tr>
-</table>
-
-<br><br>
+  <% end %>  
 
 <% end %>  
-<% end %>  
-
-<% else %>
-No results for <%= @year %>
-<br/>
-<% end %>

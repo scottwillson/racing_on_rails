@@ -8,79 +8,70 @@
   <%= link_to "Schedule", track_schedule_path %> |
 </div>
 
-<!-- main content (2 columns + 1 empty column) -->
-<table cellspacing="0" border="0" cellpadding="0">
-  <tr valign="top">
-    <td align="center">
-      
-      <!-- Left-side cell for main content -->
-      <table bgcolor="#000000" cellspacing="0" border="0" cellpadding="1" width="300">
-        <tr>
-          <td colspan="3">
-             <%= image_tag "http://#{STATIC_HOST}/track/images/photos/points_qualifier.jpg", :border => 0, :size => "300x222", :alt => "AVC points qualifier" %>
-          </td>
-            </tr>
-            <tr bgcolor="black">
-              <td>&nbsp;</td>
-              <td><small><font color="#cccccc">Points qualifer during the 2001 Alpenrose Challenge.</font></small>
-          </td>
-              <td>&nbsp;</td>
-        </tr>
-      </table>
-    </td>
-    <td width="24">&nbsp;</td>
-    <td>
-
-      <!-- Right-side -->
-      <!-- Velodrome Schedule -->
-      
-      <table cellspacing="0" class="base" border="0" cellpadding="0" align="center" class="base">
-        <caption>Schedule</caption>
-        <tr>
-            <th>Date</th>
-            <th>Event</th>
-            <th>Contact</th> 
-            <th>Phone</th>
-        </tr>
-        <% if !@events.blank? %>
-          <% @events.select { |e| (!e.respond_to?(:parent) || e.parent.nil?) && (e.class == SingleDayEvent || e.class == MultiDayEvent) }.sort_by(&:date).each do |event| %>
-            <tr>
-              <td><%= event.date_range_s(:short) %></td>
-              <td>
-                <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
-                <%= event.name unless event.flyer? %>
-              </td>
-              <td>
-                <%= link_to(event.promoter_name, event.promoter_email) if event.promoter_email %>
-                <%= event.promoter_name unless event.promoter_email %>
-              </td>
-              <td><%= event.promoter_phone %></td>
-            </tr>
-          <% end %>
+<div class="column_grid_container">
+  <div class="span-2 top_margin">
+    <table bgcolor="#000000" cellspacing="0">
+      <tr>
+        <td colspan="3">
+           <%= image_tag "http://#{STATIC_HOST}/track/images/photos/points_qualifier.jpg", :border => 0, :width => "280", :alt => "AVC points qualifier" %>
+        </td>
+      </tr>
+      <tr bgcolor="black">
+        <td>&nbsp;</td>
+        <td><small><font color="#cccccc">Points qualifer during the 2001 Alpenrose Challenge.</font></small></td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+  </div>
+  <div class="span-4 last">
+    <% table :caption => "Schedule", :class => "box-4" do %>
+      <tr>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Contact</th> 
+          <th>Phone</th>
+      </tr>
+      <% if !@events.blank? %>
+        <% @events.select { |e| (!e.respond_to?(:parent) || e.parent.nil?) && (e.class == SingleDayEvent || e.class == MultiDayEvent) }.sort_by(&:date).each do |event| %>
           <tr>
-            <td colspan="4"><small>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>.<br>
-            Call the velodrome during event hours to check on weather cancellations: 503-246-0330.</small></td>
+            <td><%= event.date_range_s(:short) %></td>
+            <td>
+              <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
+              <%= event.name unless event.flyer? %>
+            </td>
+            <td>
+              <%= link_to(event.promoter_name, event.promoter_email) if event.promoter_email %>
+              <%= event.promoter_name unless event.promoter_email %>
+            </td>
+            <td><%= event.promoter_phone %></td>
           </tr>
-        <% else %>
-          <tr>
-            <th colspan="4">
-              No events
-            </th>
-          </tr>
-        <% end %>        
-      </table>
-    </td>
-    <td>&nbsp;</td>
-  </tr>
-</table>
+        <% end %>
+        <tr>
+          <td colspan="4"><small>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>.<br>
+          Call the velodrome during event hours to check on weather cancellations: 503-246-0330.</small></td>
+        </tr>
+      <% else %>
+        <tr>
+          <th colspan="4">
+            No events
+          </th>
+        </tr>
+      <% end %>        
+    <% end %>        
+  </div>
+  
+  <div class="span-6 last">
+    <%= render :partial => 'weekly_events', 
+               :locals => { :caption => "Weekly Racing Schedule", 
+                            :weekly_events => @events.select { |e| e.class == WeeklySeries && !e.instructional? && !e.practice? } }%>
 
-<br /><br />
+    <%= render :partial => 'weekly_events', 
+               :locals => { :caption => "Weekly Instruction Schedule", 
+                            :weekly_events => @events.select { |e| e.class == WeeklySeries && e.instructional? } }%>
 
-<%= render :partial => 'weekly_events', 
-           :locals => { :caption => "Weekly Racing Schedule", :weekly_events => @events.select { |e| e.class == WeeklySeries && !e.instructional? && !e.practice? } }%>
+    <%= render :partial => 'weekly_events', 
+               :locals => { :caption => "Weekly Practice Schedule", 
+                            :weekly_events => @events.select { |e| e.class == WeeklySeries && e.practice? } }%>
+  </div>
+</div>
 
-<%= render :partial => 'weekly_events', 
-           :locals => { :caption => "Weekly Instruction Schedule", :weekly_events => @events.select { |e| e.class == WeeklySeries && e.instructional? } }%>
-
-<%= render :partial => 'weekly_events', 
-           :locals => { :caption => "Weekly Practice Schedule", :weekly_events => @events.select { |e| e.class == WeeklySeries && e.practice? } }%>

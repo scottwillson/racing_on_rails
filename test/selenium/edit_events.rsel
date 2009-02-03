@@ -1,0 +1,56 @@
+include_partial "fixtures"
+include_partial "admin_login"
+
+click_and_wait "link=New Event"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+type "event_name", "Sausalito Criterium"
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+assert_text_present "Created Sausalito Criterium"
+
+open "/admin/events"
+assert_text_present "Sausalito Criterium"
+click_and_wait "link=Sausalito Criterium"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+select "event_promoter_id", "Brad Ross"
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+open "/admin/events"
+assert_text_present "Sausalito Criterium"
+click_and_wait "link=Sausalito Criterium"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+assert_selected  "event_promoter_id", "Brad Ross"
+
+click_and_wait "link=Delete"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+open "/admin/events"
+assert_text_present "Deleted Sausalito Criterium"
+
+open "/admin/events"
+assert_text_not_present "Sausalito Criterium"
+
+click_and_wait "link=Copperopolis Road Race"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+click "id=destroy_race_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.id}"
+wait_for_condition %Q{ selenium.page().bodyText().indexOf('destroy_race') == -1; }, 500
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+click "id=destroy_standings_#{Event.find_by_name('Copperopolis Road Race').standings.first.id}"
+wait_for_confirmation("glob:Really delete*")
+wait_for_condition %Q{ selenium.page().bodyText().indexOf('destroy_standings') == -1; }, 500
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"

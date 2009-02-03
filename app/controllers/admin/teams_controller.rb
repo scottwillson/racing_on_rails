@@ -1,7 +1,9 @@
-class Admin::TeamsController < Admin::RecordEditor
+class Admin::TeamsController < ApplicationController
+  before_filter :login_required
+  layout "admin/application"
 
-  edits :team
-  
+  in_place_edit_for :team, :name
+
   def index
     @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
     if @name.blank?
@@ -29,101 +31,63 @@ class Admin::TeamsController < Admin::RecordEditor
   
   def new
     @team = Team.new
+    render(:action => :edit)
   end
   
   def create
-    begin
-      @team = Team.new(params[:team])
+    @team = Team.new(params[:team])
 
-      if @team.save
-        expire_cache
-        flash[:notice] = "Created #{@team.name}"
-        redirect_to(edit_admin_team_path(@team))
-      else
-        render :action => "edit"
-      end
-    rescue Exception => e
-      stack_trace = e.backtrace.join("\n")
-      logger.error("#{e}\n#{stack_trace}")
-      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
-      flash[:warn] = e.to_s
+    if @team.save
+      expire_cache
+      flash[:notice] = "Created #{@team.name}"
+      redirect_to(edit_admin_team_path(@team))
+    else
       render :action => "edit"
     end
   end
   
   def update
-    begin
-      @team = Team.find(params[:id])
+    @team = Team.find(params[:id])
 
-      if @team.update_attributes(params[:team])
-        expire_cache
-        redirect_to(edit_admin_team_path(@team))
-      else
-        render :action => "new"
-      end
-    rescue Exception => e
-      stack_trace = e.backtrace.join("\n")
-      logger.error("#{e}\n#{stack_trace}")
-      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
-      flash[:warn] = e.to_s
+    if @team.update_attributes(params[:team])
+      expire_cache
+      redirect_to(edit_admin_team_path(@team))
+    else
       render :action => "new"
     end
   end
   
-  # Inline
-  def edit_name
-    @team = Team.find(params[:id])
-    expire_cache
-    render(:partial => 'edit')
+  def toggle_member
+    team = Team.find(params[:id])
+    team.toggle!(:member)
+    render(:partial => "shared/member", :locals => { :record => team })
   end
   
   # Inline update. Merge with existing Team if names match
-  def update_name
-    new_name = params[:name]
-    team_id = params[:id]
-    @team = Team.find(team_id)
-    begin
-      original_name = @team.name
-      @team.name = new_name
-      existing_teams = Team.find_all_by_name(new_name) | Alias.find_all_teams_by_name(new_name)
-      existing_teams.reject! { |team| team == @team }
-      if existing_teams.size > 0
-        return merge?(original_name, existing_teams, @team)
-      end
+  def set_team_name
+    @team = Team.find(params[:id])
+    new_name = params[:value]
+    original_name = @team.name
+    @team.name = new_name
 
-      if @team.save
-        expire_cache
-        render :update do |page| page.replace_html("team_#{@team.id}_name", :partial => 'team_name', :locals => { :team => @team }) end
-      else
-        render :update do |page|
-          page.replace_html("team_#{@team.id}_name", :partial => 'edit', :locals => { :team => @team })
-          @team.errors.full_messages.each do |message|
-            page.insert_html(:after, "team_#{@team.id}_row", :partial => 'error', :locals => { :error => message })
-          end
-        end
-      end
-    rescue Exception => e
-      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+    teams_with_same_name = @team.teams_with_same_name
+    unless teams_with_same_name.empty?
+      return merge?(original_name, teams_with_same_name, @team)
+    end
+    
+    # Want validation
+    @team.name = params[:value]
+    if @team.save
+      expire_cache
       render :update do |page|
-        if @team
-          page.insert_html(:after, "team_#{@team.id}_row", :partial => 'error', :locals => { :error => e })
-        else
-          page.alert(e.message)
-        end
+        page.replace_html("team_#{@team.id}_name", @team.name)
+      end
+    else
+      render :update do |page|
+        page.alert(@team.errors.full_messages)
+        page.replace_html("team_#{@team.id}_name", original_name)
       end
     end
-  end
-  
-  def same_as_other_team?(new_name, team)
-    Team.count(:conditions => ['name = ? and id <> ?', new_name, team.id]) > 0
-  end
-  
-  def same_as_other_alias?(new_name)
-    Alias.count(:conditions => ['name = ? and team_id is not null', new_name]) > 0
-  end
-  
-  def different?(original_name, new_name)
-    original_name.casecmp(new_name) != 0
   end
   
   # Inline
@@ -132,26 +96,18 @@ class Admin::TeamsController < Admin::RecordEditor
     @existing_teams = existing_teams
     @original_name = original_name
     render :update do |page| 
-      page.replace_html("team_#{@team.id}_name", :partial => 'merge_confirm', :locals => { :team => @team })
+      page.replace_html("team_#{@team.id}_row", :partial => 'merge_confirm', :locals => { :team => @team })
     end
   end
   
   # Inline
   def merge
-    begin
-      team_to_merge_id = params[:id].gsub('team_', '')
-      @team_to_merge = Team.find(team_to_merge_id)
-      @merged_team_name = @team_to_merge.name
-      @existing_team = Team.find(params[:target_id])
-      @existing_team.merge(@team_to_merge)
-      expire_cache
-    rescue Exception => e
-      render :update do |page|
-        page.visual_effect(:highlight, "team_#{@existing_team.id}_row", :startcolor => "#ff0000", :endcolor => "#FFDE14") if @existing_team
-        page.alert("Could not merge teams.\n#{e}")
-      end
-      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
-    end
+    team_to_merge_id = params[:id].gsub('team_', '')
+    @team_to_merge = Team.find(team_to_merge_id)
+    @merged_team_name = @team_to_merge.name
+    @existing_team = Team.find(params[:target_id])
+    @existing_team.merge(@team_to_merge)
+    expire_cache
   end
   
   # Cancel inline editing
@@ -162,20 +118,12 @@ class Admin::TeamsController < Admin::RecordEditor
   
   def destroy
     @team = Team.find(params[:id])
-    begin
-      @team.destroy
-      respond_to do |format|
-        format.html {redirect_to admin_teams_path}
-        format.js
-      end
-      expire_cache
-    rescue  Exception => e
-      render :update do |page|
-        page.visual_effect(:highlight, "team_#{@team.id}_row", :startcolor => "#ff0000", :endcolor => "#FFDE14") if @existing_team
-        page.alert("Could not delete #{@team.name}.\n#{e}")
-      end
-      ExceptionNotifier.deliver_exception_notification(e, self, request, {})
+    @team.destroy
+    respond_to do |format|
+      format.html {redirect_to admin_teams_path}
+      format.js
     end
+    expire_cache
   end
 
   # Exact dupe of racers controller

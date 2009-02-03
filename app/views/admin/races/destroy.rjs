@@ -1,0 +1,5 @@
+page.visual_effect(:puff, "race_#{@race.id}_row", :duration => 2)
+page.hide("info")
+page.hide("warn")
+page.show("notice")
+page["notice"] = "Deleted #{@race.name}"

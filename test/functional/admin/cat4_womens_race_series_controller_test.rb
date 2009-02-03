@@ -1,15 +1,7 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/cat4_womens_race_series_controller'
 
-class Admin::Cat4WomensRaceSeriesController; def rescue_action(e) raise e end; end
-
-class Admin::Cat4WomensRaceSeriesControllerTest < ActiveSupport::TestCase
-
+class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   def setup
-    @controller = Admin::Cat4WomensRaceSeriesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    @request.host = "localhost"
     @request.session[:user] = users(:candi)
   end
 

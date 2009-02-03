@@ -6,12 +6,4 @@ class OregonCupController < ApplicationController
     date = Date.new(@year.to_i, 1, 1)
     @oregon_cup = OregonCup.find(:first, :conditions => ['date = ?', date]) || OregonCup.new
   end
-
-  def races
-    redirect_to(:action => :index)
-  end
-
-  def rules
-    redirect_to(:action => :index)
-  end
 end

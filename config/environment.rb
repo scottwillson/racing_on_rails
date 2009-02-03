@@ -68,6 +68,12 @@ load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/
 # application's generic files.
 ActionController::Base.prepend_view_path(File.expand_path("#{RAILS_ROOT}/local/app/views"))
 
+class ActionView::Base
+  def self.default_form_builder
+    RacingOnRails::FormBuilder
+  end
+end
+
 require "action_view/template_handlers/pdf_writer"
 ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
 

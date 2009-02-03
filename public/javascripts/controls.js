@@ -503,6 +503,7 @@ Ajax.InPlaceEditor = Class.create({
     this.registerListeners();
   },
   checkForEscapeOrReturn: function(e) {
+    alert("checkForEscapeOrReturn " + e.keyCode);
     if (!this._editing || e.ctrlKey || e.altKey || e.shiftKey) return;
     if (Event.KEY_ESC == e.keyCode)
       this.handleFormCancellation(e);
@@ -514,7 +515,7 @@ Ajax.InPlaceEditor = Class.create({
     var text = this.options[mode + 'Text'];
     if ('button' == control) {
       var btn = document.createElement('input');
-      btn.type = 'submit';
+      btn.type = 'button';
       btn.value = text;
       btn.className = 'editor_' + mode + '_button';
       if ('cancel' == mode)
@@ -535,17 +536,9 @@ Ajax.InPlaceEditor = Class.create({
   },
   createEditField: function() {
     var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
-    var fld;
-    if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
-      fld = document.createElement('input');
-      fld.type = 'text';
-      var size = this.options.size || this.options.cols || 0;
-      if (0 < size) fld.size = size;
-    } else {
-      fld = document.createElement('textarea');
-      fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-      fld.cols = this.options.cols || 40;
-    }
+    var fld = new Element('input', { 'type': 'text', 'autocomplete': 'off' });
+    var size = this.options.size || this.options.cols || 0;
+    if (0 < size) fld.size = size;
     fld.name = this.options.paramName;
     fld.value = text; // No HTML breaks conversion anymore
     fld.className = 'editor_field';
@@ -621,6 +614,7 @@ Ajax.InPlaceEditor = Class.create({
     var form = this._form;
     var value = $F(this._controls.editor);
     this.prepareSubmission();
+    this.options.savingText = value;
     var params = this.options.callback(form, value) || '';
     if (Object.isString(params))
       params = params.toQueryParams();
@@ -723,7 +717,7 @@ Ajax.InPlaceEditor = Class.create({
     this._oldInnerHTML = this.element.innerHTML;
     this.element.innerHTML = this.options.savingText;
     this.element.addClassName(this.options.savingClassName);
-    this.element.style.backgroundColor = this._originalBackground;
+    // this.element.style.backgroundColor = this._originalBackground;
     this.element.show();
   },
   triggerCallback: function(cbName, arg) {

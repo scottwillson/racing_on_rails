@@ -337,6 +337,19 @@ class EventTest < ActiveSupport::TestCase
     event.inspect
   end
   
+  def test_location
+    assert_equal(ASSOCIATION.state, SingleDayEvent.create!.location, "New event location")
+    assert_equal("Canton, OH", SingleDayEvent.create!(:city => "Canton", :state => "OH").location, "City, state location")
+
+    event = SingleDayEvent.create!(:city => "Vatican City")
+    event.state = nil
+    assert_equal("Vatican City", event.location, "City location")
+
+    event = SingleDayEvent.create!
+    event.state = nil
+    assert_equal("", event.location, "No city, state location")
+  end
+
   private
   
   def assert_orphans(count, event)

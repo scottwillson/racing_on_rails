@@ -700,6 +700,18 @@ class RacerTest < ActiveSupport::TestCase
     assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and street")
   end
   
+  def test_racers_with_same_name
+   assert_equal([], racers(:molly).racers_with_same_name, "No other racers named 'Molly Cameron'")
+
+   racer = racers(:molly)
+   racer.name = "Mollie Cameron"
+   racer.save!
+   assert_equal([], racers(:molly).racers_with_same_name, "No other racers named 'Mollie Cameron'")
+   
+   Racer.create!(:name => "Mollie Cameron")
+   assert_equal(1, racers(:molly).racers_with_same_name.size, "Other racers named 'Mollie Cameron'")
+  end
+  
   def test_dh_number_with_no_downhill_discipline
    Discipline.find_by_name("Downhill").destroy
    Discipline.reset

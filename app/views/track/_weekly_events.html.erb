@@ -1,6 +1,5 @@
 <% if !weekly_events.empty? %>
-  <table cellspacing="0" class="base">
-    <caption><%= caption %></caption>
+  <% table :caption => caption, :class => "top_margin" do %>
     <tr>
        <th>Day</th>
        <th width="200">Event</th>
@@ -25,5 +24,5 @@
        <td><small><%= event.notes %></small></td>
     </tr>
     <% end -%>
-  </table>
+  <% end -%>
 <% end -%>

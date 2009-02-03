@@ -1,1 +1,51 @@
-<%= table %>
+<% @page_title = "Admin: Schedule: #{@year}" %>
+
+<%= render :partial => "schedule/years" %>
+<%= tabs do |tabs|
+  @schedule.months.each do |month|
+    tabs.add(month.name, :anchor => month.name)
+  end
+end -%>
+
+<div class="page_buttons container">
+  <div class="left">
+    <% form_tag upload_schedule_admin_events_path, :multipart => true, :id => "upload_form" do %>
+    <label class="left">Import Schedule</label><%= file_field_tag "schedule_file", :onchange => "$('upload_form').submit();" %>
+    <% end -%>
+  </div>
+  <div class="right">
+    <%= link_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, {:id => "new_event"} %>
+  </div>
+</div>
+
+<div class="container">
+  <%- for month in @schedule.months -%>
+    <% table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>" do %>
+      <tr>
+        <th>Sunday</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+      </tr>
+      <%- for week in month.weeks -%>
+          <tr class="month">
+          <%- for day in week.days -%>
+            <%- if day.other_month? -%>
+            <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
+            <%- else -%>
+            <td class="day">
+              <div class="number"><%= day.day_of_month -%></div>
+              <%- for event in day.events -%>
+            <div class="event"><%= link_to event.name, edit_admin_event_path(event) %></div>
+              <%- end -%>
+            <%- end -%>
+            </td>
+          <%- end -%>
+          </tr>
+        <%- end -%>
+      <% end -%>
+  <% end %>
+</div>

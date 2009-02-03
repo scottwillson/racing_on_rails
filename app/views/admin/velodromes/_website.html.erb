@@ -1,7 +1,0 @@
-<a href="#" onclick="new Ajax.Updater('velodrome_<%= velodrome.id %>_website', '/admin/velodromes/edit_website/<%= velodrome.id %>', {asynchronous:false, evalScripts:true}); return false;"><%= 
-  if velodrome.website.blank? 
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-  else
-    velodrome.website 
-  end
-%></a>

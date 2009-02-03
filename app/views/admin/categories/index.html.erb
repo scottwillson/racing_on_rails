@@ -1,51 +1,20 @@
-<% @page_title = 'Admin: Categories' %>
+<% @page_title = "Admin: Categories" %>
 
-<script type="text/javascript" charset="utf-8">
-  function toggle_disclosure(id) {
-    var disclosure = $('disclosure_' + id);
-    if (disclosure.className == 'collapsed') {
-      disclosure.src='/images/icons/spinner.gif';
-      new Ajax.Request('/admin/categories/children/' + id, 
-        {asynchronous:true, 
-          evalScripts:true, 
-          onComplete:function(request){expand(id)}}); 
-      return false;      
-    }
-    else {
-      disclosure.src = '/images/icons/collapsed.gif';
-      disclosure.className = 'collapsed';
-      Element.update('children_' + id, '<div class = "children_' + id + '"></div>');
-    }
-  }
-  
-  function expand(id) {
-    var disclosure = $('disclosure_' + id);
-    disclosure.src = '/images/icons/expanded.gif';
-    disclosure.className = 'expanded';
-  }
-</script>
+<div class="column_grid_container">
+  <div class="table_container box-3">
+    <div class="caption"><%= ASSOCIATION.short_name %></div>
+    <div class="category" id="category_root">
+      <%= render :partial => "category", :collection => @category.children.sort %>
+    </div>
+  </div>
 
-<table class="categories">
-  <tr>
-    <td id="association_category_td">
-      <h2 id="association_category"><%= ASSOCIATION.short_name %></h2>
-      <div class="categories">
-      <%= render :partial => "category", :collection => @category.children.sort %>  
-      </div>
-    </td>
-    <td id="unknown_category_td">
-      <h2 id="unknown_category">Unknown</h2>
-      <div class="categories">
-      <% for category in @unknowns %>
-        <div class="category" id="category_<%= category.id %>"><%= category.name %>&nbsp;<%= link_to(image_tag('/images/icons/results_small.gif', :width => 12, :height => 12), {:controller => '/races', :action => 'category', :id => category.id}, {:title => 'View races'}) %></div>
-        <%= draggable_element("category_#{category.id}", :revert => true, :ghosting => true) %>
-      <% end %>
-      </div>
-    </td>
-  </tr>
-</table>
+  <div class="table_container box-3 last">
+    <div class="caption">Unknown</div>
+    <div class="category" id="unknown_category_root">
+      <%= render :partial => "category", :collection => @unknowns.sort %>
+    </div>
+  </div>
+</div>
 
-<%= drop_receiving_element("association_category", :url => {:action => 'add_child', :parent_id => @category.id}) %>
-<%= drop_receiving_element("association_category_td", :url => {:action => 'add_child', :parent_id => @category.id}) %>
-<%= drop_receiving_element("unknown_category", :url => {:action => 'add_child'}) %>
-<%= drop_receiving_element("unknown_category_td", :url => {:action => 'add_child'}) %>
+<%= drop_receiving_element("category_root", :url => {:action => "add_child", :parent_id => @category.id}, :hoverclass => "hovering") %>
+<%= drop_receiving_element("unknown_category_root", :url => {:action => "add_child"}, :hoverclass => "hovering") %>

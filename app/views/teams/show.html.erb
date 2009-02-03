@@ -1,7 +1,6 @@
 <% @page_title = "Results: #{@team.name}" %>
 
-<table class="base">
-  <caption><%= @team.name %></caption>
+<% table :caption => @team.name, :id => "team" do %>
   <tr>
     <th></th>
     <th>Race</th>
@@ -18,4 +17,4 @@
     <td width="100"><%= result.race.standings.event.date.strftime("%D") %></td>
   </tr>
   <%- end -%>
-</table>
+<%- end -%>

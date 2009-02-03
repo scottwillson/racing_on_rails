@@ -1,0 +1,138 @@
+/* -------------------------------------------------------------- 
+   
+Based on Blueprint CSS
+* Sets up grid of 12 columns.
+
+By default, the grid is 880px wide, with 6 columns 
+spanning 130px, and a 20px margin between columns.
+
+--- 3-col ---
+left margin + frame: 20 + 3 + 17
+col 280
+gutter 20
+col 280
+gutter 20
+col 280
+right margin + frame: 20 + 3 + 17
+
+--- 2-col ---
+left margin + frame: 20 + 3 + 17
+col 430
+gutter 20
+col 430
+right margin + frame: 20 + 3 + 17
+
+
+18 cols (40) + 17 gutters (8) =
+(x * 40) + ((x + 1) * 8) = 880
+40x + 8x + 8 = 880
+48x = 872
+      
+-------------------------------------------------------------- */
+
+/* A container should group all your columns. */
+.column_grid_container {
+  width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Columns
+-------------------------------------------------------------- */
+
+/* Sets up basic grid floating and margin. */
+div.span-1, div.span-2, div.span-3, div.span-4, div.span-5, div.span-6, 
+div.box-2, div.box-3, div.box-4 {
+  float: left;
+  margin-right: 20px;
+}
+
+/* The last column in a row needs this class. */
+div.last { margin-right: 0; }
+
+/* Use these classes to set the width of a column. */
+div.span-1  { width: 130px; }
+div.span-2  { width: 280px; }
+div.span-3  { width: 430px; }
+div.span-4  { width: 580px; }
+div.span-5  { width: 730px; }
+div.span-6  { width: 880px; margin: 0; }
+
+/* Div and tables with borders */
+div.box-2  { width: 278px; }
+div.box-3  { width: 428px; }
+div.box-4  { width: 578px; }
+
+/* Add these to a column to append empty cols. */
+div.append-1  { padding-right: 150px; }  
+div.append-2  { padding-right: 300px; } 
+div.append-3  { padding-right: 450px; } 
+div.append-4  { padding-right: 600px; } 
+div.append-5  { padding-right: 750px; } 
+
+/* Add these to a column to prepend empty cols. */
+div.prepend-1  { padding-left: 150px; }  
+div.prepend-2  { padding-left: 300px; } 
+div.prepend-3  { padding-left: 450px; } 
+div.prepend-4  { padding-left: 600px; } 
+div.prepend-5  { padding-left: 750px; } 
+
+
+/* Use this to create a horizontal ruler across a column. */
+hr {
+  background: #ddd; 
+  color: #ddd;
+  clear: both; 
+  float: none; 
+  width: 100%; 
+  height: .1em;
+  margin: 0 0 1.45em;
+  border: none; 
+}
+
+hr.space {
+  background: inherit;
+  color: inherit;
+}
+
+
+/* Clearing floats without extra markup
+   Based on How To Clear Floats Without Structural Markup by PiE
+   [http://www.positioniseverything.net/easyclearing.html] */
+
+.clearfix:after, .column_grid_container:after, .container:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+.clearfix, .column_grid_container, .container:after {display: inline-block;}
+* html .clearfix,
+* html .column_grid_container,
+* html .container:after {height: 1%;}
+.clearfix, .column_grid_container, .container:after {display: block;}
+
+/* Regular clearing
+   apply to column that should drop below previous ones. */
+
+.clear { clear:both; }
+
+div.show_grid {
+  background-position: 13px 0px;
+  background-image: url(/images/backgrounds/grid.png);
+}
+
+.no_top_margin {
+  margin-top: 0px !important;
+}
+
+.top_margin {
+  margin-top: 16px;
+}

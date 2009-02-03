@@ -1,25 +1,18 @@
 <tr class="<%= cycle("even", "odd") %>" id="team_<%= team.id %>_row">
-  <td class="name">
-    <%- @team = team -%>
-    <div class="editable" id="team_<%= team.id %>" style="background-image: url(/images/icons/people.gif); background-repeat: no-repeat;">
-      <span id="team_<%= team.id %>_name" style="padding-left: 24px;"><%= render(:partial => 'team_name', :locals => { :team => team }) %></span>
+  <td>
+    <div class="record" id="team_<%= team.id %>">
+      <%= in_place_editor_field(:team, :name, team, true) %>
     </div>
   </td>
-  <td class="aliases">
+  <td class="not_editable">
     <%= render(:partial => 'aliases', :locals => { :team => team }) %>
   </td>
-  <td class="member">
-      <%= check_box_tag "team_member_#{team.id}", "1", team.member?, 
-              :onchange => "new Ajax.Request('/admin/teams/toggle_attribute/#{team.id}?attribute=member', 
-                            {asynchronous:true, evalScripts:true})" %>
+  <td class="check_box">
+    <%= render :partial => "shared/member", :locals => { :record => team } %>
   </td>
-  <td class="right" style="white-space: nowrap;">
+  <td class="actions not_editable last">
       <%= link_to 'Results', :controller => '/results', :action => 'team', :id => team.id %>
     |
     <%= link_to 'Edit', edit_admin_team_path(team) %>
   </td>
-   <td class="icon"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif', :height => 16, :width => 16),
-                          { :url => admin_team_url(team), :method => :delete, :confirm => "Really delete #{team.name}?" },
-                          { :class => "image", :id => "delete_team_#{team.id}" } %>
-    </td>
 </tr>

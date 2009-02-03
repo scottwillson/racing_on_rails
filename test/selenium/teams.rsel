@@ -19,19 +19,24 @@ submit_and_wait("search_form")
 assert_text "warn", ""
 assert_text "notice", ""
 
-assert_table "teams", 1, 0, "Gentle Lovers"
-assert_table "teams", 2, 0, "Team dFL"
-assert_table "teams", 3, 0, "Vanilla"
+assert_table "teams_table", 1, 0, "glob:Gentle Lovers*"
+assert_table "teams_table", 2, 0, "glob:Team dFL*"
+assert_table "teams_table", 3, 0, "glob:Vanilla*"
 
-assert_table "teams", 1, 1, "Gentile Lovers"
-assert_table "teams", 2, 1, ""
-assert_table "teams", 3, 1, "Vanilla Bicycles"
+assert_table "teams_table", 1, 1, "glob:Gentile Lovers*"
+assert_table "teams_table", 2, 1, ""
+assert_table "teams_table", 3, 1, "glob:Vanilla Bicycles*"
 
 @dfl_id = Team.find_by_name("Team dFL").id
 @vanilla_id = Team.find_by_name("Vanilla").id
 assert_checked "team_member_#{@dfl_id}"
 assert_checked "team_member_#{@vanilla_id}"
 assert_checked "team_member_#{@gl_id}"
+
+click "team_member_#{@gl_id}"
+pause 100
+refresh_and_wait
+assert_not_checked "team_member_#{@gl_id}"
 
 click_and_wait "css=a[href='/results/team/#{@dfl_id}']"
 assert_text_present "Team dFL"

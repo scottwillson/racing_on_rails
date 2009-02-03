@@ -9,7 +9,7 @@
 
 <% if !@standings.races.empty? %>
 <%# TODO Encapsulate in a helper method %>
-<table border="0" cellspacing="0" cellpadding="0">
+<table cellspacing="0" class="centered">
 <% index = 0 %>  
 <% while index < @standings.races.size %>
   <tr valign="top">
@@ -26,16 +26,11 @@
 <% end %>  
 </table>
 
-<br/>
 <span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
-<br/><br/>
 
 <%- @standings.races.each_with_index do |race, index| -%>
 <%- unless race.results.empty? -%>
-<table class="base" border="0" cellspacing="0" cellpadding="0">
-  <caption>
-    <th><a name="<%= index %>"></a><span class="tablehead"><%= race.name %></span></th>
-  </caption>
+<% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>" do %>
   <tr>
     <% if @discipline == 'Team' %>
 
@@ -64,7 +59,7 @@
 
     <%- end -%>
   </tr>
-</table>
+  <%- end -%>  
 
 <br><br>
 

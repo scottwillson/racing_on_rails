@@ -1,4 +1,0 @@
-page.visual_effect(:puff, "velodrome_#{@velodrome.id}_row", :duration => 2)
-page.replace_html('notice', "Deleted #{@velodrome.name}")
-page.show('notice')
-page.hide('warn')

@@ -1,0 +1,279 @@
+body {
+  text-align: center;
+  min-width: 600px;
+  font-size: 0.75em;
+  line-height: 1.33em;
+  font-family: Verdana, sans-serif;
+  text-align: left;
+  color: black;
+  padding: 16px;
+}
+
+div.frame {
+  border: 1px solid rgb(109, 109, 109);
+  background-color: rgb(250, 250, 250);
+}
+
+div.content {
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 21px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 13px;
+  padding-right: 13px;
+}
+
+.shadow_1 {
+  border: 1px solid #E2E2E2;
+}
+
+.shadow_2 {
+  border: 1px solid #F6F6F6;
+}
+
+div.inline {
+  float: left;
+}
+
+.left, .centered .left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  display: table;
+}
+
+.centered p, .centered table {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.centered input[type=file] {
+  width: auto;
+}
+.full_width {
+  width: 100%;
+}
+
+.half_width {
+  width: 48%;
+}
+
+pre, pre a, pre a:link, pre a:visited {
+  font-size: 10px;
+  font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+}
+
+.updatedon
+{
+  font-size: 1em;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  color: rgb(160, 160, 160);
+  font-style: italic;
+  white-space: nowrap;  
+}
+
+.note
+{
+  padding-top: 4px;
+  color: rgb(160, 160, 160);
+  font-style: italic;
+  text-align: center;
+  width: 160px;
+}
+.message
+{
+  width: 450px;
+  font-family: Verdana, Helvetica, sans-serif;
+  white-space: normal;
+  text-align: center;
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.message span {
+  padding-left: 16px;
+  padding-right: 8px;
+}
+
+#notice span
+{
+  background-image: url(/images/icons/confirmed.gif);
+  background-repeat: no-repeat;
+  background-position: 0px 4px;
+}
+
+#warn span
+{
+  color: red;
+  background-image: url(/images/icons/warn.gif);
+  background-repeat: no-repeat;
+  background-position: 0px 4px;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+  color: rgb(50, 50, 50);
+  clear: both;
+}
+
+h1 {
+  font-size: 22px;
+  font-style: italic;
+  line-height: 24px;
+}
+
+h2 {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 40px;
+  text-align: center;
+}
+
+h3 {
+  padding-top: 24px;
+  color: rgb(66, 66, 66);
+  text-align: center;
+}
+
+/* Main navigation */
+
+div.nav {
+  text-align: left;
+}
+
+div.nav#top {
+  height: 51px;
+  background-image: url(/images/backgrounds/bar.gif);
+  text-align: left;
+  border-bottom: 1px solid rgb(109, 109, 109);
+}
+
+div.nav#bottom {
+  text-align: left;
+  height: 23px;
+  line-height: 23px;
+  background-image: url(/images/backgrounds/bar_low.gif);
+  border-top: 1px solid rgb(109, 109, 109);
+}
+
+div.nav h1 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  padding-top: 6px;
+  text-align: left;
+  line-height: 24px;
+}
+
+div.nav h1 a {
+  font-size: 22px;
+  font-weight: bold;
+  font-style: italic;
+  color: rgb(109, 109, 109);
+  border-bottom: none;
+}
+
+div.breadcrumb {
+  margin-left: 10px;
+}
+
+div.nav#bottom div.breadcrumb {
+  margin-top: 0px;
+}
+
+div.breadcrumb a {
+  font-weight: bold;
+  color:  rgb(109, 109, 109);
+  border-bottom: none;
+}
+
+
+/* Links */
+
+a:link
+{
+  border-bottom-style: dotted;
+  border-bottom-width: 2px;
+  border-bottom-color: #D0FA30;
+  color: black;
+  text-decoration: none;
+}
+
+a.underlined
+{
+  border-bottom-style: dotted;
+  border-bottom-width: 2px;
+  border-bottom-color: #D0FA30;
+}
+
+a:visited
+{
+  border-bottom-style: dotted;
+  border-bottom-width: 2px;
+  border-bottom-color: #D0FA30;
+  color: black;
+  text-decoration: none;
+}
+
+a:hover
+{
+  color: black;
+  background: #D0FA30;
+}
+
+a.image, a.image:hover, a.image:visited, a.image:active
+{
+  text-decoration: none;
+  background: inherit;
+  border-bottom: none;
+}
+
+a:active
+{
+  color: black;
+  background: #D0FA30;
+}
+
+ol {
+  padding-left: 28px;
+}
+
+ul.links
+{
+  padding-left: 0px;
+  list-style-type:  none;
+  text-align: left;
+  line-height: 160%;
+}
+
+/* Mainly for form labels */
+br {
+  clear: both;
+}
+
+p {
+  margin-top: 16px;
+}
+
+div.pagination {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  background-image: none;  
+}
+
+div.pagination .current {
+  background-image: none; 
+  padding-left: 0px;
+}

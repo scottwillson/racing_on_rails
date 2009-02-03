@@ -1,0 +1,273 @@
+label {
+  font-size: 1em;
+  font-weight: bold;
+  color: rgb(50, 50, 50);
+  margin-right: 8px;
+  display: block;
+  float: left;
+  width: 142px;
+  text-align: right;
+  clear: both;
+  vertical-align: middle;
+  margin-top: 11px;
+}
+
+input[type=checkbox] {
+  line-height: 15px;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 2px;
+  vertical-align: middle;
+}
+
+label.check_box {
+  font-weight: normal;
+  text-align: left;
+  margin-left: 150px;
+  width: 256px;
+  line-height: 15px;
+  margin-top: 10px;
+  display: inline;
+  vertical-align: middle;
+}
+
+label.check_box + label.check_box {
+  margin-top: 0px;
+}
+
+label.left {
+  margin-left: 0px;
+  width: auto;
+}
+
+label.left input[type=checkbox] {
+  margin-right: 4px;
+}
+
+label.inline {
+  display: inline;
+  clear: none;
+  width: auto;
+}
+
+label a {
+  font-weight: normal;
+}
+
+input[type=submit] {
+  float: none;
+}
+
+input[type=file], input[type=password], input[type=text] {
+  float: left;
+  font-size: 1em;
+  font-weight: normal;
+  line-height: normal;
+  display: block;
+  width: 270px;
+  vertical-align: middle;
+  margin-top: 8px;
+}
+
+.centered label {
+  width: auto;
+}
+
+input[type=file] {
+  margin-top: 0px;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+select {
+  float: left;
+  font-weight: normal;
+  color: black;
+  line-height: normal;
+  display: block;
+  margin-top: 10px;
+  vertical-align: middle;
+}
+
+select + select {
+  margin-left: 8px;
+}
+
+.labelled {
+  float: left;
+  font-size: 1em;
+  font-family: Verdana, Helvetica, sans-serif;
+  font-weight: normal;
+  line-height: normal;
+  margin-top: 7px;
+  padding: 4px;
+  display: block;
+}
+
+label.text_area {
+  margin-top: 0px;
+  min-width: auto;
+  text-align: left;
+  clear: both;
+  float: left;
+}
+
+textarea {
+  padding: 4px;
+  width: 420px;
+  height: 144px;
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: normal;
+  clear: both;
+  float: left;
+}
+
+.field_label
+{
+  text-align: right !important;
+  font-weight: bold;
+  min-width: 75px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 12px;
+  padding-right: 8px;
+  white-space: nowrap;  
+}
+
+.field_label#left
+{
+  text-align: left !important;
+}
+
+.vertical_field_label
+{
+  text-align: left;
+  vertical-align: bottom;
+  font-weight: bold;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+.vertical_field
+{
+  text-align: left;
+  vertical-align: top;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+.fieldWithErrors
+{
+  border-color: red;
+}
+
+#errorExplanation
+{
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2
+{
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p
+{
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li
+{
+  font-size: 12px;
+  list-style: square;
+  margin-left: 32px;
+}
+
+.cancelled
+{
+  text-decoration: line-through;
+}
+
+form#search_form {
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 450px;
+}
+
+div.page_buttons {
+  margin-top: 16px;
+  line-height: 26px;
+  vertical-align: middle;
+}
+
+div.page_buttons div.right div {
+  text-align: right;
+}
+
+div.page_buttons select {
+  margin-top: 2px;
+  width: auto;
+}
+
+div.page_buttons label {
+  margin-top: 0px;
+}
+
+td.form_column {
+  width: 416px;
+  padding-right: 16px;
+}
+
+
+fieldset {
+  margin-top: 32px;
+  clear: both;
+  border: none
+}
+
+input.editor_cancel_button {
+  position: relative;
+  top: 2px;
+  background: url(/images/buttons/inline_cancel.png);
+  border: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 0px;
+  margin-left: -22px;
+  margin-right: 0px;
+  padding: 0px;
+}
+
+table.box-2 td {
+  vertical-align: middle;
+}
+
+table.box-2 td input {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+table.box-2 td a.image {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+

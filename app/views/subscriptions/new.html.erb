@@ -3,7 +3,6 @@
 <div class="span-12 prepend-6 append-5 last subscribe" style="padding-bottom: 18px;">
   <p>Please join our ATRA email list to receive important announcements about track racing in North America.</p>
 
-  <%= "<p class='notice'>#{flash[:notice]}</p>" if flash[:notice] %>
   <%= error_messages_for :subscription %>
 
   <% form_for(:subscription, @subscription, :url => { :action => "create" }) do |f| %>

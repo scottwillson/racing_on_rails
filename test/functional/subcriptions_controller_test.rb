@@ -1,15 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'subscriptions_controller'
 
-# Re-raise errors caught by the controller.
-class SubscriptionsController; def rescue_action(e) raise e end; end
-
-class SubscriptionsControllerTest < ActiveSupport::TestCase
-
+class SubscriptionsControllerTest < ActionController::TestCase
   def setup
-    @controller = SubscriptionsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
     MailingListMailer.deliveries = []
   end
   

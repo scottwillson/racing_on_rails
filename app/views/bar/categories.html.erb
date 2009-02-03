@@ -1,40 +1,31 @@
 <% @page_title = "BAR: Categories" %>
 
-<div align="center">
-	
+
 <% for standings in @bar.standings %>
 <% reset_cycle %>
-<table class="base" style="width: 600px;">
-	<caption><%= standings.name %></caption>
-	<tbody>
-		<% for race in standings.races %>
-		<tr class="<%= cycle("even", "odd") %>">
-			<td>
-				<h3><%= race.name %></h3>
-				<% for category in race.category.children.sort{|x, y| x.name <=> y.name }.select {|c| c.parent_id} %>
-					<%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
-					<br>
-				<% end %>
-			</td>
-			<% end %>
-		</tr>
-	</tbody>
-</table>
-<br>
+
+<% table :caption => standings.name do %>
+  <% for race in standings.races %>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td>
+      <h3><%= race.name %></h3>
+      <% for category in race.category.children.sort{|x, y| x.name <=> y.name }.select {|c| c.parent_id} %>
+        <%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
+        <br>
+      <% end %>
+    </td>
+    <% end %>
+  </tr>
+<% end %>
 <% end %>
 
 <% reset_cycle %>
-<table class="base" style="width: 600px;">
-	<caption>Excluded From BAR</caption>
-	<tbody>
-	<% for category in @excluded_categories %>
-	<tr class="<%= cycle("even", "odd") %>">
-		<td>
-			<%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
-		</td>
-	</tr>
-	<% end %>
-	</tbody>
-</table>
-
-</div>
+<% table :caption => "Excluded From BAR"do  %>
+  <% for category in @excluded_categories %>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td>
+      <%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
+    </td>
+  </tr>
+  <% end %>
+<% end %>

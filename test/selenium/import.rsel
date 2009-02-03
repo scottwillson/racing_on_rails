@@ -1,18 +1,8 @@
 include_partial 'fixtures'
+include_partial "admin_login"
 
+assert_text_not_present 'error'
 open '/admin/racers'
-assert_text_not_present 'error'
-assert_location '*/account/login'
-assert_text_present 'Login'
-assert_element_present 'username'
-assert_element_present 'user_password'
-
-type 'username', 'candi'
-type 'user_password', 'candi_password'
-click_and_wait 'name=login'
-
-assert_text_not_present 'error'
-assert_location '*/admin/racers'
-assert_element_present 'import_button'
+assert_element_present 'racers_file'
 
 # Can't do a file upload with Selenium

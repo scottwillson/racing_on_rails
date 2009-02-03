@@ -1,77 +1,55 @@
-class Admin::ResultsController < Admin::RecordEditor
+class Admin::ResultsController < ApplicationController
+  before_filter :login_required
+  layout "admin/application"
 
-  edits :result
-
-  def create
-    race = Race.find(params[:id])
-    result = race.results.build(params[:result])
-    result.save!
-    flash[:notice] = "Saved new result #{result.place}"
-    expire_cache
-    redirect_to(:controller => "/admin/events", :action => :show, :id => race.standings.event.to_param, :race_id => race.to_param)
-  end
-  
-  def edit
-    @result = Result.find(params[:id])
-  end
-  
-  # Editing the Racer or Team name will update the Result's current Racer's or Team's name, which 
-  # may not be what you want. If you need to change the Racer or Team, and not just correct a misspelling,
-  # Delete the Result and create a new one
-  def update
-    @result = Result.update(params[:result][:id], params[:result])
-    
-    if @result.errors.empty?
-      flash[:notice] = "Updated result #{@result.place}"
-      expire_cache
-      redirect_to(
-        :controller => "/admin/events", 
-        :action => :show, 
-        :id => @result.race.standings.event.to_param, 
-        :race_id => @result.race.to_param)
-    else
-      'admin/results/edit'
-    end
-  end
-  
-  def destroy
-    # Get data _before_ delete
-    result = Result.find(params[:id])
-    race = result.race
-    event = race.standings.event    
-    notice = "Deleted result #{result.place}"
-    
-    result.destroy
-    flash[:notice] = notice
-    
-    expire_cache
-    redirect_to(:controller => "/admin/events", :action => :show, :id => event.to_param, :race_id => race.to_param)
-  end
+  in_place_edit_for :result, :age
+  in_place_edit_for :result, :category_name
+  in_place_edit_for :result, :date_of_birth
+  in_place_edit_for :result, :distance
+  in_place_edit_for :result, :laps
+  in_place_edit_for :result, :license
+  in_place_edit_for :result, :name
+  in_place_edit_for :result, :notes
+  in_place_edit_for :result, :number
+  in_place_edit_for :result, :place
+  in_place_edit_for :result, :points
+  in_place_edit_for :result, :points_bonus
+  in_place_edit_for :result, :points_bonus_penalty
+  in_place_edit_for :result, :points_from_place
+  in_place_edit_for :result, :points_penalty
+  in_place_edit_for :result, :points_total
+  in_place_edit_for :result, :state
+  in_place_edit_for :result, :team_name
+  in_place_edit_for :result, :time_bonus_penalty_s
+  in_place_edit_for :result, :time_gap_to_leader_s
+  in_place_edit_for :result, :time_gap_to_winner_s
+  in_place_edit_for :result, :time_s
+  in_place_edit_for :result, :time_total_s
   
   def racer
-  	@racer = Racer.find(params[:id])
-  	@results = Result.find_all_for(@racer)
+    @racer = Racer.find(params[:id])
+    @results = Result.find_all_for(@racer)
   end
   
   def find_racer
-  	racers = Racer.find_all_by_name_like(params[:name], 20)
-  	ignore_id = params[:ignore_id]
-  	racers.reject! {|r| r.id.to_s == ignore_id}
-  	if racers.size == 1
-    	racer = racers.first
-    	results = Result.find_all_for(racer)
-    	logger.debug("Found #{results.size} for #{racer.name}")
+    racers = Racer.find_all_by_name_like(params[:name], 20)
+    ignore_id = params[:ignore_id]
+    racers.reject! {|r| r.id.to_s == ignore_id}
+    if racers.size == 1
+      racer = racers.first
+      results = Result.find_all_for(racer)
+      logger.debug("Found #{results.size} for #{racer.name}")
       render(:partial => 'racer', :locals => {:racer => racer, :results => results})
-	  else
-    	render :partial => 'racers', :locals => {:racers => racers}
+    else
+      render :partial => 'racers', :locals => {:racers => racers}
     end
   end
   
   def results
-  	racer = Racer.find(params[:id])
-  	results = Result.find_all_for(racer)
-  	logger.debug("Found #{results.size} for #{racer.name}")
-	  render(:partial => 'racer', :locals => {:racer => racer, :results => results})
+    racer = Racer.find(params[:id])
+    results = Result.find_all_for(racer)
+    logger.debug("Found #{results.size} for #{racer.name}")
+    render(:partial => 'racer', :locals => {:racer => racer, :results => results})
   end
   
   def scores

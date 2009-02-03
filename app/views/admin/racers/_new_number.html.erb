@@ -1,17 +1,22 @@
 <% row_id = rand(100000) %>
-<tr id="new_number_<%= row_id %>">
+<tr class="new_number" id="new_number_<%= row_id %>">
   <td>
-    <select name='number_issuer_id[]' id='number_issuer_id'>
-      <%= options_for_select NumberIssuer.find(:all).collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
-    </select>
-  </td>
-  <td>
-    <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
-      <%= options_for_select Discipline.find_for_numbers.collect {|discipline| [discipline.name, discipline.id]}, discipline_id %>
-    </select>
-  </td>
-  <td>
-    <%= text_field_tag 'number_value[]', '', :size => 4 %>
-  </td>
-  <td><%= link_to_function image_tag('/images/buttons/small_cancel.gif'), update_page {|page| page.remove("new_number_#{row_id}")} %></td>
+    <table cellspacing="0">
+      <td>
+        <select name='number_issuer_id[]' id='number_issuer_id'>
+          <%= options_for_select NumberIssuer.find(:all).collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
+        </select>
+      </td>
+      <td>
+        <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
+          <%= options_for_select Discipline.find_for_numbers.collect {|discipline| [discipline.name, discipline.id]}, discipline_id %>
+        </select>
+      </td>
+      <td>
+        <%= text_field_tag 'number_value[]', '', :class => "number" %>
+      </td>
+      <td>
+        <%= link_to_function(image_tag('/images/buttons/small_cancel.gif'), update_page {|page| page.remove("new_number_#{row_id}")}, :class => "image") %></td>
+      </td>
+    </table>
 </tr>

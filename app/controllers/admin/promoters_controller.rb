@@ -2,10 +2,13 @@
 #
 # Promoter information shows up on the schedules
 class Admin::PromotersController < ApplicationController
-
-  layout 'admin/application'
   before_filter :login_required
+  layout "admin/application"
   cache_sweeper :schedule_sweeper, :only => [:update]
+
+  in_place_edit_for :promoter, :name
+  in_place_edit_for :promoter, :email
+  in_place_edit_for :promoter, :phone
 
   # List all Promoters
   # === Assigns
@@ -30,21 +33,15 @@ class Admin::PromotersController < ApplicationController
   end
 
   def create
-    begin
-      remember_event
-      @promoter = Promoter.create(params['promoter'])
-      if @promoter.errors.empty?
-        if @event
-          redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
-        else
-          redirect_to(edit_admin_promoter_path(@promoter))
-        end
+    remember_event
+    @promoter = Promoter.create(params['promoter'])
+    if @promoter.errors.empty?
+      if @event
+        redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
       else
-        render(:action => :edit)
+        redirect_to(edit_admin_promoter_path(@promoter))
       end
-    rescue Exception => e
-      logger.error(e)
-      flash['warn'] = e.message
+    else
       render(:action => :edit)
     end
   end
@@ -52,21 +49,15 @@ class Admin::PromotersController < ApplicationController
   # Update new (no :id param) or existing Promoter
   # No duplicate names
   def update
-    begin
-      remember_event
-      @promoter = Promoter.update(params['id'], params['promoter'])
-      if @promoter.errors.empty?
-        if @event
-          redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
-        else
-          redirect_to(edit_admin_promoter_path(@promoter))
-        end
+    remember_event
+    @promoter = Promoter.update(params['id'], params['promoter'])
+    if @promoter.errors.empty?
+      if @event
+        redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
       else
-        render(:action => :edit)
+        redirect_to(edit_admin_promoter_path(@promoter))
       end
-    rescue Exception => e
-      logger.error(e)
-      flash['warn'] = e.message
+    else
       render(:action => :edit)
     end
   end

@@ -1,16 +1,9 @@
 require File.dirname(__FILE__) + '/../../test_helper'
-require 'admin/velodromes_controller'
 
 # :stopdoc:
-class Admin::VelodromesController; def rescue_action(e) raise e end; end
-
-class Admin::VelodromesControllerTest < ActiveSupport::TestCase
+class Admin::VelodromesControllerTest < ActionController::TestCase
   
   def setup
-    @controller = Admin::VelodromesController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-    @request.host = "localhost"
     @request.session[:user] = users(:candi)
   end
   
@@ -65,13 +58,6 @@ class Admin::VelodromesControllerTest < ActiveSupport::TestCase
     assert_equal("www", velodrome.website, "Websit should be updated")
   end
   
-  def test_remote_destroy
-    velodrome = velodromes(:trexlertown)
-    delete :destroy, :id => velodrome.id, :format => "js"
-    assert_response(:success)
-    assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
-  end
-  
   def test_destroy
     velodrome = velodromes(:trexlertown)
     delete :destroy, :id => velodrome.id
@@ -80,64 +66,26 @@ class Admin::VelodromesControllerTest < ActiveSupport::TestCase
     assert_not_nil(flash[:notice], "Should have flash :notice")
   end
 
-  def test_edit_name
-    velodrome = velodromes(:alpenrose)
-    get(:edit_name, :id => velodrome.to_param)
-    assert_response(:success)
-    assert_template("admin/velodromes/_edit_name")
-    assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
-  end
-
-  def test_cancel_edit_name
-    velodrome = velodromes(:alpenrose)
-    original_name = velodrome.name
-    get(:test_cancel_edit_name, :id => velodrome.to_param, :name => velodrome.name)
-    assert_response(:success)
-    assert_template("admin/velodromes/_name")
-    assert_not_nil(assigns["velodrome"], "Should assign velodrome")
-    assert_equal(velodrome, assigns['velodrome'], "Velodrome")
-    velodrome.reload
-    assert_equal(original_name, velodrome.name, "Velodrome name after cancel should not change")
-  end
-
   def test_update_name
     velodrome = velodromes(:alpenrose)
-    post(:update_name, :id => velodrome.to_param, :name => "Paul Allen Velodrome")
+    post(:set_velodrome_name, 
+        :id => velodrome.to_param,
+        :value => "Paul Allen Velodrome",
+        :editorId => "velodrome_#velodrome.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/velodromes/_name")
-    assert_not_nil(assigns["velodrome"], "Should assign velodrome")
-    assert_equal(velodrome, assigns['velodrome'], "Velodrome")
     velodrome.reload
     assert_equal("Paul Allen Velodrome", velodrome.name, "Velodrome name should change after update")
   end
 
-  def test_edit_website
-    velodrome = velodromes(:alpenrose)
-    get(:edit_website, :id => velodrome.to_param)
-    assert_response(:success)
-    assert_template("admin/velodromes/_edit_website")
-    assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
-  end
-
-  def test_cancel_edit_website
-    velodrome = velodromes(:alpenrose)
-    original_website = velodrome.website
-    get(:test_cancel_edit_website, :id => velodrome.to_param, :website => velodrome.website)
-    assert_response(:success)
-    assert_template("admin/velodromes/_website")
-    assert_not_nil(assigns["velodrome"], "Should assign velodrome")
-    assert_equal(velodrome, assigns['velodrome'], "Velodrome")
-    velodrome.reload
-    assert_equal(original_website, velodrome.website, "Velodrome website after cancel should not change")
-  end
-
   def test_update_website
     velodrome = velodromes(:alpenrose)
-    post(:update_website, :id => velodrome.to_param, :website => "www.raceatra.com")
+    post(:set_velodrome_website, 
+        :id => velodrome.to_param,
+        :value => "www.raceatra.com",
+        :editorId => "velodrome_#velodrome.id}_website"
+    )
     assert_response(:success)
-    assert_template("admin/velodromes/_website")
-    assert_not_nil(assigns["velodrome"], "Should assign velodrome")
-    assert_equal(velodrome, assigns['velodrome'], "Velodrome")
     velodrome.reload
     assert_equal("www.raceatra.com", velodrome.website, "Velodrome website should change after update")
   end

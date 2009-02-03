@@ -1,0 +1,289 @@
+/* Basics */
+table
+{
+  border: 0px;
+  border-style: none;
+  empty-cells: show;
+}
+
+td
+{
+  font-family: Verdana, sans-serif;
+  text-align: left;
+  vertical-align: top;
+  color: black;
+}
+
+th {
+  font-weight: bold;
+}
+
+/* 
+ Styled table 
+ (actually a table inside a div for formatting and AJAX)
+*/
+.table_container {
+  margin-top: 12px;
+  width: 100%;
+}
+
+/* Can't use <caption> tag because every browser renders it in a uniquely crappy way */
+div.table_container div.caption {
+  border-top-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-width: 1px;
+  border-color: rgb(180, 180, 180);
+  background-image: url(/images/backgrounds/table_head.jpg);
+  font-weight: bold;
+  font-size: 0.8em;
+  line-height: 21px;
+  height: 21px;
+  padding-left: 8px;
+}
+
+.table_container .caption div {
+  float: left;
+}
+
+.table_container .caption div.right {
+  float: right;
+}
+
+.table_container .caption div.right {
+  padding-top: 2px;
+  padding-right: 4px;
+  height: 17px;
+}
+
+/* Unfortunate side-effect of div and tabel sharing classes */
+.table_container table.top_margin {
+  margin-top: 0px;
+}
+
+table.base, div.base {
+  border-top-style: none;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-width: 1px;
+  border-color: rgb(180, 180, 180);
+  width: 100%;
+  padding-bottom: 8px;
+}
+
+table.base {
+  clear: both;
+}
+
+table.base tr {
+  background-color: white;
+}
+
+table.base td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 8px;
+  padding-right: 0px;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.33em;
+}
+
+table.base th {
+  background-color: white;
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  color: rgb(109, 109, 109);
+  padding-top: 12px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 0px;
+  text-align: left;
+}
+
+table.base th a {
+  color: rgb(109, 109, 109);
+  border-bottom: none;
+}
+
+table.base tr.even {
+  background: rgb(230, 230, 230);
+}
+
+table.base td.not_found, table.base td.empty {
+  text-align: left;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  font-style: italic;
+  font-weight: bold;
+  color: rgb(153, 153, 153);
+}
+
+table.base th.invalid {
+  color: red;
+}
+
+table.base td.right, table.base th.right {
+  text-align: right;
+  padding-right: 8px;
+}
+
+table.base td.right span {
+  border: 1px solid #999;
+}
+
+tr.buttons td.right {
+  text-align: right;
+  padding-top: 8px;
+}
+
+.inline_error
+{
+  padding-top: 4px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 4px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  font-size: 8pt;
+  font-family: Verdana, Helvetica, sans-serif;
+  color: #C6413E;
+  white-space: normal;
+}
+
+able.base tr.error td {
+  color: rgb(250, 50, 50);
+  font-weight: bold;
+}
+
+table.base tr.error td img.icon {
+  padding-top: 1px;
+}
+
+table.base td.last {
+  padding-left: 8px;
+  padding-right: 12px;
+}
+
+table.base div.record {
+  margin: 0px;
+  padding: 0px;
+  padding-left: 24px;
+  min-height: 20px;
+  background-position: 0px 2px;
+  background-repeat: no-repeat;
+  white-space: nowrap;
+}
+
+table.base div.in_place_editable {
+  position: relative;
+  left: -4px;
+  width: 100%;
+  margin: 0px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 3px;
+  padding-right: 2px;
+  border: 1px solid transparent;
+  min-height: 16px;
+}
+
+/* Ack. Special case non-editable content that shares a row with in-place editable content */
+table.base td.not_editable {
+  padding-top: 9px;
+}
+
+table.base div.hovering {
+  width: 100%;
+  background-color: rgb(245, 245, 245);
+  border: 1px solid rgb(204, 204, 204);
+}
+
+input[type="text"].editor_field {
+  position: relative;
+  left: -4px;
+  width: 80%;
+  font-weight: normal;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 20px;
+}
+
+table.base div.inplaceeditor-saving {
+  background-image: url(/images/icons/spinner.gif);
+  background-position: left;
+  background-repeat: no-repeat;
+  border: none;
+}
+
+table.base th.name {
+  padding-left: 32px;
+}
+
+table.base td div.record form {
+  margin: 0px;
+  padding: 0px;
+}
+
+table.base td.check_box, table.base th.check_box {
+  width: 96px;
+  text-align: center;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+table.base td.check_box {
+  padding-top: 7px;
+  padding-bottom: 0px;
+}
+
+table.base td.check_box input {
+  margin-right: 0px;
+}
+
+
+table.base tr.hovering {
+  background-color: #E9F79B;
+}
+
+table.show_grid {
+  background-position: 8px 0px;
+  background-image: url(/images/backgrounds/table_grid.png);
+}
+
+.table_container + div.buttons {
+  margin-top: 4px;
+}
+
+div.buttons div {
+  float: left;
+}
+
+div.buttons div.right {
+  float: right;
+}
+
+div.table_container table.base th.date, table.base td.date {
+  text-align: right;
+  white-space: nowrap;
+}
+
+table.base td table {
+  width: 100%;
+}
+
+table.base td table td {
+  padding-left: 0px;
+}

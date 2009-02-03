@@ -15,8 +15,8 @@ Time left: <%= distance_of_time_in_words_to_now(DateTime.new(2007, 7, 1, 11, 0, 
 <%= error_messages_for('bid') %>
 
 <%= form_tag :action => 'send_bid' %>
-<div align="center">
-<table class="base" align="center">
+<div class="centered">
+<table class="base" class="centered">
 	<tr>
 		<td>Name:</td>
 		<td><%= text_field 'bid', 'name' %></td>

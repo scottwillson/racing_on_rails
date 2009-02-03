@@ -1,25 +1,27 @@
-<div style="text-align: center;">
-  <%= form_tag({:action => 'preview_import'}, { :multipart => true, :id => 'import_button' }) %>
-    <%= submit_tag 'Import' %> 
-    <%= file_field_tag "racers_file" %>
-  </form>
+<% form_tag preview_import_admin_racers_path, :multipart => true, :id => "import_form" do %>
+<div class="page_buttons centered clear">
+  <label for="racers_file">Import</label>
+  <%= file_field_tag "racers_file", :onchange => "$('upload_form').submit();" %>
+  </div>
+<% end -%>
 
-  <%= form_tag({}, {:id => 'export_form'}) %>
-    <%= button_to_function 'Export', 'submit_export(this)', :id => 'export_button' %>
+<%= form_tag({}, {:id => "export_form"}) %>
+  <div class="page_buttons centered clear">
     <select name="include" id="include">
       <option value="all">All</option>
-      <option value="members_only" selected>Current Members Only</option>
+      <option value="members_only" selected="selected">Current Members Only</option>
     </select>
-    to
     <select name="format" id="format">
-      <option value="xls" selected>Excel</option>
+      <option value="xls" selected="selected">Excel</option>
       <option value="ppl">FinishLynx</option>
       <option value="scoring_sheet">Scoring Sheet</option>
     </select>
-  </form>
-</div>
+    <%= button_to_function "Export", "submit_export(this)", :id => "export_button" %>
+  </div>
+</form>
 
 <script type="text/javascript" charset="utf-8">
+//<![CDATA[
   function submit_export() {
     if ($F('format') == 'scoring_sheet') {
       this.location = '/admin/racers.xls?excel_layout=scoring_sheet&include=' + $F('include')
@@ -28,4 +30,5 @@
       this.location = '/admin/racers.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
     }
   }
+// ]]>
 </script>

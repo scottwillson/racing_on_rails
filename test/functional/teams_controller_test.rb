@@ -1,15 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require_or_load 'teams_controller'
 
-class TeamsController; def rescue_action(e) raise e end; end
-
-class TeamsControllerTest < ActiveSupport::TestCase
-
-  def setup
-    @controller = TeamsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
+class TeamsControllerTest < ActionController::TestCase
 
   def test_index
     nonmember = Team.create!(:name => "Not Member")

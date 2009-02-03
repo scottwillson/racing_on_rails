@@ -1,0 +1,445 @@
+/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
+
+/* Admin events */
+table#left_nav {
+  font-size: 8pt;
+}
+
+table#left_nav td.text {
+  white-space: nowrap;  
+  padding-left: 4px;
+}
+
+table#left_nav td.icon {
+  text-align: right;
+  padding-right: 0px;
+}
+
+#edit_promoter_link {
+  paddin-right: 8px;  
+}
+
+/* Calendar */
+div.calendar table {
+  border-collapse: separate;
+  padding: 0px;
+  width: 100%;
+  background: white;
+}
+
+.calendar table th, .calendar .caption
+{
+  text-align: center;
+}
+
+tr.month
+{
+  vertical-align: top;
+}
+
+td.day
+{
+  height: 70px;
+  width: 14%;
+  border: 1px solid white;
+  background: #F4FDBF;
+  padding: 4px 4px;
+  text-align: left;
+}
+
+td.day div.event {
+  margin-bottom: 8px;
+}
+
+td.day div.number
+{
+  font-weight: bold;
+}
+
+td.day_from_other_month
+{
+  height: 70px;
+  width: 14%;
+  border: 1px solid white;
+  background: white;
+  padding: 4px 4px;
+}
+
+td.day_from_other_month div.number
+{
+  font-style: italic;
+  text-align: left;
+}
+
+
+/* Upcoming events */
+tr.discipline_upcoming_events {
+  vertical-align: top;
+}
+
+tr.discipline_upcoming_events td.date {
+  min-width: 50px;
+}
+
+tr.discipline_upcoming_events td.info {
+  min-width: 150px;
+  padding-right:  24px;
+}
+
+
+/* Categories */
+#category_root, #unknown_category_root {
+  padding-left: 4px;
+  padding-bottom: 12px;
+  border-left: 1px solid rgb(190, 190, 190);
+  border-right: 1px solid rgb(190, 190, 190);
+  border-bottom: 1px solid rgb(190, 190, 190);
+}
+
+div.disclosure {
+  background-repeat: no-repeat;
+  background-position: 0px 3px;
+  padding-left: 16px;
+  padding-bottom: 16px;
+  display: inline;
+}
+
+.collapsed {
+  background-image: url(/images/icons/collapsed.gif);  
+}
+
+.loading {
+  background-image: url(/images/icons/spinner.gif);
+}
+
+.expanded {
+  background-image: url(/images/icons/expanded.gif);
+}
+
+.category {
+  padding-top: 4px;
+}
+
+.category .record {
+  padding-left: 24px;
+  cursor: move;
+  background-image: url(/images/icons/category.gif);
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  display: inline;
+}
+
+.category .children {
+  padding-left: 24px;
+}
+
+/* Results admin */
+#find_progress_icon {
+  visibility: hidden;
+}
+
+table.base td.disclosure a {
+  padding-top: 8px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.half_width {
+  width: 48%;
+}
+
+#left_racer {
+  float: left;
+}
+
+#left_racer tr {
+  cursor: move;  
+}
+
+#right_racer {
+  float: left;
+  margin-left: 12px;
+  margin-right: 0px;
+}
+
+/* Promoters */
+table.promoters td.name {
+  background-repeat: no-repeat;
+  background-position: 8px 5px;
+}
+
+table.promoters div.record,
+table.racers div.record {
+  background-image: url(/images/icons/person.gif);
+}
+
+table.teams div.record {
+  background-image: url(/images/icons/people.gif);
+}
+
+table.velodromes div.record {
+  background-image: url(/images/icons/checkered_flag.gif);
+}
+
+table.base td.icon {
+  width: 16px;
+}
+
+table.base img.icon {
+  float: left;
+  position: relative;
+  top: -2px;
+  padding-left: 4px;
+  padding-right: 8px;
+}
+
+table.base td.icon a:hover {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+table.base td.icon  {
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 0px;
+}
+
+table.base td.icon img {
+  border: 0px;
+}
+
+table.base td img.cancel {
+  width: 16px;
+  height: 16px;
+  margin-left: -6px;
+}
+
+table.base td.name a.cancel {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+table.base .actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.table_container#racers th.number, .table_container#racers td.number {
+  text-align: right;
+}
+
+#export_button {
+  margin-left: 8px;
+}
+
+table.numbers select {
+  margin-top: 0px;
+  float: right;
+  width: 78px;
+}
+
+table.numbers td label {
+  text-align: left;
+  font-weight: normal;
+  color: black;
+  margin-top: 0px;
+  width: auto;
+}
+
+input#racer_license {
+  width: 100px;
+  float: right;
+  margin-right: 8px;
+}
+
+td input[type=text].number {
+  width: 30px;
+}
+
+table.racer_categories td input[type=text] {
+  width: 120px;
+}
+
+/* public teams page */
+table.base#teams_table td.club_name, table.base#teams_table td.contact, table.base#teams_table td.contact_phone {
+  white-space: nowrap;
+}  white-space: nowrap;
+}
+
+table.base a.preliminary {
+  font-style: italic;
+}
+
+input.city {
+  margin-right: 8px;
+  width: 114px;
+}
+
+input.city_no_zip {
+  margin-right: 8px;
+  width: 222px;
+}
+
+input.state {
+  margin-right: 8px;
+  width: 30px;
+}
+
+input.state_no_zip {
+  margin-right: 0px;
+  width: 30px;
+}
+
+input.zip {
+  width: 90px;
+}
+
+.current, .renewed {
+  padding-right: 20px;
+  background-image: url(/images/icons/confirmed.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
+
+/* Cat 4 womens series */
+form.cat4_womens_race_series input#event_name {
+  width: 512px;   
+}
+
+form.cat4_womens_race_series td input#result_place,
+form.cat4_womens_race_series td input#result_number {
+  width: 40px;
+}
+
+form.cat4_womens_race_series td input#result_first_name,
+form.cat4_womens_race_series td input#result_last_name,
+form.cat4_womens_race_series td input#result_team_name {
+  width: 184px;
+}
+
+
+/* Event */
+table.event_nav td.standings {
+  background-image: url(/images/icons/results.gif);
+  background-repeat: no-repeat;
+  background-position: 8px 6px;  
+}
+
+table.event_nav td.standings a {
+  margin-left: 24px;
+}
+
+table.event_nav td.race {
+  background-image: url(/images/icons/category.gif);
+  background-repeat: no-repeat;
+  background-position: 32px 6px;  
+}
+
+table.event_nav td.race a {
+  margin-left: 48px;
+}
+
+
+/* Mailing lists */
+div.archive_navigation a
+{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+div.archive_navigation span
+{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+div.archive_navigation input
+{
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+/* Results */
+table.base td.total_points span.total
+{
+  font-size: 8pt;
+  font-weight: bold;
+  text-align: right;
+  padding-right: 12px;
+}
+
+table.base td.total_points {
+  font-weight: bold;
+  text-align: right;
+  padding-right: 8px;
+}
+
+table.event_races td {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* Event first aid providers */
+table.first_aid_providers td.date {
+  white-space: nowrap;
+}
+
+table.first_aid_providers td.name {
+  width: 200px;
+}
+
+.login {
+  width: 368px;
+}
+
+.login label {
+  width: 80px;
+}
+
+.link_spacer {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+div.event_results {
+  margin-top: 24px;
+}
+
+table.racer_results td.place {
+  width: 24px;
+}
+
+table.racer_results td.standings {
+  width: 400px;
+}
+
+table.racer_results td.category {
+  width: 200px;
+}
+
+table.racer_results td.dates {
+  width: 100px;
+}
+
+tr.new_number td.right {
+  padding-left: 0px;
+  margin-left: 0px;
+}
+
+table.base td select#number_year {
+  margin-right: 8px;
+}
+
+table.numbers label.inline {
+  width: 120px;
+}

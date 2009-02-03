@@ -1,0 +1,49 @@
+include_partial "fixtures"
+include_partial "admin_login"
+
+open "/admin/first_aid_providers"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+assert_table "events_table", 1, 0, "glob:-------------*"
+assert_table "events_table", 1, 2, "glob:Lost Series*"
+assert_table "events_table", 2, 2, "glob:USA Cycling Event*"
+assert_table "events_table", 1, 3, "glob:Brad Ross*"
+
+assert_element_present "event_#{Event.find_by_name('Lost Series').id}_first_aid_provider"
+click "event_#{Event.find_by_name('Lost Series').id}_first_aid_provider"
+type "css=.editor_field", "Megan Weaver"
+submit "css=.inplaceeditor-form"
+pause 100
+
+refresh_and_wait
+assert_table "events_table", 1, 0, "glob:Megan Weaver*"
+
+click "past_events"
+pause 500
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_table "events_table", 3, 2, "glob:Copperopolis*"
+
+click "past_events"
+pause 500
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "Copperopolis"
+
+assert_table "events_table", 1, 2, "glob:Lost Series*"
+assert_table "events_table", 2, 2, "glob:USA Cycling Event*"
+
+# Table already sorted by date ascending, so click doesn't change order
+click "css=th.date a"
+pause 1000
+assert_table "events_table", 1, 2, "glob:Lost Series*"
+assert_table "events_table", 2, 2, "glob:USA Cycling Event*"
+
+click "css=th.date a"
+pause 1000
+assert_table "events_table", 1, 2, "glob:USA Cycling Event*"
+assert_table "events_table", 2, 2, "glob:Lost Series*"
+
+click "css=th.date a"
+pause 1000
+assert_table "events_table", 1, 2, "glob:Lost Series*"
+assert_table "events_table", 2, 2, "glob:USA Cycling Event*"

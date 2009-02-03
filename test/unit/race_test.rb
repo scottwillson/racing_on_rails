@@ -370,7 +370,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(second_competition_result, ironman_race.results[2], "3rd result")
   end
   
-  def test_calculate_members_only_places!
+  def test_calculate_members_only_places
     standings = standings(:banana_belt)
     race = standings.races.create(:category => categories(:senior_men))
     race.calculate_members_only_places!
@@ -423,5 +423,39 @@ class RaceTest < ActiveSupport::TestCase
     race = standings.races.create!(:category => Category.new(:name =>'Espoirs', :ages => 18..23))
     assert_equal_dates(Date.new(1977, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
     assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+  end
+  
+  def test_create_result_before
+    race = SingleDayEvent.create!.standings.create!.races.create!(:category_name => "Masters Women")
+    existing_result = race.results.create!(:place => "1")
+    new_result = race.create_result_before(existing_result.id)
+    assert_equal(2, race.results.size, "Results")
+    race.results.sort!
+    assert_equal(new_result, race.results[0], "New result should be first result")
+    assert_equal("1", race.results[0].place, "New result place")
+    assert_equal(existing_result, race.results[1], "Existing result should be second result")
+    assert_equal("2", race.results[1].place, "Existing result place")
+
+    another_new_result = race.create_result_before(new_result.id)
+    race.results.sort!
+    assert_equal(another_new_result, race.results[0], "New result should be first result")
+    assert_equal("1", race.results[0].place, "New result place")
+    assert_equal(new_result, race.results[1], "Existing result should be second result")
+    assert_equal("2", race.results[1].place, "Existing result place")
+    assert_equal(existing_result, race.results[2], "Existing result should be third result")
+    assert_equal("3", race.results[2].place, "Existing result place")
+  end
+  
+  def test_create_result_before_dnf
+    race = SingleDayEvent.create!.standings.create!.races.create!(:category_name => "Masters Women")
+    first_result = race.results.create!(:place => "1")
+    existing_result = race.results.create!(:place => "DNF")
+    new_result = race.create_result_before(existing_result.id)
+    assert_equal(3, race.results.size, "Results")
+    race.results.sort!
+    assert_equal(first_result, race.results[0], "First result should still be first result")
+    assert_equal("1", race.results[0].place, "First result place")
+    assert_equal("DNF", race.results[1].place, "New result place")
+    assert_equal("DNF", race.results[2].place, "Existing result place")
   end
 end

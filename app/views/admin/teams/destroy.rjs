@@ -1,4 +1,2 @@
 page.visual_effect(:puff, "team_#{@team.id}_row", :duration => 2)
-page.replace_html('notice', "Deleted #{@team.name}")
-page.show('notice')
-page.hide('warn')
+page.call(:flash, 'notice', "Deleted #{@team.name}")

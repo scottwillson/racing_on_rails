@@ -1,19 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'bar_controller'
 
-class BarController; def rescue_action(e) raise e end; end
-
-class BarControllerTest < ActiveSupport::TestCase
+class BarControllerTest < ActionController::TestCase
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::CaptureHelper
 
   def setup
-    @controller = BarController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-
     big_team = Team.create(:name => "T" * 60)
     weaver = racers(:weaver)
     weaver.team = big_team

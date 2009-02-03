@@ -1,5 +1,6 @@
-<table class="base" id="home_page_results">
-  <caption><%= link_to 'Results', :only_path  => false, :host => RAILS_HOST, :controller => 'results' %></caption>
+<% table :caption => link_to('Results', :only_path  => false, :host => RAILS_HOST, :controller => 'results'), 
+         :class => "no_top_margin", 
+         :id => "home_page_results" do %>
   <tr><th></th></tr>
   <%- for standings in @recent_results -%>
   <tr>
@@ -15,4 +16,4 @@
     <td style="padding-top: 16px;"><%= link_to 'More &hellip;',
   :only_path  => false, :host => RAILS_HOST, :controller => 'results' %></td>
   </tr>
-</table>
+<% end -%>

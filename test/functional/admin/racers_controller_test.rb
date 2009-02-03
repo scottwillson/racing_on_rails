@@ -89,46 +89,33 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_equal('Test', assigns['name'], "'name' assigns")
   end
 
-  def test_edit_name
-    weaver = racers(:weaver)
-    get(:edit_name, :id => weaver.to_param)
-    assert_response(:success)
-    assert_template("admin/racers/_edit")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(weaver, assigns['racer'], 'Should assign racer')
-  end
-
   def test_blank_name
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => '')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => "",
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
     racer = assigns["racer"]
     assert_not_nil(racer, "Should assign racer")
     assert(racer.errors.empty?, "Should have no errors, but had: #{racer.errors.full_messages}")
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
     assert_equal('', molly.first_name, 'Racer first_name after update')
     assert_equal('', molly.last_name, 'Racer last_name after update')
   end
 
-  def test_cancel
-    molly = racers(:molly)
-    original_name = molly.name
-    get(:cancel, :id => molly.to_param, :name => molly.name)
-    assert_response(:success)
-    assert_template("admin/racers/_racer_name")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Racer')
-    molly.reload
-    assert_equal(original_name, molly.name, 'Racer name after cancel')
-  end
-
   def test_update_name
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => 'Mollie Cameron')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => "Mollie Cameron",
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -138,9 +125,13 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
   def test_update_same_name
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => 'Molly Cameron')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => "Molly Cameron",
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -150,9 +141,13 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
   def test_update_same_name_different_case
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => 'molly cameron')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => "molly cameron",
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -163,7 +158,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
   def test_update_to_existing_name
     # Should ask to merge
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => 'Erik Tonkin')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => "Erik Tonkin",
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
@@ -179,9 +178,13 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_not_nil(erik_alias, 'Alias')
 
     tonkin = racers(:tonkin)
-    post(:update_name, :id => tonkin.to_param, :name => 'Eric Tonkin')
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => 'Eric Tonkin',
+        :editorId => "racer_#tonkin.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(tonkin, assigns['racer'], 'Racer')
     tonkin.reload
@@ -200,9 +203,13 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_not_nil(mollie_alias, 'Alias')
 
     molly = racers(:molly)
-    post(:update_name, :id => molly.to_param, :name => 'mollie cameron')
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => 'mollie cameron',
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_racer_name")
+    assert_template(nil)
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(molly, assigns['racer'], 'Racer')
     molly.reload
@@ -216,7 +223,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
   def test_update_to_other_racer_existing_alias
     tonkin = racers(:tonkin)
-    post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => "Mollie Cameron",
+        :editorId => "racer_#tonkin.id}_name"
+    )
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
@@ -236,7 +247,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_equal(1, Racer.count(:conditions => ['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
     assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
 
-    post(:update_name, :id => tonkin.to_param, :name => 'Mollie Cameron')
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => "Mollie Cameron",
+        :editorId => "racer_#tonkin.id}_name"
+    )
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
     assert_not_nil(assigns["racer"], "Should assign racer")
@@ -293,7 +308,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
   def test_merge?
     molly = racers(:molly)
     tonkin = racers(:tonkin)
-    get(:update_name, :name => molly.name, :id => tonkin.to_param)
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => molly.name,
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
@@ -317,23 +336,16 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_equal([], Racer.find_all_by_name('Erik Tonkin'), 'Tonkin should not be in database')
   end
 
-  def test_edit_team_name
-    weaver = racers(:weaver)
-    get(:edit_team_name, :id => weaver.to_param)
-    assert_response(:success)
-    assert_template("admin/racers/_edit_team_name")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(weaver, assigns['racer'], 'Should assign racer')
-  end
-  
   def test_update_team_name_to_new_team
     assert_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should not be in database')
     molly = racers(:molly)
-    post(:update_team_name, :id => molly.to_param, :team_name => 'Velo Slop')
+    post(:set_racer_team_name, 
+        :id => molly.to_param,
+        :value => 'Velo Slop',
+        :editorId => "racer_#molly.id}_team_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_team")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Racer')
+    assert_template(nil)
     molly.reload
     assert_equal('Velo Slop', molly.team_name, 'Racer team name after update')
     assert_not_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should be in database')
@@ -342,11 +354,13 @@ class Admin::RacersControllerTest < ActionController::TestCase
   def test_update_team_name_to_existing_team
     molly = racers(:molly)
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
-    post(:update_team_name, :id => molly.to_param, :team_name => 'Gentle Lovers')
+    post(:set_racer_team_name, 
+        :id => molly.to_param,
+        :value => 'Gentle Lovers',
+        :editorId => "racer_#molly.id}_team_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_team")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Racer')
+    assert_template(nil)
     molly.reload
     assert_equal('Gentle Lovers', molly.team_name, 'Racer team name after update')
     assert_equal(Team.find_by_name('Gentle Lovers'), molly.team, 'Molly should be on Gentle Lovers')
@@ -355,41 +369,31 @@ class Admin::RacersControllerTest < ActionController::TestCase
   def test_update_team_name_to_blank
     molly = racers(:molly)
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
-    post(:update_team_name, :id => molly.to_param, :team_name => '')
+    post(:set_racer_team_name, 
+        :id => molly.to_param,
+        :value => '',
+        :editorId => "racer_#molly.id}_team_name"
+    )
     assert_response(:success)
-    assert_template("admin/racers/_team")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Racer')
+    assert_template(nil)
     molly.reload
     assert_equal('', molly.team_name, 'Racer team name after update')
     assert_nil(molly.team, 'Molly should have no team')
   end
     
-  def test_cancel_edit_team_name
-    molly = racers(:molly)
-    original_name = molly.name
-    get(:cancel_edit_team_name, :id => molly.to_param, :name => molly.name)
-    assert_response(:success)
-    assert_template("admin/racers/_team")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Racer')
-    molly.reload
-    assert_equal(original_name, molly.name, 'Racer name after cancel')
-  end
-
-  def test_update_member
+  def test_toggle_member
     molly = racers(:molly)
     assert_equal(true, molly.member, 'member before update')
-    post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
+    post(:toggle_member, :id => molly.to_param)
     assert_response(:success)
-    assert_template("admin/_attribute")
+    assert_template("shared/_member")
     molly.reload
     assert_equal(false, molly.member, 'member after update')
 
     molly = racers(:molly)
-    post(:toggle_attribute, :id => molly.to_param, :attribute => 'member')
+    post(:toggle_member, :id => molly.to_param)
     assert_response(:success)
-    assert_template("admin/_attribute")
+    assert_template("shared/_member")
     molly.reload
     assert_equal(true, molly.member, 'member after second update')
   end
@@ -398,7 +402,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
     molly = racers(:molly)
     molly_with_different_road_number = Racer.create(:name => 'Molly Cameron', :road_number => '987123')
     tonkin = racers(:tonkin)
-    get(:update_name, :name => molly.name, :id => tonkin.to_param)
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => molly.name,
+        :editorId => "racer_#tonkin.id}_name"
+    )
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
@@ -415,7 +423,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
     molly.save!
     molly_with_different_cross_number = Racer.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
     tonkin = racers(:tonkin)
-    get(:update_name, :name => molly.name, :id => tonkin.to_param)
+    post(:set_racer_name, 
+        :id => tonkin.to_param,
+        :value => molly.name,
+        :editorId => "racer_#tonkin.id}_name"
+    )
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
     racer = assigns['racer']
@@ -434,7 +446,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
   def test_dupes_merge_alias?
     molly = racers(:molly)
     tonkin = racers(:tonkin)
-    get(:update_name, :name => 'Eric Tonkin', :id => molly.to_param)
+    post(:set_racer_name, 
+        :id => molly.to_param,
+        :value => 'Eric Tonkin',
+        :editorId => "racer_#molly.id}_name"
+    )
     assert_response(:success)
     assert_equal(molly, assigns['racer'], 'Racer')
     racer = assigns['racer']
@@ -468,19 +484,17 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
     get(:new)
     assert_response(:success)
-    assert_template("admin/racers/show")
+    assert_template("admin/racers/edit")
     assert_not_nil(assigns["racer"], "Should assign racer as 'racer'")
     assert_not_nil(assigns["race_numbers"], "Should assign racer's number for current year as 'race_numbers'")
   end
 
-  def test_show
+  def test_edit
     alice = racers(:alice)
-    opts = {:controller => "admin/racers", :action => "show", :id => alice.to_param.to_s}
-    assert_routing("/admin/racers/#{alice.to_param}", opts)
-    
-    get(:show, :id => alice.to_param)
+
+    get(:edit, :id => alice.to_param)
     assert_response(:success)
-    assert_template("admin/racers/show")
+    assert_template("admin/racers/edit")
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(alice, assigns['racer'], 'Should assign Alice to racer')
   end
@@ -657,20 +671,6 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_equal("Candi Murray", RaceNumber.find_by_value("AZY").updated_by, "updated_by")
   end
 
-  def test_update_error
-    molly = racers(:molly)
-    put(:update, 
-    :id => molly.to_param, 
-      :racer => {
-        :first_name => 'Molly', :last_name => 'Cameron', :road_number => '123123612333', "member_to(1i)" => "AZZZ", :team_id => "-9"
-    })
-    assert_response(:success)
-    assert_template("admin/racers/show")
-    assert_not_nil(assigns["racer"], "Should assign racer")
-    assert_equal(molly, assigns['racer'], 'Should assign Alice to racer')
-    assert(!flash.empty?, 'flash not empty?')
-  end
-  
   def test_number_year_changed
     racer = racers(:molly)
     
@@ -975,7 +975,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
     assert_equal(6, assigns['racers'].size, "Racers export size")
   end
-  
+
   def test_export_members_only_to_excel
     get(:index, :format => 'xls', :include => 'members_only')
 

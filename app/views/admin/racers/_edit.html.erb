@@ -1,7 +1,6 @@
 <%= form_remote_tag(:url => {:action => 'update_name', :id => @racer.to_param}) %>
-  <%= text_field_tag 'name', @racer.name, :size => 30, 
+  <%= text_field_tag 'name', @racer.name, 
         :class => 'edit_in_place_text_field', 
-        :style => "margin-left: 24px;",
         :id => "racer_#{@racer.id}_name_text_field" %><%= link_to_remote image_tag('/images/buttons/small_cancel.gif', :class => "cancel"), 
       { :update => "racer_#{@racer.id}_name", 
         :url => { :action => "cancel", :id => @racer.to_param} },

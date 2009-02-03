@@ -1,0 +1,56 @@
+include_partial "fixtures"
+include_partial "admin_login"
+
+click_and_wait "link=Copperopolis Road Race"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+click_and_wait "link=Senior Men Pro 1/2"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+assert_selected "race_bar_points", "Normal"
+select "race_bar_points", "Double"
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_not_title "regexp:Exception"
+
+assert_selected "race_bar_points", "Double"
+
+click "result_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.results.first.id}_place"
+type "css=.editor_field", "DNF"
+submit "css=.inplaceeditor-form"
+pause 100
+
+refresh_and_wait
+pause 100
+assert_text_not_present "13"
+assert_text_present "DNF"
+
+click "result_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.results.first.id}_name"
+type "css=.editor_field", "Megan Weaver"
+submit "css=.inplaceeditor-form"
+pause 50
+
+refresh_and_wait
+assert_text_not_present "Ryan Weaver"
+assert_text_present "Megan Weaver"
+
+click "result_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.results.first.id}_team_name"
+type "css=.editor_field", "River City"
+submit "css=.inplaceeditor-form"
+pause 50
+
+refresh_and_wait
+assert_text_present "River City"
+
+click "result_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.results.first.id}_add"
+click "result_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.results.first.id}_destroy"
+pause 50
+refresh_and_wait
+assert_text_not_present "Megan Weaver"
+assert_text_present "DNF"
+
+click "result__add"
+refresh_and_wait
+assert_text_present "Field Size (2)"

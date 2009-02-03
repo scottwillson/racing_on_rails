@@ -187,6 +187,10 @@ class Event < ActiveRecord::Base
       end
     end
   end
+  
+  def location
+    self.city_state
+  end
 
   def discipline_id
     Discipline[discipline].id if Discipline[discipline]

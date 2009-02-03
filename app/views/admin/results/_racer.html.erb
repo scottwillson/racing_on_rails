@@ -1,29 +1,29 @@
-<table class="base" id="racer_<%= racer.id %>">
-  <caption><%= racer.name %> <small><%= [racer.team.blank? ? nil : racer.team.name, racer.city, racer.racing_age].compact.join(', ') %></small></caption>
+<% table :caption => [racer.name, (racer.team.blank? ? nil : racer.team.name), racer.city, racer.racing_age].compact.join(', '), :id => "racer_#{racer.id}" do %>
   <tr>
     <th></th>
     <th></th>
     <th></th>
     <th>Race</th>
     <th>Category</th>
-    <th>Date</th>
-    <th>Pts</th>
+    <th class="right">Date</th>
+    <th class="right">Pts</th>
   </tr>
-  <%- for result in results.sort { |x, y| y.date <=> x.date } -%>
+  <%- results.sort { |x, y| y.date <=> x.date }.each do |result| -%>
   <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
     <td class="disclosure"><%= 
     link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 
     "toggle_disclosure(#{result.id})",
-    :class => 'disclosure') if result.competition_result? %></td>
+    :class => 'disclosure image', :alt => "") if result.competition_result? %></td>
     <td><%= result.place %></td>
-    <td><%= link_to(image_tag('/images/icons/web_page.gif', 
+    <td><%= link_to(image_tag('/images/icons/web_page.png', 
       :title => 'View public results web page', :alt => 'View public results web page'), 
-       :controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
-       :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id) %>
+       {:controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
+       :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id},
+       { :class => "image" } ) %>
     </td>
     <td><%= result.race.standings.name %></td>
     <td><%= result.race.name %></td>
-    <td><%= result.race.standings.event.date.strftime("%D") %></td>
+    <td class="right"><%= result.race.standings.event.date.strftime("%D") %></td>
     <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
   </tr>
   <%- end -%>
@@ -33,7 +33,7 @@
     <td colspan="7">No results</td>
   </tr>
   <%- end -%>
-</table>
+<% end -%>
 
 <%- for result in results -%>
   <%= draggable_element("result_#{result.id}", :revert => true, :ghosting => true, :scroll => 'window') -%> 

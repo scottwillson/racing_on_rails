@@ -1,19 +1,24 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<div><p><%= link_to 'Schedule in list format', {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p></div>
+<p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
 
-<%= links_to_months @schedule %>
-<%= links_to_years @discipline %>
+<hr class="space" />
+
+<%= render :partial => "years" %>
+<%= tabs do |tabs|
+  @schedule.months.each do |month|
+    tabs.add(month.name, :anchor => month.name)
+  end
+end -%>
 <%= render :partial => "disciplines", :locals => { :year => @year } %>
-<br>
 
 <% if Date.today < Date.new(@year, 2) %>
 <div>Tentative. Dates are subject to change.</div>
 <% end %>
 
-<%- for month in @schedule.months -%>
-  <table class="base" id="calendar">
-    <caption><%= month.name %> <%= @year %><a name="<%= month.name %>"></a></caption>
+<div class="container">
+  <%- for month in @schedule.months -%>
+  <% table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>" do %>
       <tr>
         <th>Sunday</th>
         <th>Monday</th>
@@ -32,6 +37,7 @@
         <td class="day">
           <div class="number"><%= day.day_of_month -%></div>
           <%- for event in day.events -%>
+          <div class="event">
       <%- if event.cancelled %>
         <span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
       <%- else -%>
@@ -43,15 +49,16 @@
             <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
             MTB
               <%- end -%>
+              </div>
               <%- end -%>
       <%- end -%>
           
-          <br>
           <%- end -%>
         <%- end -%>
         </td>
       <%- end -%>
       </tr>
       <%- end -%>
-  </table>
+  <% end -%>
 <% end %>
+</div>

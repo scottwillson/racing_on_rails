@@ -1,0 +1,88 @@
+/* Overrides for the world's favorite browser */
+label {
+  margin-top: 10px;
+}
+
+/* Fixes IE margin bugs */
+* html .column { overflow-x: hidden; }
+
+/* Fixes incorrect placement of ol numbers in IE6/7. */
+ol { margin-left:2em; }
+
+/* Fixes wrong line-height on sup/sub in IE. */
+sup { vertical-align: text-top; }
+sub { vertical-align: text-bottom; }
+
+/* Fixes IE7 missing wrapping of code elements. */
+html>body p code { *white-space: normal; } 
+
+/* IE 6&7 has problems with setting proper <hr> margins. */
+hr  { margin: -8px auto 11px; }
+
+label.check_box {
+  width: 236px;
+}
+
+input[type=password], input[type=text] {
+}
+
+input[type=checkbox] {
+  margin-top: 0px;
+  vertical-align: middle;
+}
+
+select {
+  margin-top: 15px;
+}
+
+.labelled {
+  margin-top: 14px;
+}
+
+/* For the ABA */
+#ror .labelled {
+  margin-top: 8px;
+}
+
+#ror #footer a {
+  color: #94A3BB;
+}
+
+td.day
+{
+  border: 1px solid white;
+}
+
+pre
+{
+  font-size: 11px;
+  font-family: "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+}
+
+table.base th {
+  height: 0px;
+}
+
+.table_container .caption div.right {
+  padding-top: 0px;
+}
+
+div.page_buttons a {
+  vertical-align: 20%;
+}
+
+div.centered {
+  display: block;
+}
+
+#search_form div.centered {
+  width: 327px;
+}
+
+#import_form div.centered {
+  width: 279px;
+}
+
+#export_form div.centered {
+  width: 368px;
+}

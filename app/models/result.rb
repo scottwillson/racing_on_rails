@@ -34,7 +34,7 @@ class Result < ActiveRecord::Base
   
   attr_accessor :updated_by
   
-  before_validation :find_associated_records
+  before_save :find_associated_records
   before_save :save_racer
   after_save :update_racer_number
   after_save {|result| result.race.standings.after_result_save}
@@ -576,7 +576,7 @@ class Result < ActiveRecord::Base
   def major_place
     if place.to_i > 0
       0
-    elsif place.blank?
+    elsif place.blank? || place == 0
       1
     elsif place.upcase == 'DNF'
       2

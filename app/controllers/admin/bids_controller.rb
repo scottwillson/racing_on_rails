@@ -1,9 +1,8 @@
-class Admin::BidsController < Admin::RecordEditor
-
-  include ApplicationHelper
+class Admin::BidsController < ApplicationController
   include ActionView::Helpers::TextHelper
 
-  edits :bid
+  before_filter :login_required
+  layout "admin/application"
 
   def index
     @bids = Bid.find(:all)
