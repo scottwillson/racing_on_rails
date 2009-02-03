@@ -64,12 +64,12 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 
 open "/rider_rankings"
-assert_text_present "Points are awarded to WSBA members"
+assert_text_present "Rider ranking placings include only WSBA"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_not_title "regexp:Exception"
 
 open "/cat4_womens_race_series"
-assert_text_present "Points are awarded to WSBA members"
+assert_text_present "Cat 4 Womens Race Series"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_not_title "regexp:Exception"
 

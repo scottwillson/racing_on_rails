@@ -52,5 +52,6 @@ assert_text_not_present "Megan Weaver"
 assert_text_present "DNF"
 
 click "result__add"
+pause 50
 refresh_and_wait
 assert_text_present "Field Size (2)"
