@@ -2,9 +2,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :teams
 
   map.namespace(:admin) do |admin|
-    admin.resources :categories do |category|
-      category.resources :children, :controller => :categories
-    end
+    admin.resources :categories
     admin.resources :events, :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
     admin.resources :first_aid_providers
     admin.resources :promoters
