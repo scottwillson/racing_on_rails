@@ -541,8 +541,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
 
   def test_links_to_years
     get(:index, :year => "2004")
-    assert_match('href="/admin/events?year=2003', @response.body, "Should link to 2003 in:\n#{@response.body}")
-    assert_match('href="/admin/events?year=2005', @response.body, "Should link to 2005 in:\n#{@response.body}")
+
+    link = @response.body["href=\"/admin/events?year=2003"]
+    obra_link = @response.body["/schedule/2003"]
+    assert(link || obra_link, "Should link to 2003 in:\n#{@response.body}")
+
+    link = @response.body["href=\"/admin/events?year=2005"]
+    obra_link = @response.body["/schedule/2005"]
+    assert(link || obra_link, "Should link to 2005 in:\n#{@response.body}")
   end
 
   def test_links_to_years_only_past_year_has_events
