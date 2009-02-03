@@ -1,18 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'competitions_controller'
 
 # :stopdoc:
-# Re-raise errors caught by the controller.
-class CompetitionsController; def rescue_action(e) raise e end; end #:nodoc: all
-
-class CompetitionsControllerTest < ActiveSupport::TestCase #:nodoc: all
-
-  def setup
-    @controller = CompetitionsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
-  end
-
+class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   def test_rider_rankings_no_results
     opts = {:controller => "competitions", :action => "show", :type => 'rider_rankings'}
     assert_routing("/rider_rankings", opts)
