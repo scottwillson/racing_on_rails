@@ -25,7 +25,8 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 
 open "/results"
-assert_text_present "Results"
+assert_text_present "regex:Events|Results"
+assert_text_present "#{Date.today.year}"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_not_title "regexp:Exception"
 
