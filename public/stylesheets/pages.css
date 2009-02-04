@@ -344,6 +344,12 @@ table.event_nav td.race a {
 
 
 /* Mailing lists */
+table.archive_navigation, div.archive_navigation, div.archive_navigation div {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 div.archive_navigation a
 {
   padding-top: 4px;
