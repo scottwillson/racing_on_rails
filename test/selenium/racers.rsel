@@ -71,6 +71,8 @@ assert_title "*Admin: Results: Ryan Weaver"
 open '/admin/racers'
 click_and_wait "css=a[href='/admin/racers/#{@matson_id}/edit']"
 assert_title "*Admin: Racers: Mark Matson"
+type "racer_home_phone", "411 911 1212"
+click_and_wait "save"
 
 open '/admin/racers'
 click_and_wait "css=a[href='/admin/racers/new']"

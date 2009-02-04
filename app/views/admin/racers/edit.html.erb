@@ -83,7 +83,6 @@
     <%= render :partial => 'categories', :locals => { :racer => @racer } %>
     <%= render :partial => 'aliases_table', :locals => { :racer => @racer } %>
   </div>
-<% end -%>
 
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></div>
@@ -93,6 +92,7 @@
       <%= submit_tag "Save", :id => "save" %>
     </div>
   </div>
+<% end -%>
 </div>
 
 <% focus('racer_first_name') if @racer.new_record? %>
