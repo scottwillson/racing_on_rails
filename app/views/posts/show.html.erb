@@ -5,15 +5,16 @@
 <%= labelled_text :post, :subject, nil, h(@post.subject) %>
 <%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %>
 <%= labelled_text :post, :from, nil, h(@post.sender_obscured) %>
-<%= labelled_text :post, :body, "", h(@post.body) %>
 
+<div class="clear top-margin" id="post_body">
 <% if @post.topica? || @post.body["<html>"] %>
   <%= sanitize(simple_format(@post.body)) %>
 <% else %>
   <%= sanitize(@post.body) %>
 <% end -%>
+</div>
 
-<table>
+<table class="clear">
   <tr>
     <%= render("shared/mailing_list_links", :mailing_list => @post.mailing_list) %>
   </tr>

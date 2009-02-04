@@ -1,6 +1,6 @@
 <% @page_title = "Mailing Lists" %>
 
-<% table do %>
+<% table :insert_header => true, :columns => 10 do %>
   <% for mailing_list in @mailing_lists %>
   <tr valign="top">
     <td style="padding-right: 12px;"><b><a href="/mailman/listinfo/<%= mailing_list.name %>"><%= mailing_list.friendly_name %></a><b></td>
