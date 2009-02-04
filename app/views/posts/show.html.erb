@@ -6,11 +6,13 @@
 <%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %>
 <%= labelled_text :post, :from, nil, h(@post.sender_obscured) %>
 
+<br/>
+
 <div class="clear top-margin" id="post_body">
 <% if @post.topica? || @post.body["<html>"] %>
   <%= sanitize(simple_format(@post.body)) %>
 <% else %>
-  <%= sanitize(@post.body) %>
+  <%= sanitize(simple_format(@post.body)) %>
 <% end -%>
 </div>
 
