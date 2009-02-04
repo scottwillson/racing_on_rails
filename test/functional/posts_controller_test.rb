@@ -47,7 +47,7 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     })
   
-    get(:new, :mailing_list_name => obra_race.name, :reply_to => original_post.id)
+    get(:new, :mailing_list_name => obra_race.name, :reply_to_id => original_post.id)
     assert_response(:success)
     assert_template("posts/new")
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
@@ -253,7 +253,7 @@ class PostsControllerTest < ActionController::TestCase
   
     post(:create, 
         :mailing_list_name => obra_chat.name,
-        :reply_to => {:id => ''},
+        :reply_to_id => '',
         :post => {
           :mailing_list_id => obra_chat.id,
           :subject => subject, 
@@ -298,13 +298,13 @@ class PostsControllerTest < ActionController::TestCase
   
     post(:create, 
         :mailing_list_name => obra_chat.name,
-        :mailing_list_post => {
+        :post => {
           :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
           :from_email_address => from_email_address,
           :body => body},
-        :reply_to => {:id => reply_to_post.id},
+        :reply_to_id => reply_to_post.id,
         :commit => "Post"
     )
     
@@ -338,13 +338,13 @@ class PostsControllerTest < ActionController::TestCase
   
     post(:create, 
         :mailing_list_name => obra_chat.name,
-        :mailing_list_post => {
+        :post => {
           :mailing_list_id => obra_chat.id,
           :subject => "Re: #{subject}", 
           :from_name => "",
           :from_email_address => "",
           :body => ""},
-        :reply_to => {:id => reply_to_post.id},
+        :reply_to_id => reply_to_post.id,
         :commit => "Send"
     )
     
@@ -403,7 +403,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_archive_navigation
     # No posts
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "12")
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
+    assert_tag(:tag => "span", :attributes => {:class => "archive_navigation"})
   
     # One post
     obra_race = mailing_lists(:obra_race)
@@ -535,6 +535,7 @@ class PostsControllerTest < ActionController::TestCase
   end
   
   def test_list_with_no_lists
+    Post.delete_all
     MailingList.delete_all
     get(:list, :month => Date.today.month, :year => Date.today.year)
     assert_response(:success)
@@ -572,7 +573,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_spam_post_should_not_cause_error
     obra_chat = mailing_lists(:obra_chat)
     post(:create, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
-                  "mailing_list_post" => { "from_name"=>"strap", 
+                  "post" => { "from_name"=>"strap", 
                                            "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
                                            "subject"=>"onstrapdildo@mail.com", 
                                            "from_email_address"=>"onstrapdildo@mail.com", 

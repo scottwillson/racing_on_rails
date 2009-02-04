@@ -73,10 +73,7 @@ class PostsController < ApplicationController
   # archiver to store posts. This strategy gives spam filters a change to reject
   # bogus posts.
   def create
-    unless params[:reply_to]
-      return redirect_to(:action => :new, :mailing_list_name => params[:mailing_list_name])
-    end
-    if params[:reply_to][:id].blank?
+    if params[:reply_to_id].blank?
       post_to_list
     else
       post_private_reply
@@ -84,16 +81,16 @@ class PostsController < ApplicationController
   end
   
   def post_private_reply
-    @reply_to = Post.find(params[:reply_to][:id])
-    @post = Post.new(params[:mailing_list_post])
+    @reply_to = Post.find(params[:reply_to_id])
+    @post = Post.new(params[:post])
+    @mailing_list = MailingList.find(@post.mailing_list_id)
     if @post.valid?
       private_reply_email = MailingListMailer.create_private_reply(@post, @reply_to.sender)
       MailingListMailer.deliver(private_reply_email)
       flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
-      redirect_to(:action => "confirm_private_reply", :mailing_list_name => params[:mailing_list_name])
+      redirect_to(:action => "confirm_private_reply", :mailing_list_name => @mailing_list.name)
     else
-      @mailing_list = MailingList.find_by_name(params[:mailing_list_name])
-      render(:action => "new", :reply_to => @reply_to.id)
+      render(:action => "new", :reply_to_id => @reply_to.id)
     end
   end
   
@@ -115,7 +112,7 @@ class PostsController < ApplicationController
     mailing_list_name = params["mailing_list_name"]
     @mailing_list = MailingList.find_by_name(mailing_list_name)
     @post = Post.new(:mailing_list => @mailing_list)
-    @reply_to_id = params[:reply_to]
+    @reply_to_id = params[:reply_to_id]
     if @reply_to_id
       @reply_to = Post.find(@reply_to_id)
       @post.subject = "Re: #{@reply_to.subject}"

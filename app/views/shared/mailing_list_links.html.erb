@@ -20,7 +20,7 @@
     <% if !(current_page?({:controller => "posts", :action => "new"})) and @post and @post.topica_message_id.nil? %>
     <td class="link_spacer">|</td>
     <td>
-        <%= link_to "Reply Privately", {:controller => "posts", :action => "new", :mailing_list_name => mailing_list.name, :reply_to => @post.id} %>
+        <%= link_to "Reply Privately", {:controller => "posts", :action => "new", :mailing_list_name => mailing_list.name, :reply_to_id => @post.id} %>
     </td>
     <% end %>
     

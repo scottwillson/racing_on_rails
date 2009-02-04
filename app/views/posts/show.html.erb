@@ -8,7 +8,7 @@
 
 <br/>
 
-<div class="clear top-margin" id="post_body">
+<div class="clear top-margin" id="archived_post_body">
 <% if @post.topica? || @post.body["<html>"] %>
   <%= sanitize(simple_format(@post.body)) %>
 <% else %>

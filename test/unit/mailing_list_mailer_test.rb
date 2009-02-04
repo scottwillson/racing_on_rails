@@ -40,7 +40,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
   
   def test_receive_simple
-    assert_equal(0, Post.count, "No posts in database")
+    assert_equal(1, Post.count, "Posts in database")
   
     subject = "Test Email"
     from = "scott@yahoo.com"
@@ -57,9 +57,9 @@ class MailingListMailerTest < ActionMailer::TestCase
     
     MailingListMailer.receive(email.encoded)
     
-    posts = Post.find(:all)
-    assert_equal(1, posts.size, "One new post in DB")
-    post_from_db = posts.first
+    posts = Post.find(:all, :order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
     assert_equal(subject, post_from_db.subject, "Subject")
     assert_equal(from, post_from_db.sender, "from")
     assert_equal_dates(date, post_from_db.date, "date")
@@ -68,13 +68,13 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
   
   def test_receive
-    assert_equal(0, Post.count, "No posts in database")
+    assert_equal(1, Post.count, "Posts in database")
   
     MailingListMailer.receive(email_to_archive)
     
-    posts = Post.find(:all)
-    assert_equal(1, posts.size, "One new post in DB")
-    post_from_db = posts.first
+    posts = Post.find(:all, :order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
     assert_equal("[Fwd:  For the Archives]", post_from_db.subject, "Subject")
     assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
     assert_equal_dates("Mon Jan 23 15:52:25 PST 2006", post_from_db.date, "Post date", "%a %b %d %H:%M:%S PST %Y")
@@ -83,13 +83,13 @@ class MailingListMailerTest < ActionMailer::TestCase
   end
   
   def test_receive_rich_text
-    assert_equal(0, Post.count, "No posts in database")
+    assert_equal(1, Post.count, "Posts in database")
   
     MailingListMailer.receive(rich_email_text)
     
-    posts = Post.find(:all)
-    assert_equal(1, posts.size, "One new post in DB")
-    post_from_db = posts.first
+    posts = Post.find(:all, :order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
     assert_equal("Rich Text", post_from_db.subject, "Subject")
     assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 07:02:18 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
@@ -101,13 +101,13 @@ Check it out: http://www.google.com/\n\n\357\277\274\n}
   end
   
   def test_receive_outlook
-    assert_equal(0, Post.count, "No posts in database")
+    assert_equal(1, Post.count, "Posts in database")
   
     MailingListMailer.receive(outlook_email)
     
-    posts = Post.find(:all)
-    assert_equal(1, posts.size, "One new post in DB")
-    post_from_db = posts.first
+    posts = Post.find(:all, :order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
     assert_equal("Stinky Outlook Email", post_from_db.subject, "Subject")
     assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 07:28:31 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
@@ -129,13 +129,13 @@ Still loyal:
   end
   
   def test_receive_html
-    assert_equal(0, Post.count, "No posts in database")
+    assert_equal(1, Post.count, "Posts in database")
   
     MailingListMailer.receive(html_email)
     
-    posts = Post.find(:all)
-    assert_equal(1, posts.size, "One new post in DB")
-    post_from_db = posts.first
+    posts = Post.find(:all, :order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
     assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")
     assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 10:19:04 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")

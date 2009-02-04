@@ -11,6 +11,8 @@ class MailingListTest < ActiveSupport::TestCase
   end
   
   def test_dates
+    Post.delete_all
+    
     obra = mailing_lists(:obra_chat)
     assert_nil(obra.dates, "Dates")
   
