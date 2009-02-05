@@ -85,7 +85,7 @@ open "/admin/racers/#{@matson.id}/edit"
 assert_text_present "Mark Matson"
 click "destroy_number_#{@matson.race_numbers.first.id}"
 wait_for_element_not_present "destroy_number_#{@matson.race_numbers.first.id}"
-click "save"
+click_and_wait "save"
 
 assert_text_not_present "error"
 assert_text_not_present "Unknown action"
