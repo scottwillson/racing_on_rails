@@ -9,7 +9,7 @@ assert_element_present 'format'
 assert_value 'format', 'xls'
 
 click 'export_button'
-pause 2000
+wait_for_not_location "glob:*/admin/racers.xls?excel_layout=xls&include=members_only"
 assert_text_not_present 'error'
 
 open '/admin/teams'
@@ -22,7 +22,7 @@ assert_location '*/admin/racers'
 
 type 'name', 'tonkin'
 submit_and_wait 'search_form'
-pause 1000
+wait_for_text_present "Erik Tonkin"
 assert_text_not_present 'error'
 assert_text_present 'Erik Tonkin'
 assert_text_present 'Kona'
@@ -32,13 +32,13 @@ assert_value 'name', 'tonkin'
 type 'include', 'all'
 type 'format', 'ppl'
 click 'export_button'
-pause 2000
+wait_for_not_location "glob:*/admin/racers.ppl?excel_layout=ppl&include=all"
 assert_text_not_present 'error'
 
 type 'include', 'members_only'
 type 'format', 'scoring_sheet'
 click 'export_button'
-pause 2000
+wait_for_not_location "glob:*/admin/racers.xls?excel_layout=scoring_sheet&include=members_only"
 assert_text_not_present 'error'
 
 type 'name', 'tonkin'

@@ -12,20 +12,21 @@ assert_table "events_table", 1, 3, "glob:Brad Ross*"
 
 assert_element_present "event_#{Event.find_by_name('Lost Series').id}_first_aid_provider"
 click "event_#{Event.find_by_name('Lost Series').id}_first_aid_provider"
+wait_for_element_present "css=.editor_field"
 type "css=.editor_field", "Megan Weaver"
 submit "css=.inplaceeditor-form"
-pause 100
+wait_for_element_not_present "css=.editor_field"
 
 refresh_and_wait
 assert_table "events_table", 1, 0, "glob:Megan Weaver*"
 
 click "past_events"
-pause 500
+wait_for_text_present "Copperopolis"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_table "events_table", 3, 2, "glob:Copperopolis*"
 
 click "past_events"
-pause 500
+wait_for_text_not_present "Copperopolis"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_text_not_present "Copperopolis"
 

@@ -8,6 +8,5 @@ assert_element_present "css=div#unknown_category_root div#category_#{masters_35_
 assert_element_not_present "css=div#category_root div#category_#{masters_35_plus_id}"
 
 drag_and_drop "css=div#unknown_category_root div#category_#{masters_35_plus_id}", "-400,116"
-pause 2000
-assert_element_not_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
+wait_for_element_not_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
 assert_element_present "css=div#category_root div#category_#{masters_35_plus_id}"

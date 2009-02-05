@@ -37,19 +37,19 @@ assert_not_title "regexp:Exception"
 open "/admin/events"
 assert_text_present "Deleted Sausalito Criterium"
 
-open "/admin/events"
+open "/admin/events?year=2004"
 assert_text_not_present "Sausalito Criterium"
 
-click_and_wait "link=Copperopolis Road Race"
+click_and_wait "link=Banana Belt I"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_not_title "regexp:Exception"
 
-click "id=destroy_race_#{Event.find_by_name('Copperopolis Road Race').standings.first.races.first.id}"
+click "id=destroy_race_#{Event.find_by_name('Banana Belt I').standings.first.races.first.id}"
 wait_for_condition %Q{ selenium.page().bodyText().indexOf('destroy_race') == -1; }, 500
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
 assert_not_title "regexp:Exception"
 
-click "id=destroy_standings_#{Event.find_by_name('Copperopolis Road Race').standings.first.id}"
+click "id=destroy_standings_#{Event.find_by_name('Banana Belt I').standings.first.id}"
 wait_for_confirmation("glob:Really delete*")
 wait_for_condition %Q{ selenium.page().bodyText().indexOf('destroy_standings') == -1; }, 500
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"

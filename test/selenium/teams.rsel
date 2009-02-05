@@ -34,7 +34,7 @@ assert_checked "team_member_#{@vanilla_id}"
 assert_checked "team_member_#{@gl_id}"
 
 click "team_member_#{@gl_id}"
-pause 100
+wait_for_not_checked "team_member_#{@gl_id}"
 refresh_and_wait
 assert_not_checked "team_member_#{@gl_id}"
 

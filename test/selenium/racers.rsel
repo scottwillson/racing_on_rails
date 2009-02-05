@@ -47,6 +47,7 @@ assert_table "racers_table", 4, 6, ""
 @molly_id = Racer.find_by_name("Molly Cameron").id
 @weaver_id = Racer.find_by_name("Ryan Weaver").id
 @matson_id = Racer.find_by_name("Mark Matson").id
+@matson = Racer.find_by_name("Mark Matson")
 @alice_id = Racer.find_by_name("Alice Pennington").id
 assert_checked "racer_member_#{@molly_id}"
 assert_checked "racer_member_#{@weaver_id}"
@@ -54,9 +55,11 @@ assert_checked "racer_member_#{@matson_id}"
 assert_checked "racer_member_#{@alice_id}"
 
 click "racer_#{@alice_id}_name"
+wait_for_element_present "racer_#{@alice_id}_name-inplaceeditor"
+
 type "css=.editor_field", "A Penn"
 submit "css=.inplaceeditor-form"
-pause 100
+wait_for_element_not_present "racer_#{@alice_id}_name-inplaceeditor"
 
 refresh_and_wait
 assert_table "racers_table", 3, 0, "glob:A P*"
@@ -77,3 +80,15 @@ click_and_wait "save"
 open '/admin/racers'
 click_and_wait "css=a[href='/admin/racers/new']"
 assert_title "*Admin: Racers: New Racer"
+
+open "/admin/racers/#{@matson.id}/edit"
+assert_text_present "Mark Matson"
+click "destroy_number_#{@matson.race_numbers.first.id}"
+wait_for_element_present "destroy_number_#{@matson.race_numbers.first.id}"
+click "save"
+
+assert_text_not_present "error"
+assert_text_not_present "Unknown action"
+assert_text_not_present "Couldn't find RaceNumber"
+
+assert_location "*/admin/racers/#{@matson.id}/edit"
