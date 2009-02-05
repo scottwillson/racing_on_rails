@@ -2,7 +2,7 @@ include_partial "fixtures"
 include_partial "admin_login"
 
 open "/admin/promoters"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 assert_table "promoters_table", 1, 0, "glob:Brad Ross*"
@@ -25,13 +25,13 @@ assert_value "promoter_name", "Candi Murray"
 assert_value "promoter_email", "candi@obra.org"
 assert_value "promoter_phone", "411"
 assert_text_present "Tuesday Night PIR"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 type "promoter_email", "cmurray@obra.net"
 click_and_wait "save"
 
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 assert_value "promoter_email", "cmurray@obra.net"

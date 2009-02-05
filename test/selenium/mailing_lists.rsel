@@ -1,16 +1,16 @@
 include_partial "fixtures"
 
 open "/mailing_lists"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 open "/posts/obra"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_not_present "Schedule Changes"
 
 open "/posts/obra/new"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 type "post_from_name", "Scott"
@@ -19,17 +19,17 @@ type "post_subject", "New Message"
 type "post_body", "My post message body"
 
 click_and_wait "post"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "Your new post is now in the mailing queue"
 
 open "/posts/obra/2004/12"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "Schedule Changes"
 
 click_and_wait "link=Schedule Changes"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "This is a test message."
 
@@ -39,19 +39,19 @@ type "post_from_name", "Don"
 type "post_body", "This is a special private reply"
 
 click_and_wait "commit"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "From email address can't be blank"
 
 type "post_from_email_address", "don@butlerpress.com"
 
 click_and_wait "commit"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "Your new post is now in the mailing queue"
 
 open "/posts/obra/new"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 type "post_from_email_address", "scott@butlerpress.com"
@@ -59,12 +59,12 @@ type "post_subject", "New Message 2"
 type "post_body", "My post message body"
 
 click_and_wait "commit"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "From name can't be blank"
 
 type "post_from_name", "Scott"
 click_and_wait "commit"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_text_present "Your new post is now in the mailing queue"
