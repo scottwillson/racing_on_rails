@@ -24,8 +24,7 @@
   <%- end -%>
 
   <%- if @event.respond_to?(:events) -%>
-  <p>
-    <table>
+  <table class="top_margin">
   <%- for single_day_event in @event.events -%>
     <%- for standings in single_day_event.standings -%>
     <tr>
@@ -35,7 +34,6 @@
     <%- end -%>
   <%- end -%>
   </table>
-  </p>
   <%- end -%>
 
   <%- @event.standings.each_with_index do |standings, standings_index| -%>
@@ -55,8 +53,7 @@
       <%- end -%>  
 
     <%# TODO Encapsulate in a helper method %>
-    <p>
-    <table class="event_races">
+    <table class="event_races top_margin">
       <%- results_in_first_column = standings.races_with_results.size / 2 -%>
       <%- standings.races_with_results.each_row_with_index do |row, row_index| -%>
       <tr>
@@ -70,7 +67,6 @@
       </tr>
     <%- end -%>  
     </table>
-    </p>
   <%- end -%>  
 
   <% @event.standings.each_with_index do |standings, standings_index| %>
@@ -79,9 +75,7 @@
     <%- end -%>
 
     <p class="updatedon">Updated <%= standings.updated_at.to_formatted_s(:long) %></p>
-    <% if !standings.is_a?(CombinedStandings) %>
-    <small><a href="http://<%= STATIC_HOST %>/results/questions.html" class="obvious">Results questions?</a></small>
-    <%- end -%>
+    <%= render :partial => "questions", :locals => { :standings => standings } %>
   
     <% standings.races_with_results.each_with_index do |race, index| %>
     <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
