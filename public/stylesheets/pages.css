@@ -264,9 +264,8 @@ table.racer_categories td input[type=text] {
 }
 
 /* public teams page */
-table.base#teams_table td.club_name, table.base#teams_table td.contact, table.base#teams_table td.contact_phone {
+table.base#teams_table td.club_name, table.base#teams_table td.contact, table.base#teams_table td.contact_phone, table.base td.contact_phone {
   white-space: nowrap;
-}  white-space: nowrap;
 }
 
 table.base a.preliminary {

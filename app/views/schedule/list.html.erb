@@ -26,11 +26,9 @@
     <%- for day in week.days -%>
       <%- for event in day.events -%>
   <tr class="<%= cycle("even", "odd") %>">
-    <td>
-      <%- if event.date -%>
-      <%= event.date.strftime("%a %m/%d") -%>
-      <%- end -%>
-      </td> 
+    <td class="date">
+      <%= event.date.strftime("%a %m/%d") if event.date -%>
+    </td> 
     <%- if event.cancelled %>
     <td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
     <%- else -%>
@@ -55,7 +53,7 @@
       <a href="mailto:<%= event.promoter_email -%>"><%= event.promoter_name -%></a>
       <%- end -%>
     </td> 
-    <td><%= event.promoter_phone -%></td> 
+    <td class="contact_phone"><%= event.promoter_phone -%></td> 
     <td><%= event.discipline -%></td> 
     <td><%= event.city -%></td>
   </tr>
