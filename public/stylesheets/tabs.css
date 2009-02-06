@@ -1,8 +1,15 @@
 table.tabs, div.tabs {
-  padding-top: 8px;
+  margin-top: 12px;
+  margin-bottom: 0px;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 0px;
+  padding-bottom: 0px;
   text-align: center;
+}
+
+table.tabs + table.tabs {
+  margin-top: 4px;
 }
 
 table.tabs td {

@@ -29,8 +29,7 @@ module TabsHelper
       table_class = "tabs"
       table_class = "tabs_solo" if @tabs.size < 2
       html = <<HTML
-  <div class="centered">
-    <table class="#{table_class}">
+    <table class="#{table_class} centered">
       <tr>
 HTML
       @tabs.each_with_index do |tab, index|
@@ -84,7 +83,6 @@ HTML
       end_html = <<HTML
       </tr>
     </table>
-  </div>
 HTML
       html << end_html
     end
