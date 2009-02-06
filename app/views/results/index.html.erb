@@ -1,8 +1,5 @@
 <% @page_title = "Results: #{@year}" %>
 
-<table class="base">
-  <tr>
-    <td>
 <%= tabs do |tabs|
     tabs.add(Date.today.year, :controller => 'results', :year => nil)
     (Date.today.year - 1).downto(2007) do |year|
@@ -11,10 +8,6 @@
   end  %>
 
 <%= render :partial => 'disciplines' %>
-
-    </td>
-  </tr>
-</table>
 
 <% table :caption => "#{@year}&nbsp;Results" do %>
   <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
