@@ -1,9 +1,5 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
-
-<hr class="space" />
-
 <%= render :partial => "years" %>
 <%= tabs do |tabs|
   @schedule.months.each do |month|
@@ -15,6 +11,8 @@ end -%>
 <% if Date.today < Date.new(@year, 2) %>
 <div>Tentative. Dates are subject to change.</div>
 <% end %>
+
+<p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
 
 <div class="container">
   <%- for month in @schedule.months -%>
