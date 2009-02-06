@@ -1,7 +1,7 @@
 <% form_tag preview_import_admin_racers_path, :multipart => true, :id => "import_form" do %>
 <div class="page_buttons centered clear">
   <label for="racers_file">Import</label>
-  <%= file_field_tag "racers_file", :onchange => "$('upload_form').submit();" %>
+  <%= file_field_tag "racers_file", :onchange => "$('import_form').submit();" %>
   </div>
 <% end -%>
 
