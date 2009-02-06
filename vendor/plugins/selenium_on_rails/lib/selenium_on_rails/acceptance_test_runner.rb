@@ -19,11 +19,11 @@ MULTI_WINDOW =          c :multi_window, false
 SERVER_COMMAND =      c_b :server_command do
   server_path = File.expand_path(File.dirname(__FILE__) + '/../../../../../script/server')
   if RUBY_PLATFORM =~ /mswin/
-    "ruby #{server_path} webrick -p %d -e test > NUL 2>&1"
+    "ruby #{server_path} -p %d -e test > NUL 2>&1"
   else
     # don't use redirects to /dev/nul since it makes the fork return wrong pid
     # see UnixSubProcess
-    "#{server_path} webrick -p %d -e test"
+    "#{server_path} -p %d -e test"
   end
 end
 
