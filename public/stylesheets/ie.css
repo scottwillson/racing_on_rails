@@ -53,9 +53,10 @@ td.day
   border: 1px solid white;
 }
 
-pre
+pre, pre a, pre a:link, pre a:visited 
 {
-  font-size: 11px;
+  color: red;
+  font-size: 12px;
   font-family: "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }
 

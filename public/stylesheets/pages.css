@@ -394,6 +394,11 @@ table.event_races td {
   padding-right: 12px;
 }
 
+table.child_events td {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 /* Event first aid providers */
 table.first_aid_providers td.date {
   white-space: nowrap;

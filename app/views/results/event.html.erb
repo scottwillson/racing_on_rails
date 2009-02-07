@@ -24,7 +24,7 @@
   <%- end -%>
 
   <%- if @event.respond_to?(:events) -%>
-  <table class="top_margin">
+  <table class="top_margin child_events">
   <%- for single_day_event in @event.events -%>
     <%- for standings in single_day_event.standings -%>
     <tr>
