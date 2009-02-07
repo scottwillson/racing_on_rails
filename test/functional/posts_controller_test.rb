@@ -416,7 +416,7 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     })
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "12")
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation centered"})
+    assert_tag(:tag => "div", :attributes => {:class => "top_margin archive_navigation centered last"})
   
     # Two months
     obra_race = mailing_lists(:obra_race)
@@ -429,7 +429,7 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     })
     get(:list, :mailing_list_name => "obrarace", :year => "2004", :month => "11")
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation centered"})
+    assert_tag(:tag => "div", :attributes => {:class => "top_margin archive_navigation centered last"})
   end
   
   def test_post_navigation
@@ -479,7 +479,7 @@ class PostsControllerTest < ActionController::TestCase
     })
     
     get(:show, :mailing_list_name => obra_race.name, :id => post_2004_11_07.id)
-    assert_tag(:tag => "div", :attributes => {:class => "archive_navigation"})
+    assert_tag(:tag => "div", :attributes => {:class => "top_margin archive_navigation"})
   end
   
   def test_post_previous_next
