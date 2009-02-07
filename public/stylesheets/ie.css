@@ -32,11 +32,11 @@ input[type=checkbox] {
 }
 
 select {
-  margin-top: 15px;
+  margin-top: 8px;
 }
 
 .labelled {
-  margin-top: 14px;
+  margin-top: 8px;
 }
 
 /* For the ABA */
@@ -53,8 +53,7 @@ td.day
   border: 1px solid white;
 }
 
-pre, pre a, pre a:link, pre a:visited 
-{
+bar{
   font-size: 12px;
   font-family: "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }

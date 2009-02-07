@@ -2,13 +2,11 @@
 
 <%= post_navigation(@post) %>
 
-<%= labelled_text :post, :subject, nil, h(@post.subject) %>
-<%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %>
-<%= labelled_text :post, :from, nil, h(@post.sender_obscured) %>
+<%= labelled_text :post, :subject, nil, h(@post.subject) %><br/>
+<%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %><br/>
+<%= labelled_text :post, :from, nil, h(@post.sender_obscured) %><br/>
 
-<br/>
-
-<div class="clear top-margin" id="archived_post_body">
+<div class="clear last" id="archived_post_body">
 <% if @post.topica? || @post.body["<html>"] %>
   <%= sanitize(simple_format(@post.body)) %>
 <% else %>
@@ -16,7 +14,7 @@
 <% end -%>
 </div>
 
-<table class="archive_navigation">
+<table class="archive_navigation clear last">
   <tr>
     <%= render("shared/mailing_list_links", :mailing_list => @post.mailing_list) %>
   </tr>

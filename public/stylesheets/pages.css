@@ -456,6 +456,8 @@ table.numbers label.inline {
 
 /* Mailing list archive */
 #archived_post_body {
+  float: left;
+  clear: both;
   margin-left: 154px;
   margin-bottom: 36px;
   width: 600px;
