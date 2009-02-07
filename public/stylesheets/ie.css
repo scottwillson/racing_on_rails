@@ -55,7 +55,6 @@ td.day
 
 pre, pre a, pre a:link, pre a:visited 
 {
-  color: red;
   font-size: 12px;
   font-family: "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }
