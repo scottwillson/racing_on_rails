@@ -1,9 +1,9 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
+<div class="column_grid_container top_margin">
 <%= error_messages_for :post %>
 
-<% form_for @post do |f| %>
-  <div class="column_grid_container">
+  <% form_for @post do |f| %>
     <%= f.hidden_field(:mailing_list_id) %>
     <%= hidden_field_tag("reply_to_id", @reply_to_id) %>
 
@@ -32,8 +32,8 @@
     <% end %>
       </div>
     </div>
-  </div>
-<% end -%>
+  <% end -%>
+</div>
 
 <table class="top_margin centered">
   <tr>
