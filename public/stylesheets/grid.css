@@ -99,6 +99,7 @@ hr {
 hr.space {
   background: inherit;
   color: inherit;
+  border: inherit;
 }
 
 
