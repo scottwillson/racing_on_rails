@@ -43,10 +43,13 @@
 
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
+
+        <% if ASSOCIATION.show_events_velodrome? -%>
         <%= f.label :velodrome_id, "Velodrome" %>
         <%= f.select(:velodrome_id, 
                  Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, 
                  { :include_blank => true }) %>
+        <% end -%>
         <%= f.labelled_text_field :time %>
         <%= f.labelled_check_box :cancelled %>
         <%= f.labelled_check_box :instructional %>
