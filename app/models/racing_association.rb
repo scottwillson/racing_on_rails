@@ -12,6 +12,7 @@ class RacingAssociation
   def initialize
     @masters_age = 35
     @show_license = true
+    @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
   end
   
@@ -40,7 +41,7 @@ class RacingAssociation
   end
   
   def show_events_velodrome?
-    @show_events_velodrome ||= true
+    @show_events_velodrome
   end
   
   def to_s
