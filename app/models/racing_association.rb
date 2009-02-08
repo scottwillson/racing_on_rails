@@ -40,7 +40,7 @@ class RacingAssociation
   end
   
   def show_events_velodrome?
-    @show_events_velodrome ||= false
+    @show_events_velodrome ||= true
   end
   
   def to_s
