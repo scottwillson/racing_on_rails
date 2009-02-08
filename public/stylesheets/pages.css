@@ -1,4 +1,4 @@
-/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
+onth/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
 
 /* Admin events */
 table#left_nav {
@@ -25,6 +25,10 @@ div.calendar table {
   padding: 0px;
   width: 100%;
   background: white;
+}
+
+div.calendar {
+  margin-bottom: 36px;
 }
 
 .calendar table th, .calendar .caption
