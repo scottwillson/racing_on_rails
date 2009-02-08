@@ -23,9 +23,6 @@ label.check_box {
   width: 236px;
 }
 
-input[type=password], input[type=text] {
-}
-
 input[type=checkbox] {
   margin-top: 0px;
   vertical-align: middle;
