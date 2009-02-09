@@ -109,7 +109,7 @@ hr.space {
 
 .clearfix:after, .column_grid_container:after, .container:after {
     content: "."; 
-    display: block; 
+    display: block;
     height: 0; 
     clear: both; 
     visibility: hidden;
