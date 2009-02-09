@@ -37,7 +37,7 @@ class Admin::PromotersController < ApplicationController
     @promoter = Promoter.create(params['promoter'])
     if @promoter.errors.empty?
       if @event
-        redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
+        redirect_to(edit_admin_promoter_event_path(@promoter, @event))
       else
         redirect_to(edit_admin_promoter_path(@promoter))
       end
@@ -50,10 +50,12 @@ class Admin::PromotersController < ApplicationController
   # No duplicate names
   def update
     remember_event
-    @promoter = Promoter.update(params['id'], params['promoter'])
-    if @promoter.errors.empty?
+    @promoter = Promoter.find(params[:id])
+    if @promoter.update_attributes(params[:promoter])
+      logger.debug("Updated OK")
+      logger.debug("@event: #{@event}")
       if @event
-        redirect_to(edit_admin_promoter_path(@promoter, :event_id => @event.id))
+        redirect_to(edit_admin_promoter_event_path(@promoter, @event))
       else
         redirect_to(edit_admin_promoter_path(@promoter))
       end

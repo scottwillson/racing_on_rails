@@ -62,14 +62,14 @@
         <%= f.select(:promoter_id, 
                  Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
                  { :include_blank => true }) %>
-
-        <div class="prepend-1 span-2 right">
-          <span id="edit_promoter_link">
-            <%= link_to("Edit", edit_admin_promoter_path(@event.promoter, :event_id => @event.id)) if @event.promoter %>
-          </span>
-          <%= link_to("New", new_admin_promoter_path(:event_id => @event.id)) %>
-         </div>
        </div>
+       
+      <div class="prepend-1 span-2 last" id="promoter_links">
+        <%= link_to_function("Edit", nil, :id => "edit_promoter_link") do |page|
+          page << "window.location.href = '/admin/promoters/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
+        end %>
+        <%= link_to("New", new_admin_event_promoter_path(@event)) %>
+      </div>
 
        <div class="span-3 last top_margin">
         <%= f.label :sanctioned_by %>
@@ -102,4 +102,21 @@
   </div>
 </div>
 
-<% focus("event_name") if @event.new_record? %>
+<%- focus("event_name") if @event.new_record? -%>
+
+<%= if !@event.promoter || @event.new_record?
+      update_page_tag { |page| page.hide(:edit_promoter_link) }
+    end -%>
+
+<% unless @event.new_record? %>
+<script type="text/javascript" charset="utf-8">
+  new Form.Element.Observer('event_promoter_id', 0, function(element, value) {
+    if (value == '') {
+      Element.hide('edit_promoter_link');
+    }
+    else {
+      Element.show('edit_promoter_link');
+    }
+  })
+</script>
+<% end -%>

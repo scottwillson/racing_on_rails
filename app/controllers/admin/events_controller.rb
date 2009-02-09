@@ -204,35 +204,6 @@ class Admin::EventsController < ApplicationController
       page.redirect_to(admin_events_path(:year => event.date.year))
     end
   end
-  
-  # AJAX method: update promoter's contact information when different promoter selected
-  # === Params
-  # * promoter_id
-  # * id: Event ID
-  def promoter_changed
-    promoter_id = params['promoter_id']
-    if promoter_id.blank?
-      render :update do |page|
-        page.replace_html("event_promoter_email", "")
-        page.replace_html("event_promoter_phone", "")
-        page.replace_html("edit_promoter_link", "")
-      end
-    else
-      promoter = Promoter.find(promoter_id)
-      render :update do |page|
-        page.replace_html("event_promoter_email", promoter.email)
-        page.replace_html("event_promoter_phone", promoter.phone)
-        page.replace_html("edit_promoter_link", 
-          link_to(
-              'Edit', 
-              :controller => 'promoters', 
-              :action => 'edit', 
-              :id => promoter.id,
-              :event_id => params['id'])
-          )
-      end
-    end
-  end
 
   def set_parent
     child = Event.find(params[:child_id])

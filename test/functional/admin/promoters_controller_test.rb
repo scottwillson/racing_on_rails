@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require 'test_helper'
 
 class Admin::PromotersControllerTest < ActionController::TestCase
   def setup
@@ -17,9 +17,6 @@ class Admin::PromotersControllerTest < ActionController::TestCase
   end
   
   def test_edit
-    path = {:controller => "admin/promoters", :action => 'edit', :id => promoters(:brad_ross).to_param}
-    assert_routing("/admin/promoters/#{promoters(:brad_ross).to_param}/edit", path)
-    
     get(:edit, :id => promoters(:brad_ross).to_param)
     assert_equal(promoters(:brad_ross), assigns['promoter'], "Should assign 'promoter'")
     assert_nil(assigns['event'], "Should not assign 'event'")
@@ -197,7 +194,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     promoter.reload
     
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_promoter_path(promoter, :event_id => events(:jack_frost).to_param))
+    assert_redirected_to(edit_admin_promoter_event_path(promoter, events(:jack_frost)))
   end
   
   def test_remember_event_id_on_create
@@ -209,6 +206,6 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     
     promoter = Promoter.find_by_name('Fred Whatley')
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_promoter_path(promoter, :event_id => events(:jack_frost).to_param))
+    assert_redirected_to(edit_admin_promoter_event_path(promoter, events(:jack_frost)))
   end
 end

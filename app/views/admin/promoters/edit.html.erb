@@ -1,10 +1,10 @@
 <% @page_title = "Admin: Promoters: #{@promoter.name}" %>
 
 <%-  if @event -%>
-  <p class="top-margin centered"><%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @promoter.id)) %></p>
+  <p class="top-margin centered"><%= link_to("Back to #{@event.name}", edit_admin_promoter_event_path(@promoter, @event)) %></p>
 <% end -%>
 
-<%= error_messages_for 'promoter' %>
+<%= error_messages_for :promoter %>
 
 <h2><%= @promoter.name %></h2>
 

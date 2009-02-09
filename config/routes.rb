@@ -5,9 +5,10 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :categories do |category|
       category.resources :children, :controller => :categories
     end
-    admin.resources :events, :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
+    admin.resources :events, :has_one => :promoter,
+        :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
     admin.resources :first_aid_providers
-    admin.resources :promoters
+    admin.resources :promoters, :has_many => :events
     admin.resources :racers, :collection => { :cards => :get, 
                                               :duplicates => :get, 
                                               :mailing_labels => :get, 

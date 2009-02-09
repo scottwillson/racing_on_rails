@@ -15,8 +15,8 @@ table#left_nav td.icon {
   padding-right: 0px;
 }
 
-#edit_promoter_link {
-  paddin-right: 8px;  
+#promoter_links {
+  margin-top: 8px;  
 }
 
 /* Calendar */
