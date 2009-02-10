@@ -1,5 +1,6 @@
 <% table :caption => link_to('Results', :only_path  => false, :host => RAILS_HOST, :controller => 'results'), 
          :class => "no_top_margin", 
+         :insert_header => true,
          :id => "home_page_results" do %>
   <tr><th></th></tr>
   <%- for standings in @recent_results -%>
