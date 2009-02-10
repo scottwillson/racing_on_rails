@@ -15,3 +15,10 @@
   </table>
   <%= link_to_remote(image_tag("/images/buttons/add.gif"), :url => { :action => new_action }, :html => { :class => "image" }) if new_action -%>
 </div>
+
+<% if id %>
+<script type="text/javascript" charset="utf-8">
+  // Otherwise, in-place editing jumps table around
+  fixTableColumnWidths('<%= "#{id}_table" %>');
+</script>
+<% end -%>

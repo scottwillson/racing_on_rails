@@ -37,8 +37,3 @@
     :onDrop => "function(element){$('team_#{team.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('team_#{team.id}_row') }",
     :hoverclass => 'hovering' ) %>
 <%- end -%>
-
-<script type="text/javascript" charset="utf-8">
-  // Otherwise, in-place editing jumps table around
-  fixTableColumnWidths('teams_table');
-</script>

@@ -42,9 +42,17 @@ function resizeRelativeToWindow() {
 }
 
 function fixTableColumnWidths(table_id) {
-  $$('#' + table_id + ' th').each(function(th, index){
-    th.setStyle({width: (th.getWidth() - 8) + 'px'});
-  });  
+  Event.observe(window, 'load', function() {
+    var ths = $$('#' + table_id + ' th');
+
+    var thWidths = ths.collect(function(th){
+      return th.getWidth() - Number(th.getStyle('paddingLeft').gsub('px', ''));
+    });
+
+    ths.each(function(th, index) {
+      th.setStyle({width: (thWidths[index] - 2) + 'px'});
+    });
+  });
 }
 
 function resetTableColumnWidths(table_id) {
@@ -55,7 +63,7 @@ function resetTableColumnWidths(table_id) {
 }
 
 function restripeTable(id) {
-  index = 0;
+  var index = 0;
   $A($(id).rows).each(function(row) {
     if (row.className == 'even' || row.className == 'odd') {
       if (index % 2 == 0) {

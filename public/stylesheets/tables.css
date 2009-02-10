@@ -183,10 +183,9 @@ table.base div.record {
 table.base div.in_place_editable {
   position: relative;
   left: -4px;
-  width: 100%;
   margin: 0px;
   padding-top: 2px;
-  padding-bottom: 2px;
+  padding-bottom: 3px;
   padding-left: 3px;
   padding-right: 2px;
   border: 1px solid transparent;
@@ -207,7 +206,7 @@ table.base div.hovering {
 input[type="text"].editor_field {
   position: relative;
   left: -4px;
-  width: inherit;
+  width: 100%;
   font-weight: normal;
   margin-top: 0px;
   margin-left: 0px;

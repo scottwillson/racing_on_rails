@@ -17,8 +17,3 @@
   <%= render :partial => "result", :collection => race.results.sort %>
   <%= render :partial => "result", :collection => [race.results.build] %>
 <% end -%>    
-
-<script type="text/javascript" charset="utf-8">
-  // Otherwise, in-place editing jumps table around
-  fixTableColumnWidths('results_table');
-</script>
