@@ -12,7 +12,7 @@
   <div class="span-3 last">
     <% form_for [:admin, @race] do |f| -%>
       <div class="span-3">
-        <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "BAR Category" %>
+        <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "BAR Category" %><br/>
         <%= f.label :bar_points, "BAR Points" %>
         <%= f.select :bar_points, bar_points_and_labels %>
         <%= f.labelled_text_field :notes %>

@@ -39,7 +39,7 @@
         <%- end -%>
 
         <%= f.label :discipline %>
-        <%= f.select :discipline, Discipline.find_all_names.sort %>
+        <%= f.select :discipline, Discipline.find_all_names.sort %><br/>
 
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>

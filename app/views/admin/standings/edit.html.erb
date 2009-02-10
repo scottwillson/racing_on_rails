@@ -15,7 +15,7 @@
         <%= f.labelled_text_field :name %>
 
         <%= f.label :discipline %>
-        <%= f.select :discipline, Discipline.find_all_names.sort %>
+        <%= f.select :discipline, Discipline.find_all_names.sort %><br/>
 
         <%= f.label :bar_points, "BAR Points" %>
         <%= f.select(:bar_points, bar_points_and_labels) %>

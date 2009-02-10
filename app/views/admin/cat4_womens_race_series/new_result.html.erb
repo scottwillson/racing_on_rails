@@ -12,7 +12,7 @@
 
 <div class="column_grid_container">
   <div class="span-6 last">
-    <%= label(:event, :name, "Event") %><%= text_field :event, :name, :autocomplete => "off" %>
+    <%= label(:event, :name, "Event") %><%= text_field :event, :name, :autocomplete => "off" %><br/>
     <%= label(:event, :date, "Date") %><%= date_select "event", "date", :order => [:month, :day, :year]%>
     <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{ASSOCIATION.short_name}?", :class => "check_box") %>
   </div>
