@@ -457,6 +457,26 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal(28, racer.racing_age, 'racing_age')
   end
   
+  def test_cyclocross_racing_age
+    racer = Racer.new
+    assert_nil(racer.cyclocross_racing_age)
+
+    racer.date_of_birth = 29.years.ago
+    assert_equal(30, racer.cyclocross_racing_age, "cyclocross_racing_age")
+
+    racer.date_of_birth = Date.new(29.years.ago.year, 1, 1)
+    assert_equal(30, racer.cyclocross_racing_age, "cyclocross_racing_age")
+
+    racer.date_of_birth = Date.new(29.years.ago.year, 12, 31)
+    assert_equal(30, racer.cyclocross_racing_age, "cyclocross_racing_age")
+
+    racer.date_of_birth = Date.new(30.years.ago.year, 12, 31)
+    assert_equal(31, racer.cyclocross_racing_age, "cyclocross_racing_age")
+
+    racer.date_of_birth = Date.new(28.years.ago.year, 1, 1)
+    assert_equal(29, racer.cyclocross_racing_age, "cyclocross_racing_age")
+  end
+  
   def test_bmx_category
     racer = racers(:weaver)
     assert_nil(racer.bmx_category, "BMX category")

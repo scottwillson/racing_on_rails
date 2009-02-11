@@ -277,6 +277,12 @@ class Racer < ActiveRecord::Base
     end
   end
   
+  def cyclocross_racing_age
+    if date_of_birth
+      racing_age + 1
+    end
+  end
+  
   def number(discipline, reload = false, year = nil)
     return nil if discipline.nil?
 

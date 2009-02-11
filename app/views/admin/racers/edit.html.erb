@@ -23,10 +23,12 @@
         :start_year => 1900, :end_year => Date.today.year, 
         :include_blank => true %>
     <br/>
-    <%= f.label :gender %>
-    <%= select('racer', 'gender', ['', 'F', 'M']) %><br/>
 
     <%= f.labelled_text(:racing_age,  "#{@racer.racing_age} #{'(Master)' if @racer.master? } #{'(Junior)' if @racer.junior? }") %>
+    <%= f.labelled_text :cyclocross_racing_age,  @racer.cyclocross_racing_age %>
+
+    <%= f.label :gender %>
+    <%= select('racer', 'gender', ['', 'F', 'M']) %><br/>
   </div>
 
   <div class="span-3">
