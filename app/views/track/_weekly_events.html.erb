@@ -17,8 +17,8 @@
        </td>
        <td><%= event.time %></td>
        <td>
-         <%= link_to(event.promoter_name, event.promoter_email) if event.promoter_email %>
-         <%= event.promoter_name unless event.promoter_email %>
+         <%= mail_to(event.promoter_email, event.promoter_name) unless event.promoter_email.blank? %>
+         <%= event.promoter_name if event.promoter_email.blank? %>
        </td>
        <td><%= event.promoter_phone %></td>
        <td><small><%= event.notes %></small></td>
