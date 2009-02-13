@@ -2,7 +2,6 @@
          :class => "no_top_margin", 
          :insert_header => true,
          :id => "home_page_results" do %>
-  <tr><th></th></tr>
   <%- for standings in @recent_results -%>
   <tr>
     <td><%= link_to standings.full_name, :only_path  => false, :host => RAILS_HOST, :controller => 'results', :action => 'event', :id => standings.event_id %></td>
