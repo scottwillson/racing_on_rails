@@ -745,4 +745,14 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal(2, Racer.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
     assert_equal(2, Racer.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
   end
+  
+  def test_find_all_for_export
+    racers = Racer.find_all_for_export
+    assert_equal("Molly", racers[0]["first_name"], "Row 0 first_name")
+    assert_equal("Kona", racers[1]["team_name"], "Row 1 team")
+    assert_equal("30", racers[3]["racing_age"], "Row 3 racing_age")
+    assert_equal("01/01/1999", racers[3]["member_from"], "Row 3 member_from")
+    assert_equal("12/31/#{Date.today.year}", racers[3]["member_to"], "Row 3 member_to")
+    assert_equal("5", racers[3]["track_category"], "Row 3 track_category")
+  end
 end

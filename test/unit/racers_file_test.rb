@@ -25,7 +25,7 @@ class RacerFileTest < ActiveSupport::TestCase
     assert_equal('97058', tonkin.zip, 'ZIP')
     assert_equal('541-296-9911', tonkin.home_phone, 'home_phone')
     assert_equal('IV Senior', tonkin.road_category, 'Road cat')
-    assert_equal(nil, tonkin.track_category, 'track cat')
+    assert_equal("5", tonkin.track_category, 'track cat')
     assert_equal('A', tonkin.ccx_category, 'Cross cat')
     assert_equal('Expert Junior', tonkin.mtb_category, 'MTB cat')
     assert_equal('Physician', tonkin.occupation, 'occupation')

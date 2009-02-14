@@ -57,60 +57,7 @@ class Admin::RacersController < ApplicationController
     end
     headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
-    if params['include'] == 'members_only'
-      where_clause = "WHERE (member_to >= \'#{date.strftime('%Y-%m-%d')}\')"
-    end
-    association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
-    @racers = Racer.connection.select_all(%Q{
-      SELECT racers.id, license, first_name, last_name, teams.name as team_name, racers.notes,
-             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
-             print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation, 
-             street, racers.city, racers.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
-             ccx_category, road_category, track_category, mtb_category, dh_category, 
-             volunteer_interest, official_interest, race_promotion_interest, team_interest,
-             CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
-             ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
-             singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
-             DATE_FORMAT(racers.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(racers.updated_at, '%m/%d/%Y') as updated_at
-      FROM racers
-      LEFT OUTER JOIN teams ON teams.id = racers.team_id 
-      LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.racer_id = racers.id 
-                      and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and ccx_numbers.year = #{date.year} 
-                      and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
-      LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.racer_id = racers.id 
-                      and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and dh_numbers.year = #{date.year} 
-                      and dh_numbers.discipline_id = #{Discipline[:downhill].id}
-      LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.racer_id = racers.id 
-                      and road_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and road_numbers.year = #{date.year} 
-                      and road_numbers.discipline_id = #{Discipline[:road].id}
-      LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.racer_id = racers.id 
-                      and singlespeed_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and singlespeed_numbers.year = #{date.year} 
-                      and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}
-      LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.racer_id = racers.id 
-                      and track_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and track_numbers.year = #{date.year} 
-                      and track_numbers.discipline_id = #{Discipline[:track].id}
-      LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.racer_id = racers.id 
-                      and xc_numbers.number_issuer_id = #{association_number_issuer_id} 
-                      and xc_numbers.year = #{date.year} 
-                      and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
-      #{where_clause}
-      ORDER BY last_name, first_name, racers.id
-    })
-    
-    last_racer = nil
-    @racers.reject! do |racer|
-      if last_racer && last_racer["id"] == racer["id"]
-        true
-      else
-        last_racer = racer
-        false
-      end
-    end
+    @racers = Racer.find_all_for_export(date, params['include'] == 'members_only')
     
     respond_to do |format|
       format.html

@@ -5,6 +5,15 @@ tonkin:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
+  license: 7123811
+  street: 127 SE Lambert
+  city: Portland
+  state: OR
+  zip: 19990
+  home_phone: 415 221-3773
+  road_category: 1
+  track_category: 5
+  date_of_birth: <%= 30.years.ago.to_date.to_s(:db) %>
 matson:
   first_name: Mark
   last_name: Matson
