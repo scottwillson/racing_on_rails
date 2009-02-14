@@ -132,6 +132,39 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-22", multi_day_event.end_date, "MultiDayEvent events end date")
   end
   
+  def test_create_children
+    event = MultiDayEvent.create!(:start_date => Date.new(2009, 4), :end_date => Date.new(2009, 9), :every => "Monday", :time => "5:30 PM till dusk")
+    assert_equal(22, event.events.size, "Should create child events")
+    Date.new(2009, 4, 6).step(Date.new(2009, 8, 31), 7) do |date|
+      assert(event.events.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.events.map { |e| e.date }.join(', ')}")
+    end
+
+    event = MultiDayEvent.create!(:start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10), :every => "Sunday")
+    assert_equal(22, event.events.size, "Should create child events")
+    Date.new(2009, 5, 3).step(Date.new(2009, 9, 30), 7) do |date|
+      assert(event.events.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.events.map { |e| e.date }.join(', ')}")
+    end
+
+    event = MultiDayEvent.create!(:start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10), :every => "Tuesday")
+    assert_equal(22, event.events.size, "Should create child events")
+    Date.new(2009, 5, 5).step(Date.new(2009, 10, 1), 7) do |date|
+      assert(event.events.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.events.map { |e| e.date }.join(', ')}")
+    end
+  end
+  
+  def test_create_children_on_multiple_days_of_week
+    event = MultiDayEvent.create!(:start_date => Date.new(2009), :end_date => Date.new(2009, 12, 31), :every => ["Saturday", "Sunday"])
+    assert_equal(104, event.events.size, "Should create child events")
+
+    Date.new(2009, 1, 3).step(Date.new(2009, 12, 26), 7) do |date|
+      assert(event.events.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.events.map { |e| e.date }.join(', ')}")
+    end
+
+    Date.new(2009, 1, 4).step(Date.new(2009, 12, 27), 7) do |date|
+      assert(event.events.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.events.map { |e| e.date }.join(', ')}")
+    end
+  end
+  
   def test_destroy
     mt_hood = events(:mt_hood)
     mt_hood.destroy

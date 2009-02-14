@@ -28,6 +28,7 @@ class MultiDayEvent < Event
   
   before_save :update_date
   before_save :update_events
+  after_create :create_events
   
   has_many :events, 
            :class_name => 'SingleDayEvent',
@@ -161,6 +162,20 @@ class MultiDayEvent < Event
     end
   end
   
+  # Create child events automatically, if we've got enough info to do so
+  def create_events
+    return unless start_date && @end_date && @every
+    
+    _start_date = start_date
+    until @every.include?(_start_date.wday)
+      _start_date = _start_date.next 
+    end
+    
+    _start_date.step(@end_date, 1) do |date|
+      events.create!(:date => date) if @every.include?(date.wday)
+    end
+  end
+  
   def after_child_event_save
     update_date
   end
@@ -185,6 +200,10 @@ class MultiDayEvent < Event
     date
   end
   
+  def start_date=(date)
+    self.date = date
+  end
+  
   def end_date
     if !events(true).empty?
       events.last.date
@@ -193,8 +212,27 @@ class MultiDayEvent < Event
     end
   end
   
+  # end_date is calculated from child events, and not saved to the DB. If there are no child events, end_date is set to start date.
+  # This value is stored in @end_date in memory, and is used to create a new MultiDayEvent with children. Example:
+  # MultiDayEvent.create!(:start_date => Date.new(2009, 4), :end_date => Date.new(2009, 10), :every => "Monday")
+  def end_date=(value)
+    @end_date = value
+  end
+  
   def end_date_s
     "#{end_date.month}/#{end_date.day}"
+  end
+
+  # Expects a value from Date::DAYNAMES: Monday, Tuesday, etc., or an array of same. Example: ["Saturday", "Sunday"]
+  def every=(value)
+    _every = value
+    _every = [_every] unless value.respond_to?(:each)
+    
+    _every.each do |day|
+      raise "'#{day}' must be in #{Date::DAYNAMES.join(', ')}" unless Date::DAYNAMES.index(day)
+    end
+
+    @every = _every.map { |day| Date::DAYNAMES.index(day) }
   end
   
   def date_range_s(format = :short)
