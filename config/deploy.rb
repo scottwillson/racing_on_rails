@@ -8,6 +8,12 @@ set :repository, 'http://butlerpress.com/var/repos/racing_on_rails/trunk'
 
 set :deploy_to, "/var/www/rails/#{application}"
 
+desc "Show source control status of files on server, in case anyone has edited them directly"
+task :edits do
+  run "cd #{current_path}; svn stat"
+  run "cd #{current_path}/local; svn stat"
+end
+
 namespace :deploy do
   task :after_update do
     transaction do
