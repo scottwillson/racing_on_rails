@@ -198,8 +198,8 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_destroy_event
     jack_frost = events(:jack_frost)
     delete(:destroy, :id => jack_frost.id, :commit => 'Delete')
-    assert_response(:success)
-    assert_raise(ActiveRecord::RecordNotFound, 'jack_frost should have been destroyed') { Event.find(jack_frost.id) }
+    assert_redirected_to(admin_events_path(:year => jack_frost.date.year))
+    assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
   end
 
   def test_update_event

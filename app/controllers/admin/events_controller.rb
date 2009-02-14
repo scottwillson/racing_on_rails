@@ -200,9 +200,7 @@ class Admin::EventsController < ApplicationController
     event.destroy
     expire_cache
     flash[:notice] = "Deleted #{event.name}"
-    render :update do |page|
-      page.redirect_to(admin_events_path(:year => event.date.year))
-    end
+    redirect_to(admin_events_path(:year => event.date.year))
   end
 
   def set_parent
