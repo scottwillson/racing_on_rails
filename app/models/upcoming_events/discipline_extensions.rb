@@ -14,7 +14,12 @@ module UpcomingEvents
       multi_day_events = MultiDayEvent.find(
         :all, 
         :include => :events,
-        :conditions => scope_by_sanctioned(['events_events.date between ? and ? and events.cancelled = false and events.discipline in (?) and events.type = ?', 
+        :conditions => scope_by_sanctioned([%Q{ events_events.date between ? and ? and 
+                                                events.cancelled = false and 
+                                                events.practice = false and
+                                                events.instructional = false and 
+                                                events.discipline in (?) and 
+                                                events.type = ?}, 
                                             dates.begin, dates.end, self.names, "MultiDayEvent"]),
         :order => 'events.date')
 
@@ -25,6 +30,8 @@ module UpcomingEvents
           :conditions => scope_by_sanctioned(
                            [%Q{ events.date between ? and ? 
                                 and events.cancelled = false 
+                                and events.instructional = false 
+                                and events.practice = false 
                                 and events.parent_id is not null 
                                 and parents_events.type = ?
                                 and parents_events.discipline in (?) }, 
@@ -38,7 +45,11 @@ module UpcomingEvents
       WeeklySeries.find(
         :all, 
         :include => :events,
-        :conditions => scope_by_sanctioned(['events_events.date between ? and ? and events.cancelled = false and events.discipline in (?)', 
+        :conditions => scope_by_sanctioned([%Q{ events_events.date between ? and ? and 
+                                                events.cancelled = false and 
+                                                events.practice = false and
+                                                events.instructional = false and 
+                                                events.discipline in (?)}, 
                                             dates.begin, dates.end, self.names]),
         :order => 'events.date')
     end

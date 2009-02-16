@@ -27,9 +27,17 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       
       # Tuesday
       may_day_rr =      SingleDayEvent.create!(:date => Date.new(2007, 5, 22), :name => 'May Day Road Race', :discipline => 'Road', :flyer_approved => true)
+      practice_sessions = WeeklySeries.create!(
+        :start_date => Date.new(2007, 4), :end_date => Date.new(2007, 7), :name => 'Brian Abers Training', :discipline => 'Track', 
+        :practice => true, :flyer_approved => true, :every => "Tuesday"
+      )
       # Wednesday
       lucky_lab_tt =    SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'Lucky Lab Road Race', :discipline => 'Time Trial', :flyer_approved => true)
       not_obra =        SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'USA RR', :discipline => 'Road', :sanctioned_by => 'USA Cycling', :flyer_approved => true)
+      track_class = WeeklySeries.create!(
+        :start_date => Date.new(2007, 4), :end_date => Date.new(2007, 7), :name => 'Track Class', :discipline => 'Track', 
+        :instructional => true, :flyer_approved => true, :every => "Wednesday"
+      )
       # Sunday of next full week
       woodland_rr =     SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Woodland Road Race', :discipline => 'Road', :flyer_approved => true)
       tst_rr =          SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Tahuya-Seabeck-Tahuya', :discipline => 'Road', :flyer_approved => true)
@@ -69,29 +77,35 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
       # Monday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 21))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
       # Tuesday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 22))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
 
       upcoming_events = UpcomingEvents.find_all(:date => DateTime.new(2007, 05, 22, 1, 0, 0))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
 
       upcoming_events = UpcomingEvents.find_all(:date => DateTime.new(2007, 05, 22, 23, 59, 0))
       assert_equal_events([may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
       # Wednesday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 23))
       assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
 
       # Next Sunday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29))
