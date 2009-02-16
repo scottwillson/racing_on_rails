@@ -52,10 +52,10 @@
   <tr>
     <td colspan="4">
       <div class="page_buttons">
-        <%= label_tag :schedule_file, "Import Results", :class => "left" %>
+        <%= label_tag :results_file, "Import Results", :class => "left" %>
         <% form_tag upload_admin_event_path(event), :multipart => true, :id => "upload_form", :style => "clear" do %>
           <div>
-            <%= file_field_tag "schedule_file", :style => "width: 250px;", :onchange => "$('upload_form').submit();" %>
+            <%= file_field_tag "results_file", :style => "width: 250px;", :onchange => "$('upload_form').hide(); $('upload_form').submit();" %>
           </div>
         <% end -%>
       </div>
