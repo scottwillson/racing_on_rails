@@ -2,69 +2,14 @@ require 'rake/packagetask'
 
 namespace :racing_on_rails do
   
-  desc 'Copy release package to web server' 
-  task :deploy_release do
-    puts(`scp pkg/racing_on_rails-0.0.7.zip butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.7.zip`)
-    puts(`scp pkg/racing_on_rails-0.0.7.tar.gz butlerpress.com:public_html/racing_on_rails/downloads/racing_on_rails.0.0.7.tar.gz`)
-  end
-
-  desc "Package, deploy new app from scratch. Test."
-  task :dist => [:dump_schema, :repackage, :create_app, :acceptence] do
-  end
-
-  task :create_app do
-    app_path = File.expand_path('~/racing_on_rails-0.0.7')
-    rm_rf app_path
-  
-    puts(`tar zxf pkg/racing_on_rails-0.0.7.tar.gz -C ~`)
-    `mysql -u root racing_on_rails_development < /db/schema.sql`
-  end
-
-  desc 'Customize new app'
-  task :customize do
-    # Config
-    customize("config/environment.rb")
-
-    # Views
-    customize("app/views/home/index.rhtml")
-    customize("app/views/schedule/index.rhtml")
-
-    # Extend Helpers, Controller, Model, Routes, Lib
-    customize("app/helpers/schedule_helper.rb")
-    customize("app/controllers/home_controller.rb")
-    customize("app/models/single_day_event.rb")
-    # TODO Add custom lib class
-
-    # Create whole slice (view, controller, model, helper, lib) for 'shops'
-
-    # Override instance and class methods of AR
-    # And in superclasses, then reference in subclass
-
-    path = File.expand_path('~/racing_on_rails-0.0.7')
-    puts(`#{path}/script/generate model BikeShop`)
-    puts(`#{path}/script/generate controller BikeShops list`)
-    customize('script/create_bike_shops_table.rb')
-    puts(`ruby #{path}/script/create_bike_shops_table.rb`)
-    customize("app/views/bike_shops/list.rhtml")
-  end
-
-  Rake::PackageTask.new("racing_on_rails", "0.0.7") do |p|
-    p.need_tar_gz = true
-    p.need_zip = true
-    files = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f| 
-       [ /\.$/,
-         /\.log$/, 
-         /^pkg/, 
-         /\.svn/, 
-         /^vendor\/rails/, 
-         /\.tmproj/,
-         /\.DS_Store/,
-         /^public\/(files|xml|index.html)/,
-         /\~$/, 
-         /\/\._/, 
-         /\/#/ ].any? {|regex| f =~ regex }
-    end
-    p.package_files.include(files)
+  desc 'Cold setup' 
+  task :bootstrap do
+    puts "Bootstrap task will delete your Racing on Rails development database."
+    db_password = ask("MySQL root password (press return for no password): ")
+    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(RAILS_ROOT + "/db/create_databases.sql")}`
+    puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(RAILS_ROOT + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
+    Rake::Task["db:fixtures:load"].invoke
+    puts `ruby script/server`
   end
 end
 
@@ -105,5 +50,18 @@ task :cruise do
     end
     # Wait for Firefox to exit
     Process.wait
+  end
+end
+
+def ask(message)
+  print message
+  STDIN.gets.chomp
+end
+
+def db_password_arg(db_password)
+  if db_password.blank?
+    ""
+  else
+    " --password=#{db_password}"
   end
 end
