@@ -1,6 +1,4 @@
-require File.dirname(__FILE__) + '/../../bdrb_test_helper'
-require File.dirname(__FILE__) + '/../../test_helper'
-require "workers/mailer_worker"
+require "test_helper"
 
 class Admin::EmailsControllerTest < ActionController::TestCase
   def setup

@@ -21,8 +21,13 @@ class Admin::EmailsController < ApplicationController
     end
   end
 
+  # Down and dirty replacement of BackgrounDRb
   def create
-    MiddleMan.worker(:mailer_worker).email_members(params[:email])
+	if Rails.env == "test"
+	  Admin::MemberMailer.email_all(params[:email][:subject], params[:email][:from], params[:email][:body])
+	else
+	  Thread.new { Admin::MemberMailer.email_all(params[:email][:subject], params[:email][:from], params[:email][:body]) }
+	end
     flash[:info] = "Sent email"
     redirect_to :action => :new
   end
