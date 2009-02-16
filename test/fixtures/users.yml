@@ -2,3 +2,4 @@ administrator:
   username: admin@example.com
   name: Candi Murray
   password: secret
+  email: admin@example.com

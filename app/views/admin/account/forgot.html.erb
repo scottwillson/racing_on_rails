@@ -1,0 +1,15 @@
+<% @page_title = "Admin: Forgot Password" %>
+<% @show_tabs = false %>
+
+<h2>Forgot your password?</h2>
+
+<%= form_tag :action => "forgot" %>
+  <div class="login centered">
+    <%= labelled_text_field_tag "email", "Email", "" %><br/>
+    <div class="clear page_buttons">
+      <div class="right"><input type="submit" name="login" value="Send Password"/></div>
+    </div>
+  </div>
+</form>
+
+<% focus('username') %>

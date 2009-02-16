@@ -2,7 +2,7 @@
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
 
-  attr_accessor :name, :short_name, :state
+  attr_accessor :name, :short_name, :state, :email
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
@@ -14,6 +14,7 @@ class RacingAssociation
     @show_license = true
     @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
+    @email = "scott@butlerpress.com"
   end
   
   def bmx_numbers?

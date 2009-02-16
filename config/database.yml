@@ -36,3 +36,11 @@ production:
   password: 
   host: localhost
   encoding: latin1
+
+john:
+  adapter: mysql
+  database: racing_on_rails_development
+  username: ror_development
+  password:
+  host: localhost
+  encoding: latin1

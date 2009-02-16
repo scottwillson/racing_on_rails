@@ -24,6 +24,7 @@
     <%= labelled_text_field_tag "username", "Username", "" %><br/>
     <%= label_tag "user_password", "Password" %>
     <%= password_field_tag "user_password", "" %>
+	<p><%= link_to "Forgot your password?", :action => "forgot" %></p>
     <div class="clear page_buttons">
       <div class="right"><input type="submit" name="login" value="Login"/></div>
     </div>

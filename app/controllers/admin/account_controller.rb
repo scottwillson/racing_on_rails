@@ -33,6 +33,27 @@ class Admin::AccountController < ApplicationController
     end
   end
   
+  # Send email with password to user
+  # 
+  # === Params
+  # * :email
+  # === Flash
+  # * notice
+  # --
+  def forgot
+    if request.post? and params[:email] != ""
+      user = User.find_by_email(params[:email])
+      
+      if user
+        UserNotifier.deliver_forgot_password(user)
+        flash[:info] = "Reminder email sent successfully"
+        redirect_to :action => "login"
+      else
+        flash.now[:warn]  = "Email not found"
+      end
+    end
+  end
+  
   # Remove User from session. There is no link to this action, yet.
   def logout
     session[:user] = nil
