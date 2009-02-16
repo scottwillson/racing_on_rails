@@ -4,7 +4,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::VelodromesControllerTest < ActionController::TestCase
   
   def setup
-    @request.session[:user] = users(:candi)
+    @request.session[:user] = users(:administrator)
   end
   
   def test_not_logged_in_index

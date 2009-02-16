@@ -2,7 +2,7 @@ require "test_helper"
 
 class Admin::EmailsControllerTest < ActionController::TestCase
   def setup
-    @request.session[:user] = users(:candi)
+    @request.session[:user] = users(:administrator)
   end
 
   def test_new

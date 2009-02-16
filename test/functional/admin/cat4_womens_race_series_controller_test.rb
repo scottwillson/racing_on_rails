@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   def setup
-    @request.session[:user] = users(:candi)
+    @request.session[:user] = users(:administrator)
   end
 
   def test_new_result

@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::PromotersControllerTest < ActionController::TestCase
   def setup
     super
-    @request.session[:user] = users(:candi)
+    @request.session[:user] = users(:administrator)
   end
   
   def test_index

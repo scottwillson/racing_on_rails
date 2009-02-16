@@ -4,7 +4,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
   def setup
     super
-    @request.session[:user] = users(:candi)
+    @request.session[:user] = users(:administrator)
   end
 
   def test_not_logged_in_index

@@ -1,4 +1,4 @@
-candi:
-  username: candi
+administrator:
+  username: admin@example.com
   name: Candi Murray
-  password: candi_password
+  password: secret
