@@ -36,21 +36,16 @@ end -%>
           <div class="number"><%= day.day_of_month -%></div>
           <%- for event in day.events -%>
           <div class="event">
-      <%- if event.cancelled %>
+            <%- if event.cancelled %>
         <span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
-      <%- else -%>
+            <%- else -%>
               <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-            MTB
-              <%- end -%></a>
+            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>
               <%- else -%>
-            <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-            MTB
+            <%= event.name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
               <%- end -%>
-              </div>
-              <%- end -%>
-      <%- end -%>
-          
+            <%- end -%>
+          </div>
           <%- end -%>
         <%- end -%>
         </td>
