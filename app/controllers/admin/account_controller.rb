@@ -21,15 +21,15 @@ class Admin::AccountController < ApplicationController
   # --
   # TODO Separate into two actions
   def login
-    @user = User.authenticate(params[:username], params[:user_password])
+    @user = User.authenticate(params[:email], params[:user_password])
     if @user
       session[:user] = @user
       redirect_back_or_default(admin_home_path)
     else
-      if !params[:username].blank? or !params[:user_password].blank? 
+      if !params[:email].blank? or !params[:user_password].blank? 
         flash.now[:warn]  = "Login unsuccessful"
       end
-      @login = params[:username]
+      @login = params[:email]
     end
   end
   

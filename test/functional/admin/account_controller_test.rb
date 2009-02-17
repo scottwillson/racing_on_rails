@@ -11,6 +11,19 @@ class AccountControllerTest < ActionController::TestCase
     assert_routing("admin/account/login", opts)
   end
   
+  def test_valid_login
+    post :login, :email => "admin@example.com", :user_password => "secret"
+    assert session[:user]
+    assert_response :redirect
+  end
+  
+  def test_invalid_login
+    post :login, :email => "admin@example.com", :user_password => "badsecret"
+    assert !session[:user]
+    assert_response :success
+    assert flash.has_key?(:warn)
+  end
+  
   def test_forgot_password
     opts = {:controller => "admin/account", :action => "forgot"}
     assert_routing("admin/account/forgot", opts)

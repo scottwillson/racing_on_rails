@@ -21,7 +21,7 @@
 
 <%= form_tag :action => "login" %>
   <div class="login centered">
-    <%= labelled_text_field_tag "username", "Username", "" %><br/>
+    <%= labelled_text_field_tag "email", "Email", "" %><br/>
     <%= label_tag "user_password", "Password" %>
     <%= password_field_tag "user_password", "" %>
 	<p><%= link_to "Forgot your password?", :action => "forgot" %></p>
