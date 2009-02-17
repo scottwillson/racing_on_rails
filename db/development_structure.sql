@@ -14,7 +14,7 @@ CREATE TABLE `aliases` (
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `aliases_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `aliases_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7922 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7923 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `bids` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -45,7 +45,7 @@ CREATE TABLE `categories` (
   KEY `parent_id` (`parent_id`),
   KEY `index_categories_on_friendly_param` (`friendly_param`),
   CONSTRAINT `categories_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1954 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1953 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `discipline_aliases` (
   `discipline_id` int(11) NOT NULL DEFAULT '0',
@@ -241,7 +241,7 @@ CREATE TABLE `posts` (
   KEY `idx_mailing_list_id` (`mailing_list_id`),
   KEY `idx_date_list` (`date`,`mailing_list_id`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `promoters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -275,7 +275,7 @@ CREATE TABLE `race_numbers` (
   CONSTRAINT `race_numbers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `race_numbers_ibfk_2` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
   CONSTRAINT `race_numbers_ibfk_3` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50084 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50085 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `racers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -466,10 +466,9 @@ CREATE TABLE `users` (
   `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `email` varchar(128) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -479,7 +478,7 @@ CREATE TABLE `velodromes` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 INSERT INTO schema_migrations (version) VALUES ('1');
 
@@ -524,8 +523,6 @@ INSERT INTO schema_migrations (version) VALUES ('20081214033053');
 INSERT INTO schema_migrations (version) VALUES ('20090116235413');
 
 INSERT INTO schema_migrations (version) VALUES ('20090117215129');
-
-INSERT INTO schema_migrations (version) VALUES ('20090212200352');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
