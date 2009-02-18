@@ -1,7 +1,5 @@
-admin_role:
-    id: 1
-    name: Administrator
+administrator:
+  name: Administrator
 
-member_role:
-    id: 2
-    name: Member
+member:
+  name: Member

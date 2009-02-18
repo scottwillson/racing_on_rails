@@ -1,8 +1,6 @@
-require "#{File.dirname(__FILE__)}/../test_helper"
+require "test_helper"
 
 class LoginStoriesTest < ActionController::IntegrationTest
-  fixtures :users, :roles, :roles_users
-  
   def test_valid_admin_login
     get '/admin/events'
     assert_response :redirect
