@@ -33,7 +33,15 @@
           <div class="breadcrumb">
             <%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %> |
             <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
-            <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %>
+            <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %> | 
+			<% if is_logged_in? %>
+			<%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
+			<% else %>
+			<%= link_to "Account Login", {:controller => "/account", :action => "login"}, { :id => "account_link" } %>
+			<% end %>
+			<% if logged_in_user and logged_in_user.has_role?('administrator') %>
+			 | <%= link_to "Administration", {:controller => "/admin/events"}, { :id => "admin_link" } %>
+			<% end %>
           </div>
         </div>
       </div>

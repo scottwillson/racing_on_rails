@@ -1,7 +1,7 @@
 class Admin::BidsController < ApplicationController
   include ActionView::Helpers::TextHelper
 
-  before_filter :login_required
+  before_filter :check_administrator_role
   layout "admin/application"
 
   def index

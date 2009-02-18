@@ -11,7 +11,7 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/admin/account', :action => 'login')
+    assert_redirected_to(:controller => '/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 

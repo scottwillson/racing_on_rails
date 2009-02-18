@@ -1,4 +1,11 @@
 administrator:
+  id: 1
   name: Candi Murray
   password: secret
   email: admin@example.com
+
+member_user:
+  id: 2
+  name: Bob Jones
+  password: membersecret
+  email: member@example.com

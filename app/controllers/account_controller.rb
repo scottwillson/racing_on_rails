@@ -1,7 +1,7 @@
 # User authentication
 # See also LoginModule
-class Admin::AccountController < ApplicationController
-  layout 'admin/application'
+class AccountController < ApplicationController
+  layout 'application'
 
   # Show login page and do login. If login succeeds, put an instance of User in session
   # with the key :user. LoginModule uses this User for authorization.
@@ -19,17 +19,18 @@ class Admin::AccountController < ApplicationController
   # === Flash
   # * notice 
   # --
-  # TODO Separate into two actions
   def login
+  end
+  
+  def authenticate
     @user = User.authenticate(params[:email], params[:user_password])
     if @user
       session[:user] = @user
-      redirect_back_or_default(admin_home_path)
+      redirect_back_or_default('/')
     else
-      if !params[:email].blank? or !params[:user_password].blank? 
-        flash.now[:warn]  = "Login unsuccessful"
-      end
+      flash.now[:warn]  = "Login unsuccessful"
       @login = params[:email]
+      redirect_to :action => "login"
     end
   end
   

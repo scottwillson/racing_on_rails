@@ -1,6 +1,6 @@
 # Add, delete, and edit Racer information. Also merge 
 class Admin::RacersController < ApplicationController
-  before_filter :login_required
+  before_filter :check_administrator_role
   layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
 

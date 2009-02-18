@@ -1,9 +1,9 @@
-<% @page_title = "Admin: Login" %>
+<% @page_title = "Account: Login" %>
 <% @show_tabs = false %>
 
 <% if session[:user] %>
 
-<%= form_tag :action=> "login" %>
+<%= form_tag :action=> "logout" %>
 <% table :caption => "Logged In", :id => "login" do %>
   <tr><th colspan="2">&nbsp;</th></tr>
   <tr>
@@ -19,7 +19,7 @@
 
 <h2>Welcome</h2>
 
-<%= form_tag :action => "login" %>
+<%= form_tag :action => "authenticate" %>
   <div class="login centered">
     <%= labelled_text_field_tag "email", "Email", "" %><br/>
     <%= label_tag "user_password", "Password" %>

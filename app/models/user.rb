@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   validates_length_of :email, :within => 5..128
   
   validates_presence_of :name, :password, :password_confirmation, :email
+  
+  has_and_belongs_to_many :roles
 
   def self.authenticate(email, pass)
     find(:first, :conditions => ["email = ? AND password = ?", email, pass])
@@ -17,5 +19,9 @@ class User < ActiveRecord::Base
   
   def email_with_name
     "#{name} <#{email}>"
+  end
+  
+  def has_role?(rolename)
+    self.roles.find_by_name(rolename) ? true : false
   end
 end

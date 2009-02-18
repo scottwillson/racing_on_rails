@@ -1,6 +1,6 @@
 class Admin::Cat4WomensRaceSeriesController < ApplicationController
 
-  before_filter :login_required
+  before_filter :check_administrator_role
   layout 'admin/application'
   
   def new_result

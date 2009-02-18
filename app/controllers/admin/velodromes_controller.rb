@@ -1,5 +1,5 @@
 class Admin::VelodromesController < ApplicationController
-  before_filter :login_required
+  before_filter :check_administrator_role
   layout "admin/application"
   
   in_place_edit_for :velodrome, :name

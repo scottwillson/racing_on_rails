@@ -11,7 +11,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/admin/account', :action => 'login')
+    assert_redirected_to(:controller => '/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
   
@@ -20,7 +20,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/admin/account', :action => 'login')
+    assert_redirected_to(:controller => '/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 

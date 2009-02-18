@@ -1,5 +1,5 @@
 class Admin::StandingsController < ApplicationController
-  before_filter :login_required
+  before_filter :check_administrator_role
   layout "admin/application"
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper
 

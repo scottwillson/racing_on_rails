@@ -1,5 +1,5 @@
 class Admin::FirstAidProvidersController < ApplicationController  
-  before_filter :login_required
+  before_filter :check_administrator_role
   helper :table
   layout "admin/application"
 

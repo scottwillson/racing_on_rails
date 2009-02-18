@@ -10,7 +10,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     @request.session[:user] = nil
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/admin/account', :action => 'login')
+    assert_redirected_to(:controller => '/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
   
@@ -19,7 +19,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/admin/account', :action => 'login')
+    assert_redirected_to(:controller => '/account', :action => 'login')
     assert_nil(@request.session["user"], "No user in session")
   end
 

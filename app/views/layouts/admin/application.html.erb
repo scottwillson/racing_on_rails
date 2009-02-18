@@ -30,8 +30,8 @@
     <div class="shadow_1">
       <div class="frame" id="frame">
         <div class="nav" id="top">
-          <h1><%= link_to ASSOCIATION.name, admin_home_path %></h1>
-          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
+          <h1><%= link_to ASSOCIATION.name, '/' %></h1>
+          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => '/' %></div>
         </div>
         <div class="content container">
         <%= render :partial => "shared/admin/tabs", :locals => { :show_tabs => @show_tabs } %>
@@ -39,7 +39,10 @@
 <%= yield %>
         </div>
         <div class="nav" id="bottom">
-          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, admin_home_path %></div>
+          <div class="breadcrumb">
+          	<%= link_to ASSOCIATION.short_name, '/' %> | 
+			<%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
+		  </div>
         </div>
       </div>
     </div>
