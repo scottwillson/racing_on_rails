@@ -26,7 +26,11 @@ class AccountController < ApplicationController
     @user = User.authenticate(params[:email], params[:user_password])
     if @user
       session[:user] = @user
-      redirect_back_or_default('/')
+      if @user.has_role?("Administrator")
+        redirect_back_or_default(admin_home_path)
+      else
+        redirect_back_or_default('/')
+      end
     else
       flash.now[:warn]  = "Login unsuccessful"
       @login = params[:email]

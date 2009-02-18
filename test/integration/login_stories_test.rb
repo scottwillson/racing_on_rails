@@ -19,6 +19,13 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_template 'admin/events/index'
   end
   
+  def test_should_redirect_to_admin_home_after_admin_login
+    go_to_login
+    
+    login :email => 'admin@example.com', :user_password => 'secret'
+    assert_redirected_to "/admin"
+  end
+  
   def test_valid_member_login
     go_to_login
     
