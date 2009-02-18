@@ -1,11 +1,7 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 # :stopdoc:
 class AccountControllerTest < ActionController::TestCase
-  fixtures :users
-  
-  tests Admin::AccountController
-  
   def test_login
     opts = {:controller => "account", :action => "login"}
     assert_routing("account/login", opts)
