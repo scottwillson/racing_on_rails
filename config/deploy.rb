@@ -1,12 +1,15 @@
-# Do not use 'rake deploy: it's deprecated, and it will ignore your deploy.rb
-# recipe in local/config. Use:
-# cap -f local/config/deploy.rb -a deploy
 require 'mongrel_cluster/recipes'
+load "config/db"
+load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
-set :application, 'racing_on_rails'
 set :repository, 'http://butlerpress.com/var/repos/racing_on_rails/trunk'
 
-set :deploy_to, "/var/www/rails/#{application}"
+set :deploy_to, "/usr/local/www/rails/#{application}"
+
+set :user, "app"
+set :use_sudo, false
+set :scm_auth_cache, true
+set :mongrel_conf, "/usr/local/etc/mongrel_cluster/#{application}.yml"
 
 desc "Show source control status of files on server, in case anyone has edited them directly"
 task :edits do
@@ -14,16 +17,16 @@ task :edits do
   run "cd #{current_path}/local; svn stat"
 end
 
-namespace :deploy do
-  task :after_update do
-    transaction do
-      # Pull in your local code
-      run "svn co svn+ssh://my.svn_server.com/var/repos/local_application /var/www/rails/#{application}/current/local"
-      migrate
-    end
-  end
+desc "Commit modified files on server to source control, in case anyone has edited them directly"
+task :commit_edits do
+  run "cd #{current_path}; svn commit -m 'Manual updates'"
+  run "cd #{current_path}/local; svn commit -m 'Manual updates'"
+end
 
-  task :restart, :roles => :app do
-    restart_mongrel_cluster
+namespace :deploy do
+  desc "Custom deployment"
+  task :after_update do
+    run "svn co svn+ssh://butlerpress.com/var/repos/#{application}/trunk #{release_path}/local"
+    run "chmod -R g+w #{release_path}/local"
   end
 end
