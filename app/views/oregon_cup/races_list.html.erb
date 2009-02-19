@@ -1,5 +1,5 @@
 <% table :caption => "#{@oregon_cup.date.year} Races" do %>
-  <tr><th></th></tr>
+  <tr><th>&nbsp;</th></tr>
   <%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
   <%- for event in @oregon_cup.events.sort -%>
   <tr>

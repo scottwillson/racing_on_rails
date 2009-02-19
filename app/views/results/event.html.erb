@@ -80,7 +80,7 @@
     <% standings.races_with_results.each_with_index do |race, index| %>
     <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
     <% table :caption => race.name, :class => "event_results" do %>
-    <tr><th></th></tr>
+    <tr><th>&nbsp;</th></tr>
     <tr>
       <td>
     <%= results_grid(race) -%>

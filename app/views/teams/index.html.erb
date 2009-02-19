@@ -10,7 +10,7 @@
     <th>Sponsors</th>
     <th>Website</th>
     <th>Contact</th>
-    <th></th>
+    <th>&nbsp;</th>
   </tr>
   <%= render :partial => "team", :collection => @teams.sort { |x, y| x.name.downcase <=> y.name.downcase || x <=> y } %>
 <% end -%>
