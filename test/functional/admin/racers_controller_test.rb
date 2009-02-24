@@ -4,11 +4,11 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
   def setup
     super
-    @request.session[:user] = users(:administrator).id
+    @request.session[:user_id] = users(:administrator).id
   end
 
   def test_not_logged_in_index
-    @request.session[:user] = nil
+    @request.session[:user_id] = nil
     get(:index)
     assert_response(:redirect)
     assert_redirected_to(:controller => '/account', :action => 'login')
@@ -16,7 +16,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in_edit
-    @request.session[:user] = nil
+    @request.session[:user_id] = nil
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)

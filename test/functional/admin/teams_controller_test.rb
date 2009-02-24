@@ -3,11 +3,11 @@ require File.dirname(__FILE__) + '/../../test_helper'
 # :stopdoc:
 class Admin::TeamsControllerTest < ActionController::TestCase  
   def setup
-    @request.session[:user] = users(:administrator).id
+    @request.session[:user_id] = users(:administrator).id
   end
   
   def test_not_logged_in_index
-    @request.session[:user] = nil
+    @request.session[:user_id] = nil
     get(:index)
     assert_response(:redirect)
     assert_redirected_to(:controller => '/account', :action => 'login')
@@ -15,7 +15,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in_edit
-    @request.session[:user] = nil
+    @request.session[:user_id] = nil
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
     assert_response(:redirect)

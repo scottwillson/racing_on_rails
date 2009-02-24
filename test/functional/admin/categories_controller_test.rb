@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::CategoriesControllerTest < ActionController::TestCase
 
   def setup
-    @request.session[:user] = users(:administrator).id
+    @request.session[:user_id] = users(:administrator).id
   end
 
   def test_index
@@ -17,7 +17,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in
-    @request.session[:user] = nil
+    @request.session[:user_id] = nil
     get(:index)
     assert_response(:redirect)
     assert_redirected_to(:controller => '/account', :action => 'login')

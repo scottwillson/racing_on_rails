@@ -72,7 +72,7 @@ module LoginSystem
   
   # Is the user logged in?
   def is_logged_in?
-    @logged_in_user = User.find(session[:user]) if session[:user]
+    @logged_in_user = User.find(session[:user_id]) if session[:user_id]
   end
   
   # Return the logged in user, if logged in
@@ -82,7 +82,7 @@ module LoginSystem
   
   def logged_in_user=(user)
     if !user.nil?
-      session[:user] = user.id
+      session[:user_id] = user.id
       @logged_in_user = user
     end
   end

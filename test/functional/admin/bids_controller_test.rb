@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 
 class Admin::BidsControllerTest < ActionController::TestCase
   def setup
-    @request.session[:user] = users(:administrator).id
+    @request.session[:user_id] = users(:administrator).id
   end
 
   def test_index
