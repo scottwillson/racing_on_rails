@@ -110,7 +110,7 @@ pre, pre a, pre a:link, pre a:visited {
 {
   background-image: url(/images/icons/confirmed.gif);
   background-repeat: no-repeat;
-  background-position: 0px 4px;
+  background-position: 0px 2px;
 }
 
 #warn span
@@ -118,7 +118,7 @@ pre, pre a, pre a:link, pre a:visited {
   color: red;
   background-image: url(/images/icons/warn.gif);
   background-repeat: no-repeat;
-  background-position: 0px 4px;
+  background-position: 0px 3px;
 }
 
 h1, h2, h3 {
