@@ -416,12 +416,25 @@ table.first_aid_providers td.name {
   width: 200px;
 }
 
+/* Login */
 .login {
   width: 368px;
 }
 
 .login label {
   width: 80px;
+}
+
+.login .page_buttons {
+  padding-top: 8px;
+}
+
+.forgot {
+  margin-left: 88px;
+}
+
+#login_button {
+  margin-right: 2px;
 }
 
 .link_spacer {

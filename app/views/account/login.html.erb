@@ -24,9 +24,9 @@
     <%= labelled_text_field_tag "email", "Email", "" %><br/>
     <%= label_tag "user_password", "Password" %>
     <%= password_field_tag "user_password", "" %>
-	<p><%= link_to "Forgot your password?", :action => "forgot" %></p>
-    <div class="clear page_buttons">
-      <div class="right"><input type="submit" name="login" value="Login"/></div>
+    <div class="page_buttons last">
+      <div style="float: left;"><%= link_to "Forgot your password?", { :action => "forgot" }, { :class => "obvious forgot" } %></div>
+      <div class="last right" style=""><input type="submit" name="login" value="Login" class="right" id="login_button" /></div>
     </div>
   </div>
 </form>

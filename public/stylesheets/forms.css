@@ -231,6 +231,10 @@ div.page_buttons label {
   margin-top: 0px;
 }
 
+div.right input {
+  text-align: center;
+}
+
 td.form_column {
   width: 416px;
   padding-right: 16px;
