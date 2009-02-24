@@ -47,15 +47,6 @@ create table `categories` (
   constraint `categories_ibfk_3` foreign key (`parent_id`) references `categories` (`id`) on delete set null
 ) engine=innodb default charset=latin1;
 
-create table `categories_categories` (
-  `parent_id` int(11) not null,
-  `child_id` int(11) not null,
-  key `parent_id` (`parent_id`),
-  key `child_id` (`child_id`),
-  constraint `categories_categories_ibfk_1` foreign key (`parent_id`) references `categories` (`id`) on delete cascade,
-  constraint `categories_categories_ibfk_2` foreign key (`child_id`) references `categories` (`id`)
-) engine=innodb default charset=latin1;
-
 create table `discipline_aliases` (
   `discipline_id` int(11) not null default '0',
   `alias` varchar(64) not null default '',
@@ -355,11 +346,6 @@ create table `races` (
   key `idx_standings_id` (`standings_id`),
   constraint `races_ibfk_1` foreign key (`category_id`) references `categories` (`id`),
   constraint `races_ibfk_2` foreign key (`standings_id`) references `standings` (`id`) on delete cascade
-) engine=innodb default charset=latin1;
-
-create table `races_races` (
-  `race_id` int(11) not null,
-  `competition_race_id` int(11) not null
 ) engine=innodb default charset=latin1;
 
 create table `results` (
