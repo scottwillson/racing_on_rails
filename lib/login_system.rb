@@ -72,12 +72,19 @@ module LoginSystem
   
   # Is the user logged in?
   def is_logged_in?
-    @logged_in_user = User.find(session[:user_id]) if session[:user_id]
+    !logged_in_user.nil?
   end
   
   # Return the logged in user, if logged in
   def logged_in_user
-    return @logged_in_user if is_logged_in?
+    unless @logged_in_user
+      if session[:user_id]
+        @logged_in_user = User.find(session[:user_id])
+      else
+        @logged_in_user = login_from_cookie
+      end
+    end
+    @logged_in_user
   end
   
   def logged_in_user=(user)
@@ -87,6 +94,43 @@ module LoginSystem
     end
   end
   
+  def login_from_cookie
+    @logged_in_user = cookies[:auth_token] && User.find_by_remember_token(cookies[:auth_token])
+    if @logged_in_user && @logged_in_user.remember_token?
+      handle_remember_cookie!(false) # freshen cookie token (keeping date)
+    end
+    @logged_in_user
+  end
+
+  def valid_remember_cookie?
+    return nil unless logged_in_user
+    (logged_in_user.remember_token?) && 
+      (cookies[:auth_token] == logged_in_user.remember_token)
+  end
+  
+  # Refresh the cookie auth token if it exists, create it otherwise
+  def handle_remember_cookie!(new_cookie_flag)
+    return unless @logged_in_user
+    case
+    when valid_remember_cookie? then @logged_in_user.refresh_token # keeping same expiry date
+    when new_cookie_flag        then @logged_in_user.remember_me_for(1.year)
+    else                             @logged_in_user.forget_me
+    end
+    send_remember_cookie!
+    cookies[:email] = { :value => @logged_in_user.email }
+  end
+
+  def kill_remember_cookie!
+    cookies.delete :auth_token
+  end
+  
+  def send_remember_cookie!
+    cookies[:auth_token] = {
+      :value   => logged_in_user.remember_token,
+      :expires => logged_in_user.remember_token_expires_at
+    }
+  end
+
   # Makes the is_logged_in? and logged_in_user methods available as helper methods
   # to the views
   def self.included(base)

@@ -1,6 +1,8 @@
 setup :fixtures => [:all]
 
 delete_cookie '_racing_on_rails_session_id', '/'
+delete_cookie 'auth_token', '/'
+delete_cookie 'email', '/'
 delete_cookie 'racer_name', '/'
 delete_cookie 'team_name', '/'
 

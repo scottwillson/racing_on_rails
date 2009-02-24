@@ -39,4 +39,27 @@ class AccountControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil flash[:warn]
   end
+  
+  def test_should_login_with_cookie
+    users(:administrator).remember_me
+    @request.cookies["auth_token"] = cookie_for(:administrator)
+    get :login
+    assert @controller.send(:is_logged_in?)
+  end
+
+  def test_should_fail_cookie_login
+    users(:administrator).remember_me
+    @request.cookies["auth_token"] = auth_token('invalid_auth_token')
+    get :login
+    assert !@controller.send(:is_logged_in?)
+  end
+
+  protected
+    def auth_token(token)
+      CGI::Cookie.new('name' => 'auth_token', 'value' => token)
+    end
+    
+    def cookie_for(user)
+      auth_token users(user).remember_token
+    end
 end

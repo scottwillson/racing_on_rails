@@ -20,12 +20,14 @@ class AccountController < ApplicationController
   # * notice 
   # --
   def login
+    @email = cookies[:email]
   end
   
   def authenticate
     @user = User.authenticate(params[:email], params[:user_password])
     if @user
       session[:user_id] = @user.id
+      handle_remember_cookie!(true)
       if @user.has_role?("Administrator")
         redirect_back_or_default(admin_home_path)
       else

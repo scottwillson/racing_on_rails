@@ -491,6 +491,8 @@ create table `users` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `email` varchar(128) not null,
+  `remember_token` varchar(40) default null,
+  `remember_token_expires_at` datetime default null,
   primary key (`id`)
 ) engine=myisam default charset=latin1;
 
@@ -557,6 +559,8 @@ insert into schema_migrations (version) values ('20090217170956');
 insert into schema_migrations (version) values ('20090217212657');
 
 insert into schema_migrations (version) values ('20090217212924');
+
+insert into schema_migrations (version) values ('20090224224826');
 
 insert into schema_migrations (version) values ('21');
 
