@@ -53,6 +53,21 @@ task :cruise do
   end
 end
 
+namespace :db do
+  namespace :structure do
+    desc "Monkey-patched by Racing on Rails. Standardize format to prevent SVN churn."
+    task :dump do
+      sql = File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql").readlines.join
+      sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
+      sql.downcase!
+      
+      File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql", "w") do |file|
+        file << sql
+      end
+    end
+  end
+end
+
 def ask(message)
   print message
   STDIN.gets.chomp
