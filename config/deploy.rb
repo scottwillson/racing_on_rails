@@ -19,7 +19,7 @@ end
 
 desc "Commit modified files on server to source control, in case anyone has edited them directly"
 task :commit_edits do
-  run "cd #{current_path}; svn commit -m 'Manual updates'"
+  # Can't commit from Rails root without side-stepping log symlink, so just do local for now
   run "cd #{current_path}/local; svn commit -m 'Manual updates'"
 end
 
