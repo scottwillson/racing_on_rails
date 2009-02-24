@@ -16,8 +16,15 @@
     <![endif]-->
     <%= javascript_include_tag :defaults %>
     <%= javascript_include_tag "tabs" %>
+    <script type="text/javascript">
+    function setFocus() {
+      <%- if @focus -%>
+      if($('<%= @focus %>')) { $('<%= @focus %>').focus(); } 
+      <%- end -%>
+    }
+    </script>
   </head>
-  <body>
+  <body onload="setFocus()">
   <div class="shadow_2">
     <div class="shadow_1">
       <div class="frame">
@@ -37,7 +44,7 @@
 			<% if is_logged_in? %>
 			<%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
 			<% else %>
-			<%= link_to "Account Login", {:controller => "/account", :action => "login"}, { :id => "account_link" } %>
+			<%= link_to "Login", {:controller => "/account", :action => "login"}, { :id => "account_link" } %>
 			<% end %>
 			<% if logged_in_user and logged_in_user.has_role?('administrator') %>
 			 | <%= link_to "Administration", {:controller => "/admin/events"}, { :id => "admin_link" } %>
