@@ -34,7 +34,7 @@
     <%- else -%>
     <td class="link">
       <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-          <a href="<%= event.flyer -%>"><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+          <a href="<%= event.flyer -%>"<%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
           MTB
             <%- end -%></a>
             <%- else -%>
