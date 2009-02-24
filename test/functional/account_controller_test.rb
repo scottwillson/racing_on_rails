@@ -32,4 +32,11 @@ class AccountControllerTest < ActionController::TestCase
     assert_equal users(:member_user).id, @controller.session[:user_id], "Should member user id in session (not entire User)"
     assert_redirected_to "/"
   end
+
+  def test_authenticate_failure
+    post :authenticate, :email => "admin@example.com", :user_password => "bad password"
+    assert_nil @controller.session[:user_id], "Should be no user_id in session"
+    assert_response :success
+    assert_not_nil flash[:warn]
+  end
 end

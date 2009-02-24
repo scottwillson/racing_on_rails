@@ -21,9 +21,9 @@
 
 <%= form_tag :action => "authenticate" %>
   <div class="login centered">
-    <%= labelled_text_field_tag "email", "Email", "" %><br/>
+    <%= labelled_text_field_tag "email", "Email", @email %><br/>
     <%= label_tag "user_password", "Password" %>
-    <%= password_field_tag "user_password", "" %>
+    <%= password_field_tag "user_password", @user_password %>
     <div class="page_buttons last">
       <div style="float: left;"><%= link_to "Forgot your password?", { :action => "forgot" }, { :class => "obvious forgot" } %></div>
       <div class="last right" style=""><input type="submit" name="login" value="Login" class="right" id="login_button" /></div>

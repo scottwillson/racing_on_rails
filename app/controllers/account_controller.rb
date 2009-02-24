@@ -32,9 +32,10 @@ class AccountController < ApplicationController
         redirect_back_or_default('/')
       end
     else
-      flash.now[:warn]  = "Login unsuccessful"
-      @login = params[:email]
-      redirect_to :action => "login"
+      flash[:warn]  = "Cannot login with that email address or password"
+      @email = params[:email]
+      @user_password = params[:user_password]
+      render :action => "login"
     end
   end
   
