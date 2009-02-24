@@ -104,7 +104,7 @@ class Admin::RacersController < ApplicationController
             :number_issuer_id => params[:number_issuer_id][index], 
             :year => params[:number_year],
             :value => number_value,
-            :updated_by => session[:user].name
+            :updated_by => logged_in_user.name
           )
           unless race_number.errors.empty?
             @racer.errors.add_to_base(race_number.errors.full_messages)
@@ -136,14 +136,14 @@ class Admin::RacersController < ApplicationController
     begin
       expire_cache
       @racer = Racer.find(params[:id])
-      params[:racer][:updated_by] = session[:user].name
+      params[:racer][:updated_by] = logged_in_user.name
       @racer.update_attributes(params[:racer])
       if params[:number]
         for number_id in params[:number].keys
           number = RaceNumber.find(number_id)
           number_params = params[:number][number_id]
           if number.value != params[:number][number_id][:value]
-            number_params[:updated_by] = session[:user].name
+            number_params[:updated_by] = logged_in_user.name
             RaceNumber.update(number_id, number_params)
           end
         end
@@ -157,7 +157,7 @@ class Admin::RacersController < ApplicationController
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
               :value => number_value,
-              :updated_by => session[:user].name
+              :updated_by => logged_in_user.name
             )
             unless race_number.errors.empty?
               @racer.errors.add_to_base(race_number.errors.full_messages)

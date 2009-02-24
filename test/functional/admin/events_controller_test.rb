@@ -10,7 +10,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
 
   def setup
     super
-    @request.session[:user] = users(:administrator)
+    @request.session[:user] = users(:administrator).id
   end
 
   def test_edit
@@ -563,7 +563,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
 
   def test_upload_schedule
-    @request.session[:user] = users(:administrator)
+    @request.session[:user] = users(:administrator).id
 
     before_import_after_schedule_start_date = Event.count(:conditions => "date > '2005-01-01'")
     assert_equal(11, before_import_after_schedule_start_date, "2005 events count before import")

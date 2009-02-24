@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class Admin::CategoriesControllerTest < ActionController::TestCase
 
   def setup
-    @request.session[:user] = users(:administrator)
+    @request.session[:user] = users(:administrator).id
   end
 
   def test_index

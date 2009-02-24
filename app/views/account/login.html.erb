@@ -7,7 +7,7 @@
 <% table :caption => "Logged In", :id => "login" do %>
   <tr><th colspan="2">&nbsp;</th></tr>
   <tr>
-    <td>You are logged-in as <%= session[:user].name %></td>
+    <td>You are logged-in as <%= logged_in_user.name %></td>
   </tr>
   <tr>
     <td><input type="submit" name="logout" value="Logout"/></td>

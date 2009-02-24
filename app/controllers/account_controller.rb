@@ -25,7 +25,7 @@ class AccountController < ApplicationController
   def authenticate
     @user = User.authenticate(params[:email], params[:user_password])
     if @user
-      session[:user] = @user
+      session[:user] = @user.id
       if @user.has_role?("Administrator")
         redirect_back_or_default(admin_home_path)
       else
