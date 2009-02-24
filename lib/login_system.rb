@@ -96,8 +96,15 @@ module LoginSystem
   # Check if the current logged in user has a role, if not, redirect to login
   # and flash a warning
   def check_role(role)
-    unless is_logged_in? && logged_in_user.has_role?(role)
-      flash[:warn] = "You do not have permission to do that."
+    unless is_logged_in?
+      flash[:notice] = "Please login"
+      store_location
+      return redirect_to(:controller => '/account', :action => 'login')
+    end
+    
+    unless logged_in_user.has_role?(role)
+      flash[:warn] = "You do not have permission to do that"
+      store_location
       redirect_to :controller => '/account', :action => 'login'
     end
   end
