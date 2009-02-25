@@ -11,6 +11,7 @@ namespace :db do
   task :database_dump, :roles => :db, :only => { :primary => true } do
     load 'config/environment.rb'
     abcs = ActiveRecord::Base.configurations
+    run("mkdir -p db")
     run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} --compress --ignore-table=#{abcs["production"]["database"]}.posts #{abcs["production"]["database"]} > db/production.sql")
     run("rm -f db/production.sql.bz2")
     run("bzip2 db/production.sql")
