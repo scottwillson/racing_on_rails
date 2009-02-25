@@ -4,6 +4,6 @@ class UserNotifier < ActionMailer::Base
     from        "#{ASSOCIATION.short_name} <#{ASSOCIATION.email}>"
     subject     "Your password reminder"
     body        :user => user,
-                :url => "http://#{STATIC_HOST}/admin/account/login"
+                :url => "http://#{STATIC_HOST}/account/login"
   end
 end
