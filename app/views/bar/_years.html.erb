@@ -8,6 +8,6 @@
   end
 
   years.each do |year|
-    tabs.add(year, :action => 'show', :year => year, :category => @category.friendly_param, :discipline => @discipline)
+    tabs.add(year, :action => 'show', :year => year, :category => (@category ? @category.friendly_param : nil), :discipline => @discipline)
   end
 end -%>

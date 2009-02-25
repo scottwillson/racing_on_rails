@@ -6,7 +6,7 @@ class BarController < ApplicationController
   
   def index
     @bar_categories = Discipline[:overall].bar_categories(true)
-    @all_disciplines = Discipline.find_all_bar.sort
+    @all_disciplines = Discipline.find_all_bar
     @year = Date.today.year
   end
 

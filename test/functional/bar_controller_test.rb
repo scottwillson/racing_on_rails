@@ -23,7 +23,7 @@ class BarControllerTest < ActionController::TestCase
     get(:index)
     assert_response(:success)
     assert_template("bar/index")
-    assert_nil(assigns["standings"], "Should not assign standings")
+    assert_nil(assigns["standings"], "Should assign standings")
     assert_not_nil(assigns["year"], "Should  assign year")
     assert_nil(assigns["discipline"], "Should assign not discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
