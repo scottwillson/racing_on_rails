@@ -79,7 +79,7 @@ module LoginSystem
   def logged_in_user
     unless @logged_in_user
       if session[:user_id]
-        @logged_in_user = User.find(session[:user_id])
+        @logged_in_user = User.find(session[:user_id]) rescue nil
       else
         @logged_in_user = login_from_cookie
       end

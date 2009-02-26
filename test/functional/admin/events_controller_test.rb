@@ -582,4 +582,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
     after_import_all = Event.count
     assert_equal(92, after_import_all, "All events count after import")
   end
+
+  # Really only happens to developers switching environments, and more of a test of LoginSystem
+  def test_gracefully_handle_bad_user_id
+    @request.session[:user_id] = 31289371283
+    get(:index)
+    assert_redirected_to :controller => "account", :action => "login"
+  end
 end
