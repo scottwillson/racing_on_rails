@@ -57,10 +57,28 @@ class Race < ActiveRecord::Base
     end
   end
   
-  def name
+  def discipline
+    standings.discipline if self.standings
+  end
+  
+  def category_name
     category.name if category
   end
   
+  def name
+    self.category_name
+  end
+  
+  def full_name
+    if name == standings.full_name
+      name
+    elsif standings.full_name[name]
+      standings.full_name
+    else
+      "#{standings.full_name}: #{name}"
+    end
+  end
+
   # Range of dates_of_birth of racers in this race
   def dates_of_birth
     raise(ArgumentError, 'Need category to calculate dates of birth') unless category
