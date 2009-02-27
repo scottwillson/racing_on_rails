@@ -287,12 +287,12 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(298, senior_men_overall_bar.results[3].points, "molly Senior Men Overall BAR results points")
     assert_equal(1, senior_men_overall_bar.results[3].scores.size, "molly Overall BAR results scores")
 
-    assert_equal(racers(:alice), senior_men_3_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
+    assert([racers(:alice), racers(:molly)].include?(senior_men_3_overall_bar.results[0].racer), "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_3_overall_bar.results[0].place, "Senior Men Overall BAR results place")
     assert_equal(300, senior_men_3_overall_bar.results[0].points, "alice Senior Men Overall BAR results points")
     assert_equal(1, senior_men_3_overall_bar.results[0].scores.size, "alice Overall BAR results scores")
 
-    assert_equal(racers(:molly), senior_men_3_overall_bar.results[1].racer, "Senior Men Overall BAR results racer")
+    assert([racers(:alice), racers(:molly)].include?(senior_men_3_overall_bar.results[1].racer), "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_3_overall_bar.results[1].place, "Senior Men Overall BAR results place")
     assert_equal(300, senior_men_3_overall_bar.results[1].points, "alice Senior Men Overall BAR results points")
     assert_equal(1, senior_men_3_overall_bar.results[1].scores.size, "alice Overall BAR results scores")
