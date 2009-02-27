@@ -187,7 +187,7 @@ class MtbBarTest < ActiveSupport::TestCase
     OverallBar.recalculate
 
     road_bar = bar.standings.detect { |standings| standings.name == "Road" }
-overall_bar.inspect_debug
+
     senior_men_road_bar = road_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(3, senior_men_road_bar.results.size, "Senior Men Road BAR results")
     senior_men_road_bar.results.sort!
