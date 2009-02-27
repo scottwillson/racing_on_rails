@@ -1,7 +1,7 @@
 <% @page_title = "Account: Login" %>
 <% @show_tabs = false %>
 
-<% if session[:user_id] %>
+<% if is_logged_in? %>
 
 <%= form_tag :action=> "logout" %>
 <% table :caption => "Logged In", :id => "login" do %>
