@@ -63,11 +63,6 @@ class Category < ActiveRecord::Base
     self[:name].gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp')
   end
   
-  # Default to 9999
-  def position
-    self[:position] || 9999
-  end
-  
   def ages
     self.ages_begin..ages_end
   end
