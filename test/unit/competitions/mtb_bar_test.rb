@@ -187,7 +187,7 @@ class MtbBarTest < ActiveSupport::TestCase
     OverallBar.recalculate
 
     road_bar = bar.standings.detect { |standings| standings.name == "Road" }
-
+overall_bar.inspect_debug
     senior_men_road_bar = road_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(3, senior_men_road_bar.results.size, "Senior Men Road BAR results")
     senior_men_road_bar.results.sort!
@@ -297,10 +297,20 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(300, senior_men_3_overall_bar.results[1].points, "alice Senior Men Overall BAR results points")
     assert_equal(1, senior_men_3_overall_bar.results[1].scores.size, "alice Overall BAR results scores")
 
-    assert_equal(racers(:matson), senior_men_4_5_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
+    assert([racers(:matson), racers(:weaver), racers(:tonkin)].include?(senior_men_4_5_overall_bar.results[0].racer), "Senior Men Overall BAR results racer")
     assert_equal("1", senior_men_4_5_overall_bar.results[0].place, "Senior Men Overall BAR results place")
     assert_equal(300, senior_men_4_5_overall_bar.results[0].points, "matson Senior Men Overall BAR results points")
     assert_equal(1, senior_men_4_5_overall_bar.results[0].scores.size, "matson Overall BAR results scores")
+
+    assert([racers(:matson), racers(:weaver), racers(:tonkin)].include?(senior_men_4_5_overall_bar.results[1].racer), "Senior Men Overall BAR results racer")
+    assert_equal("1", senior_men_4_5_overall_bar.results[1].place, "Senior Men Overall BAR results place")
+    assert_equal(300, senior_men_4_5_overall_bar.results[1].points, "matson Senior Men Overall BAR results points")
+    assert_equal(1, senior_men_4_5_overall_bar.results[1].scores.size, "matson Overall BAR results scores")
+
+    assert([racers(:matson), racers(:weaver), racers(:tonkin)].include?(senior_men_4_5_overall_bar.results[2].racer), "Senior Men Overall BAR results racer")
+    assert_equal("1", senior_men_4_5_overall_bar.results[2].place, "Senior Men Overall BAR results place")
+    assert_equal(300, senior_men_4_5_overall_bar.results[2].points, "matson Senior Men Overall BAR results points")
+    assert_equal(1, senior_men_4_5_overall_bar.results[2].scores.size, "matson Overall BAR results scores")
     
     assert_equal(woman_pro, senior_women_overall_bar.results[0].racer, "Senior Women Overall BAR results racer")
     assert_equal("1", senior_women_overall_bar.results[0].place, "Senior Women Overall BAR results place")
