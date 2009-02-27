@@ -23,14 +23,16 @@ namespace :db do
     get "db/production.sql.bz2", "db/production.sql.bz2"
   end
 
-  #Loads the production data downloaded into db/production_data.sql into your local development database
+  # Load the production data downloaded into db/production_data.sql into your local development database
+  # By default, delete downloaded SQL. To keep it, set SAVE=true. Example:
+  # cap production_data_refresh SAVE=true
   task :production_data_load, :roles => :db, :only => { :primary => true } do
     system "rm -f db/production.sql"
     system "bzip2 -d db/production.sql.bz2"
     load 'config/environment.rb'
     abcs = ActiveRecord::Base.configurations
     `mysql -u #{abcs[RAILS_ENV]["username"]} #{abcs[RAILS_ENV]["database"]} < db/production.sql`
-    exec("rm db/production.sql")
+    exec("rm db/production.sql") unless ENV["SAVE"]
   end
 
    #Cleans up data dump file
