@@ -80,36 +80,6 @@ class ResultsFileTest < ActiveSupport::TestCase
     end
   end
   
-  def test_combined_separate_bonus_and_penalty_points
-    rows = [ ["Masters Men 30-39", "", "", "", "", "", "", "", ""],
-             ["1.0", "", "Masters Men 30-39", "", "Rosier", "Todd", "Team Rose City", "12", "", "12"],
-             ["2.0", "", "Masters Men 30-39", "", "Davidson", "Casey", "MAC", "14", "-3", "11"],
-             ["3.0", "", "Masters Men 30-39", "", "brown", "kurt", "Unattached", "", "-7", "-7"],
-    ]
-    event = SingleDayEvent.create!
-    results_file = ResultsFile.new(
-                                    rows, 
-                                    event, 
-                                    :columns => ['place', 'membership', 'category', 'city', 'last_name', 
-                                                 'first_name', "team_name", "points_bonus", "points_penalty", "points"],     
-                                    :header_row => false
-    )
-    standings = results_file.import
-    results = standings.races.first.results
-    
-    assert_equal(12, results[0].points_bonus, "results[0].points_bonus")
-    assert_equal(0, results[0].points_penalty, "results[0].points_penalty")
-    assert_equal(12, results[0].points, "results[0].points")
-
-    assert_equal(14, results[1].points_bonus, "results[1].points_bonus")
-    assert_equal(-3, results[1].points_penalty, "results[1].points_penalty")
-    assert_equal(11, results[1].points, "results[1].points")
-
-    assert_equal(0, results[2].points_bonus, "results[2].points_bonus")
-    assert_equal(-7, results[2].points_penalty, "results[2].points_penalty")
-    assert_equal(-7, results[2].points, "results[2].points")
-  end
-  
   def test_import_time_trial_racers_with_same_name
     bruce_109 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
@@ -353,10 +323,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     event = SingleDayEvent.create(:discipline => 'Mountain Bike')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/mtb.xls"), event)
     standings = results_file.import
-    assert_not_nil(standings.combined_standings, 'Should have combined standings')
-    assert(standings.combined_standings(true).races(true).first.results(true).size > 0, "Combined standings should have results")
-    assert(standings.combined_standings.races(true).last.results(true).size > 0, "Combined standings should have results")
-    assert_equal(2, event.standings(true).size, "Should have two standings after import. #{event.standings}")
+    assert_nil(standings.combined_standings, 'Should not have combined standings')
+    assert_equal(1, event.standings(true).size, "Standings after import. #{event.standings}")
   end
   
   def test_ccx

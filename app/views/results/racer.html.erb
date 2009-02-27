@@ -19,7 +19,7 @@
 
 <% for result in @competition_results.sort {|x, y| y.race.standings.event.end_date <=> x.race.standings.event.end_date } %>
 <br/><br/>
-<% table :caption => "#{result.place.to_i.ordinalize} &mdash; #{result.race.standings.full_name}" do %>
+<% table :caption => "#{result.place.to_i.ordinalize} &mdash; #{result.race.full_name}" do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>
@@ -47,3 +47,9 @@
   </tr>
 <% end -%>
 <% end %>
+
+<% if @racer.member? %>
+<p class="updatedon centered">
+  Member since <%= @racer.member_from.to_s(:long) %>
+</p>
+<% end -%>

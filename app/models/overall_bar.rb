@@ -21,11 +21,38 @@ class OverallBar < Competition
                 :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
                   and place between 1 and 300
-                  and categories.id in (#{category_ids_for(race)})
+                  and ((standings.discipline != "Mountain Bike" and standings.discipline != "Downhill" and categories.id in (#{category_ids_for(race)}))
+                    or ((standings.discipline = "Mountain Bike" or standings.discipline = "Downhill") and categories.id in (#{mtb_category_ids_for(race)})))
                   and events.date >= '#{date.year}-01-01' 
                   and events.date <= '#{date.year}-12-31'}],
                 :order => 'racer_id'
     )
+  end
+  
+  # Array of ids (integers)
+  # +race+ category, +race+ category's siblings, and any competition categories
+  # Overall BAR does some awesome mappings for MTB and DH
+  def mtb_category_ids_for(race)
+    return "NULL" unless race.category
+    
+    case race.category.name
+    when "Senior Men"
+      categories = [Category.find_or_create_by_name("Pro Men")]
+    when "Senior Women"
+      categories = [Category.find_or_create_by_name("Pro Women"), Category.find_or_create_by_name("Category 1 Women")]
+    when "Category 3 Men"
+      categories = [Category.find_or_create_by_name("Category 1 Men")]
+    when "Category 3 Women"
+      categories = [Category.find_or_create_by_name("Category 2 Women")]
+    when "Category 4/5 Men"
+      categories = [Category.find_or_create_by_name("Category 2 Men"), Category.find_or_create_by_name("Category 3 Men")]
+    when "Category 4 Women"
+      categories = [Category.find_or_create_by_name("Category 3 Women")]
+    else
+      categories = [race.category]      
+    end
+    
+    categories.map(&:id).join(", ")
   end
 
   # if racer has > 4 discipline results, those results are worth 50 points

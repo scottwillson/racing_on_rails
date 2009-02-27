@@ -1,4 +1,5 @@
-# Standings derived from other standings: all categories in a time trial; Pro, Expert Women mountain biking
+# Standings derived from other standings: all categories in a time trial.
+# Used to also combine Pro, Expert Women for mountain biking, but not now as we've switch to numerical MTB cats
 class CombinedStandings < Standings
   after_create { |standings| standings.recalculate }
   belongs_to :source, 

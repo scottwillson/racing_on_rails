@@ -95,7 +95,9 @@ class Standings < ActiveRecord::Base
 
   def full_name
     if name == event.name
-      event.full_name
+      name
+    elsif event.name[name]
+      event.name
     elsif name[event.name]
       name
     else
@@ -103,7 +105,7 @@ class Standings < ActiveRecord::Base
     end
   end
 
-  # Adds +combined_standings+ if Mountain Bike or Time Trial Event. 
+  # Adds +combined_standings+ if Time Trial Event. 
   # Destroy +combined_standings+ if they exist, but should not
   def create_or_destroy_combined_standings
     if !calculate_combined_standings? || (combined_standings(true) && combined_standings.discipline != discipline)
@@ -111,9 +113,7 @@ class Standings < ActiveRecord::Base
     end
     
     if calculate_combined_standings? && combined_standings(true).nil?
-      if discipline == 'Downhill' || discipline == 'Mountain Bike'
-        combined_standings = CombinedMountainBikeStandings.create!(:source => self)
-      elsif discipline == 'Time Trial'
+      if discipline == 'Time Trial'
         combined_standings = CombinedTimeTrialStandings.create!(:source => self)
       end      
     end
@@ -126,7 +126,7 @@ class Standings < ActiveRecord::Base
   end
   
   def requires_combined_standings?
-    ["Downhill", "Mountain Bike", "Time Trial"].include?(self.discipline) && !self.event.is_a?(Competition)
+    ["Time Trial"].include?(self.discipline) && !self.event.is_a?(Competition)
   end
 
   def destroy_combined_standings

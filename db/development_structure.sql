@@ -32,7 +32,7 @@ create table `bids` (
 create table `categories` (
   `id` int(11) not null auto_increment,
   `position` int(11) not null default '0',
-  `name` varchar(64) not null default '',
+  `name` varchar(64) not null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -198,7 +198,7 @@ create table `new_categories` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `news_items` (
   `id` int(11) not null auto_increment,
@@ -400,12 +400,12 @@ create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `roles_users` (
   `role_id` int(11) not null,
   `user_id` int(11) not null
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
   `version` varchar(255) not null,
@@ -547,6 +547,8 @@ insert into schema_migrations (version) values ('20090217212657');
 insert into schema_migrations (version) values ('20090217212924');
 
 insert into schema_migrations (version) values ('20090224224826');
+
+insert into schema_migrations (version) values ('20090225004224');
 
 insert into schema_migrations (version) values ('21');
 

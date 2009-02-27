@@ -3,6 +3,10 @@
 require "test_helper"
 
 class OverallBarTest < ActiveSupport::TestCase
+  def teardown
+    Discipline.reset
+  end
+
   def test_recalculate
     # Lot of set-up for BAR. Keep it out of fixtures and do one-time here.
     
@@ -126,7 +130,6 @@ class OverallBarTest < ActiveSupport::TestCase
       :team => teams(:kona)
     })
       
-    results_baseline_count = Result.count
     assert_equal(0, Bar.count, "Bar standings before recalculate")
     original_results_count = Result.count
     Bar.recalculate(2004)
@@ -368,6 +371,11 @@ class OverallBarTest < ActiveSupport::TestCase
     category_4_men = categories(:category_4_men)
     category_5_men = categories(:category_5_men)
 
+    mtb = Discipline[:mtb]
+    men_3 = Category.find_or_create_by_name("Category 3 Men")
+    category_3_men = Category.find_or_create_by_name("Category 3 Men")
+    mtb.bar_categories << men_3
+
     standings = SingleDayEvent.create!(:discipline => 'Road').standings.create!
     cat_4_race = standings.races.create!(:category => category_4_men)
     weaver = racers(:weaver)
@@ -392,8 +400,8 @@ class OverallBarTest < ActiveSupport::TestCase
     standings.races.create!(:category => category_4_men).results.create!(:place => 15, :racer => weaver)
     
     standings = SingleDayEvent.create!(:discipline => "Mountain Bike").standings.create!
-    standings.races.create!(:category => Category.find_or_create_by_name("Beginner Men")).results.create!(:place => 14, :racer => matson)
-    standings.races.create!(:category => Category.find_or_create_by_name("Beginner Men")).results.create!(:place => 15, :racer => weaver)
+    standings.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 14, :racer => matson)
+    standings.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 15, :racer => weaver)
     
     standings = SingleDayEvent.create!(:discipline => "Track").standings.create!
     standings.races.create!(:category => category_4_men).results.create!(:place => 6, :racer => tonkin)

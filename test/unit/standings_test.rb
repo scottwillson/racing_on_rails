@@ -143,32 +143,16 @@ class StandingsTest < ActiveSupport::TestCase
     standings = event.standings.create
     assert_equal(1, event.standings.size, 'New road event standings should not create combined standings')
     
-    RAILS_DEFAULT_LOGGER.debug('\n *** change discipline to Mountain Bike\n')
     standings.discipline = 'Mountain Bike'
     standings.save!
-    assert_equal(2, event.standings(true).size, 'Change to MTB discipline should create combined standings')
-    assert_equal('Mountain Bike', event.standings.first.discipline, 'standings discipline')
-    assert_equal('Mountain Bike', event.standings.last.discipline, 'standings discipline')
-    
-    standings = event.standings.first
-    standings.reload
-    standings.combined_standings.reload
-    RAILS_DEFAULT_LOGGER.debug('\n *** change discipline to Track\n')
-    standings.discipline = 'Track'
-    standings.save!
-    assert_equal(1, event.standings(true).size, 'Change to Track discipline should remove combined standings')
+    assert_equal(1, event.standings(true).size, 'Change to MTB discipline should not create combined standings (like it used to do)')
   end
 
   def test_save_mtb
     event = SingleDayEvent.create!(:name => 'Reheers', :discipline => 'Mountain Bike')
     standings = event.standings.create
     event.reload
-    assert_equal(2, event.standings.size, 'New MTB standings should create combined standings')
-    
-    standings.reload
-    standings.destroy
-    event.reload
-    assert_equal(0, event.standings.size, 'MTB standings and combined standings should be deleted')
+    assert_equal(1, event.standings.size, 'New MTB standings should not create combined standings anymore')
   end
 
   def test_races_with_results
@@ -238,8 +222,8 @@ class StandingsTest < ActiveSupport::TestCase
     mtb_event = SingleDayEvent.create!(:discipline => "Mountain Bike")
     standings = mtb_event.standings.create!
     assert(standings.auto_combined_standings?, "auto_combined_standings? default")
-    assert(standings.requires_combined_standings?, "requires_combined_standings? default")
-    assert(standings.calculate_combined_standings?, "calculate_combined_standings? default")
+    assert(!standings.requires_combined_standings?, "requires_combined_standings? default")
+    assert(!standings.calculate_combined_standings?, "calculate_combined_standings? default")
     
     tt_event = SingleDayEvent.create!(:discipline => "Time Trial")
     standings = tt_event.standings.create!
