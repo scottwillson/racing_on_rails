@@ -230,21 +230,21 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal("Sacha's Team", team.name(2001), "name for 2001")
   end
 
- def test_multiple_historical_names
-   team = teams(:vanilla)
-   HistoricalName.create!(:team_id => team.id, :name => "Mapei", :year => 2001)
-   HistoricalName.create!(:team_id => team.id, :name => "Mapei-Clas", :year => 2002)
-   HistoricalName.create!(:team_id => team.id, :name => "Quick Step", :year => 2003)
-   assert_equal(3, team.historical_names.size, "Historical names")
-   assert_equal("Mapei", team.name(2000), "Historical name 2000")
-   assert_equal("Mapei", team.name(2001), "Historical name 2001")
-   assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
-   assert_equal("Quick Step", team.name(2003), "Historical name 2003")
-   assert_equal("Quick Step", team.name(2003), "Historical name 2004")
-   assert_equal("Quick Step", team.name(Date.today.year - 1), "Historical name last year")
-   assert_equal("Vanilla", team.name(Date.today.year), "Name this year")
-   assert_equal("Vanilla", team.name(Date.today.year + 1), "Name next year")
- end
+  def test_multiple_historical_names
+    team = teams(:vanilla)
+    HistoricalName.create!(:team_id => team.id, :name => "Mapei", :year => 2001)
+    HistoricalName.create!(:team_id => team.id, :name => "Mapei-Clas", :year => 2002)
+    HistoricalName.create!(:team_id => team.id, :name => "Quick Step", :year => 2003)
+    assert_equal(3, team.historical_names.size, "Historical names")
+    assert_equal("Mapei", team.name(2000), "Historical name 2000")
+    assert_equal("Mapei", team.name(2001), "Historical name 2001")
+    assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
+    assert_equal("Quick Step", team.name(2003), "Historical name 2003")
+    assert_equal("Quick Step", team.name(2003), "Historical name 2004")
+    assert_equal("Quick Step", team.name(Date.today.year - 1), "Historical name last year")
+    assert_equal("Vanilla", team.name(Date.today.year), "Name this year")
+    assert_equal("Vanilla", team.name(Date.today.year + 1), "Name next year")
+  end
  
   def test_rename_to_old_name
     team = teams(:vanilla)
@@ -255,5 +255,20 @@ class TeamTest < ActiveSupport::TestCase
     team.save!
     
     assert_equal("Sacha's Team", team.name, "New name")
+  end
+  
+  def test_renamed_teams_should_keep_aliases
+    team = Team.create!(:name => "Twin Peaks/The Bike Nook")
+    event = SingleDayEvent.create!(:date => 3.years.ago)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.aliases.create!(:name => "Twin Peaks")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "Aliases")
+    
+    team.name = "Tecate"
+    team.save!
+    assert_equal(1, team.historical_names(true).size, "historical_names")
+    assert_equal(2, team.aliases(true).size, "aliases")
+    assert_equal(["Twin Peaks", "Twin Peaks/The Bike Nook"], team.aliases.map(&:name).sort, "Should retain keep alias from old name")
   end
 end
