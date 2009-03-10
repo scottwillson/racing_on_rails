@@ -3,3 +3,4 @@ page.replace_html "team_#{@existing_team.id}_aliases", render(:partial => 'alias
 page.call(:flash, 'notice', "Merged #{@merged_team_name} into #{@existing_team.name}")
 page.call :restripeTable, :teams_table
 page.call :resetTableColumnWidths, :teams_table
+page << %Q{ Droppables.add("team_#{@existing_team.id}_row", {hoverclass:'hovering', onDrop:function(element){$('team_#{@existing_team.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/teams/merge?target_id=#{@existing_team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('team_#{@existing_team.id}_row') }}) }
