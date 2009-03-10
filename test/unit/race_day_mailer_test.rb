@@ -9,7 +9,7 @@ class RaceDayMailerTest < ActionMailer::TestCase
     @expected.body    = read_fixture("members_export")
     @expected.date    = Time.now
 
-    assert_equal @expected.encoded, RaceDayMailer.create_members_export(Racer.find_all_for_export).encoded
+    assert_equal @expected.encoded, RaceDayMailer.create_members_export(Racer.find_all_for_export, Time.now).encoded
   end
   
   def read_fixture(action)
