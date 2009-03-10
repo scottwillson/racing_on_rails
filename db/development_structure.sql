@@ -18,10 +18,10 @@ create table `aliases` (
 
 create table `bids` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default '',
-  `email` varchar(255) not null default '',
-  `phone` varchar(255) not null default '',
-  `amount` int(11) not null default '0',
+  `name` varchar(255) not null,
+  `email` varchar(255) not null,
+  `phone` varchar(255) not null,
+  `amount` int(11) not null,
   `approved` tinyint(1) default null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
@@ -39,12 +39,47 @@ create table `categories` (
   `parent_id` int(11) default null,
   `ages_begin` int(11) default '0',
   `ages_end` int(11) default '999',
-  `friendly_param` varchar(255) not null default '',
+  `friendly_param` varchar(255) not null,
   primary key (`id`),
   unique key `categories_name_index` (`name`),
   key `parent_id` (`parent_id`),
   key `index_categories_on_friendly_param` (`friendly_param`),
   constraint `categories_ibfk_3` foreign key (`parent_id`) references `categories` (`id`) on delete set null
+) engine=innodb default charset=latin1;
+
+create table `comatose_page_versions` (
+  `id` int(11) not null auto_increment,
+  `comatose_page_id` int(11) default null,
+  `version` int(11) default null,
+  `parent_id` int(11) default null,
+  `full_path` text,
+  `title` varchar(255) default null,
+  `slug` varchar(255) default null,
+  `keywords` varchar(255) default null,
+  `body` text,
+  `filter_type` varchar(25) default null,
+  `author` varchar(255) default null,
+  `position` int(11) default '0',
+  `updated_on` datetime default null,
+  `created_on` datetime default null,
+  primary key (`id`)
+) engine=innodb default charset=latin1;
+
+create table `comatose_pages` (
+  `id` int(11) not null auto_increment,
+  `parent_id` int(11) default null,
+  `full_path` text,
+  `title` varchar(255) default null,
+  `slug` varchar(255) default null,
+  `keywords` varchar(255) default null,
+  `body` text,
+  `filter_type` varchar(25) default null,
+  `author` varchar(255) default null,
+  `position` int(11) default '0',
+  `version` int(11) default null,
+  `updated_on` datetime default null,
+  `created_on` datetime default null,
+  primary key (`id`)
 ) engine=innodb default charset=latin1;
 
 create table `discipline_aliases` (
@@ -98,6 +133,11 @@ create table `duplicates_racers` (
   constraint `duplicates_racers_ibfk_2` foreign key (`duplicate_id`) references `duplicates` (`id`) on delete cascade
 ) engine=innodb default charset=latin1;
 
+create table `engine_schema_info` (
+  `engine_name` varchar(255) default null,
+  `version` int(11) default null
+) engine=myisam default charset=latin1;
+
 create table `events` (
   `id` int(11) not null auto_increment,
   `promoter_id` int(11) default null,
@@ -138,13 +178,15 @@ create table `events` (
   key `idx_type` (`type`),
   key `oregon_cup_id` (`oregon_cup_id`),
   key `events_number_issuer_id_index` (`number_issuer_id`),
+  key `cat4_womens_race_series_id` (`cat4_womens_race_series_id`),
   key `velodrome_id` (`velodrome_id`),
   constraint `events_ibfk_1` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
   constraint `events_ibfk_2` foreign key (`promoter_id`) references `promoters` (`id`) on delete set null,
   constraint `events_ibfk_3` foreign key (`oregon_cup_id`) references `events` (`id`) on delete set null,
   constraint `events_ibfk_4` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `events_ibfk_5` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
-  constraint `events_ibfk_6` foreign key (`velodrome_id`) references `velodromes` (`id`)
+  constraint `events_ibfk_6` foreign key (`cat4_womens_race_series_id`) references `events` (`id`) on delete set null,
+  constraint `events_ibfk_7` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=latin1;
 
 create table `historical_names` (
@@ -167,8 +209,8 @@ create table `images` (
   `caption` varchar(255) default null,
   `html_options` varchar(255) default null,
   `link` varchar(255) default null,
-  `name` varchar(255) not null default '',
-  `source` varchar(255) not null default '',
+  `name` varchar(255) not null,
+  `source` varchar(255) not null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -203,8 +245,8 @@ create table `new_categories` (
 
 create table `news_items` (
   `id` int(11) not null auto_increment,
-  `date` date not null default '0000-00-00',
-  `text` varchar(255) not null default '',
+  `date` date not null,
+  `text` varchar(255) not null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -336,7 +378,7 @@ create table `races` (
   `time` float default null,
   `finishers` int(11) default null,
   `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default 'obra',
+  `sanctioned_by` varchar(255) default 'wsba',
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -550,6 +592,8 @@ insert into schema_migrations (version) values ('20090217212924');
 insert into schema_migrations (version) values ('20090224224826');
 
 insert into schema_migrations (version) values ('20090225004224');
+
+insert into schema_migrations (version) values ('20090305222446');
 
 insert into schema_migrations (version) values ('20090310155105');
 

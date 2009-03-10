@@ -93,10 +93,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
+  map.connect '/', :controller => "home"
   map.track "/track", :controller => "track"
   map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
-
-  map.connect '', :controller => "home"
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
@@ -104,6 +103,6 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
 
-  # Static content needs it's own directory in views for nested layouts.
-  map.connect '*path', :controller => 'static'
+  map.comatose_admin 
+  map.comatose_root "", :layout => "application"
 end

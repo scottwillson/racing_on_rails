@@ -3,6 +3,7 @@ load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
 set :repository, 'http://butlerpress.com/var/repos/racing_on_rails/trunk'
+set :local_repository, "http://butlerpress.com/var/repos/#{application}/trunk"
 
 set :deploy_to, "/usr/local/www/rails/#{application}"
 
@@ -26,7 +27,7 @@ end
 namespace :deploy do
   desc "Custom deployment"
   task :after_update do
-    run "svn co svn+ssh://butlerpress.com/var/repos/#{application}/trunk #{release_path}/local"
+    run "svn co #{local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
   end
 end

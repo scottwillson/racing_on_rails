@@ -95,3 +95,18 @@ end
 
 RAILS_HOST = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
+
+
+Comatose.configure do |config|
+  config.admin_title = ASSOCIATION.short_name
+  config.admin_sub_title = "Static pages"
+  
+  config.default_processor = :erb
+  config.default_filter = "[No Filter]"
+  
+  config.admin_includes << :login_system
+  config.admin_authorization = :check_administrator_role
+  config.admin_get_author do
+    logged_in_user.name
+  end
+end
