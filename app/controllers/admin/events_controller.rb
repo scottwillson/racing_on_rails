@@ -81,7 +81,6 @@ class Admin::EventsController < ApplicationController
       redirect_to(:action => :new)
     else
       flash[:warn] = @event.errors.full_messages
-      "new"
     end
   end
   

@@ -1,9 +1,9 @@
 --- 
-result: passed
-numTestPasses: "16"
-numTestFailures: "0"
+result: failed
+numTestPasses: "15"
+numTestFailures: "1"
 numCommandFailures: "0"
-numCommandPasses: "384"
-numCommandErrors: "0"
+numCommandPasses: "363"
+numCommandErrors: "1"
 resultDir: 
-totalTime: "53"
+totalTime: "51"

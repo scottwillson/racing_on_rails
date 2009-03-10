@@ -129,6 +129,7 @@ create table `events` (
   `time` varchar(255) default null,
   `instructional` tinyint(1) default '0',
   `practice` tinyint(1) default '0',
+  `atra_points_series` tinyint(1) not null default '0',
   primary key (`id`),
   key `idx_date` (`date`),
   key `idx_disciplined` (`discipline`),
@@ -198,7 +199,7 @@ create table `new_categories` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8;
+) engine=innodb default charset=latin1;
 
 create table `news_items` (
   `id` int(11) not null auto_increment,
@@ -400,12 +401,12 @@ create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
   primary key (`id`)
-) engine=innodb default charset=utf8;
+) engine=innodb default charset=latin1;
 
 create table `roles_users` (
   `role_id` int(11) not null,
   `user_id` int(11) not null
-) engine=innodb default charset=utf8;
+) engine=innodb default charset=latin1;
 
 create table `schema_migrations` (
   `version` varchar(255) not null,
@@ -549,6 +550,8 @@ insert into schema_migrations (version) values ('20090217212924');
 insert into schema_migrations (version) values ('20090224224826');
 
 insert into schema_migrations (version) values ('20090225004224');
+
+insert into schema_migrations (version) values ('20090310155105');
 
 insert into schema_migrations (version) values ('21');
 
