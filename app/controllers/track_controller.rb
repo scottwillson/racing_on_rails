@@ -1,6 +1,6 @@
 class TrackController < ApplicationController
   def index
-    @upcoming_events = UpcomingEvents.find_all(:date => Date.new(2008, 6), :weeks => 6, :discipline => "Track")
+    @upcoming_events = UpcomingEvents.find_all(:weeks => 52, :discipline => "Track")
   end
   
   def schedule
