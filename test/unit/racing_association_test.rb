@@ -10,11 +10,11 @@ class RacingAssociationTest < ActiveSupport::TestCase
   def test_competitions
     default_competitions = ASSOCIATION.competitions
     ASSOCIATION.competitions.clear
-    ASSOCIATION.competitions << Ironman
-    ASSOCIATION.competitions << Ironman
+    ASSOCIATION.competitions << :ironman
+    ASSOCIATION.competitions << :ironman
     begin
-      assert(ASSOCIATION.competitions.include?(Ironman), "Racing association competitions should include Ironman")
-      assert(!ASSOCIATION.competitions.include?(Bar), "Racing association competitions should not include Bar")
+      assert(ASSOCIATION.competitions.include?(:ironman), "Racing association competitions should include Ironman")
+      assert(!ASSOCIATION.competitions.include?(:bar), "Racing association competitions should not include Bar")
       assert_equal(1, ASSOCIATION.competitions.size, "Should only include one instance of Ironman competition")
     ensure
       ASSOCIATION.competitions = default_competitions

@@ -16,7 +16,7 @@ class RacingAssociation
     @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
-    @competitions = Set.new([AgeGradedBar, Bar, Ironman, OverallBar, TeamBar])
+    @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
   end
   
   def bmx_numbers?
