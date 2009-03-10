@@ -21,6 +21,11 @@
         <%= f.label :bar_points, "BAR Points" %>
         <%= f.select(:bar_points, bar_points_and_labels) %>
         <%- end %>
+        
+        <% if ASSOCIATION.competitions.include?(RiderRankings) -%>
+        <%= f.label :bar_points, "Rider Rankings Points" %>
+        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%- end %>
 
         <%- if @standings.requires_combined_standings? -%>
           <%= f.labelled_check_box :auto_combined_standings, "Auto-calc combined standings" %>

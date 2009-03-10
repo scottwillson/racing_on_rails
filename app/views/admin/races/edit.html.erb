@@ -13,9 +13,19 @@
     <% form_for [:admin, @race] do |f| -%>
       <div class="span-3">
         <%= f.labelled_text_field :category_name %>
+
+        <% if ASSOCIATION.competitions.include?(Bar) -%>
         <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "BAR Category" %><br/>
         <%= f.label :bar_points, "BAR Points" %>
         <%= f.select :bar_points, bar_points_and_labels %>
+        <%- end %>
+
+        <% if ASSOCIATION.competitions.include?(RiderRankings) -%>
+        <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "Rider Rankings Category" %><br/>
+        <%= f.label :bar_points, "Rider Rankings Points" %>
+        <%= f.select :bar_points, bar_points_and_labels %>
+        <%- end %>
+
         <%= f.labelled_text_field :notes %>
         <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})" %>    
         <%= f.labelled_text_field :distance %>
