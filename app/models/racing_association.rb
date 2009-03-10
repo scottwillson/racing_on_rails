@@ -5,6 +5,7 @@ class RacingAssociation
   attr_accessor :name, :short_name, :state, :email
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
+  attr_accessor :competitions
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
   attr_accessor :show_events_velodrome
   attr_accessor :always_insert_table_headers
@@ -15,6 +16,7 @@ class RacingAssociation
     @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
+    @competitions = Set.new([AgeGradedBar, Bar, Ironman, OverallBar, TeamBar])
   end
   
   def bmx_numbers?
