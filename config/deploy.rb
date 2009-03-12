@@ -3,7 +3,7 @@ load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
 set :repository, 'http://butlerpress.com/var/repos/racing_on_rails/trunk'
-set :local_repository, "http://butlerpress.com/var/repos/#{application}/trunk"
+set :local_repository, "svn+ssh://butlerpress.com/var/repos/#{application}/trunk"
 
 set :deploy_to, "/usr/local/www/rails/#{application}"
 
