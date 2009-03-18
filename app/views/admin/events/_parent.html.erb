@@ -1,5 +1,5 @@
 <%- if event.is_a?(SingleDayEvent) && event.parent -%>
-  <%= f.labelled_text :parent, %Q{ #{link_to(truncate(event.parent.name, 20), edit_admin_event_path(event.parent), :class => "obvious" )}
+  <%= f.labelled_text :parent, %Q{ #{link_to(truncate(event.parent.name, :length => 20), edit_admin_event_path(event.parent), :class => "obvious" )}
           (#{event.parent.friendly_class_name}) } %> 
 <%- end -%>
 

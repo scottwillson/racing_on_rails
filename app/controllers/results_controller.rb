@@ -1,5 +1,4 @@
 class ResultsController < ApplicationController
-  session :off
   caches_page :index, :event, :competition, :racer, :team, :show
   
   def index

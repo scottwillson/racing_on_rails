@@ -9,7 +9,7 @@ Final Standings
 <%- for result in race.results.sort[0..9] %>
 <%= result.place.rjust(3) -%>
  <%= truncate(result.name).ljust(25) -%>
-   <%= truncate(result.racer_team_name, 25).ljust(25) -%>
+   <%= truncate(result.racer_team_name, :length => 25).ljust(25) -%>
    <%= format("%0.0f",result.points).rjust(6) -%>
 <%- end -%>
 <% end %>

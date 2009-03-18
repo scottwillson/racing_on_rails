@@ -258,7 +258,7 @@ class Grid
         end
       end
       if padding < 0
-        cell = truncate(cell, column_size(index))
+        cell = truncate(cell, :length => column_size(index))
       end
       text = text + cell
       unless index + 1 == row.size
@@ -291,7 +291,7 @@ class Grid
       for index in 0..(column_count - 1)
         cell = row[index] || ''
         if cell.size > column_size(index)
-          row[index] = truncate(cell, column_size(index))
+          row[index] = truncate(cell, :length => column_size(index))
         end
       end
     end

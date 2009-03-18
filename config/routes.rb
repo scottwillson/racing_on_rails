@@ -8,7 +8,8 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :events, :has_one => :promoter,
         :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
     admin.resources :first_aid_providers
-    admin.resources :promoters, :has_many => :events
+    admin.resources :multi_day_events, :as => :events, :has_one => :promoter
+    admin.resources :promoters, :has_many => :events, :has_many => :single_day_events
     admin.resources :racers, :collection => { :cards => :get, 
                                               :duplicates => :get, 
                                               :mailing_labels => :get, 
@@ -16,13 +17,15 @@ ActionController::Routing::Routes.draw do |map|
                                               :no_cards => :get, 
                                               :preview_import => :get },
                              :member => { :card => :get, :toggle_member => :post }
-    admin.resources :single_day_events, :as => "events"
-    admin.resources :standings, :has_many => :races
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
+    admin.resources :series, :as => :events, :has_one => :promoter
+    admin.resources :single_day_events, :as => :events, :has_one => :promoter
+    admin.resources :standings, :has_many => :races
     admin.resources(:tables) if RAILS_ENV == "test"
     admin.resources :teams, :member => { :toggle_member => :post }
     admin.resources :velodromes
+    admin.resources :weekly_series, :as => :events, :has_one => :promoter
   end
 
   map.resources :categories, :has_many => :races

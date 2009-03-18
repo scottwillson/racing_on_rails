@@ -1,118 +1,145 @@
 <% @page_title = "Oregon Cup: #{@oregon_cup.date.year}" %>
 
-<p>The Oregon Cup is a year-long points series for individuals and teams.</p>
 
-<p>The Health Net Criterium does not have a women's race, and will only count towards the men's Oregon Cup.</p>
+<%= image_tag 'http://www.obra.org/images/logos/or_cup_05.gif' %>
 
-<p>Only the High Desert Road Race counts for the Oregon Cup, not the omnium.</p>
+
+<br><br>
+<%= tabs do |tabs|
+  for year in Event.find_all_years
+  if year == @year
+    tabs.add(year.to_s, :year => nil)
+  else
+    tabs.add(year.to_s, :year => year)
+  end
+  end
+end -%>
+
+<div>
+  <p>The Oregon Cup is a year-long points series for individuals and teams.</p>
+  <p>Only the High Desert Road Race counts for the Oregon Cup, not the omnium.</p>
+</div>
+
 
 <%  unless @oregon_cup.new_record? %>
 <div class="updatedon">Updated <%= @oregon_cup.updated_at.to_formatted_s(:long) %></div>
 <% end %>  
 
-<div class="column_grid_container">
-  <div class="span-4">
-    <%  unless @oregon_cup.new_record? %>
+<table style="margin-top: 24px;">
+  <tr>
+    <td valign="top" width="50%">
+      <% unless @oregon_cup.new_record? %>
       <% for race in @oregon_cup.standings.first.races %>
-        <% unless race.results.empty? %>
-          <% table :caption => race.name do %>
-            <tr>
-              <td><pre><%- for result in race.results.sort %>
-    <%= result.place.rjust(3) -%>
-     <%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (25 - truncate(result.name).length) -%>
-    <%= truncate(result.racer_team_name, 30).ljust(30) -%>
-    <%= format("%0.0f",result.points).rjust(6) -%>
-    <%- end -%></pre></td>
-            </tr>
-          <% end -%>
-        <% end %>
+      <% unless race.results.empty? %>
+      <table class="base">
+        <tr>
+          <th><%= race.name %></th>
+        </tr>
+        <tr>
+          <td><pre><%- for result in race.results.sort %>
+<%= result.place.rjust(3) -%>
+ <%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
+<%= truncate(result.team_name, :length => 40).ljust(40) -%>
+<%= format("%0.0f",result.points).rjust(6) -%>
+<%- end -%></pre></td>
+        </tr>
+      </table>
+
       <% end %>
-    <% end %> 
-  </div>
-  <div class="span-2 last">
-    <%= render 'oregon_cup/races_list' %>
-    <% table do %>
-    <tr>
-      <th>Rules</th>
-    </tr>
-    <tr>
-      <td>
-        <ul>
-          <li>Divisions: Senior 1/2 Men and Senior 1/2/3 Women. </li>
-          <li>Events selected by OBRA Oregon Cup Committee based on Race Selection Criteria (below). </li>
-          <li>There is not a minimum number of races to qualify. </li>
-          <li>Cash Prize List &ndash; 5 deep for men and women. </li>
-            <ol>
-              <li>$300</li>
-              <li>$200</li>
-              <li>$150</li>
-              <li>$100</li>
-              <li>$50</li>
-            </ol>
-          <li>Gift Certificates &ndash; 10 deep for men and women to be determined.</li>
-          <li>Prizes awarded at the annual <a href="/flyers/2006/annual_mtg_banquet.html">OBRA Banquet</a></li>
-          <li>Leaders and champions jerseys will be awarded. </li>
-          <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
-          <li>Free entry to OR Cup events for OR Cup leaders. </li>
-            <li>Lower category riders competing in Senior Men or Women races will receive 
-            points unless their category is picked separately. Lower-category riders <b>do</b> 
-            still count in individual race placings -- if a lower category rider finishes 
-            ahead of a higher category rider, the higher category rider does not move up 
-            in their placing.</li>
-            <li>Only yearly OBRA members are eligible for the Oregon Cup. Racers who only 
-            purchase one-day licenses will not be counted.</li>
-            <li>Ties
-              <ul>
-              <li>Highest placing in Oregon Cup race</li>
-              <li>Number of placings</li>
-              <li>Most recent placing</li>
+      <% end %>
+      <% end %>  
+    </td>
+    <td width="24">&nbsp;</td>
+    <td valign="top" width="50%">
+      <%= render "races" %>
+      <table class="base">
+        <tr>
+          <th>Rules</th>
+        </tr>
+        <tr>
+          <td>
+            <ul>
+              <li>Divisions: Senior 1/2 Men and Senior 1/2/3 Women. </li>
+              <li>Events selected by OBRA Oregon Cup Committee based on Race Selection Criteria (below). </li>
+              <li>There is not a minimum number of races to qualify. </li>
+              <li>Cash Prize List &ndash; 5 deep for men and women. </li>
+                <ol>
+                  <li>$300</li>
+                  <li>$200</li>
+                  <li>$150</li>
+                  <li>$100</li>
+                  <li>$50</li>
+                </ol>
+              <li>Prizes awarded at the annual <a href="/flyers/2008/annual_mtg_banquet.html">OBRA Banquet</a></li>
+              <li>Leaders and champions jerseys will be awarded. </li>
+              <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
+              <li>Free entry to OR Cup events for OR Cup leaders. </li>
+                <li>Lower category riders competing in Senior Men or Women races will receive 
+                points unless their category is picked separately. Lower-category riders <b>do</b> 
+                still count in individual race placings -- if a lower category rider finishes 
+                ahead of a higher category rider, the higher category rider does not move up 
+                in their placing.</li>
+                <li>Only yearly OBRA members are eligible for the Oregon Cup. Racers who only 
+                purchase one-day licenses will not be counted.</li>
+                <li>Ties
+                  <ul>
+                    <li>The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;</li>
+                    <li>The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.</li>
+                </ul>
+                </li>
             </ul>
-            </li>
-        </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>Points</th>
+        </tr>
+        <tr>
+          <td>
+            <ol type="1">
+              <li>100</li>
+              <li>75</li>
+              <li>60</li>
+              <li>50</li>
+              <li>45</li>
+              <li>40</li>
+              <li>35</li>
+              <li>30</li>
+              <li>25</li>
+              <li>20</li>
+              <li>19</li>
+              <li>18</li>
+              <li>17</li>
+              <li>16</li>
+              <li>15</li>
+              <li>14</li>
+              <li>13</li>
+              <li>12</li>
+              <li>11</li>
+              <li>10</li>
+            </ol>
+          </td>
+        </tr>
+        <tr>
+          <th>Race Selection Criteria</th>
+        </tr>
+        <tr>
+          <td>
+            <ol type="1">
+              <li>No more than eight events. </li>
+              <li>Primarily road races. Criteriums will be used as needed to fill schedule. </li>
+              <li>Road Race Difficulty Balance - Balance degree of difficulty based on hills vs. flat, distance, etc. </li>
+              <li>High Profile Event - Well advertised in advance both with membership and media. High likelihood of commercial sponsorship. </li>
+              <li>Geographically Balanced - Southern, central and northwest Oregon based on membership representation. </li>
+              <li>Historically Significant - History of success over many seasons. </li>
+              <li>Demonstrated Participation - Popular event and/or venue. </li>
+              <li>Seasonally Balanced - Monthly, if possible, March through September. </li>
+              <li>Quality Venue/Promotion - Highest standards for promoters and OBRA. </li>
+            </ol>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
-
-        <br>
-        <b>Points</b>
-        <ol type="1">
-          <li>100  </li>
-          <li>75  </li>
-          <li>60  </li>
-          <li>50  </li>
-          <li>45  </li>
-          <li>40  </li>
-          <li>35  </li>
-          <li>30  </li>
-          <li>25  </li>
-          <li>20  </li>
-          <li>19  </li>
-          <li>18  </li>
-          <li>17  </li>
-          <li>16  </li>
-          <li>15  </li>
-          <li>14  </li>
-          <li>13  </li>
-          <li>12  </li>
-          <li>11  </li>
-          <li>10  </li>
-        </ol>
-
-        <br><br>
-        <b>Race Selection Criteria</b>
-        <ol type="1">
-          <li>No more than eight events. </li>
-          <li>Primarily road races. Criteriums will be used as needed to fill schedule. </li>
-          <li>Road Race Difficulty Balance - Balance degree of difficulty based on hills vs. flat, distance, etc. </li>
-          <li>High Profile Event - Well advertised in advance both with membership and media. High likelihood of commercial sponsorship. </li>
-          <li>Geographically Balanced - Southern, central and northwest Oregon based on membership representation. </li>
-          <li>Historically Significant - History of success over many seasons. </li>
-          <li>Demonstrated Participation - Popular event and/or venue. </li>
-          <li>Seasonally Balanced - Monthly, if possible, March through September. </li>
-          <li>Quality Venue/Promotion - Highest standards for promoters and OBRA. </li>
-        </ol>
-      </td>
-    </tr>
-    <% end -%>
-  </div>
-</div>
-
-<p>Questions? Contact <a href="mailto:scott@butlerpress.com">Scott Willson</a>.
+<div>Questions? Contact <a href="mailto:scott@butlerpress.com" class="obvious">Scott Willson</a>.</div>

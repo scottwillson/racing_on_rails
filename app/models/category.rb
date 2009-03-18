@@ -23,7 +23,8 @@ class Category < ActiveRecord::Base
   has_many :results
   has_many :races
   
-  before_validation {|record| record.friendly_param = record.to_friendly_param}
+  before_validation { |record| record.friendly_param = record.to_friendly_param }
+  before_save { |record| (record.friendly_param = record.to_friendly_param) unless record.friendly_param }
 
   validates_presence_of :name
   validates_presence_of :friendly_param

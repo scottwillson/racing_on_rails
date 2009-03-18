@@ -3,10 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 require "action_view/test_case"
 
-class Test::Unit::TestCase
+class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
-
   fixtures :all
 
   # Assert two Enumerable objects contain exactly same object in any order
@@ -92,6 +91,16 @@ class Test::Unit::TestCase
       actual_formatted = actual_sorted.join("\n")
       detailed_message = "#{message}. Expected:\n#{expected_formatted} \nbut was:\n#{actual_formatted}"
       flunk(detailed_message)
+    end
+  end
+
+  # Automatically removes the "layout/" prefix.
+  # Example: test for default layout: assert_layout("application")
+  def assert_layout(expected)
+    if expected
+      assert_equal("layouts/#{expected}", @response.layout, "layout")
+    else
+      assert_nil(@response.layout, "no layout")
     end
   end
 

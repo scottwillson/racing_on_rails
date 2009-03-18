@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 require 'mailing_list_mailer'
 
 # FIXME Navigation tests are weak. Need to do more than just not blow up

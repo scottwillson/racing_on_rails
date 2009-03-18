@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 # TODO Test updated_at and created_at
 # TODO Test name cannot be null

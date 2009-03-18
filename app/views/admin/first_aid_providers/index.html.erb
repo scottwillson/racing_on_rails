@@ -20,7 +20,7 @@
 <% end -%>
 
 <p>
-  <%= link_to "Email", formatted_admin_first_aid_providers_path("txt", :sort_by => params[:sort_by], 
+  <%= link_to "Email", admin_first_aid_providers_path(:format => "txt", :sort_by => params[:sort_by], 
                                                                        :sort_direction => params[:sort_direction], 
                                                                        :past_events => @past_events),
               { :class => :image }

@@ -47,10 +47,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
 
   def test_new_with_event
     kings_valley = events(:kings_valley)
-    path = {:controller => "admin/promoters", :action => 'new', :event_id => kings_valley.to_param.to_s}
-    assert_recognizes(path, "/admin/promoters/new", :event_id => kings_valley.to_param.to_s)
-    
-    get(:new, :event_id => kings_valley.to_param.to_s)
+    get(:new, :event_id => kings_valley.to_param)
     assert_not_nil(assigns['promoter'], "Should assign 'promoter'")
     assert(assigns['promoter'].new_record?, 'Promoter should be new record')
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
@@ -70,7 +67,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => promoter.to_param)
+    assert_redirected_to(edit_admin_promoter_path(promoter))
   end
   
   def test_update
@@ -91,7 +88,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => promoter.to_param)
+    assert_redirected_to(edit_admin_promoter_path(promoter))
   end
 
   def test_save_new_single_day_existing_promoter_different_info_overwrite
@@ -110,7 +107,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     assert_equal(new_email, candi_murray.email, 'promoter new email')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => candi_murray.to_param)
+    assert_redirected_to(edit_admin_promoter_path(candi_murray))
   end
   
   def test_save_new_single_day_existing_promoter_no_name
@@ -130,7 +127,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     assert_equal(old_email, nate_hobson.email, 'promoter old email')
     
     assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => nate_hobson.to_param)
+    assert_redirected_to(edit_admin_promoter_path(nate_hobson))
   end
   
   def test_update_blank_info
@@ -194,7 +191,7 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     promoter.reload
     
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_promoter_event_path(promoter, events(:jack_frost)))
+    assert_redirected_to(edit_admin_event_promoter_path(promoter, events(:jack_frost)))
   end
   
   def test_remember_event_id_on_create
@@ -206,6 +203,6 @@ class Admin::PromotersControllerTest < ActionController::TestCase
     
     promoter = Promoter.find_by_name('Fred Whatley')
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_promoter_event_path(promoter, events(:jack_frost)))
+    assert_redirected_to(edit_admin_event_promoter_path(promoter, events(:jack_frost)))
   end
 end

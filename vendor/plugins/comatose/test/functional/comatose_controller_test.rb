@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 require 'comatose_controller'
 require 'comatose_helper'
 
@@ -8,7 +8,7 @@ class ComatoseController
 end
 
 
-class ComatoseControllerTest < Test::Unit::TestCase
+class ComatoseControllerTest < ActiveSupport::TestCase
 
   fixtures :comatose_pages
 

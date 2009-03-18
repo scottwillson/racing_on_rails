@@ -35,7 +35,7 @@
       <%= link_to(score.source_result.race.standings.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.race.standings.event.id, :racer_id => @racer.id) if score.source_result.race.standings.event.is_a?(Competition)%></td>
     <td class="category"><%= score.source_result.race.name %></td>
     <td class="dates"><%= score.source_result.race.standings.event.date_range_s(:long) %></td>
-    <td class="right"><%= number_with_precision(score.points, 1) %></td>
+    <td class="right"><%= number_with_precision(score.points, :precision => 1) %></td>
   </tr>
   <% end %>
   <tr>
@@ -43,7 +43,7 @@
     <td></td>
     <td></td>
     <td></td>
-    <td class="total_points"><span class="total">TOTAL</span><%= number_with_precision(result.points, 1) %></td>
+    <td class="total_points"><span class="total">TOTAL</span><%= number_with_precision(result.points, :precision => 1) %></td>
   </tr>
 <% end -%>
 <% end %>

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 class IronmanControllerTest < ActionController::TestCase
   def test_index

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 class OregonCupControllerTest < ActionController::TestCase
   include OregonCupHelper
@@ -11,7 +11,7 @@ class OregonCupControllerTest < ActionController::TestCase
     assert_not_nil(assigns["oregon_cup"], "Should assign oregon_cup")
   end
 
-  def test_index
+  def test_index_without_event
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("oregon_cup/index")

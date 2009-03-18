@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 require 'comatose'
 
-class ProcessingContextTest < Test::Unit::TestCase
+class ProcessingContextTest < ActiveSupport::TestCase
 
   fixtures :comatose_pages
   

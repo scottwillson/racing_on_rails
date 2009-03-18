@@ -1,7 +1,6 @@
 # BAR = Best All-around Rider
 # FIXME Add test for overall and make logic cleaner
 class BarController < ApplicationController
-  session :off
   caches_page :show
   
   def index

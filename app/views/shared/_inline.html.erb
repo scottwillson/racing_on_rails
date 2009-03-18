@@ -1,6 +1,6 @@
 <div class="in_place_editable" id="<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>"><%= 
   if truncate_to
-    truncate(record.send(attribute_symbol), truncate_to)
+    truncate(record.send(attribute_symbol), :length => truncate_to)
   else
     record.send(attribute_symbol)
   end

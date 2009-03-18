@@ -71,7 +71,7 @@ class OverallBar < Competition
     remove_duplicate_discipline_results(scores)
     if scores.size > 4
       for score in scores[4..(scores.size - 1)]
-        score.update_attribute_with_validation_skipping(:points, 50)
+        score.update_attribute(:points, 50)
       end
     end
   end

@@ -1,6 +1,4 @@
 class SubscriptionsController < ApplicationController
-  session :off
-  
   def new
     @subscription = Subscription.new
   end

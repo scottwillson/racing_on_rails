@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 class BarControllerTest < ActionController::TestCase
   include ActionView::Helpers::TagHelper
@@ -142,13 +142,13 @@ class BarControllerTest < ActionController::TestCase
   # Lib implementation was broken at one point...
   def test_truncate
     name = 'Broadmark'
-    truncated = truncate(name, 5)
+    truncated = truncate(name, :length => 5)
     assert_equal('Br...', truncated, 'truncated Broadmark')
 
-    truncated = truncate(name, 9)
+    truncated = truncate(name, :length => 9)
     assert_equal('Broadmark', truncated, 'truncated Broadmark')
 
-    truncated = truncate(name, 8)
+    truncated = truncate(name, :length => 8)
     assert_equal('Broad...', truncated, 'truncated Broadmark')
   end
 end

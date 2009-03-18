@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require "test_helper"
 
 class Admin::RacersControllerTest < ActionController::TestCase
 
@@ -31,7 +31,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     get(:index)
     assert_response(:success)
     assert_template("admin/racers/index")
-    assert_equal('layouts/admin/application', @controller.active_layout)
+    assert_layout("admin/application")
     assert_not_nil(assigns["racers"], "Should assign racers")
     assert(assigns["racers"].empty?, "Should have no racers")
     assert_not_nil(assigns["name"], "Should assign name")
@@ -519,7 +519,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:redirect)
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
-    assert_redirected_to(:id => knowlsons.first.id)
+    assert_redirected_to(edit_admin_racer_path(knowlsons.first))
     assert_nil(knowlsons.first.member_from, 'member_from after update')
     assert_nil(knowlsons.first.member_to, 'member_to after update')
   end
@@ -546,7 +546,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     knowlsons = Racer.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
     assert_response(:redirect)
-    assert_redirected_to(:id => knowlsons.first.id)
+    assert_redirected_to(edit_admin_racer_path(knowlsons.first))
     race_numbers = knowlsons.first.race_numbers
     assert_equal(2, race_numbers.size, 'Knowlson race numbers')
     
@@ -855,14 +855,14 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
   def test_print_no_cards_pending
     get(:cards, :format => "pdf")
-    assert_redirected_to(formatted_no_cards_admin_racers_path("html"))
+    assert_redirected_to(no_cards_admin_racers_path(:format => "html"))
   end
   
   def test_no_cards
     get(:no_cards)
     assert_response(:success)
     assert_template("admin/racers/no_cards")
-    assert_equal('layouts/admin/application', @controller.active_layout)
+    assert_layout("admin/application")
   end
   
   def test_print_cards
@@ -874,7 +874,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
     assert_response(:success)
     assert_template("admin/racers/cards")
-    # TODO How to test layout?
+    assert_layout(nil)
     assert_equal(1, assigns['racers'].size, 'Should assign racers')
     tonkin.reload
     assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
@@ -890,7 +890,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
     assert_response(:success)
     assert_template("admin/racers/cards")
-    # TODO How to test layout?
+    assert_layout(nil)
     assert_equal(4, assigns['racers'].size, 'Should assign racers')
     for racer in racers
       racer.reload
@@ -900,14 +900,14 @@ class Admin::RacersControllerTest < ActionController::TestCase
   
   def test_print_no_mailing_labels_pending
     get(:mailing_labels, :format => "pdf")
-    assert_redirected_to(formatted_no_mailing_labels_admin_racers_path("html"))
+    assert_redirected_to(no_mailing_labels_admin_racers_path(:format => "html"))
   end
   
   def test_print_no_mailing_labels
     get(:no_mailing_labels)
     assert_response(:success)
     assert_template("admin/racers/no_mailing_labels")
-    assert_equal('layouts/admin/application', @controller.active_layout)
+    assert_layout("admin/application")
   end
   
   def test_print_mailing_labels
@@ -919,7 +919,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
     assert_response(:success)
     assert_template("admin/racers/mailing_labels")
-    # How to test layout?
+    assert_layout(nil)
     assert_equal(1, assigns['racers'].size, 'Should assign racers')
     tonkin.reload
     assert(!tonkin.print_mailing_label?, 'Tonkin.mailing_label? after printing')
@@ -960,7 +960,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
     assert_equal(6, assigns['racers'].size, "Racers export size")
   end
@@ -971,7 +971,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
     assert_equal(6, assigns['racers'].size, "Racers export size")
   end
@@ -982,7 +982,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"racers_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -998,7 +998,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -1008,7 +1008,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
@@ -1018,7 +1018,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_response(:success)
     today = Date.today
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
-    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['type'], 'Should set content to Excel')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
 end

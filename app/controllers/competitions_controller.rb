@@ -1,5 +1,4 @@
 class CompetitionsController < ApplicationController
-  session :off
   caches_page :show
 
   def show

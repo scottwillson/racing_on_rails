@@ -26,7 +26,7 @@ end
 
 namespace :deploy do
   desc "Custom deployment"
-  task :after_update do
+  task :after_update_code do
     run "svn co #{local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
   end

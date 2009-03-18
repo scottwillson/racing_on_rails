@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 require 'comatose_admin_controller'
 require 'comatose_admin_helper'
 require 'text_filters'
@@ -8,7 +8,7 @@ class ComatoseAdminController
   def rescue_action(e) raise e end
 end
 
-class ComatoseAdminControllerTest < Test::Unit::TestCase
+class ComatoseAdminControllerTest < ActiveSupport::TestCase
 
   fixtures :comatose_pages
     

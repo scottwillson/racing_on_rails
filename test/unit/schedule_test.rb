@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 # TODO Handle multiple emails per promoters
 # TODO Recognize Series and WeeklySeries

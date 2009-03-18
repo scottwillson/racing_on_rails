@@ -1,0 +1,27 @@
+<table class="base">
+  <tr>
+    <th colspan="2"><%= @oregon_cup.date.year %> Races</th>
+  </tr>
+	<%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
+	<%- for event in @oregon_cup.events.sort -%>
+  <tr>
+    <td><%= event.date.strftime("%B %d") %></td>
+    <td>
+<%- if event.standings.empty? -%>
+<%- if event.flyer_approved? and !event.flyer.blank? -%>
+<%= flyer_link_from_app_server(event) %>
+<%- else -%>
+<%= event.name %>
+<%- end -%>
+<%- else -%>
+<%= link_to event.name, :controller => 'results', :action => 'event', :id => event.id  %>
+<%- end -%>
+<%- end -%>
+    </td>
+  </tr>
+<% else %>
+	<tr>
+		<td colspan="2">Not scheduled</td>
+	</tr>
+<%- end -%>
+</table>

@@ -2,8 +2,6 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-
-    session :off
     caches_page :index, :list
 
     # Default calendar format

@@ -7,7 +7,8 @@ class RaceDayMailerTest < ActionMailer::TestCase
     @expected.from    = "scott@butlerpress.com"
     @expected.to      = "dcowley@sportsbaseonline.com"
     @expected.body    = read_fixture("members_export")
-    @expected.date    = Time.now
+    now = Time.now
+    @expected.date    = now
 
     # Not asserting attachment, just checking that we don't get exception
     RaceDayMailer.create_members_export(Racer.find_all_for_export, Time.now)

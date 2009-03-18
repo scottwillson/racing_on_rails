@@ -115,7 +115,7 @@ class Race < ActiveRecord::Base
   end
   
   def before_destroy
-    results.clear
+    results(true).clear
   end
   
   # Ensure child team and racers are not duplicates of existing records

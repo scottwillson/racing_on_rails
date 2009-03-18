@@ -1,5 +1,5 @@
 # :stopdoc:
-require File.dirname(__FILE__) + '/../../test_helper'
+require 'test_helper'
 
 class Admin::EventsControllerTest < ActionController::TestCase
 
@@ -24,6 +24,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["event"], "Should assign event")
     assert_nil(assigns["race"], "Should not assign race")
     assert(!@response.body["#&lt;Velodrome:"], "Should not have model in text field")
+  end
+  
+  def test_edit_sti_subclasses
+    [SingleDayEvent, MultiDayEvent, Series, WeeklySeries].each do |event_class|
+      event = event_class.create!
+      get(:edit, :id => event.to_param)
+      assert_response(:success)
+    end
   end
 
   def test_edit_parent
@@ -559,7 +567,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     
     get(:index, :year => current_year)
     assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
-    assert_match("href=\"/admin/events\"", @response.body, "Should link to #{current_year} in:\n#{@response.body}")
+    assert_select("table.tabs span", { :text => "2009" }, "Should have tab for current year")
   end
 
   def test_upload_schedule
@@ -587,6 +595,6 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_gracefully_handle_bad_user_id
     @request.session[:user_id] = 31289371283
     get(:index)
-    assert_redirected_to :controller => "account", :action => "login"
+    assert_redirected_to :controller => "/account", :action => "login"
   end
 end

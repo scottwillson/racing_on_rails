@@ -24,7 +24,7 @@
     <td><%= result.race.standings.name %></td>
     <td><%= result.race.name %></td>
     <td class="right"><%= result.race.standings.event.date.strftime("%D") %></td>
-    <td class="right"><%= number_with_precision(result.points, 1) if result.points > 0%></td>
+    <td class="right"><%= number_with_precision(result.points, :precision => 1) if result.points > 0%></td>
   </tr>
   <%- end -%>
 

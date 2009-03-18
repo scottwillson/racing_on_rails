@@ -37,7 +37,7 @@ class Admin::PromotersController < ApplicationController
     @promoter = Promoter.create(params['promoter'])
     if @promoter.errors.empty?
       if @event
-        redirect_to(edit_admin_promoter_event_path(@promoter, @event))
+        redirect_to(edit_admin_event_promoter_path(@promoter, @event))
       else
         redirect_to(edit_admin_promoter_path(@promoter))
       end
@@ -55,7 +55,7 @@ class Admin::PromotersController < ApplicationController
       logger.debug("Updated OK")
       logger.debug("@event: #{@event}")
       if @event
-        redirect_to(edit_admin_promoter_event_path(@promoter, @event))
+        redirect_to(edit_admin_event_promoter_path(@promoter, @event))
       else
         redirect_to(edit_admin_promoter_path(@promoter))
       end

@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 require 'support/class_options'
 
-class ClassOptionsTest < Test::Unit::TestCase
+class ClassOptionsTest < ActiveSupport::TestCase
 
   class Opts
     define_option :nothing, nil

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 class CombinedStandingsTest < ActiveSupport::TestCase
   def test_time_trial_ironman

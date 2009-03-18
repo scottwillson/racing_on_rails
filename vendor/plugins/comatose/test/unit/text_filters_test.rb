@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
 require 'erb'
 require 'liquid'
@@ -7,9 +7,8 @@ require 'text_filters'
 # require 'comatose/page'
 # require 'comatose/processing_context'
 
-class TextFiltersTest < Test::Unit::TestCase
+class TextFiltersTest < ActiveSupport::TestCase
   # fixtures :comatose_pages
-  # self.use_instantiated_fixtures  = true
 
   should "not alter output when using filter :none" do
     assert_equal "line one\nline two", TextFilters.render_text("line one\nline two", :none)

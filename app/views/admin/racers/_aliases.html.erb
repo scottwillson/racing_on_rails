@@ -1,3 +1,3 @@
 <span id="racer_<%= racer.id %>_aliases">
- <%= truncate(racer.aliases.collect{ |a| a.name }.join(', '), 200) %>
+ <%= truncate(racer.aliases.collect{ |a| a.name }.join(', '), :length => 200) %>
 </span>

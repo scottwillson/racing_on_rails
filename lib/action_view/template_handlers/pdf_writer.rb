@@ -10,8 +10,6 @@ module ActionView
       end
 
       def compile(template)
-        content_type_handler = (@view.send!(:controller).respond_to?(:response) ? "controller.response" : "controller")
-        "#{content_type_handler}.content_type ||= Mime::PDF\n" +
         "pdf = PDF::Writer.new(:paper => (@paper || 'LETTER'))\n" +
         template.source +
         "\npdf.render\n"

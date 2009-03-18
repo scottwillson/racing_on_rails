@@ -1,5 +1,5 @@
 # :stopdoc:
-require File.dirname(__FILE__) + '/../../test_helper'
+require "test_helper"
 
 class Admin::RacesControllerTest < ActionController::TestCase
   def setup

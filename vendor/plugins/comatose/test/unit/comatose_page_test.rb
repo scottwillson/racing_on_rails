@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require "test_helper"
 
-class ComatosePageTest < Test::Unit::TestCase
+class ComatosePageTest < ActiveSupport::TestCase
 
   fixtures :comatose_pages
 

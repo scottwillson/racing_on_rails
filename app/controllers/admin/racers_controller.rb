@@ -365,10 +365,13 @@ class Admin::RacersController < ApplicationController
   def cards
     @racers = Racer.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @racers.empty?
-      redirect_to(formatted_no_cards_admin_racers_path("html"))
+      return redirect_to(no_cards_admin_racers_path(:format => "html"))
     else
       Racer.update_all("print_card=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
+    
+    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
+    render(:template => "admin/racers/cards.pdf.pdf_writer")
   end
   
   def card
@@ -376,15 +379,21 @@ class Admin::RacersController < ApplicationController
     @racers = [@racer]
     @racer.print_card = false
     @racer.save!
+    
+    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
+    render(:template => "admin/racers/card.pdf.pdf_writer")
   end
   
   def mailing_labels
     @racers = Racer.find(:all, :conditions => ['print_mailing_label=?', true], :order => 'last_name, first_name')
     if @racers.empty?
-      redirect_to(formatted_no_mailing_labels_admin_racers_path("html"))
+      return redirect_to(no_mailing_labels_admin_racers_path(:format => "html"))
     else
       Racer.update_all("print_mailing_label=0", ['id in (?)', @racers.collect{|racer| racer.id}])
     end
+    
+    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
+    render(:template => "admin/racers/mailing_labels.pdf.pdf_writer")
   end
   
   def rescue_action_in_public(exception)

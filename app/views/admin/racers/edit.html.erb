@@ -69,7 +69,9 @@
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @racer.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@racer.member? && !@racer.renewed? -%>
 
-    <%= f.labelled_check_box :print_card, "Print card? #{(link_to 'Print one card now', formatted_card_admin_racer_path(@racer, "pdf"), {:class => 'obvious'})}" %>
+    <%= f.labelled_check_box :print_card, 
+                             "Print card? #{(link_to 'Print one card now', card_admin_racer_path(@racer, :format => "pdf"), 
+                             {:class => 'obvious'})}" unless @racer.new_record? %>
   
     <%= f.labelled_check_box :print_mailing_label, "Print mailing label?" %>
   </div>
@@ -87,10 +89,10 @@
   </div>
 
   <div class="page_buttons span-6 last">
-    <div class="updatedon span-2">Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" unless @racer.updated_at.nil? %></div>
+    <div class="updatedon span-2"><% if @racer.updated_at %>Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" %><% end %></div>
     <div class="right span-4 last">
-      <%= link_to "Move Results", :controller => '/admin/results', :action => 'racer', :id => @racer.id %>  
-      <%= link_to "Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete' %>
+      <%= link_to("Move Results", :controller => '/admin/results', :action => 'racer', :id => @racer.id) unless @racer.new_record? %>  
+      <%= link_to("Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete') unless @racer.new_record? %>
       <%= submit_tag "Save", :id => "save" %>
     </div>
   </div>

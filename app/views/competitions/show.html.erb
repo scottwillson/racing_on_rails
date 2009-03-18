@@ -36,12 +36,12 @@
 
     <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
-   <%= link_to(truncate(result.team_name, 40),
+   <%= link_to(truncate(result.team_name, :length => 40),
        :controller => 'results',
        :action => 'competition',
        :competition_id => result.race.standings.event.to_param,
-       :team_id => result.team_id) %><%= ' ' * (40 - (truncate(result.team_name, 40).length)) -%>
-   <%= number_with_precision(result.points, 1).rjust(6) -%>
+       :team_id => result.team_id) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
+   <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 
     <% else %>
@@ -53,8 +53,8 @@
      :action => 'competition',
      :competition_id => result.race.standings.event.to_param,
      :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer_team_name, 40).ljust(40) -%>
-   <%= number_with_precision(result.points, 1).rjust(6) -%>
+   <%= truncate(result.racer_team_name, :length => 40).ljust(40) -%>
+   <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 
     <%- end -%>
