@@ -9,8 +9,6 @@
     <th class="aliases">Aliases</th>
     <th class="number">Road</th>
     <th class="number">MTB</th>
-    <th class="number">DH</th>
-    <th class="number">Cross</th>
     <th class="check_box">Member</th>
     <th class="actions last"></th>
   </tr>
@@ -18,9 +16,9 @@
   <% if @racers.empty? %>
   <tr valign="top">
     <%- if @name.blank? -%>
-    <td colspan="10" width="200" class="not_found">Enter part of a racer's name</td>
+    <td colspan="8" width="200" class="not_found">Enter part of a racer's name</td>
     <%- else -%>
-    <td colspan="10" width="200" class="not_found">No racers found</td>
+    <td colspan="8" width="200" class="not_found">No racers found</td>
     <%- end -%>
   </tr>
   <% end %>
