@@ -32,21 +32,32 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def points_for(source_result, team_size = nil)
-    # If it's a finish without a number, it's always 15 points
-    return 15 if source_result.place.blank?
+    if ASSOCIATION.award_cat4_participation_points?
+      # If it's a finish without a number, it's always 15 points
+      return 15 if source_result.place.blank?
     
-    event_ids = events.collect { |e| e.id }
-    place = source_result.place.to_i
+      event_ids = events.collect { |e| e.id }
+      place = source_result.place.to_i
 
-    if event_ids.include?(source_result.event_id)
-      if place > 15
-        return 25
-      else
+      if event_ids.include?(source_result.event_id)
+        if place > 15
+          return 25
+        else
+          return point_schedule[source_result.place.to_i] || 0
+        end
+      elsif place > 0
+        return 15
+      end
+    else
+      return 0 if source_result.place.blank?
+      event_ids = events.collect { |e| e.id }
+      place = source_result.place.to_i
+
+      if event_ids.include?(source_result.event_id) && place <= 15
         return point_schedule[source_result.place.to_i] || 0
       end
-    elsif place > 0
-      return 15
     end
+
     0
   end
 

@@ -6,9 +6,10 @@ class RacingAssociation
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
   attr_accessor :competitions
+  attr_accessor :award_cat4_participation_points
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
-  attr_accessor :show_events_velodrome
   attr_accessor :always_insert_table_headers
+  attr_accessor :show_events_velodrome
   
   def initialize
     @masters_age = 35
@@ -17,6 +18,7 @@ class RacingAssociation
     @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+    @award_cat4_participation_points = true
   end
   
   def bmx_numbers?
@@ -45,6 +47,10 @@ class RacingAssociation
   
   def show_events_velodrome?
     @show_events_velodrome
+  end
+  
+  def award_cat4_participation_points?
+    @award_cat4_participation_points
   end
   
   def to_s
