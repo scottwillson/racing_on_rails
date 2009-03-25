@@ -34,16 +34,6 @@ assert_table "racers_table", 2, 4, ""
 assert_table "racers_table", 3, 4, ""
 assert_table "racers_table", 4, 4, "437"
 
-assert_table "racers_table", 1, 5, ""
-assert_table "racers_table", 2, 5, ""
-assert_table "racers_table", 3, 5, ""
-assert_table "racers_table", 4, 5, ""
-
-assert_table "racers_table", 1, 6, ""
-assert_table "racers_table", 2, 6, ""
-assert_table "racers_table", 3, 6, ""
-assert_table "racers_table", 4, 6, ""
-
 @molly_id = Racer.find_by_name("Molly Cameron").id
 @weaver_id = Racer.find_by_name("Ryan Weaver").id
 @matson_id = Racer.find_by_name("Mark Matson").id
