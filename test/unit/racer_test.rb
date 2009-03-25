@@ -39,6 +39,25 @@ class RacerTest < ActiveSupport::TestCase
     racer.reload
     assert_equal(racer.team, Team.find_by_name("Vanilla"), 'Vanilla from DB')
   end
+  
+  def test_team_name_should_preserve_aliases
+    team = Team.create!(:name => "Sorella Forte Elite Team")
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.aliases.create!(:name => "Sorella Forte")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
+    
+    racer = Racer.new(:name => "New Racer", :team_name => "Sorella Forte")
+    racer.save!
+
+    assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
+    team = Team.find_by_name("Sorella Forte Elite Team")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
+  end
 
   def test_new
     racer = Racer.create!(

@@ -249,7 +249,8 @@ class Racer < ActiveRecord::Base
     if value.blank? or value == 'N/A'
       self.team = nil
     else
-      self.team = Team.find_or_create_by_name(value)
+      self.team = Team.find_by_name_or_alias(value)
+      self.team = Team.new(:name => value) unless self.team
     end
   end
 

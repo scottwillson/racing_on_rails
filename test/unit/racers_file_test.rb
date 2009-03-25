@@ -2,6 +2,14 @@ require "test_helper"
 
 class RacerFileTest < ActiveSupport::TestCase  
   def test_import
+    team = Team.create!(:name => "Sorella Forte Elite Team")
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    team.aliases.create!(:name => "Sorella Forte")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
+
     tonkin = racers(:tonkin)
     tonkin.member=(false)
     tonkin.ccx_category = 'A'
@@ -29,7 +37,7 @@ class RacerFileTest < ActiveSupport::TestCase
     assert_equal('A', tonkin.ccx_category, 'Cross cat')
     assert_equal('Expert Junior', tonkin.mtb_category, 'MTB cat')
     assert_equal('Physician', tonkin.occupation, 'occupation')
-    assert_equal('Sorella Forte', tonkin.team_name, 'Team')
+    assert_equal("Sorella Forte Elite Team", tonkin.team_name, 'Team')
     notes = %Q{Spent Christmans in Belgium
 Receipt Code: 2R2T6R7
 Confirmation Code: 462TLJ7
@@ -68,6 +76,12 @@ Downhill/Cross Country: Downhill}
     
     camden_murray = Racer.find_all_by_name('Camden Murray').first
     assert_equal(nil, camden_murray.team, 'Team')
+    
+    assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
+    team = Team.find_by_name("Sorella Forte Elite Team")
+    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(1, team.aliases(true).size, "Aliases")
+    assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
   
   def test_excel_file_database
