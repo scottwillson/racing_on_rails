@@ -57,13 +57,13 @@ create table `comatose_page_versions` (
   `slug` varchar(255) default null,
   `keywords` varchar(255) default null,
   `body` text,
-  `filter_type` varchar(25) default 'textile',
+  `filter_type` varchar(25) default null,
   `author` varchar(255) default null,
   `position` int(11) default '0',
   `updated_on` datetime default null,
   `created_on` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `comatose_pages` (
   `id` int(11) not null auto_increment,
@@ -80,7 +80,7 @@ create table `comatose_pages` (
   `updated_on` datetime default null,
   `created_on` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `discipline_aliases` (
   `discipline_id` int(11) not null default '0',
@@ -234,7 +234,7 @@ create table `new_categories` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `news_items` (
   `id` int(11) not null auto_increment,
@@ -466,12 +466,12 @@ create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `roles_users` (
   `role_id` int(11) not null,
   `user_id` int(11) not null
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
   `version` varchar(255) not null,

@@ -120,6 +120,9 @@ class Competition < Event
         race.place_results_by_points(break_ties?)
       end
     end
+    
+    # Explicity mark as updated to make it "dirty"
+    self.updated_at = Time.now
     save!
   end
   
