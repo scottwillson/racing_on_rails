@@ -2,7 +2,7 @@
 # Application-wide Racing on Rails helper code is in RacingOnRailsControllerHelper
 module ApplicationHelper
   def focus(form_field_name)
-    @focus = form_field_name
+    render("shared/focus", :object => form_field_name)
   end
 
   # Wrap +text+ in div tags, unless +text+ is blank

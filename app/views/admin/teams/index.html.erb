@@ -25,7 +25,7 @@
   <%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image" }) %>
 </div>
 
-<% focus('name') %>
+<%= focus('name') %>
 
 <%- for team in @teams -%>
   <%= draggable_element("team_#{team.id}", :revert => true, :delay => 100,
