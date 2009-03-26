@@ -4,6 +4,6 @@ class TrackController < ApplicationController
   end
   
   def schedule
-    @events = SingleDayEvent.find_all_by_year(Date.today.year, Discipline[:track]) + MultiDayEvent.find_all_by_year(Date.today.year, Discipline[:track])
+    @events = SingleDayEvent.find_all_by_year(Date.today.year, Discipline[:track], nil) + MultiDayEvent.find_all_by_year(Date.today.year, Discipline[:track])
   end
 end

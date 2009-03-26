@@ -11,10 +11,10 @@ class SingleDayEvent < Event
              :foreign_key => 'parent_id', 
              :class_name => 'Event'
   
-  def SingleDayEvent.find_all_by_year(year, discipline = nil)
+  def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = ASSOCIATION.show_only_association_sanctioned_races_on_calendar)
     conditions = ["date between ? and ? and practice = ?", "#{year}-01-01", "#{year}-12-31", false]
 
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+    if sanctioned_by
       conditions.first << " and sanctioned_by = ?"
       conditions << ASSOCIATION.short_name
     end
