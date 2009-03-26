@@ -483,3 +483,22 @@ table.numbers label.inline {
   margin-bottom: 36px;
   width: 600px;
 }
+
+/* Racers */
+#preview_import_table tr th {
+  border-bottom: 1px solid gray;
+}
+
+table#preview_import_table {
+  border-top: 1px solid gray;
+}
+
+table#preview_import_table th {
+  min-width: 100px;
+}
+
+#import_year {
+  margin-top: 0px;
+  padding-top: 0px;
+  margin-left: 8px;
+}

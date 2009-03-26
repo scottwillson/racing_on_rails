@@ -126,6 +126,10 @@ table.base th.invalid {
   color: red;
 }
 
+table.base td.invalid {
+  color: rgb(153, 153, 153);
+}
+
 table.base td.right, table.base th.right {
   text-align: right;
   padding-right: 8px;

@@ -1,5 +1,5 @@
 <div class="table_container<%= " #{style_class}" if style_class %>"<%= " id='#{id}'" if id %>>
-  <div class="caption"><%= caption %></div>
+  <%- unless caption_visible %><div class="caption"><%= caption %></div><% end -%>
   <table cellspacing="0" class="base<%= " #{style_class}" if style_class %>"<%= " id='#{id}_table'" if id %>>
     <%- if insert_header -%>
     <tr>

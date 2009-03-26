@@ -201,6 +201,8 @@ class Admin::RacersController < ApplicationController
     else
       redirect_to(:action => :index)
     end
+    
+    render("preview_import", :layout => "admin/racers/preview_import")
   end
   
   def import

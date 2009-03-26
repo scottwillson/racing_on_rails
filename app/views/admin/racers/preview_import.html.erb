@@ -2,30 +2,38 @@
 <% @show_tabs = false %>
 
 <%= form_tag :action => 'import' %>
-<%= check_box_tag 'update_membership', true, true %> Make all imported racers current members for 
-<select name="year"><%= options_for_select @years, @year %></select>
-<br>
+<table>
+  <tr>
+    <td>
+      <%= check_box_tag 'update_membership', true, true %> Make all imported racers current members for
+    </td>
+    <td>
+      <select name="year" id="import_year"><%= options_for_select @years, @year %></select>
+    </td>
+  </tr>
+</table>
+<br/>
 <%= submit_tag 'Cancel' %>
 <%= submit_tag 'Import' %>
 </form>
-<table class="base">
-  <thead>
-    <tr>
-    <%- for column in @racers_file.columns -%>
+
+<% table :class => "preview_import", :id => "preview_import", :columns =>  @racers_file.columns.size do %>
+    <tr id="original">
+    <%- @racers_file.columns.each do |column| -%>
       <th <%= "class=invalid" unless column.valid? %>><%= column.description %></th>
     <%- end -%>
     </tr>
     <tr>
-    <%- for column in @racers_file.columns -%>
+    <%- @racers_file.columns.each do |column| -%>
       <th><%= column.field %></th>
     <%- end -%>
     </tr>
-  </thead>
-<%- for row in @racers_file.rows -%>
-  <tr class="<%= cycle("even", "odd") %>">
-  <%- for cell in row -%>
-    <td><%= cell %></td>
+
+  <%- @racers_file.rows.each do |row| -%>
+    <tr class="<%= cycle("even", "odd") %>">
+    <%- row.each do |cell| -%>
+      <td><%= cell %></td>
+    <%- end -%>
+    </tr>
   <%- end -%>
-  </tr>
-<%- end -%>
-</table>
+<% end -%>
