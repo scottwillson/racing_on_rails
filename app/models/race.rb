@@ -104,6 +104,21 @@ class Race < ActiveRecord::Base
     self.result_columns || DEFAULT_RESULT_COLUMNS.dup
   end
   
+  # Ugh. Better here than a controller or helper, I guess.
+  def result_columns_or_default_for_editing
+    columns = result_columns_or_default
+    columns.map! do |column| 
+      if column == "first_name" || column == "last_name"
+        "name"
+      else
+        column
+      end
+    end
+    columns << "bar" if ASSOCIATION.competitions.include?(:bar)
+    columns.uniq!
+    columns
+  end
+  
   # Are there are +result_columns+ that don't map to a Result attribute
   def result_columns_valid?
     return if self.result_columns.nil?

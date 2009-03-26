@@ -1,15 +1,16 @@
 <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row" style="position: relative;">
-  <% columns = result.race.result_columns_or_default.dup
-  columns.map! do |column| 
-    if column == "first_name" || column == "last_name"
-      "name"
-    else
-      column
+  <% result.race.result_columns_or_default_for_editing.map { |column_string| grid_columns(column_string) }.each do |column| %>
+  <td><%= 
+    if result.respond_to?(column.field) &&  !result.new_record?
+      if column.field == :bar
+        check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
+                :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}', 
+                              {asynchronous:true, evalScripts:true})"
+      else
+        in_place_editor_field(:result, column.field, result) 
+      end
     end
-  end
-  columns.uniq! -%>
-  <% columns.map { |column_string| grid_columns(column_string) }.each do |column| %>
-  <td><%= in_place_editor_field(:result, column.field, result) if result.respond_to?(column.field) &&  !result.new_record? -%></td>
+    -%></td>
   <% end %>
   <td class="actions last">
     <%= link_to_remote image_tag("/images/buttons/small_add.png"),

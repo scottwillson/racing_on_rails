@@ -1,15 +1,6 @@
 <% table :caption => "Results", :class => "results top_margin last", :id => :results do %>
   <tr>
-    <% columns = race.result_columns_or_default.dup
-    columns.map! do |column| 
-      if column == "first_name" || column == "last_name"
-        "name"
-      else
-        column
-      end
-    end
-    columns.uniq!
-    columns.each do |column| -%>
+    <% race.result_columns_or_default_for_editing.each do |column| -%>
     <th><%= grid_columns(column).description %></th>
     <% end -%>
     <th class="actions span-2 last"></th>

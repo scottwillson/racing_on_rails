@@ -3,6 +3,7 @@ class Admin::ResultsController < ApplicationController
   layout "admin/application"
 
   in_place_edit_for :result, :age
+  in_place_edit_for :result, :bar
   in_place_edit_for :result, :category_name
   in_place_edit_for :result, :date_of_birth
   in_place_edit_for :result, :distance

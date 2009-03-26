@@ -8,6 +8,7 @@ module GridHelper
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
       @@grid_columns['age'] = Column.new(:name => 'age', :description => 'Age', :size => 3, :fixed_size => true)
+      @@grid_columns['bar'] = Column.new(:name => 'bar', :description => 'BAR', :size => 3, :fixed_size => true)
       @@grid_columns['category_name'] = Column.new(:name => 'category_name', :description => 'Category', :size => 20, :fixed_size => true)
       @@grid_columns['city'] = Column.new(:name => 'city', :description => 'City', :size => 15, :fixed_size => true)
       @@grid_columns['date_of_birth'] = Column.new(:name => 'date_of_birth', :description => 'Date of Birth', :size => 15)
