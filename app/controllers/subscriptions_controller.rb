@@ -7,9 +7,9 @@ class SubscriptionsController < ApplicationController
   def create        
     @subscription = Subscription.new(params[:subscription])
     
-    uri = URI.parse(request.env["HTTP_REFERER"])
-    unless %w{ localhost app.americantrackracing.com raceatra.com www.raceatra.com}.include?(uri.host)
-      flash[:notice] = "Cannot send request from '#{uri.host}'"
+    uri = URI.parse(request.env["HTTP_REFERER"]) rescue nil
+    unless uri && %w{ localhost app.americantrackracing.com raceatra.com www.raceatra.com}.include?(uri.host)
+      flash[:notice] = "Cannot send request from '#{uri.host if uri}'"
       return render(:action => "new")
     end
 

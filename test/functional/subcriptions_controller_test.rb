@@ -44,6 +44,15 @@ class SubscriptionsControllerTest < ActionController::TestCase
     assert(!flash.empty?, "Flash should not be empty")
   end
   
+  def test_blank_referrer_should_not_cause_error
+    @request.env["HTTP_REFERER"] = nil
+    post(:create, :subscription => {})
+    assert_response(:success)
+    assert_not_nil(assigns(:subscription), "Should assign subscription")
+    assert_equal(0, MailingListMailer.deliveries.size, "Should have no email delivery")
+    assert(!flash.empty?, "Flash should not be empty")
+  end
+  
   def test_subscribed
     get(:subscribed)
     assert_response(:success)
