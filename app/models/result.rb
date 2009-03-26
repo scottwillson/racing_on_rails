@@ -167,6 +167,13 @@ class Result < ActiveRecord::Base
       end
     end
     
+    # license
+    unless self.license.blank?
+      matches.reject! do |match|
+        match.license != license
+      end
+    end
+    
     matches
   end
   

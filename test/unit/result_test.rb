@@ -88,7 +88,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("DNS", result.place, "place")
   end
   
-  def test_find_associated_records
+  def test_find_associated_records_2
     event = SingleDayEvent.new(:name => "Tabor CR")
     standings = Standings.new(:event => event)
     category = Category.find_by_name("Senior Men Pro 1/2")
@@ -535,6 +535,21 @@ class ResultTest < ActiveSupport::TestCase
     results = races(:kings_valley_pro_1_2_2004).results
     result = results.create(:place => 1, :first_name => 'Eric', :last_name => 'Tonkin', :number => '70A')
     assert_equal(tonkin, result.racer, 'Racer')
+  end
+  
+  def test_differentiate_racers_by_license
+    tonkin = racers(:tonkin)
+    tonkin.license = "12345"
+    tonkin.save!
+    
+    tonkin_clone = Racer.create!(:name => "Erik Tonkin", :license => "999999")
+    
+    results = races(:kings_valley_pro_1_2_2004).results
+    result = results.create(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin', :license => '12345')
+    assert_equal(tonkin, result.racer, 'Racer')
+    
+    result = results.create(:place => 2, :first_name => 'Erik', :last_name => 'Tonkin', :license => '999999')
+    assert_equal(tonkin_clone, result.racer, 'Racer')
   end
   
   def test_find_racers
