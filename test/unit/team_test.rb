@@ -235,7 +235,7 @@ class TeamTest < ActiveSupport::TestCase
     HistoricalName.create!(:team_id => team.id, :name => "Mapei", :year => 2001)
     HistoricalName.create!(:team_id => team.id, :name => "Mapei-Clas", :year => 2002)
     HistoricalName.create!(:team_id => team.id, :name => "Quick Step", :year => 2003)
-    assert_equal(3, team.historical_names.size, "Historical names")
+    assert_equal(3, team.historical_names.size, "Historical names. #{team.historical_names.map {|n| n.name}.join(', ')}")
     assert_equal("Mapei", team.name(2000), "Historical name 2000")
     assert_equal("Mapei", team.name(2001), "Historical name 2001")
     assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
@@ -255,6 +255,33 @@ class TeamTest < ActiveSupport::TestCase
     team.save!
     
     assert_equal("Sacha's Team", team.name, "New name")
+  end
+  
+  def test_rename_to_other_teams_historical_name
+    team_o_safeway = Team.create!(:name => "Team Oregon/Safeway")
+    team_o_safeway.historical_names.create!(:name => "Team Oregon", :year => 1.years.ago.year)
+    
+    team_o_river_city = Team.create!(:name => "Team Oregon/River City")
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team_o_river_city)
+    team_o_river_city.name = "Team Oregon"
+    team_o_river_city.save!
+    
+    assert_equal("Team Oregon/Safeway", team_o_safeway.name, "Team Oregon/Safeway name")
+    assert_equal(1, team_o_safeway.historical_names.size, "Team Oregon/Safeway historical names")
+    assert_equal("Team Oregon", team_o_safeway.historical_names.first.name, "Team Oregon/Safeway historical name")
+    
+    assert_equal("Team Oregon", team_o_river_city.name, "Team Oregon/River City name")
+    assert_equal(1, team_o_river_city.historical_names.size, "Team Oregon/River City historical names")
+    assert_equal("Team Oregon/River City", team_o_river_city.historical_names.first.name, "Team Oregon/River City historical name")
+  end
+  
+  def test_different_teams_with_same_historical_name
+    team_o_safeway = Team.create!(:name => "Team Oregon/Safeway")
+    team_o_safeway.historical_names.create!(:name => "Team Oregon", :year => 1.years.ago.year)
+
+    team_o_river_city = Team.create!(:name => "Team Oregon/River City")
+    team_o_river_city.historical_names.create!(:name => "Team Oregon", :year => 1.years.ago.year)
   end
   
   def test_renamed_teams_should_keep_aliases
