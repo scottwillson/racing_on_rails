@@ -89,7 +89,14 @@
   </div>
 
   <div class="page_buttons span-6 last">
-    <div class="updatedon span-2"><% if @racer.updated_at %>Updated: <%= time_ago_in_words(@racer.updated_at, true) + " ago" %><% end %></div>
+    <div class="updatedon span-2">
+      <span class="created_at">
+        <% if @racer.created_at %>Created <%= time_ago_in_words(@racer.created_at, true) + " ago" %><% end %>
+        <% if @racer.created_by %>by <%= truncate(@racer.created_by, :length => 20) %><% end %>
+      </span>
+      <% if @racer.updated_at %>Updated <%= time_ago_in_words(@racer.updated_at, true) + " ago" %><% end %>
+      <% if @racer.updated_by %>by <%= truncate(@racer.updated_by, :length => 20) %><% end %>
+    </div>
     <div class="right span-4 last">
       <%= link_to("Move Results", :controller => '/admin/results', :action => 'racer', :id => @racer.id) unless @racer.new_record? %>  
       <%= link_to("Delete", admin_racer_path(@racer), :method => :delete, :class => 'obvious', :id => 'delete') unless @racer.new_record? %>

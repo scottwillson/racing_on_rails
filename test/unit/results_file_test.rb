@@ -81,14 +81,14 @@ class ResultsFileTest < ActiveSupport::TestCase
   end
   
   def test_import_time_trial_racers_with_same_name
-    bruce_109 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
+    bruce_109 = Racer.create!(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
     bruce_109.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '109')
     
-    bruce_1300 = Racer.create(:first_name => 'Bruce', :last_name => 'Carter')
-    bruce_1300.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
+    bruce_1300 = Racer.create!(:first_name => 'Bruce', :last_name => 'Carter')
+    bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
     
-    event = SingleDayEvent.create(:discipline => 'Time Trial')
+    event = SingleDayEvent.create!(:discipline => 'Time Trial')
     event.number_issuer = association
     event.save!
 
@@ -172,7 +172,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert(eweb.errors.empty?)
     assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team')
     
-    chris_myers = Racer.create(:first_name => "Chris", :last_name => "Myers", :member => true)
+    chris_myers = Racer.create!(:first_name => "Chris", :last_name => "Myers", :member => true)
     assert_nil(chris_myers.team(true), 'Chris Myers team')
     
     race = Race.new(:category => Category.new(:name => "Pro/1/2"))
@@ -203,8 +203,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "4", :first_name => "Brady", :last_name => "Brady", :number =>"415", :team_name =>"Team Oregon/River City Bicycles", :points => "")
 		expected_races << race
 
-    event = SingleDayEvent.new(:discipline => 'Circuit')
-    standings = event.standings.build(:event => event)
+    event = SingleDayEvent.create!(:discipline => 'Circuit')
+    standings = event.standings.create!
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
     imported_standings = results_file.import
@@ -236,6 +236,10 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team should not be overwritten by results')
     chris_myers.reload
     assert_nil(chris_myers.team(true), 'Chris Myers team should not be updated by results')
+    
+    browning = Racer.find_by_name("John Browning")
+    assert_equal(event, browning.created_by, "created_by")
+    assert_equal(event.name, browning.created_by.name, "created_by name")
   end
   
   def test_stage_race

@@ -94,6 +94,7 @@ class Admin::RacersController < ApplicationController
   # New blank numbers are ignored
   def create
     expire_cache
+    params[:racer][:created_by] = logged_in_user
     @racer = Racer.create(params[:racer])
     
     if params[:number_value]

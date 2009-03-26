@@ -82,6 +82,10 @@ pre, pre a, pre a:link, pre a:visited {
   white-space: nowrap;
 }
 
+.created_at {
+  margin-right: 24px;
+}
+
 .note
 {
   padding-top: 4px;

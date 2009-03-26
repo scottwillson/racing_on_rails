@@ -76,6 +76,7 @@ Downhill/Cross Country: Downhill}
     
     camden_murray = Racer.find_all_by_name('Camden Murray').first
     assert_equal(nil, camden_murray.team, 'Team')
+    assert(camden_murray.created_by.name["55612_061202_151958.csv, attachment filename=55612_061202_151958.csv"], "created_by name")
     
     assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
@@ -153,7 +154,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
     assert_equal('120', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
-    assert_equal("Membership import", number.updated_by, "updated_by")
+    assert(number.updated_by["membership/database.xls"], "updated_by")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     

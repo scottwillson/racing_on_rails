@@ -211,6 +211,15 @@ create table `images` (
   unique key `images_name_index` (`name`)
 ) engine=innodb default charset=latin1;
 
+create table `import_files` (
+  `id` int(11) not null auto_increment,
+  `name` varchar(255) not null default 'import file',
+  `lock_version` int(11) not null default '0',
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`)
+) engine=innodb default charset=latin1;
+
 create table `mailing_lists` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) not null default '',
@@ -382,6 +391,8 @@ create table `racers` (
   `official_interest` tinyint(1) not null default '0',
   `race_promotion_interest` tinyint(1) not null default '0',
   `team_interest` tinyint(1) not null default '0',
+  `created_by_id` int(11) default null,
+  `created_by_type` varchar(255) default null,
   primary key (`id`),
   key `idx_last_name` (`last_name`),
   key `idx_first_name` (`first_name`),
@@ -620,11 +631,9 @@ insert into schema_migrations (version) values ('20090305222446');
 
 insert into schema_migrations (version) values ('20090310155105');
 
-insert into schema_migrations (version) values ('20090312003519');
+insert into schema_migrations (version) values ('20090326190925');
 
-insert into schema_migrations (version) values ('20090313231845');
-
-insert into schema_migrations (version) values ('20090316162742');
+insert into schema_migrations (version) values ('20090326192755');
 
 insert into schema_migrations (version) values ('21');
 

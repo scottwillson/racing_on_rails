@@ -181,8 +181,9 @@ class Result < ActiveRecord::Base
   end
   
   def save_racer
-    if self.racer and self.racer.dirty?
-      self.racer.save!
+    if self.racer && racer.dirty?
+      racer.created_by = self.event
+      racer.save!
     end
   end
   

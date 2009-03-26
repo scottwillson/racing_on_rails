@@ -129,7 +129,7 @@ class RacersFile < GridFile
         for row in rows
           row_hash = row.to_hash
           row_hash[:year] = year if year
-          row_hash[:updated_by] = "Membership import"          
+          row_hash[:updated_by] = import_file.name
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
           
@@ -143,6 +143,7 @@ class RacersFile < GridFile
             delete_unwanted_member_from(row_hash, racer)
             add_print_card_and_label(row_hash)
             racer = Racer.new(row_hash)
+            racer.created_by = import_file
             racer.save!
             @created = @created + 1
           elsif racers.size == 1
@@ -223,6 +224,17 @@ class RacersFile < GridFile
     if !row_hash[:print_card].blank? and row_hash[:print_mailing_label].blank?
       row_hash[:print_mailing_label] = row_hash[:print_card]
     end
+  end
+  
+  def import_file
+    unless @import_file
+      if @file
+        @import_file = ImportFile.create!(:name => @file.path)
+      else
+        @import_file = ImportFile.create!
+      end
+    end
+    @import_file
   end
   
   def logger

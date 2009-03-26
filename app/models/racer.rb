@@ -14,10 +14,11 @@ class Racer < ActiveRecord::Base
   after_save :add_alias_for_old_name
   after_save :save_numbers
 
-  belongs_to :team
   has_many :aliases
+  belongs_to :created_by, :polymorphic => true
   has_many :race_numbers, :include => [:discipline, :number_issuer]
   has_many :results
+  belongs_to :team
   
   attr_accessor :year
   

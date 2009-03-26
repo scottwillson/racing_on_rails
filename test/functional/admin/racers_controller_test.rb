@@ -1,7 +1,6 @@
 require "test_helper"
 
 class Admin::RacersControllerTest < ActionController::TestCase
-
   def setup
     super
     @request.session[:user_id] = users(:administrator).id
@@ -522,6 +521,8 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_redirected_to(edit_admin_racer_path(knowlsons.first))
     assert_nil(knowlsons.first.member_from, 'member_from after update')
     assert_nil(knowlsons.first.member_to, 'member_to after update')
+    assert_equal(users(:administrator), knowlsons.first.created_by, "created by")
+    assert_equal("Candi Murray", knowlsons.first.created_by.name, "created by")
   end
 
   def test_create_with_road_number
