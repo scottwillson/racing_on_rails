@@ -109,7 +109,7 @@
   </div>
 </div>
 
-<%- focus("event_name") if @event.new_record? -%>
+<%= focus("event_name") if @event.new_record? -%>
 
 <%= if !@event.promoter || @event.new_record?
       update_page_tag { |page| page.hide(:edit_promoter_link) }
