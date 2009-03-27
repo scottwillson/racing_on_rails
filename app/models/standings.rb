@@ -15,7 +15,8 @@ class Standings < ActiveRecord::Base
   
   validates_presence_of :event_id
   acts_as_list :scope => :event
-  
+
+  before_validation :set_bar_points
   before_save :update_discipline
   after_save :create_or_destroy_combined_standings
   
@@ -43,6 +44,13 @@ class Standings < ActiveRecord::Base
     else
       raise ArgumentError, "BAR points must be an integer, but was: #{value}"
     end
+  end
+  
+  def set_bar_points
+    if self.event.is_a?(SingleDayEvent) && event.parent.is_a?(WeeklySeries)
+      self.bar_points = 0
+    end
+    true
   end
   
   def place_results_by_points(break_ties = true)

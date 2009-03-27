@@ -9,13 +9,21 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     assert(pir.valid?, "PIR valid?")
     assert(!pir.new_record?, "PIR new?")
     assert_equal(0, pir.events.size, 'PIR events')
+    standings = pir.standings.create!
+    assert_equal(1, standings.bar_points, "Weekly Series standings BAR points")
+    race = standings.races.create!(:category => categories(:senior_men))
+    assert_equal(1, race.bar_points, "Weekly Series race BAR points")
 
     Date.new(2008, 4, 1).step(Date.new(2008, 10, 21), 7) {|date|
-      individual_pir = pir.events.create(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
+      individual_pir = pir.events.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
       assert(individual_pir.valid?, "PIR valid?")
       assert(!individual_pir.new_record?, "PIR new?")
       assert_equal(pir, individual_pir.parent, "PIR parent")
       assert_equal(date, individual_pir.date, 'New single day of PIR date')
+      standings = individual_pir.standings.create!
+      assert_equal(0, standings.bar_points, "Weekly Series standings BAR points")
+      race = standings.races.create!(:category => categories(:senior_men))
+      assert_equal(0, race.bar_points, "Weekly Series race BAR points")
     }
     pir.reload
     
