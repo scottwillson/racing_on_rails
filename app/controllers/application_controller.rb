@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   ActionController::Base.ip_spoofing_check = false
   
   filter_parameter_logging "password"
+
+  protected
   
   def expire_cache
     if perform_caching
