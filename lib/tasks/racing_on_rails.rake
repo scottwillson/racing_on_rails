@@ -6,9 +6,12 @@ namespace :racing_on_rails do
   task :bootstrap do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
+    puts "Create databases"
     puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(RAILS_ROOT + "/db/create_databases.sql")}`
+    puts "Populate development database"
     puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(RAILS_ROOT + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
     Rake::Task["db:fixtures:load"].invoke
+    puts "Start server"
     puts `ruby script/server`
   end
 end
