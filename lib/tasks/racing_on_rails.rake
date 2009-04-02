@@ -62,6 +62,7 @@ namespace :db do
     task :dump do
       sql = File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
+      sql.gsub!(ASSOCIATION.short_name, "cbra")
       sql.downcase!
       
       File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql", "w") do |file|
