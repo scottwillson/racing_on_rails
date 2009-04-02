@@ -4,11 +4,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>
-      <%- if @page_title -%>
-      <%= ASSOCIATION.short_name %>: <%= @page_title -%>
-      <%- else -%>
-      <%= ASSOCIATION.name %>
-      <%- end %>
+      <%= page_title %>
     </title>
     <%= stylesheet_link_tag "reset", "application", "grid", "tabs", "forms", "tables", "pages" %>
     <!--[if IE]>

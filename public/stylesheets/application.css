@@ -60,7 +60,8 @@ div.inline {
 .centered input[type=file] {
   width: auto;
 }
-.full_width {
+
+.full_width, div.full_width {
   width: 100%;
 }
 

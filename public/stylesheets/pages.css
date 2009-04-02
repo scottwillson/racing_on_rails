@@ -171,6 +171,22 @@ table.base td.disclosure a {
   margin-right: 0px;
 }
 
+/* Pages */
+table.pages div.record {
+  background-image: url(/images/icons/web_page.png);
+}
+
+#page_body {
+  width: 100%;
+  height: 340px;
+  font-size: 10px;
+  font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+}
+
+#page_parent_id {
+  width: 270px;
+}
+
 /* Promoters */
 table.promoters td.name {
   background-repeat: no-repeat;
@@ -186,6 +202,7 @@ table.teams div.record {
   background-image: url(/images/icons/people.gif);
 }
 
+/* Velodromes */
 table.velodromes div.record {
   background-image: url(/images/icons/checkered_flag.gif);
 }

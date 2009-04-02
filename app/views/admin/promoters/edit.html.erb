@@ -1,6 +1,6 @@
 <% @page_title = "Admin: Promoters: #{@promoter.name}" %>
 
-<%-  if @event -%>
+<%- if @event -%>
   <p class="top-margin centered">
     <%= link_to("Back to #{@event.name}", edit_admin_event_promoter_path(@promoter, @event)) unless @promoter.new_record? %>
     <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event)) if @promoter.new_record? %>

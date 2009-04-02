@@ -16,6 +16,8 @@ class HomeController < ApplicationController
       :conditions => ['events.date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
       :order => 'events.date desc'
     )
+    
+    render_page
   end
   
   def auction

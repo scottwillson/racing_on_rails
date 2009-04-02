@@ -17,6 +17,9 @@ module InPlaceEditing
     def in_place_edit_for(object, attribute, options = {})
       define_method("set_#{object}_#{attribute}") do
         @item = object.to_s.camelize.constantize.find(params[:id])
+        if @item.respond_to?(:author)
+          @item.author = logged_in_user
+        end
         @item.update_attribute(attribute, params[:value])
         # HACK! FIXME
         expire_cache

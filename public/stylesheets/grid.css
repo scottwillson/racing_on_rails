@@ -48,7 +48,7 @@ right margin + frame: 20 + 3 + 17
 
 /* Sets up basic grid floating and margin. */
 div.span-1, div.span-2, div.span-3, div.span-4, div.span-5, div.span-6, 
-div.box-2, div.box-3, div.box-4 {
+div.box-2, div.box-3, div.box-4, div.box-5, div.box-6 {
   float: left;
   margin-right: 20px;
 }
@@ -68,6 +68,7 @@ div.span-6  { width: 880px; margin: 0; }
 div.box-2  { width: 278px; }
 div.box-3  { width: 428px; }
 div.box-4  { width: 578px; }
+div.box-5  { width: 628px; }
 
 /* Add these to a column to append empty cols. */
 div.append-1  { padding-right: 150px; }  

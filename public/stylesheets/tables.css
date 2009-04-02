@@ -225,7 +225,7 @@ table.base div.inplaceeditor-saving {
   border: none;
 }
 
-table.base th.name {
+table.base th.name, table.base th.title {
   padding-left: 32px;
 }
 
@@ -253,7 +253,7 @@ table.base td.check_box input {
 }
 
 
-table.base tr.hovering {
+table.base tr.hovering, table.base tr.selected {
   background-color: #E9F79B;
 }
 

@@ -218,7 +218,7 @@ create table `import_files` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=latin1;
+) engine=innodb default charset=utf8;
 
 create table `mailing_lists` (
   `id` int(11) not null auto_increment,
@@ -423,6 +423,18 @@ create table `races` (
   key `idx_standings_id` (`standings_id`),
   constraint `races_ibfk_1` foreign key (`category_id`) references `categories` (`id`),
   constraint `races_ibfk_2` foreign key (`standings_id`) references `standings` (`id`) on delete cascade
+) engine=innodb default charset=latin1;
+
+create table `registrations` (
+  `id` int(11) not null auto_increment,
+  `event_id` int(11) not null,
+  `user_id` int(11) not null,
+  `lock_version` int(11) not null default '0',
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`),
+  key `index_registrations_on_event_id` (`event_id`),
+  key `index_registrations_on_user_id` (`user_id`)
 ) engine=innodb default charset=latin1;
 
 create table `results` (
@@ -630,6 +642,14 @@ insert into schema_migrations (version) values ('20090225004224');
 insert into schema_migrations (version) values ('20090305222446');
 
 insert into schema_migrations (version) values ('20090310155105');
+
+insert into schema_migrations (version) values ('20090312003519');
+
+insert into schema_migrations (version) values ('20090313231845');
+
+insert into schema_migrations (version) values ('20090316162742');
+
+insert into schema_migrations (version) values ('20090324032935');
 
 insert into schema_migrations (version) values ('20090326190925');
 

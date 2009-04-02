@@ -1,0 +1,63 @@
+include_partial "fixtures"
+
+# Check public page render OK with default static templates
+open "/schedule"
+assert_text_present "regex:Schedule|Calendar"
+assert_text_not_present "This year is cancelled"
+assert_title "glob:*Schedule*"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+# Now change the page
+include_partial "admin_login"
+
+open "/admin/pages"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+click_and_wait "css=a[href='/admin/pages/new']"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+type "page_title", "Schedule"
+type "page_body", "This year is cancelled"
+
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+open "/schedule"
+assert_text_present "This year is cancelled"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+open "/admin/pages"
+
+assert_table "pages_table", 2, 0, "glob:Schedule*"
+
+# Create new page
+# 404 first
+open "/officials"
+assert_text_present "ActiveRecord::RecordNotFound"
+
+open "/admin/pages"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+click_and_wait "css=a[href='/admin/pages/new']"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+type "page_title", "Officials Home Phone Numbers"
+type "page_slug", "officials"
+type "page_body", "411 911"
+
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+open "/officials"
+assert_title "glob:*Officials Home Phone Numbers"
+assert_text_present "411 911"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"

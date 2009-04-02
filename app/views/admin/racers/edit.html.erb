@@ -28,7 +28,7 @@
     <%= f.labelled_text :cyclocross_racing_age,  @racer.cyclocross_racing_age %>
 
     <%= f.label :gender %>
-    <%= select('racer', 'gender', ['', 'F', 'M']) %><br/>
+    <%= f.select(:gender, ['', 'F', 'M']) %><br/>
   </div>
 
   <div class="span-3">

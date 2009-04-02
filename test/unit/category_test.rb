@@ -49,7 +49,8 @@ class CategoryTest < ActiveSupport::TestCase
   def test_no_circular_parents
     senior_men = Category.find_by_name('Senior Men')
     senior_men.parent = senior_men
-    assert(!senior_men.valid?, 'Category with itself as parent should not be valid')
+    # Is an error here really the best thing?
+    assert_raise(ActiveRecord::Acts::Tree::CircularAssociation, "Should not be able to add parent as child") { senior_men.valid? }
   end
   
   def test_ages

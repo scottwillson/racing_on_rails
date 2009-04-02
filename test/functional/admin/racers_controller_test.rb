@@ -93,7 +93,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => "",
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     racer = assigns["racer"]
@@ -111,7 +111,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => "Mollie Cameron",
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -127,7 +127,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => "Molly Cameron",
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -143,7 +143,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => "molly cameron",
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -160,7 +160,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => "Erik Tonkin",
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_template("admin/racers/_merge_confirm")
@@ -205,7 +205,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => 'mollie cameron',
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -310,7 +310,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => tonkin.to_param,
         :value => molly.name,
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_equal(tonkin, assigns['racer'], 'Racer')
@@ -341,7 +341,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_team_name, 
         :id => molly.to_param,
         :value => 'Velo Slop',
-        :editorId => "racer_#molly.id}_team_name"
+        :editorId => "racer_#{molly.id}_team_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -356,7 +356,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_team_name, 
         :id => molly.to_param,
         :value => 'Gentle Lovers',
-        :editorId => "racer_#molly.id}_team_name"
+        :editorId => "racer_#{molly.id}_team_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -371,7 +371,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_team_name, 
         :id => molly.to_param,
         :value => '',
-        :editorId => "racer_#molly.id}_team_name"
+        :editorId => "racer_#{molly.id}_team_name"
     )
     assert_response(:success)
     assert_template(nil)
@@ -448,7 +448,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     post(:set_racer_name, 
         :id => molly.to_param,
         :value => 'Eric Tonkin',
-        :editorId => "racer_#molly.id}_name"
+        :editorId => "racer_#{molly.id}_name"
     )
     assert_response(:success)
     assert_equal(molly, assigns['racer'], 'Racer')

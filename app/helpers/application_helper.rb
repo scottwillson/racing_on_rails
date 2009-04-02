@@ -10,6 +10,16 @@ module ApplicationHelper
     "<div>#{text}</div>" unless text.blank?
   end
   
+  def page_title
+    return "#{ASSOCIATION.short_name}: #{@page_title}" if @page_title
+    
+    if @page && !@page.title.blank?
+      return "#{ASSOCIATION.short_name}: #{@page.title}"
+    end
+    
+    "#{ASSOCIATION.short_name}: #{controller.controller_name.titleize}: #{controller.action_name.titleize}"
+  end
+  
   # Defaults to text length of 20
   def truncate_from_end(text)
     return text if text.blank? || text.size <= 20

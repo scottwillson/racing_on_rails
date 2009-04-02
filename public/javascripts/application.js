@@ -85,3 +85,18 @@ function flash(key, message) {
   $(key + '_span').update(message);
   $(key).show();
 }
+
+function pinTo100PctVertical(id) {
+  Event.observe(window, 'load', function() {
+    sizeTo100PctVertical(id);
+  });
+
+  Event.observe(window, 'resize', function() {
+    sizeTo100PctVertical(id);
+  });
+}
+
+function sizeTo100PctVertical(id) {
+  newHeight = ($(id).getHeight() + (document.viewport.getHeight() - $('body').offsetHeight)) - 16;
+  $(id).setStyle( { height: newHeight + 'px' })
+}

@@ -52,8 +52,6 @@ class Admin::PromotersController < ApplicationController
     remember_event
     @promoter = Promoter.find(params[:id])
     if @promoter.update_attributes(params[:promoter])
-      logger.debug("Updated OK")
-      logger.debug("@event: #{@event}")
       if @event
         redirect_to(edit_admin_event_promoter_path(@promoter, @event))
       else

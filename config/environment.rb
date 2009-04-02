@@ -5,7 +5,10 @@ require File.join(File.dirname(__FILE__), 'boot')
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/models/sweepers #{RAILS_ROOT}/app/models/competitions )
+  require "rack/web_dav"
+  config.middleware.use Rack::WebDAV
+
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/sweepers #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {
     :session_key => '_racing_on_rails_session',
@@ -15,6 +18,7 @@ Rails::Initializer.run do |config|
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
+  # TODO Check that these work as intended
   config.active_record.observers = :bar_sweeper, :home_sweeper, :results_sweeper, :schedule_sweeper
 
   # Ugh. Make config accessible to overrides
@@ -49,6 +53,8 @@ ActionView::Template.register_template_handler :pdf_writer, ActionView::Template
 require 'array'
 require 'nil_class'
 require 'string'
+require "local_static"
+require "action_view/inline_template_extension"
 
 RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
@@ -64,17 +70,3 @@ end
 
 RAILS_HOST = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
-
-Comatose.configure do |config|
-  config.admin_title = ASSOCIATION.short_name
-  config.admin_sub_title = "Static pages"
-  
-  config.default_processor = :erb
-  config.default_filter = "[No Filter]"
-  
-  config.admin_includes << :login_system
-  config.admin_authorization = :check_administrator_role
-  config.admin_get_author do
-    logged_in_user.name
-  end
-end

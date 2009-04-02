@@ -1,6 +1,9 @@
 module ActiveRecord
   module Acts
     module Tree
+      
+      class CircularAssociation < StandardError; end
+      
       def self.included(base)
         base.extend(ClassMethods)
       end
@@ -42,9 +45,20 @@ module ActiveRecord
         def acts_as_tree(options = {})
           configuration = { :foreign_key => "parent_id", :order => nil, :counter_cache => nil }
           configuration.update(options) if options.is_a?(Hash)
+          
+          validate :parent_not_self_or_child
 
-          belongs_to :parent, :class_name => name, :foreign_key => configuration[:foreign_key], :counter_cache => configuration[:counter_cache]
-          has_many :children, :class_name => name, :foreign_key => configuration[:foreign_key], :order => configuration[:order], :dependent => :destroy
+          belongs_to :parent, 
+                     :class_name => name, 
+                     :foreign_key => configuration[:foreign_key], 
+                     :counter_cache => configuration[:counter_cache]
+
+          has_many   :children, 
+                     :class_name => name, 
+                     :foreign_key => configuration[:foreign_key], 
+                     :order => configuration[:order], 
+                     :dependent => :destroy,
+                     :before_add => :not_self_or_parent
 
           class_eval <<-EOV
             include ActiveRecord::Acts::Tree::InstanceMethods
@@ -70,6 +84,10 @@ module ActiveRecord
           nodes
         end
 
+        def descendants
+          children.map(&:descendants).flatten + children
+        end
+  
         # Returns the root node of the tree.
         def root
           node = self
@@ -89,6 +107,20 @@ module ActiveRecord
         #   subchild1.self_and_siblings # => [subchild1, subchild2]
         def self_and_siblings
           parent ? parent.children : self.class.roots
+        end
+        
+        def not_self_or_parent(new_child)
+          raise(CircularAssociation, "Cannot add self as child") if self == new_child
+          raise(CircularAssociation, "Cannot add ancestor as child") if ancestors.include?(new_child)
+        end
+        
+        def parent_not_self_or_child
+          raise(CircularAssociation, "Cannot add self as own parent") if self == self.parent
+          raise(CircularAssociation, "Cannot add descendants as parent") if descendants.include?(self.parent)
+        end
+        
+        def depth
+          ancestors.size
         end
       end
     end

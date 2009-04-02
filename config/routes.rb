@@ -9,6 +9,12 @@ ActionController::Routing::Routes.draw do |map|
         :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :promoter
+    
+    admin.resources :pages
+    admin.namespace(:pages) do |pages|
+      pages.resources :versions, :member => { :revert => :get }
+    end
+
     admin.resources :promoters, :has_many => :events, :has_many => :single_day_events
     admin.resources :racers, :collection => { :cards => :get, 
                                               :duplicates => :get, 
@@ -61,7 +67,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
   map.connect "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
   map.connect "/oregon_cup", :controller => "oregon_cup", :action => "index"
-
+  
   map.connect "/posts/:mailing_list_name/new/:reply_to_id", :controller => "posts", :action => "new"
   map.connect "/posts/:mailing_list_name/new",              :controller => "posts", :action => "new"
   map.connect "/posts/new/:mailing_list_name",              :controller => "posts", :action => "new"
@@ -106,6 +112,5 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
 
-  map.comatose_admin 
-  map.comatose_root "", :layout => "application"
+  map.connect "*path", :controller => "pages", :action => "show"
 end
