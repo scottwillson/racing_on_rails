@@ -9,6 +9,13 @@ module ApplicationHelper
   def div(text)
     "<div>#{text}</div>" unless text.blank?
   end
+  
+  # Defaults to text length of 20
+  def truncate_from_end(text)
+    return text if text.blank? || text.size <= 20
+    
+    "...#{text[-20, 20]}"
+  end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.
   # 1. Capture is a Rails helper which will 'capture' the output of a block into a variable

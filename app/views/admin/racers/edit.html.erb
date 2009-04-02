@@ -92,10 +92,10 @@
     <div class="updatedon span-2">
       <span class="created_at">
         <% if @racer.created_at %>Created <%= time_ago_in_words(@racer.created_at, true) + " ago" %><% end %>
-        <% if @racer.created_by %>by <%= truncate(@racer.created_by.name, :length => 20) %><% end %>
+        <% if @racer.created_by %>by <%= truncate_from_end(@racer.created_by.name) %><% end %>
       </span>
       <% if @racer.updated_at %>Updated <%= time_ago_in_words(@racer.updated_at, true) + " ago" %><% end %>
-      <% if @racer.updated_by %>by <%= truncate(@racer.updated_by, :length => 20) %><% end %>
+      <% if @racer.updated_by %>by <%= truncate_from_end(@racer.updated_by) %><% end %>
     </div>
     <div class="right span-4 last">
       <%= link_to("Move Results", :controller => '/admin/results', :action => 'racer', :id => @racer.id) unless @racer.new_record? %>  

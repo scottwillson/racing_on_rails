@@ -497,6 +497,18 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_not_nil(assigns["racer"], "Should assign racer")
     assert_equal(alice, assigns['racer'], 'Should assign Alice to racer')
   end
+
+  def test_edit_created_by_import_file
+    alice = racers(:alice)
+    alice.created_by = ImportFile.create!(:name => "some_very_long_import_file_name.xls")
+    alice.save!
+
+    get(:edit, :id => alice.to_param)
+    assert_response(:success)
+    assert_template("admin/racers/edit")
+    assert_not_nil(assigns["racer"], "Should assign racer")
+    assert_equal(alice, assigns['racer'], 'Should assign Alice to racer')
+  end
   
   def test_create
     assert_equal([], Racer.find_all_by_name('Jon Knowlson'), 'Knowlson should not be in database')
