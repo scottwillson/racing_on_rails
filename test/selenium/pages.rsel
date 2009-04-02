@@ -4,7 +4,7 @@ include_partial "fixtures"
 open "/schedule"
 assert_text_present "regex:Schedule|Calendar"
 assert_text_not_present "This year is cancelled"
-assert_title "glob:*Schedule*"
+assert_title "regex:Schedule|Calendar"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
