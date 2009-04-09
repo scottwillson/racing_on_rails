@@ -83,6 +83,14 @@ class OregonCupTest < ActiveSupport::TestCase
     category = Category.find_or_create_by_name('Senior Women')
     source_category = Category.find_or_create_by_name('Senior Women 1/2/3')
     
+    # Sometimes women categories are picked separately. Ignore them.
+    separate_category = Category.find_or_create_by_name('Senior Women 1/2')
+    category.children << separate_category
+    standings(:kings_valley_2004).races.create!(:category => separate_category).results.create!(:place => "1", :racer => molly)
+    womens_race = races(:kings_valley_women_2004)
+    womens_race.notes = "For Oregon Cup"
+    womens_race.save!
+    
     or_cup = OregonCup.create(:date => Date.new(2004))
     banana_belt_1 = events(:banana_belt_1)
     or_cup.events << banana_belt_1

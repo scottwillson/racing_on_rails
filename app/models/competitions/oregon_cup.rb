@@ -39,15 +39,17 @@ class OregonCup < Competition
          order by racer_id
        }
     )
-    remove_separate_women_1_2_results(results)
+    remove_duplicate_results(results)
     results
   end
   
-  # Unfortunate workaround for Rehearsal Road Race and Tabor
-  def remove_separate_women_1_2_results(results)
+  def remove_duplicate_results(results)
     results.delete_if do |result|
-      result.race.name == "Women 1/2" && result.race.standings.name = "Rehearsal Road Race"
-      result.race.name == "Senior Women" && result.race.standings.name = "Mount Tabor Circuit Race"
+      results.any? do |other_result|
+        result.event == other_result.event && 
+        !result.race.notes["Oregon Cup"] &&
+        other_result.race.notes["Oregon Cup"]
+      end
     end
   end
   
