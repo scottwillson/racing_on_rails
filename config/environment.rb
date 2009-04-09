@@ -14,7 +14,10 @@ Rails::Initializer.run do |config|
     :session_key => '_racing_on_rails_session',
     :secret      => '9998d23d32c59a8161aba78b03630a93'
   }
-
+  
+  # Rails 2 convention for gem requirements
+  config.gem "fastercsv"
+  
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
