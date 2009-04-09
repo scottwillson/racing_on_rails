@@ -6,7 +6,7 @@ class RacingAssociation
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
   attr_accessor :competitions
-  attr_accessor :award_cat4_participation_points
+  attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
   attr_accessor :always_insert_table_headers
   attr_accessor :show_events_velodrome

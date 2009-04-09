@@ -4,10 +4,16 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   def setup
     @award_cat4_participation_points = ASSOCIATION.award_cat4_participation_points
     ASSOCIATION.award_cat4_participation_points = true
+    @cat4_womens_race_series_points = ASSOCIATION.cat4_womens_race_series_points
+    ASSOCIATION.cat4_womens_race_series_points = nil
+    @cat4_womens_race_series_category = ASSOCIATION.cat4_womens_race_series_category
+    ASSOCIATION.cat4_womens_race_series_category = nil
   end
   
   def teardown
     ASSOCIATION.award_cat4_participation_points = @award_cat4_participation_points
+    ASSOCIATION.cat4_womens_race_series_points = @cat4_womens_race_series_points
+    ASSOCIATION.cat4_womens_race_series_category = @cat4_womens_race_series_category
   end
   
   def test_recalculate_no_results

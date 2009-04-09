@@ -12,7 +12,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def point_schedule
-    [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
+    ASSOCIATION.cat4_womens_race_series_points || [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
   end
 
   def source_results(race)
@@ -40,7 +40,7 @@ class Cat4WomensRaceSeries < Competition
       place = source_result.place.to_i
 
       if event_ids.include?(source_result.event_id)
-        if place > 15
+        if place >= point_schedule.size
           return 25
         else
           return point_schedule[source_result.place.to_i] || 0
@@ -53,7 +53,7 @@ class Cat4WomensRaceSeries < Competition
       event_ids = events.collect { |e| e.id }
       place = source_result.place.to_i
 
-      if event_ids.include?(source_result.event_id) && place <= 15
+      if event_ids.include?(source_result.event_id) && place < point_schedule.size
         return point_schedule[source_result.place.to_i] || 0
       end
     end
@@ -67,7 +67,7 @@ class Cat4WomensRaceSeries < Competition
 
   def create_standings
     root_standings = standings.create(:event => self)
-    category = Category.find_or_create_by_name('Women Cat 4')
+    category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
     root_standings.races.create(:category => category)
   end
 
