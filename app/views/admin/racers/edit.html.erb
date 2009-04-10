@@ -66,6 +66,7 @@
         :include_blank => true %><br/>
   
     <%= f.labelled_text(:member, "Current", nil, :class => "current") if @racer.member? -%>
+	<%= f.labelled_text(:usa_cycling, "Current (#{@racer.license})", nil, :class => "current") if @racer.member_usac_to && @racer.member_usac_to >= Date.today -%>
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @racer.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@racer.member? && !@racer.renewed? -%>
 
