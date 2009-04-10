@@ -200,11 +200,18 @@ class Racer < ActiveRecord::Base
       
       #Look for the racer. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
-      r = Racer.find_by_license(license) || Racer.find_by_name(full_name)
+      r = Racer.find_by_license(license)
+      if r.nil?
+        r = Racer.find_by_name(full_name)
+        dups = Racer.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
+        if r.nil? && dups.length == 1
+          r = dups.first
+        end
+      end
       
       unless r.nil? #we found somebody
-          if r.license != license
-            #we must have the wrong person or other confusion. Do nothing?
+          if r.license && r.license.match(/\d+/) && r.license != license
+            #person has a license, but not this one. we must have the wrong person or other confusion. Do nothing?
           else 
             #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
             r.license = license
