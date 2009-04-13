@@ -30,8 +30,6 @@ class OregonCup < Competition
           LEFT OUTER JOIN standings ON races.standings_id = standings.id 
           LEFT OUTER JOIN events ON standings.event_id = events.id 
             WHERE races.category_id is not null 
-              and ((standings.bar_points > 0 and !(standings.name like '%Overall%'))
-                   or (standings.bar_points = 0 and standings.name like '%Combined%'))
               and place between 1 and 20
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))

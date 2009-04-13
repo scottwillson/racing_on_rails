@@ -86,9 +86,11 @@ class OregonCupTest < ActiveSupport::TestCase
     # Sometimes women categories are picked separately. Ignore them.
     separate_category = Category.find_or_create_by_name('Senior Women 1/2')
     category.children << separate_category
-    standings(:kings_valley_2004).races.create!(:category => separate_category).results.create!(:place => "1", :racer => molly)
+    separate_standings = events(:kings_valley).standings.create!(:bar_points => 1)
+    separate_standings.races.create!(:category => separate_category).results.create!(:place => "1", :racer => molly)
     womens_race = races(:kings_valley_women_2004)
     womens_race.notes = "For Oregon Cup"
+    womens_race.bar_points = 0
     womens_race.save!
     
     or_cup = OregonCup.create(:date => Date.new(2004))
