@@ -1,3 +1,6 @@
+#compares current members to USAC database for current year
+#updates member_usac_to column to 12/31/{year}
+
 class UsacFile
   
   attr_accessor :members_list
@@ -23,7 +26,6 @@ class UsacFile
     REGION_FILES[key] = "/promoters/wp_p_uscf_" + value + ".csv"
   end
   
-  #compare current members to USAC database for current year, update member_usac_to column to 12/31/{year}
   def initialize(user='promo', pword='races')
     Net::HTTP.start(USAC_SITE) do |http|
       req = Net::HTTP::Get.new(REGION_FILES[ASSOCIATION.usac_region])
@@ -46,9 +48,8 @@ class UsacFile
   end
     
     #assumes USAC database contains current year's members only, all licenses good until end of this year
-  def update
+  def update_racers
     expir_date = Date.new(Date.today.year, 12, 31) 
-    num_updated = 0
     racers_updated = []
     @members_list.each {|memusac|
       #get the parameters in a nice format
@@ -74,11 +75,12 @@ class UsacFile
             #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
             r.license = license
             r.member_usac_to = expir_date
-            racers_updated.push(r) && num_updated+=1 if r.save!
+            racers_updated.push(r) if r.save!
           end
       end
     }
-    RACING_ON_RAILS_DEFAULT_LOGGER.info("#{num_updated} racers were updated with a USAC expiration date of #{expir_date} ")
+    
+    RACING_ON_RAILS_DEFAULT_LOGGER.info("#{racers_updated.length} racers were updated with a USAC expiration date of #{expir_date} ")
     return racers_updated
   end
   
