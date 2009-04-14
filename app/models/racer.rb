@@ -173,55 +173,6 @@ class Racer < ActiveRecord::Base
     racers
   end
   
-  #compare current members to USAC database for current year, update member_usac_to column to 12/31/{year}
-  def Racer.update_usac_memberships
-    Net::HTTP.start('www.usacycling.org') do |http|
-      #this request involves some hardcoded values on USACycling.org that haven't changed in years.  Brittle?
-      req = Net::HTTP::Get.new('/promoters/wp_p_uscf_nw.csv')
-      req.basic_auth 'promo', 'races'
-      response = http.request(req)
-      #parses out the data into a 2D array with other properties (such as column referencing like hashes)
-      @members_usac = FasterCSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
-    end
-    
-    #cleans up the headers so we can make clean column references
-    @members_usac.headers.each do |head|
-      head.lstrip!
-      head.downcase!
-      head.sub!(/ /,"_") #spaces replaced with underscore
-    end
-    
-    #assumes USAC database contains current year's members only, all licenses good until end of this year
-    expir_date = Date.new(Date.today.year, 12, 31)  
-    @members_usac.each do |memusac|
-      #get the parameters in a nice format
-      license = memusac["license#"].to_i.to_s #strips off leading zeros, consistent with our db
-      full_name = memusac["first_name"].to_s + " " + memusac["last_name"].to_s #as specified by find method used below
-      
-      #Look for the racer. License # is most reliable (e.g. we only have short first name)
-      #but we may not have their USAC License # yet, so also look by full name
-      r = Racer.find_by_license(license)
-      if r.nil?
-        r = Racer.find_by_name(full_name)
-        dups = Racer.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
-        if r.nil? && dups.length == 1
-          r = dups.first
-        end
-      end
-      
-      unless r.nil? #we found somebody
-          if r.license && r.license.match(/\d+/) && r.license != license
-            #person has a license, but not this one. we must have the wrong person or other confusion. Do nothing?
-          else 
-            #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
-            r.license = license
-            r.member_usac_to = expir_date
-            r.save!
-        end
-      end
-    end
-  end
-  
   def racers_with_same_name
     racers = Racer.find_all_by_name(self.name) | Alias.find_all_racers_by_name(self.name)
     racers.reject! { |racer| racer == self }
