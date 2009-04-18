@@ -1,7 +1,6 @@
 require "test_helper"
 
 class TeamsControllerTest < ActionController::TestCase
-
   def test_index
     nonmember = Team.create!(:name => "Not Member")
     assert(!nonmember.member?, "Team should not be member")

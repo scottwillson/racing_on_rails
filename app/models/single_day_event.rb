@@ -1,16 +1,9 @@
-# Event that takes place on one day only. By convention, this Event is the only subclass
-# that has Standings and Results.
+# Event that takes place on one day only
 #
-# Notifys parent event on save or destroy
+# Notifies parent event on save or destroy
 class SingleDayEvent < Event
+  before_create :set_bar_points
 
-  after_save {|event| event.parent.after_child_event_save if event.parent}
-  after_destroy {|event| event.parent.after_child_event_destroy if event.parent}
-  
-  belongs_to :parent, 
-             :foreign_key => 'parent_id', 
-             :class_name => 'Event'
-  
   def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = ASSOCIATION.show_only_association_sanctioned_races_on_calendar)
     conditions = ["date between ? and ? and practice = ?", "#{year}-01-01", "#{year}-12-31", false]
 
@@ -27,11 +20,15 @@ class SingleDayEvent < Event
     SingleDayEvent.find(:all, :conditions => conditions)
   end
   
-  # Child/single day of MultiDayEvent?
   def series_event?
-    parent and (parent.is_a?(WeeklySeries))
+    self.parent && parent.is_a?(WeeklySeries)
   end
 
+  def set_bar_points
+    self.bar_points = 0 if series_event?
+    true
+  end
+  
   def missing_parent?
     !missing_parent.nil?
   end
@@ -44,16 +41,8 @@ class SingleDayEvent < Event
     end
   end
   
-  def full_name
-    if parent.nil?
-      name
-    elsif parent.name == name
-      name
-    elsif name[parent.name]
-      name
-    else
-      "#{parent.name} #{name}"
-    end
+  def requires_combined_results?
+    self.discipline == "Time Trial"
   end
 
   def friendly_class_name

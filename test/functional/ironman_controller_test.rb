@@ -5,12 +5,12 @@ class IronmanControllerTest < ActionController::TestCase
     big_team = Team.create(:name => "T" * 60)
     weaver = racers(:weaver)
     weaver.team = big_team
-    events(:banana_belt_1).standings.first.races.first.results.create(:racer => weaver, :team => big_team)
+    events(:banana_belt_1).races.first.results.create(:racer => weaver, :team => big_team)
     weaver.first_name = "f" * 60
     weaver.last_name = "T" * 60
 
-    Ironman.recalculate(2004)
-    Ironman.recalculate
+    Ironman.calculate!(2004)
+    Ironman.calculate!
 
     opts = {:controller => "ironman", :action => "index", :year => "2004"}
     assert_routing("/ironman/2004", opts)

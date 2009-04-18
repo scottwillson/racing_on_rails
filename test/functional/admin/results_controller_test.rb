@@ -260,10 +260,8 @@ class Admin::ResultsControllerTest < ActionController::TestCase
   
   def test_update_to_alias
     weaver_jack_frost = results(:weaver_jack_frost)
-
-    first_name = 'Eric'
-    last_name = 'Tonkin'
     original_team_name = weaver_jack_frost.team_name
+    assert_equal(1, racers(:tonkin).aliases.size)
     
     post(:set_result_name, 
         :id => weaver_jack_frost.to_param,
@@ -273,8 +271,9 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
     
     weaver_jack_frost.reload
+    assert_equal(racers(:tonkin), weaver_jack_frost.racer, "Result racer")
     assert_equal('Erik', weaver_jack_frost.first_name, 'first_name')
-    assert_equal(last_name, weaver_jack_frost.last_name, 'last_name')
+    assert_equal("Tonkin", weaver_jack_frost.last_name, 'last_name')
     assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
     assert_equal(racers(:tonkin), weaver_jack_frost.racer(true), 'racer')
     assert_equal(1, racers(:tonkin).aliases.size)

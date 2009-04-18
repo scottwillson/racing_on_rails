@@ -1,11 +1,6 @@
 # Year-long best rider competition for senior men and women
 class OregonCup < Competition
-
-  # 2006 races: 19, 80, 81, 259, 265, 381, 411
   # TODO Initialize OregonCup with "today" attribute
-  # TODO Break ties according to rules on website
-  has_many :events
-
   def friendly_name
     'Oregon Cup'
   end
@@ -16,9 +11,9 @@ class OregonCup < Competition
 
   # source_results must be in racer-order
   def source_results(race)
-    return [] if events(true).empty?
+    return [] if source_events(true).empty?
     
-    event_ids = events.collect do |event|
+    event_ids = source_events.collect do |event|
       event.id
     end
     event_ids = event_ids.join(', ')    
@@ -27,8 +22,7 @@ class OregonCup < Competition
       %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
           LEFT OUTER JOIN races ON races.id = results.race_id 
           LEFT OUTER JOIN categories ON categories.id = races.category_id
-          LEFT OUTER JOIN standings ON races.standings_id = standings.id 
-          LEFT OUTER JOIN events ON standings.event_id = events.id 
+          LEFT OUTER JOIN events ON races.event_id = events.id 
             WHERE races.category_id is not null 
               and place between 1 and 20
               and categories.id in (#{category_ids_for(race)})
@@ -51,23 +45,19 @@ class OregonCup < Competition
     end
   end
   
-  def create_standings
-    root_standings = standings.create(:event => self)
-
+  def create_races
     category = Category.find_or_create_by_name('Senior Men')
-    root_standings.races.create(:category => category)
+    self.races.create(:category => category)
 
     category = Category.find_or_create_by_name('Senior Women')
-    root_standings.races.create(:category => category)
+    self.races.create(:category => category)
   end
   
-  def latest_event_with_standings
-    for event in events.sort
-      for standings in event.standings
-        for race in standings.races
-          if !race.results.empty?
-            return event
-          end
+  def latest_event_with_results
+    for event in source_events.sort_by(&:date)
+      for race in event.races
+        if !race.results.empty?
+          return event
         end
       end
     end
@@ -80,7 +70,7 @@ class OregonCup < Competition
   
   # FIXME: Needs to sort by date?
   def next_event(today = Date.today)
-    for event in events.sort
+    for event in source_events.sort_by(&:date)
       if event.date > today
         return event
       end

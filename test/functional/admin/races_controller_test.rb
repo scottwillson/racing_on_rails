@@ -8,10 +8,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
 
   def test_edit
-    kings_valley = events(:kings_valley)
-    standings = kings_valley.standings.first
     kings_valley_3 = races(:kings_valley_3)
-
     get(:edit, :id => kings_valley_3.to_param)
     assert_response(:success)
     assert_template("admin/races/edit")
@@ -102,7 +99,6 @@ class Admin::RacesControllerTest < ActionController::TestCase
   def test_destroy_result
     result_2 = results(:weaver_banana_belt)
     race = result_2.race
-    event = race.standings.event
     assert_not_nil(result_2, 'Result should exist in DB')
     
     post(:destroy_result, :id => race.to_param, :result_id => result_2.to_param)

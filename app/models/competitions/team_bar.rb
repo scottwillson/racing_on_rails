@@ -15,26 +15,23 @@ class TeamBar < Competition
   # less duplicate code
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.points, results.id as id, race_id, racer_id, team_id, place 
-          FROM results  
-          LEFT OUTER JOIN races ON races.id = results.race_id 
-          LEFT OUTER JOIN standings ON races.standings_id = standings.id 
-          LEFT OUTER JOIN events ON standings.event_id = events.id 
-          LEFT OUTER JOIN categories ON races.category_id = categories.id 
-          where results.id in (select source_result_id 
-            from scores 
-            LEFT OUTER JOIN results as competition_results 
-              ON competition_results.id = scores.competition_result_id
-            LEFT OUTER JOIN races as competition_races 
-              ON competition_races.id = competition_results.race_id
-            LEFT OUTER JOIN standings as competition_standings 
-              ON competition_races.standings_id = competition_standings.id 
-            LEFT OUTER JOIN events as competition_events 
-              ON competition_standings.event_id = competition_events.id 
-            where competition_events.type = 'Bar' 
-              and competition_events.date >= '#{date.year}-01-01' 
-              and competition_events.date <= '#{date.year}-12-31')
-          order by team_id}
+      %Q{SELECT results.points, results.id as id, race_id, racer_id, team_id, place
+              FROM results 
+              LEFT OUTER JOIN races ON races.id = results.race_id
+              LEFT OUTER JOIN events ON races.event_id = events.id
+              LEFT OUTER JOIN categories ON races.category_id = categories.id
+              where results.id in (select source_result_id
+                from scores
+                LEFT OUTER JOIN results as competition_results
+                  ON competition_results.id = scores.competition_result_id
+                LEFT OUTER JOIN races as competition_races
+                  ON competition_races.id = competition_results.race_id
+                LEFT OUTER JOIN events as competition_events
+                  ON competition_races.event_id = competition_events.id
+                where competition_events.type = 'Bar'
+                  and competition_events.date >= '#{date.year}-01-01'
+                  and competition_events.date <= '#{date.year}-12-31')
+              order by team_id}
     )
   end
 
@@ -106,9 +103,6 @@ class TeamBar < Competition
 
       team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
-      if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
-        points = points / 2.0
-      end
       if source_result.race.bar_points == 1 and field_size >= 75
         points = points * 1.5
       end

@@ -41,7 +41,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     
     # No racer ID valid when new, but can't save
     no_racer = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
-    assert(no_racer.valid?, 'No racer')
+    assert(no_racer.valid?, "No racer result should be valid, but: #{no_racer.errors.full_messages}")
     assert_raise(ActiveRecord::StatementInvalid) {no_racer.save!}
     
     no_racer = RaceNumber.new(:value => '1009', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))

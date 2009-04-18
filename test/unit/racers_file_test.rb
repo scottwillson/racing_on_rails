@@ -4,7 +4,7 @@ class RacerFileTest < ActiveSupport::TestCase
   def test_import
     team = Team.create!(:name => "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(:date => 1.years.ago)
-    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
     assert_equal(0, team.historical_names(true).size, "historical_names")
     assert_equal(1, team.aliases(true).size, "Aliases")

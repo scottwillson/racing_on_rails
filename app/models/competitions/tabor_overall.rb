@@ -1,34 +1,33 @@
-# Minimum two-race requirement
-# but ... should show not apply until there are at least two races
-class CascadeCrossSeriesStandings < Standings  
-  def CascadeCrossSeriesStandings.recalculate(year = Date.today.year)
-    series = Series.find(
-              :first, 
-              :conditions => ["name = ? and date between ? and ?", "Cascade Cross Series", Date.new(year, 1, 1), Date.new(year, 12, 31)])
-    if series && series.has_results?
-      CascadeCrossSeriesStandings.destroy_all(:event_id => series.id)
-      standings = CascadeCrossSeriesStandings.create!(:name => "Overall", :event => series)
-      standings.create_races
-      standings.recalculate
+class TaborOverall < Overall
+  def TaborOverall.calculate!(year = Date.today.year)
+    source_event = WeeklySeries.find(
+                    :first, 
+                    :conditions => ["name = ? and date between ? and ?", "Mt Tabor Series", Date.new(year, 1, 1), Date.new(year, 12, 31)])
+    return unless source_event && source_event.has_results?
+
+    unless source_event.overall
+      source_event.competitions << TaborOverall.create!(:name => "Overall")
     end
+    
+    source_event.overall.destroy_races
+    source_event.overall.create_races
+    source_event.overall.calculate!
   end
 
   def create_races
-    races.create!(:category => Category.find_or_create_by_name("Men A"))
-    races.create!(:category => Category.find_or_create_by_name("Men B"))
-    races.create!(:category => Category.find_or_create_by_name("Men C"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men A 40+"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men B 40+"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men C 40+"))
-    races.create!(:category => Category.find_or_create_by_name("Junior A"))
-    races.create!(:category => Category.find_or_create_by_name("Junior B"))
-    races.create!(:category => Category.find_or_create_by_name("Women A"))
-    races.create!(:category => Category.find_or_create_by_name("Women B"))
-    races.create!(:category => Category.find_or_create_by_name("Singlespeed"))
+    races.create!(:category => Category.find_or_create_by_name("Fixed Gear"))
+    races.create!(:category => Category.find_or_create_by_name("Category 4 Women"))
+    races.create!(:category => Category.find_or_create_by_name("Women Masters 40+"))
+    races.create!(:category => Category.find_or_create_by_name("Senior Women"))
+    races.create!(:category => Category.find_or_create_by_name("Men Masters 40+"))
+    races.create!(:category => Category.find_or_create_by_name("Category 4 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Category 5 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Category 3 Men"))
+    races.create!(:category => Category.find_or_create_by_name("Senior Men"))
   end
 
   # Race#place_results_by_points saves each Result
-  def recalculate
+  def calculate!
     for race in races
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
@@ -40,7 +39,7 @@ class CascadeCrossSeriesStandings < Standings
 
   def source_results_with_benchmark(race)
     results = []
-    CascadeCrossSeriesStandings.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    TaborOverall.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
@@ -49,22 +48,25 @@ class CascadeCrossSeriesStandings < Standings
 
   # source_results must be in racer-order
   def source_results(race)
-    return [] if event.events.empty?
+    return [] if source_event.children.empty?
     
-    event_ids = event.events.collect do |event|
+    event_ids = source_event.children.collect do |event|
       event.id
     end
     event_ids = event_ids.join(', ')
     category_ids = category_ids_for(race)
     
+    # Special case for 2008 series changing categories in second race
+    if race.category == Category.find_by_name("Category 4 Men")
+      category_ids << ", #{Category.find_by_name("Category 4/5 Men").id}"
+    end
+    
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
-          JOIN standings ON races.standings_id = standings.id 
-          JOIN events ON standings.event_id = events.id 
-          WHERE (standings.type = 'Standings' or standings.type is null)
-              and place between 1 and 18
+          JOIN events ON races.event_id = events.id 
+          WHERE place between 1 and 15
               and categories.id in (#{category_ids})
               and events.id in (#{event_ids})
           order by racer_id
@@ -79,7 +81,7 @@ class CascadeCrossSeriesStandings < Standings
     ids = ids + race.category.descendants.map {|category| category.id}
     ids.join(', ')
   end
-
+  
   # If same ride places twice in same race, only highest result counts
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
@@ -89,10 +91,8 @@ class CascadeCrossSeriesStandings < Standings
 
       racer = source_result.racer
       points = points_for(source_result)
-      
-      # We repeat some calculations here if a racer is disallowed
-      if points > 0.0 && (!event.completed? || (event.completed? && raced_minimum_events?(racer, race))) # && (!members_only? || member?(racer, source_result.date))
-
+      if points > 0.0 && (!members_only? || member?(racer, source_result.date))
+ 
         if first_result_for_racer(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
@@ -101,15 +101,16 @@ class CascadeCrossSeriesStandings < Standings
              :team => (racer ? racer.team : nil),
              :race => race)
         end
-
+ 
         Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
           competition_result.scores.create_if_best_result_for_race(
             :source_result => source_result, 
             :competition_result => competition_result, 
-            :points => points)
+            :points => points
+          )
         }
       end
-
+      
       # Aggressive memory management. If competition has a race with many results, 
       # the results array can become a large, uneeded, structure
       results[index] = nil
@@ -117,92 +118,53 @@ class CascadeCrossSeriesStandings < Standings
         logger.debug("GC start after record #{index}")
         GC.start
       end
-
+      
     end
   end
-
+  
   # By default, does nothing. Useful to apply rule like:
   # * Any results after the first four only get 50-point bonus
   # * Drop lowest-scoring result
   def after_create_competition_results_for(race)
     race.results.each do |result|
-      # Don't bother sorting scores unless we need to drop some
-      if result.scores.size > 6
-        result.scores.sort! { |x, y| x.source_result.place.to_i <=> y.source_result.place.to_i }
-        lowest_scores = result.scores[6, 2]
-        lowest_scores.each do |lowest_score|
-          result.scores.destroy(lowest_score)
-        end
+      if result.scores.size > 5 || (result.scores.size > 4 && race.category.name == "Category 5 Men")
+        result.scores.sort! { |x, y| y.points <=> x.points }
+        lowest_score = result.scores.last
+        result.scores.destroy(lowest_score)
         # Rails destroys Score in database, but doesn't update the current association
         result.scores(true)
       end
-    
-      if preliminary?(result)
-        result.preliminary = true       
-      end    
     end
   end
-
+  
   def break_ties?
     true
   end
-
+  
   # Use the recorded place with all finishers? Or only place with just Assoication member finishers?
   def place_members_only?
     false
   end
-
+  
   def point_schedule
-    [0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    [0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16, 15, 14, 13, 12, 11]
   end
-
+  
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
     points = point_schedule[source_result.place.to_i].to_f
-    #if source_result.last_event?
-      #points = points * 2
-    #end
+    if source_result.last_event?
+      points = points * 2
+    end
     points
   end
-
+  
   # Only members can score points?
   def members_only?
     false 
   end
-
+  
   def first_result_for_racer(source_result, competition_result)
     competition_result.nil? || source_result.racer != competition_result.racer
-  end
-  
-  def minimum_events
-    2
-  end
-  
-  def raced_minimum_events?(racer, race)
-    return false if event.events.empty?
-    
-    event_ids = event.events.collect do |event|
-      event.id
-    end
-    event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race)
-
-    count = Result.count_by_sql(
-      %Q{ SELECT count(*) FROM results  
-          JOIN races ON races.id = results.race_id 
-          JOIN categories ON categories.id = races.category_id 
-          JOIN standings ON races.standings_id = standings.id 
-          JOIN events ON standings.event_id = events.id 
-          WHERE (standings.type = 'Standings' or standings.type is null)
-              and categories.id in (#{category_ids})
-              and events.id in (#{event_ids})
-              and results.racer_id = #{racer.id}
-       }
-    )
-    count >= minimum_events
-  end
-  
-  def preliminary?(result)
-    event.events_with_results > minimum_events && !event.completed? && !raced_minimum_events?(result.racer, result.race)
   end
 end

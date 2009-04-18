@@ -11,9 +11,9 @@
 # to identify racer results with misspelled names.
 class RaceNumber < ActiveRecord::Base
   before_validation :defaults
-  validates_presence_of :discipline_id
-  validates_presence_of :number_issuer_id
-  validates_presence_of :racer_id
+  validates_presence_of :discipline
+  validates_presence_of :number_issuer
+  validates_presence_of :racer, :unless => :new_record?
   validates_presence_of :value
   validate :unique_number
   
@@ -83,7 +83,7 @@ class RaceNumber < ActiveRecord::Base
   end
   
   def get_racer_id
-    if racer and racer.new_record?
+    if racer && (racer.new_record? || racer.changed?)
       racer.reload
     end
   end

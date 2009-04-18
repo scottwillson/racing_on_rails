@@ -12,23 +12,19 @@ class Admin::Cat4WomensRaceSeriesController < ApplicationController
     @event = SingleDayEvent.find(:first, :conditions => { :name => event_for_find.name, :date => event_for_find.date })
     if @event.nil?
       @event = SingleDayEvent.new(params[:event])
+      @event.save!
       unless params[:event][:sanctioned_by]
         @event.sanctioned_by = nil 
+        @event.save!
       end
-      @event.save!
     end
 
-    @standings =  @event.standings.detect {|s| !s.is_a?(CombinedStandings) }
-    if @standings.nil?
-      @standings = @event.standings.create! 
-    end
-    
     cat_4_women = Category.find_or_create_by_name("Women Cat 4")
-    @race = @standings.races.detect do |r|
+    @race = @event.races.detect do |r|
       r.category == cat_4_women || cat_4_women.descendants.include?(r.category)
     end
     if @race.nil?
-      @race = @standings.races.create!(:category => cat_4_women)
+      @race = @event.races.create!(:category => cat_4_women)
     end
     
     @result = @race.results.new(params[:result])

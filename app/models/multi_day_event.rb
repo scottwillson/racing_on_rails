@@ -3,36 +3,25 @@
 # WeeklySeries subclasses represent events that do not occur on concurrent days, though
 # this is just a convention.
 #
-# Calculate start_date, end_date, and date from events. 
+# Calculate start_date, end_date, and date from children. 
 # date = start_date
 #
 # Cannot have a parent event
 #
-# By convention, only SingleDayEvents have Standings and Results -- MultiDayEvents do not. 
-# Final standings like Overall GC are associated with the last day's SingleDayEvent.
-#
-# Building large object trees of events and children and memory may not work correctly.
-# Prefer +create+ over +new+ and +build+
-#
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
-
-  PROPOGATED_ATTRIBUTES = %w{ cancelled city discipline flyer flyer_approved 
-                              instructional name practice promoter_id 
-                              prize_list sanctioned_by state time velodrome_id 
-                              time
-                             } unless defined?(PROPOGATED_ATTRIBUTES)
-
   validates_presence_of :name, :date
   validate_on_create {:parent.nil?}
   validate_on_update {:parent.nil?}
-  
+
   before_save :update_date
-  before_save :update_events
-  after_create :create_events
+  before_save :update_children
+  after_create :create_children
   
-  has_many :events, 
-           :class_name => 'SingleDayEvent',
+  # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent, 
+  # same day of next week if not adjacent (Series/WeeklySeries)
+  has_many :children, 
+           :class_name => "SingleDayEvent",
            :foreign_key => "parent_id",
            :order => "date" do
              def create!(attributes = {})
@@ -40,8 +29,10 @@ class MultiDayEvent < Event
                attributes[:parent] = @owner
                PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
+               (event.date = @owner.date) unless attributes[:date]
                event.parent = @owner
                event.save!
+               @owner.children << event
                event
              end
 
@@ -50,12 +41,14 @@ class MultiDayEvent < Event
                attributes[:parent] = @owner
                PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
+               (event.date = @owner.date) unless  attributes[:date]
                event.parent = @owner
                event.save
+               @owner.children << event
                event
              end
            end
-  
+
   def MultiDayEvent.find_all_by_year(year, discipline = nil)
     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
 
@@ -75,12 +68,12 @@ class MultiDayEvent < Event
   # Create MultiDayEvent from several SingleDayEvents.
   # Use first SingleDayEvent to populate date, name, promoter, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
-  def MultiDayEvent.create_from_events(events)
-    if events.empty?
-      raise ArgumentError.new("events cannot be empty")
+  def MultiDayEvent.create_from_children(children)
+    if children.empty?
+      raise ArgumentError.new("children cannot be empty")
     end
     
-    first_event = events.first
+    first_event = children.first
     new_event_attributes = {
       :city => first_event.city,
       :discipline => first_event.discipline,
@@ -93,15 +86,15 @@ class MultiDayEvent < Event
       :velodrome => first_event.velodrome
     }
     
-    new_multi_day_event_class = MultiDayEvent.guess_type(events)
+    new_multi_day_event_class = MultiDayEvent.guess_type(children)
     multi_day_event = new_multi_day_event_class.create!(new_event_attributes)
 
-    for event in events
+    for event in children
       event.parent = multi_day_event
       event.save!
     end
 
-    multi_day_event.events(true)
+    multi_day_event.children(true)
     multi_day_event
   end
   
@@ -127,44 +120,13 @@ class MultiDayEvent < Event
     raise ArgumentError, "'event' cannot be nil" if event.nil?
     MultiDayEvent.find(:first, :conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
-  
-  def initialize(attributes = nil)
-    super
-    self.date = Time.new.beginning_of_year unless self[:date]
-  end
-  
-  # Update child events from parents' attributes if child attribute has the
-  # same value as the parent before update
-  # TODO original_values is duplicating Rails 2.1's dirty
-  def update_events(force = false)
-    return if new_record?
-    
-    original_values = MultiDayEvent.connection.select_one("select #{PROPOGATED_ATTRIBUTES.join(', ')} from events where id = #{self.id}")
-    for attribute in PROPOGATED_ATTRIBUTES
-      original_value = original_values[attribute]
-      new_value = self[attribute]
-      RACING_ON_RAILS_DEFAULT_LOGGER.debug("MultiDayEvent update_events #{attribute}, #{original_value}, #{new_value}")
-      if force
-        SingleDayEvent.update_all(
-          ["#{attribute}=?", new_value], 
-          ["parent_id=?", self[:id]]
-        )
-      elsif original_value.nil?
-        SingleDayEvent.update_all(
-          ["#{attribute}=?", new_value], 
-          ["#{attribute} is null and parent_id=?", self[:id]]
-        ) unless original_value == new_value
-      else
-        SingleDayEvent.update_all(
-          ["#{attribute}=?", new_value], 
-          ["#{attribute}=? and parent_id=?", original_value, self[:id]]
-        ) unless original_value == new_value
-      end
-    end
+
+  def default_date
+    Time.new.beginning_of_year
   end
   
   # Create child events automatically, if we've got enough info to do so
-  def create_events
+  def create_children
     return unless start_date && @end_date && @every
     
     _start_date = start_date
@@ -173,16 +135,8 @@ class MultiDayEvent < Event
     end
     
     _start_date.step(@end_date, 1) do |date|
-      events.create!(:date => date) if @every.include?(date.wday)
+      children.create!(:date => date) if @every.include?(date.wday)
     end
-  end
-  
-  def after_child_event_save
-    update_date
-  end
-  
-  def after_child_event_destroy
-    update_date
   end
   
   # Uses SQL query to set +date+ from child events
@@ -193,23 +147,6 @@ class MultiDayEvent < Event
     unless minimum_date.blank? || minimum_date == self.date.to_s
       MultiDayEvent.connection.execute("update events set date = '#{minimum_date}' where id = #{id}")
       self.date = minimum_date
-    end
-  end
-
-  # +date+
-  def start_date
-    date
-  end
-  
-  def start_date=(date)
-    self.date = date
-  end
-  
-  def end_date
-    if !events(true).empty?
-      events.last.date
-    else
-      start_date
     end
   end
   
@@ -270,25 +207,16 @@ class MultiDayEvent < Event
                                           self.name, self.date.year]) 
   end
   
-  # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
-  # The results page should show the results in that case, and TaborSeriesStandings would just create an empty Standings.
-  def has_results_with_children?
-    has_results_without_children? || events(true).any? { |event| event.has_results? }
-  end
-  
   # Number of child events with results
-  def events_with_results(reload = false)
-    events(reload).inject(0) { |count, event| event.has_results? ? count + 1 : count }
-  end
-  
+  # def children_with_results(reload = false)
+  #   children(reload).inject(0) { |count, event| event.has_results? ? count + 1 : count }
+  # end
+
   def completed?(reload = false)
-    events.count(reload) > 0 && (events_with_results(reload) == events.count)
+    children.count(reload) > 0 && (children_with_results(reload).size == children.count)
   end
   
   def to_s
-    "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size}>"
+    "<#{self.class} #{id} #{discipline} #{name} #{date} #{children.size}>"
   end
-
-  alias_method_chain :has_results?, :children
-
 end

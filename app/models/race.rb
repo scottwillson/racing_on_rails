@@ -1,31 +1,24 @@
-# A Race is essentionally a collection of Results labelled with a Category. Races must belong to a parent Standings,
-# and Standings must belong to a SingleDayEvent or a Competition.
+# A Race is essentionally a collection of Results labelled with a Category. Races must belong to a parent Event.
 # TODO Use Discipline class, not String
 #
 # Races only have some of their attributes populated. These attributes are listed in the +result_columns+ Array.
 class Race < ActiveRecord::Base
 
   include Comparable
-  include Dirty
 
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
   # Prototype Result used for checking valid column names
   RESULT = Result.new
   
-  validates_presence_of :standings_id, :category_id
+  validates_presence_of :event, :category
   validate :result_columns_valid?
 
   before_validation :find_associated_records
   
   belongs_to :category
   serialize :result_columns, Array
-  belongs_to :standings
+  belongs_to :event
   has_many :results, :dependent => :destroy
-  
-  # :deprecated:
-  def bar_category
-    category.parent || category
-  end
   
   # Convenience method to get the Race's Category's BAR Category
   # :deprecated:
@@ -33,13 +26,13 @@ class Race < ActiveRecord::Base
     category.parent.name if category and category.parent
   end
   
-  # Defaults to Standings' BAR points
+  # Defaults to Event's BAR points
   def bar_points
-    self[:bar_points] || standings.bar_points
+    self[:bar_points] || self.event.bar_points
   end
   
   def bar_points=(value)
-    if value == standings.bar_points or value.nil?
+    if value == self.event.bar_points or value.nil?
       self[:bar_points] = nil
     elsif value.to_i == value.to_f
       self[:bar_points] = value
@@ -51,14 +44,13 @@ class Race < ActiveRecord::Base
   def category_name=(name)
     if name.blank?
       self.category = nil
-      self.category.dirty
     else
       self.category = Category.new(:name => name)
     end
   end
   
   def discipline
-    standings.discipline if self.standings
+    self.event.discipline if event
   end
   
   def category_name
@@ -70,12 +62,12 @@ class Race < ActiveRecord::Base
   end
   
   def full_name
-    if name == standings.full_name
+    if name == self.event.full_name
       name
-    elsif standings.full_name[name]
-      standings.full_name
+    elsif event.full_name[name]
+      event.full_name
     else
-      "#{standings.full_name}: #{name}"
+      "#{event.full_name}: #{name}"
     end
   end
 
@@ -86,8 +78,8 @@ class Race < ActiveRecord::Base
   end
   
   def date
-    raise(ArgumentError, 'Need standings to get date') unless standings
-    standings.date
+    raise(ArgumentError, 'Need Event to get date') unless self.event
+    self.event.date
   end
   
   # FIXME: Incorrectly doubles tandem and other team events' field sizes
@@ -138,7 +130,7 @@ class Race < ActiveRecord::Base
   # (category, bar_category, racer, team) will not point to associated records
   # FIXME Handle racers with only a number
   def find_associated_records
-    if category and (category.new_record? or category.dirty?)
+    if category && (category.new_record? || category.changed?)
       if category.name.blank?
         self.category = nil
       else
@@ -146,10 +138,6 @@ class Race < ActiveRecord::Base
         self.category = existing_category if existing_category
       end
     end
-  end
-  
-  def event
-    standings.event
   end
 
   def has_result(row_hash)
@@ -190,10 +178,10 @@ class Race < ActiveRecord::Base
   
   # FIXME Almost certainly does not handle mixed member/non-member teams correctly
   def calculate_members_only_places!
-    standings.event.disable_notification!
+    event.disable_notification!
     begin
       non_members = 0
-      for result in results.sort
+      results.sort.each do |result|
         # Slight optimization. Most of the time, no point in saving a result that hasn't changed
         place_before = result.members_only_place
         result.members_only_place = ''
@@ -207,7 +195,7 @@ class Race < ActiveRecord::Base
         result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
       end
     ensure
-      standings.event.enable_notification!
+      event.enable_notification!
     end
   end
   
@@ -269,6 +257,6 @@ class Race < ActiveRecord::Base
   end
 
   def to_s
-    "#<Race #{id} #{self[:standings_id]} #{self[:category_id]} >"
+    "#<Race #{id} #{self[:event_id]} #{self[:category_id]} >"
   end
 end

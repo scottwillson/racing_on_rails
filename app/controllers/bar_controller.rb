@@ -54,13 +54,13 @@ class BarController < ApplicationController
     
     if @discipline == Discipline[:overall]
         @race = Race.find(:first,
-                          :include => [{:standings => :event}],
+                          :include => :event,
                           :conditions => ['category_id = ? and events.date = ? and events.type = ?',
                                           @category.id, Date.new(@year), 'OverallBar'])
 
     elsif @discipline == Discipline[:team]
       @race = Race.find(:first,
-                        :include => [{:standings => :event}],
+                        :include => :event,
                         :conditions => ['events.date = ? and events.type = ?', 
                                         Date.new(@year), 'TeamBar'])
       @results = Result.find(:all, 
@@ -71,14 +71,14 @@ class BarController < ApplicationController
 
     elsif @discipline == Discipline[:age_graded]
       @race = Race.find(:first,
-                        :include => [{:standings => :event}],
+                        :include => :event,
                         :conditions => ['category_id = ? and events.date = ? and events.type = ?',
                                         @category.id, Date.new(@year), 'AgeGradedBar'])
 
     else
       @race = Race.find(:first,
-                        :include => [{:standings => :event}],
-                        :conditions => ['category_id = ? and events.date = ? and events.type = ? and (standings.discipline = ? or (standings.discipline is null and events.discipline = ?))', 
+                        :include => :event,
+                        :conditions => ['category_id = ? and events.date = ? and events.type = ? and (events.discipline = ? or (events.discipline is null and events.discipline = ?))', 
                                         @category.id, Date.new(@year), 'Bar', @discipline.name, @discipline.name])
     end
     

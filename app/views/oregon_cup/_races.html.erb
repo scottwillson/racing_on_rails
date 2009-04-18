@@ -3,11 +3,11 @@
     <th colspan="2"><%= @oregon_cup.date.year %> Races</th>
   </tr>
 	<%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
-	<%- for event in @oregon_cup.events.sort -%>
+	<%- for event in @oregon_cup.source_events.sort -%>
   <tr>
     <td><%= event.date.strftime("%B %d") %></td>
     <td>
-<%- if event.standings.empty? -%>
+<%- unless event.has_results? -%>
 <%- if event.flyer_approved? and !event.flyer.blank? -%>
 <%= flyer_link_from_app_server(event) %>
 <%- else -%>

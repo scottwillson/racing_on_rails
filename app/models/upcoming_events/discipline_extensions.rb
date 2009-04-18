@@ -13,8 +13,8 @@ module UpcomingEvents
       # Find MultiDayEvents, not their children, nor MultiDayEvents subclasses
       multi_day_events = MultiDayEvent.find(
         :all, 
-        :include => :events,
-        :conditions => scope_by_sanctioned([%Q{ events_events.date between ? and ? and 
+        :include => :children,
+        :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
                                                 events.cancelled = false and 
                                                 events.practice = false and
                                                 events.instructional = false and 
@@ -44,8 +44,8 @@ module UpcomingEvents
     def find_all_upcoming_weekly_series(dates)
       WeeklySeries.find(
         :all, 
-        :include => :events,
-        :conditions => scope_by_sanctioned([%Q{ events_events.date between ? and ? and 
+        :include => :children,
+        :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
                                                 events.cancelled = false and 
                                                 events.practice = false and
                                                 events.instructional = false and 

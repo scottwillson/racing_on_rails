@@ -1,19 +1,23 @@
 # Minimum three-race requirement
 # but ... should show not apply until there are at least three races
-class CrossCrusadeSeriesStandings < Standings  
-  def CrossCrusadeSeriesStandings.recalculate(year = Date.today.year)
-    series = Series.find(
-              :first, 
-              :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
-    if series && series.has_results?
-      CrossCrusadeSeriesStandings.destroy_all(:event_id => series.id)
-      notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
-      standings = CrossCrusadeSeriesStandings.create!(:name => "Overall", :event => series, :notes => notes, :ironman => false, :bar_points => 0)
-      standings.create_races
-      standings.recalculate
-    end
-  end
+# TODO Add an Event#overall method
+class CrossCrusadeOverall < Overall  
+  def CrossCrusadeOverall.calculate!(year = Date.today.year)
+    source_event = Series.find(
+                    :first, 
+                    :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
+    return unless source_event && source_event.has_results?
 
+    unless source_event.overall
+      notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
+      source_event.competitions << self.create!(:name => "Overall", :notes => notes)
+    end
+    
+    source_event.overall.destroy_races
+    source_event.overall.create_races
+    source_event.overall.calculate!
+  end
+  
   def create_races
     races.create!(:category => Category.find_or_create_by_name("Category A"))
     races.create!(:category => Category.find_or_create_by_name("Category B"))
@@ -36,8 +40,8 @@ class CrossCrusadeSeriesStandings < Standings
   end
 
   # Race#place_results_by_points saves each Result
-  def recalculate
-    for race in races
+  def calculate!
+    races.each do |race|
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
@@ -48,7 +52,7 @@ class CrossCrusadeSeriesStandings < Standings
 
   def source_results_with_benchmark(race)
     results = []
-    CrossCrusadeSeriesStandings.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    CrossCrusadeOverall.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
@@ -57,26 +61,17 @@ class CrossCrusadeSeriesStandings < Standings
 
   # source_results must be in racer-order
   def source_results(race)
-    return [] if event.events.empty?
+    # p "source_results for #{race}. Event: #{event}. Children: #{event.children.size}"
+    return [] if source_event.children.empty?
     
-    event_ids = event.events.collect do |event|
-      event.id
-    end
-    event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race)
-    
-    # Nasty hack to skip Age Graded standings
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
-          JOIN standings ON races.standings_id = standings.id
-          JOIN events ON standings.event_id = events.id 
-          WHERE (standings.type = 'Standings' or standings.type is null)
-              and (standings.name is null or standings.name not like "Age Graded%")
-              and place between 1 and 18
-              and categories.id in (#{category_ids})
-              and events.id in (#{event_ids})
+          JOIN events ON races.event_id = events.id
+          WHERE place between 1 and 18
+              and categories.id in (#{category_ids_for(race)})
+              and events.parent_id = #{source_event.id}
           order by racer_id
        }
     )
@@ -101,7 +96,9 @@ class CrossCrusadeSeriesStandings < Standings
       points = points_for(source_result)
       
       # We repeat some calculations here if a racer is disallowed
-      if points > 0.0 && (!event.completed? || (event.completed? && raced_minimum_events?(racer, race))) && (!members_only? || member?(racer, source_result.date))
+      if points > 0.0 && 
+         (!source_event.completed? || (source_event.completed? && raced_minimum_events?(racer, race))) && 
+           (!members_only? || member?(racer, source_result.date))
 
         if first_result_for_racer(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
@@ -190,23 +187,17 @@ class CrossCrusadeSeriesStandings < Standings
   end
   
   def raced_minimum_events?(racer, race)
-    return false if event.events.empty? || racer.nil?
+    return false if source_event.children.empty? || racer.nil?
     
-    event_ids = event.events.collect do |event|
-      event.id
-    end
-    event_ids = event_ids.join(', ')
     category_ids = category_ids_for(race)
 
     count = Result.count_by_sql(
       %Q{ SELECT count(*) FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
-          JOIN standings ON races.standings_id = standings.id 
-          JOIN events ON standings.event_id = events.id 
-          WHERE (standings.type = 'Standings' or standings.type is null)
+          JOIN events ON races.event_id = events.id 
+          WHERE events.parent_id = #{source_event.id}
               and categories.id in (#{category_ids})
-              and events.id in (#{event_ids})
               and results.racer_id = #{racer.id}
        }
     )
@@ -214,6 +205,6 @@ class CrossCrusadeSeriesStandings < Standings
   end
   
   def preliminary?(result)
-    event.events_with_results > minimum_events && !event.completed? && !raced_minimum_events?(result.racer, result.race)
+    source_event.children_with_results.size > minimum_events && !source_event.completed? && !raced_minimum_events?(result.racer, result.race)
   end
 end

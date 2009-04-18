@@ -10,14 +10,18 @@ class HomeController < ApplicationController
     @upcoming_events = UpcomingEvents.find_all(:weeks => 5)
     
     cutoff = Date.today - 14
-    @recent_results = Standings.find(
-      :all,
-      :include => :event,
-      :conditions => ['events.date > ? and events.sanctioned_by = ? and standings.type is null', cutoff, ASSOCIATION.short_name],
+    
+    @recent_results = Event.find(:all,
+      :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",
+      :joins => [:races => :results],
+      :conditions => [
+        'events.date > ? and events.sanctioned_by = ?', 
+        cutoff, ASSOCIATION.short_name
+      ],
       :order => 'events.date desc'
     )
-    
-    render_page
+
+    render_page  
   end
   
   def auction

@@ -1,59 +1,54 @@
 <% nav_caption = %Q{
-  <div>#{link_to(event.name, edit_admin_event_path(event)) unless event.new_record?}</div>
+  <div>Races</div>
   <div class="right">
   #{link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'), 
-     {:controller => '/results', :action => 'event', :year => event.date.year, 
-     :discipline => event.discipline, :id => event.id},
-     { :class => "image" }) unless event.standings.empty?}  
+     {:controller => '/results', :action => 'event', :year => @event.date.year, 
+     :discipline => @event.discipline, :id => @event.id},
+     { :class => "image" }) if @event.has_results? }  
   </div>
 } %>
 <% table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 2 do %>
-  <% event.standings.each do |standings| -%>
-  <tr id="standings_<%= standings.id %>_row">
-    <td class="standings"><%= link_to standings.name, edit_admin_standings_path(standings) %></td>
-    <td>
-      <%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif'),
-      :url => admin_standings_url(standings),
-      :html => { :class => "image", :id => "destroy_standings_#{standings.id}" },
-      :confirm => "Really delete #{standings.name}?",
+  <% unless @event.races.empty? %>
+  <tr id="destroy_races_row">
+    <td></td>
+    <td class="right">
+      <%= link_to_remote image_tag('/images/buttons/small_remove_all_solo.png'),
+      :url => destroy_races_admin_event_path(@event),
+      :html => { :class => "image", :id => "destroy_races", :title => "Delete all races" },
+      :method => :delete,
       :complete => evaluate_remote_response, 
-      :method => :delete
+      :confirm => "Really delete all races from #{@event.name}?"
       %>
     </td>
   </tr>
-  <% if defined?(race) && !race.nil?
-       races = [race]
-     else
-       races = standings.races
-     end
-  races.each do |race| %>
+  <% end %>
+  <% @event.races.each do |race| %>
   <tr id="race_<%= race.id %>_row">
     <td class="race">
       <%= link_to race.name, edit_admin_race_path(race) %>
       <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
     </td>
-    <td>
-      <%= link_to_remote image_tag('/images/buttons/small_remove_solo.gif'),
+    <td class="right">
+      <%= link_to_remote image_tag('/images/buttons/small_remove_solo.png'),
       :url => admin_race_url(race),
-      :html => { :class => "image", :id => "destroy_race_#{race.id}" },
+      :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
       :complete => evaluate_remote_response, 
       :method => :delete
       %>
     </td>
   </tr>
   <% end %>
-  <% end %>
-  <% if event.standings.empty? %>
+  <% unless @event.has_results? %>
   <tr>
     <td colspan="2" class="empty">No results</td>
   </tr>
   <% end %>
-  <% unless event.new_record? -%>
+  <% unless @event.new_record? -%>
   <tr>
-    <td colspan="4">
+    <td colspan="2">
       <div class="page_buttons">
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>
-        <% form_tag upload_admin_event_path(event), :multipart => true, :id => "upload_form", :style => "clear" do %>
+        <% form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form", :style => "clear" do %>
           <div>
             <%= file_field_tag "results_file", 
               :style => "width: 250px;", 

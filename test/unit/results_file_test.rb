@@ -4,7 +4,6 @@ require "tempfile"
 # FIXME DNF's not handled correctly
 
 class ResultsFileTest < ActiveSupport::TestCase
-
   def test_has_results?
     file = ResultsFile.new("text \t results", SingleDayEvent.new)
     
@@ -46,14 +45,13 @@ class ResultsFileTest < ActiveSupport::TestCase
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
     event.number_issuer = number_issuers(:association)
     event.save!
-    standings = event.standings.build(:event => event)
     
-    imported_standings = results_file.import
+    results_file.import
 
     expected_races = get_expected_races
-    assert_equal(expected_races.size, imported_standings.races.size, "imported_standings races")
+    assert_equal(expected_races.size, event.races.size, "event races")
     expected_races.each_with_index do |expected_race, index|
-      actual_race = imported_standings.races[index]
+      actual_race = event.races[index]
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
@@ -93,7 +91,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     event.save!
 
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"), event)
-    imported_standings = results_file.import
+    results_file.import
 
     assert_equal(10, results_file.columns.size, 'Columns size')
     assert_equal('license', results_file.columns[0].name, 'Column 0 name')
@@ -102,17 +100,16 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(:place, results_file.columns[2].field, 'Column 2 field')
     assert_equal(2, Racer.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
     
-    assert_equal(2, imported_standings.races(true).size, "imported_standings races")
-    assert_equal(7, imported_standings.races[0].results.size, "Results")
-    sorted_results = imported_standings.races[0].results.sort
+    assert_equal(2, event.races(true).size, "event races")
+    assert_equal(7, event.races[0].results.size, "Results")
+    sorted_results = event.races[0].results.sort
     assert_equal("1", sorted_results.first.place, "First result place")
     assert_in_delta(2252.0, sorted_results.first.time, 0.0001, "First result time")
     assert_equal("7", sorted_results.last.place, "Last result place")
     assert_in_delta(2762.0, sorted_results.last.time, 0.0001, "Last result time")
 
-    assert_kind_of(Standings, imported_standings, 'imported_standings')
-    assert(!imported_standings.races.empty?, 'standings.races should not be empty')
-    for race in imported_standings.races
+    assert(!event.races.empty?, 'event.races should not be empty')
+    for race in event.races
       assert_kind_of(Race, race, 'race')
       assert_kind_of(Category, race.category, 'race.category')
       for result in race.results.sort
@@ -128,8 +125,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     end
     
     # Existing racers, same name, different numbers
-    bruce_1300 = imported_standings.races.first.results[6].racer
-    bruce_109 = imported_standings.races.last.results[2].racer
+    bruce_1300 = event.races.first.results[6].racer
+    bruce_109 = event.races.last.results[2].racer
     assert_not_nil(bruce_1300, 'bruce_1300')
     assert_not_nil(bruce_109, 'bruce_109')
     assert_equal(bruce_1300.name.downcase, bruce_109.name.downcase, "Bruces with different numbers should have same name")
@@ -137,27 +134,27 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_not_equal(bruce_1300.id, bruce_109.id, "Bruces with different numbers should have different IDs")
     
     # New racer, same name, different number
-    scott_90 = imported_standings.races.first.results[5].racer
-    scott_400 = imported_standings.races.last.results[3].racer
+    scott_90 = event.races.first.results[5].racer
+    scott_400 = event.races.last.results[3].racer
     assert_equal(scott_90.name.downcase, scott_400.name.downcase, "New racers with different numbers should have same name")
     assert_equal(scott_90, scott_400, "New racers with different numbers should be same racers")
     assert_equal(scott_90.id, scott_400.id, "New racers with different numbers should have same IDs")
 
     # Existing racer, same name, different number
     existing_weaver = racers(:weaver)
-    new_weaver = imported_standings.races.last.results.first.racer
+    new_weaver = event.races.last.results.first.racer
     assert_equal(existing_weaver.name, new_weaver.name, "Weavers with different numbers should have same name")
     assert_equal(existing_weaver, new_weaver, "Weavers with different numbers should be same racers")
     assert_equal(existing_weaver.id, new_weaver.id, "Weavers with different numbers should have same IDs")
 
     # New racer, different name, same number
-    kurt = imported_standings.races.first.results[2].racer
-    alan = imported_standings.races.first.results[3].racer
+    kurt = event.races.first.results[2].racer
+    alan = event.races.first.results[3].racer
     assert_not_equal(kurt, alan, "Racer with different names, same numbers should be different racers")
 
     # Existing racer, different name, same number
     existing_matson = racers(:matson)
-    new_matson = imported_standings.races.first.results.first.racer
+    new_matson = event.races.first.results.first.racer
     assert_not_equal(existing_matson, new_matson, "Racer with different numbers should be different racers")
   end
   
@@ -204,14 +201,12 @@ class ResultsFileTest < ActiveSupport::TestCase
 		expected_races << race
 
     event = SingleDayEvent.create!(:discipline => 'Circuit')
-    standings = event.standings.create!
-
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/2006_v2.xls"), event)
-    imported_standings = results_file.import
+    results_file.import
 
-    assert_equal(expected_races.size, imported_standings.races.size, "standings races")
+    assert_equal(expected_races.size, event.races.size, "event races")
     expected_races.each_with_index do |expected_race, index|
-      actual_race = imported_standings.races[index]
+      actual_race = event.races[index]
       assert_not_nil(actual_race, "race #{index}")
       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
       assert_equal(expected_race.results.size, actual_race.results.size, "Results size for race #{index}")
@@ -243,12 +238,12 @@ class ResultsFileTest < ActiveSupport::TestCase
   end
   
   def test_stage_race
-    event = SingleDayEvent.new(:discipline => 'Road')
+    event = SingleDayEvent.create!(:discipline => 'Road')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/stage_race.xls"), event)
-    standings = results_file.import
+    results_file.import
 
-    assert_equal(7, standings.races.size, "standings races")
-    actual_race = standings.races.first
+    assert_equal(7, event.races.size, "event races")
+    actual_race = event.races.first
     assert_equal(81, actual_race.results.size, "Results")
     assert_equal(
       ["place",
@@ -324,18 +319,18 @@ class ResultsFileTest < ActiveSupport::TestCase
     pro_expert_women = categories(:pro_expert_women)
     pro_expert_women.children.create(:name => 'Pro/Expert Women')
     
-    event = SingleDayEvent.create(:discipline => 'Mountain Bike')
+    event = SingleDayEvent.create!(:discipline => 'Mountain Bike')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/mtb.xls"), event)
-    standings = results_file.import
-    assert_nil(standings.combined_standings, 'Should not have combined standings')
-    assert_equal(1, event.standings(true).size, "Standings after import. #{event.standings}")
+    results_file.import
+    assert_nil(event.combined_results, 'Should not have combined results')
+    assert_equal(6, event.races(true).size, "Races after import")
   end
   
   def test_ccx
     event = SingleDayEvent.create(:discipline => 'Cyclocross')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/ccx score sheet.xls"), event)
-    standings = results_file.import
-    assert_equal(10, standings.races.size, 'Races')
+    results_file.import
+    assert_equal(10, event.races.size, 'Races')
     assert_columns([:number, :last_name, :first_name, :team, :city, :category, :laps, :place], results_file.columns)
   end
   
@@ -349,9 +344,9 @@ class ResultsFileTest < ActiveSupport::TestCase
   def test_times
     event = SingleDayEvent.create(:discipline => 'Track')
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/times.xls"), event)
-    standings = results_file.import
-    assert_equal(1, standings.races.size, 'Races')
-    results = standings.races.first.results
+    results_file.import
+    assert_equal(1, event.races.size, 'Races')
+    results = event.races.first.results
     
     assert_equal(12.64, results[0].time, 'row 0: 12.64')
     assert_equal(12.64, results[1].time, 'row 1: 0:12.64')
@@ -367,7 +362,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_in_delta(7440, results[11].time, 0.00001, 'row 11: 2:04')
   end
   
-  def expected_standings(standings)
+  def expected_results(event)
     expected_races = []
     
     race = Race.new(:category => Category.new(:name => "Category 3"))
@@ -554,7 +549,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     event = SingleDayEvent.create(:discipline => 'Road')
     file = ResultsFile.new(rows, event, :columns => ['place', 'membership', 'category', 'city', 'last_name', 'first_name'], :header_row => false)
     file.import
-    assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool', event.standings(true).first.races.first.notes, 'Race notes')
+    assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool', event.races.first.notes, 'Race notes')
   end
   
   def build_result(race, place, first_name = nil, last_name = nil, team_name = nil)
@@ -575,16 +570,16 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << result
   end
 
-  def assert_import(standings)
-    assert_not_nil(standings)
-    assert_equal("Camas Road Race", standings.name, "name")
-    assert_equal("Camas", standings.event.city, "city")
-    assert_equal("Washington", standings.event.state, "state")
-    assert_equal_dates("2003-08-03", standings.date, "start_date")
-    assert_equal(6, standings.races.size, "children size")
-    expected_races = expected_races(standings)
+  def assert_import(event)
+    assert_not_nil(event)
+    assert_equal("Camas Road Race", event.name, "name")
+    assert_equal("Camas", event.city, "city")
+    assert_equal("Washington", event.state, "state")
+    assert_equal_dates("2003-08-03", event.date, "start_date")
+    assert_equal(6, event.races.size, "children size")
+    expected_races = expected_races(event)
     for expected_race in expected_races
-      actual_race = standings.races[expected_races.index(expected_race)]
+      actual_race = event.races[expected_races.index(expected_race)]
       assert_equal(expected_race.name, actual_race.name, "name")
       assert_equal(expected_race.city, actual_race.city, "city")
       assert_equal(expected_race.state, actual_race.state, "state")

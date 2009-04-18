@@ -3,9 +3,6 @@
 # This class doesn't add any special behavior to MultiDayEvent, but it is 
 # convential to separate events like stage races from series like the 
 # Cross Crusade
-#
-# By convention, only SingleDayEvents have Standings and Results -- WeeklySeries do not. 
-# Final standings like Overall GC are associated with the last day's SingleDayEvent.
 class Series < MultiDayEvent
 
   def Series.find_all_by_year(year)

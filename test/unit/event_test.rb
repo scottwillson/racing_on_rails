@@ -2,22 +2,9 @@ require "test_helper"
 
 class EventTest < ActiveSupport::TestCase
     
-  def test_standings_create
+  def test_create
     event = SingleDayEvent.create(:name => 'Saved')
-    standings = event.standings.create
-    assert(standings.errors.empty?, standings.errors.full_messages)
-    assert_equal(event.id, standings[:event_id])
-    assert_equal(event, standings.event)
-    assert_equal(standings, event.standings.first)
-    assert_equal(standings.id, event.standings.first[:id])
-    assert_equal(1, event.standings.count)
-  end
-    
-  def test_new_standings
-    pir_july_2 = events(:pir)
-    assert(!pir_july_2.new_standings?, "PIR should have no new standings")
-    pir_july_2.standings.build(:event => pir_july_2)
-    assert(pir_july_2.new_standings?, "PIR should have new standings")
+    assert(event.races.empty?, "Races")
   end
 
   def test_find_years
@@ -32,12 +19,10 @@ class EventTest < ActiveSupport::TestCase
     formatted_date = Date.today.strftime("%m-%d-%Y")
     assert_equal("New Event #{formatted_date}", event.name, "event name")
     assert_equal(ASSOCIATION.state, event.state, "event.state")
-    assert_nil(event.discipline, "event.discipline")
+    assert_equal("Road", event.discipline, "event.discipline")
     assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "New event sanctioned_by default")
-    event.save!
     number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
-    assert_equal(nil, event.discipline, "New event discipline default")
   end
   
   def test_new_with_promoters
@@ -128,10 +113,10 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_destroy
-    event = SingleDayEvent.create
-    standings = event.standings.create.races.create(:category => categories(:cat_3))
+    event = SingleDayEvent.create!
+    event.races.create!(:category => categories(:cat_3))
     event.destroy
-    assert_raises(ActiveRecord::RecordNotFound, "event should be deleted") {Event.find(event.id)}
+    assert(!Event.exists?(event.id), "event should be deleted")
   end
   
   def test_no_delete_with_results
@@ -160,8 +145,8 @@ class EventTest < ActiveSupport::TestCase
   def test_date_range_s_long
     mt_hood = events(:mt_hood)
     assert_equal("07/11/2005-07/12/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
-    mt_hood.events.last.date = Date.new(2005, 8, 1)
-    mt_hood.events.last.save!
+    mt_hood.children.last.date = Date.new(2005, 8, 1)
+    mt_hood.children.last.save!
     mt_hood.save!
     mt_hood.reload
     assert_equal("07/11/2005-08/01/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
@@ -201,6 +186,7 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_find_max_date_for_current_year
+    Result.delete_all
     Event.delete_all
     assert_nil(Event.find_max_date_for_current_year)
     SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
@@ -323,8 +309,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!Event.new.has_results?, "New Event should not have results")
     
     event = SingleDayEvent.create!
-    standings = event.standings.create!
-    race = standings.races.create!(:category => categories(:senior_men))
+    race = event.races.create!(:category => categories(:senior_men))
     assert(!event.has_results?, "Event with race, but no results should not have results")
     
     race.results.create!(:place => 200, :racer => racers(:matson))
@@ -333,7 +318,7 @@ class EventTest < ActiveSupport::TestCase
   
   def test_inspect
     event = SingleDayEvent.create!
-    event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:place => 1)
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => 1)
     event.inspect
   end
   
@@ -349,6 +334,139 @@ class EventTest < ActiveSupport::TestCase
     event.state = nil
     assert_equal("", event.location, "No city, state location")
   end
+
+  def test_combined_tt
+    jack_frost = events(:jack_frost_2002)
+    assert_equal(0, jack_frost.children.size, 'children.size')
+    assert_equal(2, jack_frost.races.size, 'races')
+    assert_equal(3, jack_frost.races.first.results.size + jack_frost.races.last.results.size, 'total number of results')
+    
+    jack_frost.create_or_destroy_combined_results
+    combined_results = jack_frost.combined_results
+    combined_results.calculate!
+    
+    assert_equal(false, combined_results.ironman, 'Ironman')
+    
+    assert_equal('Combined', combined_results.name, 'name')
+    assert_equal(0, combined_results.bar_points, 'bar points')
+    assert_equal(1, combined_results.races.size, 'combined_results.races')
+    combined = combined_results.races.first
+    assert_equal(3, combined.results.size, 'combined.results')
+
+    result = combined.results[0]
+    assert_equal('1', result.place, 'place')
+    assert_equal(racers(:molly), result.racer, 'racer')
+    assert_equal(categories(:masters_35_plus_women), result.category, 'category')
+    assert_equal('30:00.00', result.time_s, 'time_s')
+
+    result = combined.results[1]
+    assert_equal('2', result.place, 'place')
+    assert_equal(racers(:weaver), result.racer, 'racer')
+    assert_equal(categories(:sr_p_1_2), result.category, 'category')
+    assert_equal('30:01.00', result.time_s, 'time_s')
+
+    result = combined.results[2]
+    assert_equal('3', result.place, 'place')
+    assert_equal(racers(:alice), result.racer, 'racer')
+    assert_equal(categories(:masters_35_plus_women), result.category, 'category')
+    assert_equal('35:12.00', result.time_s, 'time_s')
+  end
+
+  def test_notes
+    event = SingleDayEvent.create(:name => 'New Event')
+    assert_equal('', event.notes, 'New notes')
+    event.notes = 'My notes'
+    event.save!
+    event.reload
+    assert_equal('My notes', event.notes)
+  end
+
+  def test_bar_points
+    event = events(:banana_belt_3)
+    assert_equal(1, event.bar_points, 'BAR points')
+    event.save!
+    event.reload
+    assert_equal(1, event.bar_points, 'BAR points')
+
+    event = SingleDayEvent.create!
+    assert_equal(1, event.bar_points, 'BAR points')
+  end
+
+  def test_races_with_results
+    bb3 = events(:banana_belt_3)
+    assert(bb3.races_with_results.empty?, 'No races')
+    
+    sr_p_1_2 = categories(:sr_p_1_2)
+    bb3.races.create!(:category => sr_p_1_2)
+    assert(bb3.races_with_results.empty?, 'No results')
+    
+    senior_women = categories(:senior_women)
+    race_1 = bb3.races.create!(:category => senior_women)
+    race_1.results.create!
+    assert_equal([race_1], bb3.races_with_results, 'One results')
+    
+    race_2 = bb3.races.create!(:category => sr_p_1_2)
+    race_2.results.create!
+    women_4 = categories(:women_4)
+    bb3.races.create!(:category => women_4)
+    assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
+    
+    bb3.discipline = 'Time Trial'
+    bb3.save!
+    combined_results = bb3.combined_results
+    assert_not_nil(combined_results, 'Combined results')
+    assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
+    race_3 = combined_results.races.first
+    race_3.results.create
+    assert(!race_3.results(true).empty?, 'Combined results should have results')
+    assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
+  end
+
+  def test_full_name
+    event = SingleDayEvent.create!(:name => 'Reheers', :discipline => 'Mountain Bike')
+    assert_equal('Reheers', event.full_name, 'full_name')
+    
+    series = Series.create!(:name => 'Bend TT Series')
+    series_event = series.children.create!(:name => 'Bend TT Series', :date => Date.new(2009, 4, 19))
+    assert_equal('Bend TT Series', series_event.full_name, 'full_name when series name is same as event')
+
+    stage_race = events(:mt_hood)
+    stage = stage_race.children.create!(:name => stage_race.name)
+    assert_equal('Mt. Hood Classic', stage.full_name, 'stage race stage full_name')
+
+    stage_race = events(:mt_hood)
+    stage = stage_race.children.create!(:name => stage_race.name)
+    event = stage.children.create!(:name => 'Cooper Spur Road Race')
+    assert_equal('Mt. Hood Classic: Cooper Spur Road Race', event.full_name, 'stage race event full_name')
+
+    stage_race = MultiDayEvent.create!(:name => 'Cascade Classic')
+    stage = stage_race.children.create!(:name => 'Cascade Classic')
+    event = stage.children.create!(:name => 'Cascade Classic - Cascade Lakes Road Race')
+    assert_equal('Cascade Classic - Cascade Lakes Road Race', event.full_name, 'stage race results full_name')
+  end
+
+  def test_updated_at
+    event = SingleDayEvent.create!
+    assert_not_nil event.updated_at, "updated_at after create"
+    
+    updated_at = event.updated_at
+    event.save!
+    assert_equal updated_at, event.updated_at, "Save! with no changes should not update updated_at"
+
+    sleep 1
+    event.children.create!
+    event.reload
+    assert event.updated_at > updated_at, "Updated at should change after adding a child event"
+
+    sleep 1
+    updated_at = event.updated_at
+    event.races.create!(:category => categories(:senior_men))
+    event.reload
+    assert event.updated_at > updated_at, "Updated at should change after adding a race"
+    
+    updated_at = event.updated_at
+  end
+
 
   private
   

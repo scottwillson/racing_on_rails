@@ -77,6 +77,7 @@ function restripeTable(id) {
   });
 }
 
+// TODO Use this!
 function flash(key, message) {
   $('info').hide();
   $('notice').hide();

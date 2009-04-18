@@ -1,27 +1,27 @@
 banana_belt_pro_1_2:
-  standings: banana_belt
+  event: banana_belt_1
   category: sr_p_1_2
 kings_valley_pro_1_2:
-  standings: kings_valley
+  event: kings_valley
   category: sr_p_1_2
 kings_valley_3:
-  standings: kings_valley
+  event: kings_valley
   category: senior_men_3
 kings_valley_women_2004:
-  standings: kings_valley_2004
+  event: kings_valley_2004
   category: senior_women_1_2_3
 kings_valley_women_2003:
-  standings: kings_valley_2004
+  event: kings_valley_2004
   category: senior_women_1_2_3
 jack_frost_masters_35_plus_women:
-  standings: jack_frost
+  event: jack_frost_2002
   category: masters_35_plus_women
 jack_frost_pro_1_2:
-  standings: jack_frost
+  event: jack_frost_2002
   category: sr_p_1_2
 kings_valley_pro_1_2_2004:
-  standings: kings_valley_2004
+  event: kings_valley_2004
   category: sr_p_1_2
 copperopolis_pro_1_2:
-  standings: copperopolis
+  event: usa_cycling_event_with_results
   category: sr_p_1_2

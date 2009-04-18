@@ -158,7 +158,7 @@ module Schedule
         name, event_array = key_value
         logger.debug("Create multi-day event #{name}")
         if event_array.size > 1
-          multi_day_events << MultiDayEvent.create_from_events(event_array)
+          multi_day_events << MultiDayEvent.create_from_children(event_array)
         end
       end
   

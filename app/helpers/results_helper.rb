@@ -12,7 +12,7 @@ module ResultsHelper
       link_to(text, 
         { :controller => 'results',
           :action => 'competition',
-          :competition_id => result.race.standings.event.to_param,
+          :competition_id => result.event.to_param,
           :racer_id => result.racer_id },
         html_options)
     else

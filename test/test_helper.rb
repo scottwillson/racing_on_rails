@@ -8,6 +8,11 @@ class ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   fixtures :all
 
+  def teardown
+    # Discipline class may have loaded earlier with no aliases in database
+    Discipline.reset
+  end
+
   # Assert two Enumerable objects contain exactly same object in any order
   def assert_same_elements(expected, actual, message = '')
     if expected.nil? && actual.nil?
@@ -117,13 +122,13 @@ class ActiveSupport::TestCase
   
   def print_all_events
     Event.find(:all, :order => :date).each {|event|
-      p "#{event.date} #{event.name} #{event.parent_id}"
+      p "#{event.date} #{event.name} #{event.id} #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }
   end
   
   def print_all_results
     Result.find(:all, :order => :racer_id).each {|result|
-      p "#{result.place} #{result.name} #{result.team} #{result.race.standings.name} #{result.race.name} #{result.date}"
+      p "#{result.place} #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end
   

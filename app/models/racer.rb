@@ -6,7 +6,6 @@
 class Racer < ActiveRecord::Base
 
   include Comparable
-  include Dirty
 
   before_validation :find_associated_records
   validate :membership_dates
@@ -40,7 +39,7 @@ class Racer < ActiveRecord::Base
   end
   
   def Racer.find_all_by_name_or_alias(first_name, last_name)
-    if !first_name.blank? and !last_name.blank?
+    if !first_name.blank? && !last_name.blank?
       Racer.find(
         :all,
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
@@ -198,6 +197,7 @@ class Racer < ActiveRecord::Base
 
   # Tries to split +name+ into +first_name+ and +last_name+
   # TODO Handle name, Jr.
+  # This looks too complicated …
   def name=(value)  
     logger.debug("name=#{name}")
     @old_name = name unless @old_name
@@ -379,7 +379,6 @@ class Racer < ActiveRecord::Base
           self.id, discipline.id, _year, association.id])
       end
     else
-      self.dirty
       if new_record?
         existing_number = race_numbers.any? do |number|
           number.value == value && number.discipline == discipline && number.association == association && number.year == _year
@@ -543,10 +542,8 @@ class Racer < ActiveRecord::Base
     self.print_card
   end
   
-  # Educated guess. If most fields are blank, it's probably from results.
-  # Should be set explicity.
   def created_from_result?
-    self.email.blank? && self.street.blank? && self.home_phone.blank?
+    !self.created_by.nil? && created_by.kind_of?(Event)
   end
 
   def state=(value)
@@ -624,7 +621,7 @@ class Racer < ActiveRecord::Base
     if reload
       return Result.find(
         :all,
-        :include => [:team, :racer, :scores, :category, {:race => [{:standings => :event}, :category]}],
+        :include => [:team, :racer, :scores, :category, {:race => [:event, :category]}],
         :conditions => ['racers.id = ?', id]
       ).reject {|r| r.competition_result?}
     end
@@ -652,7 +649,7 @@ class Racer < ActiveRecord::Base
 
     Racer.transaction do
       events = other_racer.results.collect do |result|
-        event = result.race.standings.event
+        event = result.event
         event.disable_notification!
         event
       end
@@ -680,7 +677,7 @@ class Racer < ActiveRecord::Base
   
   # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team
   def find_associated_records
-    if self.team and (team.new_record? or team.dirty?)
+    if self.team && team.new_record?
       if team.name.blank? or team.name == 'N/A'
         self.team = nil
       else

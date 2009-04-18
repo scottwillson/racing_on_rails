@@ -419,9 +419,19 @@ table.event_races td {
   padding-right: 12px;
 }
 
-table.child_events td {
+table.child_single_day_events td {
+  padding-top: 4px;
   padding-left: 8px;
   padding-right: 8px;
+  font-weight: bold;
+}
+
+table.child_single_day_events td.child {
+  padding-top: 0px;
+}
+
+table.child_single_day_events td.child a {
+  font-weight: normal;
 }
 
 /* Event first aid providers */

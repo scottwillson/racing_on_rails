@@ -4,7 +4,7 @@ class RaceTest < ActiveSupport::TestCase
   
   def test_new_from_hash
     race = Race.new({
-      :standings => Standings.new(:event => events(:pir_2)),
+      :event => events(:pir_2),
       :category_name => "Masters 35+ Women"
     })
     assert_equal("Masters 35+ Women", race.name, "race name")
@@ -12,7 +12,7 @@ class RaceTest < ActiveSupport::TestCase
   
   def test_save_existing_category
     race = Race.new({
-      :standings => Standings.new(:event => events(:pir_2)),
+      :event => events(:pir_2),
       :category_name => "Masters 35+ Women"
     })
     race.find_associated_records
@@ -20,9 +20,8 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_result_columns
-    event = SingleDayEvent.create
-    standings = Standings.create(:event => event)
-    race = Race.create(:category_name => "Masters Women", :standings => standings)
+    event = SingleDayEvent.create!
+    race = Race.create!(:category_name => "Masters Women", :event => event)
     assert_equal(Race::DEFAULT_RESULT_COLUMNS, race.result_columns_or_default, "race result_columns")
     race.save!
     race.reload
@@ -34,9 +33,8 @@ class RaceTest < ActiveSupport::TestCase
     race.reload
     assert_equal(result_columns, race.result_columns_or_default, "race result_columns after save")
 
-    event = SingleDayEvent.create
-    standings = Standings.create(:event => event)
-    race = Race.create(:category_name => "Masters Women 50+", :standings => standings, :result_columns => result_columns)
+    event = SingleDayEvent.create!
+    race = Race.create!(:category_name => "Masters Women 50+", :event => event, :result_columns => result_columns)
     assert_equal(result_columns, race.result_columns_or_default, "race result_columns")
     race.save!
     race.reload
@@ -44,9 +42,8 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_invalid_result_column
-    event = SingleDayEvent.create
-    standings = Standings.create(:event => event)
-    race = Race.create(:category_name => "Masters Women", :standings => standings)
+    event = SingleDayEvent.create!
+    race = Race.create!(:category_name => "Masters Women", :event => event)
 
     race.result_columns = ["place", "name", "hometown", "category"]
     race.save
@@ -70,8 +67,8 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(0, race[:bar_points], 'BAR points column value')
     assert_equal(0, race.bar_points, 'BAR points')
     
-    race.standings.bar_points = 2
-    race.standings.save!
+    race.event.bar_points = 2
+    race.event.save!
     race.reload
     assert_equal(0, race[:bar_points], 'BAR points column value')
     assert_equal(0, race.bar_points, 'BAR points')
@@ -84,9 +81,8 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_bar_points
-    event = SingleDayEvent.create
-    standings = Standings.create(:event => event)
-    race = Race.create(:category_name => "Masters Women", :standings => standings)
+    event = SingleDayEvent.create!
+    race = Race.create!(:category_name => "Masters Women", :event => event)
     assert_equal(1, race.bar_points, 'BAR points')
 
     assert_raise(ArgumentError, 'Fractional BAR points') {race.bar_points = 0.3333}
@@ -97,9 +93,8 @@ class RaceTest < ActiveSupport::TestCase
   end
 
   def test_notes
-    event = SingleDayEvent.create(:name => 'New Event')
-    standings = event.standings.create
-    race = standings.races.create(:category => categories(:sr_p_1_2))
+    event = SingleDayEvent.create!(:name => 'New Event')
+    race = event.races.create!(:category => categories(:sr_p_1_2))
     assert_equal('', race.notes, 'New notes')
     race.notes = 'My notes'
     race.save!
@@ -109,8 +104,8 @@ class RaceTest < ActiveSupport::TestCase
   
   # Return value from field_size column. If column is blank, count results
   def test_field_size
-    single_speed = Category.create(:name => "Singlespeed")
-    race = standings(:kings_valley_2004).races.create(:category => single_speed)
+    single_speed = Category.create!(:name => "Singlespeed")
+    race = events(:kings_valley).races.create!(:category => single_speed)
     assert_equal(0, race.field_size, 'New race field size')
     
     race = races(:banana_belt_pro_1_2)
@@ -122,11 +117,11 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_place_results_by_points
-    race = standings(:jack_frost).races.create(:category_name => "Masters Men 50+")
+    race = events(:jack_frost).races.create!(:category_name => "Masters Men 50+")
     race.place_results_by_points
     
-    first_result = race.results.create
-    second_result = race.results.create
+    first_result = race.results.create!
+    second_result = race.results.create!
     
     race.results(true)
     race.place_results_by_points
@@ -136,14 +131,14 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(second_result, race.results.last, 'Last result')
     assert_equal('1', race.results.last.place, 'Last result place')
     
-    race = standings(:jack_frost).races.create(:category_name => "Masters Men 60+")
+    race = events(:jack_frost).races.create!(:category_name => "Masters Men 60+")
     results = [
-      race.results.create(:points => 90, :place => 4),
-      race.results.create(:points => 0, :place => 5),
-      race.results.create(:points => 89, :place => 4),
-      race.results.create(:points => 89, :place => ''),
-      race.results.create(:points => 100, :place => 1),
-      race.results.create(:points => 89)
+      race.results.create!(:points => 90, :place => 4),
+      race.results.create!(:points => 0, :place => 5),
+      race.results.create!(:points => 89, :place => 4),
+      race.results.create!(:points => 89, :place => ''),
+      race.results.create!(:points => 100, :place => 1),
+      race.results.create!(:points => 89)
     ]
     
     race.results(true)
@@ -175,60 +170,60 @@ class RaceTest < ActiveSupport::TestCase
   # Look at source results for tie-breaking
   # Intentional nonsense in some results and points to test sorting
   def test_competition_place_results_by_points
-    race = standings(:jack_frost).races.create(:category_name => "Masters Men 50+")
+    race = events(:jack_frost).races.create!(:category_name => "Masters Men 50+")
 
     20.times do
-      race.results.create
+      race.results.create!
     end
     
-    ironman = Ironman.create(:date => Date.today)
-    ironman_race = ironman.standings.create(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+    ironman = Ironman.create!(:date => Date.today)
+    ironman_race = ironman.races.create!(:category => Category.new(:name => 'Ironman'))
     
-    first_competition_result = ironman_race.results.create
-    first_competition_result.scores.create(:source_result => race.results[0], :competition_result => first_competition_result, :points => 45)
+    first_competition_result = ironman_race.results.create!
+    first_competition_result.scores.create!(:source_result => race.results[0], :competition_result => first_competition_result, :points => 45)
     
-    second_competition_result = ironman_race.results.create
-    second_competition_result.scores.create(:source_result => race.results[2], :competition_result => second_competition_result, :points => 45)
+    second_competition_result = ironman_race.results.create!
+    second_competition_result.scores.create!(:source_result => race.results[2], :competition_result => second_competition_result, :points => 45)
     
-    third_competition_result = ironman_race.results.create
+    third_competition_result = ironman_race.results.create!
     race.results[3].place = 2
     race.results[3].save!
-    third_competition_result.scores.create(:source_result => race.results[3], :competition_result => third_competition_result, :points => 15)
-    third_competition_result.scores.create(:source_result => race.results[4], :competition_result => third_competition_result, :points => 15)
+    third_competition_result.scores.create!(:source_result => race.results[3], :competition_result => third_competition_result, :points => 15)
+    third_competition_result.scores.create!(:source_result => race.results[4], :competition_result => third_competition_result, :points => 15)
     race.results[4].place = 3
     race.results[4].save!
     
-    fourth_competition_result = ironman_race.results.create
-    fourth_competition_result.scores.create(:source_result => race.results[1], :competition_result => fourth_competition_result, :points => 30)
+    fourth_competition_result = ironman_race.results.create!
+    fourth_competition_result.scores.create!(:source_result => race.results[1], :competition_result => fourth_competition_result, :points => 30)
     race.results[1].place = 1
     race.results[1].save!
     
-    fifth_competition_result = ironman_race.results.create
-    fifth_competition_result.scores.create(:source_result => race.results[5], :competition_result => fifth_competition_result, :points => 4)
+    fifth_competition_result = ironman_race.results.create!
+    fifth_competition_result.scores.create!(:source_result => race.results[5], :competition_result => fifth_competition_result, :points => 4)
     race.results[5].place = 15
     race.results[5].save!
-    fifth_competition_result.scores.create(:source_result => race.results[7], :competition_result => fifth_competition_result, :points => 2)
+    fifth_competition_result.scores.create!(:source_result => race.results[7], :competition_result => fifth_competition_result, :points => 2)
     race.results[7].place = 17
     race.results[7].save!
     
-    sixth_competition_result = ironman_race.results.create
-    sixth_competition_result.scores.create(:source_result => race.results[6], :competition_result => sixth_competition_result, :points => 5)
+    sixth_competition_result = ironman_race.results.create!
+    sixth_competition_result.scores.create!(:source_result => race.results[6], :competition_result => sixth_competition_result, :points => 5)
     race.results[6].place = 15
     race.results[6].save!
-    sixth_competition_result.scores.create(:source_result => race.results[8], :competition_result => sixth_competition_result, :points => 1)
+    sixth_competition_result.scores.create!(:source_result => race.results[8], :competition_result => sixth_competition_result, :points => 1)
     race.results[8].place = 18
     race.results[8].save!
     
-    seventh_competition_result = ironman_race.results.create
-    seventh_competition_result.scores.create(:source_result => race.results[11], :competition_result => seventh_competition_result, :points => 2)
+    seventh_competition_result = ironman_race.results.create!
+    seventh_competition_result.scores.create!(:source_result => race.results[11], :competition_result => seventh_competition_result, :points => 2)
     race.results[11].place = 20
     race.results[11].save!
     
-    eighth_competition_result = ironman_race.results.create
-    eighth_competition_result.scores.create(:source_result => race.results[10], :competition_result => eighth_competition_result, :points => 1)
+    eighth_competition_result = ironman_race.results.create!
+    eighth_competition_result.scores.create!(:source_result => race.results[10], :competition_result => eighth_competition_result, :points => 1)
     race.results[10].place = 20
     race.results[10].save!
-    eighth_competition_result.scores.create(:source_result => race.results[9], :competition_result => eighth_competition_result, :points => 1)
+    eighth_competition_result.scores.create!(:source_result => race.results[9], :competition_result => eighth_competition_result, :points => 1)
     race.results[9].place = 25
     race.results[9].save!
     
@@ -259,13 +254,13 @@ class RaceTest < ActiveSupport::TestCase
   
   def test_most_recent_placing_should_break_tie
     races = []
-    races << SingleDayEvent.create!(:date => Date.new(2006, 1)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    races << SingleDayEvent.create!(:date => Date.new(2006, 2)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    races << SingleDayEvent.create!(:date => Date.new(2006, 3)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    races << SingleDayEvent.create!(:date => Date.new(2006, 4)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 1)).races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 2)).races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 3)).races.create!(:category_name => "Masters Men 50+")
+    races << SingleDayEvent.create!(:date => Date.new(2006, 4)).races.create!(:category_name => "Masters Men 50+")
 
-    ironman = Ironman.create(:date => Date.today)
-    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+    ironman = Ironman.create!(:date => Date.today)
+    ironman_race = ironman.races.create!(:category => Category.new(:name => 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(:source_result => races[3].results.create!(:place => 15), :competition_result => first_competition_result, :points => 2)
@@ -301,11 +296,11 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_highest_placing_in_last_race_should_break_tie
-    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).races.create!(:category_name => "Masters Men 50+")
+    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).races.create!(:category_name => "Masters Men 50+")
 
-    ironman = Ironman.create(:date => Date.today)
-    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+    ironman = Ironman.create!(:date => Date.today)
+    ironman_race = ironman.races.create!(:category => Category.new(:name => 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(:source_result => race.results.create!(:place => 3), :competition_result => first_competition_result, :points => 30)
@@ -331,12 +326,12 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_highest_placing_in_most_recent_race_should_break_tie
-    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).standings.create!.races.create!(:category_name => "Masters Men 50+")
-    third_race = SingleDayEvent.create!(:date => Date.new(2006, 12)).standings.create!.races.create!(:category_name => "Masters Men 50+")
+    race = SingleDayEvent.create!(:date => Date.new(2006, 10)).races.create!(:category_name => "Masters Men 50+")
+    second_race = SingleDayEvent.create!(:date => Date.new(2006, 11)).races.create!(:category_name => "Masters Men 50+")
+    third_race = SingleDayEvent.create!(:date => Date.new(2006, 12)).races.create!(:category_name => "Masters Men 50+")
 
-    ironman = Ironman.create(:date => Date.today)
-    ironman_race = ironman.standings.create!(:name => '2006').races.create(:category => Category.new(:name => 'Ironman'))
+    ironman = Ironman.create!(:date => Date.today)
+    ironman_race = ironman.races.create!(:category => Category.new(:name => 'Ironman'))
 
     first_competition_result = ironman_race.results.create!
     first_competition_result.scores.create!(:source_result => race.results.create!(:place => 4), :competition_result => first_competition_result, :points => 20)
@@ -371,22 +366,22 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_calculate_members_only_places
-    standings = standings(:banana_belt)
-    race = standings.races.create(:category => categories(:senior_men))
+    event = events(:banana_belt_1)
+    race = event.races.create!(:category => categories(:senior_men))
     race.calculate_members_only_places!
     
-    race = standings.races.create(:category => categories(:senior_women))
+    race = event.races.create!(:category => categories(:senior_women))
     non_members = []
     for i in 0..2
-      non_members << Racer.create(:name => "Non member #{i}", :member => false)
+      non_members << Racer.create!(:name => "Non member #{i}", :member => false)
       assert(!non_members[i].member?, 'Should not be a member')
     end
     
-    race.results.create(:place => '1', :racer => non_members[0])
-    race.results.create(:place => '2', :racer => racers(:weaver))
-    race.results.create(:place => '3', :racer => non_members[1])
-    race.results.create(:place => '4', :racer => racers(:molly))
-    race.results.create(:place => '5', :racer => non_members[2])
+    race.results.create!(:place => '1', :racer => non_members[0])
+    race.results.create!(:place => '2', :racer => racers(:weaver))
+    race.results.create!(:place => '3', :racer => non_members[1])
+    race.results.create!(:place => '4', :racer => racers(:molly))
+    race.results.create!(:place => '5', :racer => non_members[2])
     
     race.reload.results(true)
     race.calculate_members_only_places!
@@ -413,22 +408,20 @@ class RaceTest < ActiveSupport::TestCase
   
   def test_dates_of_birth
     event = SingleDayEvent.create!(:date => Date.today)
-    standings = event.standings.create!
-    race = standings.races.create!(:category => categories(:senior_men))
+    race = event.races.create!(:category => categories(:senior_men))
     assert_equal_dates(Date.new(Date.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
     assert_equal_dates(Date.new(Date.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
     
     event = SingleDayEvent.create!(:date => Date.new(2000, 9, 8))
-    standings = event.standings.create!
-    race = standings.races.create!(:category => Category.new(:name =>'Espoirs', :ages => 18..23))
+    race = event.races.create!(:category => Category.new(:name =>'Espoirs', :ages => 18..23))
     assert_equal_dates(Date.new(1977, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
     assert_equal_dates(Date.new(1982, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
   end
   
-  def test_create_result_before
-    race = SingleDayEvent.create!.standings.create!.races.create!(:category_name => "Masters Women")
+  def test_create!_result_before
+    race = SingleDayEvent.create!.races.create!(:category_name => "Masters Women")
     existing_result = race.results.create!(:place => "1")
-    new_result = race.create_result_before(existing_result.id)
+    new_result = race.create!_result_before(existing_result.id)
     assert_equal(2, race.results.size, "Results")
     race.results.sort!
     assert_equal(new_result, race.results[0], "New result should be first result")
@@ -436,7 +429,7 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(existing_result, race.results[1], "Existing result should be second result")
     assert_equal("2", race.results[1].place, "Existing result place")
 
-    another_new_result = race.create_result_before(new_result.id)
+    another_new_result = race.create!_result_before(new_result.id)
     race.results.sort!
     assert_equal(another_new_result, race.results[0], "New result should be first result")
     assert_equal("1", race.results[0].place, "New result place")
@@ -446,16 +439,36 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal("3", race.results[2].place, "Existing result place")
   end
   
-  def test_create_result_before_dnf
-    race = SingleDayEvent.create!.standings.create!.races.create!(:category_name => "Masters Women")
+  def test_create!_result_before_dnf
+    race = SingleDayEvent.create!.races.create!(:category_name => "Masters Women")
     first_result = race.results.create!(:place => "1")
     existing_result = race.results.create!(:place => "DNF")
-    new_result = race.create_result_before(existing_result.id)
+    new_result = race.create!_result_before(existing_result.id)
     assert_equal(3, race.results.size, "Results")
     race.results.sort!
     assert_equal(first_result, race.results[0], "First result should still be first result")
     assert_equal("1", race.results[0].place, "First result place")
     assert_equal("DNF", race.results[1].place, "New result place")
     assert_equal("DNF", race.results[2].place, "Existing result place")
+  end
+
+  def test_destroy_should_destroy_related_racers
+    mathew_braun = Racer.create!(:name => "Mathew Braun", :email => "mtb@example.com")
+    event = SingleDayEvent.create!
+    race = event.races.create!(:category => categories(:masters_35_plus_women))
+    race.results.create!(:place => "1", :racer => racers(:weaver))
+    race.results.create!(:place => "2", :racer => Racer.new(:name => "Jonah Braun"))
+    race.results.create!(:place => "3", :racer => mathew_braun)
+    assert(Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been created")
+
+    race.reload
+    race.destroy
+    assert(!Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}")
+    assert(!Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been deleted")
+    assert(Racer.exists?(:first_name => "Ryan", :last_name => "Weaver"), "Existing racer Ryan Weaver should not be deleted")
+    assert(Racer.exists?(:first_name => "Mathew", :last_name => "Braun"), "Existing racer with no results Mathew Braun should not be deleted")
+
+    # TODO Manually-created racers that only have this result
+    # TODO Teams
   end
 end

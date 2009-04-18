@@ -7,8 +7,7 @@ class MtbBarTest < ActiveSupport::TestCase
     sport_junior_men = categories(:sport_junior_men)
 
     marin_knobular = SingleDayEvent.create!(:name => "Marin Knobular", :date => Date.new(2001, 9, 7), :discipline => "Mountain Bike")
-    standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => expert_junior_men)
+    race = marin_knobular.races.create!(:category => expert_junior_men)
     kc = Racer.create!(:name => "KC Mautner", :member_from => Date.new(2001, 1, 1))
     vanilla = teams(:vanilla)
     race.results.create!(:racer => kc, :place => 4, :team => vanilla)
@@ -17,16 +16,12 @@ class MtbBarTest < ActiveSupport::TestCase
     race.results.create!(:racer => chris_woods, :place => 12, :team => gentle_lovers)
     
     lemurian = SingleDayEvent.create!(:name => "Lemurian", :date => Date.new(2001, 9, 14), :discipline => "Mountain Bike")
-    standings = marin_knobular.standings.create
-    race = standings.races.create!(:category => sport_junior_men)
+    race = lemurian.races.create!(:category => sport_junior_men)
     race.results.create!(:racer => chris_woods, :place => 14, :team => gentle_lovers)
 
-    Bar.recalculate(2001)
-    bar = Bar.find(:first, :conditions => ["date = ?", Date.new(2001, 1, 1)])
-    assert_not_nil(bar, "2001 BAR after recalculate")
-    assert_equal(7, bar.standings.count, "Bar standings after recalculate")
-
-    mtb_bar = bar.standings.detect {|s| s.name == "Mountain Bike" }
+    Bar.calculate!(2001)
+    mtb_bar = Bar.find_by_year_and_discipline(2001, "Mountain Bike")
+    assert_not_nil(mtb_bar, "2001 MTB BAR after calculate!")
     junior_men_mtb_bar = mtb_bar.races.detect {|b| b.name == "Junior Men" }
 
     assert_equal(2, junior_men_mtb_bar.results.size, "Junior Men BAR results")
@@ -129,64 +124,64 @@ class MtbBarTest < ActiveSupport::TestCase
     # Create road and MTB/DH result for each category
     tonkin = racers(:tonkin)
     event = SingleDayEvent.create!(:discipline => "Road")
-    event.standings.create!.races.create!(:category => pro_men, :field_size => 6).results.create!(:place => "3", :racer => tonkin)
+    event.races.create!(:category => pro_men, :field_size => 6).results.create!(:place => "3", :racer => tonkin)
     
     weaver = racers(:weaver)
-    event.standings.create!.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "2", :racer => weaver)
+    event.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "2", :racer => weaver)
     
     molly = racers(:molly)
-    event.standings.create!.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :racer => molly)
+    event.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :racer => molly)
     
     alice = racers(:alice)
-    event.standings.create!.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "6", :racer => alice)
+    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "6", :racer => alice)
     
     matson = racers(:matson)
-    event.standings.create!.races.create!(:category => category_4_men, :field_size => 6).results.create!(:place => "1", :racer => matson)
+    event.races.create!(:category => category_4_men, :field_size => 6).results.create!(:place => "1", :racer => matson)
     
     event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.standings.create!.races.create!(:category => pro_men, :field_size => 6).results.create!(:place => "14", :racer => matson)
+    event.races.create!(:category => pro_men, :field_size => 6).results.create!(:place => "14", :racer => matson)
     dh_event = SingleDayEvent.create!(:discipline => "Downhill")
-    dh_event.standings.create!.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "7", :racer => molly)
-    event.standings.create!.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :racer => tonkin)
-    event.standings.create!.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "4", :racer => weaver)
+    dh_event.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "7", :racer => molly)
+    event.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :racer => tonkin)
+    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "4", :racer => weaver)
     
     # Women road
     event = SingleDayEvent.create!(:discipline => "Road")
     woman_pro = Racer.create!(:name => "Woman Pro", :member => true)
-    event.standings.create!.races.create!(:category => pro_women, :field_size => 6).results.create!(:place => "2", :racer => woman_pro)
+    event.races.create!(:category => pro_women, :field_size => 6).results.create!(:place => "2", :racer => woman_pro)
 
     woman_1 = Racer.create!(:name => "Woman One", :member => true)
-    event.standings.create!.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "3", :racer => woman_1)
+    event.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "3", :racer => woman_1)
 
     woman_2 = Racer.create!(:name => "Woman Two", :member => true)
-    event.standings.create!.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :racer => woman_2)
+    event.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :racer => woman_2)
 
     woman_3 = Racer.create!(:name => "Woman Three", :member => true)
-    event.standings.create!.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "1", :racer => woman_3)
+    event.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "1", :racer => woman_3)
 
     woman_4 = Racer.create!(:name => "Woman Four", :member => true)
-    event.standings.create!.races.create!(:category => category_4_women, :field_size => 6).results.create!(:place => "3", :racer => woman_4)
+    event.races.create!(:category => category_4_women, :field_size => 6).results.create!(:place => "3", :racer => woman_4)
     
     # Women MTB
     event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.standings.create!.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "6", :racer => woman_3)
-    event.standings.create!.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :racer => woman_1)
-    event.standings.create!.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "5", :racer => woman_2)
+    event.races.create!(:category => women_1, :field_size => 6).results.create!(:place => "6", :racer => woman_3)
+    event.races.create!(:category => women_2, :field_size => 6).results.create!(:place => "4", :racer => woman_1)
+    event.races.create!(:category => women_3, :field_size => 6).results.create!(:place => "5", :racer => woman_2)
     
     # Women DH
     event = SingleDayEvent.create!(:discipline => "Downhill")
-    event.standings.create!.races.create!(:category => pro_women, :field_size => 6).results.create!(:place => "15", :racer => woman_pro)
+    event.races.create!(:category => pro_women, :field_size => 6).results.create!(:place => "15", :racer => woman_pro)
     
     original_results_count = Result.count
-    Bar.recalculate
+    Bar.calculate!
     year = Date.today.year
     bar = Bar.find_by_date(Date.new(year))
     
-    OverallBar.recalculate
+    OverallBar.calculate!
     overall_bar = OverallBar.find_by_date(Date.new(year))
-    OverallBar.recalculate
+    OverallBar.calculate!
 
-    road_bar = bar.standings.detect { |standings| standings.name == "Road" }
+    road_bar = Bar.find_by_year_and_discipline(year, "Road")
 
     senior_men_road_bar = road_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(3, senior_men_road_bar.results.size, "Senior Men Road BAR results")
@@ -218,7 +213,7 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(woman_3, senior_women_3_road_bar.results[0].racer, "Senior Woman 3 Road BAR results racer")
     assert_equal(woman_4, senior_women_4_road_bar.results[0].racer, "Senior Woman 4 Road BAR results racer")
     
-    mtb_bar = bar.standings.detect { |standings| standings.name == "Mountain Bike" }
+    mtb_bar = Bar.find_by_year_and_discipline(year, "Mountain Bike")
     mtb_bar_pro_men_bar = mtb_bar.races.detect { |race| race.name == "Pro Men" }
     assert_equal(1, mtb_bar_pro_men_bar.results.size, "Pro Men MTB BAR results")
     assert_equal(racers(:matson), mtb_bar_pro_men_bar.results[0].racer, "Pro Men MTB BAR results racer")
@@ -235,7 +230,7 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(1, mtb_bar_women_2_bar.results.size, "Women 2 MTB BAR results")
     assert_equal(woman_1, mtb_bar_women_2_bar.results[0].racer, "Women 2 MTB BAR results racer")
 
-    dh_bar = bar.standings.detect { |standings| standings.name == "Downhill" }
+    dh_bar = Bar.find_by_year_and_discipline(year, "Downhill")
     dh_bar_men_1_bar = dh_bar.races.detect { |race| race.name == "Category 1 Men" }
     assert_equal(1, dh_bar_men_1_bar.results.size, "Men 1 DH BAR results")
     assert_equal(racers(:molly), dh_bar_men_1_bar.results[0].racer, "Men 1 DH BAR results racer")
@@ -244,7 +239,6 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(1, dh_bar_pro_women_bar.results.size, "Pro Women DH BAR results")
     assert_equal(woman_pro, dh_bar_pro_women_bar.results[0].racer, "Pro Women DH BAR results racer")
 
-    overall_bar = overall_bar.standings.first
     senior_men_overall_bar = overall_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(4, senior_men_overall_bar.results.size, "Senior Men Overall BAR results")
     senior_men_overall_bar.results.sort!
@@ -352,6 +346,6 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(300, senior_women_4_overall_bar.results[0].points, "Senior Women Overall BAR results points")
     assert_equal(1, senior_women_4_overall_bar.results[0].scores.size, "Women Overall BAR results scores")
 
-    assert_equal(original_results_count + 35, Result.count, "Total count of results in DB after BARs recalculate")
+    assert_equal(original_results_count + 35, Result.count, "Total count of results in DB after BARs calculate!")
   end
 end

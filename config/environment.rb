@@ -22,7 +22,7 @@ Rails::Initializer.run do |config|
   config.active_record.schema_format = :sql
 
   # TODO Check that these work as intended
-  config.active_record.observers = :bar_sweeper, :home_sweeper, :results_sweeper, :schedule_sweeper
+  config.active_record.observers = :bar_sweeper, :event_observer, :home_sweeper, :result_observer, :results_sweeper, :schedule_sweeper
 
   # Ugh. Make config accessible to overrides
   @config = config

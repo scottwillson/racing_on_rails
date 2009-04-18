@@ -18,11 +18,11 @@ class OverallBar < Competition
 
   def source_results(race)
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
+                :include => [:race, {:racer => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
                   and place between 1 and 300
-                  and ((standings.discipline != "Mountain Bike" and standings.discipline != "Downhill" and categories.id in (#{category_ids_for(race)}))
-                    or ((standings.discipline = "Mountain Bike" or standings.discipline = "Downhill") and categories.id in (#{mtb_category_ids_for(race)})))
+                  and ((events.discipline != "Mountain Bike" and events.discipline != "Downhill" and categories.id in (#{category_ids_for(race)}))
+                    or ((events.discipline = "Mountain Bike" or events.discipline = "Downhill") and categories.id in (#{mtb_category_ids_for(race)})))
                   and events.date >= '#{date.year}-01-01' 
                   and events.date <= '#{date.year}-12-31'}],
                 :order => 'racer_id'
@@ -91,14 +91,14 @@ class OverallBar < Competition
     scores.each do |score|
       race = score.source_result.race
       if race.category == cat_4 
-        cat_4_disciplines << race.standings.discipline
+        cat_4_disciplines << race.discipline
       end
     end
 
     scores.each do |score|
       race = score.source_result.race
-      if race.category == cat_5 && cat_4_disciplines.include?(race.standings.discipline)
-        logger.debug("Cat 4 result already exists: #{race.standings.discipline} results for #{score.source_result.racer}: #{race.category.name}")
+      if race.category == cat_5 && cat_4_disciplines.include?(race.discipline)
+        logger.debug("Cat 4 result already exists: #{race.discipline} results for #{score.source_result.racer}: #{race.category.name}")
         scores_to_delete << score
       end
     end
@@ -107,18 +107,17 @@ class OverallBar < Competition
     scores_to_delete = []
     disciplines = []
     scores.each do |score|
-      if disciplines.include?(score.source_result.race.standings.discipline)
-        logger.debug("Multiple #{score.source_result.race.standings.discipline} results for #{score.source_result.racer}: #{score.source_result.race.category.name}")
+      if disciplines.include?(score.source_result.race.discipline)
+        logger.debug("Multiple #{score.source_result.race.discipline} results for #{score.source_result.racer}: #{score.source_result.race.category.name}")
         scores_to_delete << score
       else
-        disciplines << score.source_result.race.standings.discipline
+        disciplines << score.source_result.race.discipline
       end
     end
     scores_to_delete.each { |score| scores.delete(score) }
   end
 
-  def create_standings
-    root_standings = standings.create(:event => self, :discipline => Discipline[:overall].name)
+  def create_races
     for category_name in [
       'Senior Men', 'Category 3 Men', 'Category 4/5 Men',
       'Senior Women', 'Category 3 Women', 'Category 4 Women', 
@@ -126,7 +125,7 @@ class OverallBar < Competition
       'Singlespeed/Fixed', 'Tandem']
 
       category = Category.find_or_create_by_name(category_name)
-      root_standings.races.create(:category => category)
+      self.races.create(:category => category)
     end
   end
 

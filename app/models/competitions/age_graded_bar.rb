@@ -1,13 +1,13 @@
 class AgeGradedBar < Competition
-
   def points_for(scoring_result)
     scoring_result.points
   end
 
   def source_results(race)
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
-                :conditions => [%Q{events.type = 'OverallBar' 
+                :include => [:race, {:racer => :team}, :team, {:race => [:event, :category]}],
+                :conditions => [%Q{
+                  events.type = 'OverallBar' 
                   and bar = true
                   and events.sanctioned_by = "#{ASSOCIATION.short_name}"
                   and categories.id = #{race.category.parent(true).id}
@@ -17,11 +17,11 @@ class AgeGradedBar < Competition
     )
   end
   
-  def create_standings
-    root_standings = standings.create!(:event => self, :discipline => 'Age Graded')
-    for category in categories
-      root_standings.races.create!(:category => category)
+  def create_races
+    self.categories.each do |category|
+      self.races.create!(:category => category)
     end
+    self.discipline = "Age Graded"
   end
   
   def categories

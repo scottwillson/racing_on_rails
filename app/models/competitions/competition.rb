@@ -1,6 +1,6 @@
 require 'fileutils'
 
-# Year-long competition that derive there standings from other Events:
+# Year-long competition that derive their results from other Events:
 # BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
 class Competition < Event
   include FileUtils
@@ -9,11 +9,15 @@ class Competition < Event
   # TODO Use class methods to set things like friendly_name
   # TODO Just how much memory is this thing hanging on to?
   attr_accessor :point_schedule
-  
-  after_create  :create_standings
+
+  after_create  :create_races
   # return true from before_save callback or Competition won't save
-  before_save   {|competition| competition.notification = false; true}
+  before_save   { |competition| competition.notification = false; true }
   after_save    :expire_cache
+  
+  has_many :competition_event_memberships
+  has_many :source_events, :through => :competition_event_memberships, :source => :event
+  belongs_to :source_event, :class_name => "Event"
   
   def self.find_for_year(year = Date.today.year)
     self.find_by_date(Date.new(year, 1, 1))
@@ -23,7 +27,7 @@ class Competition < Event
   # (Calculate clashes with internal Rails method)
   # Destroys existing Competition for the year first.
   # TODO store intermeditate results in database?
-  def Competition.recalculate(year = Date.today.year)
+  def Competition.calculate!(year = Date.today.year)
     # TODO: Use FKs in database to cascade delete
     # TODO Use Hashs or class instead of iterating through Arrays!
     benchmark(name, Logger::INFO, false) {
@@ -33,22 +37,31 @@ class Competition < Event
         date = Date.new(year, 1, 1)
         competition = self.find_or_create_by_date(date)
         raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
-        competition.destroy_standings
-        competition.create_standings
-        # Could bulk load all Standings and Races at this point, but hardly seems to matter
+        competition.destroy_races
+        competition.create_races
+        # Could bulk load all Event and Races at this point, but hardly seems to matter
         competition.calculate_members_only_places
-        competition.recalculate
+        competition.calculate!
       end
     }
     # Don't return the entire populated instance!
     true
   end
   
-  def initialize(attributes = nil)
-    super
-    if self.date.month != 1 or self.date.day != 1
-      self.date = Date.new(Date.today.year)    
-    end
+  def default_date
+    Time.new.beginning_of_year
+  end
+
+  def default_bar_points
+    0
+  end
+  
+  def default_ironman
+    false
+  end
+
+  def default_name
+    name
   end
 
   def friendly_name
@@ -74,55 +87,36 @@ class Competition < Event
       errors.add("end_date", "End date must be December 31st")
     end
   end
-
-  # TODO Is this really good Rails API usage?
-  def destroy_standings
-    for s in standings(true)
-      Standings.delete(s.id)
-    end
-  end
   
   def name
-    self[:name] ||= "#{date.year} #{friendly_name}"
+    self[:name] ||= "#{self.date.year} #{friendly_name}"
   end
   
-  def create_standings
-    new_standings = standings.create
+  def create_races
     category = Category.find_or_create_by_name(friendly_name)
-    new_standings.races.create(:category => category)
-    new_standings
+    self.races.create(:category => category)
   end
 
   def calculate_members_only_places
     if place_members_only?
-      for race in Race.find_by_sql([%Q{
-        select races.id 
-        from races
-        left outer join standings on standings.id = races.standings_id
-        left outer join events on events.id = standings.event_id
-        where events.type <> ? and events.date between ? and ?},
-        self.class.name.demodulize, start_date, end_date])
-        
-        race = Race.find(:first,
-                         :include => [{:results => :racer}, {:standings => :event}],
-                         :conditions => ['races.id = ?', race.id])
-        race.calculate_members_only_places!
-      end
+      Race.find(:all,
+                :include => :event,
+                :conditions => [ "events.type != ? and events.date between ? and ?", 
+                                 self.class.name.demodulize, start_date, end_date ]
+      ).each(&:calculate_members_only_places!)
     end
   end
   
-  def recalculate
-    for individual_standings in standings(true)
-      for race in individual_standings.races
-        results = source_results_with_benchmark(race)
-        create_competition_results_for(results, race)
-        after_create_competition_results_for(race)
-        race.place_results_by_points(break_ties?)
-      end
+  def calculate!
+    self.races.each do |race|
+      results = source_results_with_benchmark(race)
+      create_competition_results_for(results, race)
+      after_create_competition_results_for(race)
+      race.place_results_by_points(break_ties?)
     end
     
     # Explicity mark as updated to make it "dirty"
-    self.updated_at = Time.now
+    self.updated_at_will_change!
     save!
   end
   
@@ -143,7 +137,7 @@ class Competition < Event
     ids.join(', ')
   end
   
-  # If same ride places twice in same race, only highest result counts
+  # If same rider places twice in same race, only highest result counts
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
     competition_result = nil
@@ -223,12 +217,16 @@ class Competition < Event
       0
     end
   end
+  
+  def requires_combined_results?
+    false
+  end
 
   def expire_cache
   end
 
   def to_s
-    "<self.class #{id} #{name} #{start_date} #{end_date}>"
+    "#<#{self.class} #{id} #{name} #{start_date} #{end_date}>"
   end
   
   protected

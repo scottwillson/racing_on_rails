@@ -2,23 +2,22 @@
 
 <%= error_messages_for "event" %>
 
-<h2><%= @event.name %></h2>
+<h2><%= link_to_parents(@event) %><%= @event.name %></h2>
 
 <div class="column_grid_container">
   <div class="box-3">
-    <%= render :partial => "admin/events/nav", :locals => { :event => @event } %>
+    <%= render :partial => "parent", :object => @event %>
+    <%= render :partial => "events", :object => @event %>
+    <%= render :partial => "races", :object => @event %>
   </div>
   <div class="span-3 last">
-
-    <%# form_for needs help with namespace + STI  %>
      <% form_for(:event, 
                  @event, 
                  :url => @event.new_record? ? admin_events_path : admin_event_path(@event), 
                  :html => { :method => form_method_for(@event) }) do |f| -%>
       <div class="span-3 last no_top_margin">
+        <%= f.hidden_field :parent_id %>
         <%= f.labelled_text_field :name %>
-
-        <%= render :partial => 'parent', :locals => {:event => @event, :f => f } %>
 
         <%= f.label :type %>
         <%= f.select(:type, [['Single Day Event', 'SingleDayEvent'],
@@ -28,18 +27,21 @@
            { :title => "Single day event: most events. 
     \nMulti day event: event over consecutive days (stage races, AVC). 
     \nSeries: weekend events with full BAR points (Cross Crusade). 
-    \nWeekly series: weeknight, BAR points only for final standings (PIR)" }) %><br/>
+    \nWeekly series: weeknight, BAR points only for overall (PIR)" }) %><br/>
 
-        <%- if @event.is_a?(SingleDayEvent) -%>
+        <% case @event
+           when SingleDayEvent -%>
           <%= f.label :date_1i, "Date" %>
           <%= f.date_select :date, :order => [:month, :day, :year] %>
-        <%- else -%>
+        <% when MultiDayEvent -%>
           <%- if @event.start_date == @event.end_date -%>
             <%= f.labelled_text(:date, @event.start_date.strftime('%A, %B %d, %Y')) %>
           <%- else -%>
             <%= f.labelled_text(:date, "#{@event.start_date.strftime('%a %m/%d/%Y')} to #{@event.end_date.strftime('%a %m/%d/%Y')}") %>
           <%- end -%>
-        <%- end -%>
+        <% else -%>
+            <%= f.labelled_text(:date, @event.date.strftime('%A, %B %d, %Y')) %>
+        <% end -%>
 
         <%= f.label :discipline %>
         <%= f.select :discipline, Discipline.find_all_names.sort %><br/>
@@ -85,6 +87,22 @@
         
         <%= f.labelled_check_box :atra_points_series, "ATRA Points Series" if ASSOCIATION.competitions.include?(:atra_points_series) %>
 
+        <% if ASSOCIATION.competitions.include?(:bar) -%>
+        <%= f.label :bar_points, "BAR Points" %>
+        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%- end %>
+        
+        <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
+        <%= f.label :bar_points, "Rankings Pts" %>
+        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%- end %>
+
+        <%- if @event.requires_combined_results? -%>
+          <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results" %>
+        <%- end -%>
+
+        <%= f.labelled_check_box :ironman if ASSOCIATION.competitions.include?(:ironman) %>
+
         <%= f.labelled_text_field :flyer %>
         <%= f.labelled_check_box :flyer_approved %>
 
@@ -94,10 +112,8 @@
 
         <%= f.labelled_text_area :notes %>
       </div>
-
-      <%= render(:partial => "events", :locals => { :events => @event.events }) if @event.is_a?(MultiDayEvent) %>
-
-      <div class="span-3 page_buttons last">
+      
+       <div class="span-3 page_buttons last">
         <div class="updatedon span-1"><% unless @event.updated_at.nil? %>Updated: <%= time_ago_in_words(@event.updated_at, true) + " ago" %><% end %></div>
         <div class="right span-2 last">
           <%= link_to("Delete", admin_event_path(@event), :method => :delete, :class => 'obvious', :id => 'delete') unless @event.new_record? %>

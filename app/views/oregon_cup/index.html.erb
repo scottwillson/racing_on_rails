@@ -29,7 +29,7 @@ end -%>
   <tr>
     <td valign="top" width="50%">
       <% unless @oregon_cup.new_record? %>
-      <% for race in @oregon_cup.standings.first.races %>
+      <% for race in @oregon_cup.races %>
       <% unless race.results.empty? %>
       <table class="base">
         <tr>

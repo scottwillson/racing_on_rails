@@ -6,6 +6,7 @@
 # The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
 # FIXME This documentation is out of date
+# TODO Consider using parent BAR again with child Competitions. Should that just be Overall BAR?
 class Bar < Competition
 
   # TODO Add add_child(...) to Race
@@ -13,12 +14,47 @@ class Bar < Competition
   # remove one-day licensees
   
   validate :valid_dates
+
+  def Bar.calculate!(year = Date.today.year)
+    benchmark(name, Logger::INFO, false) {
+      transaction do
+        year = year.to_i if year.is_a?(String)
+        date = Date.new(year, 1, 1)
+
+        # Age Graded BAR and Overall BAR do their own calculations
+        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+          bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          unless bar
+            bar = Bar.create!(
+              :name => "#{year} #{discipline.name} BAR",
+              :date => date,
+              :discipline => discipline.name
+            )
+          end
+        end
+
+        Bar.find(:all, :conditions => { :date => date }).each do |bar|
+          bar.destroy_races
+          bar.create_races
+          # Could bulk load all Event and Races at this point, but hardly seems to matter
+          bar.calculate_members_only_places
+          bar.calculate!
+        end
+      end
+    }
+    # Don't return the entire populated instance!
+    true
+  end
   
   # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
   # BarSweeper seems to fire, but does not expire pages?
   def Bar.expire_cache
     FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
     FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
+  end
+  
+  def Bar.find_by_year_and_discipline(year, discipline_name)
+    Bar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
 
   def point_schedule
@@ -37,10 +73,10 @@ class Bar < Competition
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
   def source_results(race)
-    if race.standings.discipline == 'Road'
+    if race.discipline == 'Road'
       race_disciplines = "'Road', 'Circuit'"
     else
-      race_disciplines = "'#{race.standings.discipline}'"
+      race_disciplines = "'#{race.discipline}'"
     end
     
     # Cat 4/5 is a special case. Can't config in database because it's a circular relationship.
@@ -50,18 +86,24 @@ class Bar < Competition
     if category_4_5_men && category_4_men && race.category == category_4_men
       category_ids << ", #{category_4_5_men.id}"
     end
-    
+
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
-                :conditions => [%Q{place between 1 AND #{point_schedule.size - 1}
-                  and bar = true
-                  and events.type in ('SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries')
-                  and events.sanctioned_by = "#{ASSOCIATION.short_name}"
-                  and categories.id in (#{category_ids})
-                  and (standings.discipline in (#{race_disciplines}) or (standings.discipline is null and events.discipline in (#{race_disciplines})))
-                  and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
-                  and events.date >= '#{date.year}-01-01' 
-                  and events.date <= '#{date.year}-12-31'}],
+                :include => [:race, {:racer => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
+                :conditions => [%Q{
+                  place between 1 AND #{point_schedule.size - 1}
+                    and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries') or events.type is NULL)
+                    and bar = true
+                    and events.sanctioned_by = "#{ASSOCIATION.short_name}"
+                    and categories.id in (#{category_ids})
+                    and (events.discipline in (#{race_disciplines})
+                      or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
+                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
+                    and (races.bar_points > 0
+                      or (races.bar_points is null and events.bar_points > 0)
+                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
+                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
+                    and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
+                }],
                 :order => 'racer_id'
       )
   end
@@ -80,9 +122,6 @@ class Bar < Competition
 
       team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
-      if source_result.race.standings.name['CoMotion'] and source_result.race.category.name == 'Category C Tandem'
-        points = points / 2.0
-      end
       if source_result.race.bar_points == 1 and field_size >= 75
         points = points * 1.5
       end
@@ -90,19 +129,9 @@ class Bar < Competition
     points
   end
   
-  def create_standings
-    raise errors.full_messages unless errors.empty?
-    # Age Graded BAR and Overall BAR do their own calculations
-    for discipline in Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}
-      discipline_standings = standings.create(
-        :name => discipline.name,
-        :discipline => discipline.name
-      )
-      raise(RuntimeError, discipline_standings.errors.full_messages) unless discipline_standings.errors.empty?
-      for category in discipline.bar_categories
-        race = discipline_standings.races.create(:category => category)
-        raise(RuntimeError, race.errors.full_messages) unless race.errors.empty?
-      end
+  def create_races
+    Discipline[discipline].bar_categories.each do |category|
+      races.create!(:category => category)
     end
   end
 

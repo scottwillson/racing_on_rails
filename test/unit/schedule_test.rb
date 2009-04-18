@@ -4,10 +4,7 @@ require "test_helper"
 # TODO Recognize Series and WeeklySeries
 
 class ScheduleTest < ActiveSupport::TestCase
-  
   def setup
-    # Discipline class may have loaded earlier with no aliases in database
-    Discipline.load_aliases
     # Remove existing promoters that may conflict
     Promoter.delete_all
   end
@@ -130,7 +127,7 @@ class ScheduleTest < ActiveSupport::TestCase
     fast_twitch_series = WeeklySeries.find_by_name("Fast Twitch Fridays")
     assert(fast_twitch_series.instance_of?(WeeklySeries), "Fast Twitch Fridays should be WeeklySeries")
     assert_not_nil(fast_twitch_series, "Should have imported Fast Twitch Fridays series")
-    assert_equal(15, fast_twitch_series.events.size, "Number of Fast Twitch Fridays events")
+    assert_equal(15, fast_twitch_series.children.size, "Number of Fast Twitch Fridays events")
     assert_equal_dates("2006-05-12", fast_twitch_series.start_date, "Fast Twitch start date")
     assert_equal_dates("2006-08-25", fast_twitch_series.end_date, "Fast Twitch end date")
     assert_equal(fast_twitch_series.start_date, fast_twitch_series.date, "Fast Twitch start date and date")
@@ -152,7 +149,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter email")
     assert_equal(ASSOCIATION.short_name, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
     
-    for event in fast_twitch_series.events
+    for event in fast_twitch_series.children
       assert_not_nil(event, "Should have imported Fast Twitch Fridays")
       assert_equal("Portland", event.city, "Fast Twitch Fridays city")
       assert_equal(ASSOCIATION.state, event.state, "Fast Twitch Fridays state")

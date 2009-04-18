@@ -54,17 +54,6 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_nil(assigns["race"], "Should not assign race")
   end
 
-  def test_edit_with_standings
-    kings_valley = events(:kings_valley)
-    standings = kings_valley.standings.first
-
-    get(:edit, :id => kings_valley.to_param, :standings_id => standings.to_param)
-    assert_response(:success)
-    assert_template("admin/events/edit")
-    assert_not_nil(assigns["event"], "Should assign event")
-    assert_nil(assigns["race"], "Should not assign race")
-  end
-
   def test_edit_with_promoter
     banana_belt = events(:banana_belt_1)
     opts = {:controller => "admin/events", :action => "edit", :id => banana_belt.to_param, :promoter_id => '2'}
@@ -82,28 +71,28 @@ class Admin::EventsControllerTest < ActionController::TestCase
 
   def test_upload
     mt_hood_1 = events(:mt_hood_1)
-    assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
+    assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
     post :upload, :id => mt_hood_1.to_param, :results_file => fixture_file_upload("results/pir_2006_format.xls")
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
     assert_response :redirect
-    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param, :standings_id => mt_hood_1.standings(true).last.to_param)
+    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param)
     assert(flash.has_key?(:notice))
-    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after upload attempt')
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
 
   def test_upload_invalid_columns
     mt_hood_1 = events(:mt_hood_1)
-    assert(mt_hood_1.standings.empty?, 'Should have no standings before import')
+    assert(mt_hood_1.races.empty?, 'Should have no races before import')
     
     post :upload, :id => mt_hood_1.to_param, :results_file => fixture_file_upload("results/invalid_columns.xls")
-    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param, :standings_id => mt_hood_1.standings(true).last.to_param)
+    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param)
 
     assert_response :redirect
     assert(flash.has_key?(:notice))
     assert(flash.has_key?(:warn))
-    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after upload attempt')
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
   
   def test_new_single_day_event
@@ -171,13 +160,13 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_redirected_to(:action => :new)
   end
   
-  def test_create_from_events
+  def test_create_from_children
     lost_child = SingleDayEvent.create!(:name => "Alameda Criterium")
     SingleDayEvent.create!(:name => "Alameda Criterium")
-    opts = {:controller => "admin/events", :action => "create_from_events", :id => lost_child.to_param}
-    assert_routing("/admin/events/create_from_events/#{lost_child.id}", opts)
+    opts = {:controller => "admin/events", :action => "create_from_children", :id => lost_child.to_param}
+    assert_routing("/admin/events/create_from_children/#{lost_child.id}", opts)
     
-    post(:create_from_events, :id => lost_child.to_param)
+    post(:create_from_children, :id => lost_child.to_param)
 
     assert_response(:redirect)
     new_parent = MultiDayEvent.find_by_name(lost_child.name)
@@ -191,7 +180,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     Racer.create(:name => 'Greg Rodgers', :road_number => '500')
     
     mt_hood_1 = events(:mt_hood_1)
-    assert(mt_hood_1.standings(true).empty?, 'Should have no standings before import')
+    assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
     file = uploaded_file("/test/fixtures/results/dupe_racers.xls", "dupe_racers.xls", "application/vnd.ms-excel")
     post :upload, :id => mt_hood_1.to_param, :results_file => file
@@ -199,7 +188,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_response :redirect
     
     # Dupe racers used to be allowed, and this would have been an error
-    assert(!mt_hood_1.standings(true).empty?, 'Should have standings after importing dupe racers')
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after importing dupe racers')
     assert(!flash.has_key?(:warn))
   end
 
@@ -208,6 +197,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
     delete(:destroy, :id => jack_frost.id, :commit => 'Delete')
     assert_redirected_to(admin_events_path(:year => jack_frost.date.year))
     assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
+  end
+
+  def test_destroy_event_ajax
+    event = events(:banana_belt_1)
+    event.destroy_races
+    xhr(:delete, :destroy, :id => event.id, :commit => 'Delete')
+    assert_response(:success)
+    assert(!Event.exists?(event.id), "Event should have been destroyed")
   end
 
   def test_update_event
@@ -560,6 +557,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
 
   def test_links_to_years_only_past_year_has_events
+    Result.delete_all
     Event.delete_all
     current_year = Date.today.year
     last_year = current_year - 1
@@ -596,5 +594,107 @@ class Admin::EventsControllerTest < ActionController::TestCase
     @request.session[:user_id] = 31289371283
     get(:index)
     assert_redirected_to :controller => "/account", :action => "login"
+  end
+  
+  def test_edit_child_event
+    get(:edit, :id => events(:banana_belt_1).id)
+    assert_response(:success)
+  end
+  
+  def test_edit_combined_results
+    jack_frost = events(:jack_frost_2002)
+    jack_frost.bar_points = 2
+    jack_frost.save!
+    get(:edit, :id => jack_frost.combined_results.id)
+    assert_response(:success)
+  end
+
+  def test_destroy_child_event
+    event = events(:banana_belt_1)
+    event.destroy_races
+    delete(:destroy, :id => event.to_param, :commit => 'Delete')
+    assert_response(:redirect)
+    assert(!Event.exists?(event.id), "Should have deleted Event")
+  end
+
+  def test_update_child_event
+    banana_belt = events(:banana_belt_1)
+
+    assert_not_equal('Banana Belt One', banana_belt.name, 'name')
+    assert_not_equal(2, banana_belt.bar_points, 'bar_points')
+    assert_not_equal('Cyclocross', banana_belt.discipline, 'discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.to_param,
+         "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+
+    banana_belt.reload
+    assert_equal('Banana Belt One', banana_belt.name, 'name')
+    assert_equal('Cyclocross', banana_belt.discipline, 'discipline')
+    assert_equal(2, banana_belt.bar_points, 'bar_points')
+  end
+
+  def test_update_nil_disciplines
+    banana_belt = events(:banana_belt_1)
+    banana_belt.update_attribute(:discipline, nil)
+    assert_nil(banana_belt[:discipline], 'discipline')
+    assert_equal('Road', banana_belt.parent.discipline, 'Parent event discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.to_param,
+         "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+
+    banana_belt.reload
+    assert_equal("Road", banana_belt[:discipline], 'discipline')
+  end
+
+  def test_update_discipline_same_as_parent_child_events
+    banana_belt = events(:banana_belt_1)
+    assert_equal('Road', banana_belt[:discipline], 'discipline')
+    assert_equal('Road', banana_belt.parent.discipline, 'Parent event discipline')
+
+    post(:update, 
+         "commit"=>"Save", 
+         :id => banana_belt.to_param,
+         "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
+    )
+    assert_response(:redirect)
+    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+
+    banana_belt.reload
+    assert_equal("Road", banana_belt[:discipline], 'discipline')
+  end  
+
+  def test_update_existing_combined_results
+    source_event = events(:jack_frost_2002)
+    source_event.bar_points = 2
+    source_event.save!
+    event = source_event.combined_results
+    
+    post(:update, "id" => event.id, 
+                  "event"=>{ "auto_combined_results"=>"1", 
+                                  "name"=>"Portland MTB Short Track Series", 
+                                  "bar_points"=>"0", 
+                                  "ironman"=>"1", 
+                                  "discipline"=>"Mountain Bike"})
+    
+    assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
+    assert_response(:redirect)
+  end
+  
+  def test_destroy_races
+    jack_frost = events(:jack_frost_2002)
+    assert_equal(2, jack_frost.races.count, "Races before destroy")
+    delete(:destroy_races, :id => jack_frost.id, :commit => 'Delete')
+    assert_response(:success)
+    assert_equal(0, jack_frost.races(true).count  , "Races before destroy")
   end
 end

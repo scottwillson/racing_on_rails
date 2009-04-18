@@ -45,4 +45,20 @@ class ApplicationController < ActionController::Base
       return render(:inline => @page.body, :layout => true)
     end
   end
+
+  def rescue_action(exception)
+    respond_to do |format|
+      format.html {
+        rescue_with_handler(exception) || rescue_action_without_handler(exception)
+      }
+      format.js {
+        log_error(exception)
+        ExceptionNotifier.deliver_exception_notification(exception, self, request, {})
+        render "shared/exception", :locals => { :exception => exception }
+      }
+      format.all {
+        rescue_with_handler(exception) || rescue_action_without_handler(exception)
+      }
+    end
+  end
 end

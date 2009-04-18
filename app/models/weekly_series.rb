@@ -1,5 +1,3 @@
-# By convention, only SingleDayEvents have Standings and Results -- WeeklySeries do not. 
-# Final standings like Overall GC are associated with the parent WeeklySeries.
 class WeeklySeries < Series
   
   # TODO Is this duplicated from Ruby core and standard lib?
@@ -7,10 +5,10 @@ class WeeklySeries < Series
 
   # 0-based. Doesn't handle multiple days of the week. Method names here are confusing.
   def day_of_week
-    if events.empty?
+    if children.empty?
       date.wday
     else
-      events.sort_by(&:date).first.date.wday
+      children.sort_by(&:date).first.date.wday
     end
   end
   
@@ -48,6 +46,6 @@ class WeeklySeries < Series
   end
 
   def to_s
-    "<#{self.class} #{id} #{discipline} #{name} #{date} #{events.size}>"
+    "<#{self.class} #{id} #{discipline} #{name} #{date} #{children.size}>"
   end
 end

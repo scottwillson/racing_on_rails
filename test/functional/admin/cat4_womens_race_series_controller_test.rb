@@ -45,12 +45,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal_dates("2009-04-01", new_event.date, "New event date")
     assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
 
-    assert_equal(1, new_event.standings.count, "New event should have one Standings")
-    standings = new_event.standings.first
-    assert_equal("Mount Hamilton Road Race", standings.name)
-
-    assert_equal(1, standings.races.count, "New event standings should have one race")
-    race = standings.races.first
+    assert_equal(1, new_event.races.count, "New event should have one race")
+    race = new_event.races.first
     women_cat_4 = Category.find_by_name("Women Cat 4")
     assert_equal(women_cat_4, race.category)
 
@@ -66,14 +62,14 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   
   def test_create_result_for_existing_race_and_racers
     women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
-    existing_race = standings(:banana_belt).races.create!(:category => women_cat_4)
+    existing_race = events(:banana_belt_1).races.create!(:category => women_cat_4)
     existing_race.results.create!(:place => "1", :racer => racers(:alice))
     molly = racers(:molly)
-    event = standings(:banana_belt).event
+    event = events(:banana_belt_1)
 
     post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
                                         :first_name => molly.first_name, :last_name => molly.last_name },
-                           :event => { :name => standings(:banana_belt).event.name, 
+                           :event => { :name => events(:banana_belt_1).name, 
                              "date(1i)" => event.date.year.to_s,
                              "date(2i)" => event.date.month.to_s,
                              "date(3i)" => event.date.day.to_s
@@ -88,12 +84,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal_dates(event.date, new_event.date, "New event date")
     assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
 
-    assert_equal(1, new_event.standings.count, "New event should have one Standings")
-    standings = new_event.standings.first
-    assert_equal("Banana Belt I", standings.name)
-
-    assert_equal(2, standings.races.count, "New event standings should have one race: #{standings.races}")
-    race = standings.races.detect {|race| race.category == women_cat_4 }
+    assert_equal(2, new_event.races.count, "New event races: #{event.races}")
+    race = new_event.races.detect {|race| race.category == women_cat_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(2, race.results.count, "race results")
@@ -125,13 +117,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal_dates("1999-01-24", new_event.date, "New event date")
     assert_nil(new_event.sanctioned_by, "Sanctioned by")
 
-    assert_equal(1, new_event.standings.count, "New event should have one Standings")
-    standings = new_event.standings.first
-    assert_equal("San Ardo Road Race", standings.name)
-
-    assert_equal(1, standings.races.count, "New event standings should have one race: #{standings.races}")
+    assert_equal(1, new_event.races.count, "New event should have one race: #{new_event.races}")
     women_cat_4 = Category.find_by_name("Women Cat 4")
-    race = standings.races.detect {|race| race.category == women_cat_4 }
+    race = new_event.races.detect {|race| race.category == women_cat_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(1, race.results.count, "race results")
@@ -151,14 +139,14 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     sr_women_4 = Category.create!(:name => "Sr. Wom 4")
     women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
     women_cat_4.children << sr_women_4
-    existing_race = standings(:banana_belt).races.create!(:category => sr_women_4)
+    existing_race = events(:banana_belt_1).races.create!(:category => sr_women_4)
     existing_race.results.create!(:place => "1", :racer => racers(:alice))
     molly = racers(:molly)
-    event = standings(:banana_belt).event
+    event = events(:banana_belt_1)
 
     post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
                                         :first_name => molly.first_name, :last_name => molly.last_name },
-                           :event => { :name => standings(:banana_belt).event.name, 
+                           :event => { :name => event.name, 
                              "date(1i)" => event.date.year.to_s,
                              "date(2i)" => event.date.month.to_s,
                              "date(3i)" => event.date.day.to_s
@@ -173,12 +161,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal_dates(event.date, new_event.date, "New event date")
     assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
 
-    assert_equal(1, new_event.standings.count, "New event should have one Standings")
-    standings = new_event.standings.first
-    assert_equal("Banana Belt I", standings.name)
-
-    assert_equal(2, standings.races.count, "New event standings should have one race: #{standings.races}")
-    race = standings.races.detect {|race| race.category == sr_women_4 }
+    assert_equal(2, new_event.races.count, "New event should have one race: #{new_event.races}")
+    race = new_event.races.detect {|race| race.category == sr_women_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(2, race.results.count, "race results")
@@ -214,12 +198,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal_dates("2009-04-01", new_event.date, "New event date")
     assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
 
-    assert_equal(1, new_event.standings.count, "New event should have one Standings")
-    standings = new_event.standings.first
-    assert_equal("Mount Hamilton Road Race", standings.name)
-
-    assert_equal(1, standings.races.count, "New event standings should have one race")
-    race = standings.races.first
+    assert_equal(1, new_event.races.count, "New event should have one race")
+    race = new_event.races.first
     women_cat_4 = Category.find_by_name("Women Cat 4")
     assert_equal(women_cat_4, race.category)
 

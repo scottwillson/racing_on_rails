@@ -9,10 +9,13 @@ namespace :db do
 
   # Dump the current database to a MySQL file
   task :database_dump, :roles => :db, :only => { :primary => true } do
+    run("rm -f db/production.sql") if File.exists?("db/production.sql") 
+    run("rm -f db/production.sql.bz2") if File.exists?("db/production.sql.bz2") 
     load("config/environment.rb") unless defined?(ASSOCIATION)
     abcs = ActiveRecord::Base.configurations
     run("mkdir -p db")
     run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} --compress --ignore-table=#{abcs["production"]["database"]}.posts #{abcs["production"]["database"]} > db/production.sql")
+     run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} --compress --no-data #{abcs["production"]["database"]} posts >> db/production.sql")
     run("rm -f db/production.sql.bz2")
     run("bzip2 db/production.sql")
   end

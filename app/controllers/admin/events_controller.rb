@@ -3,7 +3,7 @@ class Admin::EventsController < ApplicationController
   before_filter :check_administrator_role
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
-  cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :destroy_standings, :upload]
+  cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :upload]
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -21,21 +21,11 @@ class Admin::EventsController < ApplicationController
   # Show results for Event
   # === Params
   # * id: SingleDayEvent id
-  # * standings_id: Standings id (optional
-  # * race_id: Race id (optional
   # === Assigns
   # * event
-  # * standings
-  # * race
   # * disciplines: List of all Disciplines + blank
   def edit
     @event = Event.find(params[:id])
-    if params[:race_id]
-      @race = Race.find(params[:race_id])
-    elsif params[:standings_id]
-      @standings = Standings.find(params[:standings_id])
-    end
-
     @disciplines = [''] + Discipline.find(:all).collect do |discipline|
       discipline.name
     end
@@ -58,10 +48,14 @@ class Admin::EventsController < ApplicationController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    @event = SingleDayEvent.new(:date => date, :discipline => ASSOCIATION.default_discipline)
+    @event = SingleDayEvent.new(params[:event])
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     @event.number_issuer_id = association_number_issuer.id
-    render :action => :edit
+    
+    respond_to do |format|
+      format.html { render :action => :edit }
+      format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => params[:event]) } }
+    end
   end
   
   # Create new SingleDayEvent
@@ -74,11 +68,15 @@ class Admin::EventsController < ApplicationController
   def create
     event_type = params[:event][:type]
     raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-    @event = eval(event_type).new(params[:event])
+    if params[:event][:parent_id].present?
+      @event = Event.find(params[:event][:parent_id]).children.build(params[:event])
+    else
+      @event = eval(event_type).new(params[:event])
+    end
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
-      redirect_to(:action => :new)
+      redirect_to(:action => :new, :event => params[:event])
     else
       flash[:warn] = @event.errors.full_messages
     end
@@ -89,9 +87,9 @@ class Admin::EventsController < ApplicationController
   # * id: SingleDayEvent
   # === Flash
   # * warn
-  def create_from_events
+  def create_from_children
     single_day_event = Event.find(params[:id])
-    new_parent = MultiDayEvent.create_from_events(single_day_event.multi_day_event_children_with_no_parent)
+    new_parent = MultiDayEvent.create_from_children(single_day_event.multi_day_event_children_with_no_parent)
     expire_cache
     redirect_to(:action => :edit, :id => new_parent.to_param)
   end
@@ -113,7 +111,7 @@ class Admin::EventsController < ApplicationController
     event_type = params[:event][:type]
     if !event_type.blank? && event_type != @event.type
       raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-      @event.events.clear if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
+      @event.children.clear if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
       if @event.save
         Event.connection.execute("update events set type = '#{event_type}' where id = #{@event.id}")
         @event = Event.find(@event.id)
@@ -146,23 +144,16 @@ class Admin::EventsController < ApplicationController
     end
 
     temp_file = File.new(path)
-    event_id = params[:id]
-    event = Event.find(event_id)
+    event = Event.find(params[:id])
     results_file = ResultsFile.new(temp_file, event)
-    standings = results_file.import
+    results_file.import
     expire_cache
     flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
     unless results_file.invalid_columns.empty?
       flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"
     end
-    redirect_path = {
-      :controller => "/admin/events", 
-      :action => :edit, 
-      :standings_id => standings.to_param,
-      :id => event.to_param
-    }
     
-    redirect_to(redirect_path)
+    redirect_to(edit_admin_event_path(event))
   end
   
   # Upload new Excel Schedule
@@ -195,11 +186,37 @@ class Admin::EventsController < ApplicationController
   # === Flash
   # * notice
   def destroy
-    event = Event.find(params[:id])
-    event.destroy
+    @event = Event.find(params[:id])
+    if @event.destroy
+      expire_cache
+      respond_to do |format|
+        format.html {
+          flash[:notice] = "Deleted #{@event.name}"
+          if @event.parent
+            redirect_to(edit_admin_event_path(@event.parent))
+          else
+            redirect_to(admin_events_path(:year => @event.date.year))
+          end
+        }
+        format.js
+      end
+    else
+      respond_to do |format|
+        format.html {
+          flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages}"
+          redirect_to(admin_events_path(:year => @event.date.year))
+        }
+        format.js { render "destroy_error" }
+      end
+    end
+  end
+  
+  def destroy_races
+    @event = Event.find(params[:id])
+    # Remember races for view
+    @races = @event.races.dup
+    @event.destroy_races
     expire_cache
-    flash[:notice] = "Deleted #{event.name}"
-    redirect_to(admin_events_path(:year => event.date.year))
   end
 
   def set_parent

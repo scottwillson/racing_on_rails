@@ -44,7 +44,7 @@ No results for <%= @year %>
    <%= link_to(truncate(result.team_name, :length => 40),
        :controller => 'results',
        :action => 'competition',
-       :competition_id => @race.standings.event.to_param,
+       :competition_id => @race.event.to_param,
        :team_id => result.team.id) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
@@ -65,7 +65,7 @@ No results for <%= @year %>
  <%= link_to(truncate(result.name), 
    :controller => 'results',
      :action => 'competition',
-     :competition_id => @race.standings.event.to_param,
+     :competition_id => @race.event.to_param,
      :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
    <%= truncate(result.team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>

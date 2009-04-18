@@ -10,11 +10,11 @@ class BarControllerTest < ActionController::TestCase
     big_team = Team.create(:name => "T" * 60)
     weaver = racers(:weaver)
     weaver.team = big_team
-    events(:banana_belt_1).standings.first.races.first.results.create(:racer => weaver, :team => big_team)
+    events(:banana_belt_1).races.first.results.create(:racer => weaver, :team => big_team)
     weaver.first_name = "f" * 60
     weaver.last_name = "T" * 60
 
-    @bar = Bar.recalculate(2004)
+    @bar = Bar.calculate!(2004)
   end
 
   def test_index
@@ -23,7 +23,6 @@ class BarControllerTest < ActionController::TestCase
     get(:index)
     assert_response(:success)
     assert_template("bar/index")
-    assert_nil(assigns["standings"], "Should assign standings")
     assert_not_nil(assigns["year"], "Should  assign year")
     assert_nil(assigns["discipline"], "Should assign not discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
@@ -35,7 +34,6 @@ class BarControllerTest < ActionController::TestCase
     get(:show, :year => "#{Date.today.year}", :discipline => 'overall', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
-    assert_nil(assigns["standings"], "Should assign standings")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
@@ -47,20 +45,18 @@ class BarControllerTest < ActionController::TestCase
     get(:show, :year => "#{Date.today.year}", :discipline => 'road', :category => 'senior_men')
     assert_response(:success)
     assert_template("bar/show")
-    assert_nil(assigns["standings"], "Should assign road_events")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
   end
 
   def test_show
-    Bar.recalculate(Date.today.year)
+    Bar.calculate!(Date.today.year)
     opts = {:controller => "bar", :action => "show", :year => "#{Date.today.year}", :discipline => "road", :category => 'senior_women'}
     assert_routing("/bar/#{Date.today.year}/road/senior_women", opts)
     get(:show, :year => "#{Date.today.year}", :discipline => "road", :category => 'senior_women')
     assert_response(:success)
     assert_template("bar/show")
-    assert_nil(assigns["standings"], "Should not assign standings")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["discipline"], "Should assign discipline")
     assert_not_nil(assigns["all_disciplines"], "Should assign all_disciplines")
@@ -70,17 +66,17 @@ class BarControllerTest < ActionController::TestCase
     weaver = racers(:weaver)
     weaver.date_of_birth = Date.new(1975)
     weaver.save!    
-    banana_belt_standings = standings(:banana_belt)
-    banana_belt_standings.event.date = Date.new(2007, 3, 20)
-    banana_belt_standings.event.save!
+    banana_belt = events(:banana_belt_1)
+    banana_belt.date = Date.new(2007, 3, 20)
+    banana_belt.save!
     masters_men = categories(:masters_men)
     masters_30_34 = categories(:masters_men_30_34)
-    banana_belt_masters_30_34 = banana_belt_standings.races.create!(:category => masters_30_34)
+    banana_belt_masters_30_34 = banana_belt.races.create!(:category => masters_30_34)
     banana_belt_masters_30_34.results.create!(:racer => weaver, :place => '10')
 
-    Bar.recalculate(2007)
-    OverallBar.recalculate(2007)
-    AgeGradedBar.recalculate(2007)
+    Bar.calculate!(2007)
+    OverallBar.calculate!(2007)
+    AgeGradedBar.calculate!(2007)
     opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2007", :category => 'masters_men_30_34'}
     assert_routing("/bar/2007/age_graded/masters_men_30_34", opts)
     get(:show, :discipline => "age_graded", :year => "2007", :category => 'masters_men_30_34')

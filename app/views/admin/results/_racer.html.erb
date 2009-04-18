@@ -17,13 +17,13 @@
     <td><%= result.place %></td>
     <td><%= link_to(image_tag('/images/icons/web_page.png', 
       :title => 'View public results web page', :alt => 'View public results web page'), 
-       {:controller => '/results', :action => 'event', :year => result.race.standings.event.date.year, 
-       :discipline => result.race.standings.event.discipline, :id => result.race.standings.event.id},
+       {:controller => '/results', :action => 'event', :year => result.event.date.year, 
+       :discipline => result.event.discipline, :id => result.event.id},
        { :class => "image" } ) %>
     </td>
-    <td><%= result.race.standings.name %></td>
+    <td><%= result.event.full_name %></td>
     <td><%= result.race.name %></td>
-    <td class="right"><%= result.race.standings.event.date.strftime("%D") %></td>
+    <td class="right"><%= result.race.event.date.strftime("%D") %></td>
     <td class="right"><%= number_with_precision(result.points, :precision => 1) if result.points > 0%></td>
   </tr>
   <%- end -%>

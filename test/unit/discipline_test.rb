@@ -1,12 +1,6 @@
 require "test_helper"
 
 class DisciplineTest < ActiveSupport::TestCase
-  
-  def teardown
-    # Discipline class may have loaded earlier with no aliases in database
-    Discipline.reset
-  end
-  
   # Assume MySQL, which is not case-sensitive
   def test_find_by_name
     assert_equal(disciplines(:road), Discipline.find_by_name("Road"), "Road by name")

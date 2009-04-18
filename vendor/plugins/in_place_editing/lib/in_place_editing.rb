@@ -20,7 +20,8 @@ module InPlaceEditing
         if @item.respond_to?(:author)
           @item.author = logged_in_user
         end
-        @item.update_attribute(attribute, params[:value])
+        @item.send("#{attribute}=", params[:value])
+        @item.save!
         # HACK! FIXME
         expire_cache
         render :text => @item.send(attribute).to_s

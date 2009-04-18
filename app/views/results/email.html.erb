@@ -1,7 +1,0 @@
-<%# Preserves white space, so indentation is cramped  %>
-<%= standings.name %>
-<% for race in standings.races%>
-<%= race.name %>
-<% for result in race.results.sort %><%= result.place.rjust(3) %>   <%= (result.number || '').rjust(3) %>   <%= (result.first_name + " " + result.last_name).ljust(25) %>   <%= result.team_name.ljust(25) %>   <%= result.points.to_s().rjust(5) unless result.points == 0.0 %>
-<% end %>
-<% end %>

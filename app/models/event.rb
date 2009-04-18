@@ -1,4 +1,4 @@
-# Abstract superclass for anything that can have standings and results:
+# Abstract superclass for anything that can have results:
 # * SingleDayEvent
 # * MultiDayEvent
 # * Competition
@@ -9,22 +9,41 @@
 # instructional: class or clinc
 # practice: training session
 class Event < ActiveRecord::Base
-  before_validation :find_associated_records
-  validate_on_create :validate_type
-  validates_presence_of :name, :date
-  after_create :add_default_number_issuer
-  before_destroy :validate_no_results
+  PROPOGATED_ATTRIBUTES = %w{ cancelled city discipline flyer flyer_approved 
+                              instructional name practice promoter_id 
+                              prize_list sanctioned_by state time velodrome_id 
+                              time
+                             } unless defined?(PROPOGATED_ATTRIBUTES)
 
+  before_validation :find_associated_records
+  after_save :create_or_destroy_combined_results
+  before_destroy :validate_no_results, :destroy_races
+
+  validates_presence_of :name, :date
+  validate :parent_is_not_self
+
+  has_many   :competitions, :foreign_key => "source_event_id"
   belongs_to :number_issuer
   belongs_to :promoter, :foreign_key => "promoter_id"
+  has_many   :races,
+               :after_add => :children_changed,
+               :after_remove => :children_changed 
   belongs_to :velodrome
-  has_many :standings, 
-           :class_name => "Standings", 
-           :dependent => :destroy, 
-           :order => 'position'
-           
-  include Comparable
+
+  belongs_to :parent, 
+               :foreign_key => 'parent_id', 
+               :class_name => 'Event'
   
+  has_many :children,
+           :class_name => "Event",
+           :foreign_key => "parent_id",
+           :dependent => :destroy,
+           :order => "date",
+           :after_add => :children_changed,
+           :after_remove => :children_changed 
+ 
+  include Comparable
+
   # Return list of every year that has at least one event
   def Event.find_all_years
     years = []
@@ -47,60 +66,108 @@ class Event < ActiveRecord::Base
     name.underscore.humanize.titleize
   end
 
+  def after_initialize
+    set_defaults
+  end
+    
   # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
-  def initialize(attributes = nil)
-    super
-    if state == nil then write_attribute(:state, ASSOCIATION.state) end
-    if self.date.nil?
-      self.date = Date.today
-    end
-    if name == nil || name == ""
-      if !date.nil?
-        formatted_date = date.strftime("%m-%d-%Y")
-        self.name = "New Event #{formatted_date}"
-      else
-        formatted_date = Date.today.strftime("%m-%d-%Y")
-        self.name = "New Event #{formatted_date}"
+  # NumberIssuer: ASSOCIATION.short_name
+  def set_defaults
+    if new_record?
+      if parent.present?
+        PROPOGATED_ATTRIBUTES.each { |attr| (self[attr] = parent[attr]) if self[attr].nil? }
       end
-    end
-    if self.sanctioned_by.blank?
-      self.sanctioned_by = ASSOCIATION.short_name
-    end
-  end
-
-  # Assert that we're not trying to save an abstract class
-  def validate_type
-    if instance_of?(Event)
-      errors.add("class", "Cannot save abstract class Event. Use MultiDayEvent or SingleDayEvent.")
+      self.bar_points = default_bar_points       if self[:bar_points].nil?
+      self.date = default_date                   if self[:date].nil?
+      self.discipline = default_discipline       if self[:discipline].nil?
+      self.name = default_name                   if self[:name].blank?
+      self.ironman = default_ironman             if self[:ironman].nil?
+      self.number_issuer = default_number_issuer if number_issuer.nil?
+      self.sanctioned_by = default_sanctioned_by if self[:sanctioned_by].blank?
+      self.state = default_state                 if self[:state].blank?
     end
   end
-
+  
+  def default_bar_points
+    1
+  end
+  
+  def default_date
+    if parent.present?
+      parent.date
+    else
+      Date.today
+    end
+  end
+  
+  def default_discipline
+    "Road"
+  end
+  
+  def default_ironman
+    1
+  end
+  
+  def default_name
+    "New Event #{self.date.strftime("%m-%d-%Y")}"
+  end
+  
+  def default_state
+    ASSOCIATION.state
+  end
+  
+  def default_sanctioned_by
+    ASSOCIATION.short_name
+  end
+  
+  def default_number_issuer
+    NumberIssuer.find_by_name(ASSOCIATION.short_name)
+  end
+  
   # TODO Could be replaced with a select join if too slow
   # TODO Use has_results?
   def validate_no_results
-    for s in standings(true)
-      for race in s.races(true)
-        if !race.results(true).empty?
-          errors.add('results', 'Cannot destroy event with results')
-          return false 
-        end
+    races(true).each do |race|
+      if !race.results(true).empty?
+        errors.add('results', 'Cannot destroy event with results')
+        return false 
       end
     end
+
+    children(true).each do |event|
+      errors.add('results', 'Cannot destroy event with children with results')
+      return false unless event.validate_no_results
+    end
+
     true
   end
   
+  # Will return false-positive if there are only overall series results, but those should only exist if there _are_ "real" results.
+  # The results page should show the results in that case.
+  # TODO Make reload optional
   def has_results?
-    standings(true).any? { |s| s.races(true).any? { |r| !r.results(true).empty? } }
+    self.races(true).any? { |r| !r.results(true).empty? } || children(true).any? { |event| event.has_results? }
   end
   
-  # ASSOCIATION.short_name
-  def add_default_number_issuer
-    unless self.number_issuer
-      self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
-      save!
-    end
+  # Returns only the children with +results+
+  def children_with_results(reload = false)
+    children(reload).select(&:has_results?)
   end
   
+  # Returns only the Races with +results+
+  def races_with_results
+    races_copy = races.select {|race|
+      !race.results.empty?
+    }
+    races_copy.sort!
+    races_copy
+  end
+
+  def destroy_races
+    self.races.each(&:destroy)
+    races.clear
+  end
+
   # TODO Remove. Old workaround to ensure children are cancelled
   def find_associated_records
     existing_discipline = Discipline.find_via_alias(discipline)
@@ -118,41 +185,110 @@ class Event < ActiveRecord::Base
     end
   end
   
-  # Default superclass implementation does nothing
-  def after_child_event_save
-  end
-  
-  # Default superclass implementation does nothing
-  def after_child_event_destroy
-  end
-
-  # Any unsaved standings?
-  def new_standings?
-    for standing in standings
-      if standing.new_record?
-        return true  
+  # Update child events from parents' attributes if child attribute has the
+  # same value as the parent before update
+  # TODO original_values is duplicating Rails 2.1's dirty
+  def update_children(force = false)
+    return if new_record?
+    
+    original_values = Event.connection.select_one("select #{PROPOGATED_ATTRIBUTES.join(', ')} from events where id = #{self.id}")
+    for attribute in PROPOGATED_ATTRIBUTES
+      original_value = original_values[attribute]
+      new_value = self[attribute]
+      RACING_ON_RAILS_DEFAULT_LOGGER.debug("Event update_children #{attribute}, #{original_value}, #{new_value}")
+      if force
+        Event.update_all(
+          ["#{attribute}=?", new_value], 
+          ["parent_id=?", self[:id]]
+        )
+      elsif original_value.nil?
+        Event.update_all(
+          ["#{attribute}=?", new_value], 
+          ["#{attribute} is null and parent_id=?", self[:id]]
+        ) unless original_value == new_value
+      else
+        Event.update_all(
+          ["#{attribute}=?", new_value], 
+          ["#{attribute}=? and parent_id=?", original_value, self[:id]]
+        ) unless original_value == new_value
       end
     end
-    return false
+    
+    children.each { |child| child.update_children(force) }
+    true
+  end
+
+  def children_changed(child)
+    touch!
   end
   
+  def touch!
+    ActiveRecord::Base.lock_optimistically = false
+    update_attribute(:updated_at, Time.now)
+    ActiveRecord::Base.lock_optimistically = true
+    true
+  end
+
   # Update database immediately with save!
   def disable_notification!
+    ActiveRecord::Base.lock_optimistically = false
     update_attribute('notification', false)
+    ActiveRecord::Base.lock_optimistically = true
   end
 
   # Update database immediately with save!
   def enable_notification!
+    ActiveRecord::Base.lock_optimistically = false
     update_attribute('notification', true)
+    ActiveRecord::Base.lock_optimistically = true
   end
 
   # Child results fire change notifications? Set to false before bulk changes 
   # like event results import to prevent many pointless change notifications
-  # and CombinedStandings recalcs
+  # and CombinedTimeTrialResults recalcs
   def notification_enabled?
     self.notification
   end
 
+  # Adds +combined_results+ if Time Trial Event. 
+  # Destroy +combined_results+ if they exist, but should not
+  def create_or_destroy_combined_results
+    if !self.calculate_combined_results? || !has_results? || (self.combined_results(true) && combined_results.discipline != discipline)
+      destroy_combined_results
+    end
+    
+    if calculate_combined_results? && combined_results(true).nil? && has_results?
+      if discipline == 'Time Trial'
+        CombinedTimeTrialResults.create(:parent => self)
+      end      
+    end
+    combined_results(true)
+  end
+  
+  def combined_results(reload = false)
+    self.children(reload).detect { |event| event.is_a?(CombinedTimeTrialResults) }
+  end
+  
+  def calculate_combined_results?
+    auto_combined_results? && requires_combined_results?
+  end
+  
+  def requires_combined_results?
+    false
+  end
+
+  def destroy_combined_results
+    if self.combined_results(true)
+      combined_results.destroy_races
+      self.children.delete(combined_results)
+    end
+  end
+  
+  #FIXME Need common Overall subclass for Cascade Cross and Tabor
+  def overall(reload = false)
+    self.competitions(reload).detect { |competition| competition.is_a?(Overall) }
+  end
+  
   # Format for schedule page primarily
   # TODO is this used?
   def short_date
@@ -161,15 +297,31 @@ class Event < ActiveRecord::Base
     suffix = ' ' if date.day < 10
     "#{prefix}#{date.month}/#{date.day}#{suffix}"
   end
-  
-  # Same as start_date for single-day events
-  def end_date
+
+  # +date+
+  def start_date
     date
+  end
+  
+  def start_date=(date)
+    self.date = date
+  end
+  
+  def end_date
+    if !children(true).empty?
+      children.last.date
+    else
+      start_date
+    end
   end
   
   def year
     return nil unless date
     date.year
+  end
+
+  def multiple_days?
+    end_date > start_date
   end
   
   def city_state
@@ -253,8 +405,17 @@ class Event < ActiveRecord::Base
   end
 
   def full_name
-    name
+    if parent.nil?
+      name
+    elsif parent.full_name == name
+      name
+    elsif name[parent.full_name]
+      name
+    else
+      "#{parent.full_name}: #{name}"
+    end
   end
+
 
   # Only SingleDayEvent subclass has a parent -- this abstract class, Event, does not have a
   # parent, but implementing missing_parent? here allows clients to just call the method
@@ -299,6 +460,25 @@ class Event < ActiveRecord::Base
     nil
   end
   
+  # TODO Use acts as tree
+  def root
+    node = self
+    node = node.parent while node.parent
+    node
+  end
+
+  def ancestors
+    node, nodes = self, []
+    nodes << node = node.parent while node.parent
+    nodes
+  end
+
+  def parent_is_not_self
+    if parent_id && parent_id == id
+      errors.add("parent", "Event cannot be its own parent")
+    end
+  end
+
   def friendly_class_name
     self.class.friendly_class_name
   end
@@ -306,29 +486,32 @@ class Event < ActiveRecord::Base
   def <=>(other)
     return -1 if other.nil?
     
-    if self.date && other.date
-      self.date <=> other.date
+    return 0 if id == other.id
+    
+    if date && other.date
+      date <=> other.date
     else
       0
     end 
   end
   
   def inspect_debug
-    standings(true).each {|s|
-      puts(self.class.name)
-      puts("#{self.class.name} #{s.name}")
-      s.races(true).each {|r| 
-        puts(self.class.name)
-        puts("#{self.class.name}   #{r.name}")
-        r.results(true).sort.each {|result|
-          puts("#{self.class.name}      #{result.to_long_s}")
-          result.scores(true).each{|score|
-            puts("#{self.class.name}         #{score.source_result.place} #{score.source_result.race.standings.name}  #{score.source_result.race.name} #{score.points}")
-          }
+    puts("#{self.class.name.ljust(20)} #{self.date} #{self.name} #{self.discipline} #{self.id}")
+    self.races(true).each {|r| 
+      puts("#{r.class.name.ljust(20)}   #{r.name}")
+      r.results(true).sort.each {|result|
+        puts("#{result.class.name.ljust(20)}      #{result.to_long_s}")
+        result.scores(true).each{|score|
+          puts("#{score.class.name.ljust(20)}         #{score.source_result.place} #{score.source_result.race.event.name}  #{score.source_result.race.name} #{score.points}")
         }
       }
     }
-  ""
+    
+    self.children(true).each do |event|
+      event.inspect_debug
+    end
+    
+    ""
   end
 
   def to_s

@@ -1,11 +1,11 @@
 <% @page_title = "BAR: Categories" %>
 
 
-<% for standings in @bar.standings %>
+<% @bar.children.each do |event| %>
 <% reset_cycle %>
 
-<% table :caption => standings.name do %>
-  <% for race in standings.races %>
+<% table :caption => event.name do %>
+  <% event.races.each do |race| %>
   <tr class="<%= cycle("even", "odd") %>">
     <td>
       <h3><%= race.name %></h3>

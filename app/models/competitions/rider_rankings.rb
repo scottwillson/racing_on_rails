@@ -1,7 +1,5 @@
 # WSBA rider rankings. Riders get points for top-10 finishes in any event
 class RiderRankings < Competition
-  # FIXME Need to exclude non-members from the standings
-  
   def RiderRankings.expire_cache
     FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings.html")
     FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings")
@@ -30,8 +28,7 @@ class RiderRankings < Competition
     true
   end
   
-  def create_standings
-    root_standings = standings.create(:event => self)
+  def create_races
     association_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
     for category_name in [
       'Junior Men A', 'Junior Men B', 'Junior Men C', 'Junior Men D',
@@ -46,7 +43,7 @@ class RiderRankings < Competition
         category.parent = association_category
         category.save!
       end
-      root_standings.races.create(:category => category)
+      self.races.create(:category => category)
     end
   end
 
@@ -54,14 +51,16 @@ class RiderRankings < Competition
   # TODO Probably should work with fully-populated Events instead
   def source_results(race)
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [{:standings => :event}, :category]}],
-                :conditions => [%Q{members_only_place between 1 AND #{point_schedule.size - 1}
-                  and events.type = 'SingleDayEvent' 
-                  and events.sanctioned_by = "#{ASSOCIATION.short_name}"
-                  and categories.id in (#{category_ids_for(race)})
-                  and (races.bar_points > 0 or (races.bar_points is null and standings.bar_points > 0))
-                  and events.date >= '#{date.year}-01-01' 
-                  and events.date <= '#{date.year}-12-31'}],
+                :include => [:race, {:racer => :team}, :team, {:race => [:event, :category]}],
+                :conditions => [%Q{
+                  members_only_place between 1 AND #{point_schedule.size - 1}
+                    and events.type = 'SingleDayEvent' 
+                    and events.sanctioned_by = "#{ASSOCIATION.short_name}"
+                    and categories.id in (#{category_ids_for(race)})
+                    and (races.bar_points > 0 or (races.bar_points is null and events.bar_points > 0))
+                    and events.date >= '#{date.year}-01-01' 
+                    and events.date <= '#{date.year}-12-31'
+                }],
                 :order => 'racer_id'
     )
   end

@@ -1,24 +1,25 @@
-<% @page_title = "#{@standings.name} | #{@year}" %>
+<% @page_title = "#{@event.name} | #{@year}" %>
 
-<h3><%= @standings.name %></h3>
+<h3><%= @event.name %></h3>
  
+<%# FIXME This isn't good! %>
 <p>Points are awarded to WSBA members as follows:	 
 1st = 100, 2nd = 70, 3rd = 50, 4th = 40, 5th = 36, 6th = 32, 7th = 28, 8th = 24, 9th = 20, 10th = 16</p>
 
 <p>If you have questions, please contact marthalwalsh [at] yahoo [dot] com.</p>
 
-<% if !@standings.races.empty? %>
+<% if !@event.races.empty? %>
 <%# TODO Encapsulate in a helper method %>
 <table cellspacing="0" class="centered">
 <% index = 0 %>  
-<% while index < @standings.races.size %>
+<% while index < @event.races.size %>
   <tr valign="top">
-    <% if index < @standings.races.size %>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+    <% if index < @event.races.size %>
+    <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
       <% index += 1 %>  
-      <% if index < @standings.races.size %>
+      <% if index < @event.races.size %>
     <td width="16">&nbsp;</td>
-    <td><a href="#<%= index %>"><span class="type"><%= @standings.races[index].name %></span></a></td>
+    <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
       <% end %>  
     <% end %>  
   </tr>
@@ -26,9 +27,9 @@
 <% end %>  
 </table>
 
-<span class="updatedon">Updated <%= @standings.updated_at.to_formatted_s(:long) %></span>
+<span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
 
-<%- @standings.races.each_with_index do |race, index| -%>
+<%- @event.races.each_with_index do |race, index| -%>
 <%- unless race.results.empty? -%>
 <% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>" do %>
   <tr>
@@ -39,7 +40,7 @@
    <%= link_to(truncate(result.team_name, :length => 40),
        :controller => 'results',
        :action => 'competition',
-       :competition_id => result.race.standings.event.to_param,
+       :competition_id => result.event.to_param,
        :team_id => result.team_id) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
@@ -51,7 +52,7 @@
  <%= link_to(truncate(result.name), 
 	 :controller => 'results',
      :action => 'competition',
-     :competition_id => result.race.standings.event.to_param,
+     :competition_id => result.event.to_param,
      :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
    <%= truncate(result.racer_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>

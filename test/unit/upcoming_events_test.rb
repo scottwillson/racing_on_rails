@@ -54,7 +54,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
         :date => Date.new(2007, 4, 3), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
       )
       Date.new(2007, 4, 3).step(Date.new(2007, 10, 23), 7) {|date|
-        individual_pir = pir.events.create(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
+        individual_pir = pir.children.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
         assert("PIR valid?", individual_pir.valid?)
         assert("PIR new?", !individual_pir.new_record?)
       }
@@ -155,7 +155,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(6, six_day.events.size, 'Six Day events')
+    assert_equal(6, six_day.children.size, 'Six Day events')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(2006, 6, 17), six_day.end_date, 'Six Day end date')
@@ -266,7 +266,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(8, six_day.events.size, 'Six Day events')
+    assert_equal(8, six_day.children.size, 'Six Day events')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(1999, 7, 27), six_day.end_date, 'Six Day end date')
@@ -314,16 +314,16 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       :date => Date.new(1999, 6, 8), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true
     )
     
-    estacada_tt_1 = estacada_tt.events.create(:date => Date.new(1999, 6, 8), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
+    estacada_tt_1 = estacada_tt.children.create!(:date => Date.new(1999, 6, 8), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
     assert("estacada_tt_1 valid?", estacada_tt_1.valid?)
     
-    estacada_tt_2 = estacada_tt.events.create(:date => Date.new(1999, 6, 22), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
+    estacada_tt_2 = estacada_tt.children.create!(:date => Date.new(1999, 6, 22), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
     assert("estacada_tt_2 valid?", estacada_tt_2.valid?)
     
-    estacada_tt_3 = estacada_tt.events.create(:date => Date.new(1999, 6, 24), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
+    estacada_tt_3 = estacada_tt.children.create!(:date => Date.new(1999, 6, 24), :name => 'Estacada', :discipline => 'Time Trial', :flyer_approved => true)
     assert("estacada_tt_3 valid?", estacada_tt_3.valid?)
     
-    assert_equal(3, estacada_tt.events.size, 'estacada_tt events')
+    assert_equal(3, estacada_tt.children(true).size, 'estacada_tt events')
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.date, 'estacada_tt date')
     assert_equal_dates(Date.new(1999, 6, 8), estacada_tt.start_date, 'estacada_tt start date')
     assert_equal_dates(Date.new(1999, 6, 24), estacada_tt.end_date, 'estacada_tt end date')

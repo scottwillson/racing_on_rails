@@ -3,6 +3,7 @@
 class ResultsFile < GridFile
 
   attr_accessor :invalid_columns
+  attr_reader :event
 
   COLUMN_MAP = {
     "placing" => "place",
@@ -51,6 +52,7 @@ class ResultsFile < GridFile
   }
 
   def ResultsFile.cyclocross_workbook?(source, event)
+    @event = event
     if event and event.discipline == 'Cyclocross' and (source.is_a?(File) or source.is_a?(Tempfile)) and source.path.include?('.xls')
       workbook = Spreadsheet::ParseExcel.parse(source.path)
       return workbook.sheet_count > 6
@@ -92,13 +94,8 @@ class ResultsFile < GridFile
   def import
     RACING_ON_RAILS_DEFAULT_LOGGER.info("import results")
 
-    standings = nil
     begin
       @event.disable_notification!
-      standings = Standings.create!(
-        :event => @event,
-        :name => @event.name
-      )
       result_columns = columns.collect do |column|
         # Remove invalid columns
         column.field.to_s unless column.field.nil?
@@ -117,10 +114,10 @@ class ResultsFile < GridFile
         if new_race?(row_hash, index)
           if @cyclocross_workbook
             category = Category.new(:name => rows[index - 1].first)
-            race = standings.races.create(:category => category, :notes => to_notes(rows[index - 1]))
+            race = event.races.create(:category => category, :notes => to_notes(rows[index - 1]))
           else
             category = Category.new(:name => row.first)
-            race = standings.races.create(:category => category, :notes => to_notes(row))
+            race = event.races.create(:category => category, :notes => to_notes(row))
           end
           race.result_columns = result_columns
           if race.result_columns.include?('name')
@@ -139,7 +136,7 @@ class ResultsFile < GridFile
             result = race.results.build(row_hash)
             result.updated_by = @event.name
             if race.nil? and result.place and result.place.to_i == 1
-              race = standings.races.create(:category => category)
+              race = event.races.create(:category => category)
               result.race = race
             end
             if row_hash[:time] and !row_hash[:time].include?(':')
@@ -178,19 +175,18 @@ class ResultsFile < GridFile
       end
       @event.enable_notification!
       # TODO Not so clean
-      standings.create_or_destroy_combined_standings
-      standings.combined_standings.recalculate if standings.combined_standings
+      event.create_or_destroy_combined_results
+      event.combined_results.calculate! if event.combined_results
      rescue Exception => error
       begin
-        standings.destroy if standings
+        event.races.clear
       rescue Exeception => cleanup_error
         OBRA_LOGGER.warn("Problem cleaning up after failed import: #{cleanup_error}")
       ensure
-        standings = nil
         raise error
       end
     end
-    standings
+    true
   end
 
   def has_results?(row_hash)

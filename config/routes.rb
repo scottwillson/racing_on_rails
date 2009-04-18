@@ -6,7 +6,8 @@ ActionController::Routing::Routes.draw do |map|
       category.resources :children, :controller => :categories
     end
     admin.resources :events, :has_one => :promoter,
-        :collection => { :upload_schedule => :post }, :member => { :upload => :post, :set_parent => :get, :add_children => :get }
+        :collection => { :upload_schedule => :post }, 
+        :member => { :upload => :post, :set_parent => :get, :add_children => :get, :destroy_races => :delete }
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :promoter
     
@@ -27,7 +28,6 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :results
     admin.resources :series, :as => :events, :has_one => :promoter
     admin.resources :single_day_events, :as => :events, :has_one => :promoter
-    admin.resources :standings, :has_many => :races
     admin.resources(:tables) if RAILS_ENV == "test"
     admin.resources :teams, :member => { :toggle_member => :post }
     admin.resources :velodromes
@@ -109,6 +109,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
 
+  map.resources :events
+  map.resources :single_day_events, :as => :events
+  
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
 

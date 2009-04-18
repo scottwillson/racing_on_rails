@@ -6,6 +6,8 @@ banana_belt_series:
   date: 2004-01-04
   type: Series
   number_issuer: association
+  bar_points: 0
+  ironman: 0
 banana_belt_1:
   parent: banana_belt_series
   name: Banana Belt I
@@ -17,6 +19,8 @@ banana_belt_1:
   date: 2004-01-04
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 1
+  ironman: 1
 banana_belt_2:
   parent: banana_belt_series
   name: Banana Belt II
@@ -26,6 +30,8 @@ banana_belt_2:
   date: 2004-01-11
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 1
+  ironman: 1
 banana_belt_3:
   parent: banana_belt_series
   name: Banana Belt III
@@ -35,18 +41,24 @@ banana_belt_3:
   date: 2004-01-18
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 1
+  ironman: 1
 jack_frost:
   name: Jack Frost
   date: 2004-01-15
   discipline: Time Trial
   number_issuer: association
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 jack_frost_2002:
   name: Jack Frost
   date: 2002-01-17
   discipline: Time Trial
   number_issuer: stage_race
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 kings_valley:
   name: Kings Valley Road Race
   date: 2003-12-31
@@ -54,6 +66,8 @@ kings_valley:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 1
+  ironman: 1
 tabor_cr:
   name: Mt. Tabor Circuit Race
   date: 2005-07-01
@@ -64,6 +78,8 @@ tabor_cr:
   flyer_approved: false
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 1
+  ironman: 1
 pir_series:
   date: 2005-07-05
   name: Tuesday Night PIR
@@ -76,6 +92,8 @@ pir_series:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: WeeklySeries
   number_issuer: association
+  bar_points: 0
+  ironman: 0
 pir:
   parent: pir_series
   date: 2005-07-05
@@ -88,6 +106,8 @@ pir:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 0
+  ironman: 1
 pir_2:
   parent: pir_series
   date: 2005-07-12
@@ -100,6 +120,8 @@ pir_2:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 0
+  ironman: 1
 kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
@@ -107,6 +129,8 @@ kings_valley_2004:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 mt_hood:
   date: 2005-07-11
   name: Mt. Hood Classic
@@ -118,6 +142,8 @@ mt_hood:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: MultiDayEvent
+  bar_points: 0
+  ironman: 0
 mt_hood_1:
   parent: mt_hood
   date: 2005-07-11
@@ -130,6 +156,8 @@ mt_hood_1:
   city: Hood River
   number_issuer: association
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 mt_hood_2:
   parent: mt_hood
   date: 2005-07-12
@@ -142,6 +170,8 @@ mt_hood_2:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
@@ -149,6 +179,8 @@ kings_valley_2004:
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: SingleDayEvent
+  bar_points: 1
+  ironman: 1
 series_parent:
   name: Lost Series
   discipline: Road
@@ -157,6 +189,8 @@ series_parent:
   date: <%= Date.today %>
   type: Series
   number_issuer: association
+  bar_points: 0
+  ironman: 0
 lost_series_child:
   name: Lost Series
   discipline: Road
@@ -165,15 +199,21 @@ lost_series_child:
   date: <%= Date.today %>
   type: SingleDayEvent
   number_issuer: association
+  bar_points: 0
+  ironman: 0
 future_usa_cycling_event:
   name: USA Cycling Event
   discipline: Road
   sanctioned_by: USA Cycling
   date: <%= Date.today + 3 %>
   type: SingleDayEvent
+  bar_points: 0
+  ironman: 0
 usa_cycling_event_with_results:
   name: Copperopolis Road Race
   discipline: Road
   sanctioned_by: NCNCA
   date: <%= Date.today - 4 %>
   type: SingleDayEvent
+  bar_points: 0
+  ironman: 0

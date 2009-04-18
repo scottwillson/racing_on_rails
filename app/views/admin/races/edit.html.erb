@@ -2,43 +2,39 @@
 
 <%= error_messages_for "race" %>
 
-<h2>Race: <%= @race.name %></h2>
+<h2><%= link_to_events(@race) %><%= @race.name %></h2>
 
 <div class="column_grid_container">
-  <div class="box-3">
-    <%= render :partial => "admin/events/nav", :locals => { :event => @race.event, :race => @race } %>
-  </div>
+  <% form_for [:admin, @race] do |f| -%>
+    <div class="box-3">
+      <%= f.labelled_text_field :category_name %>
 
-  <div class="span-3 last">
-    <% form_for [:admin, @race] do |f| -%>
-      <div class="span-3">
-        <%= f.labelled_text_field :category_name %>
+      <% if ASSOCIATION.competitions.include?(:bar) -%>
+      <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "BAR Category" %><br/>
+      <%= f.label :bar_points, "BAR Points" %>
+      <%= f.select :bar_points, bar_points_and_labels %>
+      <%- end %>
 
-        <% if ASSOCIATION.competitions.include?(:bar) -%>
-        <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "BAR Category" %><br/>
-        <%= f.label :bar_points, "BAR Points" %>
-        <%= f.select :bar_points, bar_points_and_labels %>
-        <%- end %>
+      <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
+      <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "Rankings Cat" %><br/>
+      <%= f.label :bar_points, "Rankings Pts" %>
+      <%= f.select :bar_points, bar_points_and_labels %>
+      <%- end %>
+    </div>
 
-        <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
-        <%= f.labelled_text :bar_category, (@race.category.parent ? @race.category.parent.name : @race.category.name), "Rankings Cat" %><br/>
-        <%= f.label :bar_points, "Rankings Pts" %>
-        <%= f.select :bar_points, bar_points_and_labels %>
-        <%- end %>
+    <div class="span-3 last">
+      <%= f.labelled_text_field :notes %>
+      <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})" %>    
+      <%= f.labelled_text_field :distance %>
+      <%= f.labelled_text_field :laps %>
+    </div>
+  <% end -%>
 
-        <%= f.labelled_text_field :notes %>
-        <%= f.labelled_text_field :field_size, "Field Size (#{@race.results.size})" %>    
-        <%= f.labelled_text_field :distance %>
-        <%= f.labelled_text_field :laps %>
-      </div>
-
-      <div class="span-3 page_buttons last">
-        <div class="updatedon span-1">Updated: <%= time_ago_in_words(@race.updated_at, true) + " ago" unless @race.updated_at.nil? %></div>
-        <div class="right span-2 last">
-          <%= submit_tag "Save", :id => "save" %>
-        </div>
-      </div>
-    <% end -%>
+  <div class="span-6 page_buttons last">
+    <div class="updatedon span-3">Updated: <%= time_ago_in_words(@race.updated_at, true) + " ago" unless @race.updated_at.nil? %></div>
+    <div class="right span-3 last">
+      <%= submit_tag "Save", :id => "save" %>
+    </div>
   </div>
 </div>
 

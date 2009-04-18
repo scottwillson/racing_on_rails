@@ -5,7 +5,6 @@ class Admin::RacesController < ApplicationController
 
   def edit
     @race = Race.find(params[:id])
-
     @disciplines = [''] + Discipline.find(:all).collect do |discipline|
       discipline.name
     end

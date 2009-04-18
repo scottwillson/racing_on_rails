@@ -5,8 +5,6 @@
 # Team names must be unique
 class Team < ActiveRecord::Base
 
-  include Dirty
-  
   before_save :add_historical_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
@@ -55,11 +53,10 @@ class Team < ActiveRecord::Base
   def results_before_this_year?
     # Exists? doesn't support joins
     count = Team.count_by_sql([%Q{
-      select results.id from teams, results, races, standings, events 
+      select results.id from teams, results, races, events 
       where teams.id = ? and teams.id = results.team_id 
         and results.race_id = races.id
-        and races.standings_id  = standings.id
-        and standings.event_id = events.id and events.date < ? limit 1
+        and races.event_id = events.id and events.date < ? limit 1
     }, self.id, Date.today.beginning_of_year])
     count > 0
   end
@@ -108,7 +105,7 @@ class Team < ActiveRecord::Base
 
     Team.transaction do
       events = team.results.collect do |result|
-        event = result.race.standings.event
+        event = result.event
         event.disable_notification!
         event
       end

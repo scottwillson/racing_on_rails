@@ -1,11 +1,6 @@
 require "test_helper"
 
 class RacerTest < ActiveSupport::TestCase
-  def teardown
-    # Discipline class may have loaded earlier with no aliases in database
-    Discipline.reset
-  end
-
   def test_save
     assert_nil(Racer.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
     assert_nil(Team.find_by_name("7-11"), "7-11 should not be in DB")
@@ -43,7 +38,7 @@ class RacerTest < ActiveSupport::TestCase
   def test_team_name_should_preserve_aliases
     team = Team.create!(:name => "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(:date => 1.years.ago)
-    result = event.standings.create!.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
     assert_equal(0, team.historical_names(true).size, "historical_names")
     assert_equal(1, team.aliases(true).size, "Aliases")
@@ -719,15 +714,16 @@ class RacerTest < ActiveSupport::TestCase
     assert_equal(nil, racer.number(circuit_race), "Circuit race number after add with nil discipline")
   end
   
+  # Legacy test … used to look at data to devine creator
   def test_created_from_result?
     racer = Racer.create!
-    assert(racer.created_from_result?, "created_from_result? for blank Racer")
+    assert(!racer.created_from_result?, "created_from_result? for blank Racer")
 
     racer = Racer.create!(:name => "Some Racer")
-    assert(racer.created_from_result?, "created_from_result? for Racer with just name")
+    assert(!racer.created_from_result?, "created_from_result? for Racer with just name")
 
     racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers))
-    assert(racer.created_from_result?, "created_from_result? for Racer with just name and team")
+    assert(!racer.created_from_result?, "created_from_result? for Racer with just name and team")
 
     racer = Racer.create!(:name => "Some Racer", :team => teams(:gentle_lovers), :email => "racer@example.com")
     assert(!racer.created_from_result?, "created_from_result? for Racer with name and team and email")

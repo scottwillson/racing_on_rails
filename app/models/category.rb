@@ -15,7 +15,6 @@
 class Category < ActiveRecord::Base
 
   include Comparable
-  include Dirty
 
   acts_as_list
   acts_as_tree

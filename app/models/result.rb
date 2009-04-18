@@ -26,9 +26,6 @@ end
 #
 # Doesn't support multiple hotspot points, though it should
 class Result < ActiveRecord::Base
-  
-  include Dirty
-  
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
   
@@ -37,8 +34,6 @@ class Result < ActiveRecord::Base
   before_save :find_associated_records
   before_save :save_racer
   after_save :update_racer_number
-  after_save {|result| result.race.standings.after_result_save}
-  after_destroy { |result| result.race.standings.after_result_destroy }
   after_destroy :destroy_racers
   
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
@@ -48,7 +43,7 @@ class Result < ActiveRecord::Base
   belongs_to :racer
   belongs_to :team
   
-  validates_presence_of :race_id
+  validates_presence_of :race
   
   def Result.find_all_for(racer)
     if racer.is_a? Racer
@@ -58,7 +53,7 @@ class Result < ActiveRecord::Base
     end
     Result.find(
       :all,
-      :include => [:team, :racer, :scores, :category, {:race => [{:standings => :event}, :category]}],
+      :include => [:team, :racer, :scores, :category, {:race => [:event, :category]}],
       :conditions => ['racers.id = ?', racer_id]
     )    
   end
@@ -83,7 +78,7 @@ class Result < ActiveRecord::Base
   
   # Replace any new +category+, +racer+, or +team+ with one that already exists if name matches
   def find_associated_records
-    if category and (category.new_record? or category.dirty?)
+    if category && category.new_record?
       if category.name.blank?
         self.category = nil
       else
@@ -93,7 +88,7 @@ class Result < ActiveRecord::Base
     end
     
     _racer = self.racer
-    if _racer and (_racer.new_record? or _racer.dirty?)
+    if _racer && _racer.new_record?
       if _racer.name.blank?
         self.racer = nil
       else
@@ -124,7 +119,7 @@ class Result < ActiveRecord::Base
       self.racer.member_from = race.date
     end
     
-    if self.team and (team.new_record? or team.dirty?)
+    if self.team && team.new_record?
       if team.name.blank?
         self.team = nil
       else
@@ -188,7 +183,7 @@ class Result < ActiveRecord::Base
   end
   
   def save_racer
-    if self.racer && racer.dirty?
+    if racer && (racer.new_record? || racer.changed?)
       racer.created_by = self.event
       racer.save!
     end
@@ -196,7 +191,7 @@ class Result < ActiveRecord::Base
   
   # Destroy Racers that only exist because they were created by importing results
   def destroy_racers
-    if racer && racer.results.count == 0 && racer.created_from_result?
+    if self.racer && racer.results.count == 0 && racer.created_from_result?
       racer.destroy
     end
   end
@@ -233,7 +228,7 @@ class Result < ActiveRecord::Base
 
   # TODO refactor to something like act_as_competitive or create CompetitionResult
   def competition_result?
-    self.race.standings.is_a?(CrossCrusadeSeriesStandings) || self.race.standings.is_a?(TaborSeriesStandings) || self.race.standings.event.is_a?(Competition)
+    self.event.is_a?(CrossCrusadeOverall) || event.is_a?(TaborOverall) || event.is_a?(Competition)
   end
   
   # Not blank, DNF, DNS, DQ.
@@ -245,11 +240,11 @@ class Result < ActiveRecord::Base
   
   # Does this result belong to the last event in a MultiDayEvent?
   def last_event?
-    return false unless event
-    return false unless event.respond_to?(:parent)
+    return false unless self.event && event.parent
+    return false unless event.parent.respond_to?(:parent)
     return true unless event.parent
     
-    !(event && event.parent && (event.parent.end_date != date))
+    !(event.parent && (event.parent.end_date != self.date))
   end
   
   def date
@@ -263,14 +258,14 @@ class Result < ActiveRecord::Base
   end
   
   def event_id
-    if (race || race(true)) && (race.standings || race.standings(true))
-      race.standings.event_id
+    if self.race || race(true)
+      race.event_id
     end
   end
   
   def event
-    if (race || race(true)) && (race.standings || race.standings(true)) && (race.standings.event || race.standings.event(true))
-      race.standings.event
+    if self.race || race(true)
+      race.event
     end
   end
   
@@ -317,7 +312,6 @@ class Result < ActiveRecord::Base
   def first_name=(value)
     if self.racer
       self.racer.first_name = value
-      self.racer.dirty
     else
       self.racer = Racer.new(:first_name => value)
     end
@@ -334,7 +328,6 @@ class Result < ActiveRecord::Base
   def last_name=(value)
     if self.racer
       self.racer.last_name = value
-      self.racer.dirty
     else
       self.racer = Racer.new(:last_name => value)
     end
@@ -355,12 +348,22 @@ class Result < ActiveRecord::Base
 
   # racer.name
   def name=(value)
-    if self.racer
-      self.racer.name = value
-      self.racer.dirty
+    if value.blank?
+      self.racer = nil
+      return value
+    end
+    
+    if racer
+      racer_for_name = Racer.new(:name => value)
+      existing_racers = Racer.find_all_by_name_or_alias(racer_for_name.first_name, racer_for_name.last_name)
+      if existing_racers.size == 1
+        self.racer = existing_racers.first
+      else
+        racer_id_will_change!
+        racer.name = value
+      end
     else
-      self.racer = Racer.new
-      self.racer.name = value
+      self.racer = Racer.new(:name => value)
     end
   end
   
@@ -387,13 +390,12 @@ class Result < ActiveRecord::Base
   end
 
   def team_name=(value)
+    team_id_will_change!
     if self.team.nil? || self.team.name != value
       self.team = Team.new(:name => value)
-      self.team.dirty
     end
     if self.racer && self.racer.team_name != value
       self.racer.team = self.team
-      self.racer.dirty
     end
   end
   
@@ -621,9 +623,9 @@ class Result < ActiveRecord::Base
     end
   end
 
-  # Add +race+ and +race#standings+ name, and points to default to_s
+  # Add +race+ and +race#event+ name, time and points to default to_s
   def to_long_s
-    "#<Result #{id}\t#{place}\t#{race.standings.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{points}\t#{time_s if self[:time]}>"
+    "#<Result #{id}\t#{place}\t#{race.event.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{self.category_name}\t#{points}\t#{time_s if self[:time]}>"
   end
   
   def to_s

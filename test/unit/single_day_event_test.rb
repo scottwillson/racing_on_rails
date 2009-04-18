@@ -19,23 +19,36 @@ class SingleDayEventTest < ActiveSupport::TestCase
 
   def test_new
     event = SingleDayEvent.new
-    assert_equal(0, event.standings.size, "New event should have no standings")
+    assert_equal(0, event.races.size, "New event should have no races")
+    assert_equal(0, event.children.size, "New event should have no events")
   end
 
   def test_create
-    event = SingleDayEvent.create
+    event = SingleDayEvent.create!
     assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
+    assert_equal(ASSOCIATION.state, event.state, "default state")
+    assert_equal_dates(Date.today, event.date, "default date")
+    assert(event.name[/^New Event/], "default name")
+    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "default sanctioned_by")
 
-    event = SingleDayEvent.create(:name => 'Copperopolis')
+    event = SingleDayEvent.create!(:name => 'Copperopolis')
     assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
   end
-  
+
+  def test_create_tt
+    larch_mt_hillclimb = SingleDayEvent.create(
+      :name => "Larch Mountain Hillclimb",
+      :discipline => "Time Trial",
+      :date => Date.new(2004, 2, 1)
+    )
+  end
+
   def test_full_name
     kings_valley = events(:kings_valley_2004)
     assert_equal('Kings Valley Road Race', kings_valley.full_name, 'Event with no parent full_name')
 
     stage = events(:mt_hood_1)
-    assert_equal('Mt. Hood Classic Mount Hood Day 1', stage.full_name, 'stage full_name')
+    assert_equal('Mt. Hood Classic: Mount Hood Day 1', stage.full_name, 'stage full_name')
     
     stage_race = events(:mt_hood)
     stage.name = stage_race.name

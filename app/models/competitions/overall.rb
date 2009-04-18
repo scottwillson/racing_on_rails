@@ -1,0 +1,2 @@
+class Overall < Competition
+end

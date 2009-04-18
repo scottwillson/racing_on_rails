@@ -20,7 +20,7 @@ class Score < ActiveRecord::Base
   validates_numericality_of :points
   
   def discipline
-    self.competition_result.race.standings.discipline
+    self.competition_result.race.discipline
   end
   
   # Compare by points

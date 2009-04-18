@@ -8,94 +8,46 @@ class ResultsController < ApplicationController
     first_of_year = Date.new(@year, 1, 1)
     last_of_year = Date.new(@year + 1, 1, 1) - 1
     
-    # Ideally, SQL shouldn't pull out duplicate Events
-    @events = Set.new
     @discipline = Discipline[params['discipline']]
     if @discipline
       discipline_names = [@discipline.name]
       if @discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
-      @events = @events + Event.find(
+      @events = Set.new(Event.find(
           :all,
-          :include => :standings, 
           :conditions => [%Q{
               events.date between ? and ? 
-              and events.id in (select event_id from standings where events.date between ? and ?)
               and events.parent_id is null
               and events.type <> 'WeeklySeries'
-              and (standings.discipline in (?) or (standings.discipline is null and events.discipline in (?)))
-              }, first_of_year, last_of_year, first_of_year, last_of_year, discipline_names, discipline_names],
+              and events.discipline in (?)
+              }, first_of_year, last_of_year, discipline_names],
           :order => 'events.date desc'
-      )
-
-      @events = @events + MultiDayEvent.find(
-          :all,
-          :include => [:standings, :events],
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and events_events.id in (select event_id from standings where discipline in (?) or (discipline is null and events.discipline in (?)))
-              and events.type <> 'WeeklySeries'
-              }, first_of_year, last_of_year, discipline_names, discipline_names],
-          :order => 'events.date desc'
-      )
-
-      @weekly_series = WeeklySeries.find(
-          :all,
-          :include => [:standings, :events],
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and (events.id in (select event_id from standings) 
-                   or events_events.id in (select event_id from standings))
-              and (standings.discipline in (?) or (standings.discipline is null and events.discipline in (?)))
-              }, first_of_year, last_of_year, discipline_names, discipline_names],
-          :order => 'events.date desc'
-      )
-
+      ))
+      
     else
-      @events = @events + Event.find(
+      @events = Set.new(Event.find(
           :all,
-          :include => :standings,
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and events.id in (select event_id from standings where events.date between ? and ?)
-              and events.parent_id is null
-              and events.type <> 'WeeklySeries'
-              }, first_of_year, last_of_year, first_of_year, last_of_year],
-          :order => 'events.date desc'
-      )
-
-      @events = @events + MultiDayEvent.find(
-          :all,
-          :include => [:standings, :events],
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and events_events.id in (select event_id from standings)
-              and events.type <> 'WeeklySeries'
-              }, first_of_year, last_of_year],
-          :order => 'events.date desc'
-      )
-
-      @weekly_series = WeeklySeries.find(
-          :all,
-          :include => [:standings, :events],
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and (events.id in (select event_id from standings) 
-                   or events_events.id in (select event_id from standings))
-              }, first_of_year, last_of_year],
-          :order => 'events.date desc'
-      )
+          :select => "distinct events.id, events.*",
+          :joins => { :races => :results },
+          :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
+      ))
+      
+      @events.map!(&:root)
     end
     
-    @events = @events.to_a
-    @events.reject! {|event| event.is_a?(Competition) || (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)}
+    @weekly_series, @events = @events.partition { |event| event.is_a?(WeeklySeries) }
+    
+    @events.reject! do |event|
+      (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
+      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)
+    end
   end
   
   def event
     @event = Event.find(
       params[:id],
-      :include => [:standings => {:races => {:results => {:racer, :team}}}]
+      :include => [:races => {:results => {:racer, :team}} ]
     )
     if @event.is_a?(Bar)
       redirect_to(:controller => 'bar', :action => 'show', :year => @event.date.year)
@@ -107,21 +59,21 @@ class ResultsController < ApplicationController
     if !params[:racer_id].blank?
       @results = Result.find(
         :all,
-        :include => [:racer, {:race => {:standings => :event}}],
+        :include => [:racer, {:race => :event }],
         :conditions => ['events.id = ? and racers.id = ?', params[:competition_id], params[:racer_id]]
       )
       @racer = Racer.find(params[:racer_id])
     else
       @results = Result.find(
         :all,
-        :include => [{:race => {:standings => :event}}, :team],
+        :include => [{:race => :event }, :team],
         :conditions => ['events.id = ? and teams.id = ?', params[:competition_id], params[:team_id]]
       )
       
       result_ids = @results.collect {|result| result.id}
       @scores = Score.find(
         :all,
-        :include => [{:source_result => [:racer, {:race => [:category, {:standings => :event}]}]}],
+        :include => [{:source_result => [:racer, {:race => [:category, :event ]}]}],
         :conditions => ['competition_result_id in (?)', result_ids]
       )
       @team = Team.find(params[:team_id])
@@ -133,11 +85,11 @@ class ResultsController < ApplicationController
     @racer = Racer.find(params[:id])
     results = Result.find(
       :all,
-      :include => [:team, :racer, :scores, :category, {:race => {:standings => :event}, :race => :category}],
+      :include => [:team, :racer, :scores, :category, { :race => :event, :race => :category }],
       :conditions => ['racers.id = ?', params[:id]]
     )
     @competition_results, @event_results = results.partition do |result|
-      result.race.standings.event.is_a?(Competition)
+      result.event.is_a?(Competition)
     end
   end
   
