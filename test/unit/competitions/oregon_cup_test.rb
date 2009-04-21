@@ -43,6 +43,7 @@ class OregonCupTest < ActiveSupport::TestCase
     
     # Kings Valley women
     # 2. Alice
+    # 3. Heather (Cat 4)
     # 15. Molly
     
     # Oregon Cup
@@ -65,27 +66,30 @@ class OregonCupTest < ActiveSupport::TestCase
     kings_valley_pro_1_2.results.create!(:racer => weaver, :place => 17)
     kings_valley_pro_1_2.results.create!(:racer => molly, :place => 20)
     kings_valley_pro_1_2.results.create!(:racer => matson, :place => 21)
-    
+
     # Set BAR point bonus -- it should be ignored
     kings_valley_pro_1_2.bar_points = 2
     kings_valley_pro_1_2.save!
-    
+
     category = Category.find_or_create_by_name('Senior Men')
     source_category = Category.find_or_create_by_name('Senior Men Pro 1/2')
-    
+
     category = Category.find_or_create_by_name('Senior Women')
     source_category = Category.find_or_create_by_name('Senior Women 1/2/3')
-    
+
     # Sometimes women categories are picked separately. Ignore them.
     separate_category = Category.find_or_create_by_name('Senior Women 1/2')
     category.children << separate_category
-    separate_child_event = events(:kings_valley).children.create!(:bar_points => 1)
+    separate_child_event = events(:kings_valley_2004).children.create!(:bar_points => 1)
     separate_child_event.races.create!(:category => separate_category).results.create!(:place => "1", :racer => molly)
     womens_race = races(:kings_valley_women_2004)
     womens_race.notes = "For Oregon Cup"
     womens_race.bar_points = 0
     womens_race.save!
-    
+
+    # Ignore Cat 4 result
+    womens_race.results.create!(:place => 3, :racer => Racer.create!(:name => "Heather G", :member_from => Date.new(2004)), :category => categories(:women_4))
+
     or_cup = OregonCup.create(:date => Date.new(2004))
     banana_belt_1 = events(:banana_belt_1)
     or_cup.source_events << banana_belt_1

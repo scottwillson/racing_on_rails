@@ -44,6 +44,17 @@ class OregonCup < Competition
       end
     end
   end
+
+  def category_ids_for(race)
+    ids = [race.category_id]
+    ids = ids + race.category.descendants.map {|category| category.id}
+    if race.category == Category.find_or_create_by_name('Senior Women')
+      cat_3_women = Category.find_or_create_by_name('Category 3 Women')
+      ids = ids + [cat_3_women.id]
+      ids = ids + cat_3_women.descendants.map {|category| category.id}
+    end
+    ids.join(', ')
+  end
   
   def create_races
     category = Category.find_or_create_by_name('Senior Men')
