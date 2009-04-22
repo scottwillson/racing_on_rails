@@ -7,7 +7,11 @@ ActionController::Routing::Routes.draw do |map|
     end
     admin.resources :events, :has_one => :promoter,
         :collection => { :upload_schedule => :post }, 
-        :member => { :upload => :post, :set_parent => :get, :add_children => :get, :destroy_races => :delete }
+        :member => { :upload => :post, 
+                     :set_parent => :get, 
+                     :add_children => :get, 
+                     :create_from_children => :get, 
+                     :destroy_races => :delete }
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :promoter
     

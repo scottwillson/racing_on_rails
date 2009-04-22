@@ -163,14 +163,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_create_from_children
     lost_child = SingleDayEvent.create!(:name => "Alameda Criterium")
     SingleDayEvent.create!(:name => "Alameda Criterium")
-    opts = {:controller => "admin/events", :action => "create_from_children", :id => lost_child.to_param}
-    assert_routing("/admin/events/create_from_children/#{lost_child.id}", opts)
     
-    post(:create_from_children, :id => lost_child.to_param)
+    get :create_from_children, :id => lost_child.to_param
 
-    assert_response(:redirect)
     new_parent = MultiDayEvent.find_by_name(lost_child.name)
-    assert_redirected_to(:action => :edit, :id => new_parent.to_param)
+    assert_redirected_to edit_admin_event_path(new_parent)
   end
   
   def test_upload_dupe_racers
@@ -484,7 +481,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_nil(event.parent)
     
     parent = events(:series_parent)
-    post(:set_parent, :parent_id => parent, :child_id => event)
+    get(:set_parent, :parent_id => parent, :child_id => event)
     
     event.reload
     assert_equal(parent, event.parent)
@@ -525,7 +522,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   
   def test_add_children
     event = events(:series_parent)
-    post(:add_children, :parent_id => event.to_param)
+    get(:add_children, :parent_id => event.to_param)
     assert_redirected_to(:action => :edit, :id => event.to_param)
   end
 
