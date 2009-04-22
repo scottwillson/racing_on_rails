@@ -14,9 +14,7 @@ development:
   adapter: mysql
   database: racing_on_rails_development
   username: ror_development
-  password:
   host: localhost
-  encoding: latin1
 
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
@@ -25,22 +23,16 @@ test:
   adapter: mysql
   database: racing_on_rails_test
   username: ror_test
-  password:
   host: localhost
-  encoding: latin1
 
 production:
   adapter: mysql
   database: racing_on_rails_production
   username: root
-  password: 
   host: localhost
-  encoding: latin1
 
 john:
   adapter: mysql
   database: racing_on_rails_development
   username: ror_development
-  password:
   host: localhost
-  encoding: latin1
