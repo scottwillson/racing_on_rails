@@ -118,14 +118,14 @@ class Admin::TeamsController < ApplicationController
   
   def destroy
     @team = Team.find(params[:id])
-    @team.destroy
-    respond_to do |format|
-      format.html {redirect_to admin_teams_path}
-      format.js
+    if @team.destroy
+      expire_cache
+      redirect_to admin_teams_path
+    else
+      render :edit
     end
-    expire_cache
   end
-
+  
   # Exact dupe of racers controller
   def destroy_alias
     alias_id = params[:alias_id]

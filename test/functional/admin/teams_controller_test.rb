@@ -250,11 +250,19 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_destroy
     csc = Team.create(:name => 'CSC')
-    post(:destroy, :id => csc.id, :commit => 'Delete')
+    delete(:destroy, :id => csc.id)
     assert_redirected_to(admin_teams_path)
     assert(!Team.exists?(csc.id), 'CSC should have been destroyed')
   end
   
+  def test_destroy_team_with_results_should_not_cause_hard_errors
+    team = teams(:gentle_lovers)
+    delete(:destroy, :id => team.id)
+    assert(Team.exists?(team.id), 'Team should not have been destroyed')
+    assert(!assigns(:team).errors.empty?, "Team should have error")
+    assert_response(:success)
+  end
+
   def test_merge?
     vanilla = teams(:vanilla)
     kona = teams(:kona)

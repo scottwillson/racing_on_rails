@@ -9,6 +9,7 @@ class Team < ActiveRecord::Base
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   after_save :reset_old_name
+  before_destroy :ensure_no_results
   
   validates_presence_of :name
   validate :no_duplicates
@@ -48,6 +49,13 @@ class Team < ActiveRecord::Base
     if existing_team and ((existing_team.id == id and existing_team.name.casecmp(name) != 0) or (existing_team.id != id and name == existing_team.name))
       errors.add('name', "'#{name}' already exists")
     end
+  end
+  
+  def ensure_no_results
+    return true if results.empty?
+
+    errors.add_to_base("Cannot delete team with results. #{name} has #{results.count} results.")
+    false
   end
   
   def results_before_this_year?
