@@ -61,7 +61,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
 
-  map.connect "/ironman/:year", :controller => "ironman"
+  map.ironman  "/ironman/:year", :controller => "ironman"
 
   map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
   map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
