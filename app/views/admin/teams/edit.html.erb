@@ -49,7 +49,7 @@
       <% end -%>
 
       <% table :caption => "Historical Names", :class => "box-2 last", :insert_header => true, :columns => 3 do %>
-        <%- @team.historical_names.each do |historical_name| -%>
+        <%- @team.historical_names.sort_by(&:year).reverse.each do |historical_name| -%>
         <tr id="historical_name_<%= historical_name.id %>">
           <td><%= historical_name.name %></td>
           <td><%= historical_name.year %></td>
@@ -65,6 +65,7 @@
     <div class="page_buttons clear span-6 last">
       <div class="updatedon span-3"><%= "Updated: #{time_ago_in_words(@team.updated_at, true)} ago" unless @team.updated_at.nil? %></div>
       <div class="right span-3 last">
+        <%= link_to("Results", team_path(@team), :class => 'obvious') unless @team.new_record? %>  
         <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => 'obvious', :id => 'delete') unless @team.new_record? %>
         <%= submit_tag "Save", :id => "save" %>
       </div>
