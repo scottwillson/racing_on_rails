@@ -50,7 +50,9 @@ class ResultsController < ApplicationController
       :include => [:races => {:results => {:racer, :team}} ]
     )
     if @event.is_a?(Bar)
-      redirect_to(:controller => 'bar', :action => 'show', :year => @event.date.year)
+      redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
+    elsif @event.is_a? Ironman
+      redirect_to ironman_path(:year => @event.year)
     end
   end
 

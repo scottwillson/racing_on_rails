@@ -35,6 +35,12 @@ class ResultsControllerTest < ActionController::TestCase
     assert_redirected_to(:controller => 'bar', :year => bar.date.year)
   end
   
+  def test_redirect_to_ironman
+    event = Ironman.create!
+    get :event, :id => event.to_param
+    assert_redirected_to ironman_path(:year => event.year)
+  end
+  
   def test_event_with_discipline
     banana_belt_1 = events(:banana_belt_1)
     big_team = Team.create!(:name => "T" * 60)
