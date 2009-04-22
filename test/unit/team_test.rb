@@ -275,6 +275,21 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal("Team Oregon/River City", team_o_river_city.historical_names.first.name, "Team Oregon/River City historical name")
   end
   
+  # Reproduce UTF-8 conversion issues
+  def test_rename_to_alias
+    team = Team.create!(:name => "Grundelbruisers/Stewie Bicycles")
+    team.historical_names.create!(:name => "Grundelbruisers/Stewie Bicycles", :year => 1.years.ago.year)
+
+    team.reload
+    team.name = "Gründelbrüisers/Stewie Bicycles"
+    team.save!
+    
+    team.reload
+    assert_equal("Gründelbrüisers/Stewie Bicycles", team.name, "Team name")
+    assert_equal(0, team.aliases.count, "aliases")
+    assert_equal(1, team.historical_names.count, "Historical names")
+  end
+
   def test_different_teams_with_same_historical_name
     team_o_safeway = Team.create!(:name => "Team Oregon/Safeway")
     team_o_safeway.historical_names.create!(:name => "Team Oregon", :year => 1.years.ago.year)

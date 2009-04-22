@@ -12,7 +12,7 @@ class Team < ActiveRecord::Base
   before_destroy :ensure_no_results
   
   validates_presence_of :name
-  validate :no_duplicates
+  validates_uniqueness_of :name
   
   has_many :aliases
   has_many :historical_names, :order => "year"
@@ -43,14 +43,7 @@ class Team < ActiveRecord::Base
     teams.reject! { |team| team == self }
     teams
   end
-  
-  def no_duplicates
-    existing_team = Team.find_by_name(name)
-    if existing_team and ((existing_team.id == id and existing_team.name.casecmp(name) != 0) or (existing_team.id != id and name == existing_team.name))
-      errors.add('name', "'#{name}' already exists")
-    end
-  end
-  
+
   def ensure_no_results
     return true if results.empty?
 
