@@ -31,7 +31,7 @@ class Admin::TeamsController < ApplicationController
   
   def new
     @team = Team.new
-    render(:action => :edit)
+    render :edit
   end
   
   def create
@@ -53,7 +53,7 @@ class Admin::TeamsController < ApplicationController
       expire_cache
       redirect_to(edit_admin_team_path(@team))
     else
-      render :action => "new"
+      render :edit
     end
   end
   

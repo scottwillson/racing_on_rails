@@ -378,4 +378,12 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal("14115555", team.contact_phone, "contact_phone should be updated")
     assert(team.member?, "member should be updated")
   end
+  
+  def test_invalid_update
+    team = teams(:vanilla)
+    post :update, :id => team.to_param, :team => { :name => "" }
+    assert_response :success
+    assert_not_nil assigns(:team), "@team"
+    assert !assigns(:team).errors.empty?, "@team should have errors"
+  end
 end
