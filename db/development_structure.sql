@@ -88,7 +88,9 @@ create table `competition_event_memberships` (
   `event_id` int(11) not null,
   primary key (`id`),
   key `index_competition_event_memberships_on_competition_id` (`competition_id`),
-  key `index_competition_event_memberships_on_event_id` (`event_id`)
+  key `index_competition_event_memberships_on_event_id` (`event_id`),
+  constraint `competition_event_memberships_ibfk_1` foreign key (`competition_id`) references `events` (`id`) on delete cascade,
+  constraint `competition_event_memberships_ibfk_2` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `discipline_aliases` (
@@ -494,7 +496,11 @@ create table `roles` (
 
 create table `roles_users` (
   `role_id` int(11) not null,
-  `user_id` int(11) not null
+  `user_id` int(11) not null,
+  key `role_id` (`role_id`),
+  key `user_id` (`user_id`),
+  constraint `roles_users_ibfk_1` foreign key (`role_id`) references `roles` (`id`) on delete cascade,
+  constraint `roles_users_ibfk_2` foreign key (`user_id`) references `users` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
@@ -532,6 +538,8 @@ create table `teams` (
   `contact_email` varchar(255) default null,
   `contact_phone` varchar(255) default null,
   `show_on_public_page` tinyint(1) default '0',
+  `created_by_id` int(11) default null,
+  `created_by_type` varchar(255) default null,
   primary key (`id`),
   unique key `idx_name` (`name`)
 ) engine=innodb default charset=utf8;
@@ -640,6 +648,8 @@ insert into schema_migrations (version) values ('20090409205042');
 insert into schema_migrations (version) values ('20090422162313');
 
 insert into schema_migrations (version) values ('20090422173446');
+
+insert into schema_migrations (version) values ('20090423002956');
 
 insert into schema_migrations (version) values ('21');
 
