@@ -15,6 +15,7 @@ class Team < ActiveRecord::Base
   validates_uniqueness_of :name
   
   has_many :aliases
+  belongs_to :created_by, :polymorphic => true
   has_many :historical_names, :order => "year"
   has_many :racers
   has_many :results
@@ -166,6 +167,14 @@ class Team < ActiveRecord::Base
     self[:name] = value
   end
   
+  def created_from_result?
+    !created_by.nil? && created_by.kind_of?(Event)
+  end
+  
+  def updated_after_created?
+    created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
+  end
+
   def to_s
     "#<Team #{id} '#{name}'>"
   end

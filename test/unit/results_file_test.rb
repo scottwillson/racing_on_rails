@@ -234,6 +234,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     
     browning = Racer.find_by_name("John Browning")
     assert_equal(event, browning.created_by, "created_by")
+    assert_equal(event, browning.team.created_by, "team created_by")
     assert_equal(event.name, browning.created_by.name, "created_by name")
   end
   

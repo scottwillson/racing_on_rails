@@ -142,8 +142,8 @@ class RacersFile < GridFile
           if racers.empty?
             delete_unwanted_member_from(row_hash, racer)
             add_print_card_and_label(row_hash)
+            row_hash[:created_by] = import_file
             racer = Racer.new(row_hash)
-            racer.created_by = import_file
             racer.save!
             @created = @created + 1
           elsif racers.size == 1

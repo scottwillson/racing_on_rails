@@ -71,12 +71,15 @@ Downhill/Cross Country: Downhill}
     assert(sautter.print_card?, 'sautter.print_card? after import')
     assert(sautter.print_mailing_label?, 'sautter.mailing_label? after import')
     
-    ted_gresham = Racer.find_all_by_name('Ted Greshsam').first
+    ted_gresham = Racer.find_by_name('Ted Greshsam')
     assert_equal(nil, ted_gresham.team, 'Team')
     
-    camden_murray = Racer.find_all_by_name('Camden Murray').first
+    camden_murray = Racer.find_by_name('Camden Murray')
     assert_equal(nil, camden_murray.team, 'Team')
     assert(camden_murray.created_by.name["55612_061202_151958.csv, attachment filename=55612_061202_151958.csv"], "created_by name")
+    
+    team = Team.find_by_name("B.I.K.E. Hincapie")
+    assert(team.created_by.name["55612_061202_151958.csv, attachment filename=55612_061202_151958.csv"], "created_by name")
     
     assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")

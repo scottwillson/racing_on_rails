@@ -186,6 +186,7 @@ class Racer < ActiveRecord::Base
       end
       if attributes[:team] and attributes[:team].is_a?(Hash)
         attributes[:team] = Team.new(attributes[:team])
+        attributes[:team][:created_by] = attributes[:created_by] if new_record?
       end 
     end
     super(attributes)
@@ -251,7 +252,7 @@ class Racer < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value) unless self.team
+      self.team = Team.new(:name => value, :created_by => new_record? ? created_by : nil) unless self.team
     end
   end
 
@@ -543,7 +544,11 @@ class Racer < ActiveRecord::Base
   end
   
   def created_from_result?
-    !self.created_by.nil? && created_by.kind_of?(Event)
+    !created_by.nil? && created_by.kind_of?(Event)
+  end
+  
+  def updated_after_created?
+    created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
   end
 
   def state=(value)

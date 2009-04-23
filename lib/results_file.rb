@@ -135,10 +135,7 @@ class ResultsFile < GridFile
           if race
             result = race.results.build(row_hash)
             result.updated_by = @event.name
-            if race.nil? and result.place and result.place.to_i == 1
-              race = event.races.create(:category => category)
-              result.race = race
-            end
+
             if row_hash[:time] and !row_hash[:time].include?(':')
               result.time = result.time.to_f
             end

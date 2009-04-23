@@ -35,6 +35,7 @@ class Result < ActiveRecord::Base
   before_save :save_racer
   after_save :update_racer_number
   after_destroy :destroy_racers
+  after_destroy :destroy_teams
   
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
@@ -119,13 +120,14 @@ class Result < ActiveRecord::Base
       self.racer.member_from = race.date
     end
     
-    if self.team && team.new_record?
+    if team && team.new_record?
       if team.name.blank?
         self.team = nil
       else
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
+      team.created_by = event if team && team.new_record?
     end
   end
   
@@ -191,8 +193,15 @@ class Result < ActiveRecord::Base
   
   # Destroy Racers that only exist because they were created by importing results
   def destroy_racers
-    if self.racer && racer.results.count == 0 && racer.created_from_result?
+    if racer && racer.results.count == 0 && racer.created_from_result? && !racer.updated_after_created?
       racer.destroy
+    end
+  end
+  
+  # Destroy Team that only exist because they were created by importing results
+  def destroy_teams
+    if team && team.results.count == 0 && team.created_from_result? && !team.updated_after_created?
+      team.destroy
     end
   end
   
@@ -258,13 +267,13 @@ class Result < ActiveRecord::Base
   end
   
   def event_id
-    if self.race || race(true)
+    if race || race(true)
       race.event_id
     end
   end
   
   def event
-    if self.race || race(true)
+    if race || race(true)
       race.event
     end
   end
@@ -391,11 +400,11 @@ class Result < ActiveRecord::Base
 
   def team_name=(value)
     team_id_will_change!
-    if self.team.nil? || self.team.name != value
+    if team.nil? || team.name != value
       self.team = Team.new(:name => value)
     end
-    if self.racer && self.racer.team_name != value
-      self.racer.team = self.team
+    if racer && racer.team_name != value
+      racer.team = team
     end
   end
   
