@@ -84,3 +84,10 @@ def db_password_arg(db_password)
     " --password=#{db_password}"
   end
 end
+
+namespace :doc do
+  desc "Upload RDoc to WWW server"
+  task :upload => [:clobber_app, :app] do
+    `scp -r doc/app/ butlerpress.com:/usr/local/www/www.butlerpress.com/racing_on_rails/rdoc`
+  end
+end
