@@ -55,7 +55,7 @@
   <%= render :partial => "questions", :locals => { :event => @event } %>
   <% end -%>
 
-  <% @event.races_with_results.sort_by(&:name).each do |race| %>
+  <% @event.races_with_results.sort.each do |race| %>
   <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
   <% table :caption => race.name, :class => "event_results" do %>
     <tr><th>&nbsp;</th></tr>

@@ -2,7 +2,7 @@
 <br />
 <table class="event_races top_margin">
   <%- results_in_first_column = @event.races_with_results.size / 2 -%>
-  <%- @event.races_with_results.sort_by(&:name).each_row_with_index do |row, row_index| -%>
+  <%- @event.races_with_results.sort.each_row_with_index do |row, row_index| -%>
   <tr>
     <td>
     <a href="#race_<%= row.first.id %>"><%= row.first.name %></a>
