@@ -244,6 +244,28 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["competition"], bar, "Should assign competition")
   end
   
+  # A Competition calculated from another Competition
+  def test_overall_bar
+    Bar.calculate!(2004)
+    bar = Bar.find_by_year_and_discipline(2004, "Road")
+    result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
+    assert_not_nil(result, 'result')
+    assert_not_nil(result.racer, 'result.racer')
+    
+    OverallBar.calculate!(2004)
+    competition = OverallBar.find(:last)
+    result = competition.races.detect {|r| r.name == 'Senior Women'}.results.first
+    assert_not_nil(result, 'result')
+
+    get(:competition, :competition_id => competition.to_param.to_s, :racer_id => result.racer.to_param.to_s)
+    assert_response(:success)
+    assert_template("results/competition")
+    assert_not_nil(assigns["results"], "Should assign results")
+    assert_equal(1, assigns["results"].size, "Should assign results")
+    assert_equal(assigns["racer"], result.racer, "Should assign racer")
+    assert_equal(assigns["competition"], bar, "Should assign competition")
+  end
+  
   def test_empty_competition
     bar = Bar.create!
     racer = Racer.create!(:name => 'JP Morgen')
