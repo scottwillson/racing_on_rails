@@ -1,5 +1,3 @@
-require 'rake/packagetask'
-
 namespace :racing_on_rails do
   
   desc 'Cold setup' 
