@@ -26,13 +26,15 @@ class ConvertToUtf8 < ActiveRecord::Migration
     system "mysql --user=#{db_user} --password='#{db_pass}' --default-character-set=utf8 #{db_name} < #{utf8_dump}"
     say "done"
     
-    # What could possibly go wrong?
-    say "Recreating test database..."
-    test_db_name = db_name.gsub("development", "test")
-    test_db_user = db_user.gsub("development", "test")
-    test_db_pass = db_pass
-    system "mysql --user=#{test_db_user} --password='#{test_db_pass}' --execute=\"DROP DATABASE #{test_db_name};\""
-    system "mysql --user=#{test_db_user} --password='#{test_db_pass}' --execute=\"CREATE DATABASE #{test_db_name} CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
+    unless RAILS_ENV == "production"
+      # What could possibly go wrong?
+      say "Recreating test database..."
+      test_db_name = db_name.gsub("development", "test")
+      test_db_user = db_user.gsub("development", "test")
+      test_db_pass = db_pass
+      system "mysql --user=#{test_db_user} --password='#{test_db_pass}' --execute=\"DROP DATABASE #{test_db_name};\""
+      system "mysql --user=#{test_db_user} --password='#{test_db_pass}' --execute=\"CREATE DATABASE #{test_db_name} CHARACTER SET utf8 COLLATE utf8_unicode_ci;\""
+    end
     say "done"
     
     say " *** don't forget to delete temp files #{latin1_dump} and #{utf8_dump}"
