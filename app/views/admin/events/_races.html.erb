@@ -16,9 +16,11 @@
       :url => destroy_races_admin_event_path(@event),
       :html => { :class => "image", :id => "destroy_races", :title => "Delete all races" },
       :method => :delete,
+      :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
       :complete => evaluate_remote_response, 
       :confirm => "Really delete all races from #{@event.name}?"
       %>
+      <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
     </td>
   </tr>
   <% end %>

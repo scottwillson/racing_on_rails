@@ -1,5 +1,3 @@
-require 'parseexcel/parseexcel'
-
 # TODO Handle Excel with multiple sheet. Array of Grids?
 # TODO Handle logging better
 
@@ -13,26 +11,30 @@ class GridFile < Grid
     end
 
     excel_rows = []
-    workbook = Spreadsheet::ParseExcel.parse(file.path)
-    return [] if workbook.sheet_count == 0
-
-    for workbook_index in 0..(workbook.sheet_count - 1)
-      worksheet = workbook.worksheet(workbook_index)
-      for row in worksheet
+    Spreadsheet.open(file.path).worksheets.each do |worksheet|
+      worksheet.each do |row|
         if RACING_ON_RAILS_DEFAULT_LOGGER.debug? && debug?
           RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row}")
+          RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row.join(', ')}")
           RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
         end
         if row
           line = []
-          is_blank = true
           for cell in row
-            is_blank = false if !cell.to_s.strip.blank? || cell != 0
-            _cell = read_cell(cell)
-            line << _cell
+            case cell
+            when NilClass
+              line << ""
+            when String
+              line << cell.strip
+            when Date, DateTime, Time
+              line << cell.to_s(:db)
+            when Numeric
+              line << cell.to_s
+            else
+              line << ""
+            end
           end
-          if !line.empty? && !is_blank
+          if !line.empty? && !line.all? { |cell| cell.nil? || (cell.respond_to?(:blank?) && cell.blank?) || (cell.respond_to?(:to_i) && cell.to_i == 0) }
             excel_rows << line
           end
         end
@@ -41,66 +43,10 @@ class GridFile < Grid
     RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
     excel_rows
   end
-  
-  def GridFile.read_cell(cell)
-    if cell
-      if RACING_ON_RAILS_DEFAULT_LOGGER.debug? && debug?
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug('') 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("format_no: #{cell.format_no}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("fmt_idx:   #{cell.format.fmt_idx}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("type:      #{cell.type}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("value:     #{cell.value}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("kind:      #{cell.kind}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("numeric:   #{cell.numeric}")
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("code:      #{cell.code}")
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("to_s:      #{cell.to_s}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("to_f:      #{cell.to_f}") 
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("date:      #{cell.date}")
-        RACING_ON_RAILS_DEFAULT_LOGGER.debug("datetime:  #{cell.datetime.year}-#{cell.datetime.month}-#{cell.datetime.day} #{cell.datetime.hour}:#{cell.datetime.min}.#{cell.datetime.sec} #{cell.datetime.msec}")
-      end
-      
-      cell_f = cell.to_f
-      cell_i = cell.to_i
-      cell_type = cell.type
-      if cell_type == :numeric and cell.format_no != 0
-        if cell_f == cell_i
-          return cell_i.to_s
-        else
-          return cell.to_f.to_s
-        end
-      end
-      
-      is_time = (cell.format_no == 0 || cell.format_no >= 18) && (cell.to_s[/^\d*:\d+\.?\d?$/] || cell.to_s[/^\d*:?\d+\.\d+$/])
-      if is_time and cell_f < 2 and cell.to_s == cell_f.to_s
-        if cell_f == cell_i
-          return (cell_i * 86400).to_s
-        else
-          return (cell_f * 86400).to_s
-        end
-      elsif cell_type == :text && is_time
-        return s_to_time(cell.value).to_s
-      elsif cell_type == :date
-        date = cell.date.to_s
-        if date.blank?
-          if cell_f == cell_i
-            return (cell_i * 86400).to_s
-          else
-            return  (cell_f * 86400).to_s
-          end
-        else
-          return date
-        end
-      else
-        return cell.to_s
-      end
-    end
-    ''
-  end
-  
+    
   def GridFile.debug?
-    false
+    true
   end
-
   
   # TODO Dupe method
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75

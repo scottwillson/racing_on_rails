@@ -145,8 +145,9 @@ class Grid
       if column_name.is_a?(Column)
         column_name
       else
-        column_name.strip!
-        if quoted
+        column_name = column_name || ""
+        column_name.strip! if column_name.respond_to?(:strip!)
+        if quoted && column_name.respond_to?(:gsub!)
           column_name.gsub!(/^"/, '')
           column_name.gsub!(/"$/, '')
           description = column_name

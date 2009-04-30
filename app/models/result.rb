@@ -28,24 +28,24 @@ end
 class Result < ActiveRecord::Base
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
-  
+
   attr_accessor :updated_by
-  
+
   before_save :find_associated_records
   before_save :save_racer
   after_save :update_racer_number
   after_destroy :destroy_racers
   after_destroy :destroy_teams
-  
+
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
   belongs_to :category
   belongs_to :race
   belongs_to :racer
   belongs_to :team
-  
+
   validates_presence_of :race
-  
+
   def Result.find_all_for(racer)
     if racer.is_a? Racer
       racer_id = racer.id
@@ -56,38 +56,29 @@ class Result < ActiveRecord::Base
       :all,
       :include => [:team, :racer, :scores, :category, {:race => [:event, :category]}],
       :conditions => ['racers.id = ?', racer_id]
-    )    
+    )
   end
-    
+
   def attributes=(attributes)
     unless attributes.nil?
       if attributes[:first_name]
         self.first_name = attributes[:first_name]
-      end 
+      end
       if attributes[:last_name]
         self.last_name = attributes[:last_name]
-      end 
+      end
       if attributes[:team_name]
         self.team_name = attributes[:team_name]
-      end 
-      if attributes[:category] and attributes[:category].is_a?(String)
-        attributes[:category] = Category.new(:name => attributes[:category])
+      end
+      if attributes[:category] && attributes[:category].is_a?(String)
+        attributes[:category] = Category.find_or_create_by_name(attributes[:category])
       end
     end
     super(attributes)
   end
-  
-  # Replace any new +category+, +racer+, or +team+ with one that already exists if name matches
+
+  # Replace any new +racer+, or +team+ with one that already exists if name matches
   def find_associated_records
-    if category && category.new_record?
-      if category.name.blank?
-        self.category = nil
-      else
-        existing_category = Category.find_by_name(category.name)
-        self.category = existing_category if existing_category
-      end
-    end
-    
     _racer = self.racer
     if _racer && _racer.new_record?
       if _racer.name.blank?
@@ -95,7 +86,7 @@ class Result < ActiveRecord::Base
       else
         existing_racers = find_racers
         if existing_racers.size == 1
-          self.racer = existing_racers.to_a.first 
+          self.racer = existing_racers.to_a.first
         elsif existing_racers.size > 1
           results = existing_racers.to_a.inject([]) { |results, racer| results + racer.results }
           if results.empty?
@@ -107,19 +98,19 @@ class Result < ActiveRecord::Base
         end
       end
     end
-    
+
     # This logic should be in Racer
-    if !self.racer.nil? && 
-       self.racer.new_record? && 
+    if !self.racer.nil? &&
+       self.racer.new_record? &&
        !self.racer.first_name.blank? &&
        !self.racer.last_name.blank? &&
-       self.racer[:member_from].blank? && 
+       self.racer[:member_from].blank? &&
        event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
-       
+
       self.racer.member_from = race.date
     end
-    
+
     if team && team.new_record?
       if team.name.blank?
         self.team = nil
@@ -130,7 +121,7 @@ class Result < ActiveRecord::Base
       team.created_by = event if team && team.new_record?
     end
   end
-  
+
   # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +racer+ already exists.
   # Returns an Array of Racers if there is more than one potential match
   #
@@ -138,11 +129,11 @@ class Result < ActiveRecord::Base
   # Need Event to match on race number. Event will not be set before result is saved to database
   def find_racers(_event = event)
     matches = Set.new
-    
+
     # name
     matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
-    
+
     # number
     if matches.size > 1 or (matches.empty? and first_name.blank? and last_name.blank?)
       race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
@@ -155,7 +146,7 @@ class Result < ActiveRecord::Base
       end
       return matches if matches.size == 1
     end
-        
+
     # team
     unless team_name.blank?
       team = Team.find_by_name_or_alias(team_name)
@@ -163,17 +154,17 @@ class Result < ActiveRecord::Base
         match.team != team
       end
     end
-    
+
     # license
     unless self.license.blank?
       matches.reject! do |match|
         match.license != license
       end
     end
-    
+
     matches
   end
-  
+
   # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
     discipline = Discipline[event.discipline]
@@ -183,35 +174,35 @@ class Result < ActiveRecord::Base
       self.racer.add_number(number, discipline, event.number_issuer, event.date.year)
     end
   end
-  
+
   def save_racer
     if racer && (racer.new_record? || racer.changed?)
       racer.created_by = self.event
       racer.save!
     end
   end
-  
+
   # Destroy Racers that only exist because they were created by importing results
   def destroy_racers
     if racer && racer.results.count == 0 && racer.created_from_result? && !racer.updated_after_created?
       racer.destroy
     end
   end
-  
+
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
     if team && team.results.count == 0 && team.created_from_result? && !team.updated_after_created?
       team.destroy
     end
   end
-  
+
   # Only used for manual entry of Cat 4 Womens Series Results
   def validate_racer_name
     if first_name.blank? && last_name.blank?
       errors.add(:first_name, "and last name cannot both be blank")
     end
   end
-  
+
   # Set points from +scores+
   def calculate_points
     if !scores.empty? and competition_result?
@@ -222,16 +213,16 @@ class Result < ActiveRecord::Base
       self.points = pts
     end
   end
-  
+
   def category_name
-    (self.category && category.name) || ""
+    (category && category.name) || ""
   end
-  
+
   def category_name=(name)
     if name.blank?
       self.category = nil
     else
-      self.category = Category.new(:name => name)
+      self.category = Category.find_or_create_by_name(name)
     end
   end
 
@@ -239,49 +230,49 @@ class Result < ActiveRecord::Base
   def competition_result?
     self.event.is_a?(CrossCrusadeOverall) || event.is_a?(TaborOverall) || event.is_a?(Competition)
   end
-  
+
   # Not blank, DNF, DNS, DQ.
   def finished?
     return false if place.blank?
     return false if ["DNF", "DNS", "DQ"].include?(place)
     place.to_i > 0
   end
-  
+
   # Does this result belong to the last event in a MultiDayEvent?
   def last_event?
     return false unless self.event && event.parent
     return false unless event.parent.respond_to?(:parent)
     return true unless event.parent
-    
+
     !(event.parent && (event.parent.end_date != self.date))
   end
-  
+
   def date
     if race || race(true)
       race.date
     end
   end
-  
+
   def distance
     race && race.distance
   end
-  
+
   def event_id
     if race || race(true)
       race.event_id
     end
   end
-  
+
   def event
     if race || race(true)
       race.event
     end
   end
-  
+
   def laps
     self[:laps] || (race && race.laps)
   end
-  
+
   def place
     self[:place] || ''
   end
@@ -293,7 +284,7 @@ class Result < ActiveRecord::Base
       0.0
     end
   end
-  
+
   # Hot spots
   def points_bonus_penalty=(value)
     if value == nil || value == ""
@@ -301,7 +292,7 @@ class Result < ActiveRecord::Base
     end
     write_attribute(:points_bonus_penalty, value)
   end
-  
+
   # Points from placing at finish, not from hot spots
   def points_from_place=(value)
     if value == nil || value == ""
@@ -309,7 +300,7 @@ class Result < ActiveRecord::Base
     end
     write_attribute(:points_from_place, value)
   end
-  
+
   def first_name
     if racer and !racer.first_name.blank?
       racer.first_name
@@ -325,7 +316,7 @@ class Result < ActiveRecord::Base
       self.racer = Racer.new(:first_name => value)
     end
   end
-  
+
   def last_name
     if (racer and !racer.last_name.blank?)
       racer.last_name
@@ -333,7 +324,7 @@ class Result < ActiveRecord::Base
       ""
     end
   end
-  
+
   def last_name=(value)
     if self.racer
       self.racer.last_name = value
@@ -341,7 +332,7 @@ class Result < ActiveRecord::Base
       self.racer = Racer.new(:last_name => value)
     end
   end
-  
+
   # racer.name
   def name
     if racer == nil
@@ -361,7 +352,7 @@ class Result < ActiveRecord::Base
       self.racer = nil
       return value
     end
-    
+
     if racer
       racer_for_name = Racer.new(:name => value)
       existing_racers = Racer.find_all_by_name_or_alias(racer_for_name.first_name, racer_for_name.last_name)
@@ -375,7 +366,7 @@ class Result < ActiveRecord::Base
       self.racer = Racer.new(:name => value)
     end
   end
-  
+
   def racer_name=(value)
     name = value
   end
@@ -388,7 +379,7 @@ class Result < ActiveRecord::Base
       ""
     end
   end
-  
+
   # Racer's current team name
   def racer_team_name
     if racer
@@ -407,47 +398,86 @@ class Result < ActiveRecord::Base
       racer.team = team
     end
   end
-  
+
+  def time=(value)
+    set_time_value(:time, value)
+  end
+
+  def time_bonus_penalty=(value)
+    set_time_value(:time_bonus_penalty, value)
+  end
+
+  def time_gap_to_leader=(value)
+    set_time_value(:time_gap_to_leader, value)
+  end
+
+  def time_total=(value)
+    set_time_value(:time_total, value)
+  end
+
+  def time_gap_to_previous=(value)
+    set_time_value(:time_gap_to_previous, value)
+  end
+
+  def time_gap_to_winner=(value)
+    set_time_value(:time_gap_to_winner, value)
+  end
+
+  def time_total=(value)
+    set_time_value(:time_total, value)
+  end
+
+  def set_time_value(attribute, value)
+    case value
+    when Time, DateTime  
+      logger.debug "set_time_value #{place} #{attribute} #{name} #{value.class} val #{value} usec #{value.usec}"
+      self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
+      self[attribute]
+    else
+      self[attribute] = value
+    end
+  end
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_s
     time_to_s(self.time)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_s=(time)
     self.time = s_to_time(time)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_total_s
     time_to_s(self.time_total)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_total_s=(time_total)
     self.time_total = s_to_time(time_total)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_bonus_penalty_s
     time_to_s(self.time_bonus_penalty)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_bonus_penalty_s=(time_bonus_penalty)
     self.time_bonus_penalty = s_to_time(time_bonus_penalty)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_gap_to_leader_s
     time_to_s(self.time_gap_to_leader)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_gap_to_leader_s=(time_gap_to_leader_s)
     self.time_gap_to_leader = s_to_time(time_gap_to_leader_s)
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   # This method doesn't handle some typical edge cases very well
   def time_to_s(time)
@@ -462,7 +492,7 @@ class Result < ActiveRecord::Base
     end
     "#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
   end
-  
+
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   # This method doesn't handle some typical edge cases very well
   def s_to_time(string)
@@ -477,7 +507,7 @@ class Result < ActiveRecord::Base
         t = t + (part.to_f) * (60.0 ** index)
       end
       t
-    end  
+    end
   end
 
   # Fix common formatting mistakes and inconsistencies
@@ -516,6 +546,7 @@ class Result < ActiveRecord::Base
   # Mostly removes unfortunate punctuation typos
   def cleanup_name(name)
     return name if name.nil?
+    name = name.to_s
     return '' if name == '0.0'
     return '' if name == '0'
     return '' if name == '.'
@@ -523,9 +554,9 @@ class Result < ActiveRecord::Base
     name = name.gsub(';', '\'')
     name = name.gsub(/ *\/ */, '/')
   end
-  
+
   # Highest points first. Break ties by numbershighest placing
-  # OBRA rules: 
+  # OBRA rules:
   # * The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;
   # * The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.
   #
@@ -542,7 +573,7 @@ class Result < ActiveRecord::Base
 
     0
   end
-  
+
   def compare_by_highest_place(other)
     scores_by_place = scores.sort do |x, y|
       x.source_result <=> y.source_result
@@ -564,7 +595,7 @@ class Result < ActiveRecord::Base
     end
     0
   end
-  
+
   def compare_by_most_recent_place(other)
     dates = Set.new(scores + other.scores) { |score| score.source_result.date }.to_a
     dates.sort!.reverse!
@@ -582,7 +613,7 @@ class Result < ActiveRecord::Base
     end
     0
   end
-  
+
   def max(x, y)
     if x >= y
       x
@@ -590,7 +621,7 @@ class Result < ActiveRecord::Base
       y
     end
   end
-  
+
   # Poor name. For comparison, we sort by placed, finished, DNF, etc
   def major_place
     if place.to_i > 0
@@ -607,18 +638,18 @@ class Result < ActiveRecord::Base
       5
     end
   end
-  
+
   def place_as_integer
     place.to_i
   end
-  
+
   # All numbered places first, then blanks, followed by DNF, DQ, and DNS
   def <=>(other)
-    # Figure out the major position by place first, then break it down further if 
+    # Figure out the major position by place first, then break it down further if
     begin
       major_difference = (major_place <=> other.major_place)
       return major_difference if major_difference != 0
-      
+
       if place.to_i > 0
         place.to_i <=> other.place.to_i
       elsif self.id
@@ -636,7 +667,7 @@ class Result < ActiveRecord::Base
   def to_long_s
     "#<Result #{id}\t#{place}\t#{race.event.name}\t#{race.name} (#{race.id})\t#{name}\t#{team_name}\t#{self.category_name}\t#{points}\t#{time_s if self[:time]}>"
   end
-  
+
   def to_s
     "#<Result #{id} place #{place} race #{race_id} racer #{racer_id} team #{team_id} pts #{points}>"
   end

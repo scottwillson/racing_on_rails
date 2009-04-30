@@ -90,6 +90,20 @@ class Race < ActiveRecord::Base
       results.size
     end
   end
+
+  def result_columns=(value)
+    if value.include?("name")
+      name_index = value.index("name")
+      value[name_index] = "first_name"
+      value.insert(name_index + 1, "last_name")
+    end
+
+    if value.include?("place") && value.first != "place"
+      value.delete("place")
+      value.insert(0, "place")
+    end
+    self[:result_columns] = value
+  end
   
   # Default columns if empty
   def result_columns_or_default
