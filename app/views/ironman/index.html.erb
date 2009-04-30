@@ -22,7 +22,7 @@ There is no prize just identification of riders who need to get a life.</p>
 
 <div class="updatedon centered">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
 
-<% table :caption => "#{@ironman.date.year} Ironman" do %>
+<% table :caption => "#{@ironman.date.year} Ironman", :columns => 3, :insert_header => true do %>
   <tr>
     <td><pre><%- for result in @results %>
 <%= result.place.rjust(3) -%>

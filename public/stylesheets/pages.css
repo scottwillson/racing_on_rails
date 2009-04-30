@@ -529,3 +529,7 @@ table#preview_import_table th {
   padding-top: 0px;
   margin-left: 8px;
 }
+
+.pagination .current {
+  padding-right: 0px;
+}

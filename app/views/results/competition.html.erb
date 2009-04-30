@@ -6,8 +6,8 @@
 <%- for result in @results.sort { |x, y| y.date <=> x.date } -%>
 <% table :caption => %Q{#{result.place.to_i.ordinalize} &mdash;
                         #{link_to(@competition.name, :action => 'event', :id => @competition.to_param)}
-                        #{link_to(result.event.name, :action => 'event', :id => @competition.to_param) unless @competition.name == result.event.name}
-                        #{link_to(result.race.name, :action => 'event', :id => @competition.to_param) unless result.race.name == result.event.name}
+                        #{link_to(result.event.name, :action => 'event', :id => @competition.to_param) unless result.event.name[@competition.name]}
+                        #{link_to(result.race.name, :action => 'event', :id => @competition.to_param) unless result.event.name[result.race.name]}
 } do %></th>
   <tr>
     <th>&nbsp;</th>
