@@ -5,9 +5,6 @@ require File.join(File.dirname(__FILE__), 'boot')
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  require "rack/web_dav"
-  config.middleware.use Rack::WebDAV
-
   config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/sweepers #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {

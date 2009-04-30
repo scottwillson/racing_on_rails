@@ -8,8 +8,6 @@
 # TODO Keywords?
 # TODO Other mark-up?
 # TODO Import/export as YAML
-# TODO WebDAV API for Windows and Linux
-# TODO WebDAV move, copy, etc
 # TODO Auto-refresh preview
 # TODO Change parent to child (requires fancier logic. For now, just move page to root first)
 # TODO publish-on dates
