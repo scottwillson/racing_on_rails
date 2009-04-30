@@ -28,6 +28,10 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     pro_men_race.results.create!(:place => '4', :racer => racers(:weaver), :time => 1200)
     # Results with no time should not be included
     pro_men_race.results.create!(:place => '3', :racer => racers(:molly))
+    # Results with DNF should not be included
+    pro_men_race.results.create!(:place => "DNF", :racer => racers(:alice))
+    pro_men_race.results.create!(:place => "DNF", :racer => racers(:alice), :time => 0)
+    pro_men_race.results.create!(:place => "DQ", :racer => Racer.create!, :time => 12)
 
     # Trigger CombinedResults logic
     jack_frost.save!
