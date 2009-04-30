@@ -48,7 +48,11 @@ class Admin::EventsController < ApplicationController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    @event = SingleDayEvent.new(params[:event])
+    if params[:event] && params[:event][:type] == "Event"
+      @event = Event.new(params[:event])
+    else
+      @event = SingleDayEvent.new(params[:event])
+    end
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     @event.number_issuer_id = association_number_issuer.id
     

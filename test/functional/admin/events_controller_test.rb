@@ -100,6 +100,19 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template('admin/events/edit')
     assert_not_nil(assigns["event"], "Should assign event")
+    assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
+    assert(assigns["event"].is_a?(SingleDayEvent), "Should default to SingleDayEvent")
+  end
+
+  def test_new_child_event
+    parent = SingleDayEvent.create!
+    get(:new, :event => { :parent_id => parent.to_param, :type => "Event" })
+    assert_response(:success)
+    assert_template('admin/events/edit')
+    assert_not_nil(assigns["event"], "Should assign event")
+    assert(assigns["event"].is_a?(Event), "Should default to generic Event")
+    assert(!assigns["event"].is_a?(SingleDayEvent), "Should default to generic Event")
+    assert_equal(parent, assigns["event"].parent, "Parent event")
   end
 
   def test_new_single_day_event_default_year

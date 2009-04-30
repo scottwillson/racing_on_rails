@@ -20,11 +20,13 @@
         <%= f.labelled_text_field :name %>
 
         <%= f.label :type %>
-        <%= f.select(:type, [['Single Day Event', 'SingleDayEvent'],
+        <%= f.select(:type, [['Event', nil],
+                             ['Single Day Event', 'SingleDayEvent'],
                              ['Multi Day Event', 'MultiDayEvent'], 
                              ['Series', 'Series'], 
                              ['Weekly Series', 'WeeklySeries']], {}, 
-           { :title => "Single day event: most events. 
+           { :title => "Event: placeholder hidden from schedule (combined TT results). 
+    \nSingle day event: most events. 
     \nMulti day event: event over consecutive days (stage races, AVC). 
     \nSeries: weekend events with full BAR points (Cross Crusade). 
     \nWeekly series: weeknight, BAR points only for overall (PIR)" }) %><br/>

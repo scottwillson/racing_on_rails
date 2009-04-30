@@ -403,7 +403,16 @@ class Event < ActiveRecord::Base
   def date_range_long_s
     date.strftime('%a, %B %d')
   end
-
+  
+  # Parent's name. Own name if no parent
+  def parent_name
+    if parent.nil?
+      name
+    else
+      parent.name
+    end
+  end
+  
   def full_name
     if parent.nil?
       name
