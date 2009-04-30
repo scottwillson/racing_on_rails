@@ -15,8 +15,8 @@ class HomeController < ApplicationController
       :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",
       :joins => [:races => :results],
       :conditions => [
-        'events.type != ? and events.date > ? and events.sanctioned_by = ?',
-        ["Event"], cutoff, ASSOCIATION.short_name
+        'events.type is not null and events.type != ? and events.date > ? and events.sanctioned_by = ?',
+        "CombinedTimeTrialResults", cutoff, ASSOCIATION.short_name
       ],
       :order => 'events.date desc'
     )

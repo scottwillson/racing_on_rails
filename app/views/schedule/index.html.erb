@@ -42,12 +42,12 @@ end -%>
           <%- for event in day.events -%>
           <div class="event<%= ' atra_points_series' if event.atra_points_series? %>">
             <%- if event.cancelled %>
-        <span class="cancelled"><%= event.name -%></span> <i>cancelled</i>
+        <span class="cancelled"><%= event.parent_name -%></span> <i>cancelled</i>
             <%- else -%>
               <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>
+            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.parent_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>
               <%- else -%>
-            <%= event.name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+            <%= event.parent_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
               <%- end -%>
             <%- end -%>
           </div>
