@@ -1,17 +1,18 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<%= render :partial => "years" %>
+<%= render_page "schedule/years" %>
 <%= tabs do |tabs|
   @schedule.months.each do |month|
     tabs.add(month.name, :anchor => month.name)
   end
 end -%>
-<%= render :partial => "disciplines", :locals => { :year => @year } %>
+<%= render_page "schedule/disciplines", :locals => { :year => @year } %>
 
 <% if Date.today < Date.new(@year, 2) %>
 <div>Tentative. Dates are subject to change.</div>
 <% end %>
 
+<%= render_page "schedule/others" %>
 <p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
 
 <% if ASSOCIATION.competitions.include?(:atra_points_series) -%>
