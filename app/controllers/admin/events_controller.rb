@@ -71,7 +71,8 @@ class Admin::EventsController < ApplicationController
   # * warn
   def create
     event_type = params[:event][:type]
-    raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+    event_type = "Event" if event_type.blank?
+    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
     if params[:event][:parent_id].present?
       @event = Event.find(params[:event][:parent_id]).children.build(params[:event])
     else
