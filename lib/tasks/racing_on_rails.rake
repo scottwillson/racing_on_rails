@@ -10,6 +10,7 @@ namespace :racing_on_rails do
     puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(RAILS_ROOT + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
     Rake::Task["db:fixtures:load"].invoke
     puts "Start server"
+    puts "Please open http://localhost:3000/ in your web browser"
     puts `ruby script/server`
   end
 end
