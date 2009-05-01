@@ -144,7 +144,7 @@ class Admin::EventsController < ApplicationController
   def upload
     uploaded_file = params[:results_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
-    File.open(path, File::CREAT|File::WRONLY) do |f|
+    File.open(path, "wb") do |f|
       f.print(uploaded_file.read)
     end
 
@@ -172,7 +172,7 @@ class Admin::EventsController < ApplicationController
   def upload_schedule
     uploaded_file = params[:schedule_file]
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
-    File.open(path, File::CREAT|File::WRONLY) do |f|
+    File.open(path, "wb") do |f|
       f.print(uploaded_file.read)
     end
 

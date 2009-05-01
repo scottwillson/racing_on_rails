@@ -708,7 +708,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
 
     racers_before_import = Racer.count
 
-    file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+    file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     post :preview_import, :racers_file => file
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
@@ -736,7 +736,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_recognizes({:controller => "admin/racers", :action => "import"}, {:path => "/admin/racers/import", :method => :post})
     racers_before_import = Racer.count
   
-    file = uploaded_file("test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+    file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     post(:import, :commit => 'Import', :update_membership => 'true')
   
@@ -758,7 +758,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     assert_recognizes({:controller => "admin/racers", :action => "import"}, {:path => "/admin/racers/import", :method => :post})
     racers_before_import = Racer.count
   
-    file = uploaded_file("test/fixtures/membership/database.xls", "duplicates.xls", "application/vnd.ms-excel")
+    file = fixture_file_upload("membership/database.xls", "application/vnd.ms-excel", :binary)
     @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/database.xls")
     next_year = Date.today.year + 1
     post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
@@ -793,7 +793,7 @@ class Admin::RacersControllerTest < ActionController::TestCase
     Racer.create(:name => 'Erik Tonkin')
     racers_before_import = Racer.count
   
-    file = uploaded_file("test/fixtures/membership/duplicates.xls", "duplicates.xls", "application/vnd.ms-excel")
+    file = fixture_file_upload("membership/duplicates.xls", "application/vnd.ms-excel", :binary)
     @request.session[:racers_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/duplicates.xls")
     post(:import, :commit => 'Import', :update_membership => 'true')
   

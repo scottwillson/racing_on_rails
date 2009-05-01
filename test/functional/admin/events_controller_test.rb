@@ -260,7 +260,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
-    file = uploaded_file("/test/fixtures/results/dupe_racers.xls", "dupe_racers.xls", "application/vnd.ms-excel")
+    file = fixture_file_upload("results/dupe_racers.xls", "application/vnd.ms-excel", :binary)
     post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect

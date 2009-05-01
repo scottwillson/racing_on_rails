@@ -189,7 +189,7 @@ class Admin::RacersController < ApplicationController
     end
 
     path = "#{Dir.tmpdir}/#{params[:racers_file].original_filename}"
-    File.open(path, File::CREAT|File::WRONLY) do |f|
+    File.open(path, "wb") do |f|
       f.print(params[:racers_file].read)
     end
 
