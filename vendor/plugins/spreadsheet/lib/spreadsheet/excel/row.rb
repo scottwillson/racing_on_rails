@@ -98,6 +98,9 @@ class Row < Spreadsheet::Row
       date += 1
     end
     year = date.year
+    if year < 1970 && RUBY_PLATFORM["mswin"]
+      year = 1970
+    end
     if year < 1903
       year = 1903
     end
