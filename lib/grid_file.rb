@@ -18,25 +18,27 @@ class GridFile < Grid
           RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row.join(', ')}")
           RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
         end
-        if row
-          line = []
-          for cell in row
-            case cell
-            when NilClass
-              line << ""
-            when String
-              line << cell.strip
-            when Date, DateTime, Time
-              line << cell.to_s(:db)
-            when Numeric
-              line << cell.to_s
+        line = []
+        for cell in row
+          case cell
+          when NilClass
+            line << ""
+          when String
+            line << cell.strip
+          when Date, DateTime, Time
+            line << cell.to_s(:db)
+          when Numeric
+            line << cell.to_s
+          else
+            if cell.respond_to?(:to_s)
+              line << cell.to_s.strip
             else
               line << ""
             end
           end
-          if !line.empty? && !line.all? { |cell| cell.nil? || (cell.respond_to?(:blank?) && cell.blank?) || (cell.respond_to?(:to_i) && cell.to_i == 0) }
-            excel_rows << line
-          end
+        end
+        if !line.empty? && !line.all? { |cell| cell.nil? || (cell.respond_to?(:blank?) && cell.blank?) }
+          excel_rows << line
         end
       end
     end
@@ -45,7 +47,7 @@ class GridFile < Grid
   end
     
   def GridFile.debug?
-    true
+    false
   end
   
   # TODO Dupe method
