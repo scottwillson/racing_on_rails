@@ -39,7 +39,7 @@ load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
-ActionController::Base.prepend_view_path(File.expand_path("#{RAILS_ROOT}/local/app/views"))
+ActionController::Base.prepend_view_path("local/app/views")
 
 class ActionView::Base
   def self.default_form_builder

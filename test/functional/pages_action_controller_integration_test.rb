@@ -1,5 +1,7 @@
 require 'test_helper'
 
+ActionController::Base.prepend_view_path("test/fixtures/views")
+
 class FakeController < ApplicationController
   def index
     render_page
@@ -19,15 +21,15 @@ class FakeController < ApplicationController
   end
   
   def partial_using_action
-    render :template => File.expand_path("#{Rails.root}/test/fixtures/views/fake/partial_using_action.html.erb")
+    render :template => "fake/partial_using_action.html.erb"
   end
 
   def partial_using_partials_action
-    render :template => File.expand_path("#{Rails.root}/test/fixtures/views/fake/partial_using_partials_action.html.erb")
+    render :template => "fake/partial_using_partials_action.html.erb"
   end
 
   def missing_partial
-    render :template => File.expand_path("#{Rails.root}/test/fixtures/views/fake/missing_partial.html.erb")
+    render :template => "fake/missing_partial.html.erb"
   end
 end
 

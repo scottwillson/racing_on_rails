@@ -11,7 +11,7 @@ class CompetitionsController < ApplicationController
     elsif params[:type] == "cat4_womens_race_series"
       competition_class = Cat4WomensRaceSeries
     else
-      return render(:file => "#{RAILS_ROOT}/public/404.html", :status => 404)
+      raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
     end
     @event = competition_class.find(:first, :conditions => ['date = ?', date])
     

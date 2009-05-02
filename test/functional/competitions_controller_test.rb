@@ -39,7 +39,7 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_unknown_competition_type
-    get(:show, :type => 'not_a_series')
-    assert_response(:missing)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:show, :type => 'not_a_series') }
+    assert_response(:success)
   end
 end
