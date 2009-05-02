@@ -46,9 +46,9 @@ class Row < Spreadsheet::Row
   def _date data # :nodoc:
     return data if data.is_a?(Date)
     date = @worksheet.date_base + data.to_i
-    # if date > LEAP_ERROR
-    #   date -= 1
-    # end
+    if @worksheet.date_base < Date.new(1900) &&  date > LEAP_ERROR
+      date -= 1
+    end
     date
   end
   def _datetime data # :nodoc:

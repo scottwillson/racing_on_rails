@@ -54,8 +54,8 @@ create table `competition_event_memberships` (
   primary key (`id`),
   key `index_competition_event_memberships_on_competition_id` (`competition_id`),
   key `index_competition_event_memberships_on_event_id` (`event_id`),
-  constraint `competition_event_memberships_ibfk_2` foreign key (`event_id`) references `events` (`id`) on delete cascade,
-  constraint `competition_event_memberships_ibfk_1` foreign key (`competition_id`) references `events` (`id`) on delete cascade
+  constraint `competition_event_memberships_ibfk_1` foreign key (`competition_id`) references `events` (`id`) on delete cascade,
+  constraint `competition_event_memberships_ibfk_2` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `discipline_aliases` (
@@ -453,8 +453,8 @@ create table `roles_users` (
   `user_id` int(11) not null,
   key `role_id` (`role_id`),
   key `user_id` (`user_id`),
-  constraint `roles_users_ibfk_2` foreign key (`user_id`) references `users` (`id`) on delete cascade,
-  constraint `roles_users_ibfk_1` foreign key (`role_id`) references `roles` (`id`) on delete cascade
+  constraint `roles_users_ibfk_1` foreign key (`role_id`) references `roles` (`id`) on delete cascade,
+  constraint `roles_users_ibfk_2` foreign key (`user_id`) references `users` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
