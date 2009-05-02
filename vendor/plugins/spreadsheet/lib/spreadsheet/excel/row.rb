@@ -46,9 +46,9 @@ class Row < Spreadsheet::Row
   def _date data # :nodoc:
     return data if data.is_a?(Date)
     date = @worksheet.date_base + data.to_i
-    if date > LEAP_ERROR
-      date -= 1
-    end
+    # if date > LEAP_ERROR
+    #   date -= 1
+    # end
     date
   end
   def _datetime data # :nodoc:
@@ -100,8 +100,7 @@ class Row < Spreadsheet::Row
     year = date.year
     if year < 1970 && RUBY_PLATFORM["mswin"]
       year = 1970
-    end
-    if year < 1903
+    elsif year < 1903
       year = 1903
     end
     begin

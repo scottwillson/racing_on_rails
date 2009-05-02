@@ -96,6 +96,11 @@ class ScheduleTest < ActiveSupport::TestCase
       "Vancouver Courthouse Criterium" => 1,
       "Veloshop CCX"                   => 1
     }
+    
+    expected.each do |event_name, count|
+      assert_equal(count, Event.count(:conditions => ["name = ? and date >= ?", event_name, Date.new(2006, 1, 20)]), "Count of events named '#{event_name}'")
+    end
+    
     assert_equal(76, expected.inject(0) { |sum, e| sum + e.last }, "New events")
     
     after_import_after_schedule_start_date = Event.count(:conditions => "date >= '2006-01-20'")
