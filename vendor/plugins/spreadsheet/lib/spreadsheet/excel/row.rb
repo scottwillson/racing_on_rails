@@ -3,6 +3,7 @@ require 'spreadsheet/row'
 
 module Spreadsheet
   module Excel
+  WINDOWS =  RUBY_PLATFORM["mswin"]
 ##
 # Excel-specific Row methods
 class Row < Spreadsheet::Row
@@ -98,7 +99,7 @@ class Row < Spreadsheet::Row
       date += 1
     end
     year = date.year
-    if year < 1970 && RUBY_PLATFORM["mswin"]
+    if WINDOWS && year < 1970
       year = 1970
     elsif year < 1903
       year = 1903
