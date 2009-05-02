@@ -769,6 +769,7 @@ class Reader
         return
       when :datemode   # ○  DATEMODE ➜ 6.25
         flag, _ = work.unpack 'v'
+        @workbook.datemode = flag
         if flag == 1
           @workbook.date_base = Date.new 1904, 1, 1
         else

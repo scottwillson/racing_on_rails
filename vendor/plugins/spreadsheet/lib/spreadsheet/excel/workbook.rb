@@ -27,6 +27,7 @@ class Workbook < Spreadsheet::Workbook
   offset :encoding, :boundsheets, :sst
   attr_accessor :bof, :ole
   attr_writer :date_base
+  attr_accessor :datemode
   def Workbook.open io, opts = {}
     @reader = Reader.new opts
     @reader.read io
