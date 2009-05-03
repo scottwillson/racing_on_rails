@@ -11,8 +11,7 @@ case project_name
 when "racing_on_rails"
   exec "rake cruise"
 when "aba", "atra", "obra", "wsba"
-  exec "git clone git@butlerpress.com:#{project_name}.git local"
-  exec "rake cruise"
+  exec "git clone git@butlerpress.com:#{project_name}.git local && rake cruise"
 else
   raise "Don't know how to build project named: '#{project_name}'"
 end
