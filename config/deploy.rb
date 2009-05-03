@@ -2,8 +2,10 @@ require 'mongrel_cluster/recipes'
 load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
-set :repository, 'http://butlerpress.com/var/repos/racing_on_rails/trunk'
-set :local_repository, "svn+ssh://butlerpress.com/var/repos/#{application}/trunk"
+set :repository, "git://github.com/scottwillson/racing_on_rails.git"
+set :site_local_repository, "git@butlerpress.com:#{application}.git"
+set :branch, "master"
+set :scm, "git"
 
 set :deploy_to, "/usr/local/www/rails/#{application}"
 
@@ -27,7 +29,7 @@ end
 namespace :deploy do
   desc "Custom deployment"
   task :after_update_code do
-    run "svn co #{local_repository} #{release_path}/local"
+    run "git clone #{site_local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
   end
 end
