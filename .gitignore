@@ -7,3 +7,7 @@ tmp/**/*
 .DS_Store
 ._*
 tmp/*
+db/production.sql
+*.tmproj
+.project
+local
