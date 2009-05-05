@@ -59,11 +59,21 @@ class UsacFile
       #Look for the racer. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
       r = Racer.find_by_license(license)
+      dups = Racer.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
+      first_dup = dups.first unless dups.first.nil?
       if r.nil?
         r = Racer.find_by_name(full_name)
-        dups = Racer.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
-        if r.nil? && dups.length == 1
-          r = dups.first
+        r ||= first_dup
+      else
+        #we found someone by license. 
+        if r != first_dup #the name USAC has does not match Racer name or alias
+          #Let's make an alias with their name at USAC. Helps with importing results
+          begin
+            Alias.create!(:name => full_name, :racer => r)
+          rescue Exception => e
+            RACING_ON_RAILS_DEFAULT_LOGGER.warn("Could not create alias #{full_name} for racer #{r.name} with license #{r.license}")
+          end
+            
         end
       end
       
