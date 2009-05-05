@@ -35,8 +35,10 @@ namespace :db do
     dev_db = abcs[RAILS_ENV]["database"]
     `mysql -u #{abcs[RAILS_ENV]["username"]} -e 'drop database if exists #{dev_db}'`
     `mysql -u #{abcs[RAILS_ENV]["username"]} -e 'create database #{dev_db}'`
-    system "rm -f db/production.sql" if File.exists?("db/production.sql") && ENV["SAVE"].nil?
-    system "bzip2 -d db/production.sql.bz2" if File.exists?("db/production.sql.bz2")
+    if File.exists?("db/production.sql.bz2")
+      system "rm -f db/production.sql" if File.exists?("db/production.sql")
+      system "bzip2 -d db/production.sql.bz2"
+    end
     load("config/environment.rb") unless defined?(ASSOCIATION)
     `mysql -u #{abcs[RAILS_ENV]["username"]} #{dev_db} < db/production.sql`
     exec("rm db/production.sql") if File.exists?("db/production.sql") && ENV["SAVE"].nil?
