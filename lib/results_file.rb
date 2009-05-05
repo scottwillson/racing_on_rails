@@ -194,7 +194,7 @@ class ResultsFile
       if result.place.to_i > 0
         result.place = result.place.to_i
       elsif !result.place.blank?
-        result.place = result.place.upcase
+        result.place = result.place.upcase rescue result.place
       elsif !row.previous[:place].blank? && row.previous[:place].to_i == 0
         result.place = row.previous[:place]
       end
