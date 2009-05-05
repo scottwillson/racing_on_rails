@@ -54,8 +54,8 @@ create table `competition_event_memberships` (
   primary key (`id`),
   key `index_competition_event_memberships_on_competition_id` (`competition_id`),
   key `index_competition_event_memberships_on_event_id` (`event_id`),
-  constraint `competition_event_memberships_events_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade,
-  constraint `competition_event_memberships_competitions_id_fk` foreign key (`competition_id`) references `events` (`id`) on delete cascade
+  constraint `competition_event_memberships_competitions_id_fk` foreign key (`competition_id`) references `events` (`id`) on delete cascade,
+  constraint `competition_event_memberships_events_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `discipline_aliases` (
@@ -109,11 +109,6 @@ create table `duplicates_racers` (
   constraint `duplicates_racers_duplicates_id_fk` foreign key (`duplicate_id`) references `duplicates` (`id`) on delete cascade,
   constraint `duplicates_racers_racers_id_fk` foreign key (`racer_id`) references `racers` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
-
-create table `engine_schema_info` (
-  `engine_name` varchar(255) default null,
-  `version` int(11) default null
-) engine=myisam default charset=utf8;
 
 create table `events` (
   `id` int(11) not null auto_increment,
@@ -185,7 +180,7 @@ create table `historical_names` (
 
 create table `import_files` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default 'import file',
+  `name` varchar(255) not null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -378,7 +373,7 @@ create table `races` (
   `time` float default null,
   `finishers` int(11) default null,
   `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default 'cbra',
+  `sanctioned_by` varchar(255) default null,
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -611,6 +606,8 @@ insert into schema_migrations (version) values ('20090423002956');
 insert into schema_migrations (version) values ('20090504040327');
 
 insert into schema_migrations (version) values ('20090504040328');
+
+insert into schema_migrations (version) values ('20090505151122');
 
 insert into schema_migrations (version) values ('21');
 
