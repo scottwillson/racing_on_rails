@@ -86,8 +86,10 @@ class ResultsFile
           end
         end
       end
+      event.enable_notification!
+      event.create_or_destroy_combined_results
+      event.combined_results.calculate! if event.combined_results
     end
-    event.enable_notification!
     Rails.logger.info("ResultsFile #{Time.now} import done")
   end
 

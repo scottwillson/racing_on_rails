@@ -119,6 +119,13 @@ class EventTest < ActiveSupport::TestCase
     assert(!Event.exists?(event.id), "event should be deleted")
   end
   
+  def test_dstroy_races
+    kings_valley = events(:kings_valley)
+    assert(!kings_valley.races.empty?, "Should have races")
+    kings_valley.destroy_races
+    assert(kings_valley.races.empty?, "Should not have races")
+  end
+  
   def test_no_delete_with_results
     kings_valley = events(:kings_valley)
     assert(!kings_valley.destroy, 'Should not be destroyed')

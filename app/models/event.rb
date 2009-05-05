@@ -164,8 +164,14 @@ class Event < ActiveRecord::Base
   end
 
   def destroy_races
-    self.races.each(&:destroy)
-    races.clear
+    Event.transaction do
+      disable_notification!
+      self.races.each(&:destroy)
+      races.clear
+      enable_notification!
+      create_or_destroy_combined_results
+      combined_results.calculate! if combined_results
+    end
   end
 
   # TODO Remove. Old workaround to ensure children are cancelled
@@ -233,6 +239,7 @@ class Event < ActiveRecord::Base
   def disable_notification!
     ActiveRecord::Base.lock_optimistically = false
     update_attribute('notification', false)
+    children.each(&:disable_notification!)
     ActiveRecord::Base.lock_optimistically = true
   end
 
@@ -240,6 +247,7 @@ class Event < ActiveRecord::Base
   def enable_notification!
     ActiveRecord::Base.lock_optimistically = false
     update_attribute('notification', true)
+    children.each(&:enable_notification!)
     ActiveRecord::Base.lock_optimistically = true
   end
 
@@ -253,7 +261,8 @@ class Event < ActiveRecord::Base
   # Adds +combined_results+ if Time Trial Event. 
   # Destroy +combined_results+ if they exist, but should not
   def create_or_destroy_combined_results
-    if !self.calculate_combined_results? || !has_results? || (self.combined_results(true) && combined_results.discipline != discipline)
+    return unless notification?
+     if !self.calculate_combined_results? || !has_results? || (self.combined_results(true) && combined_results.discipline != discipline)
       destroy_combined_results
     end
     

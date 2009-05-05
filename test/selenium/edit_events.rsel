@@ -53,9 +53,10 @@ wait_for_not_visible "id=race_#{kings_valley.races.first.id}_row"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
+# TODO Fix Safari: it doesn't like the JS here
 click "id=destroy_races"
 wait_for_confirmation("glob:Really delete*")
-wait_for_not_visible "id=destroy_races_row"
+wait_for_not_visible "id=destroy_races_progress"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 

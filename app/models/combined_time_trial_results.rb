@@ -36,9 +36,10 @@ class CombinedTimeTrialResults < Event
   # TODO organize by race distance
   # TODO Consolidate approach with MTB combined results
   def calculate!
+    return unless parent.notification?
     logger.debug("CombinedTimeTrialResults Recalculate")
     combined_race = recreate_races
-    self.parent.races.each do |race|
+    parent.races.each do |race|
       race.results.each do |result|
         if result.place.to_i > 0 && result.time && result.time > 0
           combined_race.results.create(
