@@ -14,9 +14,9 @@ class UseCompetitionEventMemberships < ActiveRecord::Migration
       end
     end
 
-    execute "alter table events drop foreign key events_oregon_cup_id_fk"
-    remove_column :events, :cat4_womens_race_series_id
-    remove_column :events, :oregon_cup_id
+    execute "alter table events drop foreign key events_oregon_cup_id_fk" rescue nil
+    remove_column :events, :cat4_womens_race_series_id rescue nil
+    remove_column :events, :oregon_cup_id rescue nil
   end
 
   def self.down
