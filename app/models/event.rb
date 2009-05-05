@@ -10,7 +10,7 @@
 # practice: training session
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{ cancelled city discipline flyer flyer_approved 
-                              instructional name practice promoter_id 
+                              instructional name practice number_issuer_id promoter_id 
                               prize_list sanctioned_by state time velodrome_id 
                               time
                              } unless defined?(PROPOGATED_ATTRIBUTES)
