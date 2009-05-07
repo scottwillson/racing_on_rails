@@ -84,9 +84,9 @@ class MailingListMailer < ActionMailer::Base
     begin
       post.save!
     rescue => save_error
-      RACING_ON_RAILS_DEFAULT_LOGGER.error("Could not save post: #{save_error}")
+      Rails.logger.error("Could not save post: #{save_error}")
       if post and !post.errors.empty?
-        RACING_ON_RAILS_DEFAULT_LOGGER.error(post.errors.full_messages)
+        Rails.logger.error(post.errors.full_messages)
       end
       raise
     end

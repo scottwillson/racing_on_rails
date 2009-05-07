@@ -201,7 +201,7 @@ class Event < ActiveRecord::Base
     for attribute in PROPOGATED_ATTRIBUTES
       original_value = original_values[attribute]
       new_value = self[attribute]
-      RACING_ON_RAILS_DEFAULT_LOGGER.debug("Event update_children #{attribute}, #{original_value}, #{new_value}")
+      Rails.logger.debug("Event update_children #{attribute}, #{original_value}, #{new_value}")
       if force
         Event.update_all(
           ["#{attribute}=?", new_value], 

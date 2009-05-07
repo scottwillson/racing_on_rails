@@ -56,8 +56,6 @@ require 'string'
 require "local_static"
 require "action_view/inline_template_extension"
 
-RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
-
 unless defined?(ASSOCIATION)
   ASSOCIATION = RacingAssociation.new
   ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
