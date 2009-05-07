@@ -10,7 +10,7 @@
   <% @event_results.sort { |x, y| y.event.end_date <=> x.event.end_date }.each do |result| -%>
   <tr class="<%= cycle("even", "odd") %>">
     <td class="place right"><%= result.place %></td>
-    <td class="standings"><%= link_to(result.event.full_name, :controller => 'results', :action => 'event', :id => result.event.id, :anchor => result.race.id) %></td>
+    <td class="standings"><%= link_to(result.event.full_name, :controller => 'results', :action => 'event', :id => result.event.id, :anchor => "race_#{result.race.id}") %></td>
     <td class="category"><%= result.race.name %></td>
     <td class="dates"><%= result.event.date_range_s(:long) %></td>
   </tr>
@@ -31,7 +31,7 @@
   <tr class="<%= cycle("even", "odd") %>">
     <td class="place right" width="24"><%= score.source_result.place %></td>
     <td class="standings">
-      <%= link_to(score.source_result.event.full_name, :controller => 'results', :action => 'event', :id => score.source_result.event.id, :anchor => score.source_result.race.id) unless score.source_result.event.is_a?(Competition) %>
+      <%= link_to(score.source_result.event.full_name, :controller => 'results', :action => 'event', :id => score.source_result.event.id, :anchor => "race_#{score.source_result.race.id}") unless score.source_result.event.is_a?(Competition) %>
       <%= link_to(score.source_result.race.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.event.id, :racer_id => @racer.id) if score.source_result.event.is_a?(Competition)%></td>
     <td class="category"><%= score.source_result.race.name %></td>
     <td class="dates"><%= score.source_result.event.date_range_s(:long) %></td>
