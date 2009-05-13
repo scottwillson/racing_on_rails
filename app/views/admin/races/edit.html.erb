@@ -28,14 +28,14 @@
       <%= f.labelled_text_field :distance %>
       <%= f.labelled_text_field :laps %>
     </div>
-  <% end -%>
 
-  <div class="span-6 page_buttons last">
-    <div class="updatedon span-3">Updated: <%= time_ago_in_words(@race.updated_at, true) + " ago" unless @race.updated_at.nil? %></div>
-    <div class="right span-3 last">
-      <%= submit_tag "Save", :id => "save" %>
+    <div class="span-6 page_buttons last">
+      <div class="updatedon span-3">Updated: <%= time_ago_in_words(@race.updated_at, true) + " ago" unless @race.updated_at.nil? %></div>
+      <div class="right span-3 last">
+        <%= submit_tag "Save", :id => "save" %>
+      </div>
     </div>
-  </div>
+  <% end -%>    
 </div>
 
 <div class="container">
