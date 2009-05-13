@@ -11,10 +11,14 @@ module GridHelper
 #mbratodo I had:      @@grid_columns['ages'] = Column.new(:name => 'ages', :description => 'Ages', :size => 5, :fixed_size => true)
       @@grid_columns['bar'] = Column.new(:name => 'bar', :description => 'BAR', :size => 3, :fixed_size => true)
       @@grid_columns['category_name'] = Column.new(:name => 'category_name', :description => 'Category', :size => 20, :fixed_size => true)
+#mbrahere: I added bthe following line:
+      @@grid_columns['category_class'] = Column.new(:name => 'category_class', :description => 'Class', :size => 5, :fixed_size => true)
       @@grid_columns['city'] = Column.new(:name => 'city', :description => 'City', :size => 15, :fixed_size => true)
       @@grid_columns['date_of_birth'] = Column.new(:name => 'date_of_birth', :description => 'Date of Birth', :size => 15)
       @@grid_columns['first_name'] = Column.new(:name => 'first_name', :description => 'First Name', :size => 12, :fixed_size => true)
       @@grid_columns['first_name'].link = 'link_to_result(cell, result)'
+#mbratodo: I added the folowing line:
+      @@grid_columns['gender'] = Column.new(:name => 'gender', :description => 'Gender', :size => 6, :fixed_size => true)
       @@grid_columns['laps'] = Column.new(:name => 'laps', :description => 'Laps', :size => 4, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['last_name'] = Column.new(:name => 'last_name', :description => 'Last Name', :size => 18, :fixed_size => true)
       @@grid_columns['last_name'].link = 'link_to_result(cell, result)'
@@ -32,7 +36,8 @@ module GridHelper
       @@grid_columns['points_total'] = Column.new(:name => 'points_total', :description => 'Total Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['state'] = Column.new(:name => 'state', :description => 'ST', :size => 3)
       @@grid_columns['team_name'] = Column.new(:name => 'team_name', :description => 'Team', :size => 40)
-      @@grid_columns['team_name'].link = 'link_to_team_result(cell, result)'  #mbrahere I added this line
+#mbrahere: I added the following line:
+      @@grid_columns['team_name'].link = 'link_to_team_result(cell, result)'
       @@grid_columns['time'] = Column.new(:name => 'time', :description => 'Time', :size => 8, :justification => Column::RIGHT)
       @@grid_columns['time'].field = :time_s
       @@grid_columns['time_bonus_penalty'] = Column.new(:name => 'time_bonus_penalty', :description => 'Bon/Pen', :size => 7, :justification => Column::RIGHT)

@@ -4,12 +4,17 @@ module Admin::EventsHelper
   def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
     caption ||= link_to("Schedule", :only_path  => false, :host => RAILS_HOST, :controller => 'schedule')
     footer ||= link_to('More &hellip;', :only_path => false, :host => RAILS_HOST, :controller => 'schedule')
+#mbratodo: I replaced the above lines with:
+#    caption ||= link_to("Schedule", :controller => 'schedule', :year => Date.today.year)
+#    footer ||= link_to('More &hellip;', :controller => 'schedule', :year => Date.today.year)
+
     render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption, :footer => footer }
   end
   
   def discipline_upcoming_events(discipline, upcoming_events)
     if upcoming_events.disciplines.size > 1
       caption = discipline.name.upcase
+#mbratodo: I changed the above to: caption = discipline.name.upcase.gsub('_', " ") #remove underscores
     else
       caption = nil
     end
