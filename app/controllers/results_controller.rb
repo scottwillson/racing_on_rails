@@ -10,10 +10,12 @@ class ResultsController < ApplicationController
     
     @discipline = Discipline[params['discipline']]
     if @discipline
+#mbratodo removed below
       discipline_names = [@discipline.name]
       if @discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
+#mbratodo removed above
       @events = Set.new(Event.find(
           :all,
           :conditions => [%Q{
@@ -22,6 +24,9 @@ class ResultsController < ApplicationController
               and events.type <> 'WeeklySeries'
               and events.discipline in (?)
               }, first_of_year, last_of_year, discipline_names],
+#mbratodo I had:
+#              and events.discipline = (?)
+#              }, first_of_year, last_of_year, @discipline.name],
           :order => 'events.date desc'
       ))
       
@@ -42,6 +47,9 @@ class ResultsController < ApplicationController
       (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
       (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)
     end
+
+#mbrahere added the following
+    @discipline_names = Discipline.find_all_names
   end
   
   def event

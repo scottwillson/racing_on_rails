@@ -14,6 +14,8 @@ module Schedule
       @year = year
       @month = month
       @name = Date::MONTHNAMES[month]
+#mbrahere: added the following instance var
+      @name_abbr = Date::ABBR_MONTHNAMES[month]
       @weeks = []
       @date = Date.new(year, month, 1)
       day = monday_of_week(@date)
@@ -22,6 +24,11 @@ module Schedule
         @weeks << Week.new(self, day)
         day = day + 7
       end
+    end
+
+#mbrahere: added the following method
+    def name_abbr
+      @name_abbr
     end
     
     # Monday of this week's day as a number

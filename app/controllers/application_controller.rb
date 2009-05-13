@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
   include ExceptionNotifiable  
   
   local_addresses.clear
-  
+
+#  mbratodo: I had removed this line
   RESULTS_LIMIT = 100
   
   # HP's proxy, among others, gets this wrong

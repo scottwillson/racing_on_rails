@@ -70,6 +70,10 @@ class Category < ActiveRecord::Base
   def ages=(value)
     self.ages_begin = value.begin
     self.ages_end = value.end
+#mbratodo: expecting a string that looks like 10-18. I had commented out the prev two lines, substituting the following:
+#    age_split = value.strip.split('-')
+#    self.ages_begin = age_split[0].to_i unless age_split[0].nil?
+#    self.ages_end = age_split[1].to_i unless age_split[1].nil?
   end
   
   def descendants

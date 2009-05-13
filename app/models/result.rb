@@ -443,6 +443,9 @@ class Result < ActiveRecord::Base
     time_to_s(self.time)
   end
 
+  #mbratodo: I changed time to a time type in db (was float) and eliminated a lot of messy code below
+  #
+  #mbratodo: I had the following method commented out
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_s=(time)
     self.time = s_to_time(time)
@@ -453,6 +456,7 @@ class Result < ActiveRecord::Base
     time_to_s(self.time_total)
   end
 
+  #mbratodo: I had the following method commented out
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_total_s=(time_total)
     self.time_total = s_to_time(time_total)
@@ -463,12 +467,14 @@ class Result < ActiveRecord::Base
     time_to_s(self.time_bonus_penalty)
   end
 
+  #mbratodo: I had the following method commented out
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_bonus_penalty_s=(time_bonus_penalty)
     self.time_bonus_penalty = s_to_time(time_bonus_penalty)
   end
 
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  #mbratodo: I had the following method commented out
   def time_gap_to_leader_s
     time_to_s(self.time_gap_to_leader)
   end
@@ -481,6 +487,9 @@ class Result < ActiveRecord::Base
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   # This method doesn't handle some typical edge cases very well
   def time_to_s(time)
+#mbratodo: I changed time to a time type in db (was float) - eliminated all calculations - and had the following two lines
+#    return '' if self.time.blank?
+#    time.to_s(:elapsed_time)
     return '' if time == 0.0 or time.blank?
     hours = (time / 3600).to_i
     minutes = ((time - (hours * 3600)) / 60).floor
@@ -495,6 +504,7 @@ class Result < ActiveRecord::Base
 
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   # This method doesn't handle some typical edge cases very well
+#mbratodo: I changed time to a time type in db (was float) and eliminated the following method
   def s_to_time(string)
     if string.to_s.blank?
       0.0

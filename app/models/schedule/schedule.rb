@@ -1,4 +1,6 @@
 module Schedule
+#mbratodo: I reworte much of the schedule import functionality, abandoning the "Rigid OBRA legacy format", modeling it on results import 
+#  and tailoring to MBRA's needs.
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
 
@@ -29,12 +31,14 @@ module Schedule
     # Import implemented in several methods. See source code.
     # === Returns
     # * date of first event
+#mbratodo: added delete_all_future = 0 parm
     def Schedule.import(filename)
       date = nil
       Event.transaction do
         file             = read_file(filename)
         date             = read_date(file)
                            delete_all_future_events(date)
+#mbratodo:                           delete_all_future_events(date) if delete_all_future.to_i > 0
         events           = parse_events(file)
         multi_day_events = find_multi_day_events(events)
                            save(events, multi_day_events)

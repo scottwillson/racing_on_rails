@@ -20,6 +20,8 @@ class Event < ActiveRecord::Base
   before_destroy :validate_no_results, :destroy_races
 
   validates_presence_of :name, :date
+#mbratodo: I had:
+#  validates_presence_of :name, :date, :discipline
   validate :parent_is_not_self
 
   has_many   :competitions, :foreign_key => "source_event_id"
@@ -29,6 +31,8 @@ class Event < ActiveRecord::Base
                :after_add => :children_changed,
                :after_remove => :children_changed 
   belongs_to :velodrome
+#mbratodo: to accommodate sponsoring team I had:
+#  belongs_to :team
 
   belongs_to :parent, 
                :foreign_key => 'parent_id', 
@@ -84,6 +88,8 @@ class Event < ActiveRecord::Base
       self.ironman = default_ironman             if self[:ironman].nil?
       self.number_issuer = default_number_issuer if number_issuer.nil?
       self.sanctioned_by = default_sanctioned_by if self[:sanctioned_by].blank?
+#mbratodo: I had
+#      self.sanctioned_by = DEFAULT_SANCTIONING_ORGANIZATION if self.sanctioned_by.blank?
       self.state = default_state                 if self[:state].blank?
     end
   end
@@ -464,7 +470,16 @@ class Event < ActiveRecord::Base
     end
     @multi_day_event_children_with_no_parent
   end
-    
+
+  #mbrahere: I added has_children?
+  def has_children?
+    if Event.count(:conditions => "parent_id = #{self.id}") > 0
+      true
+    else
+      false
+    end
+  end
+
   def missing_parent
     nil
   end

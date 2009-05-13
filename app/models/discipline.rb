@@ -66,7 +66,12 @@ class Discipline < ActiveRecord::Base
       [name]
     end
   end
-    
+
+#mbrahere: added the following
+  def pretty_name
+    (name.gsub('_', " ").gsub(/\b\w/) {|s| s.upcase })
+  end
+
   def to_param
     @param || @param = name.underscore.gsub(' ', '_')
   end

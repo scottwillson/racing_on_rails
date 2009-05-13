@@ -13,14 +13,14 @@ class RacingAssociation
   attr_accessor :usac_region
   
   def initialize
-    @masters_age = 35
+    @masters_age = 35  #mbratodo: in MT is 40
     @show_license = true
     @show_events_velodrome = true
-    @show_only_association_sanctioned_races_on_calendar = true
+    @show_only_association_sanctioned_races_on_calendar = true  #mbratodo: in MT is false
     @email = "scott@butlerpress.com"
-    @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+    @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
     @award_cat4_participation_points = true
-    @usac_region = "North West"
+    @usac_region = "North West"  #mbratodo: is MT?
   end
   
   def bmx_numbers?
@@ -29,6 +29,9 @@ class RacingAssociation
   
   def default_discipline
     @default_discipline ||= "Road"
+#mbrahere: I had:
+#    @default_discipline ||= "road"
+
   end
 
   def gender_specific_numbers?

@@ -8,17 +8,28 @@ class HomeController < ApplicationController
   # * recent_results: Events with Results within last two weeks
   def index
     @upcoming_events = UpcomingEvents.find_all(:weeks => 5)
-    
+#mbrahere to fix the above I had to create records in the disciplines table for each discipline hard coded in def disciplines_for(discipline)
+
     cutoff = Date.today - 14
+    #mbratodo cutoff = Date.today - 28
     
     @recent_results = Event.find(:all,
       :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",
       :joins => [:races => :results],
       :conditions => [
-        'events.type is not null and events.type != ? and events.date > ? and events.sanctioned_by = ?',
-        "CombinedTimeTrialResults", cutoff, ASSOCIATION.short_name
+        'events.date > ? and events.sanctioned_by = ?', 
+        cutoff, ASSOCIATION.short_name
+#mbratodo: I used: :conditions => ['events.date > ? and standings.type is null', cutoff],
       ],
       :order => 'events.date desc'
+    )
+
+#mbrahere I added the following
+    @news_category = ArticleCategory.find( :all, :conditions => ["name = 'news'"] )
+    @recent_news = Article.find(
+      :all,
+      :conditions => ['updated_at > ? and article_category_id = ?', cutoff, @news_category],
+      :order => 'updated_at desc'
     )
 
     render_page  

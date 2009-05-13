@@ -8,6 +8,7 @@ module GridHelper
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
       @@grid_columns['age'] = Column.new(:name => 'age', :description => 'Age', :size => 3, :fixed_size => true)
+#mbratodo I had:      @@grid_columns['ages'] = Column.new(:name => 'ages', :description => 'Ages', :size => 5, :fixed_size => true)
       @@grid_columns['bar'] = Column.new(:name => 'bar', :description => 'BAR', :size => 3, :fixed_size => true)
       @@grid_columns['category_name'] = Column.new(:name => 'category_name', :description => 'Category', :size => 20, :fixed_size => true)
       @@grid_columns['city'] = Column.new(:name => 'city', :description => 'City', :size => 15, :fixed_size => true)
@@ -31,6 +32,7 @@ module GridHelper
       @@grid_columns['points_total'] = Column.new(:name => 'points_total', :description => 'Total Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['state'] = Column.new(:name => 'state', :description => 'ST', :size => 3)
       @@grid_columns['team_name'] = Column.new(:name => 'team_name', :description => 'Team', :size => 40)
+      @@grid_columns['team_name'].link = 'link_to_team_result(cell, result)'  #mbrahere I added this line
       @@grid_columns['time'] = Column.new(:name => 'time', :description => 'Time', :size => 8, :justification => Column::RIGHT)
       @@grid_columns['time'].field = :time_s
       @@grid_columns['time_bonus_penalty'] = Column.new(:name => 'time_bonus_penalty', :description => 'Bon/Pen', :size => 7, :justification => Column::RIGHT)
@@ -48,6 +50,29 @@ module GridHelper
 
     # Return a copy so callers can modify column attributes without affecting other clients
     grid_column.dup
+  end
+
+  #  mbrahere git diff says I added the following method - ???
+  def link_to_team_result(cell, result)
+    return cell unless result.racer
+
+    #alptodo: figure out preliminary results...
+    #    if result.preliminary?
+    #      html_options = { :class => :preliminary }
+    #    else
+    html_options = {}
+    #    end
+    #    if result.competition_result?
+    #alptodo: figure out competition results...
+    #     link_to(cell,
+    #        { :controller => 'results',
+    #          :action => 'competition',
+    #          :competition_id => result.race.standings.event.to_param,
+    #          :racer_id => result.racer_id },
+    #        html_options)
+    #    else
+    link_to(cell, "/teams/#{result.team.id}", html_options)
+    #    end
   end
 
   def results_grid(race)

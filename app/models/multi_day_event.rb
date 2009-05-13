@@ -104,6 +104,15 @@ class MultiDayEvent < Event
   end
   
   def MultiDayEvent.guess_type(events)
+  #mbratodo: I had all conditional logic in this method commented out, and always returned MultiDayEvent:
+    #alphere: fix the following if/when needed...
+    #
+    #length = events.last.date - events.first.date
+    #if events.size - 1 == length or length == 0
+      #length = 0 means all events occur on one day a la Belt Omnium
+      #alpto: this fails if a stage race spans more than one day but has more events than days
+      # we could look for events that span contiguous days...but a long stage race could have a rest day...
+
     length = events.last.date - events.first.date
     if events.size - 1 == length
      MultiDayEvent
