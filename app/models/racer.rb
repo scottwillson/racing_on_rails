@@ -23,6 +23,11 @@ class Racer < ActiveRecord::Base
   
   CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
 
+#mbrahere: added the following to support pagination I think.
+  def self.per_page
+   50
+  end
+
   # Does not consider Aliases
   def Racer.find_all_by_name(name)
     if name.blank?

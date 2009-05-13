@@ -25,6 +25,7 @@ end
 # a RaceNumber
 #
 # Doesn't support multiple hotspot points, though it should
+#alptodo: mirror USAC results xls format
 class Result < ActiveRecord::Base
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license

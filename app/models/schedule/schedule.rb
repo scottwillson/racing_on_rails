@@ -31,7 +31,8 @@ module Schedule
     # Import implemented in several methods. See source code.
     # === Returns
     # * date of first event
-#mbratodo: added delete_all_future = 0 parm
+#mbratodo: added delete_all_future parm
+#    def Schedule.import(filename, delete_all_future = 0)
     def Schedule.import(filename)
       date = nil
       Event.transaction do
@@ -45,7 +46,7 @@ module Schedule
       end
       date
     end
-    
+#mbratodo: lots of the rest of this class was changed, but as Scott is replacing this code anyhow, no point in highlighting my changes
     def Schedule.read_date(file)
       date             = file.rows.first['date']
       logger.debug("Schedule Import starting at #{date}")

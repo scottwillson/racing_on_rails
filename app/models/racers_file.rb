@@ -4,12 +4,17 @@ class RacersFile < GridFile
   COLUMN_MAP = {
     'team'                                   => 'team_name',
     'Cycling Team'                           => 'team_name',
+#mbratodo: added club, ncca club
+#    'club'                                   => 'club_name',
+#    'ncca club'                              => 'ncca_club_name',
     'fname'                                  => 'first_name',
     'lname'                                  => 'last_name',
     'f_name'                                 => 'first_name',
     'l_name'                                 => 'last_name',
     'FirstName'                              => 'first_name',
+    'first name'                             => 'first_name', #mbrahere added this line
     'LastName'                               => 'last_name',
+    'last name'                              => 'last_name', #mbrahere added this line
     'AAA Last Name'                          => 'last_name',
     'Birth date'                             => 'date_of_birth',
     'Birthdate'                              => 'date_of_birth',
@@ -25,6 +30,7 @@ class RacersFile < GridFile
     'Phone'                                  => 'home_phone',
     'DayPhone'                               => 'home_phone',
     'cell/fax'                               => 'cell_fax',
+    'cell'                                   => 'cell_fax', #mbrahere added this line
     'e-mail'                                 => 'email',
     'category'                               => 'road_category',
     'road cat'                               => 'road_category',
@@ -37,13 +43,16 @@ class RacersFile < GridFile
     'Track Category - '                      => 'track_category',
     'Track Age Group - '                     => 'track_category',
     'Cyclocross Category - '                 => 'ccx_category',
+    'cross cat'                              => 'ccx_category', #mbrahere added this line
     'ccx cat'                                => 'ccx_category',
     'Cyclocross Age Group -'                 => 'ccx_category',
     'Cross Country Mountain Bike Category -' => 'mtb_category',
     'mtn cat'                                => 'mtb_category',
     'Cross Country Mountain Age Group -'     => 'mtb_category',
+    'XC'                                     => 'mtb_category', #mbrahere added this line
     'Downhill Mountain Bike Category - '     => 'dh_category',
     'dh cat'                                 => 'dh_category',
+    'dh'                                     => 'dh_category', #mbrahere added this line
     'Downhill Mountain Bike Age Group -'     => 'dh_category',
     'number'                                 => 'road_number',
     '2009 road'                              => 'road_number',
@@ -56,10 +65,14 @@ class RacersFile < GridFile
     'ss'                                     => 'singlespeed_number',
     'ss #'                                   => 'singlespeed_number',
     'Membership No'                          => 'license',
+    'license#'                               => 'license', #mbrahere added this line
     'date joined'                            => 'member_from',
+    'exp date'                               => 'license_expiration_date', #mbrahere added this line
+    'expiration date'                        => 'license_expiration_date', #mbrahere added this line
     'card'                                   => 'print_card',
     'sex'                                    => 'gender',
     'What is your occupation? (optional)'    => 'occupation',
+    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling" #mbrahere added this line
     'Interests'                              => 'notes',
     'Receipt Code'                           => 'notes',
     'Confirmation Code'                      => 'notes',
@@ -76,6 +89,10 @@ class RacersFile < GridFile
     'Please indicate other interests. (For example: time trial tandem triathalon r'   => Column.new(:name => 'notes', :description => 'Other interests'),
     'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new(:name => 'team_name', :description => 'Team')
   }
+#alpto: add
+#    'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
+#    'NCCA club' ...can have this in addition to club and team. should team be many to many?
+
   
   attr_reader :created
   attr_reader :updated
@@ -90,6 +107,7 @@ class RacersFile < GridFile
     options = {
       :delimiter => ',',
       :quoted => true,
+#mbratodo: I had the prev two lines commented out.
       :header_row => true,
       :row_class => Racer,
       :column_map => COLUMN_MAP
@@ -130,13 +148,14 @@ class RacersFile < GridFile
           row_hash = row.to_hash
           row_hash[:year] = year if year
           row_hash[:updated_by] = import_file.name
+#mbratodo: I had: row_hash[:updated_by] = "Membership import"
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
           
           combine_categories(row_hash)
           row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
-          racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
+          racers = Racer.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])  #alptodo: or by USAC license number
           racer = nil
           row_hash[:member_to] = @member_to_for_imported_racers if @update_membership
           if racers.empty?
