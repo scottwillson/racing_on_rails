@@ -1,0 +1,8 @@
+<h1>Edit Article Category</h1>
+
+<% form_for([:admin, @article_category]) do |f| %>
+  <%=render :partial => "form", :locals => { :f => f, :action_button => "Update" } %>
+<% end %>
+<%= link_to 'Destroy', [:admin, @article_category], :confirm => 'Are you sure?', :method => :delete %>
+ | 
+<%= link_to 'Back', admin_article_categories_path %>

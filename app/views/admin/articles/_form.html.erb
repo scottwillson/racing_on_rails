@@ -1,0 +1,30 @@
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+
+  <p>
+    <%= f.label :category %><br />
+    <%= tree_select(ArticleCategory.find(:all, :conditions => "parent_id = 0"),
+                        'article', 'article_category_id', @article, false) %>
+  </p>
+
+  <p>
+    <%= f.label :body %>
+    <%#= f.text_area :body, :cols => 72, :rows => 40 %>
+  </p>
+  <p>
+    <%= fckeditor_textarea(:article, :body, :toolbarSet => 'Simple', :width => '100%', :height => '400px') %>
+  </p>
+  <p>
+    <%= f.label :position %><br />
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.check_box :display %><%= f.label :display %><br />
+   </p>
+  <p>
+    <%= f.submit action_button %>
+  </p>

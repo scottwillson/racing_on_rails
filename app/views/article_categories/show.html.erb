@@ -1,0 +1,15 @@
+<% @page_title = "#{@article_category.name.capitalize}" %>
+
+<%= tabnav :article_categories %>
+<br/>
+<table>
+  <% for article in @article_category.articles %>
+    <tr>
+      <td><h3><%= link_to article.title, article %></h3>
+        <p><%= truncate(article.body, 500) %></p>
+        <%- if article.body.length > 500 %>
+          <p><%= link_to "more", article %></p>
+        <%- end %></td>
+    </tr>
+  <% end %>
+</table>
