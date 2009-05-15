@@ -17,7 +17,6 @@ class Competition < Event
   
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
-  belongs_to :source_event, :class_name => "Event"
   
   def self.find_for_year(year = Date.today.year)
     self.find_by_date(Date.new(year, 1, 1))
@@ -133,7 +132,7 @@ class Competition < Event
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
     ids = [race.category_id]
-    ids = ids + race.category.descendants.map {|category| category.id}
+    ids = ids + race.category.descendants.map { |category| category.id }
     ids.join(', ')
   end
   
@@ -219,6 +218,21 @@ class Competition < Event
   end
   
   def requires_combined_results?
+    false
+  end
+
+  # This method does nothing, and always returns true. Competitions don't participate in event notification.
+  def disable_notification!
+    true
+  end
+
+  # This method does nothing, and always returns true. Competitions don't participate in event notification.
+  def enable_notification!
+    true
+  end
+
+  # This method always returns false. Competitions don't participate in event notification.
+  def notification_enabled?
     false
   end
 

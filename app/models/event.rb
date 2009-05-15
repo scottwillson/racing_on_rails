@@ -1,13 +1,29 @@
-# Abstract superclass for anything that can have results:
-# * SingleDayEvent
-# * MultiDayEvent
-# * Competition
-#
-# Event subclasses all share the same database table via single table inheritence, 
-# so Event is not a true ActiveRecord abstract class. Event.abstract_class? returns false
+# Superclass for anything that can have results:
+# * Event (Superclass only used to organizes multiple sets of results on a single day.
+#          Examples: Alpenrose Challenge Morning Session, Alpenrose Challenge Afternoon Session)
+# * SingleDayEvent (Most events, an event on a particular date. Appears on calendar.)
+# * MultiDayEvent (Spans more than one day. has many SingleDayEvent children)
+# * Competition (Results are calculated/derived from other events' results. Examples: Combined TT times, OBRA BAR)
 #
 # instructional: class or clinc
 # practice: training session
+#
+# Events have four similar, but distinct relationships to other Events:
+# * parent-children: A one-to-many tree. Example: stage race parent + stages children.
+#   Used for calculating competition results and schedule display. Does _not_ include
+#   Competitions, even though Competitions can have Event parents.
+#
+#   A purer children association would return all child Events and Competitions
+#  (that's how they are in the database). But we almost always want just the child Events,
+#   and not the Competitions.
+#   
+# * parent-child_competitions: A one-to-many tree. Example: stage race MultiDayEvent parent
+#   with GC and KOM child_competitions. Typically combined with children when we really
+#   do want all child Competitions and Events.
+#
+# * competition_event_memberships: many-to-many from Events to Competitions. Example: Banana Belt I
+#   can be a member of the Oregon Cup and the OBRA Road BAR. And the Oregon Cup also includes Kings Valley RR,
+#   Table Rock RR, etc. CompetitionEventMembership is a meaningul class in its own right.
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{ cancelled city discipline flyer flyer_approved 
                               instructional name practice number_issuer_id promoter_id 
@@ -22,7 +38,29 @@ class Event < ActiveRecord::Base
   validates_presence_of :name, :date
   validate :parent_is_not_self
 
-  has_many   :competitions, :foreign_key => "source_event_id"
+  belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
+  has_many :children,
+           :class_name => "Event",
+           :foreign_key => "parent_id",
+           :dependent => :destroy,
+           :conditions => "type is null or type = 'SingleDayEvent'", 
+           :order => "date",
+           :after_add => :children_changed,
+           :after_remove => :children_changed 
+  has_many :child_competitions,
+           :class_name => "Competition",
+           :foreign_key => "parent_id",
+           :dependent => :destroy,
+           :conditions => "type is not null and type != 'SingleDayEvent'", 
+           :order => "date",
+           :after_add => :children_changed,
+           :after_remove => :children_changed 
+
+  has_one :overall, :foreign_key => "parent_id", :dependent => :destroy
+  has_one :combined_results, :class_name => "CombinedTimeTrialResults", :foreign_key => "parent_id"
+  has_many :competitions, :through => :competition_event_memberships, :source => :competition
+  has_many :competition_event_memberships
+
   belongs_to :number_issuer
   belongs_to :promoter, :foreign_key => "promoter_id"
   has_many   :races,
@@ -30,18 +68,6 @@ class Event < ActiveRecord::Base
                :after_remove => :children_changed 
   belongs_to :velodrome
 
-  belongs_to :parent, 
-               :foreign_key => 'parent_id', 
-               :class_name => 'Event'
-  
-  has_many :children,
-           :class_name => "Event",
-           :foreign_key => "parent_id",
-           :dependent => :destroy,
-           :order => "date",
-           :after_add => :children_changed,
-           :after_remove => :children_changed 
- 
   include Comparable
 
   # Return list of every year that has at least one event
@@ -203,17 +229,17 @@ class Event < ActiveRecord::Base
       new_value = self[attribute]
       Rails.logger.debug("Event update_children #{attribute}, #{original_value}, #{new_value}")
       if force
-        Event.update_all(
+        SingleDayEvent.update_all(
           ["#{attribute}=?", new_value], 
           ["parent_id=?", self[:id]]
         )
       elsif original_value.nil?
-        Event.update_all(
+        SingleDayEvent.update_all(
           ["#{attribute}=?", new_value], 
           ["#{attribute} is null and parent_id=?", self[:id]]
         ) unless original_value == new_value
       else
-        Event.update_all(
+        SingleDayEvent.update_all(
           ["#{attribute}=?", new_value], 
           ["#{attribute}=? and parent_id=?", original_value, self[:id]]
         ) unless original_value == new_value
@@ -274,10 +300,6 @@ class Event < ActiveRecord::Base
     combined_results(true)
   end
   
-  def combined_results(reload = false)
-    self.children(reload).detect { |event| event.is_a?(CombinedTimeTrialResults) }
-  end
-  
   def calculate_combined_results?
     auto_combined_results? && requires_combined_results?
   end
@@ -291,11 +313,6 @@ class Event < ActiveRecord::Base
       combined_results.destroy_races
       self.children.delete(combined_results)
     end
-  end
-  
-  #FIXME Need common Overall subclass for Cascade Cross and Tabor
-  def overall(reload = false)
-    self.competitions(reload).detect { |competition| competition.is_a?(Overall) }
   end
   
   # Format for schedule page primarily

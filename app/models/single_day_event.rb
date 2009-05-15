@@ -2,6 +2,8 @@
 #
 # Notifies parent event on save or destroy
 class SingleDayEvent < Event
+  validate :parent_not_single_day_event
+  
   before_create :set_bar_points
 
   def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = ASSOCIATION.show_only_association_sanctioned_races_on_calendar)
@@ -47,6 +49,10 @@ class SingleDayEvent < Event
 
   def friendly_class_name
     'Single Day Event'
+  end
+  
+  def parent_not_single_day_event
+    errors.add(:parent, "SingleDayEvents cannot be children of other SingleDayEvents") if parent.is_a?(SingleDayEvent)
   end
   
   def to_s

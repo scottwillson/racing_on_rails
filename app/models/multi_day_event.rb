@@ -21,8 +21,9 @@ class MultiDayEvent < Event
   # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent, 
   # same day of next week if not adjacent (Series/WeeklySeries)
   has_many :children, 
-           :class_name => "SingleDayEvent",
+           :class_name => "Event",
            :foreign_key => "parent_id",
+           :conditions => "type is null or type = 'SingleDayEvent'", 
            :order => "date" do
              def create!(attributes = {})
                attributes[:parent_id] = @owner.id

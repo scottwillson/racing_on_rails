@@ -39,13 +39,13 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     following_event.races.create!(:category => cat_a).results.create!(:place => 10, :racer => racers(:weaver))
     
     CrossCrusadeOverall.calculate!(2007)
-    assert_equal(1, series.competitions(true).size, "Should add new Competitions to parent Series")
-    overall = series.competitions.first
+    assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
+    overall = series.overall
     assert_equal(18, overall.races.size, "Overall races")
     
     CrossCrusadeOverall.calculate!(2007)
-    assert_equal(1, series.competitions(true).size, "Should add new Competition to parent Series after deleting old results")
-    overall = series.competitions.first
+    assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
+    overall = series.overall
     assert_equal(18, overall.races.size, "Overall races")
     
     assert(!overall.notes.blank?, "Should have notes about rules")
@@ -211,7 +211,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     single_speed_race.results.create!(:place => 8, :racer => racers(:alice))
     
     CrossCrusadeOverall.calculate!(2007)
-    category_a_overall_race = series.overall.races.detect { |race| race.category == cat_a }
+    category_a_overall_race = series.overall(true).races.detect { |race| race.category == cat_a }
     assert(series.overall.raced_minimum_events?(molly, category_a_overall_race), "Three events. Molly has raced minimum")
     assert(!series.overall.raced_minimum_events?(racers(:alice), category_a_overall_race), "Three events. Alice has not raced minimum")
 

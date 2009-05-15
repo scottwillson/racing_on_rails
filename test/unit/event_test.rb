@@ -119,7 +119,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!Event.exists?(event.id), "event should be deleted")
   end
   
-  def test_dstroy_races
+  def test_destroy_races
     kings_valley = events(:kings_valley)
     assert(!kings_valley.races.empty?, "Should have races")
     kings_valley.destroy_races
@@ -472,6 +472,32 @@ class EventTest < ActiveSupport::TestCase
     assert event.updated_at > updated_at, "Updated at should change after adding a race"
     
     updated_at = event.updated_at
+  end
+  
+  def test_competition_and_event_associations
+    series = Series.create!
+    child_event = series.children.create!
+    overall = series.create_overall
+    
+    assert(series.valid?, series.errors.full_messages)
+    assert(child_event.valid?, series.errors.full_messages)
+    assert(overall.valid?, series.errors.full_messages)
+    
+    assert_equal_events([child_event], series.children(true), "series.children should not include competitions")
+    assert_equal_events([overall], series.child_competitions(true), "series.child_competitions should only include competitions")
+    assert_equal(overall, series.overall(true), "series.overall")
+    assert_equal(0, series.competition_event_memberships.size, "series.competition_event_memberships")
+    assert_equal_events([], series.competitions(true), "series.competitions")    
+
+    assert_equal_events([], child_event.children(true), "child_event.children")
+    assert_equal_events([], child_event.child_competitions(true), "child_event.child_competitions")
+    assert_nil(child_event.overall(true), "child_event.overall")
+    assert_equal(1, child_event.competition_event_memberships(true).size, "child_event.competition_event_memberships")
+    competition_event_membership = child_event.competition_event_memberships.first
+    assert_equal(child_event, competition_event_membership.event, "competition_event_membership.event")
+    assert_equal(overall, competition_event_membership.competition, "competition_event_membership.competition")
+    
+    assert_equal_events([overall], child_event.competitions(true), "competitions should only include competitions")    
   end
 
 
