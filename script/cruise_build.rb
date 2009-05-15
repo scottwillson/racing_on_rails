@@ -6,9 +6,10 @@
 # local overrides are loaded by Rake.
 
 project_name = ARGV.first
+project.source_control.branch = "montanabranch"
 
 case project_name
-when "racing_on_rails"
+when "racing_on_rails", "montanabranch"
   exec "rake cruise"
 when "aba", "atra", "obra", "wsba"
   exec "rm -rf local && git clone git@butlerpress.com:#{project_name}.git local && rake cruise"
