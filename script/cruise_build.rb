@@ -6,7 +6,6 @@
 # local overrides are loaded by Rake.
 
 project_name = ARGV.first
-project.source_control.branch = "montanacycling"
 
 case project_name
 when "racing_on_rails", "montanacycling"
