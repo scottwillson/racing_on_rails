@@ -16,6 +16,33 @@ create table `aliases` (
   constraint `aliases_racer_id_fk` foreign key (`racer_id`) references `racers` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
+create table `article_categories` (
+  `id` int(11) not null auto_increment,
+  `name` varchar(255) collate utf8_unicode_ci default null,
+  `parent_id` int(11) default '0',
+  `integer` int(11) default '0',
+  `position` int(11) default '0',
+  `description` varchar(255) collate utf8_unicode_ci default null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`)
+) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+
+create table `articles` (
+  `id` int(11) not null auto_increment,
+  `title` varchar(255) collate utf8_unicode_ci default null,
+  `heading` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) collate utf8_unicode_ci default null,
+  `display` tinyint(1) default null,
+  `body` text collate utf8_unicode_ci,
+  `position` int(11) default '0',
+  `integer` int(11) default '0',
+  `article_category_id` int(11) default null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`)
+) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+
 create table `bids` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) not null,
@@ -153,13 +180,13 @@ create table `events` (
   key `velodrome_id` (`velodrome_id`),
   key `index_events_on_type` (`type`),
   key `idx_date` (`date`),
-  key `source_event_id` (`source_event_id`),
   key `index_events_on_sanctioned_by` (`sanctioned_by`),
   key `index_events_on_bar_points` (`bar_points`),
+  key `events_source_event_id_fk` (`source_event_id`),
+  constraint `events_source_event_id_fk` foreign key (`source_event_id`) references `events` (`id`) on delete cascade,
   constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
   constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `promoters` (`id`) on delete set null,
-  constraint `events_source_event_id_fk` foreign key (`source_event_id`) references `events` (`id`),
   constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -608,6 +635,10 @@ insert into schema_migrations (version) values ('20090504040327');
 insert into schema_migrations (version) values ('20090504040328');
 
 insert into schema_migrations (version) values ('20090505151122');
+
+insert into schema_migrations (version) values ('20090514202305');
+
+insert into schema_migrations (version) values ('20090515031733');
 
 insert into schema_migrations (version) values ('21');
 
