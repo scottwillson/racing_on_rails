@@ -180,6 +180,11 @@ class Event < ActiveRecord::Base
     children(reload).select(&:has_results?)
   end
   
+  # Returns only the children and child child_competitions with +results+
+  def children_and_child_competitions_with_results(reload = false)
+    children_with_results(reload) + child_competitions(reload).select(&:has_results?)
+  end
+  
   # Returns only the Races with +results+
   def races_with_results
     races_copy = races.select {|race|

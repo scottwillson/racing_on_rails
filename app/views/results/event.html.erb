@@ -15,15 +15,15 @@
   <p>Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %></p>
   <%- end -%>
   
-  <% unless @event.children_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
+  <% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
   <br />
   <table class="top_margin child_single_day_events">
-    <% @event.children_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
+    <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
       <td class="right"><%= link_to child.date.strftime('%A, %B %d'), :id => child.to_param %></td>
       <td><%= link_to child.name, :id => child.to_param %></td>
     </tr>
-    <% child.children_with_results.each do |child_child| -%>
+    <% child.children_and_child_competitions_with_results.each do |child_child| -%>
       <tr>
         <td></td>
         <td class="child"><%= link_to child_child.name, :id => child_child.to_param %></td>
@@ -35,10 +35,10 @@
 
   <%= render :partial => "races", :object => @event %>
 
-  <%- unless @event.children_with_results.select { |child| !child.is_a?(SingleDayEvent) }.empty? -%>
+  <%- unless @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.empty? -%>
   <br />
   <table class="top_margin child_events">
-  <%- @event.children_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
+  <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
       <td class="centered"><%= link_to child.name, :id => child.to_param %></td>
     </tr>

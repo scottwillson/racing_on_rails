@@ -497,9 +497,29 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(child_event, competition_event_membership.event, "competition_event_membership.event")
     assert_equal(overall, competition_event_membership.competition, "competition_event_membership.competition")
     
-    assert_equal_events([overall], child_event.competitions(true), "competitions should only include competitions")    
+    assert_equal_events([overall], child_event.competitions(true), "competitions should only include competitions")
+    assert_equal_events([], child_event.children_with_results(true), "children_with_results")
+    assert_equal_events([], child_event.children_and_child_competitions_with_results(true), "children_and_child_competitions_with_results")
   end
 
+  def test_children_with_results
+    event = SingleDayEvent.create!
+    assert_equal(0, event.children_with_results.size, "events_with_results: no child")
+    assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: no child")
+
+    event.children.create!
+    assert_equal(0, event.children_with_results.size, "events_with_results: child with no results")
+    assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: child with no results")
+
+    event.children.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
+    assert_equal(1, event.children_with_results(true).size, "refresh cache: events_with_results: 1 children with results")
+    assert_equal(1, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
+
+    event.children.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results")
+    assert_equal(2, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+  end
 
   private
   
