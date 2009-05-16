@@ -23,7 +23,7 @@ class SingleDayEvent < Event
   end
   
   def series_event?
-    self.parent && parent.is_a?(WeeklySeries)
+    parent && parent.is_a?(WeeklySeries)
   end
 
   def set_bar_points
@@ -36,7 +36,7 @@ class SingleDayEvent < Event
   end
   
   def missing_parent
-    if self.parent_id.nil? 
+    if parent_id.nil? 
       MultiDayEvent.same_name_and_year(self)
     else
       nil
