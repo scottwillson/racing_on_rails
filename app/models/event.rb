@@ -47,6 +47,7 @@ class Event < ActiveRecord::Base
            :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed 
+
   has_many :child_competitions,
            :class_name => "Competition",
            :foreign_key => "parent_id",
@@ -55,6 +56,12 @@ class Event < ActiveRecord::Base
            :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed 
+
+  has_many :children_and_child_competitions,
+           :class_name => "Event",
+           :foreign_key => "parent_id",
+           :dependent => :destroy,
+           :order => "date"
 
   has_one :overall, :foreign_key => "parent_id", :dependent => :destroy
   has_one :combined_results, :class_name => "CombinedTimeTrialResults", :foreign_key => "parent_id"
@@ -182,7 +189,7 @@ class Event < ActiveRecord::Base
   
   # Returns only the children and child child_competitions with +results+
   def children_and_child_competitions_with_results(reload = false)
-    children_with_results(reload) + child_competitions(reload).select(&:has_results?)
+    children_and_child_competitions(reload).select(&:has_results?)
   end
   
   # Returns only the Races with +results+
