@@ -9,17 +9,49 @@ class WsbaBarr < Competition
   end
 
   def create_races
-    races.create!(:category => Category.find_or_create_by_name("Men Cat 1-2"))
-    races.create!(:category => Category.find_or_create_by_name("Men Cat 3"))
-    races.create!(:category => Category.find_or_create_by_name("Men Cat 4-5"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men A"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men B"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men C"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Men D"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Women A"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Women B"))
-    races.create!(:category => Category.find_or_create_by_name("Women Cat 1-2"))
-    races.create!(:category => Category.find_or_create_by_name("Women Cat 3"))
-    races.create!(:category => Category.find_or_create_by_name("Women Cat 4"))
+    for category_name in [
+      'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5',
+      'Masters Men A', 'Masters Men B', 'Masters Men C', 'Masters Men D', 
+      'Masters Women A', 'Masters Women B',
+      'Women Cat 1-2', 'Women Cat 3', 'Women Cat 4']
+
+      category = Category.find_or_create_by_name(category_name)
+      self.races.create(:category => category)
+    end
   end
+  
+  # source_results must be in racer-order
+  def source_results(race)
+    return [] if source_events(true).empty?
+    
+    event_ids = source_events.collect do |event|
+      event.id
+    end
+    event_ids = event_ids.join(', ')    
+    
+    results = Result.find_by_sql(
+      %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
+          LEFT OUTER JOIN races ON races.id = results.race_id 
+          LEFT OUTER JOIN categories ON categories.id = races.category_id
+          LEFT OUTER JOIN events ON races.event_id = events.id 
+            WHERE races.category_id is not null 
+              and place between 1 and 10
+              and categories.id in (#{category_ids_for(race)})
+              and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
+              and (events.id in (#{event_ids}) or events.parent_id in (#{event_ids}))
+         order by racer_id
+       }
+    )
+    #remove_duplicate_results(results)
+    results
+  end
+  
+  def after_create_competition_results_for(race)
+    for result in race.results
+      if race.event.name == "Wenatchee Omnium Senior State Championships"
+        result.scores.each {|res| res = res*1.5 } #State omnium is scored at 1.5 rate
+      end
+    end
+  end
+  
 end
