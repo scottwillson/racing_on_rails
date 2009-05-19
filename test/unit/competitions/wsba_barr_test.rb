@@ -9,9 +9,9 @@ class Competitions::WsbaBarrTest < ActiveSupport::TestCase
     assert_equal(12, wsba.races.size, 'races')
     wsba.races.sort_by {|s| s.name }
 
-    master_men_a = wsba.races.first
-    assert_equal('Master Men A', master_men_a.category.name, 'Master men category')
-    assert(master_men_a.results.empty?, 'Master men results.empty?')
+    men_1_2 = wsba.races.first
+    assert_equal('Men Cat 1-2', men_1_2.category.name, 'Senior men category')
+    assert(men_1_2.results.empty?, 'Senior men results.empty?')
 
     women_cat_4 = wsba.races.last
     assert_equal('Women Cat 4', women_cat_4.category.name, 'Senior women category')

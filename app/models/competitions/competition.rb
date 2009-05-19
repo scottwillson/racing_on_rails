@@ -211,7 +211,7 @@ class Competition < Event
       points = point_schedule[source_result.place.to_i].to_f
     end
     if points
-      points / team_size.to_f
+      points * source_result.event.competition_event_memberships.points_factor / team_size.to_f
     else
       0
     end

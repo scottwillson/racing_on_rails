@@ -46,12 +46,9 @@ class WsbaBarr < Competition
     results
   end
   
-  def after_create_competition_results_for(race)
-    for result in race.results
-      if race.event.name == "Wenatchee Omnium Senior State Championships"
-        result.scores.each {|res| res = res*1.5 } #State omnium is scored at 1.5 rate
-      end
-    end
-  end
+  #per Rob Whitacre
+  def place_members_only?
+     true
+   end
   
 end
