@@ -2,9 +2,10 @@ require 'test_helper'
 
 class Competitions::WsbaBarrTest < ActiveSupport::TestCase
 
-  def test_create
+  def test_calculate
     assert_nil(WsbaBarr.find(:first, :conditions => ['date = ?', Date.new(2006)]), 'Should have no Wsba Barr for 2006')
-    wsba = WsbaBarr.create!(:date => Date.new(2006))
+    WsbaBarr.calculate!(2006)
+    wsba = WsbaBarr.find_for_year(2006)
     assert(wsba.errors.empty?, "New WSBA BARR should have no errors, but has: #{wsba.errors.full_messages}")
     assert_equal(12, wsba.races.size, 'races')
     wsba.races.sort_by {|s| s.name }
@@ -27,6 +28,4 @@ class Competitions::WsbaBarrTest < ActiveSupport::TestCase
     wsba.source_events << events(:kings_valley)
     assert_equal(2, wsba.source_events.count, 'Events for new WSBA BARR')
   end
-  
-  
 end
