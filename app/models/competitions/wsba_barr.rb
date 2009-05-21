@@ -27,10 +27,11 @@ class WsbaBarr < Competition
     event_ids = source_events.collect do |event|
       event.id
     end
-    event_ids = event_ids.join(', ')    
+    event_ids = event_ids.join(', ')
     
     results = Result.find_by_sql(
-      %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
+      %Q{ SELECT results.id as id, race_id, racer_id, team_id, place, members_only_place
+          FROM results  
           LEFT OUTER JOIN races ON races.id = results.race_id 
           LEFT OUTER JOIN categories ON categories.id = races.category_id
           LEFT OUTER JOIN events ON races.event_id = events.id 
@@ -42,13 +43,11 @@ class WsbaBarr < Competition
          order by racer_id
        }
     )
-    #remove_duplicate_results(results)
     results
   end
   
-  #per Rob Whitacre
+  # per Rob Whitacre
   def place_members_only?
      true
    end
-  
 end
