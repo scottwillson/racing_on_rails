@@ -51,6 +51,7 @@ create table `competition_event_memberships` (
   `id` int(11) not null auto_increment,
   `competition_id` int(11) not null,
   `event_id` int(11) not null,
+  `points_factor` float default '1',
   primary key (`id`),
   key `index_competition_event_memberships_on_competition_id` (`competition_id`),
   key `index_competition_event_memberships_on_event_id` (`event_id`),
@@ -607,6 +608,8 @@ insert into schema_migrations (version) values ('20090504040328');
 insert into schema_migrations (version) values ('20090505151122');
 
 insert into schema_migrations (version) values ('20090514202305');
+
+insert into schema_migrations (version) values ('20090519034739');
 
 insert into schema_migrations (version) values ('21');
 
