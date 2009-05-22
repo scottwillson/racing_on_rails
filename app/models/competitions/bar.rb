@@ -37,7 +37,6 @@ class Bar < Competition
           bar.destroy_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter
-          bar.calculate_members_only_places
           bar.calculate!
         end
       end
