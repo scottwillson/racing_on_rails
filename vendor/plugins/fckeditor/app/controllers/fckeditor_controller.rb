@@ -133,7 +133,8 @@ class FckeditorController < ActionController::Base
   end
   
   def upload_directory_path
-    uploaded = request.relative_url_root.to_s+"#{UPLOADED}/#{params[:Type]}"
+    #mbrahere fix for rails 2.2.2+ uploaded = request.relative_url_root.to_s+"#{UPLOADED}/#{params[:Type]}"
+    uploaded = ActionController::Base.relative_url_root.to_s+"#{UPLOADED}/#{params[:Type]}"
     "#{uploaded}#{params[:CurrentFolder]}"
   end
   

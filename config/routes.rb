@@ -36,6 +36,8 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :teams, :member => { :toggle_member => :post }
     admin.resources :velodromes
     admin.resources :weekly_series, :as => :events, :has_one => :promoter
+    admin.resources :article_categories #mbrahere
+    admin.resources :articles #mbrahere
   end
 
   map.resources :categories, :has_many => :races
@@ -104,6 +106,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
   map.schedule "/schedule", :controller => "schedule"
 
+  map.resources :articles #mbrahere
+  map.resources :article_categories #mbrahere
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
   map.connect '/', :controller => "home"
