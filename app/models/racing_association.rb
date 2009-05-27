@@ -13,14 +13,14 @@ class RacingAssociation
   attr_accessor :usac_region
   
   def initialize
-    @masters_age = 35  #mbratodo: in MT is 40
+    @masters_age = 35
     @show_license = true
     @show_events_velodrome = true
-    @show_only_association_sanctioned_races_on_calendar = true  #mbratodo: in MT is false
+    @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
     @award_cat4_participation_points = true
-    @usac_region = "North West"  #mbratodo: is MT?
+    @usac_region = "North West"
   end
   
   def bmx_numbers?
