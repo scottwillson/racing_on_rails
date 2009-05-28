@@ -31,8 +31,8 @@ class Event < ActiveRecord::Base
                :after_add => :children_changed,
                :after_remove => :children_changed 
   belongs_to :velodrome
-#mbratodo: to accommodate sponsoring team I had:
-#  belongs_to :team
+#mbrahere: to accommodate sponsoring team:
+  belongs_to :team
 
   belongs_to :parent, 
                :foreign_key => 'parent_id', 

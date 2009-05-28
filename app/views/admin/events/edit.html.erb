@@ -48,6 +48,13 @@
         <%= f.label :discipline %>
         <%= f.select :discipline, Discipline.find_all_names.sort %><br/>
 
+        <% if ASSOCIATION.show_events_sponsoring_team? -%>
+          <%= f.label :team_id, "Sponsoring Team" %>
+          <%= f.select(:team_id,
+                   Team.find(:all).sort_by(&:name).collect {|t| [ t.name, t.id ] },
+                   { :include_blank => true }) %>
+        <% end -%>
+
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
 

@@ -9,13 +9,14 @@ class RacingAssociation
   attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
   attr_accessor :always_insert_table_headers
-  attr_accessor :show_events_velodrome
+  attr_accessor :show_events_velodrome, :show_events_sponsoring_team
   attr_accessor :usac_region
   
   def initialize
     @masters_age = 35
     @show_license = true
     @show_events_velodrome = true
+    @show_events_sponsoring_team = false  #mbrahere
     @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
@@ -52,6 +53,10 @@ class RacingAssociation
   
   def show_events_velodrome?
     @show_events_velodrome
+  end
+
+  def show_events_sponsoring_team?
+    @show_events_sponsoring_team
   end
   
   def award_cat4_participation_points?
