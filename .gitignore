@@ -10,4 +10,4 @@ tmp/*
 db/production.sql
 *.tmproj
 .project
-local
+/local
