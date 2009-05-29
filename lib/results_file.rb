@@ -87,8 +87,7 @@ class ResultsFile
         end
       end
       event.enable_notification!
-      event.create_or_destroy_combined_results
-      event.combined_results.calculate! if event.combined_results
+      CombinedTimeTrialResults.create_or_destroy_for!(event)
     end
     Rails.logger.info("ResultsFile #{Time.now} import done")
   end

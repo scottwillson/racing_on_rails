@@ -263,9 +263,9 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def event
-    if race || race(true)
-      race.event
+  def event(reload = false)
+    if race(reload)
+      race.event(reload)
     end
   end
 

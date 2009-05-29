@@ -42,10 +42,6 @@ class SingleDayEvent < Event
       nil
     end
   end
-  
-  def requires_combined_results?
-    self.discipline == "Time Trial"
-  end
 
   def friendly_class_name
     'Single Day Event'

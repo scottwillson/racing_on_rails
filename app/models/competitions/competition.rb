@@ -107,7 +107,7 @@ class Competition < Event
   end
   
   def calculate!
-    self.races.each do |race|
+    races.each do |race|
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
