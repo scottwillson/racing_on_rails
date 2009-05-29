@@ -483,7 +483,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent = MultiDayEvent.create!(:state => nil)
     parent.state = ""
     parent.save!
-    assert_equal("", parent.state, "Should be able to set state not blank")
+    assert_equal("", parent.state, "Should be able to set state to blank")
     child = parent.children.create!
     assert_equal("", child.state, "child should inherit parent values unless specified")
 

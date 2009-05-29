@@ -123,8 +123,6 @@ class Event < ActiveRecord::Base
       self.name = default_name                   if self[:name].nil?
       self.ironman = default_ironman             if self[:ironman].nil?
       self.number_issuer = default_number_issuer if number_issuer.nil?
-      self.sanctioned_by = default_sanctioned_by if self[:sanctioned_by].blank?
-      self.state = default_state                 if self[:state].blank?
       self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
       self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
     end
