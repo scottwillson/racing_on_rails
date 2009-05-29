@@ -130,6 +130,12 @@ class Result < ActiveRecord::Base
   def find_racers(_event = event)
     matches = Set.new
 
+    # use license first if more reliable
+    if SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+      matches = matches + Racer.find_all_by_license(license)
+      return matches if matches.size == 1
+    end if
+    
     # name
     matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
