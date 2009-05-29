@@ -171,6 +171,7 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
+  `team_id` int(11) default null,
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -182,8 +183,6 @@ create table `events` (
   key `idx_date` (`date`),
   key `index_events_on_sanctioned_by` (`sanctioned_by`),
   key `index_events_on_bar_points` (`bar_points`),
-  key `events_source_event_id_fk` (`source_event_id`),
-  constraint `events_source_event_id_fk` foreign key (`source_event_id`) references `events` (`id`) on delete cascade,
   constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
   constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `promoters` (`id`) on delete set null,
@@ -641,6 +640,8 @@ insert into schema_migrations (version) values ('20090514202305');
 insert into schema_migrations (version) values ('20090515031733');
 
 insert into schema_migrations (version) values ('20090519034739');
+
+insert into schema_migrations (version) values ('20090528023747');
 
 insert into schema_migrations (version) values ('21');
 
