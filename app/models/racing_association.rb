@@ -23,7 +23,6 @@ class RacingAssociation
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
     @award_cat4_participation_points = true
     @usac_region = "North West"
-    @default_sanctioned_by = short_name
   end
   
   def bmx_numbers?
@@ -35,6 +34,10 @@ class RacingAssociation
 #mbrahere: I had:
 #    @default_discipline ||= "road"
 
+  end
+  
+  def default_sanctioned_by
+    @default_sanctioned_by || short_name
   end
 
   def gender_specific_numbers?
