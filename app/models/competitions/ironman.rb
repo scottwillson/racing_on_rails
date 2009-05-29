@@ -32,7 +32,7 @@ class Ironman < Competition
   
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
+      %Q{SELECT results.id as id, race_id, racer_id, results.team_id, place FROM results  
          LEFT OUTER JOIN races ON races.id = results.race_id 
          LEFT OUTER JOIN events ON races.event_id = events.id 
          WHERE (place != 'DNS'
