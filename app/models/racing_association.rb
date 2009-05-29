@@ -11,6 +11,7 @@ class RacingAssociation
   attr_accessor :always_insert_table_headers
   attr_accessor :show_events_velodrome, :show_events_sponsoring_team
   attr_accessor :usac_region
+  attr_accessor :default_sanctioned_by
   
   def initialize
     @masters_age = 35
@@ -22,6 +23,7 @@ class RacingAssociation
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
     @award_cat4_participation_points = true
     @usac_region = "North West"
+    @default_sanctioned_by = short_name
   end
   
   def bmx_numbers?

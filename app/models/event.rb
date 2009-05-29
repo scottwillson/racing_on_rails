@@ -123,15 +123,10 @@ class Event < ActiveRecord::Base
       self.name = default_name                   if self[:name].nil?
       self.ironman = default_ironman             if self[:ironman].nil?
       self.number_issuer = default_number_issuer if number_issuer.nil?
-<<<<<<< HEAD:app/models/event.rb
       self.sanctioned_by = default_sanctioned_by if self[:sanctioned_by].blank?
-#mbratodo: I had
-#      self.sanctioned_by = DEFAULT_SANCTIONING_ORGANIZATION if self.sanctioned_by.blank?
       self.state = default_state                 if self[:state].blank?
-=======
       self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
       self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
->>>>>>> master:app/models/event.rb
     end
   end
   
@@ -164,7 +159,7 @@ class Event < ActiveRecord::Base
   end
   
   def default_sanctioned_by
-    ASSOCIATION.short_name
+    ASSOCIATION.default_sanctioned_by
   end
   
   def default_number_issuer
