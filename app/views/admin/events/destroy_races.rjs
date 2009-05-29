@@ -1,7 +1,7 @@
 @races.each do |race|
   page.visual_effect(:puff, "race_#{race.id}_row", :duration => 0.2, :queue => "front")
 end
-page.visual_effect(:fade, "destroy_races_row", :duration => 0.2, :queue => "end")
+page.visual_effect(:fade, "destroy_races_progress", :duration => 0.1, :queue => "front")
 page.hide("info")
 page.hide("warn")
 page.show("notice")

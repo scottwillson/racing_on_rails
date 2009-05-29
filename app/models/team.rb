@@ -113,22 +113,19 @@ class Team < ActiveRecord::Base
         event.disable_notification!
         event
       end
-      begin
-        save!
-        aliases << team.aliases
-        results << team.results
-        racers << team.racers
-        Team.delete(team.id)
-        existing_alias = aliases.detect{|a| a.name.casecmp(team.name) == 0}
-        if existing_alias.nil? and Team.find_all_by_name(team.name).empty?
-          aliases.create(:name => team.name) 
-        end
-      ensure
-        if events
-          events.each do |event|
-            event.reload
-            event.enable_notification!
-          end
+      save!
+      aliases << team.aliases
+      results << team.results
+      racers << team.racers
+      Team.delete(team.id)
+      existing_alias = aliases.detect{|a| a.name.casecmp(team.name) == 0}
+      if existing_alias.nil? and Team.find_all_by_name(team.name).empty?
+        aliases.create(:name => team.name) 
+      end
+      if events
+        events.each do |event|
+          event.reload
+          event.enable_notification!
         end
       end
     end

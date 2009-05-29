@@ -4,19 +4,22 @@
 class GridFile < Grid
   
   def GridFile.read_excel(file)
-    RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read_excel #{file}")
+    Rails.logger.debug("GridFile (#{Time.now}) read_excel #{file}")
     if File::Stat.new(file.path).size == 0
-      RACING_ON_RAILS_DEFAULT_LOGGER.warn("#{file.path} is empty")
+      Rails.logger.warn("#{file.path} is empty")
       return []
     end
 
     excel_rows = []
     Spreadsheet.open(file.path).worksheets.each do |worksheet|
       worksheet.each do |row|
-        if RACING_ON_RAILS_DEFAULT_LOGGER.debug? && debug?
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) #{row.join(', ')}")
-          RACING_ON_RAILS_DEFAULT_LOGGER.debug("---------------------------------") 
+        if Rails.logger.debug? && debug?
+          Rails.logger.debug("---------------------------------") 
+          Rails.logger.debug("GridFile #{Time.now} row #{row.to_a.join(', ')}")
+          row.each_with_index do |cell, index|
+            Rails.logger.debug("number_format pattern to_s to_f #{row.format(index).number_format}  #{row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
+          end
+          Rails.logger.debug("---------------------------------") 
         end
         line = []
         for cell in row
@@ -27,6 +30,12 @@ class GridFile < Grid
             line << cell.strip
           when Date, DateTime, Time
             line << cell.to_s(:db)
+          when Float
+            if cell.to_f == cell.to_i
+              line << cell.to_i.to_s
+            else
+              line << cell.to_s
+            end
           when Numeric
             line << cell.to_s
           else
@@ -42,7 +51,7 @@ class GridFile < Grid
         end
       end
     end
-    RACING_ON_RAILS_DEFAULT_LOGGER.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
+    Rails.logger.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
     excel_rows
   end
     

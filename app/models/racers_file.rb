@@ -257,6 +257,6 @@ class RacersFile < GridFile
   end
   
   def logger
-    RACING_ON_RAILS_DEFAULT_LOGGER
+    Rails.logger
   end
 end

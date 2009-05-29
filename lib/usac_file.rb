@@ -71,7 +71,7 @@ class UsacFile
           begin
             Alias.create!(:name => full_name, :racer => r)
           rescue Exception => e
-            RACING_ON_RAILS_DEFAULT_LOGGER.warn("Could not create alias #{full_name} for racer #{r.name} with license #{r.license}")
+            Rails.logger.warn("Could not create alias #{full_name} for racer #{r.name} with license #{r.license}")
           end
             
         end
@@ -80,7 +80,7 @@ class UsacFile
       unless r.nil? #we found somebody
           if r.license && r.license.match(/\d+/) && r.license != license
             #person has a license, but not this one. we must have the wrong person or other confusion.
-            RACING_ON_RAILS_DEFAULT_LOGGER.warn("Had racer #{r.name} with license #{r.license} but did not match USAC license #{license} for #{memusac["first_name"]} #{memusac["last_name"]}")
+            Rails.logger.warn("Had racer #{r.name} with license #{r.license} but did not match USAC license #{license} for #{memusac["first_name"]} #{memusac["last_name"]}")
           else 
             #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
             r.license = license
@@ -90,7 +90,7 @@ class UsacFile
       end
     }
     
-    RACING_ON_RAILS_DEFAULT_LOGGER.info("#{racers_updated.length} racers were updated with a USAC expiration date of #{expir_date} ")
+    Rails.logger.info("#{racers_updated.length} racers were updated with a USAC expiration date of #{expir_date} ")
     return racers_updated
   end
   

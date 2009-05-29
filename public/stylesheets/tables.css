@@ -49,12 +49,13 @@ div.table_container div.caption {
 
 .table_container .caption div.right {
   float: right;
-}
-
-.table_container .caption div.right {
   padding-top: 2px;
   padding-right: 4px;
   height: 17px;
+}
+
+.table_container .caption div.right a.image {
+  padding-right: 4px;
 }
 
 /* Unfortunate side-effect of div and tabel sharing classes */

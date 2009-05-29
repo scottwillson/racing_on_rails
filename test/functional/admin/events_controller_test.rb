@@ -397,14 +397,16 @@ class Admin::EventsControllerTest < ActionController::TestCase
     post(:update, 
          "commit"=>"Save", 
          :id => event.to_param,
-         "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day","date"=>event.date,
+         "event"=>{"city"=>event.city, "name"=>"Mt. Hood One Day",
                    "flyer"=>event.flyer, "sanctioned_by"=>event.sanctioned_by, "flyer_approved"=> event.flyer_approved, 
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
     )
+    event = assigns(:event)
+    assert_not_nil(event, "@event")
+    assert(event.errors.empty?, event.errors.full_messages)
     assert_response(:redirect)
     assert_redirected_to(:action => :edit, :id => event.to_param)
-    event = Event.find(event.id)
     assert(event.is_a?(SingleDayEvent), "Mt Hood should be a SingleDayEvent")
 
     assert_nil(events(:mt_hood_1).parent(true), "Original child's parent")

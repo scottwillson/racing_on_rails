@@ -663,22 +663,19 @@ class Racer < ActiveRecord::Base
         event.disable_notification!
         event
       end
-      begin
-        save!
-        aliases << other_racer.aliases
-        results << other_racer.results
-        race_numbers << other_racer.race_numbers
-        Racer.delete(other_racer.id)
-        existing_alias = aliases.detect{|a| a.name.casecmp(other_racer.name) == 0}
-        if existing_alias.nil? and Racer.find_all_by_name(other_racer.name).empty?
-          aliases.create(:name => other_racer.name) 
-        end
-      ensure
-        if events
-          events.each do |event|
-            event.reload
-            event.enable_notification!
-          end
+      save!
+      aliases << other_racer.aliases
+      results << other_racer.results
+      race_numbers << other_racer.race_numbers
+      Racer.delete(other_racer.id)
+      existing_alias = aliases.detect{|a| a.name.casecmp(other_racer.name) == 0}
+      if existing_alias.nil? and Racer.find_all_by_name(other_racer.name).empty?
+        aliases.create(:name => other_racer.name) 
+      end
+      if events
+        events.each do |event|
+          event.reload
+          event.enable_notification!
         end
       end
     end

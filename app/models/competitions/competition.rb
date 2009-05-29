@@ -17,7 +17,6 @@ class Competition < Event
   
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
-  belongs_to :source_event, :class_name => "Event"
   
   def self.find_for_year(year = Date.today.year)
     self.find_by_date(Date.new(year, 1, 1))
@@ -108,7 +107,7 @@ class Competition < Event
   end
   
   def calculate!
-    self.races.each do |race|
+    races.each do |race|
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
@@ -133,7 +132,7 @@ class Competition < Event
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
     ids = [race.category_id]
-    ids = ids + race.category.descendants.map {|category| category.id}
+    ids = ids + race.category.descendants.map { |category| category.id }
     ids.join(', ')
   end
   
@@ -212,13 +211,34 @@ class Competition < Event
       points = point_schedule[source_result.place.to_i].to_f
     end
     if points
-      points / team_size.to_f
+      points * points_factor(source_result)  / team_size.to_f
     else
       0
     end
   end
   
+  #get the multiplier from the CompetitionEventsMembership if it exists
+  def points_factor(source_result)
+    cem = source_result.event.competition_event_memberships.detect{|comp| comp.competition_id == self.id}
+    cem ? cem.points_factor : 1 #factor is one if membership is not found
+  end
+  
   def requires_combined_results?
+    false
+  end
+
+  # This method does nothing, and always returns true. Competitions don't participate in event notification.
+  def disable_notification!
+    true
+  end
+
+  # This method does nothing, and always returns true. Competitions don't participate in event notification.
+  def enable_notification!
+    true
+  end
+
+  # This method always returns false. Competitions don't participate in event notification.
+  def notification_enabled?
     false
   end
 

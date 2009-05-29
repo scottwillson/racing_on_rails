@@ -11,18 +11,20 @@
 # TODO Build new child event should populate child event with parent data
 class MultiDayEvent < Event
   validates_presence_of :name, :date
-  validate_on_create {:parent.nil?}
-  validate_on_update {:parent.nil?}
+  validate_on_create { :parent.nil? }
+  validate_on_update { :parent.nil? }
 
-  before_save :update_date
   before_save :update_children
   after_create :create_children
   
   # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent, 
   # same day of next week if not adjacent (Series/WeeklySeries)
   has_many :children, 
-           :class_name => "SingleDayEvent",
+           :class_name => "Event",
            :foreign_key => "parent_id",
+           :conditions => "type is null or type = 'SingleDayEvent'", 
+           :after_add => [ :children_changed, :update_date ],
+           :after_remove => [ :children_changed, :update_date ],
            :order => "date" do
              def create!(attributes = {})
                attributes[:parent_id] = @owner.id
@@ -69,9 +71,7 @@ class MultiDayEvent < Event
   # Use first SingleDayEvent to populate date, name, promoter, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
   def MultiDayEvent.create_from_children(children)
-    if children.empty?
-      raise ArgumentError.new("children cannot be empty")
-    end
+    raise ArgumentError.new("children cannot be empty") if children.empty?
     
     first_event = children.first
     new_event_attributes = {
@@ -88,13 +88,13 @@ class MultiDayEvent < Event
     
     new_multi_day_event_class = MultiDayEvent.guess_type(children)
     multi_day_event = new_multi_day_event_class.create!(new_event_attributes)
+    multi_day_event.disable_notification!
 
-    for event in children
-      event.parent = multi_day_event
-      event.save!
+    children.each do |child|
+      multi_day_event.children << child
     end
 
-    multi_day_event.children(true)
+    multi_day_event.enable_notification!
     multi_day_event
   end
   
@@ -149,12 +149,13 @@ class MultiDayEvent < Event
   end
   
   # Uses SQL query to set +date+ from child events
-  def update_date
-    return if new_record?
+  def update_date(child = nil)
+    return true if new_record?
     
-    minimum_date = MultiDayEvent.connection.select_value("select min(date) from events where parent_id = #{id}")
-    unless minimum_date.blank? || minimum_date == self.date.to_s
-      MultiDayEvent.connection.execute("update events set date = '#{minimum_date}' where id = #{id}")
+    minimum_date = Event.minimum(:date, :conditions => { :parent_id => id })
+    unless minimum_date.blank?
+      # Don't trigger callbacks
+      MultiDayEvent.update_all(["date = ?", minimum_date], ["id = ?", id])
       self.date = minimum_date
     end
   end
@@ -211,16 +212,13 @@ class MultiDayEvent < Event
   end
   
   def missing_children
-   @missing_children ||= SingleDayEvent.find(:all, 
+    return [] unless name && date
+    
+    @missing_children ||= SingleDayEvent.find(:all, 
                           :conditions => ['parent_id is null and name = ? and extract(year from date) = ?', 
-                                          self.name, self.date.year]) 
+                                          name, date.year])
   end
   
-  # Number of child events with results
-  # def children_with_results(reload = false)
-  #   children(reload).inject(0) { |count, event| event.has_results? ? count + 1 : count }
-  # end
-
   def completed?(reload = false)
     children.count(reload) > 0 && (children_with_results(reload).size == children.count)
   end

@@ -39,13 +39,13 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     following_event.races.create!(:category => men_a).results.create!(:place => 10, :racer => racers(:weaver))
     
     CascadeCrossOverall.calculate!(2007)
-    assert_equal(1, series.competitions(true).size, "Should add new Competitions to parent Series")
-    overall = series.competitions.first
+    assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
+    overall = series.overall
     assert_equal(11, overall.races.size, "Overall races")
     
     CascadeCrossOverall.calculate!(2007)
-    assert_equal(1, series.competitions(true).size, "Should add new Competition to parent Series after deleting old results")
-    overall = series.competitions.first
+    assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
+    overall = series.overall
     assert_equal(11, overall.races.size, "Overall races")
     
     cx_a_overall_race = overall.races.detect { |race| race.category == men_a }
@@ -110,7 +110,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
 
     CascadeCrossOverall.calculate!(2008)
     
-    masters_overall_race = series.overall.races.detect { |race| race.category == masters }
+    masters_overall_race = series.overall(true).races.detect { |race| race.category == masters }
     assert_not_nil(masters_overall_race, "Should have Masters overall race")
     masters_overall_race.results(true).sort!
     result = masters_overall_race.results.first
@@ -161,7 +161,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
 
     CascadeCrossOverall.calculate!(2007)
     
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
     men_a_overall_race.results(true).sort!
     result = men_a_overall_race.results.first
@@ -231,7 +231,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     men_a_race.results.create!(:place => 17)
 
     CascadeCrossOverall.calculate!(2007)
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(!series.overall.raced_minimum_events?(nil, men_a_overall_race), "Nil racer should never have mnimum events")
   end
   
@@ -251,7 +251,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     
     CascadeCrossOverall.calculate!(2008)
     
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
     men_a_overall_race.results(true).sort!
     result = men_a_overall_race.results.first
@@ -272,7 +272,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
 
     CascadeCrossOverall.calculate!(2008)
     
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
     men_a_overall_race.results(true).sort!
     result = men_a_overall_race.results.first
@@ -296,7 +296,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     
     CascadeCrossOverall.calculate!(2008)
     
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
     men_a_overall_race.results(true).sort!
     result = men_a_overall_race.results.first
@@ -318,7 +318,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
 
     CascadeCrossOverall.calculate!(2007)
     
-    men_a_overall_race = series.overall.races.detect { |race| race.category == men_a }
+    men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_equal(1, men_a_overall_race.results.size, "Cat A results")
     assert_equal(1, men_a_overall_race.results.first.scores.size, "Should ignore age-graded BAR")
   end
@@ -331,7 +331,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     CascadeCrossOverall.calculate!(2008)
     series.reload
     
-    overall_results = series.overall
+    overall_results = series.overall(true)
     assert_equal(false, overall_results.ironman, "Ironman")
     assert_equal(0, overall_results.bar_points, "BAR points")
 

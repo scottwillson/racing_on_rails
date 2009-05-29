@@ -108,27 +108,29 @@ class WeeklySeriesTest < ActiveSupport::TestCase
   end
   
   def test_flyer_settings_propogate_to_children
-    pir = WeeklySeries.create!(:date => Date.new(2008, 4, 1), :name => 'So OR Champs')
-    assert_nil(pir.flyer, "flyer should default to blank")
-    assert(!pir.flyer_approved?, "flyer should default to not approved")
+    so_or_champs = WeeklySeries.create!(:date => Date.new(2008, 4, 1), :name => 'So OR Champs')
+    assert_nil(so_or_champs.flyer, "flyer should default to blank")
+    assert(!so_or_champs.flyer_approved?, "flyer should default to not approved")
 
-    new_child = pir.children.create!
-    new_child.reload
-    assert_nil(new_child.flyer, "child event flyer should same as parent")
-    assert(!new_child.flyer_approved?, "child event flyer approval should same as parent")
+    child = so_or_champs.children.create!
+    child.reload
+    assert_nil(child.flyer, "child event flyer should same as parent")
+    assert(!child.flyer_approved?, "child event flyer approval should same as parent")
     
-    pir.flyer = "http://www.flyers.com"
-    pir.flyer_approved = true
-    pir.save!
-    pir.reload
-    assert_equal("http://www.flyers.com", pir.flyer, "parent flyer")
-    assert(pir.flyer_approved?, "parent flyer approval")
-    # This is now existing child, actually ....
-    new_child.reload
+    so_or_champs.flyer = "http://www.flyers.com"
+    so_or_champs.flyer_approved = true
+    so_or_champs.save!
+    so_or_champs.reload
+    assert_equal("http://www.flyers.com", so_or_champs.flyer, "parent flyer")
+    assert(so_or_champs.flyer_approved?, "parent flyer approval")
+
+    child.reload
+    assert_equal("http://www.flyers.com", child.flyer, "child event flyer should same as parent")
+    assert(child.flyer_approved?, "child event flyer approval should same as parent")
+
+    new_child = so_or_champs.children.create!
     assert_equal("http://www.flyers.com", new_child.flyer, "child event flyer should same as parent")
     assert(new_child.flyer_approved?, "child event flyer approval should same as parent")
-
-    new_child = pir.children.create!
     new_child.reload
     assert_equal("http://www.flyers.com", new_child.flyer, "child event flyer should same as parent")
     assert(new_child.flyer_approved?, "child event flyer approval should same as parent")

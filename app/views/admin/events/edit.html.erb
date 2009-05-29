@@ -37,12 +37,12 @@
           <%= f.date_select :date, :order => [:month, :day, :year] %>
         <% when MultiDayEvent -%>
           <%- if @event.start_date == @event.end_date -%>
-            <%= f.labelled_text(:date, @event.start_date.strftime('%A, %B %d, %Y')) %>
+            <%= f.labelled_text(:date, @event.start_date ? @event.start_date.strftime('%A, %B %d, %Y') : "") %>
           <%- else -%>
-            <%= f.labelled_text(:date, "#{@event.start_date.strftime('%a %m/%d/%Y')} to #{@event.end_date.strftime('%a %m/%d/%Y')}") %>
+            <%= f.labelled_text(:date, (@event.start_date && @event.end_date) ? "#{@event.start_date.strftime('%a %m/%d/%Y')} to #{@event.end_date.strftime('%a %m/%d/%Y')}" : "") %>
           <%- end -%>
         <% else -%>
-            <%= f.labelled_text(:date, @event.date.strftime('%A, %B %d, %Y')) %>
+            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
         <% end -%>
 
         <%= f.label :discipline %>
@@ -106,7 +106,7 @@
         <%= f.select(:bar_points, bar_points_and_labels) %>
         <%- end %>
 
-        <%- if @event.requires_combined_results? -%>
+        <%- if CombinedTimeTrialResults.allows_combined_results?(@event) -%>
           <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results" %>
         <%- end -%>
 

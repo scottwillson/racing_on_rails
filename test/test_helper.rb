@@ -19,9 +19,9 @@ class ActiveSupport::TestCase
       return
     end
     if !expected.nil? && actual.nil?
-      raise "#{message}\n Expected #{expected} but was nil"
+      flunk "#{message}\n Expected #{expected} but was nil"
     elseif expected.nil? && !actual.nil?
-      raise "#{message}\n Expected nil but was #{actual}"
+      flunk "#{message}\n Expected nil but was #{actual}"
     end
     _expected = expected
     if !_expected.is_a?(Set)
@@ -43,7 +43,7 @@ class ActiveSupport::TestCase
       else
         actual_message = actual.to_a.join(', ')
       end
-      raise "#{message}\n Expected \n#{expected_message} but was \n#{actual_message}.\ Difference: #{difference.to_a.join(', ')}"
+      flunk "#{message}\n Expected \n#{expected_message} but was \n#{actual_message}.\ Difference: #{difference.to_a.join(', ')}"
     end
   end
   
@@ -85,7 +85,7 @@ class ActiveSupport::TestCase
     if !actual.nil? and (actual.is_a?(Date) || actual.is_a?(DateTime) || actual.is_a?(Time))
       formatted_actual = actual.strftime(format)
     end
-    raise("#{message} \nExpected #{expected} \nbut was #{formatted_actual}") unless expected == formatted_actual
+    flunk("#{message} \nExpected #{expected} \nbut was #{formatted_actual}") unless expected == formatted_actual
   end
 
   def assert_equal_events(expected, actual, message = 'Events not equal')

@@ -112,11 +112,16 @@ class Admin::EventsController < ApplicationController
     @event = Event.find(params[:id])
     # TODO consolidate code
     event_params = params[:event].clone
+    event_type = event_params.delete(:type)
     @event = Event.update(params[:id], event_params)
-    event_type = params[:event][:type]
     if !event_type.blank? && event_type != @event.type
       raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-      @event.children.clear if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
+      if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
+        @event.children.each do |child|
+          child.parent = nil
+          child.save!
+        end
+      end
       if @event.save
         Event.connection.execute("update events set type = '#{event_type}' where id = #{@event.id}")
         @event = Event.find(@event.id)

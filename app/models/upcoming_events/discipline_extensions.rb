@@ -12,20 +12,23 @@ module UpcomingEvents
 
       # Find MultiDayEvents, not their children, nor MultiDayEvents subclasses
       multi_day_events = MultiDayEvent.find(
-        :all, 
-        :include => :children,
+        :all,
+        :select => "distinct events.id, events.name, events.date, events.discipline",
+        :joins => "left outer join events as childrens_events on childrens_events.parent_id = events.id",
         :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
+                                                (childrens_events.type is null or childrens_events.type = 'SingleDayEvent') and
                                                 events.cancelled = false and 
                                                 events.practice = false and
                                                 events.instructional = false and 
                                                 events.discipline in (?) and 
-                                                events.type = ?}, 
+                                                events.type = ? }, 
                                             dates.begin, dates.end, self.names, "MultiDayEvent"]),
         :order => 'events.date')
 
       # Find Series events, but not their parents, nor WeeklySeries
       series_events = SingleDayEvent.find(
           :all, 
+          :select => "distinct events.id, events.name, events.date, events.discipline",
           :include => :parent,
           :conditions => scope_by_sanctioned(
                            [%Q{ events.date between ? and ? 
@@ -44,8 +47,10 @@ module UpcomingEvents
     def find_all_upcoming_weekly_series(dates)
       WeeklySeries.find(
         :all, 
-        :include => :children,
+        :select => "distinct events.id, events.name, events.date, events.discipline",
+        :joins => "left outer join events as childrens_events on childrens_events.parent_id = events.id",
         :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
+                                                (childrens_events.type is null or childrens_events.type = 'SingleDayEvent') and
                                                 events.cancelled = false and 
                                                 events.practice = false and
                                                 events.instructional = false and 

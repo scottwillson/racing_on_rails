@@ -49,3 +49,12 @@ click "result__add"
 wait_for_element_present "//table[@id='results_table']//tr[1]"
 refresh_and_wait
 assert_text_present "Field Size (2)"
+
+assert_value "race_laps", ""
+type "race_laps", "12"
+
+click_and_wait "save"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+assert_value "race_laps", "12"

@@ -192,6 +192,7 @@ class Race < ActiveRecord::Base
   
   # FIXME Almost certainly does not handle mixed member/non-member teams correctly
   def calculate_members_only_places!
+    event_notification_was_enabled = event.notification_enabled?
     event.disable_notification!
     begin
       non_members = 0
@@ -209,7 +210,7 @@ class Race < ActiveRecord::Base
         result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
       end
     ensure
-      event.enable_notification!
+      event.enable_notification! if event_notification_was_enabled
     end
   end
   

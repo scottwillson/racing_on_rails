@@ -39,7 +39,7 @@ load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
-ActionController::Base.prepend_view_path("local/app/views")
+ActionController::Base.view_paths = ActionView::Base.process_view_paths(["local/app/views", "app/views"])
 
 class ActionView::Base
   def self.default_form_builder
@@ -55,8 +55,6 @@ require 'nil_class'
 require 'string'
 require "local_static"
 require "action_view/inline_template_extension"
-
-RACING_ON_RAILS_DEFAULT_LOGGER = RAILS_DEFAULT_LOGGER unless defined?(RACING_ON_RAILS_DEFAULT_LOGGER)
 
 unless defined?(ASSOCIATION)
   ASSOCIATION = RacingAssociation.new

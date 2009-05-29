@@ -7,7 +7,7 @@
   <tr>
     <td><%= event.date.strftime("%B %d") %></td>
     <td>
-<%- unless event.has_results? -%>
+<%- unless event.has_results_including_children? -%>
 <%- if event.flyer_approved? and !event.flyer.blank? -%>
 <%= flyer_link_from_app_server(event) %>
 <%- else -%>

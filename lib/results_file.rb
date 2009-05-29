@@ -86,8 +86,9 @@ class ResultsFile
           end
         end
       end
+      event.enable_notification!
+      CombinedTimeTrialResults.create_or_destroy_for!(event)
     end
-    event.enable_notification!
     Rails.logger.info("ResultsFile #{Time.now} import done")
   end
 
@@ -97,9 +98,11 @@ class ResultsFile
     self.rows = []
     previous_row = nil
     worksheet.each do |spreadsheet_row|
-      Rails.logger.debug("ResultsFile #{Time.now} row #{spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
-      spreadsheet_row.each_with_index do |cell, index|
-        Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}") if DEBUG && Rails.logger.debug?
+      if DEBUG && Rails.logger.debug?
+        Rails.logger.debug("ResultsFile #{Time.now} row #{spreadsheet_row.to_a.join(', ')}")
+        spreadsheet_row.each_with_index do |cell, index|
+          Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
+        end
       end
       row = ResultsFile::Row.new(spreadsheet_row, column_indexes)
       unless row.blank?
@@ -192,7 +195,7 @@ class ResultsFile
       if result.place.to_i > 0
         result.place = result.place.to_i
       elsif !result.place.blank?
-        result.place = result.place.upcase
+        result.place = result.place.upcase rescue result.place
       elsif !row.previous[:place].blank? && row.previous[:place].to_i == 0
         result.place = row.previous[:place]
       end

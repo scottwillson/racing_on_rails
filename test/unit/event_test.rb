@@ -1,7 +1,6 @@
 require "test_helper"
 
 class EventTest < ActiveSupport::TestCase
-    
   def test_create
     event = SingleDayEvent.create(:name => 'Saved')
     assert(event.races.empty?, "Races")
@@ -23,6 +22,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "New event sanctioned_by default")
     number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
+    assert_equal(true, event.notification?, "event notification?")
   end
   
   def test_new_with_promoters
@@ -117,6 +117,13 @@ class EventTest < ActiveSupport::TestCase
     event.races.create!(:category => categories(:cat_3))
     event.destroy
     assert(!Event.exists?(event.id), "event should be deleted")
+  end
+  
+  def test_destroy_races
+    kings_valley = events(:kings_valley)
+    assert(!kings_valley.races.empty?, "Should have races")
+    kings_valley.destroy_races
+    assert(kings_valley.races.empty?, "Should not have races")
   end
   
   def test_no_delete_with_results
@@ -313,7 +320,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!event.has_results?, "Event with race, but no results should not have results")
     
     race.results.create!(:place => 200, :racer => racers(:matson))
-    assert(event.has_results?, "Event with one result should not have results")
+    assert(event.has_results?(true), "Event with one result should have results")
   end
   
   def test_inspect
@@ -333,43 +340,6 @@ class EventTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!
     event.state = nil
     assert_equal("", event.location, "No city, state location")
-  end
-
-  def test_combined_tt
-    jack_frost = events(:jack_frost_2002)
-    assert_equal(0, jack_frost.children.size, 'children.size')
-    assert_equal(2, jack_frost.races.size, 'races')
-    assert_equal(3, jack_frost.races.first.results.size + jack_frost.races.last.results.size, 'total number of results')
-    
-    jack_frost.create_or_destroy_combined_results
-    combined_results = jack_frost.combined_results
-    combined_results.calculate!
-    
-    assert_equal(false, combined_results.ironman, 'Ironman')
-    
-    assert_equal('Combined', combined_results.name, 'name')
-    assert_equal(0, combined_results.bar_points, 'bar points')
-    assert_equal(1, combined_results.races.size, 'combined_results.races')
-    combined = combined_results.races.first
-    assert_equal(3, combined.results.size, 'combined.results')
-
-    result = combined.results[0]
-    assert_equal('1', result.place, 'place')
-    assert_equal(racers(:molly), result.racer, 'racer')
-    assert_equal(categories(:masters_35_plus_women), result.category, 'category')
-    assert_equal('30:00.00', result.time_s, 'time_s')
-
-    result = combined.results[1]
-    assert_equal('2', result.place, 'place')
-    assert_equal(racers(:weaver), result.racer, 'racer')
-    assert_equal(categories(:sr_p_1_2), result.category, 'category')
-    assert_equal('30:01.00', result.time_s, 'time_s')
-
-    result = combined.results[2]
-    assert_equal('3', result.place, 'place')
-    assert_equal(racers(:alice), result.racer, 'racer')
-    assert_equal(categories(:masters_35_plus_women), result.category, 'category')
-    assert_equal('35:12.00', result.time_s, 'time_s')
   end
 
   def test_notes
@@ -409,16 +379,6 @@ class EventTest < ActiveSupport::TestCase
     race_2.results.create!
     women_4 = categories(:women_4)
     bb3.races.create!(:category => women_4)
-    assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
-    
-    bb3.discipline = 'Time Trial'
-    bb3.save!
-    combined_results = bb3.combined_results
-    assert_not_nil(combined_results, 'Combined results')
-    assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
-    race_3 = combined_results.races.first
-    race_3.results.create
-    assert(!race_3.results(true).empty?, 'Combined results should have results')
     assert_equal([race_2, race_1], bb3.races_with_results, 'Two races with results')
   end
 
@@ -466,7 +426,53 @@ class EventTest < ActiveSupport::TestCase
     
     updated_at = event.updated_at
   end
+  
+  def test_competition_and_event_associations
+    series = Series.create!
+    child_event = series.children.create!
+    overall = series.create_overall
+    
+    assert(series.valid?, series.errors.full_messages)
+    assert(child_event.valid?, series.errors.full_messages)
+    assert(overall.valid?, series.errors.full_messages)
+    
+    assert_equal_events([child_event], series.children(true), "series.children should not include competitions")
+    assert_equal_events([overall], series.child_competitions(true), "series.child_competitions should only include competitions")
+    assert_equal(overall, series.overall(true), "series.overall")
+    assert_equal(0, series.competition_event_memberships.size, "series.competition_event_memberships")
+    assert_equal_events([], series.competitions(true), "series.competitions")    
 
+    assert_equal_events([], child_event.children(true), "child_event.children")
+    assert_equal_events([], child_event.child_competitions(true), "child_event.child_competitions")
+    assert_nil(child_event.overall(true), "child_event.overall")
+    assert_equal(1, child_event.competition_event_memberships(true).size, "child_event.competition_event_memberships")
+    competition_event_membership = child_event.competition_event_memberships.first
+    assert_equal(child_event, competition_event_membership.event, "competition_event_membership.event")
+    assert_equal(overall, competition_event_membership.competition, "competition_event_membership.competition")
+    
+    assert_equal_events([overall], child_event.competitions(true), "competitions should only include competitions")
+    assert_equal_events([], child_event.children_with_results(true), "children_with_results")
+    assert_equal_events([], child_event.children_and_child_competitions_with_results(true), "children_and_child_competitions_with_results")
+  end
+
+  def test_children_with_results
+    event = SingleDayEvent.create!
+    assert_equal(0, event.children_with_results.size, "events_with_results: no child")
+    assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: no child")
+
+    event.children.create!
+    assert_equal(0, event.children_with_results.size, "events_with_results: child with no results")
+    assert_equal(0, event.children_and_child_competitions_with_results.size, "children_and_child_competitions_with_results: child with no results")
+
+    event.children.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(1, event.children_with_results.size, "cached: events_with_results: 1 children with results")
+    assert_equal(1, event.children_with_results(true).size, "refresh cache: events_with_results: 1 children with results")
+    assert_equal(1, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 1 children with results")
+
+    event.children.create!.races.create!(:category => categories(:cat_4_women)).results.create!
+    assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results")
+    assert_equal(2, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+  end
 
   private
   
