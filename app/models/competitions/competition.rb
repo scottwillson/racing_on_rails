@@ -211,10 +211,16 @@ class Competition < Event
       points = point_schedule[source_result.place.to_i].to_f
     end
     if points
-      points / team_size.to_f
+      points * points_factor(source_result)  / team_size.to_f
     else
       0
     end
+  end
+  
+  #get the multiplier from the CompetitionEventsMembership if it exists
+  def points_factor(source_result)
+    cem = source_result.event.competition_event_memberships.detect{|comp| comp.competition_id == self.id}
+    cem ? cem.points_factor : 1 #factor is one if membership is not found
   end
   
   def requires_combined_results?

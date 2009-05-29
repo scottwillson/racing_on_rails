@@ -289,6 +289,14 @@ class Event < ActiveRecord::Base
     connection.select_value("select notification from events where id = #{id}") == "1"
   end
 
+  # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
+  def set_points_for(competition, points)
+    # For now, allow Nil exception, but probably will want to auto-create membership in the future
+    competition_event_membership = competition_event_memberships.detect { |cem| cem.competition == competition }
+    competition_event_membership.points_factor = points
+    competition_event_membership.save!
+  end
+
   # Format for schedule page primarily
   # TODO is this used?
   def short_date
