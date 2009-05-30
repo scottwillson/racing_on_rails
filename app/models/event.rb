@@ -155,7 +155,7 @@ class Event < ActiveRecord::Base
     if new_record?
       if parent
         PROPOGATED_ATTRIBUTES.each { |attr| 
-          (self[attr] = parent[attr]) if self[attr].nil? 
+          (self[attr] = parent[attr]) if self[attr].blank? 
         }
       end
       self.bar_points = default_bar_points       if self[:bar_points].nil?

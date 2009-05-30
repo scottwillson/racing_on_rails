@@ -415,7 +415,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent = MultiDayEvent.create!
     child = parent.children.create!(:flyer => "")
     assert_equal(nil, parent.flyer, "parent flyer")
-    assert_equal("", child.flyer, "child flyer")
+    assert_equal(nil, child.flyer, "child flyer")
 
     parent.flyer = "http://example.com/flyers/1"
     parent.save!
@@ -518,7 +518,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!(:city => "city")
     child = parent.children.create!(:city => "")
-    assert_equal("", child.city, "child should inherit parent values unless specified")
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(:city => "city")
     child = parent.children.create!(:city => nil)
@@ -531,7 +531,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     parent = MultiDayEvent.create!(:state => nil)
     parent.state = ""
     parent.save!
-    assert_equal("", parent.state, "Should be able to set state not blank")
+    assert_equal("", parent.reload.state, "Should be able to set state not blank")
     child = parent.children.create!
     assert_equal("", child.state, "child should inherit parent values unless specified")
 
@@ -573,7 +573,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!(:state => "NY")
     child = parent.children.create!(:state => "")
-    assert_equal("", child.state, "child should inherit parent values unless specified")
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(:state => "NY")
     child = parent.children.create!(:state => nil)
