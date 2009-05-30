@@ -91,7 +91,7 @@ class Event < ActiveRecord::Base
   end
   
   # Return [weekly_series, events] that have results
-  def Event.find_all_with_results(year = Date.now.year, discipline = nil)
+  def Event.find_all_with_results(year = Date.today.year, discipline = Discipline[:road])
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
@@ -103,13 +103,12 @@ class Event < ActiveRecord::Base
       end
       events = Set.new(Event.find(
           :all,
+          :select => "distinct events.id, events.*",
+          :joins => { :races => :results },
           :conditions => [%Q{
               events.date between ? and ? 
-              and events.parent_id is null
-              and events.type <> 'WeeklySeries'
               and events.discipline in (?)
-              }, first_of_year, last_of_year, discipline_names],
-          :order => 'events.date desc'
+              }, first_of_year, last_of_year, discipline_names]
       ))
       
     else
@@ -120,9 +119,9 @@ class Event < ActiveRecord::Base
           :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
       ))
       
-      events.map!(&:root)
     end
     
+    events.map!(&:root)
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
     
     events.reject! do |event|
