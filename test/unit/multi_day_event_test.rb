@@ -386,6 +386,54 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("USA Cycling", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
+  
+  def test_update_children_should_consider_blank_as_nil
+    parent = MultiDayEvent.create!
+    child = parent.children.create!
+    assert_equal(nil, parent.flyer, "parent flyer")
+    assert_equal(nil, child.flyer, "child flyer")
+    
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!(:flyer => "")
+    child = parent.children.create!
+    child.flyer = nil
+    child.save!
+    assert_equal("", parent.flyer, "parent flyer")
+    assert_equal(nil, child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:flyer => "")
+    assert_equal(nil, parent.flyer, "parent flyer")
+    assert_equal("", child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!(:flyer => "")
+    child = parent.children.create!(:flyer => "")
+    assert_equal("", parent.flyer, "parent flyer")
+    assert_equal("", child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+  end
 
   def test_full_name
     stage_race = events(:mt_hood)

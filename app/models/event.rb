@@ -280,10 +280,10 @@ class Event < ActiveRecord::Base
     changes.select { |key, value| PROPOGATED_ATTRIBUTES.include?(key) }.each do |change|
       attribute = change.first
       was = change.last.first
-      if was
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]])
+      if was.blank?
+        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]])
       else
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["(#{attribute}=? or #{attribute} is null) and parent_id=?", was, self[:id]])
+        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]])
       end
     end
     
