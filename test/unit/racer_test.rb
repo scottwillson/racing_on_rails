@@ -153,20 +153,42 @@ class RacerTest < ActiveSupport::TestCase
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
     assert_equal(3, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Mollys's aliases")
+    assert_equal(1, racer_to_keep.race_numbers.count, "Target racer's race numbers")
+    assert_equal("202", racer_to_keep.race_numbers.first.value, "Target racer's race number value")
+    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    assert_equal(association, racer_to_keep.race_numbers.first.number_issuer, "Target racer's race number issuer")
     
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should be in DB")
     assert_equal(2, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(1, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")
+    assert_equal(2, racer_to_merge.race_numbers.count, "Merging racer's race numbers")
+    race_numbers = racer_to_merge.race_numbers.sort
+    assert_equal("102", race_numbers.first.value, "Merging racer's race number value")
+    assert_equal(association, race_numbers.first.number_issuer, "Merging racer's race number issuer")
+    assert_equal("104", race_numbers.last.value, "Merging racer's race number value")
+    elkhorn = NumberIssuer.create!(:name => "Elkhorn")
+    race_numbers.last.number_issuer = elkhorn
+    race_numbers.last.save!
+    assert_equal(elkhorn, race_numbers.last.number_issuer, "Merging racer's race number issuer")
     
     racer_to_keep.merge(racer_to_merge)
     
+    racer_to_keep.reload
     assert_not_nil(Racer.find_by_first_name_and_last_name(racer_to_keep.first_name, racer_to_keep.last_name), "#{racer_to_keep.name} should be in DB")
     assert_equal(5, Result.find_all_by_racer_id(racer_to_keep.id).size, "Molly's results")
     aliases = Alias.find_all_by_racer_id(racer_to_keep.id)
     erik_alias = aliases.detect{|a| a.name == 'Erik Tonkin'}
     assert_not_nil(erik_alias, 'Molly should have Erik Tonkin alias')
     assert_equal(3, Alias.find_all_by_racer_id(racer_to_keep.id).size, "Molly's aliases")
-    
+    assert_equal(3, racer_to_keep.race_numbers.count, "Target racer's race numbers")
+    race_numbers = racer_to_keep.race_numbers.sort
+    assert_equal("102", race_numbers[0].value, "Racer's race number value")
+    assert_equal(association, race_numbers[0].number_issuer, "Racer's race number issuer")
+    assert_equal("104", race_numbers[1].value, "Racer's race number value")
+    assert_equal(elkhorn, race_numbers[1].number_issuer, "Racer's race number issuer")
+    assert_equal("202", race_numbers[2].value, "Racer's race number value")
+    assert_equal(association, race_numbers[2].number_issuer, "Racer's race number issuer")
+
     assert_nil(Racer.find_by_first_name_and_last_name(racer_to_merge.first_name, racer_to_merge.last_name), "#{racer_to_merge.name} should not be in DB")
     assert_equal(0, Result.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_racer_id(racer_to_merge.id).size, "Tonkin's aliases")

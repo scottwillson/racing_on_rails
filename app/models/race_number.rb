@@ -133,6 +133,14 @@ class RaceNumber < ActiveRecord::Base
     end
   end
   
+  def <=>(other)
+    if other
+      value <=> other.value
+    else
+      -1
+    end
+  end
+  
   def to_s
     "<RaceNumber (#{id}) (#{value}) (#{racer_id}) (#{number_issuer_id}) (#{discipline_id}) (#{year})>"
   end

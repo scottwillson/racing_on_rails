@@ -87,13 +87,11 @@ class Overall < Competition
              :race => race)
         end
 
-        Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
-          competition_result.scores.create_if_best_result_for_race(
-            :source_result => source_result, 
-            :competition_result => competition_result, 
-            :points => points
-          )
-        }
+        competition_result.scores.create_if_best_result_for_race(
+          :source_result => source_result, 
+          :competition_result => competition_result, 
+          :points => points
+        )
       end
 
       # Aggressive memory management. If competition has a race with many results, 

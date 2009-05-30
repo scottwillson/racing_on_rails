@@ -37,7 +37,7 @@ class Ironman < Competition
          LEFT OUTER JOIN events ON races.event_id = events.id 
          WHERE (place != 'DNS'
            and races.category_id is not null 
-           and events.type = 'SingleDayEvent' 
+           and (events.type = 'SingleDayEvent' or events.type is null)
            and events.ironman = true 
            and events.date >= '#{year}-01-01' 
            and events.date <= '#{year}-12-31')
