@@ -146,4 +146,22 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal("Combined", ten_mile.combined_results.name, "10 mile combined results")
     assert_equal("Combined", twenty_mile.combined_results.name, "20 mile combined results")
   end
+  
+  def test_destroy
+    series = Series.create!(:discipline => "Time Trial")
+    series.races.create!(:category => categories(:senior_men)).results.create!(:time => 1000, :place => "1")
+    
+    event = series.children.create!
+    event.races.create!(:category => categories(:senior_men)).results.create!(:time => 500, :place => "1")
+    
+    assert_not_nil(series.combined_results(true), "Series parent should have combined results")
+    assert_not_nil(event.combined_results(true), "Series child event parent should have combined results")
+    
+    series.reload
+    event.reload
+    event.destroy_races
+    event.combined_results.destroy_races
+    event.combined_results.destroy
+    assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
+  end
 end
