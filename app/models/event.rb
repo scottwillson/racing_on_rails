@@ -252,7 +252,7 @@ class Event < ActiveRecord::Base
 
   def destroy_races
     disable_notification!
-    self.races.clear
+    races.clear
     enable_notification!
   end
 
