@@ -28,4 +28,64 @@ class IronmanTest < ActiveSupport::TestCase
       assert_equal('2', results[index].place, "place #{index + 1}")
     end
   end
+  
+  def test_count_single_day_events
+    racer = racers(:tonkin)
+    series = Series.create!
+    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+
+    Ironman.calculate!
+    
+    ironman = Ironman.find_for_year
+    assert_equal(0, ironman.races.first.results.count, "Should have no Ironman result for a Series result")
+    
+    event = series.children.create!
+    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+
+    Ironman.calculate!
+    
+    ironman.reload
+    assert_equal(1, ironman.races.first.results.count, "Should have one Ironman result for a SingleDayEvent result")
+    assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a SingleDayEvent result")
+
+    # Check that we can calculate again
+    Ironman.calculate!
+    
+    ironman.reload
+    assert_equal(1, ironman.races.first.results.count, "Should have one Ironman result for a SingleDayEvent result")
+    assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a SingleDayEvent result")
+  end
+  
+  def test_count_child_events
+    racer = racers(:tonkin)
+    event = SingleDayEvent.create!
+    child = event.children.create!
+    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    assert(child.ironman?, "Child event should count towards Ironman")
+
+    Ironman.calculate!
+
+    ironman = Ironman.find_for_year
+    assert_equal(1, ironman.races.first.results.count, "Should have one Ironman result for a child Event result")
+    assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a child Event result")
+  end
+  
+  def test_parent_event_results_do_not_count
+    racer = racers(:tonkin)
+    series = Series.create!
+    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+
+    # Only way to exclude these results is to manually set ironman? to false
+    event = series.children.create!(:ironman => false)
+    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+
+    child = event.children.create!
+    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+
+    Ironman.calculate!
+
+    ironman = Ironman.find_for_year
+    assert_equal(1, ironman.races.first.results.count, "Should have one Ironman result for a child Event result, but no others")
+    assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a child Event result, but no others")
+  end
 end
