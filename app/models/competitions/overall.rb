@@ -1,26 +1,35 @@
-# Easy to miss override: Overall results only include non-members
+# Easy to miss override: Overall results only include members
 class Overall < Competition
  validates_presence_of :parent
  after_create :add_source_events
  
   def Overall.calculate!(year = Date.today.year)
-    parent = MultiDayEvent.find(
-                    :first, 
-                    :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
-    return unless parent && parent.has_results?
-
-    overall = parent.overall || self.create!(:name => "Overall", :parent => parent)
-    overall.destroy_races
-    overall.create_races
-    overall.calculate!
+    benchmark("#{name} calculate!", Logger::INFO, false) {
+      transaction do
+        parent = MultiDayEvent.find(
+                        :first, 
+                        :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
+                        
+        if parent && parent.has_results_including_children?(true)
+          unless parent.overall
+            # parent.create_overall will create an instance of Overall, which is probably not what we want
+            parent.overall = self.new(:parent_id => parent.id)
+            parent.overall.save!
+          end
+          parent.overall.destroy_races
+          parent.overall.create_races
+          parent.overall.calculate!
+        end
+      end
+    }
+    true
   end
 
- def add_source_events
-   logger.debug("add_source_events ")
-   parent.children.each do |source_event|
-     source_events << source_event
-   end
- end
+  def add_source_events
+    parent.children.each do |source_event|
+      source_events << source_event
+    end
+  end
 
   def source_results_with_benchmark(race)
     results = []
@@ -78,13 +87,11 @@ class Overall < Competition
              :race => race)
         end
 
-        Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
-          competition_result.scores.create_if_best_result_for_race(
-            :source_result => source_result, 
-            :competition_result => competition_result, 
-            :points => points
-          )
-        }
+        competition_result.scores.create_if_best_result_for_race(
+          :source_result => source_result, 
+          :competition_result => competition_result, 
+          :points => points
+        )
       end
 
       # Aggressive memory management. If competition has a race with many results, 

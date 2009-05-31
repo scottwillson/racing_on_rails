@@ -4,7 +4,7 @@
   #{link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      {:controller => '/results', :action => 'event', :year => @event.date.year, 
      :discipline => @event.discipline, :id => @event.id},
-     { :class => "image" }) if @event.has_results? }  
+     { :class => "image" }) if @event.has_results_including_children? }  
   </div>
 } %>
 <% table :caption => nav_caption, :class => "box-3 last", :columns => 3, :insert_header => true do %>

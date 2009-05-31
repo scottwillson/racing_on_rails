@@ -107,7 +107,7 @@ class Competition < Event
   end
   
   def calculate!
-    self.races.each do |race|
+    races.each do |race|
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
@@ -156,13 +156,11 @@ class Competition < Event
              :race => race)
         end
  
-        Competition.benchmark('competition_result.scores.create_if_best_result_for_race') {
-          competition_result.scores.create_if_best_result_for_race(
-            :source_result => source_result, 
-            :competition_result => competition_result, 
-            :points => points
-          )
-        }
+        competition_result.scores.create_if_best_result_for_race(
+          :source_result => source_result, 
+          :competition_result => competition_result, 
+          :points => points
+        )
       end
       
       # Aggressive memory management. If competition has a race with many results, 

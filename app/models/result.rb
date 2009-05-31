@@ -34,8 +34,7 @@ class Result < ActiveRecord::Base
   before_save :find_associated_records
   before_save :save_racer
   after_save :update_racer_number
-  after_destroy :destroy_racers
-  after_destroy :destroy_teams
+  after_destroy [ :destroy_racers, :destroy_teams ]
 
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
@@ -197,7 +196,7 @@ class Result < ActiveRecord::Base
 
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
-    if team && team.results.count == 0 && team.created_from_result? && !team.updated_after_created?
+    if team && team.results.count == 0 && team.racers.count == 0 && team.created_from_result? && !team.updated_after_created?
       team.destroy
     end
   end
@@ -269,9 +268,9 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def event
-    if race || race(true)
-      race.event
+  def event(reload = false)
+    if race(reload)
+      race.event(reload)
     end
   end
 

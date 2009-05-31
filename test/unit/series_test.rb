@@ -25,7 +25,8 @@ class SeriesTest < ActiveSupport::TestCase
     assert(!event.has_results?, "Series with race, but no results should not have results")
     
     race.results.create!(:place => 200, :racer => racers(:matson))
-    assert(event.has_results?, "Series with one result should not have results")
+    assert(event.has_results?(true), "Series with one with result should have results")
+    assert(event.has_results_including_children?(true), "Series with result should have results if children are included")
   end
   
   def test_has_results_in_child_event
@@ -34,6 +35,7 @@ class SeriesTest < ActiveSupport::TestCase
     race = child_event.races.create!(:category => categories(:senior_men))
     
     race.results.create!(:place => 200, :racer => racers(:matson))
-    assert(event.has_results?, "Series with one result in child Event should not have results")
+    assert(!event.has_results?(true), "Series with one result in child Event should not have results")
+    assert(event.has_results_including_children?(true), "Series with one result in child Event should have results if children are included")
   end
 end

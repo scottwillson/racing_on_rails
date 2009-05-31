@@ -89,22 +89,26 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
   
   def test_create_from_children
-    single_event = SingleDayEvent.create(:date => Date.new(2007, 6, 19))
+    single_event = SingleDayEvent.create!(:date => Date.new(2007, 6, 19))
     multi_day_event = MultiDayEvent.create_from_children([single_event])
     assert_not_nil(multi_day_event, "MultiDayEvent from one event")
     assert(multi_day_event.instance_of?(MultiDayEvent), "MultiDayEvent class")
     assert_not_nil(single_event.parent, "SingleDayEvent parent")
-    assert_equal(1, multi_day_event.children(true).size, "MultiDayEvent events size")
+    assert_equal(1, multi_day_event.children.count, "MultiDayEvent events size")
+    single_event.reload
+    assert_equal(multi_day_event, single_event.parent, "SingleDayEvent parent")
     assert_equal_dates("2007-06-19", multi_day_event.start_date, "MultiDayEvent events start date")
     assert_equal_dates("2007-06-19", multi_day_event.end_date, "MultiDayEvent events end date")
 
-    single_event_1 = SingleDayEvent.create(:date => Date.new(2007, 6, 19))
-    single_event_2 = SingleDayEvent.create(:date => Date.new(2007, 6, 20))
+    single_event_1 = SingleDayEvent.create!(:date => Date.new(2007, 6, 19))
+    single_event_2 = SingleDayEvent.create!(:date => Date.new(2007, 6, 20))
     multi_day_event = MultiDayEvent.create_from_children([single_event_1, single_event_2])
     assert_not_nil(multi_day_event, "MultiDayEvent from two events")
     assert(multi_day_event.instance_of?(MultiDayEvent), "MultiDayEvent should be instance of MultiDayEvent class")
-    assert_not_nil(single_event_1.parent, "SingleDayEvent parent")
-    assert_not_nil(single_event_2.parent, "SingleDayEvent parent")
+    single_event_1.reload
+    assert_equal(multi_day_event, single_event_1.parent, "SingleDayEvent parent")
+    single_event_2.reload
+    assert_equal(multi_day_event, single_event_2.parent, "SingleDayEvent parent")
     assert_equal(2, multi_day_event.children.size, "MultiDayEvent events size")
     assert_equal_dates("2007-06-19", multi_day_event.start_date, "MultiDayEvent events start date")
     assert_equal_dates("2007-06-20", multi_day_event.end_date, "MultiDayEvent events end date")
@@ -168,7 +172,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   def test_destroy
     mt_hood = events(:mt_hood)
     mt_hood.destroy
-    assert_raises(ActiveRecord::RecordNotFound, "Mt. Hood Stage Race should be deleted") {Event.find(mt_hood.id)}
+    assert(!Event.exists?(mt_hood.id), "Mt. Hood Stage Race should be deleted")
   end
   
   def test_date_range_s
@@ -382,6 +386,54 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("USA Cycling", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
+  
+  def test_update_children_should_consider_blank_as_nil
+    parent = MultiDayEvent.create!
+    child = parent.children.create!
+    assert_equal(nil, parent.flyer, "parent flyer")
+    assert_equal(nil, child.flyer, "child flyer")
+    
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!(:flyer => "")
+    child = parent.children.create!
+    child.flyer = nil
+    child.save!
+    assert_equal("", parent.flyer, "parent flyer")
+    assert_equal(nil, child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:flyer => "")
+    assert_equal(nil, parent.flyer, "parent flyer")
+    assert_equal(nil, child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+
+    parent = MultiDayEvent.create!(:flyer => "")
+    child = parent.children.create!(:flyer => "")
+    assert_equal("", parent.flyer, "parent flyer")
+    assert_equal("", child.flyer, "child flyer")
+
+    parent.flyer = "http://example.com/flyers/1"
+    parent.save!
+    child.reload
+    assert_equal("http://example.com/flyers/1", parent.flyer, "parent flyer")
+    assert_equal("http://example.com/flyers/1", child.flyer, "child flyer")
+  end
 
   def test_full_name
     stage_race = events(:mt_hood)
@@ -393,6 +445,143 @@ class MultiDayEventTest < ActiveSupport::TestCase
     child = event.children.create
     assert_equal_dates(Date.new(2002, 6, 12), event.date, 'event date')
     assert_equal_dates(Date.new(2002, 6, 12), child.date, 'child event date')
+  end
+  
+  def test_create_defaults
+    parent = MultiDayEvent.create!(:flyer_approved => true)
+    child = parent.children.create!(:flyer_approved => true)
+    assert_equal(true, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!(:flyer_approved => false)
+    child = parent.children.create!(:flyer_approved => false)
+    assert_equal(false, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:flyer_approved => true)
+    assert_equal(true, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:flyer_approved => false)
+    assert_equal(false, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!(:flyer_approved => true)
+    child = parent.children.create!
+    assert_equal(true, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!(:flyer_approved => false)
+    child = parent.children.create!
+    assert_equal(false, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!(:flyer_approved => false)
+    child = parent.children.create!
+    assert_equal(false, child.flyer_approved?, "parent true, child true, default false")
+
+    parent = MultiDayEvent.create!(:city => nil)
+    child = parent.children.create!
+    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => nil)
+    child = parent.children.create!(:city => nil)
+    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:city => nil)
+    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:city => "city")
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!
+    assert_equal(nil, child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "")
+    child = parent.children.create!
+    assert_equal("", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "")
+    child = parent.children.create!(:city => "")
+    assert_equal("", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "")
+    child = parent.children.create!(:city => nil)
+    assert_equal("", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "")
+    child = parent.children.create!(:city => "city")
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "city")
+    child = parent.children.create!
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "city")
+    child = parent.children.create!(:city => "")
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "city")
+    child = parent.children.create!(:city => nil)
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:city => "parent city")
+    child = parent.children.create!(:city => "city")
+    assert_equal("city", child.city, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => nil)
+    parent.state = ""
+    parent.save!
+    assert_equal("", parent.reload.state, "Should be able to set state not blank")
+    child = parent.children.create!
+    assert_equal("", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "")
+    child = parent.children.create!(:state => "")
+    assert_equal("", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:state => nil)
+    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!(:state => "NY")
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!
+    child = parent.children.create!
+    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "")
+    child = parent.children.create!
+    assert_equal("", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "")
+    child = parent.children.create!(:state => "")
+    assert_equal("", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "")
+    child = parent.children.create!(:state => nil)
+    assert_equal("", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "")
+    child = parent.children.create!(:state => "NY")
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "NY")
+    child = parent.children.create!
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "NY")
+    child = parent.children.create!(:state => "")
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "NY")
+    child = parent.children.create!(:state => nil)
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
+
+    parent = MultiDayEvent.create!(:state => "VA")
+    child = parent.children.create!(:state => "NY")
+    assert_equal("NY", child.state, "child should inherit parent values unless specified")
   end
   
   def test_missing_parent

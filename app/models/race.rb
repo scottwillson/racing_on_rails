@@ -135,10 +135,6 @@ class Race < ActiveRecord::Base
     end
   end
   
-  def before_destroy
-    results(true).clear
-  end
-  
   # Ensure child team and racers are not duplicates of existing records
   # Tricky side effect -- external references to new association records
   # (category, bar_category, racer, team) will not point to associated records
