@@ -43,7 +43,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     results_file = ResultsFile.new(File.new(source_path), event)
     assert_equal(source_path, results_file.source.path, "file path")
     results_file.import
-    assert_equal(113, results_file.rows, "spreadsheet rows")
+    assert_equal(113, results_file.rows.size, "spreadsheet rows")
     
     expected_races = get_expected_races
     assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
