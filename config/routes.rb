@@ -97,6 +97,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/results/:discipline", :controller => "results"
 
+  map.connect "/schedule/:year/calendar", :controller => "schedule", :action => "calendar", :requirements => {:year => /\d\d\d\d/} #mbrahere
+  map.connect "/schedule/calendar", :controller => "schedule", :action => "calendar" #mbrahere
   map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
   map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:year/list", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
