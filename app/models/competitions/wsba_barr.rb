@@ -39,7 +39,7 @@ class WsbaBarr < Competition
               and place between 1 and 10
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
-              and (events.id in (#{event_ids}) or events.parent_id in (#{event_ids}))
+              and (events.id in (#{event_ids}))
          order by racer_id
        }
     )
