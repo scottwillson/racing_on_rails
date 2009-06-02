@@ -34,19 +34,15 @@ class ResultsFileTest < ActiveSupport::TestCase
     spreadsheet_row = book.worksheet(0).row(0)
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), SingleDayEvent.new)
     column_indexes = results_file.create_columns(spreadsheet_row)
-    assert_equal({ :place => 0, :number => 1, :license => 2, :last_name => 3, :first_name => 4, :team_name => 5, :points => 6 }, column_indexes, "column_indexes")
+    assert_equal({ :place => 0, :number => 1, :last_name => 2, :first_name => 3, :team_name => 4, :points => 5 }, column_indexes, "column_indexes")
   end
   
   def test_import_excel
     event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
-    source_path = "#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"
-    results_file = ResultsFile.new(File.new(source_path), event)
-    assert_equal(source_path, results_file.source.path, "file path")
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
     results_file.import
-    assert_equal(113, results_file.rows, "spreadsheet rows")
-    
     expected_races = get_expected_races
-    assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+    assert_equal(expected_races.size, event.races.size, "event races")
     expected_races.each_with_index do |expected_race, index|
       actual_race = event.races[index]
       assert_not_nil(actual_race, "race #{index}")
@@ -70,9 +66,6 @@ class ResultsFileTest < ActiveSupport::TestCase
               result.racer.member_from, 
               "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
           end
-          #test result by license (some with name misspelled)
-          racer_by_lic = Racer.find_by_license(result.license) if result.license
-          assert_equal(result.racer, racer_by_lic, "Result should be assigned to #{racer_by_lic.name} by license but was given to #{result.racer.name}") if racer_by_lic
         end
       end
     end
@@ -421,7 +414,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     races = []
     
     race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
-    race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"99999999", :team_name =>"Jittery Joe's", :points => "23.0")
+    race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :team_name =>"Jittery Joe's", :points => "23.0")
     race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Tonkin", :number =>"102", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
     race.results << Result.new(:place => "3", :first_name => "John", :last_name => "Browning", :number =>"159", :team_name =>"Half Fast Velo", :points => "12.0")
     race.results << Result.new(:place => "4", :first_name => "Doug", :last_name => "Ollerenshaw", :number =>"132", :team_name =>"Health Net", :points => "8.0")
@@ -484,28 +477,27 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "9", :first_name => "Jason", :last_name => "Kentner", :number =>"917", :team_name =>"BBC", :points => "4.0")
     race.results << Result.new(:place => "10", :first_name => "Mike", :last_name => "Alligood", :number =>"603", :team_name =>"Gateway/Speedzone", :points => "2.0")
     race.results << Result.new(:place => "11", :first_name => "Richard", :last_name => "Fattic", :number =>"429", :points => "2.0")
-    race.results << Result.new(:place => "12", :first_name => "Ryan", :last_name => "Ricertes", :number =>"432", :license => "198748", :team_name =>"Fanatik Bike Co.")
-    race.results << Result.new(:place => "13", :first_name => "Bryan", :last_name => "Brock", :number =>"583", :team_name =>"Presto Velo")
-    race.results << Result.new(:place => "14", :first_name => "David", :last_name => "Pilz", :number =>"816", :team_name =>"The Bike Peddler")
-    race.results << Result.new(:place => "15", :first_name => "Michael", :last_name => "Resnick", :number =>"X26", :team_name =>"NoMad Sports Club")
-    race.results << Result.new(:place => "16", :first_name => "Robert", :last_name => "Chavier", :number =>"C13", :team_name =>"The Bike Peddler")
-    race.results << Result.new(:place => "17", :first_name => "Jon", :last_name => "Frommelt", :number =>"453")
-    race.results << Result.new(:place => "18", :first_name => "Steven", :last_name => "Lisac", :number =>"X50")
-    race.results << Result.new(:place => "19", :first_name => "Josh", :last_name => "Friberg", :number =>"452", :team_name =>"Bike & Hike")
-    race.results << Result.new(:place => "20", :first_name => "Jess", :last_name => "Graden", :number =>"27", :team_name =>"veloshop")
-    race.results << Result.new(:place => "21", :first_name => "Jeff", :last_name => "Tedder", :number =>"840", :team_name =>"Huntair")
-    race.results << Result.new(:place => "22", :first_name => "David", :last_name => "Strader", :number =>"773", :team_name =>"Team Oregon")
-    race.results << Result.new(:place => "23", :first_name => "Jeff", :last_name => "Stong", :number =>"803", :team_name =>"North River Racing")
-    race.results << Result.new(:place => "24", :first_name => "Richard", :last_name => "Lorenz", :number =>"K81", :team_name =>"EWEB Windpower")
-    race.results << Result.new(:place => "25", :first_name => "Daniel", :last_name => "Ashcom", :number =>"H64")
-    race.results << Result.new(:place => "26", :first_name => "Tommy", :last_name => "Tuite", :number =>"26", :team_name =>"veloshop")
-    race.results << Result.new(:place => "27", :first_name => "Robert", :last_name => "White", :number =>"853")
-    race.results << Result.new(:place => "28", :first_name => "Doug", :last_name => "Evans", :number =>"H33", :team_name =>"Bike&Hike")
-    race.results << Result.new(:place => "29", :first_name => "Ian", :last_name => "Megale", :number =>"C00", :team_name =>"Fred Meyer")
-    race.results << Result.new(:place => "30", :first_name => "Jeff", :last_name => "Vine", :number =>"874", :team_name =>"NoMad Sports Club")
-    race.results << Result.new(:place => "31", :first_name => "Mary", :last_name => "Ross", :number =>"279", :team_name =>"NoMad Sports Club")
-    race.results << Result.new(:place => "32", :first_name => "Joseph", :last_name => "Boquiren", :number =>"713", :team_name =>"Team Oregon")
-    race.results << Result.new(:place => "33", :first_name => "Jerry", :last_name => "Inscoe", :number =>"728", :team_name =>"Presto Velo")
+    race.results << Result.new(:place => "12", :first_name => "Bryan", :last_name => "Brock", :number =>"583", :team_name =>"Presto Velo")
+    race.results << Result.new(:place => "13", :first_name => "David", :last_name => "Pilz", :number =>"816", :team_name =>"The Bike Peddler")
+    race.results << Result.new(:place => "14", :first_name => "Michael", :last_name => "Resnick", :number =>"X26", :team_name =>"NoMad Sports Club")
+    race.results << Result.new(:place => "15", :first_name => "Robert", :last_name => "Chavier", :number =>"C13", :team_name =>"The Bike Peddler")
+    race.results << Result.new(:place => "16", :first_name => "Jon", :last_name => "Frommelt", :number =>"453")
+    race.results << Result.new(:place => "17", :first_name => "Steven", :last_name => "Lisac", :number =>"X50")
+    race.results << Result.new(:place => "18", :first_name => "Josh", :last_name => "Friberg", :number =>"452", :team_name =>"Bike & Hike")
+    race.results << Result.new(:place => "19", :first_name => "Jess", :last_name => "Graden", :number =>"27", :team_name =>"veloshop")
+    race.results << Result.new(:place => "20", :first_name => "Jeff", :last_name => "Tedder", :number =>"840", :team_name =>"Huntair")
+    race.results << Result.new(:place => "21", :first_name => "David", :last_name => "Strader", :number =>"773", :team_name =>"Team Oregon")
+    race.results << Result.new(:place => "22", :first_name => "Jeff", :last_name => "Stong", :number =>"803", :team_name =>"North River Racing")
+    race.results << Result.new(:place => "23", :first_name => "Richard", :last_name => "Lorenz", :number =>"K81", :team_name =>"EWEB Windpower")
+    race.results << Result.new(:place => "24", :first_name => "Daniel", :last_name => "Ashcom", :number =>"H64")
+    race.results << Result.new(:place => "25", :first_name => "Tommy", :last_name => "Tuite", :number =>"26", :team_name =>"veloshop")
+    race.results << Result.new(:place => "26", :first_name => "Robert", :last_name => "White", :number =>"853")
+    race.results << Result.new(:place => "27", :first_name => "Doug", :last_name => "Evans", :number =>"H33", :team_name =>"Bike&Hike")
+    race.results << Result.new(:place => "28", :first_name => "Ian", :last_name => "Megale", :number =>"C00", :team_name =>"Fred Meyer")
+    race.results << Result.new(:place => "29", :first_name => "Jeff", :last_name => "Vine", :number =>"874", :team_name =>"NoMad Sports Club")
+    race.results << Result.new(:place => "30", :first_name => "Mary", :last_name => "Ross", :number =>"279", :team_name =>"NoMad Sports Club")
+    race.results << Result.new(:place => "31", :first_name => "Joseph", :last_name => "Boquiren", :number =>"713", :team_name =>"Team Oregon")
+    race.results << Result.new(:place => "32", :first_name => "Jerry", :last_name => "Inscoe", :number =>"728", :team_name =>"Presto Velo")
     race.results << Result.new(:place => "DNF", :first_name => "Stephen", :last_name => "Perkins", :number =>"N99")
     race.results << Result.new(:place => "DNF", :first_name => "Robert", :last_name => "Nobles", :number =>"C98", :team_name =>"GS Camerati")
     # Expect AndersEn because cat 3/4 race is imported later with same OBRA number

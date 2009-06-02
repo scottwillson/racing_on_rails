@@ -164,4 +164,19 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     event.combined_results.destroy
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
   end
+  
+  def test_should_not_calculate_combined_results_for_combined_results
+    event = SingleDayEvent.create!(:discipline => "Time Trial")
+    race = event.races.create!(:category => categories(:senior_men))
+    race.results.create!(:place => "1", :racer => racers(:weaver), :time => 102)
+    
+    assert_not_nil(event.combined_results(true), "TT event should have combined results")
+    result_id = event.combined_results.races.first.results.first.id
+    
+    race.reload
+    race.calculate_members_only_places!
+    event.reload
+    result_id_after_member_place = event.combined_results(true).races.first.results.first.id
+    assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
+  end
 end
