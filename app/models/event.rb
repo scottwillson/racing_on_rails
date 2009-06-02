@@ -91,6 +91,48 @@ class Event < ActiveRecord::Base
     years.sort.reverse
   end
   
+  # Return [weekly_series, events] that have results
+  def Event.find_all_with_results(year = Date.today.year, discipline = Discipline[:road])
+    # Maybe this should be its own class, since it has knowledge of Event and Result?
+    first_of_year = Date.new(year, 1, 1)
+    last_of_year = Date.new(year + 1, 1, 1) - 1
+    
+    if discipline
+      discipline_names = [discipline.name]
+      if discipline == Discipline['road']
+        discipline_names << 'Circuit'
+      end
+      events = Set.new(Event.find(
+          :all,
+          :select => "distinct events.id, events.*",
+          :joins => { :races => :results },
+          :conditions => [%Q{
+              events.date between ? and ? 
+              and events.discipline in (?)
+              }, first_of_year, last_of_year, discipline_names]
+      ))
+      
+    else
+      events = Set.new(Event.find(
+          :all,
+          :select => "distinct events.id, events.*",
+          :joins => { :races => :results },
+          :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
+      ))
+      
+    end
+    
+    events.map!(&:root)
+    weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
+    
+    events.reject! do |event|
+      (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
+      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)
+    end
+    
+    [ weekly_series, events ]
+  end
+  
   # Used when importing Racers: should membership be for this year or the next?
   def Event.find_max_date_for_current_year
     # TODO Make this better
@@ -114,7 +156,7 @@ class Event < ActiveRecord::Base
     if new_record?
       if parent
         PROPOGATED_ATTRIBUTES.each { |attr| 
-          (self[attr] = parent[attr]) if self[attr].nil? 
+          (self[attr] = parent[attr]) if self[attr].blank? 
         }
       end
       self.bar_points = default_bar_points       if self[:bar_points].nil?
@@ -211,7 +253,7 @@ class Event < ActiveRecord::Base
 
   def destroy_races
     disable_notification!
-    self.races.clear
+    races.clear
     enable_notification!
   end
 
@@ -239,10 +281,10 @@ class Event < ActiveRecord::Base
     changes.select { |key, value| PROPOGATED_ATTRIBUTES.include?(key) }.each do |change|
       attribute = change.first
       was = change.last.first
-      if was
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]])
+      if was.blank?
+        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]])
       else
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["(#{attribute}=? or #{attribute} is null) and parent_id=?", was, self[:id]])
+        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]])
       end
     end
     

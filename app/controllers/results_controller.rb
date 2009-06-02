@@ -5,51 +5,9 @@ class ResultsController < ApplicationController
     # TODO Create helper method to return Range of first and last of year
     @year = params['year'].to_i
     @year = Date.today.year if @year == 0
-    first_of_year = Date.new(@year, 1, 1)
-    last_of_year = Date.new(@year + 1, 1, 1) - 1
-    
     @discipline = Discipline[params['discipline']]
-    if @discipline
-#mbratodo removed below
-      discipline_names = [@discipline.name]
-      if @discipline == Discipline['road']
-        discipline_names << 'Circuit'
-      end
-#mbratodo removed above
-      @events = Set.new(Event.find(
-          :all,
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and events.parent_id is null
-              and events.type <> 'WeeklySeries'
-              and events.discipline in (?)
-              }, first_of_year, last_of_year, discipline_names],
-#mbratodo I had:
-#              and events.discipline = (?)
-#              }, first_of_year, last_of_year, @discipline.name],
-          :order => 'events.date desc'
-      ))
-      
-    else
-      @events = Set.new(Event.find(
-          :all,
-          :select => "distinct events.id, events.*",
-          :joins => { :races => :results },
-          :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
-      ))
-      
-      @events.map!(&:root)
-    end
-    
-    @weekly_series, @events = @events.partition { |event| event.is_a?(WeeklySeries) }
-    
-    @events.reject! do |event|
-      (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
-      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)
-    end
-
-#mbrahere added the following
     @discipline_names = Discipline.find_all_names
+    @weekly_series, @events = Event.find_all_with_results(@year, @discipline)
   end
   
   def event

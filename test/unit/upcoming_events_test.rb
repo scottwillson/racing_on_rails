@@ -39,7 +39,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
         :instructional => true, :flyer_approved => true, :every => "Wednesday"
       )
       # Sunday of next full week
-      woodland_rr =     SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Woodland Road Race', :discipline => 'Road', :flyer_approved => true)
+      woodland_rr =     SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Woodland Road Race', :discipline => 'Road', :flyer_approved => true, :flyer => "http://obra.org/woodland")
       tst_rr =          SingleDayEvent.create!(:date => Date.new(2007, 6, 3), :name => 'Tahuya-Seabeck-Tahuya', :discipline => 'Road', :flyer_approved => true)
       # Monday after that
       not_upcoming_rr = SingleDayEvent.create!(:date => Date.new(2007, 6, 4), :name => 'Not Upcoming Road Race', :discipline => 'Road', :flyer_approved => true)
@@ -51,7 +51,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     
       # Weekly Series
       pir = WeeklySeries.create!(
-        :date => Date.new(2007, 4, 3), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true
+        :date => Date.new(2007, 4, 3), :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true, :flyer => "http://obra.org/pir"
       )
       Date.new(2007, 4, 3).step(Date.new(2007, 10, 23), 7) {|date|
         individual_pir = pir.children.create!(:date => date, :name => 'Tuesday PIR', :discipline => 'Road', :flyer_approved => true)
@@ -72,6 +72,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert_equal([], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
       assert_equal_events([pir], upcoming_events['Road'].upcoming_weekly_series, 'UpcomingEvents.upcoming_weekly_series[Road]')
+      assert_equal("http://obra.org/pir", upcoming_events['Road'].upcoming_weekly_series.first.flyer, "PIR flyer")
     
       # Sunday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
@@ -111,6 +112,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29))
       assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal_events([chain_breaker], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
+      assert_equal("http://obra.org/woodland", upcoming_events['Road'].upcoming_events.first.flyer, "Woodland RR flyer")
 
       # Next Sunday -- Mountain Bike only
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29), :weeks => 2, :discipline => "Mountain Bike")

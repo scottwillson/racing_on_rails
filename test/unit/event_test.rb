@@ -25,6 +25,56 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(true, event.notification?, "event notification?")
   end
   
+  def test_find_all_with_results
+    weekly_series, events = Event.find_all_with_results
+    assert_equal([], weekly_series, "weekly_series")
+    assert_equal([], events, "events")
+  end
+  
+  def test_find_all_with_results_with_year
+    weekly_series, events = Event.find_all_with_results(2003)
+    assert_equal([events(:kings_valley)], events, "events")
+    assert_equal([], weekly_series, "weekly_series")
+
+    weekly_series, events = Event.find_all_with_results(2004)
+    assert_equal([events(:banana_belt_series), events(:kings_valley_2004)], events, "events")
+    assert_equal([], weekly_series, "weekly_series")
+
+    pir_1 = events(:pir)
+    pir_1.races.create!(:category => categories(:senior_men)).results.create!
+    weekly_series, events = Event.find_all_with_results(2005)
+    assert_equal([], events, "events")
+    assert_equal([events(:pir_series)], weekly_series, "weekly_series")
+  end
+  
+  def test_find_all_with_results_with_discipline
+    weekly_series, events = Event.find_all_with_results(2003, Discipline["Road"])
+    assert_equal([events(:kings_valley)], events, "events")
+    assert_equal([], weekly_series, "weekly_series")
+
+    weekly_series, events = Event.find_all_with_results(2003, Discipline["Criterium"])
+    assert_equal([], events, "events")
+    assert_equal([], weekly_series, "weekly_series")
+    
+    circuit_race = SingleDayEvent.create!(:discipline => "Circuit")
+    circuit_race.races.create!(:category => categories(:senior_men)).results.create!
+    
+    track_event = SingleDayEvent.create!(:discipline => "Track")
+    track_event.races.create!(:category => categories(:senior_men)).results.create!
+    
+    track_series = WeeklySeries.create!(:discipline => "Track")
+    track_series_event = track_series.children.create!
+    track_series_event.races.create!(:category => categories(:senior_men)).results.create!
+    
+    weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Road"])
+    assert_equal([circuit_race], events, "events")
+    assert_equal([], weekly_series, "weekly_series")
+    
+    weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Track"])
+    assert_equal([track_event], events, "events")
+    assert_equal([track_series], weekly_series, "weekly_series")
+  end
+  
   def test_new_with_promoters
     promoter_name = "Scout"
     assert_nil(Promoter.find_by_name(promoter_name), "Promoter #{promoter_name} should not be in DB")

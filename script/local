@@ -1,0 +1,8 @@
+#! /bin/bash
+
+# Simple script to switch local directories for dev
+
+if [ -h local ]; then
+  rm local
+fi
+ln -s ../racing_on_rails_local/$1 local

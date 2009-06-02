@@ -660,9 +660,9 @@ class Racer < ActiveRecord::Base
     Racer.transaction do
       events = other_racer.results.collect do |result|
         event = result.event
-        event.disable_notification!
+        event.disable_notification! if event
         event
-      end
+      end.compact
       save!
       aliases << other_racer.aliases
       results << other_racer.results

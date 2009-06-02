@@ -878,4 +878,19 @@ class ResultTest < ActiveSupport::TestCase
     result.bar = false
     assert(!result.bar?, "Result bar?")
   end
+  
+  def test_dont_delete_team_names_if_used_by_racer
+    event = SingleDayEvent.create!
+    race = event.races.create!(:category => Category.find_by_name("Senior Men Pro 1/2"))
+    result = race.results.create!(
+      :first_name => "Tom", :team_name => "Blow", :team_name => "QuickStep"
+    )
+    
+    racer = Racer.create!(:name => "Phil Anderson", :team => Team.find_by_name("QuickStep"))
+    assert(race.destroy, "Should destory race")
+    
+    assert_nil(Racer.find_by_name("Tom Blow"), "Should delete racer that just came from results")
+    assert_not_nil(Racer.find_by_name("Phil Anderson"), "Should keep racer that was manually entered")
+    assert_not_nil(Team.find_by_name("QuickStep"), "Should keep team that is used by racer, even though it was created by a result")
+  end
 end
