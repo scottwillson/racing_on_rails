@@ -36,7 +36,7 @@ class WsbaBarr < Competition
           LEFT OUTER JOIN categories ON categories.id = races.category_id
           LEFT OUTER JOIN events ON races.event_id = events.id 
             WHERE races.category_id is not null 
-              and place between 1 and 10
+              and members_only_place between 1 and 10
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
               and (events.id in (#{event_ids}))
