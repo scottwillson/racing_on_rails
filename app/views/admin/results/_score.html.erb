@@ -1,8 +1,9 @@
 <tr class="scores_<%= @result.id %>">
   <td></td>
+  <td></td>
   <td class="right"><small><%= score.source_result.place %></small></td>
+  <td><small><%= score.source_result.event.name %></small></td>
   <td><small><%= score.source_result.race.name %></small></td>
-  <td><small><%= score.source_result.race.name %></small></td>
-  <td><small><%= score.source_result.event.date.strftime("%D") %></small></td>
-  <td><small><%= number_with_precision(score.points, :precision => 1) %></small></td>
+  <td class="right"><small><%= score.source_result.event.date.strftime("%D") %></small></td>
+  <td class="right"><small><%= number_with_precision(score.points, :precision => 1) %></small></td>
 </tr>

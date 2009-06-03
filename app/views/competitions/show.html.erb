@@ -1,12 +1,6 @@
 <% @page_title = "#{@event.name} | #{@year}" %>
 
 <h3><%= @event.name %></h3>
- 
-<%# FIXME This isn't good! %>
-<p>Points are awarded to WSBA members as follows:	 
-1st = 100, 2nd = 70, 3rd = 50, 4th = 40, 5th = 36, 6th = 32, 7th = 28, 8th = 24, 9th = 20, 10th = 16</p>
-
-<p>If you have questions, please contact marthalwalsh [at] yahoo [dot] com.</p>
 
 <% if !@event.races.empty? %>
 <%# TODO Encapsulate in a helper method %>

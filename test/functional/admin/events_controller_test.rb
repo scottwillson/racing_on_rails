@@ -772,9 +772,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
   
   def test_destroy_races
     jack_frost = events(:jack_frost_2002)
+    CombinedTimeTrialResults.create_or_destroy_for!(jack_frost)
+    assert_not_nil(jack_frost.combined_results, "Event should have combined results before destroying races")
     assert_equal(2, jack_frost.races.count, "Races before destroy")
     delete(:destroy_races, :id => jack_frost.id, :commit => 'Delete')
+    assert_not_nil(assigns(:races), "@races")
+    assert_not_nil(assigns(:combined_results), "@combined_results")
     assert_response(:success)
-    assert_equal(0, jack_frost.races(true).count  , "Races before destroy")
+    assert_equal(0, jack_frost.races(true).count  , "Races after destroy")
+    assert_nil(jack_frost.combined_results(true), "Event should have not combined results after destroying races")
   end
 end

@@ -39,7 +39,63 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(0, Racer.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's racers")
     assert_equal(0, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
   end
+  
+  def test_merge_with_historical_names
+    current_year = Date.today.year
+    last_year = current_year - 1
+
+    team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")
+    team_to_keep_last_year = team_to_keep.historical_names.create!(:name => "Team Oregon/River City Bicycles", :year => last_year)
     
+    event = SingleDayEvent.create!
+    senior_men = categories(:senior_men)
+    event.races.create!(:category => senior_men).results.create!(:place => "10", :team => team_to_keep)
+
+    event = SingleDayEvent.create!(:date => Date.new(last_year))
+    event.races.create!(:category => senior_men).results.create!(:place => "2", :team => team_to_keep)
+    
+    team_to_merge = Team.create!(:name => "Team O/RCB")
+    team_to_merge.historical_names.create!(:name => "Team o IRCB", :year => last_year)
+    
+    event = SingleDayEvent.create!
+    event.races.create!(:category => senior_men).results.create!(:place => "4", :team => team_to_merge)
+
+    event = SingleDayEvent.create!(:date => Date.new(last_year))
+    team_to_merge_last_year_result = event.races.create!(:category => senior_men).results.create!(:place => "19", :team => team_to_merge)
+
+    team_to_keep.merge(team_to_merge)
+    
+    assert(!Team.exists?(team_to_merge.id), "Should delete merged team")
+    assert_equal(1, team_to_keep.historical_names.count, "Target team historical names")
+    assert_equal(team_to_keep_last_year, team_to_keep.historical_names.first, "Target team historical name")
+    
+    # If the merged team has historical names, those need to become teams with results from those years
+    team_to_merge_last_year = Team.find_by_name("Team o IRCB")
+    assert_not_nil(team_to_merge_last_year, "Merged team's historical name should become a new team")
+    assert_equal(1, team_to_merge_last_year.results.count, "Merged team's historical name results")
+    assert_equal(team_to_merge_last_year_result, team_to_merge_last_year.results.first, "Merged team's historical name results")
+    assert_equal(0, team_to_merge_last_year.historical_names.count, "Merged team's historical name historical names")
+    
+    assert_equal(3, team_to_keep.results.count, "Target team's results")
+    assert_equal(1, team_to_keep.historical_names.count, "Target team's historical names")
+    assert_equal(1, team_to_keep.aliases.count, "Target team's aliases")
+  end
+    
+  def test_merge_with_historical_names_that_match_existing_team
+    current_year = Date.today.year
+    last_year = current_year - 1
+
+    team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")
+    team_to_keep_last_year = team_to_keep.historical_names.create!(:name => "Team Oregon/River City Bicycles", :year => last_year)
+        
+    team_to_merge = Team.create!(:name => "Team O/RCB")
+    team_to_merge.historical_names.create!(:name => "Team o IRCB", :year => last_year)
+    
+    Team.create!(:name => "Team o IRCB")
+    
+    team_to_keep.merge(team_to_merge)
+  end
+  
   def test_find_by_name_or_alias
     # new
     name = 'Brooklyn Cycling Force'

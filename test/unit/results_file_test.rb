@@ -41,7 +41,6 @@ class ResultsFileTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
     results_file.import
-
     expected_races = get_expected_races
     assert_equal(expected_races.size, event.races.size, "event races")
     expected_races.each_with_index do |expected_race, index|

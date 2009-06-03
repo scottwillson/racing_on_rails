@@ -406,6 +406,26 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(non_members[2], race.results[4].racer, 'Result 4 racer')
   end
   
+  def test_calculate_members_only_places_should_not_trigger_combined_results_calculation
+    event = SingleDayEvent.create!(:discipline => "Time Trial")
+    race = event.races.create!(:category => categories(:senior_men))
+    non_member = Racer.create!
+    assert(!non_member.member?, "Racer member?")
+    race.results.create!(:place => "1", :racer => non_member, :time => 100)
+    
+    assert(racers(:weaver).member?, "Racer member?")
+    race.results.create!(:place => "2", :racer => racers(:weaver), :time => 102)
+    
+    assert_not_nil(event.combined_results(true), "TT event should have combined results")
+    result_id = event.combined_results.races.first.results.first.id
+    
+    race.reload
+    race.calculate_members_only_places!
+    event.reload
+    result_id_after_member_place = event.combined_results(true).races.first.results.first.id
+    assert_equal(result_id, result_id_after_member_place, "calculate_members_only_places! should not trigger combined results recalc")
+  end
+  
   def test_dates_of_birth
     event = SingleDayEvent.create!(:date => Date.today)
     race = event.races.create!(:category => categories(:senior_men))

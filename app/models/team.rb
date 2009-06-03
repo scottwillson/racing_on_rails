@@ -112,21 +112,41 @@ class Team < ActiveRecord::Base
         event = result.event
         event.disable_notification!
         event
-      end
-      save!
+      end || []
+      
+      team.create_team_for_historical_results!
+      
       aliases << team.aliases
-      results << team.results
+      results << team.results(true)
       racers << team.racers
       Team.delete(team.id)
-      existing_alias = aliases.detect{|a| a.name.casecmp(team.name) == 0}
-      if existing_alias.nil? and Team.find_all_by_name(team.name).empty?
+      existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
+      if existing_alias.nil? && Team.find_all_by_name(team.name).empty?
         aliases.create(:name => team.name) 
       end
-      if events
-        events.each do |event|
-          event.reload
-          event.enable_notification!
-        end
+      events.each do |event|
+        event.enable_notification!
+      end
+    end
+  end
+  
+  # Preserve team names in old results by creating a new Team for them, and moving the results.
+  #
+  # Results are preserved by creating a new Team from the most recent HistoricalName. If a Team
+  # already exists with the HistoricalName's name, results will move to existing Team.
+  # This may be unxpected, can't think of a better way to handle it in this model.
+  def create_team_for_historical_results!
+    historical_name = historical_names.sort_by(&:year).reverse!.first
+    
+    if historical_name
+      team = Team.find_or_create_by_name(historical_name.name)
+      results.each do |result|
+        team.results << result if result.date.year <= historical_name.year
+      end
+      
+      historical_name.destroy
+      historical_names.each do |name|
+        team.historical_names << name unless name == historical_name
       end
     end
   end

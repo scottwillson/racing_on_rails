@@ -125,7 +125,7 @@ class Racer < ActiveRecord::Base
     
     racers = Racer.connection.select_all(%Q{
       SELECT racers.id, license, first_name, last_name, teams.name as team_name, racers.notes,
-             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to,
+             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to, DATE_FORMAT(member_usac_to, '%m/%d/%Y') as member_usac_to,
              print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation, 
              street, racers.city, racers.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
@@ -175,6 +175,15 @@ class Racer < ActiveRecord::Base
     end
     
     racers
+  end
+  
+  #interprets dates returned in sql above for member export
+  def Racer.lic_check(lic, lic_date)
+    if lic.to_i > 0
+      (lic_date && (Date.parse(lic_date) > Date.today)) ? "current" : "CHECK LIC!"
+    else
+      "NOT ON FILE"
+    end
   end
   
   def racers_with_same_name

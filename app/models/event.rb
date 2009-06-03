@@ -253,6 +253,10 @@ class Event < ActiveRecord::Base
 
   def destroy_races
     disable_notification!
+    if combined_results
+      combined_results.destroy_races
+      combined_results.destroy
+    end
     races.clear
     enable_notification!
   end

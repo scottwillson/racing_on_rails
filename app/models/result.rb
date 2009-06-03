@@ -79,7 +79,7 @@ class Result < ActiveRecord::Base
 
   # Replace any new +racer+, or +team+ with one that already exists if name matches
   def find_associated_records
-    _racer = self.racer
+    _racer = racer
     if _racer && _racer.new_record?
       if _racer.name.blank?
         self.racer = nil
@@ -100,15 +100,15 @@ class Result < ActiveRecord::Base
     end
 
     # This logic should be in Racer
-    if !self.racer.nil? &&
-       self.racer.new_record? &&
-       !self.racer.first_name.blank? &&
-       !self.racer.last_name.blank? &&
-       self.racer[:member_from].blank? &&
+    if !racer.nil? &&
+       racer.new_record? &&
+       !racer.first_name.blank? &&
+       !racer.last_name.blank? &&
+       racer[:member_from].blank? &&
        event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
-      self.racer.member_from = race.date
+      racer.member_from = race.date
     end
 
     if team && team.new_record?
@@ -120,6 +120,7 @@ class Result < ActiveRecord::Base
       end
       team.created_by = event if team && team.new_record?
     end
+    true
   end
 
   # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +racer+ already exists.
@@ -129,19 +130,13 @@ class Result < ActiveRecord::Base
   # Need Event to match on race number. Event will not be set before result is saved to database
   def find_racers(_event = event)
     matches = Set.new
-
-    # use license first if more reliable
-    if SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
-      matches = matches + Racer.find_all_by_license(license)
-      return matches if matches.size == 1
-    end if
     
     # name
     matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
 
     # number
-    if matches.size > 1 or (matches.empty? and first_name.blank? and last_name.blank?)
+    if number.present? && (matches.size > 1 || (matches.empty? && first_name.blank? && last_name.blank?))
       race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
       race_numbers.each do |race_number|
         if matches.include?(race_number.racer)
@@ -174,16 +169,16 @@ class Result < ActiveRecord::Base
   # Set +racer#number+ to +number+ if this isn't a rental number
   def update_racer_number
     discipline = Discipline[event.discipline]
-    if self.racer and !number.blank? and !RaceNumber.rental?(number, discipline)
-      self.racer.updated_by = self.updated_by
+    if racer && !number.blank? && !RaceNumber.rental?(number, discipline)
+      racer.updated_by = self.updated_by
       event.number_issuer unless event.number_issuer
-      self.racer.add_number(number, discipline, event.number_issuer, event.date.year)
+      racer.add_number(number, discipline, event.number_issuer, event.date.year)
     end
   end
 
   def save_racer
     if racer && (racer.new_record? || racer.changed?)
-      racer.created_by = self.event
+      racer.created_by = event
       racer.save!
     end
   end
@@ -436,7 +431,6 @@ class Result < ActiveRecord::Base
   def set_time_value(attribute, value)
     case value
     when Time, DateTime  
-      logger.debug "set_time_value #{place} #{attribute} #{name} #{value.class} val #{value} usec #{value.usec}"
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
       self[attribute]
     else
@@ -555,8 +549,8 @@ class Result < ActiveRecord::Base
   end
 
   def cleanup_number
-    self.number = self.number.to_s
-    self.number = self.number.to_i.to_s if self.number[/^\d+\.0$/]
+    self.number = number.to_s
+    self.number = number.to_i.to_s if number[/^\d+\.0$/]
   end
 
   # Mostly removes unfortunate punctuation typos
