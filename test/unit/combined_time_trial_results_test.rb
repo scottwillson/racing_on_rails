@@ -161,7 +161,6 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     event.reload
     event.destroy_races
     event.combined_results.destroy_races
-    event.combined_results.destroy
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")
   end
   

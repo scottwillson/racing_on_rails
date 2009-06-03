@@ -225,6 +225,7 @@ class Admin::EventsController < ApplicationController
     @event = Event.find(params[:id])
     # Remember races for view
     @races = @event.races.dup
+    @combined_results = @event.combined_results
     @event.destroy_races
     expire_cache
   end
