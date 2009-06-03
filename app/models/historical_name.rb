@@ -7,4 +7,8 @@ class HistoricalName < ActiveRecord::Base
   def date=(value)
     self.year = value.year
   end
+  
+  def to_s
+    "#<HistoricalName #{name} #{year} #{team_id}>"
+  end
 end
