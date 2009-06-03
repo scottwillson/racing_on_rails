@@ -420,14 +420,14 @@ table.event_races td {
 }
 
 table.child_single_day_events td {
-  padding-top: 4px;
+  padding-top: 12px;
   padding-left: 8px;
   padding-right: 8px;
   font-weight: bold;
 }
 
 table.child_single_day_events td.child {
-  padding-top: 0px;
+  padding-top: 2px;
 }
 
 table.child_single_day_events td.child a {

@@ -242,7 +242,7 @@ class Event < ActiveRecord::Base
   
   # Returns only the children and child child_competitions with +results+
   def children_and_child_competitions_with_results(reload = false)
-    children_and_child_competitions(reload).select(&:has_results?)
+    children_and_child_competitions(reload).select(&:has_results_including_children?)
   end
   
   # Returns only the Races with +results+
