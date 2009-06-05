@@ -5,9 +5,6 @@ class ApplicationController < ActionController::Base
   
   local_addresses.clear
 
-#  mbratodo: I had removed this line
-  RESULTS_LIMIT = 100
-  
   # HP's proxy, among others, gets this wrong
   ActionController::Base.ip_spoofing_check = false
 

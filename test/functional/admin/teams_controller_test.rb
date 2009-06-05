@@ -64,7 +64,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   end
 
   def test_find_limit
-    for i in 0..Admin::TeamsController::RESULTS_LIMIT
+    for i in 0..SEARCH_RESULTS_LIMIT
       Team.create(:name => "Test Team #{i}")
     end
     
@@ -72,7 +72,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template("admin/teams/index")
     assert_not_nil(assigns["teams"], "Should assign teams")
-    assert_equal(Admin::TeamsController::RESULTS_LIMIT, assigns['teams'].size, "Search for '' should find all teams")
+    assert_equal(SEARCH_RESULTS_LIMIT, assigns['teams'].size, "Search for '' should find all teams")
     assert_not_nil(assigns["name"], "Should assign name")
     assert(!flash.empty?, 'flash not empty?')
     assert_equal('Test', assigns['name'], "'name' assigns")

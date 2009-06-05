@@ -16,11 +16,11 @@ class Admin::TeamsController < ApplicationController
         :all, 
         :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
         :include => :aliases,
-        :limit => RESULTS_LIMIT,
+        :limit => SEARCH_RESULTS_LIMIT,
         :order => 'teams.name'
       )
-      if @teams.size == RESULTS_LIMIT
-        flash[:warn] = "First #{RESULTS_LIMIT} teams"
+      if @teams.size == SEARCH_RESULTS_LIMIT
+        flash[:warn] = "First #{SEARCH_RESULTS_LIMIT} teams"
       end
     end
   end

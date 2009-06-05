@@ -18,7 +18,7 @@ class Admin::RacersController < ApplicationController
   #  * Scott Willson
   #  * Jim Andersen (with an 'Jim Anderson' alias)
   # Store previous search in session and cookie as 'racer_name'.
-  # Limit results to ApplicationControllerBase::RESULTS_LIMIT
+  # Limit results to SEARCH_RESULTS_LIMIT
   # === Params
   # * name
   # === Assigns
@@ -36,11 +36,11 @@ class Admin::RacersController < ApplicationController
     if @name.blank?
       @racers = []
     else
-      @racers = Racer.find_all_by_name_like(@name, RESULTS_LIMIT)
+      @racers = Racer.find_all_by_name_like(@name, SEARCH_RESULTS_LIMIT)
       @racers = @racers + Racer.find_by_number(@name)
     end
-    if @racers.size == RESULTS_LIMIT
-      flash[:notice] = "First #{RESULTS_LIMIT} racers"
+    if @racers.size == SEARCH_RESULTS_LIMIT
+      flash[:notice] = "First #{SEARCH_RESULTS_LIMIT} racers"
     end
     
     @current_year = current_date.year
