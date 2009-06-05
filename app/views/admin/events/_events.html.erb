@@ -11,7 +11,7 @@
   <%- @event.children_and_child_competitions.each do |single_day_event| -%>
   <tr id="event_<%= single_day_event.id %>_row">
     <td class='nowrap'><%= link_to single_day_event.date.strftime('%A, %B %d'), edit_admin_event_path(single_day_event) %></td>
-    <td class='link'><%= link_to single_day_event.name, edit_admin_event_path(single_day_event) %></td>
+    <td class='link'><%= link_to single_day_event.full_name, edit_admin_event_path(single_day_event) %></td>
     <td class="right"><%= link_to_remote image_tag('/images/buttons/small_remove_solo.png'),
               :url => admin_event_path(single_day_event),
               :html => { :class => "image", :id => "destroy_event_#{single_day_event.id}", :title => "Delete event" },

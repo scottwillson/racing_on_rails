@@ -1,6 +1,24 @@
 module Schedule
 #mbratodo: I reworte much of the schedule import functionality, abandoning the "Rigid OBRA legacy format", modeling it on results import 
-#  and tailoring to MBRA's needs.
+#  and tailoring to MBRA's needs. This is the import map I use:
+#      COLUMN_MAP = {
+#      'Race'                                   => 'name',
+#      'Event'                                  => 'name',
+#      'StageName'                              => 'stage_name', #new field
+#      'Stage'                                  => 'stage_name',
+#      'CityState'                              => 'city',
+#      'Promoter'                               => 'promoter_name',
+#      'PromoterPhone'                          => 'promoter_phone',
+#      'PromoterEmail'                          => 'promoter_email',
+#      'SponsoringTeam'                         => 'team_id',
+#      'Team'                                   => 'team_id',
+#      'Club'                                   => 'team_id',
+#      'SanctionedBy'                           => 'sanctioned_by',
+#      'ShortDescription'                       => 'short_description',
+#      'Website'                                => 'flyer',
+#      'FlyerApproved'                          => 'flyer_approved'
+#    }
+
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
 
