@@ -20,7 +20,7 @@ class RacingAssociation
     @show_events_sponsoring_team = false  #mbrahere
     @show_only_association_sanctioned_races_on_calendar = true
     @email = "scott@butlerpress.com"
-    @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])  #mbratodo: in MT bar (rd, mtb, cx) and bat currently
+    @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @award_cat4_participation_points = true
     @usac_region = "North West"
   end
