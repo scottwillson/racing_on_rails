@@ -4,9 +4,8 @@ class RacersFile < GridFile
   COLUMN_MAP = {
     'team'                                   => 'team_name',
     'Cycling Team'                           => 'team_name',
-#mbratodo: added club, ncca club
-#    'club'                                   => 'club_name',
-#    'ncca club'                              => 'ncca_club_name',
+    'club'                                   => 'club_name',
+    'ncca club'                              => 'ncca_club_name',
     'fname'                                  => 'first_name',
     'lname'                                  => 'last_name',
     'f_name'                                 => 'first_name',
@@ -147,8 +146,7 @@ class RacersFile < GridFile
         for row in rows
           row_hash = row.to_hash
           row_hash[:year] = year if year
-          row_hash[:updated_by] = import_file.name
-#mbratodo: I had: row_hash[:updated_by] = "Membership import"
+          row_hash[:updated_by] = "Membership import: #{import_file.name}"
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
           
