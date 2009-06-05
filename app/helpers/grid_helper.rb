@@ -8,7 +8,7 @@ module GridHelper
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
       @@grid_columns['age'] = Column.new(:name => 'age', :description => 'Age', :size => 3, :fixed_size => true)
-#mbratodo I had:      @@grid_columns['ages'] = Column.new(:name => 'ages', :description => 'Ages', :size => 5, :fixed_size => true)
+      @@grid_columns['ages'] = Column.new(:name => 'ages', :description => 'Ages', :size => 5, :fixed_size => true)
       @@grid_columns['bar'] = Column.new(:name => 'bar', :description => 'BAR', :size => 3, :fixed_size => true)
       @@grid_columns['category_name'] = Column.new(:name => 'category_name', :description => 'Category', :size => 20, :fixed_size => true)
 #mbrahere: I added bthe following line:
@@ -17,7 +17,6 @@ module GridHelper
       @@grid_columns['date_of_birth'] = Column.new(:name => 'date_of_birth', :description => 'Date of Birth', :size => 15)
       @@grid_columns['first_name'] = Column.new(:name => 'first_name', :description => 'First Name', :size => 12, :fixed_size => true)
       @@grid_columns['first_name'].link = 'link_to_result(cell, result)'
-#mbratodo: I added the folowing line:
       @@grid_columns['gender'] = Column.new(:name => 'gender', :description => 'Gender', :size => 6, :fixed_size => true)
       @@grid_columns['laps'] = Column.new(:name => 'laps', :description => 'Laps', :size => 4, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['last_name'] = Column.new(:name => 'last_name', :description => 'Last Name', :size => 18, :fixed_size => true)
