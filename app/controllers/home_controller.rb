@@ -18,7 +18,6 @@ class HomeController < ApplicationController
       :conditions => [
         'events.date > ? and events.sanctioned_by = ?', 
         cutoff, ASSOCIATION.short_name
-#mbratodo: I used: :conditions => ['events.date > ? and standings.type is null', cutoff],
       ],
       :order => 'events.date desc'
     )
