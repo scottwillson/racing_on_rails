@@ -16,11 +16,10 @@ class Team < ActiveRecord::Base
   
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
+  has_many :events
   has_many :historical_names, :order => "year"
   has_many :racers
   has_many :results
-#mbratodo: I added:
-#  has_many :events
 
   def Team.find_by_name_or_alias(name)
     team = Team.find_by_name(name)
