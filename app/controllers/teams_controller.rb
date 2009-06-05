@@ -1,7 +1,10 @@
 class TeamsController < ApplicationController
   def index
-    @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
-#mbratodo we display all teams    @teams = Team.find(:all)
+    if SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
+      @teams = Team.find(:all)
+    else
+      @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
+    end
     @discipline_names = Discipline.find_all_names  #mbrahere added this line
   end
   
