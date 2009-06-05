@@ -71,6 +71,13 @@ class CategoryTest < ActiveSupport::TestCase
     assert_equal(12..15, cat.ages, 'Default age range')
   end
   
+  def test_set_ages_as_string
+    cat = Category.create(:name => 'Not a Masters Category', :ages => "12-15")
+    assert_equal(12, cat.ages_begin, 'ages_begin')
+    assert_equal(15, cat.ages_end, 'ages_end')
+    assert_equal(12..15, cat.ages, 'Default age range')
+  end
+  
   def test_to_friendly_param
     assert_equal('senior_men', categories(:senior_men).to_friendly_param, 'senior_men friendly_param')
     assert_equal('pro_expert_women', categories(:pro_expert_women).to_friendly_param, 'pro_expert_women friendly_param')
