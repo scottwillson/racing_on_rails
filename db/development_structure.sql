@@ -7,13 +7,13 @@ create table `aliases` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `idx_name` (`name`),
   key `idx_id` (`alias`),
   key `idx_racer_id` (`racer_id`),
   key `idx_team_id` (`team_id`),
-  constraint `aliases_team_id_fk` foreign key (`team_id`) references `teams` (`id`) on delete cascade,
-  constraint `aliases_racer_id_fk` foreign key (`racer_id`) references `racers` (`id`) on delete cascade
+  constraint `aliases_racer_id_fk` foreign key (`racer_id`) references `racers` (`id`) on delete cascade,
+  constraint `aliases_team_id_fk` foreign key (`team_id`) references `teams` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `article_categories` (
@@ -25,7 +25,7 @@ create table `article_categories` (
   `description` varchar(255) collate utf8_unicode_ci default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `articles` (
@@ -40,7 +40,7 @@ create table `articles` (
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `bids` (
@@ -53,7 +53,7 @@ create table `bids` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `categories` (
@@ -67,7 +67,7 @@ create table `categories` (
   `ages_begin` int(11) default '0',
   `ages_end` int(11) default '999',
   `friendly_param` varchar(255) not null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `categories_name_index` (`name`),
   key `parent_id` (`parent_id`),
   key `index_categories_on_friendly_param` (`friendly_param`),
@@ -79,7 +79,7 @@ create table `competition_event_memberships` (
   `competition_id` int(11) not null,
   `event_id` int(11) not null,
   `points_factor` float default '1',
-  primary key (`id`),
+  primary key  (`id`),
   key `index_competition_event_memberships_on_competition_id` (`competition_id`),
   key `index_competition_event_memberships_on_event_id` (`event_id`),
   constraint `competition_event_memberships_competitions_id_fk` foreign key (`competition_id`) references `events` (`id`) on delete cascade,
@@ -106,8 +106,8 @@ create table `discipline_bar_categories` (
   unique key `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
   key `idx_category_id` (`category_id`),
   key `idx_discipline_id` (`discipline_id`),
-  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade,
-  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade
+  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade,
+  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `disciplines` (
@@ -118,14 +118,14 @@ create table `disciplines` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `numbers` tinyint(1) default '0',
-  primary key (`id`),
+  primary key  (`id`),
   unique key `index_disciplines_on_name` (`name`)
 ) engine=innodb default charset=utf8;
 
 create table `duplicates` (
   `id` int(11) not null auto_increment,
   `new_attributes` text,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `duplicates_racers` (
@@ -171,8 +171,10 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
+  `source_event_id` int(11) default null,
   `team_id` int(11) default null,
-  primary key (`id`),
+  `stage_name` varchar(255) default null,
+  primary key  (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
   key `idx_promoter_id` (`promoter_id`),
@@ -183,9 +185,11 @@ create table `events` (
   key `idx_date` (`date`),
   key `index_events_on_sanctioned_by` (`sanctioned_by`),
   key `index_events_on_bar_points` (`bar_points`),
+  key `events_source_event_id_fk` (`source_event_id`),
   constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
   constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `promoters` (`id`) on delete set null,
+  constraint `events_source_event_id_fk` foreign key (`source_event_id`) references `events` (`id`) on delete cascade,
   constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -197,7 +201,7 @@ create table `historical_names` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `lock_version` int(11) not null default '0',
-  primary key (`id`),
+  primary key  (`id`),
   key `team_id` (`team_id`),
   key `index_names_on_name` (`name`),
   key `index_names_on_year` (`year`),
@@ -210,7 +214,7 @@ create table `import_files` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `mailing_lists` (
@@ -222,7 +226,7 @@ create table `mailing_lists` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `description` text,
-  primary key (`id`),
+  primary key  (`id`),
   key `idx_name` (`name`)
 ) engine=innodb default charset=utf8;
 
@@ -235,7 +239,7 @@ create table `new_categories` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `number_issuers` (
@@ -244,7 +248,7 @@ create table `number_issuers` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `number_issuers_name_index` (`name`)
 ) engine=innodb default charset=utf8;
 
@@ -260,7 +264,7 @@ create table `page_versions` (
   `lock_version` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   key `index_page_versions_on_page_id` (`page_id`)
 ) engine=innodb default charset=utf8;
 
@@ -275,7 +279,7 @@ create table `pages` (
   `updated_at` datetime default null,
   `author_id` int(11) default null,
   `lock_version` int(11) not null default '0',
-  primary key (`id`),
+  primary key  (`id`),
   unique key `index_pages_on_path` (`path`),
   key `parent_id` (`parent_id`),
   key `index_pages_on_slug` (`slug`),
@@ -293,7 +297,7 @@ create table `posts` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `mailing_list_id` int(11) not null default '0',
-  primary key (`id`),
+  primary key  (`id`),
   unique key `idx_topica_message_id` (`topica_message_id`),
   key `idx_date` (`date`),
   key `idx_sender` (`sender`),
@@ -311,7 +315,7 @@ create table `promoters` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `promoter_info` (`name`,`email`,`phone`),
   key `idx_name` (`name`)
 ) engine=innodb default charset=utf8;
@@ -327,13 +331,13 @@ create table `race_numbers` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `updated_by` varchar(255) default null,
-  primary key (`id`),
+  primary key  (`id`),
   key `racer_id` (`racer_id`),
   key `discipline_id` (`discipline_id`),
   key `number_issuer_id` (`number_issuer_id`),
   key `race_numbers_value_index` (`value`),
-  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
+  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `race_numbers_racer_id_fk` foreign key (`racer_id`) references `racers` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
@@ -379,7 +383,8 @@ create table `racers` (
   `created_by_id` int(11) default null,
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
-  primary key (`id`),
+  `status` varchar(255) default null,
+  primary key  (`id`),
   key `idx_last_name` (`last_name`),
   key `idx_first_name` (`first_name`),
   key `idx_team_id` (`team_id`),
@@ -406,12 +411,12 @@ create table `races` (
   `result_columns` varchar(255) default null,
   `bar_points` int(11) default null,
   `event_id` int(11) not null,
-  primary key (`id`),
+  primary key  (`id`),
   key `idx_category_id` (`category_id`),
   key `index_races_on_event_id` (`event_id`),
   key `index_races_on_bar_points` (`bar_points`),
-  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade,
-  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`)
+  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `results` (
@@ -450,23 +455,23 @@ create table `results` (
   `points_penalty` int(11) not null default '0',
   `preliminary` tinyint(1) default null,
   `bar` tinyint(1) default '1',
-  primary key (`id`),
+  primary key  (`id`),
   key `idx_category_id` (`category_id`),
   key `idx_race_id` (`race_id`),
   key `idx_racer_id` (`racer_id`),
   key `idx_team_id` (`team_id`),
   key `index_results_on_place` (`place`),
   key `index_results_on_members_only_place` (`members_only_place`),
-  constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`),
   constraint `results_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
   constraint `results_racer_id_fk` foreign key (`racer_id`) references `racers` (`id`),
-  constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade
+  constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade,
+  constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
-  primary key (`id`)
+  primary key  (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `roles_users` (
@@ -474,8 +479,8 @@ create table `roles_users` (
   `user_id` int(11) not null,
   key `role_id` (`role_id`),
   key `user_id` (`user_id`),
-  constraint `roles_users_user_id_fk` foreign key (`user_id`) references `users` (`id`) on delete cascade,
-  constraint `roles_users_role_id_fk` foreign key (`role_id`) references `roles` (`id`) on delete cascade
+  constraint `roles_users_role_id_fk` foreign key (`role_id`) references `roles` (`id`) on delete cascade,
+  constraint `roles_users_user_id_fk` foreign key (`user_id`) references `users` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
@@ -490,11 +495,11 @@ create table `scores` (
   `points` double default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   key `scores_competition_result_id_index` (`competition_result_id`),
   key `scores_source_result_id_index` (`source_result_id`),
-  constraint `scores_source_result_id_fk` foreign key (`source_result_id`) references `results` (`id`) on delete cascade,
-  constraint `scores_competition_result_id_fk` foreign key (`competition_result_id`) references `results` (`id`) on delete cascade
+  constraint `scores_competition_result_id_fk` foreign key (`competition_result_id`) references `results` (`id`) on delete cascade,
+  constraint `scores_source_result_id_fk` foreign key (`source_result_id`) references `results` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `teams` (
@@ -515,7 +520,7 @@ create table `teams` (
   `show_on_public_page` tinyint(1) default '0',
   `created_by_id` int(11) default null,
   `created_by_type` varchar(255) default null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `idx_name` (`name`)
 ) engine=innodb default charset=utf8;
 
@@ -529,7 +534,7 @@ create table `users` (
   `email` varchar(128) not null,
   `remember_token` varchar(40) default null,
   `remember_token_expires_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   unique key `index_users_on_email` (`email`),
   key `index_users_on_name` (`name`)
 ) engine=innodb default charset=utf8;
@@ -541,7 +546,7 @@ create table `velodromes` (
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  primary key (`id`),
+  primary key  (`id`),
   key `index_velodromes_on_name` (`name`)
 ) engine=innodb default charset=utf8;
 
@@ -642,6 +647,10 @@ insert into schema_migrations (version) values ('20090515031733');
 insert into schema_migrations (version) values ('20090519034739');
 
 insert into schema_migrations (version) values ('20090528023747');
+
+insert into schema_migrations (version) values ('20090604213033');
+
+insert into schema_migrations (version) values ('20090606004452');
 
 insert into schema_migrations (version) values ('21');
 
