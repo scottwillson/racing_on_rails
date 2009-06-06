@@ -66,12 +66,12 @@ class RacersFile < GridFile
     'Membership No'                          => 'license',
     'license#'                               => 'license', #mbrahere added this line
     'date joined'                            => 'member_from',
-    'exp date'                               => 'license_expiration_date', #mbrahere added this line
-    'expiration date'                        => 'license_expiration_date', #mbrahere added this line
+#    'exp date'                               => 'license_expiration_date', #mbrahere added this line = but I don't think we need it...alp
+#    'expiration date'                        => 'license_expiration_date', #mbrahere added this line
     'card'                                   => 'print_card',
     'sex'                                    => 'gender',
     'What is your occupation? (optional)'    => 'occupation',
-    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling" #mbrahere added this line
+#    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling" #mbrahere added this line...but do we need?
     'Interests'                              => 'notes',
     'Receipt Code'                           => 'notes',
     'Confirmation Code'                      => 'notes',

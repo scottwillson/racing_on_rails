@@ -46,6 +46,15 @@ class SingleDayEvent < Event
     end
   end
 
+  #mbrahere added full_name
+  def full_name
+    if parent.nil?
+      name
+    else
+    "#{name} - #{stage_name}"
+    end
+  end
+
   def friendly_class_name
     'Single Day Event'
   end
