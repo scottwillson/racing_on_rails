@@ -1,6 +1,4 @@
-module AdminApplicationHelper
-  #mbrahere: I added this helper. Used in managing article categories.
-  
+module Admin::ArticleCategoriesHelper
   def display_categories(categories, parent_id)
     ret = "<ul>" 
       for category in categories
@@ -53,5 +51,4 @@ module AdminApplicationHelper
     html << "</select>\n" if init
     return html
   end
-  
 end
