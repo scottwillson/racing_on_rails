@@ -481,23 +481,16 @@ class Event < ActiveRecord::Base
   end
 
 
-  # Only SingleDayEvent subclass has a parent -- this abstract class, Event, does not have a
-  # parent, but implementing missing_parent? here allows clients to just call the method
-  # without first checking that it exists
+  # Always return false
   def missing_parent?
     false
   end
 
-  # Only MultiDayEvent subclass has children -- this abstract class, Event, does not have 
-  # children, but implementing missing_children? here allows clients to just call the method
-  # without first checking that it exists
   def missing_children?
     !missing_children.empty?
   end
   
-  # Only MultiDayEvent subclass has children -- this abstract class, Event, does not have 
-  # children, but implementing missing_children? here allows clients to just call the method
-  # without first checking that it exists
+  # Always return empty Array
   def missing_children
     []
   end
