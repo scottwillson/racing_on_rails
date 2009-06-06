@@ -34,41 +34,49 @@ class ResultsFileTest < ActiveSupport::TestCase
     spreadsheet_row = book.worksheet(0).row(0)
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), SingleDayEvent.new)
     column_indexes = results_file.create_columns(spreadsheet_row)
-    assert_equal({ :place => 0, :number => 1, :last_name => 2, :first_name => 3, :team_name => 4, :points => 5 }, column_indexes, "column_indexes")
+    assert_equal({ :place => 0, :number => 1, :license => 2, :last_name => 3, :first_name => 4, :team_name => 5, :points => 6  }, column_indexes, "column_indexes")
   end
   
   def test_import_excel
-    event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
-    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), event)
-    results_file.import
-    expected_races = get_expected_races
-    assert_equal(expected_races.size, event.races.size, "event races")
-    expected_races.each_with_index do |expected_race, index|
-      actual_race = event.races[index]
-      assert_not_nil(actual_race, "race #{index}")
-      assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
-      assert_equal(expected_race.results.size, actual_race.results.size, "Results")
-      race_date = actual_race.date
-      actual_race.results.sort.each_with_index do |result, result_index|
-        expected_result = expected_race.results[result_index]
-        assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
-        assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
-        assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
-        assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
-        assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-        if result.racer
-          if RaceNumber.rental?(result.number, Discipline[event.discipline])
-            assert(!result.racer.member?(race_date), "Racer should not be a member because he has a rental number")
-          else
-            assert(result.racer.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.racer.member_from.strftime('%F')} #{result.racer.member_to.strftime('%F')}")
-            assert_not_equal(
-              Date.today, 
-              result.racer.member_from, 
-              "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
-          end
-        end
-      end
-    end
+     event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
+     source_path = "#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"
+     results_file = ResultsFile.new(File.new(source_path), event)
+     assert_equal(source_path, results_file.source.path, "file path")
+     results_file.import
+
+     expected_races = get_expected_races
+     assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+     expected_races.each_with_index do |expected_race, index|
+       actual_race = event.races[index]
+       assert_not_nil(actual_race, "race #{index}")
+       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
+       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
+       race_date = actual_race.date
+       actual_race.results.sort.each_with_index do |result, result_index|
+         expected_result = expected_race.results[result_index]
+         assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
+         if result.license && result.license.empty? #may have found racer by license
+           assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
+           assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
+         end
+         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
+         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
+         if result.racer
+           if RaceNumber.rental?(result.number, Discipline[event.discipline])
+             assert(!result.racer.member?(race_date), "Racer should not be a member because he has a rental number")
+           else
+             assert(result.racer.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.racer.member_from.strftime('%F')} #{result.racer.member_to.strftime('%F')}")
+             assert_not_equal(
+               Date.today, 
+               result.racer.member_from, 
+               "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
+           end
+           #test result by license (some with name misspelled)
+           racer_by_lic = Racer.find_by_license(result.license) if result.license
+           assert_equal(result.racer, racer_by_lic, "Result should be assigned to #{racer_by_lic.name} by license but was given to #{result.racer.name}") if racer_by_lic
+         end
+       end
+     end
   end
   
   def test_import_time_trial_racers_with_same_name
@@ -414,8 +422,8 @@ class ResultsFileTest < ActiveSupport::TestCase
     races = []
     
     race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
-    race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :team_name =>"Jittery Joe's", :points => "23.0")
-    race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Tonkin", :number =>"102", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
+    race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"999999999", :team_name =>"Jittery Joe's", :points => "23.0")
+    race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Torkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
     race.results << Result.new(:place => "3", :first_name => "John", :last_name => "Browning", :number =>"159", :team_name =>"Half Fast Velo", :points => "12.0")
     race.results << Result.new(:place => "4", :first_name => "Doug", :last_name => "Ollerenshaw", :number =>"132", :team_name =>"Health Net", :points => "8.0")
     race.results << Result.new(:place => "5", :first_name => "Dean", :last_name => "Tracy", :number =>"A76", :team_name =>"Team Rubicon", :points => "7.0")
