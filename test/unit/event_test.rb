@@ -71,10 +71,13 @@ class EventTest < ActiveSupport::TestCase
     track_series_event.races.create!(:category => categories(:senior_men)).results.create!
     
     weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Road"])
-    expected = [circuit_race]
+    expected = []
     unless ASSOCIATION.show_only_association_sanctioned_races_on_calendar
       expected << events(:usa_cycling_event_with_results)
     end
+    expected << circuit_race
+    expected.sort!
+    events.sort!
     assert_equal(expected, events, "events")
     assert_equal([], weekly_series, "weekly_series")
     
