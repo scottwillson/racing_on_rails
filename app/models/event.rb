@@ -92,7 +92,7 @@ class Event < ActiveRecord::Base
   end
   
   # Return [weekly_series, events] that have results
-  def Event.find_all_with_results(year = Date.today.year, discipline = Discipline[:road])
+  def Event.find_all_with_results(year = Date.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
