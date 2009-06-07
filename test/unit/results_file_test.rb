@@ -71,9 +71,11 @@ class ResultsFileTest < ActiveSupport::TestCase
                result.racer.member_from, 
                "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
            end
-           #test result by license (some with name misspelled)
-           racer_by_lic = Racer.find_by_license(result.license) if result.license
-           assert_equal(result.racer, racer_by_lic, "Result should be assigned to #{racer_by_lic.name} by license but was given to #{result.racer.name}") if racer_by_lic
+           # test result by license (some with name misspelled)
+           if result.license && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+             racer_by_lic = Racer.find_by_license(result.license)
+             assert_equal(result.racer, racer_by_lic, "Result should be assigned to #{racer_by_lic.name} by license but was given to #{result.racer.name}") if racer_by_lic
+           end
          end
        end
      end
@@ -423,7 +425,11 @@ class ResultsFileTest < ActiveSupport::TestCase
     
     race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
     race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"999999999", :team_name =>"Jittery Joe's", :points => "23.0")
-    race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Torkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
+    if SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+      race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Tonkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
+    else
+      race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Torkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
+    end
     race.results << Result.new(:place => "3", :first_name => "John", :last_name => "Browning", :number =>"159", :team_name =>"Half Fast Velo", :points => "12.0")
     race.results << Result.new(:place => "4", :first_name => "Doug", :last_name => "Ollerenshaw", :number =>"132", :team_name =>"Health Net", :points => "8.0")
     race.results << Result.new(:place => "5", :first_name => "Dean", :last_name => "Tracy", :number =>"A76", :team_name =>"Team Rubicon", :points => "7.0")
