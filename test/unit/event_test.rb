@@ -28,7 +28,11 @@ class EventTest < ActiveSupport::TestCase
   def test_find_all_with_results
     weekly_series, events = Event.find_all_with_results
     assert_equal([], weekly_series, "weekly_series")
-    assert_equal([], events, "events")
+    expected = []
+    unless ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      expected << events(:usa_cycling_event_with_results)
+    end
+    assert_equal(expected, events, "events")
   end
   
   def test_find_all_with_results_with_year
@@ -67,7 +71,11 @@ class EventTest < ActiveSupport::TestCase
     track_series_event.races.create!(:category => categories(:senior_men)).results.create!
     
     weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Road"])
-    assert_equal([circuit_race], events, "events")
+    expected = [circuit_race]
+    unless ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      expected << events(:usa_cycling_event_with_results)
+    end
+    assert_equal(expected, events, "events")
     assert_equal([], weekly_series, "weekly_series")
     
     weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Track"])
