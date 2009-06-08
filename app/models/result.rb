@@ -131,6 +131,12 @@ class Result < ActiveRecord::Base
   def find_racers(_event = event)
     matches = Set.new
     
+    #license first if present and source is reliable (USAC)
+    if license.present? && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+      matches = matches + Racer.find_all_by_license(license)
+      return matches if matches.size == 1
+    end
+    
     # name
     matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
@@ -430,9 +436,10 @@ class Result < ActiveRecord::Base
 
   def set_time_value(attribute, value)
     case value
-    when Time, DateTime  
+    when DateTime  
+      self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
+    when Time
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
-      self[attribute]
     else
       self[attribute] = value
     end

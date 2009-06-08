@@ -3,7 +3,7 @@
 <%= render :partial => "schedule/years" %>
 <%= tabs do |tabs|
   @schedule.months.each do |month|
-    tabs.add(month.name, :anchor => month.name)
+    tabs.add(month.name, :year => @year, :anchor => month.name)
   end
 end -%>
 

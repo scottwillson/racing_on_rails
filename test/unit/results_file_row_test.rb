@@ -25,7 +25,7 @@ class ResultsFileRowTest < ActiveSupport::TestCase
     book = Spreadsheet.open("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls")
     spreadsheet_row = book.worksheet(0).row(2)
 
-    row = ResultsFile::Row.new(spreadsheet_row, { :place => 0, :last_name => 2 })
+    row = ResultsFile::Row.new(spreadsheet_row, { :place => 0, :last_name => 3 })
     assert_nil row[:city], "Non existent column"
     assert_equal 1, row[:place], "place"
     assert_equal "Elken", row[:last_name], "last_name"

@@ -294,6 +294,18 @@ class ResultTest < ActiveSupport::TestCase
 #     assert_in_delta(-10.0, result.time_bonus_penalty, 0.0001, "time_bonus_penalty")
   end
 
+  def test_set_time_value
+    result = Result.new
+    time = Time.local(2007, 11, 20, 19, 45, 50, 678)
+    result.set_time_value(:time, time)
+    assert_equal(71156.78, result.time)
+
+    result = Result.new
+    time = DateTime.new(2007, 11, 20, 19, 45, 50)
+    result.set_time_value(:time, time)
+    assert_equal(71150.0, result.time)
+  end
+
   def test_sort
     results = [
      Result.new(:place => '1'),
@@ -892,5 +904,17 @@ class ResultTest < ActiveSupport::TestCase
     assert_nil(Racer.find_by_name("Tom Blow"), "Should delete racer that just came from results")
     assert_not_nil(Racer.find_by_name("Phil Anderson"), "Should keep racer that was manually entered")
     assert_not_nil(Team.find_by_name("QuickStep"), "Should keep team that is used by racer, even though it was created by a result")
+  end
+  
+  def test_do_not_match_blank_licenses
+    # Give everyone a bogus license #
+    Racer.update_all("license = id")
+
+    blank_license_racer = Racer.create!(:name => 'Rocket, The', :license => "")
+
+    race = races(:banana_belt_pro_1_2)
+    event = events(:banana_belt_1)
+    result = race.results.build(:first_name => 'Ryan', :last_name => 'Weaver')
+    assert_same_elements([racers(:weaver)], result.find_racers(event).to_a, "blank license shouldn't match anything")
   end
 end

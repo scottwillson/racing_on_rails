@@ -86,6 +86,19 @@ class EventTest < ActiveSupport::TestCase
     assert_equal([track_series], weekly_series, "weekly_series")
   end
   
+  def test_find_all_with_only_child_event_results
+    series = WeeklySeries.create!
+    series_event = series.children.create!
+    child_event = series_event.children.create!
+    child_event.races.create!(:category => categories(:senior_men)).results.create!
+    
+    assert(child_event.is_a?(Event), "Child event should be an Event")
+    assert(!child_event.is_a?(SingleDayEvent), "Child event should not be an SingleDayEvent")
+
+    weekly_series, events = Event.find_all_with_results
+    assert_equal([series], weekly_series, "weekly_series")
+  end
+  
   def test_new_with_promoters
     promoter_name = "Scout"
     assert_nil(Promoter.find_by_name(promoter_name), "Promoter #{promoter_name} should not be in DB")
@@ -533,6 +546,33 @@ class EventTest < ActiveSupport::TestCase
     event.children.create!.races.create!(:category => categories(:cat_4_women)).results.create!
     assert_equal(2, event.children_with_results(true).size, "refresh cache: events_with_results: 2 children with results")
     assert_equal(2, event.children_and_child_competitions_with_results(true).size, "refresh cache: children_and_child_competitions_with_results: 2 children with results")
+  end
+  
+  def test_children_with_results_only_child_events
+    series = WeeklySeries.create!
+    series_event = series.children.create!
+    child_event = series_event.children.create!
+    child_event.races.create!(:category => categories(:senior_men)).results.create!
+
+    series.reload
+
+    assert_equal(1, series.children_with_results.size, "Should have child with results")
+    assert_equal(series_event, series.children_with_results.first, "Should have child with results")
+    assert_equal(1, series_event.children_with_results.size, "Should have child with results")
+    assert_equal(child_event, series_event.children_with_results.first, "Should have child with results")
+  end
+  
+  def test_has_results_including_children
+    series = WeeklySeries.create!
+    series_event = series.children.create!
+    child_event = series_event.children.create!
+    child_event.races.create!(:category => categories(:senior_men)).results.create!
+
+    series.reload
+
+    assert(series.has_results_including_children?, "Series has_results_including_children?")
+    assert(series_event.has_results_including_children?, "Series Event has_results_including_children?")
+    assert(child_event.has_results_including_children?, "Series Event child has_results_including_children?")
   end
 
   private

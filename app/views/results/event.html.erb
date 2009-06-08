@@ -21,12 +21,12 @@
     <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
       <td class="right"><%= link_to child.date.strftime('%A, %B %d'), :id => child.to_param %></td>
-      <td><%= link_to child.name, :id => child.to_param %></td>
+      <td><%= link_to child.name, { :id => child.to_param }, { :class => "obvious" } %></td>
     </tr>
     <% child.children_and_child_competitions_with_results.each do |child_child| -%>
       <tr>
         <td></td>
-        <td class="child"><%= link_to child_child.name, :id => child_child.to_param %></td>
+        <td class="child"><%= link_to child_child.name, { :id => child_child.to_param } %></td>
       </tr>
       <% end -%>
     <% end -%>
@@ -40,7 +40,7 @@
   <table class="top_margin child_events">
   <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
-      <td class="centered"><%= link_to child.name, :id => child.to_param %></td>
+      <td class="centered"><%= link_to child.name, { :id => child.to_param }, { :class => "obvious" } %></td>
     </tr>
   <%- end -%>
   </table>
