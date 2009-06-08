@@ -294,6 +294,18 @@ class ResultTest < ActiveSupport::TestCase
 #     assert_in_delta(-10.0, result.time_bonus_penalty, 0.0001, "time_bonus_penalty")
   end
 
+  def test_set_time_value
+    result = Result.new
+    time = Time.local(2007, 11, 20, 19, 45, 50, 678)
+    result.set_time_value(:time, time)
+    assert_equal(71156.78, result.time)
+
+    result = Result.new
+    time = DateTime.new(2007, 11, 20, 19, 45, 50)
+    result.set_time_value(:time, time)
+    assert_equal(71150.0, result.time)
+  end
+
   def test_sort
     results = [
      Result.new(:place => '1'),
