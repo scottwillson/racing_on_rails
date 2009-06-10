@@ -8,7 +8,7 @@
 project_name = ARGV.first
 
 case project_name
-when "racing_on_rails"
+when "racing_on_rails", "montanacycling_branch"
   exec "rake cruise"
 when "aba", "atra", "obra", "wsba"
   exec "rm -rf local && git clone git@butlerpress.com:#{project_name}.git local && rake cruise"
