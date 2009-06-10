@@ -21,12 +21,15 @@ class ResultsFile
     "wsba#"            => "number",
     "rider_#"          => "number",
     'racing_age'       => 'age',
+    'age'              => 'age',
+    "gender"           => "gender",
     "barcategory"      => "parent",
     "bar_category"     => "parent",
     "category.name"    => "category_name",
     "categories"       => "category_name",
     "category"         => "category_name",
     "cat."             => "category_name",
+    "class"            => "category_class",  #mbrahere this is like A for Masters A
     "first"            => "first_name",
     "firstname"        => "first_name",
     "racer.first_name" => "first_name",
@@ -36,10 +39,12 @@ class ResultsFile
     "racer.last_name"  => "last_name",
     "team"             => "team_name",
     "team.name"        => "team_name",
+    "bib_#"            => "number",  #mbrahere
     "obra_number"      => "number",
     "oregoncup"        => "oregon_cup",
     "membership_#"     => "license",
     "membership"       => "license",
+    "license_#"        => "license",  #mbrahere
     "club/team"        => "team_name",
     "hometown"         => 'city',
     "stage_time"       => "time",
@@ -81,6 +86,10 @@ class ResultsFile
           Rails.logger.debug("ResultsFile #{Time.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
           if race?(row)
             race = create_race(row)
+            #mbrahere this record also contains placing data
+            if ASSOCIATION.usac_results_format
+              create_result(row, race)
+            end
           elsif result?(row)
             create_result(row, race)
           end
@@ -154,18 +163,53 @@ class ResultsFile
   end
 
   def race?(row)
-    return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
-    return false if row.place && row.place.to_i != 0
-    row.next && row.next.place && row.next.place.to_i == 1
+    #mbrahere
+    if ASSOCIATION.usac_results_format
+      #new race when one of the key fields changes: category, gender, class or age if age is a range
+      #i was looking for place = 1 but it is possible that all in race were dq or dnf or dns
+      return false if column_indexes.nil? || row.blank?
+      return true if row.previous.blank?
+      return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class] # && age group is the same...
+      return true
+    else  
+      return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
+      return false if row.place && row.place.to_i != 0
+      row.next && row.next.place && row.next.place.to_i == 1
+    end
   end
 
   def create_race(row)
-    category = Category.find_or_create_by_name(row.first)
+    #mbrahere
+    if ASSOCIATION.usac_results_format
+      category = Category.find_or_create_by_name(construct_usac_category(row))
+    else
+      category = Category.find_or_create_by_name(row.first)
+    end
     race = event.races.build(:category => category, :notes => row.notes)
     race.result_columns = columns
     race.save!
     Rails.logger.info("ResultsFile #{Time.now} create race #{category}")
     race
+  end
+
+  #mbrahere
+  def construct_usac_category(row)
+    #category_name and gender should always be populated.
+    if row[:category_name].downcase.strip == "junior"
+      #juniors may be split by age group in which case the age column should
+      #contatin the age range. otherwise it may be empty or contain an individual
+      #racer's age.
+      #The end result should look like "Junior Women 13-14" or "Junior Men"
+      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+        return (row[:category_name].to_s.strip + " " + row[:gender].to_s.strip + " " + row[:age].to_s.strip)
+      else
+        return (row[:category_name].to_s.strip + " " + row[:gender].to_s.strip)
+      end
+    else
+      #category_class may or may not be populated
+      #e.g. "Master B Men" or "Cat4 Female"
+      return (row[:category_name].to_s.strip + " " + row[:category_class].to_s.strip + " " + row[:gender].to_s.strip)
+    end
   end
 
   def result?(row)
@@ -200,6 +244,12 @@ class ResultsFile
         result.place = row.previous[:place]
       end
 
+      #mbrahere: usac format input may contain an age range in the age column for juniors.
+      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+        result.age = nil
+        result.age_group = row[:age]
+      end
+  
       result.cleanup
       result.save!
       row.result = result
@@ -274,10 +324,16 @@ class ResultsFile
     end
 
     def notes
-      return "" if blank? || size < 2
-      spreadsheet_row[1, size - 1].select { |cell| !cell.blank? }.join(", ")
+      if ASSOCIATION.usac_results_format
+        #mbrahere we want to pick up the info in the first 5 columns: org, year, event #, date, discipline
+        return "" if blank? || size < 5
+        spreadsheet_row[0, 5].select { |cell| !cell.blank? }.join(", ")
+      else  
+        return "" if blank? || size < 2
+        spreadsheet_row[1, size - 1].select { |cell| !cell.blank? }.join(", ")
+      end
     end
-    
+     
     def to_s
       "#<ResultsFile::Row #{spreadsheet_row.to_a.join(', ')} >"
     end

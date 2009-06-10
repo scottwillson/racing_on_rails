@@ -25,7 +25,6 @@ end
 # a RaceNumber
 #
 # Doesn't support multiple hotspot points, though it should
-#alptodo: mirror USAC results xls format
 class Result < ActiveRecord::Base
   # FIXME Make sure names are coerced correctly
   # TODO Add number (race_number) and license
@@ -531,6 +530,7 @@ class Result < ActiveRecord::Base
   def cleanup
     cleanup_place
     cleanup_number
+    cleanup_license
     self.first_name = cleanup_name(first_name)
     self.last_name = cleanup_name(last_name)
     self.team_name = cleanup_name(team_name)
@@ -558,6 +558,12 @@ class Result < ActiveRecord::Base
   def cleanup_number
     self.number = number.to_s
     self.number = number.to_i.to_s if number[/^\d+\.0$/]
+  end
+
+  #mbrahere usac license numbers are being imported with a one decimal zero, e.g., 12345.0
+  def cleanup_license
+    self.license = license.to_s
+    self.license = license.to_i.to_s if license[/^\d+\.0$/]
   end
 
   # Mostly removes unfortunate punctuation typos

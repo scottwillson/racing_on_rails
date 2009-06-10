@@ -454,6 +454,9 @@ create table `results` (
   `points_penalty` int(11) not null default '0',
   `preliminary` tinyint(1) default null,
   `bar` tinyint(1) default '1',
+  `gender` varchar(8) default null,
+  `category_class` varchar(16) default null,
+  `age_group` varchar(16) default null,
   primary key  (`id`),
   key `idx_category_id` (`category_id`),
   key `idx_race_id` (`race_id`),
@@ -652,6 +655,8 @@ insert into schema_migrations (version) values ('20090604213033');
 insert into schema_migrations (version) values ('20090606004452');
 
 insert into schema_migrations (version) values ('20090606191333');
+
+insert into schema_migrations (version) values ('20090607004047');
 
 insert into schema_migrations (version) values ('21');
 

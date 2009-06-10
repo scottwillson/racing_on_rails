@@ -12,6 +12,7 @@ class RacingAssociation
   attr_accessor :show_events_velodrome, :show_events_sponsoring_team
   attr_accessor :usac_region
   attr_accessor :default_sanctioned_by
+  attr_accessor :usac_results_format
   
   def initialize
     @masters_age = 35
@@ -23,6 +24,7 @@ class RacingAssociation
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @award_cat4_participation_points = true
     @usac_region = "North West"
+    @usac_results_format = false  #mbrahere
   end
   
   def bmx_numbers?
@@ -67,7 +69,11 @@ class RacingAssociation
   def award_cat4_participation_points?
     @award_cat4_participation_points
   end
-  
+
+  def usac_results_format?
+    @usac_results_format
+  end
+
   def to_s
     "#<RacingAssociation #{short_name} #{name}>"
   end

@@ -161,6 +161,7 @@ class Admin::EventsController < ApplicationController
     flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
     unless results_file.invalid_columns.empty?
       flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"
+      flash[:warn] = flash[:warn] + " (If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format
     end
     
     redirect_to(edit_admin_event_path(event))
