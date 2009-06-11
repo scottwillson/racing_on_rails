@@ -91,6 +91,10 @@
         <%= f.select :sanctioned_by, SANCTIONING_ORGANIZATIONS %>
         <%- end %>
 
+        <% if ASSOCIATION.show_events_sanctioning_org_event_id? -%>
+          <%= f.labelled_text_field :sanctioning_org_event_id, "Sanctioning Org Event ID" %>
+        <% end -%>
+
         <%= f.label :number_issuer_id, "Number Issuer" %>
         <%= f.select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})  %>
         
