@@ -39,7 +39,7 @@ class RacingAssociation
   end
   
   def default_sanctioned_by
-    @default_sanctioned_by || short_name
+    @default_sanctioned_by ||= short_name
   end
 
   def gender_specific_numbers?
