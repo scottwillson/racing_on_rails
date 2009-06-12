@@ -82,7 +82,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)
     assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(2, new_event.races.count, "New event races: #{event.races}")
     race = new_event.races.detect {|race| race.category == women_cat_4 }
@@ -159,7 +159,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)
     assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(2, new_event.races.count, "New event should have one race: #{new_event.races}")
     race = new_event.races.detect {|race| race.category == sr_women_4 }

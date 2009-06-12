@@ -74,7 +74,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
     assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
   end
   
@@ -88,7 +88,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
     assert_equal(
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
       !assigns["events"].include?(events(:usa_cycling_event_with_results)), 

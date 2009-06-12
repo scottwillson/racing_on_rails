@@ -2,12 +2,12 @@ include_partial 'fixtures'
 
 open '/'
 assert_text_not_present 'Copperopolis'
-assert_text_not_present 'USA Cycling Event'
+assert_text_not_present 'National Federation Event'
 
 open '/schedule'
 assert_text_not_present 'Copperopolis'
-assert_text_not_present 'USA Cycling Event'
+assert_text_not_present 'National Federation Event'
 
 open '/results'
 assert_text_not_present 'Copperopolis'
-assert_text_not_present 'USA Cycling Event'
+assert_text_not_present 'National Federation Event'

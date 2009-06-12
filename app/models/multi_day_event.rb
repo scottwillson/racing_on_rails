@@ -56,7 +56,7 @@ class MultiDayEvent < Event
 
     if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
       conditions.first << " and sanctioned_by = ?"
-      conditions << ASSOCIATION.short_name
+      conditions << ASSOCIATION.default_sanctioned_by
     end
     
     if discipline

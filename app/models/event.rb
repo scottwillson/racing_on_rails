@@ -127,7 +127,7 @@ class Event < ActiveRecord::Base
     
     events.reject! do |event|
       (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
-      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.short_name)
+      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.default_sanctioned_by)
     end
     
     [ weekly_series, events ]
