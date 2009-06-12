@@ -19,7 +19,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal("New Event #{formatted_date}", event.name, "event name")
     assert_equal(ASSOCIATION.state, event.state, "event.state")
     assert_equal("Road", event.discipline, "event.discipline")
-    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "New event sanctioned_by default")
+    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "New event sanctioned_by default")
     number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
     assert_equal(true, event.notification?, "event notification?")
@@ -262,7 +262,7 @@ class EventTest < ActiveSupport::TestCase
   def test_default_number_issuer
     event = SingleDayEvent.create!(:name => 'Unsanctioned')
     event.reload
-    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, 'sanctioned_by')
+    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, 'sanctioned_by')
     assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
   end
   
