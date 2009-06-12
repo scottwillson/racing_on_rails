@@ -66,6 +66,10 @@ class RacingAssociation
     @show_events_sponsoring_team
   end
   
+  def show_only_association_sanctioned_races_on_calendar?
+    @show_only_association_sanctioned_races_on_calendar
+  end
+  
   def award_cat4_participation_points?
     @award_cat4_participation_points
   end
