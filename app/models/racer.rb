@@ -116,7 +116,7 @@ class Racer < ActiveRecord::Base
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
   def Racer.find_all_for_export(date = Date.today, members_only = true)
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
-    where_clause = "WHERE (member_to >= \'#{date.strftime('%Y-%m-%d')}\')" if members_only
+    where_clause = "WHERE (member_to >= '#{date.to_s}')" if members_only
     
     racers = Racer.connection.select_all(%Q{
       SELECT racers.id, license, first_name, last_name, teams.name as team_name, racers.notes,
