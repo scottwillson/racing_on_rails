@@ -83,15 +83,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def require_no_user
-    if current_user
-      store_location
-      flash[:notice] = "You must be logged out to access this page"
-      redirect_to admin_home_url
-      return false
-    end
-  end
-  
   def require_administrator
     unless current_user && current_user.administrator?
       store_location

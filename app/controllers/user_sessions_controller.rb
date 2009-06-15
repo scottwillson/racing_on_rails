@@ -1,15 +1,19 @@
 class UserSessionsController < ApplicationController
-  before_filter :require_no_user, :only => [:new, :create]
   before_filter :require_user, :only => :destroy
   
   def new
-    @user_session = UserSession.new
+    if current_user
+      render :show
+    else
+      @user_session = UserSession.new
+    end
   end
   
   def create
     @user_session = UserSession.new(params[:user_session])
     @user_session.remember_me = true
     if @user_session.save
+      flash.discard
       if @user_session.user.administrator?
         redirect_back_or_default admin_home_url
       else

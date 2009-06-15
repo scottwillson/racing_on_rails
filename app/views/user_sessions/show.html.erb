@@ -1,0 +1,7 @@
+<% @page_title = "Logged-in as #{current_user.email}" %>
+
+<div class="tabs">
+  <%= link_to('Public Homepage', "/") %> |
+  <%= link_to('Admin Pages', admin_events_path) %> |
+  <%= link_to "Logout", user_session_path, :method => :delete %>
+</div>
