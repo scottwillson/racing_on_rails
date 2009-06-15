@@ -1,10 +1,7 @@
 require 'test_helper'
 
 class Admin::Pages::VersionsControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   test "Edit page version" do
     version = pages(:plain).versions.latest

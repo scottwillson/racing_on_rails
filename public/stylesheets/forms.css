@@ -173,7 +173,12 @@ textarea {
   padding-right: 8px;
 }
 
-.fieldWithErrors
+div.fieldWithErrors
+{
+  display: inline;
+}
+
+.fieldWithErrors input
 {
   border-color: red;
 }

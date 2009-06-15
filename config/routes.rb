@@ -72,6 +72,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
   map.connect "/oregon_cup", :controller => "oregon_cup", :action => "index"
   
+  map.resources :password_resets
+
   map.connect "/posts/:mailing_list_name/new/:reply_to_id", :controller => "posts", :action => "new"
   map.connect "/posts/:mailing_list_name/new",              :controller => "posts", :action => "new"
   map.connect "/posts/new/:mailing_list_name",              :controller => "posts", :action => "new"
@@ -106,9 +108,12 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
-  map.connect '/', :controller => "home"
+  map.root :controller => "home"
   map.track "/track", :controller => "track"
   map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
+
+  map.resource :user_session
+  map.connect "/account/*path", :controller => "account", :action => "index"
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}

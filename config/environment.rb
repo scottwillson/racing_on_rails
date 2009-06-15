@@ -13,6 +13,7 @@ Rails::Initializer.run do |config|
   }
   
   # Rails 2 convention for gem requirements
+  config.gem "authlogic"
   config.gem "fastercsv"
   
   # Racing on Rails has many foreign key constraints, so :sql is required
@@ -39,7 +40,7 @@ load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/
 
 # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
 # application's generic files.
-ActionController::Base.view_paths = ActionView::Base.process_view_paths(["local/app/views", "app/views"])
+ActionController::Base.view_paths = ActionView::Base.process_view_paths(["#{RAILS_ROOT}/local/app/views", "#{RAILS_ROOT}/app/views"])
 
 class ActionView::Base
   def self.default_form_builder
@@ -66,5 +67,5 @@ unless defined?(ASSOCIATION)
   SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
 end
 
-RAILS_HOST = 'localhost:3000' unless defined?(RAILS_HOST)
-STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
+RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
+STATIC_HOST = "localhost" unless defined?(STATIC_HOST)

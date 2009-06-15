@@ -1,25 +1,22 @@
 require "test_helper"
 
 class Admin::RacersControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_not_logged_in_index
-    @request.session[:user_id] = nil
+    destroy_user_session
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/account', :action => 'login')
+    assert_redirected_to(new_user_session_path)
     assert_nil(@request.session["user"], "No user in session")
   end
   
   def test_not_logged_in_edit
-    @request.session[:user_id] = nil
+    destroy_user_session
     weaver = racers(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/account', :action => 'login')
+    assert_redirected_to(new_user_session_path)
     assert_nil(@request.session["user"], "No user in session")
   end
 

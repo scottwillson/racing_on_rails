@@ -8,10 +8,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::CaptureHelper
 
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_edit
     banana_belt = events(:banana_belt_1)
@@ -617,10 +614,10 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in
-    @request.session[:user_id] = nil
+    destroy_user_session
     get(:index, :year => "2004")
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/account', :action => 'login')
+    assert_redirected_to(new_user_session_path)
     assert_nil(@request.session["user"], "No user in session")
   end
 
@@ -672,8 +669,9 @@ class Admin::EventsControllerTest < ActionController::TestCase
   # Really only happens to developers switching environments, and more of a test of LoginSystem
   def test_gracefully_handle_bad_user_id
     @request.session[:user_id] = 31289371283
+    @request.session[:user_credentials] = 31289371283
     get(:index)
-    assert_redirected_to :controller => "/account", :action => "login"
+    assert_redirected_to new_user_session_path
   end
   
   def test_edit_child_event

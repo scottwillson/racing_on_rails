@@ -1,9 +1,7 @@
 require "test_helper"
 
 class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
-  def setup
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_new_result
     assert_routing('/admin/cat4_womens_race_series/results/new', 

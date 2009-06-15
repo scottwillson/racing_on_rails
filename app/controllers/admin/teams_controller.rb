@@ -1,5 +1,5 @@
 class Admin::TeamsController < ApplicationController
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout "admin/application"
 
   in_place_edit_for :team, :name
@@ -35,7 +35,7 @@ class Admin::TeamsController < ApplicationController
   end
   
   def create
-    params[:team][:created_by] = logged_in_user
+    params[:team][:created_by] = current_user
     @team = Team.new(params[:team])
 
     if @team.save

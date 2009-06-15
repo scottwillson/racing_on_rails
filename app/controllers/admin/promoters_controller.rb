@@ -2,7 +2,7 @@
 #
 # Promoter information shows up on the schedules
 class Admin::PromotersController < ApplicationController
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout "admin/application"
   cache_sweeper :schedule_sweeper, :only => [:update]
 

@@ -12,7 +12,7 @@
 # TODO Change parent to child (requires fancier logic. For now, just move page to root first)
 # TODO publish-on dates
 class Admin::PagesController < ApplicationController
-  before_filter :check_administrator_role, :except => [ :show ]
+  before_filter :require_administrator, :except => [ :show ]
   in_place_edit_for :page, :title
   layout "admin/application"
 
@@ -27,7 +27,7 @@ class Admin::PagesController < ApplicationController
   
   def create
     @page = Page.new(params["page"])
-    @page.author = logged_in_user
+    @page.author = current_user
     @page.save
     if @page.errors.empty?
       flash[:notice] = "Created #{@page.title}"
@@ -44,7 +44,7 @@ class Admin::PagesController < ApplicationController
   
   def update
     @page = Page.find(params[:id])
-    @page.author = logged_in_user
+    @page.author = current_user
     if @page.update_attributes(params[:page])
       flash[:notice] = "Updated #{@page.title}"
       expire_cache

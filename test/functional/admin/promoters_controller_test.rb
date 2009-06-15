@@ -1,10 +1,7 @@
 require 'test_helper'
 
 class Admin::PromotersControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
   
   def test_index
     path = {:controller => "admin/promoters", :action => 'index'}

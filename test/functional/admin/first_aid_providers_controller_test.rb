@@ -2,10 +2,7 @@
 require "test_helper"
 
 class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_index
     get(:index)

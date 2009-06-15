@@ -1,5 +1,5 @@
 class Admin::RacesController < ApplicationController  
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout "admin/application"
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper
 

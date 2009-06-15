@@ -1,15 +1,12 @@
 require 'test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   test "Only admins can edit pages" do
-    session[:user_id] = nil
+    destroy_user_session
     get(:index)
-    assert_redirected_to(:action => "login")
+    assert_redirected_to(new_user_session_path)
   end
   
   test "View pages as tree" do

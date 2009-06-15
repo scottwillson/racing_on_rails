@@ -34,7 +34,7 @@
         <div class="nav" id="bottom">
           <div class="breadcrumb">
             <%= link_to ASSOCIATION.short_name, '/' %> | 
-      <%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
+      <%= link_to "Logout", destroy_user_session_path, { :id => "account_link" } %>
       </div>
         </div>
       </div>

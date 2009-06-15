@@ -30,12 +30,12 @@
             <%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %> |
             <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
             <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %> | 
-			<% if is_logged_in? %>
-			<%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
+			<% if current_user %>
+			<%= link_to "Logout", destroy_user_session_path, { :id => "account_link" } %>
 			<% else %>
-			<%= link_to "Login", {:controller => "/account", :action => "login"}, { :id => "account_link" } %>
+			<%= link_to "Login", new_user_session_path, { :id => "account_link" } %>
 			<% end %>
-			<% if logged_in_user && logged_in_user.has_role?('administrator') %>
+			<% if current_user && current_user.administrator?) %>
 			 | <%= link_to "Administration", {:controller => "/admin/events"}, { :id => "admin_link" } %>
 			<% end %>
           </div>

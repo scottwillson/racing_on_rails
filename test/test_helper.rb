@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 require "action_view/test_case"
+require "authlogic/test_case"
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -107,6 +108,15 @@ class ActiveSupport::TestCase
     else
       assert_nil(@response.layout, "no layout")
     end
+  end
+  
+  def create_administrator_session
+    activate_authlogic
+    UserSession.create(users(:administrator))
+  end
+  
+  def destroy_user_session
+    session["user_credentials"] = nil
   end
 
   def print_all_events

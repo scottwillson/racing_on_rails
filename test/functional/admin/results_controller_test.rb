@@ -1,10 +1,7 @@
 require "test_helper"
 
 class Admin::ResultsControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id    
-  end
+  setup :create_administrator_session
   
   def test_update_no_team
     weaver_jack_frost = results(:weaver_jack_frost)

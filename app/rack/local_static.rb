@@ -20,8 +20,6 @@ module Rack
         elsif local_file_exist?(cached_path)
           env['PATH_INFO'] = cached_path
           return @local_file_server.call(env)
-        else
-          "p Not found"
         end
       end
 

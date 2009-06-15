@@ -1,6 +1,6 @@
 # Add, delete, and edit Racer information. Also merge 
 class Admin::RacersController < ApplicationController
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
 
@@ -94,7 +94,7 @@ class Admin::RacersController < ApplicationController
   # New blank numbers are ignored
   def create
     expire_cache
-    params[:racer][:created_by] = logged_in_user
+    params[:racer][:created_by] = current_user
     @racer = Racer.create(params[:racer])
     
     if params[:number_value]
@@ -105,7 +105,7 @@ class Admin::RacersController < ApplicationController
             :number_issuer_id => params[:number_issuer_id][index], 
             :year => params[:number_year],
             :value => number_value,
-            :updated_by => logged_in_user.name
+            :updated_by => current_user.name
           )
           unless race_number.errors.empty?
             @racer.errors.add_to_base(race_number.errors.full_messages)
@@ -137,14 +137,14 @@ class Admin::RacersController < ApplicationController
     begin
       expire_cache
       @racer = Racer.find(params[:id])
-      params[:racer][:updated_by] = logged_in_user.name
+      params[:racer][:updated_by] = current_user.name
       @racer.update_attributes(params[:racer])
       if params[:number]
         for number_id in params[:number].keys
           number = RaceNumber.find(number_id)
           number_params = params[:number][number_id]
           if number.value != params[:number][number_id][:value]
-            number_params[:updated_by] = logged_in_user.name
+            number_params[:updated_by] = current_user.name
             RaceNumber.update(number_id, number_params)
           end
         end
@@ -158,7 +158,7 @@ class Admin::RacersController < ApplicationController
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
               :value => number_value,
-              :updated_by => logged_in_user.name
+              :updated_by => current_user.name
             )
             unless race_number.errors.empty?
               @racer.errors.add_to_base(race_number.errors.full_messages)
