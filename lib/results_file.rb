@@ -14,6 +14,7 @@ class ResultsFile
   attr_accessor :invalid_columns
   attr_accessor :rows
   attr_accessor :source
+  attr_accessor :usac_results_format
 
   COLUMN_MAP = {
     "placing"          => "place",
@@ -65,11 +66,19 @@ class ResultsFile
   # Toggle expensive debug logging
   DEBUG = false
   
-  def initialize(source, event)
+  # Options: Boolean usac_results_format. Defaults to RacingAssociation, which is usually "false"
+  def initialize(source, event, *options)
     self.column_indexes = nil
     self.event = event
     self.invalid_columns = []
     self.source = source
+    options = options.extract_options!
+
+    if options[:usac_results_format].nil?
+      self.usac_results_format = ASSOCIATION.usac_results_format
+    else
+      self.usac_results_format = options[:usac_results_format]
+    end
   end
 
   def import
@@ -87,7 +96,7 @@ class ResultsFile
           if race?(row)
             race = create_race(row)
             #mbrahere this record also contains placing data
-            if ASSOCIATION.usac_results_format
+            if usac_results_format
               create_result(row, race)
             end
           elsif result?(row)
@@ -113,7 +122,7 @@ class ResultsFile
           Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
         end
       end
-      row = ResultsFile::Row.new(spreadsheet_row, column_indexes)
+      row = ResultsFile::Row.new(spreadsheet_row, column_indexes, usac_results_format)
       unless row.blank?
         if column_indexes.nil?
           create_columns(spreadsheet_row)
@@ -163,8 +172,7 @@ class ResultsFile
   end
 
   def race?(row)
-    #mbrahere
-    if ASSOCIATION.usac_results_format
+    if usac_results_format
       #new race when one of the key fields changes: category, gender, class or age if age is a range
       #i was looking for place = 1 but it is possible that all in race were dq or dnf or dns
       return false if column_indexes.nil? || row.blank?
@@ -179,8 +187,7 @@ class ResultsFile
   end
 
   def create_race(row)
-    #mbrahere
-    if ASSOCIATION.usac_results_format
+    if usac_results_format
       category = Category.find_or_create_by_name(construct_usac_category(row))
     else
       category = Category.find_or_create_by_name(row.first)
@@ -195,7 +202,7 @@ class ResultsFile
   #mbrahere
   def construct_usac_category(row)
     #category_name and gender should always be populated.
-    if row[:category_name].downcase.strip == "junior"
+    if row[:category_name].present? && row[:category_name].downcase.strip == "junior"
       #juniors may be split by age group in which case the age column should
       #contatin the age range. otherwise it may be empty or contain an individual
       #racer's age.
@@ -267,10 +274,12 @@ class ResultsFile
     attr_accessor :previous
     attr_accessor :result
     attr_reader :spreadsheet_row
+    attr_reader :usac_results_format
 
-    def initialize(spreadsheet_row, column_indexes)
+    def initialize(spreadsheet_row, column_indexes, usac_results_format)
       @spreadsheet_row = spreadsheet_row
       @column_indexes = column_indexes
+      @usac_results_format = usac_results_format
     end
 
     def [](column_symbol)
@@ -324,7 +333,7 @@ class ResultsFile
     end
 
     def notes
-      if ASSOCIATION.usac_results_format
+      if usac_results_format
         #mbrahere we want to pick up the info in the first 5 columns: org, year, event #, date, discipline
         return "" if blank? || size < 5
         spreadsheet_row[0, 5].select { |cell| !cell.blank? }.join(", ")
