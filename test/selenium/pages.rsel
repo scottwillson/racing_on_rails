@@ -57,7 +57,6 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 
 open "/officials"
-assert_title "glob:*Officials Home Phone Numbers"
 assert_text_present "411 911"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
