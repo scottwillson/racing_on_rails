@@ -23,7 +23,7 @@ assert_table "events_table", 1, 0, "glob:Megan Weaver*"
 click "past_events"
 wait_for_text_present "Copperopolis"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
-assert_table "events_table", 3, 2, "glob:Copperopolis*"
+assert_table "events_table", 1, 2, "glob:Copperopolis*"
 
 click "past_events"
 wait_for_text_not_present "Copperopolis"

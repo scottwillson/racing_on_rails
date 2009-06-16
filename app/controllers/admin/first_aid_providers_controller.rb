@@ -5,12 +5,20 @@ class Admin::FirstAidProvidersController < ApplicationController
 
   def index
     @year = Date.today.year
+    
     @past_events = params[:past_events] || false
     if @past_events
       conditions = ['date >= ?', Date.today.beginning_of_year]
     else
       conditions = ['date >= CURDATE()']
     end
+    
+    if params[:sort_by].present?
+      @sort_by = params[:sort_by]
+    else
+      @sort_by = "date"
+    end
+    
     @events = SingleDayEvent.find(:all, :conditions => conditions)
     
     respond_to do |format|
