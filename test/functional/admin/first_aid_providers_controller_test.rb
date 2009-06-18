@@ -14,6 +14,7 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_equal(false, assigns["past_events"], "past_events")
+    assert_equal("date", assigns["sort_by"], "@sort_by default")
   end
 
   def test_first_aid_update_options
@@ -32,5 +33,6 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     assert_equal(false, assigns["past_events"], "past_events")
+    assert_equal("promoter_name", assigns["sort_by"], "@sort_by from param")
   end
 end

@@ -153,7 +153,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal("Don Person", cream_puff.promoter.name, "Cream Puff promoter name")
     assert_equal("541-935-4996", cream_puff.promoter.phone, "Cream Puff promoter phone")
     assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter email")
-    assert_equal(ASSOCIATION.short_name, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
     
     for event in fast_twitch_series.children
       assert_not_nil(event, "Should have imported Fast Twitch Fridays")
@@ -167,7 +167,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal("Jen Featheringill", event.promoter.name, "Fast Twitch Fridays promoter name")
       assert_equal("503-227-4439", event.promoter.phone, "Fast Twitch Fridays promoter name")
       assert_equal("bike-central@bike-central.com", event.promoter.email, "Fast Twitch Fridays promoter name")
-      assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "Fast Twitch sanctioned_by")
+      assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "Fast Twitch sanctioned_by")
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_equal(nil, event.flyer, "Fast Twitch flyer")
     end

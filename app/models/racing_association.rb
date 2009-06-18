@@ -40,7 +40,7 @@ class RacingAssociation
   end
   
   def default_sanctioned_by
-    @default_sanctioned_by || short_name
+    @default_sanctioned_by ||= short_name
   end
 
   def gender_specific_numbers?
@@ -71,6 +71,10 @@ class RacingAssociation
     @show_events_sanctioning_org_event_id
   end
 
+  def show_only_association_sanctioned_races_on_calendar?
+    @show_only_association_sanctioned_races_on_calendar
+  end
+  
   def award_cat4_participation_points?
     @award_cat4_participation_points
   end

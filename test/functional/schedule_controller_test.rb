@@ -33,7 +33,6 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     get(:index, {:year => year})
 
     html = @response.body
-    assert(html =~ /Mudslinger\s*MTB/, "Mountain Bike events should include MTB")
     for event in events
       assert(html[event.name], "'#{event.name}' should be in HTML")
     end
@@ -44,8 +43,18 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_index_only_shows_visible_events
     get :index
     html = @response.body
-    assert(!html[events(:future_usa_cycling_event).name], "Schedule should only show events sanctioned by Association")
-    assert(!html[events(:usa_cycling_event_with_results).name], "Schedule should only show events sanctioned by Association")
+    
+    assert_equal(
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?,
+      !html[events(:future_national_federation_event).name], 
+      "Schedule should only show events sanctioned by Association"
+    )
+    
+    assert_equal(
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
+      !html[events(:usa_cycling_event_with_results).name], 
+      "Schedule page should honor ASSOCIATION.show_only_association_sanctioned_races_on_calendar?"
+    )
   end
   
   def tets_road_index

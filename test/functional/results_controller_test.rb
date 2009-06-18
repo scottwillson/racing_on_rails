@@ -74,7 +74,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
     assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
   end
   
@@ -88,8 +88,12 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_usa_cycling_event)), "Should only include association-sanctioned events")
-    assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
+    assert_equal(
+      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
+      !assigns["events"].include?(events(:usa_cycling_event_with_results)), 
+      "Honor ASSOCIATION.show_only_association_sanctioned_races_on_calendar?"
+    )
   end
   
   def test_index_road
@@ -181,8 +185,14 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
     
     assert_not_nil(assigns['events'], "Should assign 'events'")
-    expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races, 
+    
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar?
+      expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races, 
                 multi_day_event_with_child_races, series_with_races_and_child_races]
+    else
+      expected = [series_with_races, single_day_event, series_with_child_races, events(:usa_cycling_event_with_results), multi_day_event_with_races, 
+                multi_day_event_with_child_races, series_with_races_and_child_races]
+    end
     assert_equal_events(expected, assigns['events'], 'Events')
 
     assert_not_nil(assigns['weekly_series'], "Should assign 'weekly_series'")

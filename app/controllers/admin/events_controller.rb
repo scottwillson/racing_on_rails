@@ -155,7 +155,7 @@ class Admin::EventsController < ApplicationController
 
     temp_file = File.new(path)
     event = Event.find(params[:id])
-    results_file = ResultsFile.new(temp_file, event)
+    results_file = ResultsFile.new(temp_file, event, :usac_results_format => (params[:usac_results_format] == "true"))
     results_file.import
     expire_cache
     flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"

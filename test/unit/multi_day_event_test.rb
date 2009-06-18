@@ -25,7 +25,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Road", pir_july_5.discipline, "discipline")
     assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_5.flyer, "flyer")
     assert_equal(promoter, pir_july_5.promoter, "promoter")
-    assert_equal(ASSOCIATION.short_name, pir_july_5.sanctioned_by, "sanctioned_by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, pir_july_5.sanctioned_by, "sanctioned_by")
     assert_equal("Nathan Hobson", pir_july_5.promoter.name, "promoter name")
     assert_equal("411-9292", pir_july_5.promoter.phone, "promoter phone")
     assert_equal("sixhobson@hotmail.com", pir_july_5.promoter.email, "promoter email")
@@ -38,7 +38,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Road", pir_july_12.discipline, "discipline")
     assert_equal("http://#{STATIC_HOST}/flyers/2005/pir.html", pir_july_12.flyer, "flyer")
     assert_equal(promoter, pir_july_12.promoter, "promoter")
-    assert_equal(ASSOCIATION.short_name, pir_july_12.sanctioned_by, "sanctioned_by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, pir_july_12.sanctioned_by, "sanctioned_by")
     assert_equal("Nathan Hobson", pir_july_12.promoter.name, "promoter name")
     assert_equal("411-9292", pir_july_12.promoter.phone, "promoter phone")
     assert_equal("sixhobson@hotmail.com", pir_july_12.promoter.email, "promoter email")
@@ -357,7 +357,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.state = "CT"
     multi_day_event.discipline = "Road"
     multi_day_event.flyer = "http://www.myseasons.com/"
-    multi_day_event.sanctioned_by = "USA Cycling"
+    multi_day_event.sanctioned_by = "FFL"
     brad_ross = promoters(:brad_ross)
     multi_day_event.promoter_name = brad_ross.name
     multi_day_event.promoter_email = brad_ross.email
@@ -383,7 +383,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Road", results["discipline"], "MultiDayEvent discipline")
     assert_equal("http://www.myseasons.com/", results["flyer"], "MultiDayEvent flyer")
     assert_equal(promoters(:brad_ross).id, results["promoter_id"].to_i, "MultiDayEvent promoter_id")
-    assert_equal("USA Cycling", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
+    assert_equal("FFL", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
   

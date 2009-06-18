@@ -73,7 +73,9 @@ class Admin::EventsControllerTest < ActionController::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
-    post :upload, :id => mt_hood_1.to_param, :results_file => fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
+    post :upload, :id => mt_hood_1.to_param, 
+                  :results_file => fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary),
+                  :usac_results_format => "false"
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
     assert_response :redirect
@@ -86,7 +88,9 @@ class Admin::EventsControllerTest < ActionController::TestCase
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
     
-    post :upload, :id => mt_hood_1.to_param, :results_file => fixture_file_upload("results/invalid_columns.xls", "application/vnd.ms-excel", :binary)
+    post :upload, :id => mt_hood_1.to_param, 
+                  :results_file => fixture_file_upload("results/invalid_columns.xls", "application/vnd.ms-excel", :binary),
+                  :usac_results_format => "false"
     assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param)
 
     assert_response :redirect
@@ -261,7 +265,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
     file = fixture_file_upload("results/dupe_racers.xls", "application/vnd.ms-excel", :binary)
-    post :upload, :id => mt_hood_1.to_param, :results_file => file
+    post :upload, :id => mt_hood_1.to_param, :results_file => file, :usac_results_format => "false"
     
     assert_response :redirect
     

@@ -49,7 +49,7 @@ assert_not_title "regexp:Exception"
 assert_table "css=table.racer_results", 1, 0, "2"
 assert_table "css=table.racer_results", 1, 1, "Kings Valley Road Race"
 assert_table "css=table.racer_results", 1, 2, "Senior Women 1/2/3"
-assert_table "css=table.racer_results", 1, 3, "12/31/2004"
+assert_text_present "12/31/2004"
 
 click_and_wait "link=Jack Frost"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"

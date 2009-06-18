@@ -1,7 +1,7 @@
 banana_belt_series:
   name: Banana Belt Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   date: 2004-01-04
   type: Series
@@ -12,7 +12,7 @@ banana_belt_1:
   parent: banana_belt_series
   name: Banana Belt I
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   updated_at: 2004-01-05
   number_issuer: stag_race
@@ -25,7 +25,7 @@ banana_belt_2:
   parent: banana_belt_series
   name: Banana Belt II
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   date: 2004-01-11
   type: SingleDayEvent
@@ -36,7 +36,7 @@ banana_belt_3:
   parent: banana_belt_series
   name: Banana Belt III
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   date: 2004-01-18
   type: SingleDayEvent
@@ -63,7 +63,7 @@ kings_valley:
   name: Kings Valley Road Race
   date: 2003-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   type: SingleDayEvent
   number_issuer: association
   bar_points: 1
@@ -72,7 +72,7 @@ tabor_cr:
   name: Mt. Tabor Circuit Race
   date: 2005-07-01
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: nate_hobson
   flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
   flyer_approved: false
@@ -89,7 +89,7 @@ pir_series:
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
   flyer_approved: true
   promoter: candi_murray
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   type: WeeklySeries
   number_issuer: association
   bar_points: 0
@@ -103,7 +103,7 @@ pir:
   discipline: Road
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
   promoter: candi_murray
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
@@ -117,7 +117,7 @@ pir_2:
   discipline: Road
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
   promoter: candi_murray
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
@@ -126,7 +126,7 @@ kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -139,7 +139,7 @@ mt_hood:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   promoter: brad_ross
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   number_issuer: association
   type: MultiDayEvent
   bar_points: 0
@@ -152,7 +152,7 @@ mt_hood_1:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   promoter: brad_ross
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   city: Hood River
   number_issuer: association
   type: SingleDayEvent
@@ -167,7 +167,7 @@ mt_hood_2:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   promoter: brad_ross
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -176,7 +176,7 @@ kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -184,7 +184,7 @@ kings_valley_2004:
 series_parent:
   name: Lost Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   date: <%= Date.today %>
   type: Series
@@ -194,17 +194,17 @@ series_parent:
 lost_series_child:
   name: Lost Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
   promoter: brad_ross
   date: <%= Date.today %>
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
   ironman: 0
-future_usa_cycling_event:
-  name: USA Cycling Event
+future_national_federation_event:
+  name: National Federation Event
   discipline: Road
-  sanctioned_by: USA Cycling
+  sanctioned_by: National Federation
   date: <%= Date.today + 3 %>
   type: SingleDayEvent
   bar_points: 0

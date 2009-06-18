@@ -9,7 +9,7 @@ class AgeGradedBar < Competition
                 :conditions => [%Q{
                   events.type = 'OverallBar' 
                   and bar = true
-                  and events.sanctioned_by = "#{ASSOCIATION.short_name}"
+                  and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
                   and categories.id = #{race.category.parent(true).id}
                   and racers.date_of_birth between '#{race.dates_of_birth.begin}' and '#{race.dates_of_birth.end}'
                   and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'}],

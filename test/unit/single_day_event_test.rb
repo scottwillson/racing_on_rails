@@ -29,7 +29,7 @@ class SingleDayEventTest < ActiveSupport::TestCase
     assert_equal(ASSOCIATION.state, event.state, "default state")
     assert_equal_dates(Date.today, event.date, "default date")
     assert(event.name[/^New Event/], "default name")
-    assert_equal(ASSOCIATION.short_name, event.sanctioned_by, "default sanctioned_by")
+    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "default sanctioned_by")
 
     event = SingleDayEvent.create!(:name => 'Copperopolis')
     assert_equal('-------------', event.first_aid_provider, "New event first aid provider")

@@ -14,7 +14,7 @@ class SingleDayEvent < Event
 
     if sanctioned_by
       conditions.first << " and sanctioned_by = ?"
-      conditions << ASSOCIATION.short_name
+      conditions << ASSOCIATION.default_sanctioned_by
     end
     
     if discipline
