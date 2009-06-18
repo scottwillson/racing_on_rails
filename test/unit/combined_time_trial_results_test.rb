@@ -26,19 +26,19 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
     result = combined.results[0]
     assert_equal('1', result.place, 'place')
-    assert_equal(racers(:molly), result.racer, 'racer')
+    assert_equal(people(:molly), result.person, 'person')
     assert_equal(categories(:masters_35_plus_women), result.category, 'category')
     assert_equal('30:00.00', result.time_s, 'time_s')
 
     result = combined.results[1]
     assert_equal('2', result.place, 'place')
-    assert_equal(racers(:weaver), result.racer, 'racer')
+    assert_equal(people(:weaver), result.person, 'person')
     assert_equal(categories(:sr_p_1_2), result.category, 'category')
     assert_equal('30:01.00', result.time_s, 'time_s')
 
     result = combined.results[2]
     assert_equal('3', result.place, 'place')
-    assert_equal(racers(:alice), result.racer, 'racer')
+    assert_equal(people(:alice), result.person, 'person')
     assert_equal(categories(:masters_35_plus_women), result.category, 'category')
     assert_equal('35:12.00', result.time_s, 'time_s')
   end
@@ -67,13 +67,13 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal("Time Trial", jack_frost.discipline, "Jack Frost discipline")
     pro_men = Category.find_or_create_by_name('Pro Men')
     pro_men_race = jack_frost.races.create!(:category => pro_men)
-    pro_men_race.results.create!(:place => '4', :racer => racers(:weaver), :time => 1200)
+    pro_men_race.results.create!(:place => '4', :person => people(:weaver), :time => 1200)
     # Results with no time should not be included
-    pro_men_race.results.create!(:place => '3', :racer => racers(:molly))
+    pro_men_race.results.create!(:place => '3', :person => people(:molly))
     # Results with DNF should not be included
-    pro_men_race.results.create!(:place => "DNF", :racer => racers(:alice))
-    pro_men_race.results.create!(:place => "DNF", :racer => racers(:alice), :time => 0)
-    pro_men_race.results.create!(:place => "DQ", :racer => Racer.create!, :time => 12)
+    pro_men_race.results.create!(:place => "DNF", :person => people(:alice))
+    pro_men_race.results.create!(:place => "DNF", :person => people(:alice), :time => 0)
+    pro_men_race.results.create!(:place => "DQ", :person => Person.create!, :time => 12)
 
     combined_results = jack_frost.combined_results(true)
     assert_not_nil(combined_results, 'Jack Frost should have combined results')
@@ -89,7 +89,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
 
     pro_men = Category.find_or_create_by_name('Pro Men')
     pro_men_race = event.races.create!(:category => pro_men, :distance => 40, :laps => 2)
-    pro_men_1st_place = pro_men_race.results.create!(:place => 1, :time => 300, :racer => Racer.create!(:name => "pro_men_1st_place"))
+    pro_men_1st_place = pro_men_race.results.create!(:place => 1, :time => 300, :person => Person.create!(:name => "pro_men_1st_place"))
 
     assert(!event.combined_results(true).nil?, "TT event should have combined results")
     event.reload
@@ -167,7 +167,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   def test_should_not_calculate_combined_results_for_combined_results
     event = SingleDayEvent.create!(:discipline => "Time Trial")
     race = event.races.create!(:category => categories(:senior_men))
-    race.results.create!(:place => "1", :racer => racers(:weaver), :time => 102)
+    race.results.create!(:place => "1", :person => people(:weaver), :time => 102)
     
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id

@@ -1,0 +1,736 @@
+# A rider who either appears in race results or who is added as a member of a racing association
+#
+# Names are _not_ unique
+#
+# New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
+class Person < ActiveRecord::Base
+
+  include Comparable
+
+  before_validation :find_associated_records
+  validate :membership_dates
+  before_save :destroy_shadowed_aliases
+  after_save :add_alias_for_old_name
+  after_save :save_numbers
+
+  has_many :aliases
+  belongs_to :created_by, :polymorphic => true
+  has_many :race_numbers, :include => [:discipline, :number_issuer]
+  has_many :results
+  belongs_to :team
+  
+  attr_accessor :year
+  
+  CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
+
+  # Does not consider Aliases
+  def Person.find_all_by_name(name)
+    if name.blank?
+      Person.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', '', ''],
+        :order => 'last_name, first_name')
+    else
+      Person.find(
+        :all,
+        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name],
+        :order => 'last_name, first_name')
+    end
+  end
+  
+  def Person.find_all_by_name_or_alias(first_name, last_name)
+    if !first_name.blank? && !last_name.blank?
+      Person.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
+      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      
+    elsif last_name.blank?
+      Person.find_all_by_first_name(first_name) | Alias.find_all_people_by_name(first_name)
+      
+    elsif first_name.blank?
+      Person.find_all_by_last_name(last_name) | Alias.find_all_people_by_name(last_name)
+      
+    else
+      Person.find(
+        :all,
+        :conditions => ['first_name = ? and last_name = ?', '', ''],
+        :order => 'last_name, first_name')
+      
+    end
+  end
+  
+  def Person.find_all_by_name_like(name, limit = 100)
+    name_like = "%#{name}%"
+    Person.find(
+      :all, 
+      :conditions => ["concat(first_name, ' ', last_name) like ? or aliases.name like ?", name_like, name_like],
+      :include => :aliases,
+      :limit => limit,
+      :order => 'last_name, first_name'
+    )
+  end
+  
+  def Person.find_by_name(name)
+    Person.find(
+      :first, 
+      :conditions => ["concat(first_name, ' ', last_name) = ?", name]
+    )
+  end
+  
+  def Person.find_by_number(number)
+    Person.find(:all, 
+               :include => :race_numbers,
+               :conditions => ['race_numbers.year = ? and race_numbers.value = ?', Date.today.year, number])
+  end
+
+  def Person.full_name(first_name, last_name)
+    unless first_name.blank? or last_name.blank?
+      return "#{first_name} #{last_name}"
+    end
+    unless first_name.blank?
+      return first_name
+    end
+    unless last_name.blank?
+      return last_name
+    end
+    
+    ''
+  end
+  
+  def Person.find_all_current_email_addresses
+    Person.connection.select_rows(%Q{ 
+      select first_name, last_name, email 
+      from people 
+      where member_to > NOW() and email is not null and email != '' 
+      order by last_name, first_name, email
+    }).collect do |first_name, last_name, email|
+      if first_name.blank? && last_name.blank?
+        email
+      else
+        "#{first_name} #{last_name} <#{email}>"
+      end
+    end
+  end
+  
+  # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
+  def Person.find_all_for_export(date = Date.today, members_only = true)
+    association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
+    where_clause = "WHERE (member_to >= '#{date.to_s}')" if members_only
+    
+    people = Person.connection.select_all(%Q{
+      SELECT people.id, license, first_name, last_name, teams.name as team_name, people.notes,
+             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to, DATE_FORMAT(member_usac_to, '%m/%d/%Y') as member_usac_to,
+             print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation, 
+             street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
+             ccx_category, road_category, track_category, mtb_category, dh_category, 
+             volunteer_interest, official_interest, race_promotion_interest, team_interest,
+             CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
+             ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
+             singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
+             DATE_FORMAT(people.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(people.updated_at, '%m/%d/%Y') as updated_at
+      FROM people
+      LEFT OUTER JOIN teams ON teams.id = people.team_id 
+      LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id 
+                      and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and ccx_numbers.year = #{date.year} 
+                      and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
+      LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id 
+                      and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and dh_numbers.year = #{date.year} 
+                      and dh_numbers.discipline_id = #{Discipline[:downhill].id}
+      LEFT OUTER JOIN race_numbers as road_numbers ON road_numbers.person_id = people.id 
+                      and road_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and road_numbers.year = #{date.year} 
+                      and road_numbers.discipline_id = #{Discipline[:road].id}
+      LEFT OUTER JOIN race_numbers as singlespeed_numbers ON singlespeed_numbers.person_id = people.id 
+                      and singlespeed_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and singlespeed_numbers.year = #{date.year} 
+                      and singlespeed_numbers.discipline_id = #{Discipline[:singlespeed].id}
+      LEFT OUTER JOIN race_numbers as track_numbers ON track_numbers.person_id = people.id 
+                      and track_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and track_numbers.year = #{date.year} 
+                      and track_numbers.discipline_id = #{Discipline[:track].id}
+      LEFT OUTER JOIN race_numbers as xc_numbers ON xc_numbers.person_id = people.id 
+                      and xc_numbers.number_issuer_id = #{association_number_issuer_id} 
+                      and xc_numbers.year = #{date.year} 
+                      and xc_numbers.discipline_id = #{Discipline[:mountain_bike].id}
+      #{where_clause}
+      ORDER BY last_name, first_name, people.id
+    })
+    
+    last_person = nil
+    people.reject! do |person|
+      if last_person && last_person["id"] == person["id"]
+        true
+      else
+        last_person = person
+        false
+      end
+    end
+    
+    people
+  end
+  
+  #interprets dates returned in sql above for member export
+  def Person.lic_check(lic, lic_date)
+    if lic.to_i > 0
+      (lic_date && (Date.parse(lic_date) > Date.today)) ? "current" : "CHECK LIC!"
+    else
+      "NOT ON FILE"
+    end
+  end
+  
+  def people_with_same_name
+    people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
+    people.reject! { |person| person == self }
+    people
+  end
+  
+  def attributes=(attributes)
+    unless attributes.nil?
+      if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
+        attributes["member_to(2i)"] = '12'
+        attributes["member_to(3i)"] = '31'
+      end
+      if attributes[:team] and attributes[:team].is_a?(Hash)
+        attributes[:team] = Team.new(attributes[:team])
+        attributes[:team][:created_by] = attributes[:created_by] if new_record?
+      end 
+    end
+    super(attributes)
+  end
+
+  def name
+    Person.full_name(first_name, last_name)
+  end
+
+  # Tries to split +name+ into +first_name+ and +last_name+
+  # TODO Handle name, Jr.
+  # This looks too complicated …
+  def name=(value)  
+    logger.debug("name=#{name}")
+    @old_name = name unless @old_name
+    if value.blank?
+      self.first_name = ''
+      self.last_name = ''
+      return
+    end
+
+    if value.include?(',')
+      parts = value.split(',')
+      if parts.size > 0
+        self.last_name = parts[0].strip
+        if parts.size > 1
+          self.first_name = parts[1..(parts.size - 1)].join
+          self.first_name.strip!
+        end
+      end
+    else
+      parts = value.split(' ')
+      if parts.size > 0
+        self.first_name = parts[0].strip
+        if parts.size > 1
+          self.last_name = parts[1..(parts.size - 1)].join
+          self.last_name.strip!
+        end
+      end
+    end
+  end
+  
+  def first_name=(value)
+    @old_name = name unless @old_name
+    self[:first_name] = value
+  end
+  
+  def last_name=(value)
+    @old_name = name unless @old_name
+    self[:last_name] = value
+  end
+
+  def team_name
+    if team
+      team.name || ''
+    else
+      ''
+    end
+  end
+
+  def team_name=(value)
+    if value.blank? or value == 'N/A'
+      self.team = nil
+    else
+      self.team = Team.find_by_name_or_alias(value)
+      self.team = Team.new(:name => value, :created_by => new_record? ? created_by : nil) unless self.team
+    end
+  end
+
+  def gender_pronoun
+    if gender == "F"
+      "herself"
+    else
+      "himself"
+    end
+  end
+  
+  # Non-nil for happier sorting
+  def gender
+    self[:gender] || ''
+  end
+  
+  def gender=(value)
+    value.upcase!
+    case value
+    when 'M', 'MALE', 'BOY'
+      self[:gender] = 'M'
+    when 'F', 'FEMALE', 'GIRL'
+      self[:gender] = 'F'
+    else
+      self[:gender] = 'M'
+    end
+  end
+  
+  def date_of_birth=(value)
+    if value.is_a?(String)
+      value.gsub!(/^00/, '19')
+      value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+    end
+    if value and value.to_s.size < 5
+      int_value = value.to_i
+      if int_value > 10 and int_value <= 99
+        value = "01/01/19#{value}"
+      end
+      if int_value > 0 and int_value <= 10
+        value = "01/01/20#{value}"
+      end
+    end
+    
+    # Don't overwrite month and day if we're just passing in the same year
+    if self[:date_of_birth] and value
+      if value.is_a?(String)
+        new_date = Date.parse(value)
+      else
+        new_date = value
+      end
+      if new_date.year == self[:date_of_birth].year and new_date.month == 1 and new_date.day == 1
+        return
+      end
+    end
+    super
+  end
+  
+  def birthdate
+    date_of_birth
+  end
+  
+  def birthdate=(value)
+    self.date_of_birth = value
+  end
+  
+  # 30 years old or older
+  def master?
+    if date_of_birth
+      date_of_birth <= Date.new(ASSOCIATION.masters_age.years.ago.year, 12, 31)
+    end
+  end
+  
+  # Under 18 years old
+  def junior?
+    if date_of_birth
+      date_of_birth >= Date.new(18.years.ago.year, 1, 1)
+    end
+  end
+  
+  # Oldest age person will be at any point in year
+  def racing_age
+    if date_of_birth
+      (Date.today.year - date_of_birth.year).ceil
+    end
+  end
+  
+  def cyclocross_racing_age
+    if date_of_birth
+      racing_age + 1
+    end
+  end
+  
+  def number(discipline, reload = false, year = nil)
+    return nil if discipline.nil?
+
+    year = year || Date.today.year
+    if discipline.is_a?(Symbol)
+      discipline = Discipline[discipline]
+    end
+    number = race_numbers(reload).detect do |race_number|
+      race_number.year == year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
+    end
+    if number
+      number.value
+    else
+      nil
+    end
+  end
+  
+  # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
+  def add_number(value, discipline, association = nil, _year = year)
+    association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
+    _year ||= Date.today.year
+
+    if discipline.nil? || !discipline.numbers?
+      discipline = Discipline[:road]
+    end
+    
+    if value.blank?
+      unless new_record?
+        # Delete ALL numbers for ASSOCIATION and this discipline?
+        # FIXME Delete number individually in UI
+        RaceNumber.destroy_all(
+          ['person_id=? and discipline_id=? and year=? and number_issuer_id=?', 
+          self.id, discipline.id, _year, association.id])
+      end
+    else
+      if new_record?
+        existing_number = race_numbers.any? do |number|
+          number.value == value && number.discipline == discipline && number.association == association && number.year == _year
+        end
+        race_numbers.build(
+          :person => self, :value => value, :discipline => discipline, :year => _year, :number_issuer => association, 
+          :updated_by => self.updated_by
+        ) unless existing_number
+      else
+        race_number = RaceNumber.find(
+          :first,
+          :conditions => ['value=? and person_id=? and discipline_id=? and year=? and number_issuer_id=?', 
+                           value, self.id, discipline.id, _year, association.id])
+        unless race_number
+          race_numbers.create(
+            :person => self, :value => value, :discipline => discipline, :year => _year, 
+            :number_issuer => association, :updated_by => self.updated_by
+          )
+        end
+      end
+    end
+  end
+  
+  def bmx_number(reload = false, year = nil)
+    number(Discipline[:bmx], reload, year)
+  end
+  
+  def ccx_number(reload = false, year = nil)
+    number(Discipline[:cyclocross], reload, year)
+  end
+  
+  def dh_number(reload = false, year = nil)
+    number(Discipline[:downhill], reload, year)
+  end
+  
+  def road_number(reload = false, year = nil)
+    number(Discipline[:road], reload, year)
+  end
+  
+  def singlespeed_number(reload = false, year = nil)
+    number(Discipline[:singlespeed], reload, year)
+  end
+
+  def track_number(reload = false, year = nil)
+    number(Discipline[:track], reload, year)
+  end
+  
+  def xc_number(reload = false, year = nil)
+    number(Discipline[:mountain_bike], reload, year)
+  end
+  
+  def bmx_number=(value)
+    add_number(value, Discipline[:bmx])
+  end
+  
+  def ccx_number=(value)
+    add_number(value, Discipline[:cyclocross])
+  end
+  
+  def dh_number=(value)
+    add_number(value, Discipline[:downhill])
+  end
+  
+  def road_number=(value)
+    add_number(value, Discipline[:road])
+  end
+  
+  def singlespeed_number=(value)
+    add_number(value, Discipline[:singlespeed])
+  end
+
+  def track_number=(value)
+    add_number(value, Discipline[:track])
+  end
+  
+  def xc_number=(value)
+    add_number(value, Discipline[:mountain_bike])
+  end
+  
+  # Is Person a current member of the bike racing association?
+  def member?(date = Date.today)
+    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
+    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
+  end
+
+  # Is/was Person a current member of the bike racing association at any point during +date+'s year?
+  def member_in_year?(date = Date.today)
+    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
+    year = date.year
+    !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
+  end
+  
+  def member
+    member?
+  end
+  
+  # Is Person a current member of the bike racing association?
+  def member=(value)
+    if value and !member?
+      self.member_from = Date.today if self.member_from.nil? or self.member_from >= Date.today
+      self.member_to = Date.new(Date.today.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(Date.today.year, 12, 31))
+    elsif !value and member?
+      if self.member_from.year == Date.today.year
+        self.member_from = nil
+        self.member_to = nil
+      else
+        self.member_to = Date.new(Date.today.year - 1, 12, 31)
+      end
+    end
+  end
+  
+  def member_from=(date)
+    if date.nil?
+      self[:member_from] = nil
+      self[:member_to] = nil
+      return date
+    end
+
+    date_as_date = date
+    case date_as_date
+    when Date
+      # Nothing to do
+    when DateTime, Time
+      date_as_date = Date.new(date.year, date.month, date.day)
+    else
+      date_as_date = Date.parse(date)
+    end
+
+    if self.member_to.nil?
+      self[:member_to] = Date.new(date_as_date.year, 12, 31)
+    end
+    self[:member_from] = date_as_date
+  end
+  
+  def member_to=(date)
+    unless date.nil?
+      self[:member_from] = Date.today if self.member_from.nil?
+      self[:member_from] = date if self.member_from > date
+    end
+    self[:member_to] = date
+  end
+  
+  # Validates member_from and member_to
+  def membership_dates
+    if member_to and member_from.nil?
+      errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
+    end
+    if member_from and member_to.nil?
+      errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
+    end
+    if member_from and member_to and member_from > member_to
+      errors.add('member_to', "cannot be greater than member_from: #{member_from}")
+    end
+  end
+  
+  def renewed?
+    self.member_from && (self.member_from > Date.today)
+  end
+  
+  def print_card?
+    self.print_card
+  end
+  
+  def created_from_result?
+    !created_by.nil? && created_by.kind_of?(Event)
+  end
+  
+  def updated_after_created?
+    created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
+  end
+
+  def state=(value)
+    if value and value.size == 2
+      value.upcase!
+    end
+    super
+  end
+  
+  def city_state_zip
+    if !city.blank?
+      if !state.blank?
+        "#{city}, #{state} #{zip}"
+      else
+        "#{city} #{zip}"
+      end
+    else
+      if !state.blank?
+        "#{state} #{zip}"
+      else
+        zip || ''
+      end
+    end
+  end
+  
+  def hometown
+    if city.blank?
+      if state.blank?
+        ''
+      else
+        if state == ASSOCIATION.state
+          ''
+        else
+          state
+        end
+      end
+    else
+      if state.blank?
+        city
+      else
+        if state == ASSOCIATION.state
+          city
+        else
+          "#{city}, #{state}"
+        end
+      end
+    end
+  end
+  
+  def hometown=(value)
+    self.city = nil
+    self.state = nil
+    return value if value.blank?
+    parts = value.split(',')
+    if parts.size > 1
+      self.state = parts.last.strip
+    end
+    self.city = parts.first.strip
+  end
+  
+  # Hack around in-place editing
+  def toggle!(attribute)
+    logger.debug("toggle! #{attribute} #{attribute == 'member'}")
+    if attribute == 'member'
+      self.member = !member?
+      save!
+    else
+      super
+    end
+  end
+  
+  # All non-Competition results
+  # reload does an optimized load with joins
+  def event_results(reload = true)
+    if reload
+      return Result.find(
+        :all,
+        :include => [:team, :person, :scores, :category, {:race => [:event, :category]}],
+        :conditions => ['people.id = ?', id]
+      ).reject {|r| r.competition_result?}
+    end
+    results.reject do |result|
+      result.competition_result?
+    end
+  end
+  
+  # BAR, Oregon Cup, Ironman
+  def competition_results
+    results.select do |result|
+      result.competition_result?
+    end
+  end
+
+  # Moves another people' aliases, results, and race numbers to this person,
+  # and delete the other person.
+  # Also adds the other people' name as a new alias
+  def merge(other_person)
+    # TODO Consider just using straight SQL for this --
+    # it's not complicated, and the current process generates an
+    # enormous amount of SQL
+    raise(ArgumentError, 'Cannot merge nil person') unless other_person
+    raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
+
+    Person.transaction do
+      events = other_person.results.collect do |result|
+        event = result.event
+        event.disable_notification! if event
+        event
+      end.compact
+      save!
+      aliases << other_person.aliases
+      results << other_person.results
+      race_numbers << other_person.race_numbers
+      Person.delete(other_person.id)
+      existing_alias = aliases.detect{|a| a.name.casecmp(other_person.name) == 0}
+      if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
+        aliases.create(:name => other_person.name) 
+      end
+      if events
+        events.each do |event|
+          event.reload
+          event.enable_notification!
+        end
+      end
+    end
+    true
+  end
+  
+  # Replace +team+ with exising Team if current +team+ is an unsaved duplicate of an existing Team
+  def find_associated_records
+    if self.team && team.new_record?
+      if team.name.blank? or team.name == 'N/A'
+        self.team = nil
+      else
+        existing_team = Team.find_by_name_or_alias(team.name)
+        self.team = existing_team if existing_team
+      end
+    end
+  end
+  
+  def save_numbers
+    for number in race_numbers
+      number.save! if number.new_record?
+    end
+  end
+  
+  # If name changes to match existing alias, destroy the alias
+  def destroy_shadowed_aliases
+    Alias.destroy_all(['name = ?', name])
+  end
+  
+  def add_alias_for_old_name
+    if !new_record? &&
+       !@old_name.blank? && 
+       !name.blank? && 
+       @old_name.casecmp(name) != 0 && 
+       !Alias.exists?(['name = ? and person_id = ?', @old_name, id]) && 
+       !Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", @old_name])
+
+      Alias.create!(:name => @old_name, :person => self)
+    end
+  end
+
+  # TODO Any reason not to change this to last name, first name?
+  def <=>(other)
+    if other
+      id <=> other.id
+    else
+      -1
+    end
+  end
+  
+  def to_s
+    "#<Person #{id} #{first_name} #{last_name} #{team_id}>"
+  end
+end

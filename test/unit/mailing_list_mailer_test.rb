@@ -152,7 +152,7 @@ Still loyal:
     <tr>
       <td valign="top"><b>Place<br>
       </b></td>
-      <td valign="top"><b>Racer<br>
+      <td valign="top"><b>Person<br>
       </b></td>
     </tr>
     <tr>
@@ -764,7 +764,7 @@ Content-Transfer-Encoding: 7bit
     <tr>
       <td valign="top"><b>Place<br>
       </b></td>
-      <td valign="top"><b>Racer<br>
+      <td valign="top"><b>Person<br>
       </b></td>
     </tr>
     <tr>

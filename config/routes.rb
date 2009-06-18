@@ -20,7 +20,7 @@ ActionController::Routing::Routes.draw do |map|
       pages.resources :versions, :member => { :revert => :get }
     end
 
-    admin.resources :racers, :collection => { :cards => :get, 
+    admin.resources :people, :collection => { :cards => :get, 
                                               :duplicates => :get, 
                                               :mailing_labels => :get, 
                                               :no_mailing_labels => :get, 
@@ -86,10 +86,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/posts/:mailing_list_name",                  :controller => "posts"
   map.resources :posts
 
-  map.connect "/results/competition/:competition_id/racer/:racer_id", :controller => "results", :action => "competition"
+  map.connect "/results/competition/:competition_id/person/:person_id", :controller => "results", :action => "competition"
   map.connect "/results/competition/:competition_id/team/:team_id", :controller => "results", :action => "competition"
   map.connect "/results/event/:id", :controller => "results", :action => "event"
-  map.connect "/results/racer/:id", :controller => "results", :action => "racer"
+  map.connect "/results/person/:id", :controller => "results", :action => "person"
   map.connect "/results/show/:id", :controller => "results", :action => "show"
   map.connect "/results/team/:id", :controller => "results", :action => "team"
   map.connect "/results/:year/:discipline", :controller => "results"

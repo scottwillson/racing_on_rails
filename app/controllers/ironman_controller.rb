@@ -5,7 +5,7 @@ class IronmanController < ApplicationController
     @ironman = Ironman.find(:first, :conditions => ['date = ?', date])
     if @ironman && !@ironman.races.empty?
       @results = Result.paginate( :conditions => ['race_id = ?', @ironman.races.first.id],
-                                  :include => [:racer],
+                                  :include => [:person],
                                   :order => 'cast(place as signed)',
                                   :limit  =>  200,
                                   :page =>  params['page']

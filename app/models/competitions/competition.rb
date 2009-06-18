@@ -123,7 +123,7 @@ class Competition < Event
     @point_schedule = @point_schedule || []
   end
   
-  # source_results must be in racer, place ascending order
+  # source_results must be in person, place ascending order
   def source_results(race)
     []
   end
@@ -143,16 +143,16 @@ class Competition < Event
     results.each_with_index do |source_result, index|
       logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race.name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
-      racer = source_result.racer
+      person = source_result.person
       points = points_for(source_result)
-      if points > 0.0 && (!members_only? || member?(racer, source_result.date))
+      if points > 0.0 && (!members_only? || member?(person, source_result.date))
  
-        if first_result_for_racer(source_result, competition_result)
+        if first_result_for_person(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :racer => racer, 
-             :team => (racer ? racer.team : nil),
+             :person => person, 
+             :team => (person ? person.team : nil),
              :race => race)
         end
  
@@ -190,12 +190,12 @@ class Competition < Event
     true 
   end
   
-  def member?(racer_or_team, date)
-    racer_or_team && racer_or_team.member_in_year?(date)
+  def member?(person_or_team, date)
+    person_or_team && person_or_team.member_in_year?(date)
   end
   
-  def first_result_for_racer(source_result, competition_result)
-    competition_result.nil? || source_result.racer != competition_result.racer
+  def first_result_for_person(source_result, competition_result)
+    competition_result.nil? || source_result.person != competition_result.person
   end
   
   # Apply points from point_schedule, and split across team

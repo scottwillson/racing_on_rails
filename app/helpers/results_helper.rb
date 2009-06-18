@@ -1,6 +1,6 @@
 module ResultsHelper
   def link_to_result(text, result)
-    return text unless result.racer
+    return text unless result.person
 
     if result.preliminary?
       html_options = { :class => :preliminary }
@@ -13,10 +13,10 @@ module ResultsHelper
         { :controller => 'results',
           :action => 'competition',
           :competition_id => result.event.to_param,
-          :racer_id => result.racer_id },
+          :person_id => result.person_id },
         html_options)
     else
-      link_to(text, "/results/racer/#{result.racer.id}", html_options)
+      link_to(text, "/results/person/#{result.person.id}", html_options)
     end
   end
 end

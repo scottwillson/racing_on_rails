@@ -1,6 +1,6 @@
-# Bike racing team of Racers
+# Bike racing team of People
 #
-# Like Racers, Teams may have many alternate  names. These are modelled as Aliases
+# Like People, Teams may have many alternate  names. These are modelled as Aliases
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
@@ -17,7 +17,7 @@ class Team < ActiveRecord::Base
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
   has_many :historical_names, :order => "year"
-  has_many :racers
+  has_many :people
   has_many :results
 
   def Team.find_by_name_or_alias(name)
@@ -98,7 +98,7 @@ class Team < ActiveRecord::Base
     aliases.detect {|a| a.name.casecmp(alias_name) == 0}
   end
 
-  # Moves another Team's aliases, results, and racers to this Team,
+  # Moves another Team's aliases, results, and people to this Team,
   # and delete the other Team.
   # Also adds the other Team's name as a new alias
   def merge(team)
@@ -116,7 +116,7 @@ class Team < ActiveRecord::Base
       
       aliases << team.aliases
       results << team.results(true)
-      racers << team.racers
+      people << team.people
       Team.delete(team.id)
       existing_alias = aliases.detect{ |a| a.name.casecmp(team.name) == 0 }
       if existing_alias.nil? && Team.find_all_by_name(team.name).empty?

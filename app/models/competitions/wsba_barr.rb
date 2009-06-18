@@ -20,7 +20,7 @@ class WsbaBarr < Competition
     end
   end
   
-  # source_results must be in racer-order
+  # source_results must be in person-order
   def source_results(race)
     return [] if source_events(true).empty?
     
@@ -30,7 +30,7 @@ class WsbaBarr < Competition
     event_ids = event_ids.join(', ')
     
     results = Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, racer_id, team_id, place, members_only_place
+      %Q{ SELECT results.id as id, race_id, person_id, team_id, place, members_only_place
           FROM results  
           LEFT OUTER JOIN races ON races.id = results.race_id 
           LEFT OUTER JOIN categories ON categories.id = races.category_id
@@ -40,7 +40,7 @@ class WsbaBarr < Competition
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
               and (events.id in (#{event_ids}))
-         order by racer_id
+         order by person_id
        }
     )
     results

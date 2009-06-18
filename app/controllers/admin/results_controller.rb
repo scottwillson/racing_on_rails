@@ -28,30 +28,30 @@ class Admin::ResultsController < ApplicationController
   in_place_edit_for :result, :time_s
   in_place_edit_for :result, :time_total_s
   
-  def racer
-    @racer = Racer.find(params[:id])
-    @results = Result.find_all_for(@racer)
+  def person
+    @person = Person.find(params[:id])
+    @results = Result.find_all_for(@person)
   end
   
-  def find_racer
-    racers = Racer.find_all_by_name_like(params[:name], 20)
+  def find_person
+    people = Person.find_all_by_name_like(params[:name], 20)
     ignore_id = params[:ignore_id]
-    racers.reject! {|r| r.id.to_s == ignore_id}
-    if racers.size == 1
-      racer = racers.first
-      results = Result.find_all_for(racer)
-      logger.debug("Found #{results.size} for #{racer.name}")
-      render(:partial => 'racer', :locals => {:racer => racer, :results => results})
+    people.reject! {|r| r.id.to_s == ignore_id}
+    if people.size == 1
+      person = people.first
+      results = Result.find_all_for(person)
+      logger.debug("Found #{results.size} for #{person.name}")
+      render(:partial => 'person', :locals => {:person => person, :results => results})
     else
-      render :partial => 'racers', :locals => {:racers => racers}
+      render :partial => 'people', :locals => {:people => people}
     end
   end
   
   def results
-    racer = Racer.find(params[:id])
-    results = Result.find_all_for(racer)
-    logger.debug("Found #{results.size} for #{racer.name}")
-    render(:partial => 'racer', :locals => {:racer => racer, :results => results})
+    person = Person.find(params[:id])
+    results = Result.find_all_for(person)
+    logger.debug("Found #{results.size} for #{person.name}")
+    render(:partial => 'person', :locals => {:person => person, :results => results})
   end
   
   def scores
@@ -66,15 +66,15 @@ class Admin::ResultsController < ApplicationController
     result_id = params[:id].to_s
     result_id = result_id[/result_(.*)/, 1]
     result = Result.find(result_id)
-    original_result_owner = Racer.find(result.racer_id)
-    racer = Racer.find(params[:racer_id].to_s[/racer_(.*)/, 1])
-    result.racer = racer
+    original_result_owner = Person.find(result.person_id)
+    person = Person.find(params[:person_id].to_s[/person_(.*)/, 1])
+    result.person = person
     result.save!
     expire_cache
     render(:update) do |page|
-      page.replace("racer_#{racer.id}", :partial => 'racer', :locals => {:racer => racer, :results => racer.results})
-      page.replace("racer_#{original_result_owner.id}", :partial => 'racer', :locals => {:racer => original_result_owner, :results => original_result_owner.results})
-      page.visual_effect(:appear, "racers", :duration => 0.6)
+      page.replace("person_#{person.id}", :partial => 'person', :locals => {:person => person, :results => person.results})
+      page.replace("person_#{original_result_owner.id}", :partial => 'person', :locals => {:person => original_result_owner, :results => original_result_owner.results})
+      page.visual_effect(:appear, "people", :duration => 0.6)
       page.hide('find_progress_icon')
     end
   end

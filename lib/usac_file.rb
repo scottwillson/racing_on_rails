@@ -48,30 +48,30 @@ class UsacFile
   end
     
     #assumes USAC database contains current year's members only, all licenses good until end of this year
-  def update_racers
+  def update_people
     expir_date = Date.new(Date.today.year, 12, 31) 
-    racers_updated = []
+    people_updated = []
     @members_list.each {|memusac|
       #get the parameters in a nice format
       license = memusac["license#"].to_i.to_s #strips off leading zeros, consistent with our db
       full_name = memusac["first_name"].to_s + " " + memusac["last_name"].to_s #as specified by find method used below
       
-      #Look for the racer. License # is most reliable (e.g. we only have short first name)
+      #Look for the person. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
-      r = Racer.find_by_license(license)
-      dups = Racer.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
+      r = Person.find_by_license(license)
+      dups = Person.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
       first_dup = dups.first unless dups.first.nil?
       if r.nil?
-        r = Racer.find_by_name(full_name)
+        r = Person.find_by_name(full_name)
         r ||= first_dup
       else
         #we found someone by license. 
-        if r != first_dup #the name USAC has does not match Racer name or alias
+        if r != first_dup #the name USAC has does not match Person name or alias
           #Let's make an alias with their name at USAC. Helps with importing results
           begin
-            Alias.create!(:name => full_name, :racer => r)
+            Alias.create!(:name => full_name, :person => r)
           rescue Exception => e
-            Rails.logger.warn("Could not create alias #{full_name} for racer #{r.name} with license #{r.license}")
+            Rails.logger.warn("Could not create alias #{full_name} for person #{r.name} with license #{r.license}")
           end
             
         end
@@ -80,18 +80,18 @@ class UsacFile
       unless r.nil? #we found somebody
           if r.license && r.license.match(/\d+/) && r.license != license
             #person has a license, but not this one. we must have the wrong person or other confusion.
-            Rails.logger.warn("Had racer #{r.name} with license #{r.license} but did not match USAC license #{license} for #{memusac["first_name"]} #{memusac["last_name"]}")
+            Rails.logger.warn("Had person #{r.name} with license #{r.license} but did not match USAC license #{license} for #{memusac["first_name"]} #{memusac["last_name"]}")
           else 
             #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
             r.license = license
             r.member_usac_to = expir_date
-            racers_updated.push(r) if r.save!
+            people_updated.push(r) if r.save!
           end
       end
     }
     
-    Rails.logger.info("#{racers_updated.length} racers were updated with a USAC expiration date of #{expir_date} ")
-    return racers_updated
+    Rails.logger.info("#{people_updated.length} people were updated with a USAC expiration date of #{expir_date} ")
+    return people_updated
   end
   
 end

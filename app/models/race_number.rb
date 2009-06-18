@@ -1,4 +1,4 @@
-# Number used to identify a Racer during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
+# Number used to identify a Person during a Race: bib number. RaceNumbers are issued from a NumberIssuer, 
 # which is usually a racing Association, but sometimes an Event.
 #
 # In the past, RaceNumbers had to be unique for NumberIssuer, Discipline and year. But we allow 
@@ -7,22 +7,22 @@
 # +Value+ is the number on the physical number plate. RaceNumber values can have letters and numbers
 #
 # This all may seem to be a case or over-modelling, but it refleccts how numbers are used by promoters
-# and associations. RacerNumbers are also used to differentiate between Racers with the same name, and 
-# to identify racer results with misspelled names.
+# and associations. PersonNumbers are also used to differentiate between People with the same name, and 
+# to identify person results with misspelled names.
 class RaceNumber < ActiveRecord::Base
   before_validation :defaults
   validates_presence_of :discipline
   validates_presence_of :number_issuer
-  validates_presence_of :racer, :unless => :new_record?
+  validates_presence_of :person, :unless => :new_record?
   validates_presence_of :value
   validate :unique_number
   
-  before_save :get_racer_id
+  before_save :get_person_id
   before_save :validate_year
   
   belongs_to :discipline
   belongs_to :number_issuer
-  belongs_to :racer
+  belongs_to :person
   
   def RaceNumber.find_all_by_value_and_event(value, _event)
     return [] if _event.nil? or value.blank?
@@ -37,7 +37,7 @@ class RaceNumber < ActiveRecord::Base
                       discipline_id, 
                       _event.number_issuer.id, 
                       _event.date.year],
-      :include => :racer
+      :include => :person
     )
   end
   
@@ -82,9 +82,9 @@ class RaceNumber < ActiveRecord::Base
     self.year = Date.today.year unless (self.year and self.year > 1800)
   end
   
-  def get_racer_id
-    if racer && (racer.new_record? || racer.changed?)
-      racer.reload
+  def get_person_id
+    if person && (person.new_record? || person.changed?)
+      person.reload
     end
   end
   
@@ -92,42 +92,42 @@ class RaceNumber < ActiveRecord::Base
     self.year > 1800
   end
   
-  # Checks that Racer doesn't already have this number.
+  # Checks that Person doesn't already have this number.
   #
-  # Numbers are unique by value, Racer, Discipline, NumberIssuer, and year.
+  # Numbers are unique by value, Person, Discipline, NumberIssuer, and year.
   #
-  # Skips check if +racer+ is not set. Typically, this happens when
-  # importing a Result that has a +number+, but no +racer+
+  # Skips check if +person+ is not set. Typically, this happens when
+  # importing a Result that has a +number+, but no +person+
   #
   # OBRA rental numbers (11-99) are not valid
   def unique_number 
     _discipline = Discipline.find(self[:discipline_id])
     if RaceNumber.rental?(self[:value], _discipline)
       errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
-      racer.errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      person.errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
       return false 
     end
     
-    return true if racer.nil?
+    return true if person.nil?
   
     if new_record?
       existing_numbers = RaceNumber.find(
         :all,
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and racer_id = ?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], racer.id])
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and person_id = ?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], person.id])
     else
       existing_numbers = RaceNumber.find(
         :all,
-        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and racer_id = ?', 
-        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, racer.id])
+        :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and person_id = ?', 
+        self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, person.id])
     end
       
     unless existing_numbers.empty?
-      racer_id = racer.id
-      errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
-      racer.errors.add('value', "Number '#{value}' can't be used for #{racer.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
+      person_id = person.id
+      errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
+      person.errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
       if existing_numbers.size > 1
-        logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, racer #{racer_id}")
+        logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, person #{person_id}")
       end
       return false
     end
@@ -142,6 +142,6 @@ class RaceNumber < ActiveRecord::Base
   end
   
   def to_s
-    "<RaceNumber (#{id}) (#{value}) (#{racer_id}) (#{number_issuer_id}) (#{discipline_id}) (#{year})>"
+    "<RaceNumber (#{id}) (#{value}) (#{person_id}) (#{number_issuer_id}) (#{discipline_id}) (#{year})>"
   end
 end

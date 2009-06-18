@@ -18,7 +18,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
   end
   
   def test_valid_admin_login
-    get admin_racers_path
+    get admin_people_path
     assert_response :redirect
     follow_redirect!
     assert_response :success
@@ -26,7 +26,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_equal "You must be an administrator to access this page", flash[:notice]
 
     login :user_session => { :email => 'admin@example.com', :password => 'secret' }
-    assert_redirected_to admin_racers_path
+    assert_redirected_to admin_people_path
   end
   
   def test_should_redirect_to_admin_home_after_admin_login
@@ -60,7 +60,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_response :success
     assert_template "user_sessions/new"
 
-    get admin_racers_path
+    get admin_people_path
     assert_response :redirect
     follow_redirect!
     assert_response :success

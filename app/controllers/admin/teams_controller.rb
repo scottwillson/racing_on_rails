@@ -26,7 +26,7 @@ class Admin::TeamsController < ApplicationController
   end
   
   def edit
-    @team = Team.find(params[:id], :include => [:aliases, :racers])
+    @team = Team.find(params[:id], :include => [:aliases, :people])
   end
   
   def new
@@ -127,7 +127,7 @@ class Admin::TeamsController < ApplicationController
     end
   end
   
-  # Exact dupe of racers controller
+  # Exact dupe of people controller
   def destroy_alias
     alias_id = params[:alias_id]
     Alias.destroy(alias_id)

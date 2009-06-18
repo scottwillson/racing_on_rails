@@ -1,0 +1,50 @@
+<% @page_title = "Admin: People" %>
+
+<%= render :partial => "shared/search", :locals => { :name => @name } %>
+
+<% table :class => "people", :id => :people do %>
+  <tr>
+    <th class="name">Name</th>
+    <th class="team">Team</th>
+    <th class="aliases">Aliases</th>
+    <th class="number">Road</th>
+    <th class="number">MTB</th>
+    <th class="check_box">Member</th>
+    <th class="actions last"></th>
+  </tr>
+  <%= render :partial => "person", :collection => @people %>
+  <% if @people.empty? %>
+  <tr valign="top">
+    <%- if @name.blank? -%>
+    <td colspan="8" width="200" class="not_found">Enter part of a person's name</td>
+    <%- else -%>
+    <td colspan="8" width="200" class="not_found">No people found</td>
+    <%- end -%>
+  </tr>
+  <% end %>
+<% end -%>
+
+<div class="buttons container">
+  <div class="updatedon">
+    <%= link_to(image_tag('/images/buttons/add.gif'), { :action => 'new' }, { :class => "image new" }) %>
+  </div>
+  <div class="right">
+    <%= link_to('Print Cards',  cards_admin_people_path(:format => "pdf")) %> |
+    <%= link_to('Print Mailing Labels', mailing_labels_admin_people_path(:format => "pdf")) %>
+  </div>
+</div>
+
+<%= render :partial => 'import_export' %>
+
+<%= focus('name') %>
+
+<%- for person in @people -%>
+  <%= draggable_element("person_#{person.id}", :revert => true, :delay => 100,
+                        :onStart => "function() { Droppables.remove('person_#{person.id}_row') }", 
+                        :onEnd => "function() { Droppables.add('person_#{person.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/people/merge?target_id=#{person.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
+  %>
+  <%= drop_receiving_element("person_#{person.id}_row", 
+    :url => { :action => "merge", :target_id => person.id },
+    :onDrop => "function(element){$('person_#{person.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/people/merge?target_id=#{person.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('person_#{person.id}_row') }",
+    :hoverclass => 'hovering' ) %>
+<%- end -%>

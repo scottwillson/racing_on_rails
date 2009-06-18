@@ -58,11 +58,11 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_not_nil(flash[:info], "Should have success message in flash")
   end
   
-  def test_create_result_for_existing_race_and_racers
+  def test_create_result_for_existing_race_and_people
     women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
     existing_race = events(:banana_belt_1).races.create!(:category => women_cat_4)
-    existing_race.results.create!(:place => "1", :racer => racers(:alice))
-    molly = racers(:molly)
+    existing_race.results.create!(:place => "1", :person => people(:alice))
+    molly = people(:molly)
     event = events(:banana_belt_1)
 
     post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
@@ -94,13 +94,13 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(molly.first_name, result.first_name, "New result first_name")
     assert_equal(molly.last_name, result.last_name, "New result last_name")
     
-    assert_equal(1, Racer.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
+    assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
     
     assert_not_nil(flash[:info], "Should have success message in flash")
   end
   
-  def test_create_result_for_existing_racer
-    molly = racers(:molly)
+  def test_create_result_for_existing_person
+    molly = people(:molly)
 
     post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
                                         :first_name => molly.first_name, :last_name => molly.last_name },
@@ -128,7 +128,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(molly.first_name, result.first_name, "New result first_name")
     assert_equal(molly.last_name, result.last_name, "New result last_name")
 
-    assert_equal(1, Racer.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
+    assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
 
     assert_not_nil(flash[:info], "Should have success message in flash")
   end
@@ -138,8 +138,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
     women_cat_4.children << sr_women_4
     existing_race = events(:banana_belt_1).races.create!(:category => sr_women_4)
-    existing_race.results.create!(:place => "1", :racer => racers(:alice))
-    molly = racers(:molly)
+    existing_race.results.create!(:place => "1", :person => people(:alice))
+    molly = people(:molly)
     event = events(:banana_belt_1)
 
     post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
@@ -171,13 +171,13 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(molly.first_name, result.first_name, "New result first_name")
     assert_equal(molly.last_name, result.last_name, "New result last_name")
     
-    assert_equal(1, Racer.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
+    assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
     
     assert_not_nil(flash[:info], "Should have success message in flash")
   end
 
   
-  def test_create_result_no_racer_name
+  def test_create_result_no_person_name
     assert_routing('/admin/cat4_womens_race_series/results', 
                    {:controller => 'admin/cat4_womens_race_series', :action => 'create_result'},
                    {:method => "post"})

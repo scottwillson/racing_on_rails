@@ -84,7 +84,7 @@ class BarController < ApplicationController
     
     # Optimization
     @results = Result.find(:all, 
-                           :include => [:racer, :team],
+                           :include => [:person, :team],
                            :conditions => ['race_id = ?', @race.id]
     ) if @race
   end

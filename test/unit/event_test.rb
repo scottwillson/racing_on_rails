@@ -359,7 +359,7 @@ class EventTest < ActiveSupport::TestCase
     race = event.races.create!(:category => categories(:senior_men))
     assert(!event.has_results?, "Event with race, but no results should not have results")
     
-    race.results.create!(:place => 200, :racer => racers(:matson))
+    race.results.create!(:place => 200, :person => people(:matson))
     assert(event.has_results?(true), "Event with one result should have results")
   end
   

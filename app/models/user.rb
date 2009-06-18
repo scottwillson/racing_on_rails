@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   end
 
   def name
-    Racer.full_name(first_name, last_name)
+    Person.full_name(first_name, last_name)
   end
 
   # Tries to split +name+ into +first_name+ and +last_name+

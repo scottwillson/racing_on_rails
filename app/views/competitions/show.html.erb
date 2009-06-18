@@ -47,8 +47,8 @@
 	 :controller => 'results',
      :action => 'competition',
      :competition_id => result.event.to_param,
-     :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer_team_name, :length => 40).ljust(40) -%>
+     :person_id => result.person_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
+   <%= truncate(result.person_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 

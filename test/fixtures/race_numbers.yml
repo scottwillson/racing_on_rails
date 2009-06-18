@@ -1,41 +1,41 @@
 tonkin_road_number_2004:
-  racer: tonkin
+  person: tonkin
   number_issuer: association
   discipline: road
   year: 2004
   value: 104
 tonkin_road_number:
-  racer: tonkin
+  person: tonkin
   number_issuer: association
   discipline: road
   year: <%= Date.today.year %>
   value: 102
 matson_road_number:
-  racer: matson
+  person: matson
   number_issuer: association
   discipline: road
   year: <%= Date.today.year %>
   value: 340
 weaver_road_number:
-  racer: weaver
+  person: weaver
   number_issuer: association
   discipline: road
   year: <%= Date.today.year %>
   value: 341
 molly_road_number:
-  racer: molly
+  person: molly
   number_issuer: association
   discipline: road
   year: <%= Date.today.year %>
   value: 202
 alice_road_number:
-  racer: alice
+  person: alice
   number_issuer: association
   discipline: road
   year: <%= Date.today.year %>
   value: 230
 weaver_mtb_number:
-  racer: weaver
+  person: weaver
   number_issuer: association
   discipline: mountain_bike
   year: <%= Date.today.year %>

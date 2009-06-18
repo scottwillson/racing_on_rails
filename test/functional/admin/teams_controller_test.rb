@@ -29,7 +29,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template("admin/teams/index")
     assert_not_nil(assigns["teams"], "Should assign teams")
-    assert(assigns["teams"].empty?, "Should have no racers")
+    assert(assigns["teams"].empty?, "Should have no people")
     assert_not_nil(assigns["name"], "Should assign name")
   end
 

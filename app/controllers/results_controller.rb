@@ -1,5 +1,5 @@
 class ResultsController < ApplicationController
-  caches_page :index, :event, :competition, :racer, :team, :show
+  caches_page :index, :event, :competition, :person, :team, :show
   
   def index
     # TODO Create helper method to return Range of first and last of year
@@ -12,7 +12,7 @@ class ResultsController < ApplicationController
   def event
     @event = Event.find(
       params[:id],
-      :include => [:races => {:results => {:racer, :team}} ]
+      :include => [:races => {:results => {:person, :team}} ]
     )
     if @event.is_a?(Bar)
       redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
@@ -23,13 +23,13 @@ class ResultsController < ApplicationController
 
   def competition
     @competition = Event.find(params[:competition_id])
-    if !params[:racer_id].blank?
+    if !params[:person_id].blank?
       @results = Result.find(
         :all,
-        :include => [:racer, {:race => :event }],
-        :conditions => ['events.id = ? and racers.id = ?', params[:competition_id], params[:racer_id]]
+        :include => [:person, {:race => :event }],
+        :conditions => ['events.id = ? and people.id = ?', params[:competition_id], params[:person_id]]
       )
-      @racer = Racer.find(params[:racer_id])
+      @person = Person.find(params[:person_id])
     else
       @results = Result.find(
         :all,
@@ -40,7 +40,7 @@ class ResultsController < ApplicationController
       result_ids = @results.collect {|result| result.id}
       @scores = Score.find(
         :all,
-        :include => [{:source_result => [:racer, {:race => [:category, :event ]}]}],
+        :include => [{:source_result => [:person, {:race => [:category, :event ]}]}],
         :conditions => ['competition_result_id in (?)', result_ids]
       )
       @team = Team.find(params[:team_id])
@@ -48,12 +48,12 @@ class ResultsController < ApplicationController
     end
   end
   
-  def racer
-    @racer = Racer.find(params[:id])
+  def person
+    @person = Person.find(params[:id])
     results = Result.find(
       :all,
-      :include => [:team, :racer, :scores, :category, { :race => :event, :race => :category }],
-      :conditions => ['racers.id = ?', params[:id]]
+      :include => [:team, :person, :scores, :category, { :race => :event, :race => :category }],
+      :conditions => ['people.id = ?', params[:id]]
     )
     @competition_results, @event_results = results.partition do |result|
       result.event.is_a?(Competition)
@@ -67,8 +67,8 @@ class ResultsController < ApplicationController
 
   def show
     result = Result.find(params[:id])
-    if result.racer
-      redirect_to(:action => 'competition', :competition_id => result.event.id, :racer_id => result.racer_id)    
+    if result.person
+      redirect_to(:action => 'competition', :competition_id => result.event.id, :person_id => result.person_id)    
     elsif result.team
       redirect_to(:action => 'competition', :competition_id => result.event.id, :team_id => result.team.id)    
     else

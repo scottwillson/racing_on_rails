@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
   create_table "aliases", :force => true do |t|
     t.string   "alias"
     t.string   "name"
-    t.integer  "racer_id"
+    t.integer  "person_id"
     t.integer  "team_id"
     t.integer  "lock_version", :default => 0, :null => false
     t.datetime "created_at"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
 
   add_index "aliases", ["name"], :name => "idx_name", :unique => true
   add_index "aliases", ["alias"], :name => "idx_id"
-  add_index "aliases", ["racer_id"], :name => "idx_racer_id"
+  add_index "aliases", ["person_id"], :name => "idx_person_id"
   add_index "aliases", ["team_id"], :name => "idx_team_id"
 
   create_table "bids", :force => true do |t|
@@ -89,14 +89,14 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
     t.text "new_attributes"
   end
 
-  create_table "duplicates_racers", :id => false, :force => true do |t|
-    t.integer "racer_id"
+  create_table "duplicates_people", :id => false, :force => true do |t|
+    t.integer "person_id"
     t.integer "duplicate_id"
   end
 
-  add_index "duplicates_racers", ["racer_id", "duplicate_id"], :name => "index_duplicates_racers_on_racer_id_and_duplicate_id", :unique => true
-  add_index "duplicates_racers", ["racer_id"], :name => "index_duplicates_racers_on_racer_id"
-  add_index "duplicates_racers", ["duplicate_id"], :name => "index_duplicates_racers_on_duplicate_id"
+  add_index "duplicates_people", ["person_id", "duplicate_id"], :name => "index_duplicates_people_on_person_id_and_duplicate_id", :unique => true
+  add_index "duplicates_people", ["person_id"], :name => "index_duplicates_people_on_person_id"
+  add_index "duplicates_people", ["duplicate_id"], :name => "index_duplicates_people_on_duplicate_id"
 
   create_table "events", :force => true do |t|
     t.integer  "promoter_id"
@@ -229,7 +229,7 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
   add_index "promoters", ["name"], :name => "idx_name"
 
   create_table "race_numbers", :force => true do |t|
-    t.integer  "racer_id",         :default => 0,  :null => false
+    t.integer  "person_id",         :default => 0,  :null => false
     t.integer  "discipline_id",    :default => 0,  :null => false
     t.integer  "number_issuer_id", :default => 0,  :null => false
     t.string   "value",            :default => "", :null => false
@@ -240,12 +240,12 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
     t.string   "updated_by"
   end
 
-  add_index "race_numbers", ["racer_id"], :name => "racer_id"
+  add_index "race_numbers", ["person_id"], :name => "person_id"
   add_index "race_numbers", ["discipline_id"], :name => "discipline_id"
   add_index "race_numbers", ["number_issuer_id"], :name => "number_issuer_id"
   add_index "race_numbers", ["value"], :name => "race_numbers_value_index"
 
-  create_table "racers", :force => true do |t|
+  create_table "people", :force => true do |t|
     t.string   "first_name",          :limit => 64
     t.string   "last_name"
     t.string   "city",                :limit => 128
@@ -281,9 +281,9 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
     t.boolean  "wants_mail",                         :default => true,  :null => false
   end
 
-  add_index "racers", ["last_name"], :name => "idx_last_name"
-  add_index "racers", ["first_name"], :name => "idx_first_name"
-  add_index "racers", ["team_id"], :name => "idx_team_id"
+  add_index "people", ["last_name"], :name => "idx_last_name"
+  add_index "people", ["first_name"], :name => "idx_first_name"
+  add_index "people", ["team_id"], :name => "idx_team_id"
 
   create_table "races", :force => true do |t|
     t.integer  "standings_id",                  :default => 0,      :null => false
@@ -309,7 +309,7 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
 
   create_table "results", :force => true do |t|
     t.integer  "category_id"
-    t.integer  "racer_id"
+    t.integer  "person_id"
     t.integer  "race_id",                             :default => 0,    :null => false
     t.integer  "team_id"
     t.integer  "age"
@@ -347,7 +347,7 @@ ActiveRecord::Schema.define(:version => 20081102001855) do
 
   add_index "results", ["category_id"], :name => "idx_category_id"
   add_index "results", ["race_id"], :name => "idx_race_id"
-  add_index "results", ["racer_id"], :name => "idx_racer_id"
+  add_index "results", ["person_id"], :name => "idx_person_id"
   add_index "results", ["team_id"], :name => "idx_team_id"
 
   create_table "scores", :force => true do |t|

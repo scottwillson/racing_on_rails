@@ -373,48 +373,48 @@ class RaceTest < ActiveSupport::TestCase
     race = event.races.create!(:category => categories(:senior_women))
     non_members = []
     for i in 0..2
-      non_members << Racer.create!(:name => "Non member #{i}", :member => false)
+      non_members << Person.create!(:name => "Non member #{i}", :member => false)
       assert(!non_members[i].member?, 'Should not be a member')
     end
     
-    race.results.create!(:place => '1', :racer => non_members[0])
-    race.results.create!(:place => '2', :racer => racers(:weaver))
-    race.results.create!(:place => '3', :racer => non_members[1])
-    race.results.create!(:place => '4', :racer => racers(:molly))
-    race.results.create!(:place => '5', :racer => non_members[2])
+    race.results.create!(:place => '1', :person => non_members[0])
+    race.results.create!(:place => '2', :person => people(:weaver))
+    race.results.create!(:place => '3', :person => non_members[1])
+    race.results.create!(:place => '4', :person => people(:molly))
+    race.results.create!(:place => '5', :person => non_members[2])
     
     race.reload.results(true)
     race.calculate_members_only_places!
     assert_equal('1', race.results[0].place, 'Result 0 place')
     assert_equal('', race.results[0].members_only_place, 'Result 0 place')
-    assert_equal(non_members[0], race.results[0].racer, 'Result 0 racer')
+    assert_equal(non_members[0], race.results[0].person, 'Result 0 person')
     
     assert_equal('2', race.results[1].place, 'Result 1 place')    
     assert_equal('1', race.results[1].members_only_place, 'Result 1 place')
-    assert_equal(racers(:weaver), race.results[1].racer, 'Result 1 racer')
+    assert_equal(people(:weaver), race.results[1].person, 'Result 1 person')
     
     assert_equal('3', race.results[2].place, 'Result 2 place')    
     assert_equal('', race.results[2].members_only_place, 'Result 2 place')
-    assert_equal(non_members[1], race.results[2].racer, 'Result 2 racer')
+    assert_equal(non_members[1], race.results[2].person, 'Result 2 person')
     
     assert_equal('4', race.results[3].place, 'Result 3 place')
     assert_equal('2', race.results[3].members_only_place, 'Result 3 place')
-    assert_equal(racers(:molly), race.results[3].racer, 'Result 3 racer')
+    assert_equal(people(:molly), race.results[3].person, 'Result 3 person')
     
     assert_equal('5', race.results[4].place, 'Result 4 place')    
     assert_equal('', race.results[4].members_only_place, 'Result 4 place')
-    assert_equal(non_members[2], race.results[4].racer, 'Result 4 racer')
+    assert_equal(non_members[2], race.results[4].person, 'Result 4 person')
   end
   
   def test_calculate_members_only_places_should_not_trigger_combined_results_calculation
     event = SingleDayEvent.create!(:discipline => "Time Trial")
     race = event.races.create!(:category => categories(:senior_men))
-    non_member = Racer.create!
-    assert(!non_member.member?, "Racer member?")
-    race.results.create!(:place => "1", :racer => non_member, :time => 100)
+    non_member = Person.create!
+    assert(!non_member.member?, "Person member?")
+    race.results.create!(:place => "1", :person => non_member, :time => 100)
     
-    assert(racers(:weaver).member?, "Racer member?")
-    race.results.create!(:place => "2", :racer => racers(:weaver), :time => 102)
+    assert(people(:weaver).member?, "Person member?")
+    race.results.create!(:place => "2", :person => people(:weaver), :time => 102)
     
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id
@@ -472,23 +472,23 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal("DNF", race.results[2].place, "Existing result place")
   end
 
-  def test_destroy_should_destroy_related_racers
-    mathew_braun = Racer.create!(:name => "Mathew Braun", :email => "mtb@example.com")
+  def test_destroy_should_destroy_related_people
+    mathew_braun = Person.create!(:name => "Mathew Braun", :email => "mtb@example.com")
     event = SingleDayEvent.create!
     race = event.races.create!(:category => categories(:masters_35_plus_women))
-    race.results.create!(:place => "1", :racer => racers(:weaver))
-    race.results.create!(:place => "2", :racer => Racer.new(:name => "Jonah Braun"))
-    race.results.create!(:place => "3", :racer => mathew_braun)
-    assert(Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been created")
+    race.results.create!(:place => "1", :person => people(:weaver))
+    race.results.create!(:place => "2", :person => Person.new(:name => "Jonah Braun"))
+    race.results.create!(:place => "3", :person => mathew_braun)
+    assert(Person.exists?(:first_name => "Jonah", :last_name => "Braun"), "New person Jonah Braun should have been created")
 
     race.reload
     race.destroy
     assert(!Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}")
-    assert(!Racer.exists?(:first_name => "Jonah", :last_name => "Braun"), "New racer Jonah Braun should have been deleted")
-    assert(Racer.exists?(:first_name => "Ryan", :last_name => "Weaver"), "Existing racer Ryan Weaver should not be deleted")
-    assert(Racer.exists?(:first_name => "Mathew", :last_name => "Braun"), "Existing racer with no results Mathew Braun should not be deleted")
+    assert(!Person.exists?(:first_name => "Jonah", :last_name => "Braun"), "New person Jonah Braun should have been deleted")
+    assert(Person.exists?(:first_name => "Ryan", :last_name => "Weaver"), "Existing person Ryan Weaver should not be deleted")
+    assert(Person.exists?(:first_name => "Mathew", :last_name => "Braun"), "Existing person with no results Mathew Braun should not be deleted")
 
-    # TODO Manually-created racers that only have this result
+    # TODO Manually-created people that only have this result
     # TODO Teams
   end
 end

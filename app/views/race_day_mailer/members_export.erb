@@ -1,4 +1,4 @@
 Blank	Lic Number	Last Name	First Name	Address	Country	City	State	Zip	Phone	Road Cat	Track Cat	Age	Gender	Blank	Club	Team	Blank	Blank
-<%- @racers.each do |racer| -%>
-<%= "	#{racer['license'].to_excel}	#{racer['last_name'].to_excel}	#{racer['first_name'].to_excel}	#{racer['street'].to_excel}	US	#{racer['city'].to_excel}	#{racer['state'].to_excel}	#{racer['zip'].to_excel}	#{racer['home_phone'].to_excel}	#{racer['road_category'].to_excel}	#{racer['track_category'].to_excel}	#{racer['racing_age']}	#{racer['gender'].to_excel}			#{racer['team_name'].to_excel}		" %>
+<%- @people.each do |person| -%>
+<%= "	#{person['license'].to_excel}	#{person['last_name'].to_excel}	#{person['first_name'].to_excel}	#{person['street'].to_excel}	US	#{person['city'].to_excel}	#{person['state'].to_excel}	#{person['zip'].to_excel}	#{person['home_phone'].to_excel}	#{person['road_category'].to_excel}	#{person['track_category'].to_excel}	#{person['racing_age']}	#{person['gender'].to_excel}			#{person['team_name'].to_excel}		" %>
 <% end -%>

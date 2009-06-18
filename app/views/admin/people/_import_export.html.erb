@@ -1,0 +1,34 @@
+<% form_tag preview_import_admin_people_path, :multipart => true, :id => "import_form" do %>
+<div class="page_buttons centered clear">
+  <label for="people_file">Import</label>
+  <%= file_field_tag "people_file", :onchange => "$('import_form').submit();" %>
+  </div>
+<% end -%>
+
+<%= form_tag({}, {:id => "export_form"}) %>
+  <div class="page_buttons centered clear">
+    <select name="include" id="include">
+      <option value="all">All</option>
+      <option value="members_only" selected="selected">Current Members Only</option>
+    </select>
+    <select name="format" id="format">
+      <option value="xls" selected="selected">Excel</option>
+      <option value="ppl">FinishLynx</option>
+      <option value="scoring_sheet">Scoring Sheet</option>
+    </select>
+    <%= button_to_function "Export", "submit_export(this)", :id => "export_button" %>
+  </div>
+</form>
+
+<script type="text/javascript" charset="utf-8">
+//<![CDATA[
+  function submit_export() {
+    if ($F('format') == 'scoring_sheet') {
+      this.location = '/admin/people.xls?excel_layout=scoring_sheet&include=' + $F('include')
+    }
+    else {
+      this.location = '/admin/people.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
+    }
+  }
+// ]]>
+</script>

@@ -1,0 +1,30 @@
+<% @page_title = "Admin: Results: #{@person.name}" %>
+
+<%= form_remote_tag( 
+  :url => {:action => :find_person, :ignore_id => @person.id}, 
+  :update => 'right_person',
+  :before => "Element.show('find_progress_icon')",
+  :complete => "$('left_person').scrollTo(); $('left_person').removeClassName('full_width'); $('left_person').addClassName('half_width'); Element.show('right_person'); Element.hide('find_progress_icon')"
+) %>
+  <div class="buttons centered">
+    <%= label_tag :name, "Move Results to Person" %>
+    <%= text_field_tag :name %>
+    <%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon' %>
+  </div>
+</form>
+
+<div class="people clear last" id="people">
+  <div class="full_width" id="left_person">
+    <%= render :partial => 'person', :locals => {:person => @person, :results => @results} %>
+  </div>
+
+  <div class="half_width last" id="right_person"></div>
+</div>
+
+<script type="text/javascript">
+  function dropped_result(dragged, dropped) {
+    Element.show('find_progress_icon');
+    new Effect.Fade($('people'), {duration:1.0, from:1.0, to:0.4});
+    new Ajax.Request('/admin/results/move_result?person_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});
+  }
+</script>

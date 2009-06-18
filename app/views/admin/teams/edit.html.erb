@@ -27,10 +27,10 @@
     <hr class="space" />
 
     <div class="clear span-6 last">
-      <% table :caption => "Racers", :class => "box-2 clear", :insert_header => true do %>
-        <%- @team.racers.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |racer| -%>
+      <% table :caption => "People", :class => "box-2 clear", :insert_header => true do %>
+        <%- @team.people.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |person| -%>
         <tr>
-          <td><%= link_to racer.name, edit_admin_racer_path(racer) %></td>
+          <td><%= link_to person.name, edit_admin_person_path(person) %></td>
         </tr>
         <%- end -%>
       <% end -%>

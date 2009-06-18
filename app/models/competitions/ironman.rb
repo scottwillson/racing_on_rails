@@ -5,7 +5,7 @@ class Ironman < Competition
     'Ironman'
   end
 
-  # TODO Can't we just iterate through all of a racer's results? Would need to weed out many results
+  # TODO Can't we just iterate through all of a person's results? Would need to weed out many results
   def Ironman.years
     years = []
     results = connection.select_all(
@@ -32,7 +32,7 @@ class Ironman < Competition
   
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.id as id, race_id, racer_id, team_id, place FROM results  
+      %Q{SELECT results.id as id, race_id, person_id, team_id, place FROM results  
          LEFT OUTER JOIN races ON races.id = results.race_id 
          LEFT OUTER JOIN events ON races.event_id = events.id 
          WHERE (place != 'DNS'
@@ -41,7 +41,7 @@ class Ironman < Competition
            and events.ironman = true 
            and events.date >= '#{year}-01-01' 
            and events.date <= '#{year}-12-31')
-         ORDER BY racer_id}
+         ORDER BY person_id}
     )
   end
     

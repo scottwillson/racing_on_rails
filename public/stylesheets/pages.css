@@ -157,15 +157,15 @@ table.base td.disclosure a {
   width: 48%;
 }
 
-#left_racer {
+#left_person {
   float: left;
 }
 
-#left_racer tr {
+#left_person tr {
   cursor: move;  
 }
 
-#right_racer {
+#right_person {
   float: left;
   margin-left: 12px;
   margin-right: 0px;
@@ -194,7 +194,7 @@ table.users td.name {
 }
 
 table.users div.record,
-table.racers div.record {
+table.people div.record {
   background-image: url(/images/icons/person.gif);
 }
 
@@ -252,7 +252,7 @@ table.base .actions {
   white-space: nowrap;
 }
 
-.table_container#racers th.number, .table_container#racers td.number {
+.table_container#people th.number, .table_container#people td.number {
   text-align: right;
 }
 
@@ -274,7 +274,7 @@ table.numbers td label {
   width: auto;
 }
 
-input#racer_license {
+input#person_license {
   width: 100px;
   float: right;
   margin-right: 8px;
@@ -284,7 +284,7 @@ td input[type=text].number {
   width: 30px;
 }
 
-table.racer_categories td input[type=text] {
+table.person_categories td input[type=text] {
   width: 120px;
 }
 
@@ -473,19 +473,19 @@ div.event_results {
   margin-top: 24px;
 }
 
-table.racer_results td.place {
+table.person_results td.place {
   width: 24px;
 }
 
-table.racer_results td.standings {
+table.person_results td.standings {
   width: 400px;
 }
 
-table.racer_results td.category {
+table.person_results td.category {
   width: 200px;
 }
 
-table.racer_results td.dates {
+table.person_results td.dates {
   width: 100px;
 }
 
@@ -511,7 +511,7 @@ table.numbers label.inline {
   width: 600px;
 }
 
-/* Racers */
+/* People */
 #preview_import_table tr th {
   border-bottom: 1px solid gray;
 }

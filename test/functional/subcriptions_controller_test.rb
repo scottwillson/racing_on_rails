@@ -13,7 +13,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   
   def test_create
     @request.env["HTTP_REFERER"] = "http://raceatra.com/subscriptions/new"
-    post(:create, :subscription => {"name"=>"Scott Willson", "city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "racer_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "email"=>"scott@butlerpress.com", "state"=>"OR"})
+    post(:create, :subscription => {"name"=>"Scott Willson", "city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "person_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "email"=>"scott@butlerpress.com", "state"=>"OR"})
     
     assert_redirected_to :action => "subscribed"
     assert(flash.empty?, "Flash should be empty")
@@ -28,7 +28,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   
   def test_subscribe_validation
     @request.env["HTTP_REFERER"] = "http://americantrackrcing.com/subscriptions/new"
-    post(:create, :subscription => {"city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "racer_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "state"=>"OR"})
+    post(:create, :subscription => {"city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "person_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "state"=>"OR"})
 
     assert_response(:success)
     assert_not_nil(assigns(:subscription), "Should assign subscription")
@@ -37,7 +37,7 @@ class SubscriptionsControllerTest < ActionController::TestCase
   
   def test_validate_subscribe_referrer
     @request.env["HTTP_REFERER"] = "http://spambot.net/spammer"
-    post(:create, :subscription => {"name"=>"Scott Willson", "city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "racer_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "email"=>"scott@butlerpress.com", "state"=>"OR"})
+    post(:create, :subscription => {"name"=>"Scott Willson", "city"=>"Portland", "sponsorship"=>"sponsorship", "zip"=>"97202", "Commit"=>"Join ATRA Mailing List", "comments"=>"This is a test", "volunteer"=>"volunteer", "action"=>"subscribe", "youth_programs"=>"on", "person_info"=>"on", "controller"=>"mailing_lists", "phone"=>"503 913-6013", "race_results"=>"on", "address"=>"1204 SE Pershing St.", "contribution"=>"contribution", "email"=>"scott@butlerpress.com", "state"=>"OR"})
     assert_response(:success)
     assert_not_nil(assigns(:subscription), "Should assign subscription")
     assert_equal(0, MailingListMailer.deliveries.size, "Should have no email delivery")

@@ -1,5 +1,5 @@
 # team = source_result.team
-# FIXME: Can't just sum up racer results -- need to get source race results
+# FIXME: Can't just sum up person results -- need to get source race results
 # Example:
 # 5th  Banana Belt Road Race  
 #
@@ -15,7 +15,7 @@ class TeamBar < Competition
   # less duplicate code
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.points, results.id as id, race_id, racer_id, team_id, place
+      %Q{SELECT results.points, results.id as id, race_id, person_id, team_id, place
               FROM results 
               LEFT OUTER JOIN races ON races.id = results.race_id
               LEFT OUTER JOIN events ON races.event_id = events.id

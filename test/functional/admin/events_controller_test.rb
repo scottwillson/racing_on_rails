@@ -248,22 +248,22 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_redirected_to edit_admin_event_path(new_parent)
   end
   
-  def test_upload_dupe_racers
-    # Two racers with different name, same numbers
+  def test_upload_dupe_people
+    # Two people with different name, same numbers
     # Excel file has Greg Rodgers with no number
-    Racer.create(:name => 'Greg Rodgers', :road_number => '404')
-    Racer.create(:name => 'Greg Rodgers', :road_number => '500')
+    Person.create(:name => 'Greg Rodgers', :road_number => '404')
+    Person.create(:name => 'Greg Rodgers', :road_number => '500')
     
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
-    file = fixture_file_upload("results/dupe_racers.xls", "application/vnd.ms-excel", :binary)
+    file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
     post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect
     
-    # Dupe racers used to be allowed, and this would have been an error
-    assert(!mt_hood_1.races(true).empty?, 'Should have races after importing dupe racers')
+    # Dupe people used to be allowed, and this would have been an error
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after importing dupe people')
     assert(!flash.has_key?(:warn))
   end
 

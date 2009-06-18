@@ -2,7 +2,7 @@ include_partial 'fixtures'
 include_partial "admin_login"
 
 assert_text_not_present 'error'
-open '/admin/racers'
-assert_element_present 'racers_file'
+open '/admin/people'
+assert_element_present 'people_file'
 
 # Can't do a file upload with Selenium

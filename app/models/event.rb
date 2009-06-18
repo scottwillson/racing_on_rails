@@ -131,7 +131,7 @@ class Event < ActiveRecord::Base
     [ weekly_series, events ]
   end
   
-  # Used when importing Racers: should membership be for this year or the next?
+  # Used when importing People: should membership be for this year or the next?
   def Event.find_max_date_for_current_year
     # TODO Make this better
     maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])

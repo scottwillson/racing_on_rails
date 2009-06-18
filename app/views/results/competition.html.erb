@@ -1,7 +1,7 @@
-<% @page_title = "Results: #{@racer.name}: #{@competition.name}" %>
+<% @page_title = "Results: #{@person.name}: #{@competition.name}" %>
 
 <%# TODO Use helper/partial? %>
-<h2><%= link_to(@racer.name, :action => 'racer', :id => @racer.to_param) %></h2>
+<h2><%= link_to(@person.name, :action => 'person', :id => @person.to_param) %></h2>
 
 <%- for result in @results.sort { |x, y| y.date <=> x.date } -%>
 <% table :caption => %Q{#{result.place.to_i.ordinalize} &mdash;
@@ -23,7 +23,7 @@
     <td width="400">
       <%= link_to(score.source_result.event.full_name, :controller => 'results', :action => 'event', 
                   :id => score.source_result.event.id, :anchor => "race_#{score.source_result.race.id}") unless score.source_result.event.is_a?(Competition) %>
-      <%= link_to(score.source_result.event.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.event.id, :racer_id => @racer.id) if score.source_result.event.is_a?(Competition)%></td>
+      <%= link_to(score.source_result.event.full_name, :controller => 'results', :action => 'competition', :competition_id => score.source_result.event.id, :person_id => @person.id) if score.source_result.event.is_a?(Competition)%></td>
     </td>
     <td width="200"><%= score.source_result.race.name %></td>
     <td width="200"><%= score.source_result.team_name %></td>
@@ -44,7 +44,7 @@
 
 <%# TODO Add year param %>
 <p class= "centered">
-  See all results for <%= link_to(@racer.name, {:action => 'racer', :id => @racer.to_param}, :class => 'obvious') %> or the
+  See all results for <%= link_to(@person.name, {:action => 'person', :id => @person.to_param}, :class => 'obvious') %> or the
   <% if @competition.is_a?(Ironman) %>
     <%= link_to(@competition.name, {:controller => 'ironman', :action => 'index', :year => @competition.date.year}, :class => 'obvious') %>.
   <% else %>

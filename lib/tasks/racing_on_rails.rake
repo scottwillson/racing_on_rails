@@ -36,11 +36,11 @@ task :cruise do
     Rake::Task["test:acceptance"].invoke
     # Clean up downloads
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/racers*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/racers*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/people*.xls")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure

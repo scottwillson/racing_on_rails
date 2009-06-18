@@ -17,11 +17,11 @@ class OverallBarTest < ActiveSupport::TestCase
     barton_a = barton.races.create!(:category => men_a, :field_size => 5)
     barton_a.results.create!({
       :place => 3,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     barton_a.results.create!({
       :place => 15,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     })
     
     swan_island = SingleDayEvent.create!({
@@ -33,17 +33,17 @@ class OverallBarTest < ActiveSupport::TestCase
     swan_island_senior_men = swan_island.races.create!(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create!({
       :place => 12,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     swan_island_senior_men.results.create!({
       :place => 2,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island.races.create!(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create!({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     # No BAR points
     senior_women_swan_island.bar_points = 0
@@ -59,11 +59,11 @@ class OverallBarTest < ActiveSupport::TestCase
     thursday_track_senior_men = thursday_track.races.create!(:category => senior_men, :field_size => 6)
     r = thursday_track_senior_men.results.create!(
       :place => 5,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     )
     thursday_track_senior_men.results.create!(
       :place => 14,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     )
     
@@ -77,35 +77,35 @@ class OverallBarTest < ActiveSupport::TestCase
     team_track_senior_men = team_track.races.create!(:category => senior_men, :field_size => 6)
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     team_track_senior_men.results.create!({
       :place => 5,
-      :racer => racers(:alice)
+      :person => people(:alice)
     })
     team_track_senior_men.results.create!({
       :place => 5,
-      :racer => racers(:matson)
+      :person => people(:matson)
     })
     # Weaver and Erik's second ride should not count
     team_track_senior_men.results.create!({
       :place => 15,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 15,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     
@@ -117,7 +117,7 @@ class OverallBarTest < ActiveSupport::TestCase
     larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create!(:category => senior_men, :field_size => 6)
     larch_mt_hillclimb_senior_men.results.create!({
       :place => 13,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
       
@@ -128,7 +128,7 @@ class OverallBarTest < ActiveSupport::TestCase
     # Discipline BAR results past 300 don't count -- add fake result
     bar = Bar.find_by_year_and_discipline(2004, "Road")
     sr_men_road_bar = bar.races.detect {|r| r.category == categories(:senior_men)}
-    sr_men_road_bar.results.create!(:place => 305, :racer => racers(:alice))
+    sr_men_road_bar.results.create!(:place => 305, :person => people(:alice))
     
     OverallBar.calculate!(2004)
     bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
@@ -158,7 +158,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal_dates(Date.today, senior_men_overall_bar.updated_at, "BAR last updated")
     senior_men_overall_bar.results.sort!
     
-    assert_equal(racers(:tonkin), senior_men_overall_bar.results[0].racer, "Senior Men Overall BAR results racer")
+    assert_equal(people(:tonkin), senior_men_overall_bar.results[0].person, "Senior Men Overall BAR results person")
     assert_equal("1", senior_men_overall_bar.results[0].place, "Senior Men Overall BAR results place")
     assert_equal(1249, senior_men_overall_bar.results[0].points, "Tonkin Senior Men Overall BAR results points")
     assert_equal(5, senior_men_overall_bar.results[0].scores.size, "Tonkin Overall BAR results scores")
@@ -169,12 +169,12 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(299, scores[3].points, "Tonkin overall BAR points for discipline 3")
     assert_equal(50, scores[4].points, "Tonkin overall BAR points for discipline 4")
 
-    assert_equal(racers(:weaver), senior_men_overall_bar.results[1].racer, "Senior Men Overall BAR results racer")
+    assert_equal(people(:weaver), senior_men_overall_bar.results[1].person, "Senior Men Overall BAR results person")
     assert_equal("2", senior_men_overall_bar.results[1].place, "Senior Men Overall BAR results place")
     assert_equal(898, senior_men_overall_bar.results[1].points, "Senior Men Overall BAR results points")
     assert_equal(3, senior_men_overall_bar.results[1].scores.size, "Weaver Overall BAR results scores")
 
-    assert_equal(racers(:molly), senior_men_overall_bar.results[2].racer, "Senior Men Overall BAR results racer")
+    assert_equal(people(:molly), senior_men_overall_bar.results[2].person, "Senior Men Overall BAR results person")
     assert_equal("3", senior_men_overall_bar.results[2].place, "Senior Men Overall BAR results place")
     assert_equal(598, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
     
@@ -185,11 +185,11 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(2, women_overall_bar.results.size, "Senior Women Overall BAR results")
 
     women_overall_bar.results.sort!
-    assert_equal(racers(:alice), women_overall_bar.results[0].racer, "Senior Women Overall BAR results racer")
+    assert_equal(people(:alice), women_overall_bar.results[0].person, "Senior Women Overall BAR results person")
     assert_equal("1", women_overall_bar.results[0].place, "Senior Women Overall BAR results place")
     assert_equal(300, women_overall_bar.results[0].points, "Senior Women Overall BAR results points")
 
-    assert_equal(racers(:molly), women_overall_bar.results[1].racer, "Senior Women Overall BAR results racer")
+    assert_equal(people(:molly), women_overall_bar.results[1].person, "Senior Women Overall BAR results person")
     assert_equal("2", women_overall_bar.results[1].place, "Senior Women Overall BAR results place")
     assert_equal(299, women_overall_bar.results[1].points, "Senior Women Overall BAR results points")
     assert_equal(1, women_overall_bar.results[1].scores.size, "Molly Women Overall BAR results scores")
@@ -208,20 +208,20 @@ class OverallBarTest < ActiveSupport::TestCase
       :date => Date.new(2004, 5, 17),
     })
     swan_island_tandem = swan_island.races.create!(:category => tandem)
-    first_racers = Racer.new(:first_name => 'Scott/Cheryl', :last_name => 'Willson/Willson', :member_from => Date.new(2004, 1, 1))
+    first_people = Person.new(:first_name => 'Scott/Cheryl', :last_name => 'Willson/Willson', :member_from => Date.new(2004, 1, 1))
     gentle_lovers = teams(:gentle_lovers)
     swan_island_tandem.results.create!({
       :place => 12,
-      :racer => first_racers,
+      :person => first_people,
       :team => gentle_lovers
     })
-    # Existing racers
-    second_racers = Racer.create!(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
-    second_racers_team = Team.create!(:name => 'Kona/Northampton Cycling Club')
+    # Existing people
+    second_people = Person.create!(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
+    second_people_team = Team.create!(:name => 'Kona/Northampton Cycling Club')
     swan_island_tandem.results.create!({
       :place => 2,
-      :racer => second_racers,
-      :team => second_racers_team
+      :person => second_people,
+      :team => second_people_team
     })
 
     Bar.calculate!(2004)
@@ -245,16 +245,16 @@ class OverallBarTest < ActiveSupport::TestCase
     # Masters too
     marin_knobular = SingleDayEvent.create!(:name => 'Marin Knobular', :date => Date.new(2001, 9, 7), :discipline => 'Mountain Bike')
     race = marin_knobular.races.create!(:category => expert_junior_men)
-    kc = Racer.create!(:name => 'KC Mautner', :member_from => Date.new(2001, 1, 1))
+    kc = Person.create!(:name => 'KC Mautner', :member_from => Date.new(2001, 1, 1))
     vanilla = teams(:vanilla)
-    race.results.create!(:racer => kc, :place => 4, :team => vanilla)
-    chris_woods = Racer.create!(:name => 'Chris Woods', :member_from => Date.new(2001, 1, 1))
+    race.results.create!(:person => kc, :place => 4, :team => vanilla)
+    chris_woods = Person.create!(:name => 'Chris Woods', :member_from => Date.new(2001, 1, 1))
     gentle_lovers = teams(:gentle_lovers)
-    race.results.create!(:racer => chris_woods, :place => 12, :team => gentle_lovers)
+    race.results.create!(:person => chris_woods, :place => 12, :team => gentle_lovers)
     
     lemurian = SingleDayEvent.create!(:name => 'Lemurian', :date => Date.new(2001, 9, 14), :discipline => 'Mountain Bike')
     race = lemurian.races.create!(:category => sport_junior_men)
-    race.results.create!(:racer => chris_woods, :place => 14, :team => gentle_lovers)
+    race.results.create!(:person => chris_woods, :place => 14, :team => gentle_lovers)
     
     original_results_count = Result.count
     Bar.calculate!(2001)
@@ -268,15 +268,15 @@ class OverallBarTest < ActiveSupport::TestCase
       race.category == junior_men
     end
     assert_equal(2, overall_junior_men_mtb_bar.results.size, 'Overall Junior Men BAR results')
-    overall_junior_men_mtb_bar.results.sort! {|x, y| x.racer <=> y.racer}
-    assert_equal(kc, overall_junior_men_mtb_bar.results.first.racer, 'Overall Junior Men BAR first result')
-    assert_equal(chris_woods, overall_junior_men_mtb_bar.results.last.racer, 'Overall Junior Men BAR last result')
+    overall_junior_men_mtb_bar.results.sort! {|x, y| x.person <=> y.person}
+    assert_equal(kc, overall_junior_men_mtb_bar.results.first.person, 'Overall Junior Men BAR first result')
+    assert_equal(chris_woods, overall_junior_men_mtb_bar.results.last.person, 'Overall Junior Men BAR last result')
     assert_equal(300, overall_junior_men_mtb_bar.results.first.points, 'Overall Junior Men BAR first points')
     assert_equal(299, overall_junior_men_mtb_bar.results.last.points, 'Overall Junior Men BAR last points')
   end
   
   def test_previous_year
-    weaver = racers(:weaver)
+    weaver = people(:weaver)
     previous_year = Date.today.year - 1
     weaver.member_from = Date.new(previous_year, 1, 1)
     current_year = Date.today.year - 1
@@ -287,7 +287,7 @@ class OverallBarTest < ActiveSupport::TestCase
     previous_year_event = SingleDayEvent.create!(:date => Date.new(previous_year, 4, 19), :discipline => 'Road')
     previous_year_event.reload
     assert_equal('Road', previous_year_event.discipline, 'Event discipline')
-    previous_year_result = previous_year_event.races.create!(:category => categories(:sr_p_1_2)).results.create!(:place => '3', :racer => weaver)
+    previous_year_result = previous_year_event.races.create!(:category => categories(:sr_p_1_2)).results.create!(:place => '3', :person => weaver)
     assert_equal(previous_year, previous_year_event.date.year, 'Event year')
     assert_equal('Road', previous_year_event.discipline, 'Event discipline')
     assert_equal(1, previous_year_event.bar_points, 'BAR points')
@@ -308,7 +308,7 @@ class OverallBarTest < ActiveSupport::TestCase
     current_year_event = SingleDayEvent.create!(:date => Date.new(current_year, 7, 20), :discipline => 'Road')
     current_year_event.reload
     assert_equal('Road', current_year_event.discipline, 'Event discipline')
-    current_year_result = current_year_event.races.create!(:category => categories(:sr_p_1_2)).results.create!(:place => '13', :racer => weaver)
+    current_year_result = current_year_event.races.create!(:category => categories(:sr_p_1_2)).results.create!(:place => '13', :person => weaver)
 
     # Calculate this years' BAR
     Bar.calculate!(current_year)
@@ -349,41 +349,41 @@ class OverallBarTest < ActiveSupport::TestCase
 
     event = SingleDayEvent.create!(:discipline => 'Road')
     cat_4_race = event.races.create!(:category => category_4_men)
-    weaver = racers(:weaver)
-    matson = racers(:matson)
-    cat_4_race.results.create!(:place => '4', :racer => weaver)
-    cat_4_race.results.create!(:place => '5', :racer => matson)
+    weaver = people(:weaver)
+    matson = people(:matson)
+    cat_4_race.results.create!(:place => '4', :person => weaver)
+    cat_4_race.results.create!(:place => '5', :person => matson)
 
     cat_5_race = event.races.create!(:category => category_5_men)
-    cat_5_race.results.create!(:place => '6', :racer => matson)
-    tonkin = racers(:tonkin)
-    cat_5_race.results.create!(:place => '15', :racer => tonkin)
+    cat_5_race.results.create!(:place => '6', :person => matson)
+    tonkin = people(:tonkin)
+    cat_5_race.results.create!(:place => '15', :person => tonkin)
     
     event = SingleDayEvent.create!(:discipline => 'Road')
     cat_5_race = event.races.create!(:category => category_5_men)
-    cat_5_race.results.create!(:place => '15', :racer => tonkin)
+    cat_5_race.results.create!(:place => '15', :person => tonkin)
     
     # Add several different discipline results to expose ordering bug
     event = SingleDayEvent.create!(:discipline => "Criterium")
-    event.races.create!(:category => category_4_men).results.create!(:place => 3, :racer => matson)
-    event.races.create!(:category => category_4_men).results.create!(:place => 6, :racer => tonkin)
-    event.races.create!(:category => category_4_men).results.create!(:place => 12, :racer => racers(:molly))
-    event.races.create!(:category => category_4_men).results.create!(:place => 15, :racer => weaver)
+    event.races.create!(:category => category_4_men).results.create!(:place => 3, :person => matson)
+    event.races.create!(:category => category_4_men).results.create!(:place => 6, :person => tonkin)
+    event.races.create!(:category => category_4_men).results.create!(:place => 12, :person => people(:molly))
+    event.races.create!(:category => category_4_men).results.create!(:place => 15, :person => weaver)
     
     event = SingleDayEvent.create!(:discipline => "Mountain Bike")
-    event.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 14, :racer => matson)
-    event.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 15, :racer => weaver)
+    event.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 14, :person => matson)
+    event.races.create!(:category => Category.find_or_create_by_name("Category 3 Men")).results.create!(:place => 15, :person => weaver)
     
     event = SingleDayEvent.create!(:discipline => "Track")
-    event.races.create!(:category => category_4_men).results.create!(:place => 6, :racer => tonkin)
-    event.races.create!(:category => category_4_men).results.create!(:place => 14, :racer => matson)
-    event.races.create!(:category => category_4_men).results.create!(:place => 15, :racer => weaver)
+    event.races.create!(:category => category_4_men).results.create!(:place => 6, :person => tonkin)
+    event.races.create!(:category => category_4_men).results.create!(:place => 14, :person => matson)
+    event.races.create!(:category => category_4_men).results.create!(:place => 15, :person => weaver)
 
-    event.races.create!(:category => category_5_men).results.create!(:place => 1, :racer => weaver)
+    event.races.create!(:category => category_5_men).results.create!(:place => 1, :person => weaver)
     
     sevent = SingleDayEvent.create!(:discipline => "Time Trial")
-    sevent.races.create!(:category => category_5_men).results.create!(:place => 1, :racer => weaver)
-    sevent.races.create!(:category => category_5_men).results.create!(:place => 15, :racer => matson)
+    sevent.races.create!(:category => category_5_men).results.create!(:place => 1, :person => weaver)
+    sevent.races.create!(:category => category_5_men).results.create!(:place => 15, :person => matson)
     
     Bar.calculate!
     OverallBar.calculate!
@@ -400,12 +400,12 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(4, cat_4_5_overall_bar.results.size, "Cat 4/5 Overall BAR results")
     cat_4_5_overall_bar.results.sort!
 
-    matson_result = cat_4_5_overall_bar.results.detect { |result| result.racer == matson }
+    matson_result = cat_4_5_overall_bar.results.detect { |result| result.person == matson }
     assert_equal("1", matson_result.place, "Matson Cat 4/5 Overall BAR place")
     assert_equal(1248.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
     assert_equal(5, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
 
-    weaver_result = cat_4_5_overall_bar.results.detect { |result| result.racer == weaver }
+    weaver_result = cat_4_5_overall_bar.results.detect { |result| result.person == weaver }
     assert_equal("2", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
     assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Road" }.points, "Road points")
     assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Time Trial" }.points, "Time Trial points")
@@ -415,7 +415,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(300 + 300 + 299 + 298 + 50, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
     assert_equal(5, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
 
-    tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.racer == tonkin }
+    tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.person == tonkin }
     assert_equal("3", tonkin_result.place, "Tonkin Cat 4/5 Overall BAR place")
     assert_equal(898.0, tonkin_result.points, "Tonkin Cat 4/5 Overall BAR points")
     assert_equal(3, tonkin_result.scores.size, "Tonkin Cat 4/5 Overall BAR 1st place scores")
@@ -439,9 +439,9 @@ class OverallBarTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:discipline => 'Road')
     category_4_men = Category.find_or_create_by_name("Category 4 Men")
     race = event.races.create!(:category => category_4_men)
-    racer = racers(:molly)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    person = people(:molly)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     score = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -455,8 +455,8 @@ class OverallBarTest < ActiveSupport::TestCase
     scores = []
     event = SingleDayEvent.create!(:discipline => 'Road')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     road_score = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -466,8 +466,8 @@ class OverallBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => 'Cyclocross')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     cx_score = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -477,8 +477,8 @@ class OverallBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => 'Track')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     track_score = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -495,8 +495,8 @@ class OverallBarTest < ActiveSupport::TestCase
     scores = []
     event = SingleDayEvent.create!(:discipline => 'Road')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     road_score_10 = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -506,8 +506,8 @@ class OverallBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => 'Cyclocross')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     cx_score_1 = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -517,8 +517,8 @@ class OverallBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => 'Cyclocross')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "2", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "2", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     cx_score_2 = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -528,8 +528,8 @@ class OverallBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => 'Track')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     track_score = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 
@@ -539,8 +539,8 @@ class OverallBarTest < ActiveSupport::TestCase
 
     event = SingleDayEvent.create!(:discipline => 'Road')
     race = event.races.create!(:category => category_4_men)
-    source_result = race.results.create!(:place => "1", :racer => racer)
-    competition_result = Result.create!(:racer => racer, :race => race)
+    source_result = race.results.create!(:place => "1", :person => person)
+    competition_result = Result.create!(:person => person, :race => race)
     road_score_1 = competition_result.scores.create_if_best_result_for_race(
       :source_result => source_result, 
       :competition_result => competition_result, 

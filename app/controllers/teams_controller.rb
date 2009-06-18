@@ -7,7 +7,7 @@ class TeamsController < ApplicationController
     @team = Team.find(params[:id])
     @results = Result.find(
       :all,
-      :include => [:team, :racer, :category, {:race => :event}],
+      :include => [:team, :person, :category, {:race => :event}],
       :conditions => ['teams.id = ?', params[:id]]
     )
     @results.reject! do |result|

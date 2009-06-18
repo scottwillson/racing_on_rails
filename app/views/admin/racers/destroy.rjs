@@ -1,2 +1,0 @@
-page.visual_effect(:puff, "racer_#{@racer.id}_row", :duration => 2)
-page.call(:flash, "notice", "Deleted #{@racer.name}")

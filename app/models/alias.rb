@@ -1,22 +1,22 @@
-# Alternate name for a Racer or Team. Example: Erik Tonkin might have aliases of 'Eric Tonkin,' and 'E. Tonkin'
-# Must belong to either a Racer or Team, but not both. Used by Result when importing results from Excel.
+# Alternate name for a Person or Team. Example: Erik Tonkin might have aliases of 'Eric Tonkin,' and 'E. Tonkin'
+# Must belong to either a Person or Team, but not both. Used by Result when importing results from Excel.
 class Alias < ActiveRecord::Base
-  belongs_to :racer
+  belongs_to :person
   belongs_to :team
   
   validates_presence_of :name
-  validate :racer_or_team
-  validate :cannot_shadow_racer
+  validate :person_or_team
+  validate :cannot_shadow_person
   validate :cannot_shadow_team
   
-  def Alias.find_all_racers_by_name(name)
+  def Alias.find_all_people_by_name(name)
     aliases = Alias.find(
       :all, 
-      :conditions => ['name = ? and racer_id is not null', name],
-      :include => :racer
+      :conditions => ['name = ? and person_id is not null', name],
+      :include => :person
     )
-    aliases.collect do |racer_alias|
-      racer_alias.racer
+    aliases.collect do |person_alias|
+      person_alias.person
     end
   end
   
@@ -31,15 +31,15 @@ class Alias < ActiveRecord::Base
     end
   end
   
-  def racer_or_team
-    unless (racer and !team) or (!racer and team)
-      errors.add('racer or team', 'Must have exactly one racer or team')
+  def person_or_team
+    unless (person and !team) or (!person and team)
+      errors.add('person or team', 'Must have exactly one person or team')
     end
   end
   
-  def cannot_shadow_racer
-    if Racer.exists?(["trim(concat(first_name, ' ', last_name)) = ?", name])
-      errors.add('name', "Racer named '#{name}' already exists. Cannot create alias that shadows a racer's real name.")
+  def cannot_shadow_person
+    if Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", name])
+      errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
     end
   end
   
@@ -50,6 +50,6 @@ class Alias < ActiveRecord::Base
   end
 
   def to_s
-    "<#{self.class.name} #{self[:id]} #{self[:name]} #{self[:racer_id]} #{self[:team_id]}>"
+    "<#{self.class.name} #{self[:id]} #{self[:name]} #{self[:person_id]} #{self[:team_id]}>"
   end
 end

@@ -4,7 +4,7 @@ class Admin::EmailsController < ApplicationController
 
   def new
     @email = Admin::MemberMailer.create_email
-    @members_count = Racer.find_all_current_email_addresses.size
+    @members_count = Person.find_all_current_email_addresses.size
   end
 
   def confirm
@@ -12,7 +12,7 @@ class Admin::EmailsController < ApplicationController
     @email.from = params[:email][:from]
     @email.subject = params[:email][:subject]
     @email.body = params[:email][:body] || ""
-    @members_count = Racer.find_all_current_email_addresses.size
+    @members_count = Person.find_all_current_email_addresses.size
     if @email.from.blank? || @email.subject.blank? || @email.body.empty?
       flash[:warn] = "From, subject, and body are required"
       render :action => "new"

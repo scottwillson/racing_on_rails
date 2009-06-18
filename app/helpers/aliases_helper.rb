@@ -1,7 +1,7 @@
 module AliasesHelper
-  def aka(racer)
-    if racer && !racer.aliases.empty?
-      aliases = racer.aliases.collect {|a| a.name}
+  def aka(person)
+    if person && !person.aliases.empty?
+      aliases = person.aliases.collect {|a| a.name}
       "(a.k.a. #{aliases.join(', ')})"
     end
   end
