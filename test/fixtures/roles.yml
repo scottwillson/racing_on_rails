@@ -3,3 +3,6 @@ administrator:
 
 member:
   name: Member
+
+promoter:
+  name: Promoter

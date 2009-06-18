@@ -1,16 +1,20 @@
 administrator:
   id: 1
-  name: Candi Murray
+  first_name: Candi
+  last_name: Murray
   email: admin@example.com
+  phone: (503) 555-1212
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
-  roles: administrator
+  roles: administrator, promoter
 
 member:
-  name: Bob Jones
+  id: 2
+  first_name: Bob
+  last_name: Jones
   email: member@example.com
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
@@ -18,3 +22,15 @@ member:
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
   roles: member
+
+promoter:
+  id: 3
+  first_name: Brad
+  last_name: Ross
+  roles: promoter
+
+nate_hobson:
+  id: 4
+  email: sixhobsons@comcast.net
+  phone: (503) 223-3343
+  roles: promoter

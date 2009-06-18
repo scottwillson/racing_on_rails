@@ -43,6 +43,16 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_nil session[:user_credentials], "Should not have :user_credentials in session"
     assert_nil cookies["user_credentials"], "user_credentials cookie"
   end
+
+  def test_blank_login_should_fail_with_blank_email_address
+    User.create!
+    post :create, "user_session" => { "email" => "", "password" => "" }, "login" => "Login"
+    assert_not_nil(assigns["user_session"], "@user_session")
+    assert(!assigns["user_session"].errors.empty?, "@user_session should have errors")
+    assert_response :success
+    assert_nil cookies["user_credentials"], "user_credentials cookie"
+    assert_not_nil session[:user_credentials], "Authlogic puts :user_credentials in session, even though it won't allow user to access protected pages"
+  end
   
   def test_logout
     UserSession.create(users(:administrator))

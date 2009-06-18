@@ -6,6 +6,6 @@
   </td>
   <td><%= link_to event.date.to_s(:short_with_week_day), edit_admin_event_path(event) %></td>
   <td><%= link_to event.name, edit_admin_event_path(event) %></td>
-  <td><%= link_to(event.promoter.name_or_contact_info, edit_admin_promoter_path(event.promoter)) if event.promoter %></td>
+  <td><%= link_to(event.promoter.name_or_contact_info, edit_admin_user_path(event.promoter)) if event.promoter %></td>
   <td><%= event.city_state %></td>
 </tr>

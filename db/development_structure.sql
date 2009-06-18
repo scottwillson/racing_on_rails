@@ -157,7 +157,7 @@ create table `events` (
   key `index_events_on_bar_points` (`bar_points`),
   constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
   constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
-  constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `promoters` (`id`) on delete set null,
+  constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `users` (`id`) on delete set null,
   constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -273,19 +273,6 @@ create table `posts` (
   key `idx_mailing_list_id` (`mailing_list_id`),
   key `idx_date_list` (`date`,`mailing_list_id`),
   constraint `posts_mailing_list_id_fk` foreign key (`mailing_list_id`) references `mailing_lists` (`id`)
-) engine=innodb default charset=utf8;
-
-create table `promoters` (
-  `id` int(11) not null auto_increment,
-  `email` varchar(255) default null,
-  `name` varchar(255) default '',
-  `phone` varchar(255) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  unique key `promoter_info` (`name`,`email`,`phone`),
-  key `idx_name` (`name`)
 ) engine=innodb default charset=utf8;
 
 create table `race_numbers` (
@@ -493,16 +480,15 @@ create table `teams` (
 
 create table `users` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default '',
   `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  `email` varchar(128) not null,
-  `crypted_password` varchar(255) not null,
-  `password_salt` varchar(255) not null,
+  `email` varchar(255) default null,
+  `crypted_password` varchar(255) default null,
+  `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
-  `single_access_token` varchar(255) not null,
-  `perishable_token` varchar(255) not null,
+  `single_access_token` varchar(255) default null,
+  `perishable_token` varchar(255) default null,
   `login_count` int(11) not null default '0',
   `failed_login_count` int(11) not null default '0',
   `last_request_at` datetime default null,
@@ -510,9 +496,11 @@ create table `users` (
   `last_login_at` datetime default null,
   `current_login_ip` varchar(255) default null,
   `last_login_ip` varchar(255) default null,
+  `first_name` varchar(255) default null,
+  `last_name` varchar(255) default null,
+  `phone` varchar(255) default null,
   primary key (`id`),
-  unique key `index_users_on_email` (`email`),
-  key `index_users_on_name` (`name`)
+  unique key `index_users_on_email` (`email`)
 ) engine=innodb default charset=utf8;
 
 create table `velodromes` (
@@ -623,6 +611,8 @@ insert into schema_migrations (version) values ('20090519034739');
 insert into schema_migrations (version) values ('20090612215607');
 
 insert into schema_migrations (version) values ('20090612235544');
+
+insert into schema_migrations (version) values ('20090616233051');
 
 insert into schema_migrations (version) values ('21');
 

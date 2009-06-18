@@ -1,5 +1,5 @@
 class ScheduleSweeper < ActionController::Caching::Sweeper
-  observe SingleDayEvent, Promoter
+  observe SingleDayEvent
   
   # If event's year changed, we need to expire both schedule pages from both years,
   # so just expire them all

@@ -1,8 +1,9 @@
+# Some promoter FKs values hard-coded because of acts_as_versioned magic classes
 banana_belt_series:
   name: Banana Belt Series
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   date: 2004-01-04
   type: Series
   number_issuer: association
@@ -13,7 +14,7 @@ banana_belt_1:
   name: Banana Belt I
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   updated_at: 2004-01-05
   number_issuer: stag_race
   date: 2004-01-04
@@ -26,7 +27,7 @@ banana_belt_2:
   name: Banana Belt II
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   date: 2004-01-11
   type: SingleDayEvent
   number_issuer: association
@@ -37,7 +38,7 @@ banana_belt_3:
   name: Banana Belt III
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   date: 2004-01-18
   type: SingleDayEvent
   number_issuer: association
@@ -73,7 +74,7 @@ tabor_cr:
   date: 2005-07-01
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: nate_hobson
+  promoter_id: 4
   flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
   flyer_approved: false
   type: SingleDayEvent
@@ -88,7 +89,7 @@ pir_series:
   discipline: Road
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
   flyer_approved: true
-  promoter: candi_murray
+  promoter_id: 1
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: WeeklySeries
   number_issuer: association
@@ -102,7 +103,7 @@ pir:
   state: OR
   discipline: Road
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-  promoter: candi_murray
+  promoter_id: 1
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: SingleDayEvent
   number_issuer: association
@@ -116,7 +117,7 @@ pir_2:
   state: OR
   discipline: Road
   flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-  promoter: candi_murray
+  promoter_id: 1
   sanctioned_by: <%= ASSOCIATION.short_name %>
   type: SingleDayEvent
   number_issuer: association
@@ -138,7 +139,7 @@ mt_hood:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  promoter: brad_ross
+  promoter_id: 3
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: MultiDayEvent
@@ -151,7 +152,7 @@ mt_hood_1:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  promoter: brad_ross
+  promoter_id: 3
   sanctioned_by: <%= ASSOCIATION.short_name %>
   city: Hood River
   number_issuer: association
@@ -166,7 +167,7 @@ mt_hood_2:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  promoter: brad_ross
+  promoter_id: 3
   sanctioned_by: <%= ASSOCIATION.short_name %>
   number_issuer: association
   type: SingleDayEvent
@@ -185,7 +186,7 @@ series_parent:
   name: Lost Series
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   date: <%= Date.today %>
   type: Series
   number_issuer: association
@@ -195,7 +196,7 @@ lost_series_child:
   name: Lost Series
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.short_name %>
-  promoter: brad_ross
+  promoter_id: 3
   date: <%= Date.today %>
   type: SingleDayEvent
   number_issuer: association

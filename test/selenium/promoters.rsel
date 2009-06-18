@@ -22,7 +22,7 @@ assert_table "promoters_table", 2, 1, "glob:411*"
 
 click_and_wait "css=a[href='/admin/promoters/#{Promoter.find_by_name('Candi Murray').id}/edit']"
 assert_value "promoter_name", "Candi Murray"
-assert_value "promoter_email", "candi@obra.org"
+assert_value "promoter_email", "admin@example.com"
 assert_value "promoter_phone", "411"
 assert_text_present "Tuesday Night PIR"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
@@ -35,3 +35,14 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 
 assert_value "promoter_email", "cmurray@obra.net"
+
+
+include_partial "logout"
+include_partial "promoter_login"
+
+assert_value "promoter_name", "Brad Ross"
+assert_value "promoter_email", "promoter@example.com"
+assert_value "promoter_phone", ""
+assert_text_present "Cross Crusade"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"

@@ -29,7 +29,7 @@ class Page < ActiveRecord::Base
       system_user = User.find_by_name("System")
       password = rand.to_s
       unless system_user
-        system_user = User.create!(:name => "System", :email => "sw@butlerpress.com", :password => password, :password_confirmation => password)
+        system_user = User.create!(:name => "System")
       end
       self.author = system_user
     end

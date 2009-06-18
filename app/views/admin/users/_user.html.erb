@@ -1,0 +1,16 @@
+<tr class="<%= cycle("even", "odd") %>" id="user_<%= user.id %>_row">
+  <td class="name span-4">
+    <div class="record" id="user_<%= user.id %>">
+      <%= in_place_editor_field(:user, :name, user) %>
+    </div>
+  </td>
+  <td class="email span-4">
+    <%= in_place_editor_field(:user, :phone, user) %>
+  </td>
+  <td class="phone span-4">
+    <%= in_place_editor_field(:user, :email, user) %>
+  </td>
+  <td class="actions span-6 last">
+    <%= link_to "Edit", edit_admin_user_path(user) %>
+  </td>
+</tr>

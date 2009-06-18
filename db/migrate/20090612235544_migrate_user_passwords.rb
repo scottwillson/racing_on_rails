@@ -2,7 +2,7 @@
 class MigrateUserPasswords < ActiveRecord::Migration
   def self.up
     User.find(:all).each do |user|
-      say "Update password for #{user.name}"
+      say "Update password for #{user.old_name}"
       user.password = user.old_password
       user.password_confirmation = user.old_password
       user.save!

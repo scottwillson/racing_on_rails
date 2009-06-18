@@ -4,11 +4,6 @@ require "test_helper"
 # TODO Recognize Series and WeeklySeries
 
 class ScheduleTest < ActiveSupport::TestCase
-  def setup
-    # Remove existing promoters that may conflict
-    Promoter.delete_all
-  end
-  
   def test_create
     piece_of_cake = SingleDayEvent.new({
       :name => "Piece of Cake Road Event",
@@ -171,7 +166,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_equal(nil, event.flyer, "Fast Twitch flyer")
     end
-    assert_equal(1, Promoter.count(:conditions => "name = 'Jen Featheringill'"), "Jen Featheringill should only be listed once in promoters")
+    assert_equal(1, User.count(:conditions => "first_name = 'Jen' and last_name = 'Featheringill'"), "Jen Featheringill should only be listed once in promoters")
     
     assert_not_nil(jack_frost, "Should have imported Jack Frost")
     assert_equal("Vancouver", jack_frost.city, "Jack Frost city")
@@ -276,7 +271,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jay Martineau", promoter.name, "promoter name")
     assert_equal("360-281-0085", promoter.phone, "promoter phone")
-    assert_equal("jaymartineau@covad.net_", promoter.email, "promoter email")
+    assert_equal("jaymartineau@covad.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("Cross Crusade")
     promoter = event.promoter
@@ -342,6 +337,6 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Molly Cameron", promoter.name, "promoter name")
     assert_equal("503.335.VELO", promoter.phone, "promoter phone")
-    assert_equal("Molly Cameron [molly@veloshop.org]", promoter.email, "promoter email")
+    assert_equal("molly@veloshop.org", promoter.email, "promoter email")
   end
 end

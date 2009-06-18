@@ -56,14 +56,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
     opts = {:controller => "admin/events", :action => "edit", :id => banana_belt.to_param, :promoter_id => '2'}
     assert_recognizes(opts, "/admin/events/#{banana_belt.to_param}/edit", :promoter_id => '2')
     
-    assert_not_equal(promoters(:candi_murray), banana_belt.promoter, 'Promoter before edit with promoter ID')
+    assert_not_equal(users(:administrator), banana_belt.promoter, 'Promoter before edit with promoter ID')
 
     get(:edit, :id => banana_belt.to_param)
     assert_response(:success)
     assert_template("admin/events/edit")
     assert_not_nil(assigns["event"], "Should assign event")
     assert_nil(assigns["race"], "Should not assign race")
-    assert_not_equal(promoters(:candi_murray), assigns["event"].promoter, 'Promoter from promoter ID')
+    assert_not_equal(users(:administrator), assigns["event"].promoter, 'Promoter from promoter ID')
   end
 
   def test_upload
@@ -128,7 +128,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  'promoter_id' => promoters(:nate_hobson).to_param, 'type' => 'SingleDayEvent'}
+                  'promoter_id' => users(:nate_hobson).to_param, 'type' => 'SingleDayEvent'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -148,7 +148,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal('Downhill', skull_hollow.discipline, 'discipline')
     assert_equal(true, skull_hollow.cancelled, 'cancelled')
     assert_equal('KY', skull_hollow.state, 'state')
-    assert_equal(promoters(:nate_hobson), skull_hollow.promoter, 'promoter')
+    assert_equal(users(:nate_hobson), skull_hollow.promoter, 'promoter')
   end
   
   def test_create_child_event
@@ -161,7 +161,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                    "parent_id" => parent.to_param,
-                  'promoter_id' => promoters(:nate_hobson).to_param, 'type' => 'Event'}
+                  'promoter_id' => users(:nate_hobson).to_param, 'type' => 'Event'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -182,7 +182,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal('Downhill', skull_hollow.discipline, 'discipline')
     assert_equal(true, skull_hollow.cancelled, 'cancelled')
     assert_equal('KY', skull_hollow.state, 'state')
-    assert_equal(promoters(:nate_hobson), skull_hollow.promoter, 'promoter')
+    assert_equal(users(:nate_hobson), skull_hollow.promoter, 'promoter')
   end
     
   def test_create_child_event_default_to_event_type
@@ -195,7 +195,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                    "parent_id" => parent.to_param,
-                  'promoter_id' => promoters(:nate_hobson).to_param, 'type' => ''}
+                  'promoter_id' => users(:nate_hobson).to_param, 'type' => ''}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -216,7 +216,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal('Downhill', skull_hollow.discipline, 'discipline')
     assert_equal(true, skull_hollow.cancelled, 'cancelled')
     assert_equal('KY', skull_hollow.state, 'state')
-    assert_equal(promoters(:nate_hobson), skull_hollow.promoter, 'promoter')
+    assert_equal(users(:nate_hobson), skull_hollow.promoter, 'promoter')
   end
   
   def test_create_series
@@ -227,7 +227,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
                    "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
                    "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                  "promoter_id"  => promoters(:nate_hobson).to_param, 'type' => 'Series'}
+                  "promoter_id"  => users(:nate_hobson).to_param, 'type' => 'Series'}
     )
     
     skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -306,7 +306,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                  "promoter_id" => promoters(:brad_ross).to_param, 'number_issuer_id' => norba.to_param}
+                  "promoter_id" => users(:promoter).to_param, 'number_issuer_id' => norba.to_param}
     )
     assert_response(:redirect)
     assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
@@ -347,7 +347,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   
   def test_save_different_promoter
     banana_belt = events(:banana_belt_1)
-    assert_equal(promoters(:brad_ross), banana_belt.promoter, 'Promoter before save')
+    assert_equal(users(:promoter), banana_belt.promoter, 'Promoter before save')
     
     post(:update, 
          "commit"=>"Save", 
@@ -355,14 +355,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
                    "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR", 'type' => 'SingleDayEvent',
-                  "promoter_id"  => promoters(:nate_hobson).to_param}
+                  "promoter_id"  => users(:nate_hobson).to_param}
     )
     assert_nil(flash[:warn], 'flash[:warn]')
     assert_response(:redirect)
     assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
     
     banana_belt.reload
-    assert_equal(promoters(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
+    assert_equal(users(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
   end
   
   def test_update_single_day_to_multi_day
@@ -376,7 +376,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                      "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", 
                      "flyer_approved"=>"1", 
                      "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
-                     "promoter_id" => promoters(:nate_hobson).to_param, 
+                     "promoter_id" => users(:nate_hobson).to_param, 
                      'number_issuer_id' => number_issuers(:stage_race).to_param,
                      'type' => type.to_s}
       )

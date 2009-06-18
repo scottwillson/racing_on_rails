@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :categories do |category|
       category.resources :children, :controller => :categories
     end
-    admin.resources :events, :has_one => :promoter,
+    admin.resources :events, :has_one => :user,
         :collection => { :upload_schedule => :post }, 
         :member => { :upload => :post, 
                      :set_parent => :get, 
@@ -13,14 +13,13 @@ ActionController::Routing::Routes.draw do |map|
                      :create_from_children => :get, 
                      :destroy_races => :delete }
     admin.resources :first_aid_providers
-    admin.resources :multi_day_events, :as => :events, :has_one => :promoter
+    admin.resources :multi_day_events, :as => :events, :has_one => :user
     
     admin.resources :pages
     admin.namespace(:pages) do |pages|
       pages.resources :versions, :member => { :revert => :get }
     end
 
-    admin.resources :promoters, :has_many => :events, :has_many => :single_day_events
     admin.resources :racers, :collection => { :cards => :get, 
                                               :duplicates => :get, 
                                               :mailing_labels => :get, 
@@ -30,12 +29,13 @@ ActionController::Routing::Routes.draw do |map|
                              :member => { :card => :get, :toggle_member => :post }
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
-    admin.resources :series, :as => :events, :has_one => :promoter
-    admin.resources :single_day_events, :as => :events, :has_one => :promoter
+    admin.resources :series, :as => :events, :has_one => :user
+    admin.resources :single_day_events, :as => :events, :has_one => :user
     admin.resources(:tables) if RAILS_ENV == "test"
     admin.resources :teams, :member => { :toggle_member => :post }
+    admin.resources :users, :has_many => :events, :has_many => :single_day_events
     admin.resources :velodromes
-    admin.resources :weekly_series, :as => :events, :has_one => :promoter
+    admin.resources :weekly_series, :as => :events, :has_one => :user
   end
 
   map.resources :categories, :has_many => :races

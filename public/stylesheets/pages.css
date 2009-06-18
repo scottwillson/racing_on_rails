@@ -188,12 +188,12 @@ table.pages div.record {
 }
 
 /* Promoters */
-table.promoters td.name {
+table.users td.name {
   background-repeat: no-repeat;
   background-position: 8px 5px;
 }
 
-table.promoters div.record,
+table.users div.record,
 table.racers div.record {
   background-image: url(/images/icons/person.gif);
 }

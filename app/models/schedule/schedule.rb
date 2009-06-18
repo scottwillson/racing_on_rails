@@ -66,7 +66,7 @@ module Schedule
     # Read GridFile +file+, split city and state, read and create promoter
     def Schedule.parse_events(file)
       events = []
-      for row in file.rows
+      file.rows.each do |row|
         row_hash = row.to_hash
 
         if has_event?(row_hash)
@@ -76,15 +76,11 @@ module Schedule
             # Save to persist new promoters (if there is one)
             # to prevent duplicate promoters in memory
             # TODO Check for dupe promoters at save time instead
-            event.find_associated_records
-            if event.promoter
-              event.promoter.save! 
-            end
             events << event
           end
         end
       end
-      return events
+      events
     end
 
     def Schedule.has_event?(row_hash)
@@ -133,6 +129,22 @@ module Schedule
             row_hash[:sanctioned_by] = 'UCI'
           end
         end
+        
+        promoter_name = row_hash.delete(:promoter_name)
+        promoter_email = row_hash.delete(:promoter_email)
+        promoter_phone = row_hash.delete(:promoter_phone)
+
+        promoter = User.find_by_info(promoter_name, promoter_email, promoter_phone)
+        if promoter
+          promoter.name = promoter_name
+          promoter.email = promoter_email
+          promoter.phone = promoter_phone
+          promoter.save!
+        else
+          promoter = User.create!(:name => promoter_name, :email => promoter_email, :phone => promoter_phone)
+        end
+
+        row_hash[:promoter] = promoter unless promoter.blank?
 
         event = SingleDayEvent.new(row_hash)
         if logger.debug? then logger.debug("Add #{event.name} to schedule") end

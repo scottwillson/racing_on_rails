@@ -52,6 +52,21 @@ class LoginStoriesTest < ActionController::IntegrationTest
     get '/admin/events'
     assert_redirected_to "/user_session/new"
   end
+  
+  def test_blank_login_shold_not_work
+    User.create!
+    
+    post user_session_path, "user_session" => { "email" => "", "password" => "" }, "login" => "Login"
+    assert_response :success
+    assert_template "user_sessions/new"
+
+    get admin_racers_path
+    assert_response :redirect
+    follow_redirect!
+    assert_response :success
+    assert_template "user_sessions/new"
+    assert_equal "You must be an administrator to access this page", flash[:notice]
+  end
 
   private
   
