@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   ActionController::Base.ip_spoofing_check = false
 
   filter_parameter_logging :password, :password_confirmation
-  helper_method :current_user_session, :current_user
+  helper_method :current_person_session, :current_person
 
   def self.expire_cache
     FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
@@ -64,30 +64,30 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def current_user_session
-    return @current_user_session if defined?(@current_user_session)
-    @current_user_session = UserSession.find
+  def current_person_session
+    return @current_person_session if defined?(@current_person_session)
+    @current_person_session = PersonSession.find
   end
 
-  def current_user
-    return @current_user if defined?(@current_user)
-    @current_user = current_user_session && current_user_session.user
+  def current_person
+    return @current_person if defined?(@current_person)
+    @current_person = current_person_session && current_person_session.person
   end
 
-  def require_user
-    unless current_user
+  def require_person
+    unless current_person
       store_location
       flash[:notice] = "You must be logged in to access this page"
-      redirect_to new_user_session_url
+      redirect_to new_person_session_url
       return false
     end
   end
 
   def require_administrator
-    unless current_user && current_user.administrator?
+    unless current_person && current_person.administrator?
       store_location
       flash[:notice] = "You must be an administrator to access this page"
-      redirect_to new_user_session_url
+      redirect_to new_person_session_url
       return false
     end
   end

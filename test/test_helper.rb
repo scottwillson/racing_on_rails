@@ -112,11 +112,11 @@ class ActiveSupport::TestCase
   
   def create_administrator_session
     activate_authlogic
-    UserSession.create(users(:administrator))
+    PersonSession.create(people(:administrator))
   end
   
-  def destroy_user_session
-    session["user_credentials"] = nil
+  def destroy_person_session
+    session["person_credentials"] = nil
   end
 
   def print_all_events

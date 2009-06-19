@@ -35,7 +35,7 @@ class Admin::TeamsController < ApplicationController
   end
   
   def create
-    params[:team][:created_by] = current_user
+    params[:team][:created_by] = current_person
     @team = Team.new(params[:team])
 
     if @team.save

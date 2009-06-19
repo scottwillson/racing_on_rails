@@ -1,4 +1,18 @@
 class MergeUsersIntoPeople < ActiveRecord::Migration
+  class Racer < ActiveRecord::Base; end
+
+  class User < ActiveRecord::Base
+    acts_as_authentic do |config|
+      config.validates_length_of_email_field_options :within => 6..72, :allow_nil => true, :allow_blank => true
+      config.validates_format_of_email_field_options :with => Authlogic::Regex.email, 
+                                                     :message => I18n.t('error_messages.email_invalid', :default => "should look like an email address."),
+                                                     :allow_nil => true,
+                                                     :allow_blank => true
+      config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+      config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+    end
+  end
+
   def self.up
     change_table :people do |t|
       t.string    :crypted_password, :null => true
@@ -38,76 +52,18 @@ class MergeUsersIntoPeople < ActiveRecord::Migration
       end
     end
     
-    rename_table :user_sessions, :person_sessions
-    rename_table :user_roles, :person_roles
-    remove_table :users
-  end
-
-  def self.down
-    change_table :racers do |t|
-      t.remove :crypted_password
-      t.remove :password_salt
-      t.remove :persistence_token
-      t.remove :single_access_toke
-      t.remove :perishable_token
-      t.remove :login_count
-      t.remove :failed_login_count
-      t.remove :last_request_at
-      t.remove :current_login_at
-      t.remove :last_login_at
-      t.remove :current_login_ip
-      t.remove :last_login_ip
+    rename_table :roles_users, :people_roles
+    change_table :people_roles do |t|
+      t.rename(:user_id, :person_id)
     end
+    
+
+    execute "alter table events drop foreign key events_promoters_id_fk"
+    execute "alter table people_roles drop foreign key roles_users_user_id_fk"
+
+    drop_table :users
+
+    execute "alter table events add foreign key (promoter_id) references people (id) on delete set null"
+    execute "alter table people_roles add foreign key (person_id) references people (id) on delete cascade"
   end
 end
-
-create table `people` (
-  `id` int(11) not null auto_increment,
-  `first_name` varchar(64) default null,
-  `last_name` varchar(255) default null,
-  `city` varchar(128) default null,
-  `date_of_birth` date default null,
-  `license` varchar(64) default null,
-  `notes` text,
-  `state` varchar(64) default null,
-  `team_id` int(11) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `cell_fax` varchar(255) default null,
-  `ccx_category` varchar(255) default null,
-  `dh_category` varchar(255) default null,
-  `email` varchar(255) default null,
-  `gender` char(2) default null,
-  `home_phone` varchar(255) default null,
-  `mtb_category` varchar(255) default null,
-  `member_from` date default null,
-  `occupation` varchar(255) default null,
-  `road_category` varchar(255) default null,
-  `street` varchar(255) default null,
-  `track_category` varchar(255) default null,
-  `work_phone` varchar(255) default null,
-  `zip` varchar(255) default null,
-  `member_to` date default null,
-  `print_card` tinyint(1) default '0',
-  `print_mailing_label` tinyint(1) default '0',
-  `ccx_only` tinyint(1) not null default '0',
-  `updated_by` varchar(255) default null,
-  `bmx_category` varchar(255) default null,
-  `wants_email` tinyint(1) not null default '1',
-  `wants_mail` tinyint(1) not null default '1',
-  `volunteer_interest` tinyint(1) not null default '0',
-  `official_interest` tinyint(1) not null default '0',
-  `race_promotion_interest` tinyint(1) not null default '0',
-  `team_interest` tinyint(1) not null default '0',
-  `created_by_id` int(11) default null,
-  `created_by_type` varchar(255) default null,
-  `member_usac_to` date default null,
-  primary key (`id`),
-  key `idx_last_name` (`last_name`),
-  key `idx_first_name` (`first_name`),
-  key `idx_team_id` (`team_id`),
-  key `index_racers_on_member_to` (`member_to`),
-  key `index_racers_on_member_from` (`member_from`),
-  constraint `racers_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
-) engine=innodb default charset=utf8;

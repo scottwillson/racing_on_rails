@@ -3,7 +3,7 @@
 
 <h2 class="centered">Welcome</h2>
 
-<% form_for @user_session, :url => user_session_path do |f| %>
+<% form_for @person_session, :url => person_session_path do |f| %>
 <div class="login centered">
   <%= f.error_messages %>
   <%= f.labelled_text_field :email %><br/>
@@ -16,4 +16,4 @@
 </div>
 <% end -%>
 
-<%= focus("user_session_email") %>
+<%= focus("person_session_email") %>

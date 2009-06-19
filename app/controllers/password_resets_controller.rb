@@ -1,25 +1,25 @@
 class PasswordResetsController < ApplicationController
-  before_filter :load_user_using_perishable_token, :only => [:edit, :update]
+  before_filter :load_person_using_perishable_token, :only => [:edit, :update]
 
   def create
-    @user = User.find_by_email(params[:email])
-    if @user
-      @user.deliver_password_reset_instructions!
+    @person = Person.find_by_email(params[:email])
+    if @person
+      @person.deliver_password_reset_instructions!
       flash[:notice] = "Instructions to reset your password have been emailed to you. Please check your email."
-      redirect_to new_user_session_path
+      redirect_to new_person_session_path
     else
-      flash[:notice] = "No user was found with that email address"
+      flash[:notice] = "No person was found with that email address"
       render :new
     end
   end
 
   def update
-    @user.password = params[:user][:password]
-    @user.password_confirmation = params[:user][:password_confirmation]
-    if @user.save
-      @user_session = UserSession.create(@user)
+    @person.password = params[:person][:password]
+    @person.password_confirmation = params[:person][:password_confirmation]
+    if @person.save
+      @person_session = PersonSession.create(@person)
       flash[:notice] = "Password successfully updated"
-      if @user.administrator?
+      if @person.administrator?
         redirect_back_or_default admin_home_url
       else
         redirect_back_or_default root_url
@@ -31,9 +31,9 @@ class PasswordResetsController < ApplicationController
 
   private
 
-  def load_user_using_perishable_token
-    @user = User.find_using_perishable_token(params[:id])
-    unless @user
+  def load_person_using_perishable_token
+    @person = Person.find_using_perishable_token(params[:id])
+    unless @person
       flash[:notice] = "We're sorry, but we could not locate your account. " +
         "Please try copying and pasting the URL " +
         "from your email into your browser or restarting the " +

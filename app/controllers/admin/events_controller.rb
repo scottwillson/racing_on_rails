@@ -32,7 +32,7 @@ class Admin::EventsController < ApplicationController
     @disciplines.sort!
     
     unless params['promoter_id'].blank?
-      @event.promoter = User.find(params['promoter_id'])
+      @event.promoter = Person.find(params['promoter_id'])
     end
   end
   

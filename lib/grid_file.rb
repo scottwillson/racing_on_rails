@@ -11,6 +11,7 @@ class GridFile < Grid
     end
 
     excel_rows = []
+    Spreadsheet.open(file.path)
     Spreadsheet.open(file.path).worksheets.each do |worksheet|
       worksheet.each do |row|
         if Rails.logger.debug? && debug?
@@ -85,18 +86,14 @@ class GridFile < Grid
   def initialize(source, *options)  
     case source
     when File, Tempfile
-      begin
-        raise "#{source} does not exist" unless File.exists?(source.path)
-        @file = source
-        if excel?
-          lines = GridFile.read_excel(@file)
-        else
-          lines = source.readlines
-        end
-        super(lines, options)
-      ensure
-        source.close unless source == nil || source.closed?
+      raise "#{source} does not exist" unless File.exists?(source.path)
+      @file = source
+      if excel?
+        lines = GridFile.read_excel(@file)
+      else
+        lines = source.readlines
       end
+      super(lines, options)
 
     when String
       super(source, options)

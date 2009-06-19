@@ -95,7 +95,7 @@ class Admin::PeopleController < ApplicationController
   # New blank numbers are ignored
   def create
     expire_cache
-    params[:person][:created_by] = current_user
+    params[:person][:created_by] = current_person
     @person = Person.create(params[:person])
     
     if params[:number_value]
@@ -106,7 +106,7 @@ class Admin::PeopleController < ApplicationController
             :number_issuer_id => params[:number_issuer_id][index], 
             :year => params[:number_year],
             :value => number_value,
-            :updated_by => current_user.name
+            :updated_by => current_person.name
           )
           unless race_number.errors.empty?
             @person.errors.add_to_base(race_number.errors.full_messages)
@@ -116,17 +116,13 @@ class Admin::PeopleController < ApplicationController
     end
     if @person.errors.empty?
       if @event
-        redirect_to(edit_admin_event_user_path(@user, @event))
+        redirect_to(edit_admin_event_person_path(@person, @event))
       else
-        redirect_to(edit_admin_user_path(@user))
+        redirect_to(edit_admin_person_path(@person))
       end
     else
       render(:action => :edit)
     end
-    @years = (2005..(Date.today.year + 1)).to_a.reverse
-    @year = params[:year] || current_date.year
-    @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-    render(:template => 'admin/people/edit')
   end
   
   # Update existing Person.
@@ -144,14 +140,14 @@ class Admin::PeopleController < ApplicationController
     begin
       expire_cache
       @person = Person.find(params[:id])
-      params[:person][:updated_by] = current_user.name
+      params[:person][:updated_by] = current_person.name
       @person.update_attributes(params[:person])
       if params[:number]
         for number_id in params[:number].keys
           number = RaceNumber.find(number_id)
           number_params = params[:number][number_id]
           if number.value != params[:number][number_id][:value]
-            number_params[:updated_by] = current_user.name
+            number_params[:updated_by] = current_person.name
             RaceNumber.update(number_id, number_params)
           end
         end
@@ -165,7 +161,7 @@ class Admin::PeopleController < ApplicationController
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
               :value => number_value,
-              :updated_by => current_user.name
+              :updated_by => current_person.name
             )
             unless race_number.errors.empty?
               @person.errors.add_to_base(race_number.errors.full_messages)
@@ -180,7 +176,11 @@ class Admin::PeopleController < ApplicationController
     end
 
     if @person.errors.empty?
-      return redirect_to(:action => :edit, :id => @person.to_param)
+      if @event
+        return redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
+      else
+        return redirect_to(edit_admin_person_path(@person))
+      end
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || Date.today.year

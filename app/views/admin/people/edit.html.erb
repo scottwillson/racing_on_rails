@@ -7,8 +7,8 @@
 
 <%- if @event -%>
   <p class="top-margin centered">
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @user.id)) unless @user.new_record? %>
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event)) if @user.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @person.id)) unless @person.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event)) if @person.new_record? %>
   </p>
 <% end -%>
 
@@ -101,8 +101,8 @@
       <th>Date</th>
       <th>Name</th>
     </tr>
-    <%= render :partial => "event", :collection => @user.events.sort_by(&:date).reverse %>
-  <% end unless @user.events.empty? -%>
+    <%= render :partial => "event", :collection => @person.events.sort_by(&:date).reverse %>
+  <% end unless @person.events.empty? -%>
 
 
   <div class="page_buttons span-6 last">

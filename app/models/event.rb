@@ -66,7 +66,7 @@ class Event < ActiveRecord::Base
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
-  belongs_to :promoter, :class_name => "User"
+  belongs_to :promoter, :class_name => "Person"
 
   has_many   :races,
              :dependent => :destroy,
@@ -404,7 +404,7 @@ class Event < ActiveRecord::Base
   end
 
   def promoter_phone
-    promoter.phone if promoter
+    promoter.home_phone if promoter
   end
 
   def date_range_s(format = :short)

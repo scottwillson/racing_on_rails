@@ -54,9 +54,9 @@ class Post < ActiveRecord::Base
     
     sender_parts = sender.split("@")
     if sender_parts.size > 1
-      user_name = sender_parts.first
-      if user_name.length > 2
-        return user_name[0..(user_name.length - 3)] + "..@" + sender_parts.last
+      person_name = sender_parts.first
+      if person_name.length > 2
+        return person_name[0..(person_name.length - 3)] + "..@" + sender_parts.last
       else
         return "..@" + sender_parts.last
       end

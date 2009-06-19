@@ -54,98 +54,6 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
 
-  def test_new
-    person = Person.create!(
-      :date_of_birth => '1970-12-31',
-      :cell_fax => '(315) 342-1313',
-      :city => "Santa Rosa", 
-      :ccx_category => 'A', 
-      :dh_category => 'Novice', 
-      :dh_number => "100", 
-      :email => 'andy@pig_bikes.com',
-      :first_name => 'Andy',
-      :gender => 'M',
-      :home_phone => '(315) 221-4774',
-      :last_name => "Hampsten", 
-      :license => "125162", 
-      :mtb_category => 'Expert', 
-      :notes => 'Won Giro', 
-      :member_from => '2001-07-19', 
-      :road_number => "300", 
-      :occupation => 'Vinter', 
-      :road_category => '1', 
-      :state => "CA", 
-      :street => "5 Burr Street", 
-      :team => {:name => "7-11"},
-      :track_category => '2', 
-      :work_phone => '(315) 444-1022',
-      :xc_number => "101",
-      :zip => "13035"
-    )
-    assert_equal_dates("1970-12-31", person.date_of_birth, "date_of_birth")
-    assert_equal("(315) 342-1313", person.cell_fax, "cell_fax")
-    assert_equal("A", person.ccx_category, "ccx_category")
-    assert_equal("Novice", person.dh_category, "dh_category")
-    assert_equal("(315) 221-4774", person.home_phone, "home_phone")
-    assert_equal("Expert", person.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", person.member_from, "member_from")
-    assert_equal("Vinter", person.occupation, "occupation")
-    assert_equal("1", person.road_category, "road_category")
-    assert_equal("2", person.track_category, "track_category")
-    assert_equal("101", person.xc_number, "xc_number")
-    assert_equal("Santa Rosa", person.city, "city")
-    assert_equal("100", person.dh_number, "dh_number")
-    assert_equal("andy@pig_bikes.com", person.email, "email")
-    assert_equal("M", person.gender, "gender")
-    assert_equal("125162", person.license, "license")
-    assert_equal("Andy Hampsten", person.name, "name")
-    assert_equal("Won Giro", person.notes, "notes")
-    assert_not_nil(person.road_number, "road_number")
-    assert_equal("300", person.road_number, "road_number")
-    assert_equal("CA", person.state, "state")
-    assert_equal("5 Burr Street", person.street, "street")
-    assert_equal("7-11", person.team.name, "team.name")
-    assert_equal("101", person.xc_number, "xc_number")
-    assert_equal("13035", person.zip, "xc_number")
-    assert_equal(false, person.print_card, 'print_card')
-    assert_equal(false, person.print_card?, 'print_card?')
-    assert_equal(false, person.print_mailing_label, 'print_mailing_label')
-    assert_equal(false, person.print_mailing_label?, 'print_mailing_label?')
-    assert_equal(false, person.ccx_only, 'ccx_only')
-    assert_equal(false, person.ccx_only?, 'ccx_only?')
-    
-    for number in person.race_numbers(true)
-      assert(number.valid?, "#{number}: #{number.errors.full_messages}")
-    end
-    person.save!
-    person.reload
-    
-    assert_equal_dates("1970-12-31", person.date_of_birth, "date_of_birth")
-    assert_equal("(315) 342-1313", person.cell_fax, "cell_fax")
-    assert_equal("A", person.ccx_category, "ccx_category")
-    assert_equal("Novice", person.dh_category, "dh_category")
-    assert_equal("(315) 221-4774", person.home_phone, "home_phone")
-    assert_equal("Expert", person.mtb_category, "mtb_category")
-    assert_equal_dates("2001-07-19", person.member_from, "member_from")
-    assert_equal("Vinter", person.occupation, "occupation")
-    assert_equal("1", person.road_category, "road_category")
-    assert_equal("2", person.track_category, "track_category")
-    assert_equal("101", person.xc_number, "xc_number")
-    assert_equal("Santa Rosa", person.city, "city")
-    assert_equal("100", person.dh_number, "dh_number")
-    assert_equal("andy@pig_bikes.com", person.email, "email")
-    assert_equal("M", person.gender, "gender")
-    assert_equal("125162", person.license, "license")
-    assert_equal("Andy Hampsten", person.name, "name")
-    assert_equal("Won Giro", person.notes, "notes")
-    assert_equal("300", person.road_number(true), "road_number")
-    assert_equal("CA", person.state, "state")
-    assert_equal("5 Burr Street", person.street, "street")
-    assert_equal("7-11", person.team.name, "team.name")
-    assert_equal("101", person.xc_number, "xc_number")
-    assert_equal("13035", person.zip, "xc_number")
-  end
- 
   def test_merge
     person_to_keep = people(:molly)
     person_to_merge = people(:tonkin)
@@ -796,59 +704,59 @@ class PersonTest < ActiveSupport::TestCase
   
   
   def test_create
-    User.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :email => "tuxedo@example.com")
+    Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :email => "tuxedo@example.com")
   end
   
   def test_find_by_info
-    assert_equal(users(:promoter), User.find_by_info("Brad ross"))
-    assert_equal(users(:promoter), User.find_by_info("Brad ross", "brad@foo.com"))
-    assert_equal(users(:administrator), User.find_by_info("Candi Murray"))
-    assert_equal(users(:administrator), User.find_by_info("Candi Murray", "admin@example.com", "(503) 555-1212"))
-    assert_equal(users(:administrator), User.find_by_info("", "admin@example.com", "(503) 555-1212"))
-    assert_equal(users(:administrator), User.find_by_info("", "admin@example.com"))
+    assert_equal(people(:promoter), Person.find_by_info("Brad ross"))
+    assert_equal(people(:promoter), Person.find_by_info("Brad ross", "brad@foo.com"))
+    assert_equal(people(:administrator), Person.find_by_info("Candi Murray"))
+    assert_equal(people(:administrator), Person.find_by_info("Candi Murray", "admin@example.com", "(503) 555-1212"))
+    assert_equal(people(:administrator), Person.find_by_info("", "admin@example.com", "(503) 555-1212"))
+    assert_equal(people(:administrator), Person.find_by_info("", "admin@example.com"))
 
-    assert_nil(User.find_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
-    assert_nil(User.find_by_info("", "membership@obra.org"))
+    assert_nil(Person.find_by_info("", "mike_murray@obra.org", "(451) 324-8133"))
+    assert_nil(Person.find_by_info("", "membership@obra.org"))
     
-    promoter = User.new(:name => '', :phone => "(212) 522-1872")
+    promoter = Person.new(:name => '', :home_phone => "(212) 522-1872")
     promoter.save!
-    assert_equal(promoter, User.find_by_info("", "", "(212) 522-1872"))
+    assert_equal(promoter, Person.find_by_info("", "", "(212) 522-1872"))
     
-    promoter = User.new(:name => '', :email => "cjw@cjw.net")
+    promoter = Person.new(:name => '', :email => "cjw@cjw.net")
     promoter.save!
-    assert_equal(promoter, User.find_by_info("", "cjw@cjw.net", ""))
+    assert_equal(promoter, Person.find_by_info("", "cjw@cjw.net", ""))
   end
   
   def test_save_blank
-    User.create!
+    Person.create!
   end
   
   def test_save_no_name
-    User.create!(:email => "nate@six-hobsons.net")
-    assert(!User.new(:email => "nate@six-hobsons.net").valid?, "No dupe email addresses allowed")
+    Person.create!(:email => "nate@six-hobsons.net")
+    assert(!Person.new(:email => "nate@six-hobsons.net").valid?, "No dupe email addresses allowed")
   end
   
   def test_save_no_email
-    User.create!(:name => "Nate Hobson")
-    User.create!(:name => "Nate Hobson")
+    Person.create!(:name => "Nate Hobson")
+    Person.create!(:name => "Nate Hobson")
   end
   
   def test_events
-    assert(!users(:administrator).events.empty?, 'User Candi should have events')
-    assert(User.create(:name => 'New').events.empty?, 'New promoter should not have events')
+    assert(!people(:administrator).events.empty?, 'Person Candi should have events')
+    assert(Person.create(:name => 'New').events.empty?, 'New promoter should not have events')
   end
   
   def test_administrator
-    assert(users(:administrator).administrator?, 'administrator administrator?')
-    assert(!users(:promoter).administrator?, 'administrator administrator?')
-    assert(!users(:member).administrator?, 'administrator administrator?')
-    assert(!users(:nate_hobson).administrator?, 'administrator administrator?')
+    assert(people(:administrator).administrator?, 'administrator administrator?')
+    assert(!people(:promoter).administrator?, 'administrator administrator?')
+    assert(!people(:member).administrator?, 'administrator administrator?')
+    assert(!people(:nate_hobson).administrator?, 'administrator administrator?')
   end
   
   def test_promoter
-    assert(users(:administrator).promoter?, 'administrator promoter?')
-    assert(users(:promoter).promoter?, 'administrator promoter?')
-    assert(!users(:member).promoter?, 'administrator promoter?')
-    assert(users(:nate_hobson).promoter?, 'administrator promoter?')
+    assert(people(:administrator).promoter?, 'administrator promoter?')
+    assert(people(:promoter).promoter?, 'administrator promoter?')
+    assert(!people(:member).promoter?, 'administrator promoter?')
+    assert(people(:nate_hobson).promoter?, 'administrator promoter?')
   end
 end

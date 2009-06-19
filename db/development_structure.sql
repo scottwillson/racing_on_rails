@@ -79,8 +79,8 @@ create table `discipline_bar_categories` (
   unique key `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
   key `idx_category_id` (`category_id`),
   key `idx_discipline_id` (`discipline_id`),
-  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade,
-  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade
+  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade,
+  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `disciplines` (
@@ -155,8 +155,8 @@ create table `events` (
   key `idx_date` (`date`),
   key `index_events_on_sanctioned_by` (`sanctioned_by`),
   key `index_events_on_bar_points` (`bar_points`),
-  constraint `events_promoters_id_fk` foreign key (`promoter_id`) references `users` (`id`) on delete set null,
   constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
+  constraint `events_ibfk_1` foreign key (`promoter_id`) references `people` (`id`) on delete set null,
   constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=utf8;
@@ -296,13 +296,35 @@ create table `people` (
   `created_by_id` int(11) default null,
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
+  `crypted_password` varchar(255) default null,
+  `password_salt` varchar(255) default null,
+  `persistence_token` varchar(255) not null,
+  `single_access_token` varchar(255) default null,
+  `perishable_token` varchar(255) default null,
+  `login_count` int(11) not null default '0',
+  `failed_login_count` int(11) not null default '0',
+  `last_request_at` datetime default null,
+  `current_login_at` datetime default null,
+  `last_login_at` datetime default null,
+  `current_login_ip` varchar(255) default null,
+  `last_login_ip` varchar(255) default null,
   primary key (`id`),
+  unique key `index_people_on_email` (`email`),
   key `idx_last_name` (`last_name`),
   key `idx_first_name` (`first_name`),
   key `idx_team_id` (`team_id`),
   key `index_racers_on_member_to` (`member_to`),
   key `index_racers_on_member_from` (`member_from`),
   constraint `racers_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
+) engine=innodb default charset=utf8;
+
+create table `people_roles` (
+  `role_id` int(11) not null,
+  `person_id` int(11) not null,
+  key `role_id` (`role_id`),
+  key `user_id` (`person_id`),
+  constraint `people_roles_ibfk_1` foreign key (`person_id`) references `people` (`id`) on delete cascade,
+  constraint `roles_users_role_id_fk` foreign key (`role_id`) references `roles` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `posts` (
@@ -342,8 +364,8 @@ create table `race_numbers` (
   key `discipline_id` (`discipline_id`),
   key `number_issuer_id` (`number_issuer_id`),
   key `race_numbers_value_index` (`value`),
-  constraint `race_numbers_ibfk_1` foreign key (`person_id`) references `people` (`id`) on delete cascade,
   constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
+  constraint `race_numbers_ibfk_1` foreign key (`person_id`) references `people` (`id`) on delete cascade,
   constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -369,8 +391,8 @@ create table `races` (
   key `idx_category_id` (`category_id`),
   key `index_races_on_event_id` (`event_id`),
   key `index_races_on_bar_points` (`bar_points`),
-  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade,
-  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`)
+  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `results` (
@@ -416,8 +438,8 @@ create table `results` (
   key `idx_team_id` (`team_id`),
   key `index_results_on_place` (`place`),
   key `index_results_on_members_only_place` (`members_only_place`),
-  constraint `results_ibfk_1` foreign key (`person_id`) references `people` (`id`),
   constraint `results_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `results_ibfk_1` foreign key (`person_id`) references `people` (`id`),
   constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade,
   constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;
@@ -426,15 +448,6 @@ create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
   primary key (`id`)
-) engine=innodb default charset=utf8;
-
-create table `roles_users` (
-  `role_id` int(11) not null,
-  `user_id` int(11) not null,
-  key `role_id` (`role_id`),
-  key `user_id` (`user_id`),
-  constraint `roles_users_user_id_fk` foreign key (`user_id`) references `users` (`id`) on delete cascade,
-  constraint `roles_users_role_id_fk` foreign key (`role_id`) references `roles` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `schema_migrations` (
@@ -452,8 +465,8 @@ create table `scores` (
   primary key (`id`),
   key `scores_competition_result_id_index` (`competition_result_id`),
   key `scores_source_result_id_index` (`source_result_id`),
-  constraint `scores_source_result_id_fk` foreign key (`source_result_id`) references `results` (`id`) on delete cascade,
-  constraint `scores_competition_result_id_fk` foreign key (`competition_result_id`) references `results` (`id`) on delete cascade
+  constraint `scores_competition_result_id_fk` foreign key (`competition_result_id`) references `results` (`id`) on delete cascade,
+  constraint `scores_source_result_id_fk` foreign key (`source_result_id`) references `results` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `teams` (
@@ -476,31 +489,6 @@ create table `teams` (
   `created_by_type` varchar(255) default null,
   primary key (`id`),
   unique key `idx_name` (`name`)
-) engine=innodb default charset=utf8;
-
-create table `users` (
-  `id` int(11) not null auto_increment,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `email` varchar(255) default null,
-  `crypted_password` varchar(255) default null,
-  `password_salt` varchar(255) default null,
-  `persistence_token` varchar(255) not null,
-  `single_access_token` varchar(255) default null,
-  `perishable_token` varchar(255) default null,
-  `login_count` int(11) not null default '0',
-  `failed_login_count` int(11) not null default '0',
-  `last_request_at` datetime default null,
-  `current_login_at` datetime default null,
-  `last_login_at` datetime default null,
-  `current_login_ip` varchar(255) default null,
-  `last_login_ip` varchar(255) default null,
-  `first_name` varchar(255) default null,
-  `last_name` varchar(255) default null,
-  `phone` varchar(255) default null,
-  primary key (`id`),
-  unique key `index_users_on_email` (`email`)
 ) engine=innodb default charset=utf8;
 
 create table `velodromes` (
@@ -615,6 +603,8 @@ insert into schema_migrations (version) values ('20090612235544');
 insert into schema_migrations (version) values ('20090616233051');
 
 insert into schema_migrations (version) values ('20090618221346');
+
+insert into schema_migrations (version) values ('20090618235734');
 
 insert into schema_migrations (version) values ('21');
 

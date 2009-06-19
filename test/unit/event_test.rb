@@ -90,7 +90,7 @@ class EventTest < ActiveSupport::TestCase
     
   def test_new_add_promoter
     event = SingleDayEvent.new
-    candi = users(:administrator)
+    candi = people(:administrator)
     event.promoter = candi
     assert_equal(candi, event.promoter, "New event promoter before save")
     event.save!
@@ -100,7 +100,7 @@ class EventTest < ActiveSupport::TestCase
 
     # Only email and phone
     event = SingleDayEvent.new
-    nate_hobson = users(:nate_hobson)
+    nate_hobson = people(:nate_hobson)
     assert(nate_hobson.errors.empty?, "Errors: #{nate_hobson.errors.full_messages.join(', ')}")
     event.promoter = nate_hobson
     assert_equal(nate_hobson, event.promoter, "New event promoter before save")
@@ -112,7 +112,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(nate_hobson, event.promoter, "New event promoter after reload")
 
     event = SingleDayEvent.new
-    nate_hobson = users(:nate_hobson)
+    nate_hobson = people(:nate_hobson)
     event.promoter = nate_hobson
     assert_equal(nate_hobson, event.promoter, "New event promoter before save")
     event.save!
@@ -123,7 +123,7 @@ class EventTest < ActiveSupport::TestCase
   
   def test_set_promoter
     event = SingleDayEvent.new
-    promoter = User.new(:name => 'Toni Kic')
+    promoter = Person.new(:name => 'Toni Kic')
     event.promoter = promoter
     assert_not_nil(event.promoter, 'event.promoter')
     assert_equal('Toni Kic', event.promoter.name, 'event.promoter.name')

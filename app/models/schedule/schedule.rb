@@ -134,14 +134,14 @@ module Schedule
         promoter_email = row_hash.delete(:promoter_email)
         promoter_phone = row_hash.delete(:promoter_phone)
 
-        promoter = User.find_by_info(promoter_name, promoter_email, promoter_phone)
+        promoter = Person.find_by_info(promoter_name, promoter_email, promoter_phone)
         if promoter
           promoter.name = promoter_name
           promoter.email = promoter_email
-          promoter.phone = promoter_phone
+          promoter.home_phone = promoter_phone
           promoter.save!
         else
-          promoter = User.create!(:name => promoter_name, :email => promoter_email, :phone => promoter_phone)
+          promoter = Person.create!(:name => promoter_name, :email => promoter_email, :home_phone => promoter_phone)
         end
 
         row_hash[:promoter] = promoter unless promoter.blank?

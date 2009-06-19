@@ -4,20 +4,20 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   setup :create_administrator_session
 
   def test_not_logged_in_index
-    destroy_user_session
+    destroy_person_session
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(new_user_session_path)
-    assert_nil(@request.session["user"], "No user in session")
+    assert_redirected_to(new_person_session_path)
+    assert_nil(@request.session["person"], "No person in session")
   end
   
   def test_not_logged_in_edit
-    destroy_user_session
+    destroy_person_session
     weaver = people(:weaver)
     get(:edit_name, :id => weaver.to_param)
     assert_response(:redirect)
-    assert_redirected_to(new_user_session_path)
-    assert_nil(@request.session["user"], "No user in session")
+    assert_redirected_to(new_person_session_path)
+    assert_nil(@request.session["person"], "No person in session")
   end
 
   def test_index
@@ -493,6 +493,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_template("admin/people/edit")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(alice, assigns['person'], 'Should assign Alice to person')
+    assert_nil(assigns['event'], "Should not assign 'event'")
   end
 
   def test_edit_created_by_import_file
@@ -530,7 +531,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_redirected_to(edit_admin_person_path(knowlsons.first))
     assert_nil(knowlsons.first.member_from, 'member_from after update')
     assert_nil(knowlsons.first.member_to, 'member_to after update')
-    assert_equal(users(:administrator), knowlsons.first.created_by, "created by")
+    assert_equal(people(:administrator), knowlsons.first.created_by, "created by")
     assert_equal("Candi Murray", knowlsons.first.created_by.name, "created by")
   end
 
@@ -972,7 +973,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
-    assert_equal(6, assigns['people'].size, "People export size")
+    assert_equal(10, assigns['people'].size, "People export size")
   end
   
   def test_export_to_excel_with_date
@@ -983,7 +984,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
-    assert_equal(6, assigns['people'].size, "People export size")
+    assert_equal(10, assigns['people'].size, "People export size")
   end
 
   def test_export_members_only_to_excel
@@ -1032,134 +1033,70 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
-  # From UsersController
-  def test_index
-    path = {:controller => "admin/users", :action => 'index'}
-    assert_routing("/admin/users", path)
-    assert_recognizes(path, "/admin/users/")
-
-    get(:index)
-    assert_equal(4, assigns['users'].size, "Should assign all promoters to 'users'")
-    assert_template("admin/users/index")
-  end
-  
-  def test_edit
-    get(:edit, :id => users(:promoter).to_param)
-    assert_equal(users(:promoter), assigns['user'], "Should assign 'user'")
-    assert_nil(assigns['event'], "Should not assign 'event'")
-    assert_template("admin/users/edit")
-  end
-
+  # From PeopleController
   def test_edit_with_event
     kings_valley = events(:kings_valley)
-    get(:edit, :id => users(:promoter).to_param, :event_id => kings_valley.to_param.to_s)
-    assert_equal(users(:promoter), assigns['user'], "Should assign 'user'")
+    get(:edit, :id => people(:promoter).to_param, :event_id => kings_valley.to_param.to_s)
+    assert_equal(people(:promoter), assigns['person'], "Should assign 'person'")
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
-    assert_template("admin/users/edit")
-  end
-  
-  def test_new
-    path = {:controller => "admin/users", :action => 'new'}
-    assert_routing("/admin/users/new", path)
-    
-    get(:new)
-    assert_not_nil(assigns['user'], "Should assign 'user'")
-    assert(assigns['user'].new_record?, 'Promoter should be new record')
-    assert_template("admin/users/edit")
+    assert_template("admin/people/edit")
   end
 
   def test_new_with_event
     kings_valley = events(:kings_valley)
     get(:new, :event_id => kings_valley.to_param)
-    assert_not_nil(assigns['user'], "Should assign 'user'")
-    assert(assigns['user'].new_record?, 'Promoter should be new record')
+    assert_not_nil(assigns['person'], "Should assign 'person'")
+    assert(assigns['person'].new_record?, 'Promoter should be new record')
     assert_equal(kings_valley, assigns['event'], "Should Kings Valley assign 'event'")
-    assert_template("admin/users/edit")
+    assert_template("admin/people/edit")
   end
   
-  def test_create
-    assert_nil(User.find_by_name("Fred Whatley"), 'Fred Whatley should not be in database')
-    post(:create, "user" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, "commit" => "Save")
-    
-    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
-    
-    promoter = User.find_by_name("Fred Whatley")
-    assert_not_nil(promoter, 'New promoter should be database')
-    assert_equal('Fred Whatley', promoter.name, 'new promoter name')
-    assert_equal('(510) 410-2201', promoter.phone, 'new promoter name')
-    assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
-    
-    assert_response(:redirect)
-    assert_redirected_to(edit_admin_user_path(promoter))
-  end
-  
-  def test_update
-    promoter = users(:promoter)
-    
-    assert_not_equal('Fred Whatley', promoter.name, 'existing promoter name')
-    assert_not_equal('(510) 410-2201', promoter.phone, 'existing promoter name')
-    assert_not_equal('fred@whatley.net', promoter.email, 'existing promoter email')
-
-    put(:update, :id => promoter.id, 
-      "user" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, "commit" => "Save")
-    
-    assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
-    
-    promoter.reload
-    assert_equal('Fred Whatley', promoter.name, 'new promoter name')
-    assert_equal('(510) 410-2201', promoter.phone, 'new promoter phone')
-    assert_equal('fred@whatley.net', promoter.email, 'new promoter email')
-    
-    assert_response(:redirect)
-    assert_redirected_to(edit_admin_user_path(promoter))
-  end
-
   def test_save_new_single_day_existing_promoter_different_info_overwrite
-    candi_murray = users(:administrator)
+    candi_murray = people(:administrator)
     new_email = "scout@scout-promotions.net"
     new_phone = "123123"
 
     put(:update, :id => candi_murray.id, 
-      "user" => {"name" => candi_murray.name, "phone" => new_phone, "email" => new_email}, "commit" => "Save")
+      "person" => {"name" => candi_murray.name, "home_phone" => new_phone, "email" => new_email}, "commit" => "Save")
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
-    assert_not_nil(assigns["user"], "@user")
-    assert(assigns["user"].errors.empty?, assigns["user"].errors.full_messages)
+    assert_not_nil(assigns["person"], "@person")
+    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
 
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_user_path(candi_murray))
+    assert_redirected_to(edit_admin_person_path(candi_murray))
     
     candi_murray.reload
     assert_equal(candi_murray.name, candi_murray.name, 'promoter old name')
-    assert_equal(new_phone, candi_murray.phone, 'promoter new phone')
+    assert_equal(new_phone, candi_murray.home_phone, 'promoter new home_phone')
     assert_equal(new_email, candi_murray.email, 'promoter new email')
   end
   
   def test_save_new_single_day_existing_promoter_no_name
-    nate_hobson = users(:nate_hobson)
+    nate_hobson = people(:nate_hobson)
     old_name = nate_hobson.name
     old_email = nate_hobson.email
-    old_phone = nate_hobson.phone
+    old_phone = nate_hobson.home_phone
 
     put(:update, :id => nate_hobson.id, 
-      "user" => {"name" => '', "phone" => old_phone, "email" => old_email}, "commit" => "Save")
+      "person" => {"name" => '', "home_phone" => old_phone, "email" => old_email}, "commit" => "Save")
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     
     nate_hobson.reload
     assert_equal('', nate_hobson.name, 'promoter name')
-    assert_equal(old_phone, nate_hobson.phone, 'promoter old phone')
+    assert_equal(old_phone, nate_hobson.home_phone, 'promoter old phone')
     assert_equal(old_email, nate_hobson.email, 'promoter old email')
     
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_user_path(nate_hobson))
+    assert_redirected_to(edit_admin_person_path(nate_hobson))
   end
   
   def test_remember_event_id_on_update
-    promoter = users(:promoter)
+    promoter = people(:promoter)
 
     put(:update, :id => promoter.id, 
-      "user" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
+      "person" => {"name" => "Fred Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
       "commit" => "Save",
       "event_id" => events(:jack_frost).id)
     
@@ -1168,18 +1105,18 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     promoter.reload
     
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_event_user_path(promoter, events(:jack_frost)))
+    assert_redirected_to(edit_admin_person_path(promoter, :event_id => events(:jack_frost)))
   end
   
   def test_remember_event_id_on_create
-    post(:create, "user" => {"name" => "Fred Whatley", "phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
+    post(:create, "person" => {"name" => "Fred Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
     "commit" => "Save",
     "event_id" => events(:jack_frost).id)
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     
-    promoter = User.find_by_name('Fred Whatley')
+    promoter = Person.find_by_name('Fred Whatley')
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_event_user_path(promoter, events(:jack_frost)))
+    assert_redirected_to(edit_admin_event_person_path(promoter, events(:jack_frost)))
   end
 end

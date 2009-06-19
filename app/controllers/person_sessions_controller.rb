@@ -1,20 +1,20 @@
 class PersonSessionsController < ApplicationController
-  before_filter :require_user, :only => :destroy
+  before_filter :require_person, :only => :destroy
   
   def new
-    if current_user
+    if current_person
       render :show
     else
-      @user_session = UserSession.new
+      @person_session = PersonSession.new
     end
   end
   
   def create
-    @user_session = UserSession.new(params[:user_session])
-    @user_session.remember_me = true
-    if @user_session.save
+    @person_session = PersonSession.new(params[:person_session])
+    @person_session.remember_me = true
+    if @person_session.save
       flash.discard
-      if @user_session.user.administrator?
+      if @person_session.person.administrator?
         redirect_back_or_default admin_home_url
       else
         redirect_back_or_default root_url
@@ -25,7 +25,7 @@ class PersonSessionsController < ApplicationController
   end
   
   def destroy
-    current_user_session.destroy
-    redirect_back_or_default new_user_session_url
+    current_person_session.destroy
+    redirect_back_or_default new_person_session_url
   end
 end

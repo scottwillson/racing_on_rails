@@ -14,10 +14,10 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in
-    destroy_user_session
+    destroy_person_session
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(new_user_session_path)
-    assert_nil(@request.session["user"], "No user in session")
+    assert_redirected_to(new_person_session_path)
+    assert_nil(@request.session["person"], "No person in session")
   end  
 end

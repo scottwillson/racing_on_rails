@@ -5,11 +5,11 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   setup :create_administrator_session
   
   def test_not_logged_in_index
-    destroy_user_session
+    destroy_person_session
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(new_user_session_path)
-    assert_nil(@request.session["user"], "No user in session")
+    assert_redirected_to(new_person_session_path)
+    assert_nil(@request.session["person"], "No person in session")
   end
 
   def test_index

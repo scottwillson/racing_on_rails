@@ -5,16 +5,16 @@ class LoginStoriesTest < ActionController::IntegrationTest
   
   def test_redirect_from_old_paths
     get "/account/login"
-    assert_redirected_to "/user_session/new"
+    assert_redirected_to "/person_session/new"
 
     get "/account/logout"
-    assert_redirected_to "/user_session/new"
+    assert_redirected_to "/person_session/new"
 
     post "/account/authenticate"
-    assert_redirected_to "/user_session/new"
+    assert_redirected_to "/person_session/new"
 
     get "/account"
-    assert_redirected_to "/user_session/new"
+    assert_redirected_to "/person_session/new"
   end
   
   def test_valid_admin_login
@@ -22,23 +22,23 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_response :redirect
     follow_redirect!
     assert_response :success
-    assert_template "user_sessions/new"
+    assert_template "person_sessions/new"
     assert_equal "You must be an administrator to access this page", flash[:notice]
 
-    login :user_session => { :email => 'admin@example.com', :password => 'secret' }
+    login :person_session => { :email => 'admin@example.com', :password => 'secret' }
     assert_redirected_to admin_people_path
   end
   
   def test_should_redirect_to_admin_home_after_admin_login
     go_to_login
-    login :user_session => { :email => 'admin@example.com', :password => 'secret' }
+    login :person_session => { :email => 'admin@example.com', :password => 'secret' }
     assert_redirected_to "/admin"
   end
   
   def test_valid_member_login
     go_to_login
     
-    login :user_session => { :email => 'member@example.com', :password => 'secret' }
+    login :person_session => { :email => 'member@example.com', :password => 'secret' }
     
     assert_response :redirect
     follow_redirect!
@@ -47,37 +47,37 @@ class LoginStoriesTest < ActionController::IntegrationTest
   end
   
   def test_should_fail_cookie_login
-    UserSession.create(users(:administrator))
-    cookies["user_credentials"] = "invalid_auth_token"
+    PersonSession.create(people(:administrator))
+    cookies["person_credentials"] = "invalid_auth_token"
     get '/admin/events'
-    assert_redirected_to "/user_session/new"
+    assert_redirected_to "/person_session/new"
   end
   
   def test_blank_login_shold_not_work
-    User.create!
+    Person.create!
     
-    post user_session_path, "user_session" => { "email" => "", "password" => "" }, "login" => "Login"
+    post person_session_path, "person_session" => { "email" => "", "password" => "" }, "login" => "Login"
     assert_response :success
-    assert_template "user_sessions/new"
+    assert_template "person_sessions/new"
 
     get admin_people_path
     assert_response :redirect
     follow_redirect!
     assert_response :success
-    assert_template "user_sessions/new"
+    assert_template "person_sessions/new"
     assert_equal "You must be an administrator to access this page", flash[:notice]
   end
 
   private
   
   def go_to_login
-    get new_user_session_path
+    get new_person_session_path
     assert_response :success
-    assert_template "user_sessions/new"
+    assert_template "person_sessions/new"
   end
   
   def login(options)
-    post user_session_path, options
+    post person_session_path, options
     assert_response :redirect
   end
 end

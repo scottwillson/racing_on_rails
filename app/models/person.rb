@@ -83,14 +83,14 @@ class Person < ActiveRecord::Base
     )
   end
   
-  def Person.find_by_info(name, email = nil, phone = nil)
+  def Person.find_by_info(name, email = nil, home_phone = nil)
     if !name.blank?
-      User.find_by_name(name)
+      Person.find_by_name(name)
     else
-      User.find(
+      Person.find(
         :first, 
-        :conditions => ["(email = ? and email <> '' and email is not null) or (phone_number = ? and phone_number <> '' and phone_number is not null)", 
-                        email, phone]
+        :conditions => ["(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)", 
+                        email, home_phone]
       )
     end
   end
@@ -236,7 +236,7 @@ class Person < ActiveRecord::Base
   # Name. If +name+ is blank, returns email and phone
   def name_or_contact_info
     if name.blank?
-      [email, phone].join(', ')
+      [email, home_phone].join(', ')
     else
       name
     end
@@ -244,14 +244,14 @@ class Person < ActiveRecord::Base
 
   # All contact information cannot be blank
   def blank?
-    name.blank? && email.blank? && phone.blank?
+    name.blank? && email.blank? && home_phone.blank?
   end
   
   # Cannot have promoters with duplicate contact information
   def unique_info
-    user = User.find_by_info(name, email, phone)
-    if user && user != self
-      errors.add("existing user with name '#{name}'")
+    person = Person.find_by_info(name, email, home_phone)
+    if person && person != self
+      errors.add("existing person with name '#{name}'")
     end
   end
 

@@ -18,7 +18,7 @@ module InPlaceEditing
       define_method("set_#{object}_#{attribute}") do
         @item = object.to_s.camelize.constantize.find(params[:id])
         if @item.respond_to?(:author)
-          @item.author = current_user
+          @item.author = current_person
         end
         @item.send("#{attribute}=", params[:value])
         @item.save!

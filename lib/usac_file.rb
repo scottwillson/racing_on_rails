@@ -26,10 +26,10 @@ class UsacFile
     REGION_FILES[key] = "/promoters/wp_p_uscf_" + value + ".csv"
   end
   
-  def initialize(user='promo', pword='races')
+  def initialize(person='promo', pword='races')
     Net::HTTP.start(USAC_SITE) do |http|
       req = Net::HTTP::Get.new(REGION_FILES[ASSOCIATION.usac_region])
-      req.basic_auth user, pword
+      req.basic_auth person, pword
       response = http.request(req)
       
       #parses out the data into a 2D array with other properties (such as column referencing like hashes)

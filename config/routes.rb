@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :categories do |category|
       category.resources :children, :controller => :categories
     end
-    admin.resources :events, :has_one => :user,
+    admin.resources :events, :has_one => :person,
         :collection => { :upload_schedule => :post }, 
         :member => { :upload => :post, 
                      :set_parent => :get, 
@@ -13,7 +13,7 @@ ActionController::Routing::Routes.draw do |map|
                      :create_from_children => :get, 
                      :destroy_races => :delete }
     admin.resources :first_aid_providers
-    admin.resources :multi_day_events, :as => :events, :has_one => :user
+    admin.resources :multi_day_events, :as => :events, :has_one => :person
     
     admin.resources :pages
     admin.namespace(:pages) do |pages|
@@ -29,13 +29,13 @@ ActionController::Routing::Routes.draw do |map|
                              :member => { :card => :get, :toggle_member => :post }
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
-    admin.resources :series, :as => :events, :has_one => :user
-    admin.resources :single_day_events, :as => :events, :has_one => :user
+    admin.resources :series, :as => :events, :has_one => :person
+    admin.resources :single_day_events, :as => :events, :has_one => :person
     admin.resources(:tables) if RAILS_ENV == "test"
     admin.resources :teams, :member => { :toggle_member => :post }
-    admin.resources :users, :has_many => :events, :has_many => :single_day_events
+    admin.resources :people, :has_many => :events, :has_many => :single_day_events
     admin.resources :velodromes
-    admin.resources :weekly_series, :as => :events, :has_one => :user
+    admin.resources :weekly_series, :as => :events, :has_one => :person
   end
 
   map.resources :categories, :has_many => :races
@@ -112,7 +112,7 @@ ActionController::Routing::Routes.draw do |map|
   map.track "/track", :controller => "track"
   map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
 
-  map.resource :user_session
+  map.resource :person_session
   map.connect "/account/*path", :controller => "account", :action => "index"
 
   map.connect "/:controller", :action => "index"

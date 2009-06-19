@@ -1,5 +1,17 @@
 # authlogic 
 class MigrateUserPasswords < ActiveRecord::Migration
+  class User < ActiveRecord::Base
+    acts_as_authentic do |config|
+      config.validates_length_of_email_field_options :within => 6..72, :allow_nil => true, :allow_blank => true
+      config.validates_format_of_email_field_options :with => Authlogic::Regex.email, 
+                                                     :message => I18n.t('error_messages.email_invalid', :default => "should look like an email address."),
+                                                     :allow_nil => true,
+                                                     :allow_blank => true
+      config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+      config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+    end
+  end
+
   def self.up
     User.find(:all).each do |user|
       say "Update password for #{user.old_name}"
