@@ -1,10 +1,5 @@
 # WSBA rider rankings. Riders get points for top-10 finishes in any event
 class RiderRankings < Competition
-  def RiderRankings.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings")
-  end
-
   def friendly_name
     'Rider Rankings'
   end
@@ -67,9 +62,5 @@ class RiderRankings < Competition
   
   def member?(person, date)
     person && person.member?(date)
-  end
-  
-  def expire_cache
-    RiderRankings.expire_cache
   end
 end

@@ -1,17 +1,4 @@
 class OverallBar < Competition
-
-  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
-  # BarSweeper seems to fire, but does not expire pages?
-  # FIXME Dupe from Bar
-  def OverallBar.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
-  end
-  
-  def expire_cache
-    OverallBar.expire_cache
-  end
-  
   def points_for(scoring_result)
     301 - scoring_result.place.to_i
   end

@@ -110,13 +110,6 @@ class TeamBar < Competition
     points
   end
 
-  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
-  # BarSweeper seems to fire, but does not expire pages?
-  def TeamBar.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
-  end
-
   def friendly_name
     'Team BAR'
   end
