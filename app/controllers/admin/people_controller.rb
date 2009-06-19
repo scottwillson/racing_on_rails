@@ -1,8 +1,9 @@
 # Add, delete, and edit Person information. Also merge 
 class Admin::PeopleController < ApplicationController
-  before_filter :require_administrator
+  before_filter :require_administrator, :remember_event
   layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
+  cache_sweeper :schedule_sweeper, :only => [:update]
 
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
@@ -114,7 +115,13 @@ class Admin::PeopleController < ApplicationController
       end
     end
     if @person.errors.empty?
-      return redirect_to(:action => :edit, :id => @person.to_param)
+      if @event
+        redirect_to(edit_admin_event_user_path(@user, @event))
+      else
+        redirect_to(edit_admin_user_path(@user))
+      end
+    else
+      render(:action => :edit)
     end
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || current_date.year
@@ -409,6 +416,8 @@ class Admin::PeopleController < ApplicationController
     super
   end
   
+  private
+  
   def assign_years
     today = current_date
     if today.month == 12
@@ -430,5 +439,11 @@ class Admin::PeopleController < ApplicationController
       date = Date.new(date.year + 1)
     end
     date
+  end
+  
+  def remember_event
+    unless params['event_id'].blank?
+      @event = Event.find(params['event_id'])
+    end
   end
 end

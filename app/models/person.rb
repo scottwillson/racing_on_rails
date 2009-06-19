@@ -7,6 +7,16 @@ class Person < ActiveRecord::Base
 
   include Comparable
 
+  acts_as_authentic do |config|
+    config.validates_length_of_email_field_options :within => 6..72, :allow_nil => true, :allow_blank => true
+    config.validates_format_of_email_field_options :with => Authlogic::Regex.email, 
+                                                   :message => I18n.t('error_messages.email_invalid', :default => "should look like an email address."),
+                                                   :allow_nil => true,
+                                                   :allow_blank => true
+    config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+    config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
+  end
+
   before_validation :find_associated_records
   validate :membership_dates
   before_save :destroy_shadowed_aliases
@@ -15,8 +25,10 @@ class Person < ActiveRecord::Base
 
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
+  has_many :events, :foreign_key => "promoter_id"
   has_many :race_numbers, :include => [:discipline, :number_issuer]
   has_many :results
+  has_and_belongs_to_many :roles
   belongs_to :team
   
   attr_accessor :year
@@ -71,10 +83,22 @@ class Person < ActiveRecord::Base
     )
   end
   
+  def Person.find_by_info(name, email = nil, phone = nil)
+    if !name.blank?
+      User.find_by_name(name)
+    else
+      User.find(
+        :first, 
+        :conditions => ["(email = ? and email <> '' and email is not null) or (phone_number = ? and phone_number <> '' and phone_number is not null)", 
+                        email, phone]
+      )
+    end
+  end
+
   def Person.find_by_name(name)
     Person.find(
       :first, 
-      :conditions => ["concat(first_name, ' ', last_name) = ?", name]
+      :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
     )
   end
   
@@ -203,6 +227,32 @@ class Person < ActiveRecord::Base
 
   def name
     Person.full_name(first_name, last_name)
+  end
+
+  def email_with_name
+    "#{name} <#{email}>"
+  end
+
+  # Name. If +name+ is blank, returns email and phone
+  def name_or_contact_info
+    if name.blank?
+      [email, phone].join(', ')
+    else
+      name
+    end
+  end
+
+  # All contact information cannot be blank
+  def blank?
+    name.blank? && email.blank? && phone.blank?
+  end
+  
+  # Cannot have promoters with duplicate contact information
+  def unique_info
+    user = User.find_by_info(name, email, phone)
+    if user && user != self
+      errors.add("existing user with name '#{name}'")
+    end
   end
 
   # Tries to split +name+ into +first_name+ and +last_name+
@@ -468,6 +518,14 @@ class Person < ActiveRecord::Base
     add_number(value, Discipline[:mountain_bike])
   end
   
+  def administrator?
+    roles.any? { |role| role.name == "Administrator" }
+  end
+
+  def promoter?
+    roles.any? { |role| role.name == "Promoter" }
+  end
+
   # Is Person a current member of the bike racing association?
   def member?(date = Date.today)
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
@@ -558,6 +616,11 @@ class Person < ActiveRecord::Base
   
   def updated_after_created?
     created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
+  end
+
+  def deliver_password_reset_instructions!
+    reset_perishable_token!
+    Notifier.deliver_password_reset_instructions(self)
   end
 
   def state=(value)

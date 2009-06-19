@@ -1,4 +1,4 @@
-class UserSessionsController < ApplicationController
+class PersonSessionsController < ApplicationController
   before_filter :require_user, :only => :destroy
   
   def new
