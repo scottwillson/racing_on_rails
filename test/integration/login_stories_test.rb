@@ -25,20 +25,20 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_template "person_sessions/new"
     assert_equal "You must be an administrator to access this page", flash[:notice]
 
-    login :person_session => { :email => 'admin@example.com', :password => 'secret' }
+    login :person_session => { :login => 'admin@example.com', :password => 'secret' }
     assert_redirected_to admin_people_path
   end
   
   def test_should_redirect_to_admin_home_after_admin_login
     go_to_login
-    login :person_session => { :email => 'admin@example.com', :password => 'secret' }
+    login :person_session => { :login => 'admin@example.com', :password => 'secret' }
     assert_redirected_to "/admin"
   end
   
   def test_valid_member_login
     go_to_login
     
-    login :person_session => { :email => 'member@example.com', :password => 'secret' }
+    login :person_session => { :login => 'bob.jones', :password => 'secret' }
     
     assert_response :redirect
     follow_redirect!

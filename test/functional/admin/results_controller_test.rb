@@ -278,13 +278,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
   
   def test_person
     weaver = people(:weaver)
-    opts = {:controller => "admin/results", :action => "person", :id => weaver.to_param.to_s}
-    assert_routing("/admin/results/person/#{weaver.to_param}", opts)
 
-    get(:person, :id => weaver.to_param.to_s)
+    get(:index, :person_id => weaver.to_param.to_s)
     
     assert_not_nil(assigns["results"], "Should assign results")
-    assert_not_nil(assigns["person"], "Should assign person")
+    assert_equal(weaver, assigns["person"], "Should assign person")
     assert_response(:success)
   end
   

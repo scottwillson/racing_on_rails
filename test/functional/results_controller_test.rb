@@ -193,10 +193,10 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_person
   	weaver = people(:weaver)
-    opts = {:controller => "results", :action => "person", :id => weaver.to_param}
-    assert_routing("/results/person/#{weaver.id}", opts)
+    opts = {:controller => "results", :action => "index", :person_id => weaver.to_param}
+    assert_routing("/people/#{weaver.id}/results", opts)
 
-    get(:person, {:controller => "results", :action => "person", :id => weaver.to_param})
+    get(:index, :person_id => weaver.to_param)
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -208,7 +208,7 @@ class ResultsControllerTest < ActionController::TestCase
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     events(:banana_belt_1).races.first.results.create!(:person => big_person, :team => big_team, :place => 2, :number => '99')
 
-    get(:person, {:controller => "results", :action => "person", :id => big_person.to_param})
+    get(:index, :person_id => big_person.to_param)
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -232,16 +232,14 @@ class ResultsControllerTest < ActionController::TestCase
     result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
     assert_not_nil(result, 'result')
     assert_not_nil(result.person, 'result.person')
-    opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :person_id => result.person.to_param.to_s}
-    assert_routing("/results/competition/#{bar.to_param}/person/#{result.person.to_param}", opts)
 
-    get(:competition, :competition_id => bar.to_param.to_s, :person_id => result.person.to_param.to_s)
+    get(:index, :event_id => bar.to_param, :person_id => result.person.to_param)
     assert_response(:success)
-    assert_template("results/competition")
+    assert_template("results/person_event")
     assert_not_nil(assigns["results"], "Should assign results")
     assert_equal(1, assigns["results"].size, "Should assign results")
     assert_equal(assigns["person"], result.person, "Should assign person")
-    assert_equal(assigns["competition"], bar, "Should assign competition")
+    assert_equal(assigns["event"], bar, "Should assign event")
   end
   
   # A Competition calculated from another Competition
@@ -257,27 +255,25 @@ class ResultsControllerTest < ActionController::TestCase
     result = competition.races.detect {|r| r.name == 'Senior Women'}.results.first
     assert_not_nil(result, 'result')
 
-    get(:competition, :competition_id => competition.to_param.to_s, :person_id => result.person.to_param.to_s)
+    get(:index, :event_id => competition.to_param, :person_id => result.person.to_param)
     assert_response(:success)
-    assert_template("results/competition")
+    assert_template("results/person_event")
     assert_not_nil(assigns["results"], "Should assign results")
     assert_equal(1, assigns["results"].size, "Should assign results")
     assert_equal(assigns["person"], result.person, "Should assign person")
-    assert_equal(assigns["competition"], bar, "Should assign competition")
+    assert_equal(assigns["event"], bar, "Should assign event")
   end
   
   def test_empty_competition
     bar = Bar.create!
     person = Person.create!(:name => 'JP Morgen')
-    opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :person_id => person.to_param.to_s}
-    assert_routing("/results/competition/#{bar.to_param}/person/#{person.to_param}", opts)
 
-    get(:competition, :competition_id => bar.to_param.to_s, :person_id => person.to_param.to_s)
+    get(:index, :event_id => bar.to_param, :person_id => person.to_param)
     assert_response(:success)
-    assert_template("results/competition")
+    assert_template("results/person_event")
     assert_equal(assigns["results"], [], "Should assign results")
     assert_equal(assigns["person"], person, "Should assign person")
-    assert_equal(assigns["competition"], bar, "Should assign competition")
+    assert_equal(assigns["event"], bar, "Should assign event")
   end
   
   def test_competition_team
@@ -286,56 +282,36 @@ class ResultsControllerTest < ActionController::TestCase
     bar = TeamBar.find(:all).first
     result = bar.races.first.results.first
     assert_not_nil(result, 'result')
-    opts = {:controller => "results", :action => "competition", :competition_id => bar.to_param.to_s, :team_id => result.team.to_param.to_s}
-    assert_routing("/results/competition/#{bar.to_param}/team/#{result.team.to_param}", opts)
 
-    get(:competition, :competition_id => bar.to_param.to_s, :team_id => result.team.to_param.to_s)
+    get(:index, :event_id => bar.to_param, :team_id => result.team.to_param)
+
     assert_response(:success)
-    assert_template("results/team_competition")
+    assert_template("results/team_event")
     assert_equal([result], assigns["results"], "Should assign results")
     assert_equal(result.team, assigns["team"], "Should assign team")
-    assert_equal(bar, assigns["competition"], "Should assign competition")
+    assert_equal(bar, assigns["event"], "Should assign event")
   end
 
   def test_show_person_result
     result = results(:tonkin_kings_valley)
-    opts = {:controller => "results", :action => "show", :id => result.to_param}
-    assert_routing("/results/show/#{result.id}", opts)
 
-    get(:show, {:controller => "results", :id => result.to_param})
-    assert_response(:redirect)
-    assert_redirected_to(
-      :controller => "results", 
-      :action => "competition", 
-      :competition_id => result.event.to_param, 
-      :person_id => result.person.to_param)
+    get(:show, :id => result.to_param)
+    assert_redirected_to event_person_results_path(result.event, result.person)
   end  
 
   def test_show_team_result
     result = races(:kings_valley_3).results.create!(:team => teams(:vanilla))
-    opts = {:controller => "results", :action => "show", :id => result.to_param}
-    assert_routing("/results/show/#{result.id}", opts)
 
-    get(:show, {:controller => "results", :id => result.to_param})
-    assert_response(:redirect)
-    assert_redirected_to(
-      :controller => "results", 
-      :action => "competition", 
-      :competition_id => result.event.to_param, 
-      :team_id => teams(:vanilla).to_param)
+    get(:show, :id => result.to_param)
+
+    assert_redirected_to event_team_results_path(result.event, teams(:vanilla))
   end
   
   def test_show_result_no_team_no_person
     result = races(:kings_valley_3).results.create!
-    opts = {:controller => "results", :action => "show", :id => result.to_param}
-    assert_routing("/results/show/#{result.id}", opts)
-
-    get(:show, {:controller => "results", :id => result.to_param})
+    get(:show, :id => result.to_param)
     assert_response(:redirect)
-    assert_redirected_to(
-      :controller => "results", 
-      :action => "competition", 
-      :competition_id => result.event.to_param)
+    assert_redirected_to(event_results_path(result.event))
   end
   
   def test_column_headers_display_correctly

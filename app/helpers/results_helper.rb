@@ -16,7 +16,7 @@ module ResultsHelper
           :person_id => result.person_id },
         html_options)
     else
-      link_to(text, "/results/person/#{result.person.id}", html_options)
+      link_to(text, person_results_path(result.person), html_options)
     end
   end
 end

@@ -28,8 +28,8 @@ class Admin::ResultsController < ApplicationController
   in_place_edit_for :result, :time_s
   in_place_edit_for :result, :time_total_s
   
-  def person
-    @person = Person.find(params[:id])
+  def index
+    @person = Person.find(params[:person_id])
     @results = Result.find_all_for(@person)
   end
   

@@ -26,7 +26,8 @@ ActionController::Routing::Routes.draw do |map|
                                               :no_mailing_labels => :get, 
                                               :no_cards => :get, 
                                               :preview_import => :get },
-                             :member => { :card => :get, :toggle_member => :post }
+                             :member => { :card => :get, :toggle_member => :post },
+                             :has_many => :results
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
     admin.resources :series, :as => :events, :has_one => :person
@@ -43,6 +44,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
   map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"
+  
+  map.connect "/admin/racers", :controller => "admin/racers"
 
   map.admin_home "/admin", :controller => "admin/home", :action => "index"
 
@@ -86,16 +89,20 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/posts/:mailing_list_name",                  :controller => "posts"
   map.resources :posts
 
-  map.connect "/results/competition/:competition_id/person/:person_id", :controller => "results", :action => "competition"
-  map.connect "/results/competition/:competition_id/team/:team_id", :controller => "results", :action => "competition"
+  map.resources :people, :has_many => :results
+  
+  map.connect "/results/competition/:event_id/racer/:person_id", :controller => "results", :action => "competition"
+  map.connect "/results/competition/:event_id/team/:team_id", :controller => "results", :action => "competition"
   map.connect "/results/event/:id", :controller => "results", :action => "event"
-  map.connect "/results/person/:id", :controller => "results", :action => "person"
+  map.connect "/results/racer/:person_id", :controller => "results", :action => "racer", :requirements => { :person_id => /\d+/ }
   map.connect "/results/show/:id", :controller => "results", :action => "show"
   map.connect "/results/team/:id", :controller => "results", :action => "team"
   map.connect "/results/:year/:discipline", :controller => "results"
   map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event", :requirements => {:year => /\d\d\d\d/}
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}
   map.connect "/results/:discipline", :controller => "results"
+  
+  map.resources :results
 
   map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
   map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
@@ -105,6 +112,20 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/schedule/list", :controller => "schedule", :action => "list"
   map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
   map.schedule "/schedule", :controller => "schedule"
+
+  map.resources :events do |events|
+    events.resources :results
+
+    events.resources :people do |people|
+      people.resources :results
+    end
+
+    events.resources :teams do |team|
+      team.resources :results
+    end
+  end
+
+  map.resources :single_day_events, :as => :events
 
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
@@ -117,9 +138,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
-
-  map.resources :events
-  map.resources :single_day_events, :as => :events
   
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'

@@ -1,13 +1,13 @@
-<% @page_title = "Results: #{@person.name}: #{@competition.name}" %>
+<% @page_title = "Results: #{@person.name}: #{@event.name}" %>
 
 <%# TODO Use helper/partial? %>
-<h2><%= link_to(@person.name, :action => 'person', :id => @person.to_param) %></h2>
+<h2><%= link_to(@person.name, person_results_path(@person)) %></h2>
 
 <%- for result in @results.sort { |x, y| y.date <=> x.date } -%>
 <% table :caption => %Q{#{result.place.to_i.ordinalize} &mdash;
-                        #{link_to(@competition.name, :action => 'event', :id => @competition.to_param)}
-                        #{link_to(result.event.name, :action => 'event', :id => @competition.to_param) unless result.event.name[@competition.name]}
-                        #{link_to(result.race.name, :action => 'event', :id => @competition.to_param) unless result.event.name[result.race.name]}
+                        #{link_to(@event.name, :action => 'event', :id => @event.to_param)}
+                        #{link_to(result.event.name, :action => 'event', :id => @event.to_param) unless result.event.name[@event.name]}
+                        #{link_to(result.race.name, :action => 'event', :id => @event.to_param) unless result.event.name[result.race.name]}
 } do %></th>
   <tr>
     <th>&nbsp;</th>
@@ -44,10 +44,10 @@
 
 <%# TODO Add year param %>
 <p class= "centered">
-  See all results for <%= link_to(@person.name, {:action => 'person', :id => @person.to_param}, :class => 'obvious') %> or the
-  <% if @competition.is_a?(Ironman) %>
-    <%= link_to(@competition.name, {:controller => 'ironman', :action => 'index', :year => @competition.date.year}, :class => 'obvious') %>.
+  See all results for <%= link_to(@person.name, person_results_path(@person), :class => 'obvious') %> or the
+  <% if @event.is_a?(Ironman) %>
+    <%= link_to(@event.name, {:controller => 'ironman', :action => 'index', :year => @event.date.year}, :class => 'obvious') %>.
   <% else %>
-    <%= link_to(@competition.name, {:action => 'event', :id => @competition.to_param}, :class => 'obvious') %>.
+    <%= link_to(@event.name, {:action => 'event', :id => @event.to_param}, :class => 'obvious') %>.
   <% end %>
 </p>

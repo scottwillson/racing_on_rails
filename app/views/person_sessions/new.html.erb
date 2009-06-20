@@ -1,12 +1,12 @@
 <% @page_title = "Login" %>
 <% @show_tabs = false %>
 
-<h2 class="centered">Welcome</h2>
+<h2 class="centered">Login to <%= ASSOCIATION.name %></h2>
 
 <% form_for @person_session, :url => person_session_path do |f| %>
 <div class="login centered">
   <%= f.error_messages %>
-  <%= f.labelled_text_field :email %><br/>
+  <%= f.labelled_text_field :login %><br/>
   <%= f.label :password %>
   <%= f.password_field :password %>
   <div class="page_buttons last">

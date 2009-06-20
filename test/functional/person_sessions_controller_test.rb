@@ -9,7 +9,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_admin_login
-    post :create, :person_session => { :email => "admin@example.com", :password => "secret" }
+    post :create, :person_session => { :login => "admin@example.com", :password => "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages)
     assert_redirected_to admin_home_path
@@ -18,7 +18,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_member_login
-    post :create, :person_session => { :email => "member@example.com", :password => "secret" }
+    post :create, :person_session => { :login => "bob.jones", :password => "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages)
     assert_redirected_to "/"
@@ -27,7 +27,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_login_failure
-    post :create, :person_session => { :email => "admin@example.com", :password => "bad password" }
+    post :create, :person_session => { :login => "admin@example.com", :password => "bad password" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
@@ -36,7 +36,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_blank_login_should_fail
-    post :create, :person_session => { :email => "", :password => "" }
+    post :create, :person_session => { :login => "", :password => "" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success

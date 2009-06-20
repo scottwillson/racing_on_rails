@@ -1,4 +1,4 @@
-<% @page_title = "Results: #{@team.name}: #{@competition.name}" %>
+<% @page_title = "Results: #{@team.name}: #{@event.name}" %>
 
 <%# TODO Use helper/partial? %>
 <h1><%= link_to(@team.name, :action => 'team', :id => @team.to_param) %></h1>
@@ -7,9 +7,9 @@
 <table class="base">
   <caption>
     <%= result.place.to_i.ordinalize %> &mdash; 
-      <%= link_to(@competition.name + ' ', :action => 'event', :id => @competition.to_param) %>
-      <%= link_to(result.race.event.name + ' ', :action => 'event', :id => @competition.to_param) unless @competition.name == result.race.event.name %>
-      <%= link_to(result.race.name, :action => 'event', :id => @competition.to_param) unless result.race.name == result.race.event.name %></th>
+      <%= link_to(@event.name + ' ', :action => 'event', :id => @event.to_param) %>
+      <%= link_to(result.race.event.name + ' ', :action => 'event', :id => @event.to_param) unless @event.name == result.race.event.name %>
+      <%= link_to(result.race.name, :action => 'event', :id => @event.to_param) unless result.race.name == result.race.event.name %></th>
   </caption>
   <tr>
     <th>&nbsp;</th>
@@ -43,5 +43,5 @@
 <%# TODO Add year param %>
 <div>
   See all results for <%= link_to(@team.name, {:action => 'team', :id => @team.to_param}, :class => 'obvious') %> or the
-  <%= link_to(@competition.name, {:action => 'event', :id => @competition.to_param}, :class => 'obvious') %>.
+  <%= link_to(@event.name, {:action => 'event', :id => @event.to_param}, :class => 'obvious') %>.
 </div>

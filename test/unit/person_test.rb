@@ -733,7 +733,7 @@ class PersonTest < ActiveSupport::TestCase
   
   def test_save_no_name
     Person.create!(:email => "nate@six-hobsons.net")
-    assert(!Person.new(:email => "nate@six-hobsons.net").valid?, "No dupe email addresses allowed")
+    assert(Person.new(:email => "nate@six-hobsons.net").valid?, "Dupe email addresses allowed")
   end
   
   def test_save_no_email

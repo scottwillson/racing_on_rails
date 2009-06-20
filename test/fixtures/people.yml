@@ -3,6 +3,7 @@ administrator:
   first_name: Candi
   last_name: Murray
   email: admin@example.com
+  login: admin@example.com
   home_phone: (503) 555-1212
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
@@ -16,6 +17,7 @@ member:
   first_name: Bob
   last_name: Jones
   email: member@example.com
+  login: bob.jones
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>

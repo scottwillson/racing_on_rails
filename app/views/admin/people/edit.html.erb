@@ -115,7 +115,7 @@
       <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
     </div>
     <div class="right span-4 last">
-      <%= link_to("Move Results", :controller => '/admin/results', :action => 'person', :id => @person.id) unless @person.new_record? %>  
+      <%= link_to("Move Results", admin_person_results_path(@person)) unless @person.new_record? %>  
       <%= link_to("Delete", admin_person_path(@person), :method => :delete, :class => 'obvious', :id => 'delete') unless @person.new_record? %>
       <%= submit_tag "Save", :id => "save" %>
     </div>
