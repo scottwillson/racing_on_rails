@@ -105,6 +105,7 @@ ActionController::Routing::Routes.draw do |map|
   # Deprecated URLs
   map.connect "/results/competition/:event_id/racer/:person_id", :controller => "results", :action => "competition"
   map.connect "/results/competition/:event_id/team/:team_id", :controller => "results", :action => "competition"
+  map.connect "/results/event/:event_id", :controller => "results", :action => "deprecated_event", :requirements => { :event_id => /\d+/ }
   map.connect "/results/racer/:person_id", :controller => "results", :action => "racer", :requirements => { :person_id => /\d+/ }
   map.connect "/results/team/:team_id", :controller => "results", :action => "deprecated_team", :requirements => { :team_id => /\d+/ }
   map.connect "/results/:year/:discipline/:event_id", 

@@ -1,9 +1,6 @@
 require "test_helper"
 
 # TODO redirect from showing all BAR results (and fix links)
-# /results/2004/road/#{banana_belt_1.to_param}
-# /results/show
-# "/results/event/:id", :controller => "results", :action => "event"
 class DeprecatedURLsTest < ActionController::IntegrationTest
   setup :activate_authlogic
   
@@ -13,6 +10,10 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     assert_redirected_to "/events/#{event.id}/results"
     assert_response :moved_permanently
     
+    get "/results/event/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+
     get "/events/#{event.id}/results"
     assert_response :success
     assert_template "results/event"
