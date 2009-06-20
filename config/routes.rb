@@ -1,6 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :teams
-
   map.namespace(:admin) do |admin|
     admin.resources :categories do |category|
       category.resources :children, :controller => :categories
@@ -45,6 +43,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"
   
+  # Redirect for legacy URLs
   map.connect "/admin/racers", :controller => "admin/racers"
 
   map.admin_home "/admin", :controller => "admin/home", :action => "index"
@@ -63,6 +62,18 @@ ActionController::Routing::Routes.draw do |map|
 
   map.new_admin_cat4_womens_race_series_result "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
   map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
+
+  map.resources :events do |events|
+    events.resources :results
+
+    events.resources :people do |people|
+      people.resources :results
+    end
+
+    events.resources :teams do |team|
+      team.resources :results
+    end
+  end
 
   map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
@@ -90,19 +101,24 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :posts
 
   map.resources :people, :has_many => :results
-  
+
+  # Deprecated URLs
   map.connect "/results/competition/:event_id/racer/:person_id", :controller => "results", :action => "competition"
   map.connect "/results/competition/:event_id/team/:team_id", :controller => "results", :action => "competition"
-  map.connect "/results/event/:id", :controller => "results", :action => "event"
   map.connect "/results/racer/:person_id", :controller => "results", :action => "racer", :requirements => { :person_id => /\d+/ }
-  map.connect "/results/show/:id", :controller => "results", :action => "show"
-  map.connect "/results/team/:id", :controller => "results", :action => "team"
-  map.connect "/results/:year/:discipline", :controller => "results"
-  map.connect "/results/:year/:discipline/:id", :controller => "results", :action => "event", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/results/:year", :controller => "results", :action => "index", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/results/:discipline", :controller => "results"
+  map.connect "/results/team/:team_id", :controller => "results", :action => "deprecated_team", :requirements => { :team_id => /\d+/ }
+  map.connect "/results/:year/:discipline/:event_id", 
+              :controller => "results", 
+              :action => "deprecated_event", 
+              :requirements => { :year => /(19|20)\d\d/, :discipline => /[^\d]+/, :event_id => /\d+/ }
+
+  # Results index page
+  map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/, :discipline => /[^\d]+/ }
+  map.connect "/results/:year", :controller => "results", :action => "index", :requirements => { :year => /(19|20)\d\d/ }
+  map.connect "/results/:discipline", :controller => "results", :discipline => /[^\d]+/ 
   
-  map.resources :results
+  # Reserve /results/2008 for /results/:year
+  map.resources :results, :except => "show"
 
   map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
   map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
@@ -113,21 +129,11 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
   map.schedule "/schedule", :controller => "schedule"
 
-  map.resources :events do |events|
-    events.resources :results
-
-    events.resources :people do |people|
-      people.resources :results
-    end
-
-    events.resources :teams do |team|
-      team.resources :results
-    end
-  end
-
   map.resources :single_day_events, :as => :events
 
   map.resources :subscriptions, :collection => { :subscribed => :get }
+
+  map.resources :teams, :has_many => :results
 
   map.root :controller => "home"
   map.track "/track", :controller => "track"

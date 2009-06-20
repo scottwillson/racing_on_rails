@@ -7,14 +7,16 @@ class ResultsController < ApplicationController
         return person_event
       elsif params[:team_id].present?
         return team_event
+      else
+        return event
       end
+    else
+      if params[:person_id].present?
+        return person
+      elsif params[:team_id].present?
+        return team
+      end      
     end
-    
-    if params[:person_id].present?
-      return person
-    elsif params[:team_id].present?
-      return team
-    end      
 
     # TODO Create helper method to return Range of first and last of year
     @year = params['year'].to_i
@@ -25,14 +27,15 @@ class ResultsController < ApplicationController
   
   def event
     @event = Event.find(
-      params[:id],
-      :include => [:races => {:results => {:person, :team}} ]
+      params[:event_id],
+      :include => [ :races => { :results => { :person, :team } } ]
     )
     if @event.is_a?(Bar)
-      redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
+      return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
     elsif @event.is_a? Ironman
-      redirect_to ironman_path(:year => @event.year)
+      return redirect_to ironman_path(:year => @event.year)
     end
+    render "event"
   end
   
   def person_event
@@ -84,8 +87,26 @@ class ResultsController < ApplicationController
   end
   
   def team
-    @team = Team.find(params[:id])
-    redirect_to(team_path(@team), :status => :moved_permanently)
+    @team = Team.find(params[:team_id])
+    @results = Result.find(
+      :all,
+      :include => [:team, :person, :category, {:race => :event}],
+      :conditions => ['teams.id = ?', params[:team_id]]
+    )
+    @results.reject! do |result|
+      result.race.event.is_a?(Competition)
+    end
+    render "teams/show"
+  end
+  
+  def deprecated_team
+    team = Team.find(params[:team_id])
+    redirect_to(team_results_path(team), :status => :moved_permanently)
+  end
+  
+  def deprecated_event
+    event = Event.find(params[:event_id])
+    redirect_to(event_results_path(event), :status => :moved_permanently)
   end
   
   def racer

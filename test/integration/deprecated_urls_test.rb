@@ -1,7 +1,22 @@
 require "test_helper"
 
+# TODO redirect from showing all BAR results (and fix links)
+# /results/2004/road/#{banana_belt_1.to_param}
+# /results/show
+# "/results/event/:id", :controller => "results", :action => "event"
 class DeprecatedURLsTest < ActionController::IntegrationTest
   setup :activate_authlogic
+  
+  def test_event_results
+    event = events(:pir)
+    get "/results/2004/road/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+    
+    get "/events/#{event.id}/results"
+    assert_response :success
+    assert_template "results/event"
+  end
 
   def test_redirect_racer_results
     weaver = people(:weaver)
@@ -14,6 +29,27 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     get "/results/competition/#{competition.id}/racer/#{weaver.id}"
     assert_redirected_to "/events/#{competition.id}/people/#{weaver.id}/results"
     assert_response :moved_permanently
+  end
+  
+  def test_redirect_team_results
+    RiderRankings.calculate!
+    competition = RiderRankings.find_for_year
+    team = teams(:vanilla)
+    get "/results/competition/#{competition.id}/team/#{team.id}"
+    assert_redirected_to "/events/#{competition.id}/teams/#{team.id}/results"
+    assert_response :moved_permanently
+    
+    get "/results/team/#{team.id}"
+    assert_redirected_to "/teams/#{team.id}/results"
+    assert_response :moved_permanently
+
+    get "/teams/#{team.id}/results"
+    assert_response :success
+    assert_template "teams/show"
+
+    get "/teams/#{team.id}"
+    assert_response :success
+    assert_template "teams/show"
   end
   
   def test_admin_racers

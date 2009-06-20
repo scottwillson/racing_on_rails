@@ -3,10 +3,7 @@ require "test_helper"
 class ResultsControllerTest < ActionController::TestCase
   def test_event
     banana_belt_1 = events(:banana_belt_1)
-    opts = {:controller => "results", :action => "event", :id => banana_belt_1.to_param}
-    assert_routing("/results/event/#{banana_belt_1.to_param}", opts)
-
-    get(:event, {:action => "event", :id => banana_belt_1.to_param})
+    get(:index, :event_id => banana_belt_1.to_param)
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -15,10 +12,7 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_event_rider_rankings
     rider_rankings = RiderRankings.create!
-    opts = {:controller => "results", :action => "event", :id => rider_rankings.to_param}
-    assert_routing("/results/event/#{rider_rankings.id}", opts)
-
-    get(:event, {:action => "event", :id => rider_rankings.to_param})
+    get(:index, :event_id => rider_rankings.to_param)
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -27,17 +21,14 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_event_bar
     bar = Bar.create!
-    opts = {:controller => "results", :action => "event", :id => bar.to_param}
-    assert_routing("/results/event/#{bar.id}", opts)
-
-    get(:event, :id => bar.to_param)
+    get(:index, :event_id => bar.to_param)
     assert_response(:redirect)
     assert_redirected_to(:controller => 'bar', :year => bar.date.year)
   end
   
   def test_redirect_to_ironman
     event = Ironman.create!
-    get :event, :id => event.to_param
+    get :index, :event_id => event.to_param
     assert_redirected_to ironman_path(:year => event.year)
   end
   
@@ -46,10 +37,8 @@ class ResultsControllerTest < ActionController::TestCase
     big_team = Team.create!(:name => "T" * 60)
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     banana_belt_1.races.first.results.create!(:place => 20, :person => big_person, :team => big_team, :number => '')
-    opts = {:controller => "results", :action => "event", :year => "2004", :discipline => "road", :id => banana_belt_1.to_param}
-    assert_routing("/results/2004/road/#{banana_belt_1.to_param}", opts)
 
-    get(:event, {:year => "2004", :discipline => "road", :id => banana_belt_1.to_param})
+    get(:index, {:year => "2004", :discipline => "road", :event_id => banana_belt_1.to_param})
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -58,16 +47,13 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_event_tt
     jack_frost = events(:jack_frost)
-    get(:event, {:year => "2004", :discipline => "road", :id => jack_frost.to_param})
+    get(:index, {:year => "2004", :discipline => "road", :event_id => jack_frost.to_param})
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
   end
   
   def test_index
-    opts = {:controller => "results", :action => "index", :year => "2004"}
-    assert_routing("/results/2004", opts)
-
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("results/index")
@@ -79,9 +65,6 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_only_shows_sanctioned_events
-    opts = {:controller => "results", :action => "index"}
-    assert_routing("/results", opts)
-
     get(:index)
     assert_response(:success)
     assert_template("results/index")
@@ -93,9 +76,6 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_road
-    opts = {:controller => "results", :action => "index", :year => "2004", :discipline => 'road'}
-    assert_routing("/results/2004/road", opts)
-
     get(:index, :year => "2004", :discipline => 'road')
     assert_response(:success)
     assert_template("results/index")
@@ -105,9 +85,6 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_road
-    opts = {:controller => "results", :action => "index", :year => "2004", :discipline => 'time_trial'}
-    assert_routing("/results/2004/time_trial", opts)
-
     get(:index, :year => "2004", :discipline => 'time_trial')
     assert_response(:success)
     assert_template("results/index")
@@ -193,9 +170,6 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_person
   	weaver = people(:weaver)
-    opts = {:controller => "results", :action => "index", :person_id => weaver.to_param}
-    assert_routing("/people/#{weaver.id}/results", opts)
-
     get(:index, :person_id => weaver.to_param)
     assert_response(:success)
     assert_template("results/person")
@@ -219,11 +193,8 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_team
   	team = teams(:vanilla)
-    opts = {:controller => "results", :action => "team", :id => team.to_param}
-    assert_routing("/results/team/#{team.id}", opts)
-
-    get(:team, {:controller => "results", :action => "team", :id => team.to_param})
-    assert_redirected_to(team_path(team))
+    get(:deprecated_team, :team_id => team.to_param)
+    assert_redirected_to(team_results_path(team))
   end
   
   def test_competition
@@ -294,16 +265,13 @@ class ResultsControllerTest < ActionController::TestCase
 
   def test_show_person_result
     result = results(:tonkin_kings_valley)
-
     get(:show, :id => result.to_param)
     assert_redirected_to event_person_results_path(result.event, result.person)
   end  
 
   def test_show_team_result
     result = races(:kings_valley_3).results.create!(:team => teams(:vanilla))
-
     get(:show, :id => result.to_param)
-
     assert_redirected_to event_team_results_path(result.event, teams(:vanilla))
   end
   
@@ -324,7 +292,7 @@ class ResultsControllerTest < ActionController::TestCase
     race.result_columns << "laps"
     race.save!
     
-    get(:event, :id => event.to_param)
+    get(:index, :event_id => event.to_param)
     assert_response(:success)
     
     assert(@response.body["Bonus"], "Should format points_bonus correctly")
