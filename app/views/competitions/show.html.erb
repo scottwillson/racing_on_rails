@@ -5,20 +5,20 @@
 <% if !@event.races.empty? %>
 <%# TODO Encapsulate in a helper method %>
 <table cellspacing="0" class="centered">
-<% index = 0 %>  
+<% index = 0 %>
 <% while index < @event.races.size %>
   <tr valign="top">
     <% if index < @event.races.size %>
     <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
-      <% index += 1 %>  
+      <% index += 1 %>
       <% if index < @event.races.size %>
     <td width="16">&nbsp;</td>
     <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
-      <% end %>  
-    <% end %>  
+      <% end %>
+    <% end %>
   </tr>
-  <% index += 1 %>  
-<% end %>  
+  <% index += 1 %>
+<% end %>
 </table>
 
 <span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
@@ -46,12 +46,12 @@
 
     <%- end -%>
   </tr>
-  <%- end -%>  
+  <%- end -%>
 
 <br><br>
 
-<%- end -%>  
-<%- end -%>  
+<%- end -%>
+<%- end -%>
 
 <%- else -%>
 No results for <%= @year %>.

@@ -12,7 +12,7 @@
   <%- end -%>
 
   <%- if @event.parent -%>
-  <p>Part of the <%= link_to @event.parent.name, :id => @event.parent.to_param %></p>
+  <p>Part of the <%= link_to @event.parent.name, event_results_path(@event.parent) %></p>
   <%- end -%>
   
   <% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
@@ -20,13 +20,13 @@
   <table class="top_margin child_single_day_events">
     <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
-      <td class="right"><%= link_to child.date.strftime('%A, %B %d'), :id => child.to_param %></td>
-      <td><%= link_to child.name, { :id => child.to_param }, { :class => "obvious" } %></td>
+      <td class="right"><%= link_to child.date.strftime('%A, %B %d'), event_results_path(child) %></td>
+      <td><%= link_to child.name, event_results_path(child), { :class => "obvious" } %></td>
     </tr>
     <% child.children_and_child_competitions_with_results.each do |child_child| -%>
       <tr>
         <td></td>
-        <td class="child"><%= link_to child_child.name, { :id => child_child.to_param } %></td>
+        <td class="child"><%= link_to child_child.name, event_results_path(child_child) %></td>
       </tr>
       <% end -%>
     <% end -%>
@@ -40,7 +40,7 @@
   <table class="top_margin child_events">
   <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
-      <td class="centered"><%= link_to child.name, { :id => child.to_param }, { :class => "obvious" } %></td>
+      <td class="centered"><%= link_to child.name, event_results_path(child), { :class => "obvious" } %></td>
     </tr>
   <%- end -%>
   </table>
