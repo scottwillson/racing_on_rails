@@ -46,11 +46,11 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
 
     get "/teams/#{team.id}/results"
     assert_response :success
-    assert_template "teams/show"
+    assert_template "results/team"
 
     get "/teams/#{team.id}"
     assert_response :success
-    assert_template "teams/show"
+    assert_template "results/team"
   end
   
   def test_admin_racers

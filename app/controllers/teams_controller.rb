@@ -13,5 +13,6 @@ class TeamsController < ApplicationController
     @results.reject! do |result|
       result.race.event.is_a?(Competition)
     end
+    render :template => "results/team"
   end
 end

@@ -41,11 +41,7 @@ No results for <%= @year %>
 
     <td><pre><%- for result in @results.sort %>
 <%= result.place.rjust(3) -%>
-   <%= link_to(truncate(result.team_name, :length => 40),
-       :controller => 'results',
-       :action => 'competition',
-       :competition_id => @race.event.to_param,
-       :team_id => result.team.id) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
+   <%= link_to(truncate(result.team_name, :length => 40), event_team_results_path(@race.event, result.team)) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 
@@ -62,11 +58,7 @@ No results for <%= @year %>
   end
 -%>
  <%- previous_place = result.place -%>
- <%= link_to(truncate(result.name), 
-   :controller => 'results',
-     :action => 'competition',
-     :competition_id => @race.event.to_param,
-     :person_id => result.person_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
+ <%= link_to(truncate(result.name), event_person_results_path(@race.event, result.person)) %><%= ' ' * (30 - truncate(result.name).length) -%>
    <%= truncate(result.team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>

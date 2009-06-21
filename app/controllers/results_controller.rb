@@ -96,7 +96,7 @@ class ResultsController < ApplicationController
     @results.reject! do |result|
       result.race.event.is_a?(Competition)
     end
-    render "teams/show"
+    render "team"
   end
   
   def deprecated_team
