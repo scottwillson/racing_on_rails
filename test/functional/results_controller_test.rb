@@ -183,7 +183,11 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_person
-  	weaver = people(:weaver)
+    weaver = people(:weaver)
+    competition = RiderRankings.create!
+    competition_result = competition.races.create!(:category => categories(:senior_men)).results.create!
+    Score.create!(:competition_result => competition_result, :source_result => results(:weaver_banana_belt), :points => 1)
+    
     get(:index, :person_id => weaver.to_param)
     assert_response(:success)
     assert_template("results/person")

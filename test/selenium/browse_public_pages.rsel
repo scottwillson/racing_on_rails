@@ -64,6 +64,11 @@ assert_text_present "Ironman"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
+open "/people"
+assert_text_present "Molly"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
 open "/rider_rankings"
 assert_text_present "No results for #{Date.today.year}"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
