@@ -445,6 +445,7 @@ table.first_aid_providers td.name {
 
 /* Login */
 .login {
+  margin-top: 20px;
   width: 368px;
 }
 
