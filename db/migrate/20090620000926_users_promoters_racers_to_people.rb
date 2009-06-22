@@ -31,6 +31,16 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
       t.rename :racer_id, :person_id
     end
     
+    change_table :pages do |t|
+      t.rename :author_id, :user_id
+      t.integer :author_id, :default => nil, :null => true
+    end
+    
+    change_table :page_versions do |t|
+      t.rename :author_id, :user_id
+      t.integer :author_id, :default => nil, :null => true
+    end
+    
     change_table :results do |t|
       t.rename :racer_id, :person_id
     end
@@ -94,6 +104,8 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
         )
       end
       say "User #{user.id} #{user.name} Person #{person}"
+      execute "update pages set author_id=#{person.id} where user_id=#{user.id}"
+      execute "update page_versions set author_id=#{person.id} where user_id=#{user.id}"
       execute "update people_roles set person_id=#{person.id} where user_id=#{user.id}"
       execute "update people set created_by_id=#{person.id} where created_by_user_id=#{user.id} and created_by_type='User'"
       execute "update teams set created_by_id=#{person.id} where created_by_user_id=#{user.id} and created_by_type='User'"
@@ -103,6 +115,7 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
     
     # Nulls not allowed, so couldn't be enabled until now
     execute "alter table people_roles add constraint people_roles_person_id foreign key (person_id) references people (id) on delete cascade"
+    execute "alter table pages add constraint pages_author_id foreign key (author_id) references people (id) on delete restrict"
 
     say "Migrate promoters"
     Promoter.find(:all).each do |promoter|
@@ -132,6 +145,14 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
     add_index :teams, :created_by_id
 
     say "Drop tables and columns"
+    change_table :pages do |t|
+      t.remove :user_id
+    end
+    change_column :pages, :author_id, :integer, :default => nil, :null => false
+    change_table :page_versions do |t|
+      t.remove :user_id
+    end
+    change_column :page_versions, :author_id, :integer, :default => nil, :null => false
     change_table :people_roles do |t|
       t.remove :user_id
     end

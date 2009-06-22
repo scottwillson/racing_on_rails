@@ -224,7 +224,6 @@ create table `page_versions` (
   `id` int(11) not null auto_increment,
   `page_id` int(11) not null,
   `parent_id` int(11) default null,
-  `author_id` int(11) default null,
   `body` text,
   `path` varchar(255) default null,
   `slug` varchar(255) default null,
@@ -232,6 +231,7 @@ create table `page_versions` (
   `lock_version` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
+  `author_id` int(11) not null,
   primary key (`id`),
   key `index_page_versions_on_page_id` (`page_id`)
 ) engine=innodb default charset=utf8;
@@ -245,12 +245,14 @@ create table `pages` (
   `title` varchar(255) not null default '',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  `author_id` int(11) default null,
   `lock_version` int(11) not null default '0',
+  `author_id` int(11) not null,
   primary key (`id`),
   unique key `index_pages_on_path` (`path`),
   key `parent_id` (`parent_id`),
   key `index_pages_on_slug` (`slug`),
+  key `pages_author_id` (`author_id`),
+  constraint `pages_author_id` foreign key (`author_id`) references `people` (`id`),
   constraint `pages_parent_id_fk` foreign key (`parent_id`) references `pages` (`id`)
 ) engine=innodb default charset=utf8;
 
