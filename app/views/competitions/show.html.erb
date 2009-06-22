@@ -3,6 +3,7 @@
 <h3><%= @event.name %></h3>
 
 <% if !@event.races.empty? %>
+<% if @event.races.size > 1 -%>
 <%# TODO Encapsulate in a helper method %>
 <table cellspacing="0" class="centered">
 <% index = 0 %>
@@ -20,12 +21,13 @@
   <% index += 1 %>
 <% end %>
 </table>
+<% end -%>
 
 <span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
 
 <%- @event.races.each_with_index do |race, index| -%>
 <%- unless race.results.empty? -%>
-<% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>" do %>
+<% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>", :insert_header => true do %>
   <tr>
     <% if @discipline == 'Team' %>
 

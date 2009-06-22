@@ -606,6 +606,8 @@ insert into schema_migrations (version) values ('20090519034739');
 
 insert into schema_migrations (version) values ('20090620000926');
 
+insert into schema_migrations (version) values ('20090621233142');
+
 insert into schema_migrations (version) values ('21');
 
 insert into schema_migrations (version) values ('22');

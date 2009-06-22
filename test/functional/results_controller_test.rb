@@ -13,14 +13,18 @@ class ResultsControllerTest < ActionController::TestCase
   def test_event_rider_rankings
     rider_rankings = RiderRankings.create!
     get(:index, :event_id => rider_rankings.to_param)
-    assert_response(:success)
-    assert_template("results/event")
-    assert_not_nil(assigns["event"], "Should assign event")
-    assert_equal(assigns["event"], rider_rankings, "rider_rankings")
+    assert_redirected_to(rider_rankings_path(rider_rankings.date.year))
   end
   
   def test_event_bar
     bar = Bar.create!
+    get(:index, :event_id => bar.to_param)
+    assert_response(:redirect)
+    assert_redirected_to(:controller => 'bar', :year => bar.date.year)
+  end
+  
+  def test_event_overall_bar
+    bar = OverallBar.create!
     get(:index, :event_id => bar.to_param)
     assert_response(:redirect)
     assert_redirected_to(:controller => 'bar', :year => bar.date.year)

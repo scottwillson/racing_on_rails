@@ -30,11 +30,21 @@ class ResultsController < ApplicationController
       params[:event_id],
       :include => [ :races => { :results => { :person, :team } } ]
     )
-    if @event.is_a?(Bar)
-      return(redirect_to(:controller => 'bar', :action => 'show', :year => @event.year))
-    elsif @event.is_a? Ironman
-      return(redirect_to ironman_path(:year => @event.year))
+    case @event
+    when AgeGradedBar, Bar, TeamBar
+      return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year, :discipline => @event.discipline)
+    when Cat4WomensRaceSeries
+      return redirect_to(cat4_womens_race_series_path(:year => @event.year))
+    when OverallBar
+      return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year)
+    when Ironman
+      return redirect_to(ironman_path(:year => @event.year))
+    when OregonCup
+      return redirect_to(oregon_cup_path(:year => @event.year))
+    when RiderRankings
+      return redirect_to(rider_rankings_path(:year => @event.year))
     end
+
     render "event"
   end
   

@@ -56,9 +56,8 @@ ActionController::Routing::Routes.draw do |map|
               :requirements => {:year => /\d+/},
               :defaults => {:discipline => 'overall', :category => 'senior_men'}
 
-  map.connect "/cat4_womens_race_series/:year/:discipline", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
-  map.connect "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
-  map.cat4_womens_race_series "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
+  map.cat4_womens_race_series "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
+  map.connect "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
 
   map.new_admin_cat4_womens_race_series_result "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
   map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
@@ -75,16 +74,15 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
 
-  map.connect "/rider_rankings/:year/:discipline", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
-  map.connect "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
-  map.connect "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
+  map.rider_rankings "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
+  map.rider_rankings_root "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
 
-  map.ironman  "/ironman/:year", :controller => "ironman"
+  map.ironman "/ironman/:year", :controller => "ironman"
 
   map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
   map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
-  map.connect "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
-  map.connect "/oregon_cup", :controller => "oregon_cup", :action => "index"
+  map.oregon_cup "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
+  map.oregon_cup_root "/oregon_cup", :controller => "oregon_cup", :action => "index"
   
   map.resources :password_resets
 
