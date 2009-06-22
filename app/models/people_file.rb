@@ -106,7 +106,6 @@ class PeopleFile < GridFile
     options = {
       :delimiter => ',',
       :quoted => true,
-#mbratodo: I had the prev two lines commented out.
       :header_row => true,
       :row_class => Person,
       :column_map => COLUMN_MAP
