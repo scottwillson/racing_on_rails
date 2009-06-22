@@ -28,7 +28,6 @@ module TabsHelper
     def to_html(select_current_page = true)
       table_class = "tabs"
       table_class = "tabs_solo" if @tabs.size < 2
-#mbratodo: for table class below I have <div class="tabs">
       html = <<HTML
     <table class="#{table_class} centered">
       <tr>
