@@ -11,6 +11,9 @@ class RacingAssociation
   attr_accessor :always_insert_table_headers
   attr_accessor :show_events_velodrome
   attr_accessor :usac_region
+  # Unused in master. Present for Montana branch compatibility
+  attr_accessor :default_sanctioned_by
+  attr_accessor :usac_results_format
   
   def initialize
     @masters_age = 35
@@ -29,6 +32,10 @@ class RacingAssociation
   
   def default_discipline
     @default_discipline ||= "Road"
+  end
+
+  def default_sanctioned_by
+    @default_sanctioned_by ||= short_name
   end
 
   def gender_specific_numbers?
@@ -55,6 +62,10 @@ class RacingAssociation
     @award_cat4_participation_points
   end
   
+  def usac_results_format?
+    @usac_results_format
+  end
+
   def to_s
     "#<RacingAssociation #{short_name} #{name}>"
   end
