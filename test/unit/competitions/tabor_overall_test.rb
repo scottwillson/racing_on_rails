@@ -9,28 +9,28 @@ class TaborOverallTest < ActiveSupport::TestCase
   end
   
   def test_recalc_with_one_event
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
     event = series.children.create!(:date => Date.new(2007, 6, 6))
     
     series.reload
     assert_equal(Date.new(2007, 6, 6), series.date, "Series date")
     
     cat_3_race = event.races.create!(:category => categories(:cat_3))
-    cat_3_race.results.create!(:place => 1, :racer => racers(:weaver))
-    cat_3_race.results.create!(:place => 3, :racer => racers(:tonkin))
+    cat_3_race.results.create!(:place => 1, :person => people(:weaver))
+    cat_3_race.results.create!(:place => 3, :person => people(:tonkin))
     
-    masters_40_plus_women_category = Category.create!(:name => "Women Masters 40+")
+    masters_40_plus_women_category = Category.find_or_create_by_name(:name => "Masters Women")
     masters_race = event.races.create!(:category => masters_40_plus_women_category)
-    masters_race.results.create!(:place => 15, :racer => racers(:alice))
-    masters_race.results.create!(:place => 16, :racer => racers(:molly))
+    masters_race.results.create!(:place => 15, :person => people(:alice))
+    masters_race.results.create!(:place => 16, :person => people(:molly))
     
     # Previous year should be ignored
-    previous_event = WeeklySeries.create!(:name => "Mt Tabor Series").children.create!(:date => Date.new(2006))
-    previous_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 9, :racer => racers(:weaver))
+    previous_event = WeeklySeries.create!(:name => "Mt. Tabor Series").children.create!(:date => Date.new(2006))
+    previous_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 9, :person => people(:weaver))
     
     # Following year should be ignored
-    following_event = WeeklySeries.create!(:name => "Mt Tabor Series").children.create!(:date => Date.new(2008))
-    following_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 10, :racer => racers(:weaver))
+    following_event = WeeklySeries.create!(:name => "Mt. Tabor Series").children.create!(:date => Date.new(2008))
+    following_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 10, :person => people(:weaver))
     
     TaborOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall to parent Series")
@@ -47,11 +47,11 @@ class TaborOverallTest < ActiveSupport::TestCase
     result = cat_3_overall_race.results.first
     assert_equal("1", result.place, "Cat 3 first result place")
     assert_equal(200, result.points, "Cat 3 first result points (double points for last result)")
-    assert_equal(racers(:weaver), result.racer, "Cat 3 first result racer")
+    assert_equal(people(:weaver), result.person, "Cat 3 first result person")
     result = cat_3_overall_race.results.last
     assert_equal("2", result.place, "Cat 3 second result place")
     assert_equal(100, result.points, "Cat 3 second result points (double points for last result)")
-    assert_equal(racers(:tonkin), result.racer, "Cat 3 second result racer")
+    assert_equal(people(:tonkin), result.person, "Cat 3 second result person")
 
     masters_40_plus_women_overall_race = series.overall.races.detect { |race| race.category == masters_40_plus_women_category }
     assert_not_nil(masters_40_plus_women_overall_race, "Should have Masters Women overall race")
@@ -59,29 +59,29 @@ class TaborOverallTest < ActiveSupport::TestCase
     result = masters_40_plus_women_overall_race.results.first
     assert_equal("1", result.place, "Masters Women first result place")
     assert_equal(22, result.points, "Masters Women first result points  (double points for last result)")
-    assert_equal(racers(:alice), result.racer, "Masters Women first result racer")
+    assert_equal(people(:alice), result.person, "Masters Women first result person")
   end
   
   def test_best_5_of_6_count
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
 
     event = series.children.create!(:date => Date.new(2007, 6, 6))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 13))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 19))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 27))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 7, 4))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 7, 11))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 11, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 11, :person => people(:weaver))
     
     TaborOverall.calculate!(2007)
     
@@ -93,29 +93,29 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
     assert_equal(100 + 12 + 50 + 36 + (15 * 2), result.points, "points")
-    assert_equal(racers(:weaver), result.racer, "racer")
+    assert_equal(people(:weaver), result.person, "person")
   end
   
   def test_double_ponts_for_final_event
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
 
     event = series.children.create!(:date => Date.new(2007, 6, 6))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 13))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 19))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 3, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 6, 27))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 5, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 7, 4))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 13, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 13, :person => people(:weaver))
 
     event = series.children.create!(:date => Date.new(2007, 7, 11))
-    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :racer => racers(:weaver))
+    event.races.create!(:category => categories(:cat_3)).results.create!(:place => 14, :person => people(:weaver))
     
     TaborOverall.calculate!(2007)
     
@@ -127,38 +127,38 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
     assert_equal(100 + 0 + 50 + 36 + 13 + (12 * 2), result.points, "points")
-    assert_equal(racers(:weaver), result.racer, "racer")
+    assert_equal(people(:weaver), result.person, "person")
   end
   
   def test_many_results
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
-    masters = Category.find_or_create_by_name("Men Masters 40+")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
+    masters = Category.find_or_create_by_name("Masters Men")
     senior_men = categories(:senior_men)
-    racer = Racer.create!(:name => "John Browning")
+    person = Person.create!(:name => "John Browning")
     
     event = series.children.create!(:date => Date.new(2008, 6, 4))
-    event.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 2, :person => person)
     
     event = series.children.create!(:date => Date.new(2008, 6, 11))
-    event.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 2, :person => person)
     
     event = series.children.create!(:date => Date.new(2008, 6, 18))
-    event.races.create!(:category => masters).results.create!(:place => 2, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 5, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 2, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 5, :person => person)
     
     event = series.children.create!(:date => Date.new(2008, 6, 25))
-    event.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 2, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 2, :person => person)
     
     event = series.children.create!(:date => Date.new(2008, 7, 2))
-    event.races.create!(:category => masters).results.create!(:place => 2, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 1, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 2, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 1, :person => person)
     
     event = series.children.create!(:date => Date.new(2008, 7, 9))
-    event.races.create!(:category => masters).results.create!(:place => 1, :racer => racer)
-    event.races.create!(:category => senior_men).results.create!(:place => 20, :racer => racer)
+    event.races.create!(:category => masters).results.create!(:place => 1, :person => person)
+    event.races.create!(:category => senior_men).results.create!(:place => 20, :person => person)
 
     TaborOverall.calculate!(2008)
     
@@ -169,7 +169,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
     assert_equal(100 + 100 + 70 + 100 + 0 + (100 * 2), result.points, "points")
-    assert_equal(racer, result.racer, "racer")
+    assert_equal(person, result.person, "person")
 
     senior_men_overall_race = series.overall.races.detect { |race| race.category == senior_men }
     assert_not_nil(senior_men_overall_race, "Should have Senior Men overall race")
@@ -178,6 +178,6 @@ class TaborOverallTest < ActiveSupport::TestCase
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
     assert_equal(70 + 70 + 36 + 70 + 100 + (0 * 2), result.points, "points")
-    assert_equal(racer, result.racer, "racer")
+    assert_equal(person, result.person, "person")
   end
 end

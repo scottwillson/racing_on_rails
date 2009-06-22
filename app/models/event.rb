@@ -30,7 +30,6 @@ class Event < ActiveRecord::Base
     cancelled flyer_approved instructional practice sanctioned_by 
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
-  before_validation :find_associated_records
   before_destroy :validate_no_results
 
   validates_presence_of :name, :date, :discipline
@@ -67,7 +66,7 @@ class Event < ActiveRecord::Base
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
-  belongs_to :promoter, :foreign_key => "promoter_id"
+  belongs_to :promoter, :class_name => "Person"
   belongs_to :team
 
   has_many   :races,
@@ -133,7 +132,7 @@ class Event < ActiveRecord::Base
     [ weekly_series, events ]
   end
   
-  # Used when importing Racers: should membership be for this year or the next?
+  # Used when importing People: should membership be for this year or the next?
   def Event.find_max_date_for_current_year
     # TODO Make this better
     maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])
@@ -259,23 +258,6 @@ class Event < ActiveRecord::Base
     end
     races.clear
     enable_notification!
-  end
-
-  # TODO Remove. Old workaround to ensure children are cancelled
-  def find_associated_records
-    existing_discipline = Discipline.find_via_alias(discipline)
-    self.discipline = existing_discipline.name unless existing_discipline.nil?
-  
-    if promoter
-      if promoter.name.blank? && promoter.email.blank? && promoter.phone.blank?
-        self.promoter = nil
-      else
-        existing_promoter = Promoter.find_by_info(promoter.name, promoter.email, promoter.phone)
-        if existing_promoter
-          self.promoter = existing_promoter
-        end
-      end
-    end
   end
   
   # Update child events from parents' attributes if child attribute has the
@@ -418,33 +400,12 @@ class Event < ActiveRecord::Base
     promoter.name if promoter
   end
 
-  def promoter_name=(value)
-    if promoter.nil?
-      self.promoter = Promoter.new
-    end
-    self.promoter.name = value
-  end
-
   def promoter_email
     promoter.email if promoter
   end
 
-  def promoter_email=(value)
-    if promoter.nil?
-      self.promoter = Promoter.new
-    end
-    self.promoter.email = value
-  end
-
   def promoter_phone
-    promoter.phone if promoter
-  end
-
-  def promoter_phone=(value)
-    if promoter.nil?
-      self.promoter = Promoter.new
-    end
-    self.promoter.phone = value
+    promoter.home_phone if promoter
   end
 
   def date_range_s(format = :short)
@@ -456,7 +417,7 @@ class Event < ActiveRecord::Base
   end
 
   def date_range_long_s
-    date.strftime('%a, %B %d')
+    date.strftime('%a, %B %d, %Y')
   end
   
   # Parent's name. Own name if no parent

@@ -40,7 +40,7 @@ class Overall < Competition
     results
   end
 
-  # source_results must be in racer-order
+  # source_results must be in person-order
   def source_results(race)
     return [] if parent.children.empty?
     
@@ -51,14 +51,14 @@ class Overall < Competition
     category_ids = category_ids_for(race)
     
     Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, racer_id, results.team_id, place FROM results  
+      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
           JOIN events ON races.event_id = events.id 
           WHERE place between 1 and #{point_schedule.size - 1}
               and categories.id in (#{category_ids})
               and events.id in (#{event_ids})
-          order by racer_id
+          order by person_id
        }
     )
   end
@@ -70,20 +70,20 @@ class Overall < Competition
     results.each_with_index do |source_result, index|
       logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race.name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
-      racer = source_result.racer
+      person = source_result.person
       points = points_for(source_result)
       
-      # We repeat some calculations here if a racer is disallowed
+      # We repeat some calculations here if a person is disallowed
       if points > 0.0 && 
-         (!parent.completed? || (parent.completed? && raced_minimum_events?(racer, race))) && 
-           (!members_only? || member?(racer, source_result.date))
+         (!parent.completed? || (parent.completed? && raced_minimum_events?(person, race))) && 
+           (!members_only? || member?(person, source_result.date))
 
-        if first_result_for_racer(source_result, competition_result)
+        if first_result_for_person(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :racer => racer, 
-             :team => (racer ? racer.team : nil),
+             :person => person, 
+             :team => (person ? person.team : nil),
              :race => race)
         end
 
@@ -136,9 +136,9 @@ class Overall < Competition
     nil
   end
   
-  def raced_minimum_events?(racer, race)
+  def raced_minimum_events?(person, race)
     return true if minimum_events.nil?
-    return false if parent.children.empty? || racer.nil?
+    return false if parent.children.empty? || person.nil?
 
     event_ids = parent.children.collect(&:id).join(", ")
     category_ids = category_ids_for(race)
@@ -150,7 +150,7 @@ class Overall < Competition
           JOIN events ON races.event_id = events.id 
           WHERE categories.id in (#{category_ids})
               and events.id in (#{event_ids})
-              and results.racer_id = #{racer.id}
+              and results.person_id = #{person.id}
        }
     )
     count >= minimum_events
@@ -158,6 +158,6 @@ class Overall < Competition
 
   
   def preliminary?(result)
-    minimum_events && parent.children_with_results.size > minimum_events && !parent.completed? && !raced_minimum_events?(result.racer, result.race)
+    minimum_events && parent.children_with_results.size > minimum_events && !parent.completed? && !raced_minimum_events?(result.person, result.race)
   end
 end

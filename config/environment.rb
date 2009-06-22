@@ -13,6 +13,7 @@ Rails::Initializer.run do |config|
   }
   
   # Rails 2 convention for gem requirements
+  config.gem "authlogic"
   config.gem "fastercsv"
   
   # Racing on Rails has many foreign key constraints, so :sql is required
@@ -69,7 +70,7 @@ end
 RAILS_HOST  = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
 
-# Limit number of racers, teams, etc. returned in search
+# Limit number of people, teams, etc. returned in search
 SEARCH_RESULTS_LIMIT          = 100 unless defined?(SEARCH_RESULTS_LIMIT)
 
 # Homepage display

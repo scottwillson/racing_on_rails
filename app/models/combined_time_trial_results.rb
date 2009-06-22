@@ -88,7 +88,7 @@ class CombinedTimeTrialResults < Event
       race.results.each do |result|
         if result.place.to_i > 0 && result.time && result.time > 0
           combined_race.results.create!(
-            :racer => result.racer,
+            :person => result.person,
             :team => result.team,
             :time => result.time,
             :category => race.category

@@ -26,12 +26,8 @@ There is no prize just identification of riders who need to get a life.</p>
   <tr>
     <td><pre><%- for result in @results %>
 <%= result.place.rjust(3) -%>
- <%= link_to(truncate(result.name), 
-	 :controller => 'results',
-     :action => 'competition',
-     :competition_id => result.event.to_param,
-     :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer_team_name, :length => 40).ljust(40) -%>
+ <%= link_to(truncate(result.name), event_person_results_path(result.event, result.person)) %><%= ' ' * (30 - truncate(result.name).length) -%>
+   <%= truncate(result.person_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 0).rjust(6) -%>
 <%- end -%></pre></td>
   </tr>

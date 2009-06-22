@@ -16,20 +16,20 @@ class TeamBarTest < ActiveSupport::TestCase
       :date => Date.new(2004, 5, 17),
     })
     swan_island_tandem = swan_island.races.create(:category => tandem)
-    first_racers = Racer.new(:first_name => 'Scott/Cheryl', :last_name => 'Willson/Willson', :member_from => Date.new(2004, 1, 1))
+    first_people = Person.new(:first_name => 'Scott/Cheryl', :last_name => 'Willson/Willson', :member_from => Date.new(2004, 1, 1))
     gentle_lovers = teams(:gentle_lovers)
     swan_island_tandem.results.create({
       :place => 12,
-      :racer => first_racers,
+      :person => first_people,
       :team => gentle_lovers
     })
-    # Existing racers
-    second_racers = Racer.create(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
-    second_racers_team = Team.create(:name => 'Kona/Northampton Cycling Club')
+    # Existing people
+    second_people = Person.create(:first_name => 'Tim/John', :last_name => 'Johnson/Verhul', :member_from => Date.new(2004, 1, 1))
+    second_people_team = Team.create(:name => 'Kona/Northampton Cycling Club')
     swan_island_tandem.results.create({
       :place => 2,
-      :racer => second_racers,
-      :team => second_racers_team
+      :person => second_people,
+      :team => second_people_team
     })
 
     Bar.calculate!(2004)
@@ -70,16 +70,16 @@ class TeamBarTest < ActiveSupport::TestCase
     # Masters too
     marin_knobular = SingleDayEvent.create(:name => 'Marin Knobular', :date => Date.new(2001, 9, 7), :discipline => 'Mountain Bike')
     race = marin_knobular.races.create(:category => expert_junior_men)
-    kc = Racer.create(:name => 'KC Mautner', :member_from => Date.new(2001, 1, 1))
+    kc = Person.create(:name => 'KC Mautner', :member_from => Date.new(2001, 1, 1))
     vanilla = teams(:vanilla)
-    race.results.create(:racer => kc, :place => 4, :team => vanilla)
-    chris_woods = Racer.create(:name => 'Chris Woods', :member_from => Date.new(2001, 1, 1))
+    race.results.create(:person => kc, :place => 4, :team => vanilla)
+    chris_woods = Person.create(:name => 'Chris Woods', :member_from => Date.new(2001, 1, 1))
     gentle_lovers = teams(:gentle_lovers)
-    race.results.create(:racer => chris_woods, :place => 12, :team => gentle_lovers)
+    race.results.create(:person => chris_woods, :place => 12, :team => gentle_lovers)
     
     lemurian = SingleDayEvent.create(:name => 'Lemurian', :date => Date.new(2001, 9, 14), :discipline => 'Mountain Bike')
     race = lemurian.races.create(:category => sport_junior_men)
-    race.results.create(:racer => chris_woods, :place => 14, :team => gentle_lovers)
+    race.results.create(:person => chris_woods, :place => 14, :team => gentle_lovers)
     
     Bar.calculate!(2001)
     TeamBar.calculate!(2001)
@@ -108,11 +108,11 @@ class TeamBarTest < ActiveSupport::TestCase
     barton_a = barton.races.create(:category => men_a, :field_size => 5)
     barton_a.results.create({
       :place => 3,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     barton_a.results.create({
       :place => 15,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     })
     
     swan_island = SingleDayEvent.create!({
@@ -124,17 +124,17 @@ class TeamBarTest < ActiveSupport::TestCase
     swan_island_senior_men = swan_island.races.create(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create({
       :place => 12,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     swan_island_senior_men.results.create({
       :place => 2,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     senior_women = Category.find_by_name("Senior Women")
     senior_women_swan_island = swan_island.races.create(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     # No BAR points
     senior_women_swan_island.bar_points = 0
@@ -150,11 +150,11 @@ class TeamBarTest < ActiveSupport::TestCase
     thursday_track_senior_men = thursday_track.races.create(:category => senior_men, :field_size => 6)
     r = thursday_track_senior_men.results.create(
       :place => 5,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     )
     thursday_track_senior_men.results.create(
       :place => 14,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     )
     
@@ -168,35 +168,35 @@ class TeamBarTest < ActiveSupport::TestCase
     team_track_senior_men = team_track.races.create(:category => senior_men, :field_size => 6)
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     team_track_senior_men.results.create({
       :place => 5,
-      :racer => racers(:alice)
+      :person => people(:alice)
     })
     team_track_senior_men.results.create({
       :place => 5,
-      :racer => racers(:matson)
+      :person => people(:matson)
     })
     # Weaver and Erik's second ride should not count
     team_track_senior_men.results.create({
       :place => 15,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create({
       :place => 15,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     
@@ -208,7 +208,7 @@ class TeamBarTest < ActiveSupport::TestCase
     larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create(:category => senior_men, :field_size => 6)
     larch_mt_hillclimb_senior_men.results.create({
       :place => 13,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
   

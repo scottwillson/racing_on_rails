@@ -1,0 +1,89 @@
+administrator:
+  id: 1
+  first_name: Candi
+  last_name: Murray
+  email: admin@example.com
+  login: admin@example.com
+  home_phone: (503) 555-1212
+  password_salt: <%= salt = Authlogic::Random.hex_token %>
+  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
+  persistence_token: <%= Authlogic::Random.hex_token %>
+  single_access_token: <%= Authlogic::Random.friendly_token %>
+  perishable_token: <%= Authlogic::Random.friendly_token %>
+  roles: administrator, promoter
+
+member:
+  id: 2
+  first_name: Bob
+  last_name: Jones
+  email: member@example.com
+  login: bob.jones
+  password_salt: <%= salt = Authlogic::Random.hex_token %>
+  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
+  persistence_token: <%= Authlogic::Random.hex_token %>
+  single_access_token: <%= Authlogic::Random.friendly_token %>
+  perishable_token: <%= Authlogic::Random.friendly_token %>
+  roles: member
+
+promoter:
+  id: 3
+  first_name: Brad
+  last_name: Ross
+  roles: promoter
+
+nate_hobson:
+  id: 4
+  email: sixhobsons@comcast.net
+  home_phone: (503) 223-3343
+  roles: promoter
+
+tonkin:
+  first_name: Erik
+  last_name: Tonkin
+  team: kona
+  member_from: 1999-01-01
+  member_to: <%= Date.today.year %>-12-31
+  gender: M
+  license: 7123811
+  street: 127 SE Lambert
+  city: Portland
+  state: OR
+  zip: 19990
+  home_phone: 415 221-3773
+  road_category: 1
+  track_category: 5
+  date_of_birth: <%= 30.years.ago.to_date.to_s(:db) %>
+matson:
+  first_name: Mark
+  last_name: Matson
+  team: kona
+  member_from: 1999-01-01
+  member_to: <%= Date.today.year %>-12-31
+  gender: M
+  email: mcfatson@gentlelovers.com
+weaver:
+  first_name: Ryan
+  last_name: Weaver
+  team: gentle_lovers
+  member_from: 1999-01-01
+  member_to: <%= Date.today.year %>-12-31
+  gender: M
+  email: hotwheels@yahoo.com
+molly:
+  first_name: Molly
+  last_name: Cameron
+  team: vanilla
+  member_from: 1999-01-01
+  member_to: <%= Date.today.year %>-12-31
+  gender: F
+alice:
+  first_name: Alice
+  last_name: Pennington
+  team: gentle_lovers
+  member_from: 1999-01-01
+  member_to: <%= Date.today.year %>-12-31
+  gender: F
+no_results:
+  first_name: Non
+  last_name: Results
+  

@@ -29,9 +29,9 @@ module Admin::EventsHelper
     return unless event
     
     if event.flyer.blank?
-      event.name
+      event.full_name
     else
-      link_to(event.name, event.flyer)
+      link_to(event.full_name, event.flyer)
     end
   end
   

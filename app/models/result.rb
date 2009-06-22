@@ -3,8 +3,8 @@ module CreateIfBestResultForRaceExtension
     source_result = attributes[:source_result]
     for score in @owner.scores
       same_race  = (score.source_result.race  == source_result.race)
-      same_racer = (score.source_result.racer == source_result.racer)
-      if same_race && score.source_result.racer && same_racer
+      same_person = (score.source_result.person == source_result.person)
+      if same_race && score.source_result.person && same_person
         if attributes[:points] > score.points
           @owner.scores.delete(score)
         else
@@ -18,9 +18,9 @@ end
 
 # Race result
 #
-# Race is the only required attribute -- even +racer+ and +place+ can be blank
+# Race is the only required attribute -- even +person+ and +place+ can be blank
 #
-# Result keeps its own copy of +number+ and +team+, even though each Racer has
+# Result keeps its own copy of +number+ and +team+, even though each Person has
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 #
@@ -32,29 +32,29 @@ class Result < ActiveRecord::Base
   attr_accessor :updated_by
 
   before_save :find_associated_records
-  before_save :save_racer
-  after_save :update_racer_number
-  after_destroy [ :destroy_racers, :destroy_teams ]
+  before_save :save_person
+  after_save :update_person_number
+  after_destroy [ :destroy_people, :destroy_teams ]
 
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
   belongs_to :category
   belongs_to :race
-  belongs_to :racer
+  belongs_to :person
   belongs_to :team
 
   validates_presence_of :race
 
-  def Result.find_all_for(racer)
-    if racer.is_a? Racer
-      racer_id = racer.id
+  def Result.find_all_for(person)
+    if person.is_a? Person
+      person_id = person.id
     else
-      racer_id = racer
+      person_id = person
     end
     Result.find(
       :all,
-      :include => [:team, :racer, :scores, :category, {:race => [:event, :category]}],
-      :conditions => ['racers.id = ?', racer_id]
+      :include => [:team, :person, :scores, :category, {:race => [:event, :category]}],
+      :conditions => ['people.id = ?', person_id]
     )
   end
 
@@ -76,38 +76,38 @@ class Result < ActiveRecord::Base
     super(attributes)
   end
 
-  # Replace any new +racer+, or +team+ with one that already exists if name matches
+  # Replace any new +person+, or +team+ with one that already exists if name matches
   def find_associated_records
-    _racer = racer
-    if _racer && _racer.new_record?
-      if _racer.name.blank?
-        self.racer = nil
+    _person = person
+    if _person && _person.new_record?
+      if _person.name.blank?
+        self.person = nil
       else
-        existing_racers = find_racers
-        if existing_racers.size == 1
-          self.racer = existing_racers.to_a.first
-        elsif existing_racers.size > 1
-          results = existing_racers.to_a.inject([]) { |results, racer| results + racer.results }
+        existing_people = find_people
+        if existing_people.size == 1
+          self.person = existing_people.to_a.first
+        elsif existing_people.size > 1
+          results = existing_people.to_a.inject([]) { |results, person| results + person.results }
           if results.empty?
-            self.racer = existing_racers.to_a.sort_by(&:updated_at).last
+            self.person = existing_people.to_a.sort_by(&:updated_at).last
           else
             results = results.sort_by(&:date)
-            self.racer = results.last.racer
+            self.person = results.last.person
           end
         end
       end
     end
 
-    # This logic should be in Racer
-    if !racer.nil? &&
-       racer.new_record? &&
-       !racer.first_name.blank? &&
-       !racer.last_name.blank? &&
-       racer[:member_from].blank? &&
+    # This logic should be in Person
+    if !person.nil? &&
+       person.new_record? &&
+       !person.first_name.blank? &&
+       !person.last_name.blank? &&
+       person[:member_from].blank? &&
        event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
-      racer.member_from = race.date
+      person.member_from = race.date
     end
 
     if team && team.new_record?
@@ -122,32 +122,32 @@ class Result < ActiveRecord::Base
     true
   end
 
-  # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +racer+ already exists.
-  # Returns an Array of Racers if there is more than one potential match
+  # Use +first_name+, +last_name+, +race_number+, +team+ to figure out if +person+ already exists.
+  # Returns an Array of People if there is more than one potential match
   #
-  # TODO refactor into methods or split responsibilities with Racer?
+  # TODO refactor into methods or split responsibilities with Person?
   # Need Event to match on race number. Event will not be set before result is saved to database
-  def find_racers(_event = event)
+  def find_people(_event = event)
     matches = Set.new
     
     #license first if present and source is reliable (USAC)
     if license.present? && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
-      matches = matches + Racer.find_all_by_license(license)
+      matches = matches + Person.find_all_by_license(license)
       return matches if matches.size == 1
     end
     
     # name
-    matches = matches + Racer.find_all_by_name_or_alias(first_name, last_name)
+    matches = matches + Person.find_all_by_name_or_alias(first_name, last_name)
     return matches if matches.size == 1
 
     # number
     if number.present? && (matches.size > 1 || (matches.empty? && first_name.blank? && last_name.blank?))
       race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
       race_numbers.each do |race_number|
-        if matches.include?(race_number.racer)
-          return [race_number.racer]
+        if matches.include?(race_number.person)
+          return [race_number.person]
         else
-          matches << race_number.racer
+          matches << race_number.person
         end
       end
       return matches if matches.size == 1
@@ -171,39 +171,39 @@ class Result < ActiveRecord::Base
     matches
   end
 
-  # Set +racer#number+ to +number+ if this isn't a rental number
-  def update_racer_number
+  # Set +person#number+ to +number+ if this isn't a rental number
+  def update_person_number
     discipline = Discipline[event.discipline]
-    if racer && !number.blank? && !RaceNumber.rental?(number, discipline)
-      racer.updated_by = self.updated_by
+    if person && !number.blank? && !RaceNumber.rental?(number, discipline)
+      person.updated_by = self.updated_by
       event.number_issuer unless event.number_issuer
-      racer.add_number(number, discipline, event.number_issuer, event.date.year)
+      person.add_number(number, discipline, event.number_issuer, event.date.year)
     end
   end
 
-  def save_racer
-    if racer && (racer.new_record? || racer.changed?)
-      racer.created_by = event
-      racer.save!
+  def save_person
+    if person && (person.new_record? || person.changed?)
+      person.created_by = event
+      person.save!
     end
   end
 
-  # Destroy Racers that only exist because they were created by importing results
-  def destroy_racers
-    if racer && racer.results.count == 0 && racer.created_from_result? && !racer.updated_after_created?
-      racer.destroy
+  # Destroy People that only exist because they were created by importing results
+  def destroy_people
+    if person && person.results.count == 0 && person.created_from_result? && !person.updated_after_created?
+      person.destroy
     end
   end
 
   # Destroy Team that only exist because they were created by importing results
   def destroy_teams
-    if team && team.results.count == 0 && team.racers.count == 0 && team.created_from_result? && !team.updated_after_created?
+    if team && team.results.count == 0 && team.people.count == 0 && team.created_from_result? && !team.updated_after_created?
       team.destroy
     end
   end
 
   # Only used for manual entry of Cat 4 Womens Series Results
-  def validate_racer_name
+  def validate_person_name
     if first_name.blank? && last_name.blank?
       errors.add(:first_name, "and last name cannot both be blank")
     end
@@ -234,7 +234,7 @@ class Result < ActiveRecord::Base
 
   # TODO refactor to something like act_as_competitive or create CompetitionResult
   def competition_result?
-    self.event.is_a?(CrossCrusadeOverall) || event.is_a?(TaborOverall) || event.is_a?(Competition)
+    event.is_a?(CrossCrusadeOverall) || event.is_a?(TaborOverall) || event.is_a?(Competition)
   end
 
   # Not blank, DNF, DNS, DQ.
@@ -308,72 +308,72 @@ class Result < ActiveRecord::Base
   end
 
   def first_name
-    if racer and !racer.first_name.blank?
-      racer.first_name
+    if person and !person.first_name.blank?
+      person.first_name
     else
       ""
     end
   end
 
   def first_name=(value)
-    if self.racer
-      self.racer.first_name = value
+    if self.person
+      self.person.first_name = value
     else
-      self.racer = Racer.new(:first_name => value)
+      self.person = Person.new(:first_name => value)
     end
   end
 
   def last_name
-    if (racer and !racer.last_name.blank?)
-      racer.last_name
+    if (person and !person.last_name.blank?)
+      person.last_name
     else
       ""
     end
   end
 
   def last_name=(value)
-    if self.racer
-      self.racer.last_name = value
+    if self.person
+      self.person.last_name = value
     else
-      self.racer = Racer.new(:last_name => value)
+      self.person = Person.new(:last_name => value)
     end
   end
 
-  # racer.name
+  # person.name
   def name
-    if racer == nil
+    if person == nil
       ""
     else
-      racer.name
+      person.name
     end
   end
 
-  def racer_name
+  def person_name
     name
   end
 
-  # racer.name
+  # person.name
   def name=(value)
     if value.blank?
-      self.racer = nil
+      self.person = nil
       return value
     end
 
-    if racer
-      racer_for_name = Racer.new(:name => value)
-      existing_racers = Racer.find_all_by_name_or_alias(racer_for_name.first_name, racer_for_name.last_name)
-      if existing_racers.size == 1
-        self.racer = existing_racers.first
+    if person
+      person_for_name = Person.new(:name => value)
+      existing_people = Person.find_all_by_name_or_alias(person_for_name.first_name, person_for_name.last_name)
+      if existing_people.size == 1
+        self.person = existing_people.first
       else
-        racer_id_will_change!
-        racer.name = value
+        person_id_will_change!
+        person.name = value
       end
     else
-      self.racer = Racer.new(:name => value)
+      self.person = Person.new(:name => value)
     end
   end
 
-  def racer_name=(value)
+  def person_name=(value)
     name = value
   end
 
@@ -386,10 +386,10 @@ class Result < ActiveRecord::Base
     end
   end
 
-  # Racer's current team name
-  def racer_team_name
-    if racer
-      racer.team_name
+  # Person's current team name
+  def person_team_name
+    if person
+      person.team_name
     else
       ""
     end
@@ -400,8 +400,8 @@ class Result < ActiveRecord::Base
     if team.nil? || team.name != value
       self.team = Team.new(:name => value)
     end
-    if racer && racer.team_name != value
-      racer.team = team
+    if person && person.team_name != value
+      person.team = team
     end
   end
 
@@ -692,6 +692,6 @@ class Result < ActiveRecord::Base
   end
 
   def to_s
-    "#<Result #{id} place #{place} race #{race_id} racer #{racer_id} team #{team_id} pts #{points}>"
+    "#<Result #{id} place #{place} race #{race_id} person #{person_id} team #{team_id} pts #{points}>"
   end
 end

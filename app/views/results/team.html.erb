@@ -1,0 +1,20 @@
+<% @page_title = "Results: #{@team.name}" %>
+
+<% table :caption => @team.name, :id => "team" do %>
+  <tr>
+    <th>&nbsp;</th>
+    <th>Race</th>
+    <th>Category</th>
+    <th>Person</th>
+    <th>Date</th>
+  </tr>
+  <%- @results.sort { |x, y| y.race.event.end_date <=> x.race.event.end_date }.each do |result| -%>
+  <tr class="<%= cycle("even", "odd") %>">
+    <td class="right" width="24"><%= result.place %></td>
+    <td width="400"><%= link_to(result.race.full_name, event_results_path(result.event)) %></td>
+    <td width="200"><%= link_to(result.race.name, event_results_path(result.event, :anchor => "race_#{result.race.id}")) %></td>
+    <td width="200"><%= link_to_result(result.person_name, result) %></td>
+    <td width="100"><%= result.event.date.strftime("%D") %></td>
+  </tr>
+  <%- end -%>
+<%- end -%>

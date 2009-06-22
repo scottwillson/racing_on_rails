@@ -5,7 +5,7 @@ class Page < ActiveRecord::Base
   validates_uniqueness_of :path
   validates_presence_of :author
   
-  belongs_to :author, :class_name => "User"
+  belongs_to :author, :class_name => "Person"
   
   after_create :update_parent
   after_destroy :update_parent
@@ -26,12 +26,12 @@ class Page < ActiveRecord::Base
   def set_author
     # Yeah, yeah, a big side-effect.
     unless self.author_id
-      system_user = User.find_by_name("System")
+      system_person = Person.find_by_name("System")
       password = rand.to_s
-      unless system_user
-        system_user = User.create!(:name => "System", :email => "sw@butlerpress.com", :password => password, :password_confirmation => password)
+      unless system_person
+        system_person = Person.create!(:name => "System")
       end
-      self.author = system_user
+      self.author = system_person
     end
   end
   

@@ -46,9 +46,9 @@ click_and_wait "link=Pennington"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
-assert_table "css=table.racer_results", 1, 0, "2"
-assert_table "css=table.racer_results", 1, 1, "Kings Valley Road Race"
-assert_table "css=table.racer_results", 1, 2, "Senior Women 1/2/3"
+assert_table "css=table.person_results", 1, 0, "2"
+assert_table "css=table.person_results", 1, 1, "Kings Valley Road Race"
+assert_table "css=table.person_results", 1, 2, "Senior Women 1/2/3"
 assert_text_present "12/31/2004"
 
 click_and_wait "link=Jack Frost"

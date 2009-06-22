@@ -31,11 +31,11 @@ class RiderRankingsTest < ActiveSupport::TestCase
     barton_a = barton.races.create!(:category => men_a, :field_size => 5)
     barton_a.results.create!({
       :place => 3,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     barton_a.results.create!({
       :place => 10,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     })
     
     swan_island = SingleDayEvent.create!({
@@ -46,16 +46,16 @@ class RiderRankingsTest < ActiveSupport::TestCase
     swan_island_senior_men = swan_island.races.create!(:category => senior_men, :field_size => 4)
     swan_island_senior_men.results.create!({
       :place => 8,
-      :racer => racers(:tonkin)
+      :person => people(:tonkin)
     })
     swan_island_senior_men.results.create!({
       :place => 2,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     senior_women_swan_island = swan_island.races.create!(:category => senior_women, :field_size => 3)
     senior_women_swan_island.results.create!({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     # No points
     senior_women_swan_island.bar_points = 0
@@ -71,11 +71,11 @@ class RiderRankingsTest < ActiveSupport::TestCase
     thursday_track_senior_men = thursday_track.races.create!(:category => senior_men, :field_size => 6)
     r = thursday_track_senior_men.results.create!(
       :place => 5,
-      :racer => racers(:weaver)
+      :person => people(:weaver)
     )
     thursday_track_senior_men.results.create!(
       :place => 10,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     )
     
@@ -89,35 +89,35 @@ class RiderRankingsTest < ActiveSupport::TestCase
     team_track_senior_men = team_track.races.create!(:category => senior_men, :field_size => 6)
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 1,
-      :racer => racers(:molly)
+      :person => people(:molly)
     })
     team_track_senior_men.results.create!({
       :place => 5,
-      :racer => racers(:alice)
+      :person => people(:alice)
     })
     team_track_senior_men.results.create!({
       :place => 5,
-      :racer => racers(:matson)
+      :person => people(:matson)
     })
     # Weaver and Erik's second ride should not count
     team_track_senior_men.results.create!({
       :place => 10,
-      :racer => racers(:weaver),
+      :person => people(:weaver),
       :team => teams(:kona)
     })
     team_track_senior_men.results.create!({
       :place => 10,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     
@@ -128,14 +128,14 @@ class RiderRankingsTest < ActiveSupport::TestCase
     })
     larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create!(:category => senior_men, :field_size => 6)
     # Should bump Tonkin result up one place to fifth. In real life, we'd have all results 1-5, too
-    non_member = Racer.create!(:name => "Non Member", :member => false)
+    non_member = Person.create!(:name => "Non Member", :member => false)
     larch_mt_hillclimb_senior_men.results.create!({
       :place => 3,
-      :racer => non_member
+      :person => non_member
     })
     larch_mt_hillclimb_senior_men.results.create!({
       :place => 6,
-      :racer => racers(:tonkin),
+      :person => people(:tonkin),
       :team => teams(:kona)
     })
     
@@ -165,16 +165,16 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_equal_dates(Date.today, senior_men.updated_at, "RiderRankings last updated")
 
     senior_men.results.sort!
-    assert_equal(racers(:tonkin), senior_men.results[0].racer, "Senior Men rider rankings results racer")
+    assert_equal(people(:tonkin), senior_men.results[0].person, "Senior Men rider rankings results person")
     assert_equal("1", senior_men.results[0].place, "Senior Men rider rankings results place")
     assert_in_delta(259.333, senior_men.results[0].points, 0.001, "Senior Men rider rankings results points")
 
-    assert_equal(racers(:weaver), senior_men.results[1].racer, "Senior Men rider rankings results racer")
+    assert_equal(people(:weaver), senior_men.results[1].person, "Senior Men rider rankings results person")
     assert_equal("2", senior_men.results[1].place, "Senior Men rider rankings results place")
     assert_in_delta(155.333, senior_men.results[1].points, 0.001, "Senior Men rider rankings results points")
     assert_equal(4, senior_men.results[1].scores.size, "Weaver rider rankings results scores")
 
-    assert_equal(racers(:matson), senior_men.results[3].racer, "Senior Men rider rankings results racer")
+    assert_equal(people(:matson), senior_men.results[3].person, "Senior Men rider rankings results person")
     assert_equal("4", senior_men.results[3].place, "Senior Men rider rankings results place")
     assert_equal(68, senior_men.results[3].points, "Senior Men rider rankings results points")
     
@@ -182,7 +182,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_equal(1, women.results.size, "Senior Women rider rankings results")
 
     women.results.sort!
-    assert_equal(racers(:alice), women.results[0].racer, "Senior Women rider rankings results racer")
+    assert_equal(people(:alice), women.results[0].person, "Senior Women rider rankings results person")
     assert_equal("1", women.results[0].place, "Senior Women rider rankings results place")
     assert_equal(70, women.results[0].points, "Senior Women rider rankings results points")
   end

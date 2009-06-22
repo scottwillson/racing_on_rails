@@ -72,15 +72,15 @@
       <div class="span-3 last top_margin">
         <%= f.label :promoter_id, "Promoter" %>
         <%= f.select(:promoter_id, 
-                 Promoter.find(:all).sort_by{|p| p.name_or_contact_info}.collect {|p| [ p.name_or_contact_info, p.id ] }, 
+                 Person.find(:all).sort_by{ |p| p.name_or_contact_info}.collect { |p| [ p.name_or_contact_info, p.id ] },
                  { :include_blank => true }) %>
        </div>
        
       <div class="prepend-1 span-2 last" id="promoter_links">
         <%= link_to_function("Edit", nil, :id => "edit_promoter_link") do |page|
-          page << "window.location.href = '/admin/promoters/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
+          page << "window.location.href = '/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
         end %>
-        <%= link_to("New", new_admin_event_promoter_path(@event)) %>
+        <%= link_to("New", new_admin_event_person_path(@event)) %>
       </div>
 
       <div class="span-3 last top_margin">

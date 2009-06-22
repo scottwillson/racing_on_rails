@@ -3,39 +3,37 @@
 <h3><%= @event.name %></h3>
 
 <% if !@event.races.empty? %>
+<% if @event.races.size > 1 -%>
 <%# TODO Encapsulate in a helper method %>
 <table cellspacing="0" class="centered">
-<% index = 0 %>  
+<% index = 0 %>
 <% while index < @event.races.size %>
   <tr valign="top">
     <% if index < @event.races.size %>
     <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
-      <% index += 1 %>  
+      <% index += 1 %>
       <% if index < @event.races.size %>
     <td width="16">&nbsp;</td>
     <td><a href="#<%= index %>"><span class="type"><%= @event.races[index].name %></span></a></td>
-      <% end %>  
-    <% end %>  
+      <% end %>
+    <% end %>
   </tr>
-  <% index += 1 %>  
-<% end %>  
+  <% index += 1 %>
+<% end %>
 </table>
+<% end -%>
 
 <span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
 
 <%- @event.races.each_with_index do |race, index| -%>
 <%- unless race.results.empty? -%>
-<% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>" do %>
+<% table :caption => "<a name=\"#{index}\"></a><span class=\"tablehead\">#{race.name}</span>", :insert_header => true do %>
   <tr>
     <% if @discipline == 'Team' %>
 
     <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
-   <%= link_to(truncate(result.team_name, :length => 40),
-       :controller => 'results',
-       :action => 'competition',
-       :competition_id => result.event.to_param,
-       :team_id => result.team_id) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
+   <%= link_to(truncate(result.team_name, :length => 40), event_team_results_path(result.event, result.team)) %><%= ' ' * (40 - (truncate(result.team_name, :length => 40).length)) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 
@@ -43,23 +41,19 @@
 
     <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
- <%= link_to(truncate(result.name), 
-	 :controller => 'results',
-     :action => 'competition',
-     :competition_id => result.event.to_param,
-     :racer_id => result.racer_id) %><%= ' ' * (30 - truncate(result.name).length) -%>
-   <%= truncate(result.racer_team_name, :length => 40).ljust(40) -%>
+ <%= link_to(truncate(result.name), event_person_results_path(result.event, result.person)) %><%= ' ' * (30 - truncate(result.name).length) -%>
+   <%= truncate(result.person_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
 
     <%- end -%>
   </tr>
-  <%- end -%>  
+  <%- end -%>
 
 <br><br>
 
-<%- end -%>  
-<%- end -%>  
+<%- end -%>
+<%- end -%>
 
 <%- else -%>
 No results for <%= @year %>.

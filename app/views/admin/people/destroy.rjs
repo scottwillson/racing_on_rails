@@ -1,0 +1,2 @@
+page.visual_effect(:puff, "person_#{@person.id}_row", :duration => 2)
+page.call(:flash, "notice", "Deleted #{@person.name}")

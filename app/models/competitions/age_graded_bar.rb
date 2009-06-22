@@ -5,15 +5,15 @@ class AgeGradedBar < Competition
 
   def source_results(race)
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [:event, :category]}],
+                :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{
                   events.type = 'OverallBar' 
                   and bar = true
                   and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
                   and categories.id = #{race.category.parent(true).id}
-                  and racers.date_of_birth between '#{race.dates_of_birth.begin}' and '#{race.dates_of_birth.end}'
+                  and people.date_of_birth between '#{race.dates_of_birth.begin}' and '#{race.dates_of_birth.end}'
                   and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'}],
-                :order => 'racer_id'
+                :order => 'person_id'
     )
   end
   

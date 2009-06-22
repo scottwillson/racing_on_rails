@@ -58,7 +58,7 @@ module GridHelper
 
   #  mbrahere git diff says I added the following method - ???
   def link_to_team_result(cell, result)
-    return cell unless result.racer
+    return cell unless result.person
 
     #alptodo: figure out preliminary results...
     #    if result.preliminary?

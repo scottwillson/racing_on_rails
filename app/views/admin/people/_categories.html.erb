@@ -1,0 +1,28 @@
+<% table :caption => "Categories", :class => "box-2 person_categories", :insert_header => true, :columns => 2 do %>
+  <%- if ASSOCIATION.bmx_numbers? -%>
+  <tr>
+    <td>BMX</td>
+    <td><%= text_field 'person', 'bmx_category' %></td>
+  </tr>
+  <%- end -%>
+  <tr>
+    <td>Cyclocross</td>
+    <td><%= text_field 'person', 'ccx_category' %></td>
+  </tr>
+  <tr>
+    <td>Downhill</td>
+    <td><%= text_field 'person', 'dh_category' %></td>
+  </tr>
+  <tr>
+    <td>Mountain Bike</td>
+    <td><%= text_field 'person', 'mtb_category' %></td>
+  </tr>
+  <tr>
+    <td>Road</td>
+    <td><%= text_field 'person', 'road_category' %></td>
+  </tr>
+  <tr>
+    <td>Track</td>
+    <td><%= text_field 'person', 'track_category' %></td>
+  </tr>
+<% end -%>

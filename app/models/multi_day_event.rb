@@ -207,7 +207,7 @@ class MultiDayEvent < Event
     if start_date == end_date
       start_date_s
     else
-      "#{start_date_s} to #{end_date.strftime('%a, %B %d')}"
+      "#{start_date_s} to #{end_date.strftime('%a, %B %d, %Y')}"
     end
   end
   

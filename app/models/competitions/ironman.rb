@@ -5,7 +5,7 @@ class Ironman < Competition
     'Ironman'
   end
 
-  # TODO Can't we just iterate through all of a racer's results? Would need to weed out many results
+  # TODO Can't we just iterate through all of a person's results? Would need to weed out many results
   def Ironman.years
     years = []
     results = connection.select_all(
@@ -17,11 +17,6 @@ class Ironman < Competition
     years.sort.reverse
   end
   
-  def Ironman.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/ironman.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/ironman")
-  end
-
   def points_for(source_result)
     1
   end
@@ -32,7 +27,7 @@ class Ironman < Competition
   
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.id as id, race_id, racer_id, results.team_id, place FROM results  
+      %Q{SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
          LEFT OUTER JOIN races ON races.id = results.race_id 
          LEFT OUTER JOIN events ON races.event_id = events.id 
          WHERE (place != 'DNS'
@@ -41,11 +36,7 @@ class Ironman < Competition
            and events.ironman = true 
            and events.date >= '#{year}-01-01' 
            and events.date <= '#{year}-12-31')
-         ORDER BY racer_id}
+         ORDER BY person_id}
     )
-  end
-    
-  def expire_cache
-    Ironman.expire_cache
   end
 end

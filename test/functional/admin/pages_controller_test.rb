@@ -1,15 +1,12 @@
 require 'test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   test "Only admins can edit pages" do
-    session[:user_id] = nil
+    destroy_person_session
     get(:index)
-    assert_redirected_to(:action => "login")
+    assert_redirected_to(new_person_session_path)
   end
   
   test "View pages as tree" do
@@ -29,7 +26,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(page, assigns("item"), "@page")
     page.reload
     assert_equal("OBRA Banquet", page.title, "Page title")
-    assert_equal(users(:administrator), page.author, "author")
+    assert_equal(people(:administrator), page.author, "author")
   end
   
   test "Edit page" do
@@ -51,7 +48,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(users(:administrator), page.author, "author")
+    assert_equal(people(:administrator), page.author, "author")
   end
   
   test "Update page parent" do
@@ -68,7 +65,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(users(:administrator), page.author, "author")
+    assert_equal(people(:administrator), page.author, "author")
     assert_equal(parent_page, page.parent, "Page parent")
     assert_redirected_to(edit_admin_page_path(page))
   end
@@ -97,7 +94,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(users(:administrator), page.author, "author")
+    assert_equal(people(:administrator), page.author, "author")
   end
   
   test "Create child page" do
@@ -114,7 +111,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(users(:administrator), page.author, "author")
+    assert_equal(people(:administrator), page.author, "author")
     assert_equal(parent_page, page.parent, "Page parent")
   end
   

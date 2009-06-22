@@ -1,9 +1,7 @@
 require "test_helper"
 
 class Admin::BidsControllerTest < ActionController::TestCase
-  def setup
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_index
     opts = {:controller => "admin/bids", :action => "index"}

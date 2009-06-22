@@ -56,38 +56,38 @@ class ResultsFileTest < ActiveSupport::TestCase
        actual_race.results.sort.each_with_index do |result, result_index|
          expected_result = expected_race.results[result_index]
          assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
-         if result.license && result.license.empty? #may have found racer by license
+         if result.license && result.license.empty? #may have found person by license
            assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
            assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
          end
          assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
          assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-         if result.racer
+         if result.person
            if RaceNumber.rental?(result.number, Discipline[event.discipline])
-             assert(!result.racer.member?(race_date), "Racer should not be a member because he has a rental number")
+             assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
            else
-             assert(result.racer.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.racer.member_from.strftime('%F')} #{result.racer.member_to.strftime('%F')}")
+             assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from.strftime('%F')} #{result.person.member_to.strftime('%F')}")
              assert_not_equal(
                Date.today, 
-               result.racer.member_from, 
-               "#{result.name} membership date should existing date or race date, but never today (#{result.racer.member_from.strftime})")
+               result.person.member_from, 
+               "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from.strftime})")
            end
            # test result by license (some with name misspelled)
            if result.license && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
-             racer_by_lic = Racer.find_by_license(result.license)
-             assert_equal(result.racer, racer_by_lic, "Result should be assigned to #{racer_by_lic.name} by license but was given to #{result.racer.name}") if racer_by_lic
+             person_by_lic = Person.find_by_license(result.license)
+             assert_equal(result.person, person_by_lic, "Result should be assigned to #{person_by_lic.name} by license but was given to #{result.person.name}") if person_by_lic
            end
          end
        end
      end
   end
   
-  def test_import_time_trial_racers_with_same_name
-    bruce_109 = Racer.create!(:first_name => 'Bruce', :last_name => 'Carter')
+  def test_import_time_trial_people_with_same_name
+    bruce_109 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
     bruce_109.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '109')
     
-    bruce_1300 = Racer.create!(:first_name => 'Bruce', :last_name => 'Carter')
+    bruce_1300 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
     bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
     
     event = SingleDayEvent.create!(:discipline => 'Time Trial')
@@ -108,7 +108,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal('place', race.result_columns[0], 'Column 0 name')
     assert_equal('category_name', race.result_columns[2], 'Column 2 name')
     
-    assert_equal(2, Racer.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
+    assert_equal(2, Person.find_all_by_first_name_and_last_name('bruce', 'carter').size, 'Bruce Carters after import')
 
     assert(!event.races.empty?, 'event.races should not be empty')
     for race in event.races
@@ -116,54 +116,54 @@ class ResultsFileTest < ActiveSupport::TestCase
       assert_kind_of(Category, race.category, 'race.category')
       for result in race.results.sort
         assert_kind_of(Result, result, 'result')
-        assert_kind_of(Racer, result.racer, 'result.racer') unless result.racer.nil?
+        assert_kind_of(Person, result.person, 'result.person') unless result.person.nil?
         assert_kind_of(Team, result.team, 'result.team') unless result.team.nil?
         assert_kind_of(Category, result.category, 'result.category') unless result.category.nil?
         result.place
-        result.racer
+        result.person
         result.team
         result.first_name
       end
     end
     
-    # Existing racers, same name, different numbers
-    bruce_1300 = event.races.first.results[6].racer
-    bruce_109 = event.races.last.results[2].racer
+    # Existing people, same name, different numbers
+    bruce_1300 = event.races.first.results[6].person
+    bruce_109 = event.races.last.results[2].person
     assert_not_nil(bruce_1300, 'bruce_1300')
     assert_not_nil(bruce_109, 'bruce_109')
     assert_equal(bruce_1300.name.downcase, bruce_109.name.downcase, "Bruces with different numbers should have same name")
-    assert_not_equal(bruce_1300, bruce_109, "Bruces with different numbers should be different racers")
+    assert_not_equal(bruce_1300, bruce_109, "Bruces with different numbers should be different people")
     assert_not_equal(bruce_1300.id, bruce_109.id, "Bruces with different numbers should have different IDs")
     
-    # New racer, same name, different number
-    scott_90 = event.races.first.results[5].racer
-    scott_400 = event.races.last.results[3].racer
-    assert_equal(scott_90.name.downcase, scott_400.name.downcase, "New racers with different numbers should have same name")
-    assert_equal(scott_90, scott_400, "New racers with different numbers should be same racers")
-    assert_equal(scott_90.id, scott_400.id, "New racers with different numbers should have same IDs")
+    # New person, same name, different number
+    scott_90 = event.races.first.results[5].person
+    scott_400 = event.races.last.results[3].person
+    assert_equal(scott_90.name.downcase, scott_400.name.downcase, "New people with different numbers should have same name")
+    assert_equal(scott_90, scott_400, "New people with different numbers should be same people")
+    assert_equal(scott_90.id, scott_400.id, "New people with different numbers should have same IDs")
 
-    # Existing racer, same name, different number
-    existing_weaver = racers(:weaver)
-    new_weaver = event.races.last.results.first.racer
+    # Existing person, same name, different number
+    existing_weaver = people(:weaver)
+    new_weaver = event.races.last.results.first.person
     assert_equal(existing_weaver.name, new_weaver.name, "Weavers with different numbers should have same name")
-    assert_equal(existing_weaver, new_weaver, "Weavers with different numbers should be same racers")
+    assert_equal(existing_weaver, new_weaver, "Weavers with different numbers should be same people")
     assert_equal(existing_weaver.id, new_weaver.id, "Weavers with different numbers should have same IDs")
 
-    # New racer, different name, same number
-    kurt = event.races.first.results[2].racer
-    alan = event.races.first.results[3].racer
-    assert_not_equal(kurt, alan, "Racer with different names, same numbers should be different racers")
+    # New person, different name, same number
+    kurt = event.races.first.results[2].person
+    alan = event.races.first.results[3].person
+    assert_not_equal(kurt, alan, "Person with different names, same numbers should be different people")
 
-    # Existing racer, different name, same number
-    existing_matson = racers(:matson)
-    new_matson = event.races.first.results.first.racer
-    assert_not_equal(existing_matson, new_matson, "Racer with different numbers should be different racers")
+    # Existing person, different name, same number
+    existing_matson = people(:matson)
+    new_matson = event.races.first.results.first.person
+    assert_not_equal(existing_matson, new_matson, "Person with different numbers should be different people")
   end
   
   def test_import_2006_v2
     expected_races = []
     
-    paul_bourcier = Racer.create!(:first_name => "Paul", :last_name => "Bourcier", :member => true)
+    paul_bourcier = Person.create!(:first_name => "Paul", :last_name => "Bourcier", :member => true)
     eweb = Team.create!(:name => 'EWEB Windpower')
     paul_bourcier.team = eweb
     paul_bourcier.save!
@@ -171,7 +171,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert(eweb.errors.empty?)
     assert_equal(eweb, paul_bourcier.team(true), 'Paul Bourcier team')
     
-    chris_myers = Racer.create!(:first_name => "Chris", :last_name => "Myers", :member => true)
+    chris_myers = Person.create!(:first_name => "Chris", :last_name => "Myers", :member => true)
     assert_nil(chris_myers.team(true), 'Chris Myers team')
     
     race = Race.new(:category => Category.new(:name => "Pro/1/2"))
@@ -219,12 +219,12 @@ class ResultsFileTest < ActiveSupport::TestCase
         assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-        if result.racer and !RaceNumber.rental?(result.number, Discipline[event.discipline])
-          assert_equal(expected_result.number, result.racer.road_number, "Road number for #{result.racer.name}")
-          assert(result.racer.member?, "member? for race #{index} result #{result_index}: #{result.racer.name} #{result.number}")
+        if result.person and !RaceNumber.rental?(result.number, Discipline[event.discipline])
+          assert_equal(expected_result.number, result.person.road_number, "Road number for #{result.person.name}")
+          assert(result.person.member?, "member? for race #{index} result #{result_index}: #{result.person.name} #{result.number}")
         end
-        if result.racer and RaceNumber.rental?(result.number, Discipline[event.discipline])
-          assert_equal(nil, result.racer.road_number, "Road number")
+        if result.person and RaceNumber.rental?(result.number, Discipline[event.discipline])
+          assert_equal(nil, result.person.road_number, "Road number")
         end
       end
     end
@@ -234,7 +234,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     chris_myers.reload
     assert_nil(chris_myers.team(true), 'Chris Myers team should not be updated by results')
     
-    browning = Racer.find_by_name("John Browning")
+    browning = Person.find_by_name("John Browning")
     assert_equal(event, browning.created_by, "created_by")
     assert_equal(event, browning.team.created_by, "team created_by")
     assert_equal(event.name, browning.created_by.name, "created_by name")
@@ -555,11 +555,11 @@ class ResultsFileTest < ActiveSupport::TestCase
   end
   
   def build_result(race, place, first_name = nil, last_name = nil, team_name = nil)
-    racer = nil
+    person = nil
     if first_name != nil && last_name != nil
-      racer = Racer.new
-      racer.first_name = first_name
-      racer.last_name = last_name
+      person = Person.new
+      person.first_name = first_name
+      person.last_name = last_name
     end
     team = nil
     if teamName != nil
@@ -567,7 +567,7 @@ class ResultsFileTest < ActiveSupport::TestCase
       team.name = team_name
     end
     result = race.results.build(:place => place)
-    result.racer = racer
+    result.person = person
     result.team = team
     race.results << result
   end
@@ -589,8 +589,8 @@ class ResultsFileTest < ActiveSupport::TestCase
       for expected_result in expected_race.results
         result = actual_race.results[expected_race.results.index(expected_result)]
         assert_equal(expected_result.place, result.place, "Place")
-        assert_equal(expected_result.first_name, result.first_name, "Racer first name")
-        assert_equal(expected_result.last_name, result.last_name, "Racer last name")
+        assert_equal(expected_result.first_name, result.first_name, "Person first name")
+        assert_equal(expected_result.last_name, result.last_name, "Person last name")
         assert_equal(expected_result.team_name, result.team_name, "Team name")
       end
     end

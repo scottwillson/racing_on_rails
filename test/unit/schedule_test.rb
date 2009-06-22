@@ -4,11 +4,6 @@ require "test_helper"
 # TODO Recognize Series and WeeklySeries
 
 class ScheduleTest < ActiveSupport::TestCase
-  def setup
-    # Remove existing promoters that may conflict
-    Promoter.delete_all
-  end
-  
   def test_create
     piece_of_cake = SingleDayEvent.new({
       :name => "Piece of Cake Road Event",
@@ -151,7 +146,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert(cream_puff.instance_of?(SingleDayEvent), "Cream Puff class")
     assert_not_nil(cream_puff.promoter, "Cream Puff promoter")
     assert_equal("Don Person", cream_puff.promoter.name, "Cream Puff promoter name")
-    assert_equal("541-935-4996", cream_puff.promoter.phone, "Cream Puff promoter phone")
+    assert_equal("541-935-4996", cream_puff.promoter.home_phone, "Cream Puff promoter home_phone")
     assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter email")
     assert_equal(ASSOCIATION.default_sanctioned_by, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
     
@@ -165,13 +160,13 @@ class ScheduleTest < ActiveSupport::TestCase
       assert(event.instance_of?(SingleDayEvent), "Fast Twitch Fridays Puff class")
       assert_equal(event.promoter, fast_twitch_series.promoter, "Fast Twitch Fridays promoter")
       assert_equal("Jen Featheringill", event.promoter.name, "Fast Twitch Fridays promoter name")
-      assert_equal("503-227-4439", event.promoter.phone, "Fast Twitch Fridays promoter name")
+      assert_equal("503-227-4439", event.promoter.home_phone, "Fast Twitch Fridays promoter name")
       assert_equal("bike-central@bike-central.com", event.promoter.email, "Fast Twitch Fridays promoter name")
       assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "Fast Twitch sanctioned_by")
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_equal(nil, event.flyer, "Fast Twitch flyer")
     end
-    assert_equal(1, Promoter.count(:conditions => "name = 'Jen Featheringill'"), "Jen Featheringill should only be listed once in promoters")
+    assert_equal(1, Person.count(:conditions => "first_name = 'Jen' and last_name = 'Featheringill'"), "Jen Featheringill should only be listed once in promoters")
     
     assert_not_nil(jack_frost, "Should have imported Jack Frost")
     assert_equal("Vancouver", jack_frost.city, "Jack Frost city")
@@ -194,49 +189,49 @@ class ScheduleTest < ActiveSupport::TestCase
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Tita Soriano", promoter.name, "promoter name")
-    assert_equal("541-840-6580", promoter.phone, "promoter phone")
+    assert_equal("541-840-6580", promoter.home_phone, "promoter home_phone")
     assert_equal("tita@3amevents.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("12/24 Hr MTN")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Randy Dreiling", promoter.name, "promoter name")
-    assert_equal("541-968-5397", promoter.phone, "promoter phone")
+    assert_equal("541-968-5397", promoter.home_phone, "promoter home_phone")
     assert_equal("raggy23@yahoo.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Banana Belt Road Race Series")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jeff Mitchem", promoter.name, "promoter name")
-    assert_equal("503-233-3636", promoter.phone, "promoter phone")
+    assert_equal("503-233-3636", promoter.home_phone, "promoter home_phone")
     assert_equal("JMitchem@ffadesign.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Beaverton Grand Prix")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Dave Levy", promoter.name, "promoter name")
-    assert_equal("503-621-9670", promoter.phone, "promoter phone")
+    assert_equal("503-621-9670", promoter.home_phone, "promoter home_phone")
     assert_equal("titaniumdave@msn.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Cascade Cream Puff MTB")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Don Person", promoter.name, "promoter name")
-    assert_equal("541-935-4996", promoter.phone, "promoter phone")
+    assert_equal("541-935-4996", promoter.home_phone, "promoter home_phone")
     assert_equal("don@mtbtires.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("CCX Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Kris Schamp", promoter.name, "promoter name")
-    assert_equal("503-446-9007", promoter.phone, "promoter phone")
+    assert_equal("503-446-9007", promoter.home_phone, "promoter home_phone")
     assert_equal("kris@portlandracing.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Cherry Pie Road Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Norman Babcock", promoter.name, "promoter name")
-    assert_equal("541 520-3717", promoter.phone, "promoter phone")
+    assert_equal("541 520-3717", promoter.home_phone, "promoter home_phone")
     assert_equal("2dogracing@comcast.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("Collegiate Track Nationals")
@@ -247,36 +242,36 @@ class ScheduleTest < ActiveSupport::TestCase
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Mark Schwyhart", promoter.name, "promoter name")
-    assert_equal("503-231-0236", promoter.phone, "promoter phone")
+    assert_equal("503-231-0236", promoter.home_phone, "promoter home_phone")
     assert_equal("columbiaplateau@comcast.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("CoMotion Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Sal Collura", promoter.name, "promoter name")
-    assert_equal("541-747-3336", promoter.phone, "promoter phone")
+    assert_equal("541-747-3336", promoter.home_phone, "promoter home_phone")
     assert_equal("salcollura@hotmail.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("CoMotion Tandem Stage Race")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Sal Collura", promoter.name, "promoter name")
-    assert_equal("541-747-3336", promoter.phone, "promoter phone")
+    assert_equal("541-747-3336", promoter.home_phone, "promoter home_phone")
     assert_equal("salcollura@hotmail.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Crawfish Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Shari Matyus", promoter.name, "promoter name")
-    assert_equal("503-223-4984", promoter.phone, "promoter phone")
+    assert_equal("503-223-4984", promoter.home_phone, "promoter home_phone")
     assert_equal("sharim@premier-press.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Criterium Championships")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jay Martineau", promoter.name, "promoter name")
-    assert_equal("360-281-0085", promoter.phone, "promoter phone")
-    assert_equal("jaymartineau@covad.net_", promoter.email, "promoter email")
+    assert_equal("360-281-0085", promoter.home_phone, "promoter home_phone")
+    assert_equal("jaymartineau@covad.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("Cross Crusade")
     promoter = event.promoter
@@ -288,35 +283,35 @@ class ScheduleTest < ActiveSupport::TestCase
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jen Featheringill", promoter.name, "promoter name")
-    assert_equal("503-227-4439", promoter.phone, "promoter phone")
+    assert_equal("503-227-4439", promoter.home_phone, "promoter home_phone")
     assert_equal("bike-central@bike-central.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Healthnet Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Porter Childs", promoter.name, "promoter name")
-    assert_equal("(503) 222-5868", promoter.phone, "promoter phone")
+    assert_equal("(503) 222-5868", promoter.home_phone, "promoter home_phone")
     assert_equal("Porter@ORbike.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("High Desert Omnium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Tim Plummer", promoter.name, "promoter name")
-    assert_equal("541-330-8758", promoter.phone, "promoter phone")
+    assert_equal("541-330-8758", promoter.home_phone, "promoter home_phone")
     assert_equal("tplummer@bendcycling.org", promoter.email, "promoter email")
     
     event = Event.find_by_name("Hood River CCX")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Jeff Lorenzon", promoter.name, "promoter name")
-    assert_equal("541-490-6837", promoter.phone, "promoter phone")
+    assert_equal("541-490-6837", promoter.home_phone, "promoter home_phone")
     assert_equal("obra369@yahoo.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Jack Frost Time Trial")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Phil Sanders", promoter.name, "promoter name")
-    assert_equal("503-649-4632", promoter.phone, "promoter phone")
+    assert_equal("503-649-4632", promoter.home_phone, "promoter home_phone")
     assert_equal("philipsanders2@comcast.net", promoter.email, "promoter email")
     
     event = Event.find_by_name("LA World Cup")
@@ -327,21 +322,21 @@ class ScheduleTest < ActiveSupport::TestCase
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Bill Cass", promoter.name, "promoter name")
-    assert_equal("503-246-6480", promoter.phone, "promoter phone")
+    assert_equal("503-246-6480", promoter.home_phone, "promoter home_phone")
     assert_equal("Bill.Cass@nike.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Vancouver Courthouse Criterium")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Carl Anton", promoter.name, "promoter name")
-    assert_equal("360-695-7088", promoter.phone, "promoter phone")
+    assert_equal("360-695-7088", promoter.home_phone, "promoter home_phone")
     assert_equal("canton@innventures.com", promoter.email, "promoter email")
     
     event = Event.find_by_name("Veloshop CCX")
     promoter = event.promoter
     assert_not_nil(promoter, "Promoter should not be nil")
     assert_equal("Molly Cameron", promoter.name, "promoter name")
-    assert_equal("503.335.VELO", promoter.phone, "promoter phone")
-    assert_equal("Molly Cameron [molly@veloshop.org]", promoter.email, "promoter email")
+    assert_equal("503.335.VELO", promoter.home_phone, "promoter home_phone")
+    assert_equal("molly@veloshop.org", promoter.email, "promoter email")
   end
 end

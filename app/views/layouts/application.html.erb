@@ -18,8 +18,8 @@
     <div class="shadow_1">
       <div class="frame">
         <div class="nav" id="top">
-          <h1><%= link_to ASSOCIATION.name, :controller => 'home', :action => 'index' %></h1>
-          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %></div>
+          <h1><%= link_to ASSOCIATION.name, "/" %></h1>
+          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, "/" %></div>
         </div>
         <div class="content container">
         <%= render :partial => "shared/flash_messages", :locals => { :flash => flash } %>
@@ -30,14 +30,14 @@
             <%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %> |
             <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
             <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %> | 
-			<% if is_logged_in? %>
-			<%= link_to "Logout", {:controller => "/account", :action => "logout"}, { :id => "account_link" } %>
-			<% else %>
-			<%= link_to "Login", {:controller => "/account", :action => "login"}, { :id => "account_link" } %>
-			<% end %>
-			<% if logged_in_user && logged_in_user.has_role?('administrator') %>
-			 | <%= link_to "Administration", {:controller => "/admin/events"}, { :id => "admin_link" } %>
-			<% end %>
+      <% if current_person %>
+      <%= link_to "Logout", person_session_path, :method => :delete, :id => "account_link" %>
+      <% else %>
+      <%= link_to "Login", new_person_session_path, { :id => "account_link" } %>
+      <% end %>
+      <% if current_person && current_person.administrator? %>
+       | <%= link_to "Administration", {:controller => "/admin/events"}, { :id => "admin_link" } %>
+      <% end %>
           </div>
         </div>
       </div>

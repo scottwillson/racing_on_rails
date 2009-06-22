@@ -4,7 +4,7 @@ require 'net/http'
 
 if ARGV[0] == "parse"
   File.open("urls",  "w") do |urls|
-    Dir["/Users/sw/logs/*"].each do |path|
+    Dir["/People/sw/logs/*"].each do |path|
       File.readlines(path).each do |line|
         url = line[/\[(http:\/\/[^\]]+)/, 1]
         if url

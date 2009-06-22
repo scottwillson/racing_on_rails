@@ -14,7 +14,7 @@
 <%= event.name %>
 <%- end -%>
 <%- else -%>
-<%= link_to event.name, :controller => 'results', :action => 'event', :id => event.id  %>
+<%= link_to event.name, event_results_path(event)  %>
 <%- end -%>
 <%- end -%>
     </td>

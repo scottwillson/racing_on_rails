@@ -87,7 +87,7 @@ class Bar < Competition
     end
 
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
+                :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                   place between 1 AND #{point_schedule.size - 1}
                     and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries') or events.type is NULL)
@@ -103,7 +103,7 @@ class Bar < Competition
                       or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
                     and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
                 }],
-                :order => 'racer_id'
+                :order => 'person_id'
       )
   end
 

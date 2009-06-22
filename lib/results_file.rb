@@ -33,11 +33,11 @@ class ResultsFile
     "class"            => "category_class",  #mbrahere this is like A for Masters A
     "first"            => "first_name",
     "firstname"        => "first_name",
-    "racer.first_name" => "first_name",
-    "racer"            => "name",
+    "person.first_name" => "first_name",
+    "person"            => "name",
     "last"             => "last_name",
     "lastname"         => "last_name",
-    "racer.last_name"  => "last_name",
+    "person.last_name"  => "last_name",
     "team"             => "team_name",
     "team.name"        => "team_name",
     "bib_#"            => "number",  #mbrahere
