@@ -9,7 +9,7 @@ class TaborOverallTest < ActiveSupport::TestCase
   end
   
   def test_recalc_with_one_event
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
     event = series.children.create!(:date => Date.new(2007, 6, 6))
     
     series.reload
@@ -19,17 +19,17 @@ class TaborOverallTest < ActiveSupport::TestCase
     cat_3_race.results.create!(:place => 1, :person => people(:weaver))
     cat_3_race.results.create!(:place => 3, :person => people(:tonkin))
     
-    masters_40_plus_women_category = Category.create!(:name => "Women Masters 40+")
+    masters_40_plus_women_category = Category.find_or_create_by_name(:name => "Masters Women")
     masters_race = event.races.create!(:category => masters_40_plus_women_category)
     masters_race.results.create!(:place => 15, :person => people(:alice))
     masters_race.results.create!(:place => 16, :person => people(:molly))
     
     # Previous year should be ignored
-    previous_event = WeeklySeries.create!(:name => "Mt Tabor Series").children.create!(:date => Date.new(2006))
+    previous_event = WeeklySeries.create!(:name => "Mt. Tabor Series").children.create!(:date => Date.new(2006))
     previous_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 9, :person => people(:weaver))
     
     # Following year should be ignored
-    following_event = WeeklySeries.create!(:name => "Mt Tabor Series").children.create!(:date => Date.new(2008))
+    following_event = WeeklySeries.create!(:name => "Mt. Tabor Series").children.create!(:date => Date.new(2008))
     following_event.races.create!(:category => categories(:cat_3)).results.create!(:place => 10, :person => people(:weaver))
     
     TaborOverall.calculate!(2007)
@@ -63,7 +63,7 @@ class TaborOverallTest < ActiveSupport::TestCase
   end
   
   def test_best_5_of_6_count
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
 
     event = series.children.create!(:date => Date.new(2007, 6, 6))
     event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :person => people(:weaver))
@@ -97,7 +97,7 @@ class TaborOverallTest < ActiveSupport::TestCase
   end
   
   def test_double_ponts_for_final_event
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
 
     event = series.children.create!(:date => Date.new(2007, 6, 6))
     event.races.create!(:category => categories(:cat_3)).results.create!(:place => 1, :person => people(:weaver))
@@ -131,8 +131,8 @@ class TaborOverallTest < ActiveSupport::TestCase
   end
   
   def test_many_results
-    series = WeeklySeries.create!(:name => "Mt Tabor Series")
-    masters = Category.find_or_create_by_name("Men Masters 40+")
+    series = WeeklySeries.create!(:name => "Mt. Tabor Series")
+    masters = Category.find_or_create_by_name("Masters Men")
     senior_men = categories(:senior_men)
     person = Person.create!(:name => "John Browning")
     
