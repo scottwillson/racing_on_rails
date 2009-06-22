@@ -8,6 +8,7 @@ class RacingAssociation
   attr_accessor :competitions
   attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
+  attr_accessor :show_practices_on_calendar
   attr_accessor :always_insert_table_headers
   attr_accessor :show_events_velodrome
   attr_accessor :usac_region
@@ -19,6 +20,7 @@ class RacingAssociation
     @show_license = true
     @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
+    @show_practices_on_calendar = false
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @award_cat4_participation_points = true
@@ -63,6 +65,10 @@ class RacingAssociation
   
   def show_events_velodrome?
     @show_events_velodrome
+  end
+  
+  def show_practices_on_calendar?
+    @show_practices_on_calendar
   end
   
   def show_only_association_sanctioned_races_on_calendar?

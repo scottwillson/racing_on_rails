@@ -7,10 +7,7 @@ class SingleDayEvent < Event
   before_create :set_bar_points
 
   def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = ASSOCIATION.show_only_association_sanctioned_races_on_calendar)
-    conditions = ["date between ? and ? and practice = ?", "#{year}-01-01", "#{year}-12-31", false]
-#mbratodo: I had the following so that practice events would be included:
-#     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
-
+    conditions = ["date between ? and ? and practice = ?", "#{year}-01-01", "#{year}-12-31", ASSOCIATION.show_practices_on_calendar?]
 
     if sanctioned_by
       conditions.first << " and sanctioned_by = ?"
