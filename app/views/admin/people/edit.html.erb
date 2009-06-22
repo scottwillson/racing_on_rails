@@ -31,8 +31,8 @@
         :include_blank => true %>
     <br/>
 
-    <%= f.labelled_text(:racing_age,  "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %>
-    <%= f.labelled_text :cyclocross_racing_age,  @person.cyclocross_racing_age %>
+    <%= f.labelled_text(:racing_age, "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %>
+    <%= f.labelled_text :cyclocross_racing_age,  @person.cyclocross_racing_age, "CX Racing Age" %>
 
     <%= f.label :gender %>
     <%= f.select(:gender, ['', 'F', 'M']) %><br/>
@@ -95,15 +95,12 @@
     <%= render :partial => 'categories', :locals => { :person => @person } %>
     <%= render :partial => 'aliases_table', :locals => { :person => @person } %>
   </div>
-  
-  <% table :caption => "Events", :class => "box-3 last no_top_margin" do %>
-    <tr>
-      <th>Date</th>
-      <th>Name</th>
-    </tr>
-    <%= render :partial => "event", :collection => @person.events.sort_by(&:date).reverse %>
-  <% end unless @person.events.empty? -%>
 
+  <hr class="space" />
+
+  <div class="clear span-6 last">
+    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.empty? %>
+  </div>
 
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
