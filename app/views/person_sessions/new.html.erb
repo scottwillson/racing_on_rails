@@ -1,11 +1,9 @@
 <% @page_title = "Login" %>
 <% @show_tabs = false %>
 
-<h2 class="centered">Login to <%= ASSOCIATION.name %></h2>
-
 <% form_for @person_session, :url => person_session_path do |f| %>
 <div class="login centered">
-  <%= f.error_messages %>
+  <%= f.error_messages :header_message => nil, :message => nil %>
   <%= f.labelled_text_field :login %><br/>
   <%= f.label :password %>
   <%= f.password_field :password %>
@@ -16,4 +14,5 @@
 </div>
 <% end -%>
 
-<%= focus("person_session_email") %>
+<%= focus("person_session_login") if @person_session.login.blank? %>
+<%= focus("person_session_password") unless @person_session.login.blank? %>
