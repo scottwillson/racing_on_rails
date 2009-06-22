@@ -1,6 +1,5 @@
 module Schedule
-#mbratodo: I reworte much of the schedule import functionality, abandoning the "Rigid OBRA legacy format", modeling it on results import 
-#  and tailoring to MBRA's needs. This is the import map I use:
+# MBRA format:
 #      COLUMN_MAP = {
 #      'Race'                                   => 'name',
 #      'Event'                                  => 'name',
@@ -49,22 +48,18 @@ module Schedule
     # Import implemented in several methods. See source code.
     # === Returns
     # * date of first event
-#mbratodo: added delete_all_future parm
-#    def Schedule.import(filename, delete_all_future = 0)
     def Schedule.import(filename)
       date = nil
       Event.transaction do
         file             = read_file(filename)
         date             = read_date(file)
                            delete_all_future_events(date)
-#mbratodo:                           delete_all_future_events(date) if delete_all_future.to_i > 0
         events           = parse_events(file)
         multi_day_events = find_multi_day_events(events)
                            save(events, multi_day_events)
       end
       date
     end
-#mbratodo: lots of the rest of this class was changed, but as Scott is replacing this code anyhow, no point in highlighting my changes
     def Schedule.read_date(file)
       date             = file.rows.first['date']
       logger.debug("Schedule Import starting at #{date}")
