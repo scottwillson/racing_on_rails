@@ -10,7 +10,6 @@ module Admin::EventsHelper
   def discipline_upcoming_events(discipline, upcoming_events)
     if upcoming_events.disciplines.size > 1
       caption = discipline.name.upcase
-#mbratodo: I changed the above to: caption = discipline.name.upcase.gsub('_', " ") #remove underscores
     else
       caption = nil
     end
