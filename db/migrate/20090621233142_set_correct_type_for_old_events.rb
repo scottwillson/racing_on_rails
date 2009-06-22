@@ -1,6 +1,3 @@
-# TODO CascadeCrossOverall
-# TODO RiderRankings
-# TODO WSBA BARR
 class SetCorrectTypeForOldEvents < ActiveRecord::Migration
   def self.up
     Bar.find(:all, :conditions => ["date < ?", Date.new(2009)]).each do |discipline_bar_parent|
@@ -26,6 +23,10 @@ class SetCorrectTypeForOldEvents < ActiveRecord::Migration
       tabor_overall_2008 = Event.find(14319)
       tabor_overall_2008.type = "TaborOverall"
       tabor_overall_2008.save!
+    end
+    
+    if ASSOCIATION.short_name == "WSBA"
+      execute "update events set type = 'CascadeCrossOverall' where id = 655"
     end
   end
 end
