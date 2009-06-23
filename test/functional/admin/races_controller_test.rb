@@ -2,10 +2,7 @@
 require "test_helper"
 
 class Admin::RacesControllerTest < ActionController::TestCase
-  def setup
-    super
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_edit
     kings_valley_3 = races(:kings_valley_3)

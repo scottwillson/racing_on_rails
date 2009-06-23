@@ -23,7 +23,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :discipline => "Mountain Bike",
       :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
-      :promoter => Promoter.new(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :phone => "203-259-8577")
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
     events << mud_slinger
     mud_slinger.save!
@@ -78,7 +78,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :discipline => "Mountain Bike",
       :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
-      :promoter => Promoter.new(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :phone => "203-259-8577")
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
     events << mud_slinger
     mud_slinger.save!
@@ -111,7 +111,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :discipline => "Mountain Bike",
       :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
-      :promoter => Promoter.new(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :phone => "203-259-8577")
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
     events << mud_slinger
     mud_slinger.save!
@@ -144,7 +144,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :discipline => "Mountain Bike",
       :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
-      :promoter => Promoter.new(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :phone => "203-259-8577")
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
     events << mud_slinger
     mud_slinger.save!
@@ -182,7 +182,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :discipline => "Mountain Bike",
       :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
-      :promoter => Promoter.new(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :phone => "203-259-8577")
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
     events << mud_slinger
     mud_slinger.save!

@@ -1,0 +1,59 @@
+<%  
+# this partial renders a tabnav, you can call it in your views with:
+#   <%= tabnav :results_disciplines % > (just the tabnav) 
+# or, if you want a boxed tabnav:
+#   <% tabnav :results_disciplines do % >
+#     your html here
+#   <% end % >
+# (remove the space between % and >, we don't want to mess up your brand new tabnav :-))
+#
+# you can pass render_tabnav a few options:
+#   :generate_css => true|false #=> generates a default inline css for the tabnav, defaults to false
+#   :html => aHash #=> sets html options for the tabnav's div (es :html => {:class=> 'myCssClass', :id=>'myCssId'}) 
+#
+#alphere: apparently the first parm to render tabnav just results in id's and classes in html,
+#  so I can share the css for disciplines across results and schedule.
+
+render_tabnav :disciplines, 
+              :generate_css => false do
+
+  if @year.blank?
+    year = Date.today.year
+  else
+    year = @year
+  end
+
+  discipline_names = Discipline.find_all_names
+
+  for discipline_name in discipline_names
+    if discipline_name.to_s == ''
+      add_tab do |t|
+        t.named 'All'
+        t.titled 'All Disciplines'
+        t.links_to :controller => 'results', :discipline => '', :year => year
+      end
+    else
+      #remove underscores and captalize each word
+      pretty_name = (discipline_name.gsub('_', " ").gsub(/\b\w/) {|s| s.upcase })
+      add_tab do |t|
+        t.named pretty_name
+        t.titled pretty_name + " Results"
+        t.links_to :controller => 'results', :discipline => discipline_name, :year => year
+      end
+    end
+  end
+
+  add_tab do |t|
+    t.named 'Teams'
+    t.titled 'Team Results'
+    t.links_to :controller => 'teams'
+  end
+
+  add_tab do |t|
+    t.named 'People'
+    t.titled 'Person Results'
+    t.links_to :controller => 'people'
+  end
+
+end 
+%>

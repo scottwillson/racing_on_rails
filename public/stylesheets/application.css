@@ -10,7 +10,7 @@ body {
 }
 
 div.frame {
-  border: 1px solid rgb(109, 109, 109);
+  border: 1px solid rgb(190, 190, 190);
   background-color: rgb(250, 250, 250);
 }
 
@@ -25,11 +25,11 @@ div.content {
 }
 
 .shadow_1 {
-  border: 1px solid #E2E2E2;
+  border: 1px solid rgb(240, 240, 240);
 }
 
 .shadow_2 {
-  border: 1px solid #F6F6F6;
+  border: 1px solid rgb(245, 245, 245);
 }
 
 div.inline {
@@ -161,7 +161,7 @@ div.nav#top {
   height: 51px;
   background-image: url(/images/backgrounds/bar.gif);
   text-align: left;
-  border-bottom: 1px solid rgb(109, 109, 109);
+  border-bottom: 1px solid rgb(190, 190, 190);
 }
 
 div.nav#bottom {
@@ -169,7 +169,7 @@ div.nav#bottom {
   height: 23px;
   line-height: 23px;
   background-image: url(/images/backgrounds/bar_low.gif);
-  border-top: 1px solid rgb(109, 109, 109);
+  border-top: 1px solid rgb(190, 190, 190);
 }
 
 div.nav h1 {

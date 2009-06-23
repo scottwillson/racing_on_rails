@@ -14,7 +14,6 @@ module Schedule
       @year = year
       @month = month
       @name = Date::MONTHNAMES[month]
-#mbrahere: added the following instance var
       @name_abbr = Date::ABBR_MONTHNAMES[month]
       @weeks = []
       @date = Date.new(year, month, 1)
@@ -26,7 +25,6 @@ module Schedule
       end
     end
 
-#mbrahere: added the following method
     def name_abbr
       @name_abbr
     end

@@ -21,7 +21,7 @@ class IronmanTest < ActiveSupport::TestCase
     
     results = ironman.races.first.results.sort
     assert_equal("1", results[0].place, 'place')
-    assert_equal(racers(:molly), results[0].racer, 'racer')
+    assert_equal(people(:molly), results[0].person, 'person')
 
     assert_equal(2, results[0].points, 'points')
     for index in 1..4
@@ -30,9 +30,9 @@ class IronmanTest < ActiveSupport::TestCase
   end
   
   def test_count_single_day_events
-    racer = racers(:tonkin)
+    person = people(:tonkin)
     series = Series.create!
-    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
 
     Ironman.calculate!
     
@@ -40,7 +40,7 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal(0, ironman.races.first.results.count, "Should have no Ironman result for a Series result")
     
     event = series.children.create!
-    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
 
     Ironman.calculate!
     
@@ -57,10 +57,10 @@ class IronmanTest < ActiveSupport::TestCase
   end
   
   def test_count_child_events
-    racer = racers(:tonkin)
+    person = people(:tonkin)
     event = SingleDayEvent.create!
     child = event.children.create!
-    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
     assert(child.ironman?, "Child event should count towards Ironman")
 
     Ironman.calculate!
@@ -71,16 +71,16 @@ class IronmanTest < ActiveSupport::TestCase
   end
   
   def test_parent_event_results_do_not_count
-    racer = racers(:tonkin)
+    person = people(:tonkin)
     series = Series.create!
-    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    series.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
 
     # Only way to exclude these results is to manually set ironman? to false
     event = series.children.create!(:ironman => false)
-    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    event.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
 
     child = event.children.create!
-    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :racer => racer)
+    child.races.create!(:category => categories(:senior_men)).results.create(:place => "1", :person => person)
 
     Ironman.calculate!
 

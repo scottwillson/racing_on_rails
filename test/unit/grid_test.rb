@@ -81,7 +81,7 @@ END
   end
   
   def test_set_value
-    columns = ["place", "number", "racer.last_name", "racer.first_name", "team.name", "racer.category"]
+    columns = ["place", "number", "person.last_name", "person.first_name", "team.name", "person.category"]
     text = <<END
       1\t189\tWillson\tScott\tGentle Lover\tSenior Men 1/2/3\t11\t\t11
       2\t190\tPhinney\tHarry\tCCCP\tSenior Men 1/2/3\t9\t\t

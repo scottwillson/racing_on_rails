@@ -71,7 +71,7 @@ class Race < ActiveRecord::Base
     end
   end
 
-  # Range of dates_of_birth of racers in this race
+  # Range of dates_of_birth of people in this race
   def dates_of_birth
     raise(ArgumentError, 'Need category to calculate dates of birth') unless category
     Date.new(date.year - category.ages.end, 1, 1)..Date.new(date.year - category.ages.begin, 12, 31)
@@ -135,10 +135,10 @@ class Race < ActiveRecord::Base
     end
   end
   
-  # Ensure child team and racers are not duplicates of existing records
+  # Ensure child team and people are not duplicates of existing records
   # Tricky side effect -- external references to new association records
-  # (category, bar_category, racer, team) will not point to associated records
-  # FIXME Handle racers with only a number
+  # (category, bar_category, person, team) will not point to associated records
+  # FIXME Handle people with only a number
   def find_associated_records
     if category && (category.new_record? || category.changed?)
       if category.name.blank?
@@ -154,7 +154,7 @@ class Race < ActiveRecord::Base
     if !row_hash["place"].blank? and row_hash["place"] != "1" && row_hash["place"] != "0"
       return true
     end
-    if row_hash["racer.first_name"].blank? and row_hash["racer.last_name"].blank? and row_hash["racer.road_number"].blank? and row_hash["team.name"].blank?
+    if row_hash["person.first_name"].blank? and row_hash["person.last_name"].blank? and row_hash["person.road_number"].blank? and row_hash["team.name"].blank?
       return false
     end
     true
@@ -197,7 +197,7 @@ class Race < ActiveRecord::Base
         place_before = result.members_only_place
         result.members_only_place = ''
         if result.place.to_i > 0
-          if result.racer.nil? or (result.racer and result.racer.member?(result.date))
+          if result.person.nil? or (result.person and result.person.member?(result.date))
             result.members_only_place = (result.place.to_i - non_members).to_s
           else
             non_members = non_members + 1

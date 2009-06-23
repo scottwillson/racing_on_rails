@@ -35,7 +35,7 @@ module Fckeditor
         inputs = "<textarea id='#{id}' #{cols} #{rows} name='#{object}[#{field}]'>#{value}</textarea>\n"
       end
       
-      #mbrahere fix for rails 2.2.2+ js_path = "#{request.relative_url_root}/javascripts"
+      # Fix for rails 2.2.2+ js_path = "#{request.relative_url_root}/javascripts"
       js_path = "#{ActionController::Base.relative_url_root}/javascripts"
       base_path = "#{js_path}/fckeditor/"
       return inputs <<

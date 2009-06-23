@@ -1,10 +1,5 @@
 # WSBA rider rankings. Riders get points for top-10 finishes in any event
 class RiderRankings < Competition
-  def RiderRankings.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/rider_rankings")
-  end
-
   def friendly_name
     'Rider Rankings'
   end
@@ -47,11 +42,11 @@ class RiderRankings < Competition
     end
   end
 
-  # source_results must be in racer-order
+  # source_results must be in person-order
   # TODO Probably should work with fully-populated Events instead
   def source_results(race)
     Result.find(:all,
-                :include => [:race, {:racer => :team}, :team, {:race => [:event, :category]}],
+                :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{
                   members_only_place between 1 AND #{point_schedule.size - 1}
                     and events.type = 'SingleDayEvent' 
@@ -61,15 +56,11 @@ class RiderRankings < Competition
                     and events.date >= '#{date.year}-01-01' 
                     and events.date <= '#{date.year}-12-31'
                 }],
-                :order => 'racer_id'
+                :order => 'person_id'
     )
   end
   
-  def member?(racer, date)
-    racer && racer.member?(date)
-  end
-  
-  def expire_cache
-    RiderRankings.expire_cache
+  def member?(person, date)
+    person && person.member?(date)
   end
 end

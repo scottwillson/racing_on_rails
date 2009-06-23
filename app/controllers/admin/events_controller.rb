@@ -1,6 +1,6 @@
 # Show Schedule, add and edit Events, edit Results for Events
 class Admin::EventsController < ApplicationController  
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :upload]
@@ -32,7 +32,7 @@ class Admin::EventsController < ApplicationController
     @disciplines.sort!
     
     unless params['promoter_id'].blank?
-      @event.promoter = Promoter.find(params['promoter_id'])
+      @event.promoter = Person.find(params['promoter_id'])
     end
   end
   

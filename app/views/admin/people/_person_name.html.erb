@@ -1,0 +1,7 @@
+<a href="#" onclick="new Ajax.Updater('person_<%= person.id %>_name', '/admin/people/edit_name/<%= person.id %>', {asynchronous:false, evalScripts:true}); return false;"><%= 
+  if person.name.blank?
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+  else
+    person.name 
+  end
+%></a>

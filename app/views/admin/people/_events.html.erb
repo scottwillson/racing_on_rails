@@ -1,0 +1,7 @@
+  <% table :caption => "Promoted Events", :class => "box-3 last no_top_margin" do %>
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+    </tr>
+    <%= render :partial => "event", :collection => @person.events.sort_by(&:date).reverse %>
+  <% end -%>

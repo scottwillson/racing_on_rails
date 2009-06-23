@@ -1,0 +1,93 @@
+<%  
+# this partial renders a tabnav, you can call it in your views with:
+#   <%= tabnav :main % > (just the tabnav) 
+# or, if you want a boxed tabnav:
+#   <% tabnav :main do % >
+#     your html here
+#   <% end % >
+# (remove the space between % and >, we don't want to mess up your brand new tabnav :-))
+#
+# you can pass render_tabnav a few options:
+#   :generate_css => true|false #=> generates a default inline css for the tabnav, defaults to false
+#   :html => aHash #=> sets html options for the tabnav's div (es :html => {:class=> 'myCssClass', :id=>'myCssId'}) 
+#     
+render_tabnav :main, 
+              :generate_css => false do
+    
+  # this generates a tab for every controller in your app
+  # you'll probably want to delete this and
+  # add tabs one by one as shown below
+#  controller_names.each do |name|
+#    add_tab do |t|
+#      t.named name.camelize
+#      t.titled "Go to #{name.camelize}"
+#      t.links_to :controller => name
+#    end
+#  end
+
+  if @year.blank?
+    year = Date.today.year
+  else
+    year = @year
+  end
+
+  add_tab do |t|
+    t.named 'Home'
+    t.titled 'Home Page'
+    t.links_to :controller => 'home'
+  end
+  add_tab do |t|
+    t.named 'Schedule'
+    t.titled 'Racing Schedule'
+    t.links_to :controller => 'schedule', :year => year
+  end
+  add_tab do |t|
+    t.named 'Results'
+    t.titled 'Rase Results'
+    t.links_to :controller => 'results', :year => year
+  end
+
+  article_categories = ArticleCategory.find(:all, :conditions => ["parent_id = 0"], :order => "position")
+
+  for article_category in article_categories
+    add_tab do |t|
+      t.named article_category.name
+      t.titled article_category.description
+      #t.links_to :controller => 'article_categories', :action => :show, :id => article_category
+      t.links_to hash_for_article_category_path(:id => article_category.id) #using article_category without .id breaks highlighting
+    end
+  end
+
+  #  
+  # you can use restful routes with:
+  #
+  #add_tab do |t|
+  #  t.named 'People'
+  #  t.links_to hash_for_people_path
+  #end
+  #
+  #add_tab do |t|
+  #  t.named 'Customers'
+  #  t.links_to :controller => 'customers'
+  #end
+  #  
+  # # A tab can be initialized with a Hash like this:
+  # 
+  # add_tab :name => 'welcome', :link => {:controller=>'welcome'}
+  #
+  # # You can have a dynamic name or link 
+  # # (this partial is evaluated in the page context, so it sees every helper or instance variable)
+  #  
+  # add_tab do |t|
+  #   t.named "#{current_person} details"
+  #   t.links_to :controller => 'people', :action => 'show', :id => current_person.id
+  # end
+  #
+  # # You can have an image inside 
+  #
+  # add_tab do |t|
+  #   t.named image_tag('test')
+  #   t.links_to :controller => 'people', :action => 'show', :id => current_person.id
+  # end
+end 
+%>

@@ -1,4 +1,4 @@
-# A change to almost any model can effect the BAR (Race, Racer, Category ...) so only sweep when BAR calculate!s 
+# A change to almost any model can effect the BAR (Race, Person, Category ...) so only sweep when BAR calculate!s 
 class BarSweeper < ActionController::Caching::Sweeper
   observe Bar
   

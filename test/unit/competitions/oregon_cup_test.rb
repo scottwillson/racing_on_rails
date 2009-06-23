@@ -58,14 +58,14 @@ class OregonCupTest < ActiveSupport::TestCase
     # 2. Molly      15
     
     kings_valley_pro_1_2 = races(:kings_valley_pro_1_2_2004)
-    matson = racers(:matson)
-    tonkin = racers(:tonkin)
-    weaver = racers(:weaver)
-    molly = racers(:molly)
-    kings_valley_pro_1_2.results.create!(:racer => tonkin, :place => 16)
-    kings_valley_pro_1_2.results.create!(:racer => weaver, :place => 17)
-    kings_valley_pro_1_2.results.create!(:racer => molly, :place => 20)
-    kings_valley_pro_1_2.results.create!(:racer => matson, :place => 21)
+    matson = people(:matson)
+    tonkin = people(:tonkin)
+    weaver = people(:weaver)
+    molly = people(:molly)
+    kings_valley_pro_1_2.results.create!(:person => tonkin, :place => 16)
+    kings_valley_pro_1_2.results.create!(:person => weaver, :place => 17)
+    kings_valley_pro_1_2.results.create!(:person => molly, :place => 20)
+    kings_valley_pro_1_2.results.create!(:person => matson, :place => 21)
 
     # Set BAR point bonus -- it should be ignored
     kings_valley_pro_1_2.bar_points = 2
@@ -81,14 +81,14 @@ class OregonCupTest < ActiveSupport::TestCase
     separate_category = Category.find_or_create_by_name('Senior Women 1/2')
     category.children << separate_category
     separate_child_event = events(:kings_valley_2004).children.create!(:bar_points => 1)
-    separate_child_event.races.create!(:category => separate_category).results.create!(:place => "1", :racer => molly)
+    separate_child_event.races.create!(:category => separate_category).results.create!(:place => "1", :person => molly)
     womens_race = races(:kings_valley_women_2004)
     womens_race.notes = "For Oregon Cup"
     womens_race.bar_points = 0
     womens_race.save!
 
     # Ignore Cat 4 result
-    womens_race.results.create!(:place => 3, :racer => Racer.create!(:name => "Heather G", :member_from => Date.new(2004)), :category => categories(:women_4))
+    womens_race.results.create!(:place => 3, :person => Person.create!(:name => "Heather G", :member_from => Date.new(2004)), :category => categories(:women_4))
 
     or_cup = OregonCup.create(:date => Date.new(2004))
     banana_belt_1 = events(:banana_belt_1)
@@ -122,33 +122,33 @@ class OregonCupTest < ActiveSupport::TestCase
     or_cup.races.sort_by {|s| s.name }
     races = or_cup.races.sort_by {|s| s.name }
     races[0].results.sort!
-    assert_equal(racers(:tonkin), races[0].results[0].racer, "Senior Men Oregon Cup results racer")
+    assert_equal(people(:tonkin), races[0].results[0].person, "Senior Men Oregon Cup results person")
     assert_equal("1", races[0].results[0].place, "Tonkin Oregon Cup results place")
     assert_equal(114, races[0].results[0].points, "Tonkin Oregon Cup results points")
     assert_equal(2, races[0].results[0].scores.size, "Tonkin Oregon Cup results scores")
 
-    assert_equal(racers(:weaver), races[0].results[1].racer, "Senior Men Oregon Cup results racer")
+    assert_equal(people(:weaver), races[0].results[1].person, "Senior Men Oregon Cup results person")
     assert_equal("2", races[0].results[1].place, "Weaver Oregon Cup results place")
     assert_equal(88, races[0].results[1].points, "Weaver Oregon Cup results points")
     assert_equal(2, races[0].results[1].scores.size, "Weaver Oregon Cup results scores")
 
-    assert_equal(racers(:matson), races[0].results[2].racer, "Senior Men Oregon Cup results racer")
+    assert_equal(people(:matson), races[0].results[2].person, "Senior Men Oregon Cup results person")
     assert_equal("3", races[0].results[2].place, "Matson Oregon Cup results place")
     assert_equal(60, races[0].results[2].points, "Matson Oregon Cup results points")
     assert_equal(1, races[0].results[2].scores.size, "Matson Oregon Cup results scores")
 
-    assert_equal(racers(:molly), races[0].results[3].racer, "Senior Men Oregon Cup results racer")
+    assert_equal(people(:molly), races[0].results[3].person, "Senior Men Oregon Cup results person")
     assert_equal("4", races[0].results[3].place, "Molly Oregon Cup results place")
     assert_equal(24, races[0].results[3].points, "Molly Oregon Cup results points")
     assert_equal(2, races[0].results[3].scores.size, "Molly Oregon Cup results scores")
 
     races[1].results.sort!
-    assert_equal(racers(:alice), races[1].results[0].racer, "Senior Women Oregon Cup results racer")
+    assert_equal(people(:alice), races[1].results[0].person, "Senior Women Oregon Cup results person")
     assert_equal("1", races[1].results[0].place, "Alice Oregon Cup results place")
     assert_equal(75, races[1].results[0].points, "Alice Oregon Cup results points")
     assert_equal(1, races[1].results[0].scores.size, "Alice Oregon Cup results scores")
 
-    assert_equal(racers(:molly), races[1].results[1].racer, "Senior Women Oregon Cup results racer")
+    assert_equal(people(:molly), races[1].results[1].person, "Senior Women Oregon Cup results person")
     assert_equal("2", races[1].results[1].place, "Molly Oregon Cup results place")
     assert_equal(15, races[1].results[1].points, "Molly Oregon Cup results points")
     assert_equal(1, races[1].results[1].scores.size, "Molly Oregon Cup results scores")
@@ -168,7 +168,7 @@ class OregonCupTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!
     race = event.races.create!(:category => categories(:sr_p_1_2))
-    race.results.create!(:place => '1', :racer => racers(:tonkin))
+    race.results.create!(:place => '1', :person => people(:tonkin))
     or_cup = OregonCup.create!
     or_cup.source_events << event
     or_cup.source_events << SingleDayEvent.create!

@@ -1,0 +1,18 @@
+<tr class="<%= cycle("even", "odd") %>" id="person_<%= person.id %>_row" style="position: relative;">
+  <td class="name" style="position: relative;">
+    <%- @person = person -%>
+      <%= link_to person.name, person_results_path(person) %>
+  </td>
+  <td class="aliases">
+    <%= truncate(person.aliases.collect{ |a| a.name }.join(', '), :limit => 200) %>
+  </td>
+  <td class="right">
+    <%= person.road_category %>
+  </td>
+  <td class="right">
+    <%= person.mtb_category %>
+  </td>
+  <td class="right">
+    <%= person.ccx_category %>
+  </td>
+</tr>

@@ -40,8 +40,8 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "author" do
-    page = Page.create!(:body => "<h1>Welcome</h1>", :title => "", :author => users(:administrator))
-    assert_equal(users(:administrator), page.author, "author")
+    page = Page.create!(:body => "<h1>Welcome</h1>", :title => "", :author => people(:administrator))
+    assert_equal(people(:administrator), page.author, "author")
   end
   
   test "Root page valid_parents" do
@@ -81,7 +81,7 @@ class PageTest < ActiveSupport::TestCase
   
   test "Versions updated on create and save" do
     parent = pages(:plain)
-    admin = users(:administrator)
+    admin = people(:administrator)
     page = parent.children.create!(:title => "New Page", :body => "Original content", :author => admin)
     
     assert_equal("New Page", page.title, "title")
@@ -120,12 +120,12 @@ class PageTest < ActiveSupport::TestCase
   
   test "Versions updated on update_attributes" do
     parent = pages(:plain)
-    admin = users(:administrator)
+    admin = people(:administrator)
     page = parent.children.create!(:title => "New Page", :body => "Original content", :author => admin)
 
-    new_user = User.create!(:name => "New User", :password => "foobar123", :password_confirmation => "foobar123", :email => "user@example.com")
+    new_person = Person.create!(:name => "New Person", :password => "foobar123", :password_confirmation => "foobar123", :email => "person@example.com")
     new_parent = Page.create!(:title => "Root")
-    page.author = new_user
+    page.author = new_person
     assert(page.update_attributes(:parent_id => new_parent.id, :title => "Revised Title", :body => "Revised content"), "Updated")
     
     assert_equal(new_parent.id, page.parent_id, "parent_id")
@@ -133,7 +133,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("new_page", page.slug, "slug")
     assert_equal("root/new_page", page.path, "path")
     assert_equal("Revised content", page.body, "body")
-    assert_equal(new_user.id, page.author_id, "author")
+    assert_equal(new_person.id, page.author_id, "author")
     assert_equal(2, page.lock_version, "version")
     
     original = page.versions.earliest
@@ -150,7 +150,7 @@ class PageTest < ActiveSupport::TestCase
     parent = pages(:plain)
     updated_at = parent.updated_at
     
-    child = parent.children.create!(:title => "New Page", :body => "Original content", :author => users(:administrator))
+    child = parent.children.create!(:title => "New Page", :body => "Original content", :author => people(:administrator))
     assert_equal(1, parent.versions.size, "versions")
     assert(parent.reload.updated_at > updated_at, "New child should updated updated_at")
     updated_at = parent.updated_at

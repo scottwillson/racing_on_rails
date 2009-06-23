@@ -28,16 +28,7 @@ module UpcomingEvents
       if discipline
         [Discipline[discipline]]
       else
-        [Discipline[:road], Discipline[:mountain_bike], Discipline[:bmx], Discipline[:track], Discipline[:cyclocross]]
-#mbratodo: I had the following fix
-        #alphere this is causing nil discipline error in UpcomingEvents.find_all
-        #[Discipline[:road], Discipline[:mountain_bike], Discipline[:bmx], Discipline[:track], Discipline[:cyclocross]]
-        #works: [Discipline[:road]]
-#        disciplines = Array.new
-#        Discipline.find_all_names.each do | name |
-#          disciplines << (Discipline[name.to_sym]) unless name.to_s == ''
-#        end
-#        disciplines
+        [Discipline[:road], Discipline[:mountain_bike], Discipline[:bmx], Discipline[:track], Discipline[:cyclocross]].compact
       end
     end
     

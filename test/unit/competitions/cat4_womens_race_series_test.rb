@@ -44,45 +44,45 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     
     women_cat_4 = Category.find_by_name("Women Cat 4")
     banana_belt_women_cat_4 = banana_belt.races.create!(:category => women_cat_4)
-    alice = racers(:alice)
-    banana_belt_women_cat_4.results.create!(:racer => alice, :place => '7')
+    alice = people(:alice)
+    banana_belt_women_cat_4.results.create!(:person => alice, :place => '7')
 
     # All finishes count
-    molly = racers(:molly)
-    banana_belt_women_cat_4.results.create!(:racer => molly, :place => '17')
+    molly = people(:molly)
+    banana_belt_women_cat_4.results.create!(:person => molly, :place => '17')
 
     kv_women_cat_4 = kings_valley_2004.races.create!(:category => women_cat_4)
-    kv_women_cat_4.results.create!(:racer => molly, :place => '205')
+    kv_women_cat_4.results.create!(:person => molly, :place => '205')
     
     # ... but not DNFs, DQs, etc...
-    kv_women_cat_4.results.create!(:racer => racers(:matson), :place => 'DQ')
+    kv_women_cat_4.results.create!(:person => people(:matson), :place => 'DQ')
     
     # ... and not results in different years
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2003-12-31")
     race = wrong_year_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => molly, :place => "1")    
+    race.results.create!(:person => molly, :place => "1")    
 
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2005-01-01")
     race = wrong_year_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => alice, :place => "2")
+    race.results.create!(:person => alice, :place => "2")
     
     # WSBA results count for participation points
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
     race = other_wsba_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => molly, :place => "18")    
+    race.results.create!(:person => molly, :place => "18")    
 
     # Blank results count -- finished, but don't know where
-    race.results.create!(:racer => alice, :place => "")
+    race.results.create!(:person => alice, :place => "")
     
     # Non-WSBA results count for participation points
     non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
     race = non_wsba_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => alice, :place => "56")
+    race.results.create!(:person => alice, :place => "56")
     
     # Other categories don't count
     category_3_women = categories(:cat_3_women)
     banana_belt_category_3_women = banana_belt.races.create!(:category => category_3_women)
-    banana_belt_category_3_women.results.create!(:racer => alice, :place => '1')
+    banana_belt_category_3_women.results.create!(:person => alice, :place => '1')
     
     # Other competitions don't count!
     RiderRankings.calculate!(2004)
@@ -112,11 +112,11 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
     race.results.sort!
     assert_equal('1', race.results[0].place, 'Place')
-    assert_equal(alice, race.results[0].racer, 'Racer')
+    assert_equal(alice, race.results[0].person, 'Person')
     assert_equal(102, race.results[0].points, 'Points')
 
     assert_equal('2', race.results[1].place, 'Place')
-    assert_equal(molly, race.results[1].racer, 'Racer')
+    assert_equal(molly, race.results[1].person, 'Person')
     assert_equal(65, race.results[1].points, 'Points')
   end
   
@@ -131,45 +131,45 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     
     women_cat_4 = Category.find_by_name("Women Cat 4")
     banana_belt_women_cat_4 = banana_belt.races.create!(:category => women_cat_4)
-    alice = racers(:alice)
-    banana_belt_women_cat_4.results.create!(:racer => alice, :place => '7')
+    alice = people(:alice)
+    banana_belt_women_cat_4.results.create!(:person => alice, :place => '7')
 
     # This finish does not count
-    molly = racers(:molly)
-    banana_belt_women_cat_4.results.create!(:racer => molly, :place => '17')
+    molly = people(:molly)
+    banana_belt_women_cat_4.results.create!(:person => molly, :place => '17')
 
     kv_women_cat_4 = kings_valley_2004.races.create!(:category => women_cat_4)
-    kv_women_cat_4.results.create!(:racer => molly, :place => '205')
+    kv_women_cat_4.results.create!(:person => molly, :place => '205')
     
     # ... but not DNFs, DQs, etc...
-    kv_women_cat_4.results.create!(:racer => racers(:matson), :place => 'DQ')
+    kv_women_cat_4.results.create!(:person => people(:matson), :place => 'DQ')
     
     # ... and not results in different years
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2003-12-31")
     race = wrong_year_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => molly, :place => "1")    
+    race.results.create!(:person => molly, :place => "1")    
 
     wrong_year_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2005-01-01")
     race = wrong_year_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => alice, :place => "2")
+    race.results.create!(:person => alice, :place => "2")
     
     # No points for non-series races
     other_wsba_event = SingleDayEvent.create!(:name => "Boat Street CT", :date => "2004-06-26")
     race = other_wsba_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => molly, :place => "18")    
+    race.results.create!(:person => molly, :place => "18")    
 
     # Blank results count do not count
-    race.results.create!(:racer => alice, :place => "")
+    race.results.create!(:person => alice, :place => "")
     
     # Non-WSBA results do not count for participation points
     non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
     race = non_wsba_event.races.create!(:category => women_cat_4)
-    race.results.create!(:racer => alice, :place => "56")
+    race.results.create!(:person => alice, :place => "56")
     
     # Other categories don't count
     category_3_women = categories(:cat_3_women)
     banana_belt_category_3_women = banana_belt.races.create!(:category => category_3_women)
-    banana_belt_category_3_women.results.create!(:racer => alice, :place => '1')
+    banana_belt_category_3_women.results.create!(:person => alice, :place => '1')
     
     # Other competitions don't count!
     RiderRankings.calculate!(2004)
@@ -199,7 +199,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
     race.results.sort!
     assert_equal('1', race.results[0].place, 'Place')
-    assert_equal(alice, race.results[0].racer, 'Racer')
+    assert_equal(alice, race.results[0].person, 'Person')
     assert_equal(72, race.results[0].points, 'Points')
   end
   

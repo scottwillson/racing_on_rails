@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   helper :all
-  include LoginSystem
   include ExceptionNotifiable  
   
   local_addresses.clear
@@ -8,7 +7,8 @@ class ApplicationController < ActionController::Base
   # HP's proxy, among others, gets this wrong
   ActionController::Base.ip_spoofing_check = false
 
-  filter_parameter_logging "password"
+  filter_parameter_logging :password, :password_confirmation
+  helper_method :current_person_session, :current_person
 
   def self.expire_cache
     FileUtils.rm_rf(File.join(RAILS_ROOT, 'public', 'results'))
@@ -58,5 +58,44 @@ class ApplicationController < ActionController::Base
         rescue_with_handler(exception) || rescue_action_without_handler(exception)
       }
     end
+  end
+
+  private
+
+  def current_person_session
+    return @current_person_session if defined?(@current_person_session)
+    @current_person_session = PersonSession.find
+  end
+
+  def current_person
+    return @current_person if defined?(@current_person)
+    @current_person = current_person_session && current_person_session.person
+  end
+
+  def require_person
+    unless current_person
+      store_location
+      flash[:notice] = "You must be logged in to access this page"
+      redirect_to new_person_session_url
+      return false
+    end
+  end
+
+  def require_administrator
+    unless current_person && current_person.administrator?
+      store_location
+      flash[:notice] = "You must be an administrator to access this page"
+      redirect_to new_person_session_url
+      return false
+    end
+  end
+  
+  def store_location
+    session[:return_to] = request.request_uri
+  end
+  
+  def redirect_back_or_default(default)
+    redirect_to(session[:return_to] || default)
+    session[:return_to] = nil
   end
 end

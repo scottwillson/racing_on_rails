@@ -8,9 +8,9 @@ class BarControllerTest < ActionController::TestCase
 
   def setup
     big_team = Team.create(:name => "T" * 60)
-    weaver = racers(:weaver)
+    weaver = people(:weaver)
     weaver.team = big_team
-    events(:banana_belt_1).races.first.results.create(:racer => weaver, :team => big_team)
+    events(:banana_belt_1).races.first.results.create(:person => weaver, :team => big_team)
     weaver.first_name = "f" * 60
     weaver.last_name = "T" * 60
 
@@ -63,7 +63,7 @@ class BarControllerTest < ActionController::TestCase
   end
   
   def test_show_age_graded
-    weaver = racers(:weaver)
+    weaver = people(:weaver)
     weaver.date_of_birth = Date.new(1975)
     weaver.save!    
     banana_belt = events(:banana_belt_1)
@@ -72,7 +72,7 @@ class BarControllerTest < ActionController::TestCase
     masters_men = categories(:masters_men)
     masters_30_34 = categories(:masters_men_30_34)
     banana_belt_masters_30_34 = banana_belt.races.create!(:category => masters_30_34)
-    banana_belt_masters_30_34.results.create!(:racer => weaver, :place => '10')
+    banana_belt_masters_30_34.results.create!(:person => weaver, :place => '10')
 
     Bar.calculate!(2007)
     OverallBar.calculate!(2007)

@@ -15,7 +15,7 @@ class Cat4WomensRaceSeries < Competition
 
   def source_results(race)
     Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, racer_id, results.team_id, place FROM results  
+      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
           LEFT JOIN races ON races.id = results.race_id 
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN events ON races.event_id = events.id 
@@ -23,7 +23,7 @@ class Cat4WomensRaceSeries < Competition
             and categories.id in (#{category_ids_for(race)})
             and events.type = "SingleDayEvent"
             and events.date between '#{year}-01-01' and '#{year}-12-31'
-          order by racer_id
+          order by person_id
        }
     )
   end

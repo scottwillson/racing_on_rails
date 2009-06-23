@@ -1,7 +1,0 @@
-<a href="#" onclick="new Ajax.Updater('racer_<%= racer.id %>_team_name', '/admin/racers/edit_team_name/<%= racer.id %>', {asynchronous:false, evalScripts:true}); return false;"><%= 
-  if racer.team_name.blank? 
-    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-  else
-    racer.team_name 
-  end
-%></a>

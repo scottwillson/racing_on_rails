@@ -152,7 +152,7 @@ Still loyal:
     <tr>
       <td valign="top"><b>Place<br>
       </b></td>
-      <td valign="top"><b>Racer<br>
+      <td valign="top"><b>Person<br>
       </b></td>
     </tr>
     <tr>
@@ -210,7 +210,7 @@ In-Reply-To: <43D56B2E.4080607@cheryljwillson.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 8bit
-User-Agent: Internet Messaging Program (IMP) 3.2.2
+Person-Agent: Internet Messaging Program (IMP) 3.2.2
 X-Originating-IP: 63.230.177.28
 X-Virus-Scanned: amavisd-new at obra.org
 Subject: [OBRA Chat] [Fwd:  For the Archives]
@@ -720,7 +720,7 @@ Received: from [192.168.1.151] (cheryljwillson.com [71.36.251.213])
 Message-ID: <43DBB598.8070102@butlerpress.com>
 Date: Sat, 28 Jan 2006 10:19:04 -0800
 From: Scott Willson <scott@butlerpress.com>
-User-Agent: Mozilla Thunderbird 0.8 (Windows/20040913)
+Person-Agent: Mozilla Thunderbird 0.8 (Windows/20040913)
 X-Accept-Language: en-us, en
 MIME-Version: 1.0
 To: obra@list.obra.org
@@ -764,7 +764,7 @@ Content-Transfer-Encoding: 7bit
     <tr>
       <td valign="top"><b>Place<br>
       </b></td>
-      <td valign="top"><b>Racer<br>
+      <td valign="top"><b>Person<br>
       </b></td>
     </tr>
     <tr>

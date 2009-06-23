@@ -1,10 +1,7 @@
 require "test_helper"
 
 class Admin::CategoriesControllerTest < ActionController::TestCase
-
-  def setup
-    @request.session[:user_id] = users(:administrator).id
-  end
+  setup :create_administrator_session
 
   def test_index
     opts = {:controller => "admin/categories", :action => "index"}
@@ -17,10 +14,10 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
   end
   
   def test_not_logged_in
-    @request.session[:user_id] = nil
+    destroy_person_session
     get(:index)
     assert_response(:redirect)
-    assert_redirected_to(:controller => '/account', :action => 'login')
-    assert_nil(@request.session["user"], "No user in session")
+    assert_redirected_to(new_person_session_path)
+    assert_nil(@request.session["person"], "No person in session")
   end  
 end

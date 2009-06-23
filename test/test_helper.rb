@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 require "action_view/test_case"
+require "authlogic/test_case"
 
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = true
@@ -65,12 +66,12 @@ class ActiveSupport::TestCase
     end
   end
   
-  # Assert Arrays of Results are the same. Only considers place, Racer, and time
+  # Assert Arrays of Results are the same. Only considers place, Person, and time
   def assert_results(expected, actual, message = nil)
     assert_equal(expected.size, actual.size, "Size of results. #{message}")
     expected.each_with_index {|result, index|
       assert_equal((index + 1).to_s, actual[index].place.to_s, "place for #{result}. #{message}")
-      assert_equal(result.racer, actual[index].racer, "racer for #{result}. #{message}")
+      assert_equal(result.person, actual[index].person, "person for #{result}. #{message}")
       assert_equal(result.time, actual[index].time, "time for #{result}. #{message}")
     }
   end
@@ -108,6 +109,15 @@ class ActiveSupport::TestCase
       assert_nil(@response.layout, "no layout")
     end
   end
+  
+  def create_administrator_session
+    activate_authlogic
+    PersonSession.create(people(:administrator))
+  end
+  
+  def destroy_person_session
+    session["person_credentials"] = nil
+  end
 
   def print_all_events
     Event.find(:all, :order => :date).each {|event|
@@ -116,7 +126,7 @@ class ActiveSupport::TestCase
   end
   
   def print_all_results
-    Result.find(:all, :order => :racer_id).each {|result|
+    Result.find(:all, :order => :person_id).each {|result|
       p "#{result.place} #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end

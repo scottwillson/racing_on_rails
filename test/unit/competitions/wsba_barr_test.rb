@@ -48,7 +48,7 @@ class Competitions::WsbaBarrTest < ActiveSupport::TestCase
     sr_men_race.category = category_men_1_2
     sr_men_race.save!
     wsba.source_events << kings_valley    
-    result = sr_men_race.results.create!(:place => "10", :racer => racers(:tonkin))
+    result = sr_men_race.results.create!(:place => "10", :person => people(:tonkin))
     result.place = 10
     result.save!
     

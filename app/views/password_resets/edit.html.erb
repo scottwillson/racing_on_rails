@@ -1,0 +1,18 @@
+<% @page_title = "New Password" %>
+<% @show_tabs = false %>
+
+<% form_for @person, :url => password_reset_path, :method => :put do |f| %>
+  <div class="centered">
+    <%= f.error_messages %>
+    <%= f.label :password, "New Password", :style => "width: 150px;" %>
+    <%= f.password_field :password %>
+    <br />
+    <%= f.label :password_confirmation, "Confirm New Password", :style => "width: 150px;" %>
+    <%= f.password_field :password_confirmation %>
+    <div class="page_buttons last">
+      <div class="last right" style=""><%= submit_tag "Save", :class => :right %></div>
+    </div>
+  </div>
+<% end %>
+
+<%= focus("person_password") %>

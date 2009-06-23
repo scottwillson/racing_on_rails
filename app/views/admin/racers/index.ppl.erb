@@ -1,4 +1,0 @@
-number,last name,first name,team,"category,gender,age"
-<%- for racer in @racers -%>
-<%= ppl_escape(racer["road_number"]) %>,<%= ppl_escape(racer["last_name"]) %>,<%= ppl_escape(racer["first_name"]) %>,<%= ppl_escape(racer["team_name"]) %>,"<%= ppl_escape(racer["road_category"]) %>,<%= racer["gender"] -%>,<%= racer["racing_age"] %>"
-<%- end -%>

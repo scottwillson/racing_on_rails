@@ -67,7 +67,7 @@ class Discipline < ActiveRecord::Base
     end
   end
 
-#mbrahere: added the following
+  # Deprecated. Should use standard Discipline names.
   def pretty_name
     (name.gsub('_', " ").gsub(/\b\w/) {|s| s.upcase })
   end

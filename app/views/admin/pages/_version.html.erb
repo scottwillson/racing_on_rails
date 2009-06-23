@@ -2,14 +2,14 @@
 
 <tr <%= "class='selected'" if version == selected %>>
   <td><%= link_to version.updated_at.to_s(:long), edit_admin_page_path(version.page) %></td>
-  <td><%= link_to User.find(version.author_id).name, edit_admin_page_path(version.page) %></td>
+  <td><%= link_to Person.find(version.author_id).name, edit_admin_page_path(version.page) %></td>
 </tr>
 
 <% else -%>
 
 <tr <%= "class='selected'" if version == selected %>>
   <td><%= link_to version.updated_at.to_s(:long), edit_admin_pages_version_path(version) %></td>
-  <td><%= link_to User.find(version.author_id).name, edit_admin_pages_version_path(version) %></td>
+  <td><%= link_to Person.find(version.author_id).name, edit_admin_pages_version_path(version) %></td>
 </tr>
 
 <% end -%>

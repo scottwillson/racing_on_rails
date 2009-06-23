@@ -1,0 +1,43 @@
+<% @page_title = 'People' %>
+
+<%= tabnav :results_disciplines %>
+<br/><br/>
+<%= form_tag({}, {:method => 'get', :id => 'search_form'}) %>
+  <table style="margin-top: 16px; margin-bottom: 16px">
+    <tr>
+      <td class="field_label">Name:</td>
+      <td>
+        <%= text_field_tag 'name', @name, :size => 30 %>
+        <br/><em>Enter part of a person's name to search</em>
+      </td>
+      <td><%= submit_tag "Search" %></td>
+    </tr>
+  </table>
+</form>
+
+<p class="message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><%= flash[:notice] %></p>
+<p class="message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><%= flash[:warn] %></p>
+
+<table style="position: relative;">
+  <tr style="position: relative;">
+    <td style="position: relative;">
+      <table class="base" id="people" style="position: relative;">
+        <tr>
+          <th class="name">Name</th>
+          <th class="aliases">Aliases</th>
+          <th class="right">Road Cat</th>
+          <th class="right">MTB Cat</th>
+          <th class="right">Cross Cat</th>
+        </tr>
+        <%= render :partial => "person", :collection => @people %>
+        <% if @people.empty? %>
+        <tr valign="top">
+          <td colspan="10" width="200" class="not_found">No matching people found</td>
+        </tr>
+        <% else %>
+          <%= will_paginate @people %>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>

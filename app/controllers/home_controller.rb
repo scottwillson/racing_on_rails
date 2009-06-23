@@ -8,7 +8,6 @@ class HomeController < ApplicationController
   # * recent_results: Events with Results within last two weeks
   def index
     @upcoming_events = UpcomingEvents.find_all(:weeks => WEEKS_OF_UPCOMING_EVENTS)
-#mbrahere to fix the above I had to create records in the disciplines table for each discipline hard coded in def disciplines_for(discipline)
 
     cutoff = Date.today - WEEKS_OF_RECENT_RESULTS * 7
     
@@ -22,7 +21,6 @@ class HomeController < ApplicationController
       :order => 'events.date desc'
     )
 
-#mbrahere I added the following
     @news_category = ArticleCategory.find( :all, :conditions => ["name = 'news'"] )
     @recent_news = Article.find(
       :all,

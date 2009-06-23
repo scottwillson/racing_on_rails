@@ -1,6 +1,6 @@
 class Admin::Cat4WomensRaceSeriesController < ApplicationController
 
-  before_filter :check_administrator_role
+  before_filter :require_administrator
   layout 'admin/application'
   
   def new_result
@@ -28,7 +28,7 @@ class Admin::Cat4WomensRaceSeriesController < ApplicationController
     end
     
     @result = @race.results.new(params[:result])
-    @result.validate_racer_name
+    @result.validate_person_name
     if @result.errors.empty?
       @result.save!
       flash[:info] = "Created result for #{@result.name} in #{@event.name}"

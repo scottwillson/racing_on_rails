@@ -98,32 +98,10 @@ class EventTest < ActiveSupport::TestCase
     weekly_series, events = Event.find_all_with_results
     assert_equal([series], weekly_series, "weekly_series")
   end
-  
-  def test_new_with_promoters
-    promoter_name = "Scout"
-    assert_nil(Promoter.find_by_name(promoter_name), "Promoter #{promoter_name} should not be in DB")
-    event = SingleDayEvent.new({
-      :name => "Silverton",
-      :promoter => Promoter.new(:name => promoter_name)
-    })
-    assert_not_nil(event.promoter, "Event promoter before save")
-    event.save!
-    assert_not_nil(event.promoter, "Event promoter after save")
-    assert_equal(1, Promoter.count(:conditions => "name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
-
-    event = SingleDayEvent.new({
-      :name => "State Criterium",
-      :promoter => Promoter.new(:name => promoter_name)
-    })
-    assert_not_nil(event.promoter, "Event promoter before save")
-    event.save!
-    assert_not_nil(event.promoter, "Event promoter after save")
-    assert_equal(1, Promoter.count(:conditions => "name = '#{promoter_name}'"), "Promoter #{promoter_name} count in DB")
-  end
-  
+    
   def test_new_add_promoter
     event = SingleDayEvent.new
-    candi = promoters(:candi_murray)
+    candi = people(:administrator)
     event.promoter = candi
     assert_equal(candi, event.promoter, "New event promoter before save")
     event.save!
@@ -133,8 +111,7 @@ class EventTest < ActiveSupport::TestCase
 
     # Only email and phone
     event = SingleDayEvent.new
-    nate_hobson = promoters(:nate_hobson)
-    nate_hobson.save!
+    nate_hobson = people(:nate_hobson)
     assert(nate_hobson.errors.empty?, "Errors: #{nate_hobson.errors.full_messages.join(', ')}")
     event.promoter = nate_hobson
     assert_equal(nate_hobson, event.promoter, "New event promoter before save")
@@ -146,7 +123,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(nate_hobson, event.promoter, "New event promoter after reload")
 
     event = SingleDayEvent.new
-    nate_hobson = promoters(:nate_hobson)
+    nate_hobson = people(:nate_hobson)
     event.promoter = nate_hobson
     assert_equal(nate_hobson, event.promoter, "New event promoter before save")
     event.save!
@@ -157,7 +134,7 @@ class EventTest < ActiveSupport::TestCase
   
   def test_set_promoter
     event = SingleDayEvent.new
-    promoter = Promoter.new(:name => 'Toni Kic')
+    promoter = Person.new(:name => 'Toni Kic')
     event.promoter = promoter
     assert_not_nil(event.promoter, 'event.promoter')
     assert_equal('Toni Kic', event.promoter.name, 'event.promoter.name')
@@ -393,7 +370,7 @@ class EventTest < ActiveSupport::TestCase
     race = event.races.create!(:category => categories(:senior_men))
     assert(!event.has_results?, "Event with race, but no results should not have results")
     
-    race.results.create!(:place => 200, :racer => racers(:matson))
+    race.results.create!(:place => 200, :person => people(:matson))
     assert(event.has_results?(true), "Event with one result should have results")
   end
   

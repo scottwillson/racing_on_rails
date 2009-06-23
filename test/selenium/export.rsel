@@ -1,7 +1,7 @@
 include_partial 'fixtures'
 include_partial "admin_login"
 
-open '/admin/racers'
+open '/admin/people'
 assert_element_present 'export_button'
 assert_element_present 'include'
 assert_value 'include', 'members_only'
@@ -9,16 +9,16 @@ assert_element_present 'format'
 assert_value 'format', 'xls'
 
 click 'export_button'
-wait_for_not_location "glob:*/admin/racers.xls?excel_layout=xls&include=members_only"
+wait_for_not_location "glob:*/admin/people.xls?excel_layout=xls&include=members_only"
 assert_text_not_present 'error'
 
 open '/admin/teams'
 assert_text_not_present 'error'
 assert_location '*/admin/teams'
 
-open '/admin/racers'
+open '/admin/people'
 assert_text_not_present 'error'
-assert_location '*/admin/racers'
+assert_location '*/admin/people'
 
 type 'name', 'tonkin'
 submit_and_wait 'search_form'
@@ -32,13 +32,13 @@ assert_value 'name', 'tonkin'
 type 'include', 'all'
 type 'format', 'ppl'
 click 'export_button'
-wait_for_not_location "glob:*/admin/racers.ppl?excel_layout=ppl&include=all"
+wait_for_not_location "glob:*/admin/people.ppl?excel_layout=ppl&include=all"
 assert_text_not_present 'error'
 
 type 'include', 'members_only'
 type 'format', 'scoring_sheet'
 click 'export_button'
-wait_for_not_location "glob:*/admin/racers.xls?excel_layout=scoring_sheet&include=members_only"
+wait_for_not_location "glob:*/admin/people.xls?excel_layout=scoring_sheet&include=members_only"
 assert_text_not_present 'error'
 
 type 'name', 'tonkin'

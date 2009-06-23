@@ -1,57 +1,57 @@
 tonkin_banana_belt:
   race: banana_belt_pro_1_2
-  racer: tonkin
+  person: tonkin
   team: kona
   place: 1
 weaver_banana_belt:
   race: banana_belt_pro_1_2
-  racer: weaver
+  person: weaver
   place: 2
 matson_banana_belt:
   race: banana_belt_pro_1_2
-  racer: matson
+  person: matson
   team: kona
   place: 3
 molly_banana_belt:
   race: banana_belt_pro_1_2
-  racer: molly
+  person: molly
   team: vanilla
   place: 16
 alice_kings_valley_women_2004:
   race: kings_valley_women_2004
-  racer: alice
+  person: alice
   team: gentle_lovers
   place: 2
 molly_kings_valley_women_2004:
   race: kings_valley_women_2004
-  racer: molly
+  person: molly
   team: vanilla
   place: 15
 tonkin_kings_valley:
   race: kings_valley_pro_1_2
-  racer: tonkin
+  person: tonkin
   team: kona
   place: 16
 weaver_kings_valley:
   race: kings_valley_pro_1_2
-  racer: weaver
+  person: weaver
   place: 17
 molly_jack_frost:
   race: jack_frost_masters_35_plus_women
-  racer: molly
+  person: molly
   place: 1
   time: 1800
 alice_jack_frost:
   race: jack_frost_masters_35_plus_women
-  racer: alice
+  person: alice
   place: 2
   time: 2112
 weaver_jack_frost:
   race: jack_frost_pro_1_2
-  racer: weaver
+  person: weaver
   place: 9
   time: 1801
 weaver_copperopolis:
   race: copperopolis_pro_1_2
-  racer: weaver
+  person: weaver
   place: 13
