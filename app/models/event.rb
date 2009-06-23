@@ -476,15 +476,6 @@ class Event < ActiveRecord::Base
     @multi_day_event_children_with_no_parent
   end
 
-  #mbrahere: I added has_children?
-  def has_children?
-    if Event.count(:conditions => "parent_id = #{self.id}") > 0
-      true
-    else
-      false
-    end
-  end
-
   def missing_parent
     nil
   end
