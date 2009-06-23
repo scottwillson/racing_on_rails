@@ -38,9 +38,8 @@ class Person < ActiveRecord::Base
   
   CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
 
-#mbrahere: added the following to support pagination I think.
   def self.per_page
-   50
+    50
   end
 
   # Does not consider Aliases
