@@ -21,7 +21,6 @@ class HomeController < ApplicationController
       :order => 'events.date desc'
     )
 
-#mbrahere I added the following
     @news_category = ArticleCategory.find( :all, :conditions => ["name = 'news'"] )
     @recent_news = Article.find(
       :all,

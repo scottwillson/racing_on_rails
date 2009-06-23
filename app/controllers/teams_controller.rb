@@ -5,7 +5,7 @@ class TeamsController < ApplicationController
     else
       @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
     end
-    @discipline_names = Discipline.find_all_names  #mbrahere added this line
+    @discipline_names = Discipline.find_all_names
   end
   
   def show
