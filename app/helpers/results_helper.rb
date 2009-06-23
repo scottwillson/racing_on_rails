@@ -14,4 +14,14 @@ module ResultsHelper
       link_to(text, person_results_path(result.person), html_options)
     end
   end
+
+  def link_to_team_result(text, result)
+    return text unless result.person
+
+    if result.competition_result?
+      link_to(text, event_team_results_path(result.event, result.team))
+    else
+      link_to(text, team_results_path(result.team))
+    end
+  end
 end
