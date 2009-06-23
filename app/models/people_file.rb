@@ -1,6 +1,9 @@
 # Excel or text file of People. Assumes that the first row is a header row. 
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
 class PeopleFile < GridFile
+  # TODO 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
+  #    'NCCA club' ...can have this in addition to club and team. should team be many to many?
+
   COLUMN_MAP = {
     'team'                                   => 'team_name',
     'Cycling Team'                           => 'team_name',
@@ -11,9 +14,9 @@ class PeopleFile < GridFile
     'f_name'                                 => 'first_name',
     'l_name'                                 => 'last_name',
     'FirstName'                              => 'first_name',
-    'first name'                             => 'first_name', #mbrahere added this line
+    'first name'                             => 'first_name',
     'LastName'                               => 'last_name',
-    'last name'                              => 'last_name', #mbrahere added this line
+    'last name'                              => 'last_name',
     'AAA Last Name'                          => 'last_name',
     'Birth date'                             => 'date_of_birth',
     'Birthdate'                              => 'date_of_birth',
@@ -29,7 +32,7 @@ class PeopleFile < GridFile
     'Phone'                                  => 'home_phone',
     'DayPhone'                               => 'home_phone',
     'cell/fax'                               => 'cell_fax',
-    'cell'                                   => 'cell_fax', #mbrahere added this line
+    'cell'                                   => 'cell_fax',
     'e-mail'                                 => 'email',
     'category'                               => 'road_category',
     'road cat'                               => 'road_category',
@@ -42,16 +45,16 @@ class PeopleFile < GridFile
     'Track Category - '                      => 'track_category',
     'Track Age Group - '                     => 'track_category',
     'Cyclocross Category - '                 => 'ccx_category',
-    'cross cat'                              => 'ccx_category', #mbrahere added this line
+    'cross cat'                              => 'ccx_category',
     'ccx cat'                                => 'ccx_category',
     'Cyclocross Age Group -'                 => 'ccx_category',
     'Cross Country Mountain Bike Category -' => 'mtb_category',
     'mtn cat'                                => 'mtb_category',
     'Cross Country Mountain Age Group -'     => 'mtb_category',
-    'XC'                                     => 'mtb_category', #mbrahere added this line
+    'XC'                                     => 'mtb_category',
     'Downhill Mountain Bike Category - '     => 'dh_category',
     'dh cat'                                 => 'dh_category',
-    'dh'                                     => 'dh_category', #mbrahere added this line
+    'dh'                                     => 'dh_category',
     'Downhill Mountain Bike Age Group -'     => 'dh_category',
     'number'                                 => 'road_number',
     '2009 road'                              => 'road_number',
@@ -64,14 +67,14 @@ class PeopleFile < GridFile
     'ss'                                     => 'singlespeed_number',
     'ss #'                                   => 'singlespeed_number',
     'Membership No'                          => 'license',
-    'license#'                               => 'license', #mbrahere added this line
+    'license#'                               => 'license',
     'date joined'                            => 'member_from',
-    'exp date'                               => 'member_usac_to', #mbrahere added this line
-    'expiration date'                        => 'member_usac_to', #mbrahere added this line
+    'exp date'                               => 'member_usac_to',
+    'expiration date'                        => 'member_usac_to',
     'card'                                   => 'print_card',
     'sex'                                    => 'gender',
     'What is your occupation? (optional)'    => 'occupation',
-    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling" #mbrahere added this line
+    'Suspension'                             => 'status',   #e.g. "SUSPENDED - Contact USA Cycling"
     'Interests'                              => 'notes',
     'Receipt Code'                           => 'notes',
     'Confirmation Code'                      => 'notes',
@@ -88,10 +91,6 @@ class PeopleFile < GridFile
     'Please indicate other interests. (For example: time trial tandem triathalon r'   => Column.new(:name => 'notes', :description => 'Other interests'),
     'Your team or club name (please enter N/A if you do not have a team affiliation)' => Column.new(:name => 'team_name', :description => 'Team')
   }
-#alpto: add
-#    'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
-#    'NCCA club' ...can have this in addition to club and team. should team be many to many?
-
   
   attr_reader :created
   attr_reader :updated

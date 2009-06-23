@@ -123,8 +123,8 @@ ActionController::Routing::Routes.draw do |map|
   # Reserve /results/2008 for /results/:year
   map.resources :results, :except => "show"
 
-  map.connect "/schedule/:year/calendar", :controller => "schedule", :action => "calendar", :requirements => {:year => /\d\d\d\d/} #mbrahere
-  map.connect "/schedule/calendar", :controller => "schedule", :action => "calendar" #mbrahere
+  map.connect "/schedule/:year/calendar", :controller => "schedule", :action => "calendar", :requirements => {:year => /\d\d\d\d/}
+  map.connect "/schedule/calendar", :controller => "schedule", :action => "calendar"
   map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
   map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
   map.connect "/schedule/:year/list", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}

@@ -30,7 +30,7 @@ class ResultsFile
     "categories"       => "category_name",
     "category"         => "category_name",
     "cat."             => "category_name",
-    "class"            => "category_class",  #mbrahere this is like A for Masters A
+    "class"            => "category_class",  # Example: A for Masters A
     "first"            => "first_name",
     "firstname"        => "first_name",
     "person.first_name" => "first_name",
@@ -40,12 +40,12 @@ class ResultsFile
     "person.last_name"  => "last_name",
     "team"             => "team_name",
     "team.name"        => "team_name",
-    "bib_#"            => "number",  #mbrahere
+    "bib_#"            => "number",
     "obra_number"      => "number",
     "oregoncup"        => "oregon_cup",
     "membership_#"     => "license",
     "membership"       => "license",
-    "license_#"        => "license",  #mbrahere
+    "license_#"        => "license",
     "club/team"        => "team_name",
     "hometown"         => 'city',
     "stage_time"       => "time",
@@ -95,7 +95,7 @@ class ResultsFile
           Rails.logger.debug("ResultsFile #{Time.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
           if race?(row)
             race = create_race(row)
-            #mbrahere this record also contains placing data
+            # This row is also a result. I.e., no separate race header row.
             if usac_results_format
               create_result(row, race)
             end
@@ -199,7 +199,6 @@ class ResultsFile
     race
   end
 
-  #mbrahere
   def construct_usac_category(row)
     #category_name and gender should always be populated.
     if row[:category_name].present? && row[:category_name].downcase.strip == "junior"
@@ -251,7 +250,7 @@ class ResultsFile
         result.place = row.previous[:place]
       end
 
-      #mbrahere: usac format input may contain an age range in the age column for juniors.
+      # USAC format input may contain an age range in the age column for juniors.
       if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
         result.age = nil
         result.age_group = row[:age]
@@ -334,7 +333,7 @@ class ResultsFile
 
     def notes
       if usac_results_format
-        #mbrahere we want to pick up the info in the first 5 columns: org, year, event #, date, discipline
+        # We want to pick up the info in the first 5 columns: org, year, event #, date, discipline
         return "" if blank? || size < 5
         spreadsheet_row[0, 5].select { |cell| !cell.blank? }.join(", ")
       else  

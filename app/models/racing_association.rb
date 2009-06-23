@@ -25,7 +25,7 @@ class RacingAssociation
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @award_cat4_participation_points = true
     @usac_region = "North West"
-    @usac_results_format = false  #mbrahere
+    @usac_results_format = false
   end
   
   def bmx_numbers?
@@ -34,9 +34,6 @@ class RacingAssociation
   
   def default_discipline
     @default_discipline ||= "Road"
-#mbrahere: I had:
-#    @default_discipline ||= "road"
-
   end
   
   def default_sanctioned_by

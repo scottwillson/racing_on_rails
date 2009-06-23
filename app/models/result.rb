@@ -550,9 +550,9 @@ class Result < ActiveRecord::Base
     self.number = number.to_i.to_s if number[/^\d+\.0$/]
   end
 
-  #mbrahere usac license numbers are being imported with a one decimal zero, e.g., 12345.0
   def cleanup_license
     self.license = license.to_s
+    # USAC license numbers are being imported with a one decimal zero, e.g., 12345.0
     self.license = license.to_i.to_s if license[/^\d+\.0$/]
   end
 
@@ -568,7 +568,7 @@ class Result < ActiveRecord::Base
     name = name.gsub(/ *\/ */, '/')
   end
 
-  # Highest points first. Break ties by numbershighest placing
+  # Highest points first. Break ties by highest placing
   # OBRA rules:
   # * The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;
   # * The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.
