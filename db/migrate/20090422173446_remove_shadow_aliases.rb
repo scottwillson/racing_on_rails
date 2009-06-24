@@ -1,4 +1,10 @@
-# After switch to UTF-8, MySQL may consider some Aliases as exact matches the Racer or Team names
+class Racer < ActiveRecord::Base
+end
+
+Alias.class_eval do
+  belongs_to :racer, :class_name => "Racer"
+end
+
 class RemoveShadowAliases < ActiveRecord::Migration
   def self.up
     Alias.find(:all).each do |a|

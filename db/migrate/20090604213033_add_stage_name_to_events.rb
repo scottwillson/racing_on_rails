@@ -1,5 +1,6 @@
 class AddStageNameToEvents < ActiveRecord::Migration
   def self.up
+    return if ASSOCIATION.short_name == "MBRA"
     add_column :events, :stage_name, :string
   end
 

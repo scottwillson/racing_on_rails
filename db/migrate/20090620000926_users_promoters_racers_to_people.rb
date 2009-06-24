@@ -4,13 +4,19 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
   class User < ActiveRecord::Base; end
 
   def self.up
+    say "Clean up orphaned aliases"
+    execute "delete from aliases where racer_id is not null and racer_id not in (select id from racers)"
+    execute "delete from aliases where team_id is not null and team_id not in (select id from teams)"
+    execute "delete from race_numbers where racer_id is not null and racer_id not in (select id from racers)"
+    execute "update results set racer_id = null where racer_id is not null and racer_id not in (select id from racers)"
+    
     say "Drop constraints"
     execute "alter table events drop foreign key events_promoters_id_fk"
     execute "alter table roles_users drop foreign key roles_users_user_id_fk"
-    execute "alter table aliases drop foreign key aliases_racer_id_fk"
+    execute "alter table aliases drop foreign key aliases_racer_id_fk" rescue nil
     execute "alter table duplicates_racers drop foreign key duplicates_racers_racers_id_fk"
-    execute "alter table race_numbers drop foreign key race_numbers_racer_id_fk"
-    execute "alter table results drop foreign key results_racer_id_fk"
+    execute "alter table race_numbers drop foreign key race_numbers_racer_id_fk" rescue nil
+    execute "alter table results drop foreign key results_racer_id_fk" rescue nil
   
     say "Rename tables"
     rename_table :roles_users, :people_roles
