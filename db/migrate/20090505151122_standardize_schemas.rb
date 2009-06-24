@@ -6,11 +6,13 @@ class StandardizeSchemas < ActiveRecord::Migration
     drop_table :images rescue nil
     drop_table :news_items rescue nil
 
-    change_table :bids do |t|
-      t.change_default(:name, nil)
-      t.change_default(:email, nil)
-      t.change_default(:phone, nil)
-      t.change_default(:amount, nil)
+    unless ASSOCIATION.short_name == "MBRA"
+      change_table :bids do |t|
+        t.change_default(:name, nil)
+        t.change_default(:email, nil)
+        t.change_default(:phone, nil)
+        t.change_default(:amount, nil)
+      end
     end
     
     change_table :categories do |t|

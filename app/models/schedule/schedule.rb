@@ -13,7 +13,6 @@ module Schedule
 #      'Team'                                   => 'team_id',
 #      'Club'                                   => 'team_id',
 #      'SanctionedBy'                           => 'sanctioned_by',
-#      'ShortDescription'                       => 'short_description',
 #      'Website'                                => 'flyer',
 #      'FlyerApproved'                          => 'flyer_approved'
 #    }

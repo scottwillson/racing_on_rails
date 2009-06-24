@@ -1,5 +1,7 @@
 class ConvertComatosePages < ActiveRecord::Migration
   def self.up
+    return if ASSOCIATION.short_name == "MBRA"
+    
     Page.delete_all
     Page::Version.delete_all
     comatose_pages = Page.connection.select_rows("select id, parent_id, full_path, title, slug, body from comatose_pages")

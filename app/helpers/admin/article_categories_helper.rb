@@ -36,7 +36,7 @@ module Admin::ArticleCategoriesHelper
       level += 1 # keep position
       categories.collect do |cat|
         html << "\t<option value=\"#{cat.id}\" style=\"padding-left:#{level * 10}px\""
-        # alptodo: we need to be able to tell this routine what field to look at to determine parent ID
+        # TODO: we need to be able to tell this routine what field to look at to determine parent ID
         # with articles it is article_category_id
         # with article_categories it is parent_id
         if model == "article"

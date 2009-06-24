@@ -402,9 +402,9 @@ create table `race_numbers` (
   key `discipline_id` (`discipline_id`),
   key `number_issuer_id` (`number_issuer_id`),
   key `race_numbers_value_index` (`value`),
-  constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade,
   constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
-  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`)
+  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
+  constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `races` (
@@ -479,8 +479,8 @@ create table `results` (
   key `idx_team_id` (`team_id`),
   key `index_results_on_place` (`place`),
   key `index_results_on_members_only_place` (`members_only_place`),
-  constraint `results_person_id` foreign key (`person_id`) references `people` (`id`),
   constraint `results_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `results_person_id` foreign key (`person_id`) references `people` (`id`),
   constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade,
   constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;
@@ -604,6 +604,8 @@ insert into schema_migrations (version) values ('20090225004224');
 
 insert into schema_migrations (version) values ('20090305222446');
 
+insert into schema_migrations (version) values ('20090310155100');
+
 insert into schema_migrations (version) values ('20090310155105');
 
 insert into schema_migrations (version) values ('20090312003519');
@@ -653,6 +655,10 @@ insert into schema_migrations (version) values ('20090607004047');
 insert into schema_migrations (version) values ('20090620000926');
 
 insert into schema_migrations (version) values ('20090621233142');
+
+insert into schema_migrations (version) values ('20090623033141');
+
+insert into schema_migrations (version) values ('20090624002909');
 
 insert into schema_migrations (version) values ('21');
 

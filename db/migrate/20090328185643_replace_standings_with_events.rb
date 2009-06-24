@@ -42,6 +42,11 @@ class ReplaceStandingsWithEvents < ActiveRecord::Migration
       raise "Found orphaned races with no standings"
     end
 
+    Event.connection.select_values("select id from events where parent_id is not null and parent_id not in (select id from events)").each do |orphan_id|
+      execute "update events set parent_id = null where id = #{orphan_id}"
+    end
+    
+
     add_column :races, :event_id, :integer, :null => false, :default => nil
     add_index :races, :event_id
     execute "alter table races alter column category_id drop default"

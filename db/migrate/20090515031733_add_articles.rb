@@ -1,5 +1,7 @@
 class AddArticles < ActiveRecord::Migration
   def self.up
+    return if ASSOCIATION.short_name == "MBRA"
+    
     create_table :article_categories do |t|
       t.string :name
       t.integer :parent_id, :integer, :default => 0
