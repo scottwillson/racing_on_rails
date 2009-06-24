@@ -151,7 +151,8 @@ class PeopleFile < GridFile
           combine_categories(row_hash)
           row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
-          people = Person.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])  #alptodo: or by USAC license number
+          # TODO or by USAC license number
+          people = Person.find_all_by_name_or_alias(row_hash[:first_name], row_hash[:last_name])
           person = nil
           row_hash[:member_to] = @member_to_for_imported_people if @update_membership
           if people.empty?
