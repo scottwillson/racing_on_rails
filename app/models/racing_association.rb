@@ -14,6 +14,7 @@ class RacingAssociation
   attr_accessor :usac_region
   attr_accessor :default_sanctioned_by
   attr_accessor :usac_results_format
+  attr_accessor :show_events_sanctioning_org_event_id
   
   def initialize
     @masters_age = 35
@@ -26,6 +27,7 @@ class RacingAssociation
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false
+    @show_events_sanctioning_org_event_id = false
   end
   
   def bmx_numbers?
@@ -78,6 +80,10 @@ class RacingAssociation
 
   def usac_results_format?
     @usac_results_format
+  end
+
+  def show_events_sanctioning_org_event_id?
+    @show_events_sanctioning_org_event_id
   end
 
   def to_s
