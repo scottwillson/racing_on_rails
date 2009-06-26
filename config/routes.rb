@@ -66,6 +66,7 @@ ActionController::Routing::Routes.draw do |map|
   map.new_admin_cat4_womens_race_series_result "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
   map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
 
+  map.connect "/events/:event_id", :controller => "results", :action => "index"
   map.resources :events do |events|
     events.resources :results
 

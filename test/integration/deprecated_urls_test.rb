@@ -17,6 +17,10 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     get "/events/#{event.id}/results"
     assert_response :success
     assert_template "results/event"
+
+    get "/events/#{event.id}"
+    assert_response :success
+    assert_template "results/event"
   end
 
   def test_redirect_racer_results
