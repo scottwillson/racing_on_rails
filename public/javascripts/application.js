@@ -114,7 +114,6 @@ function auto_complete(model, attribute, path) {
      });
 
     function afterUpdateElement(element, li) {
-      console.log(li.id);
       $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
       $(attribute + '_auto_complete_link').innerHTML = element.value;
     }
