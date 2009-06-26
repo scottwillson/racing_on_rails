@@ -1,7 +1,7 @@
 class Admin::ArticleCategoriesController < ApplicationController
 
   layout 'admin/application'
-  before_filter :login_required
+  before_filter :require_administrator
 
   # GET /article_categories
   # GET /article_categories.xml
