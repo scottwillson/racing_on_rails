@@ -72,7 +72,7 @@
         <%= link_to_function("Edit", nil, :class => "obvious", :id => "edit_promoter_link") do |page|
           page << "window.location.href = '/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
         end %>
-        <%= link_to("New", new_admin_event_person_path(@event), :class => "obvious") %>
+        <%= link_to("New", new_admin_person_path(:event_id => @event.id), :class => "obvious", :id => "new_event_promoter_link") %>
         <%= link_to_function("Remove", nil, :class => "obvious", :id => "remove_promoter_link") do |page|
           page[:event_promoter_id].set_value ""
           page[:promoter_auto_complete_link].replace_html "None"

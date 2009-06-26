@@ -7,8 +7,8 @@
 
 <%- if @event -%>
   <p class="top-margin centered">
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @person.id)) unless @person.new_record? %>
-    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event)) if @person.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @person.id), :id => "back_to_event") unless @person.new_record? %>
+    <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event), :id => "back_to_event") if @person.new_record? %>
   </p>
 <% end -%>
 
@@ -18,6 +18,7 @@
 
 <div class="column_grid_container">
 <% form_for [:admin, @person]  do |f| -%>
+  <%= hidden_field_tag("event_id", @event.id) if @event %>
   <div class="span-3">
     <%= f.labelled_text_field :first_name %>
     <%= f.labelled_text_field :last_name %>
