@@ -1,4 +1,6 @@
-<%= f.label attribute, label_text %>
+<%= f.label "#{attribute}_id", label_text %>
+<%= f.hidden_field "#{attribute}_id" -%>
+
 <%= link_to_function value || "None", nil, :class => "editable labelled", :id => "#{attribute}_auto_complete_link" do |page|
   page["#{attribute}_auto_complete_link"].hide
   page["#{attribute}_query"].show
@@ -14,8 +16,6 @@ end %>
     name="name" value="<%= value %>" autocomplete="off" />
   <div id="<%= attribute %>_auto_complete_choices" class="auto_complete"></div>
 </div>
-
-<%= f.hidden_field "#{attribute}_id" -%>
 
 <%
   @auto_complete_fields = @auto_complete_fields || []

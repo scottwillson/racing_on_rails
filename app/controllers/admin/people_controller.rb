@@ -122,7 +122,7 @@ class Admin::PeopleController < ApplicationController
     end
     if @person.errors.empty?
       if @event
-        redirect_to(edit_admin_event_person_path(@person, @event))
+        redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
       else
         redirect_to(edit_admin_person_path(@person))
       end
