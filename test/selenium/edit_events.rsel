@@ -17,7 +17,7 @@ click_and_wait "link=Sausalito Criterium"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
-select "event_promoter_id", "Brad Ross"
+assert_value "event_promoter_id", ""
 click_and_wait "save"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
@@ -28,7 +28,7 @@ click_and_wait "link=Sausalito Criterium"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
-assert_selected  "event_promoter_id", "Brad Ross"
+assert_value "event_promoter_id", ""
 
 click_and_wait "link=Delete"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
