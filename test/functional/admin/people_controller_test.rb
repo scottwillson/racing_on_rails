@@ -1125,6 +1125,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     promoter = Person.find_by_name('Fred Whatley')
     assert_response(:redirect)
-    assert_redirected_to(edit_admin_event_person_path(promoter, events(:jack_frost)))
+    assert_redirected_to(edit_admin_person_path(promoter, :event_id => events(:jack_frost)))
   end
 end
