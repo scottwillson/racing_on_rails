@@ -102,6 +102,7 @@
 
         <%= f.label :number_issuer_id, "Number Issuer" %>
         <%= f.select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})  %>
+        <br/>
         
         <%= f.labelled_check_box :atra_points_series, "ATRA Points Series" if ASSOCIATION.competitions.include?(:atra_points_series) %>
 
