@@ -32,6 +32,14 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert(assigns["teams"].empty?, "Should have no people")
     assert_not_nil(assigns["name"], "Should assign name")
   end
+  
+  def test_index_rjs
+    get(:index, :name => 'nilla', :format => "js")
+    assert_response(:success)
+    assert_template("admin/teams/index")
+    assert_not_nil(assigns["teams"], "Should assign teams")
+    assert_equal([teams(:vanilla)], assigns['teams'], 'Search for nilla should find Vanilla')
+  end
 
   def test_find
     get(:index, :name => 'van')

@@ -101,3 +101,28 @@ function sizeTo100PctVertical(id) {
   newHeight = ($(id).getHeight() + (document.viewport.getHeight() - $('body').offsetHeight)) - 16;
   $(id).setStyle( { height: newHeight + 'px' })
 }
+
+function auto_complete(model, attribute, path) {
+  Event.observe(window, 'load', function() {
+    new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
+      method: 'GET',
+      indicator: attribute + '_auto_complete_progress', 
+      minChars: 3, 
+      afterUpdateElement: afterUpdateElement,
+      onHide: hideAutocomplete,
+      frequency: 0.2
+     });
+
+    function afterUpdateElement(element, li) {
+      console.log(li.id);
+      $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
+      $(attribute + '_auto_complete_link').innerHTML = element.value;
+    }
+     
+    function hideAutocomplete(element, update) {
+      new Effect.Fade(update,{duration:0.15});
+      $(attribute + '_query').hide();
+      $(attribute + '_auto_complete_link').show();
+    }
+  });  
+}

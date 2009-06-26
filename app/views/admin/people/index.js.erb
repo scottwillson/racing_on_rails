@@ -1,0 +1,14 @@
+<ul>
+  <% # Compact HTML to avoid whitespace on suggest. Should just deal with this at the front-end.
+   @people[0..7].each do |person| -%>
+  <li id="person_<%= person.id %>"><%= person.name -%><div class="informal"><%= [ person.team_name.present? ? person.team_name : nil, person.city_state ].compact.join(" | ") -%></div></li>
+  <% end -%>
+
+  <% if @people.empty? -%>
+  <div class="more weak">No matches</div>
+  <% end -%>
+</ul>
+
+<% if @people.size >= 8 -%>
+<div class="more weak">More than eight matches</div>
+<% end -%>

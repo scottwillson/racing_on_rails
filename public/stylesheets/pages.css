@@ -15,12 +15,13 @@ table#left_nav td.icon {
   padding-right: 0px;
 }
 
-#edit_promoter_link {
-  padding-right: 8px;
+#promoter_links {
+  margin-top: 4px;
+  margin-left: 5px;
 }
 
-#promoter_links {
-  margin-top: 8px;  
+#promoter_links a {
+  margin-right: 8px;
 }
 
 /* Calendar */

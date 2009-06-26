@@ -407,6 +407,10 @@ class Event < ActiveRecord::Base
   def promoter_phone
     promoter.home_phone if promoter
   end
+  
+  def team_name
+    team.name if team
+  end
 
   def date_range_s(format = :short)
     if format == :long

@@ -1,6 +1,7 @@
 # Show Schedule, add and edit Events, edit Results for Events
 class Admin::EventsController < ApplicationController  
   before_filter :require_administrator
+  before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
   cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :upload]
@@ -26,11 +27,6 @@ class Admin::EventsController < ApplicationController
   # * disciplines: List of all Disciplines + blank
   def edit
     @event = Event.find(params[:id])
-    @disciplines = [''] + Discipline.find(:all).collect do |discipline|
-      discipline.name
-    end
-    @disciplines.sort!
-    
     unless params['promoter_id'].blank?
       @event.promoter = Person.find(params['promoter_id'])
     end
@@ -238,7 +234,7 @@ class Admin::EventsController < ApplicationController
     child.save!
     redirect_to(edit_admin_event_path(child))
   end
-  
+
   # :nodoc  
   def add_children
     parent = Event.find(params[:parent_id])
@@ -247,5 +243,11 @@ class Admin::EventsController < ApplicationController
       child.save!
     end
     redirect_to(edit_admin_event_path(parent))
+  end
+  
+  protected
+  
+  def assign_disciplines
+    @disciplines = Discipline.find_all_names
   end
 end

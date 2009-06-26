@@ -40,6 +40,17 @@ class Team < ActiveRecord::Base
     team
   end
   
+  def Team.find_all_by_name_like(name, limit)
+    name_like = "%#{name}%"
+    Team.find(
+      :all, 
+      :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
+      :include => :aliases,
+      :limit => limit,
+      :order => 'teams.name'
+    )
+  end
+  
   def teams_with_same_name
     teams = Team.find_all_by_name(self.name) | Alias.find_all_teams_by_name(self.name)
     teams.reject! { |team| team == self }

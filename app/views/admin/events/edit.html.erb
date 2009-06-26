@@ -46,12 +46,7 @@
         <% end -%>
 
         <%= f.label :discipline %>
-        <%= f.select :discipline, Discipline.find_all_names.sort %><br/>
-
-        <%= f.label :team_id, "Sponsoring Team" %>
-        <%= f.select(:team_id,
-                 Team.find(:all).sort_by(&:name).collect {|t| [ t.name, t.id ] },
-                 { :include_blank => true }) %>
+        <%= f.select :discipline, @disciplines.sort %><br/>
 
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
@@ -70,17 +65,29 @@
       </div>
 
       <div class="span-3 last top_margin">
-        <%= f.label :promoter_id, "Promoter" %>
-        <%= f.select(:promoter_id, 
-                 Person.find(:all).sort_by{ |p| p.name_or_contact_info}.collect { |p| [ p.name_or_contact_info, p.id ] },
-                 { :include_blank => true }) %>
-       </div>
+        <%= auto_complete f, :event, :promoter, admin_people_path %>
+      </div>
        
       <div class="prepend-1 span-2 last" id="promoter_links">
-        <%= link_to_function("Edit", nil, :id => "edit_promoter_link") do |page|
+        <%= link_to_function("Edit", nil, :class => "obvious", :id => "edit_promoter_link") do |page|
           page << "window.location.href = '/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
         end %>
-        <%= link_to("New", new_admin_event_person_path(@event)) %>
+        <%= link_to("New", new_admin_event_person_path(@event), :class => "obvious") %>
+        <%= link_to_function("Remove", nil, :class => "obvious", :id => "remove_promoter_link") do |page|
+          page[:event_promoter_id].set_value ""
+          page[:edit_promoter_link].replace_html "None"
+        end if @event.promoter %>
+      </div>
+
+      <div class="span-3 last top_margin">
+        <%= auto_complete f, :event, :team, admin_teams_path, "Sponsoring Team" %>
+      </div>
+      
+      <div class="prepend-1 span-2 last" id="team_links">
+        <%= link_to_function("Remove", nil, :class => "obvious #{'invisible' unless @event.team}", :id => "remove_team_link") do |page|
+          page[:event_team_id].set_value ""
+          page[:edit_team_link].replace_html "None"
+        end %>
       </div>
 
       <div class="span-3 last top_margin">
@@ -138,15 +145,15 @@
       update_page_tag { |page| page.hide(:edit_promoter_link) }
     end -%>
 
-<% unless @event.new_record? %>
+<% unless @event.new_record? -%>
 <script type="text/javascript" charset="utf-8">
   new Form.Element.Observer('event_promoter_id', 0, function(element, value) {
     if (value == '') {
       Element.hide('edit_promoter_link');
     }
     else {
-      Element.show('edit_promoter_link');
+      Element.show('edit_promoter_link')
     }
-  })
+  });
 </script>
 <% end -%>

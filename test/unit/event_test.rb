@@ -455,6 +455,12 @@ class EventTest < ActiveSupport::TestCase
     event = stage.children.create!(:name => 'Cascade Classic - Cascade Lakes Road Race')
     assert_equal('Cascade Classic - Cascade Lakes Road Race', event.full_name, 'stage race results full_name')
   end
+  
+  def test_team_name
+    assert_equal(nil, Event.new.team_name, "team_name")
+    assert_equal("", Event.new(:team => Team.new(:name => "")).team_name, "team_name")
+    assert_equal("Vanilla", Event.new(:team => Team.new(:name => "Vanilla")).team_name, "team_name")
+  end
 
   def test_updated_at
     event = SingleDayEvent.create!

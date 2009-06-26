@@ -637,6 +637,22 @@ class Person < ActiveRecord::Base
     super
   end
   
+  def city_state
+    if !city.blank?
+      if !state.blank?
+        "#{city}, #{state}"
+      else
+        "#{city}"
+      end
+    else
+      if !state.blank?
+        "#{state}"
+      else
+        nil
+      end
+    end
+  end
+  
   def city_state_zip
     if !city.blank?
       if !state.blank?
