@@ -75,7 +75,7 @@
         <%= link_to("New", new_admin_event_person_path(@event), :class => "obvious") %>
         <%= link_to_function("Remove", nil, :class => "obvious", :id => "remove_promoter_link") do |page|
           page[:event_promoter_id].set_value ""
-          page[:edit_promoter_link].replace_html "None"
+          page[:promoter_auto_complete_link].replace_html "None"
         end if @event.promoter %>
       </div>
 
@@ -86,7 +86,7 @@
       <div class="prepend-1 span-2 last" id="team_links">
         <%= link_to_function("Remove", nil, :class => "obvious #{'invisible' unless @event.team}", :id => "remove_team_link") do |page|
           page[:event_team_id].set_value ""
-          page[:edit_team_link].replace_html "None"
+          page[:team_auto_complete_link].replace_html "None"
         end %>
       </div>
 
