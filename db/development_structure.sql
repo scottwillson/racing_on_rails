@@ -172,6 +172,7 @@ create table `events` (
   `auto_combined_results` tinyint(1) not null default '1',
   `team_id` int(11) default null,
   `promoter_id` int(11) default null,
+  `sanctioning_org_event_id` varchar(16) default null,
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -644,6 +645,8 @@ insert into schema_migrations (version) values ('20090606004452');
 insert into schema_migrations (version) values ('20090606191333');
 
 insert into schema_migrations (version) values ('20090607004047');
+
+insert into schema_migrations (version) values ('20090611215912');
 
 insert into schema_migrations (version) values ('20090620000926');
 
