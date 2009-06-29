@@ -33,8 +33,10 @@ class UnforkMbra2 < ActiveRecord::Migration
       end
 
       execute "update events set notes = trim(concat(concat(notes, ' '), short_description)) where short_description is not null and short_description != ''"
+      execute "update events set sanctioning_org_event_id = trim(usac_event_number) where usac_event_number is not null and usac_event_number != ''"
       change_table :events do |t|
         t.remove :short_description
+        t.remove :usac_event_number
       end
 
       change_table :people do |t|
