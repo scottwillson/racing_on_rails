@@ -18,6 +18,8 @@ class UnforkMbra < ActiveRecord::Migration
     
     execute "update racers set team_id = null where team_id is not null and team_id not in (select id from teams)"
     execute "update results set team_id = null where team_id is not null and team_id not in (select id from teams)"
+
+    execute "update events set name = stage_name where parent_id is not null and stage_name is not null"
     
     create_table :roles, :force => true do |t|
       t.integer :id
