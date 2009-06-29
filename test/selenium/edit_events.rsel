@@ -1,3 +1,6 @@
+# Selenium's wait_for seems to collide with Safari 4 AJAX and JS. Not sure why. Admin UI works fine in Safari 4; 
+# tests work fine in Firefox. Resort to pausing after AJAX calls.
+
 include_partial "fixtures"
 include_partial "admin_login"
 
@@ -17,18 +20,132 @@ click_and_wait "link=Sausalito Criterium"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
-select "event_promoter_id", "Brad Ross"
+assert_value "event_promoter_id", ""
+assert_text "promoter_auto_complete_link", "None"
+click_and_wait "new_event_promoter_link"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_title "glob:*New Person"
+type "person_first_name", "Tom"
+type "person_last_name", "Brown"
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+click_and_wait "back_to_event"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_title "glob:*Sausalito Criterium*"
+assert_value "event_promoter_id", "regex:\\d+"
+assert_text "promoter_auto_complete_link", "Tom Brown"
+
 click_and_wait "save"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
+assert_value "event_promoter_id", "regex:\\d+"
+assert_text "promoter_auto_complete_link", "Tom Brown"
 
 open "/admin/events"
 assert_text_present "Sausalito Criterium"
 click_and_wait "link=Sausalito Criterium"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
+assert_value "event_promoter_id", "regex:\\d+"
+assert_text "promoter_auto_complete_link", "Tom Brown"
 
-assert_selected  "event_promoter_id", "Brad Ross"
+click_and_wait "edit_promoter_link"
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_title "glob:*Tom Brown"
+
+type "person_first_name", "Tim"
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+
+click_and_wait "back_to_event"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_title "glob:*Sausalito Criterium*"
+assert_value "event_promoter_id", "regex:\\d+"
+assert_text "promoter_auto_complete_link", "Tim Brown"
+
+# Need event and timing workarounds for Safari 4
+click "promoter_auto_complete_link"
+wait_for_visible "promoter_auto_complete"
+click "promoter_auto_complete"
+type "promoter_auto_complete", "candi m"
+fire_event "promoter_auto_complete", "keydown"
+fire_event "promoter_auto_complete", "keypress"
+fire_event "promoter_auto_complete", "keyup"
+fire_event "promoter_auto_complete", "change"
+wait_for_text_present "Candi Murray"
+candi = Person.find_by_name('Candi Murray')
+click "person_#{candi.id}"
+pause 500
+assert_value "event_promoter_id", candi.id
+assert_text "promoter_auto_complete_link", "Candi Murray"
+
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_value "event_promoter_id", candi.id
+assert_text "promoter_auto_complete_link", "Candi Murray"
+
+click "remove_promoter_link"
+wait_for_text_not_present "Candi Murray"
+assert_text "promoter_auto_complete_link", "None"
+assert_value "event_promoter_id", ""
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_value "event_promoter_id", ""
+assert_text "promoter_auto_complete_link", "None"
+
+assert_value "event_team_id", ""
+assert_text "team_auto_complete_link", "None"
+
+# Need event and timing workarounds for Safari 4
+click "team_auto_complete_link"
+wait_for_visible "team_auto_complete"
+click "team_auto_complete"
+type "team_auto_complete", "Gentle Lovers"
+fire_event "team_auto_complete", "keydown"
+fire_event "team_auto_complete", "keypress"
+fire_event "team_auto_complete", "keyup"
+fire_event "team_auto_complete", "change"
+wait_for_text_present "Gentle Lovers"
+gl = Team.find_by_name('Gentle Lovers')
+click "team_#{gl.id}"
+pause 500
+assert_value "event_team_id", gl.id
+assert_text "team_auto_complete_link", "Gentle Lovers"
+
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_value "event_team_id", gl.id
+assert_text "team_auto_complete_link", "Gentle Lovers"
+
+# More Selenium + Safari 4 workarounds
+assert_value "event_team_id", gl.id
+pause 500
+click "remove_team_link"
+pause 500
+assert_text "team_auto_complete_link", "None"
+assert_value "event_team_id", ""
+click_and_wait "save"
+
+assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_not_title "regexp:Exception"
+assert_value "event_team_id", ""
+assert_text "team_auto_complete_link", "None"
 
 click_and_wait "link=Delete"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
@@ -48,15 +165,18 @@ assert_text_present "Senior Men Pro 1/2"
 assert_text_present "Senior Men 3"
 
 kings_valley = Event.find_by_name_and_date('Kings Valley Road Race', '2003-12-31')
+pause 1000
 click "id=destroy_race_#{kings_valley.races.first.id}"
-wait_for_not_visible "id=race_#{kings_valley.races.first.id}_row"
+pause 1000
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
-# TODO Fix Safari: it doesn't like the JS here
-click "id=destroy_races"
-wait_for_confirmation("glob:Really delete*")
-wait_for_not_visible "id=destroy_races_progress"
+open "/admin/events?year=2003"
+click_and_wait "link=Kings Valley Road Race"
+
+pause 1000
+click "destroy_races"
+pause 1000
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 

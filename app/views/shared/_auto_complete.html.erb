@@ -1,0 +1,7 @@
+    <% if @auto_complete_fields -%>
+    <script type="text/javascript" charset="utf-8">
+      <% @auto_complete_fields.each do |auto_complete_field| -%>
+        <%= "auto_complete('#{auto_complete_field[:model]}', '#{auto_complete_field[:attribute]}', '#{auto_complete_field[:path]}')" %>
+      <% end -%>
+    </script>
+    <% end -%>

@@ -15,12 +15,13 @@ table#left_nav td.icon {
   padding-right: 0px;
 }
 
-#edit_promoter_link {
-  padding-right: 8px;
+#promoter_links {
+  margin-top: 4px;
+  margin-left: 5px;
 }
 
-#promoter_links {
-  margin-top: 8px;  
+#promoter_links a {
+  margin-right: 8px;
 }
 
 /* Calendar */
@@ -444,25 +445,28 @@ table.first_aid_providers td.name {
 }
 
 /* Login */
-.login {
-  margin-top: 20px;
-  width: 368px;
+div.login {
+  margin-top: 16px;
+}
+
+div.login, div.login div.span-3 {
+  width: 376px;
 }
 
 .login label {
-  width: 80px;
+  width: 90px;
+  margin-right: 8px;
 }
 
-.login .page_buttons {
-  padding-top: 8px;
+.login #person_session_login, #person_session_password {
+  margin-top: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 270px;
+  float: left;
 }
 
-.forgot {
-  margin-left: 88px;
-}
-
-#login_button {
-  margin-right: 2px;
+.login .page_buttons input {
 }
 
 .link_spacer {

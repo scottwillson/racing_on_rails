@@ -1,0 +1,23 @@
+<%= f.label "#{attribute}_id", label_text %>
+<%= f.hidden_field "#{attribute}_id" -%>
+
+<%= link_to_function value || "None", nil, :class => "editable labelled", :id => "#{attribute}_auto_complete_link" do |page|
+  page["#{attribute}_auto_complete_link"].hide
+  page["#{attribute}_query"].show
+  page["#{attribute}_auto_complete"].focus
+  page["#{attribute}_auto_complete"].select
+end %>
+
+<img src="/images/icons/spinner.gif" alt="Working..." class="auto_complete_progress_spinner" 
+  id="<%= attribute %>_auto_complete_progress" style="display: none" />
+
+<div id="<%= attribute %>_query" style="display: none">
+  <input type="text" id="<%= attribute %>_auto_complete" 
+    name="name" value="<%= value %>" autocomplete="off" />
+  <div id="<%= attribute %>_auto_complete_choices" class="auto_complete"></div>
+</div>
+
+<%
+  @auto_complete_fields = @auto_complete_fields || []
+  @auto_complete_fields << { :model => model, :attribute => attribute, :path => path }
+%>

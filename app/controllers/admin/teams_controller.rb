@@ -12,16 +12,16 @@ class Admin::TeamsController < ApplicationController
       session['team_name'] = @name
       cookies[:team_name] = {:value => @name, :expires => Time.now + 36000}
       name_like = "%#{@name}%"
-      @teams = Team.find(
-        :all, 
-        :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
-        :include => :aliases,
-        :limit => SEARCH_RESULTS_LIMIT,
-        :order => 'teams.name'
-      )
+      @teams = Team.find_all_by_name_like(params[:name], SEARCH_RESULTS_LIMIT)
       if @teams.size == SEARCH_RESULTS_LIMIT
         flash[:warn] = "First #{SEARCH_RESULTS_LIMIT} teams"
       end
+    end
+
+    respond_to do |wants|
+      wants.html
+      # TODO Optimize JS call. It shouldn't consider cookie and should pull back only nine results
+      wants.js
     end
   end
   

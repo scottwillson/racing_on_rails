@@ -15,11 +15,8 @@
     "toggle_disclosure(#{result.id})",
     :class => 'disclosure image', :alt => "") if result.competition_result? %></td>
     <td><%= result.place %></td>
-    <td><%= link_to(image_tag('/images/icons/web_page.png', 
-      :title => 'View public results web page', :alt => 'View public results web page'), 
-       {:controller => '/results', :action => 'event', :year => result.event.date.year, 
-       :discipline => result.event.discipline, :id => result.event.id},
-       { :class => "image" } ) %>
+    <td><%= link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'),
+      event_results_path(result.event, :html => { :anchor => "race_#{result.race.id}", :class => "image" } )) %>
     </td>
     <td><%= result.event.full_name %></td>
     <td><%= result.race.name %></td>

@@ -1,0 +1,10 @@
+<ul>
+  <% # Compact HTML to avoid whitespace on suggest. Should just deal with this at the front-end.
+   @teams[0..7].each do |team| -%>
+  <li id="team_<%= team.id %>"><%= team.name -%></li>
+  <% end -%>
+</ul>
+
+<% if @teams.size >= 8 -%>
+<div class="more weak">More than eight matches</div>
+<% end -%>

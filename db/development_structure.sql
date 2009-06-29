@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
+  `name` varchar(255) default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `title` varchar(255) default null,
+  `heading` varchar(255) default null,
+  `description` varchar(255) default null,
   `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
+  `body` text,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -172,6 +172,7 @@ create table `events` (
   `auto_combined_results` tinyint(1) not null default '1',
   `team_id` int(11) default null,
   `promoter_id` int(11) default null,
+  `sanctioning_org_event_id` varchar(16) default null,
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -224,18 +225,6 @@ create table `mailing_lists` (
   `description` text,
   primary key (`id`),
   key `idx_name` (`name`)
-) engine=innodb default charset=utf8;
-
-create table `new_categories` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) default null,
-  `type` varchar(255) default null,
-  `new_category_id` int(11) default null,
-  `position` int(11) not null default '999',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `number_issuers` (
@@ -301,7 +290,7 @@ create table `people` (
   `ccx_category` varchar(255) default null,
   `dh_category` varchar(255) default null,
   `email` varchar(255) default null,
-  `gender` char(2) default null,
+  `gender` varchar(2) default null,
   `home_phone` varchar(255) default null,
   `mtb_category` varchar(255) default null,
   `member_from` date default null,
@@ -341,6 +330,9 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
+  `license_expiration_date` date default null,
+  `club_name` varchar(255) default null,
+  `ncca_club_name` varchar(255) default null,
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -353,7 +345,7 @@ create table `people` (
   key `index_people_on_perishable_token` (`perishable_token`),
   key `index_people_on_single_access_token` (`single_access_token`),
   key `index_people_on_created_by_id` (`created_by_id`),
-  constraint `racers_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
+  constraint `people_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `people_roles` (
@@ -368,7 +360,7 @@ create table `people_roles` (
 create table `posts` (
   `id` int(11) not null auto_increment,
   `body` text not null,
-  `date` timestamp not null default '0000-00-00 00:00:00',
+  `date` datetime not null,
   `sender` varchar(255) not null default '',
   `subject` varchar(255) not null default '',
   `topica_message_id` varchar(255) default null,
@@ -488,6 +480,8 @@ create table `results` (
 create table `roles` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) default null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
   primary key (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -500,7 +494,7 @@ create table `scores` (
   `id` int(11) not null auto_increment,
   `competition_result_id` int(11) default null,
   `source_result_id` int(11) default null,
-  `points` double default null,
+  `points` float default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`),
@@ -651,6 +645,8 @@ insert into schema_migrations (version) values ('20090606004452');
 insert into schema_migrations (version) values ('20090606191333');
 
 insert into schema_migrations (version) values ('20090607004047');
+
+insert into schema_migrations (version) values ('20090611215912');
 
 insert into schema_migrations (version) values ('20090620000926');
 

@@ -121,6 +121,10 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(name, team.name, 'name')
   end
   
+  def test_find_all_by_name_like
+    
+  end
+  
   def test_create_dupe
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla should exist')
     dupe = Team.new(:name => 'Vanilla')

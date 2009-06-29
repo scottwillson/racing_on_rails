@@ -43,10 +43,16 @@ class Admin::PeopleController < ApplicationController
     if @people.size == SEARCH_RESULTS_LIMIT
       flash[:notice] = "First #{SEARCH_RESULTS_LIMIT} people"
     end
-    
+
     @current_year = current_date.year
+
+    respond_to do |wants|
+      wants.html
+      # TODO Optimize JS call. It shouldn't consider cookie and should pull back only nine results
+      wants.js
+    end
   end
-  
+
   def export
     date = current_date
     if params['excel_layout'] == 'scoring_sheet'
@@ -116,7 +122,7 @@ class Admin::PeopleController < ApplicationController
     end
     if @person.errors.empty?
       if @event
-        redirect_to(edit_admin_event_person_path(@person, @event))
+        redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
       else
         redirect_to(edit_admin_person_path(@person))
       end
