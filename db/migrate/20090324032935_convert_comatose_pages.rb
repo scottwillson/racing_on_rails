@@ -1,6 +1,6 @@
 class ConvertComatosePages < ActiveRecord::Migration
   def self.up
-    return if ASSOCIATION.short_name == "MBRA"
+    return if ASSOCIATION.short_name == "MBRA" || ASSOCIATION.short_name == "ABA"
     
     Page.delete_all
     Page::Version.delete_all
