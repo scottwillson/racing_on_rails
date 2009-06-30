@@ -66,7 +66,8 @@ class ResultsFile
   # Toggle expensive debug logging
   DEBUG = false
   
-  # Options: Boolean usac_results_format. Defaults to RacingAssociation, which is usually "false"
+  # Options: usac_results_format. If not present it defaults to RacingAssociation, which is usually "false".
+  #   otherwise treat as boolean, potentially overriding the default.
   def initialize(source, event, *options)
     self.column_indexes = nil
     self.event = event
@@ -74,10 +75,10 @@ class ResultsFile
     self.source = source
     options = options.extract_options!
 
-    if options[:usac_results_format].blank?
-      self.usac_results_format = ASSOCIATION.usac_results_format
-    else
+    if options.has_key?(:usac_results_format)
       self.usac_results_format = options[:usac_results_format]
+    else
+      self.usac_results_format = ASSOCIATION.usac_results_format
     end
   end
 
@@ -177,7 +178,11 @@ class ResultsFile
       #i was looking for place = 1 but it is possible that all in race were dq or dnf or dns
       return false if column_indexes.nil? || row.blank?
       return true if row.previous.blank?
-      return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class] # && age group is the same...
+      #break if age is a range and it has changed
+      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+        return true unless row[:age] == row.previous[:age]
+      end
+      return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class]
       return true
     else  
       return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
@@ -201,19 +206,14 @@ class ResultsFile
 
   def construct_usac_category(row)
     #category_name and gender should always be populated.
-    if row[:category_name].present? && row[:category_name].downcase.strip == "junior"
-      #juniors may be split by age group in which case the age column should
-      #contatin the age range. otherwise it may be empty or contain an individual
-      #racer's age.
-      #The end result should look like "Junior Women 13-14" or "Junior Men"
-      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
-        return (row[:category_name].to_s.strip + " " + row[:gender].to_s.strip + " " + row[:age].to_s.strip)
-      else
-        return (row[:category_name].to_s.strip + " " + row[:gender].to_s.strip)
-      end
+    #juniors, and conceivably masters, may be split by age group in which case the age column should
+    #contain the age range. otherwise it may be empty or contain an individual racer's age.
+    #The end result should look like "Junior Women 13-14" or "Junior Men"
+    #category_class may or may not be populated
+    #e.g. "Master B Men" or "Cat4 Female"
+    if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+      return (row[:category_name].to_s.strip + " " + row[:category_class].to_s.strip + " " + row[:gender].to_s.strip + " " + row[:age].to_s.strip)
     else
-      #category_class may or may not be populated
-      #e.g. "Master B Men" or "Cat4 Female"
       return (row[:category_name].to_s.strip + " " + row[:category_class].to_s.strip + " " + row[:gender].to_s.strip)
     end
   end
