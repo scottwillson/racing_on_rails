@@ -74,7 +74,7 @@ class ResultsFile
     self.source = source
     options = options.extract_options!
 
-    if options[:usac_results_format].nil?
+    if options[:usac_results_format].blank?
       self.usac_results_format = ASSOCIATION.usac_results_format
     else
       self.usac_results_format = options[:usac_results_format]
