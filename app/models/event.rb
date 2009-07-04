@@ -123,13 +123,14 @@ class Event < ActiveRecord::Base
     
     events.map!(&:root)
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
+    competitons, events = events.partition { |event| event.is_a?(Competition) }
     
     events.reject! do |event|
       (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
       (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.default_sanctioned_by)
     end
     
-    [ weekly_series, events ]
+    [ weekly_series, events, competitons ]
   end
 
   def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
