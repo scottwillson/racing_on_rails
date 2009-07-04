@@ -1,10 +1,4 @@
 class Cat4WomensRaceSeries < Competition
-  # Expire Cat4WomensRaceSeries web pages from cache. Expires *all* Cat4WomensRaceSeries pages.
-  def Cat4WomensRaceSeries.expire_cache
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat4_womens_race_series.html")
-    FileUtils::rm_rf("#{RAILS_ROOT}/public/cat4_womens_race_series")
-  end
-
   def friendly_name
     "Cat 4 Womens Race Series"
   end
@@ -65,9 +59,5 @@ class Cat4WomensRaceSeries < Competition
   def create_races
     category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
     self.races.create(:category => category)
-  end
-
-  def expire_cache
-    Cat4WomensRaceSeries.expire_cache
   end
 end
