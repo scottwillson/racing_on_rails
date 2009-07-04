@@ -131,7 +131,24 @@ class Event < ActiveRecord::Base
     
     [ weekly_series, events ]
   end
-  
+
+  def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
+    first_of_year = Date.new(year, 1, 1)
+    last_of_year = Date.new(year + 1, 1, 1) - 1
+      discipline_names = [discipline]
+      discipline_names << 'Circuit' if discipline.downcase == 'road'
+      Set.new(Event.find(
+          :all,
+          :select => "distinct events.id, events.*",
+          :conditions => [%Q{
+              events.date between ? and ?
+              and events.discipline in (?)
+              and bar_points > 0
+              }, first_of_year, last_of_year, discipline_names]
+      ))
+
+  end
+
   # Used when importing People: should membership be for this year or the next?
   def Event.find_max_date_for_current_year
     # TODO Make this better

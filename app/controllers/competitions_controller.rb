@@ -12,6 +12,8 @@ class CompetitionsController < ApplicationController
       competition_class = Cat4WomensRaceSeries
     elsif params[:type] == "wsba_barr"
       competition_class = WsbaBarr
+    elsif params[:type] == "mbra_bar"
+      competition_class = MbraBar
     else
       raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
     end
