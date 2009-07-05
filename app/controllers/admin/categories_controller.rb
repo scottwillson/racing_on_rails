@@ -44,4 +44,10 @@ class Admin::CategoriesController < ApplicationController
       end
     end
   end
+
+  # ugly I know. Refactor if/when another LA wants to compute BAR on demand. alp
+  def recompute_bar
+    MbraBar.calculate!
+    redirect_to :action => :index
+  end  
 end
