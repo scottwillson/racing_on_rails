@@ -85,7 +85,7 @@ class MbraBar < Competition
     Result.find(:all,
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
-                    (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries') or events.type is NULL)
+                    (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
                     and bar = true
                     and categories.id in (#{category_ids})
                     and (events.discipline in (#{race_disciplines})
@@ -130,6 +130,10 @@ class MbraBar < Competition
     Discipline[discipline].bar_categories.each do |category|
       races.create!(:category => category)
     end
+  end
+
+  def members_only?
+    false
   end
 
   def friendly_name
