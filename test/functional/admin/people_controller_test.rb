@@ -286,9 +286,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_destroy_number
     race_number = race_numbers(:molly_road_number)
     assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
-    
-    opts = {:controller => "admin/people", :action => "destroy_number", :id => race_number.to_param}
-    assert_routing("/admin/people/destroy_number/#{race_number.to_param}", opts)
 
     post(:destroy_number, :id => race_number.to_param)
     assert_response(:success)
@@ -692,9 +689,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_number_year_changed
     person = people(:molly)
-    
-    opts = {:controller => "admin/people", :action => "number_year_changed", :id => person.to_param.to_s}
-    assert_routing("/admin/people/number_year_changed/#{person.to_param}", opts)
 
     post(:number_year_changed, 
          :id => person.to_param.to_s,
