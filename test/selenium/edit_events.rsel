@@ -21,30 +21,15 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 
 assert_value "event_promoter_id", ""
-assert_text "promoter_auto_complete_link", "None"
-click_and_wait "new_event_promoter_link"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
-assert_not_title "regexp:Exception"
-assert_title "glob:*New Person"
-type "person_first_name", "Tom"
-type "person_last_name", "Brown"
-click_and_wait "save"
-
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
-assert_not_title "regexp:Exception"
-
-click_and_wait "back_to_event"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
-assert_not_title "regexp:Exception"
-assert_title "glob:*Sausalito Criterium*"
-assert_value "event_promoter_id", "regex:\\d+"
-assert_text "promoter_auto_complete_link", "Tom Brown"
+assert_value "promoter_auto_complete", ""
+click "promoter_auto_complete"
+type "promoter_auto_complete", "Tom Brown"
 
 click_and_wait "save"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_promoter_id", "regex:\\d+"
-assert_text "promoter_auto_complete_link", "Tom Brown"
+assert_value "promoter_auto_complete", "Tom Brown"
 
 open "/admin/events"
 assert_text_present "Sausalito Criterium"
@@ -52,7 +37,7 @@ click_and_wait "link=Sausalito Criterium"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_promoter_id", "regex:\\d+"
-assert_text "promoter_auto_complete_link", "Tom Brown"
+assert_value "promoter_auto_complete", "Tom Brown"
 
 click_and_wait "edit_promoter_link"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
@@ -71,11 +56,9 @@ assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error
 assert_not_title "regexp:Exception"
 assert_title "glob:*Sausalito Criterium*"
 assert_value "event_promoter_id", "regex:\\d+"
-assert_text "promoter_auto_complete_link", "Tim Brown"
+assert_value "promoter_auto_complete", "Tim Brown"
 
 # Need event and timing workarounds for Safari 4
-click "promoter_auto_complete_link"
-wait_for_visible "promoter_auto_complete"
 click "promoter_auto_complete"
 type "promoter_auto_complete", "candi m"
 fire_event "promoter_auto_complete", "keydown"
@@ -87,32 +70,50 @@ candi = Person.find_by_name('Candi Murray')
 click "person_#{candi.id}"
 pause 500
 assert_value "event_promoter_id", candi.id
-assert_text "promoter_auto_complete_link", "Candi Murray"
+assert_value "promoter_auto_complete", "Candi Murray"
 
 click_and_wait "save"
 
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_promoter_id", candi.id
-assert_text "promoter_auto_complete_link", "Candi Murray"
+assert_value "promoter_auto_complete", "Candi Murray"
 
-click "remove_promoter_link"
-wait_for_text_not_present "Candi Murray"
-assert_text "promoter_auto_complete_link", "None"
-assert_value "event_promoter_id", ""
+click "promoter_auto_complete"
+type "promoter_auto_complete", ""
+fire_event "promoter_auto_complete", "keydown"
+fire_event "promoter_auto_complete", "keypress"
+fire_event "promoter_auto_complete", "keyup"
+fire_event "promoter_auto_complete", "change"
+assert_value "promoter_auto_complete", ""
 click_and_wait "save"
 
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_promoter_id", ""
-assert_text "promoter_auto_complete_link", "None"
+assert_value "promoter_auto_complete", ""
 
 assert_value "event_team_id", ""
-assert_text "team_auto_complete_link", "None"
+assert_value "team_auto_complete", ""
+
+assert_value "event_phone", ""
+assert_value "event_email", ""
+
+type "event_phone", "(541) 212-9000"
+type "event_email", "event@google.com"
+click_and_wait "save"
+
+assert_value "event_phone", "(541) 212-9000"
+assert_value "event_email", "event@google.com"
+
+open "/admin/people/#{candi.id}/edit"
+assert_value "person_home_phone", "(503) 555-1212"
+assert_value "person_email", "admin@example.com"
+
+open "/admin/events"
+click_and_wait "link=Sausalito Criterium"
 
 # Need event and timing workarounds for Safari 4
-click "team_auto_complete_link"
-wait_for_visible "team_auto_complete"
 click "team_auto_complete"
 type "team_auto_complete", "Gentle Lovers"
 fire_event "team_auto_complete", "keydown"
@@ -124,28 +125,24 @@ gl = Team.find_by_name('Gentle Lovers')
 click "team_#{gl.id}"
 pause 500
 assert_value "event_team_id", gl.id
-assert_text "team_auto_complete_link", "Gentle Lovers"
+assert_value "team_auto_complete", "Gentle Lovers"
 
 click_and_wait "save"
 
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_team_id", gl.id
-assert_text "team_auto_complete_link", "Gentle Lovers"
+assert_value "team_auto_complete", "Gentle Lovers"
 
-# More Selenium + Safari 4 workarounds
 assert_value "event_team_id", gl.id
-pause 500
-click "remove_team_link"
-pause 500
-assert_text "team_auto_complete_link", "None"
-assert_value "event_team_id", ""
+click "team_auto_complete"
+type "team_auto_complete", ""
 click_and_wait "save"
 
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 assert_value "event_team_id", ""
-assert_text "team_auto_complete_link", "None"
+assert_value "team_auto_complete", ""
 
 click_and_wait "link=Delete"
 assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"

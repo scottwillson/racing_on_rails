@@ -27,10 +27,11 @@
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    cancelled flyer_approved instructional practice sanctioned_by 
+    cancelled flyer_approved instructional practice sanctioned_by email phone team_id
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results
+  before_save :set_promoter, :set_team
 
   validates_presence_of :name, :date, :discipline
   validate :parent_is_not_self
@@ -75,6 +76,9 @@ class Event < ActiveRecord::Base
              :after_remove => :children_changed 
 
   belongs_to :velodrome
+  
+  attr_reader :new_promoter_name
+  attr_reader :new_team_name
 
   include Comparable
 
@@ -425,8 +429,40 @@ class Event < ActiveRecord::Base
     promoter.home_phone if promoter
   end
   
+  def promoter_name=(value)
+    @new_promoter_name = value
+  end
+  
+  def set_promoter
+    if new_promoter_name.present?
+      promoters = Person.find_all_by_name_or_alias(new_promoter_name)
+      case promoters.size
+      when 0
+        self.promoter = Person.create!(:name => new_promoter_name)
+      when 1
+        self.promoter = promoters.first
+      else
+        self.promoter = promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
+      end
+    elsif new_promoter_name == ""
+      self.promoter = nil
+    end
+  end
+  
   def team_name
     team.name if team
+  end
+
+  def team_name=(value)
+    @new_team_name = value
+  end
+  
+  def set_team
+    if new_team_name.present?
+      self.team = Team.find_by_name_or_alias_or_create(new_team_name)
+    elsif new_team_name == ""
+      self.team = nil
+    end
   end
 
   def date_range_s(format = :short)

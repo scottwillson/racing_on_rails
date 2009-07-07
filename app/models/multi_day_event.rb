@@ -77,12 +77,15 @@ class MultiDayEvent < Event
     new_event_attributes = {
       :city => first_event.city,
       :discipline => first_event.discipline,
+      :email => first_event.email,
       :flyer => first_event.flyer,
       :name => first_event.name,
+      :phone => first_event.phone,
       :promoter => first_event.promoter,
       :prize_list => first_event.prize_list,
       :sanctioned_by => first_event.sanctioned_by,
       :state => first_event.state,
+      :team => first_event.team,
       :velodrome => first_event.velodrome
     }
     

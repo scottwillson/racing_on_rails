@@ -688,7 +688,8 @@ class PersonTest < ActiveSupport::TestCase
   def test_find_all_by_name_or_alias
     new_tonkin = Person.create!(:name => "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
-    assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Person.find_all_by_name_or_alias(:first_name => "Erik", :last_name => "Tonkin").size, "Should have 2 Tonkins")
+    assert_raise(ArgumentError) { Person.find_all_by_name("Erik", "Tonkin") }
   end
   
   def test_find_all_for_export
@@ -700,8 +701,6 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("12/31/#{Date.today.year}", people[3]["member_to"], "Row 3 member_to")
     assert_equal("5", people[3]["track_category"], "Row 3 track_category")
   end
-  
-  
   
   def test_create
     Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :email => "tuxedo@example.com")
