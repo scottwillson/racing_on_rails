@@ -13,15 +13,12 @@
     <tr>
        <td><%= long_day_of_week(event.day_of_week) %></td>
        <td>
-         <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
+         <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? && event.flyer_approved? %>
          <%= event.name unless event.flyer? %>
        </td>
        <td><%= event.time %></td>
-       <td>
-         <%= mail_to(event.promoter_email, event.promoter_name) unless event.promoter_email.blank? %>
-         <%= event.promoter_name if event.promoter_email.blank? %>
-       </td>
-       <td><%= event.promoter_phone %></td>
+       <td><%= link_to_event_email event %></td>
+       <td><%= link_to_event_phone event %></td>
        <td><small><%= event.notes %></small></td>
     </tr>
     <% end -%>

@@ -406,29 +406,10 @@ class Event < ActiveRecord::Base
     Discipline[discipline].id if Discipline[discipline]
   end
   
-  def flyer
-    unless self[:flyer].blank?
-      if self[:flyer][/^\//]
-        return 'http://' + STATIC_HOST + self[:flyer]
-      elsif self[:flyer][/^..\/..\//]
-        return 'http://' + STATIC_HOST + (self[:flyer][/^..\/..(.*)/, 1])
-      end
-    end
-    self[:flyer]
-  end
-  
   def promoter_name
     promoter.name if promoter
   end
 
-  def promoter_email
-    promoter.email if promoter
-  end
-
-  def promoter_phone
-    promoter.home_phone if promoter
-  end
-  
   def promoter_name=(value)
     @new_promoter_name = value
   end

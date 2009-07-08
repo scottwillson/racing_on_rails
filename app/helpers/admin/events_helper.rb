@@ -20,13 +20,15 @@ module Admin::EventsHelper
     LONG_DAYS_OF_WEEK[index]
   end
   
+  # Show link even if not approved
   def link_to_flyer(event)
+    # TODO Add more options and use throughout
     return unless event
     
     if event.flyer.blank?
       event.full_name
     else
-      link_to(event.full_name, event.flyer)
+      link_to event.full_name, event.flyer
     end
   end
   

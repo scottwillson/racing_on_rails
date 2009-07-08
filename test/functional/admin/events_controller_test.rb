@@ -298,8 +298,8 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_equal('../../flyers/2006/banana_belt.html', banana_belt.flyer, 'flyer')
     assert_not_equal('UCI', banana_belt.sanctioned_by, 'sanctioned_by')
     assert_not_equal(true, banana_belt.flyer_approved, 'flyer_approved')
-    assert_not_equal('503-233-3636', banana_belt.promoter_phone, 'promoter_phone')
-    assert_not_equal('JMitchem@ffadesign.com', banana_belt.promoter_email, 'promoter_email')
+    assert_not_equal('503-233-3636', banana_belt.promoter.phone, 'promoter_phone')
+    assert_not_equal('JMitchem@ffadesign.com', banana_belt.promoter.email, 'promoter.email')
     assert_not_equal('Track', banana_belt.discipline, 'discipline')
     assert_not_equal(true, banana_belt.cancelled, 'cancelled')
     assert_not_equal('OR', banana_belt.state, 'state')
@@ -328,8 +328,8 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal(true, banana_belt.cancelled, 'cancelled')
     assert_equal('OR', banana_belt.state, 'state')
     assert_equal('Brad Ross', banana_belt.promoter_name, 'promoter_name')
-    assert_nil(banana_belt.promoter_phone, 'promoter_phone')
-    assert_nil(banana_belt.promoter_email, 'promoter_email')
+    assert_nil(banana_belt.promoter.phone, 'promoter_phone')
+    assert_nil(banana_belt.promoter.email, 'promoter_email')
     assert_equal(norba, banana_belt.number_issuer, 'number_issuer')
   end
 

@@ -39,11 +39,8 @@
               <%= link_to(event.name, event.flyer, :class => "obvious") if event.flyer? %>
               <%= event.name unless event.flyer? %>
             </td>
-            <td>
-              <%= mail_to(event.promoter_email, event.promoter_name) unless event.promoter_email.blank? %>
-              <%= event.promoter_name if event.promoter_email.blank? %>
-            </td>
-            <td><%= event.promoter_phone %></td>
+            <td><%= link_to_event_email event %></td>
+            <td><%= link_to_event_phone event %></td>
           </tr>
         <% end %>
         <tr>

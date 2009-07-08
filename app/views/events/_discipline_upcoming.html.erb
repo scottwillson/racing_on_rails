@@ -4,10 +4,7 @@
 <%- discipline.upcoming_events.sort_by(&:date).each do |event| -%>
 <tr>
   <td class="date"><%= event.date_range_s %></td>
-  <td class="info">
-    <%= link_to(event.full_name, event.flyer) unless event.flyer.blank? -%>
-    <%= event.full_name if event.flyer.blank? -%>
-  </td>
+  <td class="info"><%= public_link_to_flyer event %></td>
 </tr>
 <%- end -%>
 

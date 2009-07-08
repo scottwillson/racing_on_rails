@@ -44,16 +44,8 @@
       <%- end -%>
       </td> 
   <%- end -%>
-    <td>
-      <%- if event.promoter_email.blank? -%>
-        <%= event.promoter_name -%>
-      <%- elsif event.promoter_name.blank? -%>
-      <a href="mailto:<%= event.promoter_email -%>"><%= event.promoter_email -%></a>
-      <%- else -%>
-      <a href="mailto:<%= event.promoter_email -%>"><%= event.promoter_name -%></a>
-      <%- end -%>
-    </td> 
-    <td class="contact_phone"><%= event.promoter_phone -%></td> 
+    <td><%= link_to_event_email event %></td> 
+    <td class="contact_phone"><%= link_to_event_phone event %></td> 
     <td><%= event.discipline -%></td> 
     <td><%= event.city -%></td>
   </tr>
