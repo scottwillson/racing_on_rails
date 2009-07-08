@@ -23,8 +23,11 @@ module EventsHelper
 
   # Only show link if flyer approved
   def public_link_to_flyer(event)
-    if event && event.flyer_approved?
+    return unless event
+    if event.flyer_approved?
       link_to_flyer event
+    else
+      event.full_name
     end
   end
 end
