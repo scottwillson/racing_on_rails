@@ -118,7 +118,7 @@ class Team < ActiveRecord::Base
     raise(ArgumentError, 'Cannot merge team onto itself') if team == self
 
     Team.transaction do
-      events = team.results.collect do |result|
+      events_with_results = team.results.collect do |result|
         event = result.event
         event.disable_notification!
         event
@@ -127,6 +127,7 @@ class Team < ActiveRecord::Base
       team.create_team_for_historical_results!
       
       aliases << team.aliases
+      events << team.events
       results << team.results(true)
       people << team.people
       Team.delete(team.id)
@@ -134,7 +135,7 @@ class Team < ActiveRecord::Base
       if existing_alias.nil? && Team.find_all_by_name(team.name).empty?
         aliases.create(:name => team.name) 
       end
-      events.each do |event|
+      events_with_results.each do |event|
         event.enable_notification!
       end
     end

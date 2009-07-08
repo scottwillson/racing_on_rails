@@ -79,6 +79,8 @@ class PersonTest < ActiveSupport::TestCase
     race_numbers.last.save!
     assert_equal(elkhorn, race_numbers.last.number_issuer, "Merging person's race number issuer")
     
+    promoter_events = [ Event.create!(:promoter => person_to_keep), Event.create!(:promoter => person_to_merge) ]
+    
     person_to_keep.merge(person_to_merge)
     
     person_to_keep.reload
@@ -100,6 +102,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(Person.find_by_first_name_and_last_name(person_to_merge.first_name, person_to_merge.last_name), "#{person_to_merge.name} should not be in DB")
     assert_equal(0, Result.find_all_by_person_id(person_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_person_id(person_to_merge.id).size, "Tonkin's aliases")
+    assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
   end
   
   def test_merge_no_alias_dup_names

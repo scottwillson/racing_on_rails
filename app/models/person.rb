@@ -759,13 +759,14 @@ class Person < ActiveRecord::Base
     raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
 
     Person.transaction do
-      events = other_person.results.collect do |result|
+      events_with_results = other_person.results.collect do |result|
         event = result.event
         event.disable_notification! if event
         event
-      end.compact
+      end.compact || []
       save!
       aliases << other_person.aliases
+      events << other_person.events
       results << other_person.results
       race_numbers << other_person.race_numbers
       Person.delete(other_person.id)
@@ -773,11 +774,9 @@ class Person < ActiveRecord::Base
       if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
         aliases.create(:name => other_person.name) 
       end
-      if events
-        events.each do |event|
-          event.reload
-          event.enable_notification!
-        end
+      events_with_results.each do |event|
+        event.reload
+        event.enable_notification!
       end
     end
     true

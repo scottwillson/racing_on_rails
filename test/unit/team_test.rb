@@ -24,6 +24,8 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(2, Person.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's people")
     assert_equal(1, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
     
+    promoter_events = [ Event.create!(:team => team_to_keep), Event.create!(:team => team_to_merge) ]
+
     team_to_keep.merge(team_to_merge)
     
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
@@ -38,6 +40,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(0, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
     assert_equal(0, Person.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's people")
     assert_equal(0, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
+    assert_same_elements(promoter_events, team_to_keep.events(true), "Should merge sponsored events")
   end
   
   def test_merge_with_historical_names
@@ -122,7 +125,7 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_find_all_by_name_like
-    
+    flunk
   end
   
   def test_create_dupe
