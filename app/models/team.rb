@@ -40,7 +40,7 @@ class Team < ActiveRecord::Base
     team
   end
   
-  def Team.find_all_by_name_like(name, limit)
+  def Team.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
     Team.find(
       :all, 

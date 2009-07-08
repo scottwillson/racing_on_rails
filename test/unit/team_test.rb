@@ -125,7 +125,14 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_find_all_by_name_like
-    flunk
+    vanilla = teams(:vanilla)
+    assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla"), "Vanilla"
+    assert_same_elements [vanilla], Team.find_all_by_name_like("Vanilla Bicycles"), "Vanilla Bicycles"
+    assert_same_elements [vanilla], Team.find_all_by_name_like("van"), "van"
+    assert_same_elements [vanilla], Team.find_all_by_name_like("cyc"), "cyc"
+    
+    steelman = Team.create!(:name => "Steelman Cycles")
+    assert_same_elements [steelman, vanilla], Team.find_all_by_name_like("cycles"), "cycles"
   end
   
   def test_create_dupe
