@@ -11,3 +11,4 @@ db/production.sql
 *.tmproj
 .project
 /local
+vendor/plugins/selenium-on-rails/log/
