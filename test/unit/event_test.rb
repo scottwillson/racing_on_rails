@@ -361,10 +361,10 @@ class EventTest < ActiveSupport::TestCase
     assert_equal('http://veloshop.org/pir.html', event.flyer, 'Other site flyer')
     
     event.flyer = '/events/pir.html'
-    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Absolute root flyer')
+    assert_equal("/events/pir.html", event.flyer, 'Absolute root flyer')
     
     event.flyer = '../../events/pir.html'
-    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Relative root flyer')
+    assert_equal('../../events/pir.html', event.flyer, 'Relative root flyer')
   end
   
   def test_sort
