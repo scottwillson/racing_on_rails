@@ -25,7 +25,7 @@ class HomeController < ApplicationController
     @recent_news = Article.find(
       :all,
       :conditions => ['updated_at > ? and article_category_id = ?', cutoff, @news_category],
-      :order => 'updated_at desc'
+      :order => 'created_at desc'
     )
 
     render_page  
