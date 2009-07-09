@@ -59,7 +59,7 @@ class UsacFile
       #Look for the person. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
       r = Person.find_by_license(license)
-      dups = Person.find_all_by_name_or_alias(memusac["first_name"], memusac["last_name"])
+      dups = Person.find_all_by_name_or_alias(:first_name => memusac["first_name"], :last_name => memusac["last_name"])
       first_dup = dups.first unless dups.first.nil?
       if r.nil?
         r = Person.find_by_name(full_name)

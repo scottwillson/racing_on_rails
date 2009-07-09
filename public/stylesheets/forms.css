@@ -152,27 +152,6 @@ textarea {
   text-align: left !important;
 }
 
-.vertical_field_label
-{
-  text-align: left;
-  vertical-align: bottom;
-  font-weight: bold;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 12px;
-  padding-right: 8px;
-}
-
-.vertical_field
-{
-  text-align: left;
-  vertical-align: top;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 12px;
-  padding-right: 8px;
-}
-
 div.fieldWithErrors
 {
   display: inline;
@@ -264,11 +243,28 @@ td.form_column {
   padding-right: 16px;
 }
 
-
 fieldset {
-  margin-top: 32px;
   clear: both;
-  border: none
+  border: 1px solid rgb(190, 190, 190);
+  padding: 4px;
+}
+
+fieldset label {
+  width: 134px;  
+}
+
+legend {
+  font-weight: bold;
+}
+
+fieldset p {
+  clear: both;
+  float: left;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-style: italic;
 }
 
 input.editor_cancel_button {

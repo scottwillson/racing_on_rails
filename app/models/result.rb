@@ -137,7 +137,7 @@ class Result < ActiveRecord::Base
     end
     
     # name
-    matches = matches + Person.find_all_by_name_or_alias(first_name, last_name)
+    matches = matches + Person.find_all_by_name_or_alias(:first_name => first_name, :last_name => last_name)
     return matches if matches.size == 1
 
     # number

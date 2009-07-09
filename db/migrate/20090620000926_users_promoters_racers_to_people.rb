@@ -73,6 +73,8 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
     change_table :events do |t|
       t.rename :promoter_id, :old_promoter_id
       t.integer :promoter_id, :default => nil, :null => true
+      t.string :phone, :default => nil
+      t.string :email, :default => nil
     end
 
     change_table :teams do |t|
@@ -128,12 +130,26 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
       person = nil
       person = Person.find_by_name(promoter.name) unless promoter.name.blank?
       if person
-        person.email = promoter.email
-        person.save!
-        unless [person.home_phone, person.work_phone, person.cell_fax].include?(promoter.phone)
-          person.home_phone = promoter.phone
-          person.save!
+        if person.email.present? && (person.email != promoter.email)
+          execute "update events set email='#{promoter.email}' where old_promoter_id=#{promoter.id}"
         end
+
+        if promoter.phone.present? && ![person.home_phone, person.work_phone, person.cell_fax].include?(promoter.phone)
+          execute "update events set phone='#{promoter.phone}' where old_promoter_id=#{promoter.id}"
+        end
+
+        if person.email.blank?
+          person.email = promoter.email          
+        end
+
+        unless [person.home_phone, person.work_phone, person.cell_fax].include?(promoter.phone)
+          if person.home_phone.blank?
+            person.home_phone = promoter.phone
+          elsif person.work_phone.blank?
+            person.work_phone = promoter.phone
+          end
+        end
+        person.save!
       else
         person = Person.create!(
           :name => promoter.name,

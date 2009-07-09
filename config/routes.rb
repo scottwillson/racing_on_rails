@@ -49,6 +49,9 @@ ActionController::Routing::Routes.draw do |map|
   
   # Redirect for legacy URLs
   map.connect "/admin/racers", :controller => "admin/racers"
+  
+  # Inplace editor workaround
+  map.admin_persons "/admin/persons/:action/:id", :controller => "admin/people"
 
   map.admin_home "/admin", :controller => "admin/home", :action => "index"
 

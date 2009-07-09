@@ -139,6 +139,108 @@ class EventTest < ActiveSupport::TestCase
     assert_not_nil(event.promoter, 'event.promoter')
     assert_equal('Toni Kic', event.promoter.name, 'event.promoter.name')
   end
+  
+  def test_set_promoter_by_name_no_id
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross")
+    assert_equal people(:promoter), event.promoter, "Should set promoter from name, even without promoter_id"
+  end
+
+  def test_set_promoter_by_name_with_id
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => people(:promoter).id)
+    assert_equal people(:promoter), event.promoter, "Should set promoter from name and/or promoter_id"
+  end
+
+  def test_set_promoter_by_name_and_ignore_bogus_id
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => "1281928")
+    assert_equal people(:promoter), event.promoter, "Should set promoter from name and ignore bogus promoter_id"
+  end
+
+  def test_set_promoter_by_name_and_ignore_wrong_id
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => people(:administrator).id)
+    assert_equal people(:promoter), event.promoter, "Should set promoter from name, even another person's promoter_id"
+  end
+
+  def test_choose_promoter_by_id_with_multiple_same_names
+    brad_ross_2 = Person.create!(:name => "Brad Ross")
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => brad_ross_2.id)
+    assert_equal brad_ross_2, event.promoter, "Should use promoter_id to choose between duplicates"
+  end
+
+  def test_non_unique_promoter_wrong_id
+    brad_ross_2 = Person.create!(:name => "Brad Ross")
+    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => "12378129")
+    assert [people(:promoter), brad_ross_2].include?(event.promoter), "Should choose a Person from duplicates, even without a matching promoter_id"
+  end
+
+  def test_new_promoter_wrong_id
+    event = SingleDayEvent.create!(:promoter_name => "Marie Le Blanc", :promoter_id => people(:administrator).id)
+    new_promoter = Person.find_by_name("Marie Le Blanc")
+    assert_not_nil new_promoter, "Should create new promoter"
+    assert_equal new_promoter, event.promoter, "Should use create new promoter and ignore bad promoter_id"
+  end
+
+  def test_new_promoter_no_id
+    event = SingleDayEvent.create!(:promoter_name => "Marie Le Blanc")
+    new_promoter = Person.find_by_name("Marie Le Blanc")
+    assert_not_nil new_promoter, "Should create new promoter"
+    assert_equal new_promoter, event.promoter, "Should use create new promoter"
+  end
+  
+  def test_set_promoter_by_alias
+    event = SingleDayEvent.create!(:promoter_name => "Mollie Cameron")
+    assert_equal people(:molly), event.promoter, "Should set promoter from alias"
+  end
+  
+  def test_remove_promoter
+    event = SingleDayEvent.create!(:promoter_name => "Mollie Cameron")
+    event.update_attributes(:promoter_name => "")
+    assert_nil event.promoter, "Blank promoter name should remove promoter"
+  end
+
+  def test_set_team_by_name_no_id
+    event = SingleDayEvent.create!(:team_name => "Vanilla")
+    assert_equal teams(:vanilla), event.team, "Should set team from name, even without team_id"
+  end
+
+  def test_set_team_by_name_with_id
+    event = SingleDayEvent.create!(:team_name => "Vanilla", :team_id => teams(:vanilla).id)
+    assert_equal teams(:vanilla), event.team, "Should set team from name and/or team_id"
+  end
+
+  def test_set_team_by_name_and_ignore_bogus_id
+    event = SingleDayEvent.create!(:team_name => "Vanilla", :team_id => "1281928")
+    assert_equal teams(:vanilla), event.team, "Should set team from name and ignore bogus team_id"
+  end
+
+  def test_set_team_by_name_and_ignore_wrong_id
+    event = SingleDayEvent.create!(:team_name => "Vanilla", :team_id => teams(:gentle_lovers).id)
+    assert_equal teams(:vanilla), event.team, "Should set team from name, even another person's team_id"
+  end
+
+  def test_new_team_wrong_id
+    event = SingleDayEvent.create!(:team_name => "Katusha", :team_id => teams(:gentle_lovers).id)
+    new_team = Team.find_by_name("Katusha")
+    assert_not_nil new_team, "Should create new team"
+    assert_equal new_team, event.team, "Should use create new team and ignore bad team_id"
+  end
+
+  def test_new_team_no_id
+    event = SingleDayEvent.create!(:team_name => "Katusha")
+    new_team = Team.find_by_name("Katusha")
+    assert_not_nil new_team, "Should create new team"
+    assert_equal new_team, event.team, "Should use create new team"
+  end
+  
+  def test_set_team_by_alias
+    event = SingleDayEvent.create!(:team_name => "Vanilla Bicycles")
+    assert_equal teams(:vanilla), event.team, "Should set team from alias"
+  end
+  
+  def test_remove_team
+    event = SingleDayEvent.create!(:team_name => "Vanilla Bicycles")
+    event.update_attributes(:team_name => "")
+    assert_nil event.team, "Blank team name should remove team"
+  end
 
   def test_timestamps
     hood_river_crit = SingleDayEvent.new(:name => "Hood River")
@@ -259,10 +361,10 @@ class EventTest < ActiveSupport::TestCase
     assert_equal('http://veloshop.org/pir.html', event.flyer, 'Other site flyer')
     
     event.flyer = '/events/pir.html'
-    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Absolute root flyer')
+    assert_equal("/events/pir.html", event.flyer, 'Absolute root flyer')
     
     event.flyer = '../../events/pir.html'
-    assert_equal("http://#{STATIC_HOST}/events/pir.html", event.flyer, 'Relative root flyer')
+    assert_equal('../../events/pir.html', event.flyer, 'Relative root flyer')
   end
   
   def test_sort

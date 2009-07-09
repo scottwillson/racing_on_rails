@@ -58,9 +58,20 @@ wait_for_element_present "person_#{@alice_id}_name-inplaceeditor"
 type "css=.editor_field", "A Penn"
 submit "css=.inplaceeditor-form"
 wait_for_element_not_present "person_#{@alice_id}_name-inplaceeditor"
+pause 300
 
 refresh_and_wait
-assert_table "people_table", 4, 0, "glob:Alice P*"
+assert_table "people_table", 4, 0, "glob:A Penn*"
+
+click "person_#{@weaver_id}_team_name"
+wait_for_element_present "person_#{@weaver_id}_team_name-inplaceeditor"
+
+type "css=.editor_field", "River City Bicycles"
+submit "css=.inplaceeditor-form"
+wait_for_element_not_present "person_#{@alice_id}_team_name-inplaceeditor"
+
+refresh_and_wait
+assert_table "people_table", 6, 1, "glob:River City Bicycles*"
 
 click_and_wait "css=a[href='/admin/people/#{@molly_id}/results']"
 assert_title "*Admin: Results: Molly Cameron"
@@ -82,7 +93,7 @@ assert_title "*Admin: People: New Person"
 open "/admin/people/#{@matson.id}/edit"
 assert_text_present "Mark Matson"
 click "destroy_number_#{@matson.race_numbers.first.id}"
-wait_for_element_not_present "destroy_number_#{@matson.race_numbers.first.id}"
+pause 2300
 click_and_wait "save"
 
 assert_text_not_present "error"

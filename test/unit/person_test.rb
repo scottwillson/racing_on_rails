@@ -79,6 +79,8 @@ class PersonTest < ActiveSupport::TestCase
     race_numbers.last.save!
     assert_equal(elkhorn, race_numbers.last.number_issuer, "Merging person's race number issuer")
     
+    promoter_events = [ Event.create!(:promoter => person_to_keep), Event.create!(:promoter => person_to_merge) ]
+    
     person_to_keep.merge(person_to_merge)
     
     person_to_keep.reload
@@ -100,6 +102,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(Person.find_by_first_name_and_last_name(person_to_merge.first_name, person_to_merge.last_name), "#{person_to_merge.name} should not be in DB")
     assert_equal(0, Result.find_all_by_person_id(person_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_person_id(person_to_merge.id).size, "Tonkin's aliases")
+    assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
   end
   
   def test_merge_no_alias_dup_names
@@ -688,7 +691,8 @@ class PersonTest < ActiveSupport::TestCase
   def test_find_all_by_name_or_alias
     new_tonkin = Person.create!(:name => "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
-    assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Person.find_all_by_name_or_alias(:first_name => "Erik", :last_name => "Tonkin").size, "Should have 2 Tonkins")
+    assert_raise(ArgumentError) { Person.find_all_by_name("Erik", "Tonkin") }
   end
   
   def test_find_all_for_export
@@ -700,8 +704,6 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("12/31/#{Date.today.year}", people[3]["member_to"], "Row 3 member_to")
     assert_equal("5", people[3]["track_category"], "Row 3 track_category")
   end
-  
-  
   
   def test_create
     Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :email => "tuxedo@example.com")

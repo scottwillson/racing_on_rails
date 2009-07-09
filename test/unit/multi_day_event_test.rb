@@ -152,11 +152,14 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.cancelled = false
     single_event_1.city = "Baker City"
     single_event_1.discipline = "Track"
+    single_event_1.email = "info@elkhornclassic.com"
     single_event_1.flyer = "http://google.com"
+    single_event_1.phone = "718 671-1999"
     single_event_1.promoter = people(:promoter)
     single_event_1.sanctioned_by = "FIAC"
     single_event_1.state = "NY"
     single_event_1.prize_list = 3000
+    single_event_1.team_id = teams(:gentle_lovers).id
     single_event_1.velodrome_id = velodromes(:alpenrose).id
     single_event_1.save!
     
@@ -165,11 +168,14 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_2.cancelled = false
     single_event_2.city = "Baker City"
     single_event_2.discipline = "Track"
+    single_event_2.email = "info@elkhornclassic.com"
     single_event_2.flyer = "http://google.com"
     single_event_2.promoter = people(:promoter)
+    single_event_2.phone = "718 671-1999"
     single_event_2.sanctioned_by = "FIAC"
     single_event_2.state = "NY"
     single_event_2.prize_list = 3000
+    single_event_2.team_id = teams(:gentle_lovers).id
     single_event_2.velodrome_id = velodromes(:alpenrose).id
     single_event_2.save!
     
@@ -183,12 +189,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
+    assert_equal("info@elkhornclassic.com", results["email"], "SingleDayEvent email")
     assert_equal("http://google.com", results["flyer"], "SingleDayEvent flyer")
     assert_equal("0", results["flyer_approved"], "SingleDayEvent flyer")
+    assert_equal("718 671-1999", results["phone"], "SingleDayEvent phone")
     assert_equal(people(:promoter).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "SingleDayEvent state")
     assert_equal("3000", results["prize_list"], "SingleDayEvent prize_list")
+    assert_equal(teams(:gentle_lovers).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:alpenrose).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
     assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
 
@@ -198,12 +207,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("2007-06-26", results["date"], "SingleDayEvent start_date")
     assert_equal("Baker City", results["city"], "SingleDayEvent city")
     assert_equal("Track", results["discipline"], "SingleDayEvent discipline")
+    assert_equal("info@elkhornclassic.com", results["email"], "SingleDayEvent email")
     assert_equal("http://google.com", results["flyer"], "SingleDayEvent flyer")
     assert_equal("0", results["flyer_approved"], "SingleDayEvent flyer")
+    assert_equal("718 671-1999", results["phone"], "SingleDayEvent phone")
     assert_equal(people(:promoter).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "SingleDayEvent state")
     assert_equal("3000", results["prize_list"], "SingleDayEvent prize_list")
+    assert_equal(teams(:gentle_lovers).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:alpenrose).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
     assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
 
@@ -213,12 +225,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("2007-06-19", results["date"], "MultiDayEvent start_date")
     assert_equal("Baker City", results["city"], "MultiDayEvent city")
     assert_equal("Track", results["discipline"], "MultiDayEvent discipline")
+    assert_equal("info@elkhornclassic.com", results["email"], "MultiDayEvent email")
     assert_equal("http://google.com", results["flyer"], "MultiDayEvent flyer")
     assert_equal("0", results["flyer_approved"], "MultiDayEvent flyer")
+    assert_equal("718 671-1999", results["phone"], "MultiDayEvent phone")
     assert_equal(people(:promoter).id, results["promoter_id"].to_i, "MultiDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "MultiDayEvent state")
     assert_equal("3000", results["prize_list"], "MultiDayEvent prize_list")
+    assert_equal(teams(:gentle_lovers).to_param, results["team_id"], "MultiDayEvent team")
     assert_equal(velodromes(:alpenrose).to_param, results["velodrome_id"], "MultiDayEvent velodrome")
 
     # change only name, all children should change
@@ -242,13 +257,16 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.city = "Boise"
     multi_day_event.state = "ID"
     multi_day_event.discipline = "Mountain Bike"
+    multi_day_event.email = "scott@butlerpress.com"
     multi_day_event.flyer = nil
     multi_day_event.flyer_approved = true
     candi_murray = people(:administrator)
     multi_day_event.promoter = candi_murray
+    multi_day_event.phone = "911"
     multi_day_event.sanctioned_by = "UCI"
     assert_not_nil(multi_day_event.promoter, "event.promoter")
     multi_day_event.prize_list = 4000
+    multi_day_event.team_id = teams(:vanilla).to_param
     multi_day_event.velodrome_id = velodromes(:trexlertown).to_param
     multi_day_event.save!
 
@@ -258,12 +276,15 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
+    assert_equal("scott@butlerpress.com", results["email"], "SingleDayEvent email")
     assert_equal(nil, results["flyer"], "SingleDayEvent flyer")
     assert_equal("1", results["flyer_approved"], "SingleDayEvent flyer")
     assert_equal(people(:administrator).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
+    assert_equal("911", results["phone"], "SingleDayEvent phone")
     assert_equal("UCI", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("ID", results["state"], "SingleDayEvent state")
     assert_equal("4000", results["prize_list"], "SingleDayEvent prize_list")
+    assert_equal(teams(:vanilla).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:trexlertown).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")

@@ -57,25 +57,37 @@ class Person < ActiveRecord::Base
     end
   end
   
-  def Person.find_all_by_name_or_alias(first_name, last_name)
-    if !first_name.blank? && !last_name.blank?
+  # "Jane Doe" or "Jane", "Doe" or :name => "Jane Doe" or :first_name => "Jane", :last_name => "Doe"
+  def Person.find_all_by_name_or_alias(*args)
+    options = args.extract_options!
+    options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless [:name, :first_name, :last_name].include?(key) }
+    
+    name = args.join(" ") if options.empty?
+    
+    name = name || options[:name]
+    first_name = options[:first_name]
+    last_name = options[:last_name]
+    
+    if name.present?
+      return Person.find(
+        :all,
+        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
+      ) | Alias.find_all_people_by_name(name)
+    elsif first_name.present? && last_name.blank?
+      Person.find(
+        :all,
+        :conditions => ['first_name = ?', first_name]
+      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+    elsif first_name.blank? && last_name.present?
+      Person.find(
+        :all,
+        :conditions => ['last_name = ?', last_name]
+      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+    else
       Person.find(
         :all,
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
-      
-    elsif last_name.blank?
-      Person.find_all_by_first_name(first_name) | Alias.find_all_people_by_name(first_name)
-      
-    elsif first_name.blank?
-      Person.find_all_by_last_name(last_name) | Alias.find_all_people_by_name(last_name)
-      
-    else
-      Person.find(
-        :all,
-        :conditions => ['first_name = ? and last_name = ?', '', ''],
-        :order => 'last_name, first_name')
-      
     end
   end
   
@@ -83,7 +95,7 @@ class Person < ActiveRecord::Base
     name_like = "%#{name}%"
     Person.find(
       :all, 
-      :conditions => ["concat(first_name, ' ', last_name) like ? or aliases.name like ?", name_like, name_like],
+      :conditions => ["trim(concat(first_name, ' ', last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
       :order => 'last_name, first_name'
@@ -266,7 +278,6 @@ class Person < ActiveRecord::Base
   # TODO Handle name, Jr.
   # This looks too complicated …
   def name=(value)  
-    logger.debug("name=#{name}")
     @old_name = name unless @old_name
     if value.blank?
       self.first_name = ''
@@ -288,7 +299,7 @@ class Person < ActiveRecord::Base
       if parts.size > 0
         self.first_name = parts[0].strip
         if parts.size > 1
-          self.last_name = parts[1..(parts.size - 1)].join
+          self.last_name = parts[1..(parts.size - 1)].join(" ")
           self.last_name.strip!
         end
       end
@@ -748,13 +759,14 @@ class Person < ActiveRecord::Base
     raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
 
     Person.transaction do
-      events = other_person.results.collect do |result|
+      events_with_results = other_person.results.collect do |result|
         event = result.event
         event.disable_notification! if event
         event
-      end.compact
+      end.compact || []
       save!
       aliases << other_person.aliases
+      events << other_person.events
       results << other_person.results
       race_numbers << other_person.race_numbers
       Person.delete(other_person.id)
@@ -762,11 +774,9 @@ class Person < ActiveRecord::Base
       if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
         aliases.create(:name => other_person.name) 
       end
-      if events
-        events.each do |event|
-          event.reload
-          event.enable_notification!
-        end
+      events_with_results.each do |event|
+        event.reload
+        event.enable_notification!
       end
     end
     true

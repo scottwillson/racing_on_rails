@@ -31,7 +31,6 @@
             <%= link_to_remote(
                   image_tag('/images/buttons/small_remove_solo.png'),
                     :url => { :action => "destroy_number", :id => @number.id},
-                    :complete => evaluate_remote_response,
                     :html => { :id => "destroy_number_#{@number.id}", :class => "image" }
                   )
            %>

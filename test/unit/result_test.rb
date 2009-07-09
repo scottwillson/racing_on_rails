@@ -702,7 +702,7 @@ class ResultTest < ActiveSupport::TestCase
   def test_assign_results_to_existing_person_with_same_name_instead_of_creating_a_new_one
     new_tonkin = Person.create!(:name => "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
-    assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
+    assert_equal(2, Person.find_all_by_name_or_alias(:first_name => "Erik", :last_name => "Tonkin").size, "Should have 2 Tonkins")
 
     # A very old result
     SingleDayEvent.create!(:date => Date.new(1980)).races.create!(:category => categories(:cx_a)).results.create!(:person => new_tonkin)
@@ -719,14 +719,14 @@ class ResultTest < ActiveSupport::TestCase
     new_tonkin = Person.create!(:name => "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
     assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
-
+    
     tonkin = people(:tonkin)
     tonkin.results.clear
-
+    
     kings_valley_2004 = events(:kings_valley_2004)
     results = races(:kings_valley_pro_1_2_2004).results
     result = results.create!(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin')
-
+    
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
   end

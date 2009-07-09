@@ -366,7 +366,7 @@ class Admin::PeopleController < ApplicationController
     RaceNumber.destroy(id)
     render :update do |page|
       page.visual_effect(:puff, "number_#{id}_row", :duration => 2)
-      page.remove("number_#{id}_row")
+      page.remove("number_#{id}_value")
     end
   end
   
