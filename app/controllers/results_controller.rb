@@ -23,7 +23,7 @@ class ResultsController < ApplicationController
     @year = Date.today.year if @year == 0
     @discipline = Discipline[params['discipline']]
     @discipline_names = Discipline.find_all_names
-    @weekly_series, @events = Event.find_all_with_results(@year, @discipline)
+    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
   end
   
   def event

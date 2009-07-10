@@ -120,9 +120,12 @@ ActionController::Routing::Routes.draw do |map|
               :requirements => { :year => /(19|20)\d\d/, :discipline => /[^\d]+/, :event_id => /\d+/ }
 
   # Results index page
-  map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/, :discipline => /[^\d]+/ }
+  #mbrahere: Scott, I removed the discipline pattern for results routes as they broke
+  #some of my routes after your mbra migration renamed my mtb discipline. from 20090310155100_unfork_mbra:
+  #execute "update disciplines set name = 'Mountain Bike' where name = 'mountain_bike'"
+  map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/ }
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => { :year => /(19|20)\d\d/ }
-  map.connect "/results/:discipline", :controller => "results", :discipline => /[^\d]+/ 
+  map.connect "/results/:discipline", :controller => "results" 
   
   # Reserve /results/2008 for /results/:year
   map.resources :results, :except => "show"
