@@ -45,9 +45,11 @@ class Admin::CategoriesController < ApplicationController
     end
   end
 
-  # ugly I know. Refactor if/when another LA wants to compute BAR on demand. alp
+  # ugly I know. Refactor if/when another LA wants to compute BAR on demand...
+  # or remove it when MBRA computation starts taking too long to do it on demand. alp
   def recompute_bar
-    MbraBar.calculate!
+#    MbraBar.calculate!
+    MbraTeamBar.calculate!
     redirect_to :action => :index
   end  
 end

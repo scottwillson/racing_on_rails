@@ -1,0 +1,170 @@
+class MbraTeamBar < Competition
+  
+  def MbraTeamBar.calculate!(year = Date.today.year)
+    benchmark(name, Logger::INFO, false) {
+      transaction do
+        year = year.to_i if year.is_a?(String)
+        date = Date.new(year, 1, 1)
+
+        # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
+        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+          bar = MbraTeamBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          unless bar
+            bar = MbraTeamBar.create!(
+              :name => "#{year} #{discipline.name} BAT",
+              :date => date,
+              :discipline => discipline.name
+            )
+          end
+        end
+
+        MbraTeamBar.find(:all, :conditions => { :date => date }).each do |bar|
+          bar.destroy_races
+          bar.create_races
+          bar.calculate!
+        end
+      end
+    }
+    # Don't return the entire populated instance!
+    true
+  end
+
+  def point_schedule
+    @point_schedule = @point_schedule || []
+  end
+  
+  # Riders obtain points inversely proportional to the starting field size,
+  # plus bonuses for first, second and third place (6, 3, and 1 points respectively).
+  # DNF: 1/2  point
+  def calculate_point_schedule(field_size)
+    @point_schedule = [0]
+    field_size.downto(1) { |i| @point_schedule << i }
+    @point_schedule[1] += 6 if @point_schedule.length > 1
+    @point_schedule[2] += 3 if @point_schedule.length > 2
+    @point_schedule[3] += 1 if @point_schedule.length > 3
+  end
+
+  # Find the source results from discipline BAR's competition results.
+  def source_results(race)
+    race_disciplines = "'#{race.discipline}'"
+    category_ids = category_ids_for(race)
+    Result.find_by_sql(
+      %Q{SELECT results.points, results.id as id, race_id, person_id, results.team_id, place
+              FROM results 
+              LEFT OUTER JOIN races ON races.id = results.race_id
+              LEFT OUTER JOIN events ON races.event_id = events.id
+              LEFT OUTER JOIN categories ON races.category_id = categories.id
+              where categories.id in (#{category_ids}) 
+              and events.discipline in (#{race_disciplines})
+              AND results.id in
+                (select source_result_id
+                  from scores
+                  LEFT OUTER JOIN results as competition_results
+                    ON competition_results.id = scores.competition_result_id
+                  LEFT OUTER JOIN races as competition_races
+                    ON competition_races.id = competition_results.race_id
+                  LEFT OUTER JOIN events as competition_events
+                    ON competition_races.event_id = competition_events.id
+                  where competition_events.type = 'MbraBar'
+                    and competition_events.date >= '#{date.year}-01-01'
+                    and competition_events.date <= '#{date.year}-12-31')
+              order by team_id, race_id}
+    )
+  end
+  
+  #create a competition_result for each team appearing in this set of results, which is per race
+  def create_competition_results_for(results, race)
+    competition_result = nil
+    for source_result in results
+      logger.debug("#{self.class.name} scoring result: #{source_result.event.name} | #{source_result.race.name} | #{source_result.place} | #{source_result.name} | #{source_result.team_name}") if logger.debug?
+      # e.g., MbraTeamBar scoring result: Belt Creek Omnium - Highwood TT | Master A Men | 4 | Steve Zellmer | Northern Rockies Cycling
+
+      #I don't need this now: no allowance for TTT or tandem teams with members of multiple teams
+      #  teams = extract_teams_from(source_result)
+      #  logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
+      #  for team in teams
+
+      if member?(source_result.team, source_result.date)
+
+        if first_result_for_team(source_result, competition_result)
+          # Bit of a hack here, because we split tandem team results into two results,
+          # we can't guarantee that results are in team-order.
+          # So 'first result' really means 'not the same as last result'
+          # race here is the category in the competition
+          competition_result = race.results.detect {|result| result.team == source_result.team}
+          competition_result = race.results.create(:team => source_result.team) if competition_result.nil?
+        end
+
+        #limit to top two results for team for each source race by 
+        #removing the lowest score for the event after every result.
+        #I do it this way because results do not arrive in postion order.
+        #Sql sorting does not work as position is a varchar field.
+        score = competition_result.scores.create(
+          :source_result => source_result,
+          :competition_result => competition_result,
+          :points => points_for(source_result).to_f #/ teams.size
+        )
+        this_points = score.points
+        logger.debug("#{self.class.name} competition result: #{competition_result.event.name} | #{competition_result.race.name} | #{competition_result.place} | #{competition_result.team_name}") if logger.debug?
+        # e.g., MbraTeamBar competition result: 2009 MBRA BAT | Master A Men |  | Gallatin Alpine Sports/Intrinsik Architecture
+        scores_for_event = competition_result.scores.select{ |s| s.source_result.event.name == source_result.event.name}
+        if scores_for_event.size > 2
+          competition_result.scores.delete(scores_for_event.min { |a,b| a.points <=> b.points })
+        end
+      end
+    end
+  end
+
+  # Simple logic to split team results (tandem, team TTs) between teams
+  # Just splits on first slash, so "Bike Gallery/Veloce" becomes "Bike Gallery" and "Veloce"  
+  # This method probably gets things wrong sometimes
+  #  def extract_teams_from(source_result)
+  #    return [] unless source_result.team
+  #
+  #    if source_result.race.category.name.include?('Tandem')
+  #      teams = []
+  #      team_names = source_result.team.name.split("/")
+  #      teams << Team.find_by_name_or_alias_or_create(team_names.first)
+  #      if team_names.size > 1
+  #        name = team_names[1, team_names.size - 1].join("/")
+  #        teams << Team.find_by_name_or_alias_or_create(name)
+  #      end
+  #      teams
+  #    else
+  #      [source_result.team]
+  #    end
+  #  end
+
+  def first_result_for_team(source_result, competition_result)
+    competition_result.nil? || source_result.team != competition_result.team
+  end
+
+  # Apply points from point_schedule
+  # Points are awarded using the same criteria as for individuals except that there
+  # are no double points awarded for State Championships.
+  def points_for(source_result, team_size = nil)
+    calculate_point_schedule(source_result.race.field_size)
+    points = 0
+    MbraTeamBar.benchmark('points_for') {
+      if source_result.place.strip.downcase == "dnf"
+        points = 0.5
+      else
+        # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
+        team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+        points = point_schedule[source_result.place.to_i] / team_size.to_f
+      end
+    }
+    points
+  end
+
+  def create_races
+    Discipline[discipline].bar_categories.each do |category|
+      races.create!(:category => category)
+    end
+  end
+
+  def friendly_name
+    'MBRA BAT'
+  end
+
+end

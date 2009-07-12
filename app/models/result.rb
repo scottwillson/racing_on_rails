@@ -213,7 +213,7 @@ class Result < ActiveRecord::Base
   def calculate_points
     if !scores.empty? and competition_result?
       pts = 0
-      if ASSOCIATION.mbra_bar_scoring_rules
+      if race.event.type == 'MbraBar'
         # mbraonly: 70% of the races (rounded to the nearest whole number) count in the
         # individual series standings.  Riders who compete in more than 70% of the races will throw out
         # their weakest results.)

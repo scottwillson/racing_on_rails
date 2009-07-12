@@ -32,7 +32,6 @@ class MbraBar < Competition
         MbraBar.find(:all, :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
-          # Could bulk load all Event and Races at this point, but hardly seems to matter
           bar.calculate!
         end
       end
@@ -115,11 +114,11 @@ class MbraBar < Competition
     MbraBar.benchmark('points_for') {
 #      field_size = source_result.race.field_size
 
-      # if multiple riders got the same place (must be a TTT?), then they split the points...
-      team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
+        # if multiple riders got the same place (must be a TTT?), then they split the points...
+        team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
         points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
       end
     }
