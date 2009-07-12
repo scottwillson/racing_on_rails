@@ -8,7 +8,7 @@
     <td><%= event.date.strftime("%B %d") %></td>
     <td>
 <%- unless event.has_results_including_children? -%>
-<%- public_link_to_flyer event -%>
+<%= public_link_to_flyer event -%>
 <%- else -%>
 <%= link_to event.name, event_results_path(event)  %>
 <%- end -%>

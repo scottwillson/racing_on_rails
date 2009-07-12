@@ -141,6 +141,8 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      
+      assert(upcoming_events['Road'].upcoming_events.all? { |e| e.flyer_approved? }, "All events should have approved flyers")
     ensure
       ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end
@@ -189,6 +191,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 3))
     assert_equal_enumerables([six_day], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
+    assert(upcoming_events['Track'].upcoming_events.all? { |e| e.flyer_approved? }, "All events should have approved flyers")
     
     # Saturday
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2006, 6, 16))
@@ -295,6 +298,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 7))
     assert_equal_enumerables([], upcoming_events["Track"].upcoming_events, 'UpcomingEvents.events[Track]')
     assert_equal_enumerables([six_day], upcoming_events["Track"].upcoming_weekly_series, 'UpcomingEvents.events[Track]')
+    assert(upcoming_events['Track'].upcoming_weekly_series.all? { |e| e.flyer_approved? }, "All events should have approved flyers")
     
     # Saturday
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 5, 29))
@@ -338,6 +342,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
 
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 7))
     assert_equal_enumerables([estacada_tt_1], upcoming_events["Road"].upcoming_events, 'UpcomingEvents.events[Road]')
+    assert(upcoming_events['Road'].upcoming_events.all? { |e| e.flyer_approved? }, "All events should have approved flyers")
     assert_equal_enumerables([], upcoming_events['Road'].upcoming_weekly_series, 'UpcomingEvents.events[Road]')
 
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(1999, 6, 20))
