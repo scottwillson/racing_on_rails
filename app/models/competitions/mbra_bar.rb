@@ -40,13 +40,6 @@ class MbraBar < Competition
     true
   end
   
-  # Expire BAR web pages from cache. Expires *all* BAR pages. Shouldn't be in the model, either
-  # BarSweeper seems to fire, but does not expire pages?
-#  def MbraBar.expire_cache
-#    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar.html")
-#    FileUtils::rm_rf("#{RAILS_ROOT}/public/bar")
-#  end
-  
   def MbraBar.find_by_year_and_discipline(year, discipline_name)
     MbraBar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
@@ -100,10 +93,6 @@ class MbraBar < Competition
       )
   end
 
-#  def expire_cache
-#    MbraBar.expire_cache
-#  end
-  
   # Apply points from point_schedule
   def points_for(source_result, team_size = nil)
     # TODO Consider indexing place
