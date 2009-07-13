@@ -21,6 +21,18 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     get "/events/#{event.id}"
     assert_response :success
     assert_template "results/event"
+    
+    get "/results/2009/Time Trial/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+    
+    get "/results/2009/Mountain Bike/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+    
+    get "/results/2009/Road/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
   end
 
   def test_redirect_racer_results
@@ -33,6 +45,13 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     competition = RiderRankings.find_for_year 2004
     get "/results/competition/#{competition.id}/racer/#{weaver.id}"
     assert_redirected_to "/events/#{competition.id}/people/#{weaver.id}/results"
+    assert_response :moved_permanently
+  end
+  
+  def test_results
+    result = results(:tonkin_banana_belt)
+    get "/results/show/#{result.id}"
+    assert_redirected_to "/events/#{result.event.id}/people/#{people(:tonkin).id}/results"
     assert_response :moved_permanently
   end
   
