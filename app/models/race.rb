@@ -248,7 +248,7 @@ class Race < ActiveRecord::Base
   end
   
   def <=>other
-    category <=> other.category
+    category.name <=> other.category.name
   end
 
   def hash
