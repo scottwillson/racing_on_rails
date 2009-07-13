@@ -16,9 +16,6 @@ module ResultsHelper
   end
 
   def link_to_team_result(text, result)
-    #mbrahere: the following prevents links thru to team results when displaying team bar results
-    #I do not know why we do not link if not a person-specific result. A bug?
-    #return text unless result.person
     return text unless result.team
 
     if result.competition_result?
