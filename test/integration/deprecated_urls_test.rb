@@ -6,10 +6,6 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
   
   def test_event_results
     event = events(:pir)
-    get "/results/2004/road/#{event.id}"
-    assert_redirected_to "/events/#{event.id}/results"
-    assert_response :moved_permanently
-    
     get "/results/event/#{event.id}"
     assert_redirected_to "/events/#{event.id}/results"
     assert_response :moved_permanently
@@ -26,7 +22,15 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     assert_redirected_to "/events/#{event.id}/results"
     assert_response :moved_permanently
     
-    get "/results/2009/Mountain Bike/#{event.id}"
+    get "/results/2009/time_trial/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+    
+    get "/results/2009/Mountain%20Bike/#{event.id}"
+    assert_redirected_to "/events/#{event.id}/results"
+    assert_response :moved_permanently
+    
+    get "/results/2009/road/#{event.id}"
     assert_redirected_to "/events/#{event.id}/results"
     assert_response :moved_permanently
     
