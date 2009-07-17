@@ -101,10 +101,6 @@ class MbraBar < Competition
       )
   end
 
-#  def expire_cache
-#    MbraBar.expire_cache
-#  end
-  
   # Apply points from point_schedule
   def points_for(source_result, team_size = nil)
     # TODO Consider indexing place

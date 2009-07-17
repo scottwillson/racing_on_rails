@@ -109,20 +109,17 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :people, :has_many => :results
 
   # Deprecated URLs
+  map.connect "/results/:year/:discipline/:event_id", 
+              :controller => "results", 
+              :action => "deprecated_event", 
+              :requirements => { :year => /(19|20)\d\d/, :discipline => /\w+.*/, :event_id => /\d+/ }
+  map.connect "/results/show/:id", :controller => "results", :action => "show"
   map.connect "/results/competition/:event_id/racer/:person_id", :controller => "results", :action => "competition"
   map.connect "/results/competition/:event_id/team/:team_id", :controller => "results", :action => "competition"
   map.connect "/results/event/:event_id", :controller => "results", :action => "deprecated_event", :requirements => { :event_id => /\d+/ }
   map.connect "/results/racer/:person_id", :controller => "results", :action => "racer", :requirements => { :person_id => /\d+/ }
   map.connect "/results/team/:team_id", :controller => "results", :action => "deprecated_team", :requirements => { :team_id => /\d+/ }
-  map.connect "/results/:year/:discipline/:event_id", 
-              :controller => "results", 
-              :action => "deprecated_event", 
-              :requirements => { :year => /(19|20)\d\d/, :discipline => /[^\d]+/, :event_id => /\d+/ }
 
-  # Results index page
-  #mbrahere: Scott, I removed the discipline pattern for results routes as they broke
-  #some of my routes after your mbra migration renamed my mtb discipline. from 20090310155100_unfork_mbra:
-  #execute "update disciplines set name = 'Mountain Bike' where name = 'mountain_bike'"
   map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/ }
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => { :year => /(19|20)\d\d/ }
   map.connect "/results/:discipline", :controller => "results" 

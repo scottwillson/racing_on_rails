@@ -139,11 +139,11 @@ class ResultsController < ApplicationController
   def show
     result = Result.find(params[:id])
     if result.person
-      redirect_to event_person_results_path(result.event, result.person)
+      redirect_to event_person_results_path(result.event, result.person), :status => :moved_permanently
     elsif result.team
-      redirect_to event_team_results_path(result.event, result.team)
+      redirect_to event_team_results_path(result.event, result.team), :status => :moved_permanently
     else
-      redirect_to event_results_path(result.event)
+      redirect_to event_results_path(result.event), :status => :moved_permanently
     end
   end
 end
