@@ -7,7 +7,6 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_response(:redirect)
     assert_redirected_to(new_person_session_path)
     assert_nil(@request.session["person"], "No person in session")
   end
@@ -58,7 +57,6 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   def test_destroy
     velodrome = velodromes(:trexlertown)
     delete :destroy, :id => velodrome.id
-    assert_response(:redirect)
     assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
     assert_not_nil(flash[:notice], "Should have flash :notice")
   end

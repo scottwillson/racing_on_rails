@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/sweepers #{RAILS_ROOT}/app/models/competitions )
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {
     :session_key => '_racing_on_rails_session',
@@ -20,7 +20,7 @@ Rails::Initializer.run do |config|
   config.active_record.schema_format = :sql
 
   # TODO Check that these work as intended
-  config.active_record.observers = :bar_sweeper, :event_observer, :home_sweeper, :result_observer, :results_sweeper, :schedule_sweeper
+  config.active_record.observers = :event_observer, :result_observer
 
   # Ugh. Make config accessible to overrides
   @config = config

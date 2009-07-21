@@ -4,7 +4,6 @@ class Admin::EventsController < ApplicationController
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
-  cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper, :only => [:create, :update, :destroy_event, :upload]
   
   # schedule calendar  with links to admin Event pages
   # === Params

@@ -22,7 +22,7 @@ class Admin::EmailsControllerTest < ActionController::TestCase
   
   def test_create
     post(:create, :email => { :from => "scott@butlerpress.com", :subject => "Masters Racing", :body => "My opinion" })
-    assert_redirected_to(:action => "new")
+    assert_redirected_to(:controller => "admin/emails", :action => "new")
     assert(!Admin::MemberMailer.deliveries.empty?, "Should deliver")
     assert_not_nil(flash[:info])
   end

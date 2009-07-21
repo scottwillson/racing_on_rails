@@ -37,6 +37,6 @@ class HomeControllerTest < ActionController::TestCase
 
   def test_send_bid
     post(:send_bid, :bid => {:name => 'Bryan Martin', :email => 'digitalbry@gmail.com', :phone => '911', :amount => 2500})
-    assert_response(:redirect)
+    assert_redirected_to :action => "confirm_bid"
   end
 end

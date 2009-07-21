@@ -92,7 +92,6 @@ class BarControllerTest < ActionController::TestCase
     opts = {:controller => "bar", :action => 'show', :discipline => "age_graded", :year => "2006", :category => 'masters_men_30_34'}
     assert_routing("/bar/2006/age_graded/masters_men_30_34", opts)
     get(:show, :discipline => "age_graded", :year => "2006", :category => 'masters_men_30_34')
-    assert_response(:redirect)
     assert_redirected_to("http://#{STATIC_HOST}/bar/2006/overall_by_age.html")
   end
   
@@ -100,7 +99,6 @@ class BarControllerTest < ActionController::TestCase
     opts = {:controller => "bar", :action => 'show', :discipline => "overall", :year => "2003", :category => 'masters_men_30_34'}
     assert_routing('/bar/2003/overall/masters_men_30_34', opts)
     get(:show, :discipline => 'overall', :year => "2003", :category => 'masters_men_30_34')
-    assert_response(:redirect)
     assert_redirected_to("http://#{STATIC_HOST}/bar/2003")
   end
   
