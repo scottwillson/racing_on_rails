@@ -213,19 +213,8 @@ class Result < ActiveRecord::Base
   def calculate_points
     if !scores.empty? and competition_result?
       pts = 0
-      if race.event.type == 'MbraBar'
-        # mbraonly: 70% of the races (rounded to the nearest whole number) count in the
-        # individual series standings.  Riders who compete in more than 70% of the races will throw out
-        # their weakest results.)
-        # sort descending and sum only the max # eligible events
-        n = (Event.find_all_bar_for_discipline(race.discipline, race.date.year).size * 0.7).to_i
-        scores.sort_by(&:points).reverse.first(n).each do |score|
-          pts = pts + score.points
-        end  
-      else
-        for score in scores
-          pts = pts + score.points
-        end
+      for score in scores
+        pts = pts + score.points
       end
       self.points = pts
     end

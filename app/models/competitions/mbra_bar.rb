@@ -1,8 +1,9 @@
 # MBRA Best All-around Rider Competition.
 # Calculates a BAR for each Discipline
-# This class implements a number of MBRA-specific rules.
 # The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
+#
+# This class implements a number of MBRA-specific rules.
 class MbraBar < Competition
 
   # TODO Add add_child(...) to Race
@@ -32,7 +33,9 @@ class MbraBar < Competition
         MbraBar.find(:all, :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
+          bar.calculate_threshold_number_of_races
           bar.calculate!
+          bar.after_create_all_results
         end
       end
     }
@@ -44,6 +47,11 @@ class MbraBar < Competition
     MbraBar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
   
+  def calculate_threshold_number_of_races
+    # 70% of the races (rounded to the nearest whole number) count in the BAR standings.
+    @threshold_number_of_races = (Event.find_all_bar_for_discipline(self.discipline, self.date.year).size * 0.7).to_i
+  end
+
   def point_schedule
     @point_schedule = @point_schedule || []
   end
@@ -101,8 +109,6 @@ class MbraBar < Competition
     calculate_point_schedule(source_result.race.field_size)
     points = 0
     MbraBar.benchmark('points_for') {
-#      field_size = source_result.race.field_size
-
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
@@ -114,6 +120,56 @@ class MbraBar < Competition
     points
   end
   
+  def after_create_competition_results_for(race)
+    # 70% of the races (rounded to the nearest whole number) count in the
+    # individual series standings. Riders who compete in more than 70% of the
+    # races will throw out their weakest results.
+    race.results.each do |result|
+      # Don't bother sorting scores unless we need to drop some
+      if result.scores.size > @threshold_number_of_races
+        result.scores.sort! { |x, y| y.points <=> x.points }
+        for lowest_score in result.scores[@threshold_number_of_races..(result.scores.size - 1)]
+          result.scores.destroy(lowest_score)
+        end
+        # Rails destroys Score in database, but doesn't update the current association
+        result.scores(true)
+      end
+    end
+  end
+
+  def after_create_all_results
+# Riders upgrading during the season will take 1/2 of their points (up to 30 points max)
+# with them to the higher category. The upgrading rider's accumulated points are allowed to stand at the
+# lower category.
+# After computing BAR results, look for Cat n BAR results for anyone in the Cat n - 1 BAR and add in half their Cat n points.
+    for category_pair in [
+      ["cat_up" => "Cat 1/2 Men", "cat_down" => "Cat 3 Men"],
+      ["cat_up" => "Cat 3 Men", "cat_down" => "Cat 4 Men"],
+      ["cat_up" => "Cat 4 Men", "cat_down" => "Cat 5 Men"],
+      ["cat_up" => "Cat 1/2/3 Women", "cat_down" => "Cat 4 Women"]
+    ]
+      cat = category_pair[0]["cat_up"]
+      cat_up_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_up"] }
+      cat_down_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_down"] }
+      cat_up_race.results.each do |up_result|
+        take_with_result = cat_down_race.results.detect { |down_result| down_result.person == up_result.person }
+        unless take_with_result.blank?
+          upgrade_points = (take_with_result.points/2).to_i
+          upgrade_points = 30 if upgrade_points > 30
+          up_result.points += upgrade_points
+          upgrade_note = "Point total includes #{upgrade_points} upgrade points."
+          if up_result.notes.blank?
+            up_result.notes = upgrade_note
+          else  
+            up_result.notes += " #{upgrade_note}"
+          end
+          up_result.save!
+        end
+      end unless (cat_up_race.blank? || cat_down_race.blank?)
+
+    end
+  end
+
   def create_races
     Discipline[discipline].bar_categories.each do |category|
       races.create!(:category => category)
@@ -131,4 +187,5 @@ class MbraBar < Competition
   def to_s
     "#<#{self.class.name} #{id} #{discipline} #{name} #{date}>"
   end
+
 end

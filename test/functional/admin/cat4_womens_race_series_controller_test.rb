@@ -36,7 +36,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
                            :commit => "Save" 
                          }
 
-    assert_redirected_to(:action => 'new_result')
+    assert_redirected_to new_admin_cat4_womens_race_series_result_path(:result => { 
+      :team_name => "Gentle Lovers", :first_name => "Cheryl", :last_name => "Willson"
+    })
     
     new_event = SingleDayEvent.find_by_name("Mount Hamilton Road Race")
     assert_not_nil(new_event, "Should have created Mount Hamilton Road Race")
@@ -75,7 +77,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
                            :commit => "Save" 
                          }
 
-    assert_redirected_to(:action => 'new_result')
+    assert_redirected_to new_admin_cat4_womens_race_series_result_path(:result => { 
+      :team_name => molly.team_name, :first_name => "Molly", :last_name => "Cameron"
+    })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)
@@ -108,7 +112,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
                            :commit => "Save" 
                          }
 
-    assert_redirected_to(:action => 'new_result')
+    assert_redirected_to new_admin_cat4_womens_race_series_result_path(:result => { 
+      :team_name => molly.team_name, :first_name => "Molly", :last_name => "Cameron"
+    })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => "San Ardo Road Race"}))
     new_event = SingleDayEvent.find_by_name("San Ardo Road Race")
@@ -152,7 +158,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
                            :commit => "Save" 
                          }
 
-    assert_redirected_to(:action => 'new_result')
+    assert_redirected_to new_admin_cat4_womens_race_series_result_path(:result => { 
+     :team_name => molly.team_name, :first_name => "Molly", :last_name => "Cameron"
+    })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)

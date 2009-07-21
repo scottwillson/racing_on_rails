@@ -75,8 +75,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                   :usac_results_format => "false"
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
-    assert_response :redirect
-    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param)
+    assert_redirected_to edit_admin_event_path(mt_hood_1)
     assert(flash.has_key?(:notice))
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
@@ -88,7 +87,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     post :upload, :id => mt_hood_1.to_param, 
                   :results_file => fixture_file_upload("results/invalid_columns.xls", "application/vnd.ms-excel", :binary),
                   :usac_results_format => "false"
-    assert_redirected_to(:action => :edit, :id => mt_hood_1.to_param)
+    assert_redirected_to edit_admin_event_path(mt_hood_1)
 
     assert_response :redirect
     assert(flash.has_key?(:notice))
@@ -141,8 +140,10 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
     assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
     
-    assert_response(:redirect)
-    assert_redirected_to(:action => :new)
+    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+              'promoter_id' => people(:nate_hobson).to_param, 'type' => 'SingleDayEvent'})
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -175,8 +176,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should not be a SingleDayEvent')
     assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
     
-    assert_response(:redirect)
-    assert_redirected_to(:action => :new)
+    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+               "parent_id" => parent.to_param,
+              'promoter_id' => people(:nate_hobson).to_param, 'type' => 'Event'})
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -209,8 +213,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should not be a SingleDayEvent')
     assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
     
-    assert_response(:redirect)
-    assert_redirected_to(:action => :new)
+    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+               "parent_id" => parent.to_param,
+              'promoter_id' => people(:nate_hobson).to_param, 'type' => ''})
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -240,8 +247,10 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
     assert(skull_hollow.is_a?(Series), 'Skull Hollow should be a series')
     
-    assert_response(:redirect)
-    assert_redirected_to(:action => :new)
+    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+              "promoter_id"  => people(:nate_hobson).to_param, 'type' => 'Series'})
   end
   
   def test_create_from_children
@@ -314,8 +323,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
                   "promoter_id" => people(:promoter).to_param, 'number_issuer_id' => norba.to_param}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+    assert_redirected_to edit_admin_event_path(banana_belt)
 
     banana_belt.reload
     assert_equal('Banana Belt One', banana_belt.name, 'name')
@@ -343,12 +351,13 @@ class Admin::EventsControllerTest < ActionController::TestCase
                   'type' => 'SingleDayEvent',
                   'promoter_id' => ""}
     )
-    assert_response(:redirect)
     silverton = SingleDayEvent.find_by_name('Silverton')
     assert_not_nil(silverton, 'Silverton should be in database')
     assert(!silverton.new_record?, "Silverton should be saved")
     assert_nil(silverton.promoter, "Silverton Promoter")
-    assert_redirected_to(:action => :new)
+    assert_redirected_to new_admin_event_path("event"=>{"name"=>"Silverton",
+              'type' => 'SingleDayEvent',
+              'promoter_id' => ""})
   end
   
   def test_save_different_promoter
@@ -364,8 +373,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                   "promoter_id"  => people(:nate_hobson).to_param}
     )
     assert_nil(flash[:warn], 'flash[:warn]')
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+    assert_redirected_to edit_admin_event_path(banana_belt)
     
     banana_belt.reload
     assert_equal(people(:nate_hobson), banana_belt.promoter(true), 'Promoter after save')
@@ -386,8 +394,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                      'number_issuer_id' => number_issuers(:stage_race).to_param,
                      'type' => type.to_s}
       )
-      assert_response(:redirect)
-      assert_redirected_to(:action => :edit, :id => event.to_param)
+      assert_redirected_to edit_admin_event_path(event)
       event = Event.find(event.id)
       assert(event.is_a?(type), "#{event.name} should be a #{type}")
     end
@@ -408,8 +415,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     event = assigns(:event)
     assert_not_nil(event, "@event")
     assert(event.errors.empty?, event.errors.full_messages)
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
     assert(event.is_a?(SingleDayEvent), "Mt Hood should be a SingleDayEvent")
 
     assert_nil(events(:mt_hood_1).parent(true), "Original child's parent")
@@ -441,8 +447,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'Series'}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
     event = Event.find(event.id)
     assert(event.is_a?(Series), "Mt Hood should be a Series")
 
@@ -475,8 +480,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
     event = Event.find(event.id)
     assert(event.is_a?(WeeklySeries), "Mt Hood should be a WeeklySeries")
 
@@ -508,8 +512,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'WeeklySeries'}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
     event = Event.find(event.id)
     assert(event.is_a?(WeeklySeries), "BB should be a WeeklySeries")
 
@@ -541,8 +544,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                    "discipline"=>event.discipline, "cancelled"=>event.cancelled, "state"=>event.state,
                   'promoter_id' => event.promoter_id, 'number_issuer_id' => event.number_issuer_id, 'type' => 'SingleDayEvent'}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
     event = Event.find(event.id)
     assert(event.is_a?(SingleDayEvent), "PIR should be a SingleDayEvent")
 
@@ -571,8 +573,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     
     event.reload
     assert_equal(parent, event.parent)
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => event)
+    assert_redirected_to edit_admin_event_path(event)
   end
   
   def test_missing_parent
@@ -609,7 +610,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_add_children
     event = events(:series_parent)
     get(:add_children, :parent_id => event.to_param)
-    assert_redirected_to(:action => :edit, :id => event.to_param)
+    assert_redirected_to edit_admin_event_path(event)
   end
 
   def test_index
@@ -622,8 +623,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_not_logged_in
     destroy_person_session
     get(:index, :year => "2004")
-    assert_response(:redirect)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to new_person_session_path
     assert_nil(@request.session["person"], "No person in session")
   end
 
@@ -697,7 +697,6 @@ class Admin::EventsControllerTest < ActionController::TestCase
     event = events(:banana_belt_1)
     event.destroy_races
     delete(:destroy, :id => event.to_param, :commit => 'Delete')
-    assert_response(:redirect)
     assert(!Event.exists?(event.id), "Should have deleted Event")
   end
 
@@ -713,8 +712,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          :id => banana_belt.to_param,
          "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Cyclocross"}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+    assert_redirected_to edit_admin_event_path(banana_belt)
 
     banana_belt.reload
     assert_equal('Banana Belt One', banana_belt.name, 'name')
@@ -733,8 +731,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          :id => banana_belt.to_param,
          "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+    assert_redirected_to edit_admin_event_path(banana_belt)
 
     banana_belt.reload
     assert_equal("Road", banana_belt[:discipline], 'discipline')
@@ -750,8 +747,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          :id => banana_belt.to_param,
          "event"=>{"bar_points"=>"2", "name"=>"Banana Belt One", "discipline"=>"Road"}
     )
-    assert_response(:redirect)
-    assert_redirected_to(:action => :edit, :id => banana_belt.to_param)
+    assert_redirected_to edit_admin_event_path(banana_belt)
 
     banana_belt.reload
     assert_equal("Road", banana_belt[:discipline], 'discipline')
@@ -771,7 +767,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
                                   "discipline"=>"Mountain Bike"})
     
     assert_nil(flash[:warn], "flash[:warn] should be empty, but was: #{flash[:empty]}")
-    assert_response(:redirect)
+    assert_redirected_to edit_admin_event_path(event)
   end
   
   def test_destroy_races

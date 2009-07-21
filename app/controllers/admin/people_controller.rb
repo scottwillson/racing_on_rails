@@ -3,7 +3,6 @@ class Admin::PeopleController < ApplicationController
   before_filter :require_administrator, :remember_event
   layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'
-  cache_sweeper :schedule_sweeper, :only => [:update]
 
   include ApplicationHelper
   include ActionView::Helpers::TextHelper

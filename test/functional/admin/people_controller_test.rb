@@ -6,7 +6,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_response(:redirect)
     assert_redirected_to(new_person_session_path)
     assert_nil(@request.session["person"], "No person in session")
   end
@@ -15,7 +14,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     destroy_person_session
     weaver = people(:weaver)
     get(:edit_name, :id => weaver.to_param)
-    assert_response(:redirect)
     assert_redirected_to(new_person_session_path)
     assert_nil(@request.session["person"], "No person in session")
   end
@@ -271,7 +269,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_destroy
     person = people(:no_results)
     delete :destroy, :id => person.id
-    assert_response(:redirect)
     assert_redirected_to(admin_people_path)
     assert(!Person.exists?(person.id), 'Person should have been destroyed')
   end
@@ -530,7 +527,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     end
     
     assert(flash.empty?, "Flash should be empty, but was: #{flash}")
-    assert_response(:redirect)
     knowlsons = Person.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
     assert_redirected_to(edit_admin_person_path(knowlsons.first))
@@ -551,7 +547,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
         "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
         "number_issuer_id"=>[number_issuers(:association).to_param, number_issuers(:association).to_param], "number_value"=>["8977", "BBB9"],
-        "discipline_id"=>[disciplines(:road).id, disciplines(:mountain_bike).id], :number_year => '2007',
+        "discipline_id"=>[disciplines(:road).id.to_s, disciplines(:mountain_bike).id.to_s], 
+        :number_year => '2007',
       "commit"=>"Save"})
     
     if assigns['person']
@@ -561,7 +558,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(flash.empty?, "flash empty? #{flash}")
     knowlsons = Person.find_all_by_name('Jon Knowlson')
     assert(!knowlsons.empty?, 'Knowlson should be created')
-    assert_response(:redirect)
     assert_redirected_to(edit_admin_person_path(knowlsons.first))
     race_numbers = knowlsons.first.race_numbers
     assert_equal(2, race_numbers.size, 'Knowlson race numbers')
@@ -597,7 +593,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
       "number_issuer_id"=>["2", "2"], "number_value"=>["104", "BBB9"], "discipline_id"=>["4", "3"], :number_year => '2004',
       "commit"=>"Save"})
     
-    assert_response(:redirect)
     assert_not_nil(assigns['person'], "Should assign person")
     assert(assigns['person'].errors.empty?, "Person should not have errors")
     
@@ -627,7 +622,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                    "id"=>molly.to_param}
     )
     assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
-    assert_response(:redirect)
+    assert_redirected_to edit_admin_person_path(molly)
     molly.reload
     assert_equal('222', molly.road_number(true, Date.today.year), 'Road number should be updated')
     assert_equal(true, molly.print_card?, 'print_card?')
@@ -662,7 +657,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     put(:update, {"commit"=>"Save", 
                    "number_year" => Date.today.year.to_s,
-                   "number_issuer_id"=>[number_issuers(:association).to_param], "number_value"=>["AZY"], "discipline_id" => [disciplines(:mountain_bike).id],
+                   "number_issuer_id"=>[number_issuers(:association).to_param], "number_value"=>["AZY"], 
+                   "discipline_id" => [disciplines(:mountain_bike).id.to_s],
                    "number"=>{race_numbers(:molly_road_number).to_param =>{"value"=>"202"}},
                    "person"=>{"work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
                    "cell_fax"=>"", "zip"=>"97070", 
@@ -676,7 +672,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                    "email"=>"paul.formiller@verizon.net", "state"=>"OR"}, 
                    "id"=>molly.to_param}
     )
-    assert_response(:redirect)
+    assert_redirected_to edit_admin_person_path(molly)
     assert(flash.empty?, 'flash empty?')
     molly.reload
     assert_equal('202', molly.road_number(true, Date.today.year), 'Road number should not be updated')
@@ -725,8 +721,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     post(:preview_import, :commit => 'Import', :people_file => "")
   
     assert(flash.has_key?(:warn), "should have flash[:warn]")
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
   end
   
   def test_import
@@ -743,8 +738,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_nil(session[:duplicates], 'session[:duplicates]')
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
     
     assert_nil(session[:people_file_path], 'Should remove temp file path from session')
     assert(people_before_import < Person.count, 'Should have added people')
@@ -766,8 +760,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_nil(session[:duplicates], 'session[:duplicates]')
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
     
     assert_nil(session[:people_file_path], 'Should remove temp file path from session')
     assert(people_before_import < Person.count, 'Should have added people')
@@ -800,8 +793,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(flash.has_key?(:warn), "flash[:warn] should not be empty")
     assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
     assert_equal(1, Duplicate.count, 'Should have duplicates')
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'duplicates')
+    assert_redirected_to duplicates_admin_people_path
     
     assert_nil(session[:people_file_path], 'Should remove temp file path from session')
     assert(people_before_import < Person.count, 'Should have added people')
@@ -811,8 +803,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     post(:import, :commit => 'Import', :update_membership => 'true')
   
     assert(flash.has_key?(:warn), "should have flash[:warn]")
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
   end
   
   def test_duplicates
@@ -833,8 +824,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.find(:all, :conditions => ['last_name = ?', 'Weaver']))
     alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.find(:all, :conditions => ['last_name = ?', 'Pennington']))
     post(:resolve_duplicates, {tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param})
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
     assert_equal(0, Duplicate.count, 'Should have no duplicates')
     
     assert_equal(3, Person.find(:all, :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
@@ -850,8 +840,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_cancel_import
     post(:import, :commit => 'Cancel', :update_membership => 'false')
-    assert_response(:redirect)
-    assert_redirected_to(:action => 'index')
+    assert_redirected_to admin_people_path
     assert_nil(session[:people_file_path], 'Should remove temp file path from session')
   end
   
@@ -1065,7 +1054,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(assigns["person"], "@person")
     assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
 
-    assert_response(:redirect)
     assert_redirected_to(edit_admin_person_path(candi_murray))
     
     candi_murray.reload
@@ -1090,7 +1078,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(old_phone, nate_hobson.home_phone, 'promoter old phone')
     assert_equal(old_email, nate_hobson.email, 'promoter old email')
     
-    assert_response(:redirect)
     assert_redirected_to(edit_admin_person_path(nate_hobson))
   end
   
@@ -1106,7 +1093,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     promoter.reload
     
-    assert_response(:redirect)
     assert_redirected_to(edit_admin_person_path(promoter, :event_id => events(:jack_frost)))
   end
   
@@ -1118,7 +1104,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     
     promoter = Person.find_by_name('Fred Whatley')
-    assert_response(:redirect)
     assert_redirected_to(edit_admin_person_path(promoter, :event_id => events(:jack_frost)))
   end
 end

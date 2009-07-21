@@ -72,8 +72,8 @@ class PostsControllerTest < ActionController::TestCase
   
   def test_index
     get(:index, :mailing_list_name => "obrarace")
-    assert_response(:redirect)
     assert_redirected_to(
+      :controller => "posts",
       :action => "list", 
       :mailing_list_name => "obrarace", 
       :month => Date.today.month, 
@@ -222,16 +222,13 @@ class PostsControllerTest < ActionController::TestCase
     })
     
     get(:list, :mailing_list_name => obra_race.name, :year => "2004", :month => "11", :next => "&gt;")
-    assert_response(:redirect)
-    assert_redirected_to(:month => 12, :year => 2004)
+    assert_redirected_to(:controller => "posts", :action => :list, :month => 12, :year => 2004)
     
     get(:list, :mailing_list_name => obra_race.name, :year => "2004", :month => "12", :next => "&gt;")
-    assert_response(:redirect)
-    assert_redirected_to(:month => 1, :year => 2005)
+    assert_redirected_to(:controller => "posts", :action => :list, :month => 1, :year => 2005)
     
     get(:list, :mailing_list_name => obra_race.name, :year => "2004", :month => "12", :previous => "&lt;")
-    assert_response(:redirect)
-    assert_redirected_to(:month => 11, :year => 2004)
+    assert_redirected_to(:controller => "posts", :action => :list, :month => 11, :year => 2004)
   end
   
   def test_list_routing
@@ -264,8 +261,7 @@ class PostsControllerTest < ActionController::TestCase
     )
     
     assert(flash.has_key?(:notice))
-    assert_response(:redirect)
-    assert_redirected_to(:action => "confirm", :mailing_list_name => obra_chat.name)
+    assert_redirected_to(:controller => "posts", :action => "confirm", :mailing_list_name => obra_chat.name)
     
     assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
     delivered_mail = MailingListMailer.deliveries.first

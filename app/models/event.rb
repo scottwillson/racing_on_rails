@@ -41,7 +41,6 @@ class Event < ActiveRecord::Base
            :class_name => "Event",
            :foreign_key => "parent_id",
            :dependent => :destroy,
-           :conditions => "type is null or type = 'SingleDayEvent'", 
            :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed
@@ -50,7 +49,6 @@ class Event < ActiveRecord::Base
            :class_name => "Competition",
            :foreign_key => "parent_id",
            :dependent => :destroy,
-           :conditions => "type is not null and type != 'SingleDayEvent'", 
            :order => "date",
            :after_add => :children_changed,
            :after_remove => :children_changed 
