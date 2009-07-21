@@ -41,7 +41,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal([], weekly_series, "weekly_series")
 
     weekly_series, events = Event.find_all_with_results(2004)
-    assert_equal([events(:banana_belt_series), events(:kings_valley_2004)], events, "events")
+    assert_equal_events([events(:banana_belt_series), events(:kings_valley_2004)], events, "events")
     assert_equal([], weekly_series, "weekly_series")
 
     pir_1 = events(:pir)
