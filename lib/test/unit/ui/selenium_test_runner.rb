@@ -1,6 +1,11 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
+# Use our custom TestRunner in place of the default console runner.
+# SeleniumTestRunner extends console TestRunner. Main difference is screendumps and snapshots.
+# You'd think there would be a easier, cleaner way to do this.
+#
+# Holds class-based reference to Selenium driver
 module Test
   module Unit
     module UI
