@@ -19,20 +19,25 @@ module Test
         end
 
         def add_fault(fault)
-          dir, path = screenshot_path_for(fault)
           File.open("tmp/acceptance.html", "a") do |f|
             f.puts "<p><em>#{fault.long_display}</em></p>"
-            f.puts "<a href='../#{path}'>Screenshot</a><br/>"
-            f.puts "<a href='../#{html_path_for(fault)}'>HTML</a>"
           end
 
-          FileUtils.mkdir_p dir
-          File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
+          if fault.respond_to? :location
+            dir, path = screenshot_path_for(fault)
+            File.open("tmp/acceptance.html", "a") do |f|
+              f.puts "<a href='../#{path}'>Screenshot</a><br/>"
+              f.puts "<a href='../#{html_path_for(fault)}'>HTML</a>"
+            end
 
-          if @@selenium.session_started?
-            File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
+            FileUtils.mkdir_p dir
+            File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
+
+            if @@selenium.session_started?
+              File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
+            end
           end
-
+          
           super
         end
         
