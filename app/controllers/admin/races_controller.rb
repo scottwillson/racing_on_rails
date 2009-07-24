@@ -1,7 +1,6 @@
 class Admin::RacesController < ApplicationController  
   before_filter :require_administrator
   layout "admin/application"
-  cache_sweeper :home_sweeper, :results_sweeper, :schedule_sweeper
 
   def edit
     @race = Race.find(params[:id])
