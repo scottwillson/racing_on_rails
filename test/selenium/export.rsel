@@ -2,10 +2,10 @@ include_partial 'fixtures'
 include_partial "admin_login"
 
 open '/admin/people'
-assert_element_present 'export_button'
-assert_element_present 'include'
+assert_present 'export_button'
+assert_present 'include'
 assert_value 'include', 'members_only'
-assert_element_present 'format'
+assert_present 'format'
 assert_value 'format', 'xls'
 
 click 'export_button'

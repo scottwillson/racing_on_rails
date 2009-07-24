@@ -4,10 +4,10 @@ include_partial "admin_login"
 open "/admin/categories"
 
 masters_35_plus_id = Category.find_by_name("Masters 35+").id
-assert_element_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
-assert_element_not_present "css=div#category_root div#category_#{masters_35_plus_id}"
+assert_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
+assert_not_present "css=div#category_root div#category_#{masters_35_plus_id}"
 
 drag_and_drop "css=div#unknown_category_root div#category_#{masters_35_plus_id}", "-400,116"
 wait_for_element_not_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
 wait_for_element_present "css=div#category_root div#category_#{masters_35_plus_id}"
-assert_element_present "css=div#category_root div#category_#{masters_35_plus_id}"
+assert_present "css=div#category_root div#category_#{masters_35_plus_id}"

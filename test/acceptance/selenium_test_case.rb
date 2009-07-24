@@ -64,6 +64,14 @@ class SeleniumTestCase < ActiveSupport::TestCase
     string_command "assertNotTitle", [pattern]
   end
   
+  def assert_present(locator)
+    string_command "assertElementPresent", [locator]
+  end
+  
+  def assert_not_present(locator)
+    string_command "assertElementNotPresent", [locator]
+  end
+  
   # rows and coluns are 1-based
   def assert_table locator, row, column, expected
     string_command "assertTable", ["#{locator}.#{row}.#{column}", expected]
