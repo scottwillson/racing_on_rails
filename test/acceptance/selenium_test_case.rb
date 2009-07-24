@@ -50,6 +50,11 @@ class SeleniumTestCase < ActiveSupport::TestCase
   def assert_not_title(pattern)
     string_command "assertNotTitle", [pattern]
   end
+  
+  # 1-based
+  def assert_table locator, row, column, expected
+    string_command "assertTable", ["#{locator}.#{row}.#{column}", expected]
+  end
 end
 
 # Hack. Use our custom TestRunner in place of the default console runner.
