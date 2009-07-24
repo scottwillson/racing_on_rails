@@ -73,31 +73,31 @@ wait_for_element_not_present "person_#{@alice_id}_team_name-inplaceeditor"
 refresh_and_wait
 assert_table "people_table", 6, 1, "glob:River City Bicycles*"
 
-click_and_wait "css=a[href='/admin/people/#{@molly_id}/results']"
+click "css=a[href='/admin/people/#{@molly_id}/results']", :wait_for => :page
 assert_title "*Admin: Results: Molly Cameron"
 
 open '/admin/people'
-click_and_wait "css=a[href='/admin/people/#{@weaver_id}/results']"
+click "css=a[href='/admin/people/#{@weaver_id}/results']", :wait_for => :page
 assert_title "*Admin: Results: Ryan Weaver"
 
 open '/admin/people'
-click_and_wait "css=a[href='/admin/people/#{@matson_id}/edit']"
+click "css=a[href='/admin/people/#{@matson_id}/edit']", :wait_for => :page
 assert_title "*Admin: People: Mark Matson"
 type "person_home_phone", "411 911 1212"
-click_and_wait "save"
+click "save", :wait_for => :page
 
 open '/admin/people'
-click_and_wait "css=a[href='/admin/people/new']"
+click "css=a[href='/admin/people/new']", :wait_for => :page
 assert_title "*Admin: People: New Person"
 
 open "/admin/people/#{@matson.id}/edit"
 assert_text_present "Mark Matson"
 click "destroy_number_#{@matson.race_numbers.first.id}"
 pause 2300
-click_and_wait "save"
+click "save", :wait_for => :page
 
-assert_text_not_present "error"
-assert_text_not_present "Unknown action"
-assert_text_not_present "Couldn't find RaceNumber"
+assert_no_text "error"
+assert_no_text "Unknown action"
+assert_no_text "Couldn't find RaceNumber"
 
 assert_location "*/admin/people/#{@matson.id}/edit"

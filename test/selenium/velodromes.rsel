@@ -2,7 +2,7 @@ include_partial "fixtures"
 include_partial "admin_login"
 
 open "/admin/velodromes"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 assert_table "velodromes_table", 1, 0, "glob:Alpenrose Dairy*"
@@ -19,16 +19,16 @@ wait_for_element_not_present "css=.editor_field"
 refresh_and_wait
 assert_table "velodromes_table", 2, 1, "glob:http://example.com*"
 
-click_and_wait "css=a[href='/admin/velodromes/#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}/edit']"
+click "css=a[href='/admin/velodromes/#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}/edit']", :wait_for => :page
 assert_value "velodrome_name", "Valley Preferred Cycling Center"
 assert_value "velodrome_website", "http://example.com"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 type "velodrome_name", "T-Town"
 click_and_wait("save")
 
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 assert_value "velodrome_name", "T-Town"

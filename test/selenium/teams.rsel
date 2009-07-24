@@ -1,13 +1,13 @@
 include_partial 'fixtures'
 
 open '/teams'
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
+assert_no_text 'error'
+assert_no_text 'Unknown action'
 
 @gl_id = Team.find_by_name("Gentle Lovers").id
-click_and_wait "css=a[href='/teams/#{@gl_id}']"
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
+click "css=a[href='/teams/#{@gl_id}']", :wait_for => :page
+assert_no_text 'error'
+assert_no_text 'Unknown action'
 
 include_partial 'admin_login'
 
@@ -38,19 +38,19 @@ wait_for_not_checked "team_member_#{@gl_id}"
 refresh_and_wait
 assert_not_checked "team_member_#{@gl_id}"
 
-click_and_wait "css=a[href='/results/team/#{@dfl_id}']"
+click "css=a[href='/results/team/#{@dfl_id}']", :wait_for => :page
 assert_text_present "Team dFL"
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
+assert_no_text 'error'
+assert_no_text 'Unknown action'
 
 open '/admin/teams'
-click_and_wait "css=a[href='/admin/teams/#{@vanilla_id}/edit']"
+click "css=a[href='/admin/teams/#{@vanilla_id}/edit']", :wait_for => :page
 assert_text_present "Vanilla"
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
+assert_no_text 'error'
+assert_no_text 'Unknown action'
 
 type "team_name", "SpeedVagen"
 click_and_wait("save")
 assert_text_present "SpeedVagen"
-assert_text_not_present 'error'
-assert_text_not_present 'Unknown action'
+assert_no_text 'error'
+assert_no_text 'Unknown action'

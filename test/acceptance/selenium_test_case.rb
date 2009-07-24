@@ -32,9 +32,22 @@ class SeleniumTestCase < ActiveSupport::TestCase
     super
   end
   
+  def login_as_admin
+    open "/person_session/new"
+    type "person_session_login", "admin@example.com"
+    type "person_session_password", "secret"
+    click "login_button", :wait_for => :page
+    assert_no_errors
+    assert_location "*/admin/events"
+  end
+  
   # Check page has no error
   def open(url)
     selenium.open(url)
+    assert_no_errors
+  end
+  
+  def assert_no_errors
     assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
     assert_not_title "regexp:Exception"
   end
@@ -51,9 +64,13 @@ class SeleniumTestCase < ActiveSupport::TestCase
     string_command "assertNotTitle", [pattern]
   end
   
-  # 1-based
+  # rows and coluns are 1-based
   def assert_table locator, row, column, expected
     string_command "assertTable", ["#{locator}.#{row}.#{column}", expected]
+  end
+  
+  def assert_location(pattern)
+    string_command "assertLocation", [pattern]
   end
 end
 

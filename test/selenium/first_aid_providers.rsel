@@ -2,7 +2,7 @@ include_partial "fixtures"
 include_partial "admin_login"
 
 open "/admin/first_aid_providers"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_not_title "regexp:Exception"
 
 assert_table "events_table", 1, 0, "glob:-------------*"
@@ -22,13 +22,13 @@ assert_table "events_table", 1, 0, "glob:Megan Weaver*"
 
 click "past_events"
 wait_for_text_present "Copperopolis"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
 assert_table "events_table", 1, 2, "glob:Copperopolis*"
 
 click "past_events"
 wait_for_text_not_present "Copperopolis"
-assert_text_not_present "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
-assert_text_not_present "Copperopolis"
+assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
+assert_no_text "Copperopolis"
 
 assert_table "events_table", 1, 2, "glob:Lost Series*"
 assert_table "events_table", 2, 2, "glob:National Federation Event*"
