@@ -33,15 +33,15 @@ module TableHelper
     render(:partial => "table/th", :locals => locals)
   end
   
-  def sort_rows(collection)
-    return collection if params[:sort_by].blank?
+  def sort_rows(collection, sort_by, sort_direction)
+    return collection if sort_by.blank?
     
-     params[:sort_by].split(",").each do |sort_attribute|
+     sort_by.split(",").each do |sort_attribute|
       sort_attribute_symbol = sort_attribute.to_sym
       collection.sort! { |x, y| (x.send(sort_attribute_symbol) || "") <=> (y.send(sort_attribute_symbol) || "") }
     end
       
-    collection.reverse! if params[:sort_direction] == "desc"
+    collection.reverse! if sort_direction == "desc"
     collection
   end
 end

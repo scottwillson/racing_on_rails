@@ -3,7 +3,7 @@
   <table cellspacing="0" class="base<%= " #{style_class}" if style_class %>"<%= " id='#{id}_table'" if id %>>
     <%- if insert_header -%>
     <tr>
-      <% columns.times do -%><th>&nbsp;</th><%- end %>
+      <% columns.times do -%><th>&nbsp;</th><%- end -%>
     </tr>
     <%- end -%>
 <%= body -%>

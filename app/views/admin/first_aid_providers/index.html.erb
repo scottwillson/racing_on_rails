@@ -16,7 +16,7 @@
     <%= th(:promoter_name, :title => "Promoter", :sort_params => { :past_events => @past_events }) %>
     <%= th(:location, :class => "last", :sort_params => { :past_events => @past_events }) %>
   </tr>
-  <%= render :partial => "event", :collection => sort_rows(@events) %>
+  <%= render :partial => "event", :collection => sort_rows(@events, @sort_by, params[:sort_direction]) %>
 <% end -%>
 
 <p>
