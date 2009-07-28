@@ -18,7 +18,7 @@ Rails::Initializer.run do |config|
   config.gem "fastercsv"
   config.gem "pdf-writer", :lib => "pdf/writer"
   # For tests
-  config.gem "selenium-client", :lib => false
+  config.gem "selenium-client", :lib => "selenium/client"
   
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
