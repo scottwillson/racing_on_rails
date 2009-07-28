@@ -14,42 +14,65 @@ module Test
           @@selenium = Selenium::Client::Driver.new(options)
         end
         
+        def results_path
+          "tmp/test"
+        end
+        
         def initialize(suite, output_level=NORMAL, io=STDOUT)
           super(suite, output_level=NORMAL, io=STDOUT)
         end
 
         def add_fault(fault)
-          File.open("tmp/acceptance.html", "a") do |f|
-            f.puts "<p><em>#{fault.long_display}</em></p>"
-          end
-
-          if fault.respond_to? :location
-            dir, path = screenshot_path_for(fault)
-            File.open("tmp/acceptance.html", "a") do |f|
-              f.puts "<a href='../#{path}'>Screenshot</a><br/>"
-              f.puts "<a href='../#{html_path_for(fault)}'>HTML</a>"
-            end
-
-            FileUtils.mkdir_p dir
-            File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
-
-            if @@selenium.session_started?
-              File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
-            end
-          end
-          
+          dump(fault)
           super
         end
         
+        def dump(fault)
+          dir, path = screenshot_path_for(fault)
+          File.open("#{results_path}/acceptance.html", "a") do |f|
+            f.puts "<h2>#{fault.test_name}</h2>"
+            f.puts "<h3>#{fault.message}</h3>"
+            if fault.respond_to? :location
+              f.puts "<ol>"
+              fault.location.each do |line|
+                f.puts "<li>#{line}</li>"
+              end
+              f.puts "</ol>"
+            elsif fault.respond_to? :exception
+              f.puts "<ol>"
+              fault.exception.backtrace.each do |line|
+                f.puts "<li>#{line}</li>"
+              end
+              f.puts "</ol>"
+            end
+            File.open("#{results_path}/acceptance.html", "a") do |f|
+              f.puts "<a href='../../#{path}'>Screenshot</a><br/>"
+              f.puts "<a href='../../#{html_path_for(fault)}'>HTML</a>"
+            end
+          end
+
+          begin
+            if @@selenium.session_started?
+              FileUtils.mkdir_p dir
+              File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
+              File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
+            end
+          rescue Exception => e
+            p e
+          end
+        end
+        
         def test_started(name)
-          File.open("tmp/acceptance.html", "a") do |f|
+          File.open("#{results_path}/acceptance.html", "a") do |f|
             f.puts "<p>#{name}</p>"
           end
           super
         end
         
         def started(result)
-          File.open("tmp/acceptance.html", "w") do |f|
+          FileUtils.rm_rf results_path
+          FileUtils.mkdir_p results_path
+          File.open("#{results_path}/acceptance.html", "w") do |f|
             f.puts "<html>"
             f.puts "<body>"
           end
@@ -57,7 +80,7 @@ module Test
         end
         
         def finished(elapsed_time)
-          File.open("tmp/acceptance.html", "a") do |f|
+          File.open("#{results_path}/acceptance.html", "a") do |f|
             f.puts "</body>"
             f.puts "</html>"
           end
@@ -65,16 +88,15 @@ module Test
         end
         
         def screenshot_path_for(fault)
-          # /test/acceptance/public_pages_test.rb:27:in `test_popular_pages'
-          dir = "tmp#{fault.location.first[/(\/[^.]+)/,1]}"
-          path = "#{dir}/#{fault.location.first[/`([^\']+)/,1]}.png"
+          dir = "#{results_path}/#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}"
+          path = "#{dir}/#{fault.test_name[/[^\(]+/]}.png"
           [dir, path]
         end
         
         def html_path_for(fault)
-          dir = "tmp#{fault.location.first[/(\/[^.]+)/,1]}"
-          "#{dir}/#{fault.location.first[/`([^\']+)/,1]}.html"
+          "#{results_path}/#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}/#{fault.test_name[/[^\(]+/]}.html"
         end
+        
       end
     end
   end

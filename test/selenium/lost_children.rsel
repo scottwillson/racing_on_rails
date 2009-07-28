@@ -1,9 +1,0 @@
-include_partial 'fixtures'
-include_partial "admin_login"
-
-open "/admin/events/#{SingleDayEvent.find_by_name('Lost Series').id}/edit"
-assert_text_present 'has no parent'
-click 'set_parent', :wait_for => :page
-assert_no_text 'error'
-assert_no_text 'Unknown action'
-assert_no_text 'has no parent'

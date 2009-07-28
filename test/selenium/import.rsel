@@ -1,8 +1,0 @@
-include_partial 'fixtures'
-include_partial "admin_login"
-
-assert_no_text 'error'
-open '/admin/people'
-assert_present 'people_file'
-
-# Can't do a file upload with Selenium

@@ -1,8 +1,0 @@
-open "/person_session/new"
-assert_no_text "error"
-assert_location "*/person_session/new"
-type "person_session_login", "admin@example.com"
-type "person_session_password", "secret"
-click "login_button", :wait_for => :page
-assert_no_text "error"
-assert_location "*/admin/events"

@@ -8,6 +8,10 @@ class SeleniumTestCase < ActiveSupport::TestCase
   # Uses method_missing to route method calls to @selenium
   include Selenium::Client::SeleniumHelper
    
+  self.use_transactional_fixtures = false
+  self.use_instantiated_fixtures  = false
+  fixtures :all
+
   def setup
     @selenium = Test::Unit::UI::SeleniumTestRunner.selenium(
         :host => "localhost", 
@@ -28,7 +32,7 @@ class SeleniumTestCase < ActiveSupport::TestCase
   end
     
   def teardown
-    close_current_browser_session
+    close_current_browser_session rescue nil
     super
   end
   
@@ -42,14 +46,37 @@ class SeleniumTestCase < ActiveSupport::TestCase
   end
   
   # Check page has no error
-  def open(url)
+  def open(url, options = {})
     selenium.open(url)
+    wait_for_page
+    if options[:assert] == :error
+      assert_errors
+    else
+      assert_no_errors
+    end
+  end
+  
+  def click(locator, options={})    
+    super(locator, options)
     assert_no_errors
+  end
+  
+  def submit_and_wait(locator)
+    submit locator
+    wait_for_page
+  end
+  
+  def wait_for_not_location(pattern)
+    string_command "waitForNotLocation", [pattern]
   end
   
   def assert_no_errors
     assert_no_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
     assert_not_title "regexp:Exception"
+  end
+  
+  def assert_errors
+    assert_text "regexp:Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound"
   end
   
   def assert_text(pattern)
@@ -58,6 +85,14 @@ class SeleniumTestCase < ActiveSupport::TestCase
   
   def assert_no_text(pattern)
     assert !text?(pattern), "Found '#{pattern}' in response"
+  end
+  
+  def assert_element_text(locator, pattern)
+    string_command "assertText", [locator, pattern]
+  end
+  
+  def assert_title(pattern)
+    string_command "assertTitle", [pattern]
   end
   
   def assert_not_title(pattern)
@@ -72,6 +107,10 @@ class SeleniumTestCase < ActiveSupport::TestCase
     string_command "assertElementNotPresent", [locator]
   end
   
+  def assert_value(locator, pattern)
+    string_command "assertValue", [locator, pattern]
+  end
+  
   # rows and coluns are 1-based
   def assert_table locator, row, column, expected
     string_command "assertTable", ["#{locator}.#{row}.#{column}", expected]
@@ -79,6 +118,14 @@ class SeleniumTestCase < ActiveSupport::TestCase
   
   def assert_location(pattern)
     string_command "assertLocation", [pattern]
+  end
+  
+  def assert_checked(locator)
+    string_command "assertChecked", [locator]
+  end
+  
+  def assert_not_checked(locator)
+    string_command "assertNotChecked", [locator]
   end
 end
 
