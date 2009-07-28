@@ -58,7 +58,7 @@ class SeleniumTestCase < ActiveSupport::TestCase
   
   def click(locator, options={})    
     super(locator, options)
-    assert_no_errors
+    assert_no_errors if options[:wait_for] && options[:wait_for] == :page
   end
   
   def submit_and_wait(locator)

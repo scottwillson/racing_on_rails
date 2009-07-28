@@ -53,8 +53,7 @@ class TeamsTest < SeleniumTestCase
     assert_no_text 'Unknown action'
 
     type "team_name", "SpeedVagen"
-    click "save"
-    wait_for_page
+    click "save", :wait_for => :page
     assert_text "SpeedVagen"
     assert_no_text 'error'
     assert_no_text 'Unknown action'

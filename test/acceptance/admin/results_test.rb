@@ -8,8 +8,7 @@ class ResultsTest < SeleniumTestCase
 
     click "link=Senior Men Pro 1/2", :wait_for => :page
 
-    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_place"
-    wait_for :element => "css=.editor_field"
+    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_place", :wait_for => { :element => "css=.editor_field" }
     type "css=.editor_field", "DNF"
     submit "css=.inplaceeditor-form"
     wait_for :element => "css=.editor_field"
@@ -19,8 +18,7 @@ class ResultsTest < SeleniumTestCase
     assert_no_text "13"
     assert_text "DNF"
 
-    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_name"
-    wait_for :element => "css=.editor_field"
+    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_name", :wait_for => { :element => "css=.editor_field" }
     type "css=.editor_field", "Megan Weaver"
     submit "css=.inplaceeditor-form"
     wait_for :element => "css=.editor_field"
@@ -30,8 +28,7 @@ class ResultsTest < SeleniumTestCase
     assert_no_text "Ryan Weaver"
     assert_text "Megan Weaver"
 
-    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_team_name"
-    wait_for :element => "css=.editor_field"
+    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_team_name", :wait_for => { :element => "css=.editor_field" }
     type "css=.editor_field", "River City"
     submit "css=.inplaceeditor-form"
     wait_for :element => "css=.editor_field"
@@ -41,15 +38,15 @@ class ResultsTest < SeleniumTestCase
     assert_text "River City"
 
     click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_add"
-    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_destroy"
-    wait_for :element => "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id.id}_add"
+    wait_for_ajax
+    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_destroy", 
+          :wait_for => { :element => "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id.id}_add" }
     refresh
     wait_for_page
     assert_no_text "Megan Weaver"
     assert_text "DNF"
 
-    click "result__add"
-    wait_for :element => "//table[@id='results_table']//tr[1]"
+    click "result__add", :wait_for => { :element => "//table[@id='results_table']//tr[1]" }
     refresh
     wait_for_page
     assert_text "Field Size (2)"

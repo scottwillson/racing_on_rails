@@ -11,8 +11,7 @@ class VelodromesTest < SeleniumTestCase
     assert_table "velodromes_table", 2, 0, "glob:Valley Preferred Cycling Center*"
     assert_table "velodromes_table", 2, 1, "glob:http://www.lvvelo.org/*"
 
-    click "velodrome_#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}_website"
-    wait_for :element => "css=.editor_field"
+    click "velodrome_#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}_website", :wait_for => { :element => "css=.editor_field" }
     type "css=.editor_field", "http://example.com"
     submit "css=.inplaceeditor-form"
     wait_for :element => "css=.editor_field"

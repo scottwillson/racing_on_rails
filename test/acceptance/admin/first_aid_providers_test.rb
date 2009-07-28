@@ -13,8 +13,7 @@ class FirstAidProvidersTest < SeleniumTestCase
     assert_table "events_table", 2, 0, "glob:-------------*"
 
     assert_present "xpath=//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
-    click "xpath=//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
-    wait_for :element => "css=.editor_field"
+    click "xpath=//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']", :wait_for => { :element => "css=.editor_field" }
     type "css=.editor_field", "Megan Weaver"
     submit "css=.inplaceeditor-form"
     wait_for_ajax
@@ -24,30 +23,25 @@ class FirstAidProvidersTest < SeleniumTestCase
     wait_for_page
     assert_table "events_table", 1, 0, "glob:Megan Weaver*"
 
-    click "past_events"
-    wait_for_page
+    click "past_events", :wait_for => :page
     assert_table "events_table", 1, 2, "glob:Copperopolis*"
 
-    click "past_events"
-    wait_for_page
+    click "past_events", :wait_for => :page
     assert_no_text "Copperopolis"
 
     assert_table "events_table", 1, 2, "glob:Lost Series*"
     assert_table "events_table", 2, 2, "glob:National Federation Event*"
 
     # Table already sorted by date ascending, so click doesn't change order
-    click "css=th.date a"
-    wait_for_page
+    click "css=th.date a", :wait_for => :page
     assert_table "events_table", 1, 2, "glob:Lost Series*"
     assert_table "events_table", 2, 2, "glob:National Federation Event*"
 
-    click "css=th.date a"
-    wait_for_page
+    click "css=th.date a", :wait_for => :page
     assert_table "events_table", 1, 2, "glob:National Federation Event*"
     assert_table "events_table", 2, 2, "glob:Lost Series*"
 
-    click "css=th.date a"
-    wait_for_page
+    click "css=th.date a", :wait_for => :page
     assert_table "events_table", 1, 2, "glob:Lost Series*"
     assert_table "events_table", 2, 2, "glob:National Federation Event*"    
   end

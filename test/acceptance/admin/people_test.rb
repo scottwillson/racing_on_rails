@@ -55,8 +55,7 @@ class PeopleTest < SeleniumTestCase
     assert_checked "person_member_#{@matson_id}"
     assert_checked "person_member_#{@alice_id}"
 
-    click "person_#{@alice_id}_name"
-    wait_for :element => "person_#{@alice_id}_name-inplaceeditor"
+    click "person_#{@alice_id}_name", :wait_for => { :element => "person_#{@alice_id}_name-inplaceeditor" }
 
     type "css=.editor_field", "A Penn"
     submit "css=.inplaceeditor-form"
@@ -66,8 +65,7 @@ class PeopleTest < SeleniumTestCase
     wait_for_page
     assert_table "people_table", 4, 0, "glob:A Penn*"
 
-    click "person_#{@weaver_id}_team_name"
-    wait_for :element => "person_#{@weaver_id}_team_name-inplaceeditor"
+    click "person_#{@weaver_id}_team_name", :wait_for => { :element => "person_#{@weaver_id}_team_name-inplaceeditor" }
 
     type "css=.editor_field", "River City Bicycles"
     submit "css=.inplaceeditor-form"
