@@ -12,8 +12,6 @@ Rails::Initializer.run do |config|
     :secret      => '9998d23d32c59a8161aba78b03630a93'
   }
   
-  # Rails 2 convention for gem requirements
-  config.gem "rack"
   config.gem "authlogic"
   config.gem "fastercsv"
   config.gem "pdf-writer", :lib => "pdf/writer"
@@ -23,7 +21,6 @@ Rails::Initializer.run do |config|
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
-  # TODO Check that these work as intended
   config.active_record.observers = :event_observer, :result_observer
 
   # Ugh. Make config accessible to overrides
