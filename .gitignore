@@ -1,7 +1,8 @@
 db/*.db
 db/dumps/*
 local/*
-log/*.log
+log/*.*
+log/*
 log/test
 pkg
 tmp/**/*
