@@ -15,7 +15,7 @@ module Test
         end
         
         def results_path
-          "tmp/test"
+          File.expand_path("#{RAILS_ROOT}/log/test")
         end
         
         def initialize(suite, output_level=NORMAL, io=STDOUT)
