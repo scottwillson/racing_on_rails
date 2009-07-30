@@ -9,6 +9,7 @@
  * For more information, see http://www.mozilla.org/unix/customizing.html#prefs
  */
 
+user_pref("app.update.auto", false);
 user_pref("app.update.enabled", false);
 user_pref("app.update.lastUpdateTime.addon-background-update-timer", 1248716578);
 user_pref("app.update.lastUpdateTime.background-update-timer", 1248716577);
@@ -16,6 +17,8 @@ user_pref("app.update.lastUpdateTime.blocklist-background-update-timer", 1248716
 user_pref("app.update.lastUpdateTime.microsummary-generator-update-timer", 1248716577);
 user_pref("app.update.lastUpdateTime.places-maintenance-timer", 1248716599);
 user_pref("app.update.lastUpdateTime.search-engine-update-timer", 1248716578);
+user_pref("app.update.showInstalledUI", true);
+user_pref("app.update.silent", true);
 user_pref("browser.download.manager.showWhenStarting", false);
 user_pref("browser.history_expire_days.mirror", 180);
 user_pref("browser.migration.version", 1);
@@ -29,9 +32,11 @@ user_pref("browser.startup.homepage_override.mstone", "rv:1.9.1.1");
 user_pref("browser.tabs.warnOnClose", false);
 user_pref("browser.tabs.warnOnOpen", false);
 user_pref("extensions.enabledItems", "{972ce4c6-7e08-4474-a285-3208198ce6fd}:3.5.1");
+user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.lastAppVersion", "3.5.1");
 user_pref("extensions.update.enabled", false);
 user_pref("extensions.update.notifyUser", false);
+user_pref("general.warnOnAboutConfig", false);
 user_pref("intl.charsetmenu.browser.cache", "UTF-8");
 user_pref("network.cookie.prefsMigrated", true);
 user_pref("privacy.sanitize.migrateFx3Prefs", true);

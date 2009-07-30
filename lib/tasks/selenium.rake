@@ -13,7 +13,7 @@ if defined?(Selenium)
     rc.background = true
     rc.wait_until_up_and_running = true
     rc.jar_file = "#{Rails.root}/vendor/selenium-server.jar"
-    rc.additional_args << "-firefoxProfileTemplate #{Rails.root}/test/firefox_profile/7esr0dad.selenium"
+    rc.additional_args << "-firefoxProfileTemplate #{Rails.root}/test/fixtures/firefox_profile/7esr0dad.selenium"
   end
 
   Selenium::Rake::RemoteControlStopTask.new do |rc|
