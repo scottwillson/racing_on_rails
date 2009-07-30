@@ -212,9 +212,9 @@ class ResultsFile
     #category_class may or may not be populated
     #e.g. "Master B Men" or "Cat4 Female"
     if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
-      return (row[:category_name].to_s.strip + " " + row[:category_class].to_s.strip + " " + row[:gender].to_s.strip + " " + row[:age].to_s.strip)
+      return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s + " " + row[:age].to_s)).squeeze(" ").strip
     else
-      return (row[:category_name].to_s.strip + " " + row[:category_class].to_s.strip + " " + row[:gender].to_s.strip)
+      return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s)).squeeze(" ").strip
     end
   end
 
