@@ -39,6 +39,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     TaborOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new overall to parent Series after deleting old overall")
     assert_equal(9, series.overall.races.size, "Overall races")
+    assert_equal(1, series.overall.bar_points, "BAR points")
 
     cat_3_overall_race = series.overall.races.detect { |race| race.category == categories(:cat_3) }
     assert_not_nil(cat_3_overall_race, "Should have Cat 3 overall race")
