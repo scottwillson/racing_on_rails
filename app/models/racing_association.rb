@@ -4,7 +4,7 @@ class RacingAssociation
 
   attr_accessor :name, :short_name, :state, :email
   attr_accessor :masters_age
-  attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline
+  attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
   attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
@@ -17,6 +17,7 @@ class RacingAssociation
   attr_accessor :show_events_sanctioning_org_event_id
   
   def initialize
+    @cx_memberships = false
     @masters_age = 35
     @show_license = true
     @show_events_velodrome = true
@@ -32,6 +33,10 @@ class RacingAssociation
   
   def bmx_numbers?
     @bmx_numbers
+  end
+  
+  def cx_memberships?
+    @cx_memberships
   end
   
   def default_discipline

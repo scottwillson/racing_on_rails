@@ -75,9 +75,10 @@
         :include_blank => true %><br/>
   
     <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
-	<%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Date.today -%>
+    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Date.today -%>
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
+    <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if ASSOCIATION.cx_memberships? %>
 
     <%= f.labelled_check_box :print_card, 
                              "Print card? #{(link_to 'Print one card now', card_admin_person_path(@person, :format => "pdf"), 
