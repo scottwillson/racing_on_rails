@@ -31,9 +31,10 @@ task :cruise do
   Rake::Task["db:test:prepare"].invoke
   Rake::Task["test:units"].invoke
   Rake::Task["test:functionals"].invoke
+  Rake::Task["test:integration"].invoke
   
   begin
-    Rake::Task["test:acceptance"].invoke
+    Rake::Task["test:acceptance:browser"].invoke
     # Clean up downloads
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
     FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")

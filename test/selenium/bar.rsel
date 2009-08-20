@@ -1,8 +1,0 @@
-include_partial 'fixtures'
-
-open '/bar'
-assert_text_not_present 'error'
-assert_text_present 'Oregon Best All-Around Rider'
-
-click 'link=Age Graded'
-assert_text_present 'Oregon Best All-Around Rider'

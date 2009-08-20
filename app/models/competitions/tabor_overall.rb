@@ -3,6 +3,10 @@ class TaborOverall < Overall
     "Mt. Tabor Series"
   end
 
+  def default_bar_points
+    1
+  end
+
   def create_races
     races.create!(:category => Category.find_or_create_by_name("Fixed Gear"))
     races.create!(:category => Category.find_or_create_by_name("Category 4 Women"))

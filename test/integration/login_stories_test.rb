@@ -53,7 +53,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_redirected_to "/person_session/new"
   end
   
-  def test_blank_login_shold_not_work
+  def test_blank_login_should_not_work
     Person.create!
     
     post person_session_path, "person_session" => { "email" => "", "password" => "" }, "login" => "Login"

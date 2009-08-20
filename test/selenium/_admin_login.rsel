@@ -1,8 +1,0 @@
-open "/person_session/new"
-assert_text_not_present "error"
-assert_location "*/person_session/new"
-type "person_session_login", "admin@example.com"
-type "person_session_password", "secret"
-click_and_wait "login_button"
-assert_text_not_present "error"
-assert_location "*/admin/events"

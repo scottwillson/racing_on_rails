@@ -1,7 +1,6 @@
 require "test_helper"
 
 class CategoryTest < ActiveSupport::TestCase
-  
   def test_acts_as_tree
     senior_men = Category.find_by_name('Senior Men')
     assert_equal(2, senior_men.children.size, 'Senior Men children')

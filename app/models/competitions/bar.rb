@@ -83,7 +83,7 @@ class Bar < Competition
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                   place between 1 AND #{point_schedule.size - 1}
-                    and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries') or events.type is NULL)
+                    and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries', 'TaborOverall') or events.type is NULL)
                     and bar = true
                     and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
                     and categories.id in (#{category_ids})
