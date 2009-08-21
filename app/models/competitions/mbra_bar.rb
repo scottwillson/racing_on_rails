@@ -112,9 +112,10 @@ class MbraBar < Competition
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
-        # if multiple riders got the same place (must be a TTT?), then they split the points...
-        team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-        points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
+        # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
+        #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
+        #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+        points = point_schedule[source_result.place.to_i] * source_result.race.bar_points #/ team_size.to_f
       end
     }
     points
