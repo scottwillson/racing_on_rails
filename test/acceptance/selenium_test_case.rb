@@ -19,7 +19,7 @@ class SeleniumTestCase < ActiveSupport::TestCase
     when /windows/i
       "*iexplorer"
     else
-      "@firefox"
+      "*firefox"
     end
     
     @selenium = Test::Unit::UI::SeleniumTestRunner.selenium(
