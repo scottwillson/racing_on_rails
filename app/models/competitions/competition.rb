@@ -98,11 +98,13 @@ class Competition < Event
 
   def calculate_members_only_places
     if place_members_only?
-      Race.find(:all,
-                :include => :event,
+      Race.find_each(:include => :event,
                 :conditions => [ "events.type != ? and events.date between ? and ?", 
-                                 self.class.name.demodulize, start_date, end_date ]
-      ).each(&:calculate_members_only_places!)
+                                 self.class.name.demodulize, start_date, end_date ],
+                :batch_size => 50 #Rails 2.3 db cursor feature to limit load on memory
+                ) do |r|
+                  r.calculate_members_only_places!
+                end
     end
   end
   
