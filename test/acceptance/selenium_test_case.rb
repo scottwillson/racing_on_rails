@@ -13,10 +13,19 @@ class SeleniumTestCase < ActiveSupport::TestCase
   fixtures :all
 
   def setup
+    browser = case RUBY_PLATFORM
+    when /darwin/i
+      "*safari"
+    when /windows/i
+      "*iexplorer"
+    else
+      "@firefox"
+    end
+    
     @selenium = Test::Unit::UI::SeleniumTestRunner.selenium(
         :host => "localhost", 
         :port => 4444, 
-        :browser => "*firefox", 
+        :browser => browser, 
         :url => "http://localhost:3000", 
         :timeout_in_second => 60
     )
