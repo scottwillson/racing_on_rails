@@ -375,7 +375,7 @@ class BarTest < ActiveSupport::TestCase
     weaver = people(:weaver)
     previous_year = Date.today.year - 1
     weaver.member_from = Date.new(previous_year, 1, 1)
-    current_year = Date.today.year - 1
+    current_year = Date.today.year
     weaver.member_to = Date.new(current_year, 12, 31)
     weaver.save!
     
