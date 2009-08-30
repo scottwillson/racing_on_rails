@@ -49,7 +49,8 @@ class MbraBar < Competition
   
   def calculate_threshold_number_of_races
     # 70% of the races (rounded to the nearest whole number) count in the BAR standings.
-    @threshold_number_of_races = (Event.find_all_bar_for_discipline(self.discipline, self.date.year).size * 0.7).to_i
+    @threshold_number_of_races = (Event.find_all_bar_for_discipline(self.discipline, self.date.year).size * 0.7).round.to_i
+#    @threshold_number_of_races = 1 if @threshold_number_of_races < 1 #unlikely but possible
   end
 
   def point_schedule

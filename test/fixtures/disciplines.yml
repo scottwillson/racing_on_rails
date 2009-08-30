@@ -16,7 +16,7 @@ road:
   name: Road
   bar: true
   numbers: true
-  bar_categories: senior_men, senior_women, cat_4_women, masters_men, category_4_men, category_5_men
+  bar_categories: senior_men, senior_women, cat_4_women, masters_men, category_4_men, category_5_men, cat_1_2_3_women
 time_trial:
   name: Time Trial
   bar: true

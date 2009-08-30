@@ -111,3 +111,11 @@ beginner_men:
   name: Beginner Men
   friendly_param: beginner_men
   parent: category_5_men
+cat_4_women:
+  name: Cat 4 Women
+  friendly_param: cat_4_women
+  parent: association
+cat_1_2_3_women:
+  name: Cat 1/2/3 Women
+  friendly_param: cat_1_2_3_women
+  parent: association
