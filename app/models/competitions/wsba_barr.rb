@@ -52,10 +52,13 @@ class WsbaBarr < Competition
     Bar.benchmark('points_for') {
       #field_size = source_result.race.field_size
       results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-      if (team_size.nil? && results_in_place>1)
-        team_size = 4 #assume this is a TTT, score divided by 4 regardless of # of riders 
+      if team_size.nil?
+        team_size = (results_in_place > 1) ? 4 : 1 #assume this is a TTT, score divided by 4 regardless of # of riders
       end
-      points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
+      points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
+      points = point_schedule[points_index].to_f
+      points *= points_factor(source_result)
+      points /= team_size.to_f 
     }
     points
   end
