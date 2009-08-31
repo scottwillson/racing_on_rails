@@ -46,6 +46,20 @@ class WsbaBarr < Competition
     results
   end
   
+  # Override of base BAR rules, mainly due to TTT rules on dividing points always by 4. Also, no points multiplier
+  def points_for(source_result, team_size = nil)
+    points = 0
+    Bar.benchmark('points_for') {
+      #field_size = source_result.race.field_size
+      results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+      if (team_size.nil? && results_in_place>1)
+        team_size = 4 #assume this is a TTT, score divided by 4 regardless of # of riders 
+      end
+      points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
+    }
+    points
+  end
+  
   # per Rob Whitacre
   def place_members_only?
      true
