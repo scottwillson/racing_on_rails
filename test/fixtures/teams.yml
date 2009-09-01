@@ -14,3 +14,7 @@ dfl:
   name: Team dFL
   member: true
   show_on_public_page: false
+chocolate:
+  name: Chocolate
+  member: false
+  show_on_public_page: false

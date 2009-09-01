@@ -45,31 +45,27 @@ class MbraTeamBar < Competition
   end
 
   # Find the source results from discipline BAR's competition results.
+  #this does not work for mbra due to the 70%-of-events rule for bar that does not apply to bat
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
-    Result.find_by_sql(
-      %Q{SELECT results.points, results.id as id, race_id, person_id, results.team_id, place
-              FROM results 
-              LEFT OUTER JOIN races ON races.id = results.race_id
-              LEFT OUTER JOIN events ON races.event_id = events.id
-              LEFT OUTER JOIN categories ON races.category_id = categories.id
-              where categories.id in (#{category_ids}) 
-              and events.discipline in (#{race_disciplines})
-              AND results.id in
-                (select source_result_id
-                  from scores
-                  LEFT OUTER JOIN results as competition_results
-                    ON competition_results.id = scores.competition_result_id
-                  LEFT OUTER JOIN races as competition_races
-                    ON competition_races.id = competition_results.race_id
-                  LEFT OUTER JOIN events as competition_events
-                    ON competition_races.event_id = competition_events.id
-                  where competition_events.type = 'MbraBar'
-                    and competition_events.date >= '#{date.year}-01-01'
-                    and competition_events.date <= '#{date.year}-12-31')
-              order by team_id, race_id}
-    )
+    Result.find(:all,
+                :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
+                :conditions => [%Q{
+                    (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
+                    and bar = true
+                    and categories.id in (#{category_ids})
+                    and (events.discipline in (#{race_disciplines})
+                      or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
+                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
+                    and (races.bar_points > 0
+                      or (races.bar_points is null and events.bar_points > 0)
+                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
+                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
+                    and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
+                }],
+                :order => 'results.team_id, race_id'
+      )
   end
   
   #create a competition_result for each team appearing in this set of results, which is per race
@@ -155,6 +151,7 @@ class MbraTeamBar < Competition
         points = point_schedule[source_result.place.to_i] #/ team_size.to_f
       end
     }
+      logger.debug("#{self.class.name} points: #{points} for #{source_result.event.name} | #{source_result.race.name} | #{source_result.place} | #{source_result.name} | #{source_result.team_name}") if logger.debug?
     points
   end
 
