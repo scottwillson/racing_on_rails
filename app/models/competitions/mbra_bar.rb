@@ -175,6 +175,7 @@ class MbraBar < Competition
   def create_races
     Discipline[discipline].bar_categories.each do |category|
       races.create!(:category => category)
+      logger.debug("#{self.class.name} created BAR race in discipline #{discipline} for category '#{category}'") if logger.debug?
     end
   end
 
