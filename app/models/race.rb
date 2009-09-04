@@ -186,29 +186,50 @@ class Race < ActiveRecord::Base
     end
   end
   
-  # FIXME Almost certainly does not handle mixed member/non-member teams correctly
   def calculate_members_only_places!
     event_notification_was_enabled = event.notification_enabled?
     event.disable_notification!
     begin
-      non_members = 0
+      last_members_only_place = 1 #count up from one
+      last_result_place = 1 #assuming first result starting at one (better than sorting results twice?)
       results.sort.each do |result|
         # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-        place_before = result.members_only_place
+        place_before = result.members_only_place.to_i
         result.members_only_place = ''
-        if result.place.to_i > 0
-          if result.person.nil? or (result.person and result.person.member?(result.date))
-            result.members_only_place = (result.place.to_i - non_members).to_s
-          else
-            non_members = non_members + 1
+        if result.place.to_i > 0         
+          if ((result.person.nil? or (result.person and result.person.member?(result.date))) and not non_members_on_team(result))
+            last_members_only_place+=1 if (last_result_place!=result.place.to_i) #only increment if we have moved onto a new place
+            result.members_only_place = last_members_only_place.to_s
           end
+          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
+          last_result_place = result.place.to_i #store to know when switching to new placement (team result feature)
         end
-        result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
       end
     ensure
       event.enable_notification! if event_notification_was_enabled
     end
   end
+  
+  def non_members_on_team(result)
+    non_members = false
+    exempt_cats = ASSOCIATION.exempt_team_categories #if this is undeclared in environment.rb, assume this rule does not apply
+     if (exempt_cats.nil? or exempt_cats.include?(result.race.category.name))
+       return non_members
+     else
+       other_results_in_place = Result.find(:all, :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
+       other_results_in_place.each { |orip|
+          unless orip.person.nil?
+            if not orip.person.member?(result.date)
+             #might as well blank out this result while we're here, saves some future work
+             result.members_only_place = ''
+             result.update_attribute('members_only_place', result.members_only_place)
+             non_members=true #could also use other_results_in_place.size if needed for calculations
+            end
+          end
+       }
+       return non_members #still false if no others found, or all are members, or could not be determined (non-person)
+     end
+   end
   
   def create_result_before(result_id)
     results.sort!

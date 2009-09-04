@@ -15,6 +15,7 @@ class RacingAssociation
   attr_accessor :default_sanctioned_by
   attr_accessor :usac_results_format
   attr_accessor :show_events_sanctioning_org_event_id
+  attr_accessor :exempt_team_categories
   
   def initialize
     @cx_memberships = false
