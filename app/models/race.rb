@@ -190,18 +190,17 @@ class Race < ActiveRecord::Base
     event_notification_was_enabled = event.notification_enabled?
     event.disable_notification!
     begin
-      last_members_only_place = 1 #count up from one
-      last_result_place = 1 #assuming first result starting at one (better than sorting results twice?)
+      last_members_only_place = 0 #count up from zero
+      last_result_place = 0 #assuming first result starting at zero+one (better than sorting results twice?)
       results.sort.each do |result|
-        # Slight optimization. Most of the time, no point in saving a result that hasn't changed
         place_before = result.members_only_place.to_i
         result.members_only_place = ''
         if result.place.to_i > 0         
           if ((result.person.nil? or (result.person and result.person.member?(result.date))) and not non_members_on_team(result))
-            last_members_only_place+=1 if (last_result_place!=result.place.to_i) #only increment if we have moved onto a new place
+            last_members_only_place+=1 if (result.place.to_i!=last_members_only_place && result.place.to_i!=last_result_place) #only increment if we have moved onto a new place
             result.members_only_place = last_members_only_place.to_s
           end
-          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place
+          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place # Slight optimization. Most of the time, no point in saving a result that hasn't changed
           last_result_place = result.place.to_i #store to know when switching to new placement (team result feature)
         end
       end
