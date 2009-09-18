@@ -182,7 +182,7 @@ class Competition < Event
     true
   end
   
-  # Use the recorded place with all finishers? Or only place with just Assoication member finishers?
+  # Use the recorded place with all finishers? Or only place with just Association member finishers?
   def place_members_only?
     false
   end
