@@ -1,4 +1,4 @@
-require "test_helper"
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class RiderRankingsTest < ActiveSupport::TestCase
   def test_new
@@ -138,7 +138,8 @@ class RiderRankingsTest < ActiveSupport::TestCase
       :person => people(:tonkin),
       :team => teams(:kona)
     })
-    
+    #need to fill in any gaps in results to prevent place_members_only errors
+    fill_in_missing_results      
     original_results_count = Result.count
     assert_equal(0, RiderRankings.count, "RiderRankings before calculate!")
     RiderRankings.calculate!(2004)

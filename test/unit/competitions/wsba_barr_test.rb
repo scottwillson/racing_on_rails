@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../../test_helper'
 
 class Competitions::WsbaBarrTest < ActiveSupport::TestCase
 
@@ -51,7 +51,7 @@ class Competitions::WsbaBarrTest < ActiveSupport::TestCase
     result = sr_men_race.results.create!(:place => "10", :person => people(:tonkin))
     result.place = 10
     result.save!
-    
+    fill_in_missing_results
     WsbaBarr.calculate!(2004)
 
     wsba = WsbaBarr.find_for_year(2004)

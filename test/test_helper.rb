@@ -5,7 +5,7 @@ require "action_view/test_case"
 require "authlogic/test_case"
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = true
+  self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
   fixtures :all
 
@@ -127,7 +127,7 @@ class ActiveSupport::TestCase
   
   def print_all_results
     Result.find(:all, :order => :person_id).each {|result|
-      p "#{result.place} #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
+      p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end
   
@@ -135,5 +135,20 @@ class ActiveSupport::TestCase
     Category.find(:all, :order => 'parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
     }
+  end
+  
+  #helps with place_members_only calculation, so there are no gaps
+  def fill_in_missing_results
+    Result.all.group_by(&:race).each do |race, results|
+       all_results=results.collect(&:place) #get an array of just places for this race       
+       results.sort!{|a,b| a.place.to_i <=> b.place.to_i} #important to get last place in last
+       need_results=[]
+       (1..results.last.place.to_i).reverse_each {|res|
+         unless all_results.include?(res.to_s)
+          #we need a result, there is a gap here
+           race.results.create!(:place => res)
+         end         
+       }
+    end
   end
 end
