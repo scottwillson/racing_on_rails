@@ -2,9 +2,9 @@ require "test_helper"
 require "tempfile"
 require "spreadsheet"
 
-# FIXME DNF's not handled correctly
+# FIXME DNF's not handled correctly.
 
-# Test fixtures are in OBRA (not USAC) format. Force USAC format in ResultsFile to test logic shared by both formats.
+# Most Test fixtures are in OBRA (not USAC) format. Force USAC format in ResultsFile to test logic shared by both formats.
 class ResultsFileTest < ActiveSupport::TestCase
   def test_race?
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"), SingleDayEvent.new, :usac_results_format => false)
@@ -21,8 +21,21 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert(!results_file.race?(results_file.rows[11]), 'New race')
     assert(!results_file.race?(results_file.rows[12]), 'New race')
     assert(!results_file.race?(results_file.rows[13]), 'New race')
-  end
   
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls"), SingleDayEvent.new, :usac_results_format => true)
+    book = Spreadsheet.open("#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls")
+    results_file.create_rows(book.worksheet(0))
+
+    assert(results_file.race?(results_file.rows[0]), 'New race')
+    assert(!results_file.race?(results_file.rows[1]), 'New race')
+    assert(!results_file.race?(results_file.rows[2]), 'New race')
+    assert(!results_file.race?(results_file.rows[3]), 'New race')
+    assert(!results_file.race?(results_file.rows[4]), 'New race')
+    assert(results_file.race?(results_file.rows[5]), "New race: #{results_file.rows[5]}")
+    assert(!results_file.race?(results_file.rows[6]), "New race: #{results_file.rows[6]}")
+    assert(!results_file.race?(results_file.rows[7]), 'New race')
+  end
+
   def test_new
     file = Tempfile.new("test_results.txt")
     ResultsFile.new(file, SingleDayEvent.new, :usac_results_format => false)
@@ -36,6 +49,12 @@ class ResultsFileTest < ActiveSupport::TestCase
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"), SingleDayEvent.new, :usac_results_format => false)
     column_indexes = results_file.create_columns(spreadsheet_row)
     assert_equal({ :place => 0, :number => 1, :license => 2, :last_name => 3, :first_name => 4, :team_name => 5, :points => 6  }, column_indexes, "column_indexes")
+
+    book = Spreadsheet.open("#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls")
+    spreadsheet_row = book.worksheet(0).row(0)
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls"), SingleDayEvent.new, :usac_results_format => true)
+    column_indexes = results_file.create_columns(spreadsheet_row)
+    assert_equal({ :category_name => 5, :gender => 6, :category_class => 7, :age => 8, :license => 9, :last_name => 10, :first_name => 11, :number => 12, :team_name => 13, :time => 14, :place => 15 }, column_indexes, "column_indexes")
   end
   
   def test_import_excel
@@ -81,7 +100,7 @@ class ResultsFileTest < ActiveSupport::TestCase
        end
      end
   end
-  
+
   def test_import_time_trial_people_with_same_name
     bruce_109 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
     association = number_issuers(:association)
@@ -547,11 +566,63 @@ class ResultsFileTest < ActiveSupport::TestCase
     return races
   end
   
+  def test_import_excel_usac_format
+     event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2008, 5, 11))
+     source_path = "#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls"
+     results_file = ResultsFile.new(File.new(source_path), event, :usac_results_format => true)
+     assert_equal(source_path, results_file.source.path, "file path")
+     results_file.import
+
+     expected_races = get_expected_races_usac_format
+     assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+     expected_races.each_with_index do |expected_race, index|
+       actual_race = event.races[index]
+       assert_not_nil(actual_race, "race #{index}")
+       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
+       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
+       assert_equal(expected_race.name, actual_race.name, "Name")
+       actual_race.results.sort.each_with_index do |result, result_index|
+         expected_result = expected_race.results[result_index]
+         assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
+         if result.license && result.license.empty? #may have found person by license
+           assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
+           assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
+         end
+         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
+       end
+     end
+  end
+
+  def get_expected_races_usac_format
+    races = []
+
+    race = Race.new(:category => Category.new(:name => "Master A Men"))
+    race.results << Result.new(:place => "1", :first_name => "David", :last_name => "Landstrom", :number =>"20", :license =>"20280", :team_name =>"Flathead Cycling", :time => "0:37:32")
+    race.results << Result.new(:place => "2", :first_name => "Richard", :last_name => "Graves", :number =>"223", :license =>"13949", :team_name =>"Flathead Cycling", :time => "0:40:36")
+    race.results << Result.new(:place => "3", :first_name => "David", :last_name => "West", :number =>"201", :license =>"63105", :team_name =>"Echelon Cycling", :time => "0:40:49")
+    race.results << Result.new(:place => "DQ", :first_name => "Robert", :last_name => "Ray", :number =>"237", :license =>"68315", :team_name =>"Great Divide")
+    race.results << Result.new(:place => "DNS", :first_name => "Chad", :last_name => "Elkin", :number =>"264", :license =>"279240", :team_name =>"Great Falls Bicycle Club")
+    races << race
+
+    race = Race.new(:category => Category.new(:name => "Junior Men 10-18"))
+    race.results << Result.new(:place => "1", :first_name => "Phil", :last_name => "Rayner", :number =>"335", :team_name =>"Headwinds", :time => "0:38:33")
+    race.results << Result.new(:place => "2", :first_name => "Thomas", :last_name => "Greason", :number =>"212", :license =>"46661", :team_name =>"Bozeman Masters Velo", :time => "0:38:36")
+    race.results << Result.new(:place => "DNF", :first_name => "Maxwell", :last_name => "Yanof", :number =>"468", :license =>"236853", :team_name =>"Bozeman Masters Velo")
+    races << race
+
+    return races
+  end
+
   def test_race_notes
     event = SingleDayEvent.create!
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt.xls"), event, :usac_results_format => false)
     results_file.import
     assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
+
+    event = SingleDayEvent.create!
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt_usac.xls"), event, :usac_results_format => true)
+    results_file.import
+    assert_equal('USCF, 2008, 563, 2012-05-11, Stage Race', event.races(true).first.notes, 'Race notes')
   end
   
   def build_result(race, place, first_name = nil, last_name = nil, team_name = nil)
