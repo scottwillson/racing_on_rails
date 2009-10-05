@@ -719,14 +719,19 @@ class ResultTest < ActiveSupport::TestCase
     new_tonkin = Person.create!(:name => "Erik Tonkin")
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should have 2 Tonkins")
     assert_equal(2, Person.find_all_by_name_or_alias("Erik", "Tonkin").size, "Should have 2 Tonkins")
-    
+
     tonkin = people(:tonkin)
     tonkin.results.clear
-    
+    # Force magic updated_at column to past time
+    Person.connection.execute("update people set updated_at = '2009-10-05 16:18:22' where id=#{tonkin.id}")
+
+    new_tonkin.city = "Brussels"
+    new_tonkin.save!
+
     kings_valley_2004 = events(:kings_valley_2004)
     results = races(:kings_valley_pro_1_2_2004).results
     result = results.create!(:place => 1, :first_name => 'Erik', :last_name => 'Tonkin')
-    
+
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
   end
