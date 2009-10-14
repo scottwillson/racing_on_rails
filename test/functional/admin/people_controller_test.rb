@@ -647,10 +647,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                  "number_year"=>"2008"
     )
     assert_not_nil(assigns(:person), "@person")
-    assert(!assigns(:person).errors.empty?, "Should have errors")
-    assert(assigns(:person).errors.on(:member_from), "Should have errors on 'member_from'")
-    assert(flash.empty?, "Expected flash.empty?")
-    assert_response :success
+    assert(assigns(:person).errors.empty?, "Should have errors")
+    assert(!assigns(:person).errors.on(:member_from), "Should have errors on 'member_from'")
+    assert_redirected_to edit_admin_person_path(assigns(:person))
   end
 
   def test_update_new_number

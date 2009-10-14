@@ -149,11 +149,15 @@ class Admin::PeopleController < ApplicationController
       @person.update_attributes(params[:person])
       if params[:number]
         for number_id in params[:number].keys
-          number = RaceNumber.find(number_id)
-          number_params = params[:number][number_id]
-          if number.value != params[:number][number_id][:value]
-            number_params[:updated_by] = current_person.name
-            RaceNumber.update(number_id, number_params)
+          begin
+            number = RaceNumber.find(number_id)
+            number_params = params[:number][number_id]
+            if number.value != params[:number][number_id][:value]
+              number_params[:updated_by] = current_person.name
+              RaceNumber.update(number_id, number_params)
+            end
+          rescue Exception => e
+            logger.warn("#{e} updating RaceNumber #{number_id}")
           end
         end
       end

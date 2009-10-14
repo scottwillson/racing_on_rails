@@ -1,8 +1,9 @@
 class Admin::MemberMailer < ActionMailer::Base
 
-  def email(members = [])
+  def email(members = [], sent_on = Time.now)
     recipients members
     body ""
+    @sent_on    = sent_on
   end
   
   def self.email_all(subject, from, body)
