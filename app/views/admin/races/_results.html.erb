@@ -7,4 +7,4 @@
   </tr>
   <%= render :partial => "result", :collection => race.results.sort %>
   <%= render :partial => "result", :collection => [race.results.build] %>
-<% end -%>    
+<% end unless race.new_record? -%>

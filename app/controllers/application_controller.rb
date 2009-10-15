@@ -10,9 +10,15 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person
 
+  before_filter :toggle_tabs
+
   include SslRequirement
  
-   def self.expire_cache
+  def toggle_tabs
+    @show_tabs = false
+  end
+
+  def self.expire_cache
     begin
       FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "bar"))
       FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "cat4_womens_race_series"))

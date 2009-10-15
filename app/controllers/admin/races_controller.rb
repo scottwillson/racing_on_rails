@@ -1,6 +1,22 @@
 class Admin::RacesController < Admin::AdminController  
   before_filter :require_administrator
   layout "admin/application"
+  
+  def new
+    @event = Event.find params[:event_id]
+    @race = @event.races.build
+    render :edit
+  end
+  
+  def create
+    @event = Event.find params[:race][:event_id]
+    @race = @event.races.build params[:race]
+    if @race.save
+      redirect_to edit_admin_race_path(@race)
+    else
+      render :edit
+    end
+  end
 
   def edit
     @race = Race.find(params[:id])
