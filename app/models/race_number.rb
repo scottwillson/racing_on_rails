@@ -103,8 +103,8 @@ class RaceNumber < ActiveRecord::Base
   def unique_number 
     _discipline = Discipline.find(self[:discipline_id])
     if RaceNumber.rental?(self[:value], _discipline)
-      errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
-      person.errors.add('value', "#{value} is a rental numbers. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      errors.add('value', "#{value} is a rental number. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      person.errors.add('value', "#{value} is a rental number. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
       return false 
     end
     
