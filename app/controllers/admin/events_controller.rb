@@ -1,5 +1,5 @@
 # Show Schedule, add and edit Events, edit Results for Events
-class Admin::EventsController < Admin::AdminController  
+class Admin::EventsController < Admin::AdminController 
   before_filter :require_administrator
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
