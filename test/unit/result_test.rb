@@ -934,4 +934,26 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.build(:first_name => 'Ryan', :last_name => 'Weaver')
     assert_same_elements([people(:weaver)], result.find_people(event).to_a, "blank license shouldn't match anything")
   end
+  
+  def test_competition_result
+    result = races(:banana_belt_pro_1_2).results.create!(:category => categories(:senior_men))
+    assert !result.competition_result?, "SingleDayEvent competition_result?"
+
+    result = Ironman.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => categories(:senior_men))
+    assert result.competition_result?, "Ironman competition_result?"
+
+    result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => categories(:senior_men))
+    assert result.competition_result?, "TeamBar competition_result?"
+  end
+
+  def test_team_competition_result
+    result = races(:banana_belt_pro_1_2).results.create!(:category => categories(:senior_men))
+    assert !result.team_competition_result?, "SingleDayEvent team_competition_result?"
+
+    result = Ironman.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => categories(:senior_men))
+    assert !result.team_competition_result?, "Ironman team_competition_result?"
+
+    result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => categories(:senior_men))
+    assert result.team_competition_result?, "TeamBar competition_result?"
+  end
 end

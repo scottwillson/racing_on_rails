@@ -324,4 +324,28 @@ class ResultsControllerTest < ActionController::TestCase
     get :index
     assert_redirected_to "http://test.host/results"
   end
+  
+  def test_return_404_for_missing_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:event, :event_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_person
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person, :person_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_team_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => events(:banana_belt_1).to_param, :team_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_team_event_bad_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => teams(:vanilla).to_param) }
+  end
+  
+  def test_return_404_for_missing_person_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_person_event_bad_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) }
+  end
 end

@@ -1,3 +1,4 @@
+# What appear to be duplicate finds are actually existence tests
 class ResultsController < ApplicationController
   caches_page :index, :event, :person_event, :team_event, :person, :team
   
@@ -38,6 +39,7 @@ class ResultsController < ApplicationController
   
   def person_event
     @event = Event.find(params[:event_id])
+    @person = Person.find(params[:person_id])
     @results = Result.find(
       :all,
       :include => [ :team, :person, :category, 
@@ -48,10 +50,11 @@ class ResultsController < ApplicationController
                   ],
       :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
     )
-    @person = Person.find(params[:person_id])
   end
 
   def team_event
+    @team = Team.find(params[:team_id])
+    @event = Event.find(params[:event_id])
     @result = Result.find(
       :first,
       :include => [ :team, :person, :category, 

@@ -233,8 +233,13 @@ class Result < ActiveRecord::Base
   end
 
   # TODO refactor to something like act_as_competitive or create CompetitionResult
+  # TODO Is this method triggering additional DB calls?
   def competition_result?
     event.is_a?(Competition)
+  end
+
+  def team_competition_result?
+    event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
   end
 
   # Not blank, DNF, DNS, DQ.

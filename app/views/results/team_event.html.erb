@@ -1,6 +1,6 @@
-<% @page_title = "Results: #{@result.team.name}: #{@result.event.full_name}" %>
+<% @page_title = "Results: #{@team.name}: #{@event.full_name}" %>
 
-<h2><%= link_to(@result.team.name, team_results_path(@result.team)) %></h2>
+<h2><%= link_to(@team.name, team_results_path(@team)) %></h2>
 
 <% table :caption => %Q{#{@result.place.to_i.ordinalize} &mdash;
                         #{link_to(@result.race.full_name, event_results_path(@result.event, :anchor => "race_#{@result.race.id}"))}
@@ -21,7 +21,7 @@
         <%= score.event_name %>
       <% elsif score.source_result.event.is_a?(Competition) -%>
         <%= link_to(score.source_result.race.full_name, 
-                event_team_results_path(score.source_result.event, @result.team, 
+                event_team_results_path(score.source_result.event, @team, 
                 :anchor => "race_#{score.source_result.race.id}")) %>
       <% else -%>
         <%= link_to(score.source_result.event.full_name, 
@@ -49,6 +49,6 @@
 
 <%# TODO Add year param %>
 <p class= "centered">
-  See all results for <%= link_to(@result.team.name, team_results_path(@result.team), :class => 'obvious') %> or the
+  See all results for <%= link_to(@team.name, team_results_path(@team), :class => 'obvious') %> or the
   <%= link_to(@result.event.full_name, event_results_path(@result.event), :class => 'obvious') %>.
 </p>
