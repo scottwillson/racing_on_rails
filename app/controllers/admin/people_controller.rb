@@ -126,7 +126,10 @@ class Admin::PeopleController < Admin::AdminController
         redirect_to(edit_admin_person_path(@person))
       end
     else
-      render(:action => :edit)
+      @year = current_date.year
+      @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @years = (2005..(@year + 1)).to_a.reverse
+      render :edit
     end
   end
   

@@ -477,9 +477,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   end
   
   def test_new
-    opts = {:controller => "admin/people", :action => "new"}
-    assert_routing("/admin/people/new", opts)
-  
     get(:new)
     assert_response(:success)
     assert_template("admin/people/edit")
@@ -601,6 +598,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     knowlsons.each do |knowlson|
       assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
     end
+  end
+  
+  def test_create_with_empty_password_and_no_numbers
+    post :create,  :person => { :login => "", :password_confirmation => "", :password => "", :team_name => "", 
+                                :first_name => "Henry", :last_name => "David", :license => "" }, :number_issuer_id => [ { "1" => nil } ]
+    assert_not_nil assigns(:person), "@person"
+    assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages}"
+    assert_redirected_to edit_admin_person_path(assigns(:person))
   end
     
   def test_update
