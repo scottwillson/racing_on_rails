@@ -1,4 +1,6 @@
 class TeamsController < ApplicationController
+  caches_page :index, :show
+
   def index
     if SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
       @teams = Team.find(:all)
