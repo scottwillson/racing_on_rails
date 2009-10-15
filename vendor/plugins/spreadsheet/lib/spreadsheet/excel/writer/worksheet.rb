@@ -48,8 +48,9 @@ class Worksheet
       date = DateTime.new date.year, date.month, date.day,
                           date.hour, date.min, date.sec
     end
-    value = date - @workbook.date_base
-    if date > LEAP_ERROR
+    base = @workbook.date_base
+    value = date - base
+    if LEAP_ERROR > base
       value += 1
     end
     value
@@ -86,9 +87,19 @@ class Worksheet
     unicode_string @worksheet.name
   end
   def need_number? cell
-    (cell.is_a?(Numeric) && cell.abs > 0x1fffffff) \
-      || (cell.is_a?(Float) \
-          && !/^[\000\001]\000{3}/.match([cell * 100].pack(EIGHT_BYTE_DOUBLE)))
+    if cell.is_a?(Numeric) && cell.abs > 0x1fffffff
+      true
+    elsif cell.is_a?(Float)
+      higher = cell * 100
+      if higher == higher.to_i
+        need_number? higher.to_i
+      else
+        test1, test2 = [cell * 100].pack(EIGHT_BYTE_DOUBLE).unpack('V2')
+        test1 > 0 || need_number?(test2)
+      end
+    else
+      false
+    end
   end
   def row_blocks
     # All cells in an Excel document are divided into blocks of 32 consecutive
@@ -501,15 +512,17 @@ class Worksheet
 
     ].pack('V2')
     tail = []
+    ## call internal to get the correct internal encoding in Ruby 1.9
+    nullstr = internal "\000"
     unless link == link.url
-      desc = internal(link).dup << "\000\000"
+      desc = internal(link).dup << nullstr
       tail.push [desc.size / 2].pack('V'), desc
     end
     if link.target_frame
-      frme = internal(link.target_frame).dup << "\000\000"
+      frme = internal(link.target_frame).dup << nullstr
       tail.push [frme.size / 2].pack('V'), frme
     end
-    url = internal(link.url).dup << "\000\000"
+    url = internal(link.url).dup << nullstr
     tail.push [
       # 6.53.2 Hyperlink containing a URL (Uniform Resource Locator)
       # These data fields occur for links which are not local files or files
@@ -526,7 +539,7 @@ class Worksheet
                 # string.
     ].pack('H32V'), url
     if link.fragment
-      frag = internal(link.fragment).dup << "\000\000"
+      frag = internal(link.fragment).dup << nullstr
       tail.push [frag.size / 2].pack('V'), frag
     end
     write_op opcode(:hlink), cell_range, guid, options, *tail
@@ -691,9 +704,9 @@ class Worksheet
     end
     opts |= 0x00000100
     height = if height == ROW_HEIGHT
-               height * TWIPS
+               (height * TWIPS).to_i | 0x8000
              else
-               ( height * TWIPS ) | 0x8000
+               height * TWIPS
              end
     # TODO: Row spacing
     data = [

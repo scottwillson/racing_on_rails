@@ -487,7 +487,7 @@ class Reader
         size, = work.unpack "x#{pos}V"
         pos += 4
         data = work[pos, size].chomp "\000\000"
-        link.url = client data, 'UTF-16LE'
+        link.url = client data
         pos += size
       else
         # 6.53.3 Hyperlink to a Local File
@@ -532,7 +532,7 @@ class Reader
         total, size = work.unpack "x#{pos}V2"
         pos += 10
         if total > 0
-          link.url = client work[pos, size], 'UTF-16LE'
+          link.url = client work[pos, size]
           pos += size
         end
       end
@@ -771,9 +771,9 @@ class Reader
         flag, _ = work.unpack 'v'
         @workbook.datemode = flag
         if flag == 1
-          @workbook.date_base = Date.new 1904, 1, 1
+          @workbook.date_base = DateTime.new 1904, 1, 1
         else
-          @workbook.date_base = Date.new 1899, 12, 31
+          @workbook.date_base = DateTime.new 1899, 12, 31
         end
       when :continue   # ○  CONTINUE ➜ 6.22
         case previous_op
@@ -1096,9 +1096,18 @@ class Reader
     worksheet.set_row_address index, attrs
   end
   def setup io
+    ## Reading from StringIO fails without forced encoding
+    if io.respond_to?(:string) && (str = io.string) \
+      && str.respond_to?(:force_encoding)
+      str.force_encoding 'ASCII-8BIT'
+    end
+    ##
+    io.rewind
     @ole = Ole::Storage.open io
     @workbook = Workbook.new io, {}
-    @book = @ole.file.open("Book") rescue @ole.file.open("Workbook")
+    %w{Book Workbook BOOK WORKBOOK book workbook}.any? do |name|
+      @book = @ole.file.open(name) rescue false
+    end
     @data = @book.read
     read_bof
     @workbook.ole = @book

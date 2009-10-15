@@ -3,10 +3,10 @@ require 'spreadsheet/row'
 
 module Spreadsheet
   module Excel
-  WINDOWS =  RUBY_PLATFORM["mswin"]
 ##
 # Excel-specific Row methods
 class Row < Spreadsheet::Row
+  WINDOWS =  RUBY_PLATFORM["mswin"]
   ##
   # The Excel date calculation erroneously assumes that 1900 is a leap-year. All
   # Dates after 28.2.1900 are off by one.
@@ -46,18 +46,16 @@ class Row < Spreadsheet::Row
   private
   def _date data # :nodoc:
     return data if data.is_a?(Date)
-    date = @worksheet.date_base + data.to_i
-    if @worksheet.datemode == 0 &&  date > LEAP_ERROR
-      date -= 1
-    end
-    date
+    datetime = _datetime data
+    Date.new datetime.year, datetime.month, datetime.day
   end
   def _datetime data # :nodoc:
     return data if data.is_a?(DateTime)
-    date = _date data
+    base = @worksheet.date_base
+    date = base + data.to_f
     hour = (data % 1) * 24
     min  = (hour % 1) * 60
-    sec  = ((min  % 1) * 60).round
+    sec  = ((min % 1) * 60).round
     min = min.floor
     hour = hour.floor
     if sec > 59
@@ -69,6 +67,9 @@ class Row < Spreadsheet::Row
     end
     if hour > 23
       date += 1
+    end
+    if LEAP_ERROR > base
+      date -= 1
     end
     DateTime.new(date.year, date.month, date.day, hour, min, sec)
   end
