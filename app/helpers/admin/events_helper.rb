@@ -11,7 +11,7 @@ module Admin::EventsHelper
     if upcoming_events.disciplines.size > 1
       caption = discipline.name.upcase
     else
-      caption = nil
+      caption = "&nbsp;"
     end
     render :partial => 'events/discipline_upcoming', :locals => { :discipline => discipline, :dates => upcoming_events.dates, :caption => caption }
   end
