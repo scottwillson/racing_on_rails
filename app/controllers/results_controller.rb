@@ -1,23 +1,7 @@
 class ResultsController < ApplicationController
-  caches_page :index, :show
+  caches_page :index, :event, :person_event, :team_event, :person, :team
   
   def index
-    if params[:event_id].present?
-      if params[:person_id].present?
-        return person_event
-      elsif params[:team_id].present?
-        return team_event
-      else
-        return event
-      end
-    else
-      if params[:person_id].present?
-        return person
-      elsif params[:team_id].present?
-        return team
-      end      
-    end
-
     # TODO Create helper method to return Range of first and last of year
     @year = params['year'].to_i
     @year = Date.today.year if @year == 0
@@ -27,10 +11,8 @@ class ResultsController < ApplicationController
   end
   
   def event
-    @event = Event.find(
-      params[:event_id],
-      :include => [ :races => { :results => { :person, :team } } ]
-    )
+    @event = Event.find(params[:event_id])
+    
     case @event
     when AgeGradedBar, Bar, TeamBar
       return redirect_to(:controller => 'bar', :action => 'show', :year => @event.year, :discipline => @event.discipline)
@@ -46,68 +28,73 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    render "event"
+    @event = Event.find(
+      params[:event_id],
+      :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :historical_names } ] } ] ]
+    )
+    
+    render :event
   end
   
   def person_event
-    @event = Event.find(
-      params[:event_id],
-      :include => [:races => {:results => {:person, :team}} ]
-    )
+    @event = Event.find(params[:event_id])
     @results = Result.find(
       :all,
-      :include => [:person, {:race => :event }],
+      :include => [ :team, :person, :category, 
+                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
+                  { :scores => [ 
+                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, {:team => :historical_names} ] }, 
+                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
+                  ],
       :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
     )
     @person = Person.find(params[:person_id])
-    render "person_event"
   end
 
   def team_event
-    @event = Event.find(
-      params[:event_id],
-      :include => [:races => {:results => {:person, :team}} ]
-    )
-    @results = Result.find(
-      :all,
-      :include => [{:race => :event }, :team],
+    @result = Result.find(
+      :first,
+      :include => [ :team, :person, :category, 
+                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
+                  { :scores => [ 
+                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, [ :person, { :team => :historical_names }] ] }, 
+                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
+                  ],
       :conditions => ['events.id = ? and teams.id = ?', params[:event_id], params[:team_id]]
     )
-    
-    result_ids = @results.collect {|result| result.id}
-    @scores = Score.find(
-      :all,
-      :include => [{:source_result => [:person, {:race => [:category, :event ]}]}],
-      :conditions => ['competition_result_id in (?)', result_ids]
-    )
-    @team = Team.find(params[:team_id])
-    render "team_event"
   end
   
   def person
     @person = Person.find(params[:person_id])
+    
     results = Result.find(
       :all,
-      :include => [:team, :person, :scores, :category, { :race => :event, :race => :category }],
+      :include => [ :team, :person, :category, 
+                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
+                  { :scores => [ 
+                    { :source_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } }, 
+                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
+                  ],
       :conditions => ['people.id = ?', @person.id]
     )
+    
     @competition_results, @event_results = results.partition do |result|
       result.event.is_a?(Competition)
     end
-    render "person"
   end
   
   def team
     @team = Team.find(params[:team_id])
     @results = Result.find(
       :all,
-      :include => [:team, :person, :category, {:race => :event}],
+      :include => [ :team, :person, :category, 
+                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }
+                  ],
       :conditions => ['teams.id = ?', params[:team_id]]
     )
     @results.reject! do |result|
       result.race.event.is_a?(Competition)
     end
-    render "team"
   end
   
   def deprecated_team

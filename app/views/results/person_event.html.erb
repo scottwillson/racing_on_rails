@@ -6,7 +6,7 @@
 <%- for result in @results.sort { |x, y| y.date <=> x.date } -%>
 <% table :caption => %Q{#{result.place.to_i.ordinalize} &mdash;
                         #{link_to(result.race.full_name, event_results_path(@event, :anchor => "race_#{result.race.id}"))}
-} do %></th>
+} do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>
@@ -48,6 +48,6 @@
   <% if @event.is_a?(Ironman) %>
     <%= link_to(@event.name, {:controller => 'ironman', :action => 'index', :year => @event.date.year}, :class => 'obvious') %>.
   <% else %>
-    <%= link_to(@event.name, event_results_path(@event), :class => 'obvious') %>.
+    <%= link_to(@event.full_name, event_results_path(@event), :class => 'obvious') %>.
   <% end %>
 </p>

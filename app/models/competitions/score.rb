@@ -23,6 +23,10 @@ class Score < ActiveRecord::Base
     self.competition_result.race.discipline
   end
   
+  def source_event_date
+    date || source_result.event.date
+  end
+
   # Compare by points
   def <=>(other)
     other.points <=> points

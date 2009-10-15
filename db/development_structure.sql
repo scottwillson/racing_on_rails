@@ -501,6 +501,9 @@ create table `scores` (
   `points` float default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
+  `date` date default null,
+  `description` varchar(255) default null,
+  `event_name` varchar(255) default null,
   primary key (`id`),
   key `scores_competition_result_id_index` (`competition_result_id`),
   key `scores_source_result_id_index` (`source_result_id`),
@@ -669,6 +672,8 @@ insert into schema_migrations (version) values ('20090708162118');
 insert into schema_migrations (version) values ('20090730022816');
 
 insert into schema_migrations (version) values ('20091009021956');
+
+insert into schema_migrations (version) values ('20091011235631');
 
 insert into schema_migrations (version) values ('20091015052458');
 

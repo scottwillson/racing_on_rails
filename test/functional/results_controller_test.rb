@@ -3,7 +3,7 @@ require "test_helper"
 class ResultsControllerTest < ActionController::TestCase
   def test_event
     banana_belt_1 = events(:banana_belt_1)
-    get(:index, :event_id => banana_belt_1.to_param)
+    get(:event, :event_id => banana_belt_1.to_param)
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -12,35 +12,41 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_event_rider_rankings
     rider_rankings = RiderRankings.create!
-    get(:index, :event_id => rider_rankings.to_param)
+    get(:event, :event_id => rider_rankings.to_param)
     assert_redirected_to(rider_rankings_path(rider_rankings.date.year))
   end
   
   def test_event_bar
     bar = Bar.create!
-    get(:index, :event_id => bar.to_param)
+    get(:event, :event_id => bar.to_param)
     assert_redirected_to(:controller => 'bar', :action => "show", :year => bar.date.year, :discipline => bar.discipline)
   end
   
   def test_event_overall_bar
     bar = OverallBar.create!
-    get(:index, :event_id => bar.to_param)
+    get(:event, :event_id => bar.to_param)
     assert_redirected_to(:controller => 'bar', :action => "show", :year => bar.date.year)
   end
   
   def test_redirect_to_ironman
     event = Ironman.create!
-    get :index, :event_id => event.to_param
+    get :event, :event_id => event.to_param
     assert_redirected_to ironman_path(:year => event.year)
   end
   
-  def test_event_with_discipline
+  def test_cross_crusade_team_competition
+    event = CrossCrusadeTeamCompetition.create!(:parent => Series.create!)
+    get :event, :event_id => event.to_param
+    assert_template "results/event"
+  end
+  
+  def test_big_names
     banana_belt_1 = events(:banana_belt_1)
     big_team = Team.create!(:name => "T" * 60)
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     banana_belt_1.races.first.results.create!(:place => 20, :person => big_person, :team => big_team, :number => '')
   
-    get(:index, {:year => "2004", :discipline => "road", :event_id => banana_belt_1.to_param})
+    get :event, :event_id => banana_belt_1.to_param
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -49,7 +55,7 @@ class ResultsControllerTest < ActionController::TestCase
   
   def test_event_tt
     jack_frost = events(:jack_frost)
-    get(:index, {:year => "2004", :discipline => "road", :event_id => jack_frost.to_param})
+    get :event, :event_id => jack_frost.to_param
     assert_response(:success)
     assert_template("results/event")
     assert_not_nil(assigns["event"], "Should assign event")
@@ -186,7 +192,7 @@ class ResultsControllerTest < ActionController::TestCase
     competition_result = competition.races.create!(:category => categories(:senior_men)).results.create!
     Score.create!(:competition_result => competition_result, :source_result => results(:weaver_banana_belt), :points => 1)
     
-    get(:index, :person_id => weaver.to_param)
+    get :person, :person_id => weaver.to_param
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -198,7 +204,7 @@ class ResultsControllerTest < ActionController::TestCase
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     events(:banana_belt_1).races.first.results.create!(:person => big_person, :team => big_team, :place => 2, :number => '99')
 
-    get(:index, :person_id => big_person.to_param)
+    get :person, :person_id => big_person.to_param
     assert_response(:success)
     assert_template("results/person")
     assert_not_nil(assigns["person"], "Should assign person")
@@ -220,7 +226,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(result, 'result')
     assert_not_nil(result.person, 'result.person')
 
-    get(:index, :event_id => bar.to_param, :person_id => result.person.to_param)
+    get(:person_event, :event_id => bar.to_param, :person_id => result.person.to_param)
     assert_response(:success)
     assert_template("results/person_event")
     assert_not_nil(assigns["results"], "Should assign results")
@@ -238,24 +244,24 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(result.person, 'result.person')
     
     OverallBar.calculate!(2004)
-    competition = OverallBar.find(:last)
-    result = competition.races.detect {|r| r.name == 'Senior Women'}.results.first
+    overall_bar = OverallBar.find(:last)
+    result = overall_bar.races.detect {|r| r.name == 'Senior Women'}.results.first
     assert_not_nil(result, 'result')
 
-    get(:index, :event_id => competition.to_param, :person_id => result.person.to_param)
+    get(:person_event, :event_id => overall_bar.to_param, :person_id => result.person.to_param)
     assert_response(:success)
     assert_template("results/person_event")
     assert_not_nil(assigns["results"], "Should assign results")
     assert_equal(1, assigns["results"].size, "Should assign results")
     assert_equal(assigns["person"], result.person, "Should assign person")
-    assert_equal(assigns["event"], bar, "Should assign event")
+    assert_equal(assigns["event"], overall_bar, "Should assign event")
   end
   
   def test_empty_competition
     bar = Bar.create!
     person = Person.create!(:name => 'JP Morgen')
 
-    get(:index, :event_id => bar.to_param, :person_id => person.to_param)
+    get(:person_event, :event_id => bar.to_param, :person_id => person.to_param)
     assert_response(:success)
     assert_template("results/person_event")
     assert_equal(assigns["results"], [], "Should assign results")
@@ -270,13 +276,11 @@ class ResultsControllerTest < ActionController::TestCase
     result = bar.races.first.results.first
     assert_not_nil(result, 'result')
 
-    get(:index, :event_id => bar.to_param, :team_id => result.team.to_param)
+    get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param)
 
     assert_response(:success)
     assert_template("results/team_event")
-    assert_equal([result], assigns["results"], "Should assign results")
-    assert_equal(result.team, assigns["team"], "Should assign team")
-    assert_equal(bar, assigns["event"], "Should assign event")
+    assert_equal(result, assigns["result"], "Should assign result")
   end
 
   def test_show_person_result
@@ -307,7 +311,7 @@ class ResultsControllerTest < ActionController::TestCase
     race.result_columns << "laps"
     race.save!
     
-    get(:index, :event_id => event.to_param)
+    get(:event, :event_id => event.to_param)
     assert_response(:success)
     
     assert(@response.body["Bonus"], "Should format points_bonus correctly")

@@ -47,7 +47,7 @@
   <%- end -%>
 
   <%- if !@event.notes.blank? -%>
-  <p><%= @event.notes -%></p>
+  <p class="notes"><%= @event.notes -%></p>
   <%- end -%>
 
   <% unless @event.races_with_results.empty? -%>
