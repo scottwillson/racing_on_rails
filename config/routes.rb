@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :categories do |category|
       category.resources :children, :controller => :categories
     end
-    admin.resources :events, :has_one => :person,
+    admin.resources :events, :has_one => :person, :has_many => :races,
         :collection => { :upload_schedule => :post }, 
         :member => { :upload => :post, 
                      :set_parent => :get, 
@@ -79,17 +79,19 @@ ActionController::Routing::Routes.draw do |map|
     events.resources :people do |people|
       people.resources :results
     end
-
+    
     events.resources :teams do |team|
       team.resources :results
     end
   end
-
+  
   map.rider_rankings "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
   map.rider_rankings_root "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
 
   map.ironman "/ironman/:year", :controller => "ironman"
 
+  map.mailing_lists "/mailing_lists", :controller => "mailing_lists", :action => "index"
+  
   map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
   map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
   map.oregon_cup "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
@@ -112,11 +114,11 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
   map.connect "/people/:person_id", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
   map.resources :people, 
-                :member => { :card => :get, :account => :get },
-                :collection => { :account => :get, :new_login => :get, :create_login => :post },
+                :member => { :card => :get, :account => :get, :membership => :get },
+                :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
                 :has_many => :results do |person|
   end
-
+  
   # Deprecated URLs
   map.connect "/results/:year/:discipline/:event_id", 
               :controller => "results", 
@@ -150,11 +152,14 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :single_day_events, :as => :events
   map.resources :subscriptions, :collection => { :subscribed => :get }
 
+  map.connect "/teams/:team_id/results", :controller => "results", :action => "team"
+  map.connect "/teams/:team_id", :controller => "results", :action => "team"
   map.resources :teams, :has_many => :results
 
   map.root :controller => "home"
   map.track "/track", :controller => "track"
   map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
+  
 
   map.resource :person_session
   map.unauthorized "/unauthorized", :controller => "person_sessions", :action => "unauthorized"
