@@ -197,7 +197,7 @@ class Admin::PeopleController < Admin::AdminController
     @years = (2005..(Date.today.year + 1)).to_a.reverse
     @year = params[:year] || Date.today.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-    render(:template => 'admin/people/edit')
+    render :edit
   end
   
   # Preview contents of new members file from event registration service website like SignMeUp or Active.com.
