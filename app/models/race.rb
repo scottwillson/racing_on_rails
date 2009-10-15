@@ -162,13 +162,17 @@ class Race < ActiveRecord::Base
   
   # Sort results by points, assign places
   # Save! each result after place is set
-  def place_results_by_points(break_ties = true)
+  def place_results_by_points(break_ties = true, ascending = true)
     for result in results
       result.calculate_points
     end
 
     results.sort! do |x, y| 
       x.compare_by_points(y)
+    end
+
+    if !ascending
+      results.reverse!
     end
 
     previous_result = nil

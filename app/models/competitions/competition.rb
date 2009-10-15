@@ -113,7 +113,7 @@ class Competition < Event
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
-      race.place_results_by_points(break_ties?)
+      race.place_results_by_points(break_ties?, ascending_points?)
     end
     
     # Explicity mark as updated to make it "dirty"
@@ -182,7 +182,11 @@ class Competition < Event
     true
   end
   
-  # Use the recorded place with all finishers? Or only place with just Association member finishers?
+  def ascending_points?
+    true
+  end
+  
+  # Use the recorded place with all finishers? Or only place with just Assoication member finishers?
   def place_members_only?
     false
   end
@@ -198,6 +202,10 @@ class Competition < Event
   
   def first_result_for_person(source_result, competition_result)
     competition_result.nil? || source_result.person != competition_result.person
+  end
+
+  def first_result_for_team(source_result, competition_result)
+    competition_result.nil? || source_result.team != competition_result.team
   end
   
   # Apply points from point_schedule, and split across team
