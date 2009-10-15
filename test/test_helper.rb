@@ -5,13 +5,18 @@ require "action_view/test_case"
 require "authlogic/test_case"
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = false
+  self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
   fixtures :all
 
   def teardown
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
+  end
+
+  def login_as(person_fixture_symbol)
+    activate_authlogic
+    PersonSession.create people(person_fixture_symbol).reload
   end
 
   # Assert two Enumerable objects contain exactly same object in any order
@@ -115,6 +120,10 @@ class ActiveSupport::TestCase
     PersonSession.create(people(:administrator))
   end
   
+  def use_ssl
+    @request.env['HTTPS'] = 'on'
+  end
+
   def destroy_person_session
     session["person_credentials"] = nil
   end

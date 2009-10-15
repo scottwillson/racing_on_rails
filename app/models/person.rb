@@ -20,7 +20,7 @@ class Person < ActiveRecord::Base
     config.validate_email_field(false)
   end
 
-  before_validation :find_associated_records
+  before_validation :find_associated_records, :make_login_blanks_nil
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
@@ -92,7 +92,9 @@ class Person < ActiveRecord::Base
   end
   
   def Person.find_all_by_name_like(name, limit = 100)
-    name_like = "%#{name}%"
+    return [] if name.blank?
+    
+    name_like = "%#{name.strip}%"
     Person.find(
       :all, 
       :conditions => ["trim(concat(first_name, ' ', last_name)) like ? or aliases.name like ?", name_like, name_like],
@@ -128,7 +130,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.full_name(first_name, last_name)
-    unless first_name.blank? or last_name.blank?
+    unless first_name.blank? || last_name.blank?
       return "#{first_name} #{last_name}"
     end
     unless first_name.blank?
@@ -221,6 +223,17 @@ class Person < ActiveRecord::Base
       (lic_date && (Date.parse(lic_date) > Date.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
+    end
+  end
+  
+  # Find Person with most recent. If no results, select the most recently updated Person.
+  def Person.select_by_recent_activity(people)
+    results = people.to_a.inject([]) { |results, person| results + person.results }
+    if results.empty?
+      people.to_a.sort_by(&:updated_at).last
+    else
+      results = results.sort_by(&:date)
+      results.last.person
     end
   end
   
@@ -325,7 +338,7 @@ class Person < ActiveRecord::Base
   end
 
   def team_name=(value)
-    if value.blank? or value == 'N/A'
+    if value.blank? || value == 'N/A'
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
@@ -535,6 +548,13 @@ class Person < ActiveRecord::Base
   def xc_number=(value)
     add_number(value, Discipline[:mountain_bike])
   end
+
+  # Handle updates to people without logins
+  def make_login_blanks_nil
+    self.login = nil if login.blank?
+    self.password = nil if password.blank?
+    self.password_confirmation = nil if password_confirmation.blank?
+  end
   
   def administrator?
     roles.any? { |role| role.name == "Administrator" }
@@ -563,10 +583,10 @@ class Person < ActiveRecord::Base
   
   # Is Person a current member of the bike racing association?
   def member=(value)
-    if value and !member?
+    if value && !member?
       self.member_from = Date.today if self.member_from.nil? or self.member_from >= Date.today
       self.member_to = Date.new(Date.today.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(Date.today.year, 12, 31))
-    elsif !value and member?
+    elsif !value && member?
       if self.member_from.year == Date.today.year
         self.member_from = nil
         self.member_to = nil
@@ -764,6 +784,11 @@ class Person < ActiveRecord::Base
         event.disable_notification! if event
         event
       end.compact || []
+      if login.blank? && other_person.login.present?
+        self.login = other_person.login
+        self.crypted_password = other_person.crypted_password
+        other_person.update_attribute :login, nil
+      end
       save!
       aliases << other_person.aliases
       events << other_person.events
@@ -802,7 +827,7 @@ class Person < ActiveRecord::Base
   
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
-    Alias.destroy_all(['name = ?', name])
+    Alias.destroy_all(['name = ?', name]) if first_name_changed? || last_name_changed?
   end
   
   def add_alias_for_old_name

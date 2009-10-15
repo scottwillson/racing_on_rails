@@ -1,4 +1,4 @@
-class Admin::ArticleCategoriesController < ApplicationController
+class Admin::ArticleCategoriesController < Admin::AdminController
 
   layout 'admin/application'
   before_filter :require_administrator

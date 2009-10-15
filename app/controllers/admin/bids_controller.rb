@@ -1,4 +1,4 @@
-class Admin::BidsController < ApplicationController
+class Admin::BidsController < Admin::AdminController
   include ActionView::Helpers::TextHelper
 
   before_filter :require_administrator

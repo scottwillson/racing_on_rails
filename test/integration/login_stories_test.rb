@@ -3,21 +3,77 @@ require "test_helper"
 class LoginStoriesTest < ActionController::IntegrationTest
   setup :activate_authlogic
   
-  def test_redirect_from_old_paths
-    get "/account/login"
-    assert_redirected_to "/person_session/new"
-
-    get "/account/logout"
-    assert_redirected_to "/person_session/new"
-
-    post "/account/authenticate"
-    assert_redirected_to "/person_session/new"
+  # logged-in?, person_id?, same person?, admin?
+  def test_member_account
+    get "/account"
+    assert_redirected_to "http://www.example.com/person_session/new"
+    follow_redirect!
+    https!
+    login :person_session => { :login => 'bob.jones', :password => 'secret' }
+    assert_redirected_to "https://www.example.com/account"
+    follow_redirect!
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
 
     get "/account"
-    assert_redirected_to "/person_session/new"
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+    get "/people/#{people(:member).id}/account"
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+    get "/people/account"
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+    another_member = Person.create!.id
+    get "/people/#{another_member}/account"
+    assert_redirected_to "https://www.example.com/people/#{another_member}/edit"
+    follow_redirect!
+    assert_redirected_to unauthorized_path
+
+    get "/logout"
+    get "/account"
+    login :person_session => { :login => 'admin@example.com', :password => 'secret' }
+    assert_redirected_to "https://www.example.com/account"
+    follow_redirect!
+    assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+
+    get "/people/#{people(:member).id}/account"
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+    get "/people/account"
+    assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+
+    get "/people/#{another_member}/account"
+    assert_redirected_to "https://www.example.com/people/#{another_member}/edit"
+
+    get "/people/#{people(:administrator).id}/account"
+    assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+  end
+  
+  def test_redirect_from_old_paths
+    get "/account/login"
+    assert_redirected_to "https://www.example.com/account/login"
+    follow_redirect!
+
+    get "/account/logout"
+    assert_redirected_to "https://www.example.com/person_session/new"
+    follow_redirect!
+  end
+  
+  def test_login
+    get "/login"
+    assert_redirected_to "https://www.example.com/login"
+    
+    https!
+    get "/login"
+
+    login :person_session => { :login => 'bob.jones', :password => 'secret' }
+    assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+    get "/login"
   end
   
   def test_valid_admin_login
+    https!
     get admin_people_path
     assert_response :redirect
     follow_redirect!
@@ -37,16 +93,12 @@ class LoginStoriesTest < ActionController::IntegrationTest
   
   def test_valid_member_login
     go_to_login
-    
     login :person_session => { :login => 'bob.jones', :password => 'secret' }
-    
-    assert_response :redirect
-    follow_redirect!
-    assert_response :success
-    assert_template "home/index.html.erb"
+    assert_redirected_to edit_person_path(people(:member))
   end
   
   def test_should_fail_cookie_login
+    https!
     PersonSession.create(people(:administrator))
     cookies["person_credentials"] = "invalid_auth_token"
     get '/admin/events'
@@ -56,6 +108,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
   def test_blank_login_should_not_work
     Person.create!
     
+    https!
     post person_session_path, "person_session" => { "email" => "", "password" => "" }, "login" => "Login"
     assert_response :success
     assert_template "person_sessions/new"
@@ -67,10 +120,16 @@ class LoginStoriesTest < ActionController::IntegrationTest
     assert_template "person_sessions/new"
     assert_equal "You must be an administrator to access this page", flash[:notice]
   end
+  
+  def test_unauthorized
+    get "/unauthorized"
+    assert_response :success
+  end
 
   private
   
   def go_to_login
+    https!
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"

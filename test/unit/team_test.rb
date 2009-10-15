@@ -21,7 +21,7 @@ class TeamTest < ActiveSupport::TestCase
     
     assert_not_nil(Team.find_by_name(team_to_merge.name), "#{team_to_merge.name} should be in DB")
     assert_equal(1, Result.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's results")
-    assert_equal(2, Person.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's people")
+    assert_equal(3, Person.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's people")
     assert_equal(1, Alias.find_all_by_team_id(team_to_merge.id).size, "Gentle Lovers's aliases")
     
     promoter_events = [ Event.create!(:team => team_to_keep), Event.create!(:team => team_to_merge) ]
@@ -30,7 +30,7 @@ class TeamTest < ActiveSupport::TestCase
     
     assert_not_nil(Team.find_by_name(team_to_keep.name), "#{team_to_keep.name} should be in DB")
     assert_equal(3, Result.find_all_by_team_id(team_to_keep.id).size, "Vanilla's results")
-    assert_equal(3, Person.find_all_by_team_id(team_to_keep.id).size, "Vanilla's people")
+    assert_equal(4, Person.find_all_by_team_id(team_to_keep.id).size, "Vanilla's people")
     aliases = Alias.find_all_by_team_id(team_to_keep.id)
     lovers_alias = aliases.detect{|a| a.name == 'Gentle Lovers'}
     assert_not_nil(lovers_alias, 'Vanilla should have Gentle Lovers alias')

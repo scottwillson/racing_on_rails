@@ -1,4 +1,4 @@
-class Admin::VelodromesController < ApplicationController
+class Admin::VelodromesController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
   

@@ -2,7 +2,7 @@ require "test_helper"
 
 # :stopdoc:
 class Admin::VelodromesControllerTest < ActionController::TestCase
-  setup :create_administrator_session
+  setup :create_administrator_session, :use_ssl
   
   def test_not_logged_in_index
     destroy_person_session

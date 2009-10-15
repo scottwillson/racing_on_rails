@@ -1,4 +1,4 @@
-class Admin::ResultsController < ApplicationController
+class Admin::ResultsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 

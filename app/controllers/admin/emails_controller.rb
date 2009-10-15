@@ -1,4 +1,4 @@
-class Admin::EmailsController < ApplicationController
+class Admin::EmailsController < Admin::AdminController
   before_filter :require_administrator
   layout 'admin/application'
 

@@ -1,4 +1,4 @@
-class Admin::Pages::VersionsController < ApplicationController
+class Admin::Pages::VersionsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 

@@ -1,6 +1,8 @@
 require "test_helper"
 
 class PasswordResetsControllerTest < ActionController::TestCase
+  setup :use_ssl
+  
   def test_forgot_password
     post :create, :email => "admin@example.com"
     assert_response :redirect

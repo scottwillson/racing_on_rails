@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Admin::PeopleControllerTest < ActionController::TestCase
-  setup :create_administrator_session
+  setup :create_administrator_session, :use_ssl
 
   def test_not_logged_in_index
     destroy_person_session
@@ -963,7 +963,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
-    assert_equal(10, assigns['people'].size, "People export size")
+    assert_equal(11, assigns['people'].size, "People export size")
   end
   
   def test_export_to_excel_with_date
@@ -974,7 +974,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
-    assert_equal(10, assigns['people'].size, "People export size")
+    assert_equal(11, assigns['people'].size, "People export size")
   end
 
   def test_export_members_only_to_excel

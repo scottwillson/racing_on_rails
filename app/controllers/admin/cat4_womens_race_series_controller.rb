@@ -1,4 +1,4 @@
-class Admin::Cat4WomensRaceSeriesController < ApplicationController
+class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
 
   before_filter :require_administrator
   layout 'admin/application'

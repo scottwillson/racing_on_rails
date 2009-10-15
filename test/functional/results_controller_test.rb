@@ -314,4 +314,10 @@ class ResultsControllerTest < ActionController::TestCase
     assert(@response.body["Penalty"], "Should format points_penalty correctly")
     assert(@response.body["Laps"], "Should format laps correctly")
   end
+  
+  def test_index_ssl
+    use_ssl
+    get :index
+    assert_redirected_to "http://test.host/results"
+  end
 end

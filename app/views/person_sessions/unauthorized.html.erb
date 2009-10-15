@@ -1,0 +1,9 @@
+Sorry, you're not allowed to look at that page.
+<%= "You are logged-in as #{current_person.login}." if current_person %>
+<%= "You are not logged-in." unless current_person %>
+
+<div class="column_grid_container top_margin centered">
+  <%= link_to('Public Homepage', "/") %><br/>
+  <%= link_to('Admin Pages', admin_events_path) if current_person && current_person.administrator? %><br/>
+  <%= link_to("Logout and try a different login", logout_path) if current_person %>
+</div>

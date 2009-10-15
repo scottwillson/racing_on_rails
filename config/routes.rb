@@ -21,12 +21,13 @@ ActionController::Routing::Routes.draw do |map|
     end
 
     admin.resources :people, :collection => { :cards => :get, 
+                                              :account => :get, 
                                               :duplicates => :get, 
                                               :mailing_labels => :get, 
                                               :no_mailing_labels => :get, 
                                               :no_cards => :get, 
                                               :preview_import => :get },
-                             :member => { :card => :get, :toggle_member => :post },
+                             :member => { :card => :get, :toggle_member => :post, :account => :get },
                              :has_many => :results
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
@@ -106,7 +107,13 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/posts/:mailing_list_name",                  :controller => "posts"
   map.resources :posts
 
-  map.resources :people, :has_many => :results
+  map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
+  map.connect "/people/:person_id", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
+  map.resources :people, 
+                :member => { :card => :get, :account => :get },
+                :collection => { :account => :get, :new_login => :get, :create_login => :post },
+                :has_many => :results do |person|
+  end
 
   # Deprecated URLs
   map.connect "/results/:year/:discipline/:event_id", 
@@ -148,7 +155,12 @@ ActionController::Routing::Routes.draw do |map|
   map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
 
   map.resource :person_session
-  map.connect "/account/*path", :controller => "account", :action => "index"
+  map.unauthorized "/unauthorized", :controller => "person_sessions", :action => "unauthorized"
+  map.logout "/logout", :controller => "person_sessions", :action => "destroy"
+  map.login "/login", :controller => "person_sessions", :action => "new"
+  map.connect "/account/logout", :controller => "person_sessions", :action => "destroy"
+  map.connect "/account/login", :controller => "person_sessions", :action => "new"
+  map.connect "/account", :controller => "people", :action => "account"
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}

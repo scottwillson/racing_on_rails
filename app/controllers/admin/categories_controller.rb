@@ -1,5 +1,5 @@
 # Manage Asssociation and BAR categories
-class Admin::CategoriesController < ApplicationController
+class Admin::CategoriesController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 

@@ -11,7 +11,7 @@
 # TODO Auto-refresh preview
 # TODO Change parent to child (requires fancier logic. For now, just move page to root first)
 # TODO publish-on dates
-class Admin::PagesController < ApplicationController
+class Admin::PagesController < Admin::AdminController
   before_filter :require_administrator, :except => [ :show ]
   in_place_edit_for :page, :title
   layout "admin/application"

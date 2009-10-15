@@ -1,6 +1,7 @@
 class PasswordResetsController < ApplicationController
   before_filter :load_person_using_perishable_token, :only => [:edit, :update]
-
+  ssl_required :create, :edit, :update, :new
+  
   def create
     @person = Person.find_by_email(params[:email])
     if @person

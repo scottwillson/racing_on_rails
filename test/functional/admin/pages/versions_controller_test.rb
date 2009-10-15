@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class Admin::Pages::VersionsControllerTest < ActionController::TestCase
-  setup :create_administrator_session
+  setup :create_administrator_session, :use_ssl
 
   test "Edit page version" do
     version = pages(:plain).versions.latest

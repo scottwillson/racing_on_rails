@@ -70,6 +70,7 @@ end
 
 RAILS_HOST  = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
+ActionMailer::Base.default_url_options[:host] = RAILS_HOST
 
 # Limit number of people, teams, etc. returned in search
 SEARCH_RESULTS_LIMIT          = 100 unless defined?(SEARCH_RESULTS_LIMIT)

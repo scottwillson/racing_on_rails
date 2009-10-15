@@ -1,0 +1,43 @@
+<h2>New Login</h2>
+
+<% form_for :person, :url => create_login_people_path do |f| -%>
+  <%= f.error_messages :message => nil, :header_message => nil, :object_name => nil %>
+  <div class="column_grid_container">
+    <div class="prepend-1 span-3 append-2 last">
+      <div class="help">
+        Most people use their email address as a login, but it's up to you
+      </div>
+
+      <div><%= f.labelled_text_field :login %></div>
+      <div><%= f.labelled_text_field :email %></div>
+      <div><%= f.labelled_password_field :password %></div>
+      <div><%= f.labelled_password_field :password_confirmation %></div>
+      <div><%= hidden_field_tag "return_to", @return_to %></div>
+      <hr class="space" />
+      
+      <div class="help">
+        Current or past <%= ASSOCIATION.short_name %> member? Enter your license number and 
+        name&mdash;we can link to your account. Your license number is on your 
+        <%= ASSOCIATION.short_name %> membership card, under the bar code.
+      </div>
+
+      <div><%= f.labelled_text_field :name %></div>
+      <div><%= f.labelled_text_field :license, "#{ASSOCIATION.short_name} License #", :autocomplete => "off" %></div>
+    </div>
+
+    <div class="prepend-1 span-3 append-2 page_buttons right last">
+      <%= submit_tag "Save", :id => "save" %>
+    </div>
+  
+    <div class="prepend-1 span-4 append-1 top_margin">
+      <hr class="top_margin" />
+      <%= ASSOCIATION.short_name %> respects your privacy and security.
+      Your personal information is encrypted and backed-up.
+      We never store your credit card number.
+      If it's OK with you, we will mail and email you about bike racing.
+      <%= link_to "Privacy Policy", "/privacy_policy", :class => "obvious" %>.
+    </div>
+  </div>
+<% end -%>
+
+<%= focus "person_login" -%>

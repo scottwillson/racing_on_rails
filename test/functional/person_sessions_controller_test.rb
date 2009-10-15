@@ -1,7 +1,7 @@
 require "test_helper"
 
 class PersonSessionsControllerTest < ActionController::TestCase
-  setup :activate_authlogic
+  setup :activate_authlogic, :use_ssl
 
   def test_login_page
     get :new
@@ -21,7 +21,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
     post :create, :person_session => { :login => "bob.jones", :password => "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages)
-    assert_redirected_to "/"
+    assert_redirected_to edit_person_path(people(:member))
     assert_not_nil session[:person_credentials], "Should have :person_credentials in session"
     assert_not_nil cookies["person_credentials"], "person_credentials cookie"
   end
@@ -63,5 +63,39 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert_nil(assigns["person_session"], "@person_session")
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"    
+  end
+  
+  def test_logout_no_ssl
+    @request.env['HTTPS'] = nil
+    PersonSession.create(people(:administrator))
+
+    delete :destroy
+    
+    assert_redirected_to "https://test.host/person_session"
+  end
+  
+  def test_show
+    @request.env['HTTPS'] = nil
+    get :show
+    assert_redirected_to new_person_session_url
+  end
+  
+  def test_show_and_return_to
+    @request.env['HTTPS'] = nil
+    get :show, :return_to => "/admin"
+    assert_redirected_to new_person_session_url
+  end
+  
+  def test_show_and_return_to_registration
+    @request.env['HTTPS'] = nil
+    get :show, :return_to => "/events/123/register"
+    assert_redirected_to new_person_session_url
+  end
+  
+  def test_show_loggedin
+    @request.env['HTTPS'] = nil
+    login_as :member
+    get :show
+    assert_response :success
   end
 end

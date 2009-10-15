@@ -1,4 +1,4 @@
-class Admin::TeamsController < ApplicationController
+class Admin::TeamsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 

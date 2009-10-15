@@ -1,9 +1,11 @@
 class PersonSessionsController < ApplicationController
-  before_filter :require_person, :only => :destroy
+  ssl_required :new, :create, :destroy
+
+  before_filter :require_person, :only => [ :destroy, :show ]
   
   def new
     if current_person
-      render :show
+      return render :show
     else
       @person_session = PersonSession.new
     end
@@ -17,15 +19,15 @@ class PersonSessionsController < ApplicationController
       if @person_session.person.administrator?
         redirect_back_or_default admin_home_url
       else
-        redirect_back_or_default root_url
+        redirect_back_or_default edit_person_path(@person_session.person)
       end
     else
-      render :action => :new
+      render :new
     end
   end
   
   def destroy
-    current_person_session.destroy
+    current_person_session.destroy if current_person_session
     redirect_back_or_default new_person_session_url
   end
 end

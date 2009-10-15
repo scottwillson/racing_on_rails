@@ -24,6 +24,8 @@ member:
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
   roles: member
+  member_from: <%= Date.today.year - 1 %>-01-01
+  member_to: <%= Date.today.year - 1 %>-12-31
 
 promoter:
   id: 3
@@ -61,6 +63,7 @@ matson:
   member_to: <%= Date.today.year %>-12-31
   gender: M
   email: mcfatson@gentlelovers.com
+  license: 576
 weaver:
   first_name: Ryan
   last_name: Weaver
@@ -86,4 +89,11 @@ alice:
 no_results:
   first_name: Non
   last_name: Results
-  
+past_member:
+  first_name: Kevin
+  last_name: Condron
+  team: gentle_lovers
+  member_from: 2000-01-01
+  member_to: <%= Date.today.year - 1 %>-12-31
+  email: kc@example.com
+  license: 576

@@ -1,0 +1,99 @@
+<% @page_title = "Persons: #{@person.name}" %>
+
+<%= error_messages_for :person %>
+
+<h2><%= @person.name %></h2>
+
+<div class="column_grid_container">
+<% form_for @person  do |f| -%>
+  <div class="span-3">
+    <% if @person.first_name.blank? -%>
+    <%= f.labelled_text_field :first_name %>
+    <% else -%>
+    <%= f.labelled_text :first_name %>
+    <% end -%>
+
+    <% if @person.last_name.blank? -%>
+    <%= f.labelled_text_field :last_name %>
+    <% else -%>
+    <%= f.labelled_text :last_name %>
+    <% end -%>
+
+    <%= f.labelled_text_field :team_name %>
+  </div>
+  <div class="span-3 last">
+    <%= f.label :date_of_birth, "Date of Birth" %>
+    <%= date_select 'person', 'date_of_birth', 
+        :order => [:month, :day, :year], 
+        :start_year => 1900, :end_year => Date.today.year, 
+        :include_blank => true %>
+    <br/>
+
+    <%= f.labelled_text(:racing_age,  "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %>
+    <%= f.labelled_text :cyclocross_racing_age,  @person.cyclocross_racing_age %>
+
+    <%= f.label :gender %>
+    <%= f.select(:gender, ['', 'F', 'M']) %><br/>
+  </div>
+
+  <div class="span-3">
+    <%= f.labelled_text_field :email %>
+    <%= f.labelled_text_field :home_phone %>
+    <%= f.labelled_text_field :work_phone %>
+    <%= f.labelled_text_field :cell_fax %>
+    <%= f.labelled_text_field :emergency_contact %>
+    <%= f.labelled_text_field :emergency_contact_phone %>
+    <%= f.labelled_check_box :wants_mail, "It's OK to send me mail" %>
+    <%= f.labelled_check_box :wants_email, "It's OK to email me" %>
+  </div>
+  <div class="span-3 last">
+    <%= f.labelled_text_field :street %>
+    <%= f.label :city, "City, State ZIP" %>
+    <%= f.text_field :city, :class => "city" %> <%= f.text_field :state, :class => "state" %> <%= f.text_field :zip, :class => "zip" %>
+    <%= f.labelled_text_field :occupation %>
+
+    <h3>Interests</h3>
+    <%= f.labelled_check_box :volunteer_interest, "Volunteer" %>
+    <%= f.labelled_check_box :official_interest, "Officiating" %>
+    <%= f.labelled_check_box :race_promotion_interest, "Race promotion" %>
+    <%= f.labelled_check_box :team_interest, "Team" %>
+  </div>
+
+  <hr class="space" />
+
+  <div class="span-3">
+    <%= f.labelled_text :member_from, @person.member_from %>
+    <%= f.labelled_text :member_to, @person.member_to %><br/>
+  
+    <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
+    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Date.today -%>
+    <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
+    <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>  
+  </div>
+
+  <div class="span-3 last">
+    <%= f.labelled_text_field :login, nil, :autocomplete => "off" %>
+    <%= f.label :password %>
+    <%= f.password_field :password, :autocomplete => "off" %>    
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, :autocomplete => "off" %>
+  </div>
+
+  <hr class="space" />
+
+  <div class="page_buttons span-6 last">
+    <div class="updatedon span-2">
+      <span class="created_at">
+        <% if @person.created_at %>Created <%= time_ago_in_words(@person.created_at, true) + " ago" %><% end %>
+        <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name) %><% end %>
+      </span>
+      <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
+      <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
+    </div>
+    <div class="right span-4 last">
+      <%= link_to "Results", person_results_path(@person) %>
+      <%= submit_tag "Save", :id => "save" %>
+    </div>
+  </div>
+<% end -%>
+</div>

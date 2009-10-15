@@ -1,5 +1,5 @@
 # Just redirect to People
-class Admin::RacersController < ApplicationController
+class Admin::RacersController < Admin::AdminController
   before_filter :require_administrator
   
   def index

@@ -1,5 +1,5 @@
 # Add, delete, and edit Person information. Also merge 
-class Admin::PeopleController < ApplicationController
+class Admin::PeopleController < Admin::AdminController
   before_filter :require_administrator, :remember_event
   layout 'admin/application', :except => [:card, :cards, :mailing_labels]
   exempt_from_layout 'xls.erb', 'ppl.erb'

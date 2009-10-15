@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Admin::EmailsControllerTest < ActionController::TestCase
-  setup :create_administrator_session
+  setup :create_administrator_session, :use_ssl
 
   def test_new
     get(:new)

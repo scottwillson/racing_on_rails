@@ -10,7 +10,9 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person
 
-  def self.expire_cache
+  include SslRequirement
+ 
+   def self.expire_cache
     begin
       FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "bar"))
       FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "cat4_womens_race_series"))
@@ -34,6 +36,9 @@ class ApplicationController < ActionController::Base
     
     true
   end
+
+
+  protected
 
   def expire_cache
     if perform_caching
@@ -76,6 +81,16 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def assign_person
+    @person = Person.find(params[:id])
+  end
+
+  def require_same_person_or_administrator
+    unless current_person.administrator? || (@person && current_person == @person)
+      redirect_to unauthorized_path
+    end
+  end
+
   def current_person_session
     return @current_person_session if defined?(@current_person_session)
     @current_person_session = PersonSession.find
@@ -89,7 +104,7 @@ class ApplicationController < ActionController::Base
   def require_person
     unless current_person
       store_location
-      flash[:notice] = "You must be logged in to access this page"
+      flash[:notice] = "Please login to your #{ASSOCIATION.short_name} account"
       redirect_to new_person_session_url
       return false
     end
@@ -111,5 +126,17 @@ class ApplicationController < ActionController::Base
   def redirect_back_or_default(default)
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
+  end
+
+  # Returns true if the current action is supposed to run as SSL.
+  # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
+  def ssl_required?
+    self.class.read_inheritable_attribute(:ssl_required_actions) &&
+    self.class.read_inheritable_attribute(:ssl_required_actions).include?(action_name.to_sym)
+  end
+  
+  def ssl_allowed?
+    self.class.read_inheritable_attribute(:ssl_allowed_actions) &&
+    self.class.read_inheritable_attribute(:ssl_allowed_actions).include?(action_name.to_sym)
   end
 end
