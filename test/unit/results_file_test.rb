@@ -238,10 +238,7 @@ class ResultsFileTest < ActiveSupport::TestCase
         assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-        if result.person and !RaceNumber.rental?(result.number, Discipline[event.discipline])
-          assert_equal(expected_result.number, result.person.road_number, "Road number for #{result.person.name}")
-          assert(result.person.member?, "member? for race #{index} result #{result_index}: #{result.person.name} #{result.number}")
-        end
+        assert_equal(expected_result.number, result.number, "Result number for race #{index} result #{result_index}")
         if result.person and RaceNumber.rental?(result.number, Discipline[event.discipline])
           assert_equal(nil, result.person.road_number, "Road number")
         end

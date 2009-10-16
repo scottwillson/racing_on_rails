@@ -73,6 +73,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(!result_from_db.new_record?, "result_from_db.new_record")
     assert(!result.team.new_record?, "team.new_record")
     assert(!person_from_db.new_record?, "person_from_db.new_record")
+    assert_nil person_from_db.road_number, "Should not create racing association number from result"
   end
 
   def test_new_with_nested_attributes
@@ -457,8 +458,7 @@ class ResultTest < ActiveSupport::TestCase
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     assert_nil(result.person(true).road_number(true), 'Current road number')
     road_number_2004 = result.person.race_numbers.detect{|number| number.year == 2004}
-    assert_not_nil(road_number_2004.value, '2004 road number')
-    assert_equal('300', road_number_2004.value, '2004 road number')
+    assert_nil road_number_2004, "Should not create official race number from result"
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
 
@@ -467,9 +467,7 @@ class ResultTest < ActiveSupport::TestCase
     result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
     road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
-    assert_not_nil(road_number, 'Current road number')
-    assert_equal('200', road_number.value, 'road number')
-    assert_equal(Date.today.year, road_number.year, 'road number year')
+    assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
     assert(result.person.member?, "Person should be member")

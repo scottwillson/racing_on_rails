@@ -172,11 +172,12 @@ class Result < ActiveRecord::Base
   end
 
   # Set +person#number+ to +number+ if this isn't a rental number
+  # FIXME optimize default number issuer business
   def update_person_number
     discipline = Discipline[event.discipline]
-    if person && !number.blank? && !RaceNumber.rental?(number, discipline)
+    default_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    if person && !event.number_issuer.nil? && event.number_issuer != default_number_issuer && !number.blank? && !RaceNumber.rental?(number, discipline)
       person.updated_by = self.updated_by
-      event.number_issuer unless event.number_issuer
       person.add_number(number, discipline, event.number_issuer, event.date.year)
     end
   end
