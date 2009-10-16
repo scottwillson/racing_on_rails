@@ -121,7 +121,7 @@ class ActiveSupport::TestCase
   end
   
   def use_ssl
-    @request.env['HTTPS'] = 'on'
+    (@request.env['HTTPS'] = 'on') if ASSOCIATION.ssl?
   end
 
   def destroy_person_session

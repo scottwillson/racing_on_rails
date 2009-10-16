@@ -81,7 +81,7 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
   end
   
   def test_admin_racers
-    https!
+    https! if ASSOCIATION.ssl?
     post person_session_path, :person_session => { :login => 'admin@example.com', :password => 'secret' }
     assert_response :redirect
     

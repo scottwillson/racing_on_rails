@@ -320,9 +320,11 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_ssl
-    use_ssl
-    get :index
-    assert_redirected_to "http://test.host/results"
+    if ASSOCIATION.ssl?
+      use_ssl
+      get :index
+      assert_redirected_to "http://test.host/results"
+    end
   end
   
   def test_return_404_for_missing_event

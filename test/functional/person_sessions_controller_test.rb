@@ -71,7 +71,11 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
     delete :destroy
     
-    assert_redirected_to "https://test.host/person_session"
+    if ASSOCIATION.ssl?
+      assert_redirected_to "https://test.host/person_session"
+    else
+      assert_redirected_to "http://test.host/person_session/new"
+    end
   end
   
   def test_show

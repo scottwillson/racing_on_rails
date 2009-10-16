@@ -16,6 +16,7 @@ class RacingAssociation
   attr_accessor :usac_results_format
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
+  attr_accessor :ssl
   
   def initialize
     @cx_memberships = false
@@ -30,6 +31,7 @@ class RacingAssociation
     @usac_region = "North West"
     @usac_results_format = false
     @show_events_sanctioning_org_event_id = false
+    @ssl = false
   end
   
   def bmx_numbers?
@@ -90,6 +92,10 @@ class RacingAssociation
 
   def show_events_sanctioning_org_event_id?
     @show_events_sanctioning_org_event_id
+  end
+  
+  def ssl?
+    @ssl
   end
 
   def to_s
