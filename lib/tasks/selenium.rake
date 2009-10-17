@@ -48,7 +48,7 @@ if defined?(Selenium)
           # up the pid, we'll reopen stdin and stdout instead
           # to get the same effect.
           [STDOUT,STDERR].each {|f| f.reopen '/dev/null', 'w' }
-          exec "./script/server -e test"
+          exec "./script/server -e selenium"
         end
       end
 

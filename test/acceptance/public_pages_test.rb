@@ -45,7 +45,10 @@ class PublicPagesTest < SeleniumTestCase
     assert_text "Ironman"
 
     open "/people"
-    assert_text "Molly"
+    assert_no_text "Molly"
+    
+    type "name", "Molly"
+    submit_and_wait "search_form"
 
     open "/rider_rankings"
     assert_text "No results for #{Date.today.year}"
