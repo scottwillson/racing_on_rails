@@ -741,6 +741,7 @@ class ResultTest < ActiveSupport::TestCase
     jt_2 = Person.create!(:name => "John Thompson")
     jt_2.race_numbers.create!(:value => "157", :discipline => Discipline[:cyclocross])
     
+    # Bad discipline name—should cause name to not match
     cx_race = SingleDayEvent.create!(:discipline => "cyclocross").races.create!(:category => categories(:senior_men))
     result = cx_race.results.create!(:place => 1, :first_name => 'John', :last_name => 'Thompson', :number => "157")
     assert_equal jt_2, result.person, "Should assign person based on correct discipline number"

@@ -143,6 +143,7 @@ class Result < ActiveRecord::Base
     # number
     if number.present? && (matches.size > 1 || (matches.empty? && first_name.blank? && last_name.blank?))
       race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
+      
       race_numbers.each do |race_number|
         if matches.include?(race_number.person)
           return [race_number.person]
