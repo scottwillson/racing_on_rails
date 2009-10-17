@@ -733,6 +733,18 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(2, Person.find_all_by_name("Erik Tonkin").size, "Should not create! new Tonkin")
     assert_equal(new_tonkin, result.person, "Should use most recently-updated person if can't decide otherwise")
   end
+  
+  def test_find_people_among_duplicates
+    Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
+    
+    jt_1 = Person.create!(:name => "John Thompson")
+    jt_2 = Person.create!(:name => "John Thompson")
+    jt_2.race_numbers.create!(:value => "157", :discipline => Discipline[:cyclocross])
+    
+    cx_race = SingleDayEvent.create!(:discipline => "cyclocross").races.create!(:category => categories(:senior_men))
+    result = cx_race.results.create!(:place => 1, :first_name => 'John', :last_name => 'Thompson', :number => "157")
+    assert_equal jt_2, result.person, "Should assign person based on correct discipline number"
+  end
 
   def test_multiple_scores_for_same_race
     competition = Competition.create!(:name => 'KOM')
