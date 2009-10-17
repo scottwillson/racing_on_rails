@@ -157,6 +157,66 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal existing_person, assigns(:person), "Should match existing Person"
   end
   
+  def test_create_login_with_license_in_name_field
+    ActionMailer::Base.deliveries.clear
+    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "racer@example.com", 
+                      :password => "secret", 
+                      :password_confirmation => "secret", 
+                      :email => "racer@example.com", 
+                      :license => "Speed Racer",
+                      :name => ""
+                    },
+         :return_to => root_path
+ 
+    assert_response :success
+    assert assigns(:person).errors.on(:name), "Should have error on :name"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+  
+  def test_create_login_with_name_in_license_field
+    ActionMailer::Base.deliveries.clear
+    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "racer@example.com", 
+                      :password => "secret", 
+                      :password_confirmation => "secret", 
+                      :email => "racer@example.com", 
+                      :license => "",
+                      :name => "123"
+                    },
+         :return_to => root_path
+ 
+    assert_response :success
+    assert assigns(:person).errors.on(:license), "Should have error on :license"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+  
+  def test_create_login_with_reversed_fields
+    ActionMailer::Base.deliveries.clear
+    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "racer@example.com", 
+                      :password => "secret", 
+                      :password_confirmation => "secret", 
+                      :email => "racer@example.com", 
+                      :license => "Speed Racer",
+                      :name => "123"
+                    },
+         :return_to => root_path
+ 
+    assert_response :success
+    assert assigns(:person).errors.any?, "Should have errors"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+  
   def test_create_login_blank_license
     ActionMailer::Base.deliveries.clear
     people_count = Person.count
@@ -182,7 +242,6 @@ class PeopleControllerTest < ActionController::TestCase
          :person => { :login => "racer@example.com", 
                       :password => "secret", 
                       :password_confirmation => "secret", 
-                      :license => "111", 
                       :email => "" 
                     },
          :return_to => root_path
@@ -261,9 +320,7 @@ class PeopleControllerTest < ActionController::TestCase
            :login => "", 
            :email => "racer@example.com", 
            :password => "secret", 
-           :password_confirmation => "secret", 
-           :license => "111",
-           :name => ""
+           :password_confirmation => "secret"
           },
          :return_to => root_path
     assert_response :success
@@ -286,7 +343,7 @@ class PeopleControllerTest < ActionController::TestCase
            :password => "secret", 
            :password_confirmation => "secret", 
            :license => "",
-           :name => "Speed Racer"
+           :name => ""
           },
          :return_to => root_path
     assert_response :success

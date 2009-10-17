@@ -53,6 +53,18 @@ class PeopleController < ApplicationController
   def create_login
     @return_to = params[:return_to]
     
+    if (params[:person][:license].blank? && params[:person][:name].present?)
+      @person = Person.new(params[:person])
+      @person.errors.add :license, "can't be blank if name is present"
+      return render(:new_login)
+    end
+    
+    if (params[:person][:license].present? && params[:person][:name].blank?)
+      @person = Person.new(params[:person])
+      @person.errors.add :name, "can't be blank if license is present"
+      return render(:new_login)
+    end
+    
     if params[:person][:license].present? && params[:person][:name].present?
       @person = Person.find_all_by_name_like(params[:person][:name]).detect { |person|
         person.license == params[:person][:license].strip
