@@ -275,6 +275,7 @@ class ResultsControllerTest < ActionController::TestCase
     bar = TeamBar.find(:all).first
     result = bar.races.first.results.first
     assert_not_nil(result, 'result')
+    assert_not_nil result.team, "result.team" 
 
     get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param)
 
@@ -343,11 +344,29 @@ class ResultsControllerTest < ActionController::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => teams(:vanilla).to_param) }
   end
   
-  def test_return_404_for_missing_person_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) }
+  def test_return_404_for_missing_team_event_result
+    event = CrossCrusadeTeamCompetition.create!(:parent => SingleDayEvent.create!(:name => "Cross Crusade"))
+    assert_raise(ActiveRecord::RecordNotFound) {
+      get(:team_event, :event_id => event.to_param, :team_id => teams(:vanilla).to_param) 
+    }
+  end
+  
+  def test_missing_person_event_bad_person
+    assert_raise(ActiveRecord::RecordNotFound) { 
+      get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) 
+    }
   end
   
   def test_return_404_for_missing_person_event_bad_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) }
+    assert_raise(ActiveRecord::RecordNotFound) { 
+      get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) 
+    }
+  end
+  
+  def test_missing_person_event_result
+    Bar.create!
+    event = Bar.find_for_year
+    get(:person_event, :event_id => event.to_param, :person_id => Person.create!.to_param)
+    assert_response :success
   end
 end

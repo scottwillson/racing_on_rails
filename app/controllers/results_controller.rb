@@ -65,6 +65,7 @@ class ResultsController < ApplicationController
                   ],
       :conditions => ['events.id = ? and teams.id = ?', params[:event_id], params[:team_id]]
     )
+    raise ActiveRecord::RecordNotFound unless @result
   end
   
   def person
