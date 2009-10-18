@@ -90,18 +90,21 @@ class PeopleControllerTest < ActionController::TestCase
   end
   
   def test_account
+    use_ssl
     login_as :member
     get :account
     assert_redirected_to edit_person_path(people(:member))
   end
   
   def test_account_with_person
+    use_ssl
     login_as :member
     get :account, :id => people(:member).to_param
     assert_redirected_to edit_person_path(people(:member))
   end
   
   def test_account_with_another_person
+    use_ssl
     login_as :member
     another_person = Person.create!
     get :account, :id => another_person.to_param
@@ -109,11 +112,13 @@ class PeopleControllerTest < ActionController::TestCase
   end
   
   def test_account_not_logged_in
+    use_ssl
     get :account
     assert_redirected_to new_person_session_path
   end
   
   def test_account_with_person_not_logged_in
+    use_ssl
     get :account, :id => people(:member).to_param
     assert_redirected_to edit_person_path(people(:member))
   end

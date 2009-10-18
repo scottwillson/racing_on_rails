@@ -134,6 +134,7 @@ class ApplicationController < ActionController::Base
     session[:return_to] = nil
   end
 
+
   # Returns true if the current action is supposed to run as SSL.
   # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
   def ssl_required?
@@ -142,9 +143,8 @@ class ApplicationController < ActionController::Base
     self.class.read_inheritable_attribute(:ssl_required_actions).include?(action_name.to_sym)
   end
   
+  # Counter-intuitive. "True" means that we don't care if it's HTTPS or HTTP.
   def ssl_allowed?
-    ASSOCIATION.ssl? &&
-    self.class.read_inheritable_attribute(:ssl_allowed_actions) &&
-    self.class.read_inheritable_attribute(:ssl_allowed_actions).include?(action_name.to_sym)
+    !ASSOCIATION.ssl?
   end
 end

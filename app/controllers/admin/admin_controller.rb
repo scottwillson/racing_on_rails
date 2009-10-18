@@ -4,12 +4,14 @@ class Admin::AdminController < ApplicationController
   end
 
   protected
-    # Force SSL for admin controllers
-    def ssl_required?
-      ASSOCIATION.ssl?
-    end
-  
-    def ssl_allowed?
-      ASSOCIATION.ssl?
-    end
+
+  # Force SSL for admin controllers
+  def ssl_required?
+    ASSOCIATION.ssl?
+  end
+
+  # Counter-intuitive. "True" means that we don't care if it's HTTPS or HTTP.
+  def ssl_allowed?
+    !ASSOCIATION.ssl?
+  end
 end

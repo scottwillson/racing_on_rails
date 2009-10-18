@@ -3,8 +3,7 @@ class PeopleController < ApplicationController
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator, :only => [ :edit, :update, :card ]
 
-  ssl_required :edit, :update, :card, :new_login, :create_login
-  ssl_allowed :account
+  ssl_required :edit, :update, :card, :new_login, :create_login, :account
   
   def index
     @people = []

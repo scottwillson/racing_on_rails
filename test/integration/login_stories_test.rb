@@ -7,9 +7,10 @@ class LoginStoriesTest < ActionController::IntegrationTest
     # logged-in?, person_id?, same person?, admin?
     def test_member_account
       get "/account"
-      assert_redirected_to "http://www.example.com/person_session/new"
-      follow_redirect!
+      assert_redirected_to "https://www.example.com/account"
       https!
+      follow_redirect!
+      assert_redirected_to "https://www.example.com/person_session/new"
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
       assert_redirected_to "https://www.example.com/account"
       follow_redirect!
