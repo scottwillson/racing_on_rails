@@ -140,6 +140,7 @@ class EventsTest < SeleniumTestCase
     click "link=Kings Valley Road Race", :wait_for => :page
 
     click "destroy_races"
+    get_confirmation
 
     open "/admin/events?year=2003"
 

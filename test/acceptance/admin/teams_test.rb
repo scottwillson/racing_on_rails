@@ -21,13 +21,17 @@ class TeamsTest < SeleniumTestCase
     assert_element_text "warn", ""
     assert_element_text "notice", ""
 
-    assert_table "teams_table", 1, 0, "glob:Gentle Lovers*"
-    assert_table "teams_table", 2, 0, "glob:Team dFL*"
-    assert_table "teams_table", 3, 0, "glob:Vanilla*"
+    File.open("/Users/sw/Desktop/teams.png", "wb") { |f| f.write Base64.decode64(selenium.capture_entire_page_screenshot_to_string("")) }
 
-    assert_table "teams_table", 1, 1, "glob:Gentile Lovers*"
-    assert_table "teams_table", 2, 1, ""
-    assert_table "teams_table", 3, 1, "glob:Vanilla Bicycles*"
+    assert_table "teams_table", 1, 0, "glob:Chocolate*"
+    assert_table "teams_table", 2, 0, "glob:Gentle Lovers*"
+    assert_table "teams_table", 3, 0, "glob:Team dFL*"
+    assert_table "teams_table", 4, 0, "glob:Vanilla*"
+
+    assert_table "teams_table", 1, 1, ""
+    assert_table "teams_table", 2, 1, "glob:Gentile Lovers*"
+    assert_table "teams_table", 3, 1, ""
+    assert_table "teams_table", 4, 1, "glob:Vanilla Bicycles*"
 
     @dfl_id = Team.find_by_name("Team dFL").id
     @vanilla_id = Team.find_by_name("Vanilla").id
