@@ -15,7 +15,7 @@ class SeleniumTestCase < ActiveSupport::TestCase
   def setup
     browser = case RUBY_PLATFORM
     when /darwin/i
-      "*firefox"
+      "*safari"
     when /windows/i
       "*iexplorer"
     else

@@ -54,8 +54,8 @@ module Test
           begin
             if @@selenium.session_started?
               FileUtils.mkdir_p dir
-              File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
               File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
+              File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
             end
           rescue Exception => e
             p e
@@ -90,13 +90,12 @@ module Test
         def screenshot_path_for(fault)
           dir = "#{results_path}/#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}"
           path = "#{dir}/#{fault.test_name[/[^\(]+/]}.png"
-          [dir, path]
+          [ dir, path ]
         end
         
         def html_path_for(fault)
           "#{results_path}/#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}/#{fault.test_name[/[^\(]+/]}.html"
         end
-        
       end
     end
   end

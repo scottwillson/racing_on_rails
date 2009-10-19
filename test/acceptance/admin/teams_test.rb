@@ -21,8 +21,6 @@ class TeamsTest < SeleniumTestCase
     assert_element_text "warn", ""
     assert_element_text "notice", ""
 
-    File.open("/Users/sw/Desktop/teams.png", "wb") { |f| f.write Base64.decode64(selenium.capture_entire_page_screenshot_to_string("")) }
-
     assert_table "teams_table", 1, 0, "glob:Chocolate*"
     assert_table "teams_table", 2, 0, "glob:Gentle Lovers*"
     assert_table "teams_table", 3, 0, "glob:Team dFL*"
