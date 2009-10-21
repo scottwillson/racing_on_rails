@@ -33,27 +33,27 @@ task :cruise do
   Rake::Task["test:functionals"].invoke
   Rake::Task["test:integration"].invoke
   
-  # begin
-  #   Rake::Task["test:acceptance:browser"].invoke
-  #   # Clean up downloads
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/people*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
-  #   FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
-  # ensure
-  #   if RUBY_PLATFORM[/freebsd/]
-  #     # Rake task doesn't seem to quit Firefox correctly
-  #     fork do
-  #       exec("killall firefox-bin")
-  #     end
-  #   end
-  #   # Wait for Firefox to exit
-  #   Process.wait
-  # end
+  begin
+    Rake::Task["test:acceptance:browser"].invoke
+    # Clean up downloads
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/people*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
+    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
+  ensure
+    if RUBY_PLATFORM[/freebsd/]
+      # Rake task doesn't seem to quit Firefox correctly
+      fork do
+        exec("killall firefox-bin")
+      end
+    end
+    # Wait for Firefox to exit
+    Process.wait
+  end
 end
 
 namespace :db do
