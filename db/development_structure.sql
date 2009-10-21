@@ -106,8 +106,8 @@ create table `discipline_bar_categories` (
   unique key `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
   key `idx_category_id` (`category_id`),
   key `idx_discipline_id` (`discipline_id`),
-  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade,
-  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade
+  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade,
+  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `disciplines` (
@@ -398,9 +398,9 @@ create table `race_numbers` (
   key `discipline_id` (`discipline_id`),
   key `number_issuer_id` (`number_issuer_id`),
   key `race_numbers_value_index` (`value`),
-  constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade,
   constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
-  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`)
+  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
+  constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `races` (
@@ -425,8 +425,8 @@ create table `races` (
   key `idx_category_id` (`category_id`),
   key `index_races_on_event_id` (`event_id`),
   key `index_races_on_bar_points` (`bar_points`),
-  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade,
-  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`)
+  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `results` (
@@ -475,8 +475,8 @@ create table `results` (
   key `idx_team_id` (`team_id`),
   key `index_results_on_place` (`place`),
   key `index_results_on_members_only_place` (`members_only_place`),
-  constraint `results_person_id` foreign key (`person_id`) references `people` (`id`),
   constraint `results_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
+  constraint `results_person_id` foreign key (`person_id`) references `people` (`id`),
   constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade,
   constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;

@@ -1,7 +1,7 @@
 # Don't raise exceptions if Selenium isn't installed. This gives Rails a chance to install gems.
 begin
   # Vendored gems not on load path yet
-  require File.expand_path("#{Rails.root}/vendor/gems/selenium-client-1.2.16/lib/selenium/rake/tasks")
+  require File.expand_path("#{Rails.root}/vendor/gems/selenium-client-1.2.17/lib/selenium/rake/tasks")
 rescue MissingSourceFile => e
   puts "Could not load selenium-client for browser-based acceptance tests: #{e}"
 end
