@@ -18,7 +18,6 @@ class SeleniumTestCase < ActiveSupport::TestCase
       "*safari"
     when /windows/i
       "*iexplorer"
-    else
     when /freebsd/i
       "*firefox /usr/local/lib/firefox3/firefox-bin"
     else
