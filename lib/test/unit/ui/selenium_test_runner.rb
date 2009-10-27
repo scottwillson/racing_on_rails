@@ -15,7 +15,7 @@ module Test
         end
         
         def results_path
-          File.expand_path("#{RAILS_ROOT}/log")
+          File.expand_path("#{RAILS_ROOT}/log/acceptance")
         end
         
         def initialize(suite, output_level=NORMAL, io=STDOUT)
@@ -29,7 +29,7 @@ module Test
         
         def dump(fault)
           dir, path = screenshot_path_for(fault)
-          File.open("#{results_path}/acceptance.html", "a") do |f|
+          File.open("#{results_path}/index.html", "a") do |f|
             f.puts "<h2>#{fault.test_name}</h2>"
             f.puts "<h3>#{fault.message}</h3>"
             if fault.respond_to? :location
@@ -45,25 +45,33 @@ module Test
               end
               f.puts "</ol>"
             end
-            File.open("#{results_path}/acceptance.html", "a") do |f|
-              f.puts "<a href='../../#{path}'>Screenshot</a><br/>"
-              f.puts "<a href='../../#{html_path_for(fault)}'>HTML</a>"
+            File.open("#{results_path}/index.html", "a") do |f|
+              f.puts "<a href='./#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}/#{fault.test_name[/[^\(]+/]}.png'>Screenshot</a><br/>"
+              f.puts "<a href='./#{fault.test_name[/[^\(]+\(([^\)]+)/,1]}/#{fault.test_name[/[^\(]+/]}.html'>HTML</a>"
             end
           end
 
           begin
             if @@selenium.session_started?
               FileUtils.mkdir_p dir
+              case @@selenium.browser_string
+              when /firefox/, /chrome/
+                File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot(path, "s")) }
+              else
+                @@selenium.capture_screenshot(path)
+              end
               File.open(html_path_for(fault), "w") { |f| f.write @@selenium.get_html_source }
-              File.open(path, "wb") { |f| f.write Base64.decode64(@@selenium.capture_entire_page_screenshot_to_string("")) }
             end
           rescue Exception => e
             p e
+            e.backtrace.each do |line|
+              p line
+            end
           end
         end
         
         def test_started(name)
-          File.open("#{results_path}/acceptance.html", "a") do |f|
+          File.open("#{results_path}/index.html", "a") do |f|
             f.puts "<p>#{name}</p>"
           end
           super
@@ -72,7 +80,7 @@ module Test
         def started(result)
           FileUtils.rm_rf results_path
           FileUtils.mkdir_p results_path
-          File.open("#{results_path}/acceptance.html", "w") do |f|
+          File.open("#{results_path}/index.html", "w") do |f|
             f.puts "<html>"
             f.puts "<body>"
           end
@@ -80,7 +88,7 @@ module Test
         end
         
         def finished(elapsed_time)
-          File.open("#{results_path}/acceptance.html", "a") do |f|
+          File.open("#{results_path}/index.html", "a") do |f|
             f.puts "</body>"
             f.puts "</html>"
           end

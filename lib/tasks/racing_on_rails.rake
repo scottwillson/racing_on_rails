@@ -17,6 +17,8 @@ end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
+  ENV['CC_BUILD_ARTIFACTS'] ||= File.expand_path("#{RAILS_ROOT}/log/acceptance")
+
   if RUBY_PLATFORM[/freebsd/]
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
