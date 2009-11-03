@@ -4,7 +4,7 @@ class PasswordResetsController < ApplicationController
 
   def create
     @person = Person.find_by_email(params[:email])
-    if @person
+    if @person && params[:email].present?
       @person.deliver_password_reset_instructions!
       flash[:notice] = "Instructions to reset your password have been emailed to you. Please check your email."
       redirect_to new_person_session_path
@@ -17,6 +17,14 @@ class PasswordResetsController < ApplicationController
   def update
     @person.password = params[:person][:password]
     @person.password_confirmation = params[:person][:password_confirmation]
+    
+    if @person.password.blank? || @person.password_confirmation.blank?
+      flash[:warn] = "Please provide a new password and confirmation"
+      @person.errors.add(:password, "can't be blank") if @person.password.blank?
+      @person.errors.add(:password_confirmation, "can't be blank") if @person.password_confirmation.blank?
+      return render(:edit)
+    end
+    
     if @person.save
       @person_session = PersonSession.create(@person)
       flash[:notice] = "Password changed"

@@ -18,6 +18,8 @@ class Person < ActiveRecord::Base
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
 
     config.validate_email_field(false)
+    
+    config.disable_perishable_token_maintenance(true)
   end
 
   before_validation :find_associated_records, :make_login_blanks_nil
