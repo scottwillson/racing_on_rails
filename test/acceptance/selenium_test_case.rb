@@ -47,13 +47,12 @@ class SeleniumTestCase < ActiveSupport::TestCase
     super
   end
   
-  def login_as_admin
+  def login_as(person_symbol)
     open "/person_session/new"
-    type "person_session_login", "admin@example.com"
+    type "person_session_login", people(person_symbol).login
     type "person_session_password", "secret"
     click "login_button", :wait_for => :page
     assert_no_errors
-    assert_location "*/admin/events"
   end
   
   # Check page has no error

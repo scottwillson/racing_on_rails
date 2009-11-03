@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class EventsTest < SeleniumTestCase
   def test_events
-    login_as_admin
+    login_as :administrator
 
     click "link=New Event", :wait_for => :page
 
@@ -164,7 +164,7 @@ class EventsTest < SeleniumTestCase
   end
   
   def test_lost_children
-    login_as_admin
+    login_as :administrator
 
     open "/admin/events/#{SingleDayEvent.find_by_name('Lost Series').id}/edit"
     assert_text 'has no parent'

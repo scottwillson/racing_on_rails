@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class FirstAidProvidersTest < SeleniumTestCase
   def test_first_aid_providers
-    login_as_admin
+    login_as :administrator
 
     open "/admin/first_aid_providers"
 

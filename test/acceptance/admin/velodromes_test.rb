@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class VelodromesTest < SeleniumTestCase
   def test_velodromes
-    login_as_admin
+    login_as :administrator
 
     open "/admin/velodromes"
 

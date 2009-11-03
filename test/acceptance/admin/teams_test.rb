@@ -11,7 +11,7 @@ class TeamsTest < SeleniumTestCase
     assert_no_text 'error'
     assert_no_text 'Unknown action'
 
-    login_as_admin
+    login_as :administrator 
 
     open '/admin/teams'
     assert_text "Enter part of a team's name"

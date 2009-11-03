@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class PeopleTest < SeleniumTestCase
   def test_people
-    login_as_admin
+    login_as :administrator
     
     open '/admin/people'
     assert_text "Enter part of a person's name"
@@ -119,7 +119,7 @@ class PeopleTest < SeleniumTestCase
   end
   
   def test_export
-    login_as_admin
+    login_as :administrator
 
     open '/admin/people'
     assert_present 'export_button'
@@ -171,7 +171,7 @@ class PeopleTest < SeleniumTestCase
   end
   
   def test_import
-    login_as_admin
+    login_as :administrator
     open '/admin/people'
     assert_present 'people_file'
   end

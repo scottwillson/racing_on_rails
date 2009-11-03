@@ -9,7 +9,7 @@ class PagesTest < SeleniumTestCase
     assert_title "regex:Schedule|Calendar"
 
     # Now change the page
-    login_as_admin
+    login_as :administrator
 
     open "/admin/pages"
 

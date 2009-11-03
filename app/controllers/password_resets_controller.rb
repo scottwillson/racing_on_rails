@@ -19,11 +19,11 @@ class PasswordResetsController < ApplicationController
     @person.password_confirmation = params[:person][:password_confirmation]
     if @person.save
       @person_session = PersonSession.create(@person)
-      flash[:notice] = "Password successfully updated"
+      flash[:notice] = "Password changed"
       if @person.administrator?
         redirect_back_or_default admin_home_url
       else
-        redirect_back_or_default root_url
+        redirect_back_or_default "/account"
       end
     else
       render :edit
@@ -39,7 +39,7 @@ class PasswordResetsController < ApplicationController
         "Please try copying and pasting the URL " +
         "from your email into your browser or restarting the " +
         "reset password process."
-      redirect_to root_url
+      redirect_to new_password_reset_path
     end
   end
 end

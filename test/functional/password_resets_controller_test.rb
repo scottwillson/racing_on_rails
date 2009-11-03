@@ -36,7 +36,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
     assert(password != Person.find(people(:member).id).crypted_password, "Password should change")
-    assert_redirected_to root_path
+    assert_redirected_to "/account"
   end
   
   def test_invalid_update

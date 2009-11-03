@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class ResultsTest < SeleniumTestCase
   def test_results_editing
-    login_as_admin
+    login_as :administrator
 
     click "link=Copperopolis Road Race", :wait_for => :page
 

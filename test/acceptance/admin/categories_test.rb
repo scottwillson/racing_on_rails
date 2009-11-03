@@ -2,7 +2,7 @@ require "acceptance/selenium_test_case"
 
 class CategoriesTest < SeleniumTestCase
   def test_popular_pages
-    login_as_admin
+    login_as :administrator
 
     open "/admin/categories"
 
