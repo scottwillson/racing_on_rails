@@ -33,7 +33,7 @@ class PasswordResetsController < ApplicationController
   private
 
   def load_person_using_perishable_token
-    @person = Person.find_using_perishable_token(params[:id])
+    @person = Person.find_using_perishable_token(params[:id], 1.day)
     unless @person
       flash[:notice] = "We're sorry, but we could not locate your account. " +
         "Please try copying and pasting the URL " +
