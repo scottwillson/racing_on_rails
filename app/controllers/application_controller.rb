@@ -36,6 +36,7 @@ class ApplicationController < ActionController::Base
       FileUtils.rm(File.join(RAILS_ROOT, "public", "results.html"), :force => true)
       FileUtils.rm(File.join(RAILS_ROOT, "public", "rider_rankings.html"), :force => true)
       FileUtils.rm(File.join(RAILS_ROOT, "public", "schedule.html"), :force =>true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "teams.html"), :force =>true)
     rescue Exception => e
       logger.error(e)
     end
