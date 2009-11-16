@@ -495,15 +495,20 @@ class Result < ActiveRecord::Base
   # This method doesn't handle some typical edge cases very well
   def time_to_s(time)
     return '' if time == 0.0 or time.blank?
+    positive = time >= 0
+    
+    if !positive
+      time = -time
+    end
+    
     hours = (time / 3600).to_i
     minutes = ((time - (hours * 3600)) / 60).floor
     seconds = (time - (hours * 3600).floor - (minutes * 60).floor)
-    # TODO Use sprintf better
     seconds = sprintf('%0.2f', seconds)
     if hours > 0
       hour_prefix = "#{hours.to_s.rjust(2, '0')}:"
     end
-    "#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
+    "#{"-" unless positive}#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
   end
 
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -519,7 +524,11 @@ class Result < ActiveRecord::Base
       parts.each_with_index do |part, index|
         t = t + (part.to_f) * (60.0 ** index)
       end
-      t
+      if parts.last && parts.last.starts_with?("-")
+        -t
+      else
+        t
+      end
     end
   end
 
