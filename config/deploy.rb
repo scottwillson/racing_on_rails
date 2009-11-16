@@ -21,4 +21,15 @@ namespace :deploy do
     run "git clone #{site_local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
   end
+
+  task :after_deploy do
+    %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
+      run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
+    end
+  end
+  
+  task :before_start do
+    # Give Mongrels a chance to really stop
+    sleep 2
+  end
 end
