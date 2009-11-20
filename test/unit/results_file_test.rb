@@ -92,7 +92,7 @@ class ResultsFileTest < ActiveSupport::TestCase
                "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from.strftime})")
            end
            # test result by license (some with name misspelled)
-           if result.license && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+           if result.license && ASSOCIATION.eager_match_on_license?
              person_by_lic = Person.find_by_license(result.license)
              assert_equal(result.person, person_by_lic, "Result should be assigned to #{person_by_lic.name} by license but was given to #{result.person.name}") if person_by_lic
            end

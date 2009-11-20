@@ -170,9 +170,9 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
+  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
-  `promoter_id` int(11) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
   primary key (`id`),
@@ -316,7 +316,6 @@ create table `people` (
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
-  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -332,6 +331,7 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
+  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
@@ -398,6 +398,7 @@ create table `race_numbers` (
   key `discipline_id` (`discipline_id`),
   key `number_issuer_id` (`number_issuer_id`),
   key `race_numbers_value_index` (`value`),
+  key `index_race_numbers_on_year` (`year`),
   constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
   constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
   constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade
@@ -670,6 +671,8 @@ insert into schema_migrations (version) values ('20090708162116');
 insert into schema_migrations (version) values ('20090708162118');
 
 insert into schema_migrations (version) values ('20090730022816');
+
+insert into schema_migrations (version) values ('20091007232822');
 
 insert into schema_migrations (version) values ('20091009021956');
 

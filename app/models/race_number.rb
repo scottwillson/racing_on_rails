@@ -111,23 +111,21 @@ class RaceNumber < ActiveRecord::Base
     return true if person.nil?
   
     if new_record?
-      existing_numbers = RaceNumber.find(
-        :all,
+      existing_numbers = RaceNumber.count(
         :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and person_id = ?', 
         self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], person.id])
     else
-      existing_numbers = RaceNumber.find(
-        :all,
+      existing_numbers = RaceNumber.count(
         :conditions => ['value=? and discipline_id=? and number_issuer_id=? and year=? and id<>? and person_id = ?', 
         self[:value], self[:discipline_id], self[:number_issuer_id], self[:year], self.id, person.id])
     end
       
-    unless existing_numbers.empty?
+    unless existing_numbers == 0
       person_id = person.id
       errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
       person.errors.add('value', "Number '#{value}' can't be used for #{person.name}. Already used as #{year} #{number_issuer.name} #{discipline.name.downcase} number.")
       if existing_numbers.size > 1
-        logger.warn("Race number '#{value}' found #{existing_numbers.size} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, person #{person_id}")
+        logger.warn("Race number '#{value}' found #{existing_numbers} times for discipline #{discipline_id}, number issuer #{number_issuer_id}, year #{year}, person #{person_id}")
       end
       return false
     end

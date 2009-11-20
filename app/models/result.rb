@@ -87,13 +87,7 @@ class Result < ActiveRecord::Base
         if existing_people.size == 1
           self.person = existing_people.to_a.first
         elsif existing_people.size > 1
-          results = existing_people.to_a.inject([]) { |results, person| results + person.results }
-          if results.empty?
-            self.person = existing_people.to_a.sort_by(&:updated_at).last
-          else
-            results = results.sort_by(&:date)
-            self.person = results.last.person
-          end
+          self.person = Person.select_by_recent_activity(existing_people)
         end
       end
     end
@@ -131,7 +125,7 @@ class Result < ActiveRecord::Base
     matches = Set.new
     
     #license first if present and source is reliable (USAC)
-    if license.present? && SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+    if ASSOCIATION.eager_match_on_license? && license.present?
       matches = matches + Person.find_all_by_license(license)
       return matches if matches.size == 1
     end
@@ -141,17 +135,18 @@ class Result < ActiveRecord::Base
     return matches if matches.size == 1
 
     # number
-    if number.present? && (matches.size > 1 || (matches.empty? && first_name.blank? && last_name.blank?))
-      race_numbers = RaceNumber.find_all_by_value_and_event(number, _event)
-      
-      race_numbers.each do |race_number|
-        if matches.include?(race_number.person)
-          return [race_number.person]
-        else
-          matches << race_number.person
+    if number.present?
+      if matches.size > 1
+        # use number to choose between same names
+        RaceNumber.find_all_by_value_and_event(number, _event).each do |race_number|
+          if matches.include?(race_number.person)
+            return [ race_number.person ]
+          end
         end
+      elsif name.blank?
+        # no name, so try to match by number
+        matches = RaceNumber.find_all_by_value_and_event(number, _event).map(&:person)
       end
-      return matches if matches.size == 1
     end
 
     # team
@@ -160,6 +155,7 @@ class Result < ActiveRecord::Base
       matches.reject! do |match|
         match.team != team
       end
+      return matches if matches.size == 1
     end
 
     # license
@@ -545,7 +541,7 @@ class Result < ActiveRecord::Base
   # Drops the 'st' from 1st, among other things
   def cleanup_place
     if place
-      normalized_place = place.to_s
+      normalized_place = place.to_s.dup
       normalized_place.upcase!
       normalized_place.gsub!("ST", "")
       normalized_place.gsub!("ND", "")

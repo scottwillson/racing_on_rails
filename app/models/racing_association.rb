@@ -14,6 +14,7 @@ class RacingAssociation
   attr_accessor :usac_region
   attr_accessor :default_sanctioned_by
   attr_accessor :usac_results_format
+  attr_accessor :eager_match_on_license
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
   attr_accessor :ssl
@@ -30,6 +31,7 @@ class RacingAssociation
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false
+    @eager_match_on_license = true
     @show_events_sanctioning_org_event_id = false
     @ssl = false
   end
@@ -88,6 +90,10 @@ class RacingAssociation
 
   def usac_results_format?
     @usac_results_format
+  end
+
+  def eager_match_on_license?
+    @eager_match_on_license
   end
 
   def show_events_sanctioning_org_event_id?

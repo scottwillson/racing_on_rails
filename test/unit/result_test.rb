@@ -563,6 +563,37 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(tonkin_clone, result.person, 'Person')
   end
 
+  def test_differentiate_people_by_number
+    person = Person.create!(:name => "Joe Racer", :road_number => "600")
+    person_clone = Person.create!(:name => "Joe Racer", :road_number => "550")
+    person_with_same_number = Person.create!(:name => "Jenny Biker", :road_number => "600")
+
+    results = SingleDayEvent.create!.races.create!(:category => categories(:senior_men)).results
+    result = results.create!(:place => 1, :first_name => 'Joe', :last_name => 'Racer', :number => "550")
+    assert_equal(person_clone, result.person, 'Person')
+
+    result = results.create!(:place => 2, :first_name => "Joe", :last_name => "Racer", :number => "600")
+    assert_equal(person, result.person, 'Person')
+  end
+
+  def test_differentiate_people_by_number_ignore_different_names
+    person = Person.create!(:name => "Joe Racer")
+    Person.connection.execute "update people set updated_at = '#{Date.today - 90}' where id = #{person.id}"
+    person.reload
+    
+    person_clone = Person.create!(:name => "Joe Racer")
+    Person.create!(:name => "Jenny Biker")
+    person_with_same_number = Person.create!(:name => "Eddy Racer", :road_number => "600")
+    SingleDayEvent.create!.races.create!(:category => categories(:senior_men)).results.create!(:person => person_with_same_number)
+
+    results = SingleDayEvent.create!.races.create!(:category => categories(:senior_men)).results
+    result = results.create!(:place => 1, :first_name => 'Joe', :last_name => 'Racer', :number => "550")
+    assert_equal(person_clone, result.person, 'Person')
+
+    result = results.create!(:place => 2, :first_name => "Joe", :last_name => "Racer", :number => "600")
+    assert_equal(person_clone, result.person, 'Person')
+  end
+
   def test_find_people
     # TODO Add warning that numbers don't match
     tonkin = people(:tonkin)
