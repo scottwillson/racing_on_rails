@@ -31,7 +31,7 @@ class RacingAssociation
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false
-    @eager_match_on_license = true
+    @eager_match_on_license = false
     @show_events_sanctioning_org_event_id = false
     @ssl = false
   end
