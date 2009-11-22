@@ -5,17 +5,21 @@ require "action_view/test_case"
 require "authlogic/test_case"
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = (Rails.env != "selenium")
+  self.use_transactional_fixtures = !Rails.env.selenium?
   self.use_instantiated_fixtures  = false
   fixtures :all
 
+  def setup
+    activate_authlogic
+    super
+  end
+  
   def teardown
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
   end
 
   def login_as(person_fixture_symbol)
-    activate_authlogic
     PersonSession.create people(person_fixture_symbol).reload
   end
 
@@ -114,9 +118,8 @@ class ActiveSupport::TestCase
       assert_nil(@response.layout, "no layout")
     end
   end
-  
+
   def create_administrator_session
-    activate_authlogic
     PersonSession.create(people(:administrator))
   end
   

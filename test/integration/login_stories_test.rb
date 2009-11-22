@@ -1,8 +1,6 @@
 require "test_helper"
 
 class LoginStoriesTest < ActionController::IntegrationTest
-  setup :activate_authlogic
-  
   if ASSOCIATION.ssl?
     # logged-in?, person_id?, same person?, admin?
     def test_member_account

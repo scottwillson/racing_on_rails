@@ -2,7 +2,11 @@
 require "test_helper"
 
 class Admin::RacesControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_edit
     kings_valley_3 = races(:kings_valley_3)

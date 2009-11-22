@@ -1,7 +1,10 @@
 require "test_helper"
 
 class PasswordResetsControllerTest < ActionController::TestCase
-  setup :use_ssl
+  def setup
+    super
+    use_ssl
+  end
   
   def test_forgot_password
     ActionMailer::Base.deliveries.clear

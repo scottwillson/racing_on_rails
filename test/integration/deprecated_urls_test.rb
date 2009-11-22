@@ -2,8 +2,6 @@ require "test_helper"
 
 # TODO redirect from showing all BAR results (and fix links)
 class DeprecatedURLsTest < ActionController::IntegrationTest
-  setup :activate_authlogic
-  
   def test_event_results
     event = events(:pir)
     get "/results/event/#{event.id}"

@@ -323,7 +323,6 @@ create table `people` (
   `perishable_token` varchar(255) default null,
   `login_count` int(11) not null default '0',
   `failed_login_count` int(11) not null default '0',
-  `last_request_at` datetime default null,
   `current_login_at` datetime default null,
   `last_login_at` datetime default null,
   `current_login_ip` varchar(255) default null,
@@ -679,6 +678,8 @@ insert into schema_migrations (version) values ('20091009021956');
 insert into schema_migrations (version) values ('20091011235631');
 
 insert into schema_migrations (version) values ('20091015052458');
+
+insert into schema_migrations (version) values ('20091122223629');
 
 insert into schema_migrations (version) values ('21');
 

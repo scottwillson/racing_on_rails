@@ -2,7 +2,11 @@
 require "test_helper"
 
 class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_index
     get(:index)

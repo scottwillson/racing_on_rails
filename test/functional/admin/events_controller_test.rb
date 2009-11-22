@@ -8,7 +8,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::CaptureHelper
 
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_edit
     banana_belt = events(:banana_belt_1)

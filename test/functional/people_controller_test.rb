@@ -1,8 +1,6 @@
 require "test_helper"
 
 class PeopleControllerTest < ActionController::TestCase
-  setup :activate_authlogic
-
   def test_index
     get(:index)
     assert_response(:success)

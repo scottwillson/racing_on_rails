@@ -1,7 +1,11 @@
 require 'test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   test "Only admins can edit pages" do
     destroy_person_session

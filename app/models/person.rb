@@ -26,7 +26,6 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
-  after_save :save_numbers
 
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
@@ -818,12 +817,6 @@ class Person < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
-    end
-  end
-  
-  def save_numbers
-    for number in race_numbers
-      number.save! if number.new_record?
     end
   end
   
