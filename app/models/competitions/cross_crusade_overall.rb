@@ -35,11 +35,7 @@ class CrossCrusadeOverall < Overall
 
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
-    points = point_schedule[source_result.place.to_i].to_f
-    if source_result.last_event?
-      points = points * 2
-    end
-    points
+    point_schedule[source_result.place.to_i].to_f
   end
 
   def minimum_events
