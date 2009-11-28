@@ -125,4 +125,20 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_redirected_to(admin_pages_path)
     assert(!Page.exists?(page.id), "Page should be deleted")
   end
+  
+  def test_delete_parent_page
+    page = pages(:plain)
+    page.children.create!
+    page.reload
+    delete(:destroy, :id => page.to_param)
+    assert_redirected_to(admin_pages_path)
+    assert(!Page.exists?(page.id), "Page should be deleted")
+  end
+  
+  def test_delete_child_page
+    page = pages(:plain).children.create!
+    delete(:destroy, :id => page.to_param)
+    assert_redirected_to(admin_pages_path)
+    assert(!Page.exists?(page.id), "Page should be deleted")
+  end
 end
