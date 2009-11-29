@@ -110,24 +110,29 @@ class ApplicationController < ActionController::Base
 
   def require_person
     unless current_person
-      store_location
       flash[:notice] = "Please login to your #{ASSOCIATION.short_name} account"
-      redirect_to new_person_session_url
+      store_location_and_redirect_to_login
       return false
     end
   end
 
   def require_administrator
     unless current_person && current_person.administrator?
-      store_location
+      session[:return_to] = request.request_uri
       flash[:notice] = "You must be an administrator to access this page"
-      redirect_to new_person_session_url
+      store_location_and_redirect_to_login
       return false
     end
   end
   
-  def store_location
-    session[:return_to] = request.request_uri
+  def store_location_and_redirect_to_login
+    if request.format == "js"
+      session[:return_to] = request.referrer
+      render :update do |page| page.redirect_to(new_person_session_url) end
+    else
+      session[:return_to] = request.request_uri
+      redirect_to new_person_session_url
+    end
   end
   
   def redirect_back_or_default(default)
