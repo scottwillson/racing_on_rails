@@ -348,4 +348,25 @@ class MtbBarTest < ActiveSupport::TestCase
 
     assert_equal(original_results_count + 35, Result.count, "Total count of results in DB after BARs calculate!")
   end
+  
+  def test_masters_state_champs
+    event = SingleDayEvent.create!(:name => "Mudslinger", :date => Date.new(2001, 9, 7), :discipline => "Mountain Bike", :bar_points => 2)
+    masters_men = categories(:masters_men)
+    masters_men_45_54 = masters_men.children.create!(:name => "Masters Men 45 -54")
+    race = event.races.create!(:category => masters_men_45_54)
+    kc = Person.create!(:name => "KC Mautner", :member_from => Date.new(2001, 1, 1))
+    vanilla = teams(:vanilla)
+    race.results.create!(:person => kc, :place => 4, :team => vanilla)
+
+    mtb = Discipline[:mtb]
+    mtb.bar_categories << masters_men
+    Bar.calculate!(2001)
+    mtb_bar = Bar.find_by_year_and_discipline(2001, "Mountain Bike")
+    assert_not_nil(mtb_bar, "2001 MTB BAR after calculate!")
+    masters_mtb_bar = mtb_bar.races.detect { |b| b.name == "Masters Men" }
+
+    assert_equal(1, masters_mtb_bar.results.size, "Masters Men BAR results")
+    assert_equal(kc, masters_mtb_bar.results.first.person, "Masters Men BAR first result")
+    assert_equal(38, masters_mtb_bar.results.first.points, "Masters Men BAR first points")
+  end
 end
