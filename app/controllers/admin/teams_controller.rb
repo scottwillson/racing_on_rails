@@ -112,9 +112,12 @@ class Admin::TeamsController < Admin::AdminController
   end
   
   # Cancel inline editing
-  def cancel
-    @team = Team.find(params[:id])
-    render(:partial => 'team_name', :locals => { :team => @team })
+  def cancel_in_place_edit
+    team_id = params[:id]
+    render :update do |page|
+      page.replace("team_#{team_id}_row", :partial => "team", :locals => { :team => Team.find(team_id) })
+      page.call :restripeTable, :teams_table
+    end
   end
   
   def destroy

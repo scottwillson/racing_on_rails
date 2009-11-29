@@ -256,6 +256,12 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     # try with different cases
   end
   
+  def test_cancel_in_place_edit
+    xhr :post, :cancel_in_place_edit, :id => teams(:gentle_lovers)
+    assert_response(:success)
+    assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
+  end
+
   def test_destroy
     csc = Team.create(:name => 'CSC')
     delete(:destroy, :id => csc.id)

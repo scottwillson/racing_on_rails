@@ -400,6 +400,12 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(true, molly.member, 'member after second update')
   end
   
+  def test_cancel_in_place_edit
+    xhr :post, :cancel_in_place_edit, :id => people(:molly)
+    assert_response(:success)
+    assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
+  end
+  
   def test_dupes_merge?
     molly = people(:molly)
     molly_with_different_road_number = Person.create(:name => 'Molly Cameron', :road_number => '987123')
