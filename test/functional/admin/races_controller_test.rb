@@ -101,6 +101,22 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('DNF', dnf.place, 'DNF place after insert')
     race.results(true).sort!
     assert_equal('DNF', race.results.last.place, 'DNF place after insert')
+    
+    post :create_result, :id => race.id
+    assert_response(:success)
+    assert_equal(11, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    race.results(true).sort!
+    assert_equal('DNF', race.results.last.place, 'DNF place after insert')
   end
   
   def test_destroy_result
