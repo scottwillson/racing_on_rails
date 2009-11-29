@@ -12,27 +12,50 @@ label {
   margin-top: 11px;
 }
 
-input[type=checkbox] {
-  line-height: 15px;
-  margin-top: 0px;
+input[type=checkbox], input[type=radio] {
   margin-left: 0px;
-  margin-right: 2px;
+  margin-right: 4px;
+  float: left;
+  text-align: right;
   vertical-align: middle;
+  margin-bottom: 0px;
+  display: inline;
 }
 
-label.check_box {
+td input[type=checkbox], input[type=radio] {
+  float: none;
+}
+
+input[type=checkbox] {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+input[type=radio] {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+div.check_box, div.radio {
+  vertical-align: top;
+  clear: both;
+  display: block;
+  padding-top: 10px;
+  margin-left: 150px;
+}
+
+div.check_box label, div.radio label {
   font-weight: normal;
   text-align: left;
-  margin-left: 150px;
-  width: 256px;
+  width: 242px;
   line-height: 15px;
-  margin-top: 10px;
-  display: inline;
   vertical-align: middle;
+  clear: none;
+  margin-top: 0px;
 }
 
-label.check_box + label.check_box {
-  margin-top: 0px;
+.check_box + .check_box, .radio + .radio {
+  padding-top: 4px;
 }
 
 label.left, label.top {
@@ -113,6 +136,30 @@ select + select {
   display: block;
 }
 
+.help, .wide_help {
+  float: left;
+  margin-left: 150px;
+  width: 256px;
+  line-height: 15px;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+.wide_help {
+  margin-top: 4px;
+  margin-left: 0px;
+  width: 400px;
+}
+
+.help + .help {
+  margin-top: 8px;  
+}
+
+form h2 {
+  margin-left: 150px;
+  text-align: left;
+}
+
 label.text_area {
   margin-top: 0px;
   min-width: auto;
@@ -157,18 +204,22 @@ div.fieldWithErrors
   display: inline;
 }
 
-.fieldWithErrors input
+.fieldWithErrors input[type=text]
 {
-  border-color: red;
+  border-color: rgb(204, 0, 0);
+}
+
+.fieldWithErrors label
+{
+  color: rgb(204, 0, 0);
 }
 
 #errorExplanation
 {
   width: 400px;
-  border: 2px solid red;
+  border: 2px solid rgb(204, 0, 0);
   padding: 7px;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   background-color: #f0f0f0;
   margin-left: auto;
   margin-right: auto;
@@ -228,6 +279,10 @@ div.page_buttons div.right div {
 div.page_buttons select {
   margin-top: 2px;
   width: auto;
+}
+
+div.page_buttons input[type="submit"]:first-child {
+  margin-left: 0px;
 }
 
 div.page_buttons label {

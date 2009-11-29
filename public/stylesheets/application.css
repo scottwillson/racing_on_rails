@@ -20,8 +20,7 @@ div.content {
   margin-bottom: 21px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 13px;
-  padding-right: 13px;
+  padding: 13px;
 }
 
 .shadow_1 {
@@ -115,6 +114,12 @@ pre, pre a, pre a:link, pre a:visited {
   padding-right: 8px;
 }
 
+#info span
+{
+  background-color: rgb(255, 250, 117);
+  border: 2px solid rgb(255, 250, 117);
+}
+
 #notice span
 {
   background-image: url(/images/icons/confirmed.gif);
@@ -143,14 +148,14 @@ h1 {
 }
 
 h2 {
-  margin-top: 20px;
+  padding-top: 32px;
   font-size: 18px;
-  line-height: 40px;
+  line-height: 24px;
   text-align: center;
 }
 
 h3 {
-  padding-top: 24px;
+  padding-top: 32px;
   color: rgb(66, 66, 66);
   text-align: center;
 }
@@ -285,4 +290,8 @@ div.pagination {
 div.pagination .current {
   background-image: none; 
   padding-left: 0px;
+}
+
+p.notes {
+  width: 600px;
 }
