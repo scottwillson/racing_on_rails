@@ -652,7 +652,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                  "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",  
                  "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River", 
                  "work_phone"=>"541-387-8883 x 213", "occupation"=>"Sales Territory Manager", "cell_fax"=>"541-387-8884",
-                 "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg", "print_mailing_label"=>"1", 
+                 "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg",
                  "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M", 
                  "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1", 
                  "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3", 
@@ -913,51 +913,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
       assert(!person.print_card?, 'Person.print_card? after printing')
     end
   end
-  
-  def test_print_no_mailing_labels_pending
-    get(:mailing_labels, :format => "pdf")
-    assert_redirected_to(no_mailing_labels_admin_people_path(:format => "html"))
-  end
-  
-  def test_print_no_mailing_labels
-    get(:no_mailing_labels)
-    assert_response(:success)
-    assert_template("admin/people/no_mailing_labels")
-    assert_layout("admin/application")
-  end
-  
-  def test_print_mailing_labels
-    tonkin = people(:tonkin)
-    tonkin.print_mailing_label = true
-    tonkin.save!
 
-    get(:mailing_labels, :format => "pdf")
-
-    assert_response(:success)
-    assert_template("admin/people/mailing_labels")
-    assert_layout(nil)
-    assert_equal(1, assigns['people'].size, 'Should assign people')
-    tonkin.reload
-    assert(!tonkin.print_mailing_label?, 'Tonkin.mailing_label? after printing')
-  end
-
-  def test_many_mailing_labels
-    people = []
-    for i in 1..31
-      people << Person.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_mailing_label => true)
-    end
-
-    get(:mailing_labels, :format => "pdf")
-
-    assert_response(:success)
-    assert_template("admin/people/mailing_labels")
-    assert_equal(31, assigns['people'].size, 'Should assign people')
-    for person in people
-      person.reload
-      assert(!person.print_mailing_label?, 'Person.print_mailing_label? after printing')
-    end
-  end
-  
   def test_export_to_excel
     tonkin = people(:tonkin)
     tonkin.singlespeed_number = "409"

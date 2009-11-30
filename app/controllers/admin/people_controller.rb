@@ -1,7 +1,7 @@
 # Add, delete, and edit Person information. Also merge 
 class Admin::PeopleController < Admin::AdminController
   before_filter :require_administrator, :remember_event
-  layout 'admin/application', :except => [:card, :cards, :mailing_labels]
+  layout 'admin/application', :except => [:card, :cards]
   exempt_from_layout 'xls.erb', 'ppl.erb'
 
   include ApplicationHelper
@@ -400,22 +400,11 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @people = [@person]
     @person.print_card = false
+    @person.card_printed_at = Time.now
     @person.save!
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
     render(:template => "admin/people/card.pdf.pdf_writer")
-  end
-  
-  def mailing_labels
-    @people = Person.find(:all, :conditions => ['print_mailing_label=?', true], :order => 'last_name, first_name')
-    if @people.empty?
-      return redirect_to(no_mailing_labels_admin_people_path(:format => "html"))
-    else
-      Person.update_all("print_mailing_label=0", ['id in (?)', @people.collect{|person| person.id}])
-    end
-    
-    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render(:template => "admin/people/mailing_labels.pdf.pdf_writer")
   end
   
   def rescue_action_in_public(exception)

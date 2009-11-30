@@ -22,8 +22,6 @@ ActionController::Routing::Routes.draw do |map|
 
     admin.resources :people, :collection => { :cards => :get, 
                                               :duplicates => :get, 
-                                              :mailing_labels => :get, 
-                                              :no_mailing_labels => :get, 
                                               :no_cards => :get, 
                                               :preview_import => :get },
                              :member => { :card => :get, :toggle_member => :post },

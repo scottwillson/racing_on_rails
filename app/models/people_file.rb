@@ -233,12 +233,7 @@ class PeopleFile < GridFile
     if @update_membership and !@has_print_column
       if person.nil? or (!person.member? or person.member_to < @member_to_for_imported_people)
         row_hash[:print_card] = true
-        row_hash[:print_mailing_label] = true
       end
-    end
-    
-    if !row_hash[:print_card].blank? and row_hash[:print_mailing_label].blank?
-      row_hash[:print_mailing_label] = row_hash[:print_card]
     end
   end
   

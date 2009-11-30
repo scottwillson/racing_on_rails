@@ -170,9 +170,9 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
-  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
+  `promoter_id` int(11) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
   primary key (`id`),
@@ -304,7 +304,6 @@ create table `people` (
   `zip` varchar(255) default null,
   `member_to` date default null,
   `print_card` tinyint(1) default '0',
-  `print_mailing_label` tinyint(1) default '0',
   `ccx_only` tinyint(1) not null default '0',
   `updated_by` varchar(255) default null,
   `bmx_category` varchar(255) default null,
@@ -316,6 +315,7 @@ create table `people` (
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
+  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -330,12 +330,12 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
-  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
   `emergency_contact` varchar(255) default null,
   `emergency_contact_phone` varchar(255) default null,
+  `card_printed_at` datetime default null,
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -680,6 +680,8 @@ insert into schema_migrations (version) values ('20091011235631');
 insert into schema_migrations (version) values ('20091015052458');
 
 insert into schema_migrations (version) values ('20091122223629');
+
+insert into schema_migrations (version) values ('20091129235114');
 
 insert into schema_migrations (version) values ('21');
 
