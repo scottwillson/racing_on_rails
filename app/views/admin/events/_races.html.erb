@@ -42,12 +42,20 @@
     </td>
   </tr>
   <% end %>
-  <% unless @event.has_results_including_children? %>
+  <% unless @event.races.any? %>
   <tr>
-    <td colspan="2" class="empty">No results</td>
+    <td colspan="2" class="empty">No races</td>
   </tr>
   <% end %>
   <% unless @event.new_record? -%>
+  <tr>
+    <td colspan="2" class="right">
+      <%= link_to image_tag("/images/buttons/small_add.png"), 
+                  new_admin_event_race_path(@event),
+                  :class => "image", :id => "new_race"
+      %>
+    </td>
+  </tr>
   <tr>
     <td colspan="2">
       <div class="page_buttons">
