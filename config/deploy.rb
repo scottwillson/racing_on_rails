@@ -16,9 +16,6 @@ set :scm_auth_cache, true
 set :mongrel_conf, "/usr/local/etc/mongrel_cluster/#{application}.yml"
 
 namespace :deploy do
-  after "update_code", "deploy:local_code", "deploy:copy_cache"
-  before "start", "deploy:wait_for_mongrels_to_stop"
-  
   desc "Deploy association-specific customizations"
   task :local_code do
     run "git clone #{site_local_repository} #{release_path}/local"
@@ -36,3 +33,6 @@ namespace :deploy do
     sleep 2
   end
 end
+
+after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
+before "deploy:start", "deploy:wait_for_mongrels_to_stop"
