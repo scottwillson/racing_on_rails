@@ -56,6 +56,8 @@ class Admin::PeopleController < Admin::AdminController
     date = current_date
     if params['excel_layout'] == 'scoring_sheet'
       file_name = 'scoring_sheet.xls'
+    elsif params['include'] == 'print_cards'
+      file_name = 'print_cards.xls'
     elsif params['format'] == 'ppl'
       file_name = 'lynx.ppl'
     else
@@ -63,12 +65,18 @@ class Admin::PeopleController < Admin::AdminController
     end
     headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
-    @people = Person.find_all_for_export(date, params['include'] == 'members_only')
+    @people = Person.find_all_for_export(date, params['include'])
     
     respond_to do |format|
       format.html
       format.ppl
-      format.xls {render :template => 'admin/people/scoring_sheet.xls.erb' if params['excel_layout'] == 'scoring_sheet'}
+      format.xls {
+        if params['excel_layout'] == 'scoring_sheet'
+          render :template => 'admin/people/scoring_sheet.xls.erb' 
+        elsif params['excel_layout'] == 'endicia'
+          render :template => 'admin/people/endicia.xls.erb' 
+        end
+      }
     end
   end
   

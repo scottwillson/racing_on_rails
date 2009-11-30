@@ -160,9 +160,13 @@ class Person < ActiveRecord::Base
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = Date.today, members_only = true)
+  def Person.find_all_for_export(date = Date.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
-    where_clause = "WHERE (member_to >= '#{date.to_s}')" if members_only
+    if include_people == "members_only"
+      where_clause = "WHERE (member_to >= '#{date.to_s}')" 
+    elsif include_people == "print_cards"
+      where_clause = "WHERE  (member_to >= '#{date.to_s}') and print_card is true" 
+    end
     
     people = Person.connection.select_all(%Q{
       SELECT people.id, license, first_name, last_name, teams.name as team_name, people.notes,

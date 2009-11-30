@@ -994,6 +994,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end
   
+  def test_export_print_cards_to_endicia
+    get(:index, :format => "xls", :include => "print_cards", :excel_layout => "endicia")
+
+    assert_response(:success)
+    today = Date.today
+    assert_equal("filename=\"print_cards.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
+  
   # From PeopleController
   def test_edit_with_event
     kings_valley = events(:kings_valley)
