@@ -2,6 +2,7 @@ require "test_helper"
 
 class SubscriptionsControllerTest < ActionController::TestCase
   def setup
+    super
     MailingListMailer.deliveries = []
   end
   

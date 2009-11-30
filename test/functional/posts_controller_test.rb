@@ -4,6 +4,7 @@ require 'mailing_list_mailer'
 # FIXME Navigation tests are weak. Need to do more than just not blow up
 class PostsControllerTest < ActionController::TestCase
   def setup
+    super
     ActionMailer::Base.deliveries = []
   end
   

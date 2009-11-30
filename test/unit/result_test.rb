@@ -2,6 +2,7 @@ require "test_helper"
 
 class ResultTest < ActiveSupport::TestCase
   def setup
+    super
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.load_aliases
   end

@@ -2,6 +2,7 @@ require "test_helper"
 
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   def setup
+    super
     @award_cat4_participation_points = ASSOCIATION.award_cat4_participation_points
     ASSOCIATION.award_cat4_participation_points = true
     @cat4_womens_race_series_points = ASSOCIATION.cat4_womens_race_series_points
