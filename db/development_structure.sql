@@ -170,11 +170,12 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
+  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
-  `promoter_id` int(11) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
+  `postponed` tinyint(1) not null default '0',
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -315,7 +316,6 @@ create table `people` (
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
-  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -330,6 +330,7 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
+  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
@@ -682,6 +683,8 @@ insert into schema_migrations (version) values ('20091015052458');
 insert into schema_migrations (version) values ('20091122223629');
 
 insert into schema_migrations (version) values ('20091129235114');
+
+insert into schema_migrations (version) values ('20091201031927');
 
 insert into schema_migrations (version) values ('21');
 
