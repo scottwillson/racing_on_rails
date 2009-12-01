@@ -302,6 +302,22 @@ class ResultsControllerTest < ActionController::TestCase
     assert_redirected_to(event_results_path(result.event))
   end
   
+  def test_person_with_overall_results
+    person = people(:tonkin)
+    event = CrossCrusadeOverall.create!(:parent => Series.create!)
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1")
+    get :person, :person_id => person.to_param
+    assert_response :success
+  end
+  
+  def test_person_overall_results
+    person = people(:tonkin)
+    event = CrossCrusadeOverall.create!(:parent => Series.create!)
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1")
+    get(:person_event, :event_id => event.to_param, :person_id => person.to_param)
+    assert_response :success
+  end
+  
   def test_column_headers_display_correctly
     event = events(:banana_belt_1)
     race = event.races.first
@@ -368,5 +384,29 @@ class ResultsControllerTest < ActionController::TestCase
     event = Bar.find_for_year
     get(:person_event, :event_id => event.to_param, :person_id => Person.create!.to_param)
     assert_response :success
+  end
+  
+  def test_return_404_for_missing_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:event, :event_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_person
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person, :person_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_team_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => events(:banana_belt_1).to_param, :team_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_team_event_bad_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => teams(:vanilla).to_param) }
+  end
+  
+  def test_return_404_for_missing_person_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) }
+  end
+  
+  def test_return_404_for_missing_person_event_bad_event
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) }
   end
 end
