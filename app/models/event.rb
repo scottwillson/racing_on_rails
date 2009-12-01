@@ -27,7 +27,7 @@
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    cancelled flyer_approved instructional practice sanctioned_by email phone team_id
+    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results

@@ -31,6 +31,8 @@
     </td>
     <%- if event.cancelled %>
     <td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
+    <%- elsif event.postponed? %>
+    <td><span class="postponed"><%= event.name -%></span> <i>postponed</i></td>
     <%- else -%>
     <td class="link">
       <%- if (!event.flyer.blank? and event.flyer_approved?) -%>

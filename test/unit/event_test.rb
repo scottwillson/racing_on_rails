@@ -659,6 +659,14 @@ class EventTest < ActiveSupport::TestCase
     assert(series_event.has_results_including_children?, "Series Event has_results_including_children?")
     assert(child_event.has_results_including_children?, "Series Event child has_results_including_children?")
   end
+  
+  def test_postponed
+    event = events(:banana_belt_3)
+    assert !event.postponed?, "postponed?"
+    event.postponed = true
+    event.save!
+    assert event.postponed?, "postponed?"
+  end
 
   private
   

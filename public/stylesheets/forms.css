@@ -255,6 +255,11 @@ div.fieldWithErrors
   text-decoration: line-through;
 }
 
+.postponed
+{
+  font-style: italic;
+}
+
 form#search_form {
   margin-top: 16px;
   margin-left: auto;
