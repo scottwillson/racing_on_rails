@@ -38,6 +38,7 @@ class Admin::PeopleController < Admin::AdminController
     else
       @people = Person.find_all_by_name_like(@name, SEARCH_RESULTS_LIMIT)
       @people = @people + Person.find_by_number(@name)
+      @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
     end
     if @people.size == SEARCH_RESULTS_LIMIT
       flash[:notice] = "First #{SEARCH_RESULTS_LIMIT} people"
