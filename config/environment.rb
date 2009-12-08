@@ -14,6 +14,7 @@ Rails::Initializer.run do |config|
   
   config.gem "authlogic"
   config.gem "fastercsv"
+  config.gem "tabular"
   config.gem "color"
   config.gem "pdf-writer", :lib => "pdf/writer"
   # For tests

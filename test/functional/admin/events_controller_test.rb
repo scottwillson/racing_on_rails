@@ -663,7 +663,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     before_import_all = Event.count
     assert_equal(19, before_import_all, "All events count before import")
 
-    post(:upload_schedule, :schedule_file => fixture_file_upload("schedule.xls", "application/vnd.ms-excel", :binary))
+    post(:upload_schedule, :schedule_file => fixture_file_upload("schedule/excel.xls", "application/vnd.ms-excel", :binary))
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
     assert_response :redirect

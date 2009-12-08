@@ -1,24 +1,19 @@
 module Schedule
-# MBRA format:
-#      COLUMN_MAP = {
-#      'Race'                                   => 'name',
-#      'Event'                                  => 'name',
-#      'StageName'                              => 'stage_name', #new field
-#      'Stage'                                  => 'stage_name',
-#      'CityState'                              => 'city',
-#      'Promoter'                               => 'promoter_name',
-#      'PromoterPhone'                          => 'promoter_phone',
-#      'PromoterEmail'                          => 'promoter_email',
-#      'SponsoringTeam'                         => 'team_id',
-#      'Team'                                   => 'team_id',
-#      'Club'                                   => 'team_id',
-#      'SanctionedBy'                           => 'sanctioned_by',
-#      'Website'                                => 'flyer',
-#      'FlyerApproved'                          => 'flyer_approved'
-#    }
-
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
+    COLUMNS_MAP = {
+      :race            => :name,
+      :event           => :name,
+      :city_state      => :location,
+      :promoter        => :promoter_name,
+      :phone           => :promoter_phone,
+      :email           => :promoter_email,
+      :sponsoring_team => :team_id,
+      :team            => :team_id,
+      :club            => :team_id,
+      :website         => :flyer,
+      :flyer_approved  => { :column_type => :boolean }
+    }
 
     # FIXME Remove dependency. Is it here because we need a helper?
     include ActionView
@@ -29,40 +24,19 @@ module Schedule
     # Import Schedule from Excel +filename+.
     #
     # *Warning:* Deletes all events after the schedule's first event date
-    #
-    # Rigid OBRA legacy format (skip first row):
-    # 0. _skip_
-    # 1. _skip_
-    # 2. _skip_
-    # 3. date
-    # 4. _skip_
-    # 5. name
-    # 6. city
-    # 7. promoter_name
-    # 8. promoter_phone
-    # 9. promoter_email
-    # 10. discipline
-    # 11. notes
-    #
-    # Import implemented in several methods. See source code.
     # === Returns
     # * date of first event
-    def Schedule.import(filename)
-      date = nil
+    def Schedule.import(file_path)
+      start_date = nil
       Event.transaction do
-        file             = read_file(filename)
-        date             = read_date(file)
-                           delete_all_future_events(date)
-        events           = parse_events(file)
+        table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
+        start_date = table[0][:date]
+        delete_all_future_events(start_date)
+        events = parse_events(table)
         multi_day_events = find_multi_day_events(events)
-                           save(events, multi_day_events)
+        save(events, multi_day_events)
       end
-      date
-    end
-    def Schedule.read_date(file)
-      date             = file.rows.first['date']
-      logger.debug("Schedule Import starting at #{date}")
-      Date.parse(date)
+      start_date
     end
     
     # Events with results _will not_ be destroyed
@@ -70,103 +44,79 @@ module Schedule
       logger.debug("Delete all events after #{date}")
       Event.destroy_all(["date >= ?", date])
     end
-    
-    # Create GridFile from Excel
-    def Schedule.read_file(filename)
-      logger.debug("Read #{filename}")
-      GridFile.new(
-        File.new(filename), 
-        :columns => ["", "", "", "date", "", "name", "city", "promoter_name", "promoter_phone", "promoter_email", "discipline", Column.new(:name => 'notes', :description => 'Notes')]
-      )
-    end
 
     # Read GridFile +file+, split city and state, read and create promoter
     def Schedule.parse_events(file)
       events = []
       file.rows.each do |row|
-        row_hash = row.to_hash
-
-        if has_event?(row_hash)
-          split_city_state(row_hash)
-          event = Schedule.parse(row_hash)
-          if event != nil
-            # Save to persist new promoters (if there is one)
-            # to prevent duplicate promoters in memory
-            # TODO Check for dupe promoters at save time instead
-            events << event
-          end
+        if has_event?(row)
+          events << Schedule.parse(row)
         end
       end
+      events.compact!
       events
     end
 
-    def Schedule.has_event?(row_hash)
-      name = row_hash[:name]
-      date = row_hash[:date]
-      return (!name.blank? and !date.blank?)
+    def Schedule.has_event?(row)
+      row[:name].present? && row[:date].present?
     end
 
-    # Split location on comma
-    def Schedule.split_city_state(row_hash)
-      city = row_hash[:city]
-      state = row_hash[:state]
-      if !city.nil? and (state == "" or state.nil?)
-        city, state = city.split(",")
-        city.strip! unless city.nil?
-        row_hash[:city] = city
-        state.strip! unless state.nil?
-        row_hash[:state] = state
-      end
-    end
-
-    # Read GridFile Row and create SingleDayEvent
-    def Schedule.parse(row_hash)
-      logger.debug(row_hash.inspect) if logger.debug?
+    # Read Table Row and create SingleDayEvent
+    def Schedule.parse(row)
+      logger.debug(row.inspect) if logger.debug?
       event = nil
-      if !(row_hash[:date].blank? and row_hash[:name].blank?)
-        begin
-          row_hash[:date] = Date.strptime(row_hash[:date], "%Y-%m-%d")
-        rescue
-          logger.warn($!)
-          row_hash[:date] = nil
-        end
-        if row_hash[:discipline]
-          discipline = Discipline.find_via_alias(row_hash[:discipline])
-          if discipline != nil
-            row_hash[:discipline] = discipline.name
-          else
-            row_hash[:discipline] = ASSOCIATION.default_discipline
-          end
-        end
-        
-        if !row_hash.has_key?(:sanctioned_by)
-          if row_hash[:notes] == 'national'
-            row_hash[:sanctioned_by] = 'USA Cycling'
-          elsif row_hash[:notes] == 'international'
-            row_hash[:sanctioned_by] = 'UCI'
-          end
-        end
-        
-        promoter_name = row_hash.delete(:promoter_name)
-        promoter_email = row_hash.delete(:promoter_email)
-        promoter_phone = row_hash.delete(:promoter_phone)
 
-        promoter = Person.find_by_info(promoter_name, promoter_email, promoter_phone)
-        if promoter
-          promoter.name = promoter_name
-          promoter.email = promoter_email
-          promoter.home_phone = promoter_phone
-          promoter.save!
+      if row[:discipline]
+        discipline = Discipline.find_via_alias(row[:discipline])
+        if discipline != nil
+          row[:discipline] = discipline.name
         else
-          promoter = Person.create!(:name => promoter_name, :email => promoter_email, :home_phone => promoter_phone)
+          row[:discipline] = ASSOCIATION.default_discipline
+        end
+      end
+      
+      if row[:sanctioned_by].nil?
+        if row[:notes] == 'national'
+          row[:sanctioned_by] = 'USA Cycling'
+        elsif row[:notes] == 'international'
+          row[:sanctioned_by] = 'UCI'
+        end
+      end
+      
+      event_hash = row.to_hash
+      promoter = Person.find_by_info(row[:promoter_name], row[:promoter_email], row[:promoter_phone])
+      
+      if promoter
+        if promoter.name.blank?
+          promoter.update_attributes!(:name => row[:promoter_name])
+        end
+          
+        if promoter.home_phone.blank?
+          promoter.update_attributes!(:home_phone => row[:promoter_phone])
+        else
+          event_hash[:phone] = row[:promoter_phone]
         end
 
-        row_hash[:promoter] = promoter unless promoter.blank?
-
-        event = SingleDayEvent.new(row_hash)
-        if logger.debug? then logger.debug("Add #{event.name} to schedule") end
+        if promoter.email.blank?
+          promoter.update_attributes!(:email => row[:promoter_email])
+        else
+          event_hash[:email] = row[:promoter_email]
+        end
+      elsif row[:promoter_name].present? || row[:promoter_email].present? || row[:promoter_phone].present?
+        promoter = Person.create!(
+                    :name => row[:promoter_name], 
+                    :email => row[:promoter_email], 
+                    :home_phone => row[:promoter_phone]
+                  )
       end
-      return event
+
+      event_hash.delete(:promoter_email)
+      event_hash.delete(:promoter_phone)
+      event_hash[:promoter] = promoter
+      event = SingleDayEvent.new(event_hash)
+      
+      if logger.debug? then logger.debug("Add #{event.name} to schedule") end
+      event
     end
 
     # Try and create parent MultiDayEvents from imported SingleDayEvents
@@ -175,7 +125,7 @@ module Schedule
 
       # Hash of Arrays keyed by event name
       events_by_name = Hash.new
-      for event in events
+      events.each do |event|
         logger.debug("Find multi-day events #{event.name}")
         event_array = events_by_name[event.name] || Array.new
         event_array << event
@@ -183,15 +133,14 @@ module Schedule
       end
   
       multi_day_events = []
-      for key_value in events_by_name
-        name, event_array = key_value
+      events_by_name.each do |name, event_array|
         logger.debug("Create multi-day event #{name}")
         if event_array.size > 1
           multi_day_events << MultiDayEvent.create_from_children(event_array)
         end
       end
   
-      return multi_day_events
+      multi_day_events
     end
 
     def Schedule.add_one_day_events_to_parents(events, multi_day_events)
@@ -215,7 +164,7 @@ module Schedule
     end
     
     def Schedule.logger
-      RAILS_DEFAULT_LOGGER
+      Rails.logger
     end
 
     def initialize(year, events)

@@ -400,6 +400,17 @@ class Event < ActiveRecord::Base
   def location
     self.city_state
   end
+  
+  def location=(value)
+    if value.present?
+      self.city, self.state = value.split(",")
+      self.city = city.strip if city
+      self.state = state.strip if state
+    else
+      self.city = nil
+      self.state = nil
+    end
+  end
 
   def discipline_id
     Discipline[discipline].id if Discipline[discipline]

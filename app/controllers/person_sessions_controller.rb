@@ -5,7 +5,7 @@ class PersonSessionsController < ApplicationController
   
   def new
     if current_person
-      return render :show
+      return render(:show)
     else
       @person_session = PersonSession.new
     end
