@@ -20,6 +20,8 @@ Rails::Initializer.run do |config|
   # For tests
   config.gem "selenium-client", :lib => "selenium/client"
   
+  config.time_zone = "Pacific Time (US & Canada)"
+  
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
