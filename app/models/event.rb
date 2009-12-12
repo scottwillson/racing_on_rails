@@ -300,7 +300,7 @@ class Event < ActiveRecord::Base
 
   def children_changed(child)
     # Don't trigger callbacks
-    Event.update_all(["updated_at = ?", Time.now], ["id = ?", id])
+    Event.update_all(["updated_at = ?", Time.zone.now], ["id = ?", id])
     true
   end
   

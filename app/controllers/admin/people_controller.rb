@@ -32,7 +32,7 @@ class Admin::PeopleController < Admin::AdminController
     @name = params['name'] || session['person_name'] || cookies[:person_name] || ''
     @name.strip!
     session['person_name'] = @name
-    cookies[:person_name] = {:value => @name, :expires => Time.now + 36000}
+    cookies[:person_name] = {:value => @name, :expires => Time.zone.now + 36000}
     if @name.blank?
       @people = []
     else
@@ -409,7 +409,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @people = [@person]
     @person.print_card = false
-    @person.card_printed_at = Time.now
+    @person.card_printed_at = Time.zone.now
     @person.save!
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.

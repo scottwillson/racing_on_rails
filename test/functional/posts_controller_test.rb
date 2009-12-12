@@ -85,7 +85,7 @@ class PostsControllerTest < ActionController::TestCase
   def test_list
     obra_chat = mailing_lists(:obra_chat)
     for index in 1..22
-      date = Time.now.beginning_of_month + index * 3600 * 24
+      date = Time.zone.now.beginning_of_month + index * 3600 * 24
       Post.create({
         :mailing_list => obra_chat,
         :subject => "Subject Test #{index}",
@@ -106,7 +106,7 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     })
   
-    get(:list, :mailing_list_name => obra_chat.name, :month => Time.now.month, :year => Time.now.year)
+    get(:list, :mailing_list_name => obra_chat.name, :month => Time.zone.now.month, :year => Time.zone.now.year)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_not_nil(assigns["year"], "Should assign month")
@@ -117,7 +117,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(Date.today.year, assigns["year"], "Assign year")
     assert_template("posts/list")
   
-    get(:list, :mailing_list_name => obra_race.name, :month => Time.now.month, :year => Time.now.year)
+    get(:list, :mailing_list_name => obra_race.name, :month => Time.zone.now.month, :year => Time.zone.now.year)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
     assert_not_nil(assigns["year"], "Should assign month")
@@ -151,7 +151,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Schedule Changes",
-      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -381,7 +381,7 @@ class PostsControllerTest < ActionController::TestCase
     new_post = Post.create({
       :mailing_list => obra_race,
       :subject => "Only OBRA Race Message",
-      :date => Time.now,
+      :date => Time.zone.now,
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."

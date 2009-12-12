@@ -7,7 +7,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
-    @expected.date = Time.now
+    @expected.date = Time.zone.now
     @expected.body = read_fixture("post")
 
     post = Post.new
@@ -26,7 +26,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = "Scout <scout@butlerpress.com>"
-    @expected.date = Time.now
+    @expected.date = Time.zone.now
     @expected.body = read_fixture("reply")
 
     post = Post.new
@@ -44,7 +44,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   
     subject = "Test Email"
     from = "scott@yahoo.com"
-    date = Time.now
+    date = Time.zone.now
     body = "Some message for the mailing list"
     email = TMail::Mail.new
     email.set_content_type "text", "plain", { "charset" => 'utf-8' }

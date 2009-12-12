@@ -613,7 +613,7 @@ class ResultTest < ActiveSupport::TestCase
     ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(true)
     
     person = Person.create!(:name => "Joe Racer")
-    Person.connection.execute "update people set updated_at = '2008-01-01' where id = #{person.id}"
+    Person.connection.execute "update people set updated_at = '#{Time.local(2008).utc.to_s(:db)}' where id = #{person.id}"
     person.reload
     assert_equal_dates "2008-01-01", person.updated_at, "updated_at"
     

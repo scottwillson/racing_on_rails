@@ -83,7 +83,7 @@ class ResultsFile
   end
 
   def import
-    Rails.logger.info("ResultsFile #{Time.now} import")
+    Rails.logger.info("ResultsFile #{Time.zone.now} import")
 
     Event.transaction do
       event.disable_notification!
@@ -93,7 +93,7 @@ class ResultsFile
         create_rows(worksheet)
 
         rows.each do |row|
-          Rails.logger.debug("ResultsFile #{Time.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
+          Rails.logger.debug("ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
           if race?(row)
             race = create_race(row)
             # This row is also a result. I.e., no separate race header row.
@@ -108,7 +108,7 @@ class ResultsFile
       event.enable_notification!
       CombinedTimeTrialResults.create_or_destroy_for!(event)
     end
-    Rails.logger.info("ResultsFile #{Time.now} import done")
+    Rails.logger.info("ResultsFile #{Time.zone.now} import done")
   end
 
   def create_rows(worksheet)
@@ -118,7 +118,7 @@ class ResultsFile
     previous_row = nil
     worksheet.each do |spreadsheet_row|
       if DEBUG && Rails.logger.debug?
-        Rails.logger.debug("ResultsFile #{Time.now} row #{spreadsheet_row.to_a.join(', ')}")
+        Rails.logger.debug("ResultsFile #{Time.zone.now} row #{spreadsheet_row.to_a.join(', ')}")
         spreadsheet_row.each_with_index do |cell, index|
           Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
         end
@@ -168,7 +168,7 @@ class ResultsFile
       end
     end
     
-    Rails.logger.debug("ResultsFile #{Time.now} Create column indexes #{self.column_indexes.inspect}") if DEBUG && Rails.logger.debug?
+    Rails.logger.debug("ResultsFile #{Time.zone.now} Create column indexes #{self.column_indexes.inspect}") if DEBUG && Rails.logger.debug?
     self.column_indexes
   end
 
@@ -200,7 +200,7 @@ class ResultsFile
     race = event.races.build(:category => category, :notes => row.notes)
     race.result_columns = columns
     race.save!
-    Rails.logger.info("ResultsFile #{Time.now} create race #{category}")
+    Rails.logger.info("ResultsFile #{Time.zone.now} create race #{category}")
     race
   end
 
@@ -259,7 +259,7 @@ class ResultsFile
       result.cleanup
       result.save!
       row.result = result
-      Rails.logger.debug("ResultsFile #{Time.now} create result #{race} #{result.place}") if DEBUG && Rails.logger.debug?
+      Rails.logger.debug("ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if DEBUG && Rails.logger.debug?
     else
       # TODO Maybe a hard exception or error would be better?
       Rails.logger.warn("No race. Skip.")

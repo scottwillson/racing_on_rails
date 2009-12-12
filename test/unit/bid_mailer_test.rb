@@ -7,7 +7,7 @@ class BidMailerTest < ActionMailer::TestCase
     @expected.body    = read_fixture('created')
     @expected.from = 'scott@butlerpress.com'
     @expected.to = 'cmurray@obra.org'
-    date = Time.now
+    date = Time.zone.now
     @expected.date = date
     
     bid = Bid.new(:name => 'Ryan Weaver', :amount => 2400, :email => 'ryan@weaver.com', :phone => '411')

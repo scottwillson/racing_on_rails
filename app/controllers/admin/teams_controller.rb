@@ -10,7 +10,7 @@ class Admin::TeamsController < Admin::AdminController
       @teams = []
     else
       session['team_name'] = @name
-      cookies[:team_name] = {:value => @name, :expires => Time.now + 36000}
+      cookies[:team_name] = {:value => @name, :expires => Time.zone.now + 36000}
       name_like = "%#{@name}%"
       @teams = Team.find_all_by_name_like(params[:name], SEARCH_RESULTS_LIMIT)
       if @teams.size == SEARCH_RESULTS_LIMIT
