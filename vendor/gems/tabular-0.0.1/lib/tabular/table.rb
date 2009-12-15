@@ -1,7 +1,10 @@
 module Tabular
+  # Simple Enumerable list of Hashes. Use Table.read(file_path) to read file.
   class Table
     attr_reader :columns, :rows
     
+    # Assumes .txt = tab-delimited, .csv = CSV, .xls = Excel. Assumes first row is the header.
+    # Normalizes column names to lower-case with underscores.
     def self.read(file_path, *options)
       raise "Could not find '#{file_path}'" unless File.exists?(file_path)
       
@@ -24,6 +27,11 @@ module Tabular
       Table.new data, options
     end
     
+    # Pass data in as +rows+. Expects rows to be an Enumerable of Enumerables. 
+    # Maps rows to Hash-like Tabular::Rows.
+    #
+    # Options:
+    # :column => { :original_name => :preferred_name, :column_name => { :column_type => :boolean } }
     def initialize(rows = [], *options)
       if options
         options = options.flatten.first || {}
@@ -41,6 +49,7 @@ module Tabular
       end
     end
     
+    # Return Row at zero-based index, or nil if Row is out of bounds
     def [](index)
       rows[index]
     end

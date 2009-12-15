@@ -1,16 +1,22 @@
 module Tabular
+  # Associate list of cells. Each Table has a list of Rows. Access Row cells via symbols. Ex: row[:city]
   class Row
     include Enumerable
     
+    # +columns+ -- array of string
+    # +cell+ -- array (not neccessarily Strings)
     def initialize(columns, cells = [])
       @columns = columns
       @array = cells
+      @hash = nil
     end
     
+    # Cell value by symbol. E.g., row[:phone_number]
     def [](key)
       hash[key]
     end
     
+    # Set cell value. Adds cell to end of Row and adds new Column if there is no Column fo +key_
     def []=(key, value)
       if @columns.has_key?(key)
         @array[@columns.index(key)] = value
@@ -21,10 +27,12 @@ module Tabular
       hash[key] = value
     end
     
+    # Call +block+ for each cell
     def each(&block)
       @array.each(&block)
     end
-    
+
+    # For pretty-printing cell values
     def join(sep = nil)
       @array.join(sep)
     end
@@ -44,7 +52,8 @@ module Tabular
 
     protected
     
-    def hash
+    
+    def hash #:nodoc:
       unless @hash
         @hash = Hash.new
         @columns.each do |column|

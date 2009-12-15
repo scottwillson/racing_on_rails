@@ -7,6 +7,7 @@ module Tabular
       columns_map = columns_map || {}
       map_for_key = columns_map[key]
     
+      @column_type = :string
       case map_for_key
       when nil
         @key = key
@@ -20,8 +21,6 @@ module Tabular
       else
         raise "Expected Symbol or Hash, but was #{map_for_key.class}"
       end
-      
-      @column_type = :string unless @column_type
     end
 
     def symbolize(key)

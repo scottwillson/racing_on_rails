@@ -1,5 +1,4 @@
-require "test/unit"
-require File.expand_path(File.dirname(__FILE__) + "/../lib/tabular")
+require "helper"
 
 module Tabular
   class RowTest < Test::Unit::TestCase
