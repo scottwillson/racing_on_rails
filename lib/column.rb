@@ -22,7 +22,7 @@ class Column
     end
     options = {} if options.nil?
     
-    for option in options.keys
+    options.keys.each do |option|
       raise ArgumentError.new("#{option} is not a valid option") unless VALID_OPTIONS.include?(option)
     end
     
