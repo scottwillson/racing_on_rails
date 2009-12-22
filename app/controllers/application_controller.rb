@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   helper :all
   include ExceptionNotifiable
+  include SslRequirement
   
   local_addresses.clear
 
@@ -11,12 +12,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_person_session, :current_person
 
   before_filter :toggle_tabs
-
-  include SslRequirement
- 
-  def toggle_tabs
-    @show_tabs = false
-  end
 
   def self.expire_cache
     begin
@@ -46,6 +41,10 @@ class ApplicationController < ActionController::Base
 
 
   protected
+
+  def toggle_tabs
+    @show_tabs = false
+  end
 
   def expire_cache
     if perform_caching
