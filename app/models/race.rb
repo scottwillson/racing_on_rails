@@ -78,8 +78,7 @@ class Race < ActiveRecord::Base
   end
   
   def date
-    raise(ArgumentError, 'Need Event to get date') unless self.event
-    self.event.date
+    event && event.date
   end
   
   # FIXME: Incorrectly doubles tandem and other team events' field sizes
