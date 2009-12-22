@@ -65,6 +65,7 @@ namespace :db do
       sql = File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
       sql.downcase!
+      sql.gsub!("default 'us'", "default 'US'")
 
       File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql", "w") do |file|
         file << sql
