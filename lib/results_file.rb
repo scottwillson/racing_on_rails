@@ -95,7 +95,7 @@ class ResultsFile
         rows.each do |row|
           Rails.logger.debug("ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
           if race?(row)
-            race = create_race(row)
+            race = find_or_create_race(row)
             # This row is also a result. I.e., no separate race header row.
             if usac_results_format
               create_result(row, race)
@@ -150,14 +150,14 @@ class ResultsFile
       cell_string = cell.to_s
       if index == 0 && cell_string.blank?
         column_indexes[:place] = 0
-      elsif !cell_string.blank?
+      elsif cell_string.present?
         cell_string.strip!
         cell_string.gsub!(/^"/, '')
         cell_string.gsub!(/"$/, '')
         cell_string = cell_string.downcase.underscore
         cell_string.gsub!(" ", "_")
         cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
-        if !cell_string.blank?
+        if cell_string.present?
           if Race::RESULT.respond_to?(cell_string.to_sym)
             self.column_indexes[cell_string.to_sym] = index
             self.columns << cell_string 
@@ -179,7 +179,7 @@ class ResultsFile
       return false if column_indexes.nil? || row.blank?
       return true if row.previous.blank?
       #break if age is a range and it has changed
-      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
         return true unless row[:age] == row.previous[:age]
       end
       return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class]
@@ -191,13 +191,18 @@ class ResultsFile
     end
   end
 
-  def create_race(row)
+  def find_or_create_race(row)
     if usac_results_format
       category = Category.find_or_create_by_name(construct_usac_category(row))
     else
       category = Category.find_or_create_by_name(row.first)
     end
-    race = event.races.build(:category => category, :notes => row.notes)
+    race = event.races.detect { |race| race.category == category }
+    if race
+      race.results.clear
+    else
+      race = event.races.build(:category => category, :notes => row.notes)
+    end
     race.result_columns = columns
     race.save!
     Rails.logger.info("ResultsFile #{Time.zone.now} create race #{category}")
@@ -211,7 +216,7 @@ class ResultsFile
     #The end result should look like "Junior Women 13-14" or "Junior Men"
     #category_class may or may not be populated
     #e.g. "Master B Men" or "Cat4 Female"
-    if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+    if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
       return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s + " " + row[:age].to_s)).squeeze(" ").strip
     else
       return ((row[:category_name].to_s + " " + row[:category_class].to_s + " " + row[:gender].to_s)).squeeze(" ").strip
@@ -221,12 +226,7 @@ class ResultsFile
   def result?(row)
     return false unless column_indexes
     return false if row.blank?
-    return true if !row.place.blank?
-    return true if !row[:number].blank?
-    return true if !row[:license].blank?
-    if !row[:team_name].blank?
-      return true
-    end
+    return true if row.place.present? || row[:number].present? || row[:license].present? || row[:team_name].present?
     if !(row[:first_name].blank? && row[:last_name].blank? && row[:name].blank?)
       return true
     end
@@ -238,20 +238,20 @@ class ResultsFile
       result = race.results.build(row.to_hash)
       result.updated_by = @event.name
 
-      if row[:time] && (row[:time].to_s.downcase.include?("st") || row[:time].to_s.downcase.include?("s.t."))
+      if row[:time] && row[:time].to_s[/st|s.t./i]
         result.time = row.previous.result.time
       end
 
       if result.place.to_i > 0
         result.place = result.place.to_i
-      elsif !result.place.blank?
+      elsif result.place.present?
         result.place = result.place.upcase rescue result.place
-      elsif !row.previous[:place].blank? && row.previous[:place].to_i == 0
+      elsif row.previous[:place].present? && row.previous[:place].to_i == 0
         result.place = row.previous[:place]
       end
 
       # USAC format input may contain an age range in the age column for juniors.
-      if !row[:age].blank? && /\d+-\d+/ =~ row[:age].to_s
+      if row[:age].present? && /\d+-\d+/ =~ row[:age].to_s
         result.age = nil
         result.age_group = row[:age]
       end
@@ -266,7 +266,6 @@ class ResultsFile
     end
   end
 
-  # TODO Try caching some things
   class Row
     attr_reader :column_indexes
     attr_accessor :next
@@ -335,10 +334,10 @@ class ResultsFile
       if usac_results_format
         # We want to pick up the info in the first 5 columns: org, year, event #, date, discipline
         return "" if blank? || size < 5
-        spreadsheet_row[0, 5].select { |cell| !cell.blank? }.join(", ")
+        spreadsheet_row[0, 5].select { |cell| cell.present? }.join(", ")
       else  
         return "" if blank? || size < 2
-        spreadsheet_row[1, size - 1].select { |cell| !cell.blank? }.join(", ")
+        spreadsheet_row[1, size - 1].select { |cell| cell.present? }.join(", ")
       end
     end
      
