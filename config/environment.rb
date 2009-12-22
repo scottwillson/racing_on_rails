@@ -19,7 +19,8 @@ Rails::Initializer.run do |config|
   config.gem "pdf-writer", :lib => "pdf/writer"
   # For tests
   config.gem "selenium-client", :lib => "selenium/client"
-  
+  config.gem "mocha"
+
   config.time_zone = "Pacific Time (US & Canada)"
   
   # Racing on Rails has many foreign key constraints, so :sql is required
