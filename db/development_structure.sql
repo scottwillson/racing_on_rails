@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
+  `name` varchar(255) default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `title` varchar(255) default null,
+  `heading` varchar(255) default null,
+  `description` varchar(255) default null,
   `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
+  `body` text,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -170,8 +170,8 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
-  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
+  `promoter_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
@@ -286,7 +286,6 @@ create table `people` (
   `notes` text,
   `state` varchar(64) default null,
   `team_id` int(11) default null,
-  `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `cell_fax` varchar(255) default null,
@@ -316,6 +315,7 @@ create table `people` (
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
+  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -330,13 +330,15 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
-  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
   `emergency_contact` varchar(255) default null,
   `emergency_contact_phone` varchar(255) default null,
   `card_printed_at` datetime default null,
+  `license_type` varchar(255) default null,
+  `country_code` varchar(2) default 'us',
+  `membership_card` tinyint(1) not null default '0',
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -672,6 +674,12 @@ insert into schema_migrations (version) values ('20090708162118');
 
 insert into schema_migrations (version) values ('20090730022816');
 
+insert into schema_migrations (version) values ('20090815135542');
+
+insert into schema_migrations (version) values ('20090930060618');
+
+insert into schema_migrations (version) values ('20091006194727');
+
 insert into schema_migrations (version) values ('20091007232822');
 
 insert into schema_migrations (version) values ('20091009021956');
@@ -685,6 +693,8 @@ insert into schema_migrations (version) values ('20091122223629');
 insert into schema_migrations (version) values ('20091129235114');
 
 insert into schema_migrations (version) values ('20091201031927');
+
+insert into schema_migrations (version) values ('20091220162338');
 
 insert into schema_migrations (version) values ('21');
 
