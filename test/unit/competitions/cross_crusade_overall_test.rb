@@ -25,7 +25,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     cat_a_race.results.create!(:place => 1, :person => people(:weaver))
     cat_a_race.results.create!(:place => 9, :person => people(:tonkin))
 
-    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+")
+    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+ A")
     masters_race = event.races.create!(:category => masters_35_plus_women)
     masters_race.results.create!(:place => 15, :person => people(:alice))
     masters_race.results.create!(:place => 19, :person => people(:molly))
@@ -41,14 +41,19 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
-    assert_equal(18, overall.races.size, "Overall races")
+    assert_equal(19, overall.races.size, "Overall races")
     
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
-    assert_equal(18, overall.races.size, "Overall races")
+    assert_equal(19, overall.races.size, "Overall races")
     
+    assert_equal "Series Overall", overall.name, "Overall name"
+    assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
     assert(!overall.notes.blank?, "Should have notes about rules")
+    assert_equal_dates Date.new(2007, 10, 7), overall.date, "Overall series date"
+    assert_equal_dates Date.new(2007, 10, 7), overall.start_date, "Overall series start date"
+    assert_equal_dates Date.new(2007, 11, 5), overall.end_date, "Overall series end date"
         
     cx_a_overall_race = overall.races.detect { |race| race.category == cat_a }
     assert_not_nil(cx_a_overall_race, "Should have Men A overall race")
