@@ -45,6 +45,8 @@
     <%= f.labelled_text_field :home_phone %>
     <%= f.labelled_text_field :work_phone %>
     <%= f.labelled_text_field :cell_fax %>
+    <%= f.labelled_text_field :emergency_contact %>
+    <%= f.labelled_text_field :emergency_contact_phone, "Emerg Contact Phone" %>
     <%= f.labelled_check_box :wants_mail, "Wants mail?" %>
     <%= f.labelled_check_box :wants_email, "Wants email?" %>
   </div>
@@ -58,6 +60,12 @@
     <%= f.labelled_check_box :official_interest, "Official Interest" %>
     <%= f.labelled_check_box :race_promotion_interest, "Race Promotion Interest" %>
     <%= f.labelled_check_box :team_interest, "Team Interest" %>
+
+    <%= f.labelled_text_field :login, nil, :autocomplete => "off" %>
+    <%= f.label :password %>
+    <%= f.password_field :password, :autocomplete => "off" %>
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, :autocomplete => "off" %>
   </div>
 
   <hr class="space" />
@@ -83,8 +91,9 @@
     <%= f.labelled_check_box :print_card, 
                              "Print card? #{(link_to 'Print one card now', card_admin_person_path(@person, :format => "pdf"), 
                              {:class => 'obvious'})}" unless @person.new_record? %>
-  
+
     <%= f.labelled_text :card_printed_at %>
+    <%= f.labelled_text :membership_card, @person.membership_card, "Has Card?" %>
   </div>
 
   <div class="span-3 last">
