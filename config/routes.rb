@@ -110,7 +110,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :posts
 
   map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
-  map.connect "/people/:person_id", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
+  map.connect "/people/:person_id", :controller => "results", :action => "person", 
+              :requirements => { :person_id => /\d+/ }, 
+              :conditions => { :method => :get }
   map.resources :people, 
                 :member => { :card => :get, :account => :get, :membership => :get },
                 :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
