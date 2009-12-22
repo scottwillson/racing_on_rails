@@ -1,7 +1,11 @@
-<% @page_title = "Logged-in as #{current_person.email}" %>
+<% @page_title = "Logged-in as #{current_person.login}" %>
 
-<div class="tabs">
-  <%= link_to('Public Homepage', "/") %> |
+<h2>You are logged in as <%= current_person.login %></h2>
+
+<div class="tabs top_margin">
+  <%= link_to("#{ASSOCIATION.short_name} Homepage", root_url(:protocol => "http")) %> |
+  <% if administrator? -%>
   <%= link_to('Admin Pages', admin_events_path) %> |
+  <% end -%>
   <%= link_to "Logout", person_session_path, :method => :delete %>
 </div>
