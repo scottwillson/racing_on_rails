@@ -3,15 +3,14 @@ class Admin::AdminController < ApplicationController
     @show_tabs = true
   end
 
-  protected
+  private
+    # Force SSL for admin controllers
+    def ssl_required?
+      ASSOCIATION.ssl?
+    end
 
-  # Force SSL for admin controllers
-  def ssl_required?
-    ASSOCIATION.ssl?
-  end
-
-  # Counter-intuitive. "True" means that we don't care if it's HTTPS or HTTP.
-  def ssl_allowed?
-    !ASSOCIATION.ssl?
-  end
+    # Counter-intuitive. "True" means that we don't care if it's HTTPS or HTTP.
+    def ssl_allowed?
+      !ASSOCIATION.ssl?
+    end
 end
