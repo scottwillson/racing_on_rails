@@ -159,7 +159,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(6, six_day.children.count, 'Six Day events')
+    assert_equal(6, six_day.children(true).count, 'Six Day events')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(2006, 6, 17), six_day.end_date, 'Six Day end date')
@@ -271,7 +271,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(8, six_day.children.count, 'Six Day events')
+    assert_equal(8, six_day.children(true).count, 'Six Day events')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(1999, 7, 27), six_day.end_date, 'Six Day end date')

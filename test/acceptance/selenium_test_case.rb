@@ -117,6 +117,30 @@ class SeleniumTestCase < ActiveSupport::TestCase
     string_command "assertElementNotPresent", [locator]
   end
   
+  def assert_enabled(locator)
+    string_command "assertEditable", [locator]    
+  end
+  
+  def assert_disabled(locator)
+    string_command "assertNotEditable", [locator]    
+  end
+  
+  def wait_for_enabled(locator)
+    string_command "waitForEditable", [locator]
+  end
+  
+  def wait_for_disabled(locator)
+    string_command "waitForNotEditable", [locator]
+  end
+  
+  def assert_visible(locator)
+    string_command "assertVisible", [locator]
+  end
+  
+  def assert_not_visible(locator)
+    string_command "assertNotVisible", [locator]
+  end
+  
   def assert_value(locator, pattern)
     string_command "assertValue", [locator, pattern]
   end

@@ -305,10 +305,10 @@ class EventTest < ActiveSupport::TestCase
   def test_date_range_s_long
     mt_hood = events(:mt_hood)
     assert_equal("07/11/2005-07/12/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
-    mt_hood.children.last.date = Date.new(2005, 8, 1)
-    mt_hood.children.last.save!
-    mt_hood.save!
-    mt_hood.reload
+    last_day = mt_hood.children.last
+    last_day.date = Date.new(2005, 8, 1)
+    last_day.save!
+    mt_hood = Event.find(mt_hood.id)
     assert_equal("07/11/2005-08/01/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
 
     kings_valley = events(:kings_valley)
@@ -373,14 +373,28 @@ class EventTest < ActiveSupport::TestCase
     nov_event = Series.new(:date => Date.new(1998, 11, 20))
     events = [jan_event, march_event, nov_event]
     
-    assert_equal([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
     march_event.date = Date.new(1999)
-    assert_equal([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
     
     events.each {|e| e.save!}
-    assert_equal([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
     march_event.date = Date.new(1998, 3, 2)
-    assert_equal([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+  end
+  
+  def test_equality
+    event_1 = SingleDayEvent.create!
+    event_2 = SingleDayEvent.create!
+    event_1_copy = SingleDayEvent.find(event_1.id)
+    
+    assert_equal event_1, event_1, "event_1 == event_1"
+    assert_equal event_2, event_2, "event_2 == event_2"
+    assert (event_1 != event_2), "event_1 != event_2"
+    assert (event_2 != event_1), "event_2 != event_1"
+    assert_equal event_1, event_1_copy, "event_1 == event_1_copy"
+    assert (event_1_copy != event_2), "event_1_copy != event_2"
+    assert (event_2 != event_1_copy), "event_2 != event_1_copy"
   end
   
   def test_multi_day_event_children_with_no_parent

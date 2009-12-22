@@ -47,6 +47,9 @@ class LoginStoriesTest < ActionController::IntegrationTest
 
       get "/people/#{people(:administrator).id}/account"
       assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+      
+      put "/people/#{people(:administrator).id}"
+      assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"      
     end
 
     def test_redirect_from_old_paths
@@ -166,6 +169,9 @@ class LoginStoriesTest < ActionController::IntegrationTest
 
       get "/people/#{people(:administrator).id}/account"
       assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"
+      
+      put "/people/#{people(:administrator).id}"
+      assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"      
     end
 
     def test_redirect_from_old_paths

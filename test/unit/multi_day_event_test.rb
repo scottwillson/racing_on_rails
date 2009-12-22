@@ -138,10 +138,10 @@ class MultiDayEventTest < ActiveSupport::TestCase
   def test_date_range_s
     mt_hood = events(:mt_hood)
     assert_equal('7/11-12', mt_hood.date_range_s, 'Date range')
-    mt_hood.children.last.date = Date.new(2005, 8, 1)
-    mt_hood.children.last.save!
-    mt_hood.save!
-    mt_hood.reload
+    last_day = mt_hood.children.last
+    last_day.date = Date.new(2005, 8, 1)
+    last_day.save!
+    mt_hood = Event.find(mt_hood.id)
     assert_equal('7/11-8/1', mt_hood.date_range_s, 'Date range')
   end
   

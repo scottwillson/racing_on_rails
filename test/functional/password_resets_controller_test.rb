@@ -5,7 +5,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     super
     use_ssl
   end
-  
+
   def test_forgot_password
     ActionMailer::Base.deliveries.clear
     post :create, :email => "admin@example.com"
@@ -47,7 +47,9 @@ class PasswordResetsControllerTest < ActionController::TestCase
     post :update, :id => people(:administrator).perishable_token, :person => { :password => "my new password", :password_confirmation => "my new password" }
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns["person_session"], "@person_session")
-    assert(password != Person.find(people(:administrator).id).crypted_password, "Password should change")
+    updated_person = Person.find(people(:administrator).id)
+    assert(password != updated_person.crypted_password, "Password should change")
+    assert_equal "admin@example.com", updated_person.login, "login"
     assert_redirected_to admin_home_path
   end
   
@@ -57,7 +59,10 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
-    assert(password != Person.find(people(:member).id).crypted_password, "Password should change")
+    updated_person = Person.find(people(:member).id)
+    assert(password != updated_person.crypted_password, "Password should change")
+    assert_equal "bob.jones", updated_person.login, "login"
+    assert(password != Person.find(updated_person.id).crypted_password, "Password should change")
     assert_redirected_to "/account"
   end
   
@@ -67,7 +72,9 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_nil(assigns["person_session"], "@person_session")
     assert_not_nil(assigns["person"], "@person")
     assert_not_nil(assigns("person").errors[:password], "Should have error on password")
-    assert(password == Person.find(people(:member).id).crypted_password, "Password should not change")
+    updated_person = Person.find(people(:member).id)
+    assert(password == Person.find(updated_person.id).crypted_password, "Password should not change")
+    assert_equal "bob.jones", updated_person.login, "login"
     assert_response :success
   end
   
