@@ -427,6 +427,13 @@ class Person < ActiveRecord::Base
     end
   end
   
+  # Over 18 years old
+  def senior?
+    if date_of_birth
+      date_of_birth < Date.new(18.years.ago.year, 1, 1)
+    end
+  end
+  
   # Oldest age person will be at any point in year
   def racing_age
     if date_of_birth
