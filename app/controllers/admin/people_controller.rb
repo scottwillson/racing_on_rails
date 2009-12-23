@@ -83,9 +83,9 @@ class Admin::PeopleController < Admin::AdminController
   
   def new
     @year = current_date.year
-    @person = Person.new(:member_from => Date.new(@year))
+    @person = Person.new
     @race_numbers = []
-    @years = (2005..(@year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
     render(:action => "edit")
   end
   
@@ -93,7 +93,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @year = current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-    @years = (2005..(@year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
   end
   
   # Create new Person
@@ -137,7 +137,7 @@ class Admin::PeopleController < Admin::AdminController
     else
       @year = current_date.year
       @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-      @years = (2005..(@year + 1)).to_a.reverse
+      @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
       render :edit
     end
   end
@@ -203,8 +203,8 @@ class Admin::PeopleController < Admin::AdminController
         return redirect_to(edit_admin_person_path(@person))
       end
     end
-    @years = (2005..(Date.today.year + 1)).to_a.reverse
-    @year = params[:year] || Date.today.year
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+    @year = params[:year] || ASSOCIATION.effective_year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     render :edit
   end
@@ -363,7 +363,7 @@ class Admin::PeopleController < Admin::AdminController
       @person = Person.new
       @race_numbers = []
     end
-    @years = (2005..(Date.today.year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
     render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
   end
   
@@ -409,7 +409,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @people = [@person]
     @person.print_card = false
-    @person.card_printed_at = Time.zone.now
+    @person.card_printed_at = ASSOCIATION.now
     @person.save!
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
@@ -429,26 +429,21 @@ class Admin::PeopleController < Admin::AdminController
   private
   
   def assign_years
-    today = current_date
-    if today.month == 12
-      @year = today.year + 1
+    date = current_date
+    if date.month == 12
+      @year = date.year + 1
     else
-      @year = today.year
+      @year = date.year
     end
-    @years = [today.year, today.year + 1]
+    @years = [ date.year, date.year + 1 ]
   end
 
   def current_date
-    if params[:date].blank?
-      date = Date.today
+    if params[:date].present?
+      Date.parse(params[:date])
     else
-      date = Date.parse(params[:date])
+      ASSOCIATION.effective_today
     end
-    max_date_for_current_year = Event.find_max_date_for_current_year
-    if max_date_for_current_year && (date > max_date_for_current_year)
-      date = Date.new(date.year + 1)
-    end
-    date
   end
   
   def remember_event

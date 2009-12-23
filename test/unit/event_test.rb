@@ -345,14 +345,6 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
   end
   
-  def test_find_max_date_for_current_year
-    Result.delete_all
-    Event.delete_all
-    assert_nil(Event.find_max_date_for_current_year)
-    SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
-    assert_equal_dates("#{Date.today.year}-06-10", Event.find_max_date_for_current_year)
-  end
-  
   def test_flyer
     event = SingleDayEvent.new
     assert_equal(nil, event.flyer, 'Blank event flyer')

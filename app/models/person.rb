@@ -125,7 +125,7 @@ class Person < ActiveRecord::Base
   def Person.find_by_number(number)
     Person.find(:all, 
                :include => :race_numbers,
-               :conditions => ['race_numbers.year = ? and race_numbers.value = ?', Date.today.year, number])
+               :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ ASSOCIATION.year, ASSOCIATION.next_year ], number ])
   end
 
   def Person.full_name(first_name, last_name)
@@ -158,7 +158,7 @@ class Person < ActiveRecord::Base
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = Date.today, include_people = "members_only")
+  def Person.find_all_for_export(date = ASSOCIATION.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
     if include_people == "members_only"
       where_clause = "WHERE (member_to >= '#{date.to_s}')" 
@@ -223,7 +223,7 @@ class Person < ActiveRecord::Base
   #interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
-      (lic_date && (Date.parse(lic_date) > Date.today)) ? "current" : "CHECK LIC!"
+      (lic_date && (Date.parse(lic_date) > ASSOCIATION.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
     end
@@ -435,7 +435,7 @@ class Person < ActiveRecord::Base
   # Oldest age person will be at any point in year
   def racing_age
     if date_of_birth
-      (Date.today.year - date_of_birth.year).ceil
+      (ASSOCIATION.year - date_of_birth.year).ceil
     end
   end
   
@@ -448,7 +448,7 @@ class Person < ActiveRecord::Base
   def number(discipline, reload = false, year = nil)
     return nil if discipline.nil?
 
-    year = year || Date.today.year
+    year = year || ASSOCIATION.year
     if discipline.is_a?(Symbol)
       discipline = Discipline[discipline]
     end
@@ -465,7 +465,7 @@ class Person < ActiveRecord::Base
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
-    _year ||= Date.today.year
+    _year ||= ASSOCIATION.year
 
     if discipline.nil? || !discipline.numbers?
       discipline = Discipline[:road]
@@ -575,13 +575,13 @@ class Person < ActiveRecord::Base
   end
 
   # Is Person a current member of the bike racing association?
-  def member?(date = Date.today)
+  def member?(date = ASSOCIATION.today)
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
-  def member_in_year?(date = Date.today)
+  def member_in_year?(date = ASSOCIATION.today)
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     year = date.year
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
@@ -594,14 +594,14 @@ class Person < ActiveRecord::Base
   # Is Person a current member of the bike racing association?
   def member=(value)
     if value && !member?
-      self.member_from = Date.today if self.member_from.nil? or self.member_from >= Date.today
-      self.member_to = Date.new(Date.today.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(Date.today.year, 12, 31))
+      self.member_from = ASSOCIATION.today if self.member_from.nil? or self.member_from >= ASSOCIATION.today
+      self.member_to = Date.new(ASSOCIATION.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(ASSOCIATION.year, 12, 31))
     elsif !value && member?
-      if self.member_from.year == Date.today.year
+      if self.member_from.year == ASSOCIATION.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Date.new(Date.today.year - 1, 12, 31)
+        self.member_to = Date.new(ASSOCIATION.year - 1, 12, 31)
       end
     end
   end
@@ -631,7 +631,7 @@ class Person < ActiveRecord::Base
   
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = Date.today if self.member_from.nil?
+      self[:member_from] = ASSOCIATION.today if self.member_from.nil?
       self[:member_from] = date if self.member_from > date
     end
     self[:member_to] = date
@@ -651,7 +651,7 @@ class Person < ActiveRecord::Base
   end
   
   def renewed?
-    self.member_from && (self.member_from > Date.today)
+    self.member_from && (self.member_from > ASSOCIATION.today)
   end
   
   def print_card?

@@ -4,11 +4,11 @@ class Admin::FirstAidProvidersController < Admin::AdminController
   layout "admin/application"
 
   def index
-    @year = Date.today.year
+    @year = ASSOCIATION.effective_year
     
     @past_events = params[:past_events] || false
     if @past_events
-      conditions = ['date >= ?', Date.today.beginning_of_year]
+      conditions = ['date >= ?', ASSOCIATION.effective_today ]
     else
       conditions = ['date >= CURDATE()']
     end

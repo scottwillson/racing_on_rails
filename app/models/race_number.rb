@@ -79,7 +79,7 @@ class RaceNumber < ActiveRecord::Base
   def defaults
     self.discipline = Discipline[:road] unless self.discipline
     self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer
-    self.year = Date.today.year unless (self.year and self.year > 1800)
+    self.year = ASSOCIATION.effective_year unless (self.year and self.year > 1800)
   end
   
   def get_person_id

@@ -154,12 +154,6 @@ class Event < ActiveRecord::Base
 
   end
 
-  # Used when importing People: should membership be for this year or the next?
-  def Event.find_max_date_for_current_year
-    # TODO Make this better
-    maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])
-  end
-  
   def Event.friendly_class_name
     name.underscore.humanize.titleize
   end

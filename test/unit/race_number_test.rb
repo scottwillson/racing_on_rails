@@ -5,12 +5,12 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert_not_nil(NumberIssuer.find_by_name(ASSOCIATION.short_name), 'Number issuer exists')
     race_number = RaceNumber.new(:value => '999', :person => people(:alice))
     race_number.save!
-    assert_equal(Date.today.year, race_number.year, 'year default')
+    assert_equal(ASSOCIATION.effective_year, race_number.year, 'year default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
 
     race_number = RaceNumber.create!(:person => people(:alice), :value => '100')
-    assert_equal(Date.today.year, race_number.year, 'year default')
+    assert_equal(ASSOCIATION.effective_year, race_number.year, 'year default')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
   end

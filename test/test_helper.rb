@@ -11,6 +11,7 @@ class ActiveSupport::TestCase
 
   def setup
     activate_authlogic
+    ASSOCIATION.now = nil
     super
   end
   

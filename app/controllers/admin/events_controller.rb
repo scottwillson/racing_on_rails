@@ -13,7 +13,7 @@ class Admin::EventsController < Admin::AdminController
   # * year
   def index
     @year = params["year"].to_i
-    @year = Date.today.year if @year == 0
+    @year = ASSOCIATION.effective_year if @year == 0
     events = SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
   end
@@ -38,7 +38,7 @@ class Admin::EventsController < Admin::AdminController
   # * event: Unsaved SingleDayEvent
   def new
     if params[:year].blank?
-      date = Date.today
+      date = ASSOCIATION.effective_year
     else
       year = params[:year]
       date = Date.new(year.to_i)
