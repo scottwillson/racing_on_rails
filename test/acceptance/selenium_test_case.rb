@@ -28,16 +28,16 @@ class SeleniumTestCase < ActiveSupport::TestCase
         :host => "localhost", 
         :port => 4444, 
         :browser => browser, 
-        :url => "http://localhost:3000", 
+        :url => "http://localhost:3000",
         :timeout_in_second => 60
     )
     start_new_browser_session
 
-    delete_cookie '_racing_on_rails_session_id', '/'
-    delete_cookie 'auth_token', '/'
-    delete_cookie 'email', '/'
-    delete_cookie 'person_name', '/'
-    delete_cookie 'team_name', '/'
+    delete_cookie '_racing_on_rails_session_id'
+    delete_cookie 'auth_token'
+    delete_cookie 'email'
+    delete_cookie 'person_name'
+    delete_cookie 'team_name'
 
     super
   end
