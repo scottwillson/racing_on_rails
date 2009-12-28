@@ -801,6 +801,7 @@ class ResultTest < ActiveSupport::TestCase
   end
   
   def test_find_people_among_duplicates
+    ASSOCIATION.now = Date.new(2009, 6)
     Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
     
     jt_1 = Person.create!(:name => "John Thompson")

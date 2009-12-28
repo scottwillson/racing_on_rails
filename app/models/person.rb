@@ -4,7 +4,6 @@
 #
 # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
 class Person < ActiveRecord::Base
-
   include Comparable
 
   acts_as_authentic do |config|
@@ -593,9 +592,9 @@ class Person < ActiveRecord::Base
   
   # Is Person a current member of the bike racing association?
   def member=(value)
-    if value && !member?
-      self.member_from = ASSOCIATION.today if self.member_from.nil? or self.member_from >= ASSOCIATION.today
-      self.member_to = Date.new(ASSOCIATION.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(ASSOCIATION.year, 12, 31))
+    if value
+      self.member_from = ASSOCIATION.today if self.member_from.nil? || self.member_from >= ASSOCIATION.today
+      self.member_to = Date.new(ASSOCIATION.effective_year, 12, 31) unless self.member_to && (self.member_to >= Date.new(ASSOCIATION.effective_year, 12, 31))
     elsif !value && member?
       if self.member_from.year == ASSOCIATION.year
         self.member_from = nil
@@ -649,11 +648,11 @@ class Person < ActiveRecord::Base
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
   end
-  
+
   def renewed?
-    self.member_from && (self.member_from > ASSOCIATION.today)
+    self.member_to && (self.member_to.year >= ASSOCIATION.effective_year)
   end
-  
+
   def print_card?
     self.print_card
   end
