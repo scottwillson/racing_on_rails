@@ -398,7 +398,7 @@ class Admin::PeopleController < Admin::AdminController
     if @people.empty?
       return redirect_to(no_cards_admin_people_path(:format => "html"))
     else
-      Person.update_all("print_card=0", ['id in (?)', @people.collect{|person| person.id}])
+      Person.update_all("print_card=0, membership_card=1", ['id in (?)', @people.collect{|person| person.id}])
     end
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
@@ -409,6 +409,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @people = [@person]
     @person.print_card = false
+    @person.membership_card = true
     @person.card_printed_at = ASSOCIATION.now
     @person.save!
     

@@ -885,6 +885,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     tonkin = people(:tonkin)
     tonkin.print_card = true
     tonkin.save!
+    assert !tonkin.membership_card?, "Tonkin.membership_card? before printing"
 
     get(:cards, :format => "pdf")
 
@@ -894,6 +895,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(1, assigns['people'].size, 'Should assign people')
     tonkin.reload
     assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
+    assert tonkin.membership_card?, "Tonkin.has_card? after printing"
   end
   
   def test_many_print_cards
@@ -911,6 +913,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     for person in people
       person.reload
       assert(!person.print_card?, 'Person.print_card? after printing')
+      assert person.membership_card?, "person.membership_card? after printing"
     end
   end
 
