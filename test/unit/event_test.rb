@@ -8,8 +8,7 @@ class EventTest < ActiveSupport::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal(5, years.size, "Should find all years with events")
-    assert_equal([Date.today.year, 2005, 2004, 2003, 2002], years, "Years")
+    assert_equal_enumerables([Date.today.year, 2005, 2004, 2003, 2002], years, "Should find all years with events")
   end
   
   def test_defaults
@@ -397,8 +396,8 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
     assert(events(:kings_valley_2004).multi_day_event_children_with_no_parent.empty?)
     
-    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
+    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
     assert(!(event.multi_day_event_children_with_no_parent?))
     assert(event.multi_day_event_children_with_no_parent.empty?)
       
@@ -407,16 +406,16 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
       
-    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 1, 9, 5))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 12))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(!pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     assert(pir_2.multi_day_event_children_with_no_parent.empty?)
 
-    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 17))
+    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 17))
     # Need to completely reset state
     pir_1 = SingleDayEvent.find(pir_1.id)
     pir_2 = SingleDayEvent.find(pir_2.id)
@@ -431,7 +430,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
   
-    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(ASSOCIATION.year - 2, 7, 13))
     assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)

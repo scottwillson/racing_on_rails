@@ -225,7 +225,9 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
     assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
     
-    ASSOCIATION.now = nil
+    ASSOCIATION.now = Date.new(2010)
+    person.member_from = Date.new(2010)
+    person.member_to = Date.new(2010, 12, 31)
     person.member = false
     assert_equal(false, person.member?, 'member')
     assert_nil(person.member_from, 'Member on')
