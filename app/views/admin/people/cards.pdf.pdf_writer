@@ -6,7 +6,7 @@
   
   pdf.select_font 'Helvetica'
   pdf.pointer = 742.8 - ((index % 3) * 268.4)
-  pdf.text '2007 Member', :justification => :center, :font_size => 12, :absolute_left => 46, :absolute_right => 311.4
+  pdf.text "#{ASSOCIATION.effective_year} Member", :justification => :center, :font_size => 12, :absolute_left => 46, :absolute_right => 311.4
 
   pdf.rectangle(31, 584.8 - ((index % 3) * 268.4), 288, 162).stroke
   
@@ -38,5 +38,5 @@
   pdf.text("Racing Age: #{person.racing_age}", :justification => :left, :font_size => 9, :absolute_left => 348, :absolute_right => 579.5)
 
   pdf.select_font 'Helvetica'
-  pdf.text 'Membership expires 12/31/2009', :justification => :center, :font_size => 8, :absolute_left => 336.4, :absolute_right => 579.5
+  pdf.text "Membership expires 12/31/#{ASSOCIATION.effective_year}", :justification => :center, :font_size => 8, :absolute_left => 336.4, :absolute_right => 579.5
 end
