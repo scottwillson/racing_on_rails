@@ -111,7 +111,7 @@
   <hr class="space" />
 
   <div class="clear span-6 last">
-    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.empty? %>
+    <%= render(:partial => "people/events", :locals => { :person => @person }) unless @person.events.empty? %>
   </div>
 
   <div class="page_buttons span-6 last">

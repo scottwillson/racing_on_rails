@@ -157,7 +157,7 @@ create table `events` (
   `cancelled` tinyint(1) default '0',
   `notification` tinyint(1) default '1',
   `number_issuer_id` int(11) default null,
-  `first_aid_provider` varchar(255) default '-------------',
+  `first_aid_provider` varchar(255) default null,
   `pre_event_fees` float default null,
   `post_event_fees` float default null,
   `flyer_ad_fee` float default null,
@@ -176,6 +176,7 @@ create table `events` (
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
   `postponed` tinyint(1) not null default '0',
+  `chief_referee` varchar(255) default null,
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -695,6 +696,8 @@ insert into schema_migrations (version) values ('20091129235114');
 insert into schema_migrations (version) values ('20091201031927');
 
 insert into schema_migrations (version) values ('20091220162338');
+
+insert into schema_migrations (version) values ('20100107001744');
 
 insert into schema_migrations (version) values ('21');
 
