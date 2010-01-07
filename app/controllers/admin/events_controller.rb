@@ -4,6 +4,7 @@ class Admin::EventsController < Admin::AdminController
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
+  in_place_edit_for :event, :chief_referee
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -49,7 +50,9 @@ class Admin::EventsController < Admin::AdminController
       @event = SingleDayEvent.new(params[:event])
     end
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
-    @event.number_issuer_id = association_number_issuer.id
+    if association_number_issuer
+      @event.number_issuer_id = association_number_issuer.id
+    end
     
     respond_to do |format|
       format.html { render :action => :edit }

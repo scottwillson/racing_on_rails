@@ -25,14 +25,14 @@ class SingleDayEventTest < ActiveSupport::TestCase
 
   def test_create
     event = SingleDayEvent.create!
-    assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
+    assert_equal nil, event.first_aid_provider, "New event first aid provider"
     assert_equal(ASSOCIATION.state, event.state, "default state")
     assert_equal_dates(Date.today, event.date, "default date")
     assert(event.name[/^New Event/], "default name")
     assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "default sanctioned_by")
 
     event = SingleDayEvent.create!(:name => 'Copperopolis')
-    assert_equal('-------------', event.first_aid_provider, "New event first aid provider")
+    assert_equal nil, event.first_aid_provider, "New event first aid provider"
   end
 
   def test_create_tt

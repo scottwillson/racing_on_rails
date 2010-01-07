@@ -85,6 +85,11 @@
 
   <hr class="space" />
 
+  <div class="clear span-6 last">
+    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.empty? %>
+  </div>
+  <hr class="space" />
+
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
       <span class="created_at">
