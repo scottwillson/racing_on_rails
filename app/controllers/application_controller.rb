@@ -96,6 +96,12 @@ class ApplicationController < ActionController::Base
       redirect_to unauthorized_path
     end
   end
+  
+  def require_administrator_or_promoter
+    unless (current_person && current_person.administrator?) || (@event && current_person == @event.promoter)
+      redirect_to unauthorized_path
+    end
+  end
 
   def current_person_session
     return @current_person_session if defined?(@current_person_session)
