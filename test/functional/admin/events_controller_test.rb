@@ -69,6 +69,19 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_nil(assigns["race"], "Should not assign race")
     assert_not_equal(people(:administrator), assigns["event"].promoter, 'Promoter from promoter ID')
   end
+  
+  def test_edit_as_promoter
+    login_as :promoter
+    get :edit, :id => events(:banana_belt_1).to_param
+    assert_response :success
+    assert_template "admin/events/edit"
+  end
+  
+  def test_promoter_can_only_edit_own_events
+    login_as :promoter
+    get :edit, :id => events(:pir).to_param
+    assert_redirected_to unauthorized_path
+  end
 
   def test_upload
     mt_hood_1 = events(:mt_hood_1)

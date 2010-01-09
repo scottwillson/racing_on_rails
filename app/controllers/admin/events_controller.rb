@@ -1,6 +1,8 @@
 # Show Schedule, add and edit Events, edit Results for Events
 class Admin::EventsController < Admin::AdminController
-  before_filter :require_administrator
+  before_filter :assign_event, :only => [ :edit, :update ]
+  before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
+  before_filter :require_administrator, :except => [ :edit, :update ]
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
@@ -26,8 +28,7 @@ class Admin::EventsController < Admin::AdminController
   # * event
   # * disciplines: List of all Disciplines + blank
   def edit
-    @event = Event.find(params[:id])
-    unless params['promoter_id'].blank?
+    if params['promoter_id'].present? && current_person.administrator?
       @event.promoter = Person.find(params['promoter_id'])
     end
   end
@@ -106,8 +107,6 @@ class Admin::EventsController < Admin::AdminController
   # === Flash
   # * warn
   def update
-    expire_cache
-    @event = Event.find(params[:id])
     # TODO consolidate code
     event_params = params[:event].clone
     event_type = event_params.delete(:type)
@@ -129,6 +128,7 @@ class Admin::EventsController < Admin::AdminController
     if @event.errors.empty?
       redirect_to(edit_admin_event_path(@event))
     else
+      expire_cache
       render(:action => :edit)
     end
   end
@@ -255,5 +255,9 @@ class Admin::EventsController < Admin::AdminController
   
   def assign_disciplines
     @disciplines = Discipline.find_all_names
+  end
+  
+  def assign_event
+    @event = Event.find(params[:id])
   end
 end

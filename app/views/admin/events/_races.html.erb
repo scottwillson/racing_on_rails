@@ -12,15 +12,14 @@
   <tr id="destroy_races_row">
     <td></td>
     <td class="right">
-      <%= link_to_remote image_tag('/images/buttons/small_remove_all_solo.png'),
+      <%= link_to_remote(image_tag('/images/buttons/small_remove_all_solo.png'),
       :url => destroy_races_admin_event_path(@event),
       :html => { :class => "image", :id => "destroy_races", :title => "Delete all races" },
       :method => :delete,
       :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
       :complete => evaluate_remote_response, 
-      :confirm => (Rails.env == "test") ? nil : "Really delete all races from #{@event.name}?"
+      :confirm => (Rails.env == "test") ? nil : "Really delete all races from #{@event.name}?") if administrator?
       # Lame workaround for Safari
-
       %>
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
     </td>
@@ -33,11 +32,11 @@
       <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
     </td>
     <td class="right">
-      <%= link_to_remote image_tag('/images/buttons/small_remove_solo.png'),
+      <%= link_to_remote(image_tag('/images/buttons/small_remove_solo.png'),
       :url => admin_race_url(race),
       :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
       :complete => evaluate_remote_response, 
-      :method => :delete
+      :method => :delete) if administrator?
       %>
     </td>
   </tr>
@@ -59,6 +58,7 @@
   <tr>
     <td colspan="2">
       <div class="page_buttons">
+        <% if administrator? -%>
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>
         <% form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form", :style => "clear" do %>
           <div>
@@ -68,6 +68,7 @@
           </div>
         <% end -%>
         <div id="upload_progress" style="display: none;"><em>Importing Results</em>&nbsp;<%= image_tag "icons/spinner.gif" %></div>
+        <% end -%>
       </div>
     </td>
   </tr>
