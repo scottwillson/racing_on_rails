@@ -118,8 +118,7 @@
         <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if ASSOCIATION.competitions.include?(:atra_points_series) %>
 
         <% if ASSOCIATION.competitions.include?(:bar) -%>
-        <%= f.label :bar_points, "BAR Points" %>
-        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "BAR Points"}, :editable => administrator? %>
         <%- end %>
         
         <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
