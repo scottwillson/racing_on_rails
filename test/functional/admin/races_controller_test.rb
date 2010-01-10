@@ -17,6 +17,22 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal(kings_valley_3, assigns["race"], "Should assign kings_valley_3 race")
   end
   
+  def test_edit_own_race
+    login_as :promoter
+    race = races(:banana_belt_pro_1_2)
+    get :edit, :id => race.to_param
+    assert_response :success
+    assert_template "admin/races/edit"
+    assert_not_nil assigns["race"], "Should assign race"
+  end
+  
+  def test_cannot_edit_someone_elses_race
+    login_as :member
+    race = races(:kings_valley_3)
+    get :edit, :id => race.to_param
+    assert_redirected_to unauthorized_path
+  end
+  
   def test_update
     race = races(:kings_valley_3)
     put :update, :id => race.to_param, :race => { :category_name => "Open", :event_id => race.event.to_param }

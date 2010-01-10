@@ -1,16 +1,15 @@
 class Admin::RacesController < Admin::AdminController
-  before_filter :require_administrator
+  before_filter :assign_event, :only => [ :new, :create ]
+  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :update ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :update ]
   layout "admin/application"
   
   def new
-    @event = Event.find params[:event_id]
-    @race = @event.races.build
     render :edit
   end
   
   def create
-    @event = Event.find params[:race][:event_id]
-    @race = @event.races.build params[:race]
     if @race.save
       redirect_to edit_admin_race_path(@race)
     else
@@ -19,28 +18,26 @@ class Admin::RacesController < Admin::AdminController
   end
 
   def edit
-    @race = Race.find(params[:id])
     @disciplines = [''] + Discipline.find(:all).collect do |discipline|
       discipline.name
     end
     @disciplines.sort!
   end
   
-  # Update existing Event
+  # Update existing Race
   # === Params
   # * id
   # * event: Attributes Hash
   # === Assigns
-  # * event: Unsaved Event
+  # * event: Unsaved Race
   # === Flash
   # * warn
   def update
-    @race = Race.update(params[:id], params[:race])
-    if @race.errors.empty?
+    if @race.update_attributes(params[:race])
       expire_cache
       return redirect_to(edit_admin_race_path(@race))
     end
-    render(:action => :edit)
+    render :action => :edit
   end
 
   # Permanently destroy race and redirect to Event
@@ -59,8 +56,7 @@ class Admin::RacesController < Admin::AdminController
   # === Flash
   # * notice
   def create_result
-    race = Race.find(params[:id])
-    @result = race.create_result_before(params[:before_result_id])
+    @result = @race.create_result_before(params[:before_result_id])
     expire_cache
   end
 
@@ -71,7 +67,26 @@ class Admin::RacesController < Admin::AdminController
   # * notice
   def destroy_result
     @result = Result.find(params[:result_id])
-    @result.race.destroy_result(@result)
-    @result.race.results(true)
+    @result.race.destroy_result @result
+    @result.race.results true
+  end
+  
+  
+  private
+  
+  def assign_event
+    if params[:event_id].present?
+      @event = Event.find params[:event_id]
+    elsif params[:race]
+      @event = Event.find params[:race][:event_id]
+    end
+  end
+  
+  def assign_race
+    if params[:id].present?
+      @race = Race.find(params[:id])
+    else
+      @race = @event.races.build params[:race]
+    end
   end
 end
