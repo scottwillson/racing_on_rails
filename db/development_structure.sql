@@ -308,8 +308,8 @@ create table `people` (
   `ccx_only` tinyint(1) not null default '0',
   `updated_by` varchar(255) default null,
   `bmx_category` varchar(255) default null,
-  `wants_email` tinyint(1) not null default '1',
-  `wants_mail` tinyint(1) not null default '1',
+  `wants_email` tinyint(1) not null default '0',
+  `wants_mail` tinyint(1) not null default '0',
   `volunteer_interest` tinyint(1) not null default '0',
   `official_interest` tinyint(1) not null default '0',
   `race_promotion_interest` tinyint(1) not null default '0',
@@ -698,6 +698,8 @@ insert into schema_migrations (version) values ('20091201031927');
 insert into schema_migrations (version) values ('20091220162338');
 
 insert into schema_migrations (version) values ('20100107001744');
+
+insert into schema_migrations (version) values ('20100113032309');
 
 insert into schema_migrations (version) values ('21');
 
