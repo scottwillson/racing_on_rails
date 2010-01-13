@@ -160,6 +160,15 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_template :edit
   end
   
+  def test_new_as_promoter
+    login_as :promoter
+    event = events(:banana_belt_1)
+    get :new, :event_id => event.to_param
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_template :edit
+  end
+  
   def test_create
     event = events(:kings_valley)
     assert event.races.none? { |race| race.category_name == "Senior Women" }

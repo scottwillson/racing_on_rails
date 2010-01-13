@@ -444,6 +444,23 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def category(discipline)
+    case discipline
+    when Discipline[:road], Discipline[:track], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
+      self["road_category"]
+    when Discipline[:road], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
+      self["track_category"]
+    when Discipline[:cyclocross]
+      self["ccx_category"]
+    when Discipline[:dh]
+      self["dh_category"]
+    when Discipline[:bmx]
+      self["bmx_category"]
+    when Discipline[:mtb]
+      self["xc_category"]
+    end
+  end
+  
   def number(discipline, reload = false, year = nil)
     return nil if discipline.nil?
 

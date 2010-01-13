@@ -126,9 +126,10 @@ class Admin::EventsController < Admin::AdminController
     end
     
     if @event.errors.empty?
+      expire_cache
+      flash[:notice] = "Updated #{@event.name}"
       redirect_to(edit_admin_event_path(@event))
     else
-      expire_cache
       render(:action => :edit)
     end
   end

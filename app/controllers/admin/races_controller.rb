@@ -1,8 +1,8 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create ]
   before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :update ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :update ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :update ]
   layout "admin/application"
   
   def new
@@ -11,6 +11,7 @@ class Admin::RacesController < Admin::AdminController
   
   def create
     if @race.save
+      flash[:notice] = "Created #{@race.name}"
       redirect_to edit_admin_race_path(@race)
     else
       render :edit
@@ -35,6 +36,7 @@ class Admin::RacesController < Admin::AdminController
   def update
     if @race.update_attributes(params[:race])
       expire_cache
+      flash[:notice] = "Updated #{@race.name}"
       return redirect_to(edit_admin_race_path(@race))
     end
     render :action => :edit
