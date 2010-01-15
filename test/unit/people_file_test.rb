@@ -99,7 +99,8 @@ Downhill/Cross Country: Downhill}
       :member_to => Date.new(Date.today.year + 1, 12, 31),
       :date_of_birth => '1965-10-02',
       :notes => 'Existing notes',
-      :road_number => '825'
+      :road_number => '824',
+      :dh_number => "117"
     )
 
     rene = Person.create!(
@@ -124,16 +125,19 @@ Downhill/Cross Country: Downhill}
       :member_from => '2000-01-01',
       :team_name => 'EWEB',
       :road_category => '3',
-      :date_of_birth => '1959-12-09'
+      :date_of_birth => '1959-12-09',
+      :license => "1516"
     )
-    assert(scott.valid?, scott.errors.full_messages)
-    assert(!scott.new_record?)
-    number = scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
-    assert(number.valid?, number.errors.full_messages)
-    assert(!number.new_record?, 'Number should be saved')
+    number = scott.race_numbers.create!(:value => '422', :year => Date.today.year - 1)
     number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
+    
+    # Dupe Scott Seaton should be skipped because of different license
+    Person.create!(
+      :last_name =>'Seaton',
+      :first_name => 'Scott'
+    )
 
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
     people = PeopleFile.new(file).import(true)
@@ -170,7 +174,13 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
-    assert_equal('825', brian_abers.road_number, 'Brian Abers road_number')
+    road_numbers = RaceNumber.find(:all, :conditions => [ 
+        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, ASSOCIATION.year
+      ])
+    assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
+    assert road_numbers.any? { |number| number.value == "824" }, "Should preseve Brian Abers road number"
+    assert road_numbers.any? { |number| number.value == "825" }, "Should add Brian Abers new road number"
+    assert_equal('117', brian_abers.dh_number, 'Brian Abers dh_number')
     assert(!brian_abers.print_card?, 'brian_abers.print_card? after import')
     
     all_heidi_babi = Person.find_all_by_name('heidi babi')
@@ -202,8 +212,8 @@ Downhill/Cross Country: Downhill}
     assert_equal('190A', rene_babi.road_number, 'Rene road_number')
     
     all_scott_seaton = Person.find_all_by_name('scott seaton')
-    assert_equal(1, all_scott_seaton.size, 'Scott Seaton in database after import')
-    scott_seaton = all_scott_seaton.first
+    assert_equal(2, all_scott_seaton.size, 'Scott Seaton in database after import')
+    scott_seaton = all_scott_seaton.detect { |p| p.license == "1516"}
     assert_equal('M', scott_seaton.gender, 'Scott Seaton gender')
     assert_equal('sseaton@bendcable.com', scott_seaton.email, 'Scott Seaton email')
     assert_equal_dates('2000-01-01', scott_seaton.member_from, 'Scott Seaton member from')
@@ -229,6 +239,8 @@ Downhill/Cross Country: Downhill}
     Person.create(:name => 'Erik Tonkin')
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
+    
+    # FIXME
     # people_file.import(true)
     # 
     # assert_equal(1, people_file.created, 'Number of people created')
