@@ -132,7 +132,11 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
-  
+
+  def administrator?
+    current_person && current_person.administrator?
+  end
+
   def store_location_and_redirect_to_login
     if request.format == "js"
       session[:return_to] = request.referrer
