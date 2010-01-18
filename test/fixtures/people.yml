@@ -10,7 +10,7 @@ administrator:
   persistence_token: <%= Authlogic::Random.hex_token %>
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
-  roles: administrator, promoter
+  roles: administrator
 
 member:
   id: 2
@@ -37,13 +37,11 @@ promoter:
   persistence_token: <%= Authlogic::Random.hex_token %>
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
-  roles: promoter
 
 nate_hobson:
   id: 4
   email: sixhobsons@comcast.net
   home_phone: (503) 223-3343
-  roles: promoter
 
 tonkin:
   first_name: Erik
@@ -61,6 +59,7 @@ tonkin:
   road_category: 1
   track_category: 5
   date_of_birth: <%= 30.years.ago.to_date.to_s(:db) %>
+
 matson:
   first_name: Mark
   last_name: Matson
@@ -70,6 +69,7 @@ matson:
   gender: M
   email: mcfatson@gentlelovers.com
   license: 576
+
 weaver:
   first_name: Ryan
   last_name: Weaver
@@ -78,6 +78,7 @@ weaver:
   member_to: <%= Date.today.year %>-12-31
   gender: M
   email: hotwheels@yahoo.com
+
 molly:
   first_name: Molly
   last_name: Cameron
@@ -85,6 +86,7 @@ molly:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
+
 alice:
   first_name: Alice
   last_name: Pennington
@@ -92,9 +94,11 @@ alice:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
+
 no_results:
   first_name: Non
   last_name: Results
+
 past_member:
   first_name: Kevin
   last_name: Condron

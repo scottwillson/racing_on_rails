@@ -587,7 +587,7 @@ class Person < ActiveRecord::Base
   end
 
   def promoter?
-    roles.any? { |role| role.name == "Promoter" }
+    Event.exists?([ "promoter_id = ?", self.id ])
   end
 
   # Is Person a current member of the bike racing association?

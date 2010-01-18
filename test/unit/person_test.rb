@@ -841,7 +841,7 @@ class PersonTest < ActiveSupport::TestCase
     assert(people(:administrator).promoter?, 'administrator promoter?')
     assert(people(:promoter).promoter?, 'administrator promoter?')
     assert(!people(:member).promoter?, 'administrator promoter?')
-    assert(people(:nate_hobson).promoter?, 'administrator promoter?')
+    assert(!people(:nate_hobson).promoter?, 'administrator promoter?')
   end
   
   def test_login_with_periods
