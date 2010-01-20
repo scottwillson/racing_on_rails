@@ -80,7 +80,7 @@ class Admin::EventsController < Admin::AdminController
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
-      redirect_to(:action => :new, :event => params[:event])
+      redirect_to edit_admin_event_path(@event)
     else
       flash[:warn] = @event.errors.full_messages
     end

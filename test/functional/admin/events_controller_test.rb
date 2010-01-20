@@ -157,10 +157,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
     assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
     
-    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
-               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-              'promoter_id' => people(:nate_hobson).to_param, 'type' => 'SingleDayEvent'})
+    assert_redirected_to edit_admin_event_path(assigns(:event))
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -193,11 +190,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should not be a SingleDayEvent')
     assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
     
-    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
-               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-               "parent_id" => parent.to_param,
-              'promoter_id' => people(:nate_hobson).to_param, 'type' => 'Event'})
+    assert_redirected_to edit_admin_event_path(assigns(:event))
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -230,11 +223,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should not be a SingleDayEvent')
     assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
     
-    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
-               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-               "parent_id" => parent.to_param,
-              'promoter_id' => people(:nate_hobson).to_param, 'type' => ''})
+    assert_redirected_to edit_admin_event_path(assigns(:event))
     assert(flash.has_key?(:notice))
 
     assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
@@ -264,10 +253,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
     assert(skull_hollow.is_a?(Series), 'Skull Hollow should be a series')
     
-    assert_redirected_to new_admin_event_path("event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-               "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
-               "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-              "promoter_id"  => people(:nate_hobson).to_param, 'type' => 'Series'})
+    assert_redirected_to edit_admin_event_path(assigns(:event))
   end
   
   def test_create_from_children
@@ -372,9 +358,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(silverton, 'Silverton should be in database')
     assert(!silverton.new_record?, "Silverton should be saved")
     assert_nil(silverton.promoter, "Silverton Promoter")
-    assert_redirected_to new_admin_event_path("event"=>{"name"=>"Silverton",
-              'type' => 'SingleDayEvent',
-              'promoter_id' => ""})
+    assert_redirected_to edit_admin_event_path(assigns(:event))
   end
   
   def test_save_different_promoter
