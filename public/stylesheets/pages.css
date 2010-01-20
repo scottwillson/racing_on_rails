@@ -275,8 +275,8 @@ table.numbers td label {
   width: auto;
 }
 
-td input[type=text].number {
-  width: 30px;
+table.numbers td input[type=text] {
+  width: 60px;
 }
 
 table.person_categories td input[type=text] {
