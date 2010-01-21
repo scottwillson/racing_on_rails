@@ -336,7 +336,7 @@ input.zip {
 
 .current, .renewed {
   padding-right: 20px;
-  background-image: url(/images/icons/confirmed.gif);
+  background-image: url(/images/icons/accept.png);
   background-repeat: no-repeat;
   background-position: center right;
 }

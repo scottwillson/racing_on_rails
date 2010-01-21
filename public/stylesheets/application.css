@@ -110,8 +110,12 @@ pre, pre a, pre a:link, pre a:visited {
 }
 
 .message span {
-  padding-left: 16px;
+  padding-left: 20px;
   padding-right: 8px;
+}
+
+p.message {
+  line-height: 16px;
 }
 
 #info span
@@ -122,7 +126,7 @@ pre, pre a, pre a:link, pre a:visited {
 
 #notice span
 {
-  background-image: url(/images/icons/confirmed.gif);
+  background-image: url(/images/icons/accept.png);
   background-repeat: no-repeat;
   background-position: 0px 2px;
 }
