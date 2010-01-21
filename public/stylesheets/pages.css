@@ -24,7 +24,7 @@ table#left_nav td.icon {
   margin-right: 8px;
 }
 
-/* Calendar */
+/* Calendar of events */
 div.calendar table {
   border-collapse: separate;
   padding: 0px;
@@ -60,6 +60,12 @@ td.day div.event {
   margin-bottom: 8px;
 }
 
+td.day div.beginner_friendly {
+  background-image: url(/images/icons/bullet_green.png);
+  background-repeat: no-repeat;
+  padding-left: 16px;
+}
+
 td.day div.number
 {
   font-weight: bold;
@@ -80,6 +86,10 @@ td.day_from_other_month div.number
   text-align: left;
 }
 
+div.calendar table.base td.beginner_friendly {
+  text-align: right;
+}
+
 
 /* Upcoming events */
 tr.discipline_upcoming_events {
@@ -90,9 +100,16 @@ tr.discipline_upcoming_events td.date {
   min-width: 50px;
 }
 
+div#upcoming_events td.beginner_friendly {
+  background-image: url(/images/icons/bullet_green.png);
+  background-repeat: no-repeat;
+  background-position: 0px 6px;
+  padding-left: 16px;
+}
+
 tr.discipline_upcoming_events td.info {
   min-width: 150px;
-  padding-right:  24px;
+  padding-right: 24px;
 }
 
 
