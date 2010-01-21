@@ -3,21 +3,23 @@
 </tr>
 <%- discipline.upcoming_events.sort_by(&:date).each do |event| -%>
 <tr>
+  <td><%= image_tag("icons/accept.png") if event.beginner_friendly? %></td>
   <td class="date"><%= event.date_range_s %></td>
-  <td class="info<%= " beginner_friendly" if event.beginner_friendly? %>"><%= public_link_to_flyer event %></td>
+  <td class="info"><%= public_link_to_flyer event %></td>
 </tr>
 <%- end -%>
 
 <%- unless discipline.upcoming_weekly_series.empty? -%>
 <tr>
-  <td colspan="2"><h4>Weekly</h4></td>
+  <td colspan="3"><h4>Weekly</h4></td>
 </tr>
 <%- end -%>
 
 <%- discipline.upcoming_weekly_series.sort { |a, b| a.earliest_day_of_week(dates) <=> b.earliest_day_of_week(dates) || a.date <=> b.date }.each do |event| -%>
 <tr>
+  <td><%= image_tag("icons/accept.png") if event.beginner_friendly? %></td>
   <td class="date"><%= event.days_of_week_as_string(dates) -%></td>
-  <td class="info<%= " beginner_friendly" if event.beginner_friendly? %>">
+  <td class="info">
     <%- if event.flyer.blank? -%>
       <%= event.full_name %> <small>(<%= event.start_date.strftime("%m/%d") %> - <%= event.end_date.strftime("%m/%d") -%>)</small>
     <%- else -%>
@@ -29,5 +31,5 @@
 <%- end -%>
 
 <tr>
-  <td colspan="2">&nbsp;</td>
+  <td colspan="3">&nbsp;</td>
 </tr>

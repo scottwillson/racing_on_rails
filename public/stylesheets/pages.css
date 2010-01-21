@@ -61,7 +61,7 @@ td.day div.event {
 }
 
 td.day div.beginner_friendly {
-  background-image: url(/images/icons/bullet_green.png);
+  background-image: url(/images/icons/accept.png);
   background-repeat: no-repeat;
   padding-left: 16px;
 }
@@ -96,15 +96,16 @@ tr.discipline_upcoming_events {
   vertical-align: top;
 }
 
-tr.discipline_upcoming_events td.date {
-  min-width: 50px;
+table#upcoming_events_table td img {
+  vertical-align: top;
 }
 
-div#upcoming_events td.beginner_friendly {
-  background-image: url(/images/icons/bullet_green.png);
-  background-repeat: no-repeat;
-  background-position: 0px 6px;
-  padding-left: 16px;
+table#upcoming_events_table td:first-line {
+  line-height: 16px;
+}
+
+tr.discipline_upcoming_events td.date {
+  min-width: 50px;
 }
 
 tr.discipline_upcoming_events td.info {
