@@ -19,7 +19,6 @@ class Admin::EventsController < Admin::AdminController
     @year = ASSOCIATION.effective_year if @year == 0
     events = SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
-    flash[:notice] = "Warning!"
   end
 
   # Show results for Event

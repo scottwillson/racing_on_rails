@@ -11,11 +11,11 @@
   <%- results.sort { |x, y| y.date <=> x.date }.each do |result| -%>
   <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
     <td class="disclosure"><%= 
-    link_to_function(image_tag('icons/collapsed.gif', :class => "collapsed", :id => "disclosure_#{result.id}"), 
+    link_to_function(image_tag('icons/play_blue.png', :class => "collapsed", :id => "disclosure_#{result.id}"), 
     "toggle_disclosure(#{result.id})",
     :class => 'disclosure image', :alt => "") if result.competition_result? %></td>
     <td><%= result.place %></td>
-    <td><%= link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'),
+    <td><%= link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
       event_results_path(result.event, :html => { :anchor => "race_#{result.race.id}", :class => "image" } )) %>
     </td>
     <td><%= result.event.full_name %></td>
@@ -53,7 +53,7 @@
       return false;      
     }
     else {
-      disclosure.src = '/images/icons/collapsed.gif';
+      disclosure.src = '/images/icons/play_blue.png';
       disclosure.className = 'collapsed';
       $$('tr.scores_' + id).each(function(e) {
     e.remove();
@@ -63,7 +63,7 @@
   
   function expand(id) {
     var disclosure = $('disclosure_' + id);
-    disclosure.src = '/images/icons/expanded.gif';
+    disclosure.src = '/images/icons/down_blue.png';
     disclosure.className = 'expanded';
   }
 </script>

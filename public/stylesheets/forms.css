@@ -330,7 +330,7 @@ fieldset p {
 input.editor_cancel_button {
   position: relative;
   top: 2px;
-  background: url(/images/buttons/inline_cancel.png);
+  background: url(/images/icons/decline.png);
   border: none;
   width: 15px;
   height: 15px;

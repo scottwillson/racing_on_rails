@@ -61,7 +61,7 @@ td.day div.event {
 }
 
 td.day div.beginner_friendly {
-  background-image: url(/images/icons/accept.png);
+  background-image: url(/images/icons/disc_green.png);
   background-repeat: no-repeat;
   padding-left: 16px;
 }
@@ -132,7 +132,7 @@ div.disclosure {
 }
 
 .collapsed {
-  background-image: url(/images/icons/collapsed.gif);  
+  background-image: url(/images/icons/play_blue.png);  
 }
 
 .loading {
@@ -140,7 +140,7 @@ div.disclosure {
 }
 
 .expanded {
-  background-image: url(/images/icons/expanded.gif);
+  background-image: url(/images/icons/down_blue.png);
 }
 
 .category {
@@ -150,7 +150,7 @@ div.disclosure {
 .category .record {
   padding-left: 24px;
   cursor: move;
-  background-image: url(/images/icons/category.gif);
+  background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
   background-position: 0px 0px;
   display: inline;
@@ -192,7 +192,7 @@ table.base td.disclosure a {
 
 /* Pages */
 table.pages div.record {
-  background-image: url(/images/icons/web_page.png);
+  background-image: url(/images/icons/world_go.png);
 }
 
 #page_body {
@@ -214,16 +214,16 @@ table.people td.name {
 
 table.people div.record,
 table.people div.record {
-  background-image: url(/images/icons/person.gif);
+  background-image: url(/images/icons/user.png);
 }
 
 table.teams div.record {
-  background-image: url(/images/icons/people.gif);
+  background-image: url(/images/icons/group.png);
 }
 
 /* Velodromes */
 table.velodromes div.record {
-  background-image: url(/images/icons/checkered_flag.gif);
+  background-image: url(/images/icons/flag_checked.png);
 }
 
 table.base td.icon {
@@ -360,7 +360,7 @@ form.cat4_womens_race_series td input#result_team_name {
 
 /* Event */
 table.event_nav td.standings {
-  background-image: url(/images/icons/results.gif);
+  background-image: url(/images/icons/table.png);
   background-repeat: no-repeat;
   background-position: 8px 6px;  
 }
@@ -370,7 +370,7 @@ table.event_nav td.standings a {
 }
 
 table.event_nav td.race {
-  background-image: url(/images/icons/category.gif);
+  background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
   background-position: 32px 6px;  
 }

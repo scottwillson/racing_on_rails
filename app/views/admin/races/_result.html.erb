@@ -13,11 +13,11 @@
     -%></td>
   <% end %>
   <td class="actions last">
-    <%= link_to_remote image_tag("/images/buttons/small_add.png"),
+    <%= link_to_remote image_tag("/images/icons/add.png"),
           :url => create_result_admin_race_path(:before_result_id => result.id), 
           :html => { :class => "image", :id => "result_#{result.id}_add" }, 
           :method => "post"
-    %><%= link_to_remote(image_tag("/images/buttons/small_remove.png"), 
+    %><%= link_to_remote(image_tag("/images/icons/delete.png"), 
             :url => destroy_result_admin_race_path(result.race, :result_id => result.id), 
             :html => { :class => "image", :id => "result_#{result.id}_destroy" }, 
             :method => "delete") unless result.new_record? %>
