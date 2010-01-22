@@ -35,6 +35,16 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["name"], "Should assign name")
   end
   
+  def test_index_with_cookie
+    @request.cookies["team_name"] = "gentle"
+    get(:index)
+    assert_response(:success)
+    assert_template("admin/teams/index")
+    assert_not_nil(assigns["teams"], "Should assign teams")
+    assert_equal("gentle", assigns["name"], "Should assign name")
+    assert_equal(1, assigns["teams"].size, "Should have no teams")
+  end
+  
   def test_index_rjs
     get(:index, :name => 'nilla', :format => "js")
     assert_response(:success)

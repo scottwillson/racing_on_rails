@@ -113,6 +113,15 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal('', molly.last_name, 'Person last_name after update')
   end
 
+  def test_index_with_cookie
+    @request.cookies["person_name"] = "weaver"
+    get(:index)
+    assert_response(:success)
+    assert_not_nil(assigns["people"], "Should assign people")
+    assert_equal("weaver", assigns["name"], "Should assign name")
+    assert_equal(1, assigns["people"].size, "Should have no people")
+  end
+
   def test_update_name
     molly = people(:molly)
     post(:set_person_name, 
