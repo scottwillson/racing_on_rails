@@ -118,25 +118,17 @@ p.message {
   line-height: 16px;
 }
 
-#info span
-{
-  background-color: rgb(255, 250, 117);
-  border: 2px solid rgb(255, 250, 117);
-}
-
 #notice span
 {
   background-image: url(/images/icons/accept.png);
   background-repeat: no-repeat;
-  background-position: 0px 2px;
 }
 
 #warn span
 {
   color: red;
-  background-image: url(/images/icons/warn.gif);
+  background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
-  background-position: 0px 3px;
 }
 
 h1, h2, h3 {

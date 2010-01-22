@@ -31,7 +31,7 @@ class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
     @result.validate_person_name
     if @result.errors.empty?
       @result.save!
-      flash[:info] = "Created result for #{@result.name} in #{@event.name}"
+      flash[:notice] = "Created result for #{@result.name} in #{@event.name}"
       redirect_to(:action => "new_result", :result => { 
                                                         :first_name => params[:result][:first_name],
                                                         :last_name => params[:result][:last_name],
