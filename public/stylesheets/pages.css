@@ -61,7 +61,7 @@ td.day div.event {
 }
 
 td.day div.beginner_friendly {
-  background-image: url(/images/icons/disc_green.png);
+  background-image: url(/images/icons/star_green.png);
   background-repeat: no-repeat;
   padding-left: 16px;
 }
@@ -111,6 +111,10 @@ tr.discipline_upcoming_events td.date {
 tr.discipline_upcoming_events td.info {
   min-width: 150px;
   padding-right: 24px;
+}
+
+a.beginner_friendly {
+  padding-right: 8px;
 }
 
 
@@ -192,7 +196,7 @@ table.base td.disclosure a {
 
 /* Pages */
 table.pages div.record {
-  background-image: url(/images/icons/world_go.png);
+  background-image: url(/images/icons/page_white_world.png);
 }
 
 #page_body {

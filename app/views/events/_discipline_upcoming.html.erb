@@ -1,23 +1,24 @@
 <tr>
-  <th colspan="3"><%= caption %></th>
+  <th colspan="2"><%= caption %></th>
 </tr>
 <%- discipline.upcoming_events.sort_by(&:date).each do |event| -%>
 <tr>
-  <td><%= image_tag("icons/disc_green.png") if event.beginner_friendly? %></td>
   <td class="date"><%= event.date_range_s %></td>
-  <td class="info"><%= public_link_to_flyer event %></td>
+  <td class="info">
+    <%= public_link_to_flyer event %>
+    <%= link_to(image_tag("icons/star_green.png"), "#", :class => "image beginner_friendly", :title => "Beginner friendly event") if event.beginner_friendly? %>
+  </td>
 </tr>
 <%- end -%>
 
 <%- unless discipline.upcoming_weekly_series.empty? -%>
 <tr>
-  <td colspan="3"><h4>Weekly</h4></td>
+  <td colspan="2"><h4>Weekly</h4></td>
 </tr>
 <%- end -%>
 
 <%- discipline.upcoming_weekly_series.sort { |a, b| a.earliest_day_of_week(dates) <=> b.earliest_day_of_week(dates) || a.date <=> b.date }.each do |event| -%>
 <tr>
-  <td><%= image_tag("icons/disc_green.png") if event.beginner_friendly? %></td>
   <td class="date"><%= event.days_of_week_as_string(dates) -%></td>
   <td class="info">
     <%- if event.flyer.blank? -%>
@@ -26,10 +27,11 @@
       <%= link_to(event.full_name, event.flyer)  -%> <small>(<%= link_to(event.start_date.strftime("%m/%d"), event.flyer) %> - 
     <%= link_to(event.end_date.strftime("%m/%d"), event.flyer) %>)</small>
     <%- end -%>
+    <%= image_tag("icons/star_green.png") if event.beginner_friendly? %>
   </td>
 </tr>
 <%- end -%>
 
 <tr>
-  <td colspan="3">&nbsp;</td>
+  <td colspan="2">&nbsp;</td>
 </tr>
