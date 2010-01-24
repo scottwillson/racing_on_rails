@@ -77,6 +77,18 @@ class Competition < Event
     Date.new(date.year, 12, 31)
   end
   
+  def date_range_long_s
+    if multiple_days?
+      "#{start_date.strftime('%a, %B %d')} to #{end_date.strftime('%a, %B %d, %Y')}"
+    else
+      start_date.strftime('%a, %B %d')
+    end
+  end
+  
+  def multiple_days?
+    source_events.count > 1
+  end
+
   # Assert start and end dates are first and last days of the year
   def valid_dates
     if !start_date or start_date.month != 1 or start_date.day != 1

@@ -135,6 +135,10 @@ div.show_grid {
   margin-top: 0px !important;
 }
 
+h3.no_top_margin {
+  padding-top: 0px;
+}
+
 .top_margin {
   margin-top: 16px;
 }

@@ -2,8 +2,8 @@
   <tr>
     <th colspan="2"><%= @oregon_cup.date.year %> Races</th>
   </tr>
-	<%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
-	<%- for event in @oregon_cup.source_events.sort -%>
+  <%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
+  <%- for event in @oregon_cup.source_events.sort -%>
   <tr>
     <td><%= event.date.strftime("%B %d") %></td>
     <td>
@@ -16,8 +16,8 @@
     </td>
   </tr>
 <% else %>
-	<tr>
-		<td colspan="2">Not scheduled</td>
-	</tr>
+  <tr>
+    <td colspan="2">Not scheduled</td>
+  </tr>
 <%- end -%>
 </table>

@@ -56,7 +56,13 @@ class Admin::PagesController < Admin::AdminController
   
   def destroy
     @page = Page.find(params[:id])
-    @page.destroy
+    begin
+      ActiveRecord::Base.lock_optimistically = false
+      @page.destroy
+    ensure
+      ActiveRecord::Base.lock_optimistically = true
+    end
+    
     expire_cache
     flash[:notice] = "Deleted #{@page.title}"
     redirect_to admin_pages_path

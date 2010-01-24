@@ -1,7 +1,11 @@
 require "test_helper"
 
 class Admin::EmailsControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_new
     get(:new)
@@ -24,7 +28,7 @@ class Admin::EmailsControllerTest < ActionController::TestCase
     post(:create, :email => { :from => "scott@butlerpress.com", :subject => "Masters Racing", :body => "My opinion" })
     assert_redirected_to(:controller => "admin/emails", :action => "new")
     assert(!Admin::MemberMailer.deliveries.empty?, "Should deliver")
-    assert_not_nil(flash[:info])
+    assert_not_nil(flash[:notice])
   end
   
   def test_no_from_should_be_invalid

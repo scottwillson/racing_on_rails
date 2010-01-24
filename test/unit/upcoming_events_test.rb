@@ -105,6 +105,10 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       # Wednesday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 23))
       assert_equal_events([lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      event = upcoming_events['Road'].upcoming_events.first
+      assert !event.beginner_friendly?, "beginner_friendly"
+      event = upcoming_events['Road'].upcoming_events.last
+      assert !event.beginner_friendly?, "beginner_friendly"
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
       assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
 
@@ -159,7 +163,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(6, six_day.children.count, 'Six Day events')
+    assert_equal(6, six_day.children(true).count, 'Six Day events')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(2006, 6, 12), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(2006, 6, 17), six_day.end_date, 'Six Day end date')
@@ -271,7 +275,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     }
     six_day.save!
     assert("Six Day valid?", six_day.valid?)
-    assert_equal(8, six_day.children.count, 'Six Day events')
+    assert_equal(8, six_day.children(true).count, 'Six Day events')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.date, 'Six Day date')
     assert_equal_dates(Date.new(1999, 6, 8), six_day.start_date, 'Six Day start date')
     assert_equal_dates(Date.new(1999, 7, 27), six_day.end_date, 'Six Day end date')
@@ -351,11 +355,19 @@ class UpcomingEventsTest < ActiveSupport::TestCase
   end
   
   def test_downhill_events
-    super_d = SingleDayEvent.create!(:date => Date.new(2007, 5, 27), :name => 'Super D', :discipline => 'Downhill', :flyer_approved => true)
+    super_d = SingleDayEvent.create!(
+      :date => Date.new(2007, 5, 27), 
+      :name => 'Super D', 
+      :discipline => 'Downhill', 
+      :flyer_approved => true,
+      :beginner_friendly => true
+    )
 
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 26))
     assert_nil(upcoming_events['Road'], 'UpcomingEvents.events[Road]')
     assert_equal_events([super_d], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
+    event = upcoming_events['Mountain Bike'].upcoming_events.first
+    assert event.beginner_friendly?, "beginner_friendly"
   end
   
   def test_disciplines

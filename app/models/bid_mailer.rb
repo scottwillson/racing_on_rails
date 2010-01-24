@@ -1,6 +1,6 @@
 class BidMailer < ActionMailer::Base
 
-  def created(bid, sent_on = Time.now)
+  def created(bid, sent_on = Time.zone.now)
     @subject    = 'New Ridley Bid'
     @recipients = 'cmurray@obra.org'
     @from       = 'scott@butlerpress.com'

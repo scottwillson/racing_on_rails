@@ -63,9 +63,9 @@ class ScheduleTest < ActiveSupport::TestCase
     before_import_all = Event.count
     assert_equal(22, before_import_all, "All events count before import")
     
-    filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule.xls")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule/excel.xls")
     Schedule::Schedule.import(filename)
-        
+
     expected = {
       "12 Mile Endurance DH"           => 1,
       "12/24 Hr MTN"                   => 1,
@@ -100,8 +100,7 @@ class ScheduleTest < ActiveSupport::TestCase
     
     after_import_after_schedule_start_date = Event.count(:conditions => "date >= '2006-01-20'")
     assert_equal(77, after_import_after_schedule_start_date, "2006 events count after import")
-    after_import_all = Event.count
-    assert_equal(93, after_import_all, "All events count after import")
+    assert_equal(93, Event.count, "All events count after import")
     
     assert(SingleDayEvent.exists?(event_before.id), 'Event before schedule start')
     assert(!SingleDayEvent.exists?(event_on.id), 'Event on schedule start')
@@ -338,5 +337,71 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal("Molly Cameron", promoter.name, "promoter name")
     assert_equal("503.335.VELO", promoter.home_phone, "promoter home_phone")
     assert_equal("molly@veloshop.org", promoter.email, "promoter email")
+  end
+  
+  def test_import_mbra_tabbed
+    Team.create!(:id => 1200000, :name => "Bike Team")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule/tab-delimited.txt")
+    Schedule::Schedule.import(filename)
+
+    butte_hc = Event.find_by_name("Butte Hillclimb")
+    assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
+    assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
+    assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
+    assert_equal("Butte", butte_hc.city, "Butte Hillclimb city")
+    assert_equal(ASSOCIATION.state, butte_hc.state, "Butte Hillclimb state")
+    assert_equal("Road", butte_hc.discipline, "Butte Hillclimb discipline")
+    assert_equal_dates(Date.today, butte_hc.updated_at, "Butte Hillclimb updated_at")
+    assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
+    assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
+    assert_equal(ASSOCIATION.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
+    assert !butte_hc.flyer_approved?, "flyer_approved?"
+
+    valentine_ct = Event.find_by_name("Valentine Criterium")
+    assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")
+    assert(valentine_ct.instance_of?(SingleDayEvent), "Valentine Criterium should be SingleDayEvent")
+    assert_equal("Missoula", valentine_ct.city, "Valentine Criterium city")
+    assert_equal("MT", valentine_ct.state, "Valentine Criterium state")
+    assert_equal("Criterium", valentine_ct.discipline, "Valentine Criterium discipline")
+    assert_equal_dates(Date.today, valentine_ct.updated_at, "Valentine Criterium updated_at")
+    assert_equal_dates("1999-02-12", valentine_ct.date, "Valentine Criterium date")
+    assert_equal("Al Pendergrass", valentine_ct.promoter.name, "Valentine Criterium promoter")
+    assert_equal("(414) 333-1100", valentine_ct.promoter.home_phone, "Valentine Criterium promoter")
+    assert_equal("al@gmail.com", valentine_ct.promoter.email, "Valentine Criterium promoter")
+    assert_equal("USA Cycling", valentine_ct.sanctioned_by, "Valentine Criterium sanctioned_by")
+    assert valentine_ct.flyer_approved?, "flyer_approved?"
+  end
+  
+  def test_import_mbra_csv
+    Team.create!(:id => 1200000, :name => "Bike Team")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../fixtures/schedule/comma-delimited.csv")
+    Schedule::Schedule.import(filename)
+
+    butte_hc = Event.find_by_name("Butte Hillclimb")
+    assert_not_nil(butte_hc, "Should have imported Butte Hillclimb")
+    assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
+    assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
+    assert_equal("Butte", butte_hc.city, "Butte Hillclimb city")
+    assert_equal(ASSOCIATION.state, butte_hc.state, "Butte Hillclimb state")
+    assert_equal("Road", butte_hc.discipline, "Butte Hillclimb discipline")
+    assert_equal_dates(Date.today, butte_hc.updated_at, "Butte Hillclimb updated_at")
+    assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
+    assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
+    assert_equal(ASSOCIATION.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
+    assert !butte_hc.flyer_approved?, "flyer_approved?"
+
+    valentine_ct = Event.find_by_name("Valentine Criterium")
+    assert_not_nil(valentine_ct, "Should have imported Valentine Criterium")
+    assert(valentine_ct.instance_of?(SingleDayEvent), "Valentine Criterium should be SingleDayEvent")
+    assert_equal("Missoula", valentine_ct.city, "Valentine Criterium city")
+    assert_equal("MT", valentine_ct.state, "Valentine Criterium state")
+    assert_equal("Criterium", valentine_ct.discipline, "Valentine Criterium discipline")
+    assert_equal_dates(Date.today, valentine_ct.updated_at, "Valentine Criterium updated_at")
+    assert_equal_dates("1999-02-12", valentine_ct.date, "Valentine Criterium date")
+    assert_equal("Al Pendergrass", valentine_ct.promoter.name, "Valentine Criterium promoter")
+    assert_equal("(414) 333-1100", valentine_ct.promoter.home_phone, "Valentine Criterium promoter")
+    assert_equal("al@gmail.com", valentine_ct.promoter.email, "Valentine Criterium promoter")
+    assert_equal("USA Cycling", valentine_ct.sanctioned_by, "Valentine Criterium sanctioned_by")
+    assert valentine_ct.flyer_approved?, "flyer_approved?"
   end
 end

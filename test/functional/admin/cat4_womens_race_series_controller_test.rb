@@ -1,7 +1,11 @@
 require "test_helper"
 
 class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_new_result
     assert_routing('/admin/cat4_womens_race_series/results/new', 
@@ -57,7 +61,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal("Gentle Lovers", result.team_name, "New result team_name")
     assert_equal("Cheryl", result.first_name, "New result first_name")
     assert_equal("Willson", result.last_name, "New result last_name")
-    assert_not_nil(flash[:info], "Should have success message in flash")
+    assert_not_nil(flash[:notice], "Should have success message in flash")
   end
   
   def test_create_result_for_existing_race_and_people
@@ -100,7 +104,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     
     assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
     
-    assert_not_nil(flash[:info], "Should have success message in flash")
+    assert_not_nil(flash[:notice], "Should have success message in flash")
   end
   
   def test_create_result_for_existing_person
@@ -136,7 +140,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
 
     assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
 
-    assert_not_nil(flash[:info], "Should have success message in flash")
+    assert_not_nil(flash[:notice], "Should have success message in flash")
   end
 
   def test_create_result_for_existing_race_with_different_category
@@ -181,7 +185,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     
     assert_equal(1, Person.count(:all, :conditions => {:last_name => molly.last_name, :first_name => molly.first_name }), "#{molly.name} in DB")
     
-    assert_not_nil(flash[:info], "Should have success message in flash")
+    assert_not_nil(flash[:notice], "Should have success message in flash")
   end
 
   

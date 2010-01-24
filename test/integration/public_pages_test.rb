@@ -47,4 +47,18 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_response :success
     assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
   end
+
+  private
+  
+  def go_to_login
+    https! if ASSOCIATION.ssl?
+    get new_person_session_path
+    assert_response :success
+    assert_template "person_sessions/new"
+  end
+  
+  def login(options)
+    post person_session_path, options
+    assert_response :redirect
+  end
 end

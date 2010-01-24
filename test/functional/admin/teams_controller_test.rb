@@ -2,7 +2,11 @@ require "test_helper"
 
 # :stopdoc:
 class Admin::TeamsControllerTest < ActionController::TestCase  
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
   
   def test_not_logged_in_index
     destroy_person_session
@@ -29,6 +33,16 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["teams"], "Should assign teams")
     assert(assigns["teams"].empty?, "Should have no people")
     assert_not_nil(assigns["name"], "Should assign name")
+  end
+  
+  def test_index_with_cookie
+    @request.cookies["team_name"] = "gentle"
+    get(:index)
+    assert_response(:success)
+    assert_template("admin/teams/index")
+    assert_not_nil(assigns["teams"], "Should assign teams")
+    assert_equal("gentle", assigns["name"], "Should assign name")
+    assert_equal(1, assigns["teams"].size, "Should have no teams")
   end
   
   def test_index_rjs
@@ -252,6 +266,12 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     # try with different cases
   end
   
+  def test_cancel_in_place_edit
+    xhr :post, :cancel_in_place_edit, :id => teams(:gentle_lovers)
+    assert_response(:success)
+    assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
+  end
+
   def test_destroy
     csc = Team.create(:name => 'CSC')
     delete(:destroy, :id => csc.id)

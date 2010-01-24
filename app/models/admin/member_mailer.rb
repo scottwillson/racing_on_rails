@@ -1,6 +1,6 @@
 class Admin::MemberMailer < ActionMailer::Base
 
-  def email(members = [], sent_on = Time.now)
+  def email(members = [], sent_on = Time.zone.now)
     recipients members
     body ""
     @sent_on    = sent_on

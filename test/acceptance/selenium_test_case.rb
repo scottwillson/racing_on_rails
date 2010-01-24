@@ -28,16 +28,16 @@ class SeleniumTestCase < ActiveSupport::TestCase
         :host => "localhost", 
         :port => 4444, 
         :browser => browser, 
-        :url => "http://localhost:3000", 
+        :url => "http://localhost:3000",
         :timeout_in_second => 60
     )
     start_new_browser_session
 
-    delete_cookie '_racing_on_rails_session_id', '/'
-    delete_cookie 'auth_token', '/'
-    delete_cookie 'email', '/'
-    delete_cookie 'person_name', '/'
-    delete_cookie 'team_name', '/'
+    delete_cookie '_racing_on_rails_session_id'
+    delete_cookie 'auth_token'
+    delete_cookie 'email'
+    delete_cookie 'person_name'
+    delete_cookie 'team_name'
 
     super
   end
@@ -115,6 +115,30 @@ class SeleniumTestCase < ActiveSupport::TestCase
   
   def assert_not_present(locator)
     string_command "assertElementNotPresent", [locator]
+  end
+  
+  def assert_enabled(locator)
+    string_command "assertEditable", [locator]    
+  end
+  
+  def assert_disabled(locator)
+    string_command "assertNotEditable", [locator]    
+  end
+  
+  def wait_for_enabled(locator)
+    string_command "waitForEditable", [locator]
+  end
+  
+  def wait_for_disabled(locator)
+    string_command "waitForNotEditable", [locator]
+  end
+  
+  def assert_visible(locator)
+    string_command "assertVisible", [locator]
+  end
+  
+  def assert_not_visible(locator)
+    string_command "assertNotVisible", [locator]
   end
   
   def assert_value(locator, pattern)

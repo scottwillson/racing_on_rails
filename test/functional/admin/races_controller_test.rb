@@ -2,7 +2,11 @@
 require "test_helper"
 
 class Admin::RacesControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_edit
     kings_valley_3 = races(:kings_valley_3)
@@ -11,6 +15,22 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_template("admin/races/edit")
     assert_not_nil(assigns["race"], "Should assign race")
     assert_equal(kings_valley_3, assigns["race"], "Should assign kings_valley_3 race")
+  end
+  
+  def test_edit_own_race
+    login_as :promoter
+    race = races(:banana_belt_pro_1_2)
+    get :edit, :id => race.to_param
+    assert_response :success
+    assert_template "admin/races/edit"
+    assert_not_nil assigns["race"], "Should assign race"
+  end
+  
+  def test_cannot_edit_someone_elses_race
+    login_as :member
+    race = races(:kings_valley_3)
+    get :edit, :id => race.to_param
+    assert_redirected_to unauthorized_path
   end
   
   def test_update
@@ -97,6 +117,22 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('DNF', dnf.place, 'DNF place after insert')
     race.results(true).sort!
     assert_equal('DNF', race.results.last.place, 'DNF place after insert')
+    
+    post :create_result, :id => race.id
+    assert_response(:success)
+    assert_equal(11, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    race.results(true).sort!
+    assert_equal('DNF', race.results.last.place, 'DNF place after insert')
   end
   
   def test_destroy_result
@@ -118,6 +154,15 @@ class Admin::RacesControllerTest < ActionController::TestCase
   
   def test_new
     event = events(:kings_valley)
+    get :new, :event_id => event.to_param
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_template :edit
+  end
+  
+  def test_new_as_promoter
+    login_as :promoter
+    event = events(:banana_belt_1)
     get :new, :event_id => event.to_param
     assert_response :success
     assert_not_nil assigns(:race), "@race"

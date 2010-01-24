@@ -4,6 +4,12 @@ class ResultsTest < SeleniumTestCase
   def test_results_editing
     login_as :administrator
 
+    if Date.today.month == 12
+      open "/admin/events?year=#{Date.today.year}"
+    else
+      open "/admin/events"
+    end
+
     click "link=Copperopolis Road Race", :wait_for => :page
 
     click "link=Senior Men Pro 1/2", :wait_for => :page
@@ -39,8 +45,8 @@ class ResultsTest < SeleniumTestCase
 
     click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_add"
     wait_for_ajax
-    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id}_destroy", 
-          :wait_for => { :element => "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id.id}_add" }
+    click "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.to_param}_destroy", 
+          :wait_for => { :element => "result_#{Event.find_by_name('Copperopolis Road Race').races.first.results.first.id.to_param}_add" }
     refresh
     wait_for_page
     assert_no_text "Megan Weaver"

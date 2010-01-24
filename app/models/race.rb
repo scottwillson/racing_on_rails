@@ -78,8 +78,7 @@ class Race < ActiveRecord::Base
   end
   
   def date
-    raise(ArgumentError, 'Need Event to get date') unless self.event
-    self.event.date
+    event && event.date
   end
   
   # FIXME: Incorrectly doubles tandem and other team events' field sizes
@@ -242,16 +241,20 @@ class Race < ActiveRecord::Base
     
     if result_id
       result = Result.find(result_id)
+      place = result.place
+      start_index = results.index(result)
+      for index in start_index...(results.size)
+        if results[index].place.to_i > 0
+          results[index].place = (results[index].place.to_i + 1).to_s
+          results[index].save!
+        end
+      end
     else
       result = results.last
-    end
-    
-    place = result.place
-    start_index = results.index(result)
-    for index in start_index...(results.size)
-      if results[index].place.to_i > 0
-        results[index].place = (results[index].place.to_i + 1).to_s
-        results[index].save!
+      if result.place.to_i > 0
+        place = result.place.to_i + 1
+      else
+        place = result.place
       end
     end
     

@@ -6,7 +6,7 @@ class Notifier < ActionMailer::Base
     subject       "Password Reset Instructions"
     from          "#{ASSOCIATION.short_name} <#{ASSOCIATION.email}>"
     recipients    person.email_with_name
-    sent_on       Time.now
+    sent_on       Time.zone.now
     body          :edit_password_reset_url => edit_password_reset_url(person.perishable_token), :person => person
   end
 end

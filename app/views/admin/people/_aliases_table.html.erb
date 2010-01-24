@@ -3,7 +3,7 @@
   <tr id="alias_<%= name_alias.id %>">
     <td><%= name_alias.name %></td>
     <td>
-      <%= link_to_remote(image_tag('/images/buttons/remove_solo.gif'), 
+      <%= link_to_remote(image_tag('/images/icons/delete.png'), 
            :url => { :action => "destroy_alias", :id => @person.id, :alias_id => name_alias.id },
            :html => { :class => "image" }) %>
     </td>

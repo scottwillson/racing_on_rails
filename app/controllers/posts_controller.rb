@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   def index
     mailing_list_name = params["mailing_list_name"]
-    month_start = Time.now.beginning_of_month
+    month_start = Time.zone.now.beginning_of_month
     redirect_to(
       :action => "list", 
       :controller => "posts",
@@ -20,14 +20,14 @@ class PostsController < ApplicationController
       requested_year = params["year"]
       requested_month = params["month"]
       begin
-        raise "Invalid year" unless (1990..2099).include?(requested_year.to_i )
-        raise "Invalid month" unless (1..12).include?(requested_month.to_i )
+        raise "Invalid year" unless (1990..2099).include?(requested_year.to_i)
+        raise "Invalid month" unless (1..12).include?(requested_month.to_i)
         
         if requested_year and requested_month
-          month_start = Time.local(requested_year.to_i, requested_month.to_i, 1)
+          month_start = Time.zone.local(requested_year.to_i, requested_month.to_i)
         end
       rescue
-        month_start = Time.now.beginning_of_month
+        month_start = Time.zone.now.beginning_of_month
         return redirect_to(
           :action => "list", 
           :month => month_start.month, 
@@ -44,7 +44,7 @@ class PostsController < ApplicationController
       end
     
       # end_of_month sets to 00:00
-      month_end = month_start.end_of_month.change(:hour => 23, :min => 59, :sec => 59, :usec => 999999)
+      month_end = month_start.end_of_month
       @year = month_start.year
       @month = month_start.month
     

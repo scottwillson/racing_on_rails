@@ -256,12 +256,45 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_equal(event.name, browning.created_by.name, "created_by name")
   end
   
+  def test_import_and_reuse_races
+    # race       exists?   in_results_file   order?   after_import
+    # pro_1_2    Y          Y                 Y         Y + results
+    # cat_3      Y          Y                           Y + results
+    # cat_4      Y                            Y         Y
+    # cat_5      Y                                      Y
+    # w_1_2                 Y                           Y + results
+    # Other combinations are invalid
+
+    event = SingleDayEvent.create!(:date => Date.today + 3)
+    pro_1_2_race = event.races.create! :category => Category.find_or_create_by_name("Pro 1/2")
+    event.races.create! :category => Category.find_or_create_by_name("Cat 3")
+    cat_4_race = event.races.create! :category => Category.find_or_create_by_name("Cat 4")
+    event.races.create! :category => Category.find_or_create_by_name("Cat 5")
+    
+    pro_1_2_race.results.create! :place => 1, :person => people(:weaver)
+
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/small_event.xls"), event, :usac_results_format => false)
+    results_file.import
+    
+    event.reload
+    
+    assert_equal 5, event.races.count, "Races"
+    [ "Pro 1/2", "Cat 3", "Cat 4", "Cat 5", "Women 1/2" ].each do |cat_name|
+      assert event.races.detect { |race| race.name == cat_name }, "Should have race #{cat_name}"
+      assert_equal 1, event.races.select { |race| race.name == cat_name }.size, "Should only one of race #{cat_name}"
+    end
+    
+    [ "Pro 1/2", "Cat 3", "Women 1/2" ].each do |cat_name|
+      assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
+    end
+  end
+  
   def test_stage_race
     event = SingleDayEvent.create!
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/stage_race.xls"), event, :usac_results_format => false)
     results_file.import
 
-    assert_equal(7, event.races.size, "event races")
+    assert_equal(2, event.races.size, "event races")
     actual_race = event.races.first
     assert_equal(80, actual_race.results.size, "Results")
     assert_equal(

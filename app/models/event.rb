@@ -27,7 +27,7 @@
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    cancelled flyer_approved instructional practice sanctioned_by email phone team_id
+    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results
@@ -107,6 +107,7 @@ class Event < ActiveRecord::Base
           :all,
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
+          :include => { :parent => :parent },
           :conditions => [%Q{
               events.date between ? and ? 
               and events.discipline in (?)
@@ -118,20 +119,21 @@ class Event < ActiveRecord::Base
           :all,
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
+          :include => { :parent => :parent },
           :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
       ))
       
     end
     
     events.map!(&:root)
-    weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitons, events = events.partition { |event| event.is_a?(Competition) }
-    
     events.reject! do |event|
       (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
       (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.default_sanctioned_by)
     end
     
+    weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
+    competitons, events = events.partition { |event| event.is_a?(Competition) }
+
     [ weekly_series, events, competitons ]
   end
 
@@ -152,12 +154,6 @@ class Event < ActiveRecord::Base
 
   end
 
-  # Used when importing People: should membership be for this year or the next?
-  def Event.find_max_date_for_current_year
-    # TODO Make this better
-    maximum(:date, :conditions => ['date > ? and date < ?', Date.new(Date.today.year, 1, 1), Date.new(Date.today.year + 1, 1, 1)])
-  end
-  
   def Event.friendly_class_name
     name.underscore.humanize.titleize
   end
@@ -300,7 +296,7 @@ class Event < ActiveRecord::Base
 
   def children_changed(child)
     # Don't trigger callbacks
-    Event.update_all(["updated_at = ?", Time.now], ["id = ?", id])
+    Event.update_all(["updated_at = ?", Time.zone.now], ["id = ?", id])
     true
   end
   
@@ -365,7 +361,7 @@ class Event < ActiveRecord::Base
   end
   
   def end_date
-    if !children(true).empty?
+    if children.any?
       children.last.date
     else
       start_date
@@ -399,6 +395,17 @@ class Event < ActiveRecord::Base
   
   def location
     self.city_state
+  end
+  
+  def location=(value)
+    if value.present?
+      self.city, self.state = value.split(",")
+      self.city = city.strip if city
+      self.state = state.strip if state
+    else
+      self.city = nil
+      self.state = nil
+    end
   end
 
   def discipline_id
@@ -540,16 +547,48 @@ class Event < ActiveRecord::Base
     self.class.friendly_class_name
   end
   
+  def ==(other)
+    if self.equal?(other)
+      return true
+    end
+    
+    if other.nil? || new_record? || other.new_record?
+      return false
+    end
+
+    id == other.id
+  end
+  
+  def eql?(other)
+    if self.equal?(other)
+      return true
+    end
+
+    if other.nil? || new_record? || other.new_record?
+      return false
+    end
+
+    id == other.id
+  end
+  
   def <=>(other)
     return -1 if other.nil?
-    
-    return 0 if id == other.id
-    
-    if date && other.date
-      date <=> other.date
-    else
-      0
+
+    if date 
+      if other.date
+        return date <=> other.date
+      else
+        return -1
+      end
+    elsif other.date
+      return 1
     end 
+    
+    unless new_record? || other.new_record?
+      return id <=> other.id
+    end
+    
+    0
   end
   
   def inspect_debug

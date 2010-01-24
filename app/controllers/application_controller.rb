@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   helper :all
   include ExceptionNotifiable
+  include SslRequirement
   
   local_addresses.clear
 
@@ -11,12 +12,6 @@ class ApplicationController < ActionController::Base
   helper_method :current_person_session, :current_person
 
   before_filter :toggle_tabs
-
-  include SslRequirement
- 
-  def toggle_tabs
-    @show_tabs = false
-  end
 
   def self.expire_cache
     begin
@@ -46,6 +41,10 @@ class ApplicationController < ActionController::Base
 
 
   protected
+
+  def toggle_tabs
+    @show_tabs = false
+  end
 
   def expire_cache
     if perform_caching
@@ -97,6 +96,15 @@ class ApplicationController < ActionController::Base
       redirect_to unauthorized_path
     end
   end
+  
+  def require_administrator_or_promoter
+    unless (current_person && current_person.administrator?) || 
+           (@event && current_person == @event.promoter) || 
+           (@race && current_person == @race.event.promoter)
+           
+      redirect_to unauthorized_path
+    end
+  end
 
   def current_person_session
     return @current_person_session if defined?(@current_person_session)
@@ -110,24 +118,33 @@ class ApplicationController < ActionController::Base
 
   def require_person
     unless current_person
-      store_location
       flash[:notice] = "Please login to your #{ASSOCIATION.short_name} account"
-      redirect_to new_person_session_url
+      store_location_and_redirect_to_login
       return false
     end
   end
 
   def require_administrator
     unless current_person && current_person.administrator?
-      store_location
+      session[:return_to] = request.request_uri
       flash[:notice] = "You must be an administrator to access this page"
-      redirect_to new_person_session_url
+      store_location_and_redirect_to_login
       return false
     end
   end
-  
-  def store_location
-    session[:return_to] = request.request_uri
+
+  def administrator?
+    current_person && current_person.administrator?
+  end
+
+  def store_location_and_redirect_to_login
+    if request.format == "js"
+      session[:return_to] = request.referrer
+      render :update do |page| page.redirect_to(new_person_session_url) end
+    else
+      session[:return_to] = request.request_uri
+      redirect_to new_person_session_url
+    end
   end
   
   def redirect_back_or_default(default)

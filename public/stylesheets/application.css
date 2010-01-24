@@ -20,8 +20,7 @@ div.content {
   margin-bottom: 21px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 13px;
-  padding-right: 13px;
+  padding: 13px;
 }
 
 .shadow_1 {
@@ -111,23 +110,25 @@ pre, pre a, pre a:link, pre a:visited {
 }
 
 .message span {
-  padding-left: 16px;
+  padding-left: 20px;
   padding-right: 8px;
+}
+
+p.message {
+  line-height: 16px;
 }
 
 #notice span
 {
-  background-image: url(/images/icons/confirmed.gif);
+  background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
-  background-position: 0px 2px;
 }
 
 #warn span
 {
   color: red;
-  background-image: url(/images/icons/warn.gif);
+  background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
-  background-position: 0px 3px;
 }
 
 h1, h2, h3 {
@@ -143,14 +144,14 @@ h1 {
 }
 
 h2 {
-  margin-top: 20px;
+  padding-top: 32px;
   font-size: 18px;
-  line-height: 40px;
+  line-height: 24px;
   text-align: center;
 }
 
 h3 {
-  padding-top: 24px;
+  padding-top: 32px;
   color: rgb(66, 66, 66);
   text-align: center;
 }
@@ -285,4 +286,8 @@ div.pagination {
 div.pagination .current {
   background-image: none; 
   padding-left: 0px;
+}
+
+p.notes {
+  width: 600px;
 }

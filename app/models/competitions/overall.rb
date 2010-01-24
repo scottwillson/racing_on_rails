@@ -156,8 +156,32 @@ class Overall < Competition
     count >= minimum_events
   end
 
-  
   def preliminary?(result)
-    minimum_events && parent.children_with_results.size > minimum_events && !parent.completed? && !raced_minimum_events?(result.person, result.race)
+    minimum_events && 
+    parent.children_with_results.size > minimum_events && 
+    !parent.completed? && 
+    !raced_minimum_events?(result.person, result.race)
+  end
+  
+  def date
+    if source_events.any?
+      source_events.sort.first.date
+    else
+      parent.start_date
+    end
+  end
+
+  # Same as +date+. Should always be January 1st
+  def start_date
+    date
+  end
+  
+  # Last day of year for +date+
+  def end_date
+    if source_events.any?
+      source_events.sort.last.date
+    else
+      parent.end_date
+    end
   end
 end

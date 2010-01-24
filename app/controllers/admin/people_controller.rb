@@ -1,7 +1,7 @@
 # Add, delete, and edit Person information. Also merge 
 class Admin::PeopleController < Admin::AdminController
   before_filter :require_administrator, :remember_event
-  layout 'admin/application', :except => [:card, :cards, :mailing_labels]
+  layout 'admin/application', :except => [:card, :cards]
   exempt_from_layout 'xls.erb', 'ppl.erb'
 
   include ApplicationHelper
@@ -32,12 +32,13 @@ class Admin::PeopleController < Admin::AdminController
     @name = params['name'] || session['person_name'] || cookies[:person_name] || ''
     @name.strip!
     session['person_name'] = @name
-    cookies[:person_name] = {:value => @name, :expires => Time.now + 36000}
+    cookies[:person_name] = { :value => @name, :expires => Time.zone.now + 36000 }
     if @name.blank?
       @people = []
     else
       @people = Person.find_all_by_name_like(@name, SEARCH_RESULTS_LIMIT)
       @people = @people + Person.find_by_number(@name)
+      @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
     end
     if @people.size == SEARCH_RESULTS_LIMIT
       flash[:notice] = "First #{SEARCH_RESULTS_LIMIT} people"
@@ -56,6 +57,8 @@ class Admin::PeopleController < Admin::AdminController
     date = current_date
     if params['excel_layout'] == 'scoring_sheet'
       file_name = 'scoring_sheet.xls'
+    elsif params['include'] == 'print_cards'
+      file_name = 'print_cards.xls'
     elsif params['format'] == 'ppl'
       file_name = 'lynx.ppl'
     else
@@ -63,20 +66,26 @@ class Admin::PeopleController < Admin::AdminController
     end
     headers['Content-Disposition'] = "filename=\"#{file_name}\""
 
-    @people = Person.find_all_for_export(date, params['include'] == 'members_only')
+    @people = Person.find_all_for_export(date, params['include'])
     
     respond_to do |format|
       format.html
       format.ppl
-      format.xls {render :template => 'admin/people/scoring_sheet.xls.erb' if params['excel_layout'] == 'scoring_sheet'}
+      format.xls {
+        if params['excel_layout'] == 'scoring_sheet'
+          render :template => 'admin/people/scoring_sheet.xls.erb' 
+        elsif params['excel_layout'] == 'endicia'
+          render :template => 'admin/people/endicia.xls.erb' 
+        end
+      }
     end
   end
   
   def new
     @year = current_date.year
-    @person = Person.new(:member_from => Date.new(@year))
+    @person = Person.new
     @race_numbers = []
-    @years = (2005..(@year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
     render(:action => "edit")
   end
   
@@ -84,7 +93,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @year = current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-    @years = (2005..(@year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
   end
   
   # Create new Person
@@ -128,7 +137,7 @@ class Admin::PeopleController < Admin::AdminController
     else
       @year = current_date.year
       @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-      @years = (2005..(@year + 1)).to_a.reverse
+      @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
       render :edit
     end
   end
@@ -194,8 +203,8 @@ class Admin::PeopleController < Admin::AdminController
         return redirect_to(edit_admin_person_path(@person))
       end
     end
-    @years = (2005..(Date.today.year + 1)).to_a.reverse
-    @year = params[:year] || Date.today.year
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+    @year = params[:year] || ASSOCIATION.effective_year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     render :edit
   end
@@ -354,7 +363,7 @@ class Admin::PeopleController < Admin::AdminController
       @person = Person.new
       @race_numbers = []
     end
-    @years = (2005..(Date.today.year + 1)).to_a.reverse
+    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
     render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
   end
   
@@ -389,7 +398,7 @@ class Admin::PeopleController < Admin::AdminController
     if @people.empty?
       return redirect_to(no_cards_admin_people_path(:format => "html"))
     else
-      Person.update_all("print_card=0", ['id in (?)', @people.collect{|person| person.id}])
+      Person.update_all("print_card=0, membership_card=1", ['id in (?)', @people.collect{|person| person.id}])
     end
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
@@ -400,22 +409,12 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @people = [@person]
     @person.print_card = false
+    @person.membership_card = true
+    @person.card_printed_at = ASSOCIATION.now
     @person.save!
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
     render(:template => "admin/people/card.pdf.pdf_writer")
-  end
-  
-  def mailing_labels
-    @people = Person.find(:all, :conditions => ['print_mailing_label=?', true], :order => 'last_name, first_name')
-    if @people.empty?
-      return redirect_to(no_mailing_labels_admin_people_path(:format => "html"))
-    else
-      Person.update_all("print_mailing_label=0", ['id in (?)', @people.collect{|person| person.id}])
-    end
-    
-    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render(:template => "admin/people/mailing_labels.pdf.pdf_writer")
   end
   
   def rescue_action_in_public(exception)
@@ -431,26 +430,21 @@ class Admin::PeopleController < Admin::AdminController
   private
   
   def assign_years
-    today = current_date
-    if today.month == 12
-      @year = today.year + 1
+    date = current_date
+    if date.month == 12
+      @year = date.year + 1
     else
-      @year = today.year
+      @year = date.year
     end
-    @years = [today.year, today.year + 1]
+    @years = [ date.year, date.year + 1 ]
   end
 
   def current_date
-    if params[:date].blank?
-      date = Date.today
+    if params[:date].present?
+      Date.parse(params[:date])
     else
-      date = Date.parse(params[:date])
+      ASSOCIATION.effective_today
     end
-    max_date_for_current_year = Event.find_max_date_for_current_year
-    if max_date_for_current_year && (date > max_date_for_current_year)
-      date = Date.new(date.year + 1)
-    end
-    date
   end
   
   def remember_event

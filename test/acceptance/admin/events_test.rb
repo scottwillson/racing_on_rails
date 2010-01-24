@@ -9,8 +9,12 @@ class EventsTest < SeleniumTestCase
     type "event_name", "Sausalito Criterium"
     click "save", :wait_for => :page
     assert_text "Created Sausalito Criterium"
-
-    open "/admin/events"
+    
+    if Date.today.month == 12
+      open "/admin/events?year=#{Date.today.year}"
+    else
+      open "/admin/events"
+    end
     assert_text "Sausalito Criterium"
     click "link=Sausalito Criterium", :wait_for => :page
 
@@ -23,7 +27,7 @@ class EventsTest < SeleniumTestCase
     assert_value "event_promoter_id", "regex:\\d+"
     assert_value "promoter_auto_complete", "Tom Brown"
 
-    open "/admin/events"
+    open "/admin/events?year=#{Date.today.year}"
     assert_text "Sausalito Criterium"
     click "link=Sausalito Criterium", :wait_for => :page
     assert_value "event_promoter_id", "regex:\\d+"
@@ -34,7 +38,6 @@ class EventsTest < SeleniumTestCase
 
     type "person_first_name", "Tim"
     click "save", :wait_for => :page
-
 
     click "back_to_event", :wait_for => :page
 
@@ -90,7 +93,7 @@ class EventsTest < SeleniumTestCase
     assert_value "person_home_phone", "(503) 555-1212"
     assert_value "person_email", "admin@example.com"
 
-    open "/admin/events"
+    open "/admin/events?year=#{Date.today.year}"
     click "link=Sausalito Criterium", :wait_for => :page
 
     # Need event and timing workarounds for Safari 4

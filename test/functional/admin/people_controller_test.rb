@@ -1,7 +1,11 @@
 require "test_helper"
 
 class Admin::PeopleControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
   def test_not_logged_in_index
     destroy_person_session
@@ -107,6 +111,15 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly.reload
     assert_equal('', molly.first_name, 'Person first_name after update')
     assert_equal('', molly.last_name, 'Person last_name after update')
+  end
+
+  def test_index_with_cookie
+    @request.cookies["person_name"] = "weaver"
+    get(:index)
+    assert_response(:success)
+    assert_not_nil(assigns["people"], "Should assign people")
+    assert_equal("weaver", assigns["name"], "Should assign name")
+    assert_equal(1, assigns["people"].size, "Should have no people")
   end
 
   def test_update_name
@@ -396,6 +409,12 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(true, molly.member, 'member after second update')
   end
   
+  def test_cancel_in_place_edit
+    xhr :post, :cancel_in_place_edit, :id => people(:molly)
+    assert_response(:success)
+    assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
+  end
+  
   def test_dupes_merge?
     molly = people(:molly)
     molly_with_different_road_number = Person.create(:name => 'Molly Cameron', :road_number => '987123')
@@ -642,7 +661,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                  "member_from(1i)"=>"","member_from(2i)"=>"10", "member_from(3i)"=>"19",  
                  "member_to(3i)"=>"31", "date_of_birth(2i)"=>"1", "city"=>"Hood River", 
                  "work_phone"=>"541-387-8883 x 213", "occupation"=>"Sales Territory Manager", "cell_fax"=>"541-387-8884",
-                 "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg", "print_mailing_label"=>"1", 
+                 "date_of_birth(3i)"=>"1", "zip"=>"97031", "license"=>"583", "mtb_category"=>"Beg",
                  "dh_category"=>"Beg", "notes"=>"interests: 6\r\nr\r\ninterests: 4\r\nr\r\ninterests: 4\r\n", "gender"=>"M", 
                  "ccx_category"=>"B", "team_name"=>"River City Specialized", "print_card"=>"1", 
                  "street"=>"3541 Avalon Drive", "home_phone"=>"503-367-5193", "road_category"=>"3", 
@@ -875,6 +894,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     tonkin = people(:tonkin)
     tonkin.print_card = true
     tonkin.save!
+    assert !tonkin.membership_card?, "Tonkin.membership_card? before printing"
 
     get(:cards, :format => "pdf")
 
@@ -884,6 +904,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(1, assigns['people'].size, 'Should assign people')
     tonkin.reload
     assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
+    assert tonkin.membership_card?, "Tonkin.has_card? after printing"
   end
   
   def test_many_print_cards
@@ -901,53 +922,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     for person in people
       person.reload
       assert(!person.print_card?, 'Person.print_card? after printing')
+      assert person.membership_card?, "person.membership_card? after printing"
     end
   end
-  
-  def test_print_no_mailing_labels_pending
-    get(:mailing_labels, :format => "pdf")
-    assert_redirected_to(no_mailing_labels_admin_people_path(:format => "html"))
-  end
-  
-  def test_print_no_mailing_labels
-    get(:no_mailing_labels)
-    assert_response(:success)
-    assert_template("admin/people/no_mailing_labels")
-    assert_layout("admin/application")
-  end
-  
-  def test_print_mailing_labels
-    tonkin = people(:tonkin)
-    tonkin.print_mailing_label = true
-    tonkin.save!
 
-    get(:mailing_labels, :format => "pdf")
-
-    assert_response(:success)
-    assert_template("admin/people/mailing_labels")
-    assert_layout(nil)
-    assert_equal(1, assigns['people'].size, 'Should assign people')
-    tonkin.reload
-    assert(!tonkin.print_mailing_label?, 'Tonkin.mailing_label? after printing')
-  end
-
-  def test_many_mailing_labels
-    people = []
-    for i in 1..31
-      people << Person.create(:first_name => 'First Name', :last_name => "Last #{i}", :print_mailing_label => true)
-    end
-
-    get(:mailing_labels, :format => "pdf")
-
-    assert_response(:success)
-    assert_template("admin/people/mailing_labels")
-    assert_equal(31, assigns['people'].size, 'Should assign people')
-    for person in people
-      person.reload
-      assert(!person.print_mailing_label?, 'Person.print_mailing_label? after printing')
-    end
-  end
-  
   def test_export_to_excel
     tonkin = people(:tonkin)
     tonkin.singlespeed_number = "409"
@@ -964,11 +942,25 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'all')
 
     assert_response(:success)
-    today = Date.today
+    today = ASSOCIATION.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
     assert_equal(11, assigns['people'].size, "People export size")
+    expected_body = %Q{license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at
+						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	01/13/2010  	01/13/2010
+	Molly	Cameron	Vanilla	01/01/1999	12/31/2010	0	0		0							0		0				F								202					0	0	0	0	01/13/2010  	01/13/2010
+576	Kevin	Condron	Gentle Lovers	01/01/2000	12/31/2009	0	0		0							0	kc@example.com	0																	0	0	0	0	01/13/2010  	01/13/2010
+	Bob	Jones		01/01/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	01/13/2010  	01/13/2010
+576	Mark	Matson	Kona	01/01/1999	12/31/2010	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	01/13/2010  	01/13/2010
+	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	01/13/2010  	01/13/2010
+	Alice	Pennington	Gentle Lovers	01/01/1999	12/31/2010	0	0		0							0		0				F								230					0	0	0	0	01/13/2010  	01/13/2010
+	Non	Results				0	0		0							0		0																	0	0	0	0	01/13/2010  	01/13/2010
+	Brad	Ross				0	0		0							0		0																	0	0	0	0	01/13/2010  	01/13/2010
+7123811	Erik	Tonkin	Kona	01/01/1999	12/31/2010	0	0		0	01/01/1980		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	01/13/2010  	01/13/2010
+	Ryan	Weaver	Gentle Lovers	01/01/1999	12/31/2010	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	01/13/2010  	01/13/2010
+}
+    # assert_equal expected_body, @response.body, "Excel contents"
   end
   
   def test_export_to_excel_with_date
@@ -986,7 +978,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'members_only')
 
     assert_response(:success)
-    today = Date.today
+    today = ASSOCIATION.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
@@ -1002,7 +994,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'ppl', :include => 'all')
 
     assert_response(:success)
-    today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
@@ -1012,7 +1003,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'ppl', :include => 'members_only')
 
     assert_response(:success)
-    today = Date.today
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
@@ -1022,8 +1012,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'members_only', :excel_layout => 'scoring_sheet')
 
     assert_response(:success)
-    today = Date.today
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
+  
+  def test_export_print_cards_to_endicia
+    get(:index, :format => "xls", :include => "print_cards", :excel_layout => "endicia")
+
+    assert_response(:success)
+    assert_equal("filename=\"print_cards.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end

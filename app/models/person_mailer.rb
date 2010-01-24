@@ -3,7 +3,7 @@ class PersonMailer < ActionMailer::Base
     recipients    person.email
     from          "#{ASSOCIATION.short_name} Help <#{ASSOCIATION.email}>"
     subject       "New #{ASSOCIATION.short_name} Login"
-    sent_on       Time.now
+    sent_on       Time.zone.now
     body          :person => person
   end
 end

@@ -1,0 +1,10 @@
+Name	Company	Address1	Address2	City	State	Zip
+<%- @people.each do |person| -%>
+<%= person["first_name"].to_excel %> <%= person["last_name"].to_excel -%> <%= person["road_number"] -%> <%= !person["card_printed_at"].nil? -%> <%= person["wants_email"] -%>
+	<%= person["street"] -%>
+	
+	<%= person["city"].to_excel -%>
+	<%= person["state"].to_excel -%>
+  <%# Last column is slightly different to ensure a line break -%>
+	<%= person["zip"] %>
+<%- end -%>

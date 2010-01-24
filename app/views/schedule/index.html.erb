@@ -16,7 +16,7 @@ end -%>
 <p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
 
 <% if ASSOCIATION.competitions.include?(:atra_points_series) -%>
-<p class="centered"><%= image_tag "icons/red_star.gif", :style => "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA Points Series</p>
+<p class="centered"><%= image_tag "icons/red_star.gif", :style => "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
 <%- end %>
 
 <div class="container">
@@ -40,9 +40,11 @@ end -%>
         <td class="day">
           <div class="number"><%= day.day_of_month -%></div>
           <%- for event in day.events -%>
-          <div class="event<%= ' atra_points_series' if event.atra_points_series? %>">
+          <div class="event<%= ' atra_points_series' if event.atra_points_series? %><%= " beginner_friendly" if event.beginner_friendly? %>">
             <%- if event.cancelled %>
         <span class="cancelled"><%= event.parent_name -%></span> <i>cancelled</i>
+            <%- elsif event.postponed? %>
+        <span class="postponed"><%= event.parent_name -%></span> <i>postponed</i>
             <%- else -%>
               <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
             <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.parent_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>

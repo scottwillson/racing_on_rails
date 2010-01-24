@@ -9,14 +9,18 @@ class Post < ActiveRecord::Base
   belongs_to :mailing_list
   
   def Post.find_for_dates(mailing_list, month_start, month_end)
-    Post.find_by_sql(
-      ["select id, date, sender, subject, topica_message_id from posts where mailing_list_id = ? and date >= ? and date <= ? order by date desc",
-        mailing_list.id, month_start, month_end])
+    logger.debug("Post.find_for_dates(#{mailing_list}, #{month_start}, #{month_end})")
+    mailing_list.posts.find(
+      :all,
+      :select => ["id, date, sender, subject, topica_message_id" ],
+      :conditions => [ "date >= ? and date <= ?", month_start, month_end ],
+      :order => "date desc"
+    )
   end
   
   def initialize(attributes = nil)
     super
-    self.date = Time.now if date.nil?
+    self.date = Time.zone.now if date.nil?
   end
   
   # Hack used when importing old Topica email

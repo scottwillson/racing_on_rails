@@ -1,9 +1,12 @@
 # Show Schedule, add and edit Events, edit Results for Events
 class Admin::EventsController < Admin::AdminController
-  before_filter :require_administrator
+  before_filter :assign_event, :only => [ :edit, :update ]
+  before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
+  before_filter :require_administrator, :except => [ :edit, :update ]
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
   in_place_edit_for :event, :first_aid_provider
+  in_place_edit_for :event, :chief_referee
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -13,7 +16,7 @@ class Admin::EventsController < Admin::AdminController
   # * year
   def index
     @year = params["year"].to_i
-    @year = Date.today.year if @year == 0
+    @year = ASSOCIATION.effective_year if @year == 0
     events = SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
   end
@@ -25,8 +28,7 @@ class Admin::EventsController < Admin::AdminController
   # * event
   # * disciplines: List of all Disciplines + blank
   def edit
-    @event = Event.find(params[:id])
-    unless params['promoter_id'].blank?
+    if params['promoter_id'].present? && current_person.administrator?
       @event.promoter = Person.find(params['promoter_id'])
     end
   end
@@ -38,7 +40,7 @@ class Admin::EventsController < Admin::AdminController
   # * event: Unsaved SingleDayEvent
   def new
     if params[:year].blank?
-      date = Date.today
+      date = ASSOCIATION.effective_year
     else
       year = params[:year]
       date = Date.new(year.to_i)
@@ -49,7 +51,9 @@ class Admin::EventsController < Admin::AdminController
       @event = SingleDayEvent.new(params[:event])
     end
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
-    @event.number_issuer_id = association_number_issuer.id
+    if association_number_issuer
+      @event.number_issuer_id = association_number_issuer.id
+    end
     
     respond_to do |format|
       format.html { render :action => :edit }
@@ -76,7 +80,7 @@ class Admin::EventsController < Admin::AdminController
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
-      redirect_to(:action => :new, :event => params[:event])
+      redirect_to edit_admin_event_path(@event)
     else
       flash[:warn] = @event.errors.full_messages
     end
@@ -103,8 +107,6 @@ class Admin::EventsController < Admin::AdminController
   # === Flash
   # * warn
   def update
-    expire_cache
-    @event = Event.find(params[:id])
     # TODO consolidate code
     event_params = params[:event].clone
     event_type = event_params.delete(:type)
@@ -124,6 +126,8 @@ class Admin::EventsController < Admin::AdminController
     end
     
     if @event.errors.empty?
+      expire_cache
+      flash[:notice] = "Updated #{@event.name}"
       redirect_to(edit_admin_event_path(@event))
     else
       render(:action => :edit)
@@ -252,5 +256,9 @@ class Admin::EventsController < Admin::AdminController
   
   def assign_disciplines
     @disciplines = Discipline.find_all_names
+  end
+  
+  def assign_event
+    @event = Event.find(params[:id])
   end
 end

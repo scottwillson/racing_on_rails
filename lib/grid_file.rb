@@ -4,7 +4,7 @@
 class GridFile < Grid
   
   def GridFile.read_excel(file)
-    Rails.logger.debug("GridFile (#{Time.now}) read_excel #{file}")
+    Rails.logger.debug("GridFile (#{Time.zone.now}) read_excel #{file}")
     if File::Stat.new(file.path).size == 0
       Rails.logger.warn("#{file.path} is empty")
       return []
@@ -16,7 +16,7 @@ class GridFile < Grid
       worksheet.each do |row|
         if Rails.logger.debug? && debug?
           Rails.logger.debug("---------------------------------") 
-          Rails.logger.debug("GridFile #{Time.now} row #{row.to_a.join(', ')}")
+          Rails.logger.debug("GridFile #{Time.zone.now} row #{row.to_a.join(', ')}")
           row.each_with_index do |cell, index|
             Rails.logger.debug("number_format pattern to_s to_f #{row.format(index).number_format}  #{row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
           end
@@ -52,7 +52,7 @@ class GridFile < Grid
         end
       end
     end
-    Rails.logger.debug("GridFile (#{Time.now}) read #{excel_rows.size} rows")
+    Rails.logger.debug("GridFile (#{Time.zone.now}) read #{excel_rows.size} rows")
     excel_rows
   end
     

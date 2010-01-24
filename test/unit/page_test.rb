@@ -167,6 +167,6 @@ class PageTest < ActiveSupport::TestCase
 
     child.destroy
     assert_equal(1, parent.versions.size, "versions")
-    assert(parent.reload.updated_at > updated_at, "New child should updated updated_at after child destroyed")
+    assert(parent.reload.updated_at > updated_at, "Parent should updated updated_at after child destroyed")
   end
 end

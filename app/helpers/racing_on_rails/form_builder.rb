@@ -2,7 +2,21 @@ module RacingOnRails
   class FormBuilder < ActionView::Helpers::FormBuilder
     def labelled_text_field(method, text = method.to_s.titleize, text_field_options = {})
       label_options = text_field_options.delete(:label) || {}
-      %Q{#{label(method, "#{text}", label_options)} #{text_field(method, text_field_options)}}
+      if text_field_options[:editable] == false
+        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
+      else
+        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{text_field(method, text_field_options)}}
+      end
+    end
+
+    def labelled_select(method, select_options, options = {})
+      label_options = options.delete(:label) || {}
+      text = label_options[:text] if label_options
+      if options[:editable] == false
+        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
+      else
+        %Q{#{label(method, "#{method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}
+      end
     end
 
     def labelled_password_field(method, text = method.to_s.titleize, password_field_options = {})
@@ -11,7 +25,12 @@ module RacingOnRails
     end
 
     def labelled_check_box(method, text = nil, check_box_options = {})
-      %Q{<div class="check_box">#{check_box(method, check_box_options)}#{label(method, text || method.to_s.titleize)}</div>}
+      label_options = check_box_options.delete(:label) || {}
+      if check_box_options[:editable] == false
+        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
+      else
+        %Q{<div class="check_box">#{check_box(method, check_box_options)}#{label(method, text || method.to_s.titleize)}</div>}
+      end
     end
     
     def labelled_radio_button(method, value, text = nil)
@@ -19,7 +38,13 @@ module RacingOnRails
     end
     
     def labelled_text_area(method, options = {})
-      %Q{#{label(method, "#{method.to_s.titleize}", :class => 'text_area')}#{text_area(method, options)}}
+      label_options = options.delete(:label) || {}
+      text = label_options[:text] if label_options
+      if options[:editable] == false
+        %Q{#{label(method, "#{text || method.to_s.titleize}", :class => 'text_area')} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
+      else
+        %Q{#{label(method, "#{text || method.to_s.titleize}", :class => 'text_area')}#{text_area(method, options)}}
+      end
     end
     
     # TODO get attribute from record

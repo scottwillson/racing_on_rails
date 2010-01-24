@@ -80,6 +80,12 @@ class PublicPagesTest < SeleniumTestCase
     assert_text "BAR"
 
     click 'link=Age Graded', :wait_for => :page
+    assert_text "2009 Age Graded BAR"
+
+    open "/bar/#{Date.today.year}"
+    assert_text "BAR"
+
+    click 'link=Age Graded', :wait_for => :page
     assert_text "#{Date.today.year} Age Graded BAR"
   end
 end

@@ -23,13 +23,20 @@ hr.space {
   color: white;
 }
 
-label.check_box {
-  width: 236px;
+.check_box, .radio {
+  padding-top: 6px;
 }
 
-input[type=checkbox] {
+.check_box label, .radio label {
+  line-height: 22px;
+}
+
+.check_box + .check_box, .radio + .radio {
+  padding-top: 0px;
+}
+
+input[type=radio] {
   margin-top: 0px;
-  vertical-align: middle;
 }
 
 select {
@@ -85,4 +92,28 @@ div.centered {
 
 #export_form div.centered {
   width: 368px;
+}
+
+input.city {
+  margin-right: 4px;
+  width: 106px;
+}
+
+input.city_no_zip {
+  margin-right: 4px;
+  width: 214px;
+}
+
+input.state {
+  margin-right: 4px;
+  width: 22px;
+}
+
+input.state_no_zip {
+  margin-right: 0px;
+  width: 22px;
+}
+
+input.zip {
+  width: 82px;
 }

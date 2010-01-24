@@ -27,6 +27,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     )
     events << mud_slinger
     mud_slinger.save!
+    
+    SingleDayEvent.create!(:postponed => true)
 
     opts = {:controller => "schedule", :action => "index", :year => year.to_s}
     assert_routing("schedule/#{year}", opts)

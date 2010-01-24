@@ -2,6 +2,7 @@ require "test_helper"
 
 class ResultTest < ActiveSupport::TestCase
   def setup
+    super
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.load_aliases
   end
@@ -579,9 +580,13 @@ class ResultTest < ActiveSupport::TestCase
   def test_differentiate_people_by_number_ignore_different_names
     ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(false)
     
-    person = Person.create!(:name => "Joe Racer")
-    Person.connection.execute "update people set updated_at = '#{Date.today - 90}' where id = #{person.id}"
+    person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
     person.reload
+    person.update_attribute(:updated_at, "2008-10-01")
+    person.reload
+    assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
+    person = Person.find(person.id)
+    assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
     
     person_clone = Person.create!(:name => "Joe Racer")
     Person.create!(:name => "Jenny Biker")
@@ -593,15 +598,24 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal(person_clone, result.person, 'Person')
 
     result = results.create!(:place => 2, :first_name => "Joe", :last_name => "Racer", :number => "600")
+
+    assert_equal 2, Person.find_all_by_name_like("Joe Racer").size, "Joe Racers"
     assert_equal(person_clone, result.person, 'Person')
+
+    person.reload
+    assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
+
+    person_clone.reload
+    assert_equal_dates Date.today, person_clone.updated_at, "updated_at"
   end
 
   def test_differentiate_people_by_number_ignore_different_names_eager_match
     ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(true)
     
     person = Person.create!(:name => "Joe Racer")
-    Person.connection.execute "update people set updated_at = '#{Date.today - 90}' where id = #{person.id}"
+    Person.connection.execute "update people set updated_at = '#{Time.local(2008).utc.to_s(:db)}' where id = #{person.id}"
     person.reload
+    assert_equal_dates "2008-01-01", person.updated_at, "updated_at"
     
     person_clone = Person.create!(:name => "Joe Racer")
     Person.create!(:name => "Jenny Biker")
@@ -787,6 +801,7 @@ class ResultTest < ActiveSupport::TestCase
   end
   
   def test_find_people_among_duplicates
+    ASSOCIATION.now = Date.new(Date.today.year, 6)
     Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
     
     jt_1 = Person.create!(:name => "John Thompson")

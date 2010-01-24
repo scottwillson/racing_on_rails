@@ -48,7 +48,7 @@ Donation: 10
 Downhill/Cross Country: Downhill}
     assert_equal(notes, tonkin.notes, 'notes')
     assert(tonkin.print_card?, 'Tonkin.print_card? after import')
-    assert(tonkin.print_mailing_label?, 'Tonkin.mailing_label? after import')
+    assert_nil(tonkin.card_printed_at, 'Tonkin.card_printed_at after import')
 
     sautter = Person.find_all_by_name('C Sautter').first
     assert_equal('C Sautter', sautter.name, 'Sautter name')
@@ -69,7 +69,7 @@ Downhill/Cross Country: Downhill}
     notes = %Q{Receipt Code: 922T4R7\nConfirmation Code: PQ2THJ7\nTransaction Payment Total: 22.3\nRegistration Completion Date/Time: 11/20/06 09:23 PM\nDisciplines: Road/Track/Cyclocross & Mtn Bike \nDonation: 0\nDownhill/Cross Country: Cross country\nSinglespeed: No\nOther interests: Marathon XC Short track XC}
     assert_equal(notes, sautter.notes, 'notes')
     assert(sautter.print_card?, 'sautter.print_card? after import')
-    assert(sautter.print_mailing_label?, 'sautter.mailing_label? after import')
+    assert_nil(sautter.card_printed_at, 'sautter.card_printed_at after import')
     
     ted_gresham = Person.find_by_name('Ted Greshsam')
     assert_equal(nil, ted_gresham.team, 'Team')
@@ -99,7 +99,8 @@ Downhill/Cross Country: Downhill}
       :member_to => Date.new(Date.today.year + 1, 12, 31),
       :date_of_birth => '1965-10-02',
       :notes => 'Existing notes',
-      :road_number => '825'
+      :road_number => '824',
+      :dh_number => "117"
     )
 
     rene = Person.create!(
@@ -124,16 +125,19 @@ Downhill/Cross Country: Downhill}
       :member_from => '2000-01-01',
       :team_name => 'EWEB',
       :road_category => '3',
-      :date_of_birth => '1959-12-09'
+      :date_of_birth => '1959-12-09',
+      :license => "1516"
     )
-    assert(scott.valid?, scott.errors.full_messages)
-    assert(!scott.new_record?)
-    number = scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
-    assert(number.valid?, number.errors.full_messages)
-    assert(!number.new_record?, 'Number should be saved')
+    number = scott.race_numbers.create!(:value => '422', :year => Date.today.year - 1)
     number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
+    
+    # Dupe Scott Seaton should be skipped because of different license
+    Person.create!(
+      :last_name =>'Seaton',
+      :first_name => 'Scott'
+    )
 
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
     people = PeopleFile.new(file).import(true)
@@ -159,7 +163,6 @@ Downhill/Cross Country: Downhill}
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
     assert(number.updated_by["membership/database.xls"], "updated_by")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
-    assert(!quinn_jackson.print_mailing_label?, 'quinn_jackson.mailing_label? after import')
     
     all_abers = Person.find_all_by_name('Brian Abers')
     assert_equal(1, all_abers.size, 'Brian Abers in database after import')
@@ -171,9 +174,14 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
-    assert_equal('825', brian_abers.road_number, 'Brian Abers road_number')
+    road_numbers = RaceNumber.find(:all, :conditions => [ 
+        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, ASSOCIATION.year
+      ])
+    assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
+    assert road_numbers.any? { |number| number.value == "824" }, "Should preseve Brian Abers road number"
+    assert road_numbers.any? { |number| number.value == "825" }, "Should add Brian Abers new road number"
+    assert_equal('117', brian_abers.dh_number, 'Brian Abers dh_number')
     assert(!brian_abers.print_card?, 'brian_abers.print_card? after import')
-    assert(!brian_abers.print_mailing_label?, 'brian_abers.mailing_label? after import')
     
     all_heidi_babi = Person.find_all_by_name('heidi babi')
     assert_equal(1, all_heidi_babi.size, 'Heidi Babi in database after import')
@@ -189,7 +197,6 @@ Downhill/Cross Country: Downhill}
     assert_equal('360-696-9272', heidi_babi.work_phone, 'Heidi work phone')
     assert_equal('360-696-9398', heidi_babi.cell_fax, 'Heidi cell/fax')
     assert(heidi_babi.print_card?, 'heidi_babi.print_card? after import')
-    assert(heidi_babi.print_mailing_label?, 'heidi_babi.mailing_label? after import')
     
     all_rene_babi = Person.find_all_by_name('rene babi')
     assert_equal(1, all_rene_babi.size, 'Rene Babi in database after import')
@@ -202,12 +209,11 @@ Downhill/Cross Country: Downhill}
     assert_equal(nil, rene_babi.notes, 'Rene Babi notes')
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
     assert(rene_babi.print_card?, 'rene_babi.print_card? after import')
-    assert(rene_babi.print_mailing_label?, 'rene_babi.mailing_label? after import')
     assert_equal('190A', rene_babi.road_number, 'Rene road_number')
     
     all_scott_seaton = Person.find_all_by_name('scott seaton')
-    assert_equal(1, all_scott_seaton.size, 'Scott Seaton in database after import')
-    scott_seaton = all_scott_seaton.first
+    assert_equal(2, all_scott_seaton.size, 'Scott Seaton in database after import')
+    scott_seaton = all_scott_seaton.detect { |p| p.license == "1516"}
     assert_equal('M', scott_seaton.gender, 'Scott Seaton gender')
     assert_equal('sseaton@bendcable.com', scott_seaton.email, 'Scott Seaton email')
     assert_equal_dates('2000-01-01', scott_seaton.member_from, 'Scott Seaton member from')
@@ -222,7 +228,6 @@ Downhill/Cross Country: Downhill}
     assert_equal('firefighter', scott_seaton.occupation, 'Scott Seaton occupation')
     assert_equal("Hutch's Bend", scott_seaton.team_name, 'Scott Seaton team should be updated')
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
-    assert(!scott_seaton.print_mailing_label?, 'sautter.mailing_label? after import')
     
     scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
     number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
@@ -234,6 +239,8 @@ Downhill/Cross Country: Downhill}
     Person.create(:name => 'Erik Tonkin')
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
+    
+    # FIXME
     # people_file.import(true)
     # 
     # assert_equal(1, people_file.created, 'Number of people created')

@@ -25,7 +25,7 @@ class Grid
   def initialize(source = '', *options)
     raise ArgumentError("'source' cannot be nil") if source.nil?
 
-    Rails.logger.debug("Grid (#{Time.now}) new")
+    Rails.logger.debug("Grid (#{Time.zone.now}) new")
     
     options.flatten! if options
     @truncated = false

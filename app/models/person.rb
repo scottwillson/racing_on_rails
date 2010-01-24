@@ -4,7 +4,6 @@
 #
 # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
 class Person < ActiveRecord::Base
-
   include Comparable
 
   acts_as_authentic do |config|
@@ -16,17 +15,14 @@ class Person < ActiveRecord::Base
 
     config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
-
-    config.validate_email_field(false)
-    
-    config.disable_perishable_token_maintenance(true)
+    config.validate_email_field false
+    config.disable_perishable_token_maintenance true
   end
 
   before_validation :find_associated_records, :make_login_blanks_nil
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
-  after_save :save_numbers
 
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
@@ -128,7 +124,7 @@ class Person < ActiveRecord::Base
   def Person.find_by_number(number)
     Person.find(:all, 
                :include => :race_numbers,
-               :conditions => ['race_numbers.year = ? and race_numbers.value = ?', Date.today.year, number])
+               :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ ASSOCIATION.year, ASSOCIATION.next_year ], number ])
   end
 
   def Person.full_name(first_name, last_name)
@@ -161,14 +157,18 @@ class Person < ActiveRecord::Base
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = Date.today, members_only = true)
+  def Person.find_all_for_export(date = ASSOCIATION.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
-    where_clause = "WHERE (member_to >= '#{date.to_s}')" if members_only
+    if include_people == "members_only"
+      where_clause = "WHERE (member_to >= '#{date.to_s}')" 
+    elsif include_people == "print_cards"
+      where_clause = "WHERE  (member_to >= '#{date.to_s}') and print_card is true" 
+    end
     
     people = Person.connection.select_all(%Q{
       SELECT people.id, license, first_name, last_name, teams.name as team_name, people.notes,
              DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to, DATE_FORMAT(member_usac_to, '%m/%d/%Y') as member_usac_to,
-             print_card, print_mailing_label, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation, 
+             print_card, card_printed_at, membership_card, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation,
              street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
              volunteer_interest, official_interest, race_promotion_interest, team_interest,
@@ -222,7 +222,7 @@ class Person < ActiveRecord::Base
   #interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
-      (lic_date && (Date.parse(lic_date) > Date.today)) ? "current" : "CHECK LIC!"
+      (lic_date && (Date.parse(lic_date) > ASSOCIATION.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
     end
@@ -424,10 +424,17 @@ class Person < ActiveRecord::Base
     end
   end
   
+  # Over 18 years old
+  def senior?
+    if date_of_birth
+      date_of_birth < Date.new(18.years.ago.year, 1, 1)
+    end
+  end
+  
   # Oldest age person will be at any point in year
   def racing_age
     if date_of_birth
-      (Date.today.year - date_of_birth.year).ceil
+      (ASSOCIATION.year - date_of_birth.year).ceil
     end
   end
   
@@ -437,10 +444,27 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def category(discipline)
+    case discipline
+    when Discipline[:road], Discipline[:track], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
+      self["road_category"]
+    when Discipline[:road], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
+      self["track_category"]
+    when Discipline[:cyclocross]
+      self["ccx_category"]
+    when Discipline[:dh]
+      self["dh_category"]
+    when Discipline[:bmx]
+      self["bmx_category"]
+    when Discipline[:mtb]
+      self["xc_category"]
+    end
+  end
+  
   def number(discipline, reload = false, year = nil)
     return nil if discipline.nil?
 
-    year = year || Date.today.year
+    year = year || ASSOCIATION.year
     if discipline.is_a?(Symbol)
       discipline = Discipline[discipline]
     end
@@ -457,7 +481,7 @@ class Person < ActiveRecord::Base
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
-    _year ||= Date.today.year
+    _year ||= ASSOCIATION.year
 
     if discipline.nil? || !discipline.numbers?
       discipline = Discipline[:road]
@@ -563,17 +587,17 @@ class Person < ActiveRecord::Base
   end
 
   def promoter?
-    roles.any? { |role| role.name == "Promoter" }
+    Event.exists?([ "promoter_id = ?", self.id ])
   end
 
   # Is Person a current member of the bike racing association?
-  def member?(date = Date.today)
+  def member?(date = ASSOCIATION.today)
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
-  def member_in_year?(date = Date.today)
+  def member_in_year?(date = ASSOCIATION.today)
     date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     year = date.year
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
@@ -585,15 +609,15 @@ class Person < ActiveRecord::Base
   
   # Is Person a current member of the bike racing association?
   def member=(value)
-    if value && !member?
-      self.member_from = Date.today if self.member_from.nil? or self.member_from >= Date.today
-      self.member_to = Date.new(Date.today.year, 12, 31) unless self.member_to and (self.member_to >= Date.new(Date.today.year, 12, 31))
+    if value
+      self.member_from = ASSOCIATION.today if self.member_from.nil? || self.member_from >= ASSOCIATION.today
+      self.member_to = Date.new(ASSOCIATION.effective_year, 12, 31) unless self.member_to && (self.member_to >= Date.new(ASSOCIATION.effective_year, 12, 31))
     elsif !value && member?
-      if self.member_from.year == Date.today.year
+      if self.member_from.year == ASSOCIATION.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Date.new(Date.today.year - 1, 12, 31)
+        self.member_to = Date.new(ASSOCIATION.year - 1, 12, 31)
       end
     end
   end
@@ -623,7 +647,7 @@ class Person < ActiveRecord::Base
   
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = Date.today if self.member_from.nil?
+      self[:member_from] = ASSOCIATION.today if self.member_from.nil?
       self[:member_from] = date if self.member_from > date
     end
     self[:member_to] = date
@@ -641,11 +665,11 @@ class Person < ActiveRecord::Base
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
   end
-  
+
   def renewed?
-    self.member_from && (self.member_from > Date.today)
+    self.member_to && (self.member_to.year >= ASSOCIATION.effective_year)
   end
-  
+
   def print_card?
     self.print_card
   end
@@ -818,12 +842,6 @@ class Person < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
-    end
-  end
-  
-  def save_numbers
-    for number in race_numbers
-      number.save! if number.new_record?
     end
   end
   

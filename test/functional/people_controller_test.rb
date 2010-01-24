@@ -1,8 +1,6 @@
 require "test_helper"
 
 class PeopleControllerTest < ActionController::TestCase
-  setup :activate_authlogic
-
   def test_index
     get(:index)
     assert_response(:success)
@@ -57,6 +55,14 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => people(:member).to_param
     assert_response :success
     assert_equal people(:member), assigns(:person), "@person"
+  end
+
+  def test_edit_promoter
+    use_ssl
+    login_as :promoter
+    get :edit, :id => people(:promoter).to_param
+    assert_response :success
+    assert_equal people(:promoter), assigns(:person), "@person"
   end
 
   def test_must_be_logged_in

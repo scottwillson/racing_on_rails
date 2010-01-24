@@ -1,5 +1,5 @@
 class RaceDayMailer < ActionMailer::Base
-  def members_export(people, sent_on_time = Time.now)
+  def members_export(people, sent_on_time = Time.zone.now)
     subject    "#{ASSOCIATION.name} Members Export"
     recipients 'dcowley@sportsbaseonline.com'
     from       "scott@butlerpress.com"

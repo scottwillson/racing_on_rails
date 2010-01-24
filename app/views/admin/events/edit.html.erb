@@ -17,8 +17,9 @@
                  :html => { :method => form_method_for(@event) }) do |f| -%>
       <div class="span-3 last no_top_margin">
         <%= f.hidden_field :parent_id %>
-        <%= f.labelled_text_field :name %>
+        <%= f.labelled_text_field :name, nil, :editable => administrator? %>
 
+        <% if administrator? %>
         <%= f.label :type %>
         <%= f.select(:type, [['Event', nil],
                              ['Single Day Event', 'SingleDayEvent'],
@@ -30,11 +31,16 @@
     \nMulti day event: event over consecutive days (stage races, AVC). 
     \nSeries: weekend events with full BAR points (Cross Crusade). 
     \nWeekly series: weeknight, BAR points only for overall (PIR)" }) %><br/>
-
+        <% end -%>
+        
         <% case @event
            when SingleDayEvent -%>
-          <%= f.label :date_1i, "Date" %>
-          <%= f.date_select :date, :order => [:month, :day, :year] %>
+           <% if administrator? %>
+           <%= f.label :date_1i, "Date" %>
+           <%= f.date_select :date, :order => [:month, :day, :year] %>
+           <% else %>
+            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
+           <% end -%>
         <% when MultiDayEvent -%>
           <%- if @event.start_date == @event.end_date -%>
             <%= f.labelled_text(:date, @event.start_date ? @event.start_date.strftime('%A, %B %d, %Y') : "") %>
@@ -45,29 +51,29 @@
             <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
         <% end -%>
 
-        <%= f.label :discipline %>
-        <%= f.select :discipline, @disciplines.sort %><br/>
+        <%= f.labelled_select :discipline, @disciplines.sort, :editable => administrator? %><br/>
 
+        <% if administrator? %>
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
+        <% else %>
+        <%= f.labelled_text :location %>
+        <% end -%>
 
         <% if ASSOCIATION.show_events_velodrome? -%>
-        <%= f.label :velodrome_id, "Velodrome" %>
-        <%= f.select(:velodrome_id, 
-                 Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, 
-                 { :include_blank => true }) %>
+        <%= f.labelled_select(:velodrome_id, Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, 
+                 :include_blank => true, :editable => administrator?) %>
         <% end -%>
         
-        <%= f.labelled_text_field :time %>
-        <%= f.labelled_check_box :cancelled %>
-        <%= f.labelled_check_box :instructional %>
-        <%= f.labelled_check_box :practice %>
+        <%= f.labelled_text_field :time, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :cancelled, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :postponed, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :instructional, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :practice, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :beginner_friendly, nil, :editable => administrator? %>
       </div>
 
-      <div class="span-3 last top_margin">
-        <%= auto_complete f, :event, :team, admin_teams_path, "Sponsoring Team" %>
-      </div>
-      
+      <% if administrator? %>
       <div class="span-3 last">
         <%= auto_complete f, :event, :promoter, admin_people_path %>
       </div>
@@ -77,7 +83,8 @@
           page << "window.location.href = 'http://#{RAILS_HOST}/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
         end %>
       </div>
-
+      <% end -%>
+      
       <div class="span-3 last top_margin">
         <fieldset>
           <legend>Contact Information</legend>
@@ -86,53 +93,59 @@
           <%= f.labelled_text_field :email %>
         </fieldset>
       </div>
-
+      
+      <div class="span-3 last top_margin">
+        <% if administrator? %>
+        <%= auto_complete f, :event, :team, admin_teams_path, "Sponsoring Team" %>
+        <% else %>
+        <%= f.labelled_text :team_name %>
+        <% end -%>
+        <%= f.labelled_text_field :first_aid_provider, nil, :editable => administrator? %>
+        <%= f.labelled_text_field :chief_referee, nil, :editable => administrator? %>
+      </div>
+      
       <div class="span-3 last top_margin">
         <% if SANCTIONING_ORGANIZATIONS.size > 1 -%>
-        <%= f.label :sanctioned_by %>
-        <%= f.select :sanctioned_by, SANCTIONING_ORGANIZATIONS %>
+        <%= f.labelled_select :sanctioned_by, SANCTIONING_ORGANIZATIONS, :editable => administrator? %>
         <%- end %>
 
         <% if ASSOCIATION.show_events_sanctioning_org_event_id? -%>
-          <%= f.labelled_text_field :sanctioning_org_event_id, "Sanctioning Org Event ID" %>
+          <%= f.labelled_text_field :sanctioning_org_event_id, "Sanctioning Org Event ID", :editable => administrator? %>
         <% end -%>
 
-        <%= f.label :number_issuer_id, "Number Issuer" %>
-        <%= f.select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]})  %>
+        <%= f.labelled_select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]}) if administrator? %>
         <br/>
         
-        <%= f.labelled_check_box :atra_points_series, "ATRA Points Series" if ASSOCIATION.competitions.include?(:atra_points_series) %>
+        <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if ASSOCIATION.competitions.include?(:atra_points_series) %>
 
         <% if ASSOCIATION.competitions.include?(:bar) -%>
-        <%= f.label :bar_points, "BAR Points" %>
-        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "BAR Points"}, :editable => administrator? %>
         <%- end %>
         
         <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
-        <%= f.label :bar_points, "Rankings Pts" %>
-        <%= f.select(:bar_points, bar_points_and_labels) %>
+        <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "Rankings Pts"}, :editable => administrator? %>
         <%- end %>
 
         <%- if CombinedTimeTrialResults.allows_combined_results?(@event) -%>
-          <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results" %>
+          <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results", :editable => administrator? %>
         <%- end -%>
 
-        <%= f.labelled_check_box :ironman if ASSOCIATION.competitions.include?(:ironman) %>
+        <%= f.labelled_check_box(:ironman, nil, :editable => administrator?) if ASSOCIATION.competitions.include?(:ironman) %>
 
-        <%= f.labelled_text_field :flyer %>
-        <%= f.labelled_check_box :flyer_approved %>
+        <%= f.labelled_text_field :flyer, nil, :editable => administrator? %>
+        <%= f.labelled_check_box :flyer_approved, nil, :editable => administrator? %>
 
-        <%= f.labelled_text_field :pre_event_fees %>
-        <%= f.labelled_text_field :post_event_fees %>
-        <%= f.labelled_text_field :flyer_ad_fee %>
+        <%= f.labelled_text_field :pre_event_fees, nil, :editable => administrator? %>
+        <%= f.labelled_text_field :post_event_fees, nil, :editable => administrator? %>
+        <%= f.labelled_text_field :flyer_ad_fee, nil, :editable => administrator? %>
 
-        <%= f.labelled_text_area :notes %>
+        <%= f.labelled_text_area :notes, :editable => administrator? %>
       </div>
       
        <div class="span-3 page_buttons last">
         <div class="updatedon span-1"><% unless @event.updated_at.nil? %>Updated: <%= time_ago_in_words(@event.updated_at, true) + " ago" %><% end %></div>
         <div class="right span-2 last">
-          <%= link_to("Delete", admin_event_path(@event), :method => :delete, :class => 'obvious', :id => 'delete') unless @event.new_record? %>
+          <%= link_to("Delete", admin_event_path(@event), :method => :delete, :class => 'obvious', :id => 'delete') unless @event.new_record? || !administrator? %>
           <%= submit_tag "Save", :id => "save" %>
         </div>
       </div>
@@ -143,7 +156,7 @@
 
 <%= focus("event_name") if @event.new_record? -%>
 
-<%= if !@event.promoter || @event.new_record?
+<%= if (!@event.promoter || @event.new_record?) && administrator?
       update_page_tag { |page| page.hide(:edit_promoter_link) }
     end -%>
 

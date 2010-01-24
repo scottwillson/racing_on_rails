@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
+  `name` varchar(255) default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `title` varchar(255) default null,
+  `heading` varchar(255) default null,
+  `description` varchar(255) default null,
   `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
+  `body` text,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -157,7 +157,7 @@ create table `events` (
   `cancelled` tinyint(1) default '0',
   `notification` tinyint(1) default '1',
   `number_issuer_id` int(11) default null,
-  `first_aid_provider` varchar(255) default '-------------',
+  `first_aid_provider` varchar(255) default null,
   `pre_event_fees` float default null,
   `post_event_fees` float default null,
   `flyer_ad_fee` float default null,
@@ -170,11 +170,14 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
-  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
+  `promoter_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
+  `postponed` tinyint(1) not null default '0',
+  `chief_referee` varchar(255) default null,
+  `beginner_friendly` tinyint(1) not null default '0',
   primary key (`id`),
   key `idx_disciplined` (`discipline`),
   key `parent_id` (`parent_id`),
@@ -285,7 +288,6 @@ create table `people` (
   `notes` text,
   `state` varchar(64) default null,
   `team_id` int(11) default null,
-  `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `cell_fax` varchar(255) default null,
@@ -304,18 +306,18 @@ create table `people` (
   `zip` varchar(255) default null,
   `member_to` date default null,
   `print_card` tinyint(1) default '0',
-  `print_mailing_label` tinyint(1) default '0',
   `ccx_only` tinyint(1) not null default '0',
   `updated_by` varchar(255) default null,
   `bmx_category` varchar(255) default null,
-  `wants_email` tinyint(1) not null default '1',
-  `wants_mail` tinyint(1) not null default '1',
+  `wants_email` tinyint(1) not null default '0',
+  `wants_mail` tinyint(1) not null default '0',
   `volunteer_interest` tinyint(1) not null default '0',
   `official_interest` tinyint(1) not null default '0',
   `race_promotion_interest` tinyint(1) not null default '0',
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
+  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -323,7 +325,6 @@ create table `people` (
   `perishable_token` varchar(255) default null,
   `login_count` int(11) not null default '0',
   `failed_login_count` int(11) not null default '0',
-  `last_request_at` datetime default null,
   `current_login_at` datetime default null,
   `last_login_at` datetime default null,
   `current_login_ip` varchar(255) default null,
@@ -331,12 +332,15 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
-  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
   `emergency_contact` varchar(255) default null,
   `emergency_contact_phone` varchar(255) default null,
+  `card_printed_at` datetime default null,
+  `license_type` varchar(255) default null,
+  `country_code` varchar(2) default 'US',
+  `membership_card` tinyint(1) not null default '0',
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -672,6 +676,12 @@ insert into schema_migrations (version) values ('20090708162118');
 
 insert into schema_migrations (version) values ('20090730022816');
 
+insert into schema_migrations (version) values ('20090815135542');
+
+insert into schema_migrations (version) values ('20090930060618');
+
+insert into schema_migrations (version) values ('20091006194727');
+
 insert into schema_migrations (version) values ('20091007232822');
 
 insert into schema_migrations (version) values ('20091009021956');
@@ -679,6 +689,20 @@ insert into schema_migrations (version) values ('20091009021956');
 insert into schema_migrations (version) values ('20091011235631');
 
 insert into schema_migrations (version) values ('20091015052458');
+
+insert into schema_migrations (version) values ('20091122223629');
+
+insert into schema_migrations (version) values ('20091129235114');
+
+insert into schema_migrations (version) values ('20091201031927');
+
+insert into schema_migrations (version) values ('20091220162338');
+
+insert into schema_migrations (version) values ('20100107001744');
+
+insert into schema_migrations (version) values ('20100113032309');
+
+insert into schema_migrations (version) values ('20100121041557');
 
 insert into schema_migrations (version) values ('21');
 

@@ -58,6 +58,12 @@ class PersonTest < ActiveSupport::TestCase
     person_to_keep = people(:molly)
     person_to_merge = people(:tonkin)
     
+    person_to_keep.login = "molly"
+    person_to_keep.password = "secret"
+    person_to_keep.password_confirmation = "secret"
+    person_to_keep.save!
+    person_to_keep_old_password = person_to_keep.crypted_password
+    
     assert_not_nil(Person.find_by_first_name_and_last_name(person_to_keep.first_name, person_to_keep.last_name), "#{person_to_keep.name} should be in DB")
     assert_equal(3, Result.find_all_by_person_id(person_to_keep.id).size, "Molly's results")
     assert_equal(1, Alias.find_all_by_person_id(person_to_keep.id).size, "Mollys's aliases")
@@ -103,6 +109,52 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(0, Result.find_all_by_person_id(person_to_merge.id).size, "Tonkin's results")
     assert_equal(0, Alias.find_all_by_person_id(person_to_merge.id).size, "Tonkin's aliases")
     assert_same_elements(promoter_events, person_to_keep.events(true), "Should merge promoter events")
+    
+    assert_equal "molly", person_to_keep.login, "Should preserve login"
+    assert_equal person_to_keep_old_password, person_to_keep.crypted_password, "Should preserve password"
+  end
+  
+  def test_merge_login
+    person_to_keep = people(:molly)
+    person_to_merge = people(:tonkin)
+    
+    person_to_merge.login = "tonkin"
+    person_to_merge.password = "secret"
+    person_to_merge.password_confirmation = "secret"
+    person_to_merge.save!
+    person_to_merge_old_password = person_to_merge.crypted_password
+
+    person_to_keep.merge person_to_merge
+    
+    person_to_keep.reload
+    assert_equal "tonkin", person_to_keep.login, "Should merge login"
+    assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
+  end
+  
+  def test_merge_two_logins
+    person_to_keep = people(:molly)
+    person_to_merge = people(:tonkin)
+    
+    person_to_keep.login = "molly"
+    person_to_keep.password = "secret"
+    person_to_keep.password_confirmation = "secret"
+    person_to_keep.save!
+    person_to_keep_old_password = person_to_keep.crypted_password
+
+    person_to_merge.login = "tonkin"
+    person_to_merge.password = "secret"
+    person_to_merge.password_confirmation = "secret"
+    person_to_merge.save!
+    person_to_merge_old_password = person_to_merge.crypted_password
+
+    person_to_keep.reload
+    person_to_merge.reload
+    
+    person_to_keep.merge person_to_merge
+    
+    person_to_keep.reload
+    assert_equal "molly", person_to_keep.login, "Should preserve login"
+    assert_equal person_to_keep_old_password, person_to_keep.crypted_password, "Should preserve password"
   end
   
   def test_merge_no_alias_dup_names
@@ -151,18 +203,31 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(person.member_from, 'Member on')
     assert_nil(person.member_to, 'Member to')
 
+    ASSOCIATION.now = Date.new(2009, 6)
     person.member = true
     assert_equal(true, person.member?, 'member')
-    assert_equal(Date.today, person.member_from, 'Member on')
-    year = Date.today.year
-    assert_equal(Date.new(year, 12, 31), person.member_to, 'Member to')
+    assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
+    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
     person.save!
     person.reload
     assert_equal(true, person.member?, 'member')
-    assert_equal(Date.today, person.member_from, 'Member on')
-    year = Date.today.year
-    assert_equal(Date.new(year, 12, 31), person.member_to, 'Member to')
+    assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
+    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
+
+    ASSOCIATION.now = Date.new(2009, 12)
+    person.member = true
+    assert_equal(true, person.member?, 'member')
+    assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
+    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+    person.save!
+    person.reload
+    assert_equal(true, person.member?, 'member')
+    assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
+    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
     
+    ASSOCIATION.now = Date.new(2010)
+    person.member_from = Date.new(2010)
+    person.member_to = Date.new(2010, 12, 31)
     person.member = false
     assert_equal(false, person.member?, 'member')
     assert_nil(person.member_from, 'Member on')
@@ -174,13 +239,14 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(person.member_to, 'Member to')
     
     # From nil, to nil
+    ASSOCIATION.now = Date.new(2009)
     person.member_from = nil
     person.member_to = nil
     assert_equal(false, person.member?, 'member?')
     person.member = true
     assert_equal(true, person.member?, 'member')
-    assert_equal(Date.today, person.member_from, 'Member from')
-    assert_equal(Date.new(year, 12, 31), person.member_to, 'Member to')
+    assert_equal(Date.new(2009), person.member_from, 'Member from')
+    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
     
     person.member_from = nil
     person.member_to = nil
@@ -191,6 +257,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     
     # From, to in past
+    ASSOCIATION.now = Date.new(2009, 11)
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -201,8 +268,22 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(year, 12, 31), person.member_to, 'Member to')
+    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
     
+    ASSOCIATION.now = Date.new(2009, 12)
+    person.member_from = Date.new(2001, 1, 1)
+    person.member_to = Date.new(2001, 12, 31)
+    assert_equal(false, person.member?, 'member?')
+    assert_equal(false, person.member?(Date.new(2000, 12, 31)), 'member')
+    assert_equal(true, person.member?(Date.new(2001, 1, 1)), 'member')
+    assert_equal(true, person.member?(Date.new(2001, 12, 31)), 'member')
+    assert_equal(false, person.member?(Date.new(2002, 1, 1)), 'member')
+    person.member = true
+    assert_equal(true, person.member?, 'member')
+    assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
+    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+
+    ASSOCIATION.now = nil
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -212,6 +293,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     
     # From in past, to in future
+    ASSOCIATION.now = Date.new(2009, 1)
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(3000, 12, 31)
     assert_equal(true, person.member?, 'member?')
@@ -222,7 +304,7 @@ class PersonTest < ActiveSupport::TestCase
     
     person.member = false
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(year - 1, 12, 31), person.member_to, 'Member to')
+    assert_equal(Date.new(2008, 12, 31), person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')
 
     # From, to in future
@@ -231,7 +313,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     person.member = true
     assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Date.today, person.member_from, 'Member from')
+    assert_equal_dates(Date.new(2009), person.member_from, 'Member from')
     assert_equal_dates('3000-12-31', person.member_to, 'Member to')
     
     person.member = false
@@ -759,6 +841,105 @@ class PersonTest < ActiveSupport::TestCase
     assert(people(:administrator).promoter?, 'administrator promoter?')
     assert(people(:promoter).promoter?, 'administrator promoter?')
     assert(!people(:member).promoter?, 'administrator promoter?')
-    assert(people(:nate_hobson).promoter?, 'administrator promoter?')
+    assert(!people(:nate_hobson).promoter?, 'administrator promoter?')
+  end
+  
+  def test_login_with_periods
+    Person.create!(:name => 'Mr. Tuxedo', :password =>'blackcat', :password_confirmation =>'blackcat', :login => "tuxedo.cat@example.com")
+  end
+  
+  def test_long_login
+    person = Person.create!(
+      :name => 'Mr. Tuxedo', 
+      :password =>'blackcatthebestkittyinblacktuxatonypa', 
+      :password_confirmation =>'blackcatthebestkittyinblacktuxatonypa', 
+      :login => "tuxedo.black.cat@subdomain123456789.example.com"
+    )
+    person.reload
+    assert_equal "tuxedo.black.cat@subdomain123456789.example.com", person.login, "login"
+    assert PersonSession.create!(
+    :login => "tuxedo.black.cat@subdomain123456789.example.com",
+    :password =>'blackcatthebestkittyinblacktuxatonypa'
+    )
+  end
+  
+  def test_ignore_blank_login_fields
+    person = Person.create!(:password => "", :password_confirmation => "", :login => "")
+    person.reload
+    assert_nil person.login, "login should be nil, not blank"
+  end
+  
+  def test_authlogic_should_not_set_updated_at_on_load
+    person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
+    assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
+    person = Person.find(person.id)
+    assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
+  end
+  
+  def test_renewed
+    person = Person.create!
+    assert !person.renewed?, "New person"
+
+    ASSOCIATION.now = Date.new(2009, 11, 30)
+    person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
+    assert person.renewed?, "Before Dec 1"
+
+    ASSOCIATION.now = Date.new(2009, 12, 1)
+    person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
+    assert !person.renewed?, "On Dec 1"
+  end
+  
+  # member_from: nil, past, future, > October, < October, end of year, next year, far in future
+  # member_to: nil, past, future, > October, < October, end of year, next year, far in future
+  # now: start of year, < October, > October, end of year
+  def test_renew
+    # assert_renew(Time.local(2008, 1), nil, nil, Time.local(2008, 1), Time.local(2008, 12, 31))
+    # assert_renew(Time.local(2008, 8), nil, nil, Time.local(2008, 8), Time.local(2008, 12, 31))
+    # assert_renew(Time.local(2008, 11), nil, nil, Time.local(2008, 11), Time.local(2008, 12, 31))
+    # assert_renew(Time.local(2008, 12, 31), nil, nil, Time.local(2008, 12, 31), Time.local(2008, 12, 31))
+    # 
+    # person = Person.new(:member_from => Time.local(2004))
+    # now = Time.local(2008, 1).to_date
+    # person.renew(now)
+    # assert_equal true, person.member?(now), "member?"
+    # assert_equal_dates Time.local(2004, 1, 1), person.member_from, "member_from"
+    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
+    # 
+    # person = Person.new(:member_from => Time.local(2012))
+    # now = Time.local(2008, 1).to_date
+    # person.renew(now)
+    # assert_equal true, person.member?(now), "member?"
+    # assert_equal_dates Time.local(2008, 1, 1), person.member_from, "member_from"
+    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
+    # 
+    # person = Person.new(:member_from => Time.local(2008, 11))
+    # now = Time.local(2008, 11).to_date
+    # person.renew(now)
+    # assert_equal true, person.member?(now), "member?"
+    # assert_equal_dates Time.local(2008, 11), person.member_from, "member_from"
+    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
+    # 
+    # person = Person.new(:member_from => Time.local(2008, 11))
+    # now = Time.local(2008, 3).to_date
+    # person.renew(now)
+    # assert_equal true, person.member?(now), "member?"
+    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
+    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
+    # 
+    # person = Person.new(:member_from => Time.local(2008, 12, 31))
+    # now = Time.local(2008, 12, 31).to_date
+    # person.renew(now)
+    # assert_equal true, person.member?(now), "member?"
+    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
+    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
+  end
+
+  def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)
+    now = now.to_date
+    person = Person.new
+    person.renew(now)
+    assert_equal true, person.member?(now), "member? for #{now.to_formatted_s(:db)}. Member: #{member_from.to_formatted_s(:db) if member_from}- #{member_to.to_formatted_s(:db) if member_to}"
+    assert_equal_dates expected_member_from, person.member_from, "member_from for #{now.to_formatted_s(:db)}. Member: #{member_from.to_formatted_s(:db) if member_from}- #{member_to.to_formatted_s(:db) if member_to}"
+    assert_equal_dates expected_member_to, person.member_to, "member_to for #{now.to_formatted_s(:db)}. Member: #{member_from.to_formatted_s(:db) if member_from}- #{member_to.to_formatted_s(:db) if member_to}"
   end
 end

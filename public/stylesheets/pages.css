@@ -24,7 +24,7 @@ table#left_nav td.icon {
   margin-right: 8px;
 }
 
-/* Calendar */
+/* Calendar of events */
 div.calendar table {
   border-collapse: separate;
   padding: 0px;
@@ -60,6 +60,12 @@ td.day div.event {
   margin-bottom: 8px;
 }
 
+td.day div.beginner_friendly {
+  background-image: url(/images/icons/star_green.png);
+  background-repeat: no-repeat;
+  padding-left: 16px;
+}
+
 td.day div.number
 {
   font-weight: bold;
@@ -80,10 +86,22 @@ td.day_from_other_month div.number
   text-align: left;
 }
 
+div.calendar table.base td.beginner_friendly {
+  text-align: right;
+}
+
 
 /* Upcoming events */
 tr.discipline_upcoming_events {
   vertical-align: top;
+}
+
+table#upcoming_events_table td img {
+  vertical-align: top;
+}
+
+table#upcoming_events_table td:first-line {
+  line-height: 16px;
 }
 
 tr.discipline_upcoming_events td.date {
@@ -92,7 +110,11 @@ tr.discipline_upcoming_events td.date {
 
 tr.discipline_upcoming_events td.info {
   min-width: 150px;
-  padding-right:  24px;
+  padding-right: 24px;
+}
+
+a.beginner_friendly {
+  padding-right: 8px;
 }
 
 
@@ -114,7 +136,7 @@ div.disclosure {
 }
 
 .collapsed {
-  background-image: url(/images/icons/collapsed.gif);  
+  background-image: url(/images/icons/play_blue.png);  
 }
 
 .loading {
@@ -122,7 +144,7 @@ div.disclosure {
 }
 
 .expanded {
-  background-image: url(/images/icons/expanded.gif);
+  background-image: url(/images/icons/down_blue.png);
 }
 
 .category {
@@ -132,7 +154,7 @@ div.disclosure {
 .category .record {
   padding-left: 24px;
   cursor: move;
-  background-image: url(/images/icons/category.gif);
+  background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
   background-position: 0px 0px;
   display: inline;
@@ -174,7 +196,7 @@ table.base td.disclosure a {
 
 /* Pages */
 table.pages div.record {
-  background-image: url(/images/icons/web_page.png);
+  background-image: url(/images/icons/page_white_world.png);
 }
 
 #page_body {
@@ -196,16 +218,16 @@ table.people td.name {
 
 table.people div.record,
 table.people div.record {
-  background-image: url(/images/icons/person.gif);
+  background-image: url(/images/icons/user.png);
 }
 
 table.teams div.record {
-  background-image: url(/images/icons/people.gif);
+  background-image: url(/images/icons/group.png);
 }
 
 /* Velodromes */
 table.velodromes div.record {
-  background-image: url(/images/icons/checkered_flag.gif);
+  background-image: url(/images/icons/flag_checked.png);
 }
 
 table.base td.icon {
@@ -275,14 +297,8 @@ table.numbers td label {
   width: auto;
 }
 
-input#person_license {
-  width: 100px;
-  float: right;
-  margin-right: 8px;
-}
-
-td input[type=text].number {
-  width: 30px;
+table.numbers td input[type=text] {
+  width: 60px;
 }
 
 table.person_categories td input[type=text] {
@@ -324,7 +340,7 @@ input.zip {
 
 .current, .renewed {
   padding-right: 20px;
-  background-image: url(/images/icons/confirmed.gif);
+  background-image: url(/images/icons/accept.png);
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -348,7 +364,7 @@ form.cat4_womens_race_series td input#result_team_name {
 
 /* Event */
 table.event_nav td.standings {
-  background-image: url(/images/icons/results.gif);
+  background-image: url(/images/icons/table.png);
   background-repeat: no-repeat;
   background-position: 8px 6px;  
 }
@@ -358,7 +374,7 @@ table.event_nav td.standings a {
 }
 
 table.event_nav td.race {
-  background-image: url(/images/icons/category.gif);
+  background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
   background-position: 32px 6px;  
 }
@@ -444,31 +460,6 @@ table.first_aid_providers td.name {
   width: 200px;
 }
 
-/* Login */
-div.login {
-  margin-top: 16px;
-}
-
-div.login, div.login div.span-3 {
-  width: 376px;
-}
-
-.login label {
-  width: 90px;
-  margin-right: 8px;
-}
-
-.login #person_session_login, #person_session_password {
-  margin-top: 8px;
-  margin-left: 0px;
-  margin-right: 0px;
-  width: 270px;
-  float: left;
-}
-
-.login .page_buttons input {
-}
-
 .link_spacer {
   padding-left: 8px;
   padding-right: 8px;
@@ -537,4 +528,9 @@ table#preview_import_table th {
 
 .pagination .current {
   padding-right: 0px;
+}
+
+/* Login */
+.login .options {
+  margin-top: 8px;
 }

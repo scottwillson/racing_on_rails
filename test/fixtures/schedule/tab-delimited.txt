@@ -1,0 +1,3 @@
+Date	Race	CityState	Discipline	Promoter	PromoterPhone	PromoterEmail	SponsoringTeam	SanctionedBy	Website	FlyerApproved
+1/1/99	Butte Hillclimb	Butte								
+2/12/99	Valentine Criterium	"Missoula, MT"	Criterium	Al Pendergrass	(414) 333-1100	al@gmail.com	1200000	USA Cycling	http://geocities.com/bikes	1

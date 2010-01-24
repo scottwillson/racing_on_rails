@@ -8,8 +8,7 @@ class EventTest < ActiveSupport::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal(5, years.size, "Should find all years with events")
-    assert_equal([Date.today.year, 2005, 2004, 2003, 2002], years, "Years")
+    assert_equal_enumerables([Date.today.year, 2005, 2004, 2003, 2002], years, "Should find all years with events")
   end
   
   def test_defaults
@@ -305,10 +304,10 @@ class EventTest < ActiveSupport::TestCase
   def test_date_range_s_long
     mt_hood = events(:mt_hood)
     assert_equal("07/11/2005-07/12/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
-    mt_hood.children.last.date = Date.new(2005, 8, 1)
-    mt_hood.children.last.save!
-    mt_hood.save!
-    mt_hood.reload
+    last_day = mt_hood.children.last
+    last_day.date = Date.new(2005, 8, 1)
+    last_day.save!
+    mt_hood = Event.find(mt_hood.id)
     assert_equal("07/11/2005-08/01/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
 
     kings_valley = events(:kings_valley)
@@ -345,14 +344,6 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
   end
   
-  def test_find_max_date_for_current_year
-    Result.delete_all
-    Event.delete_all
-    assert_nil(Event.find_max_date_for_current_year)
-    SingleDayEvent.create(:date => Date.new(Date.today.year, 6, 10))
-    assert_equal_dates("#{Date.today.year}-06-10", Event.find_max_date_for_current_year)
-  end
-  
   def test_flyer
     event = SingleDayEvent.new
     assert_equal(nil, event.flyer, 'Blank event flyer')
@@ -373,14 +364,28 @@ class EventTest < ActiveSupport::TestCase
     nov_event = Series.new(:date => Date.new(1998, 11, 20))
     events = [jan_event, march_event, nov_event]
     
-    assert_equal([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Unsaved events should be sorted by date')
     march_event.date = Date.new(1999)
-    assert_equal([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Unsaved events should be sorted by date')
     
     events.each {|e| e.save!}
-    assert_equal([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, nov_event, march_event], events.sort, 'Saved events should be sorted by date')
     march_event.date = Date.new(1998, 3, 2)
-    assert_equal([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+    assert_equal_enumerables([jan_event, march_event, nov_event], events.sort, 'Saved events should be sorted by date')
+  end
+  
+  def test_equality
+    event_1 = SingleDayEvent.create!
+    event_2 = SingleDayEvent.create!
+    event_1_copy = SingleDayEvent.find(event_1.id)
+    
+    assert_equal event_1, event_1, "event_1 == event_1"
+    assert_equal event_2, event_2, "event_2 == event_2"
+    assert (event_1 != event_2), "event_1 != event_2"
+    assert (event_2 != event_1), "event_2 != event_1"
+    assert_equal event_1, event_1_copy, "event_1 == event_1_copy"
+    assert (event_1_copy != event_2), "event_1_copy != event_2"
+    assert (event_2 != event_1_copy), "event_2 != event_1_copy"
   end
   
   def test_multi_day_event_children_with_no_parent
@@ -391,8 +396,8 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
     assert(events(:kings_valley_2004).multi_day_event_children_with_no_parent.empty?)
     
-    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
-    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
+    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
     assert(!(event.multi_day_event_children_with_no_parent?))
     assert(event.multi_day_event_children_with_no_parent.empty?)
       
@@ -401,16 +406,16 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
       
-    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2009, 9, 5))
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 1, 9, 5))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 12))
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 12))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(!pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     assert(pir_2.multi_day_event_children_with_no_parent.empty?)
 
-    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(2010, 9, 17))
+    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 17))
     # Need to completely reset state
     pir_1 = SingleDayEvent.find(pir_1.id)
     pir_2 = SingleDayEvent.find(pir_2.id)
@@ -425,7 +430,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
   
-    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(2005, 7, 13))
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(ASSOCIATION.year - 2, 7, 13))
     assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
@@ -658,6 +663,14 @@ class EventTest < ActiveSupport::TestCase
     assert(series.has_results_including_children?, "Series has_results_including_children?")
     assert(series_event.has_results_including_children?, "Series Event has_results_including_children?")
     assert(child_event.has_results_including_children?, "Series Event child has_results_including_children?")
+  end
+  
+  def test_postponed
+    event = events(:banana_belt_3)
+    assert !event.postponed?, "postponed?"
+    event.postponed = true
+    event.save!
+    assert event.postponed?, "postponed?"
   end
 
   private

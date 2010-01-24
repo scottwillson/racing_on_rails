@@ -41,9 +41,9 @@ class Page < ActiveRecord::Base
   end
   
   def update_parent
-    if self.parent(true)
+    if parent(true)
       parent.without_revision do
-        self.parent.update_attribute(:updated_at, Time.now)
+        parent.update_attribute(:updated_at, Time.zone.now)
       end
     end
   end

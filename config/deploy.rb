@@ -16,20 +16,23 @@ set :scm_auth_cache, true
 set :mongrel_conf, "/usr/local/etc/mongrel_cluster/#{application}.yml"
 
 namespace :deploy do
-  desc "Custom deployment"
-  task :after_update_code do
+  desc "Deploy association-specific customizations"
+  task :local_code do
     run "git clone #{site_local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
   end
 
-  task :after_deploy do
+  task :copy_cache do
     %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
       run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
     end
   end
   
-  task :before_start do
+  task :wait_for_mongrels_to_stop do
     # Give Mongrels a chance to really stop
     sleep 2
   end
 end
+
+after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
+before "deploy:start", "deploy:wait_for_mongrels_to_stop"

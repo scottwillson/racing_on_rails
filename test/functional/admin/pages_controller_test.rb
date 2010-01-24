@@ -1,20 +1,24 @@
 require 'test_helper'
 
 class Admin::PagesControllerTest < ActionController::TestCase
-  setup :create_administrator_session, :use_ssl
+  def setup
+    super
+    create_administrator_session
+    use_ssl
+  end
 
-  test "Only admins can edit pages" do
+  def test_only_admins_can_edit_pages
     destroy_person_session
     get(:index)
     assert_redirected_to(new_person_session_path)
   end
   
-  test "View pages as tree" do
+  def test_view_pages_as_tree
     get(:index)
     assert_response(:success)
   end
   
-  test "Update title inplace" do
+  def test_update_title_inplace
     page = pages(:plain)
     post(:set_page_title, 
         :id => page.to_param,
@@ -29,12 +33,12 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(people(:administrator), page.author, "author")
   end
   
-  test "Edit page" do
+  def test_edit_page
     page = pages(:plain)
     get(:edit, :id => page.id)
   end
   
-  test "Update page" do
+  def test_update_page
     page = pages(:plain)
     put(:update, 
         :id => page.to_param,
@@ -51,7 +55,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(people(:administrator), page.author, "author")
   end
   
-  test "Update page parent" do
+  def test_update_page_parent
     parent_page = Page.create!(:title => "Root")
     page = pages(:plain)
     put(:update,
@@ -70,11 +74,11 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_redirected_to(edit_admin_page_path(page))
   end
   
-  test "New page" do
+  def test_new_page
     get(:new)
   end
   
-  test "New page parent" do
+  def test_new_page_parent
     parent_page = pages(:plain)
     get(:new, :page => { :parent_id => parent_page.to_param })
     page = assigns(:page)
@@ -82,7 +86,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(parent_page, page.parent, "New page parent")
   end
   
-  test "Create page" do
+  def test_create_page
     put(:create, 
         :page => {
           :title => "My Awesome Bike Racing Page",
@@ -97,7 +101,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(people(:administrator), page.author, "author")
   end
   
-  test "Create child page" do
+  def test_create_child_page
     parent_page = pages(:plain)
     post(:create, 
         :page => {
@@ -115,8 +119,24 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(parent_page, page.parent, "Page parent")
   end
   
-  test "Delete page" do
+  def test_delete_page
     page = pages(:plain)
+    delete(:destroy, :id => page.to_param)
+    assert_redirected_to(admin_pages_path)
+    assert(!Page.exists?(page.id), "Page should be deleted")
+  end
+  
+  def test_delete_parent_page
+    page = pages(:plain)
+    page.children.create!
+    page.reload
+    delete(:destroy, :id => page.to_param)
+    assert_redirected_to(admin_pages_path)
+    assert(!Page.exists?(page.id), "Page should be deleted")
+  end
+  
+  def test_delete_child_page
+    page = pages(:plain).children.create!
     delete(:destroy, :id => page.to_param)
     assert_redirected_to(admin_pages_path)
     assert(!Page.exists?(page.id), "Page should be deleted")

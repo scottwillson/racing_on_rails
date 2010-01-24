@@ -5,7 +5,7 @@ class Admin::MemberMailerTest < ActionMailer::TestCase
   def test_email
     @expected.body    = read_fixture('email')
     @expected.to = ["training_wheels@yahoo.com"]
-    date = Time.now
+    date = Time.zone.now
     @expected.date = date
 
     assert_equal @expected.encoded, Admin::MemberMailer.create_email("training_wheels@yahoo.com", date).encoded

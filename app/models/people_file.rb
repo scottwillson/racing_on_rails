@@ -152,7 +152,16 @@ class PeopleFile < GridFile
           row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
           # TODO or by USAC license number
-          people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
+          people = []
+
+          if row_hash[:license].present?
+            people = Person.find_all_by_license(row_hash[:license])
+          end
+
+          if people.empty?
+            people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
+          end
+          
           person = nil
           row_hash[:member_to] = @member_to_for_imported_people if @update_membership
           if people.empty?
@@ -233,12 +242,7 @@ class PeopleFile < GridFile
     if @update_membership and !@has_print_column
       if person.nil? or (!person.member? or person.member_to < @member_to_for_imported_people)
         row_hash[:print_card] = true
-        row_hash[:print_mailing_label] = true
       end
-    end
-    
-    if !row_hash[:print_card].blank? and row_hash[:print_mailing_label].blank?
-      row_hash[:print_mailing_label] = row_hash[:print_card]
     end
   end
   

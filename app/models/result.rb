@@ -173,7 +173,7 @@ class Result < ActiveRecord::Base
   def update_person_number
     discipline = Discipline[event.discipline]
     default_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
-    if person && !event.number_issuer.nil? && event.number_issuer != default_number_issuer && !number.blank? && !RaceNumber.rental?(number, discipline)
+    if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
       person.updated_by = self.updated_by
       person.add_number(number, discipline, event.number_issuer, event.date.year)
     end

@@ -38,9 +38,10 @@ class OregonCup < Competition
   def remove_duplicate_results(results)
     results.delete_if do |result|
       results.any? do |other_result|
-        result.event == other_result.event && 
-        !result.race.notes["Oregon Cup"] &&
-        other_result.race.notes["Oregon Cup"]
+        result.event.root == other_result.event.root &&
+        ((!result.race.notes["Oregon Cup"] && other_result.race.notes["Oregon Cup"]) ||
+        (!result.event.notes["Oregon Cup"] && other_result.event.notes["Oregon Cup"]) ||
+        (!result.event.name["Oregon Cup"] && other_result.event.name["Oregon Cup"]))
       end
     end
   end

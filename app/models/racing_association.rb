@@ -18,6 +18,7 @@ class RacingAssociation
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
   attr_accessor :ssl
+  attr_accessor :now
   
   def initialize
     @cx_memberships = false
@@ -102,6 +103,44 @@ class RacingAssociation
   
   def ssl?
     @ssl
+  end
+  
+  # Defaults to Time.now, but can be explicitly set for tests or data cleanup
+  def now
+    @now || Time.zone.now
+  end
+  
+  # Returns now.to_date, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  def today
+    now.to_date
+  end
+  
+  # Returns now.to_date.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  def year
+    now.to_date.year
+  end
+  
+  # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
+  # On and after December 1, returns the next year.
+  def effective_year
+    if now.month < 12
+      now.year
+    else
+      now.year + 1
+    end
+  end
+  
+  def effective_today
+    if now.month < 12
+      Date.new(now.year)
+    else
+      Date.new(now.year + 1)
+    end
+  end
+  
+  # Date.today.year + 1 unless +now+ is set.
+  def next_year
+    now.year + 1
   end
 
   def to_s

@@ -1,8 +1,7 @@
 # Minimum three-race requirement
 # but ... should show not apply until there are at least three races
-# TODO Add an Event#overall method
 class CrossCrusadeOverall < Overall
-  before_create :set_notes
+  before_create :set_notes, :set_name
   
   def CrossCrusadeOverall.parent_name
     "Cross Crusade"
@@ -21,7 +20,8 @@ class CrossCrusadeOverall < Overall
     races.create!(:category => Category.find_or_create_by_name("Women A"))
     races.create!(:category => Category.find_or_create_by_name("Women B"))
     races.create!(:category => Category.find_or_create_by_name("Beginner Women"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+"))
+    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ A"))
+    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ B"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 45+"))
     races.create!(:category => Category.find_or_create_by_name("Beginner Men CCX"))
     races.create!(:category => Category.find_or_create_by_name("Singlespeed"))
@@ -35,11 +35,7 @@ class CrossCrusadeOverall < Overall
 
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
-    points = point_schedule[source_result.place.to_i].to_f
-    if source_result.last_event?
-      points = points * 2
-    end
-    points
+    point_schedule[source_result.place.to_i].to_f
   end
 
   def minimum_events
@@ -48,5 +44,9 @@ class CrossCrusadeOverall < Overall
   
   def set_notes
     self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
+  end
+  
+  def set_name
+    self.name = "Series Overall"
   end
 end

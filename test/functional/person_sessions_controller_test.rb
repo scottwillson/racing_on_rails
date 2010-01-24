@@ -1,7 +1,10 @@
 require "test_helper"
 
 class PersonSessionsControllerTest < ActionController::TestCase
-  setup :activate_authlogic, :use_ssl
+  def setup
+    super
+    use_ssl
+  end
 
   def test_login_page
     get :new

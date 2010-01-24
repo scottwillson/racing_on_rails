@@ -4,7 +4,12 @@
       <%= in_place_editor_field(:event, :first_aid_provider, event, nil, 40) %>
     </div>
   </td>
-  <td><%= link_to event.date.to_s(:short_with_week_day), edit_admin_event_path(event) %></td>
+  <td class="chief_referee">
+    <div class="record" id="event_<%= event.id %>">
+      <%= in_place_editor_field(:event, :chief_referee, event, nil, 40) %>
+    </div>
+  </td>
+  <td class="date"><%= link_to event.date.to_s(:short_with_week_day), edit_admin_event_path(event) %></td>
   <td><%= link_to event.name, edit_admin_event_path(event) %></td>
   <td><%= link_to(event.promoter.name_or_contact_info, edit_admin_person_path(event.promoter)) if event.promoter %></td>
   <td><%= event.city_state %></td>

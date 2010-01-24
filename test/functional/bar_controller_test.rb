@@ -7,6 +7,7 @@ class BarControllerTest < ActionController::TestCase
   include ActionView::Helpers::CaptureHelper
 
   def setup
+    super
     big_team = Team.create(:name => "T" * 60)
     weaver = people(:weaver)
     weaver.team = big_team
