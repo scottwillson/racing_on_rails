@@ -461,7 +461,7 @@ class Event < ActiveRecord::Base
   end
 
   def date_range_long_s
-    date.strftime('%a, %B %d, %Y')
+    date.to_s :long_with_week_day
   end
   
   # Parent's name. Own name if no parent
