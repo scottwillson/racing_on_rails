@@ -13,7 +13,7 @@ pdf.rectangle(31, 584.8 - ((index % 3) * 268.4), 288, 162).stroke
 
 pdf.pointer = 689.8 - ((index % 3) * 268.4)
 pdf.select_font 'Helvetica-Bold'
-pdf.text '2007 Membership Card', :justification => :center, :font_size => 12, :absolute_left => 336.4, :absolute_right => 579.5
+pdf.text "#{ASSOCIATION.effective_year} Membership Card", :justification => :center, :font_size => 12, :absolute_left => 336.4, :absolute_right => 579.5
 pdf.text(person.name || '', :justification => :left, :font_size => 10, :absolute_left => 348, :absolute_right => 579.5)
 
 previous_y = pdf.y
