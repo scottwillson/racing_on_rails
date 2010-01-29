@@ -116,6 +116,7 @@ class MbraBar < Competition
         # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
         #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
         #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+        #TODO a gap in the placings for a race (e.g. place 1, 3, 4) will cause an error here. I should check for this.
         points = point_schedule[source_result.place.to_i] * source_result.race.bar_points #/ team_size.to_f
       end
     }

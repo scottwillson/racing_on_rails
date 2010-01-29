@@ -3,5 +3,9 @@
       <th>Date</th>
       <th>Name</th>
     </tr>
-    <%= render :partial => "people/event", :collection => @person.events.sort_by(&:date).reverse %>
+    <%= render :partial => "people/event", 
+               :collection => @person.events.find(:all, :conditions => [ 
+                 "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+               ]).sort_by(&:date).reverse 
+    %>
   <% end -%>

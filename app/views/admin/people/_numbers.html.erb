@@ -23,13 +23,13 @@
             <%= text_field 'number[]', 'value', :class => "number" %>
           </td>
           <td>
-            <%= link_to(image_tag("icons/info.gif"), "#", 
+            <%= link_to(image_tag("icons/information.png"), "#", 
               :title => "Updated #{time_ago_in_words(@number.updated_at, true)} ago #{('by ' + @number.updated_by) if @number.updated_by}", 
               :class => "image") %>
           </td>
           <td class="right">
             <%= link_to_remote(
-                  image_tag('/images/buttons/small_remove_solo.png'),
+                  image_tag('/images/icons/delete.png'),
                     :url => { :action => "destroy_number", :id => @number.id},
                     :html => { :id => "destroy_number_#{@number.id}", :class => "image" }
                   )
@@ -45,7 +45,7 @@
   <% end %>
   <tr id="new_number_button_row">
     <td class="right">
-      <%= link_to_remote(image_tag("/images/buttons/small_add.png", :size => "16x16"), 
+      <%= link_to_remote(image_tag("/images/icons/add.png", :size => "16x16"), 
             :url => { :action => "new_number" }, :html => { :class => "image" }) %>
     </td>
   </tr>

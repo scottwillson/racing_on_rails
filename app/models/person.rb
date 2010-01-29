@@ -465,11 +465,11 @@ class Person < ActiveRecord::Base
     return nil if discipline.nil?
 
     year = year || ASSOCIATION.year
-    if discipline.is_a?(Symbol)
+    unless discipline.is_a?(Discipline)
       discipline = Discipline[discipline]
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == year and race_number.discipline_id == discipline.id and race_number.number_issuer.name == ASSOCIATION.short_name
+      race_number.year == year && race_number.discipline_id == discipline.id && race_number.number_issuer.name == ASSOCIATION.short_name
     end
     if number
       number.value

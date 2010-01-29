@@ -13,7 +13,7 @@ class Post < ActiveRecord::Base
     mailing_list.posts.find(
       :all,
       :select => ["id, date, sender, subject, topica_message_id" ],
-      :conditions => [ "date >= ? and date <= ?", month_start, month_end ],
+      :conditions => [ "date between ? and ?", month_start, month_end ],
       :order => "date desc"
     )
   end

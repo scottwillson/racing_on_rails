@@ -2,7 +2,7 @@
 
 <td>
   <%= form_remote_tag(:url => {:action => 'merge', :id => @person.id, :target_id => @existing_people.first.id}) %>
-    <div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
+    <div style=" background-image: url(/images/icons/error.png); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
       <%= @existing_people.first.name %> <%= aka(@existing_people.first) %> already exists.
     </div>
     <div style="padding-left: 24px; width: 300px; white-space: normal;">
@@ -15,7 +15,7 @@
             :html => { :class => "image" }
           )
        %>
-      <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
+      <%= image_submit_tag '/images/icons/confirm.png', :height => 22, :width => 44, :class => "button" %>
     </div>
   </form>
 </td>
@@ -25,7 +25,7 @@
 
 <td>
   <%= form_remote_tag(:url => {:action => 'merge'}) %>
-    <div style=" background-image: url(/images/icons/warn.gif); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
+    <div style=" background-image: url(/images/icons/error.png); background-position: 2px 2px; background-repeat: no-repeat; padding-left: 24px; width: 300px; white-space: normal;">
       <%= @existing_people.first.name %> already exists.
     </div>
     <div style="padding-left: 24px; width: 300px; white-space: normal;">
@@ -51,7 +51,7 @@
       :html => { :class => "image" }
       )
      %>
-    <%= image_submit_tag '/images/buttons/small_ok.gif', :height => 22, :width => 44, :class => "button" %>
+    <%= image_submit_tag '/images/icons/confirm.png', :height => 22, :width => 44, :class => "button" %>
   </div>
   </form>
 </td>

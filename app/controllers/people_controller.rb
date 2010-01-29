@@ -33,7 +33,7 @@ class PeopleController < ApplicationController
       render :edit
     end
   end
-
+  
   def card
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
     render(:template => "admin/people/card.pdf.pdf_writer")

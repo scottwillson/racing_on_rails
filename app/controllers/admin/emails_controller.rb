@@ -28,7 +28,7 @@ class Admin::EmailsController < Admin::AdminController
     else
       Thread.new { Admin::MemberMailer.email_all(params[:email][:subject], params[:email][:from], params[:email][:body]) }
     end
-    flash[:info] = "Sent email"
+    flash[:notice] = "Sent email"
     redirect_to :action => :new
   end
 end

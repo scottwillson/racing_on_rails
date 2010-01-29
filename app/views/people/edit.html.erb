@@ -86,7 +86,9 @@
   <hr class="space" />
 
   <div class="clear span-6 last">
-    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.empty? %>
+    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.find(:all, :conditions => [ 
+       "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+     ]).empty? %>
   </div>
   <hr class="space" />
 

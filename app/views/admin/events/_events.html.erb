@@ -1,7 +1,7 @@
 <% nav_caption = %Q{
   <div>Events</div>
   <div class="right">
-  #{link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'), 
+  #{link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      {:controller => '/results', :action => 'event', :year => @event.date.year, 
      :discipline => @event.discipline, :id => @event.id},
      { :class => "image" }) if @event.has_results_including_children? }  
@@ -12,7 +12,7 @@
   <tr id="event_<%= single_day_event.id %>_row">
     <td class='nowrap'><%= link_to single_day_event.date.strftime('%A, %B %d'), edit_admin_event_path(single_day_event) %></td>
     <td class='link'><%= link_to single_day_event.name, edit_admin_event_path(single_day_event) %></td>
-    <td class="right"><%= link_to_remote(image_tag('/images/buttons/small_remove_solo.png'),
+    <td class="right"><%= link_to_remote(image_tag('/images/icons/delete.png'),
               :url => admin_event_path(single_day_event),
               :html => { :class => "image", :id => "destroy_event_#{single_day_event.id}", :title => "Delete event" },
               :complete => evaluate_remote_response, 
@@ -27,7 +27,7 @@
       <% end -%>
     </td>
     <td class='link'></td>
-    <td class="right"><%= link_to_remote(image_tag("/images/buttons/small_add.png"),
+    <td class="right"><%= link_to_remote(image_tag("/images/icons/add.png"),
               :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => "Event" }),
               :html => { :class => "image", :id => "new_event" }, 
               :method => "post") if administrator?

@@ -1,7 +1,7 @@
 <% nav_caption = %Q{
   <div>Races</div>
   <div class="right">
-  #{link_to(image_tag('/images/icons/web_page.png', :title => 'View public results web page', :alt => 'View public results web page'), 
+  #{link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      {:controller => '/results', :action => 'event', :year => @event.date.year, 
      :discipline => @event.discipline, :id => @event.id},
      { :class => "image" }) if @event.has_results_including_children? }  
@@ -12,9 +12,9 @@
   <tr id="destroy_races_row">
     <td></td>
     <td class="right">
-      <%= link_to_remote(image_tag('/images/buttons/small_remove_all_solo.png'),
+      <%= link_to_remote("Delete all races",
       :url => destroy_races_admin_event_path(@event),
-      :html => { :class => "image", :id => "destroy_races", :title => "Delete all races" },
+      :html => { :class => "obvious", :id => "destroy_races", :title => "Delete all races" },
       :method => :delete,
       :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
       :complete => evaluate_remote_response, 
@@ -32,7 +32,7 @@
       <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
     </td>
     <td class="right">
-      <%= link_to_remote(image_tag('/images/buttons/small_remove_solo.png'),
+      <%= link_to_remote(image_tag('/images/icons/delete.png'),
       :url => admin_race_url(race),
       :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
       :complete => evaluate_remote_response, 
@@ -49,7 +49,7 @@
   <% unless @event.new_record? -%>
   <tr>
     <td colspan="2" class="right">
-      <%= link_to image_tag("/images/buttons/small_add.png"), 
+      <%= link_to image_tag("/images/icons/add.png"), 
                   new_admin_event_race_path(@event),
                   :class => "image", :id => "new_race"
       %>

@@ -1,15 +1,5 @@
 <% @page_title = "Admin: Categories" %>
 
-<% #ugly I know. Refactor if/when another LA wants to compute BAR on demand. alp -%>
-<% if ASSOCIATION.competitions.include?(:mbra_bar) -%>
-  <% form_tag '/admin/categories/recompute_bar' do -%>
-    <div class="content">
-      <%= submit_tag "Recompute MBRA Competitions", :id => "recompute_bar" %>
-    </div>
-  <% end -%>
-<%- end %>
-
-
 <div class="column_grid_container">
   <div class="table_container box-3">
     <div class="caption"><%= ASSOCIATION.short_name %></div>

@@ -23,9 +23,8 @@ member:
   persistence_token: <%= Authlogic::Random.hex_token %>
   single_access_token: <%= Authlogic::Random.friendly_token %>
   perishable_token: <%= Authlogic::Random.friendly_token %>
-  roles: member
-  member_from: <%= Date.today.year - 1 %>-01-01
-  member_to: <%= Date.today.year - 1 %>-12-31
+  member_from: <%= Date.today.year %>-01-01
+  member_to: <%= Date.today.year %>-12-31
 
 promoter:
   id: 3

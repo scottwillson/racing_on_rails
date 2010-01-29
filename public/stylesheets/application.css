@@ -110,29 +110,25 @@ pre, pre a, pre a:link, pre a:visited {
 }
 
 .message span {
-  padding-left: 16px;
+  padding-left: 20px;
   padding-right: 8px;
 }
 
-#info span
-{
-  background-color: rgb(255, 250, 117);
-  border: 2px solid rgb(255, 250, 117);
+p.message {
+  line-height: 16px;
 }
 
 #notice span
 {
-  background-image: url(/images/icons/confirmed.gif);
+  background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
-  background-position: 0px 2px;
 }
 
 #warn span
 {
   color: red;
-  background-image: url(/images/icons/warn.gif);
+  background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
-  background-position: 0px 3px;
 }
 
 h1, h2, h3 {
