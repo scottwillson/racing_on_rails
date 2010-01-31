@@ -1,4 +1,4 @@
 class PersonSession < Authlogic::Session::Base
   remember_me true
-  remember_me_for 3.months
+  remember_me_for 12.months
 end
