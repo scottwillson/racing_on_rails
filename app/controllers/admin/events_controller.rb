@@ -83,6 +83,7 @@ class Admin::EventsController < Admin::AdminController
       redirect_to edit_admin_event_path(@event)
     else
       flash[:warn] = @event.errors.full_messages
+      render :edit
     end
   end
   

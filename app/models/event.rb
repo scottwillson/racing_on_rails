@@ -33,7 +33,7 @@ class Event < ActiveRecord::Base
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
 
-  validates_presence_of :name, :date, :discipline
+  validates_presence_of :name, :date
   validate :parent_is_not_self
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
