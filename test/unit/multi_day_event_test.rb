@@ -19,8 +19,14 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2005-07-12", series.end_date, "PIR series end date")
 
     series.children.create!(:date => "2005-06-25")
-    assert_equal_dates("2005-07-05", series.start_date, "PIR series start date")
+    assert_equal_dates("2005-06-25", series.start_date, "PIR series start date")
     assert_equal_dates("2005-07-12", series.end_date, "PIR series end date")
+    
+    event = SingleDayEvent.create!(:date => "2005-07-19")
+    event.parent = series
+    event.save!
+    assert_equal_dates("2005-06-25", series.start_date, "PIR series start date")
+    assert_equal_dates("2005-07-19", series.end_date, "PIR series end date")
   end
   
   def test_new

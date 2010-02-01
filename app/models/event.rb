@@ -377,6 +377,10 @@ class Event < ActiveRecord::Base
     end_date > start_date
   end
   
+  # Does nothing. Allows us to treat Events and MultiDayEvents the same.
+  def update_date
+  end
+  
   def city_state
     if !city.blank?
       if !state.blank?

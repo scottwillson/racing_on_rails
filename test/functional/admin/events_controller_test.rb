@@ -609,9 +609,17 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_add_children
+    lost_series_child = events(:lost_series_child)
+    start_date = ASSOCIATION.now.to_date + 30
+    lost_series_child.date = start_date
+    lost_series_child.save!
+    
     event = events(:series_parent)
     get(:add_children, :parent_id => event.to_param)
     assert_redirected_to edit_admin_event_path(event)
+    event.reload.children(true)
+    assert_equal start_date, event.start_date, "parent start_date"
+    assert_equal start_date, event.end_date, "parent end_date"
   end
 
   def test_index
