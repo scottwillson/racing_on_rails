@@ -73,10 +73,10 @@ class PostsController < ApplicationController
   # archiver to store posts. This strategy gives spam filters a change to reject
   # bogus posts.
   def create
-    if params[:reply_to_id].blank?
-      post_to_list
-    else
+    if params[:reply_to_id].present?
       post_private_reply
+    else
+      post_to_list
     end
   end
   
@@ -112,9 +112,8 @@ class PostsController < ApplicationController
     mailing_list_name = params["mailing_list_name"]
     @mailing_list = MailingList.find_by_name(mailing_list_name)
     @post = Post.new(:mailing_list => @mailing_list)
-    @reply_to_id = params[:reply_to_id]
-    if @reply_to_id
-      @reply_to = Post.find(@reply_to_id)
+    if params[:reply_to_id].present?
+      @reply_to = Post.find(params[:reply_to_id])
       @post.subject = "Re: #{@reply_to.subject}"
     end
   end
