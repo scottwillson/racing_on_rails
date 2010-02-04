@@ -34,7 +34,7 @@ class MailingListsTest < SeleniumTestCase
     type "post_from_email_address", "don@butlerpress.com"
 
     click "commit", :wait_for => :page
-    assert_text "Your new post is now in the mailing queue"
+    assert_text "Sent private reply"
 
     open "/posts/obra/new"
 
