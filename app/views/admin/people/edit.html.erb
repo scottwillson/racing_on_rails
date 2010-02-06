@@ -62,10 +62,8 @@
     <%= f.labelled_check_box :team_interest, "Team Interest" %>
 
     <%= f.labelled_text_field :login, nil, :autocomplete => "off" %>
-    <%= f.label :password %>
-    <%= f.password_field :password, :autocomplete => "off" %>
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, :autocomplete => "off" %>
+    <%= f.labelled_password_field :password, nil, :autocomplete => "off" %>
+    <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off" %>
   </div>
 
   <hr class="space" />
