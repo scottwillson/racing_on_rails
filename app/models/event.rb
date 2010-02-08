@@ -27,7 +27,7 @@
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id
+    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results
@@ -274,6 +274,11 @@ class Event < ActiveRecord::Base
     end
     races.clear
     enable_notification!
+  end
+
+  def categories
+    _categories = races.map(&:category)
+    children.inject(_categories) { |cats, child| cats + child.categories }
   end
   
   # Update child events from parents' attributes if child attribute has the

@@ -211,6 +211,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(teams(:gentle_lovers).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:alpenrose).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
     assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
+    assert_equal "0", results["beginner_friendly"], "parent beginner_friendly"
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -229,6 +230,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(teams(:gentle_lovers).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:alpenrose).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
     assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
+    assert_equal "0", results["beginner_friendly"], "event beginner_friendly"
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
@@ -279,6 +281,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.prize_list = 4000
     multi_day_event.team_id = teams(:vanilla).to_param
     multi_day_event.velodrome_id = velodromes(:trexlertown).to_param
+    multi_day_event.beginner_friendly = true
     multi_day_event.save!
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
@@ -297,6 +300,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("4000", results["prize_list"], "SingleDayEvent prize_list")
     assert_equal(teams(:vanilla).to_param, results["team_id"], "SingleDayEvent team")
     assert_equal(velodromes(:trexlertown).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
+    assert_equal "1", results["beginner_friendly"], "SingleDayEvent beginner_friendly"
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -311,6 +315,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("ID", results["state"], "SingleDayEvent state")
     assert_equal("4000", results["prize_list"], "SingleDayEvent prize_list")
     assert_equal(velodromes(:trexlertown).to_param, results["velodrome_id"], "SingleDayEvent velodrome")
+    assert_equal "1", results["beginner_friendly"], "SingleDayEvent beginner_friendly"
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "MultiDayEvent name")
@@ -325,6 +330,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("ID", results["state"], "MultiDayEvent state")
     assert_equal("4000", results["prize_list"], "MultiDayEvent prize_list")
     assert_equal(velodromes(:trexlertown).to_param, results["velodrome_id"], "MultiDayEvent velodrome")
+    assert_equal "1", results["beginner_friendly"], "parent beginner_friendly"
 
     # parent, children all different
     # change parent, children do not change
