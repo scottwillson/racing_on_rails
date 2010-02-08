@@ -14,9 +14,10 @@
     link_to_function(image_tag('icons/play_blue.png', :class => "collapsed", :id => "disclosure_#{result.id}"), 
     "toggle_disclosure(#{result.id})",
     :class => 'disclosure image', :alt => "") if result.competition_result? %></td>
-    <td><%= result.place %></td>
+    <td class="right"><%= result.place %></td>
     <td><%= link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
-      event_results_path(result.event, :html => { :anchor => "race_#{result.race.id}", :class => "image" } )) %>
+      event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('/images/icons/world_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
+      edit_admin_race_path(result.race), :class => "image") %>
     </td>
     <td><%= result.event.full_name %></td>
     <td><%= result.race.name %></td>
