@@ -150,7 +150,6 @@ ActionController::Routing::Routes.draw do |map|
   map.schedule "/schedule", :controller => "schedule"
 
   map.resources :single_day_events, :as => :events
-  map.resources :subscriptions, :collection => { :subscribed => :get }
 
   map.connect "/teams/:team_id/results", :controller => "results", :action => "team"
   map.connect "/teams/:team_id", :controller => "results", :action => "team"
