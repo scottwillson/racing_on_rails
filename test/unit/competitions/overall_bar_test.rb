@@ -178,7 +178,7 @@ class OverallBarTest < ActiveSupport::TestCase
 
     assert_equal(people(:molly), senior_men_overall_bar.results[2].person, "Senior Men Overall BAR results person")
     assert_equal("3", senior_men_overall_bar.results[2].place, "Senior Men Overall BAR results place")
-    assert_equal(598, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
+    assert_equal(596, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
     
     women_overall_bar = overall_bar.races.detect do |b|
       b.name == "Senior Women"

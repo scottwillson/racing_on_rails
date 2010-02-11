@@ -28,7 +28,7 @@ class MtbBarTest < ActiveSupport::TestCase
     junior_men_mtb_bar.results.sort! {|x, y| x.person <=> y.person}
     assert_equal(kc, junior_men_mtb_bar.results.first.person, "Junior Men BAR first result")
     assert_equal(chris_woods, junior_men_mtb_bar.results.last.person, "Junior Men BAR last result")
-    assert_equal(19, junior_men_mtb_bar.results.first.points, "Junior Men BAR first points")
+    assert_equal(12, junior_men_mtb_bar.results.first.points, "Junior Men BAR first points")
     assert_equal(6, junior_men_mtb_bar.results.last.points, "Junior Men BAR last points")
     assert_equal(2, junior_men_mtb_bar.results.last.scores.size, "Junior Men BAR last scores")
   end
@@ -369,6 +369,6 @@ class MtbBarTest < ActiveSupport::TestCase
 
     assert_equal(1, masters_mtb_bar.results.size, "Masters Men BAR results")
     assert_equal(kc, masters_mtb_bar.results.first.person, "Masters Men BAR first result")
-    assert_equal(38, masters_mtb_bar.results.first.points, "Masters Men BAR first points")
+    assert_equal(24, masters_mtb_bar.results.first.points, "Masters Men BAR first points")
   end
 end

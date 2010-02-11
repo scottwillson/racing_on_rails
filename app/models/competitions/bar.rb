@@ -53,7 +53,7 @@ class Bar < Competition
   end
 
   def point_schedule
-    [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1]
+    [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
 
   # Source result = counts towards the BAR "race" and BAR results
