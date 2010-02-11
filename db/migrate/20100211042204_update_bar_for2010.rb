@@ -6,23 +6,23 @@ class UpdateBarFor2010 < ActiveRecord::Migration
     downhill.save!
     
     short_track = Discipline.create!(:name => "Short Track", :bar => true)
-    short_track.bar_categories << Category.find_by_name("Category 3 Men")
-    short_track.bar_categories << Category.find_by_name("Category 3 Women")
-    short_track.bar_categories << Category.find_by_name("Junior Men")
-    short_track.bar_categories << Category.find_by_name("Junior Women")
-    short_track.bar_categories << Category.find_by_name("Masters Men")
-    short_track.bar_categories << Category.find_by_name("Masters Women")
-    short_track.bar_categories << Category.find_by_name("Singlespeed/Fixed")
-    short_track.bar_categories << Category.find_by_name("Tandem")
-    short_track.bar_categories << Category.find_by_name("Pro Men")
-    short_track.bar_categories << Category.find_by_name("Pro Women")
-    short_track.bar_categories << Category.find_by_name("Category 2 Men")
-    short_track.bar_categories << Category.find_by_name("Category 2 Women")
-    short_track.bar_categories << Category.find_by_name("Category 1 Men")
-    short_track.bar_categories << Category.find_by_name("Category 1 Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 3 Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 3 Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Junior Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Junior Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Masters Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Masters Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Singlespeed/Fixed")
+    short_track.bar_categories << Category.find_or_create_by_name("Tandem")
+    short_track.bar_categories << Category.find_or_create_by_name("Pro Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Pro Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 2 Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 2 Women")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 1 Men")
+    short_track.bar_categories << Category.find_or_create_by_name("Category 1 Women")
     
     Discipline.find(:all, :conditions => "bar is true").each do |discipline|
-      discipline.bar_categories << Category.find_by_name("Clydesdale")
+      discipline.bar_categories << Category.find_or_create_by_name("Clydesdale")
     end
     
     if ASSOCIATION.short_name == "obra"
@@ -32,5 +32,6 @@ class UpdateBarFor2010 < ActiveRecord::Migration
   end
 
   def self.down
+    Discipline.delete_all "name = 'Short Track'"
   end
 end
