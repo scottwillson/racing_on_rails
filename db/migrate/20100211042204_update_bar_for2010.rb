@@ -9,7 +9,7 @@ class UpdateBarFor2010 < ActiveRecord::Migration
     short_track.bar_categories << Category.find_by_name("Category 3 Men")
     short_track.bar_categories << Category.find_by_name("Category 3 Women")
     short_track.bar_categories << Category.find_by_name("Junior Men")
-    short_track.bar_categories << Category.find_by_name("Junior Women)"
+    short_track.bar_categories << Category.find_by_name("Junior Women")
     short_track.bar_categories << Category.find_by_name("Masters Men")
     short_track.bar_categories << Category.find_by_name("Masters Women")
     short_track.bar_categories << Category.find_by_name("Singlespeed/Fixed")
@@ -20,6 +20,15 @@ class UpdateBarFor2010 < ActiveRecord::Migration
     short_track.bar_categories << Category.find_by_name("Category 2 Women")
     short_track.bar_categories << Category.find_by_name("Category 1 Men")
     short_track.bar_categories << Category.find_by_name("Category 1 Women")
+    
+    Discipline.find(:all, :conditions => "bar is true").each do |discipline|
+      discipline.bar_categories << Category.find_by_name("Clydesdale")
+    end
+    
+    if ASSOCIATION.short_name == "obra"
+      execute "delete from events where date >= '2010-01-01' and type like '%bar%'"
+      OverallBar.calculate!
+    end
   end
 
   def self.down
