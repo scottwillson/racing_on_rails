@@ -74,23 +74,19 @@ class OverallBar < Competition
     categories.map(&:id).join(", ")
   end
 
-  # if person has > 4 discipline results, those results are worth 50 points
-  # E.g., person had top-15 results in road, track, cyclocross, mountain bike, and criteriums
-  # TODO Consolidate these three methods? Are they all needed?
+  # Only count the top 5 disciplines
   def after_create_competition_results_for(race)
-    for result in race.results
-      set_bonus_points_for_extra_disciplines(result.scores)
-    end
-  end
+    race.results.each do |result|
+      result.scores.sort! { |x, y| y.points <=> x.points }
+      remove_duplicate_discipline_results result.scores
 
-  # if person has > 4 discipline results, those results are worth 50 points
-  # E.g., person had top-15 results in road, track, cyclocross, mountain bike, and criterium
-  def set_bonus_points_for_extra_disciplines(scores)
-    scores.sort! { |x, y| y.points.to_i <=> x.points.to_i }
-    remove_duplicate_discipline_results(scores)
-    if scores.size > 4
-      for score in scores[4..(scores.size - 1)]
-        score.update_attribute(:points, 50)
+      if result.scores.size > 5
+        lowest_scores = result.scores[5, result.scores.size - 5]
+        lowest_scores.each do |lowest_score|
+          result.scores.destroy lowest_score
+        end
+        # Rails destroys Score in database, but doesn't update the current association
+        result.scores true
       end
     end
   end
