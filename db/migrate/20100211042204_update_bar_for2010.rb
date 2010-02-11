@@ -4,6 +4,22 @@ class UpdateBarFor2010 < ActiveRecord::Migration
     downhill.bar_categories.clear
     downhill.bar = false
     downhill.save!
+    
+    short_track = Discipline.create!(:name => "Short Track", :bar => true)
+    short_track.bar_categories << Category.find_by_name("Category 3 Men")
+    short_track.bar_categories << Category.find_by_name("Category 3 Women")
+    short_track.bar_categories << Category.find_by_name("Junior Men")
+    short_track.bar_categories << Category.find_by_name("Junior Women)"
+    short_track.bar_categories << Category.find_by_name("Masters Men")
+    short_track.bar_categories << Category.find_by_name("Masters Women")
+    short_track.bar_categories << Category.find_by_name("Singlespeed/Fixed")
+    short_track.bar_categories << Category.find_by_name("Tandem")
+    short_track.bar_categories << Category.find_by_name("Pro Men")
+    short_track.bar_categories << Category.find_by_name("Pro Women")
+    short_track.bar_categories << Category.find_by_name("Category 2 Men")
+    short_track.bar_categories << Category.find_by_name("Category 2 Women")
+    short_track.bar_categories << Category.find_by_name("Category 1 Men")
+    short_track.bar_categories << Category.find_by_name("Category 1 Women")
   end
 
   def self.down

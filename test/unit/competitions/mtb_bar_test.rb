@@ -109,6 +109,10 @@ class MtbBarTest < ActiveSupport::TestCase
     overall.bar_categories << category_4_women
     overall.save!
 
+    short_track = Discipline.create!(:name => "Short Track", :bar => true)
+    short_track.bar_categories << Category.find_by_name("Category 3 Men")
+    Discipline.reset
+
     # Create road and MTB/DH result for each category
     tonkin = people(:tonkin)
     event = SingleDayEvent.create!(:discipline => "Road")
@@ -161,6 +165,10 @@ class MtbBarTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:discipline => "Downhill")
     event.races.create!(:category => pro_women, :field_size => 6).results.create!(:place => "15", :person => woman_pro)
     
+    # Short Track
+    event = SingleDayEvent.create!(:discipline => "Short Track")
+    event.races.create!(:category => men_3, :field_size => 6).results.create!(:place => "6", :person => weaver)
+
     original_results_count = Result.count
     Bar.calculate!
     year = Date.today.year
@@ -226,6 +234,11 @@ class MtbBarTest < ActiveSupport::TestCase
     mtb_bar_women_2_bar = mtb_bar.races.detect { |race| race.name == "Category 2 Women" }
     assert_equal(1, mtb_bar_women_2_bar.results.size, "Women 2 MTB BAR results")
     assert_equal(woman_1, mtb_bar_women_2_bar.results[0].person, "Women 2 MTB BAR results person")
+    
+    short_track_bar = Bar.find_by_year_and_discipline(year, "Short Track")
+    short_track_bar_men_3_bar = short_track_bar.races.detect { |race| race.name == "Category 3 Men" }
+    assert_equal(1, short_track_bar_men_3_bar.results.size, "Men 3 Short Track BAR results")
+    assert_equal(people(:weaver), short_track_bar_men_3_bar.results[0].person, "Men 3 Short Track BAR results person")
 
     senior_men_overall_bar = overall_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(4, senior_men_overall_bar.results.size, "Senior Men Overall BAR results")
@@ -279,18 +292,19 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(300, senior_men_3_overall_bar.results[1].points, "alice Senior Men Overall BAR results points")
     assert_equal(1, senior_men_3_overall_bar.results[1].scores.size, "alice Overall BAR results scores")
 
-    assert([people(:matson), people(:weaver), people(:tonkin)].include?(senior_men_4_5_overall_bar.results[0].person), "Senior Men Overall BAR results person")
+    senior_men_4_5_overall_bar.results.sort
+    assert_equal people(:weaver), senior_men_4_5_overall_bar.results[0].person, "Senior Men Overall BAR results person"
     assert_equal("1", senior_men_4_5_overall_bar.results[0].place, "Senior Men Overall BAR results place")
-    assert_equal(300, senior_men_4_5_overall_bar.results[0].points, "matson Senior Men Overall BAR results points")
-    assert_equal(1, senior_men_4_5_overall_bar.results[0].scores.size, "matson Overall BAR results scores")
+    assert_equal(600, senior_men_4_5_overall_bar.results[0].points, "matson Senior Men Overall BAR results points")
+    assert_equal(2, senior_men_4_5_overall_bar.results[0].scores.size, "matson Overall BAR results scores")
 
     assert([people(:matson), people(:weaver), people(:tonkin)].include?(senior_men_4_5_overall_bar.results[1].person), "Senior Men Overall BAR results person")
-    assert_equal("1", senior_men_4_5_overall_bar.results[1].place, "Senior Men Overall BAR results place")
+    assert_equal("2", senior_men_4_5_overall_bar.results[1].place, "Senior Men Overall BAR results place")
     assert_equal(300, senior_men_4_5_overall_bar.results[1].points, "matson Senior Men Overall BAR results points")
     assert_equal(1, senior_men_4_5_overall_bar.results[1].scores.size, "matson Overall BAR results scores")
 
     assert([people(:matson), people(:weaver), people(:tonkin)].include?(senior_men_4_5_overall_bar.results[2].person), "Senior Men Overall BAR results person")
-    assert_equal("1", senior_men_4_5_overall_bar.results[2].place, "Senior Men Overall BAR results place")
+    assert_equal("2", senior_men_4_5_overall_bar.results[2].place, "Senior Men Overall BAR results place")
     assert_equal(300, senior_men_4_5_overall_bar.results[2].points, "matson Senior Men Overall BAR results points")
     assert_equal(1, senior_men_4_5_overall_bar.results[2].scores.size, "matson Overall BAR results scores")
     
@@ -334,7 +348,7 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(300, senior_women_4_overall_bar.results[0].points, "Senior Women Overall BAR results points")
     assert_equal(1, senior_women_4_overall_bar.results[0].scores.size, "Women Overall BAR results scores")
 
-    assert_equal(original_results_count + 35, Result.count, "Total count of results in DB after BARs calculate!")
+    assert_equal(original_results_count + 36, Result.count, "Total count of results in DB after BARs calculate!")
   end
   
   def test_masters_state_champs

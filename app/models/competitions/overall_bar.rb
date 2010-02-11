@@ -40,8 +40,8 @@ class OverallBar < Competition
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
                   and place between 1 and 300
-                  and ((events.discipline != "Mountain Bike" and events.discipline != "Downhill" and categories.id in (#{category_ids_for(race)}))
-                    or ((events.discipline = "Mountain Bike" or events.discipline = "Downhill") and categories.id in (#{mtb_category_ids_for(race)})))
+                  and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{category_ids_for(race)}))
+                    or ((events.discipline in ("Mountain Bike", "Downhill", "Short Track")) and categories.id in (#{mtb_category_ids_for(race)})))
                   and events.date >= '#{date.year}-01-01' 
                   and events.date <= '#{date.year}-12-31'}],
                 :order => 'person_id'
