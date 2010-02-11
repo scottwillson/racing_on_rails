@@ -1,9 +1,11 @@
 class UpdateBarFor2010 < ActiveRecord::Migration
   def self.up
     downhill = Discipline[:downhill]
-    downhill.bar_categories.clear
-    downhill.bar = false
-    downhill.save!
+    if downhill
+      downhill.bar_categories.clear
+      downhill.bar = false
+      downhill.save!
+    end
     
     short_track = Discipline.create!(:name => "Short Track", :bar => true)
     short_track.bar_categories << Category.find_or_create_by_name("Category 3 Men")
