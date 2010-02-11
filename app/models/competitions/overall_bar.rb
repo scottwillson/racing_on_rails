@@ -137,7 +137,7 @@ class OverallBar < Competition
       'Senior Men', 'Category 3 Men', 'Category 4/5 Men',
       'Senior Women', 'Category 3 Women', 'Category 4 Women', 
       'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
-      'Singlespeed/Fixed', 'Tandem']
+      'Singlespeed/Fixed', 'Tandem', "Clydesdale"]
 
       category = Category.find_or_create_by_name(category_name)
       self.races.create(:category => category)
@@ -145,7 +145,7 @@ class OverallBar < Competition
   end
   
   def create_children
-    Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+    Discipline.find_all_bar.reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:overall]].include?(discipline) }.each do |discipline|
       bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
       unless bar
         bar = Bar.create!(
