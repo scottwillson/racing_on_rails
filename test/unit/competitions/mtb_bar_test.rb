@@ -80,18 +80,6 @@ class MtbBarTest < ActiveSupport::TestCase
   
     mtb.save!
     
-    dh = Discipline[:downhill]
-    dh.bar_categories.clear
-    dh.bar_categories << pro_men
-    dh.bar_categories << men_1
-    dh.bar_categories << men_2
-    dh.bar_categories << men_3
-    dh.bar_categories << pro_women
-    dh.bar_categories << women_1
-    dh.bar_categories << women_2
-    dh.bar_categories << women_3
-    dh.save!
-    
     road = Discipline[:road]
     road.bar_categories.clear
     road.bar_categories << senior_men
@@ -140,6 +128,7 @@ class MtbBarTest < ActiveSupport::TestCase
     
     event = SingleDayEvent.create!(:discipline => "Mountain Bike")
     event.races.create!(:category => pro_men, :field_size => 6).results.create!(:place => "14", :person => matson)
+    
     dh_event = SingleDayEvent.create!(:discipline => "Downhill")
     dh_event.races.create!(:category => men_1, :field_size => 6).results.create!(:place => "7", :person => molly)
     event.races.create!(:category => men_2, :field_size => 6).results.create!(:place => "5", :person => tonkin)
@@ -218,6 +207,10 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(1, mtb_bar_pro_men_bar.results.size, "Pro Men MTB BAR results")
     assert_equal(people(:matson), mtb_bar_pro_men_bar.results[0].person, "Pro Men MTB BAR results person")
 
+    mtb_bar_men_1_bar = mtb_bar.races.detect { |race| race.name == "Category 1 Men" }
+    assert_equal(1, mtb_bar_men_1_bar.results.size, "Men 1 MTB BAR results")
+    assert_equal(people(:molly), mtb_bar_men_1_bar.results[0].person, "Men 1 MTB BAR results person")
+
     mtb_bar_men_2 = mtb_bar.races.detect { |race| race.name == "Category 2 Men" }
     assert_equal(1, mtb_bar_men_2.results.size, "Men 2 MTB BAR results")
     assert_equal(people(:tonkin), mtb_bar_men_2.results[0].person, "Men 2 MTB BAR results person")
@@ -226,18 +219,13 @@ class MtbBarTest < ActiveSupport::TestCase
     assert_equal(1, mtb_bar_men_3_bar.results.size, "Men 3 MTB BAR results")
     assert_equal(people(:weaver), mtb_bar_men_3_bar.results[0].person, "Men 3 MTB BAR results person")
 
+    mtb_bar_pro_women_bar = mtb_bar.races.detect { |race| race.name == "Pro Women" }
+    assert_equal(1, mtb_bar_pro_women_bar.results.size, "Pro Women MTB BAR results")
+    assert_equal(woman_pro, mtb_bar_pro_women_bar.results[0].person, "Pro Women MTB BAR results person")
+
     mtb_bar_women_2_bar = mtb_bar.races.detect { |race| race.name == "Category 2 Women" }
     assert_equal(1, mtb_bar_women_2_bar.results.size, "Women 2 MTB BAR results")
     assert_equal(woman_1, mtb_bar_women_2_bar.results[0].person, "Women 2 MTB BAR results person")
-
-    dh_bar = Bar.find_by_year_and_discipline(year, "Downhill")
-    dh_bar_men_1_bar = dh_bar.races.detect { |race| race.name == "Category 1 Men" }
-    assert_equal(1, dh_bar_men_1_bar.results.size, "Men 1 DH BAR results")
-    assert_equal(people(:molly), dh_bar_men_1_bar.results[0].person, "Men 1 DH BAR results person")
-
-    dh_bar_pro_women_bar = dh_bar.races.detect { |race| race.name == "Pro Women" }
-    assert_equal(1, dh_bar_pro_women_bar.results.size, "Pro Women DH BAR results")
-    assert_equal(woman_pro, dh_bar_pro_women_bar.results[0].person, "Pro Women DH BAR results person")
 
     senior_men_overall_bar = overall_bar.races.detect { |race| race.name == "Senior Men" }
     assert_equal(4, senior_men_overall_bar.results.size, "Senior Men Overall BAR results")

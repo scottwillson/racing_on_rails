@@ -68,10 +68,13 @@ class Bar < Competition
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
   def source_results(race)
-    if race.discipline == 'Road'
-      race_disciplines = "'Road', 'Circuit'"
+    race_disciplines = case race.discipline
+    when "Road"
+      "'Road', 'Circuit'"
+    when "Mountain Bike"
+      "'Mountain Bike', 'Downhill'"
     else
-      race_disciplines = "'#{race.discipline}'"
+      "'#{race.discipline}'"
     end
     
     # Cat 4/5 is a special case. Can't config in database because it's a circular relationship.

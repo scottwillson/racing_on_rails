@@ -141,11 +141,11 @@ class BarTest < ActiveSupport::TestCase
     assert_equal(0, Bar.count, "Bar before calculate!")
     original_results_count = Result.count
     Bar.calculate!(2004)
-    assert_equal(7, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
+    assert_equal(6, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
     assert_equal(original_results_count + 15, Result.count, "Total count of results in DB")
     # Should delete old BAR
     Bar.calculate!(2004)
-    assert_equal(7, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
+    assert_equal(6, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
     Bar.find(:all, :conditions => ['date = ?', Date.new(2004)]).each do |bar|
       assert(bar.name[/2004.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")

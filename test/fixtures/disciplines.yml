@@ -41,9 +41,8 @@ team:
   bar_categories: team
 downhill:
   name: Downhill
-  bar: true
+  bar: false
   numbers: true
-  bar_categories: pro_semi_pro_men, junior_men, junior_men, beginner_men
 singlespeed:
   name: Singlespeed
   bar: false
