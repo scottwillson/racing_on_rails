@@ -18,8 +18,12 @@ class Competition < Event
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
   
-  def self.find_for_year(year = Date.today.year)
+  def self.find_for_year(year = ASSOCIATION.year)
     self.find_by_date(Date.new(year, 1, 1))
+  end
+  
+  def self.find_or_create_for_year(year = ASSOCIATION.year)
+    self.find_for_year(year) || self.create(:date => (Date.new(year, 1, 1)))
   end
   
   # Update results based on source event results.
@@ -38,6 +42,7 @@ class Competition < Event
         raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
         competition.destroy_races
         competition.create_races
+        competition.create_children
         # Could bulk load all Event and Races at this point, but hardly seems to matter
         competition.calculate_members_only_places
         competition.calculate!
@@ -106,6 +111,11 @@ class Competition < Event
   def create_races
     category = Category.find_or_create_by_name(friendly_name)
     self.races.create(:category => category)
+  end
+  
+  # Override in superclass for Competitions like OBRA OverallBAR
+  def create_children
+    true
   end
 
   def calculate_members_only_places

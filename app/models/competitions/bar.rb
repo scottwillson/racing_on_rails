@@ -20,12 +20,15 @@ class Bar < Competition
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
+        
+        overall_bar = OverallBar.find_or_create_for_year(year)
 
         # Age Graded BAR and Overall BAR do their own calculations
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
           bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(
+              :parent => overall_bar,
               :name => "#{year} #{discipline.name} BAR",
               :date => date,
               :discipline => discipline.name

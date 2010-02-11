@@ -1,43 +1,27 @@
-<% @page_title = "BAR: #{@year}: #{@discipline.name}: #{@category.name}" %>
+<% if @race
+     @page_title = "BAR: #{@race.year}: #{@race.discipline}: #{@race.category.name}"
+   else
+     @page_title = "BAR"
+   end  -%>
 
-<%= tabs do |tabs|
-  @all_disciplines.each do |discipline|
-    tabs.add(discipline.name, :action => 'show', :discipline => discipline, :year => @year, :category => @category.friendly_param)
-  end
-end -%>
+<%= render :partial => "years", :locals => { :overall_bar => @overall_bar, :race => @race } %>
+<%= render :partial => "disciplines", :locals => { :overall_bar => @overall_bar, :race => @race } %>
 
-<%= render :partial => 'years' %>
+<% if @race && @race.results.any? -%>
+<h2><%= @race.year %> <%= @race.discipline %> BAR</h2>
+<div class="updatedon centered">Updated <%= @race.updated_at.to_formatted_s(:long) %></div>
+<% end -%>
 
-<%- if @discipline.bar_categories.sort.size > 1 %>
-<table class="centered top_margin">
-  <%- @discipline.bar_categories.sort.each_row_with_index do |row, row_index| -%>
-  <tr>
-    <td style="margin-right: 18px;">
-    <%= link_to row.first.name, :action => 'show', :category => row.first.friendly_param, :year => @year, :discipline => @discipline %>
-    </td>
-    <td style="margin-left: 18px;">
-    &nbsp;
-    <%- if row.size == 2 -%>
-      <%= link_to row.last.name, :action => 'show', :category => row.last.friendly_param, :year => @year, :discipline => @discipline %></a>
-    <%- end -%>
-    </td>
-  </tr>
-<%- end -%>  
-</table>
-<%- end -%>  
-
-<h2><%= @year %> <%= @discipline.name %> BAR</h2>
+<%= render :partial => "races", :locals => { :race => @race } %>
 
 <% if @race.nil? || @race.results.empty? %>
-No results for <%= @year %>
+No results for <%= params[:year] %>
 <% else %>
-
-<div class="updatedon centered">Updated <%= @race.updated_at.to_formatted_s(:long) %></div>
 
 <% table :caption => @race.name do %>
   <tr><th>&nbsp;</th></tr>
   <tr>
-    <% if @discipline == Discipline[:team] %>
+    <% if @race.discipline == Discipline[:team] %>
 
     <td><pre><%- for result in @results.sort %>
 <%= result.place.rjust(3) -%>

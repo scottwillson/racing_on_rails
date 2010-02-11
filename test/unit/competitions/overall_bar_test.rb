@@ -127,13 +127,14 @@ class OverallBarTest < ActiveSupport::TestCase
     
     # Discipline BAR results past 300 don't count -- add fake result
     bar = Bar.find_by_year_and_discipline(2004, "Road")
+    assert_not_nil bar.parent, "Should have parent"
     sr_men_road_bar = bar.races.detect {|r| r.category == categories(:senior_men)}
     sr_men_road_bar.results.create!(:place => 305, :person => people(:alice))
     
     OverallBar.calculate!(2004)
     bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after calculate!")
-    assert_equal(1, OverallBar.count, "Bar events after calculate!")
+    assert_equal(1, OverallBar.count, "Overall BARs after calculate! #{OverallBar.all.map(&:date).join(", ")}")
     assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
     # Should delete old BAR
     OverallBar.calculate!(2004)
@@ -148,6 +149,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Overall Bar name")
     assert_equal(12, overall_bar.races.size, "2004 Overall Bar races")
     assert_equal_dates(Date.today, overall_bar.updated_at, "BAR last updated")
+    assert_equal 7, overall_bar.children.size, "Overall BAR children"
     
     senior_men_overall_bar = overall_bar.races.detect do |b|
       b.name == "Senior Men"

@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/bar/categories", :controller => "bar", :action => 'categories'
   map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
   map.connect "/bar", :controller => "bar", :action => "index"
-  map.connect "/bar/:year/:discipline/:category",
+  map.bar "/bar/:year/:discipline/:category",
               :controller => "bar", :action => "show",
               :requirements => {:year => /\d+/},
               :defaults => {:discipline => 'overall', :category => 'senior_men'}

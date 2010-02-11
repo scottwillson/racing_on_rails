@@ -1,0 +1,17 @@
+<% if race -%>
+<table class="centered top_margin">
+  <%- race.event.races.map(&:category).sort.each_row_with_index do |row, row_index| -%>
+  <tr>
+    <td style="margin-right: 18px;">
+    <%= link_to row.first.name, bar_path(:category => row.first.friendly_param, :year => race.year, :discipline => Discipline[race.discipline]) %>
+    </td>
+    <td style="margin-left: 18px;">
+    &nbsp;
+    <%- if row.size == 2 -%>
+      <%= link_to row.last.name, bar_path(:category => row.last.friendly_param, :year => race.year, :discipline => Discipline[race.discipline]) %></a>
+    <%- end -%>
+    </td>
+  </tr>
+  <%- end -%>  
+</table>
+<% end -%>

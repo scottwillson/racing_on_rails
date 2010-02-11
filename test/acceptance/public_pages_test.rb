@@ -72,20 +72,24 @@ class PublicPagesTest < SeleniumTestCase
   end
   
   def test_bar
+    AgeGradedBar.calculate!
+    AgeGradedBar.calculate!(2009)
+    
     open "/bar"
     assert_text "BAR"
     assert_text 'Oregon Best All-Around Rider'
 
     open "/bar/2009"
-    assert_text "BAR"
+    assert_title "*BAR*"
 
     click 'link=Age Graded', :wait_for => :page
-    assert_text "2009 Age Graded BAR"
+    assert_text "Masters Men 30-34"
 
     open "/bar/#{Date.today.year}"
-    assert_text "BAR"
+    assert_text "Overall"
 
     click 'link=Age Graded', :wait_for => :page
-    assert_text "#{Date.today.year} Age Graded BAR"
+    assert_title "*Age Graded*"
+    assert_title "*#{Date.today.year}*"
   end
 end

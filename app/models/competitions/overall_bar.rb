@@ -1,4 +1,36 @@
 class OverallBar < Competition
+  def find_race(discipline, category)
+    if Discipline[:overall] == discipline
+      event = self
+    else
+      event = children.detect { |e| e.discipline == discipline.name }
+    end
+    
+    if event
+      event.races.detect { |e| e.category == category }
+    end
+  end
+  
+  def equivalent_category_for(category_friendly_param, discipline)
+    return nil unless category_friendly_param && discipline
+    
+    if discipline == Discipline[:overall]
+      event = self
+    else
+      event = children.detect { |child| child.discipline == discipline.name }
+      return unless event
+    end
+    
+    category = event.categories.detect { |cat| cat.friendly_param == category_friendly_param }
+
+    if category.nil?
+      event.categories.detect { |cat| cat.friendly_param == category_friendly_param || cat.parent.friendly_param == category_friendly_param } || 
+      event.categories.sort.first
+    else
+      category
+    end
+  end
+  
   def points_for(scoring_result)
     301 - scoring_result.place.to_i
   end
@@ -115,8 +147,26 @@ class OverallBar < Competition
       self.races.create(:category => category)
     end
   end
+  
+  def create_children
+    Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+      bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+      unless bar
+        bar = Bar.create!(
+          :parent => self,
+          :name => "#{year} #{discipline.name} BAR",
+          :date => date,
+          :discipline => discipline.name
+        )
+      end
+    end
+  end
 
   def friendly_name
     'Overall BAR'
+  end
+
+  def default_discipline
+    "Overall"
   end
 end
