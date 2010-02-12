@@ -147,7 +147,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
 
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Overall Bar name")
-    assert_equal(12, overall_bar.races.size, "2004 Overall Bar races")
+    assert_equal(13, overall_bar.races.size, "2004 Overall Bar races")
     assert_equal_dates(Date.today, overall_bar.updated_at, "BAR last updated")
     assert_equal 6, overall_bar.children.size, "Overall BAR children"
     
