@@ -1,4 +1,5 @@
-<% @page_title = 'People' %>
+<% @page_title = "People" %>
+<% @show_tabs = (promoter? || administrator?) -%>
 
 <%= render_page "people/disciplines", :locals => { :year => @year } %>
 
@@ -29,4 +30,7 @@
   <% end %>
 <% end -%>
 
+<% if (promoter? || administrator?) %>
+<%= link_to("Export current members to Excel", admin_people_path(:format => "xls", :excel_layout => "scoring_sheet", :include => "members_only"), :id => "export_link") %>
+<% end -%>
 <%= focus('name') %>

@@ -10,7 +10,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to new_person_session_path
     assert_nil(@request.session["person"], "No person in session")
   end
   
@@ -980,6 +980,19 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_response(:success)
     today = ASSOCIATION.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
+
+  def test_export_members_only_to_excel_promoter
+    destroy_person_session
+    PersonSession.create(people(:promoter))
+    
+    get(:index, :format => 'xls', :include => 'members_only', :excel_layout => "scoring_sheet")
+
+    assert_response(:success)
+    today = ASSOCIATION.effective_today
+    assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end

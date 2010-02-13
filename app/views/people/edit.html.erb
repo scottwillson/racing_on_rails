@@ -1,4 +1,5 @@
-<% @page_title = "Persons: #{@person.name}" %>
+<% @page_title = "People: #{@person.name}" %>
+<% @show_tabs = (promoter? || administrator?) -%>
 
 <%= error_messages_for :person %>
 

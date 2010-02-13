@@ -30,7 +30,7 @@
     <td class="date">
       <%= event.date.strftime("%a %m/%d") if event.date -%>
     </td>
-    <td class="beginner_friendly"><%= image_tag("icons/bullet_green.png") if event.beginner_friendly? %></td>
+    <td class="beginner_friendly"><%= image_tag("icons/star_green.png") if event.beginner_friendly? %></td>
     <%- if event.cancelled %>
     <td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
     <%- elsif event.postponed? %>

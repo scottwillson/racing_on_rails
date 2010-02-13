@@ -117,7 +117,8 @@ ActionController::Routing::Routes.draw do |map|
                 :member => { :card => :get, :account => :get, :membership => :get },
                 :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
                 :has_many => :results do |person|
-  end
+                  person.resources :events
+                end
   
   # Deprecated URLs
   map.connect "/results/:year/:discipline/:event_id", 

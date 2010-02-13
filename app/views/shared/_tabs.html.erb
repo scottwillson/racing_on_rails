@@ -1,0 +1,7 @@
+<%- if @show_tabs -%>
+<div class="tabs">
+  <%= link_to "Account", "/account" %> |
+  <%= link_to "Events", person_events_path(current_person) %> |
+  <%= link_to "People", people_path %>
+</div>
+<%- end -%>

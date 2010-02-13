@@ -9,6 +9,21 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
     assert_not_nil(assigns["name"], "Should assign name")
+    assert_select ".tabs", :count => 0
+    assert_select "a#export_link", :count => 0
+  end
+
+  def test_index_as_promoter
+    PersonSession.create(people(:promoter))
+    get(:index)
+    assert_response(:success)
+    assert_template("people/index")
+    assert_layout("application")
+    assert_not_nil(assigns["people"], "Should assign people")
+    assert(assigns["people"].empty?, "Should find no one")
+    assert_not_nil(assigns["name"], "Should assign name")
+    assert_select ".tabs", :count => 1
+    assert_select "a#export_link", :count => 1
   end
 
   def test_find
@@ -55,6 +70,7 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => people(:member).to_param
     assert_response :success
     assert_equal people(:member), assigns(:person), "@person"
+    assert_select ".tabs", :count => 0
   end
 
   def test_edit_promoter
@@ -63,6 +79,7 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => people(:promoter).to_param
     assert_response :success
     assert_equal people(:promoter), assigns(:person), "@person"
+    assert_select ".tabs", :count => 1
   end
 
   def test_must_be_logged_in
