@@ -16,7 +16,6 @@ class EventsControllerTest < ActionController::TestCase
   
   def test_index_with_person_id_promoter
     PersonSession.create(people(:promoter))
-    PersonSession.create(people(:promoter))
     
     get :index, :person_id => people(:promoter)
     assert_response :success

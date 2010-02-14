@@ -1,7 +1,26 @@
-<%- if @show_tabs -%>
-<div class="tabs">
-  <%= link_to "Account", "/account" %> |
-  <%= link_to "Events", person_events_path(current_person) %> |
-  <%= link_to "People", people_path %>
-</div>
+<%- if (@show_tabs.nil? || @show_tabs) -%>
+  <%- if administrator? -%>
+
+  <%= tabs do |tabs|
+      tabs.add("Schedule", admin_events_path) if ASSOCIATION.administrator_tabs.include?(:schedule)
+      tabs.add("First Aid", admin_first_aid_providers_path) if ASSOCIATION.administrator_tabs.include?(:first_aid)
+      tabs.add("People", admin_people_path) if ASSOCIATION.administrator_tabs.include?(:people)
+      tabs.add("Teams", admin_teams_path) if ASSOCIATION.administrator_tabs.include?(:teams)
+      tabs.add("Velodromes", admin_velodromes_path) if ASSOCIATION.administrator_tabs.include?(:velodromes)
+      tabs.add("Categories", admin_categories_path) if ASSOCIATION.administrator_tabs.include?(:categories)
+      tabs.add("Cat 4 Womens Series", new_admin_cat4_womens_race_series_result_path) if ASSOCIATION.administrator_tabs.include?(:cat4_womens_race_series)
+      tabs.add("Article Categories", admin_article_categories_path) if ASSOCIATION.administrator_tabs.include?(:article_categories)
+      tabs.add("Articles", admin_articles_path) if ASSOCIATION.administrator_tabs.include?(:articles)
+      tabs.add("Pages", admin_pages_path) if ASSOCIATION.administrator_tabs.include?(:pages)
+  end %>
+  
+  <%- elsif promoter? -%>
+
+  <%= tabs do |tabs|
+    tabs.add "Account", "/account"
+    tabs.add "Events", person_events_path(current_person)
+    tabs.add "People", people_path
+  end %>
+
+  <%- end -%>
 <%- end -%>

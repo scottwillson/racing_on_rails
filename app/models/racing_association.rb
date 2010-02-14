@@ -6,6 +6,7 @@ class RacingAssociation
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
+  attr_accessor :administrator_tabs
   attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
   attr_accessor :show_practices_on_calendar
@@ -29,6 +30,9 @@ class RacingAssociation
     @show_practices_on_calendar = false
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+    @administrator_tabs = Set.new([ 
+      :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
+    ])
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false

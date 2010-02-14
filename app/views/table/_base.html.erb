@@ -7,7 +7,7 @@
     </tr>
     <%- end -%>
 <%= body -%>
-    <%- if body.blank? || (collection && collection.empty?) -%>
+    <%- if body.blank? || collection.try(:empty?) -%>
     <tr>
       <td class="empty">None</td>
     </tr>
