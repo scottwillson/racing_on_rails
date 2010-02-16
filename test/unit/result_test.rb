@@ -945,7 +945,7 @@ class ResultTest < ActiveSupport::TestCase
 
     person = result.person
     person.reload
-    assert(!person.member?, "Finisher with event (not racing association) number should be member")
+    assert(!person.member?, "Finisher with event (not racing association) number should not be a member")
   end
 
   def test_only_make_member_if_full_name

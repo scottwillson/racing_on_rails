@@ -93,7 +93,8 @@ class Result < ActiveRecord::Base
     end
 
     # This logic should be in Person
-    if person && ASSOCIATION.add_members_from_results?
+    if person && 
+       ASSOCIATION.add_members_from_results? &&
        person.new_record? &&
        person.first_name.present? &&
        person.last_name.present? &&

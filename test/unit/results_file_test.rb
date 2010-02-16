@@ -58,47 +58,52 @@ class ResultsFileTest < ActiveSupport::TestCase
   end
   
   def test_import_excel
-     event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
-     source_path = "#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"
-     results_file = ResultsFile.new(File.new(source_path), event, :usac_results_format => false)
-     assert_equal(source_path, results_file.source.path, "file path")
-     results_file.import
-
-     expected_races = get_expected_races
-     assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
-     expected_races.each_with_index do |expected_race, index|
-       actual_race = event.races[index]
-       assert_not_nil(actual_race, "race #{index}")
-       assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
-       assert_equal(expected_race.results.size, actual_race.results.size, "Results")
-       race_date = actual_race.date
-       actual_race.results.sort.each_with_index do |result, result_index|
-         expected_result = expected_race.results[result_index]
-         assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
-         if result.license && result.license.empty? #may have found person by license
-           assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
-           assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
-         end
-         assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
-         assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-         if result.person
-           if RaceNumber.rental?(result.number, Discipline[event.discipline])
-             assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
-           else
-             assert_equal(ASSOCIATION.add_members_from_results?, result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from.strftime('%F')} #{result.person.member_to.strftime('%F')}")
-             assert_not_equal(
-               Date.today, 
-               result.person.member_from, 
-               "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from.strftime})")
-           end
-           # test result by license (some with name misspelled)
-           if result.license && ASSOCIATION.eager_match_on_license?
-             person_by_lic = Person.find_by_license(result.license)
-             assert_equal(result.person, person_by_lic, "Result should be assigned to #{person_by_lic.name} by license but was given to #{result.person.name}") if person_by_lic
-           end
-         end
-       end
-     end
+    current_members = Person.find(:all, :conditions => ["member_to >= ?", ASSOCIATION.now])
+    event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
+    source_path = "#{File.dirname(__FILE__)}/../fixtures/results/pir_2006_format.xls"
+    results_file = ResultsFile.new(File.new(source_path), event, :usac_results_format => false)
+    assert_equal(source_path, results_file.source.path, "file path")
+    results_file.import
+ 
+    expected_races = get_expected_races
+    assert_equal(expected_races.size, event.races.size, "Expected #{expected_races.size.to_s} event races but was #{event.races.size.to_s}")
+    expected_races.each_with_index do |expected_race, index|
+      actual_race = event.races[index]
+      assert_not_nil(actual_race, "race #{index}")
+      assert_not_nil(actual_race.results, "results for category #{expected_race.category}")
+      assert_equal(expected_race.results.size, actual_race.results.size, "Results")
+      race_date = actual_race.date
+      actual_race.results.sort.each_with_index do |result, result_index|
+        expected_result = expected_race.results[result_index]
+        assert_equal(expected_result.place, result.place, "place for race #{index} result #{result_index} #{expected_result.first_name} #{expected_result.last_name}")
+        if result.license && result.license.empty? #may have found person by license
+          assert_equal(expected_result.first_name, result.first_name, "first_name for race #{index} result #{result_index}")
+          assert_equal(expected_result.last_name, result.last_name, "last_name for race #{index} result #{result_index}")
+        end
+        assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
+        assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
+        if result.person
+          if RaceNumber.rental?(result.number, Discipline[event.discipline])
+            assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
+          else
+            if ASSOCIATION.add_members_from_results? || current_members.include?(result.person)
+              assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
+              assert_not_equal(
+                Date.today, 
+                result.person.member_from, 
+                "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})")
+            else
+              assert(!result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
+            end
+          end
+          # test result by license (some with name misspelled)
+          if result.license && ASSOCIATION.eager_match_on_license?
+            person_by_lic = Person.find_by_license(result.license)
+            assert_equal(result.person, person_by_lic, "Result should be assigned to #{person_by_lic.name} by license but was given to #{result.person.name}") if person_by_lic
+          end
+        end
+      end
+    end
   end
 
   def test_import_time_trial_people_with_same_name
