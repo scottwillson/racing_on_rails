@@ -85,7 +85,7 @@ class ResultsFileTest < ActiveSupport::TestCase
            if RaceNumber.rental?(result.number, Discipline[event.discipline])
              assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
            else
-             assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from.strftime('%F')} #{result.person.member_to.strftime('%F')}")
+             assert_equal(ASSOCIATION.add_members_from_results?, result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from.strftime('%F')} #{result.person.member_to.strftime('%F')}")
              assert_not_equal(
                Date.today, 
                result.person.member_from, 

@@ -93,10 +93,10 @@ class Result < ActiveRecord::Base
     end
 
     # This logic should be in Person
-    if !person.nil? &&
+    if person &&
        person.new_record? &&
-       !person.first_name.blank? &&
-       !person.last_name.blank? &&
+       person.first_name.present? &&
+       person.last_name.present? &&
        person[:member_from].blank? &&
        event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])

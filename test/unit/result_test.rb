@@ -470,7 +470,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
-    assert(result.person.member?, "Person should be member")
+    assert_equal(ASSOCIATION.add_members_from_results?, result.person.member?, "Person should be member")
 
     # Rental
     begin
@@ -924,8 +924,12 @@ class ResultTest < ActiveSupport::TestCase
 
     person = result.person
     person.reload
-
-    assert(person.member?, "Finisher with racing association number should be member")
+    
+    if ASSOCIATION.add_members_from_results?
+      assert(person.member?, "Finisher with racing association number should be member")
+    else
+      assert(!person.member?, "Finisher with racing association number should be member if RacingAssociation doesn't allow this")
+    end
   end
 
   def test_do_not_make_member_if_not_association_number
