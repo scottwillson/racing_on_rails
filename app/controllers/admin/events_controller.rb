@@ -72,11 +72,7 @@ class Admin::EventsController < Admin::AdminController
     event_type = params[:event][:type]
     event_type = "Event" if event_type.blank?
     raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-    if params[:event][:parent_id].present?
-      @event = Event.find(params[:event][:parent_id]).children.build(params[:event])
-    else
-      @event = eval(event_type).new(params[:event])
-    end
+    @event = eval(event_type).new(params[:event])
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
