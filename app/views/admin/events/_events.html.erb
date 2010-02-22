@@ -28,7 +28,7 @@
     </td>
     <td class='link'></td>
     <td class="right"><%= link_to_remote(image_tag("/images/icons/add.png"),
-              :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => "Event" }),
+              :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => @event.is_a?(MultiDayEvent) ? "SingleDayEvent" : "Event" }),
               :html => { :class => "image", :id => "new_event" }, 
               :method => "post") if administrator?
         %></td>
