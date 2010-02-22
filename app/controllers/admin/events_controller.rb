@@ -45,11 +45,10 @@ class Admin::EventsController < Admin::AdminController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    if params[:event] && params[:event][:type] == "Event"
-      @event = Event.new(params[:event])
-    else
-      @event = SingleDayEvent.new(params[:event])
-    end
+    event_type = params[:event][:type]
+    event_type = "Event" if event_type.blank?
+    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+    @event = eval(event_type).new(params[:event])
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     if association_number_issuer
       @event.number_issuer_id = association_number_issuer.id

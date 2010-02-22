@@ -20,6 +20,11 @@
         <%= f.labelled_text_field :name, nil, :editable => administrator? %>
 
         <% if administrator? %>
+        <% unless @event.new_record? -%>
+        <div class="prepend-1 span-2 last">
+          <%= link_to "Duplicate", new_admin_event_path(:event => @event.attributes), :class => "obvious", :id => "duplicate_event" %><br/>
+        </div>
+        <% end -%>
         <%= f.label :type %>
         <%= f.select(:type, [['Event', nil],
                              ['Single Day Event', 'SingleDayEvent'],
