@@ -245,7 +245,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal(people(:nate_hobson), skull_hollow.promoter, 'promoter')
   end
     
-  def test_create_child_event_default_to_event_type
+  def test_create_child_event
     parent = SingleDayEvent.create!
     assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
 

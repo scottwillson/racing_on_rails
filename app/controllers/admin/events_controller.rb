@@ -45,10 +45,7 @@ class Admin::EventsController < Admin::AdminController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    event_type = params[:event][:type]
-    event_type = "Event" if event_type.blank?
-    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-    @event = eval(event_type).new(params[:event])
+    assign_new_event
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     if association_number_issuer
       @event.number_issuer_id = association_number_issuer.id
@@ -68,10 +65,7 @@ class Admin::EventsController < Admin::AdminController
   # === Flash
   # * warn
   def create
-    event_type = params[:event][:type]
-    event_type = "Event" if event_type.blank?
-    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-    @event = eval(event_type).new(params[:event])
+    assign_new_event
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
@@ -256,5 +250,17 @@ class Admin::EventsController < Admin::AdminController
   
   def assign_event
     @event = Event.find(params[:id])
+  end
+  
+  def assign_new_event
+    if params[:event] && params[:event][:type].present?
+      event_type = params[:event][:type]
+    elsif params[:event] && params[:event][:parent_id].present?
+      event_type = "Event"
+    else
+      event_type = "SingleDayEvent"
+    end
+    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+    @event = eval(event_type).new(params[:event])
   end
 end
