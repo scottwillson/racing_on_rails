@@ -122,19 +122,20 @@ class Event < ActiveRecord::Base
           :include => { :parent => :parent },
           :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
       ))
-      
+    end
+    
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      events.reject! do |event|
+        event.sanctioned_by != ASSOCIATION.default_sanctioned_by
+      end
     end
     
     events.map!(&:root)
-    events.reject! do |event|
-      (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
-      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.default_sanctioned_by)
-    end
     
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitons, events = events.partition { |event| event.is_a?(Competition) }
+    competitions, events = events.partition { |event| event.is_a?(Competition) }
 
-    [ weekly_series, events, competitons ]
+    [ weekly_series, events, competitions ]
   end
 
   def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
