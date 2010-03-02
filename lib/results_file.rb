@@ -283,8 +283,14 @@ class ResultsFile
     def [](column_symbol)
       index = column_indexes[column_symbol]
       if index
-        value = spreadsheet_row[index]
-        value = spreadsheet_row[index].value if spreadsheet_row[index].is_a?(Spreadsheet::Formula)
+        case spreadsheet_row[index]
+        when Spreadsheet::Formula
+          value = spreadsheet_row[index].value
+        when Spreadsheet::Excel::Error
+          value = nil
+        else
+          value = spreadsheet_row[index]
+        end
         value.strip! if value.respond_to?(:strip!)
         value
       end

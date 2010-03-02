@@ -270,7 +270,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     # w_1_2                 Y                           Y + results
     # Other combinations are invalid
 
-    event = SingleDayEvent.create!(:date => Date.today + 3)
+    event = SingleDayEvent.create!(:date => Date.today + 3, :price => 23, :registration => true)
     pro_1_2_race = event.races.create! :category => Category.find_or_create_by_name("Pro 1/2")
     event.races.create! :category => Category.find_or_create_by_name("Cat 3")
     cat_4_race = event.races.create! :category => Category.find_or_create_by_name("Cat 4")
@@ -278,6 +278,11 @@ class ResultsFileTest < ActiveSupport::TestCase
     
     pro_1_2_race.results.create! :place => 1, :person => people(:weaver)
 
+    order = people(:member).orders.create!
+    order.create_registration(event, pro_1_2_race)
+    order = people(:tonkin).orders.create!
+    order.create_registration(event, cat_4_race)
+    
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/small_event.xls"), event, :usac_results_format => false)
     results_file.import
     
@@ -292,6 +297,16 @@ class ResultsFileTest < ActiveSupport::TestCase
     [ "Pro 1/2", "Cat 3", "Women 1/2" ].each do |cat_name|
       assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
     end
+    
+    assert_equal 1, people(:member).orders.count, "Orders for member"
+    order = people(:member).orders.first
+    assert_equal event, order.line_items.first.event, "LineItem event"
+    assert_equal pro_1_2_race, order.line_items.first.race, "LineItem Race"
+    
+    assert_equal 1, people(:tonkin).orders.count, "Orders for member"
+    order = people(:tonkin).orders.first
+    assert_equal event, order.line_items.first.event, "LineItem event"
+    assert_equal cat_4_race, order.line_items.first.race, "LineItem Race"
   end
   
   def test_stage_race
@@ -492,7 +507,7 @@ class ResultsFileTest < ActiveSupport::TestCase
     race.results << Result.new(:place => "7", :first_name => "Nathan", :last_name => "Dills", :number =>"J25", :team_name =>"Bike Gallery/TREK", :points => "5.0")
     race.results << Result.new(:place => "8", :first_name => "David", :last_name => "Oliphant", :number =>"112", :team_name =>"Team TAI", :points => "4.0")
     race.results << Result.new(:place => "9", :first_name => "Richard", :last_name => "Barrows", :number =>"568", :team_name =>"North River Racing", :points => "3.0")
-    race.results << Result.new(:place => "10", :first_name => "George", :last_name => "Gardner", :number =>"385", :team_name =>"Team Oregon", :points => "2.0")
+    race.results << Result.new(:place => "10", :first_name => "George", :last_name => "Gardner", :number =>"385", :team_name =>"", :points => "2.0")
     race.results << Result.new(:place => "11", :first_name => "Kendall", :last_name => "Kuhar", :number =>"152", :team_name =>"Bike N Hike/Giant", :points => "1.0")
     race.results << Result.new(:place => "12", :first_name => "Ryan", :last_name => "Weaver", :number =>"341", :team_name =>"Gentle Lovers")
     race.results << Result.new(:place => "13", :first_name => "Sal", :last_name => "Collura", :number =>"A99", :team_name =>"Hutch's")
