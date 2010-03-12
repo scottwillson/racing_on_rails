@@ -37,15 +37,6 @@ task :cruise do
   
   begin
     Rake::Task["test:acceptance:browser"].invoke
-    # Clean up downloads
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/people*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure
     if RUBY_PLATFORM[/freebsd/]
       # Rake task doesn't seem to quit Firefox correctly

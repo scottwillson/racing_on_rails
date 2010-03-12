@@ -1,30 +1,30 @@
-require "acceptance/selenium_test_case"
+require "acceptance/webdriver_test_case"
 
-class PeopleTest < SeleniumTestCase
+class PeopleTest < WebDriverTestCase
   def test_people
     login_as :administrator
     
     open '/admin/people'
-    assert_text "Enter part of a person's name"
-    type "name", "a"
-    submit_and_wait "search_form"
+    assert_page_source "Enter part of a person's name"
+    type "a", "name"
+    submit "search_form"
 
-    assert_element_text "warn", ""
-    assert_element_text "notice", ""
+    assert_text "", "warn"
+    assert_text "", "notice"
 
-    assert_table "people_table", 1, 0, "glob:Molly Cameron*"
-    assert_table "people_table", 2, 0, "glob:Mark Matson*"
-    assert_table "people_table", 3, 0, "glob:Candi Murray*"
-    assert_table "people_table", 4, 0, "glob:Alice Pennington*"
-    assert_table "people_table", 5, 0, "glob:Brad Ross*"
-    assert_table "people_table", 6, 0, "glob:Ryan Weaver*"
+    assert_table("people_table", 1, 0, /^Molly Cameron/)
+    assert_table("people_table", 2, 0, /^Mark Matson/)
+    assert_table("people_table", 3, 0, /^Candi Murray/)
+    assert_table("people_table", 4, 0, /^Alice Pennington/)
+    assert_table("people_table", 5, 0, /^Brad Ross/)
+    assert_table("people_table", 6, 0, /^Ryan Weaver/)
 
-    assert_table "people_table", 1, 1, "glob:Vanilla*"
-    assert_table "people_table", 2, 1, "glob:Kona*"
-    assert_table "people_table", 4, 1, "glob:Gentle Lovers*"
-    assert_table "people_table", 6, 1, "glob:Gentle Lovers*"
-
-    assert_table "people_table", 1, 2, "glob:Mollie Cameron*"
+    assert_table("people_table", 1, 1, /^Vanilla/)
+    assert_table("people_table", 2, 1, /^Kona/)
+    assert_table("people_table", 4, 1, /^Gentle Lovers/)
+    assert_table("people_table", 6, 1, /^Gentle Lovers/)
+                
+    assert_table("people_table", 1, 2, /^Mollie Cameron/)
     assert_table "people_table", 2, 2, ""
     assert_table "people_table", 3, 2, ""
     assert_table "people_table", 4, 2, ""
@@ -59,130 +59,131 @@ class PeopleTest < SeleniumTestCase
     assert_checked "person_member_#{@matson_id}"
     assert_checked "person_member_#{@alice_id}"
 
-    click "person_#{@alice_id}_name", :wait_for => { :element => "person_#{@alice_id}_name-inplaceeditor" }
+    click "person_#{@alice_id}_name"
+    wait_for_element "person_#{@alice_id}_name-inplaceeditor"
 
-    type "css=.editor_field", "A Penn"
-    submit "css=.inplaceeditor-form"
-    wait_for :element => "person_#{@alice_id}_name-inplaceeditor"
-
-    refresh
-    wait_for_page
-    assert_table "people_table", 4, 0, "glob:A Penn*"
-
-    click "person_#{@weaver_id}_team_name", :wait_for => { :element => "person_#{@weaver_id}_team_name-inplaceeditor" }
-
-    type "css=.editor_field", "River City Bicycles"
-    submit "css=.inplaceeditor-form"
-    wait_for :element => "person_#{@alice_id}_team_name-inplaceeditor"
+    type "A Penn", :class => "editor_field"
+    submit :class => "inplaceeditor-form"
+    wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
-    wait_for_page
-    assert_table "people_table", 6, 1, "glob:River City Bicycles*"
+    wait_for_element "people_table"
+    assert_table("people_table", 4, 0, /^A Penn/)
 
-    click "css=a[href='/admin/people/#{@molly_id}/results']", :wait_for => :page
-    assert_title "*Admin: Results: Molly Cameron"
+    click "person_#{@weaver_id}_team_name"
+    wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
+
+    type "River City Bicycles", :class => "editor_field"
+    submit :class => "inplaceeditor-form"
+    wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
+
+    refresh
+    wait_for_element "people_table"
+    assert_table("people_table", 6, 1, /^River City Bicycles/)
+
+    click :css => "a[href='/admin/people/#{@molly_id}/results']"
+    assert_title(/Admin: Results: Molly Cameron$/)
+
+    open "/admin/people"
+    click :css => "a[href='/admin/people/#{@weaver_id}/results']"
+    assert_title(/Admin: Results: Ryan Weaver$/)
+
+    open "/admin/people"
+    click :css => "a[href='/admin/people/#{@matson_id}/edit']"
+    assert_title(/Admin: People: Mark Matson$/)
+    type "411 911 1212", "person_home_phone"
+    click "save"
 
     open '/admin/people'
-    click "css=a[href='/admin/people/#{@weaver_id}/results']", :wait_for => :page
-    assert_title "*Admin: Results: Ryan Weaver"
-
-    open '/admin/people'
-    click "css=a[href='/admin/people/#{@matson_id}/edit']", :wait_for => :page
-    assert_title "*Admin: People: Mark Matson"
-    type "person_home_phone", "411 911 1212"
-    click "save", :wait_for => :page
-
-    open '/admin/people'
-    click "css=a[href='/admin/people/new']", :wait_for => :page
-    assert_title "*Admin: People: New Person"
+    click :css => "a[href='/admin/people/new']"
+    assert_title(/Admin: People: New Person/)
 
     open "/admin/people/#{@matson.id}/edit"
-    assert_text "Mark Matson"
+    assert_page_source "Mark Matson"
     if Date.today.month < 12
       click "destroy_number_#{@matson.race_numbers.first.id}"
-      wait_for_ajax
-      click "save", :wait_for => :page
+      wait_for_no_element :css => "input.number[value='340']"
+      
+      click "save"
 
-      assert_no_text "error"
-      assert_no_text "Unknown action"
-      assert_no_text "Couldn't find RaceNumber"
+      assert_not_in_page_source "error"
+      assert_not_in_page_source "Unknown action"
+      assert_not_in_page_source "Couldn't find RaceNumber"
     end
     
-    assert_location "*/admin/people/#{@matson.id}/edit"
+    assert_current_url(/admin\/people\/#{@matson.id}\/edit/)
     
     open "/admin/people/#{Person.find_by_name("Non Results").id}/edit"
-    assert_text 'Non Results'
-    click 'delete', :wait_for => :page
-    assert_no_text 'error'
-    assert_no_text 'Unknown action'
-    assert_no_text 'has no parent'
+    assert_page_source 'Non Results'
+    click "delete"
+    assert_not_in_page_source 'error'
+    assert_not_in_page_source 'Unknown action'
+    assert_not_in_page_source 'has no parent'
 
-    assert_location '*/admin/people'
-    type 'name', 'no results'
-    submit_and_wait 'search_form'
-    assert_no_text 'error'
-    assert_no_text 'Non Results'
+    assert_current_url(/\/admin\/people/)
+    type "no results", "name"
+    submit "search_form"
+    assert_not_in_page_source "Non Results"
   end
   
   def test_export
     login_as :administrator
 
     open '/admin/people'
-    assert_present 'export_button'
-    assert_present 'include'
-    assert_value 'include', 'members_only'
-    assert_present 'format'
-    assert_value 'format', 'xls'
+    assert_element 'export_button'
+    assert_element 'include'
+    assert_value 'members_only', 'include'
+    assert_element 'format'
+    assert_value 'xls', 'format'
 
     click 'export_button'
-    wait_for_not_location "glob:*/admin/people.xls?excel_layout=xls&include=members_only"
-    assert_no_text 'error'
+    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
+    wait_for_download "people_2010_1_1.xls"
+    assert_no_errors
 
     open '/admin/teams'
-    assert_no_text 'error'
-    assert_location '*/admin/teams'
+    assert_current_url(/\/admin\/teams/)
 
     open '/admin/people'
-    assert_no_text 'error'
-    assert_location '*/admin/people'
+    assert_current_url(/\/admin\/people/)
 
-    type 'name', 'tonkin'
-    submit_and_wait 'search_form'
-    wait_for :text =>  "Erik Tonkin"
-    assert_no_text 'error'
-    assert_text 'Erik Tonkin'
-    assert_text 'Kona'
+    type "tonkin", "name"
+    submit 'search_form'
+    assert_not_in_page_source 'error'
+    assert_page_source 'Erik Tonkin'
+    assert_page_source 'Kona'
     if Date.today.month < 12
-      assert_text '102'
+      assert_page_source '102'
     end
-    assert_value 'name', 'tonkin'
+    assert_value 'tonkin', "name"
 
-    type 'include', 'all'
-    type 'format', 'ppl'
+    find_element(:css => "#include option[value='all']").select
+    find_element(:css => "#format option[value='ppl']").select
     click 'export_button'
-    wait_for_not_location "glob:*/admin/people.ppl?excel_layout=ppl&include=all"
-    assert_no_text 'error'
+    wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
+    wait_for_download "lynx.ppl"
+    assert_no_errors
 
-    type 'include', 'members_only'
-    type 'format', 'scoring_sheet'
+    find_element(:css => "#include option[value='members_only']").select
+    find_element(:css => "#format option[value='scoring_sheet']").select
     click 'export_button'
-    wait_for_not_location "glob:*/admin/people.xls?excel_layout=scoring_sheet&include=members_only"
-    assert_no_text 'error'
+    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
+    wait_for_download "scoring_sheet.xls"
+    assert_no_errors
 
-    type 'name', 'tonkin'
-    submit_and_wait 'search_form'
-    assert_no_text 'error'
-    assert_text 'Erik Tonkin'
-    assert_text 'Kona'
+    type 'tonkin', 'name'
+    submit 'search_form'
+    assert_page_source 'Erik Tonkin'
+    assert_page_source 'Kona'
     if Date.today.month < 12
-      assert_text '102'
+      assert_page_source '102'
     end
-    assert_value 'name', 'tonkin'
+    assert_value 'tonkin', "name"
   end
   
   def test_import
     login_as :administrator
     open '/admin/people'
-    assert_present 'people_file'
+    assert_element 'people_file'
   end
 end

@@ -5,7 +5,7 @@ development:
   host: localhost
   encoding: utf8
 
-selenium:
+acceptance:
   adapter: mysql
   database: racing_on_rails_test
   username: ror_test

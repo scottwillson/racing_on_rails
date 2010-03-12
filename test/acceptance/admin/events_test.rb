@@ -1,179 +1,162 @@
-require "acceptance/selenium_test_case"
+require "acceptance/webdriver_test_case"
 
-class EventsTest < SeleniumTestCase
+class EventsTest < WebDriverTestCase
   def test_events
     login_as :administrator
 
-    click "link=New Event", :wait_for => :page
+    click :link_text => "New Event"
 
-    type "event_name", "Sausalito Criterium"
-    click "save", :wait_for => :page
-    assert_text "Created Sausalito Criterium"
+    type "Sausalito Criterium", "event_name"
+    click "save"
+    assert_page_source "Created Sausalito Criterium"
     
     if Date.today.month == 12
       open "/admin/events?year=#{Date.today.year}"
     else
       open "/admin/events"
     end
-    assert_text "Sausalito Criterium"
-    click "link=Sausalito Criterium", :wait_for => :page
+    assert_page_source "Sausalito Criterium"
+    click :link_text => "Sausalito Criterium"
 
-    assert_value "event_promoter_id", ""
-    assert_value "promoter_auto_complete", ""
+    assert_value "", "event_promoter_id"
+    assert_value "", "promoter_auto_complete"
     click "promoter_auto_complete"
-    type "promoter_auto_complete", "Tom Brown"
+    type "Tom Brown", "promoter_auto_complete"
 
-    click "save", :wait_for => :page
-    assert_value "event_promoter_id", "regex:\\d+"
-    assert_value "promoter_auto_complete", "Tom Brown"
+    click "save"
+    assert_value(/\d+/, "event_promoter_id")
+    assert_value "Tom Brown", "promoter_auto_complete"
 
     open "/admin/events?year=#{Date.today.year}"
-    assert_text "Sausalito Criterium"
-    click "link=Sausalito Criterium", :wait_for => :page
-    assert_value "event_promoter_id", "regex:\\d+"
-    assert_value "promoter_auto_complete", "Tom Brown"
+    assert_page_source "Sausalito Criterium"
+    click :link_text => "Sausalito Criterium"
+    assert_value(/\d+/, "event_promoter_id")
+    assert_value "Tom Brown", "promoter_auto_complete"
 
-    click "edit_promoter_link", :wait_for => :page
-    assert_title "glob:*Tom Brown"
+    click "edit_promoter_link"
+    assert_title(/Tom Brown$/)
 
-    type "person_first_name", "Tim"
-    click "save", :wait_for => :page
+    type "Tim", "person_first_name"
+    click "save"
 
-    click "back_to_event", :wait_for => :page
+    click "back_to_event"
 
-    assert_title "glob:*Sausalito Criterium*"
-    assert_value "event_promoter_id", "regex:\\d+"
-    assert_value "promoter_auto_complete", "Tim Brown"
+    assert_title(/Sausalito Criterium/)
+    assert_value(/\d+/, "event_promoter_id")
+    assert_value "Tim Brown", "promoter_auto_complete"
 
     # Need event and timing workarounds for Safari 4
     click "promoter_auto_complete"
-    type "promoter_auto_complete", "candi m"
-    fire_event "promoter_auto_complete", "keydown"
-    fire_event "promoter_auto_complete", "keypress"
-    fire_event "promoter_auto_complete", "keyup"
-    fire_event "promoter_auto_complete", "change"
+    type "candi m", "promoter_auto_complete"
     candi = Person.find_by_name('Candi Murray')
     wait_for_element "person_#{candi.id}"
     
     click "person_#{candi.id}"
-    assert_value "event_promoter_id", candi.id
-    assert_value "promoter_auto_complete", "Candi Murray"
+    assert_value candi.id, "event_promoter_id"
+    assert_value "Candi Murray", "promoter_auto_complete"
 
-    click "save", :wait_for => :page
+    click "save"
 
-    assert_value "event_promoter_id", candi.id
-    assert_value "promoter_auto_complete", "Candi Murray"
+    assert_value candi.id, "event_promoter_id"
+    assert_value "Candi Murray", "promoter_auto_complete"
 
     click "promoter_auto_complete"
-    type "promoter_auto_complete", ""
-    fire_event "promoter_auto_complete", "keydown"
-    fire_event "promoter_auto_complete", "keypress"
-    fire_event "promoter_auto_complete", "keyup"
-    fire_event "promoter_auto_complete", "change"
-    assert_value "promoter_auto_complete", ""
-    click "save", :wait_for => :page
+    type "", "promoter_auto_complete"
+    assert_value "", "promoter_auto_complete"
+    click "save"
 
-    assert_value "event_promoter_id", ""
-    assert_value "promoter_auto_complete", ""
+    assert_value "", "event_promoter_id"
+    assert_value "", "promoter_auto_complete"
 
-    assert_value "event_team_id", ""
-    assert_value "team_auto_complete", ""
+    assert_value "", "event_team_id"
+    assert_value "", "team_auto_complete"
 
-    assert_value "event_phone", ""
-    assert_value "event_email", ""
+    assert_value "", "event_phone"
+    assert_value "", "event_email"
 
-    type "event_phone", "(541) 212-9000"
-    type "event_email", "event@google.com"
-    click "save", :wait_for => :page
+    type "(541) 212-9000", "event_phone"
+    type "event@google.com", "event_email"
+    click "save"
 
-    assert_value "event_phone", "(541) 212-9000"
-    assert_value "event_email", "event@google.com"
+    assert_value "(541) 212-9000", "event_phone"
+    assert_value "event@google.com", "event_email"
 
     open "/admin/people/#{candi.id}/edit"
-    assert_value "person_home_phone", "(503) 555-1212"
-    assert_value "person_email", "admin@example.com"
+    assert_value "(503) 555-1212", "person_home_phone"
+    assert_value "admin@example.com", "person_email"
 
     open "/admin/events?year=#{Date.today.year}"
-    click "link=Sausalito Criterium", :wait_for => :page
+    click :link_text => "Sausalito Criterium"
 
-    # Need event and timing workarounds for Safari 4
     click "team_auto_complete"
-    type "team_auto_complete", "Gentle Lovers"
-    fire_event "team_auto_complete", "keydown"
-    fire_event "team_auto_complete", "keypress"
-    fire_event "team_auto_complete", "keyup"
-    fire_event "team_auto_complete", "change"
-    wait_for :text =>  "Gentle Lovers"
+    type "Gentle Lovers", "team_auto_complete"
     gl = Team.find_by_name('Gentle Lovers')
     wait_for_element "team_#{gl.id}"
     click "team_#{gl.id}"
-    assert_value "event_team_id", gl.id
-    assert_value "team_auto_complete", "Gentle Lovers"
+    assert_value gl.id, "event_team_id"
+    assert_value "Gentle Lovers", "team_auto_complete"
 
-    click "save", :wait_for => :page
+    click "save"
 
-    assert_value "event_team_id", gl.id
-    assert_value "team_auto_complete", "Gentle Lovers"
+    assert_value gl.id, "event_team_id"
+    assert_value "Gentle Lovers", "team_auto_complete"
 
-    assert_value "event_team_id", gl.id
+    assert_value gl.id, "event_team_id"
     click "team_auto_complete"
-    type "team_auto_complete", ""
-    click "save", :wait_for => :page
+    type "", "team_auto_complete"
+    click "save"
 
-    assert_value "event_team_id", ""
-    assert_value "team_auto_complete", ""
+    assert_value "", "event_team_id"
+    assert_value "", "team_auto_complete"
 
-    click "link=Delete", :wait_for => :page
+    click :link_text => "Delete"
 
-    assert_text "Deleted Sausalito Criterium"
+    assert_page_source "Deleted Sausalito Criterium"
 
     open "/admin/events?year=2004"
-    assert_no_text "Sausalito Criterium"
+    assert_not_in_page_source "Sausalito Criterium"
 
     open "/admin/events?year=2003"
 
-    click "link=Kings Valley Road Race", :wait_for => :page
-    assert_text "Senior Men Pro 1/2"
-    assert_text "Senior Men 3"
+    click :link_text => "Kings Valley Road Race"
+    assert_page_source "Senior Men Pro 1/2"
+    assert_page_source "Senior Men 3"
 
     kings_valley = Event.find_by_name_and_date('Kings Valley Road Race', '2003-12-31')
-    click "id=destroy_race_#{kings_valley.races.first.id}"
+    click "destroy_race_#{kings_valley.races.first.id}"
 
     open "/admin/events?year=2003"
-    click "link=Kings Valley Road Race", :wait_for => :page
+    click :link_text => "Kings Valley Road Race"
 
+    click_ok_on_confirm_dialog
     click "destroy_races"
-    get_confirmation
 
     open "/admin/events?year=2003"
 
-    click "link=Kings Valley Road Race", :wait_for => :page
-    # Selenium breaks delete all races, though it works fine in Safari
-    unless selenium.browser_string == "*safari"
-      assert_no_text "Senior Men Pro 1/2"
-      assert_no_text "Senior Men 3"
-    end
+    click :link_text => "Kings Valley Road Race"
+    assert_not_in_page_source "Senior Men Pro 1/2"
+    assert_not_in_page_source "Senior Men 3"
 
-    click "new_event", :wait_for => :page
-    assert_text "Kings Valley Road Race"
-    assert_value "event_parent_id", kings_valley.id
+    click "new_event"
+    assert_page_source "Kings Valley Road Race"
+    assert_value kings_valley.id, "event_parent_id"
 
-    type "event_name", "Fancy New Child Event"
-    click "save", :wait_for => :page
-    assert_value "event_parent_id", kings_valley.id
+    type "Fancy New Child Event", "event_name"
+    click "save"
+    assert_value kings_valley.id, "event_parent_id"
 
     open "/admin/events/#{kings_valley.id}/edit"
-    assert_text "Fancy New Child Event"
+    assert_page_source "Fancy New Child Event"
   end
   
   def test_lost_children
     login_as :administrator
 
     open "/admin/events/#{SingleDayEvent.find_by_name('Lost Series').id}/edit"
-    assert_text 'has no parent'
-    click 'set_parent', :wait_for => :page
-    assert_no_text 'error'
-    assert_no_text 'Unknown action'
-    assert_no_text 'has no parent'
+    assert_page_source 'has no parent'
+    click "set_parent"
+    assert_not_in_page_source 'error'
+    assert_not_in_page_source 'Unknown action'
+    assert_not_in_page_source 'has no parent'
   end
 end
