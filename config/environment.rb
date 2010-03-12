@@ -18,7 +18,7 @@ Rails::Initializer.run do |config|
   config.gem "color"
   config.gem "pdf-writer", :lib => "pdf/writer"
   # For tests
-  config.gem "selenium-client", :lib => "selenium/client"
+  config.gem "selenium-webdriver"
   config.gem "mocha"
 
   config.time_zone = "Pacific Time (US & Canada)"

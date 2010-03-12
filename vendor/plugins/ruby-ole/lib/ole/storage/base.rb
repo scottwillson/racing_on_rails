@@ -143,7 +143,7 @@ module Ole # :nodoc:
 			end
 
 			@root = @dirents.to_tree.first
-			Log.warn "root name was #{@root.name.inspect}" unless @root.name == 'Root Entry'
+			Log.warn "root name was #{@root.name.inspect}" unless ['Root Entry', 'R'].include?(@root.name)
 			unused = @dirents.reject(&:idx).length
 			Log.warn "#{unused} unused directories" if unused > 0
 

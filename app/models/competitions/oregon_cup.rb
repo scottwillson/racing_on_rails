@@ -16,7 +16,7 @@ class OregonCup < Competition
     event_ids = source_events.collect do |event|
       event.id
     end
-    event_ids = event_ids.join(', ')    
+    event_ids = event_ids.join(', ')
     
     results = Result.find_by_sql(
       %Q{SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
@@ -38,10 +38,14 @@ class OregonCup < Competition
   def remove_duplicate_results(results)
     results.delete_if do |result|
       results.any? do |other_result|
+        result != other_result &&
+        result.race != other_result.race &&
         result.event.root == other_result.event.root &&
-        ((!result.race.notes["Oregon Cup"] && other_result.race.notes["Oregon Cup"]) ||
-        (!result.event.notes["Oregon Cup"] && other_result.event.notes["Oregon Cup"]) ||
-        (!result.event.name["Oregon Cup"] && other_result.event.name["Oregon Cup"]))
+        (
+          other_result.race.notes.include?("Oregon Cup") ||
+          other_result.event.notes.include?("Oregon Cup") ||
+          other_result.event.name.include?("Oregon Cup")
+        )
       end
     end
   end
