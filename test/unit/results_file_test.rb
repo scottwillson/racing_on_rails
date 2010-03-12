@@ -270,18 +270,13 @@ class ResultsFileTest < ActiveSupport::TestCase
     # w_1_2                 Y                           Y + results
     # Other combinations are invalid
 
-    event = SingleDayEvent.create!(:date => Date.today + 3, :price => 23, :registration => true)
+    event = SingleDayEvent.create!(:date => Date.today + 3)
     pro_1_2_race = event.races.create! :category => Category.find_or_create_by_name("Pro 1/2")
     event.races.create! :category => Category.find_or_create_by_name("Cat 3")
     cat_4_race = event.races.create! :category => Category.find_or_create_by_name("Cat 4")
     event.races.create! :category => Category.find_or_create_by_name("Cat 5")
     
     pro_1_2_race.results.create! :place => 1, :person => people(:weaver)
-
-    order = people(:member).orders.create!
-    order.create_registration(event, pro_1_2_race)
-    order = people(:tonkin).orders.create!
-    order.create_registration(event, cat_4_race)
     
     results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/small_event.xls"), event, :usac_results_format => false)
     results_file.import
@@ -297,16 +292,6 @@ class ResultsFileTest < ActiveSupport::TestCase
     [ "Pro 1/2", "Cat 3", "Women 1/2" ].each do |cat_name|
       assert_equal 3, event.races.detect { |race| race.name == cat_name }.results.count, "Race #{cat_name} results"
     end
-    
-    assert_equal 1, people(:member).orders.count, "Orders for member"
-    order = people(:member).orders.first
-    assert_equal event, order.line_items.first.event, "LineItem event"
-    assert_equal pro_1_2_race, order.line_items.first.race, "LineItem Race"
-    
-    assert_equal 1, people(:tonkin).orders.count, "Orders for member"
-    order = people(:tonkin).orders.first
-    assert_equal event, order.line_items.first.event, "LineItem event"
-    assert_equal cat_4_race, order.line_items.first.race, "LineItem Race"
   end
   
   def test_stage_race
