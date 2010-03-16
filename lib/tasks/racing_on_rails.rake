@@ -19,7 +19,8 @@ desc "Override default cc.rb task, mainly to NOT try and recreate the test DB fr
 task :cruise do
   ENV['CC_BUILD_ARTIFACTS'] = File.expand_path("#{RAILS_ROOT}/log/acceptance")
 
-  if RUBY_PLATFORM[/freebsd/]
+  # Use Xvfb to create an X session for browser-based acceptance tests
+  if RUBY_PLATFORM[/freebsd/] || RUBY_PLATFORM[/linux/]
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
       xvfb_pid = fork do
