@@ -17,9 +17,15 @@ Rails::Initializer.run do |config|
   config.gem "tabular"
   config.gem "color"
   config.gem "pdf-writer", :lib => "pdf/writer"
-  # For tests
-  config.gem "selenium-webdriver"
-  config.gem "mocha"
+
+  if RAILS_ENV == "acceptance"
+    config.gem "selenium-webdriver"
+    config.gem "mocha"
+  end
+
+  if RAILS_ENV == "test"
+    config.gem "mocha"
+  end
 
   config.time_zone = "Pacific Time (US & Canada)"
   
