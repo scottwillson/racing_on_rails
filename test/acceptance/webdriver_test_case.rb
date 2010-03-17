@@ -18,7 +18,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
     @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
     Test::Unit::UI::WebDriverTestRunner.driver = driver
-    @base_url = "http://localhost"
+    @base_url = "http://localhost:3000"
     driver.manage.delete_all_cookies
     super
   end
@@ -137,15 +137,15 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def assert_element(element_finder)
-    assert find_elements(element_finder).any?, "#{element_finder} should be present"
+    assert find_elements(element_finder).any?, "#{element_finder.inspect} should be present"
   end
   
   def assert_no_element(element_finder)
-    assert find_elements(element_finder).empty?, "#{element_finder} should not be displayed"
+    assert find_elements(element_finder).empty?, "#{element_finder.inspect} should not be displayed"
   end
   
   def assert_not_displayed(element_finder)
-    assert !find_element(element_finder).displayed?, "#{element_finder} should not be displayed"
+    assert !find_element(element_finder).displayed?, "#{element_finder.inspect} should not be displayed"
   end
   
   def wait_for_element(element_finder)
@@ -158,7 +158,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "Element #{element_finder} did not appear within 5 seconds"
+      raise Timeout::Error, "Element #{element_finder.inspect} did not appear within 5 seconds"
     end
   end
   
@@ -172,7 +172,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "Element #{element_finder} did not appear within 5 seconds"
+      raise Timeout::Error, "Element #{element_finder.inspect} did not appear within 5 seconds"
     end
   end
   
