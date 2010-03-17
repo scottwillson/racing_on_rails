@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require "fileutils"
+
 # The git clone is a bit of a hack, but seems like the easiest solution to pulling in different projects
 #
 # Intentionally doing git clone and rake cruise in separate processes to ensure that all of the
@@ -11,7 +13,8 @@ case project_name
 when "racing_on_rails"
   exec "rake cruise"
 when "aba", "atra", "mbra", "obra", "wsba"
-  exec "rm -rf local && git clone git@butlerpress.com:#{project_name}.git local && rake cruise"
+  FileUtils.rm_rf "local"
+  exec "git clone git@butlerpress.com:#{project_name}.git local && rake cruise"
 else
   raise "Don't know how to build project named: '#{project_name}'"
 end
