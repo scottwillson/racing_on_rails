@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@person.name}" %>
 
-<% table :caption => @person.name, :class => "person_results", :collection => @event_results do %>
+<% table :caption => @person.name, :class => "person_results", :id => "person_results", :collection => @event_results do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>
