@@ -42,6 +42,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     assert_no_errors
   end
   
+  def back
+    driver.navigate.back
+  end
+  
   def click(element_finder)
     find_element(element_finder).click
     assert_no_errors
@@ -138,6 +142,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def assert_no_element(element_finder)
     assert find_elements(element_finder).empty?, "#{element_finder} should not be displayed"
+  end
+  
+  def assert_not_displayed(element_finder)
+    assert !find_element(element_finder).displayed?, "#{element_finder} should not be displayed"
   end
   
   def wait_for_element(element_finder)
