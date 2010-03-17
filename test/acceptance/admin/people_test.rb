@@ -157,15 +157,15 @@ class PeopleTest < WebDriverTestCase
     end
     assert_value 'tonkin', "name"
 
-    find_element(:css => "#include option[value='all']").select
-    find_element(:css => "#format option[value='ppl']").select
+    select_option "all", "include"
+    select_option "ppl", "format"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
     wait_for_download "lynx.ppl"
     assert_no_errors
 
-    find_element(:css => "#include option[value='members_only']").select
-    find_element(:css => "#format option[value='scoring_sheet']").select
+    select_option "members_only", "include"
+    select_option "scoring_sheet", "format"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
     wait_for_download "scoring_sheet.xls"
