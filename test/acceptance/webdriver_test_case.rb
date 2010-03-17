@@ -47,6 +47,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     assert_no_errors
   end
   
+  def check(element_finder)
+    click element_finder
+  end
+  
   def submit(element_finder)
     find_element(element_finder).submit
     assert_no_errors
@@ -64,6 +68,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     type "secret", "person_session_password"
     click "login_button"
     assert_no_errors
+  end
+  
+  def select_option(value, select_element_id)
+    find_element(:css => "select##{select_element_id} option[value='#{value}']").select
   end
   
   def click_ok_on_confirm_dialog
