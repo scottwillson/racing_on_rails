@@ -15,8 +15,13 @@ class WebDriverTestCase < ActiveSupport::TestCase
   def setup
     FileUtils.rm_rf download_directory
     FileUtils.mkdir_p download_directory
-    webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
-    @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
+    if RUBY_PLATFORM[/darwin/]
+      @driver = Selenium::WebDriver.for(:chrome)
+    else
+      # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
+      # webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
+      @driver = Selenium::WebDriver.for(:firefox)
+    end
     Test::Unit::UI::WebDriverTestRunner.driver = driver
     @base_url = "http://localhost:3000"
     driver.manage.delete_all_cookies
