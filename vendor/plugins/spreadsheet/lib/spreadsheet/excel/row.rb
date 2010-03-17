@@ -6,7 +6,7 @@ module Spreadsheet
 ##
 # Excel-specific Row methods
 class Row < Spreadsheet::Row
-  WINDOWS =  RUBY_PLATFORM["mswin"]
+  WINDOWS =  RUBY_PLATFORM["mswin"] || RUBY_PLATFORM["mingw32"]
   ##
   # The Excel date calculation erroneously assumes that 1900 is a leap-year. All
   # Dates after 28.2.1900 are off by one.
