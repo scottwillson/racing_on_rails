@@ -303,6 +303,6 @@ class Race < ActiveRecord::Base
   end
 
   def to_s
-    "#<Race #{id} #{self[:event_id]} #{self[:category_id]} >"
+    "#<Race #{self.id} #{self[:event_id]} #{self[:category_id]} >"
   end
 end
