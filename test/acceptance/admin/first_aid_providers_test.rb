@@ -33,15 +33,15 @@ class FirstAidProvidersTest < WebDriverTestCase
       assert_table "events_table", 2, 3, /^National Federation Event/
 
       # Table already sorted by date ascending, so click doesn't change order
-      click :css => "th.date a"
+      click :xpath => "//th[@class='date']//a"
       assert_table "events_table", 1, 3, /^Lost Series/
       assert_table "events_table", 2, 3, /^National Federation Event/
 
-      click :css => "th.date a"
+      click :xpath => "//th[@class='date']//a"
       assert_table "events_table", 1, 3, /^National Federation Event/
       assert_table "events_table", 2, 3, /^Lost Series/
 
-      click :css => "th.date a"
+      click :xpath => "//th[@class='date']//a"
       assert_table "events_table", 1, 3, /^Lost Series/
       assert_table "events_table", 2, 3, /^National Federation Event/    
     end  
