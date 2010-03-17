@@ -29,11 +29,13 @@ class PublicPagesTest < WebDriverTestCase
     assert_page_source "Senior Women 1/2/3"
 
     click :link_text => "Pennington"
+    wait_for_current_url(/people/)
+    wait_for_element "person_results"
     
-    assert_equal "2", find_element(:css => "table.person_results").first(:css => "td.place").text
-    assert_equal "Kings Valley Road Race", find_element(:css => "table.person_results").first(:css => "td.standings").text
-    assert_equal "Senior Women 1/2/3", find_element(:css => "table.person_results").first(:css => "td.category").text
-    assert_equal "12/31/2004", find_element(:css => "table.person_results").first(:css => "td.dates").text
+    assert_table "person_results_table", 1, 0, "2"
+    assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
+    assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
+    assert_table "person_results_table", 1, 3, "12/31/2004"
 
     find_element(:link_text => "Jack Frost").click
     assert_page_source "Jack Frost"
@@ -83,12 +85,14 @@ class PublicPagesTest < WebDriverTestCase
     assert_title(/BAR/)
   
     click :link_text => "Age Graded"
+    wait_for_current_url(/\/bar\/2009\/age_graded/)
     assert_page_source "Masters Men 30-34"
   
     open "/bar/#{Date.today.year}"
     assert_page_source "Overall"
   
     click :link_text => "Age Graded"
+    wait_for_current_url(/age_graded/)
     assert_title(/Age Graded/)
     assert_title(/#{Date.today.year}/)
   end
