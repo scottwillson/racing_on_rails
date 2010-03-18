@@ -13,7 +13,7 @@ class PagesTest < WebDriverTestCase
 
     open "/admin/pages"
 
-    click :css => "a[href='/admin/pages/new']"
+    click :xpath => "//a[@href='/admin/pages/new']"
 
     type "Schedule", "page_title"
     type "This year is cancelled", "page_body"
@@ -34,7 +34,7 @@ class PagesTest < WebDriverTestCase
 
     open "/admin/pages"
 
-    click :css => "a[href='/admin/pages/new']"
+    click :xpath => "//a[@href='/admin/pages/new']"
 
     type "Officials Home Phone Numbers", "page_title"
     type "officials", "page_slug"

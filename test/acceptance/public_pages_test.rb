@@ -50,7 +50,7 @@ class PublicPagesTest < WebDriverTestCase
     assert_not_in_page_source "Molly"
     
     type "Molly", :name => "name"
-    submit :id => "search_form"
+    type :enter, :name => "name"
 
     open "/rider_rankings"
     assert_page_source "No results for #{Date.today.year}"

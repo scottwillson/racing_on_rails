@@ -12,7 +12,7 @@ class CategoriesTest < WebDriverTestCase
     assert_no_element :xpath => "//div[@id='category_root']//div[@id='category_#{masters_35_plus_id}']"
 
     # No drag-and-drop in chrome
-    unless driver.bridge.browser == :chrome
+    unless chrome?
       drag_and_drop_by(-400, 116, :xpath => "//div[@id='unknown_category_root']//div[@id='category_#{masters_35_plus_id}']")
       wait_for_no_element :xpath => "//div[@id='unknown_category_root']//div[@id='category_#{masters_35_plus_id}']"
       wait_for_element :xpath => "//div[@id='category_root']//div[@id='category_#{masters_35_plus_id}']"

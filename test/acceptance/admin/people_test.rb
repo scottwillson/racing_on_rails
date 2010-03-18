@@ -136,6 +136,7 @@ class PeopleTest < WebDriverTestCase
     assert_element 'format'
     assert_value 'xls', 'format'
 
+    remove_download "people_2010_1_1.xls"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
     wait_for_download "people_2010_1_1.xls"
@@ -148,7 +149,7 @@ class PeopleTest < WebDriverTestCase
     assert_current_url(/\/admin\/people/)
 
     type "tonkin", "name"
-    submit 'search_form'
+    type :return, { :name => "name" }, false
     assert_not_in_page_source 'error'
     assert_page_source 'Erik Tonkin'
     assert_page_source 'Kona'
@@ -159,6 +160,7 @@ class PeopleTest < WebDriverTestCase
 
     select_option "all", "include"
     select_option "ppl", "format"
+    remove_download "lynx.ppl"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
     wait_for_download "lynx.ppl"
@@ -166,13 +168,14 @@ class PeopleTest < WebDriverTestCase
 
     select_option "members_only", "include"
     select_option "scoring_sheet", "format"
+    remove_download "scoring_sheet.xls"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
     wait_for_download "scoring_sheet.xls"
     assert_no_errors
 
     type 'tonkin', 'name'
-    submit 'search_form'
+    type :return, { :name => "name" }, false
     assert_page_source 'Erik Tonkin'
     assert_page_source 'Kona'
     if Date.today.month < 12
