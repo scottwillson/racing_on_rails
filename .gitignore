@@ -15,3 +15,5 @@ db/production.sql
 /local
 vendor/plugins/selenium-on-rails/log/
 mkmf.log
+*~
+
