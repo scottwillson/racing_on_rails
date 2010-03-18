@@ -176,6 +176,7 @@ class PeopleTest < WebDriverTestCase
 
     type 'tonkin', 'name'
     type :return, { :name => "name" }, false
+    wait_for_element "people_table"
     assert_page_source 'Erik Tonkin'
     assert_page_source 'Kona'
     if Date.today.month < 12

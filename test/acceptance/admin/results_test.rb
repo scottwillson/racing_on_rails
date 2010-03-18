@@ -11,8 +11,10 @@ class ResultsTest < WebDriverTestCase
     end
 
     click :link_text => "Copperopolis Road Race"
+    wait_for_current_url(/\/admin\/events\/\d+\/edit/)
 
     click :link_text => "Senior Men Pro 1/2"
+    wait_for_current_url(/\/admin\/races\/\d+\/edit/)
 
     result_id = Event.find_by_name('Copperopolis Road Race').races.first.results.first.id
     click "result_#{result_id}_place"
@@ -67,6 +69,7 @@ class ResultsTest < WebDriverTestCase
 
     click "save"
 
+    wait_for_element "race_laps"
     assert_value "12", "race_laps"
   end
 end

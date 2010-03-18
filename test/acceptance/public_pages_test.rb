@@ -35,8 +35,12 @@ class PublicPagesTest < WebDriverTestCase
     assert_table "person_results_table", 1, 0, "2"
     assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
     assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
-    assert_table "person_results_table", 1, 3, "12/31/2004"
-
+    if ASSOCIATION.short_name == "MBRA"
+     assert_table "person_results_table", 1, 3, "Gentle Lovers"
+    else
+     assert_table "person_results_table", 1, 3, "12/31/2004"
+    end
+ 
     find_element(:link_text => "Jack Frost").click
     assert_page_source "Jack Frost"
     assert_page_source "January 17, 2002"
