@@ -13,12 +13,13 @@ class WebDriverTestCase < ActiveSupport::TestCase
   fixtures :all
   
   def setup
-    FileUtils.rm_rf download_directory
-    FileUtils.mkdir_p download_directory
+    # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
     webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
     @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
+    FileUtils.rm_rf download_directory
+    FileUtils.mkdir_p download_directory
     Test::Unit::UI::WebDriverTestRunner.driver = driver
-    @base_url = "http://localhost"
+    @base_url = "http://localhost:3000"
     driver.manage.delete_all_cookies
     super
   end
@@ -42,9 +43,17 @@ class WebDriverTestCase < ActiveSupport::TestCase
     assert_no_errors
   end
   
+  def back
+    driver.navigate.back
+  end
+  
   def click(element_finder)
     find_element(element_finder).click
     assert_no_errors
+  end
+  
+  def check(element_finder)
+    click element_finder
   end
   
   def submit(element_finder)
@@ -52,9 +61,9 @@ class WebDriverTestCase < ActiveSupport::TestCase
     assert_no_errors
   end
   
-  def type(text, element_finder)
+  def type(text, element_finder, clear = true)
     _element = find_element(element_finder)
-    _element.clear
+    _element.clear if clear
     _element.send_keys text
   end
   
@@ -64,6 +73,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     type "secret", "person_session_password"
     click "login_button"
     assert_no_errors
+  end
+  
+  def select_option(value, select_element_id)
+    find_element(:css => "select##{select_element_id} option[value='#{value}']").select
   end
   
   def click_ok_on_confirm_dialog
@@ -125,24 +138,28 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def assert_element(element_finder)
-    assert find_elements(element_finder).any?, "#{element_finder} should be present"
+    assert find_elements(element_finder).any?, "#{element_finder.inspect} should be present"
   end
   
   def assert_no_element(element_finder)
-    assert find_elements(element_finder).empty?, "#{element_finder} should not be displayed"
+    assert find_elements(element_finder).empty?, "#{element_finder.inspect} should not be displayed"
+  end
+  
+  def assert_not_displayed(element_finder)
+    assert !find_element(element_finder).displayed?, "#{element_finder.inspect} should not be displayed"
   end
   
   def wait_for_element(element_finder)
     raise ArgumentError if element_finder.empty? || element_finder.blank?
 
     begin
-      Timeout::timeout(5) do
+      Timeout::timeout(10) do
         until find_elements(element_finder).any?
           sleep 0.25
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "Element #{element_finder} did not appear within 5 seconds"
+      raise Timeout::Error, "Element #{element_finder.inspect} did not appear within 10 seconds"
     end
   end
   
@@ -150,19 +167,19 @@ class WebDriverTestCase < ActiveSupport::TestCase
     raise ArgumentError if element_finder.empty? || element_finder.blank?
 
     begin
-      Timeout::timeout(5) do
+      Timeout::timeout(10) do
         until find_elements(element_finder).empty?
           sleep 0.25
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "Element #{element_finder} did not appear within 5 seconds"
+      raise Timeout::Error, "Element #{element_finder.inspect} did not appear within 10 seconds"
     end
   end
   
   def wait_for_download(glob_pattern)
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
-    Timeout::timeout(5) do
+    Timeout::timeout(10) do
       while Dir.glob("#{download_directory}/#{glob_pattern}").empty?
         sleep 0.25
       end
@@ -171,7 +188,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def wait_for_current_url(url_pattern)
     raise ArgumentError if url_pattern.blank? || (url_pattern.respond_to?(:empty?) && url_pattern.empty?)
-    Timeout::timeout(5) do
+    Timeout::timeout(10) do
       until driver.current_url.match(url_pattern)
         sleep 0.25
       end
@@ -180,7 +197,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def wait_for_not_current_url(url_pattern)
     raise ArgumentError if url_pattern.blank? || (url_pattern.respond_to?(:empty?) && url_pattern.empty?)
-    Timeout::timeout(5) do
+    Timeout::timeout(10) do
       while driver.current_url.match(url_pattern)
         sleep 0.25
       end
@@ -250,7 +267,25 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def download_directory
-    @download_directory ||= "/tmp/webdriver-downloads"
+    @download_directory ||= (
+    if os_x? && chrome?
+      File.expand_path("~/Downloads")
+    else
+      "/tmp/webdriver-downloads"
+    end
+    )
+  end
+  
+  def remove_download(filename)
+    FileUtils.rm_f "#{download_directory}/#{filename}"
+  end
+  
+  def chrome?
+    driver.bridge.browser == :chrome
+  end
+  
+  def os_x?
+    RUBY_PLATFORM[/darwin/]
   end
 end
 
