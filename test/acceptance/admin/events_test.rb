@@ -138,6 +138,7 @@ class EventsTest < WebDriverTestCase
     assert_not_in_page_source "Senior Men 3"
 
     click "new_event"
+    wait_for_current_url(/\/events\/new/)
     assert_page_source "Kings Valley Road Race"
     assert_value kings_valley.id, "event_parent_id"
 
