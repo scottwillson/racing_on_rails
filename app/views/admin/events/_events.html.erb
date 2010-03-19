@@ -1,7 +1,7 @@
 <% nav_caption = %Q{
   <div>Events</div>
   <div class="right">
-  #{link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
+  #{link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      {:controller => '/results', :action => 'event', :year => @event.date.year, 
      :discipline => @event.discipline, :id => @event.id},
      { :class => "image" }) if @event.has_results_including_children? }  
