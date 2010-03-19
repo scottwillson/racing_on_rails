@@ -467,6 +467,27 @@ class Admin::EventsControllerTest < ActionController::TestCase
     end
   end
   
+  def test_update_to_event
+    [ MultiDayEvent, Series, WeeklySeries, SingleDayEvent ].each do |type|
+      event = type.create!
+
+      post(:update, 
+           "commit"=>"Save", 
+           :id => event.to_param,
+           "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
+                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", 
+                     "flyer_approved"=>"1", 
+                     "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+                     "promoter_id" => people(:nate_hobson).to_param, 
+                     'number_issuer_id' => number_issuers(:stage_race).to_param,
+                     'type' => "" }
+      )
+      assert_redirected_to edit_admin_event_path(event)
+      event = Event.find(event.id)
+      assert_equal Event, event.class, "#{event.name} should be an Event"
+    end
+  end
+  
   def test_update_multi_day_to_single_day
     event = events(:mt_hood)
     original_attributes = event.attributes.clone

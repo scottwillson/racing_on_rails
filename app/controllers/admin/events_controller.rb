@@ -100,9 +100,14 @@ class Admin::EventsController < Admin::AdminController
     # TODO consolidate code
     event_params = params[:event].clone
     event_type = event_params.delete(:type)
+    
     @event = Event.update(params[:id], event_params)
+    
+    if event_type == ""
+      event_type = "Event"
+    end
     if !event_type.blank? && event_type != @event.type
-      raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+      raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
       if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
         @event.children.each do |child|
           child.parent = nil
