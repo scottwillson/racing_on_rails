@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
+  `name` varchar(255) default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `title` varchar(255) default null,
+  `heading` varchar(255) default null,
+  `description` varchar(255) default null,
   `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
+  `body` text,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -171,8 +171,8 @@ create table `events` (
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
   `team_id` int(11) default null,
-  `sanctioning_org_event_id` varchar(16) default null,
   `promoter_id` int(11) default null,
+  `sanctioning_org_event_id` varchar(16) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
   `postponed` tinyint(1) not null default '0',
