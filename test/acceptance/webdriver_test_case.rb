@@ -214,6 +214,25 @@ class WebDriverTestCase < ActiveSupport::TestCase
     end
   end
   
+  def wait_for_value(value, element_finder)
+    raise ArgumentError if element_finder.empty? || element_finder.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until find_elements(element_finder).any? && case
+          when Regexp
+            find_element(element_finder).value[value]
+          else
+            find_element(element_finder).value[value.to_s]
+          end
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Element #{element_finder.inspect} with value '#{value}' did not appear within 10 seconds"
+    end
+  end
+  
   def assert_checked(element_finder)
     element = find_element(element_finder)
     assert element.selected?, "#{element_finder.inspect} should be checked"

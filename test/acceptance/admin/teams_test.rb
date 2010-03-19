@@ -48,6 +48,6 @@ class TeamsTest < WebDriverTestCase
 
     type "SpeedVagen", "team_name"
     click "save"
-    assert_page_source "SpeedVagen"
+    wait_for_value "SpeedVagen", "team_name"
   end
 end
