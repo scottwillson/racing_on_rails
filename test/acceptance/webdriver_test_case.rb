@@ -268,7 +268,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def download_directory
     @download_directory ||= (
-    if os_x? && chrome?
+    if Selenium::WebDriver::Platform.mac? && chrome?
       File.expand_path("~/Downloads")
     else
       "/tmp/webdriver-downloads"
@@ -282,10 +282,6 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def chrome?
     driver.bridge.browser == :chrome
-  end
-  
-  def os_x?
-    RUBY_PLATFORM[/darwin/]
   end
 end
 
