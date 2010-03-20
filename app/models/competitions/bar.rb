@@ -67,12 +67,13 @@ class Bar < Competition
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
+  # TODO Duplicate of Discipline.names?
   def source_results(race)
     race_disciplines = case race.discipline
     when "Road"
       "'Road', 'Circuit'"
     when "Mountain Bike"
-      "'Mountain Bike', 'Downhill'"
+      "'Mountain Bike', 'Downhill', 'Super D'"
     else
       "'#{race.discipline}'"
     end

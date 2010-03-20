@@ -2,6 +2,9 @@ require "test_helper"
 
 class MtbBarTest < ActiveSupport::TestCase
   def test_no_masters_or_junior_ability_categories
+    Discipline.reset
+    Discipline.create! :name => "Super D"
+    
     expert_junior_men = categories(:expert_junior_men)
     junior_men = categories(:junior_men)
     sport_junior_men = categories(:sport_junior_men)
@@ -15,7 +18,7 @@ class MtbBarTest < ActiveSupport::TestCase
     gentle_lovers = teams(:gentle_lovers)
     race.results.create!(:person => chris_woods, :place => 12, :team => gentle_lovers)
     
-    lemurian = SingleDayEvent.create!(:name => "Lemurian", :date => Date.new(2001, 9, 14), :discipline => "Mountain Bike")
+    lemurian = SingleDayEvent.create!(:name => "Lemurian", :date => Date.new(2001, 9, 14), :discipline => "Super D")
     race = lemurian.races.create!(:category => sport_junior_men)
     race.results.create!(:person => chris_woods, :place => 14, :team => gentle_lovers)
 
