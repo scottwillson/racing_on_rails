@@ -16,7 +16,7 @@ module TabsHelper
 
     def add(name, options = {}, html_options = {}, &block)
       _html_options = {:onmouseover => "hover(this)", :onmouseout => "hoverOut(this)"}
-      _html_options.merge(html_options) if html_options
+      _html_options.merge!(html_options) if html_options
       @tabs << Tab.new(name, options, _html_options)
     end
 
