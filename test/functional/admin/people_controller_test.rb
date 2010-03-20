@@ -564,7 +564,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
         "number_issuer_id"=>[number_issuers(:association).to_param, number_issuers(:association).to_param], "number_value"=>["8977", "BBB9"],
         "discipline_id"=>[disciplines(:road).id.to_s, disciplines(:mountain_bike).id.to_s], 
-        :number_year => '2007',
+        :number_year => '2007', "official" => "0",
       "commit"=>"Save"})
     
     if assigns['person']
@@ -641,7 +641,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                      "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
                      "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
                      "dh_number"=>"917", "road_number"=>"4051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
-                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1"
+                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1",
+                     "official" => "1"
                     }, 
                    "id"=>molly.to_param}
     )
