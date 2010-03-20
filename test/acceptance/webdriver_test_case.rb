@@ -75,6 +75,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     assert_no_errors
   end
   
+  def logout
+    open "/logout"
+  end
+  
   def select_option(value, select_element_id)
     find_element(:css => "select##{select_element_id} option[value='#{value}']").select
   end
