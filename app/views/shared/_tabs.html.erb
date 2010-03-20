@@ -14,12 +14,13 @@
       tabs.add("Pages", admin_pages_path) if ASSOCIATION.administrator_tabs.include?(:pages)
   end %>
   
-  <%- elsif promoter? -%>
+  <%- elsif promoter? || official? -%>
 
   <%= tabs do |tabs|
     tabs.add "Account", "/account"
-    tabs.add "Events", person_events_path(current_person)
-    tabs.add "People", people_path
+    tabs.add("Events", person_events_path(current_person)) if promoter?
+    tabs.add("People", people_path) if promoter?
+    tabs.add("First Aid", admin_first_aid_providers_path) if ASSOCIATION.administrator_tabs.include?(:first_aid) && official?
   end %>
 
   <%- end -%>
