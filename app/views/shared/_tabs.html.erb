@@ -17,10 +17,10 @@
   <%- elsif promoter? || official? -%>
 
   <%= tabs do |tabs|
-    tabs.add "Account", "/account"
-    tabs.add("Events", person_events_path(current_person)) if promoter?
-    tabs.add("People", people_path) if promoter?
-    tabs.add("First Aid", admin_first_aid_providers_path) if ASSOCIATION.administrator_tabs.include?(:first_aid) && official?
+    tabs.add "Account", "/account", :id => "account_tab"
+    tabs.add("Events", person_events_path(current_person), :id => "events_tab") if promoter?
+    tabs.add("People", people_path, :id => "people_tab") if promoter?
+    tabs.add("First Aid", admin_first_aid_providers_path, :id => "first_aid_tab") if ASSOCIATION.administrator_tabs.include?(:first_aid) && official?
   end %>
 
   <%- end -%>
