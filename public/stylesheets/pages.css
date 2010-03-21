@@ -124,7 +124,9 @@ a.beginner_friendly {
   padding-bottom: 12px;
   border-left: 1px solid rgb(190, 190, 190);
   border-right: 1px solid rgb(190, 190, 190);
+  border-top: 1px solid rgb(190, 190, 190);
   border-bottom: 1px solid rgb(190, 190, 190);
+  min-height: 200px;
 }
 
 div.disclosure {
