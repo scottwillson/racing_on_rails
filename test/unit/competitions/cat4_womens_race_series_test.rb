@@ -229,6 +229,36 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(80, race.results[1].points, 'Points')
   end
   
+  def test_child_events
+    series = Cat4WomensRaceSeries.create!(:date => Date.new(2004))
+    event = SingleDayEvent.create!(:discipline => "Time Trial", :date => Date.new(2004))
+    series.source_events << event
+    fourteen_mile = event.children.create!
+    assert_equal 1, fourteen_mile.bar_points, "Children should recieve BAR points"
+    assert_equal Date.new(2004), fourteen_mile.date, "Children should share parent date"
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    race = fourteen_mile.races.create!(:category => women_cat_4)
+    race.results.create!(:place => 3, :time => 3000, :person => people(:alice))
+    seven_mile = event.children.create!
+    race = seven_mile.races.create!(:category => women_cat_4)
+    race.results.create!(:place => 1, :time => 1500, :person => people(:molly))
+    assert series.source_events.include?(event), "Event should be in series"
+    
+    Cat4WomensRaceSeries.calculate!(2004)
+    series.reload
+    assert_equal(1, series.races.size, 'Races')
+    
+    race = series.races.first
+    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    race.results.sort!
+    assert_equal('1', race.results[0].place, 'Place')
+    assert_equal(people(:molly), race.results[0].person, 'Person')
+    assert_equal(100, race.results[0].points, 'Points')
+    assert_equal('2', race.results[1].place, 'Place')
+    assert_equal(people(:alice), race.results[1].person, 'Person')
+    assert_equal(90, race.results[1].points, 'Points')
+  end
+  
   def test_points_for
     series = Cat4WomensRaceSeries.create!
     event = SingleDayEvent.create!
