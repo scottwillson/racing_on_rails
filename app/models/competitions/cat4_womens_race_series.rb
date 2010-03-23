@@ -17,8 +17,7 @@ class Cat4WomensRaceSeries < Competition
           WHERE (place > 0 or place is null or place = '')
             and categories.id in (#{category_ids_for(race)})
             and (events.type = "SingleDayEvent" or events.type is null)
-            and events.bar_points is not null
-            and events.bar_points > 0
+            and events.ironman is true
             and events.date between '#{year}-01-01' and '#{year}-12-31'
           order by person_id
        }
