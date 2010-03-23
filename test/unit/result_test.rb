@@ -201,6 +201,18 @@ class ResultTest < ActiveSupport::TestCase
     result.reload
     assert_equal(events(:kings_valley_2004), result.event, 'Result event')
   end
+  
+  def test_set_time
+    result = Result.new
+    result.time = "20:23:00"
+    assert_in_delta 73380.0, result.time, 0.0001, "20:23:00 should be 20 hours and 23 minutes"
+
+    result.time = "20:23.00"
+    assert_in_delta 1223.0, result.time, 0.0001, "20:23.00 should be 20 minutes and 23 seconds"
+
+    result.time = "20:23"
+    assert_in_delta 1223.0, result.time, 0.0001, "20:23 should be 20 minutes and 23 seconds"
+  end
 
   def test_time_s
     result = Result.new
@@ -295,18 +307,6 @@ class ResultTest < ActiveSupport::TestCase
     assert_in_delta(-10.0, result.time_bonus_penalty, 0.0001, "time_bonus_penalty")
   end
   
-  def test_set_time_value
-    result = Result.new
-    time = Time.local(2007, 11, 20, 19, 45, 50, 678)
-    result.set_time_value(:time, time)
-    assert_equal(71156.78, result.time)
-
-    result = Result.new
-    time = DateTime.new(2007, 11, 20, 19, 45, 50)
-    result.set_time_value(:time, time)
-    assert_equal(71150.0, result.time)
-  end
-
   def test_set_time_value
     result = Result.new
     time = Time.local(2007, 11, 20, 19, 45, 50, 678)

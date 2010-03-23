@@ -439,12 +439,14 @@ class Result < ActiveRecord::Base
 
   def set_time_value(attribute, value)
     case value
-    when DateTime  
+    when DateTime
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
     when Time
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
+    when Numeric, NilClass
+      self[attribute] = value      
     else
-      self[attribute] = value
+      self[attribute] = s_to_time(value)
     end
   end
 
