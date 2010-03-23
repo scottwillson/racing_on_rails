@@ -204,6 +204,31 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(72, race.results[0].points, 'Points')
   end
   
+  def test_more_than_one_cat_4_race
+    series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
+    event = SingleDayEvent.create(:date => Date.new(2004))
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    race_1 = event.races.create!(:category => women_cat_4)
+    race_1.results.create!(:place => "2", :person => people(:molly))
+    race_2 = event.races.create!(:category => women_cat_4)
+    race_2.results.create!(:place => "5", :person => people(:alice))
+    series.source_events << event
+
+    Cat4WomensRaceSeries.calculate!(2004)
+    series.reload    
+    assert_equal(1, series.races.size, 'Races')
+    
+    race = series.races.first
+    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    race.results.sort!
+    assert_equal('1', race.results[0].place, 'Place')
+    assert_equal(people(:molly), race.results[0].person, 'Person')
+    assert_equal(95, race.results[0].points, 'Points')
+    assert_equal('2', race.results[1].place, 'Place')
+    assert_equal(people(:alice), race.results[1].person, 'Person')
+    assert_equal(80, race.results[1].points, 'Points')
+  end
+  
   def test_points_for
     series = Cat4WomensRaceSeries.create!
     event = SingleDayEvent.create!
