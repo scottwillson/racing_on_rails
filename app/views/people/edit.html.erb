@@ -11,13 +11,13 @@
     <% if @person.first_name.blank? -%>
     <%= f.labelled_text_field :first_name %>
     <% else -%>
-    <%= f.labelled_text :first_name %>
+    <%= f.labelled_text :first_name %><br/>
     <% end -%>
 
     <% if @person.last_name.blank? -%>
     <%= f.labelled_text_field :last_name %>
     <% else -%>
-    <%= f.labelled_text :last_name %>
+    <%= f.labelled_text :last_name %><br/>
     <% end -%>
 
     <%= f.labelled_text_field :team_name %>
@@ -30,8 +30,8 @@
         :include_blank => true %>
     <br/>
 
-    <%= f.labelled_text(:racing_age,  "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %>
-    <%= f.labelled_text :cyclocross_racing_age, @person.cyclocross_racing_age, "CX Racing Age" %>
+    <%= f.labelled_text(:racing_age,  "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %><br/>
+    <%= f.labelled_text :cyclocross_racing_age, @person.cyclocross_racing_age, "CX Racing Age" %><br/>
 
     <%= f.label :gender %>
     <%= f.select(:gender, ['', 'F', 'M']) %><br/>
