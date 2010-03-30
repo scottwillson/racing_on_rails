@@ -48,6 +48,7 @@ class TeamsTest < WebDriverTestCase
 
     type "SpeedVagen", "team_name"
     click "save"
+    sleep 1
     wait_for_value "SpeedVagen", "team_name"
   end
 end
