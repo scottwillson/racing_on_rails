@@ -27,6 +27,6 @@ class VelodromesTest < WebDriverTestCase
 
     type "T-Town", "velodrome_name"
     click "save"
-    assert_value "T-Town", "velodrome_name"
+    wait_for_value "T-Town", "velodrome_name"
   end
 end
