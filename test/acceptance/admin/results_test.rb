@@ -47,6 +47,19 @@ class ResultsTest < WebDriverTestCase
     refresh
     wait_for_element "results_table"
     assert_page_source "River City"
+    
+    assert_checked "result_#{result_id}_bar"
+    click "result_#{result_id}_bar"
+    refresh
+    wait_for_element "results_table"
+
+    assert_not_checked "result_#{result_id}_bar"
+    
+    click "result_#{result_id}_bar"
+    refresh
+    wait_for_element "results_table"
+
+    assert_checked "result_#{result_id}_bar"
 
     assert_no_element :xpath => "//table[@id='results_table']//tr[4]"
     click "result_#{result_id}_add"

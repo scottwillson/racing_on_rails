@@ -4,7 +4,7 @@
     if result.respond_to?(column.field) &&  !result.new_record?
       if column.field == :bar
         check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
-                :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}', 
+                :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}?value=#{result.bar? ? "0" : "1"}', 
                               {asynchronous:true, evalScripts:true})"
       else
         in_place_editor_field(:result, column.field, result) 
