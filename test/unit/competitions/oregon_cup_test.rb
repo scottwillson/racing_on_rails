@@ -154,6 +154,33 @@ class OregonCupTest < ActiveSupport::TestCase
     assert_equal(1, races[1].results[1].scores.size, "Molly Oregon Cup results scores")
   end
   
+  def test_calculate_should_use_child_event
+    series = Series.create!(:name => "Banana Belt")
+    event = series.children.create!(:name => "Banana Belt 1", :date => Date.new(2010, 3, 1))
+    oregon_cup_women = Event.new(:name => "Oregon Cup Women", :notes => "Oregon Cup")
+    event.children << oregon_cup_women
+    or_cup = OregonCup.create!(:date => Date.new(2010))
+    or_cup.source_events << event
+    
+    women_1_2_race = event.races.create!(:category => Category.find_or_create_by_name("Women 1/2"))
+    women_1_2_race.results.create!(:place => 1, :person => people(:alice))
+    women_1_2_race.results.create!(:place => 2, :person => people(:molly))
+    
+    cat_3_women = Category.find_or_create_by_name('Category 3 Women')
+    women_3_race = event.races.create!(:category => cat_3_women)
+    women_3_race.results.create!(:place => 1, :person => people(:molly))
+    
+    oregon_cup_women_race = event.races.create!(:category => Category.find_or_create_by_name("Senior Women"), :notes => "Oregon Cup")
+    oregon_cup_women_race.results.create!(:place => 1, :person => people(:alice))
+    
+    OregonCup.calculate!(2010)
+    
+    or_cup = OregonCup.find_for_year
+    womens_race = or_cup.races.detect { |r| r.category == categories(:senior_women) }
+    assert_equal 1, womens_race.results.size, "OR Cup womens race"
+    assert_equal people(:alice), womens_race.results.first.person, "Result person"
+  end
+  
   def test_latest_event_with_results
     or_cup = OregonCup.new
     assert_nil(or_cup.latest_event_with_results, 'Should have no event with results')

@@ -66,7 +66,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     assert_equal(0, MbraTeamBar.count, "BAT events before calculate!")
     original_results_count = Result.count
     MbraTeamBar.calculate!(2008)
-    assert_equal(7, MbraTeamBar.count(:conditions => ['date = ?', Date.new(2008)]), "BAT events after calculate!")
+    assert_equal(6, MbraTeamBar.count(:conditions => ['date = ?', Date.new(2008)]), "BAT events after calculate!")
     assert_equal(original_results_count + 2, Result.count, "Total count of results in DB")
 
     road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
@@ -109,7 +109,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     }) #team change
 
     MbraTeamBar.calculate!(2008)
-    assert_equal(7, MbraTeamBar.count(:conditions => ['date = ?', Date.new(2008)]), "BAT events after calculate!")
+    assert_equal(6, MbraTeamBar.count(:conditions => ['date = ?', Date.new(2008)]), "BAT events after calculate!")
     assert_equal(original_results_count + 2 + 2, Result.count, "Total count of results in DB")
 
     road_bat = MbraTeamBar.find_by_name("2008 Road BAT")

@@ -54,7 +54,11 @@ class Race < ActiveRecord::Base
   end
   
   def category_name
-    category.name if category
+    category.try :name
+  end
+  
+  def category_friendly_param
+    category.try :friendly_param
   end
   
   def name
@@ -79,6 +83,10 @@ class Race < ActiveRecord::Base
   
   def date
     event && event.date
+  end
+  
+  def year
+    event && event.date && event.date.year
   end
   
   # FIXME: Incorrectly doubles tandem and other team events' field sizes
@@ -295,6 +303,6 @@ class Race < ActiveRecord::Base
   end
 
   def to_s
-    "#<Race #{id} #{self[:event_id]} #{self[:category_id]} >"
+    "#<Race #{self.id} #{self[:event_id]} #{self[:category_id]} >"
   end
 end

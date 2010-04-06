@@ -1,4 +1,4 @@
-# There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
+# There is duplication between BAR tests, but refactoring the tests should wait until the Competition refactoring is complete
 # FIXME Assert correct team names on BAR results
 
 require "test_helper"
@@ -141,11 +141,11 @@ class BarTest < ActiveSupport::TestCase
     assert_equal(0, Bar.count, "Bar before calculate!")
     original_results_count = Result.count
     Bar.calculate!(2004)
-    assert_equal(7, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
+    assert_equal(6, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
     assert_equal(original_results_count + 15, Result.count, "Total count of results in DB")
     # Should delete old BAR
     Bar.calculate!(2004)
-    assert_equal(7, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
+    assert_equal(6, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
     Bar.find(:all, :conditions => ['date = ?', Date.new(2004)]).each do |bar|
       assert(bar.name[/2004.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
@@ -160,7 +160,7 @@ class BarTest < ActiveSupport::TestCase
     women_road_bar.results.sort!
     assert_equal(people(:alice), women_road_bar.results[0].person, "Senior Women Road BAR results person")
     assert_equal("1", women_road_bar.results[0].place, "Senior Women Road BAR results place")
-    assert_equal(25, women_road_bar.results[0].points, "Senior Women Road BAR results points")
+    assert_equal(14, women_road_bar.results[0].points, "Senior Women Road BAR results points")
 
     assert_equal(people(:molly), women_road_bar.results[1].person, "Senior Women Road BAR results person")
     assert_equal("2", women_road_bar.results[1].place, "Senior Women Road BAR results place")
@@ -173,7 +173,7 @@ class BarTest < ActiveSupport::TestCase
     assert_not_nil(sr_men_track, 'Senior Men Track BAR')
     tonkin_track_bar_result = sr_men_track.results.detect {|result| result.person == people(:tonkin)}
     assert_not_nil(tonkin_track_bar_result, 'Tonkin Track BAR result')
-    assert_in_delta(22, tonkin_track_bar_result.points, 0.0, 'Tonkin Track BAR points')
+    assert_in_delta(12, tonkin_track_bar_result.points, 0.0, 'Tonkin Track BAR points')
   end
   
   def test_calculate_tandem
@@ -238,14 +238,14 @@ class BarTest < ActiveSupport::TestCase
     event = Bar.find_by_year_and_discipline(2005, "Time Trial")
     race = event.races.detect {|race| race.category == categories(:senior_women)}
     leah_tt_bar_result = race.results.detect {|result| result.person == leah}
-    assert_equal(22, leah_tt_bar_result.points, 'Leah TT BAR points')
+    assert_equal(13, leah_tt_bar_result.points, 'Leah TT BAR points')
 
     road_bar = Bar.find_by_year_and_discipline(2005, "Road")
     leah_road_bar_result = road_bar.races.detect {|r| r.category == categories(:senior_women)}.results.detect {|r| r.person == leah}
     assert_equal(1, leah_road_bar_result.points, 'Leah Road BAR points')
 
     svein_road_bar_result = road_bar.races.detect {|r| r.category == categories(:senior_men)}.results.detect {|r| r.person == tuft}
-    assert_equal(25, svein_road_bar_result.points, 'Svein Road BAR points')  
+    assert_equal(14, svein_road_bar_result.points, 'Svein Road BAR points')  
   end
   
   # Used to only award bonus points for races of five or less, but now all races get equal points
@@ -355,10 +355,10 @@ class BarTest < ActiveSupport::TestCase
     men_a_bar.results.sort!
     tonkin_bar_result = men_a_bar.results.first
     assert_equal(people(:tonkin), tonkin_bar_result.person)
-    assert_equal(33 + 30 + 25 + 21, tonkin_bar_result.points, 'Tonkin BAR points')
+    assert_equal(66.5, tonkin_bar_result.points, 'Tonkin BAR points')
     weaver_bar_result = men_a_bar.results.last
     assert_equal(people(:weaver), weaver_bar_result.person)
-    assert_equal(1.5 + 11 + 22, weaver_bar_result.points, 'Weaver BAR points')
+    assert_equal(22.5, weaver_bar_result.points, 'Weaver BAR points')
 
     crit_bar = Bar.find_by_year_and_discipline(2009, "Criterium")
     sr_men_crit_bar = crit_bar.races.detect { |race| race.name == 'Senior Men' }
@@ -442,7 +442,7 @@ class BarTest < ActiveSupport::TestCase
     bar = Bar.find_by_year_and_discipline(1999, "Road")
     race = bar.races.detect {|r| r.name == 'Senior Men'}
     assert_equal(1, race.results.size, 'Results')
-    assert_equal(19, race.results.first.points, 'BAR result points')
+    assert_equal(12, race.results.first.points, 'BAR result points')
   end
   
   def test_points_for_team_event
@@ -453,7 +453,7 @@ class BarTest < ActiveSupport::TestCase
     competition.set_defaults
     team_size = 3
     points = competition.points_for(result, team_size)
-    assert_in_delta(12.666, points, 0.001, 'Points for first place with team of 3 and multiplier of 2')
+    assert_in_delta(8.0, points, 0.001, 'Points for first place with team of 3 and multiplier of 2')
 
     event = SingleDayEvent.create!(:bar_points => 3)
     race = event.races.create!(:category => categories(:senior_men))
@@ -462,7 +462,7 @@ class BarTest < ActiveSupport::TestCase
     competition.set_defaults
     team_size = 2
     points = competition.points_for(result, team_size)
-    assert_in_delta(28.5, points, 0.001, 'Points for third place with team of 2 and multiplier of 3')
+    assert_in_delta(18.0, points, 0.001, 'Points for third place with team of 2 and multiplier of 3')
   end
 
   def test_count_category_4_5_results

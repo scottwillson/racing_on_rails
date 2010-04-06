@@ -1,52 +1,52 @@
-require "acceptance/selenium_test_case"
+require "acceptance/webdriver_test_case"
 
-class MailingListsTest < SeleniumTestCase
+class MailingListsTest < WebDriverTestCase
   def test_mailing_lists
     open "/mailing_lists"
 
     open "/posts/obra"
-    assert_no_text "Schedule Changes"
+    assert_not_in_page_source "Schedule Changes"
 
     open "/posts/obra/new"
 
-    type "post_from_name", "Scott"
-    type "post_from_email_address", "scott@butlerpress.com"
-    type "post_subject", "New Message"
-    type "post_body", "My post message body"
+    type "Scott", :id => "post_from_name"
+    type "scott@butlerpress.com", :id => "post_from_email_address"
+    type "New Message", :id => "post_subject"
+    type "My post message body", :id => "post_body"
 
-    click "post", :wait_for => :page
-    assert_text "Your new post is now in the mailing queue"
+    click :id => "post"
+    assert_page_source "Your new post is now in the mailing queue"
 
     open "/posts/obra/2004/12"
-    assert_text "Schedule Changes"
+    assert_page_source "Schedule Changes"
 
-    click "link=Schedule Changes", :wait_for => :page
-    assert_text "This is a test message."
+    click :link_text => "Schedule Changes"
+    assert_page_source "This is a test message."
 
-    click "link=Reply Privately", :wait_for => :page
+    click :link_text => "Reply Privately"
 
-    type "post_from_name", "Don"
-    type "post_body", "This is a special private reply"
+    type "Don", :id => "post_from_name"
+    type "This is a special private reply", :id => "post_body"
 
-    click "commit", :wait_for => :page
-    assert_text "From email address can't be blank"
+    click :name => "commit"
+    assert_page_source "From email address can't be blank"
 
-    type "post_from_email_address", "don@butlerpress.com"
+    type "don@butlerpress.com", :id => "post_from_email_address"
 
-    click "commit", :wait_for => :page
-    assert_text "Your new post is now in the mailing queue"
+    click :name => "commit"
+    assert_page_source "Sent private reply"
 
     open "/posts/obra/new"
 
-    type "post_from_email_address", "scott@butlerpress.com"
-    type "post_subject", "New Message 2"
-    type "post_body", "My post message body"
+    type "scott@butlerpress.com", :id => "post_from_email_address"
+    type "New Message 2", :id => "post_subject"
+    type "My post message body", :id => "post_body"
 
-    click "commit", :wait_for => :page
-    assert_text "From name can't be blank"
+    click :name => "commit"
+    assert_page_source "From name can't be blank"
 
-    type "post_from_name", "Scott"
-    click "commit", :wait_for => :page
-    assert_text "Your new post is now in the mailing queue"    
+    type "Scott", :id => "post_from_name"
+    click :name => "commit"
+    assert_page_source "Your new post is now in the mailing queue"    
   end
 end

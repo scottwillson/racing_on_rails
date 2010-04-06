@@ -6,6 +6,7 @@ class RacingAssociation
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
+  attr_accessor :administrator_tabs
   attr_accessor :award_cat4_participation_points, :cat4_womens_race_series_points, :cat4_womens_race_series_category
   attr_accessor :show_license, :show_only_association_sanctioned_races_on_calendar, :show_calendar_view, :flyers_in_new_window
   attr_accessor :show_practices_on_calendar
@@ -15,6 +16,7 @@ class RacingAssociation
   attr_accessor :default_sanctioned_by
   attr_accessor :usac_results_format
   attr_accessor :eager_match_on_license
+  attr_accessor :add_members_from_results
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
   attr_accessor :ssl
@@ -29,10 +31,14 @@ class RacingAssociation
     @show_practices_on_calendar = false
     @email = "scott@butlerpress.com"
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+    @administrator_tabs = Set.new([ 
+      :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
+    ])
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false
     @eager_match_on_license = false
+    @add_members_from_results = true
     @show_events_sanctioning_org_event_id = false
     @ssl = false
   end
@@ -95,6 +101,10 @@ class RacingAssociation
 
   def eager_match_on_license?
     @eager_match_on_license
+  end
+  
+  def add_members_from_results?
+    @add_members_from_results
   end
 
   def show_events_sanctioning_org_event_id?

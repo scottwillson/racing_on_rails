@@ -75,12 +75,12 @@ class PagesControllerTest < ActionController::TestCase
   test "call partials" do
     Page.create!(:body => "<h1>Mailing Lists</h1>\n<%= render :partial => 'shared/flash_messages' %>", :title => "lists")
     get :show, :path => ["lists"]
-    assert_select("p.message")
+    assert_select("p.flash_message")
   end
   
   test "call partials with concise syntax" do
     Page.create!(:body => "<h1>Mailing Lists</h1>\n<%= render 'shared/flash_messages' %>", :title => "lists")
     get :show, :path => ["lists"]
-    assert_select("p.message")
+    assert_select("p.flash_message")
   end
 end

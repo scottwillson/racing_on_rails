@@ -1,70 +1,76 @@
-require "acceptance/selenium_test_case"
+require "acceptance/webdriver_test_case"
 
-class PublicPagesTest < SeleniumTestCase
+class PublicPagesTest < WebDriverTestCase
   def test_popular_pages
     open "/"
 
     open "/schedule"
-    assert_text "regex:Schedule|Calendar"
+    assert_page_source(/Schedule|Calendar/)
 
     open "/schedule/list"
-    assert_text "regex:Schedule|Calendar"
+    assert_page_source(/Schedule|Calendar/)
 
     open "/schedule/cyclocross"
-    assert_text "regex:Schedule|Calendar"
+    assert_page_source(/Schedule|Calendar/)
 
     open "/schedule/list/cyclocross"
-    assert_text "regex:Schedule|Calendar"
+    assert_page_source(/Schedule|Calendar/)
 
     open "/results"
-    assert_text "regex:Events|Results"
-    assert_text Date.today.year
+    assert_page_source(/Events|Results/)
+    assert_page_source Date.today.year
 
     open "/results/2004/road"
-    assert_text "Kings Valley"
+    assert_page_source "Kings Valley"
 
-    click "link=Kings Valley Road Race", :wait_for => :page
-    assert_text "Kings Valley Road Race"
-    assert_text "December 31, 2004"
-    assert_text "Senior Women 1/2/3"
+    click :link_text => "Kings Valley Road Race"
+    assert_page_source "Kings Valley Road Race"
+    assert_page_source "December 31, 2004"
+    assert_page_source "Senior Women 1/2/3"
 
-    click "link=Pennington", :wait_for => :page
-
-    assert_table "css=table.person_results", 1, 0, "2"
-    assert_table "css=table.person_results", 1, 1, "Kings Valley Road Race"
-    assert_table "css=table.person_results", 1, 2, "Senior Women 1/2/3"
-    assert_text "12/31/2004"
-
-    click "link=Jack Frost", :wait_for => :page
-    assert_text "Jack Frost"
-    assert_text "January 17, 2002"
-    assert_text "Weaver"
-    assert_text "Pennington"
+    click :link_text => "Pennington"
+    wait_for_current_url(/people/)
+    wait_for_element "person_results"
+    
+    assert_table "person_results_table", 1, 0, "2"
+    assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
+    assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
+    if ASSOCIATION.short_name == "MBRA"
+     assert_table "person_results_table", 1, 3, "Gentle Lovers"
+    else
+     assert_table "person_results_table", 1, 3, "12/31/2004"
+    end
+ 
+    find_element(:link_text => "Jack Frost").click
+    assert_page_source "Jack Frost"
+    assert_page_source "January 17, 2002"
+    assert_page_source "Weaver"
+    assert_page_source "Pennington"
 
     open "/ironman"
-    assert_text "Ironman"
+    assert_page_source "Ironman"
 
     open "/people"
-    assert_no_text "Molly"
+    assert_not_in_page_source "Molly"
     
-    type "name", "Molly"
-    submit_and_wait "search_form"
+    type "Molly", :name => "name"
+    type :enter, :name => "name"
 
     open "/rider_rankings"
-    assert_text "No results for #{Date.today.year}"
+    assert_page_source "No results for #{Date.today.year}"
 
     open "/cat4_womens_race_series"
-    assert_text "No results for #{Date.today.year}"
+    assert_page_source "No results for #{Date.today.year}"
 
     open "/oregon_cup"
-    assert_text "Oregon Cup"
+    assert_page_source "Oregon Cup"
 
     open "/teams"
-    assert_text "Teams"
-    assert_text "Vanilla"
+    assert_page_source "Teams"
+    assert_page_source "Vanilla"
 
     open "/teams/#{Team.find_by_name('Vanilla').id}"
-    assert_text "Vanilla"
+    assert_page_source "Vanilla"
 
     open "/track"
 
@@ -72,20 +78,26 @@ class PublicPagesTest < SeleniumTestCase
   end
   
   def test_bar
+    AgeGradedBar.calculate!
+    AgeGradedBar.calculate!(2009)
+    
     open "/bar"
-    assert_text "BAR"
-    assert_text 'Oregon Best All-Around Rider'
-
+    assert_page_source "BAR"
+    assert_page_source "Oregon Best All-Around Rider"
+  
     open "/bar/2009"
-    assert_text "BAR"
-
-    click 'link=Age Graded', :wait_for => :page
-    assert_text "2009 Age Graded BAR"
-
+    assert_title(/BAR/)
+  
+    click :link_text => "Age Graded"
+    wait_for_current_url(/\/bar\/2009\/age_graded/)
+    assert_page_source "Masters Men 30-34"
+  
     open "/bar/#{Date.today.year}"
-    assert_text "BAR"
-
-    click 'link=Age Graded', :wait_for => :page
-    assert_text "#{Date.today.year} Age Graded BAR"
+    assert_page_source "Overall"
+  
+    click :link_text => "Age Graded"
+    wait_for_current_url(/age_graded/)
+    assert_title(/Age Graded/)
+    assert_title(/#{Date.today.year}/)
   end
 end

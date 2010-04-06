@@ -27,13 +27,13 @@
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id
+    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
 
-  validates_presence_of :name, :date, :discipline
+  validates_presence_of :name, :date
   validate :parent_is_not_self
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
@@ -122,19 +122,20 @@ class Event < ActiveRecord::Base
           :include => { :parent => :parent },
           :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
       ))
-      
+    end
+    
+    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      events.reject! do |event|
+        event.sanctioned_by != ASSOCIATION.default_sanctioned_by
+      end
     end
     
     events.map!(&:root)
-    events.reject! do |event|
-      (!event.is_a?(SingleDayEvent) && !event.is_a?(MultiDayEvent)) ||
-      (ASSOCIATION.show_only_association_sanctioned_races_on_calendar && event.sanctioned_by != ASSOCIATION.default_sanctioned_by)
-    end
     
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitons, events = events.partition { |event| event.is_a?(Competition) }
+    competitions, events = events.partition { |event| event.is_a?(Competition) }
 
-    [ weekly_series, events, competitons ]
+    [ weekly_series, events, competitions ]
   end
 
   def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
@@ -275,6 +276,11 @@ class Event < ActiveRecord::Base
     races.clear
     enable_notification!
   end
+
+  def categories
+    _categories = races.map(&:category)
+    children.inject(_categories) { |cats, child| cats + child.categories }
+  end
   
   # Update child events from parents' attributes if child attribute has the
   # same value as the parent before update
@@ -375,6 +381,10 @@ class Event < ActiveRecord::Base
 
   def multiple_days?
     end_date > start_date
+  end
+  
+  # Does nothing. Allows us to treat Events and MultiDayEvents the same.
+  def update_date
   end
   
   def city_state

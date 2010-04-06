@@ -10,7 +10,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to new_person_session_path
     assert_nil(@request.session["person"], "No person in session")
   end
   
@@ -564,7 +564,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, 
         "number_issuer_id"=>[number_issuers(:association).to_param, number_issuers(:association).to_param], "number_value"=>["8977", "BBB9"],
         "discipline_id"=>[disciplines(:road).id.to_s, disciplines(:mountain_bike).id.to_s], 
-        :number_year => '2007',
+        :number_year => '2007', "official" => "0",
       "commit"=>"Save"})
     
     if assigns['person']
@@ -641,7 +641,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                      "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
                      "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
                      "dh_number"=>"917", "road_number"=>"4051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
-                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1"
+                     "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1",
+                     "official" => "1"
                     }, 
                    "id"=>molly.to_param}
     )
@@ -980,6 +981,19 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_response(:success)
     today = ASSOCIATION.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+    assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
+    assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
+  end
+
+  def test_export_members_only_to_excel_promoter
+    destroy_person_session
+    PersonSession.create(people(:promoter))
+    
+    get(:index, :format => 'xls', :include => 'members_only', :excel_layout => "scoring_sheet")
+
+    assert_response(:success)
+    today = ASSOCIATION.effective_today
+    assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
   end

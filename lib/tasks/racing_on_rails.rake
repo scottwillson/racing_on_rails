@@ -17,9 +17,10 @@ end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
-  ENV['CC_BUILD_ARTIFACTS'] ||= File.expand_path("#{RAILS_ROOT}/log/acceptance")
+  ENV['CC_BUILD_ARTIFACTS'] = File.expand_path("#{RAILS_ROOT}/log/acceptance")
 
-  if RUBY_PLATFORM[/freebsd/]
+  # Use Xvfb to create an X session for browser-based acceptance tests
+  if RUBY_PLATFORM[/freebsd/] || RUBY_PLATFORM[/linux/]
     ENV['DISPLAY'] = "localhost:1"
     if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
       xvfb_pid = fork do
@@ -37,15 +38,6 @@ task :cruise do
   
   begin
     Rake::Task["test:acceptance:browser"].invoke
-    # Clean up downloads
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.ppl")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/people*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/lynx*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/people*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/scoring_sheet*.xls")
-    FileUtils.rm Dir.glob("#{File.expand_path('~')}/Downloads/lynx*.xls")
   ensure
     if RUBY_PLATFORM[/freebsd/]
       # Rake task doesn't seem to quit Firefox correctly

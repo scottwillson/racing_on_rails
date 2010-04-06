@@ -61,12 +61,12 @@ class MbraBarTest < ActiveSupport::TestCase
 
     assert_equal(0, MbraBar.count, "Bar before calculate!")
     MbraBar.calculate!(2008)
-    assert_equal(7, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
+    assert_equal(6, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
     assert_equal(original_results_count + (6 + 4) + (1 + 1), Result.count, "Total count of results in DB")
 
     # Should delete old BAR
     MbraBar.calculate!(2008)
-    assert_equal(7, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
+    assert_equal(6, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
     MbraBar.find(:all, :conditions => ['date = ?', Date.new(2008)]).each do |bar|
       assert(bar.name[/2008.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
@@ -153,7 +153,7 @@ class MbraBarTest < ActiveSupport::TestCase
     })
 
     MbraBar.calculate!(2008)
-    assert_equal(7, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
+    assert_equal(6, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
     assert_equal(original_results_count + (6 + 4) + (1 + 1) + 3 + 1 + 2 + 1, Result.count, "Total count of results in DB")
 
     road_bar = MbraBar.find_by_name("2008 Road BAR")
@@ -197,7 +197,7 @@ class MbraBarTest < ActiveSupport::TestCase
     })
 
     MbraBar.calculate!(2008)
-    assert_equal(7, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
+    assert_equal(6, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
     assert_equal(original_results_count + (6 + 4) + (1 + 1) + 3 + 1 + 2 + 1 + 1, Result.count, "Total count of results in DB")
 
     road_bar = MbraBar.find_by_name("2008 Road BAR")

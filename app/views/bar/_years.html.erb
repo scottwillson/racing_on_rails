@@ -8,6 +8,6 @@
   end
 
   years.each do |year|
-    tabs.add(year, :action => 'show', :year => year, :category => (@category ? @category.friendly_param : nil), :discipline => @discipline)
+    tabs.add(year, bar_path(:discipline => Discipline[race.try(:discipline)], :year => year, :category => race.try(:category_friendly_param)))
   end
 end -%>

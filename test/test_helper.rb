@@ -5,7 +5,7 @@ require "action_view/test_case"
 require "authlogic/test_case"
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = !Rails.env.selenium?
+  self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
 

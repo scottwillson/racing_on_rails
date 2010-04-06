@@ -98,7 +98,8 @@ pre, pre a, pre a:link, pre a:visited {
   text-align: center;
   width: 160px;
 }
-.message
+
+.flash_message, .message
 {
   width: 450px;
   font-family: Verdana, Helvetica, sans-serif;
@@ -109,26 +110,34 @@ pre, pre a, pre a:link, pre a:visited {
   margin-right: auto;
 }
 
-.message span {
-  padding-left: 20px;
-  padding-right: 8px;
+p.message, div.message {
+  text-align: left;
 }
 
-p.message {
+p.flash_message, p.message, div.flash_message, div.message {
   line-height: 16px;
 }
 
-#notice span
+#notice_span
 {
   background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
+  padding-left: 20px;
+  padding-right: 4px;
 }
 
-#warn span
+#warn_span, .warn
 {
   color: red;
   background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
+  padding-left: 20px;
+  padding-right: 4px;
+}
+
+#warn a, .warn a, #warn a:link, .warn a:link, #warn a:visited, .warn a:visited {
+  color: red;
+  border-bottom-color: red;
 }
 
 h1, h2, h3 {

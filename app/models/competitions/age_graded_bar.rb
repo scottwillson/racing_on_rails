@@ -1,4 +1,6 @@
 class AgeGradedBar < Competition
+  after_create :set_parent
+
   def points_for(scoring_result)
     scoring_result.points
   end
@@ -75,6 +77,17 @@ class AgeGradedBar < Competition
       categories << category
     end
     categories
+  end
+  
+  def set_parent
+    if parent.nil?
+      self.parent = OverallBar.find_or_create_for_year(year)
+      save!
+    end
+  end
+
+  def default_discipline
+    "AgeGraded"
   end
 
   def friendly_name

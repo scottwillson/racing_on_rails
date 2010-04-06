@@ -20,12 +20,15 @@ class Bar < Competition
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
+        
+        overall_bar = OverallBar.find_or_create_for_year(year)
 
         # Age Graded BAR and Overall BAR do their own calculations
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
           bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(
+              :parent => overall_bar,
               :name => "#{year} #{discipline.name} BAR",
               :date => date,
               :discipline => discipline.name
@@ -50,7 +53,7 @@ class Bar < Competition
   end
 
   def point_schedule
-    [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1]
+    [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
 
   # Source result = counts towards the BAR "race" and BAR results
@@ -64,11 +67,15 @@ class Bar < Competition
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
+  # TODO Duplicate of Discipline.names?
   def source_results(race)
-    if race.discipline == 'Road'
-      race_disciplines = "'Road', 'Circuit'"
+    race_disciplines = case race.discipline
+    when "Road"
+      "'Road', 'Circuit'"
+    when "Mountain Bike"
+      "'Mountain Bike', 'Downhill', 'Super D'"
     else
-      race_disciplines = "'#{race.discipline}'"
+      "'#{race.discipline}'"
     end
     
     # Cat 4/5 is a special case. Can't config in database because it's a circular relationship.

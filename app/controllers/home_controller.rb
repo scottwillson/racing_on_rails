@@ -30,29 +30,4 @@ class HomeController < ApplicationController
 
     render_page  
   end
-  
-  def auction
-    @bid = Bid.highest
-    render(:partial => 'auction')
-  end
-  
-  def bid
-    @highest_bid = Bid.highest
-    @bid = Bid.new
-  end
-  
-  def send_bid
-    @bid = Bid.create(params[:bid])
-    if @bid.errors.empty?
-      begin
-        BidMailer.create_created(@bid)
-      rescue Exception => e
-        logger.error("Could not send bid email notification: #{e}")
-      end
-      redirect_to :action => 'confirm_bid'
-    else
-      @highest_bid = Bid.highest
-      render(:action => 'bid')
-    end
-  end
 end

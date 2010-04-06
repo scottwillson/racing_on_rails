@@ -16,4 +16,9 @@ table.tabs + table.tabs {
 table.tabs td {
   padding-left: 8px;
   padding-right: 8px;
+  border-left: 1px solid rgb(190, 190, 190);
+}
+
+table.tabs td.first {
+  border-left: none;
 }

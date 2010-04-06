@@ -25,6 +25,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["event"], "Should assign event")
     assert_nil(assigns["race"], "Should not assign race")
     assert(!@response.body["#&lt;Velodrome:"], "Should not have model in text field")
+    assert_select "#event_date_1i", :count => 1
   end
   
   def test_edit_sti_subclasses
@@ -32,6 +33,11 @@ class Admin::EventsControllerTest < ActionController::TestCase
       event = event_class.create!
       get(:edit, :id => event.to_param)
       assert_response(:success)
+      if event_class == SingleDayEvent
+        assert_select "#event_date_1i", :count => 1
+      else
+        assert_select "#event_date_1i", :count => 0
+      end
     end
   end
 
@@ -75,6 +81,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     get :edit, :id => events(:banana_belt_1).to_param
     assert_response :success
     assert_template "admin/events/edit"
+    assert_select "#event_date_1i", :count => 0
   end
   
   def test_promoter_can_only_edit_own_events
@@ -205,7 +212,40 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal(people(:nate_hobson), skull_hollow.promoter, 'promoter')
   end
     
-  def test_create_child_event_default_to_event_type
+  
+  def test_create_child_for_multi_day_event
+    parent = MultiDayEvent.create!
+    assert_nil(SingleDayEvent.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
+
+    post(:create, 
+         "commit"=>"Save", 
+         "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+                   "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                   "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+                   "parent_id" => parent.to_param,
+                  'promoter_id' => people(:nate_hobson).to_param, 'type' => 'SingleDayEvent'}
+    )
+    
+    skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
+    assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
+    assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
+    
+    assert_redirected_to edit_admin_event_path(assigns(:event))
+    assert(flash.has_key?(:notice))
+
+    assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
+    assert_equal('Smith Rock', skull_hollow.city, 'city')
+    assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
+    assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
+    assert_equal('WSBA', skull_hollow.sanctioned_by, 'sanctioned_by')
+    assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
+    assert_equal('Downhill', skull_hollow.discipline, 'discipline')
+    assert_equal(true, skull_hollow.cancelled, 'cancelled')
+    assert_equal('KY', skull_hollow.state, 'state')
+    assert_equal(people(:nate_hobson), skull_hollow.promoter, 'promoter')
+  end
+    
+  def test_create_child_event
     parent = SingleDayEvent.create!
     assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
 
@@ -256,6 +296,24 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_redirected_to edit_admin_event_path(assigns(:event))
   end
   
+  def test_create_single_day_event
+    assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
+
+    post(:create, 
+         "commit"=>"Save", 
+         "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
+                   "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                   "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
+                  "promoter_id"  => people(:nate_hobson).to_param, 'type' => 'SingleDayEvent'}
+    )
+    
+    skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
+    assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
+    assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
+    
+    assert_redirected_to edit_admin_event_path(assigns(:event))
+  end
+  
   def test_create_from_children
     lost_child = SingleDayEvent.create!(:name => "Alameda Criterium")
     SingleDayEvent.create!(:name => "Alameda Criterium")
@@ -264,6 +322,14 @@ class Admin::EventsControllerTest < ActionController::TestCase
 
     new_parent = MultiDayEvent.find_by_name(lost_child.name)
     assert_redirected_to edit_admin_event_path(new_parent)
+  end
+  
+  def test_create_without_promoter_id
+    post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"ABA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
+    
+    assert_not_nil assigns(:event), "@event"
+    assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages
+    assert_redirected_to edit_admin_event_path(assigns(:event))
   end
   
   def test_upload_dupe_people
@@ -398,6 +464,27 @@ class Admin::EventsControllerTest < ActionController::TestCase
       assert_redirected_to edit_admin_event_path(event)
       event = Event.find(event.id)
       assert(event.is_a?(type), "#{event.name} should be a #{type}")
+    end
+  end
+  
+  def test_update_to_event
+    [ MultiDayEvent, Series, WeeklySeries, SingleDayEvent ].each do |type|
+      event = type.create!
+
+      post(:update, 
+           "commit"=>"Save", 
+           :id => event.to_param,
+           "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
+                     "flyer"=>"../../flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", 
+                     "flyer_approved"=>"1", 
+                     "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
+                     "promoter_id" => people(:nate_hobson).to_param, 
+                     'number_issuer_id' => number_issuers(:stage_race).to_param,
+                     'type' => "" }
+      )
+      assert_redirected_to edit_admin_event_path(event)
+      event = Event.find(event.id)
+      assert_equal Event, event.class, "#{event.name} should be an Event"
     end
   end
   
@@ -609,9 +696,17 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_add_children
+    lost_series_child = events(:lost_series_child)
+    start_date = ASSOCIATION.now.to_date + 30
+    lost_series_child.date = start_date
+    lost_series_child.save!
+    
     event = events(:series_parent)
     get(:add_children, :parent_id => event.to_param)
     assert_redirected_to edit_admin_event_path(event)
+    event.reload.children(true)
+    assert_equal start_date, event.start_date, "parent start_date"
+    assert_equal start_date, event.end_date, "parent end_date"
   end
 
   def test_index
