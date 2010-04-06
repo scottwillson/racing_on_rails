@@ -2,7 +2,7 @@
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
 
-  attr_accessor :name, :short_name, :state, :email
+  attr_accessor :name, :short_name, :state, :email, :membership_email
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
@@ -13,6 +13,7 @@ class RacingAssociation
   attr_accessor :always_insert_table_headers
   attr_accessor :show_events_velodrome
   attr_accessor :usac_region
+  attr_accessor :country_code
   attr_accessor :default_sanctioned_by
   attr_accessor :usac_results_format
   attr_accessor :eager_match_on_license
@@ -30,6 +31,7 @@ class RacingAssociation
     @show_only_association_sanctioned_races_on_calendar = true
     @show_practices_on_calendar = false
     @email = "scott@butlerpress.com"
+    @membership_email = @email
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @administrator_tabs = Set.new([ 
       :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
@@ -37,6 +39,7 @@ class RacingAssociation
     @award_cat4_participation_points = true
     @usac_region = "North West"
     @usac_results_format = false
+    @country_code = "US"
     @eager_match_on_license = false
     @add_members_from_results = true
     @show_events_sanctioning_org_event_id = false
@@ -98,7 +101,7 @@ class RacingAssociation
   def usac_results_format?
     @usac_results_format
   end
-
+  
   def eager_match_on_license?
     @eager_match_on_license
   end
@@ -151,6 +154,14 @@ class RacingAssociation
   # Date.today.year + 1 unless +now+ is set.
   def next_year
     now.year + 1
+  end
+  
+  def priority_country_options
+    if country_code == "US"
+      [ ['United States', 'US'], ['Canada', 'CA'] ]
+    else
+      [ ['Canada', 'CA'], ['United States', 'US'] ]
+    end
   end
 
   def to_s
