@@ -29,8 +29,8 @@ class RiderRankings < Competition
       'Junior Men A', 'Junior Men B', 'Junior Men C', 'Junior Men D',
       'Junior Women A', 'Junior Women B', 'Junior Women C', 'Junior Women D',
       'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5', 
-      'Masters Men A', 'Masters Men B', 'Masters Men C', 
-      'Masters Men D', 'Masters Women A', 'Masters Women B', 
+      'Master Men 30+ Cat 1-3', 'Master Men 30+ Cat 4-5 & 50+', 
+      'Masters Women A', 'Masters Women B', 
       'Women Cat 1-2', 'Women Cat 3', 'Women Cat 4']
 
       category = Category.find_or_create_by_name(category_name)
