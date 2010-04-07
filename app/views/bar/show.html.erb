@@ -21,7 +21,7 @@ No results for <%= params[:year] %>
 <% table :caption => @race.name do %>
   <tr><th>&nbsp;</th></tr>
   <tr>
-    <% if @race.discipline == Discipline[:team] %>
+    <% if @race.discipline == "Team" %>
 
     <td><pre><%- for result in @results.sort %>
 <%= result.place.rjust(3) -%>
