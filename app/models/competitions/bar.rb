@@ -24,7 +24,7 @@ class Bar < Competition
         overall_bar = OverallBar.find_or_create_for_year(year)
 
         # Age Graded BAR and Overall BAR do their own calculations
-        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:team]}.each do |discipline|
           bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(

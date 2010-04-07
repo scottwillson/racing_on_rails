@@ -4,6 +4,20 @@ require 'fileutils'
 # BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
 class Competition < Event
   include FileUtils
+  
+  TYPES = %w{
+    AgeGradedBar
+    Bar
+    Cat4WomensRaceSeries
+    CrossCrusadeOverall
+    CrossCrusadeTeamCompetition
+    Ironman
+    OregonCup
+    OregonJuniorCyclocrossSeries
+    OverallBar
+    TaborOverall
+    TeamBar
+  }
 
   # TODO Validate dates
   # TODO Use class methods to set things like friendly_name

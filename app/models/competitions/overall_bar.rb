@@ -145,7 +145,7 @@ class OverallBar < Competition
   end
   
   def create_children
-    Discipline.find_all_bar.reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:overall]].include?(discipline) }.each do |discipline|
+    Discipline.find_all_bar.reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }.each do |discipline|
       bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
       unless bar
         bar = Bar.create!(
