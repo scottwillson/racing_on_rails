@@ -1,0 +1,5 @@
+<%= tabs do |tabs|
+    (Date.today.year).downto(2006) do |year|
+      tabs.add(year, :year => year)
+    end
+  end  %>

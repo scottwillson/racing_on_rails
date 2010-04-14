@@ -32,6 +32,9 @@ class PublicPagesTest < WebDriverTestCase
     wait_for_current_url(/people/)
     wait_for_element "person_results"
     
+    assert_page_source "None"
+    
+    open "/people/#{people(:alice).to_param}?year=2004"
     assert_table "person_results_table", 1, 0, "2"
     assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
     assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
@@ -41,6 +44,7 @@ class PublicPagesTest < WebDriverTestCase
      assert_table "person_results_table", 1, 3, "12/31/2004"
     end
  
+    open "/people/#{people(:alice).to_param}?year=2002"
     find_element(:link_text => "Jack Frost").click
     assert_page_source "Jack Frost"
     assert_page_source "January 17, 2002"
@@ -71,6 +75,8 @@ class PublicPagesTest < WebDriverTestCase
 
     open "/teams/#{Team.find_by_name('Vanilla').id}"
     assert_page_source "Vanilla"
+
+    open "/teams/#{Team.find_by_name('Vanilla').id}?year=2004"
 
     open "/track"
 

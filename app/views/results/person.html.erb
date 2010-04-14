@@ -1,4 +1,6 @@
-<% @page_title = "Results: #{@person.name}" %>
+<% @page_title = "Results: #{@person.name}: #{@year}" %>
+
+<%= render_page "years" %>
 
 <% table :caption => @person.name, :class => "person_results", :id => "person_results", :collection => @event_results do %>
   <tr>

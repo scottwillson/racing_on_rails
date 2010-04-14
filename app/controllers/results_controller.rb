@@ -70,7 +70,7 @@ class ResultsController < ApplicationController
   
   def person
     @person = Person.find(params[:person_id])
-    
+    set_date_and_year
     results = Result.find(
       :all,
       :include => [ :team, :person, :category, 
@@ -79,7 +79,7 @@ class ResultsController < ApplicationController
                     { :source_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } }, 
                     { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
                   ],
-      :conditions => ['people.id = ?', @person.id]
+      :conditions => [ "people.id = ? and events.date between ? and ?", @person.id, @date.beginning_of_year, @date.end_of_year ]
     )
     
     @competition_results, @event_results = results.partition do |result|
@@ -89,12 +89,13 @@ class ResultsController < ApplicationController
   
   def team
     @team = Team.find(params[:team_id])
+    set_date_and_year
     @results = Result.find(
       :all,
       :include => [ :team, :person, :category, 
                   { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }
                   ],
-      :conditions => ['teams.id = ?', params[:team_id]]
+      :conditions => [ "teams.id = ? and events.date between ? and ?", @team.id, @date.beginning_of_year, @date.end_of_year ]
     )
     @results.reject! do |result|
       result.race.event.is_a?(Competition)
@@ -136,5 +137,17 @@ class ResultsController < ApplicationController
     else
       redirect_to event_results_path(result.event), :status => :moved_permanently
     end
+  end
+  
+  
+  private
+  
+  def set_date_and_year
+    if params[:year] && params[:year][/\d\d\d\d/].present?
+      @year = params[:year].to_i
+    else
+      @year = Date.today.year
+    end
+    @date = Date.new(@year)
   end
 end
