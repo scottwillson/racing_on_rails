@@ -10,7 +10,7 @@ class MailingListsTest < WebDriverTestCase
     open "/posts/obra/new"
 
     type "Scott", :id => "post_from_name"
-    type "scott@butlerpress.com", :id => "post_from_email_address"
+    type "scott.willson@gmail.com", :id => "post_from_email_address"
     type "New Message", :id => "post_subject"
     type "My post message body", :id => "post_body"
 
@@ -38,7 +38,7 @@ class MailingListsTest < WebDriverTestCase
 
     open "/posts/obra/new"
 
-    type "scott@butlerpress.com", :id => "post_from_email_address"
+    type "scott.willson@gmail.com", :id => "post_from_email_address"
     type "New Message 2", :id => "post_subject"
     type "My post message body", :id => "post_body"
 

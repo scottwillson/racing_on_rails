@@ -76,7 +76,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("[Fwd:  For the Archives]", post_from_db.subject, "Subject")
-    assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
+    assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal_dates("Mon Jan 23 15:52:25 PST 2006", post_from_db.date, "Post date", "%a %b %d %H:%M:%S PST %Y")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     assert(post_from_db.body["Too bad it doesn't work"], "body")
@@ -91,7 +91,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Rich Text", post_from_db.subject, "Subject")
-    assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
+    assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 07:02:18 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{Rich text message with some formatting and a small attachment.
@@ -109,7 +109,7 @@ Check it out: http://www.google.com/\n\n\357\277\274\n}
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Stinky Outlook Email", post_from_db.subject, "Subject")
-    assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
+    assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 07:28:31 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{Hey, this is from Bloodhound in the basement.
@@ -137,7 +137,7 @@ Still loyal:
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")
-    assert_equal("Scott Willson <scott@butlerpress.com>", post_from_db.sender, "from")
+    assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 10:19:04 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -181,8 +181,8 @@ Still loyal:
   private
     
     def email_to_archive
-      return %Q{From scott@butlerpress.com  Mon Jan 23 15:52:43 2006
-Return-Path: <scott@butlerpress.com>
+      return %Q{From scott.willson@gmail.com  Mon Jan 23 15:52:43 2006
+Return-Path: <scott.willson@gmail.com>
 X-Original-To: obra@list.obra.org
 Delivered-To: obra@list.obra.org
 Received: from localhost (localhost [127.0.0.1])
@@ -203,7 +203,7 @@ Received: from webgateway0.cnf.com (webgateway0.cnf.com [63.230.177.28])
         for <sw@localhost>; Mon, 23 Jan 2006 15:52:25 -0800
 Message-ID: <1138060345.43d56c39bb9c3@www.cheryljwillson.com>
 Date: Mon, 23 Jan 2006 15:52:25 -0800
-From: Scott Willson <scott@butlerpress.com>
+From: Scott Willson <scott.willson@gmail.com>
 To: obra@list.obra.org
 References: <43D56B2E.4080607@cheryljwillson.com>
 In-Reply-To: <43D56B2E.4080607@cheryljwillson.com>
@@ -240,11 +240,11 @@ Quoting Cheryl Willson <cjw@cheryljwillson.com>:
   
   def rich_email_text
     %Q{Return-Path: <obra-bounces@list.obra.org>
-X-Original-To: scott@butlerpress.com
-Delivered-To: scott@butlerpress.com
+X-Original-To: scott.willson@gmail.com
+Delivered-To: scott.willson@gmail.com
 Received: from list.obra.org (list.obra.org [69.30.32.118])
 	by mail.cheryljwillson.com (Postfix) with ESMTP id 63D0E42058
-	for <scott@butlerpress.com>; Sat, 28 Jan 2006 07:01:58 -0800 (PST)
+	for <scott.willson@gmail.com>; Sat, 28 Jan 2006 07:01:58 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
 	by list.obra.org (Postfix) with ESMTP id EC68310663;
 	Sat, 28 Jan 2006 07:02:31 -0800 (PST)
@@ -272,7 +272,7 @@ Received: from [192.168.1.100] (cheryljwillson.com [71.36.251.213])
 Mime-Version: 1.0 (Apple Message framework v746.2)
 To: obra@list.obra.org
 Message-Id: <CB0870E9-7054-4576-86A4-BE6A577F6DFE@butlerpress.com>
-From: Scott Willson <scott@butlerpress.com>
+From: Scott Willson <scott.willson@gmail.com>
 Date: Sat, 28 Jan 2006 07:02:18 -0800
 X-Mailer: Apple Mail (2.746.2)
 X-Virus-Scanned: amavisd-new at obra.org
@@ -454,11 +454,11 @@ http://list.obra.org/mailman/listinfo/obra
   
   def outlook_email
     %Q{Return-Path: <obra-bounces@list.obra.org>
-X-Original-To: scott@butlerpress.com
-Delivered-To: scott@butlerpress.com
+X-Original-To: scott.willson@gmail.com
+Delivered-To: scott.willson@gmail.com
 Received: from list.obra.org (list.obra.org [69.30.32.118])
 	by mail.cheryljwillson.com (Postfix) with ESMTP id B22A1143E3
-	for <scott@butlerpress.com>; Sat, 28 Jan 2006 07:24:38 -0800 (PST)
+	for <scott.willson@gmail.com>; Sat, 28 Jan 2006 07:24:38 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
 	by list.obra.org (Postfix) with ESMTP id 59480145A5;
 	Sat, 28 Jan 2006 07:25:12 -0800 (PST)
@@ -484,7 +484,7 @@ Received: from bloodhound (unknown [192.168.1.151])
 	by mail.cheryljwillson.com (Postfix) with ESMTP id 3ECBE4DA67
 	for <obra@list.obra.org>; Sat, 28 Jan 2006 07:24:31 -0800 (PST)
 Message-ID: <000d01c62420$0d11edb0$9701a8c0@bloodhound>
-From: "Scott Willson" <scott@butlerpress.com>
+From: "Scott Willson" <scott.willson@gmail.com>
 To: <obra@list.obra.org>
 Date: Sat, 28 Jan 2006 07:28:31 -0800
 MIME-Version: 1.0
@@ -688,11 +688,11 @@ http://list.obra.org/mailman/listinfo/obra
   
   def html_email
     %{Return-Path: <obra-bounces@list.obra.org>
-X-Original-To: scott@butlerpress.com
-Delivered-To: scott@butlerpress.com
+X-Original-To: scott.willson@gmail.com
+Delivered-To: scott.willson@gmail.com
 Received: from list.obra.org (list.obra.org [69.30.32.118])
 	by mail.cheryljwillson.com (Postfix) with ESMTP id 01FB84824D
-	for <scott@butlerpress.com>; Sat, 28 Jan 2006 10:11:15 -0800 (PST)
+	for <scott.willson@gmail.com>; Sat, 28 Jan 2006 10:11:15 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
 	by list.obra.org (Postfix) with ESMTP id 3923214796;
 	Sat, 28 Jan 2006 10:11:49 -0800 (PST)
@@ -719,7 +719,7 @@ Received: from [192.168.1.151] (cheryljwillson.com [71.36.251.213])
 	for <obra@list.obra.org>; Sat, 28 Jan 2006 10:11:07 -0800 (PST)
 Message-ID: <43DBB598.8070102@butlerpress.com>
 Date: Sat, 28 Jan 2006 10:19:04 -0800
-From: Scott Willson <scott@butlerpress.com>
+From: Scott Willson <scott.willson@gmail.com>
 Person-Agent: Mozilla Thunderbird 0.8 (Windows/20040913)
 X-Accept-Language: en-us, en
 MIME-Version: 1.0
@@ -729,7 +729,7 @@ Subject: [OBRA Chat] Thunderbird HTML
 X-BeenThere: obra@list.obra.org
 X-Mailman-Version: 2.1.6
 Precedence: list
-Reply-To: scott@butlerpress.com
+Reply-To: scott.willson@gmail.com
 List-Id: Oregon Bicycle Racing Association <obra.list.obra.org>
 List-Unsubscribe: <http://list.obra.org/mailman/listinfo/obra>,
 	<mailto:obra-request@list.obra.org?subject=unsubscribe>

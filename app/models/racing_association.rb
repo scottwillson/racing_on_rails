@@ -30,7 +30,7 @@ class RacingAssociation
     @show_events_velodrome = true
     @show_only_association_sanctioned_races_on_calendar = true
     @show_practices_on_calendar = false
-    @email = "scott@butlerpress.com"
+    @email = "scott.willson@gmail.com"
     @membership_email = @email
     @competitions = Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
     @administrator_tabs = Set.new([ 

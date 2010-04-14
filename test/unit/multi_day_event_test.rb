@@ -270,7 +270,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.city = "Boise"
     multi_day_event.state = "ID"
     multi_day_event.discipline = "Mountain Bike"
-    multi_day_event.email = "scott@butlerpress.com"
+    multi_day_event.email = "scott.willson@gmail.com"
     multi_day_event.flyer = nil
     multi_day_event.flyer_approved = true
     candi_murray = people(:administrator)
@@ -290,7 +290,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-19", results["date"], "SingleDayEvent start_date")
     assert_equal("Boise", results["city"], "SingleDayEvent city")
     assert_equal("Mountain Bike", results["discipline"], "SingleDayEvent discipline")
-    assert_equal("scott@butlerpress.com", results["email"], "SingleDayEvent email")
+    assert_equal("scott.willson@gmail.com", results["email"], "SingleDayEvent email")
     assert_equal(nil, results["flyer"], "SingleDayEvent flyer")
     assert_equal("1", results["flyer_approved"], "SingleDayEvent flyer")
     assert_equal(people(:administrator).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
