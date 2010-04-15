@@ -48,8 +48,12 @@ class RaceNumber < ActiveRecord::Base
       Discipline[:road].id
     when Discipline[:cyclocross]
       Discipline[:cyclocross].id
-    when Discipline[:mountain_bike]
+    when Discipline[:mountain_bike], Discipline[:super_d]
       Discipline[:mountain_bike].id
+    when Discipline[:downhill]
+      Discipline[:downhill].id
+    else
+      Discipline[:road].id
     end
   end
   

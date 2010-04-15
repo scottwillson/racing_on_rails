@@ -562,6 +562,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("U89", tonkin.number("ccx"))
     assert_equal("U89", tonkin.number("Cyclocross"))
     assert_equal("U89", tonkin.number(Discipline["Cyclocross"]))
+    assert_equal "102", tonkin.number("Time Trial")
   end
   
   def test_update
@@ -731,10 +732,10 @@ class PersonTest < ActiveSupport::TestCase
     circuit_race = Discipline[:circuit]
     person.add_number("7890", circuit_race)
     assert_equal("7890", person.road_number, "Road number after add with nil discipline")
-    assert_equal(nil, person.number(circuit_race), "Circuit race number after add with nil discipline")
+    assert_equal("7890", person.number(circuit_race), "Circuit race number after add with nil discipline")
   end
   
-  # Legacy test … used to look at data to devine creator
+  # Legacy test … used to look at data to devine creator
   def test_created_from_result?
     person = Person.create!
     assert(!person.created_from_result?, "created_from_result? for blank Person")

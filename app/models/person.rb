@@ -461,15 +461,15 @@ class Person < ActiveRecord::Base
     end
   end
   
-  def number(discipline, reload = false, year = nil)
-    return nil if discipline.nil?
+  def number(discipline_param, reload = false, year = nil)
+    return nil if discipline_param.nil?
 
     year = year || ASSOCIATION.year
-    unless discipline.is_a?(Discipline)
-      discipline = Discipline[discipline]
+    if discipline_param.is_a?(Discipline)
+      discipline_param = discipline_param.to_param
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == year && race_number.discipline_id == discipline.id && race_number.number_issuer.name == ASSOCIATION.short_name
+      race_number.year == year && race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && race_number.number_issuer.name == ASSOCIATION.short_name
     end
     if number
       number.value
