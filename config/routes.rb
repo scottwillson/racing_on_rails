@@ -110,6 +110,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :posts
 
   map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
+  map.connect "/people/:person_id/:year", :controller => "results", :action => "person", 
+              :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }, 
+              :conditions => { :method => :get }
   map.connect "/people/:person_id", :controller => "results", :action => "person", 
               :requirements => { :person_id => /\d+/ }, 
               :conditions => { :method => :get }
@@ -153,6 +156,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :single_day_events, :as => :events
 
   map.connect "/teams/:team_id/results", :controller => "results", :action => "team"
+  map.connect "/teams/:team_id/:year", :controller => "results", :action => "team", :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }
   map.connect "/teams/:team_id", :controller => "results", :action => "team"
   map.resources :teams, :has_many => :results
 
