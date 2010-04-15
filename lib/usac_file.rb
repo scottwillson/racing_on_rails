@@ -55,6 +55,7 @@ class UsacFile
       #get the parameters in a nice format
       license = memusac["license#"].to_i.to_s #strips off leading zeros, consistent with our db
       full_name = memusac["first_name"].to_s + " " + memusac["last_name"].to_s #as specified by find method used below
+      status = memusac["suspension"].to_s 
       
       #Look for the person. License # is most reliable (e.g. we only have short first name)
       #but we may not have their USAC License # yet, so also look by full name
@@ -85,6 +86,7 @@ class UsacFile
             #Either the license # matches or we didn't get this data from the member. Either way, safe to overwrite it
             r.license = license
             r.member_usac_to = expir_date
+            r.status = status #could be SUSPENDED or PENDING, per USAC IT guys. No current examples
             people_updated.push(r) if r.save!
           end
       end
