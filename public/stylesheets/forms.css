@@ -132,7 +132,10 @@ select + select {
   font-weight: normal;
   line-height: normal;
   margin-top: 7px;
-  padding: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 0px;
+  padding-right: 4px;
   display: block;
 }
 

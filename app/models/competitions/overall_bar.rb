@@ -1,4 +1,36 @@
 class OverallBar < Competition
+  def find_race(discipline, category)
+    if Discipline[:overall] == discipline
+      event = self
+    else
+      event = children.detect { |e| e.discipline == discipline.name }
+    end
+    
+    if event
+      event.races.detect { |e| e.category == category }
+    end
+  end
+  
+  def equivalent_category_for(category_friendly_param, discipline)
+    return nil unless category_friendly_param && discipline
+    
+    if discipline == Discipline[:overall]
+      event = self
+    else
+      event = children.detect { |child| child.discipline == discipline.name }
+      return unless event
+    end
+    
+    category = event.categories.detect { |cat| cat.friendly_param == category_friendly_param }
+
+    if category.nil?
+      event.categories.detect { |cat| cat.friendly_param == category_friendly_param || cat.parent.friendly_param == category_friendly_param } || 
+      event.categories.sort.first
+    else
+      category
+    end
+  end
+  
   def points_for(scoring_result)
     301 - scoring_result.place.to_i
   end
@@ -8,8 +40,8 @@ class OverallBar < Competition
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
                   and place between 1 and 300
-                  and ((events.discipline != "Mountain Bike" and events.discipline != "Downhill" and categories.id in (#{category_ids_for(race)}))
-                    or ((events.discipline = "Mountain Bike" or events.discipline = "Downhill") and categories.id in (#{mtb_category_ids_for(race)})))
+                  and ((events.discipline not in ("Mountain Bike", "Downhill", "Short Track") and categories.id in (#{category_ids_for(race)}))
+                    or ((events.discipline in ("Mountain Bike", "Downhill", "Short Track")) and categories.id in (#{mtb_category_ids_for(race)})))
                   and events.date >= '#{date.year}-01-01' 
                   and events.date <= '#{date.year}-12-31'}],
                 :order => 'person_id'
@@ -42,23 +74,19 @@ class OverallBar < Competition
     categories.map(&:id).join(", ")
   end
 
-  # if person has > 4 discipline results, those results are worth 50 points
-  # E.g., person had top-15 results in road, track, cyclocross, mountain bike, and criteriums
-  # TODO Consolidate these three methods? Are they all needed?
+  # Only count the top 5 disciplines
   def after_create_competition_results_for(race)
-    for result in race.results
-      set_bonus_points_for_extra_disciplines(result.scores)
-    end
-  end
+    race.results.each do |result|
+      result.scores.sort! { |x, y| y.points <=> x.points }
+      remove_duplicate_discipline_results result.scores
 
-  # if person has > 4 discipline results, those results are worth 50 points
-  # E.g., person had top-15 results in road, track, cyclocross, mountain bike, and criterium
-  def set_bonus_points_for_extra_disciplines(scores)
-    scores.sort! { |x, y| y.points.to_i <=> x.points.to_i }
-    remove_duplicate_discipline_results(scores)
-    if scores.size > 4
-      for score in scores[4..(scores.size - 1)]
-        score.update_attribute(:points, 50)
+      if result.scores.size > 5
+        lowest_scores = result.scores[5, result.scores.size - 5]
+        lowest_scores.each do |lowest_score|
+          result.scores.destroy lowest_score
+        end
+        # Rails destroys Score in database, but doesn't update the current association
+        result.scores true
       end
     end
   end
@@ -109,14 +137,32 @@ class OverallBar < Competition
       'Senior Men', 'Category 3 Men', 'Category 4/5 Men',
       'Senior Women', 'Category 3 Women', 'Category 4 Women', 
       'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
-      'Singlespeed/Fixed', 'Tandem']
+      'Singlespeed/Fixed', 'Tandem', "Clydesdale"]
 
       category = Category.find_or_create_by_name(category_name)
       self.races.create(:category => category)
     end
   end
+  
+  def create_children
+    Discipline.find_all_bar.reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }.each do |discipline|
+      bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+      unless bar
+        bar = Bar.create!(
+          :parent => self,
+          :name => "#{year} #{discipline.name} BAR",
+          :date => date,
+          :discipline => discipline.name
+        )
+      end
+    end
+  end
 
   def friendly_name
     'Overall BAR'
+  end
+
+  def default_discipline
+    "Overall"
   end
 end

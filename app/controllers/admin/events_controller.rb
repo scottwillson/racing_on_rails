@@ -17,6 +17,10 @@ class Admin::EventsController < Admin::AdminController
   def index
     @year = params["year"].to_i
     @year = ASSOCIATION.effective_year if @year == 0
+    @competitions = Event.find(
+                        :all, 
+                        :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
+                      )
     events = SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
   end
@@ -45,11 +49,7 @@ class Admin::EventsController < Admin::AdminController
       year = params[:year]
       date = Date.new(year.to_i)
     end
-    if params[:event] && params[:event][:type] == "Event"
-      @event = Event.new(params[:event])
-    else
-      @event = SingleDayEvent.new(params[:event])
-    end
+    assign_new_event
     association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
     if association_number_issuer
       @event.number_issuer_id = association_number_issuer.id
@@ -69,20 +69,14 @@ class Admin::EventsController < Admin::AdminController
   # === Flash
   # * warn
   def create
-    event_type = params[:event][:type]
-    event_type = "Event" if event_type.blank?
-    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-    if params[:event][:parent_id].present?
-      @event = Event.find(params[:event][:parent_id]).children.build(params[:event])
-    else
-      @event = eval(event_type).new(params[:event])
-    end
+    assign_new_event
     if @event.save
       expire_cache
       flash[:notice] = "Created #{@event.name}"
       redirect_to edit_admin_event_path(@event)
     else
       flash[:warn] = @event.errors.full_messages
+      render :edit
     end
   end
   
@@ -110,9 +104,14 @@ class Admin::EventsController < Admin::AdminController
     # TODO consolidate code
     event_params = params[:event].clone
     event_type = event_params.delete(:type)
+    
     @event = Event.update(params[:id], event_params)
+    
+    if event_type == ""
+      event_type = "Event"
+    end
     if !event_type.blank? && event_type != @event.type
-      raise "Unknown event type: #{event_type}" unless ['SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+      raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
       if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
         @event.children.each do |child|
           child.parent = nil
@@ -260,5 +259,17 @@ class Admin::EventsController < Admin::AdminController
   
   def assign_event
     @event = Event.find(params[:id])
+  end
+  
+  def assign_new_event
+    if params[:event] && params[:event][:type].present?
+      event_type = params[:event][:type]
+    elsif params[:event] && params[:event][:parent_id].present?
+      event_type = "Event"
+    else
+      event_type = "SingleDayEvent"
+    end
+    raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+    @event = eval(event_type).new(params[:event])
   end
 end

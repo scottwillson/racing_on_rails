@@ -4,88 +4,48 @@ class BarController < ApplicationController
   caches_page :show
   
   def index
-    @bar_categories = Discipline[:overall].bar_categories(true)
-    @all_disciplines = Discipline.find_all_bar
-    @year = Date.today.year
+    @overall_bar = OverallBar.find_for_year
   end
 
   # Default to Overall BAR with links to disciplines
   def show
-    @year = params['year'].to_i
-    if @year < 1990 or @year > Date.today.year
-      flash[:notice] = "\'#{params['year']}\' is not a valid year"
-      return render(:action => 'not_found')
-    end
+    year = params['year'].to_i
 
-    @discipline = Discipline[params['discipline']]
-    if @discipline.nil?
-      flash[:notice] = "Discipline \'#{params['discipline']}\' does not exist"
-      return render(:action => 'not_found')
+    discipline = Discipline[params['discipline']]
+    if discipline.nil?
+      flash.now[:warn] = "Could not find discipline \'#{params['discipline']}\'"
+      return render(:show)
     end
     
-    if @year < 2007 && @discipline == Discipline[:age_graded]
-      redirect_to("http://#{STATIC_HOST}/bar/#{@year}/overall_by_age.html")
-      return    
-    elsif @year < 2006
-      redirect_to("http://#{STATIC_HOST}/bar/#{@year}")
-      return
+    if year < 2007 && discipline == Discipline[:age_graded]
+      return redirect_to("http://#{STATIC_HOST}/bar/#{year}/overall_by_age.html")
+    elsif year < 2006 && year >= 2001
+      return redirect_to("http://#{STATIC_HOST}/bar/#{year}")
     end
     
-    @all_disciplines = Discipline.find_all_bar.sort
-
-    @category = @discipline.bar_categories(true).detect {|cat| cat.friendly_param == params['category']}
-    if @category.nil?
-      for discipline in @all_disciplines
-        @category = discipline.bar_categories(true).detect {|cat| cat.friendly_param == params['category']}
-        break if @category
-      end
-
-      if @category.nil?
-        flash[:notice] = "Category \'#{params['category']}\' does not exist"
-        return render(:action => 'not_found')
-      end
-
-      equivalent_category = @discipline.bar_categories.detect {|cat| cat.parent == @category} || @discipline.bar_categories.detect {|cat| cat == @category.parent} || @discipline.bar_categories.sort.first
-      raise "Could not find equivalent category for #{@category.name} in #{@discipline.name}" unless equivalent_category
-      redirect_to(:category => equivalent_category.friendly_param)
-      return
+    @overall_bar = OverallBar.find_for_year(year)
+    unless @overall_bar
+      flash.now[:warn] = "Could not find Overall BAR for #{year}"
+      return render(:show)
     end
-    raise "Could not find category '#{params['category']}'" unless @category
+
+    category = @overall_bar.equivalent_category_for(params[:category], discipline)
+    unless category
+      flash.now[:warn] = "Could not find BAR category \'#{params['category']}\'"
+      return render(:show)
+    end
+    return redirect_to(:category => category.friendly_param) if category.friendly_param != params["category"]
     
-    if @discipline == Discipline[:overall]
-        @race = Race.find(:first,
-                          :include => :event,
-                          :conditions => ['category_id = ? and events.date = ? and events.type = ?',
-                                          @category.id, Date.new(@year), 'OverallBar'])
-
-    elsif @discipline == Discipline[:team]
-      @race = Race.find(:first,
-                        :include => :event,
-                        :conditions => ['events.date = ? and events.type = ?', 
-                                        Date.new(@year), 'TeamBar'])
-      @results = Result.find(:all, 
-                             :include => [:team],
-                             :conditions => ['race_id = ?', @race.id]
-      ) if @race
-      return
-
-    elsif @discipline == Discipline[:age_graded]
-      @race = Race.find(:first,
-                        :include => :event,
-                        :conditions => ['category_id = ? and events.date = ? and events.type = ?',
-                                        @category.id, Date.new(@year), 'AgeGradedBar'])
-
-    else
-      @race = Race.find(:first,
-                        :include => :event,
-                        :conditions => ['category_id = ? and events.date = ? and events.type = ? and (events.discipline = ? or (events.discipline is null and events.discipline = ?))', 
-                                        @category.id, Date.new(@year), 'Bar', @discipline.name, @discipline.name])
+    @race = @overall_bar.find_race(discipline, category)
+    unless @race
+      flash.now[:warn] = "Could not find results"
+      return render(:show)
     end
     
     # Optimization
     @results = Result.find(:all, 
-                           :include => [:person, :team],
-                           :conditions => ['race_id = ?', @race.id]
+                           :include => [ :person, :team ],
+                           :conditions => [ 'race_id = ?', @race.id ]
     ) if @race
   end
   

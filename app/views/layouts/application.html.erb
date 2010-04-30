@@ -22,7 +22,8 @@
           <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, "/" %></div>
         </div>
         <div class="content container">
-        <%= render :partial => "shared/flash_messages", :locals => { :flash => flash } %>
+          <%= render :partial => "shared/tabs" %>
+          <%= render :partial => "shared/flash_messages", :locals => { :flash => flash } %>
 <%= yield %>
         </div>
           <div class="nav" id="bottom">

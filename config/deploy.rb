@@ -20,6 +20,7 @@ namespace :deploy do
   task :local_code do
     run "git clone #{site_local_repository} #{release_path}/local"
     run "chmod -R g+w #{release_path}/local"
+    run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
 
   task :copy_cache do

@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/bar/categories", :controller => "bar", :action => 'categories'
   map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
   map.connect "/bar", :controller => "bar", :action => "index"
-  map.connect "/bar/:year/:discipline/:category",
+  map.bar "/bar/:year/:discipline/:category",
               :controller => "bar", :action => "show",
               :requirements => {:year => /\d+/},
               :defaults => {:discipline => 'overall', :category => 'senior_men'}
@@ -110,6 +110,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :posts
 
   map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
+  map.connect "/people/:person_id/:year", :controller => "results", :action => "person", 
+              :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }, 
+              :conditions => { :method => :get }
   map.connect "/people/:person_id", :controller => "results", :action => "person", 
               :requirements => { :person_id => /\d+/ }, 
               :conditions => { :method => :get }
@@ -117,7 +120,8 @@ ActionController::Routing::Routes.draw do |map|
                 :member => { :card => :get, :account => :get, :membership => :get },
                 :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
                 :has_many => :results do |person|
-  end
+                  person.resources :events
+                end
   
   # Deprecated URLs
   map.connect "/results/:year/:discipline/:event_id", 
@@ -150,9 +154,9 @@ ActionController::Routing::Routes.draw do |map|
   map.schedule "/schedule", :controller => "schedule"
 
   map.resources :single_day_events, :as => :events
-  map.resources :subscriptions, :collection => { :subscribed => :get }
 
   map.connect "/teams/:team_id/results", :controller => "results", :action => "team"
+  map.connect "/teams/:team_id/:year", :controller => "results", :action => "team", :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }
   map.connect "/teams/:team_id", :controller => "results", :action => "team"
   map.resources :teams, :has_many => :results
 

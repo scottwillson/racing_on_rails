@@ -1,7 +1,7 @@
 <% nav_caption = %Q{
   <div>Events</div>
   <div class="right">
-  #{link_to(image_tag('/images/icons/world_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
+  #{link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      {:controller => '/results', :action => 'event', :year => @event.date.year, 
      :discipline => @event.discipline, :id => @event.id},
      { :class => "image" }) if @event.has_results_including_children? }  
@@ -28,9 +28,9 @@
     </td>
     <td class='link'></td>
     <td class="right"><%= link_to_remote(image_tag("/images/icons/add.png"),
-              :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => "Event" }),
+              :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => @event.is_a?(MultiDayEvent) ? "SingleDayEvent" : "Event" }),
               :html => { :class => "image", :id => "new_event" }, 
-              :method => "post") if administrator?
+              :method => "post") if administrator? && !@event.new_record?
         %></td>
   </tr>
 <% end -%>

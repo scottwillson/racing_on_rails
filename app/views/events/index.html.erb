@@ -1,0 +1,12 @@
+<% @page_title = "#{@person.name}: Events" %>
+<% @show_tabs = (promoter? || administrator?) -%>
+
+<div class="container centered">
+<% table :caption => "Promoted Events", :class => "span-4", :collection => @events do %>
+  <tr>
+    <th>Date</th>
+    <th>Name</th>
+  </tr>
+  <%= render :partial => "event", :collection => @events.sort_by(&:date) %>
+<% end -%>
+</div>

@@ -341,7 +341,6 @@ create table `people` (
   `license_type` varchar(255) default null,
   `country_code` varchar(2) default 'US',
   `membership_card` tinyint(1) not null default '0',
-  `official` tinyint(1) not null default '0',
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -704,14 +703,6 @@ insert into schema_migrations (version) values ('20100107001744');
 insert into schema_migrations (version) values ('20100113032309');
 
 insert into schema_migrations (version) values ('20100121041557');
-
-insert into schema_migrations (version) values ('20100210042552');
-
-insert into schema_migrations (version) values ('20100211042204');
-
-insert into schema_migrations (version) values ('20100320020606');
-
-insert into schema_migrations (version) values ('20100320224529');
 
 insert into schema_migrations (version) values ('21');
 

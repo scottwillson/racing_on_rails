@@ -5,7 +5,7 @@ require "action_view/test_case"
 require "authlogic/test_case"
 
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = !Rails.env.selenium?
+  self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
 
@@ -43,6 +43,9 @@ class ActiveSupport::TestCase
       _actual = Set.new(_actual)
     end
     difference = _expected.difference(_actual)
+    if difference.empty?
+      difference = _actual.difference(_expected)
+    end
     if !difference.empty?
       if expected.empty?
         expected_message = "[]"
@@ -54,7 +57,7 @@ class ActiveSupport::TestCase
       else
         actual_message = actual.to_a.join(', ')
       end
-      flunk "#{message}\n Expected \n#{expected_message} but was \n#{actual_message}.\ Difference: #{difference.to_a.join(', ')}"
+      flunk "#{message}\nExpected\n#{expected_message} but was \n#{actual_message}.\nDifference: #{difference.to_a.join(', ')}"
     end
   end
   

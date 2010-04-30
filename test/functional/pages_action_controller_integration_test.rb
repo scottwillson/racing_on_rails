@@ -50,7 +50,7 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
   def test_work_as_a_partial_and_all_partials_itself
     get(:partial_using_partials_action)
     assert_select("p", :text => "This is a plain page")
-    assert_select("p.message")
+    assert_select("p.flash_message")
     assert_layout("application")
   end
 

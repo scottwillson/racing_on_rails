@@ -127,13 +127,14 @@ class OverallBarTest < ActiveSupport::TestCase
     
     # Discipline BAR results past 300 don't count -- add fake result
     bar = Bar.find_by_year_and_discipline(2004, "Road")
+    assert_not_nil bar.parent, "Should have parent"
     sr_men_road_bar = bar.races.detect {|r| r.category == categories(:senior_men)}
     sr_men_road_bar.results.create!(:place => 305, :person => people(:alice))
     
     OverallBar.calculate!(2004)
     bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after calculate!")
-    assert_equal(1, OverallBar.count, "Bar events after calculate!")
+    assert_equal(1, OverallBar.count, "Overall BARs after calculate! #{OverallBar.all.map(&:date).join(", ")}")
     assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
     # Should delete old BAR
     OverallBar.calculate!(2004)
@@ -146,8 +147,9 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
 
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Overall Bar name")
-    assert_equal(12, overall_bar.races.size, "2004 Overall Bar races")
+    assert_equal(13, overall_bar.races.size, "2004 Overall Bar races")
     assert_equal_dates(Date.today, overall_bar.updated_at, "BAR last updated")
+    assert_equal 6, overall_bar.children.size, "Overall BAR children"
     
     senior_men_overall_bar = overall_bar.races.detect do |b|
       b.name == "Senior Men"
@@ -160,14 +162,14 @@ class OverallBarTest < ActiveSupport::TestCase
     
     assert_equal(people(:tonkin), senior_men_overall_bar.results[0].person, "Senior Men Overall BAR results person")
     assert_equal("1", senior_men_overall_bar.results[0].place, "Senior Men Overall BAR results place")
-    assert_equal(1249, senior_men_overall_bar.results[0].points, "Tonkin Senior Men Overall BAR results points")
+    assert_equal(1498, senior_men_overall_bar.results[0].points, "Tonkin Senior Men Overall BAR results points")
     assert_equal(5, senior_men_overall_bar.results[0].scores.size, "Tonkin Overall BAR results scores")
     scores = senior_men_overall_bar.results[0].scores.sort {|x, y| y.points <=> x.points}
     assert_equal(300, scores[0].points, "Tonkin overall BAR points for discipline 0")
     assert_equal(300, scores[1].points, "Tonkin overall BAR points for discipline 1")
     assert_equal(300, scores[2].points, "Tonkin overall BAR points for discipline 2")
     assert_equal(299, scores[3].points, "Tonkin overall BAR points for discipline 3")
-    assert_equal(50, scores[4].points, "Tonkin overall BAR points for discipline 4")
+    assert_equal(299, scores[4].points, "Tonkin overall BAR points for discipline 4")
 
     assert_equal(people(:weaver), senior_men_overall_bar.results[1].person, "Senior Men Overall BAR results person")
     assert_equal("2", senior_men_overall_bar.results[1].place, "Senior Men Overall BAR results place")
@@ -176,7 +178,7 @@ class OverallBarTest < ActiveSupport::TestCase
 
     assert_equal(people(:molly), senior_men_overall_bar.results[2].person, "Senior Men Overall BAR results person")
     assert_equal("3", senior_men_overall_bar.results[2].place, "Senior Men Overall BAR results place")
-    assert_equal(598, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
+    assert_equal(596, senior_men_overall_bar.results[2].points, "Senior Men Overall BAR results points")
     
     women_overall_bar = overall_bar.races.detect do |b|
       b.name == "Senior Women"
@@ -402,7 +404,7 @@ class OverallBarTest < ActiveSupport::TestCase
 
     matson_result = cat_4_5_overall_bar.results.detect { |result| result.person == matson }
     assert_equal("1", matson_result.place, "Matson Cat 4/5 Overall BAR place")
-    assert_equal(1248.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
+    assert_equal(1497.0, matson_result.points, "Matson Cat 4/5 Overall BAR points")
     assert_equal(5, matson_result.scores.size, "Matson Cat 4/5 Overall BAR 1st place scores")
 
     weaver_result = cat_4_5_overall_bar.results.detect { |result| result.person == weaver }
@@ -411,8 +413,8 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(300, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Time Trial" }.points, "Time Trial points")
     assert_equal(299, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Mountain Bike" }.points, "Mountain Bike points")
     assert_equal(298, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Track" }.points, "Track points")
-    assert_equal(50, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Criterium" }.points, "Criterium points")
-    assert_equal(300 + 300 + 299 + 298 + 50, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
+    assert_equal(297, weaver_result.scores.detect { |s| s.source_result.race.discipline == "Criterium" }.points, "Criterium points")
+    assert_equal(300 + 300 + 299 + 298 + 297, weaver_result.points, "Weaver Cat 4/5 Overall BAR points")
     assert_equal(5, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
 
     tonkin_result = cat_4_5_overall_bar.results.detect { |result| result.person == tonkin }

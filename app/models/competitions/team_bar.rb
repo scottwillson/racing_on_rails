@@ -5,6 +5,7 @@
 #
 # TODO Consolidate with other BARs. Consider subclasses
 class TeamBar < Competition
+  after_create :set_parent
   
   def point_schedule
     [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1]
@@ -108,6 +109,17 @@ class TeamBar < Competition
       end
     }
     points
+  end
+  
+  def set_parent
+    if parent.nil?
+      self.parent = OverallBar.find_or_create_for_year(year)
+      save!
+    end
+  end
+
+  def default_discipline
+    "Team"
   end
 
   def friendly_name

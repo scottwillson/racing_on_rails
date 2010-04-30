@@ -1,0 +1,9 @@
+<tr class="<%= cycle("even", "odd") %>">
+  <%- if administrator? || (current_person && current_person == event.promoter) -%>
+  <td><%= link_to event.date.to_s(:long), edit_admin_event_path(event) %></td>
+  <td><%= link_to event.name, edit_admin_event_path(event) %></td>
+  <% else -%>
+  <td><%= link_to event.date.to_s(:long), event_path(event) %></td>
+  <td><%= link_to event.name, event_path(event) %></td>
+  <% end -%>
+</tr>

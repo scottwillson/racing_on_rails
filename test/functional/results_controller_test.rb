@@ -203,6 +203,18 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["person"], weaver, "Weaver!")
   end
   
+  def test_person_with_year
+    weaver = people(:weaver)
+    result = SingleDayEvent.create!(:date => Date.new(2008)).races.create!(:category => categories(:senior_men)).results.create!(:person => weaver, :place => "1")
+    
+    get :person, :person_id => weaver.to_param, :year => "2008"
+    assert_response(:success)
+    assert_template("results/person")
+    assert_not_nil(assigns["person"], "Should assign person")
+    assert_equal(assigns["person"], weaver, "Weaver!")
+    assert_equal [ result ], assigns(:event_results), "@event_results for 2008"
+  end
+  
   def test_person_long_name
     big_team = Team.create!(:name => "T" * 60)
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)

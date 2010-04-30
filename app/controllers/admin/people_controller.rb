@@ -1,6 +1,10 @@
 # Add, delete, and edit Person information. Also merge 
 class Admin::PeopleController < Admin::AdminController
-  before_filter :require_administrator, :remember_event
+  before_filter :require_person
+  before_filter :require_administrator, :expect => :index
+  skip_filter :require_administrator, :only => :index
+  before_filter :require_administrator_or_promoter, :only => :index
+  before_filter :remember_event
   layout 'admin/application', :except => [:card, :cards]
   exempt_from_layout 'xls.erb', 'ppl.erb'
 
@@ -450,6 +454,13 @@ class Admin::PeopleController < Admin::AdminController
   def remember_event
     unless params['event_id'].blank?
       @event = Event.find(params['event_id'])
+    end
+  end
+  
+  def require_administrator_or_promoter
+    unless current_person.administrator? ||
+      current_person && current_person.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
+      redirect_to unauthorized_path
     end
   end
 end

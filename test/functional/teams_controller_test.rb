@@ -13,11 +13,4 @@ class TeamsControllerTest < ActionController::TestCase
     assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
     assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
   end
-  
-  def test_show
-    team = teams(:gentle_lovers)
-    get(:show, :id => team.to_param)    
-    assert_response(:success)
-    assert_equal(team, assigns(:team), "Should assign @team")
-  end
 end

@@ -1,0 +1,5 @@
+<%= tabs do |tabs|
+  (overall_bar.children + [ overall_bar ]).sort_by(&:name).each do |bar|
+    tabs.add(bar.discipline, bar_path(:discipline => Discipline[bar.discipline], :year => bar.year, :category => race.try(:category_friendly_param)))
+  end
+end if overall_bar -%>

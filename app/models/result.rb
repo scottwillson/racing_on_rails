@@ -93,10 +93,11 @@ class Result < ActiveRecord::Base
     end
 
     # This logic should be in Person
-    if !person.nil? &&
+    if person && 
+       ASSOCIATION.add_members_from_results? &&
        person.new_record? &&
-       !person.first_name.blank? &&
-       !person.last_name.blank? &&
+       person.first_name.present? &&
+       person.last_name.present? &&
        person[:member_from].blank? &&
        event.number_issuer.name == ASSOCIATION.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
@@ -438,12 +439,14 @@ class Result < ActiveRecord::Base
 
   def set_time_value(attribute, value)
     case value
-    when DateTime  
+    when DateTime
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
     when Time
       self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
+    when Numeric, NilClass
+      self[attribute] = value      
     else
-      self[attribute] = value
+      self[attribute] = s_to_time(value)
     end
   end
 

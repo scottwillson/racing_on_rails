@@ -1,6 +1,8 @@
 <% @page_title = "Results: #{@team.name}" %>
 
-<% table :caption => @team.name, :id => "team" do %>
+<%= render_page "results/years" %>
+
+<% table :caption => @team.name, :id => "team", :collection => @results do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>

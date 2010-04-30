@@ -4,7 +4,7 @@ class RaceDayMailerTest < ActionMailer::TestCase
   tests RaceDayMailer
   def test_members_export
     @expected.subject = "#{ASSOCIATION.name} Members Export"
-    @expected.from    = "scott@butlerpress.com"
+    @expected.from    = "scott.willson@gmail.com"
     @expected.to      = "dcowley@sportsbaseonline.com"
     @expected.body    = read_fixture("members_export")
     now = Time.zone.now

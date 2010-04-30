@@ -124,7 +124,9 @@ a.beginner_friendly {
   padding-bottom: 12px;
   border-left: 1px solid rgb(190, 190, 190);
   border-right: 1px solid rgb(190, 190, 190);
+  border-top: 1px solid rgb(190, 190, 190);
   border-bottom: 1px solid rgb(190, 190, 190);
+  min-height: 200px;
 }
 
 div.disclosure {
@@ -363,16 +365,6 @@ form.cat4_womens_race_series td input#result_team_name {
 
 
 /* Event */
-table.event_nav td.standings {
-  background-image: url(/images/icons/table.png);
-  background-repeat: no-repeat;
-  background-position: 8px 6px;  
-}
-
-table.event_nav td.standings a {
-  margin-left: 24px;
-}
-
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;

@@ -50,7 +50,7 @@ class DisciplineTest < ActiveSupport::TestCase
   
   def test_names
     assert_equal(%w{ Circuit }, Discipline[:circuit].names, "Circuit names")
-    assert_equal(["Downhill", "Mountain Bike"], Discipline[:mountain_bike].names, "Mountain Bike names")
+    assert_equal(["Downhill", "Mountain Bike", "Super D"], Discipline[:mountain_bike].names, "Mountain Bike names")
     assert_equal(["Downhill"], Discipline[:downhill].names, "Downhill names")
   end
 end

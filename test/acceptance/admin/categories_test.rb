@@ -1,18 +1,21 @@
-require "acceptance/selenium_test_case"
+require "acceptance/webdriver_test_case"
 
-class CategoriesTest < SeleniumTestCase
+class CategoriesTest < WebDriverTestCase
   def test_edit
     login_as :administrator
 
     open "/admin/categories"
 
     masters_35_plus_id = Category.find_by_name("Masters 35+").id
-    assert_present "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
-    assert_not_present "css=div#category_root div#category_#{masters_35_plus_id}"
+    assert_element :tag_name => "div"
+    assert_element :xpath => "//div[@id='unknown_category_root']//div[@id='category_#{masters_35_plus_id}']"
+    assert_no_element :xpath => "//div[@id='category_root']//div[@id='category_#{masters_35_plus_id}']"
 
-    drag_and_drop "css=div#unknown_category_root div#category_#{masters_35_plus_id}", "-400,116"
-    wait_for_no_element "css=div#unknown_category_root div#category_#{masters_35_plus_id}"
-    wait_for_element "css=div#category_root div#category_#{masters_35_plus_id}"
-    assert_present "css=div#category_root div#category_#{masters_35_plus_id}"
+    # No drag-and-drop in chrome
+    unless chrome?
+      drag_and_drop_by(-400, 116, :xpath => "//div[@id='unknown_category_root']//div[@id='category_#{masters_35_plus_id}']")
+      wait_for_no_element :xpath => "//div[@id='unknown_category_root']//div[@id='category_#{masters_35_plus_id}']"
+      wait_for_element :xpath => "//div[@id='category_root']//div[@id='category_#{masters_35_plus_id}']"
+    end
   end
 end

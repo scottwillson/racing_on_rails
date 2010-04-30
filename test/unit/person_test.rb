@@ -558,6 +558,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(tonkin.ccx_number)
     tonkin.ccx_number = "U89"
     assert_equal("U89", tonkin.ccx_number)
+    assert_equal("U89", tonkin.number(:ccx))
+    assert_equal("U89", tonkin.number("ccx"))
+    assert_equal("U89", tonkin.number("Cyclocross"))
+    assert_equal("U89", tonkin.number(Discipline["Cyclocross"]))
+    assert_equal "102", tonkin.number("Time Trial")
   end
   
   def test_update
@@ -709,6 +714,7 @@ class PersonTest < ActiveSupport::TestCase
   def test_find_all_current_email_addresses
     email = Person.find_all_current_email_addresses
     expected = [
+      "Bob Jones <member@example.com>",
       "Mark Matson <mcfatson@gentlelovers.com>",
       "Ryan Weaver <hotwheels@yahoo.com>"
     ]
@@ -726,10 +732,10 @@ class PersonTest < ActiveSupport::TestCase
     circuit_race = Discipline[:circuit]
     person.add_number("7890", circuit_race)
     assert_equal("7890", person.road_number, "Road number after add with nil discipline")
-    assert_equal(nil, person.number(circuit_race), "Circuit race number after add with nil discipline")
+    assert_equal("7890", person.number(circuit_race), "Circuit race number after add with nil discipline")
   end
   
-  # Legacy test … used to look at data to devine creator
+  # Legacy test … used to look at data to devine creator
   def test_created_from_result?
     person = Person.create!
     assert(!person.created_from_result?, "created_from_result? for blank Person")
@@ -780,11 +786,11 @@ class PersonTest < ActiveSupport::TestCase
   def test_find_all_for_export
     people = Person.find_all_for_export
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
-    assert_equal("Kona", people[1]["team_name"], "Row 1 team")
-    assert_equal("30", people[3]["racing_age"], "Row 3 racing_age")
-    assert_equal("01/01/1999", people[3]["member_from"], "Row 3 member_from")
-    assert_equal("12/31/#{Date.today.year}", people[3]["member_to"], "Row 3 member_to")
-    assert_equal("5", people[3]["track_category"], "Row 3 track_category")
+    assert_equal("Kona", people[2]["team_name"], "Row 2 team")
+    assert_equal("30", people[4]["racing_age"], "Row 4 racing_age")
+    assert_equal("01/01/1999", people[4]["member_from"], "Row 4 member_from")
+    assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
+    assert_equal("5", people[4]["track_category"], "Row 4 track_category")
   end
   
   def test_create

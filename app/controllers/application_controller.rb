@@ -133,8 +133,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_administrator_or_official
+    unless current_person && (current_person.administrator? || current_person.official?)
+      session[:return_to] = request.request_uri
+      flash[:notice] = "You must be an official or administrator to access this page"
+      store_location_and_redirect_to_login
+      return false
+    end
+  end
+
   def administrator?
     current_person && current_person.administrator?
+  end
+
+  def official?
+    current_person.try(:official?)
   end
 
   def store_location_and_redirect_to_login

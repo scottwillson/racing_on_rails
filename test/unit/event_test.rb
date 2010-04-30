@@ -381,11 +381,11 @@ class EventTest < ActiveSupport::TestCase
     
     assert_equal event_1, event_1, "event_1 == event_1"
     assert_equal event_2, event_2, "event_2 == event_2"
-    assert (event_1 != event_2), "event_1 != event_2"
-    assert (event_2 != event_1), "event_2 != event_1"
+    assert event_1 != event_2, "event_1 != event_2"
+    assert event_2 != event_1, "event_2 != event_1"
     assert_equal event_1, event_1_copy, "event_1 == event_1_copy"
-    assert (event_1_copy != event_2), "event_1_copy != event_2"
-    assert (event_2 != event_1_copy), "event_2 != event_1_copy"
+    assert event_1_copy != event_2, "event_1_copy != event_2"
+    assert event_2 != event_1_copy, "event_2 != event_1_copy"
   end
   
   def test_multi_day_event_children_with_no_parent
@@ -671,6 +671,35 @@ class EventTest < ActiveSupport::TestCase
     event.postponed = true
     event.save!
     assert event.postponed?, "postponed?"
+  end
+  
+  def test_single_day_event_categories
+    event = SingleDayEvent.create!
+    assert_equal [], event.categories, "categories for event with no races"
+    
+    event.races.create!(:category => categories(:senior_men))
+    assert_same_elements [ categories(:senior_men) ], event.categories, "categories for event with one race"
+    
+    event.races.create!(:category => categories(:senior_women))
+    assert_same_elements [ categories(:senior_men), categories(:senior_women) ], event.categories, "categories for event with two races"
+  end
+  
+  def test_multiday_event_categories
+    parent = MultiDayEvent.create!(:name => "parent")
+    assert_equal [], parent.categories, "categories for event with no races"
+    
+    event = parent.children.create!(:name => "child")
+    event.races.create!(:category => categories(:senior_men))
+    assert_same_elements [ categories(:senior_men) ], parent.categories, "categories from child"
+    
+    event.races.create!(:category => categories(:senior_women))
+    parent.races.create!(:category => categories(:senior_men))
+    parent.races.create!(:category => categories(:men_4_5))
+    assert_same_elements(
+      [ categories(:senior_men), categories(:senior_men), categories(:men_4_5), categories(:senior_women) ], 
+      parent.categories, 
+      "categories for event with two races"
+    )
   end
 
   private

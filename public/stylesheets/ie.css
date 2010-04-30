@@ -23,6 +23,10 @@ hr.space {
   color: white;
 }
 
+input[type=checkbox] {
+  margin-top: 0px;
+}
+
 .check_box, .radio {
   padding-top: 6px;
 }
