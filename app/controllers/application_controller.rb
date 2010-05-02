@@ -85,6 +85,34 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def render_404
+    respond_to do |type|
+      type.html {
+        local_path = "#{Rails.root}/local/public/404.html"
+        if File.exists?(local_path)
+          render :file => "#{RAILS_ROOT}/local/public/404.html", :status => "404 Not Found"
+        else
+          render :file => "#{RAILS_ROOT}/public/404.html", :status => "404 Not Found"
+        end
+      }
+      type.all  { render :nothing => true, :status => "404 Not Found" }
+    end
+  end
+
+  def render_500
+    respond_to do |type|
+      type.html {
+        local_path = "#{Rails.root}/local/public/500.html"
+        if File.exists?(local_path)
+          render :file => "#{RAILS_ROOT}/local/public/500.html", :status => "500 Error"
+        else
+          render :file => "#{RAILS_ROOT}/public/500.html", :status => "500 Error"
+        end
+      }
+      type.all  { render :nothing => true, :status => "500 Error" }
+    end
+  end
+
   private
 
   def assign_person
