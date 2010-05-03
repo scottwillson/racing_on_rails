@@ -19,6 +19,11 @@ namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
     run "git clone #{site_local_repository} #{release_path}/local"
+    if site_local_repository_branch
+      run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
+    else
+      run "git clone #{site_local_repository} #{release_path}/local"
+    end
     run "chmod -R g+w #{release_path}/local"
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
@@ -30,8 +35,10 @@ namespace :deploy do
   end
   
   task :wait_for_mongrels_to_stop do
+    deploy.stop
     # Give Mongrels a chance to really stop
-    sleep 2
+    sleep 10
+    deploy.start
   end
 end
 
