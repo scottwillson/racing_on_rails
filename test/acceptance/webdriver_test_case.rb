@@ -137,7 +137,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     when Regexp
       assert_match pattern, driver.current_url
     else
-      assert driver.current_url.include?(pattern.to_s), "Current URL should include '#{pattern}'"
+      assert driver.current_url.include?(pattern.to_s), "Current URL #{driver.current_url} should include '#{pattern}'"
     end
   end
   
@@ -181,6 +181,20 @@ class WebDriverTestCase < ActiveSupport::TestCase
     end
   end
   
+  def wait_for_displayed(element_finder)
+    raise ArgumentError if element_finder.empty? || element_finder.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until find_elements(element_finder).any? && find_elements(element_finder).first.displayed?
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Element #{element_finder.inspect} not displayed within 10 seconds"
+    end
+  end
+  
   def wait_for_download(glob_pattern)
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
     Timeout::timeout(10) do
@@ -192,10 +206,14 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def wait_for_current_url(url_pattern)
     raise ArgumentError if url_pattern.blank? || (url_pattern.respond_to?(:empty?) && url_pattern.empty?)
-    Timeout::timeout(10) do
-      until driver.current_url.match(url_pattern)
-        sleep 0.25
+    begin
+      Timeout::timeout(10) do
+        until driver.current_url.match(url_pattern)
+          sleep 0.25
+        end
       end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "URL did not become #{url_pattern} within seconds 10 seconds. Was #{driver.current_url}"
     end
   end
   
@@ -254,6 +272,17 @@ class WebDriverTestCase < ActiveSupport::TestCase
       assert_match text, element.text
     else
       assert_equal text.to_s, element.text
+    end
+  end
+  
+  def assert_selected_text(text, element_finder)
+    element = find_element(element_finder)
+    selected_element = element.first(:css, "option[selected=selected]")
+    case text
+    when Regexp
+      assert_match text, selected_element.text
+    else
+      assert_equal text.to_s, selected_element.text
     end
   end
   
