@@ -57,6 +57,8 @@ class PersonTest < ActiveSupport::TestCase
   def test_merge
     person_to_keep = people(:molly)
     person_to_merge = people(:tonkin)
+    person_to_merge.member_to = Date.new(2008, 12, 31)
+    person_to_merge.save!
     
     person_to_keep.login = "molly"
     person_to_keep.password = "secret"
@@ -112,6 +114,11 @@ class PersonTest < ActiveSupport::TestCase
     
     assert_equal "molly", person_to_keep.login, "Should preserve login"
     assert_equal person_to_keep_old_password, person_to_keep.crypted_password, "Should preserve password"
+
+    assert_equal_dates Date.new(1996), person_to_keep.member_from, "member_from"
+    assert_equal_dates Date.today.end_of_year, person_to_keep.member_to, "member_to"
+    
+    assert_equal "7123811", person_to_keep.license, "license"
   end
   
   def test_merge_login
@@ -191,6 +198,13 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(person.name, '', 'name')
   end
   
+  def test_name_or_login
+    assert_equal nil, Person.new.name_or_login
+    assert_equal "dario@example.com", Person.new(:email => "dario@example.com").name_or_login
+    assert_equal "the_dario", Person.new(:login => "the_dario").name_or_login
+    assert_equal "Dario", Person.new(:name => "Dario").name_or_login
+  end
+
   def test_member
     person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
     assert_equal(false, person.member?, 'member')
@@ -788,7 +802,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
     assert_equal("Kona", people[2]["team_name"], "Row 2 team")
     assert_equal("30", people[4]["racing_age"], "Row 4 racing_age")
-    assert_equal("01/01/1999", people[4]["member_from"], "Row 4 member_from")
+    assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
     assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
   end
@@ -880,6 +894,15 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
     person = Person.find(person.id)
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
+  end
+  
+  def test_destroy_with_editors
+    person = Person.create!
+    person.editors << people(:alice)
+    assert people(:alice).editable_people.any?, "should be editor"
+    person.destroy
+    assert !Person.exists?(person)
+    assert people(:alice).editable_people(true).empty?, "should remove editors"
   end
   
   def test_renewed

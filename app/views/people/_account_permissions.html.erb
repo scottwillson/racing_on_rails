@@ -1,0 +1,17 @@
+<% table :caption => "Account Permissions", :class => "box-3 last", :id => "accounts", :collection => account_permissions do %>
+  <tr>
+    <th>Person</th>
+    <% if current_person == person -%>
+    <th>My Account</th>
+    <% else -%>
+    <th>This Account</th>
+    <% end -%>
+    <th>Their Account</th>
+  </tr>
+  
+  <%- account_permissions.each_with_index do |account_permission, account_permission_index| -%>
+    <%= render :partial => "people/account_permission", 
+          :locals => { :account_permission => account_permission, :account_permission_index => :account_permission_index, :person => person, :return_to => return_to }
+    %>
+  <% end -%>
+<% end -%>

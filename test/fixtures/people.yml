@@ -46,7 +46,7 @@ tonkin:
   first_name: Erik
   last_name: Tonkin
   team: kona
-  member_from: 1999-01-01
+  member_from: 1996-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: M
   license: 7123811
