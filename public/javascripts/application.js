@@ -102,7 +102,7 @@ function sizeTo100PctVertical(id) {
   $(id).setStyle( { height: newHeight + 'px' })
 }
 
-function auto_complete(model, attribute, path) {
+function autoComplete(model, attribute, path) {
   Event.observe(window, 'load', function() {
     new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
       method: 'GET',
