@@ -16,7 +16,7 @@
   <%= link_to_remote(image_tag("/images/icons/add.png"), :url => { :action => new_action }, :html => { :class => "image" }) if new_action -%>
 </div>
 
-<% if id %>
+<% if id && fix_table_column_widths %>
 <script type="text/javascript" charset="utf-8">
   // Otherwise, in-place editing jumps table around
   fixTableColumnWidths('<%= "#{id}_table" %>');
