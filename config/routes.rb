@@ -90,6 +90,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.mailing_lists "/mailing_lists", :controller => "mailing_lists", :action => "index"
   
+  map.resources :update_requests, :member => { :confirm => :get }
   map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
   map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
   map.oregon_cup "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
@@ -119,8 +120,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :people, 
                 :member => { :card => :get, :account => :get, :membership => :get },
                 :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
-                :has_many => :results do |person|
-                  person.resources :events
+                :has_many => [ :editor_requests, :events, :results ],
+                :has_one => :membership do |people|
+                  people.resources :editors, :member => { :create => :get, :destroy => :get }
                 end
   
   # Deprecated URLs
