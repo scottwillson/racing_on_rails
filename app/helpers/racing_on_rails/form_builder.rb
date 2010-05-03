@@ -11,12 +11,16 @@ module RacingOnRails
 
     def labelled_select(method, select_options, options = {})
       label_options = options.delete(:label) || {}
-      text = label_options[:text] if label_options
+      text = label_options.delete(:text) if label_options
       if options[:editable] == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
       else
-        %Q{#{label(method, "#{method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}
+       %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}
       end
+    end
+
+    def labelled_country_select(method, options = {})
+      labelled_select method, ASSOCIATION.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
     end
 
     def labelled_password_field(method, text = method.to_s.titleize, password_field_options = {})
@@ -29,7 +33,7 @@ module RacingOnRails
       if check_box_options[:editable] == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
       else
-        %Q{<div class="check_box">#{check_box(method, check_box_options)}#{label(method, text || method.to_s.titleize)}</div>}
+        %Q{<div class="check_box"><div class="input">#{check_box(method, check_box_options)}</div><div  class="label">#{label(method, text || method.to_s.titleize)}</div></div>}
       end
     end
     
