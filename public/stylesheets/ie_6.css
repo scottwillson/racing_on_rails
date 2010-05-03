@@ -1,3 +1,11 @@
 label {
   margin-top: 4px;
 }
+
+div.check_box {
+  margin-left: 77px;
+}
+
+.help, .wide_help {
+  margin-left: 77px;
+}

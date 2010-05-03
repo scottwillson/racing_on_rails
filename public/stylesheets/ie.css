@@ -23,12 +23,15 @@ hr.space {
   color: white;
 }
 
-input[type=checkbox] {
-  margin-top: 0px;
+div.check_box {
+  width: 267px;
 }
 
-.check_box, .radio {
-  padding-top: 6px;
+.span-1 div.check_box {
+  width: 130px;
+  margin: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .check_box label, .radio label {

@@ -118,7 +118,7 @@ p.flash_message, p.message, div.flash_message, div.message {
   line-height: 16px;
 }
 
-#notice_span
+#notice_span, .notice, .notice_span
 {
   background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
@@ -126,18 +126,12 @@ p.flash_message, p.message, div.flash_message, div.message {
   padding-right: 4px;
 }
 
-#warn_span, .warn
+#warn_span, .warn, .warn_span
 {
-  color: red;
   background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
   padding-left: 20px;
   padding-right: 4px;
-}
-
-#warn a, .warn a, #warn a:link, .warn a:link, #warn a:visited, .warn a:visited {
-  color: red;
-  border-bottom-color: red;
 }
 
 h1, h2, h3 {

@@ -42,9 +42,11 @@ div.check_box, div.radio {
   display: block;
   padding-top: 10px;
   margin-left: 150px;
+  float: left;
 }
 
-div.check_box label, div.radio label {
+div.check_box div.input, div.check_box div.label {
+ float: left;
   font-weight: normal;
   text-align: left;
   width: 242px;
@@ -52,11 +54,21 @@ div.check_box label, div.radio label {
   vertical-align: middle;
   clear: none;
   margin-top: 0px;
+  margin-right: 0px;
 }
 
 .check_box + .check_box, .radio + .radio {
   padding-top: 4px;
 }
+
+.span-1 div.check_box {
+  margin-left: 0px;
+}
+
+.span-1 div.check_box label {
+  width: auto;
+}
+
 
 label.left, label.top {
   margin-left: 0px;
@@ -219,11 +231,8 @@ div.fieldWithErrors
 
 #errorExplanation
 {
-  width: 400px;
-  border: 2px solid rgb(204, 0, 0);
+  width: 430px;
   padding: 7px;
-  margin-bottom: 12px;
-  background-color: #f0f0f0;
   margin-left: auto;
   margin-right: auto;
 }
@@ -249,8 +258,14 @@ div.fieldWithErrors
 #errorExplanation ul li
 {
   font-size: 12px;
-  list-style: square;
+  line-height: 16px;
+  list-style-type: none;
+  margin-top: 6px;
   margin-left: 32px;
+  padding-left: 20px;
+  background-image: url(/images/icons/exclamation.png);
+  background-repeat: no-repeat;
+  background-position: 0 0.5px;
 }
 
 .cancelled

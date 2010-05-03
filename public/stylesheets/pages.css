@@ -1,4 +1,4 @@
-onth/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
+/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
 
 /* Admin events */
 table#left_nav {
@@ -58,12 +58,13 @@ td.day
 
 td.day div.event {
   margin-bottom: 8px;
+  line-height: 16px;
 }
 
 td.day div.beginner_friendly {
   background-image: url(/images/icons/star_green.png);
   background-repeat: no-repeat;
-  padding-left: 16px;
+  padding-left: 20px;
 }
 
 td.day div.number
@@ -158,7 +159,7 @@ div.disclosure {
   cursor: move;
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 0px 0px;
+  background-position: 0px -1px;
   display: inline;
 }
 
@@ -368,7 +369,7 @@ form.cat4_womens_race_series td input#result_team_name {
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 32px 6px;  
+  background-position: 32px 4px;  
 }
 
 table.event_nav td.race a {
