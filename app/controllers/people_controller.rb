@@ -1,9 +1,10 @@
 class PeopleController < ApplicationController
   before_filter :require_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
-  before_filter :require_same_person_or_administrator, :only => [ :edit, :update, :card ]
+  before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
 
   ssl_required :edit, :update, :card, :new_login, :create_login, :account
+  ssl_allowed :index
   
   def index
     @people = []
@@ -12,7 +13,6 @@ class PeopleController < ApplicationController
     if @name.present?
       @people = Person.find_all_by_name_like(@name)
       @people = @people.paginate(:page => params[:page])
-      @name = ''
     end
   end
   
@@ -28,6 +28,7 @@ class PeopleController < ApplicationController
   
   def update
     if @person.update_attributes(params[:person])
+      flash[:notice] = "Updated #{@person.name}"
       redirect_to edit_person_path(@person)
     else
       render :edit
@@ -52,19 +53,13 @@ class PeopleController < ApplicationController
   def create_login
     @return_to = params[:return_to]
     
-    if (params[:person][:license].blank? && params[:person][:name].present?)
-      @person = Person.new(params[:person])
-      @person.errors.add :license, "can't be blank if name is present"
-      return render(:new_login)
-    end
-    
-    if (params[:person][:license].present? && params[:person][:name].blank?)
+    if params[:person][:license].present? && params[:person][:name].blank?
       @person = Person.new(params[:person])
       @person.errors.add :name, "can't be blank if license is present"
       return render(:new_login)
     end
     
-    if params[:person][:license].present? && params[:person][:name].present?
+    if params[:person][:license].present?
       @person = Person.find_all_by_name_like(params[:person][:name]).detect { |person|
         person.license == params[:person][:license].strip
       }
@@ -98,6 +93,14 @@ class PeopleController < ApplicationController
       @person.errors.add :login, "can't be blank"
     end
     
+    if params[:person][:license].present? && params[:person][:license].strip[/\D+/]
+      @person.errors.add :license, "should only be numbers"
+    end
+    
+    if params[:person][:name].present? && params[:person][:name].strip[/^\d+$/]
+      @person.errors.add :name, "is a number. Did you accidently type your license in the name field?"
+    end
+
     if @person.errors.any?
       return render(:new_login)
     end
