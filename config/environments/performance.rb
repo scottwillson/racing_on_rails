@@ -11,12 +11,3 @@ config.action_mailer.raise_delivery_errors = true
 config.action_mailer.delivery_method = :test
 
 RAILS_HOST = "localhost:3000" unless defined?(RAILS_HOST)
-
-config.after_initialize do
-  ActiveMerchant::Billing::Base.mode = :test
-
-  ::GATEWAY = ActiveMerchant::Billing::Base.gateway(:trust_commerce).new(
-    :login => "834347",
-    :password => "commerce7"
-  )
-end
