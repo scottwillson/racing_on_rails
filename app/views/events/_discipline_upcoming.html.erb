@@ -6,7 +6,7 @@
   <td class="date"><%= event.date_range_s %></td>
   <td class="info">
     <%= public_link_to_flyer event %>
-    <%= link_to(image_tag("icons/star_green.png"), "#", :class => "image beginner_friendly", :title => "Beginner friendly event") if event.beginner_friendly? %>
+    <%= link_to(image_tag("icons/star_green.png"), "http://www.obra.org/beginner_friendly.html", :class => "image beginner_friendly", :title => "Beginner friendly event") if event.beginner_friendly? %>
   </td>
 </tr>
 <%- end -%>
