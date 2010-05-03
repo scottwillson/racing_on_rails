@@ -12,7 +12,7 @@ module PageHelper
     "<span title=\"Created on #{page.created_at}\">#{time_ago_in_words(page.updated_at, true)} ago</span> by #{page.author.name}"
   end
   
-  def confirm_destory_message(page)
+  def confirm_destroy_message(page)
     msg = "Really delete"
     if page.title.blank?
       msg = "#{msg} page?"
