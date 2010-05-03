@@ -26,10 +26,14 @@ class Person < ActiveRecord::Base
 
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
+  has_and_belongs_to_many :editable_people, :class_name => "Person", :foreign_key => "editor_id", :before_add => :validate_unique_editors
+  has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :before_add => :validate_unique_editors
+  has_many :editor_requests, :dependent => :destroy
   has_many :events, :foreign_key => "promoter_id"
-  has_many :race_numbers, :include => [:discipline, :number_issuer]
+  has_many :race_numbers, :include => [ :discipline, :number_issuer ]
   has_many :results
   has_and_belongs_to_many :roles
+  has_many :sent_editor_requests, :foreign_key => "editor_id", :class_name => "EditorRequest", :dependent => :destroy
   belongs_to :team
   
   attr_accessor :year
@@ -127,18 +131,21 @@ class Person < ActiveRecord::Base
                :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ ASSOCIATION.year, ASSOCIATION.next_year ], number ])
   end
 
+  # if/else to avoid strip
   def Person.full_name(first_name, last_name)
-    unless first_name.blank? || last_name.blank?
-      return "#{first_name} #{last_name}"
+    if first_name.present?
+      if last_name.present?
+        "#{first_name} #{last_name}"
+      else
+        first_name
+      end
+    else
+      if last_name.present?
+        last_name
+      else
+        ""
+      end
     end
-    unless first_name.blank?
-      return first_name
-    end
-    unless last_name.blank?
-      return last_name
-    end
-    
-    ''
   end
   
   def Person.find_all_current_email_addresses
@@ -267,6 +274,26 @@ class Person < ActiveRecord::Base
     "#{name} <#{email}>"
   end
 
+  def name_or_login
+    if name.present?
+      name
+    elsif login.present?
+      login
+    else
+      email
+    end
+  end
+  
+  def last_name_or_login
+    if last_name.present?
+      last_name
+    elsif login.present?
+      login
+    else
+      email
+    end
+  end
+
   # Name. If +name+ is blank, returns email and phone
   def name_or_contact_info
     if name.blank?
@@ -274,11 +301,6 @@ class Person < ActiveRecord::Base
     else
       name
     end
-  end
-
-  # All contact information cannot be blank
-  def blank?
-    name.blank? && email.blank? && home_phone.blank?
   end
   
   # Cannot have promoters with duplicate contact information
@@ -362,14 +384,18 @@ class Person < ActiveRecord::Base
   end
   
   def gender=(value)
-    value.upcase!
-    case value
-    when 'M', 'MALE', 'BOY'
-      self[:gender] = 'M'
-    when 'F', 'FEMALE', 'GIRL'
-      self[:gender] = 'F'
+    if value.nil?
+      self[:gender] = nil
     else
-      self[:gender] = 'M'
+      value.upcase!
+      case value
+      when 'M', 'MALE', 'BOY'
+        self[:gender] = 'M'
+      when 'F', 'FEMALE', 'GIRL'
+        self[:gender] = 'F'
+      else
+        self[:gender] = 'M'
+      end
     end
   end
   
@@ -445,7 +471,13 @@ class Person < ActiveRecord::Base
   end
   
   def category(discipline)
-    case discipline
+    if discipline.is_a?(String)
+      _discipline = Discipline[discipline]
+    else
+      _discipline = discipline
+    end
+    
+    case _discipline
     when Discipline[:road], Discipline[:track], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
       self["road_category"]
     when Discipline[:road], Discipline[:criterium], Discipline[:time_trial], Discipline[:circuit]
@@ -670,6 +702,13 @@ class Person < ActiveRecord::Base
     self.member_to && (self.member_to.year >= ASSOCIATION.effective_year)
   end
 
+  def renew!(license_type)
+    self.member = true
+    self.print_card = true
+    self.license_type = license_type
+    save!
+  end
+
   def print_card?
     self.print_card
   end
@@ -815,6 +854,17 @@ class Person < ActiveRecord::Base
         self.crypted_password = other_person.crypted_password
         other_person.update_attribute :login, nil
       end
+      if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
+        self.member_from = other_person.member_from
+      end
+      if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
+        self.member_to = other_person.member_to
+      end
+      
+      if license.blank?
+        self.license = other_person.license
+      end
+
       save!
       aliases << other_person.aliases
       events << other_person.events
@@ -859,6 +909,22 @@ class Person < ActiveRecord::Base
        !Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", @old_name])
 
       Alias.create!(:name => @old_name, :person => self)
+    end
+  end
+
+  def validate_unique_editors(editor)
+    if editors.include?(editor)
+      raise ActiveRecord::ActiveRecordError, "Can't add duplicate editor #{editor.name} for #{name}"
+    end
+    
+    if editor == self
+      raise ActiveRecord::ActiveRecordError, "Can't be editor for self"
+    end
+  end
+  
+  def account_permissions
+    (editors + editable_people).reject { |person| person == self }.uniq.map do |person|
+      AccountPermission.new(person, editable_people.include?(person), editors.include?(person))
     end
   end
 
