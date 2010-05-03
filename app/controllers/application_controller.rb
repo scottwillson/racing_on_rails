@@ -125,6 +125,12 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def require_same_person_or_administrator_or_editor
+    unless current_person.administrator? || (@person && current_person == @person) || (@person && @person.editors.include?(current_person))
+      redirect_to unauthorized_path
+    end
+  end
+
   def require_administrator_or_promoter
     unless (current_person && current_person.administrator?) || 
            (@event && current_person == @event.promoter) || 

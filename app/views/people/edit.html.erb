@@ -8,17 +8,8 @@
 <div class="column_grid_container">
 <% form_for @person  do |f| -%>
   <div class="span-3">
-    <% if @person.first_name.blank? -%>
     <%= f.labelled_text_field :first_name %>
-    <% else -%>
-    <%= f.labelled_text :first_name %><br/>
-    <% end -%>
-
-    <% if @person.last_name.blank? -%>
     <%= f.labelled_text_field :last_name %>
-    <% else -%>
-    <%= f.labelled_text :last_name %><br/>
-    <% end -%>
 
     <%= f.labelled_text_field :team_name %>
   </div>
@@ -78,6 +69,12 @@
     <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off" %>
   </div>
 
+  <hr class="space" />
+
+  <div class="clear span-6 last">
+    <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "" } %>
+  </div>
+
   <div class="span-2">
     <%= render :partial => "numbers", :locals => { :person => @person } %>
   </div>
@@ -104,6 +101,10 @@
       <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
       <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
     </div>
+    <div class="clear span-6 last">
+      <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "admin" } %>
+    </div>
+    
     <div class="right span-4 last">
       <%= link_to "Results", person_results_path(@person) %>
       <%= submit_tag "Save", :id => "save" %>

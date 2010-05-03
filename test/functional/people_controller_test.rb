@@ -32,7 +32,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')
     assert_not_nil(assigns["name"], "Should assign name")
-    assert_equal('', assigns['name'], "'name' assigns")
+    assert_equal('weav', assigns['name'], "'name' assigns")
   end
 
   def test_find_nothing
@@ -61,7 +61,17 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal(30, assigns['people'].size, "Search for '' should find all people and paginate")
     assert_not_nil(assigns["name"], "Should assign name")
     assert(flash.empty?, 'flash not empty?')
-    assert_equal('', assigns['name'], "'name' assigns")
+    assert_equal('Test', assigns['name'], "'name' assigns")
+  end
+
+  def test_ajax_ssl_find
+    use_ssl
+    xhr :get, :index, :name => "weav"
+    assert_response :success
+    assert_not_nil assigns["people"], "Should assign people"
+    assert_equal [ people(:weaver) ], assigns['people'], "Search for weav should find Weaver"
+    assert_template "people/index"
+    assert_layout nil
   end
   
   def test_edit
@@ -80,6 +90,16 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal people(:promoter), assigns(:person), "@person"
     assert_select ".tabs", :count => 1
+  end
+
+  def test_edit_as_editor
+    people(:molly).editors << people(:member)
+    use_ssl
+    login_as :member
+    get :edit, :id => people(:molly).to_param
+    assert_response :success
+    assert_equal people(:molly), assigns(:person), "@person"
+    assert_select ".tabs", :count => 0
   end
 
   def test_must_be_logged_in
@@ -107,6 +127,17 @@ class PeopleControllerTest < ActionController::TestCase
     use_ssl
     person = people(:member)
     login_as :member
+    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    assert_redirected_to edit_person_path(person)
+    assert_equal teams(:gentle_lovers), person.reload.team(true), "Team should be updated"
+  end
+  
+  def test_update_by_editor
+    people(:member).editors << people(:molly)
+
+    use_ssl
+    person = people(:member)
+    login_as :molly
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     assert_equal teams(:gentle_lovers), person.reload.team(true), "Team should be updated"
@@ -163,6 +194,24 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
   
+  def test_create_login_with_name
+    ActionMailer::Base.deliveries.clear
+    
+    use_ssl
+    post :create_login, 
+         :person => { 
+           :login => "racer@example.com", 
+           :name => "Bike Racer",
+           :password => "secret", 
+           :password_confirmation => "secret", 
+           :email => "racer@example.com"
+          },
+         :return_to => root_path
+    assert_redirected_to root_path
+    
+    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+
   def test_create_login_with_license_and_name
     ActionMailer::Base.deliveries.clear
     existing_person = Person.create!(:license => "123", :name => "Speed Racer")
@@ -202,26 +251,6 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.on(:name), "Should have error on :name"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
-  
-  def test_create_login_with_name_in_license_field
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "",
-                      :name => "123"
-                    },
-         :return_to => root_path
- 
-    assert_response :success
-    assert assigns(:person).errors.on(:license), "Should have error on :license"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
   
