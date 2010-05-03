@@ -10,6 +10,7 @@
 
       <div><%= f.labelled_text_field :login %></div>
       <div><%= f.labelled_text_field :email %></div>
+      <div><%= f.labelled_text_field :name %></div>
       <div><%= f.labelled_password_field :password %></div>
       <div><%= f.labelled_password_field :password_confirmation %></div>
       <div><%= hidden_field_tag "return_to", @return_to %></div>
@@ -21,7 +22,6 @@
         <%= ASSOCIATION.short_name %> membership card, under the bar code.
       </div>
 
-      <div><%= f.labelled_text_field :name %></div>
       <div><%= f.labelled_text_field :license, "#{ASSOCIATION.short_name} License #", :autocomplete => "off" %></div>
     </div>
 
