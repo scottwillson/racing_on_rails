@@ -1,7 +1,7 @@
 class PersonSessionsController < ApplicationController
   ssl_required :new, :create, :destroy
 
-  before_filter :require_person, :only => [ :destroy, :show ]
+  before_filter :require_person, :only => [ :show ]
   
   def new
     if current_person
@@ -27,6 +27,7 @@ class PersonSessionsController < ApplicationController
   end
   
   def destroy
+    session[:return_to] = nil
     current_person_session.destroy if current_person_session
     redirect_back_or_default new_person_session_url
   end
