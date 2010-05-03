@@ -273,6 +273,9 @@ class Event < ActiveRecord::Base
       combined_results.destroy_races
       combined_results.destroy
     end
+    races.each do |race|
+      race.results.clear
+    end
     races.clear
     enable_notification!
   end
@@ -488,7 +491,7 @@ class Event < ActiveRecord::Base
       name
     elsif parent.full_name == name
       name
-    elsif name[parent.full_name]
+    elsif name[ parent.full_name ]
       name
     else
       "#{parent.full_name}: #{name}"
