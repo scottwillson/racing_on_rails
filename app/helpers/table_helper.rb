@@ -3,6 +3,7 @@ module TableHelper
     # TODO Use merge or something
     options[:caption] = nil unless options[:caption]
     options[:caption_visible] = true unless options[:caption_visible]
+    options[:fix_table_column_widths] = true unless options.include?(:fix_table_column_widths)
     options[:new_action] = nil unless options[:new_action]
     options[:id] = nil unless options[:id]
     options[:style_class] = options[:class]
