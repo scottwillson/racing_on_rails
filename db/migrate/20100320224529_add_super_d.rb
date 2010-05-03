@@ -1,6 +1,6 @@
 class AddSuperD < ActiveRecord::Migration
   def self.up
-    if ASSOCIATION.short_name == "obra"
+    if ASSOCIATION.short_name == "OBRA"
       Discipline.create! :name => "Super D"
     end
   end
