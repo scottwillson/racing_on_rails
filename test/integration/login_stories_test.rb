@@ -82,7 +82,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "You must be an administrator to access this page", flash[:notice]
+      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
 
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to admin_people_path
@@ -121,7 +121,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "You must be an administrator to access this page", flash[:notice]
+      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
     end
 
   # No-SSL tests

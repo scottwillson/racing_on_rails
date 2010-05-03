@@ -35,6 +35,15 @@ class PeopleHelperTest < ActionView::TestCase
     assert promoter?, "promoter? with no one logged-in"
   end
 
+  def test_pronoun
+    person_1 = Person.new(:name => "Tiny")
+    person_2 = Person.new(:name => "Buddy")
+    assert_equal "Tiny", pronoun(person_1, person_2)
+    assert_equal "me", pronoun(person_1, person_1)
+    assert_equal "me", pronoun(person_2, person_2)
+    assert_equal "Buddy", pronoun(person_2, person_1)
+  end
+
   
   private
   

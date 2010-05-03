@@ -998,7 +998,7 @@ class ResultTest < ActiveSupport::TestCase
     )
 
     person = Person.create!(:name => "Phil Anderson", :team => Team.find_by_name("QuickStep"))
-    assert(race.destroy, "Should destory race")
+    assert(race.destroy, "Should destroy race")
 
     assert_nil(Person.find_by_name("Tom Blow"), "Should delete person that just came from results")
     assert_not_nil(Person.find_by_name("Phil Anderson"), "Should keep person that was manually entered")

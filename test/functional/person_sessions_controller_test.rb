@@ -58,14 +58,37 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
   
   def test_logout
-    PersonSession.create(people(:administrator))
+    login_as :member
 
     delete :destroy
     
     assert_redirected_to new_person_session_path
-    assert_nil(assigns["person_session"], "@person_session")
+    assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil session[:return_to], ":return_to in session"
+  end
+  
+  def test_logout_administrator
+    login_as :administrator
+
+    delete :destroy
+    
+    assert_redirected_to new_person_session_path
+    assert_nil assigns["person_session"], "@person_session"
+    assert_nil session[:person_credentials], "Should not have :person_credentials in session"
+    assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil session[:return_to], ":return_to in session"
+  end
+  
+  def test_logout_no_session
+    delete :destroy
+    
+    assert_redirected_to new_person_session_path
+    assert_nil assigns["person_session"], "@person_session"
+    assert_nil session[:person_credentials], "Should not have :person_credentials in session"
+    assert_nil cookies["person_credentials"], "person_credentials cookie"    
+    assert_nil session[:return_to], ":return_to in session"
   end
   
   def test_logout_no_ssl

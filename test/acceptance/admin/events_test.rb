@@ -20,7 +20,6 @@ class EventsTest < WebDriverTestCase
 
     assert_value "", "event_promoter_id"
     assert_value "", "promoter_auto_complete"
-    # click "promoter_auto_complete"
     type "Tom Brown", "promoter_auto_complete"
 
     click "save"
@@ -96,6 +95,7 @@ class EventsTest < WebDriverTestCase
     gl = Team.find_by_name('Gentle Lovers')
     unless chrome?
       wait_for_element "team_#{gl.id}"
+      wait_for_displayed "team_#{gl.id}"
       click "team_#{gl.id}"
       assert_value gl.id, "event_team_id"
       assert_value "Gentle Lovers", "team_auto_complete"

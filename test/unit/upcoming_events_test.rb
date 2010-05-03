@@ -76,7 +76,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     
       # Sunday
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
-      assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
+      assert_same_elements([saltzman_hc, may_day_rr, lucky_lab_tt, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       assert_equal(nil, upcoming_events['Mountain Bike'], 'UpcomingEvents.events[Mountain Bike]')
       assert_equal(nil, upcoming_events['Track'], 'UpcomingEvents.events[Track]')
     
