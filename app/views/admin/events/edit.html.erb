@@ -56,6 +56,7 @@
             <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
         <% end -%>
 
+        <%= f.labelled_text_field(:time) if administrator? %>
         <%= f.labelled_select(:discipline, @disciplines.sort) if administrator? %><br/>
 
         <%= f.label :city, "City, State" %>
@@ -66,7 +67,6 @@
         <% end -%>
         
         <% if administrator? %>
-        <%= f.labelled_text_field :time %>
         <%= f.labelled_check_box :cancelled %>
         <%= f.labelled_check_box :postponed %>
         <%= f.labelled_check_box :instructional %>
@@ -164,8 +164,9 @@
       update_page_tag { |page| page.hide(:edit_promoter_link) }
     end -%>
 
-<% unless @event.new_record? -%>
+<% if !@event.new_record? && administrator? -%>
 <script type="text/javascript" charset="utf-8">
+<!--
   new Form.Element.Observer('event_promoter_id', 0, function(element, value) {
     if (value == '') {
       Element.hide('edit_promoter_link');
@@ -174,5 +175,6 @@
       Element.show('edit_promoter_link')
     }
   });
+// -->
 </script>
 <% end -%>
