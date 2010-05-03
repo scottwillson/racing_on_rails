@@ -37,8 +37,8 @@ end -%>
         </tr>
         <tr>
           <td><pre><%- for result in race.results.sort %>
-<%= result.place.rjust(3) -%>
- <%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
+<%= "#{result.place.rjust(3)}  " -%>
+<%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
 <%= truncate(result.team_name, :length => 40).ljust(40) -%>
 <%= format("%0.0f",result.points).rjust(6) -%>
 <%- end -%></pre></td>
@@ -70,7 +70,7 @@ end -%>
                   <li>$100</li>
                   <li>$50</li>
                 </ol>
-              <li>Prizes awarded at the annual <a href="/flyers/2008/annual_mtg_banquet.html">OBRA Banquet</a></li>
+              <li>Prizes awarded at the annual OBRA Banquet</li>
               <li>Leaders and champions jerseys will be awarded. </li>
               <li>The OBRA Oregon Cup Committee will conduct ongoing outreach to potential sponsors and media. </li>
               <li>Free entry to OR Cup events for OR Cup leaders. </li>
