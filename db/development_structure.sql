@@ -138,6 +138,26 @@ create table `duplicates_people` (
   constraint `duplicates_racers_duplicates_id_fk` foreign key (`duplicate_id`) references `duplicates` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
+create table `editor_requests` (
+  `id` int(11) not null auto_increment,
+  `lock_version` int(11) not null default '0',
+  `person_id` int(11) not null,
+  `editor_id` int(11) not null,
+  `expires_at` datetime not null,
+  `token` varchar(255) not null,
+  `email` varchar(255) not null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`),
+  unique key `index_editor_requests_on_editor_id_and_person_id` (`editor_id`,`person_id`),
+  key `index_editor_requests_on_editor_id` (`editor_id`),
+  key `index_editor_requests_on_person_id` (`person_id`),
+  key `index_editor_requests_on_expires_at` (`expires_at`),
+  key `index_editor_requests_on_token` (`token`),
+  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
+  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+) engine=innodb default charset=utf8;
+
 create table `events` (
   `id` int(11) not null auto_increment,
   `parent_id` int(11) default null,
@@ -341,6 +361,7 @@ create table `people` (
   `license_type` varchar(255) default null,
   `country_code` varchar(2) default 'US',
   `membership_card` tinyint(1) not null default '0',
+  `official` tinyint(1) not null default '0',
   primary key (`id`),
   unique key `index_people_on_login` (`login`),
   key `idx_last_name` (`last_name`),
@@ -354,6 +375,16 @@ create table `people` (
   key `index_people_on_single_access_token` (`single_access_token`),
   key `index_people_on_created_by_id` (`created_by_id`),
   constraint `people_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
+) engine=innodb default charset=utf8;
+
+create table `people_people` (
+  `person_id` int(11) not null,
+  `editor_id` int(11) not null,
+  unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
+  key `index_people_people_on_editor_id` (`editor_id`),
+  key `index_people_people_on_person_id` (`person_id`),
+  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
+  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `people_roles` (
@@ -703,6 +734,18 @@ insert into schema_migrations (version) values ('20100107001744');
 insert into schema_migrations (version) values ('20100113032309');
 
 insert into schema_migrations (version) values ('20100121041557');
+
+insert into schema_migrations (version) values ('20100210042552');
+
+insert into schema_migrations (version) values ('20100211042204');
+
+insert into schema_migrations (version) values ('20100320020606');
+
+insert into schema_migrations (version) values ('20100320224529');
+
+insert into schema_migrations (version) values ('20100406002503');
+
+insert into schema_migrations (version) values ('20100407222156');
 
 insert into schema_migrations (version) values ('21');
 
