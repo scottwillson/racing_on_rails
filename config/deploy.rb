@@ -35,7 +35,6 @@ namespace :deploy do
   end
   
   task :wait_for_mongrels_to_stop do
-    deploy.stop
     # Give Mongrels a chance to really stop
     sleep 10
     deploy.start
