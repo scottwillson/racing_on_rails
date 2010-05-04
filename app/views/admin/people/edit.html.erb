@@ -6,7 +6,7 @@
 <% @page_title = "Admin: People: #{person_name}" %>
 
 <%- if @event -%>
-  <p class="top-margin centered">
+  <p class="top_margin centered">
     <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event, :promoter_id => @person.id), :id => "back_to_event") unless @person.new_record? %>
     <%= link_to("Back to #{@event.name}", edit_admin_event_path(@event), :id => "back_to_event") if @person.new_record? %>
   </p>

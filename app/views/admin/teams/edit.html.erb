@@ -40,7 +40,7 @@
         <tr id="alias_<%= name_alias.id %>">
           <td><%= name_alias.name %></td>
           <td>
-            <%= link_to_remote(image_tag('/images/icons/delete.png', :height => 22, :width => 23), 
+            <%= link_to_remote(image_tag("/images/icons/delete.png"), 
                  :url => { :action => "destroy_alias", :id => @team.id, :alias_id => name_alias.id},
                  :html => { :class => "image" }) %>
           </td>
@@ -54,7 +54,7 @@
           <td><%= historical_name.name %></td>
           <td><%= historical_name.year %></td>
           <td>
-            <%= link_to_remote(image_tag('/images/icons/delete.png', :height => 22, :width => 23), 
+            <%= link_to_remote(image_tag("/images/icons/delete.png"), 
                  :url => { :action => "destroy_historical_name", :id => @team.id, :historical_name_id => historical_name.id}) %>
           </td>
         </tr>
