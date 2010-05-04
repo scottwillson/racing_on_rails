@@ -119,10 +119,13 @@ ActionController::Routing::Routes.draw do |map|
               :conditions => { :method => :get }
   map.resources :people, 
                 :member => { :card => :get, :account => :get, :membership => :get },
-                :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post },
-                :has_many => [ :editor_requests, :events, :results ],
-                :has_one => :membership do |people|
-                  people.resources :editors, :member => { :create => :get, :destroy => :get }
+                :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post } do |person|
+                  person.resources :editors, :member => { :create => :get, :destroy => :get }
+                  person.resources :editor_requests
+                  person.resources :events
+                  person.resource :membership
+                  person.resources :orders
+                  person.resources :results
                 end
   
   # Deprecated URLs
