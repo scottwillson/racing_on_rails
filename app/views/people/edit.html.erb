@@ -71,10 +71,6 @@
 
   <hr class="space" />
 
-  <div class="clear span-6 last">
-    <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "" } %>
-  </div>
-
   <div class="span-2">
     <%= render :partial => "numbers", :locals => { :person => @person } %>
   </div>
@@ -85,11 +81,11 @@
 
   <hr class="space" />
 
-  <div class="clear span-6 last">
-    <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.find(:all, :conditions => [ 
-       "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
-     ]).empty? %>
-  </div>
+  <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "" } %>
+  <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.find(:all, :conditions => [ 
+     "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+   ]).empty? %>
+
   <hr class="space" />
 
   <div class="page_buttons span-6 last">
@@ -100,9 +96,6 @@
       </span>
       <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
       <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
-    </div>
-    <div class="clear span-6 last">
-      <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "admin" } %>
     </div>
     
     <div class="right span-4 last">

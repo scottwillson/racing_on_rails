@@ -15,14 +15,14 @@ module RacingOnRails
       if options[:editable] == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}
       else
-       %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}
+        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}
       end
     end
 
     def labelled_country_select(method, options = {})
       labelled_select method, ASSOCIATION.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
     end
-
+    
     def labelled_password_field(method, text = method.to_s.titleize, password_field_options = {})
       label_options = password_field_options.delete(:label) || {}
       %Q{#{label(method, "#{text}", label_options)} #{password_field(method, password_field_options)}}

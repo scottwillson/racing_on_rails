@@ -47,6 +47,9 @@ div.check_box, div.radio {
 
 div.check_box div.input, div.check_box div.label {
  float: left;
+}
+
+div.check_box label, div.radio label {
   font-weight: normal;
   text-align: left;
   width: 242px;
@@ -68,7 +71,6 @@ div.check_box div.input, div.check_box div.label {
 .span-1 div.check_box label {
   width: auto;
 }
-
 
 label.left, label.top {
   margin-left: 0px;
