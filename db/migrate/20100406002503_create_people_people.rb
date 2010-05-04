@@ -14,12 +14,14 @@ class CreatePeoplePeople < ActiveRecord::Migration
     
     Person.find(:all, :conditions => "last_name is not null and last_name != '' and email is not null and email != ''").each do |person|
       Person.find(:all, :conditions => ["last_name is not null and last_name != '' and email = ? and id != ?", person.email, person.id] ).each do |other_person|
-        say "#{person.name} and #{other_person.name} share #{person.email}"
-        unless person.editors.include?(other_person)
-          person.editors << other_person
-        end
-        unless other_person.editors.include?(person)
-          other_person.editors << person
+        if person.email.present? && person.email[Authlogic::Regex.email]
+          say "#{person.name} and #{other_person.name} share #{person.email}"
+          unless person.editors.include?(other_person)
+            person.editors << other_person
+          end
+          unless other_person.editors.include?(person)
+            other_person.editors << person
+          end
         end
       end
     end
