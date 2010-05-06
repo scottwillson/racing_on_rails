@@ -43,8 +43,8 @@ class OregonCup < Competition
         result.event.root == other_result.event.root &&
         (
           other_result.race.notes.include?("Oregon Cup") ||
-          other_result.event.notes.include?("Oregon Cup") ||
-          other_result.event.name.include?("Oregon Cup")
+          ((result.event.root != other_result.event.root) &&
+            (other_result.event.notes.include?("Oregon Cup") || other_result.event.name.include?("Oregon Cup")))
         )
       end
     end
