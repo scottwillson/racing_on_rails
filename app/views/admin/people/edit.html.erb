@@ -110,7 +110,9 @@
   <hr class="space" />
 
   <div class="clear span-6 last">
-    <%= render(:partial => "people/events", :locals => { :person => @person }) unless @person.events.empty? %>
+    <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find(:all, :conditions => [ 
+       "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+     ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
   </div>
 
   <div class="page_buttons span-6 last">

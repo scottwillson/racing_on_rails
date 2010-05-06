@@ -82,9 +82,9 @@
   <hr class="space" />
 
   <%= render :partial => "people/account_permissions", :locals => { :person => @person, :account_permissions => @person.account_permissions, :return_to => "" } %>
-  <%= render(:partial => "events", :locals => { :person => @person }) unless @person.events.find(:all, :conditions => [ 
+  <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find(:all, :conditions => [ 
      "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
-   ]).empty? %>
+   ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
 
   <hr class="space" />
 

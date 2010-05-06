@@ -491,6 +491,15 @@ table.numbers label.inline {
   width: 120px;
 }
 
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
+}
+
 /* Mailing list archive */
 #archived_post_body {
   float: left;

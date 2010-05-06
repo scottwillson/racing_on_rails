@@ -38,14 +38,14 @@ namespace :deploy do
     sleep 10
     deploy.start
   end
-end
 
-namespace :web do
-  desc "Present a maintenance page to visitors"
-  task :disable, :roles => :web, :except => { :no_release => true } do
-    on_rollback { run "rm #{shared_path}/system/maintenance.html" }
-    run "if [ -f #{release_path}/public/maintenance.html ]; then cp #{release_path}/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
-    run "if [ -f #{release_path}/local/public/maintenance.html ]; then cp #{release_path}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
+  namespace :web do
+    desc "Present a maintenance page to visitors"
+    task :disable, :roles => :web, :except => { :no_release => true } do
+      on_rollback { run "rm #{shared_path}/system/maintenance.html" }
+      run "if [ -f #{release_path}/public/maintenance.html ]; then cp #{release_path}/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
+      run "if [ -f #{release_path}/local/public/maintenance.html ]; then cp #{release_path}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
+    end
   end
 end
 
