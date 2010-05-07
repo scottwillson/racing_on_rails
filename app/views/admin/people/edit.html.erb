@@ -85,7 +85,6 @@
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
     <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if ASSOCIATION.cx_memberships? %>
-    <%= f.labelled_check_box :official %>
 
     <%= f.labelled_check_box :membership_card, "Has Card?" %>
     <%= f.labelled_check_box :print_card, 
@@ -93,6 +92,7 @@
                              {:class => 'obvious'})}" unless @person.new_record? %>
 
     <%= f.labelled_text :card_printed_at, @person.card_printed_at ? @person.card_printed_at.to_s(:long_ordinal) : "Never" %>
+    <%= f.labelled_check_box :official %>
   </div>
 
   <div class="span-3 last">
