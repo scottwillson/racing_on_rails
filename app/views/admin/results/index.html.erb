@@ -22,7 +22,7 @@
 </div>
 
 <script type="text/javascript">
-  function dropped_result(dragged, dropped) {
+  function droppedResult(dragged, dropped) {
     Element.show('find_progress_icon');
     new Effect.Fade($('people'), {duration:1.0, from:1.0, to:0.4});
     new Ajax.Request('/admin/results/move_result?person_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});

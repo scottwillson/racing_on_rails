@@ -79,9 +79,9 @@ function restripeTable(id) {
 
 // TODO Use this!
 function flash(key, message) {
-  $('info').hide();
-  $('notice').hide();
-  $('warn').hide();
+  if ($('info') != null) { $('info').hide() }
+  if ($('notice') != null) { $('notice').hide() }
+  if ($('warn') != null) { $('warn').hide() }
   
   $(key + '_span').update(message);
   $(key).show();

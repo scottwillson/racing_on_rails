@@ -167,6 +167,14 @@ div.disclosure {
   padding-left: 24px;
 }
 
+.category_name {
+  white-space: nowrap;
+}
+
+#category_root div.hovering, #unknown_category_root div.hovering {
+  background-color: #E9F79B;
+}
+
 /* Results admin */
 #find_progress_icon {
   visibility: hidden;
