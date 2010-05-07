@@ -131,6 +131,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def require_administrator_or_promoter_or_official
+    unless current_person.administrator? || current_person.promoter? || current_person.official?
+      redirect_to unauthorized_path
+    end
+  end
+
   def require_administrator_or_promoter
     unless (current_person && current_person.administrator?) || 
            (@event && current_person == @event.promoter) || 

@@ -1,9 +1,8 @@
 # Add, delete, and edit Person information. Also merge 
 class Admin::PeopleController < Admin::AdminController
   before_filter :require_person
-  before_filter :require_administrator, :expect => :index
   skip_filter :require_administrator, :only => :index
-  before_filter :require_administrator_or_promoter, :only => :index
+  before_filter :require_administrator_or_promoter_or_official, :only => :index
   before_filter :remember_event
   layout 'admin/application', :except => [:card, :cards]
   exempt_from_layout 'xls.erb', 'ppl.erb'
