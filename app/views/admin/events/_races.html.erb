@@ -36,7 +36,8 @@
       :url => admin_race_url(race),
       :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
       :complete => evaluate_remote_response, 
-      :method => :delete) if administrator?
+      :confirm => (Rails.env.production? && promoter?) ? nil : "Really delete #{race.name}?",
+      :method => :delete)
       %>
     </td>
   </tr>

@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
+  `name` varchar(255) default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
+  `title` varchar(255) default null,
+  `heading` varchar(255) default null,
+  `description` varchar(255) default null,
   `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
+  `body` text,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+) engine=innodb default charset=utf8;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -154,8 +154,8 @@ create table `editor_requests` (
   key `index_editor_requests_on_person_id` (`person_id`),
   key `index_editor_requests_on_expires_at` (`expires_at`),
   key `index_editor_requests_on_token` (`token`),
-  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `events` (
@@ -190,8 +190,8 @@ create table `events` (
   `bar_points` int(11) not null,
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
-  `promoter_id` int(11) default null,
   `team_id` int(11) default null,
+  `promoter_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
@@ -337,6 +337,7 @@ create table `people` (
   `team_interest` tinyint(1) not null default '0',
   `created_by_type` varchar(255) default null,
   `member_usac_to` date default null,
+  `status` varchar(255) default null,
   `crypted_password` varchar(255) default null,
   `password_salt` varchar(255) default null,
   `persistence_token` varchar(255) not null,
@@ -351,7 +352,6 @@ create table `people` (
   `login` varchar(100) default null,
   `string` varchar(100) default null,
   `created_by_id` int(11) default null,
-  `status` varchar(255) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
   `ncca_club_name` varchar(255) default null,
@@ -383,8 +383,8 @@ create table `people_people` (
   unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
   key `index_people_people_on_editor_id` (`editor_id`),
   key `index_people_people_on_person_id` (`person_id`),
-  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `people_roles` (
