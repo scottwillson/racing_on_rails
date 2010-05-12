@@ -11,8 +11,6 @@
   
   <%= render :partial => "version", :collection => @person.versions.sort_by(&:updated_at).reverse %>
 
-  <hr class="space" />
-
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
       <span class="created_at">
@@ -20,8 +18,8 @@
     </div>
   
     <div class="right span-4 last">
-      <%= link_to("Edit Account", edit_admin_person_path(@person)) if administrator? %>
-      <%= link_to("Edit Account", edit_person_path(@person)) unless administrator? %>
+      <%= link_to("Edit Account", edit_admin_person_path(@person), :class => "obvious") if administrator? %>
+      <%= link_to("Edit Account", edit_person_path(@person), :class => "obvious") unless administrator? %>
     </div>
   </div>
 </div>
