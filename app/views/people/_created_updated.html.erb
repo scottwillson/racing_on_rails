@@ -1,7 +1,7 @@
 <span class="created_at">
   <% link_to(person_versions_path(@person)) do %>
     <% if @person.created_at.present? %>Created <%= time_ago_in_words(@person.created_at, true) + " ago" %><% end %>
-    <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name_or_login) %><% end %>
+    <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name) %><% end %>
   <% end -%>
 </span>
 <% link_to(person_versions_path(@person)) do %>

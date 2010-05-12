@@ -3,7 +3,7 @@
 <% changes = version.changes.select { |key, change| change.first.present? || change.last.present? } -%>
 <% reset_cycle -%>
 
-<% table :caption => "Updated by #{version.user_without_name.try(:name_or_login)} on #{version.updated_at.to_s(:long)}", 
+<% table :caption => "Updated by #{version.user_without_name.try(:name)} on #{version.updated_at.to_s(:long)}", 
          :class => "version span-6 last clear", 
          :columns => 3, :collection => changes do %>
   <tr>
