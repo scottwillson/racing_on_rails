@@ -112,7 +112,6 @@ class Admin::PeopleController < Admin::AdminController
   # New blank numbers are ignored
   def create
     expire_cache
-    params[:person][:created_by] = current_person
     @person = Person.create(params[:person])
     
     if params[:number_value]
@@ -122,8 +121,7 @@ class Admin::PeopleController < Admin::AdminController
             :discipline_id => params[:discipline_id][index], 
             :number_issuer_id => params[:number_issuer_id][index], 
             :year => params[:number_year],
-            :value => number_value,
-            :updated_by => current_person.name
+            :value => number_value
           )
           unless race_number.errors.empty?
             @person.errors.add_to_base(race_number.errors.full_messages)
@@ -160,7 +158,6 @@ class Admin::PeopleController < Admin::AdminController
     begin
       expire_cache
       @person = Person.find(params[:id])
-      params[:person][:updated_by] = current_person.name
       @person.update_attributes(params[:person])
       if params[:number]
         for number_id in params[:number].keys

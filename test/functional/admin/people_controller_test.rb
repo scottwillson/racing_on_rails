@@ -654,6 +654,20 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')
     assert_equal(true, molly.ccx_only?, 'ccx_only?')
+
+    assert_equal 1, molly.versions.size, "versions"
+    version = molly.versions.last
+    admin = people(:administrator)
+    assert_equal admin, version.user, "version user"
+    changes = version.changes
+    assert_equal 25, changes.size, "changes"
+    change = changes["team_id"]
+    assert_not_nil change, "Should have change for team ID"
+    assert_equal teams(:vanilla).id, change.first, "Team ID before"
+    assert_equal nil, change.last, "Team ID after"
+    assert_equal "Candi Murray", molly.last_updated_by, "last_updated_by"
+    # VestalVersions convention
+    assert_nil molly.updated_by, "updated_by"
   end
   
   def test_update_bad_member_from_date
