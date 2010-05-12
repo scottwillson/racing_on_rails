@@ -1,0 +1,155 @@
+--- !ruby/object:Gem::Specification 
+name: vestal_versions
+version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 1
+  - 0
+  - 2
+  version: 1.0.2
+platform: ruby
+authors: 
+- laserlemon
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2010-01-12 00:00:00 -08:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: activerecord
+  prerelease: false
+  requirement: &id001 !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+        - 2
+        - 1
+        - 0
+        version: 2.1.0
+  type: :runtime
+  version_requirements: *id001
+- !ruby/object:Gem::Dependency 
+  name: shoulda
+  prerelease: false
+  requirement: &id002 !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id002
+- !ruby/object:Gem::Dependency 
+  name: mocha
+  prerelease: false
+  requirement: &id003 !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        segments: 
+        - 0
+        version: "0"
+  type: :development
+  version_requirements: *id003
+description: Keep a DRY history of your ActiveRecord models' changes
+email: steve@laserlemon.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- LICENSE
+- README.rdoc
+files: 
+- .gitignore
+- LICENSE
+- README.rdoc
+- Rakefile
+- VERSION
+- generators/vestal_versions/templates/initializer.rb
+- generators/vestal_versions/templates/migration.rb
+- generators/vestal_versions/vestal_versions_generator.rb
+- init.rb
+- lib/vestal_versions.rb
+- lib/vestal_versions/changes.rb
+- lib/vestal_versions/conditions.rb
+- lib/vestal_versions/configuration.rb
+- lib/vestal_versions/control.rb
+- lib/vestal_versions/creation.rb
+- lib/vestal_versions/options.rb
+- lib/vestal_versions/reload.rb
+- lib/vestal_versions/reset.rb
+- lib/vestal_versions/reversion.rb
+- lib/vestal_versions/tagging.rb
+- lib/vestal_versions/users.rb
+- lib/vestal_versions/version.rb
+- lib/vestal_versions/versioned.rb
+- lib/vestal_versions/versions.rb
+- test/changes_test.rb
+- test/conditions_test.rb
+- test/configuration_test.rb
+- test/control_test.rb
+- test/creation_test.rb
+- test/options_test.rb
+- test/reload_test.rb
+- test/reset_test.rb
+- test/reversion_test.rb
+- test/schema.rb
+- test/tagging_test.rb
+- test/test_helper.rb
+- test/users_test.rb
+- test/version_test.rb
+- test/versioned_test.rb
+- test/versions_test.rb
+- vestal_versions.gemspec
+has_rdoc: true
+homepage: http://github.com/laserlemon/vestal_versions
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --charset=UTF-8
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.6
+signing_key: 
+specification_version: 3
+summary: Keep a DRY history of your ActiveRecord models' changes
+test_files: 
+- test/changes_test.rb
+- test/conditions_test.rb
+- test/configuration_test.rb
+- test/control_test.rb
+- test/creation_test.rb
+- test/options_test.rb
+- test/reload_test.rb
+- test/reset_test.rb
+- test/reversion_test.rb
+- test/schema.rb
+- test/tagging_test.rb
+- test/test_helper.rb
+- test/users_test.rb
+- test/version_test.rb
+- test/versioned_test.rb
+- test/versions_test.rb
