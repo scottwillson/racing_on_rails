@@ -37,6 +37,10 @@ class ResultsTest < WebDriverTestCase
     wait_for_element "results_table"
     assert_not_in_page_source "Ryan Weaver"
     assert_page_source "Megan Weaver"
+    
+    weaver = Person.find_by_name("Ryan Weaver")
+    megan = Person.find_by_name("Megan Weaver")
+    assert weaver != megan, "Should create new person, not rename existing one"
 
     click "result_#{result_id}_team_name"
     wait_for_element :class_name => "editor_field"

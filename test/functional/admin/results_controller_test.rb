@@ -280,6 +280,32 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_equal(1, people(:tonkin).aliases.size)
   end
   
+  def test_update_to_new_person
+    weaver = people(:weaver)
+    assert_equal 0, weaver.aliases.size, "aliases"
+    assert_equal 4, weaver.results.size, "results"
+    result = results(:weaver_jack_frost)
+    
+    post :set_result_name, 
+         :id => result.to_param,
+         :value => "Stella Carey",
+         :editorId => "result_#{result.id}_name"
+
+    assert_response :success
+
+    result = Result.find(result.id)
+    assert_equal "Stella", result.first_name, "first_name"
+    assert_equal "Carey", result.last_name, "last_name"
+    assert weaver != result.person, "Result should be associated with a different person"
+    assert_equal 0, result.person.aliases.size, "Result person aliases"
+    assert_equal 2, result.person.results.size, "Result person results"
+    weaver = Person.find(weaver.id)
+    assert_equal 0, weaver.aliases.size, "Weaver aliases"
+    assert_equal "Ryan", weaver.first_name, "first_name"
+    assert_equal "Weaver", weaver.last_name, "last_name"
+    assert_equal 3, weaver.results.size, "results"
+  end
+  
   def test_person
     weaver = people(:weaver)
 

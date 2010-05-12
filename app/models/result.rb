@@ -358,27 +358,15 @@ class Result < ActiveRecord::Base
 
   # person.name
   def name=(value)
-    if value.blank?
-      self.person = nil
-      return value
-    end
-
-    if person
-      person_for_name = Person.new(:name => value)
-      existing_people = Person.find_all_by_name_or_alias(person_for_name.first_name, person_for_name.last_name)
-      if existing_people.size == 1
-        self.person = existing_people.first
-      else
-        person_id_will_change!
-        person.name = value
-      end
-    else
+    if value.present?
       self.person = Person.new(:name => value)
+    else
+      self.person = nil
     end
   end
 
   def person_name=(value)
-    name = value
+    self.name = value
   end
 
   # Team name when result was created

@@ -140,6 +140,7 @@ class EventsTest < WebDriverTestCase
       open "/admin/events?year=2003"
 
       click :link_text => "Kings Valley Road Race"
+      wait_for_current_url %r{/admin/events/\d+/edit}
       assert_not_in_page_source "Senior Men Pro 1/2"
       assert_not_in_page_source "Senior Men 3"
     end
