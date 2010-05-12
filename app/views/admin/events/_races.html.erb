@@ -18,7 +18,7 @@
       :method => :delete,
       :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
       :complete => evaluate_remote_response, 
-      :confirm => (Rails.env == "test") ? nil : "Really delete all races from #{@event.name}?") if administrator?
+      :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?") if administrator?
       # Lame workaround for Safari
       %>
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
@@ -36,7 +36,7 @@
       :url => admin_race_url(race),
       :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
       :complete => evaluate_remote_response, 
-      :confirm => (Rails.env.production? && promoter?) ? nil : "Really delete #{race.name}?",
+      :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?",
       :method => :delete)
       %>
     </td>

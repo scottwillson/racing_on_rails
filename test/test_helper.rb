@@ -20,8 +20,16 @@ class ActiveSupport::TestCase
     Discipline.reset
   end
 
-  def login_as(person_fixture_symbol)
-    PersonSession.create people(person_fixture_symbol).reload
+  # person = fixture symbol or Person
+  def login_as(person)
+    case person
+    when Symbol
+      PersonSession.create people(person).reload
+    when Person
+      PersonSession.create person.reload
+    else
+      raise "Don't recogonize #{person}"
+    end
   end
 
   # Assert two Enumerable objects contain exactly same object in any order

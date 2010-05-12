@@ -214,6 +214,7 @@ future_national_federation_event:
   type: SingleDayEvent
   bar_points: 0
   ironman: 0
+  number_issuer: association
 usa_cycling_event_with_results:
   name: Copperopolis Road Race
   discipline: Road
@@ -222,3 +223,4 @@ usa_cycling_event_with_results:
   type: SingleDayEvent
   bar_points: 0
   ironman: 0
+  number_issuer: association

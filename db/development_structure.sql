@@ -18,30 +18,30 @@ create table `aliases` (
 
 create table `article_categories` (
   `id` int(11) not null auto_increment,
-  `name` varchar(255) default null,
+  `name` varchar(255) collate utf8_unicode_ci default null,
   `parent_id` int(11) default '0',
   `integer` int(11) default '0',
   `position` int(11) default '0',
-  `description` varchar(255) default null,
+  `description` varchar(255) collate utf8_unicode_ci default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8;
+) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `articles` (
   `id` int(11) not null auto_increment,
-  `title` varchar(255) default null,
-  `heading` varchar(255) default null,
-  `description` varchar(255) default null,
+  `title` varchar(255) collate utf8_unicode_ci default null,
+  `heading` varchar(255) collate utf8_unicode_ci default null,
+  `description` varchar(255) collate utf8_unicode_ci default null,
   `display` tinyint(1) default null,
-  `body` text,
+  `body` text collate utf8_unicode_ci,
   `position` int(11) default '0',
   `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
-) engine=innodb default charset=utf8;
+) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `bids` (
   `id` int(11) not null auto_increment,
@@ -154,8 +154,8 @@ create table `editor_requests` (
   key `index_editor_requests_on_person_id` (`person_id`),
   key `index_editor_requests_on_expires_at` (`expires_at`),
   key `index_editor_requests_on_token` (`token`),
-  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
-  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
+  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
+  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `events` (
@@ -191,8 +191,8 @@ create table `events` (
   `ironman` tinyint(1) not null,
   `auto_combined_results` tinyint(1) not null default '1',
   `team_id` int(11) default null,
-  `promoter_id` int(11) default null,
   `sanctioning_org_event_id` varchar(16) default null,
+  `promoter_id` int(11) default null,
   `phone` varchar(255) default null,
   `email` varchar(255) default null,
   `postponed` tinyint(1) not null default '0',
@@ -327,7 +327,7 @@ create table `people` (
   `member_to` date default null,
   `print_card` tinyint(1) default '0',
   `ccx_only` tinyint(1) not null default '0',
-  `updated_by` varchar(255) default null,
+  `last_updated_by` varchar(255) default null,
   `bmx_category` varchar(255) default null,
   `wants_email` tinyint(1) not null default '0',
   `wants_mail` tinyint(1) not null default '0',
@@ -383,8 +383,8 @@ create table `people_people` (
   unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
   key `index_people_people_on_editor_id` (`editor_id`),
   key `index_people_people_on_person_id` (`person_id`),
-  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
-  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
+  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
+  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `people_roles` (
@@ -581,6 +581,27 @@ create table `velodromes` (
   key `index_velodromes_on_name` (`name`)
 ) engine=innodb default charset=utf8;
 
+create table `versions` (
+  `id` int(11) not null auto_increment,
+  `versioned_id` int(11) default null,
+  `versioned_type` varchar(255) default null,
+  `user_id` int(11) default null,
+  `user_type` varchar(255) default null,
+  `user_name` varchar(255) default null,
+  `changes` text,
+  `number` int(11) default null,
+  `tag` varchar(255) default null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`),
+  key `index_versions_on_versioned_id_and_versioned_type` (`versioned_id`,`versioned_type`),
+  key `index_versions_on_user_id_and_user_type` (`user_id`,`user_type`),
+  key `index_versions_on_user_name` (`user_name`),
+  key `index_versions_on_number` (`number`),
+  key `index_versions_on_tag` (`tag`),
+  key `index_versions_on_created_at` (`created_at`)
+) engine=innodb default charset=utf8;
+
 insert into schema_migrations (version) values ('1');
 
 insert into schema_migrations (version) values ('10');
@@ -746,6 +767,8 @@ insert into schema_migrations (version) values ('20100320224529');
 insert into schema_migrations (version) values ('20100406002503');
 
 insert into schema_migrations (version) values ('20100407222156');
+
+insert into schema_migrations (version) values ('20100511224150');
 
 insert into schema_migrations (version) values ('21');
 

@@ -129,7 +129,47 @@ class PeopleControllerTest < ActionController::TestCase
     login_as :member
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
-    assert_equal teams(:gentle_lovers), person.reload.team(true), "Team should be updated"
+    person = Person.find(person.id)
+    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal 1, person.versions.size, "versions"
+    version = person.versions.last
+    assert_equal person, version.user, "version user"
+    changes = version.changes
+    assert_equal 1, changes.size, "changes"
+    change = changes["team_id"]
+    assert_not_nil change, "Should have change for team ID"
+    assert_equal nil, change.first, "Team ID before"
+    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal "Bob Jones", person.last_updated_by, "last_updated_by"
+    # VestalVersions convention
+    assert_nil person.updated_by, "updated_by"
+  end
+  
+  def test_update_no_name
+    use_ssl
+    editor = Person.create!(:login => "my_login")
+    editor.roles << roles(:administrator)
+    editor.save!
+    
+    login_as editor
+    
+    person = people(:member)
+    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    assert_redirected_to edit_person_path(person)
+    person = Person.find(person.id)
+    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal 1, person.versions.size, "versions"
+    version = person.versions.last
+    assert_equal editor, version.user, "version user"
+    changes = version.changes
+    assert_equal 1, changes.size, "changes"
+    change = changes["team_id"]
+    assert_not_nil change, "Should have change for team ID"
+    assert_equal nil, change.first, "Team ID before"
+    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal "my_login", person.last_updated_by, "last_updated_by"
+    # VestalVersions convention
+    assert_nil person.updated_by, "updated_by"
   end
   
   def test_update_by_editor

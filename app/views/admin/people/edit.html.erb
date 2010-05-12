@@ -117,12 +117,7 @@
 
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
-      <span class="created_at">
-        <% if @person.created_at %>Created <%= time_ago_in_words(@person.created_at, true) + " ago" %><% end %>
-        <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name) %><% end %>
-      </span>
-      <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
-      <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
+      <%= render :partial => "people/created_updated" %>
     </div>
     <div class="right span-4 last">
       <%= link_to("Move Results", admin_person_results_path(@person)) unless @person.new_record? %>  

@@ -5,7 +5,11 @@
 # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
 class Person < ActiveRecord::Base
   include Comparable
+  include SentientUser
 
+  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
+                         :persistence_token, :single_access_token ]
+  
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
     config.validates_format_of_login_field_options :with => Authlogic::Regex.login, 
@@ -22,6 +26,8 @@ class Person < ActiveRecord::Base
   before_validation :find_associated_records, :make_login_blanks_nil
   validate :membership_dates
   before_save :destroy_shadowed_aliases
+  before_create :set_created_by
+  before_save :set_last_updated_by
   after_save :add_alias_for_old_name
 
   has_many :aliases
@@ -892,6 +898,18 @@ class Person < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
+    end
+  end
+  
+  def set_last_updated_by
+    if Person.current
+      self.last_updated_by = Person.current.name_or_login
+    end
+  end
+  
+  def set_created_by
+    if created_by.nil? && Person.current
+      self.created_by = Person.current
     end
   end
   

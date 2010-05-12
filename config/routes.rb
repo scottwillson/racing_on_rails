@@ -126,6 +126,7 @@ ActionController::Routing::Routes.draw do |map|
                   person.resource :membership
                   person.resources :orders
                   person.resources :results
+                  person.resources :versions
                 end
   
   # Deprecated URLs

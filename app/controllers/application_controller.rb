@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   helper :all
   include ExceptionNotifiable
+  include SentientController
   include SslRequirement
   
   local_addresses.clear

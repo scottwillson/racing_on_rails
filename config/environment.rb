@@ -17,6 +17,8 @@ Rails::Initializer.run do |config|
   config.gem "tabular"
   config.gem "color"
   config.gem "pdf-writer", :lib => "pdf/writer"
+  config.gem "vestal_versions"
+  config.gem "sentient_user"
 
   if RAILS_ENV == "acceptance"
     config.gem "selenium-webdriver"

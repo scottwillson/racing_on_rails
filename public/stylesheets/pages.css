@@ -544,3 +544,10 @@ table#preview_import_table th {
 .login .options {
   margin-top: 8px;
 }
+
+/* Versions */
+.version .what,
+.version .from,
+.version .to {
+  width: 33%;
+}

@@ -93,6 +93,8 @@ class PeopleTest < WebDriverTestCase
     assert_title(/Admin: People: Mark Matson$/)
     type "411 911 1212", "person_home_phone"
     click "save"
+    
+    click :css => "a[href='/people/#{@matson_id}/versions']"
 
     open '/admin/people'
     click :css => "a[href='/admin/people/new']"
