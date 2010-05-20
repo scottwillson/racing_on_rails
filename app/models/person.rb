@@ -8,7 +8,7 @@ class Person < ActiveRecord::Base
   include SentientUser
 
   versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
-                         :persistence_token, :single_access_token ]
+                         :perishable_token, :persistence_token, :single_access_token ]
   
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
