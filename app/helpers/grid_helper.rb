@@ -41,6 +41,8 @@ module GridHelper
       @@grid_columns['time_bonus_penalty'].field = :time_bonus_penalty_s
       @@grid_columns['time_gap_to_leader'] = Column.new(:name => 'time_gap_to_leader', :description => 'Down', :size => 6, :justification => Column::RIGHT)
       @@grid_columns['time_gap_to_leader'].field = :time_gap_to_leader_s
+      @@grid_columns['time_gap_to_winner'] = Column.new(:name => 'time_gap_to_winner', :description => 'Down', :size => 6, :justification => Column::RIGHT)
+      @@grid_columns['time_gap_to_winner'].field = :time_gap_to_winner_s
       @@grid_columns['time_total'] = Column.new(:name => 'time_total', :description => 'Overall', :size => 8, :justification => Column::RIGHT)
       @@grid_columns['time_total'].field = :time_total_s
     end

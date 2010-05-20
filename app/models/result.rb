@@ -479,6 +479,11 @@ class Result < ActiveRecord::Base
   end
 
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  def time_gap_to_winner_s
+    time_to_s time_gap_to_winner
+  end
+
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   # This method doesn't handle some typical edge cases very well
   def time_to_s(time)
     return '' if time == 0.0 or time.blank?
