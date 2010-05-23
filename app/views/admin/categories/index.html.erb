@@ -1,5 +1,17 @@
 <% @page_title = "Admin: Categories" %>
 
+<% #We're small enough we can recompute competitions on demand. alp -%>
+<% if ASSOCIATION.competitions.include?(:mbra_bar) -%>
+  <div class="left">
+    <p><% form_tag '/admin/categories/recompute_bar' do -%>
+      <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
+    <% end -%></p>
+    <p><% form_tag '/admin/categories/recompute_team_bar' do -%>
+      <%= submit_tag "Recompute MBRA BAT", :id => "recompute_bar" %>
+    <% end -%></p>
+  </div>
+<%- end %>
+
 <div class="column_grid_container">
   <div class="table_container box-3">
     <div class="caption"><%= ASSOCIATION.short_name %></div>
@@ -18,3 +30,4 @@
 
 <%= drop_receiving_element("category_root", :url => {:action => "add_child", :parent_id => @category.id}, :hoverclass => "hovering") %>
 <%= drop_receiving_element("unknown_category_root", :url => {:action => "add_child"}, :hoverclass => "hovering") %>
+

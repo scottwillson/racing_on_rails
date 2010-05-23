@@ -9,6 +9,7 @@ class MbraTeamBar < Competition
         # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
           bar = MbraTeamBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
             bar = MbraTeamBar.create!(
               :name => "#{year} #{discipline.name} BAT",
@@ -19,6 +20,7 @@ class MbraTeamBar < Competition
         end
 
         MbraTeamBar.find(:all, :conditions => { :date => date }).each do |bar|
+          logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.destroy_races
           bar.create_races
           bar.calculate!
@@ -156,7 +158,9 @@ class MbraTeamBar < Competition
   end
 
   def create_races
+    logger.debug("In create_races: discipline #{discipline}") if logger.debug?
     Discipline[discipline].bar_categories.each do |category|
+      logger.debug("In create_race: category #{category}") if logger.debug?
       races.create!(:category => category)
     end
   end
