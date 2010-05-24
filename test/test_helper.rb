@@ -16,6 +16,16 @@ class ActiveSupport::TestCase
   end
   
   def teardown
+    assert_no_angle_brackets
+    # Discipline class may have loaded earlier with no aliases in database
+    Discipline.reset
+  end
+
+  def reset_association
+    ASSOCIATION.now = nil
+  end
+  
+  def reset_disciplines
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
   end
@@ -128,6 +138,15 @@ class ActiveSupport::TestCase
       assert_equal("layouts/#{expected}", @response.layout, "layout")
     else
       assert_nil(@response.layout, "no layout")
+    end
+  end
+
+  # Detect HTML escaping screw-ups
+  def assert_no_angle_brackets
+    if @response && @response.body.present?
+      body_string = @responsebody.to_s
+      assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
+      assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
     end
   end
 
