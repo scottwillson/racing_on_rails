@@ -278,6 +278,11 @@ class EventTest < ActiveSupport::TestCase
     assert(kings_valley.races.empty?, "Should not have races")
   end
   
+  def test_destroy_all
+    SingleDayEvent.destroy_all
+    Event.destroy_all
+  end
+  
   def test_no_delete_with_results
     kings_valley = events(:kings_valley)
     assert(!kings_valley.destroy, 'Should not be destroyed')
