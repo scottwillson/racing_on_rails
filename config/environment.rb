@@ -8,7 +8,7 @@ Rails::Initializer.run do |config|
   config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {
-    :session_key => '_racing_on_rails_session',
+    :key => '_racing_on_rails_session',
     :secret      => '9998d23d32c59a8161aba78b03630a93'
   }
   
