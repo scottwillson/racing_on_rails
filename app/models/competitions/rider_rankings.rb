@@ -49,6 +49,7 @@ class RiderRankings < Competition
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{
                   members_only_place between 1 AND #{point_schedule.size - 1}
+                    and results.person_id is not null
                     and events.type = 'SingleDayEvent' 
                     and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
                     and categories.id in (#{category_ids_for(race)})
