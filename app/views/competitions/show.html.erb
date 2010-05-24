@@ -41,7 +41,13 @@
 
     <td><pre><%- for result in race.results.sort %>
 <%= result.place.rjust(3) -%>
- <%= link_to(truncate(result.name), event_person_results_path(result.event, result.person)) %><%= ' ' * (30 - truncate(result.name).length) -%>
+ <%= 
+  if result.person
+    link_to(truncate(result.name), event_person_results_path(result.event, result.person))
+  else
+    truncate(result.name)
+  end
+ %><%= ' ' * (30 - truncate(result.name).length) -%>
    <%= truncate(result.person_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>
