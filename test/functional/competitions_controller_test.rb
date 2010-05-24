@@ -13,6 +13,7 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
     assert_not_nil(assigns["year"], "Should assign year")
   end
 
+  # How does this happen?
   def test_rider_rankings_result_with_no_person
     RiderRankings.calculate!
     rider_rankings = RiderRankings.find_for_year
