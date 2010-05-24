@@ -154,8 +154,8 @@ create table `editor_requests` (
   key `index_editor_requests_on_person_id` (`person_id`),
   key `index_editor_requests_on_expires_at` (`expires_at`),
   key `index_editor_requests_on_token` (`token`),
-  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `events` (
@@ -383,8 +383,8 @@ create table `people_people` (
   unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
   key `index_people_people_on_editor_id` (`editor_id`),
   key `index_people_people_on_person_id` (`person_id`),
-  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `people_roles` (
