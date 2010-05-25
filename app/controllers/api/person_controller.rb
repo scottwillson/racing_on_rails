@@ -1,6 +1,10 @@
 class Api::PersonController < ApplicationController
   def index
-    people = Person.all
+    conditions = { }
+    if params[:license]
+      conditions[:license] = params[:license]
+    end
+    people = Person.all(:conditions => conditions)
     respond_to do |format|
       format.xml {
         render :xml => people.to_xml(
