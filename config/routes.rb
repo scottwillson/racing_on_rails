@@ -183,7 +183,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
 
   # web services
-  map.resources :people, :controller => "api/people", :path_prefix => "/api"
+  map.resources :people, :controller => "api/person", :path_prefix => "/api"
+  map.resources :events, :controller => "api/event", :path_prefix => "/api"
 
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
