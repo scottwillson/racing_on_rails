@@ -184,6 +184,15 @@ class ResultsFileTest < ActiveSupport::TestCase
     assert_not_equal(existing_matson, new_matson, "Person with different numbers should be different people")
   end
   
+  # Expose bad regex defect
+  def test_import_time_trial_with_hundreds
+    event = SingleDayEvent.create!(:discipline => "Time Trial")
+    results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../fixtures/results/tt_hundreds.xls"), event, :usac_results_format => false)
+    results_file.import
+    result = event.races.first.results.first
+    assert_equal 1086.23, result.time, "First result time of 18:06.23 formatted as 18:06.2 in Excel"
+  end
+  
   def test_import_2006_v2
     expected_races = []
     

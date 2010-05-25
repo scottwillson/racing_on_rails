@@ -238,7 +238,7 @@ class ResultsFile
       result = race.results.build(row.to_hash)
       result.updated_by = @event.name
 
-      if row[:time] && row[:time].to_s[/st|s.t./i]
+      if row.same_time?
         result.time = row.previous.result.time
       end
 
@@ -334,6 +334,13 @@ class ResultsFile
       # Mainly to handle Dates and DateTimes in the place column
       value = nil unless value.respond_to?(:to_i)
       value
+    end
+    
+    def same_time?
+      if previous && self[:time].present?
+        row_time = self[:time].try(:to_s)
+        row_time && (row_time[/st/i] || row_time[/s\.t\./i])
+      end
     end
 
     def notes
