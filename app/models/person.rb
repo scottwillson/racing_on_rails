@@ -60,7 +60,7 @@ class Person < ActiveRecord::Base
     else
       Person.find(
         :all,
-        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name],
+        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name],
         :order => 'last_name, first_name')
     end
   end
@@ -79,7 +79,7 @@ class Person < ActiveRecord::Base
     if name.present?
       return Person.find(
         :all,
-        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
+        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
       ) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
       Person.find(
@@ -105,7 +105,7 @@ class Person < ActiveRecord::Base
     name_like = "%#{name.strip}%"
     Person.find(
       :all, 
-      :conditions => ["trim(concat(first_name, ' ', last_name)) like ? or aliases.name like ?", name_like, name_like],
+      :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
       :order => 'last_name, first_name'
@@ -127,10 +127,14 @@ class Person < ActiveRecord::Base
   def Person.find_by_name(name)
     Person.find(
       :first, 
-      :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
+      :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
     )
   end
   
+  def Person.find_or_create_by_name(name)
+    Person.find_by_name(name) || Person.create(:name => name)
+  end
+
   def Person.find_by_number(number)
     Person.find(:all, 
                :include => :race_numbers,
@@ -924,7 +928,7 @@ class Person < ActiveRecord::Base
        !name.blank? && 
        @old_name.casecmp(name) != 0 && 
        !Alias.exists?(['name = ? and person_id = ?', @old_name, id]) && 
-       !Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", @old_name])
+       !Person.exists?(["trim(concat_ws(' ', first_name, last_name)) = ?", @old_name])
       
       new_alias = Alias.new(:name => @old_name, :person => self)
       unless new_alias.save

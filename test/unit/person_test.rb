@@ -626,6 +626,16 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
   end
   
+  def test_find_by_name
+    assert_equal people(:weaver), Person.find_by_name("Ryan Weaver"), "find_by_name"
+    
+    person = Person.create!(:first_name => "Sam")
+    assert_equal person, Person.find_by_name("Sam"), "find_by_name first_name only"
+    
+    person = Person.create!(:last_name => "Richardson")
+    assert_equal person, Person.find_by_name("Richardson"), "find_by_name last_name only"
+  end
+  
   def test_hometown
     person = Person.new
     assert_equal('', person.hometown, 'New Person hometown')
@@ -805,6 +815,25 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
     assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
+  end
+
+  def test_find_or_create_by_name
+    person = Person.find_or_create_by_name("Erik Tonkin")
+    assert_equal people(:tonkin), person, "Should find existing person"
+
+    person = Person.find_or_create_by_name("Sam Richardson")
+    assert_equal "Sam Richardson", person.name, "New person name"
+    assert_equal "Sam", person.first_name, "New person first_name"
+    assert_equal "Richardson", person.last_name, "New person last_name"
+    person_2 = Person.find_or_create_by_name("Sam Richardson")
+    assert_equal person, person_2, "Should find new person"
+
+    person = Person.find_or_create_by_name("Sam")
+    assert_equal "Sam", person.name, "New person name"
+    assert_equal "Sam", person.first_name, "New person first_name"
+    assert_equal nil, person.last_name, "New person last_name"
+    person_2 = Person.find_or_create_by_name("Sam")
+    assert_equal person, person_2, "Should find new person"
   end
   
   def test_create
