@@ -925,8 +925,12 @@ class Person < ActiveRecord::Base
        @old_name.casecmp(name) != 0 && 
        !Alias.exists?(['name = ? and person_id = ?', @old_name, id]) && 
        !Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", @old_name])
-
-      Alias.create!(:name => @old_name, :person => self)
+      
+      new_alias = Alias.new(:name => @old_name, :person => self)
+      unless new_alias.save
+        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+      end
+      new_alias
     end
   end
 

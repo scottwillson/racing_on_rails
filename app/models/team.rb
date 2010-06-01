@@ -88,7 +88,11 @@ class Team < ActiveRecord::Base
       !Alias.exists?(['name = ? and team_id = ?', @old_name, id]) &&
       !Team.exists?(["name = ?", @old_name])
 
-      Alias.create!(:name => @old_name, :team => self)
+      new_alias = Alias.create!(:name => @old_name, :team => self)
+      unless new_alias.save
+        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+      end
+      new_alias
     end
   end
 
