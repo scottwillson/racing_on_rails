@@ -8,7 +8,8 @@ class Api::PersonController < ApplicationController
     respond_to do |format|
       format.xml {
         render :xml => people.to_xml(
-          :include => [ :aliases, :events, :race_numbers, :results, :team ]
+          :only    => [:first_name, :last_name, :date_of_birth, :license, :gender],
+          :include => [:team]
         )
       }
     end
