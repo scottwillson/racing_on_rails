@@ -2,7 +2,7 @@
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
 
-  attr_accessor :name, :short_name, :state, :email, :membership_email
+  attr_accessor :name, :short_name, :state, :email, :membership_email, :person
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
@@ -112,6 +112,11 @@ class RacingAssociation
 
   def show_events_sanctioning_org_event_id?
     @show_events_sanctioning_org_event_id
+  end
+  
+  # Person record for RacingAssociation
+  def person
+    @person ||= Person.find_by_name(name)
   end
   
   def ssl?
