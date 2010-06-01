@@ -393,6 +393,20 @@ class EventTest < ActiveSupport::TestCase
     assert event_2 != event_1_copy, "event_2 != event_1_copy"
   end
   
+  def test_set
+    event_1 = SingleDayEvent.create!
+    event_2 = SingleDayEvent.create!
+    set = Set.new
+    set << event_1
+    set << event_2
+    set << event_1
+    set << event_2
+    set << event_1
+    set << event_2
+    
+    assert_same_elements [ event_1, event_2 ], set.to_a, "Set equality"
+  end
+  
   def test_multi_day_event_children_with_no_parent
     event = SingleDayEvent.create!(:name => 'PIR')
     assert(!event.multi_day_event_children_with_no_parent?)
