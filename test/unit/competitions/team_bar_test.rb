@@ -54,7 +54,7 @@ class TeamBarTest < ActiveSupport::TestCase
       score.source_result.race == swan_island_tandem
     end
     assert_not_nil(swan_island_tandem_bar_result, 'Tandem results should count in Team BAR')
-    assert_equal(12.5, swan_island_tandem_bar_result.points, 'Kona Tandem BAR points')
+    assert_equal(7, swan_island_tandem_bar_result.points, 'Kona Tandem BAR points')
 
     ncc_team_result = team_bar_race.results.detect do |result|
       result.team.name == 'Northampton Cycling Club'
@@ -89,7 +89,7 @@ class TeamBarTest < ActiveSupport::TestCase
     team_bar.results.sort!
     assert_equal(2, team_bar.results.size, 'Team BAR results')
     assert_equal(vanilla, team_bar.results.first.team, 'Team BAR first result')
-    assert_equal(19, team_bar.results.first.points, 'Team BAR first points')
+    assert_equal(12, team_bar.results.first.points, 'Team BAR first points')
     assert_equal(gentle_lovers, team_bar.results.last.team, 'Team BAR last result')
     assert_equal(6, team_bar.results.last.points, 'Team BAR last points')
   end
@@ -234,11 +234,11 @@ class TeamBarTest < ActiveSupport::TestCase
     team_race.results.sort!
     assert_equal(teams(:kona), team_race.results[0].team, "Team BAR results team")
     assert_equal("1", team_race.results[0].place, "Team BAR results place")
-    assert_in_delta(97, team_race.results[0].points, 0.0, "Team BAR results points")
+    assert_in_delta(53, team_race.results[0].points, 0.0, "Team BAR results points")
 
     assert_equal(teams(:gentle_lovers), team_race.results[1].team, "Team BAR results team")
     assert_equal("2", team_race.results[1].place, "Team BAR results place")
-    assert_equal(25, team_race.results[1].points, "Team BAR results points")
+    assert_equal(14, team_race.results[1].points, "Team BAR results points")
 
     assert_equal(teams(:vanilla), team_race.results[2].team, "Team BAR results team")
     assert_equal("3", team_race.results[2].place, "Team BAR results place")
