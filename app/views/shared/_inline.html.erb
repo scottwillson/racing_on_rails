@@ -10,7 +10,7 @@
 
 new Ajax.InPlaceEditor('<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>',
                        '<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>',
-                       { okControl: false, cancelControl: 'button', cancelText: '', clickToEditText: '', hoverClassName: 'hovering', 
+                       { okControl: false, cancelControl: false, cancelText: '', clickToEditText: '', hoverClassName: 'hovering', 
                          savingText: '&nbsp;', htmlResponse: <%= !script %>,
                          onComplete: function(ipe) {},
                          onEnterHover: function(ipe) {},

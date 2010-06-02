@@ -14,7 +14,7 @@ class VelodromesTest < WebDriverTestCase
     click "velodrome_#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}_website"
     wait_for_element :class_name => "editor_field"
     type "http://example.com", :class_name => "editor_field"
-    submit :class_name => "inplaceeditor-form"
+     type :return, { :class_name => "editor_field" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh

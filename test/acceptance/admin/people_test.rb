@@ -63,7 +63,7 @@ class PeopleTest < WebDriverTestCase
     wait_for_element "person_#{@alice_id}_name-inplaceeditor"
 
     type "A Penn", :class => "editor_field"
-    submit :class => "inplaceeditor-form"
+     type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
@@ -74,7 +74,7 @@ class PeopleTest < WebDriverTestCase
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
 
     type "River City Bicycles", :class => "editor_field"
-    submit :class => "inplaceeditor-form"
+     type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
