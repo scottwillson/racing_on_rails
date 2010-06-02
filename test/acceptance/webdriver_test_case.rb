@@ -25,8 +25,18 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def teardown
-    @driver.try :quit
-    super
+    begin
+      begin
+        Timeout::timeout(5) do
+          @driver.try :quit
+        end
+      rescue Timeout::Error => e
+        Rails.logger.warn "Could not quit Firefox driver"
+      end
+      super
+    rescue Exception => e
+      Rails.logger.error e
+    end
   end
   
   def open(url, expect_error_page = false)
