@@ -28,10 +28,11 @@ class WebDriverTestCase < ActiveSupport::TestCase
     begin
       begin
         Timeout::timeout(5) do
-          @driver.try :quit
+          driver.try :quit
         end
       rescue Timeout::Error => e
         Rails.logger.warn "Could not quit Firefox driver"
+        driver.try(:quit) rescue nil
       end
       super
     rescue Exception => e
