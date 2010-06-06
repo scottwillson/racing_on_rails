@@ -388,6 +388,22 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def possessive_pronoun
+    if gender == "F"
+      "her"
+    else
+      "his"
+    end
+  end
+  
+  def third_person_pronoun
+    if gender == "F"
+      "her"
+    else
+      "him"
+    end
+  end
+
   # Non-nil for happier sorting
   def gender
     self[:gender] || ''
@@ -903,6 +919,10 @@ class Person < ActiveRecord::Base
         self.team = existing_team if existing_team
       end
     end
+  end
+
+  def can_edit?(person)
+    person == self || person.editors.include?(self)
   end
   
   def set_last_updated_by
