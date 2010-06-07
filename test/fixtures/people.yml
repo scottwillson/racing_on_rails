@@ -93,6 +93,13 @@ alice:
   member_from: 1999-01-01
   member_to: <%= Date.today.year %>-12-31
   gender: F
+  official: true
+  login: alice
+  password_salt: <%= salt = Authlogic::Random.hex_token %>
+  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
+  persistence_token: <%= Authlogic::Random.hex_token %>
+  single_access_token: <%= Authlogic::Random.friendly_token %>
+  perishable_token: <%= Authlogic::Random.friendly_token %>
 
 no_results:
   first_name: Non

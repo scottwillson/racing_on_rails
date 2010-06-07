@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PublicPagesTest < ActionController::IntegrationTest
+class AdminPagesTest < ActionController::IntegrationTest
   if ASSOCIATION.ssl?
     def test_events
       get admin_events_path
