@@ -2,12 +2,22 @@ Tabular is a Ruby library for reading, writing, and manipulating CSV, tab-delimi
 
 I extracted it from production code. Still extracting it, actually. I need to read structured data and manipulate it via a common interface before persisting it with ActiveRecord.
 
+Install
+-------
+sudo gem install tabular
+
+(The gem is hosted on Gemcutter, not RubyForge)
+
 
 Dependencies
 ------------
 For tab-delimited data: Ruby standard lib
-For CSV: FasterCSV
-For Excel: Spreadsheet gem
+
+For CSV: FasterCSV (http://fastercsv.rubyforge.org/)
+sudo gem install fastercsv
+
+For Excel: Spreadsheet gem (http://spreadsheet.rubyforge.org/)
+sudo gem install spreadsheet
 
 
 Examples
@@ -30,9 +40,13 @@ Table.read assumes that .txt files are tab-delimited, .csv files are comma-delim
 
 Table.new accepts an Array of Arrays.
 
-Table.new also accepts an options hash. Currently, :columns is the only option. Examples:
+Table.new also accepts an options hash.
+
+:columns option to map columns to a different key or type:
 :city_state => :location -- Maps :city_state column to :location. A column with a "City State" header would be accessed as row[:location]
 :flyer_approved  => { :column_type => :boolean } -- Coerce :flyer_approved column cells to booleans.
+
+:as => [:csv, :xls, :txt] to override file format
 
 
 Tests
@@ -43,4 +57,4 @@ There's basic test coverage. More comprehensive test coverage needs to be extrac
 Copyright
 ---------
 
-Copyright (c) 2009 Scott Willson. See LICENSE for details.
+Copyright (c) 2010 Scott Willson. See LICENSE for details.

@@ -3,12 +3,15 @@ module Tabular
   class Row
     include Enumerable
     
-    # +columns+ -- array of string
+    attr_reader :index
+    
+    # +table+ -- Table
     # +cell+ -- array (not neccessarily Strings)
-    def initialize(columns, cells = [])
-      @columns = columns
+    def initialize(table, cells = [])
+      @table = table
       @array = cells
       @hash = nil
+      @index = table.rows.size
     end
     
     # Cell value by symbol. E.g., row[:phone_number]
@@ -16,13 +19,13 @@ module Tabular
       hash[key]
     end
     
-    # Set cell value. Adds cell to end of Row and adds new Column if there is no Column fo +key_
+    # Set cell value. Adds cell to end of Row and adds new Column if there is no Column for +key_
     def []=(key, value)
-      if @columns.has_key?(key)
-        @array[@columns.index(key)] = value
+      if columns.has_key?(key)
+        @array[columns.index(key)] = value
       else
         @array << value
-        @columns << key
+        columns << key
       end
       hash[key] = value
     end
@@ -35,6 +38,16 @@ module Tabular
     # For pretty-printing cell values
     def join(sep = nil)
       @array.join(sep)
+    end
+    
+    def previous
+      if index > 0
+        @table.rows[index - 1]
+      end
+    end
+    
+    def columns
+      @table.columns
     end
     
     def to_hash
@@ -52,12 +65,11 @@ module Tabular
 
     protected
     
-    
     def hash #:nodoc:
       unless @hash
         @hash = Hash.new
-        @columns.each do |column|
-          index = @columns.index(column.key)
+        columns.each do |column|
+          index = columns.index(column.key)
           if index
             case column.column_type
             when :boolean

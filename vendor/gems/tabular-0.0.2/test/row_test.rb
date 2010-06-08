@@ -3,7 +3,7 @@ require "helper"
 module Tabular
   class RowTest < Test::Unit::TestCase
     def test_new
-      row = Row.new([])
+      row = Row.new(Table.new)
       assert_equal nil, row[:city], "[]"
       
       assert_equal "", row.join, "join"
@@ -16,8 +16,8 @@ module Tabular
     end
     
     def test_set
-      columns = Columns.new([ "planet", "star" ])
-      row = Row.new(columns, [ "Mars", "Sun" ])
+      table = Table.new([[ "planet", "star" ]])
+      row = Row.new(table, [ "Mars", "Sun" ])
       
       assert_equal "Sun", row[:star], "row[:star]"
       
@@ -29,28 +29,36 @@ module Tabular
     end
     
     def test_join
-      columns = Columns.new([ "planet", "star" ])
-      row = Row.new(columns, [ "Mars", "Sun" ])
+      table = Table.new([[ "planet", "star" ]])
+      row = Row.new(table, [ "Mars", "Sun" ])
       assert_equal "MarsSun", row.join, "join"
       assert_equal "Mars-Sun", row.join("-"), "join '-'"
     end
     
     def test_to_hash
-      columns = Columns.new([ "planet", "star" ])
-      row = Row.new(columns, [ "Mars", "Sun" ])
+      table = Table.new([[ "planet", "star" ]])
+      row = Row.new(table, [ "Mars", "Sun" ])
       assert_equal({ :planet => "Mars", :star => "Sun"}, row.to_hash, "to_hash")
     end
     
     def test_inspect
-      columns = Columns.new([ "planet", "star" ])
-      row = Row.new(columns, [ "Mars", "Sun" ])
+      table = Table.new([[ "planet", "star" ]])
+      row = Row.new(table, [ "Mars", "Sun" ])
       assert_equal "{:planet=>\"Mars\", :star=>\"Sun\"}", row.inspect, "inspect"
     end
     
     def test_to_s
-      columns = Columns.new([ "planet", "star" ])
-      row = Row.new(columns, [ "Mars", "Sun" ])
+      table = Table.new([[ "planet", "star" ]])
+      row = Row.new(table, [ "Mars", "Sun" ])
       assert_equal "Mars, Sun", row.to_s, "to_s"
+    end
+    
+    def test_previous
+      table = Table.new([[ "planet", "star" ]])
+      table << [ "Mars", "Sun" ]
+      table << [ "Jupiter", "Sun" ]
+      assert_equal nil, table.rows.first.previous, "previous of first Row"
+      assert_equal "Mars", table.rows.last.previous[:planet], "previous"
     end
   end
 end

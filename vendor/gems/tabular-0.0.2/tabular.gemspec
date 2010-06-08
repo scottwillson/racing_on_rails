@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tabular}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Scott Willson"]
-  s.date = %q{2009-12-15}
+  s.date = %q{2010-06-07}
   s.description = %q{Tabular is a Ruby library for reading, writing, and manipulating CSV, tab-delimited and Excel data.}
   s.email = %q{scott.willson@gmail.cpm}
   s.extra_rdoc_files = [
@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
      "README"
   ]
   s.files = [
-    "LICENSE",
+    ".gitignore",
+     "LICENSE",
      "README",
      "Rakefile",
      "VERSION",
@@ -33,6 +34,7 @@ Gem::Specification.new do |s|
      "test/fixtures/blank.txt",
      "test/fixtures/excel.xls",
      "test/fixtures/sample.csv",
+     "test/fixtures/sample.lif",
      "test/helper.rb",
      "test/row_test.rb",
      "test/table_test.rb"
@@ -40,7 +42,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/scottwillson/tabular}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{Read, write, and manipulate CSV, tab-delimited and Excel data}
   s.test_files = [
     "test/column_test.rb",
@@ -54,7 +56,7 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     else
     end
   else

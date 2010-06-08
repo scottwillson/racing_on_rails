@@ -32,6 +32,21 @@ module Tabular
       table = Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/excel.xls"))
       assert_equal Date.new(2006, 1, 20), table[0][:date], "0.0"
     end
+    
+    def test_read_as
+      table = Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/sample.lif"), :as => :csv)
+      assert_equal 4, table.rows.size, "rows"
+    end
+    
+    def test_column_map
+      data = [
+        [ "nom", "equipe", "homme" ],
+        [ "Hinault", "Team Z", "true" ]
+      ]
+      table = Table.new(data, :columns => { :nom => :name, :equipe => :team, :homme => { :column_type => :boolean } })
+      assert_equal "Hinault", table.rows.first[:name], ":name"
+      assert_equal "Team Z", table.rows.first[:team], ":team"
+      assert_equal true, table.rows.first[:homme], "boolean"
+    end
   end
 end
-

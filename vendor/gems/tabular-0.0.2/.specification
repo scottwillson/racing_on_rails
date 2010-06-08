@@ -1,13 +1,13 @@
 --- !ruby/object:Gem::Specification 
 name: tabular
 version: !ruby/object:Gem::Version 
-  hash: 29
+  hash: 27
   prerelease: false
   segments: 
   - 0
   - 0
-  - 1
-  version: 0.0.1
+  - 2
+  version: 0.0.2
 platform: ruby
 authors: 
 - Scott Willson
@@ -15,7 +15,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-12-15 00:00:00 -08:00
+date: 2010-06-07 00:00:00 -07:00
 default_executable: 
 dependencies: []
 
@@ -29,6 +29,7 @@ extra_rdoc_files:
 - LICENSE
 - README
 files: 
+- .gitignore
 - LICENSE
 - README
 - Rakefile
@@ -45,6 +46,7 @@ files:
 - test/fixtures/blank.txt
 - test/fixtures/excel.xls
 - test/fixtures/sample.csv
+- test/fixtures/sample.lif
 - test/helper.rb
 - test/row_test.rb
 - test/table_test.rb
