@@ -26,7 +26,7 @@ columns["time_gap_to_previous"] = ["time_gap_to_previous"]
 columns["time_gap_to_winner"] = ["time_gap_to_winner"]
 columns["time_total"] = ["time_total"]
 
-ResultsFile::COLUMN_MAP.each do |key, value|
+Results::ResultsFile::COLUMN_MAP.each do |key, value|
   keys = columns[value] || []
   keys << key
   columns[value] = keys

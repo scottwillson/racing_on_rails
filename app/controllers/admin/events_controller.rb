@@ -154,9 +154,9 @@ class Admin::EventsController < Admin::AdminController
     temp_file = File.new(path)
     event = Event.find(params[:id])
     if params[:usac_results_format]
-      results_file = ResultsFile.new(temp_file, event, :usac_results_format => (params[:usac_results_format] == "true"))
+      results_file = Results::ResultsFile.new(temp_file, event, :usac_results_format => (params[:usac_results_format] == "true"))
     else
-      results_file = ResultsFile.new(temp_file, event)
+      results_file = Results::ResultsFile.new(temp_file, event)
     end
     results_file.import
     expire_cache
