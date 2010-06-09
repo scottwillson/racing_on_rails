@@ -33,6 +33,11 @@ module Tabular
       assert_equal Date.new(2006, 1, 20), table[0][:date], "0.0"
     end
     
+    def test_read_from_excel_file
+      table = Table.read(File.new(File.expand_path(File.dirname(__FILE__) + "/fixtures/excel.xls")))
+      assert_equal Date.new(2006, 1, 20), table[0][:date], "0.0"
+    end
+    
     def test_read_as
       table = Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/sample.lif"), :as => :csv)
       assert_equal 4, table.rows.size, "rows"

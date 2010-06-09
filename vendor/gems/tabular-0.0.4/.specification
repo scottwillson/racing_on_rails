@@ -1,13 +1,13 @@
 --- !ruby/object:Gem::Specification 
 name: tabular
 version: !ruby/object:Gem::Version 
-  hash: 27
+  hash: 23
   prerelease: false
   segments: 
   - 0
   - 0
-  - 2
-  version: 0.0.2
+  - 4
+  version: 0.0.4
 platform: ruby
 authors: 
 - Scott Willson
@@ -15,7 +15,7 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2010-06-07 00:00:00 -07:00
+date: 2010-06-09 00:00:00 -07:00
 default_executable: 
 dependencies: []
 

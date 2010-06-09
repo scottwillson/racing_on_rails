@@ -3,26 +3,29 @@ module Tabular
   class Table
     attr_reader :rows
     
+    # +file+ : file path as String or File
     # Assumes .txt = tab-delimited, .csv = CSV, .xls = Excel. Assumes first row is the header.
     # Normalizes column names to lower-case with underscores.
-    def self.read(file_path, *options)
-      raise "Could not find '#{file_path}'" unless File.exists?(file_path)
-      options = extract_options(options)
-      as = options.delete(:as)
-      
-      if as.present?
-        format = as
+    def self.read(file, *options)
+      file_path = case file
+      when File
+         file.path
       else
-        format = case File.extname(file_path)
-        when ".xls", ".xlsx"
-          :xls
-        when ".txt"
-          :txt
-        when ".csv"
-          :csv
-        end
+        file
       end
       
+      raise "Could not find '#{file_path}'" unless File.exists?(file_path)
+      options = extract_options(options)
+      
+      format = self.format_from(options.delete(:as), file_path)
+      data = read_file(file_path, format)
+      
+      Table.new data, options
+    end
+    
+    # +format+ : :csv, :txt, or :xls
+    # Returns Array of Arrays
+    def self.read_file(file_path, format)
       case format
       when :xls
         require "spreadsheet"
@@ -31,17 +34,25 @@ module Tabular
         Spreadsheet.open(file_path).worksheets.first.each do |excel_row|
           data << excel_row.inject([]) { |row, cell| row << cell; row }
         end
+        data
       when :txt
         require "csv"
-        data = ::CSV.open(file_path, "r","\t").collect { |row| row }
+        if RUBY_VERSION < "1.9"
+          ::CSV.open(file_path, "r","\t").collect { |row| row }
+        else
+          CSV.read(file_path)
+        end
       when :csv
-        require "fastercsv"
-        data = FasterCSV.read(file_path)
+        if RUBY_VERSION < "1.9"
+          require "fastercsv"
+          FasterCSV.read(file_path)
+        else
+          require "csv"
+          CSV.read(file_path)
+        end
       else
         raise "Cannot read '#{format}' format. Expected :xls, :xlsx, :txt, or :csv"
       end
-      
-      Table.new data, options
     end
     
     # Pass data in as +rows+. Expects rows to be an Enumerable of Enumerables. 
@@ -91,6 +102,21 @@ module Tabular
         options.flatten.first || {}
       else
         {}
+      end
+    end
+    
+    def self.format_from(as_option, file_path)
+      if as_option.present?
+        as_option
+      else
+        case File.extname(file_path)
+        when ".xls", ".xlsx"
+          :xls
+        when ".txt"
+          :txt
+        when ".csv"
+          :csv
+        end
       end
     end
   end
