@@ -3,8 +3,8 @@ module Results
     attr_reader :event, :race, :table
 
     def initialize(path, event)
-      @table = Tabular::Table.read(path, :as => :csv, :columns => ResultsFile::COLUMN_MAP)
       @event = event
+      @table = Tabular::Table.read(path, :as => :csv, :columns => ResultsFile::COLUMN_MAP)
     end
     
     def import
@@ -24,14 +24,14 @@ module Results
     def find_or_create_race(row)
       return true if race
       
-      category = Category.find_or_create_by_name(row[:category])
+      category = Category.find_or_create_by_name(row[:category_name])
       @race = event.races.detect { |race| race.category == category }
       if race
         race.results.clear
       else
         @race = event.races.build(:category => category)
       end
-      race.result_columns = table.columns.map(&:key)
+      race.result_columns = table.columns.map { |column| column.key.to_s }
       race.save!
     end
     
@@ -42,6 +42,11 @@ module Results
 
       result.cleanup
       result.save!
+    end
+    
+    # For ResultFile compatibility
+    def invalid_columns
+      []
     end
   end
 end

@@ -30,5 +30,9 @@ class LifFileTest < ActiveSupport::TestCase
     assert_equal "Kansas State", result.team_name, "team"
     assert_equal 3300, result.time, "time"
     assert_equal 41.282, result.time_gap_to_leader, "time_gap_to_leader"
+    
+    assert_same_elements [ "place", "number", "category_name", "last_name", "first_name", "team_name", "time", "license", "time_gap_to_leader" ],
+                         race.result_columns,
+                         "result_columns"
   end
 end

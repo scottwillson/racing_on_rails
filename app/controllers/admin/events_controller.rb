@@ -146,20 +146,26 @@ class Admin::EventsController < Admin::AdminController
   # * notice
   def upload
     uploaded_file = params[:results_file]
+    
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
     File.open(path, "wb") do |f|
       f.print(uploaded_file.read)
     end
+    logger.debug("EventsController#upload temp_file #{path}")
 
     temp_file = File.new(path)
     event = Event.find(params[:id])
-    if params[:usac_results_format]
-      results_file = Results::ResultsFile.new(temp_file, event, :usac_results_format => (params[:usac_results_format] == "true"))
+    
+    if File.extname(path) == ".lif"
+      results_file = Results::LifFile.new(temp_file, event)
     else
-      results_file = Results::ResultsFile.new(temp_file, event)
+      results_file = Results::ResultsFile.new(temp_file, event, :usac_results_format => params[:usac_results_format] == "true")
     end
+    
     results_file.import
     expire_cache
+    FileUtils.rm temp_file rescue nil
+    
     flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
     unless results_file.invalid_columns.empty?
       flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"
