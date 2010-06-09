@@ -772,6 +772,8 @@ insert into schema_migrations (version) values ('20100511224150');
 
 insert into schema_migrations (version) values ('20100601154817');
 
+insert into schema_migrations (version) values ('20100608160458');
+
 insert into schema_migrations (version) values ('21');
 
 insert into schema_migrations (version) values ('22');
