@@ -538,7 +538,7 @@ module Results
       race.results << Result.new(:place => "", :first_name => "Yann", :last_name => "Blindert", :number =>"177", :team_name =>"Bike Gallery")
       race.results << Result.new(:place => "DNF", :first_name => "Jeff", :last_name => "Mitchem", :number =>"151", :team_name =>"Casa Bruno")
       race.results << Result.new(:place => "DNF", :first_name => "Craig", :last_name => "Broberg", :number =>"500", :team_name =>"FredMeyer Cycling Team")
-      race.results << Result.new(:place => "DNF", :first_name => "Bradley", :last_name => "Ganz", :number =>"770")
+      race.results << Result.new(:place => "DNF", :first_name => "Brad", :last_name => "Ganz", :number =>"770")
       race.results << Result.new(:place => "DNF", :first_name => "Bryan", :last_name => "Curry", :number =>"393", :team_name =>"Fred Meyer")
       race.results << Result.new(:place => "DQ", :first_name => "Chris", :last_name => "Alling", :number =>"168", :team_name =>"Columbia River Velo")
       race.results << Result.new(:place => "DNS", :first_name => "Dickie", :last_name => "Mallison", :number =>"140", :team_name =>"Guinness Cycling")
