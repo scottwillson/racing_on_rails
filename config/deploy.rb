@@ -8,6 +8,7 @@ set :site_local_repository, "git@butlerpress.com:#{application}.git"
 set :site_local_repository_branch, nil
 set :branch, "master"
 set :deploy_via, :remote_cache
+set :keep_releases, 5
 
 set :deploy_to, "/usr/local/www/rails/#{application}"
 
@@ -37,7 +38,6 @@ namespace :deploy do
   task :wait_for_mongrels_to_stop do
     # Give Mongrels a chance to really stop
     sleep 10
-    deploy.start
   end
 
   namespace :web do
@@ -51,4 +51,4 @@ namespace :deploy do
 end
 
 after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
-before "deploy:start", "deploy:wait_for_mongrels_to_stop"
+after "deploy:stop", "deploy:wait_for_mongrels_to_stop"
