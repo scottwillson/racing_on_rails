@@ -8,15 +8,15 @@ set :rails_env, "staging"
 
 namespace :deploy do
   task :start do
-    run "/usr/local/etc/rc.d/unicorn start"
+    run "/usr/local/etc/rc.d/obra_staging start"
   end
   
   task :stop do
-    run "/usr/local/etc/rc.d/unicorn stop"
+    run "/usr/local/etc/rc.d/obra_staging stop"
   end
   
   task :restart do
-    run "/usr/local/etc/rc.d/unicorn restart"
+    run "/usr/local/etc/rc.d/obra_staging restart"
   end
   
   task :robots do
@@ -24,4 +24,4 @@ namespace :deploy do
   end
 end
 
-after "deploy:update_code", "deploy:local_code", "deploy:copy_cache", "deploy:robots"
+after "deploy:update_code", "deploy:robots"
