@@ -61,7 +61,7 @@ class Discipline < ActiveRecord::Base
     when "Road"
       [nil, "", 'Circuit', "Criterium", "Road", "Time Trial", "Singlespeed", "Tour"]
     when "Mountain Bike"
-      ['Downhill', 'Mountain Bike', 'Super D']
+      ['Downhill', 'Mountain Bike', 'Super D', "Short Track"]
     else
       [name]
     end

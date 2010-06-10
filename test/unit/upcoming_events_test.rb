@@ -363,9 +363,17 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       :beginner_friendly => true
     )
 
+    short_track = SingleDayEvent.create!(
+      :date => Date.new(2007, 5, 27), 
+      :name => 'Short Track', 
+      :discipline => 'Short Track', 
+      :flyer_approved => true,
+      :beginner_friendly => true
+    )
+
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 26))
     assert_nil(upcoming_events['Road'], 'UpcomingEvents.events[Road]')
-    assert_equal_events([super_d], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
+    assert_equal_events([super_d, short_track], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
     event = upcoming_events['Mountain Bike'].upcoming_events.first
     assert event.beginner_friendly?, "beginner_friendly"
   end
