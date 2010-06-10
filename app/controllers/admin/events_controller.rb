@@ -151,7 +151,6 @@ class Admin::EventsController < Admin::AdminController
     File.open(path, "wb") do |f|
       f.print(uploaded_file.read)
     end
-    logger.debug("EventsController#upload temp_file #{path}")
 
     temp_file = File.new(path)
     event = Event.find(params[:id])
