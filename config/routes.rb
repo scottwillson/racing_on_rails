@@ -177,7 +177,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login "/login", :controller => "person_sessions", :action => "new"
   map.connect "/account/logout", :controller => "person_sessions", :action => "destroy"
   map.connect "/account/login", :controller => "person_sessions", :action => "new"
-  map.connect "/account", :controller => "people", :action => "account"
+  map.account "/account", :controller => "people", :action => "account"
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
