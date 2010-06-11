@@ -3,13 +3,19 @@ class PasswordResetsController < ApplicationController
   ssl_required :create, :edit, :update, :new
 
   def create
-    @person = Person.find_by_email(params[:email])
-    if @person && params[:email].present?
-      @person.deliver_password_reset_instructions!
-      flash[:notice] = "Instructions to reset your password have been emailed to you. Please check your email."
+    if params[:email].blank?
+      flash[:notice] = "Please enter an email address"
+      return render(:new)
+    end
+    
+    @email = params[:email].strip
+    @people = Person.all(:conditions => [ "email = ? and login is not null and login != ''", @email ])
+    if @people.any?
+      Person.deliver_password_reset_instructions!(@people)
+      flash[:notice] = "Please check your email. We've sent you password reset instructions."
       redirect_to new_person_session_path
     else
-      flash[:notice] = "No person was found with that email address"
+      flash[:notice] = "Can't find anyone with this email address"
       render :new
     end
   end

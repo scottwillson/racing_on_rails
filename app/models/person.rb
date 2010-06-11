@@ -255,6 +255,11 @@ class Person < ActiveRecord::Base
       results.last.person
     end
   end
+
+  def Person.deliver_password_reset_instructions!(people)
+    people.each &:reset_perishable_token!
+    Notifier.deliver_password_reset_instructions(people)
+  end
   
   def people_with_same_name
     people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
@@ -745,11 +750,6 @@ class Person < ActiveRecord::Base
   
   def updated_after_created?
     created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
-  end
-
-  def deliver_password_reset_instructions!
-    reset_perishable_token!
-    Notifier.deliver_password_reset_instructions(self)
   end
 
   def state=(value)

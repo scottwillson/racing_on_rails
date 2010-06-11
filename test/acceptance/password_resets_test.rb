@@ -7,7 +7,7 @@ class PasswordResetsTest < WebDriverTestCase
     type "member@example.com", :id => "email"
     click :name => "commit"
 
-    assert_page_source "Instructions to reset your password have been emailed to you"
+    assert_page_source "Please check your email. We've sent you password reset instructions"
     perishable_token = Person.find_by_email("member@example.com").perishable_token
     open "/password_resets/#{perishable_token}/edit"
 
@@ -39,7 +39,7 @@ class PasswordResetsTest < WebDriverTestCase
     type "member@example.com", :id => "email"
     click :name => "commit"
 
-    assert_page_source "Instructions to reset your password have been emailed to you"
+    assert_page_source "Please check your email. We've sent you password reset instructions"
     perishable_token = Person.find_by_email("member@example.com").perishable_token
     open "/password_resets/#{perishable_token}/edit"
 
