@@ -41,6 +41,31 @@ class ActiveSupport::TestCase
       raise "Don't recogonize #{person}"
     end
   end
+  
+  def logout
+    session[:person_credentials_id] = nil
+    session[:person_credentials] = nil
+  end
+  
+  # person = fixture symbol or Person
+  def goto_login_page_and_login_as(person, password = "secret")
+    person = case person
+    when Symbol
+      people(person)
+    when Person
+      person
+    else
+      raise "Don't recognize #{person}"
+    end
+    
+    https! if ASSOCIATION.ssl?
+    get new_person_session_path
+    assert_response :success
+    assert_template "person_sessions/new"
+    
+    post person_session_path, :person_session => { :login => person.login, :password => password }
+    assert_response :redirect
+  end
 
   # Assert two Enumerable objects contain exactly same object in any order
   def assert_same_elements(expected, actual, message = '')
