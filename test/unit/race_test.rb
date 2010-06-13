@@ -41,13 +41,13 @@ class RaceTest < ActiveSupport::TestCase
     assert_equal(result_columns, race.result_columns_or_default, "race result_columns after save")
   end
   
-  def test_invalid_result_column
+  def test_custom_result_column
     event = SingleDayEvent.create!
     race = Race.create!(:category_name => "Masters Women", :event => event)
 
-    race.result_columns = ["place", "name", "hometown", "category"]
+    race.result_columns = [ "place", "name", "hometown", "category" ]
     race.save
-    assert(!race.valid?, 'Race with bogus result column should be invalid')
+    assert race.valid?, "Race with custom result column should be valid"
   end
   
   def test_bar_points

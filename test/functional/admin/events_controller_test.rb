@@ -117,18 +117,18 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
 
-  def test_upload_invalid_columns
+  def test_upload_custom_columns
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
     
     post :upload, :id => mt_hood_1.to_param, 
-                  :results_file => fixture_file_upload("results/invalid_columns.xls", "application/vnd.ms-excel", :binary),
+                  :results_file => fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary),
                   :usac_results_format => "false"
     assert_redirected_to edit_admin_event_path(mt_hood_1)
 
     assert_response :redirect
     assert(flash.has_key?(:notice))
-    assert(flash.has_key?(:warn))
+    assert(!flash.has_key?(:warn))
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
   

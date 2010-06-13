@@ -55,7 +55,24 @@ module Results
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), SingleDayEvent.new, :usac_results_format => true)
       column_indexes = results_file.create_columns(spreadsheet_row)
-      assert_equal({ :category_name => 5, :gender => 6, :category_class => 7, :age => 8, :license => 9, :last_name => 10, :first_name => 11, :number => 12, :team_name => 13, :time => 14, :place => 15 }, column_indexes, "column_indexes")
+      assert_equal({ 
+        :gender         => 6,
+        :"event_#"      => 2,
+        :organization   => 0,
+        :last_name      => 10,
+        :category_class => 7,
+        :discipline     => 4,
+        :event_year     => 1,
+        :first_name     => 11,
+        :age            => 8,
+        :team_name      => 13,
+        :place          => 15,
+        :time           => 14,
+        :race_date      => 3,
+        :number         => 12,
+        :category_name  => 5,
+        :license        => 9
+      }, column_indexes, "column_indexes")
     end
   
     def test_import_excel
@@ -393,13 +410,13 @@ module Results
       assert_equal(6, event.races(true).size, "Races after import")
     end
   
-    def test_invalid_columns
+    def test_custom_columns
       event = SingleDayEvent.create(:discipline => 'Downhill')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/invalid_columns.xls"), event, :usac_results_format => false)
+      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/custom_columns.xls"), event, :usac_results_format => false)
       results_file.import
-      assert_equal(['Bogus Column Name'], results_file.invalid_columns, 'Invalid columns')
+      assert_equal(["bogus_column_name"], results_file.custom_columns.to_a, 'Custom columns')
     end
-  
+
     def test_times
       event = SingleDayEvent.create(:discipline => 'Track')
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/times.xls"), event, :usac_results_format => false)

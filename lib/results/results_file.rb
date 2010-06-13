@@ -12,10 +12,15 @@ module Results
     attr_accessor :columns
     attr_accessor :column_indexes
     attr_accessor :event
-    attr_accessor :invalid_columns
     attr_accessor :rows
     attr_accessor :source
     attr_accessor :usac_results_format
+
+    # All custom columns in file
+    attr_accessor :custom_columns
+    
+    # Custom columns just for Race
+    attr_accessor :race_custom_columns
 
     COLUMN_MAP = {
       "placing"           => "place",
@@ -75,7 +80,8 @@ module Results
     def initialize(source, event, *options)
       self.column_indexes = nil
       self.event = event
-      self.invalid_columns = []
+      self.custom_columns = Set.new
+      self.race_custom_columns = Set.new
       self.source = source
       options = options.extract_options!
 
@@ -162,11 +168,11 @@ module Results
           cell_string.gsub!(" ", "_")
           cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
           if cell_string.present?
-            if Race::RESULT.respond_to?(cell_string.to_sym)
-              self.column_indexes[cell_string.to_sym] = index
-              self.columns << cell_string 
-            else
-              self.invalid_columns << cell.to_s
+            self.column_indexes[cell_string.to_sym] = index
+            self.columns << cell_string 
+            if !Race::RESULT.respond_to?(cell_string.to_sym)
+              self.custom_columns << cell_string
+              self.race_custom_columns << cell_string
             end
           end
         end
@@ -208,6 +214,8 @@ module Results
         race = event.races.build(:category => category, :notes => row.notes)
       end
       race.result_columns = columns
+      race.custom_columns = race_custom_columns.to_a
+      race_custom_columns = Set.new
       race.save!
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} create race #{category}")
       race
@@ -239,7 +247,7 @@ module Results
 
     def create_result(row, race)
       if race
-        result = race.results.build(row.to_hash)
+        result = race.results.build(result_attributes(row, race))
         result.updated_by = @event.name
 
         if row.same_time?
@@ -268,6 +276,26 @@ module Results
         # TODO Maybe a hard exception or error would be better?
         Rails.logger.warn("No race. Skip.")
       end
+    end
+    
+    def result_attributes(row, race)
+      attributes = row.to_hash.dup
+      custom_attributes = {}
+      attributes.delete_if do |key, value|
+        if race.custom_columns.include?(key.to_s)
+          custom_attributes[key] = case value
+          when Time
+            value.strftime "%H:%M:%S"
+          else
+            value
+          end
+          true
+        else
+          false
+        end
+      end
+      attributes.merge!(:custom_attributes => custom_attributes)
+      attributes
     end
 
     class Row

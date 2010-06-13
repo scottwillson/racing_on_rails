@@ -48,7 +48,10 @@ module GridHelper
     end
     grid_column = @@grid_columns[column.to_s]
     if grid_column.nil?
-      grid_column = Column.new(:name => column)
+      grid_column = Column.new(:name => column, :description => column.humanize)
+      if column.to_s[/^run/] || column.to_s[/^heat/] || column.to_s[/^time/] || column.to_s[/^point/] || column.to_s[/^pts/]  || column.to_s[/^hot_spot/]
+        grid_column.justification = Column::RIGHT
+      end
       @@grid_columns[column] = grid_column
     end
 
@@ -63,7 +66,7 @@ module GridHelper
     rows = race.results.sort.collect do |result|
       row = []
       for grid_column in result_grid_columns
-        if grid_column.field and result.respond_to?(grid_column.field)
+        if grid_column.field
           cell = result.send(grid_column.field).to_s
           cell = '' if cell == '0.0'
           row << cell

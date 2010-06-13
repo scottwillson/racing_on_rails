@@ -11,12 +11,12 @@ class Race < ActiveRecord::Base
   RESULT = Result.new
   
   validates_presence_of :event, :category
-  validate :result_columns_valid?
 
   before_validation :find_associated_records
   
   belongs_to :category
   serialize :result_columns, Array
+  serialize :custom_columns, Array
   belongs_to :event
   has_many :results, :dependent => :destroy
   
@@ -132,14 +132,8 @@ class Race < ActiveRecord::Base
     columns
   end
   
-  # Are there are +result_columns+ that don't map to a Result attribute
-  def result_columns_valid?
-    return if self.result_columns.nil?
-    for column in self.result_columns
-      if column.blank? or !RESULT.respond_to?(column.to_sym)
-        errors.add('result_columns', "'#{column}' is not a valid result column")
-      end
-    end
+  def custom_columns
+    self[:custom_columns] ||= []
   end
   
   # Ensure child team and people are not duplicates of existing records

@@ -45,7 +45,7 @@ module Results
     end
     
     # For ResultFile compatibility
-    def invalid_columns
+    def custom_columns
       []
     end
   end

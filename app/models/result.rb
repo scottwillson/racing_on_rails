@@ -30,6 +30,7 @@ class Result < ActiveRecord::Base
   # TODO Add number (race_number) and license
 
   attr_accessor :updated_by
+  serialize :custom_attributes, Hash
 
   before_save :find_associated_records
   before_save :save_person
@@ -662,6 +663,14 @@ class Result < ActiveRecord::Base
 
   def place_as_integer
     place.to_i
+  end
+  
+  def method_missing(sym, *args, &block)
+    if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
+      custom_attributes[sym]
+    else
+      super
+    end
   end
 
   # All numbered places first, then blanks, followed by DNF, DQ, and DNS

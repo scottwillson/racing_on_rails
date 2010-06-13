@@ -1038,4 +1038,11 @@ class ResultTest < ActiveSupport::TestCase
     result = TeamBar.create!.races.create!(:category => Category.new(:name => "Team")).results.create!(:category => categories(:senior_men))
     assert result.team_competition_result?, "TeamBar competition_result?"
   end
+  
+  def test_custom_attributes
+    race = Race.new(:result_columns => [ "place", "run" ])
+    result = race.results.build(:place => "1", :custom_attributes => { :run => "9:00" })
+    assert_equal "9:00", result.run, "run custom_attribute"
+    assert_raise(NoMethodError) { result.foo_bar }
+  end
 end

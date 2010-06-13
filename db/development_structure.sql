@@ -457,6 +457,7 @@ create table `races` (
   `result_columns` varchar(255) default null,
   `bar_points` int(11) default null,
   `event_id` int(11) not null,
+  `custom_columns` text,
   primary key (`id`),
   key `idx_category_id` (`category_id`),
   key `index_races_on_event_id` (`event_id`),
@@ -504,6 +505,7 @@ create table `results` (
   `gender` varchar(8) default null,
   `category_class` varchar(16) default null,
   `age_group` varchar(16) default null,
+  `custom_attributes` text,
   primary key (`id`),
   key `idx_category_id` (`category_id`),
   key `idx_race_id` (`race_id`),
@@ -773,6 +775,8 @@ insert into schema_migrations (version) values ('20100511224150');
 insert into schema_migrations (version) values ('20100601154817');
 
 insert into schema_migrations (version) values ('20100608160458');
+
+insert into schema_migrations (version) values ('20100613014859');
 
 insert into schema_migrations (version) values ('21');
 
