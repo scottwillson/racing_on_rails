@@ -20,7 +20,6 @@ create table `article_categories` (
   `id` int(11) not null auto_increment,
   `name` varchar(255) collate utf8_unicode_ci default null,
   `parent_id` int(11) default '0',
-  `integer` int(11) default '0',
   `position` int(11) default '0',
   `description` varchar(255) collate utf8_unicode_ci default null,
   `created_at` datetime default null,
@@ -36,7 +35,6 @@ create table `articles` (
   `display` tinyint(1) default null,
   `body` text collate utf8_unicode_ci,
   `position` int(11) default '0',
-  `integer` int(11) default '0',
   `article_category_id` int(11) default null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
@@ -350,7 +348,6 @@ create table `people` (
   `current_login_ip` varchar(255) default null,
   `last_login_ip` varchar(255) default null,
   `login` varchar(100) default null,
-  `string` varchar(100) default null,
   `created_by_id` int(11) default null,
   `license_expiration_date` date default null,
   `club_name` varchar(255) default null,
@@ -374,6 +371,9 @@ create table `people` (
   key `index_people_on_perishable_token` (`perishable_token`),
   key `index_people_on_single_access_token` (`single_access_token`),
   key `index_people_on_created_by_id` (`created_by_id`),
+  key `index_people_on_email` (`email`),
+  key `index_people_on_license` (`license`),
+  key `index_people_on_print_card` (`print_card`),
   constraint `people_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
 ) engine=innodb default charset=utf8;
 
@@ -777,6 +777,8 @@ insert into schema_migrations (version) values ('20100601154817');
 insert into schema_migrations (version) values ('20100608160458');
 
 insert into schema_migrations (version) values ('20100613014859');
+
+insert into schema_migrations (version) values ('20100613220247');
 
 insert into schema_migrations (version) values ('21');
 
