@@ -31,7 +31,7 @@ class ResultsController < ApplicationController
 
     @event = Event.find(
       params[:event_id],
-      :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :historical_names } ] } ] ]
+      :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :names } ] } ] ]
     )
     
     render :event
@@ -45,7 +45,7 @@ class ResultsController < ApplicationController
       :include => [ :team, :person, :category, 
                   { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
                   { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, {:team => :historical_names} ] }, 
+                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, {:team => :names} ] }, 
                     { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
                   ],
       :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
@@ -60,7 +60,7 @@ class ResultsController < ApplicationController
       :include => [ :team, :person, :category, 
                   { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
                   { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, [ :person, { :team => :historical_names }] ] }, 
+                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, [ :person, { :team => :names }] ] }, 
                     { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
                   ],
       :conditions => ['events.id = ? and teams.id = ?', params[:event_id], params[:team_id]]

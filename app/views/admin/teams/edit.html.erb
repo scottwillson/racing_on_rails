@@ -49,13 +49,13 @@
       <% end -%>
 
       <% table :caption => "Historical Names", :class => "box-2 last", :insert_header => true, :columns => 3 do %>
-        <%- @team.historical_names.sort_by(&:year).reverse.each do |historical_name| -%>
-        <tr id="historical_name_<%= historical_name.id %>">
-          <td><%= historical_name.name %></td>
-          <td><%= historical_name.year %></td>
+        <%- @team.names.sort_by(&:year).reverse.each do |name| -%>
+        <tr id="name_<%= name.id %>">
+          <td><%= name.name %></td>
+          <td><%= name.year %></td>
           <td>
             <%= link_to_remote(image_tag("/images/icons/delete.png"), 
-                 :url => { :action => "destroy_historical_name", :id => @team.id, :historical_name_id => historical_name.id}) %>
+                 :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id}) %>
           </td>
         </tr>
         <%- end -%>

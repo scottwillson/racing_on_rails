@@ -970,7 +970,7 @@ class ResultTest < ActiveSupport::TestCase
 
     event = SingleDayEvent.create!(:date => 1.years.ago)
     old_result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
-    team.historical_names.create!(:name => "Twin Peaks", :year => 1.years.ago.year)
+    team.names.create!(:name => "Twin Peaks", :year => 1.years.ago.year)
 
     event = SingleDayEvent.create!(:date => Date.today)
     result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)

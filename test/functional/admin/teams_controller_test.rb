@@ -358,15 +358,15 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')
   end
   
-  def test_destroy_historical_name
+  def test_destroy_name
     vanilla = teams(:vanilla)
-    vanilla.historical_names.create!(:name => "Generic Team", :year => 1990)
-    assert_equal(1, vanilla.historical_names.count, "Vanilla historical_names")
-    historical_name = vanilla.historical_names.first
+    vanilla.names.create!(:name => "Generic Team", :year => 1990)
+    assert_equal(1, vanilla.names.count, "Vanilla names")
+    name = vanilla.names.first
 
-    post(:destroy_historical_name, :id => vanilla.to_param, :historical_name_id => historical_name.to_param)
+    post(:destroy_name, :id => vanilla.to_param, :name_id => name.to_param)
     assert_response(:success)
-    assert_equal(0, vanilla.historical_names(true).count, 'Vanilla historical_names after destruction')
+    assert_equal(0, vanilla.names(true).count, 'Vanilla names after destruction')
   end
   
   def test_new

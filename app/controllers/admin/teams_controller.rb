@@ -139,11 +139,11 @@ class Admin::TeamsController < Admin::AdminController
     end
   end
 
-  def destroy_historical_name
-    historical_name_id = params[:historical_name_id]
-    HistoricalName.destroy(params[:historical_name_id])
+  def destroy_name
+    name_id = params[:name_id]
+    Name.destroy(params[:name_id])
     render :update do |page|
-      page.visual_effect(:puff, "historical_name_#{historical_name_id}", :duration => 2)
+      page.visual_effect(:puff, "name_#{name_id}", :duration => 2)
     end
   end
 end

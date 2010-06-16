@@ -5,7 +5,7 @@
 # Team names must be unique
 class Team < ActiveRecord::Base
 
-  before_save :add_historical_name
+  before_save :add_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   after_save :reset_old_name
@@ -17,7 +17,7 @@ class Team < ActiveRecord::Base
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
   has_many :events
-  has_many :historical_names, :order => "year"
+  has_many :names, :order => "year"
   has_many :people
   has_many :results
 
@@ -98,10 +98,10 @@ class Team < ActiveRecord::Base
 
   # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
   # TODO This is a bit naive, needs validation, and more tests
-  def add_historical_name
+  def add_name
     last_year = Date.today.year - 1
-    if !@old_name.blank? && results_before_this_year? && !self.historical_names.any? { |name| name.year == last_year }
-      self.historical_names.create(:name => @old_name, :year => last_year)
+    if !@old_name.blank? && results_before_this_year? && !self.names.any? { |name| name.year == last_year }
+      self.names.create(:name => @old_name, :year => last_year)
     end
   end
   
@@ -147,21 +147,21 @@ class Team < ActiveRecord::Base
   
   # Preserve team names in old results by creating a new Team for them, and moving the results.
   #
-  # Results are preserved by creating a new Team from the most recent HistoricalName. If a Team
-  # already exists with the HistoricalName's name, results will move to existing Team.
+  # Results are preserved by creating a new Team from the most recent Name. If a Team
+  # already exists with the Name's name, results will move to existing Team.
   # This may be unxpected, can't think of a better way to handle it in this model.
   def create_team_for_historical_results!
-    historical_name = historical_names.sort_by(&:year).reverse!.first
+    name = names.sort_by(&:year).reverse!.first
     
-    if historical_name
-      team = Team.find_or_create_by_name(historical_name.name)
+    if name
+      team = Team.find_or_create_by_name(name.name)
       results.each do |result|
-        team.results << result if result.date.year <= historical_name.year
+        team.results << result if result.date.year <= name.year
       end
       
-      historical_name.destroy
-      historical_names.each do |name|
-        team.historical_names << name unless name == historical_name
+      name.destroy
+      names.each do |name|
+        team.names << name unless name == name
       end
     end
   end
@@ -172,7 +172,7 @@ class Team < ActiveRecord::Base
   
   # Team names change over time
   def name(date_or_year = nil)
-    return read_attribute(:name) unless date_or_year && !self.historical_names.empty?
+    return read_attribute(:name) unless date_or_year && !self.names.empty?
     
     # TODO Tune this
     if date_or_year.is_a? Integer
@@ -181,14 +181,14 @@ class Team < ActiveRecord::Base
       year = date_or_year.year
     end
     
-    # Assume historical_names always sorted
-    if year <= self.historical_names.first.year
-      return self.historical_names.first.name
-    elsif year >= self.historical_names.last.year && year < Date.today.year
-      return self.historical_names.last.name
+    # Assume names always sorted
+    if year <= self.names.first.year
+      return self.names.first.name
+    elsif year >= self.names.last.year && year < Date.today.year
+      return self.names.last.name
     end
     
-    name_for_year = self.historical_names.detect { |n| n.year == year }
+    name_for_year = self.names.detect { |n| n.year == year }
     if name_for_year
       name_for_year.name
     else

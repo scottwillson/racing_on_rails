@@ -213,19 +213,17 @@ create table `events` (
   constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
 ) engine=innodb default charset=utf8;
 
-create table `historical_names` (
+create table `first_names` (
   `id` int(11) not null auto_increment,
-  `team_id` int(11) not null,
-  `name` varchar(255) not null,
-  `year` int(11) not null,
+  `name` varchar(255) default null,
+  `person_id` int(11) not null,
+  `year` int(11) default null,
+  `lock_version` int(11) not null default '0',
   `created_at` datetime default null,
   `updated_at` datetime default null,
-  `lock_version` int(11) not null default '0',
   primary key (`id`),
-  key `team_id` (`team_id`),
-  key `index_names_on_name` (`name`),
-  key `index_names_on_year` (`year`),
-  constraint `historical_names_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
+  key `person_id` (`person_id`),
+  constraint `first_names_ibfk_1` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `import_files` (
@@ -235,6 +233,19 @@ create table `import_files` (
   `created_at` datetime default null,
   `updated_at` datetime default null,
   primary key (`id`)
+) engine=innodb default charset=utf8;
+
+create table `last_names` (
+  `id` int(11) not null auto_increment,
+  `name` varchar(255) default null,
+  `person_id` int(11) not null,
+  `year` int(11) default null,
+  `lock_version` int(11) not null default '0',
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`),
+  key `person_id` (`person_id`),
+  constraint `last_names_ibfk_1` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8;
 
 create table `mailing_lists` (
@@ -248,6 +259,21 @@ create table `mailing_lists` (
   `description` text,
   primary key (`id`),
   key `idx_name` (`name`)
+) engine=innodb default charset=utf8;
+
+create table `names` (
+  `id` int(11) not null auto_increment,
+  `team_id` int(11) not null,
+  `name` varchar(255) not null,
+  `year` int(11) not null,
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  `lock_version` int(11) not null default '0',
+  primary key (`id`),
+  key `team_id` (`team_id`),
+  key `index_names_on_name` (`name`),
+  key `index_names_on_year` (`year`),
+  key `index_historical_names_on_team_id` (`team_id`)
 ) engine=innodb default charset=utf8;
 
 create table `number_issuers` (
@@ -779,6 +805,10 @@ insert into schema_migrations (version) values ('20100608160458');
 insert into schema_migrations (version) values ('20100613014859');
 
 insert into schema_migrations (version) values ('20100613220247');
+
+insert into schema_migrations (version) values ('20100616171753');
+
+insert into schema_migrations (version) values ('20100616224058');
 
 insert into schema_migrations (version) values ('21');
 

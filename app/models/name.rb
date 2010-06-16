@@ -1,4 +1,4 @@
-class HistoricalName < ActiveRecord::Base
+class Name < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :year
   validates_uniqueness_of :name, :scope => [:year, :team_id]
@@ -9,6 +9,6 @@ class HistoricalName < ActiveRecord::Base
   end
   
   def to_s
-    "#<HistoricalName #{name} #{year} #{team_id}>"
+    "#<Name #{name} #{year} #{team_id}>"
   end
 end

@@ -40,7 +40,7 @@ class PersonTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:date => 1.years.ago)
     result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
     
@@ -49,7 +49,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
