@@ -4,8 +4,8 @@
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
+  include Names::Nameable
 
-  before_save :add_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   after_save :reset_old_name
@@ -95,15 +95,6 @@ class Team < ActiveRecord::Base
       new_alias
     end
   end
-
-  # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
-  # TODO This is a bit naive, needs validation, and more tests
-  def add_name
-    last_year = Date.today.year - 1
-    if !@old_name.blank? && results_before_this_year? && !self.names.any? { |name| name.year == last_year }
-      self.names.create(:name => @old_name, :year => last_year)
-    end
-  end
   
   # Otherwise, if we change name in memory more than once, @old_name will be out of date
   def reset_old_name
@@ -168,32 +159,6 @@ class Team < ActiveRecord::Base
   
   def member_in_year?(date = Date.today)
     member
-  end
-  
-  # Team names change over time
-  def name(date_or_year = nil)
-    return read_attribute(:name) unless date_or_year && !self.names.empty?
-    
-    # TODO Tune this
-    if date_or_year.is_a? Integer
-      year = date_or_year
-    else
-      year = date_or_year.year
-    end
-    
-    # Assume names always sorted
-    if year <= self.names.first.year
-      return self.names.first.name
-    elsif year >= self.names.last.year && year < Date.today.year
-      return self.names.last.name
-    end
-    
-    name_for_year = self.names.detect { |n| n.year == year }
-    if name_for_year
-      name_for_year.name
-    else
-      read_attribute(:name)
-    end
   end
   
   def name=(value)
