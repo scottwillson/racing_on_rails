@@ -257,7 +257,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.deliver_password_reset_instructions!(people)
-    people.each &:reset_perishable_token!
+    people.each(&:reset_perishable_token!)
     Notifier.deliver_password_reset_instructions(people)
   end
   
@@ -284,7 +284,7 @@ class Person < ActiveRecord::Base
   def name
     Person.full_name(first_name, last_name)
   end
-
+  
   def email_with_name
     "#{name} <#{email}>"
   end
