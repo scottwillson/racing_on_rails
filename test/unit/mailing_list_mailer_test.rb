@@ -16,7 +16,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = @expected.date
+    post.date = Time.zone.now
     post_email = MailingListMailer.create_post(post)
     assert_equal(@expected.encoded, post_email.encoded)
   end
@@ -34,7 +34,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = @expected.date
+    post.date = Time.zone.now
     post_email = MailingListMailer.create_private_reply(post, "Scout <scout@butlerpress.com>")
     assert_equal(@expected.encoded, post_email.encoded)
   end

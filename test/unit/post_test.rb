@@ -80,11 +80,11 @@ class PostTest < ActiveSupport::TestCase
     id = 90
     post.id = id
     post.date = Time.local(2003, 5, 13, 12, 0, 0, 0)
-    assert_equal_dates("2003-05-13 12:00:00", post.date, "date before adding time", "%Y-%m-%d %H:%M:%S")
+    assert_equal_dates Time.local(2003, 5, 13, 12, 0, 0, 0), post.date, "date before adding time"
     post.add_time
-    assert_equal_dates("2003-05-13 12:01:30", post.date, "date with time", "%Y-%m-%d %H:%M:%S")
+    assert_equal_dates Time.local(2003, 5, 13, 12, 0, 1, 30), post.date, "date with time"
     post.add_time
-    assert_equal_dates("2003-05-13 12:01:30", post.date, "date with time", "%Y-%m-%d %H:%M:%S")
+    assert_equal_dates Time.local(2003, 5, 13, 12, 0, 1, 30), post.date, "date with time"
   end
   
   def test_remove_topica_header
