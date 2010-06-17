@@ -933,7 +933,63 @@ class PersonTest < ActiveSupport::TestCase
     assert !Person.exists?(person)
     assert people(:alice).editable_people(true).empty?, "should remove editors"
   end
+
+  def test_multiple_names
+    person = people(:weaver)
+
+    person.names.create!(:first_name => "R", :last_name => "Weavedog", :name => "R Weavedog", :year => 2001)
+    person.names.create!(:first_name => "Mister", :last_name => "Weavedog", :name => "Mister Weavedog", :year => 2002)
+    person.names.create!(:first_name => "Ryan", :last_name => "Farris", :name => "Ryan Farris", :year => 2003)
+
+    assert_equal(3, person.names.size, "Historical names. #{person.names.map {|n| n.name}.join(', ')}")
+
+    assert_equal("R Weavedog", person.name(2000), "Historical name 2000")
+    assert_equal("R", person.first_name(2000), "Historical first_name 2000")
+    assert_equal("Weavedog", person.last_name(2000), "Historical last_name 2000")
+
+    assert_equal("R Weavedog", person.name(2001), "Historical name 2001")
+    assert_equal("R", person.first_name(2001), "Historical first_name 2001")
+    assert_equal("Weavedog", person.last_name(2001), "Historical last_name 2001")
+
+    assert_equal("Mister Weavedog", person.name(2002), "Historical name 2002")
+    assert_equal("Mister", person.first_name(2002), "Historical first_name 2002")
+    assert_equal("Weavedog", person.last_name(2002), "Historical last_name 2002")
+
+    assert_equal("Ryan Farris", person.name(2003), "Historical name 2003")
+    assert_equal("Ryan Farris", person.name(2004), "Historical name 2004")
+    assert_equal("Ryan Farris", person.name(Date.today.year - 1), "Historical name last year")
+    assert_equal("Ryan Weaver", person.name(Date.today.year), "Name this year")
+    assert_equal("Ryan Weaver", person.name(Date.today.year + 1), "Name next year")
+  end
   
+  def test_create_new_name_if_there_are_results_from_previous_year
+    person = people(:weaver)
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    old_result = event.races.create!(:category => categories(:senior_men)).results.create!(:person => person)
+    assert_equal("Ryan Weaver", old_result.name, "Name on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+    
+    event = SingleDayEvent.create!(:date => Date.today)
+    result = event.races.create!(:category => categories(:senior_men)).results.create!(:person => person)
+    assert_equal("Ryan Weaver", old_result.name, "Name on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+    
+    person.name = "Rob Farris"
+    person.save!
+
+    assert_equal(1, person.names(true).size, "names")
+
+    assert_equal("Ryan Weaver", old_result.name, "name should stay the same on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+
+    assert_equal("Rob Farris", result.name, "name should change on this year's result")
+    assert_equal("Rob", result.first_name, "first_name on result")
+    assert_equal("Farris", result.last_name, "last_name on result")
+  end
+
   def test_renewed
     person = Person.create!
     assert !person.renewed?, "New person"

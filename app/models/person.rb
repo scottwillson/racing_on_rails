@@ -5,6 +5,7 @@
 # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
 class Person < ActiveRecord::Base
   include Comparable
+  include Names::Nameable
   include SentientUser
 
   versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
@@ -280,9 +281,20 @@ class Person < ActiveRecord::Base
     end
     super(attributes)
   end
-
-  def name
-    Person.full_name(first_name, last_name)
+  
+  def name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:name) || Person.full_name(first_name(year), last_name(year))
+  end
+  
+  def first_name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:first_name) || read_attribute(:first_name)
+  end
+  
+  def last_name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:last_name) || read_attribute(:last_name)
   end
   
   def email_with_name

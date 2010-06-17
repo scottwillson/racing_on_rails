@@ -314,7 +314,7 @@ class Result < ActiveRecord::Base
 
   def first_name
     if person and !person.first_name.blank?
-      person.first_name
+      person.first_name(date)
     else
       ""
     end
@@ -330,7 +330,7 @@ class Result < ActiveRecord::Base
 
   def last_name
     if (person and !person.last_name.blank?)
-      person.last_name
+      person.last_name(date)
     else
       ""
     end
@@ -349,7 +349,7 @@ class Result < ActiveRecord::Base
     if person == nil
       ""
     else
-      person.name
+      person.name(date)
     end
   end
 

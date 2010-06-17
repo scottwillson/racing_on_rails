@@ -293,7 +293,7 @@ class TeamTest < ActiveSupport::TestCase
 
   def test_name_date_or_year
     team = teams(:vanilla)
-    Name.create!(:team_id => team.id, :name => "Sacha's Team", :year => 2001)
+    team.names.create!(:name => "Sacha's Team", :year => 2001)
     assert_equal("Sacha's Team", team.name(Date.new(2001, 12, 31)), "name for 2001-12-31")
     assert_equal("Sacha's Team", team.name(Date.new(2001)), "name for 2001-01-01")
     assert_equal("Sacha's Team", team.name(2001), "name for 2001")
@@ -301,9 +301,9 @@ class TeamTest < ActiveSupport::TestCase
 
   def test_multiple_names
     team = teams(:vanilla)
-    Name.create!(:team_id => team.id, :name => "Mapei", :year => 2001)
-    Name.create!(:team_id => team.id, :name => "Mapei-Clas", :year => 2002)
-    Name.create!(:team_id => team.id, :name => "Quick Step", :year => 2003)
+    team.names.create!(:name => "Mapei", :year => 2001)
+    team.names.create!(:name => "Mapei-Clas", :year => 2002)
+    team.names.create!(:name => "Quick Step", :year => 2003)
     assert_equal(3, team.names.size, "Historical names. #{team.names.map {|n| n.name}.join(', ')}")
     assert_equal("Mapei", team.name(2000), "Historical name 2000")
     assert_equal("Mapei", team.name(2001), "Historical name 2001")
@@ -317,7 +317,7 @@ class TeamTest < ActiveSupport::TestCase
  
   def test_rename_to_old_name
     team = teams(:vanilla)
-    Name.create!(:team_id => team.id, :name => "Sacha's Team", :year => 2001)
+    team.names.create!(:name => "Sacha's Team", :year => 2001)
     assert_equal(1, team.names.size, "Historical names")
     assert_equal("Sacha's Team", team.name(2001), "Historical name 2001")
     team.name = "Sacha's Team"

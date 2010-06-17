@@ -263,17 +263,21 @@ create table `mailing_lists` (
 
 create table `names` (
   `id` int(11) not null auto_increment,
-  `team_id` int(11) not null,
+  `nameable_id` int(11) not null,
   `name` varchar(255) not null,
   `year` int(11) not null,
   `created_at` datetime default null,
   `updated_at` datetime default null,
   `lock_version` int(11) not null default '0',
+  `nameable_type` varchar(255) default null,
+  `first_name` varchar(255) default null,
+  `last_name` varchar(255) default null,
   primary key (`id`),
-  key `team_id` (`team_id`),
+  key `team_id` (`nameable_id`),
   key `index_names_on_name` (`name`),
   key `index_names_on_year` (`year`),
-  key `index_historical_names_on_team_id` (`team_id`)
+  key `index_historical_names_on_team_id` (`nameable_id`),
+  key `index_names_on_nameable_type` (`nameable_type`)
 ) engine=innodb default charset=utf8;
 
 create table `number_issuers` (
@@ -809,6 +813,8 @@ insert into schema_migrations (version) values ('20100613220247');
 insert into schema_migrations (version) values ('20100616171753');
 
 insert into schema_migrations (version) values ('20100616224058');
+
+insert into schema_migrations (version) values ('20100616230454');
 
 insert into schema_migrations (version) values ('21');
 

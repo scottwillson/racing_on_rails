@@ -17,7 +17,6 @@ class Team < ActiveRecord::Base
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
   has_many :events
-  has_many :names, :order => "year"
   has_many :people
   has_many :results
 
@@ -62,17 +61,6 @@ class Team < ActiveRecord::Base
 
     errors.add_to_base("Cannot delete team with results. #{name} has #{results.count} results.")
     false
-  end
-  
-  def results_before_this_year?
-    # Exists? doesn't support joins
-    count = Team.count_by_sql([%Q{
-      select results.id from teams, results, races, events 
-      where teams.id = ? and teams.id = results.team_id 
-        and results.race_id = races.id
-        and races.event_id = events.id and events.date < ? limit 1
-    }, self.id, Date.today.beginning_of_year])
-    count > 0
   end
   
   # If name changes to match existing alias, destroy the alias
