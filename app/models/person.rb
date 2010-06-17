@@ -906,6 +906,7 @@ class Person < ActiveRecord::Base
       save!
       aliases << other_person.aliases
       events << other_person.events
+      names << other_person.names
       results << other_person.results
       race_numbers << other_person.race_numbers
       Person.delete(other_person.id)

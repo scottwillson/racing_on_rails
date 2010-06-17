@@ -337,14 +337,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     tonkin = people(:tonkin)
     old_id = tonkin.id
-    assert(Person.find_all_by_name('Erik Tonkin'), 'Tonkin should be in database')
+    assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-    get(:merge, :id => tonkin.to_param, :target_id => molly.id)
-    assert_response(:success)
-    assert_template("admin/people/merge")
+    get :merge, :id => tonkin.to_param, :target_id => molly.id
+    assert_response :success
+    assert_template %Q{admin/people/merge}
 
-    assert(Person.find_all_by_name('Molly Cameron'), 'Molly should be in database')
-    assert_equal([], Person.find_all_by_name('Erik Tonkin'), 'Tonkin should not be in database')
+    assert Person.find_all_by_name("Molly Cameron"), "Molly should be in database"
+    assert_equal [], Person.find_all_by_name("Erik Tonkin"), "Tonkin should not be in database"
   end
 
   def test_update_team_name_to_new_team
