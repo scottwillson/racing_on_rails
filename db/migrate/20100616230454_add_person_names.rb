@@ -1,5 +1,7 @@
 class AddPersonNames < ActiveRecord::Migration
   def self.up
+    execute "alter table names drop foreign key historical_names_team_id_fk"
+    
     change_table :names do |t|
       t.string :nameable_type
       t.string :first_name
