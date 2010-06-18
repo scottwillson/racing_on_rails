@@ -46,6 +46,7 @@ class RacingAssociation
     @ssl = false
   end
   
+  # TODO Shouldn't this be in disciplines?
   def bmx_numbers?
     @bmx_numbers
   end
@@ -116,7 +117,7 @@ class RacingAssociation
   
   # Person record for RacingAssociation
   def person
-    @person ||= Person.find_by_name(name)
+    Person.find_or_create_by_name(short_name)
   end
   
   def ssl?
@@ -128,14 +129,14 @@ class RacingAssociation
     @now || Time.zone.now
   end
   
-  # Returns now.to_date, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
   def today
-    now.to_date
+    now.beginning_of_day
   end
   
-  # Returns now.to_date.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
   def year
-    now.to_date.year
+    now.year
   end
   
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.

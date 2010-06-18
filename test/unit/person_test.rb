@@ -232,7 +232,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
-    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2010, 12, 31), person.member_to, 'Member to')
     person.save!
     person.reload
     assert_equal(true, person.member?, 'member')
@@ -282,7 +282,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2009, 12, 31), person.member_to, 'Member to')
     
     ASSOCIATION.now = Date.new(2009, 12)
     person.member_from = Date.new(2001, 1, 1)
@@ -295,7 +295,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2010, 12, 31), person.member_to, 'Member to')
 
     ASSOCIATION.now = nil
     person.member_from = Date.new(2001, 1, 1)
@@ -318,7 +318,7 @@ class PersonTest < ActiveSupport::TestCase
     
     person.member = false
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2008, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2008, 12, 31), person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')
 
     # From, to in future

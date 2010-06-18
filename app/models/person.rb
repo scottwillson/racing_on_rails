@@ -667,15 +667,14 @@ class Person < ActiveRecord::Base
 
   # Is Person a current member of the bike racing association?
   def member?(date = ASSOCIATION.today)
-    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
-    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
+    member_to.present? && member_from.present? && (member_from.to_date <= date.to_date && member_to.to_date >= date.to_date)
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
   def member_in_year?(date = ASSOCIATION.today)
-    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     year = date.year
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
+    member_to.present? && member_from.present? && (member_from.year <= year && member_to.year >= year)
   end
   
   def member
@@ -685,14 +684,16 @@ class Person < ActiveRecord::Base
   # Is Person a current member of the bike racing association?
   def member=(value)
     if value
-      self.member_from = ASSOCIATION.today if self.member_from.nil? || self.member_from >= ASSOCIATION.today
-      self.member_to = Date.new(ASSOCIATION.effective_year, 12, 31) unless self.member_to && (self.member_to >= Date.new(ASSOCIATION.effective_year, 12, 31))
+      self.member_from = ASSOCIATION.today if member_from.nil? || member_from.to_date >= ASSOCIATION.today.to_date
+      unless member_to && (member_to.to_date >= Time.zone.local(ASSOCIATION.effective_year, 12, 31).to_date)
+        self.member_to = Time.zone.local(ASSOCIATION.effective_year, 12, 31) 
+      end
     elsif !value && member?
       if self.member_from.year == ASSOCIATION.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Date.new(ASSOCIATION.year - 1, 12, 31)
+        self.member_to = Time.zone.local(ASSOCIATION.year - 1, 12, 31)
       end
     end
   end
@@ -722,27 +723,27 @@ class Person < ActiveRecord::Base
   
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = ASSOCIATION.today if self.member_from.nil?
-      self[:member_from] = date if self.member_from > date
+      self[:member_from] = ASSOCIATION.today if member_from.nil?
+      self[:member_from] = date if member_from.to_date > date.to_date
     end
     self[:member_to] = date
   end
   
   # Validates member_from and member_to
   def membership_dates
-    if member_to and member_from.nil?
+    if member_to && !member_from
       errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
     end
-    if member_from and member_to.nil?
+    if member_from && !member_to
       errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
     end
-    if member_from and member_to and member_from > member_to
+    if member_from && member_to && member_from.to_date > member_to.to_date
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
   end
 
   def renewed?
-    self.member_to && (self.member_to.year >= ASSOCIATION.effective_year)
+    member_to && member_to.year >= ASSOCIATION.effective_year
   end
 
   def renew!(license_type)
