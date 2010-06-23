@@ -14,7 +14,6 @@ module Results
     attr_accessor :event
     attr_accessor :rows
     attr_accessor :source
-    attr_accessor :usac_results_format
 
     # All custom columns in file
     attr_accessor :custom_columns
@@ -75,21 +74,12 @@ module Results
     # Toggle expensive debug logging
     DEBUG = false
 
-    # Options: usac_results_format. If not present it defaults to RacingAssociation, which is usually "false".
-    #   otherwise treat as boolean, potentially overriding the default.
-    def initialize(source, event, *options)
+    def initialize(source, event)
       self.column_indexes = nil
       self.event = event
       self.custom_columns = Set.new
       self.race_custom_columns = Set.new
       self.source = source
-      options = options.extract_options!
-
-      if options.has_key?(:usac_results_format)
-        self.usac_results_format = options[:usac_results_format]
-      else
-        self.usac_results_format = ASSOCIATION.usac_results_format
-      end
     end
 
     def import
@@ -107,7 +97,7 @@ module Results
             if race?(row)
               race = find_or_create_race(row)
               # This row is also a result. I.e., no separate race header row.
-              if usac_results_format
+              if usac_results_format?
                 create_result(row, race)
               end
             elsif result?(row)
@@ -133,7 +123,7 @@ module Results
             Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
           end
         end
-        row = Results::ResultsFile::Row.new(spreadsheet_row, column_indexes, usac_results_format)
+        row = Results::ResultsFile::Row.new(spreadsheet_row, column_indexes, usac_results_format?)
         unless row.blank?
           if column_indexes.nil?
             create_columns(spreadsheet_row)
@@ -168,11 +158,18 @@ module Results
           cell_string.gsub!(" ", "_")
           cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
           if cell_string.present?
-            self.column_indexes[cell_string.to_sym] = index
-            self.columns << cell_string 
-            if !Race::RESULT.respond_to?(cell_string.to_sym)
-              self.custom_columns << cell_string
-              self.race_custom_columns << cell_string
+            if usac_results_format?
+              if Race::RESULT.respond_to?(cell_string.to_sym)
+                column_indexes[cell_string.to_sym] = index
+                self.columns << cell_string 
+              end
+            else
+              column_indexes[cell_string.to_sym] = index
+              self.columns << cell_string 
+              if !Race::RESULT.respond_to?(cell_string.to_sym)
+                self.custom_columns << cell_string
+                self.race_custom_columns << cell_string
+              end
             end
           end
         end
@@ -183,7 +180,7 @@ module Results
     end
 
     def race?(row)
-      if usac_results_format
+      if usac_results_format?
         #new race when one of the key fields changes: category, gender, class or age if age is a range
         #i was looking for place = 1 but it is possible that all in race were dq or dnf or dns
         return false if column_indexes.nil? || row.blank?
@@ -202,7 +199,7 @@ module Results
     end
 
     def find_or_create_race(row)
-      if usac_results_format
+      if usac_results_format?
         category = Category.find_or_create_by_name(construct_usac_category(row))
       else
         category = Category.find_or_create_by_name(row.first)
@@ -296,6 +293,10 @@ module Results
       end
       attributes.merge!(:custom_attributes => custom_attributes)
       attributes
+    end
+    
+    def usac_results_format?
+      ASSOCIATION.usac_results_format?
     end
 
     class Row

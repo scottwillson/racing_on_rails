@@ -103,13 +103,26 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
 
+  def test_upload_usac
+    ASSOCIATION.usac_results_format = true
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.races.empty?, 'Should have no races before import')
+
+    post :upload, :id => mt_hood_1.to_param, 
+                  :results_file => fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary)
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert_redirected_to edit_admin_event_path(mt_hood_1)
+    assert(flash.has_key?(:notice))
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+  end
+
   def test_upload_lif
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
     post :upload, :id => mt_hood_1.to_param, 
-                  :results_file => fixture_file_upload("results/OutputFile.lif", nil, :binary),
-                  :usac_results_format => "false"
+                  :results_file => fixture_file_upload("results/OutputFile.lif", nil, :binary)
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
     assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -122,8 +135,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
     
     post :upload, :id => mt_hood_1.to_param, 
-                  :results_file => fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary),
-                  :usac_results_format => "false"
+                  :results_file => fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary)
     assert_redirected_to edit_admin_event_path(mt_hood_1)
 
     assert_response :redirect
@@ -355,7 +367,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
     file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
-    post :upload, :id => mt_hood_1.to_param, :results_file => file, :usac_results_format => "false"
+    post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect
     

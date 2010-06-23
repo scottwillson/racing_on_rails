@@ -12,6 +12,7 @@ class ActiveSupport::TestCase
   def setup
     activate_authlogic
     ASSOCIATION.now = nil
+    ASSOCIATION.usac_results_format = false
     super
   end
   
