@@ -445,6 +445,7 @@ module Results
       assert_in_delta(13920, results[15].time, 0.00001, 'row 15: 3:52')
       assert_in_delta(0.161111111, results[16].time, 0.00001, 'row 16: 0.161111111')
       assert_equal(2752.92, results[17].time, 'row 17: 45:52.917')
+      assert_equal(36000, results[18].time, 'row 18: 10:00:00')
     end
   
     def expected_results(event)
