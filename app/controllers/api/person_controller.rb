@@ -18,7 +18,7 @@ class Api::PersonController < ApplicationController
     # paginage
     people = people.paginate(:page => params[:page])
 
-    only = [:first_name, :last_name, :date_of_birth, :license, :gender]
+    only = [:id, :first_name, :last_name, :date_of_birth, :license, :gender]
     respond_to do |format|
       format.xml { render :xml => people.to_xml(:only => only) }
       format.json { render :json => people.to_json(:only => only) }
