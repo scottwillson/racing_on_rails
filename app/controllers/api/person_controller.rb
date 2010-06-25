@@ -4,19 +4,19 @@ class Api::PersonController < ApplicationController
 
     # name
     if params[:name]
-      people = people + Person.find_all_by_name_like(params[:name], 5)
+      people = people + Person.find_all_by_name_like(params[:name])
     end
 
     # license
     if params[:license]
-      people = people + Person.find_all_by_license(params[:license], 5)
+      people = people + Person.find_all_by_license(params[:license])
     end
 
     # order
     people.stable_sort_by(:first_name).stable_sort_by(:last_name)
 
-    # limit
-    people = people[0, 5]
+    # paginage
+    people = people.paginate(:page => params[:page])
 
     only = [:first_name, :last_name, :date_of_birth, :license, :gender]
     respond_to do |format|
