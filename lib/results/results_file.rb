@@ -8,6 +8,8 @@ module Results
   #
   # Notes example:
   # Senior Men Pro 1/2 | Field size: 79 riders | Laps: 2
+  #
+  # Set DEBUG_RESULTS to Toggle expensive debug logging. E.g., DEBUG_RESULTS=yes ./script/server
   class ResultsFile
     attr_accessor :columns
     attr_accessor :column_indexes
@@ -71,9 +73,6 @@ module Results
       "sex"               => "gender"
     }
 
-    # Toggle expensive debug logging
-    DEBUG = false
-
     def initialize(source, event)
       self.column_indexes = nil
       self.event = event
@@ -93,7 +92,7 @@ module Results
           create_rows(worksheet)
 
           rows.each do |row|
-            Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if DEBUG && Rails.logger.debug?
+            Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{row.spreadsheet_row.to_a.join(', ')}") if debug?
             if race?(row)
               race = find_or_create_race(row)
               # This row is also a result. I.e., no separate race header row.
@@ -117,7 +116,7 @@ module Results
       self.rows = []
       previous_row = nil
       worksheet.each do |spreadsheet_row|
-        if DEBUG && Rails.logger.debug?
+        if debug?
           Rails.logger.debug("Results::ResultsFile #{Time.zone.now} row #{spreadsheet_row.to_a.join(', ')}")
           spreadsheet_row.each_with_index do |cell, index|
             Rails.logger.debug("number_format pattern to_s to_f #{spreadsheet_row.format(index).number_format}  #{spreadsheet_row.format(index).pattern} #{cell.to_s} #{cell.to_f if cell.respond_to?(:to_f)} #{cell.class}")
@@ -175,7 +174,7 @@ module Results
         end
       end
 
-      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} Create column indexes #{self.column_indexes.inspect}") if DEBUG && Rails.logger.debug?
+      Rails.logger.debug("Results::ResultsFile #{Time.zone.now} Create column indexes #{self.column_indexes.inspect}") if debug?
       self.column_indexes
     end
 
@@ -268,7 +267,7 @@ module Results
         result.cleanup
         result.save!
         row.result = result
-        Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if DEBUG && Rails.logger.debug?
+        Rails.logger.debug("Results::ResultsFile #{Time.zone.now} create result #{race} #{result.place}") if debug?
       else
         # TODO Maybe a hard exception or error would be better?
         Rails.logger.warn("No race. Skip.")
@@ -297,6 +296,10 @@ module Results
     
     def usac_results_format?
       ASSOCIATION.usac_results_format?
+    end
+    
+    def debug?
+      ENV["DEBUG_RESULTS"].present? && Rails.logger.debug?
     end
 
     class Row
