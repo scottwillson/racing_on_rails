@@ -6,6 +6,10 @@ class Api::PersonControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal "application/xml", @response.content_type
     assert_select "first-name", "Erik"
+    assert_select "last-name", "Tonkin"
+    assert_select "date-of-birth", "1980-06-25"
+    assert_select "license", "7123811"
+    assert_select "gender", "M"
 
     get :index, { :name => "ron" }
     assert_response :success
