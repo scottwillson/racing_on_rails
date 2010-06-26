@@ -5,11 +5,29 @@ class Api::PersonControllerTest < ActionController::TestCase
     get :index, { :license => 7123811 }
     assert_response :success
     assert_equal "application/xml", @response.content_type
-    assert_select "first-name", "Erik"
-    assert_select "last-name", "Tonkin"
-    assert_select "date-of-birth", "1980-06-25"
-    assert_select "license", "7123811"
-    assert_select "gender", "M"
+    [
+      "person > first-name",
+      "person > last-name",
+      "person > date-of-birth",
+      "person > license",
+      "person > gender",
+      "person > team",
+      "person > race-numbers",
+      "person > aliases",
+      "team > city",
+      "team > state",
+      "team > website",
+      "race-numbers > race-number",
+      "race-number > value",
+      "race-number > year",
+      "race-number > discipline",
+      "discipline > name",
+      "aliases > alias",
+      "alias > name",
+      "alias > alias"
+    ].each do |key|
+      assert_select key
+    end
 
     get :index, { :name => "ron" }
     assert_response :success
