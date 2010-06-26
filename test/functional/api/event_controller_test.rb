@@ -1,8 +1,8 @@
 require "test_helper"
 
-class Api::EventControllerTest < ActionController::TestCase
-  def test_index
-    get :index
+class EventsControllerTest < ActionController::TestCase
+  def test_index_xml_format
+    get :index, :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
     [
