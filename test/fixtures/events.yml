@@ -38,7 +38,6 @@ banana_belt_3:
   name: Banana Belt III
   discipline: Road
   sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
-  promoter: brad_ross
   promoter_id: 3
   date: 2004-01-18
   type: SingleDayEvent

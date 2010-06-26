@@ -721,6 +721,22 @@ class EventTest < ActiveSupport::TestCase
     )
   end
 
+  def test_editable_by
+    assert_equal [], Event.editable_by(people(:alice)), "Alice can't edit any events"
+    assert_same_elements [ events(:banana_belt_series), events(:banana_belt_1), events(:banana_belt_2), events(:banana_belt_3),
+                           events(:mt_hood), events(:mt_hood_1), events(:mt_hood_2), events(:series_parent), events(:lost_series_child) ], 
+      Event.editable_by(people(:promoter)), 
+      "Promoter can edit his events"
+      
+    assert_equal_enumerables Event.all, Event.editable_by(people(:administrator)), "Administrator can edit all events"
+  end
+  
+  def test_today_and_future
+    assert Event.today_and_future.include?(events(:lost_series_child)), "today_and_future scope should include Lost Series child event"
+    assert Event.today_and_future.include?(events(:future_national_federation_event)), "today_and_future scope should include future event"
+    assert !Event.today_and_future.include?(events(:banana_belt_3)), "today_and_future scope should not include Banana Belt event"
+  end
+
   private
   
   def assert_orphans(count, event)

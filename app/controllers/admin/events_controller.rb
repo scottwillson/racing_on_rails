@@ -158,7 +158,7 @@ class Admin::EventsController < Admin::AdminController
     if File.extname(path) == ".lif"
       results_file = Results::LifFile.new(temp_file, event)
     else
-      results_file = Results::ResultsFile.new(temp_file, event, :usac_results_format => params[:usac_results_format] == "true")
+      results_file = Results::ResultsFile.new(temp_file, event)
     end
     
     results_file.import
@@ -168,7 +168,7 @@ class Admin::EventsController < Admin::AdminController
     flash[:notice] = "Imported #{uploaded_file.original_filename}. "
     unless results_file.custom_columns.empty?
       flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:humanize).join(", ")}. "
-      flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format
+      flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format?
     end
     
     redirect_to(edit_admin_event_path(event))

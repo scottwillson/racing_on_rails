@@ -75,6 +75,11 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   
+  named_scope :editable_by, lambda { |person| 
+    {:conditions => { :promoter_id => person.id } } unless person.administrator?
+  }
+  named_scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
+  
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
