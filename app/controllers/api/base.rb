@@ -24,11 +24,11 @@ module Api
       [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly ]
     end
 
-    def event_includes(with_results=false)
+    def event_includes
       {
         :races => {
           :only    => race_fields,
-          :include => race_includes(with_results)
+          :include => race_includes
         }
       }
     end
