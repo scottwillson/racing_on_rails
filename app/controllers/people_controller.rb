@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  include Api::People
+  
   before_filter :require_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
@@ -7,15 +9,14 @@ class PeopleController < ApplicationController
   ssl_allowed :index
   
   def index
-    @people = []
-    @name = params['name'] || ''
-    @name.strip!
-    if @name.present?
-      @people = Person.find_all_by_name_like(@name)
-      @people = @people.paginate(:page => params[:page])
+    respond_to do |format|
+      format.html { find_people }
+      format.js { find_people }
+      format.xml { render :xml => people_as_xml }
+      format.json { render :json => people_as_json }
     end
   end
-  
+
   def account
     person = (params[:id] && Person.find(params[:id])) || current_person
     if person
@@ -116,6 +117,19 @@ class PeopleController < ApplicationController
       end
     else
       render :new_login
+    end
+  end
+
+  
+  private
+
+  def find_people
+    @people = []
+    @name = params['name'] || ''
+    @name.strip!
+    if @name.present?
+      @people = Person.find_all_by_name_like(@name)
+      @people = @people.paginate(:page => params[:page])
     end
   end
 end

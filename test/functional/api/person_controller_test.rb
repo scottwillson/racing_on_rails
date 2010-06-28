@@ -1,8 +1,8 @@
 require "test_helper"
 
-class Api::PersonControllerTest < ActionController::TestCase
-  def test_index
-    get :index, { :license => 7123811 }
+class PeopleControllerTest < ActionController::TestCase
+  def test_index_as_json
+    get :index, :license => 7123811, :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
     [
@@ -29,16 +29,26 @@ class Api::PersonControllerTest < ActionController::TestCase
       assert_select key
     end
 
-    get :index, { :name => "ron" }
+    get :index, { :format => "json", :name => "ron" }
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+  end
+  
+  def test_find_by_name_xml
+    get :index, :name => "ron", :format => "xml"
     assert_response :success
     assert_select "first-name", "Molly"
     assert_select "first-name", "Kevin"
-
-    get :index, { :name => "m", :license => 576 }
+  end
+  
+  def test_find_by_license_as_xml
+    get :index, :name => "m", :license => 576, :format => "xml"
     assert_response :success
     assert_select "first-name", "Mark"
-
-    get :index, { :format => "json", :name => "ron" }
+  end
+  
+  def test_index_as_json
+    get :index, :format => "json", :name => "ron"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
