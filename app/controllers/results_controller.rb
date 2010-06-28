@@ -1,14 +1,22 @@
 # What appear to be duplicate finds are actually existence tests
 class ResultsController < ApplicationController
+  include Api::Results
+
   caches_page :index, :event, :person_event, :team_event, :person, :team
   
   def index
-    # TODO Create helper method to return Range of first and last of year
-    @year = params['year'].to_i
-    @year = Date.today.year if @year == 0
-    @discipline = Discipline[params['discipline']]
-    @discipline_names = Discipline.find_all_names
-    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+    respond_to do |format|
+      format.html {
+        # TODO Create helper method to return Range of first and last of year
+        @year = params['year'].to_i
+        @year = Date.today.year if @year == 0
+        @discipline = Discipline[params['discipline']]
+        @discipline_names = Discipline.find_all_names
+        @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+      }
+      format.xml { render :xml => results_as_xml }
+      format.json { render :json => results_as_json }
+    end
   end
   
   def event

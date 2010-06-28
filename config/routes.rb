@@ -37,11 +37,6 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :weekly_series, :as => :events, :has_one => :person
   end
 
-  map.namespace :api do |api|
-    api.resources :people, :only => :index, :controller => :person
-    api.resources :events, :only => :index, :controller => :event, :member => { :results => :get }
-  end
-
   map.resources :articles
   map.resources :article_categories
   map.resources :categories, :has_many => :races
