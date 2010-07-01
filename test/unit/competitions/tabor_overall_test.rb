@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
 class TaborOverallTest < ActiveSupport::TestCase  
   def test_recalc_with_no_tabor_series

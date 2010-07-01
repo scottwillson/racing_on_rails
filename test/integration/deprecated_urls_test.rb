@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 # TODO redirect from showing all BAR results (and fix links)
 class DeprecatedURLsTest < ActionController::IntegrationTest

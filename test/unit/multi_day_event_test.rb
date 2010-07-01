@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 # TODO Test updated_at and created_at
 # TODO Test name cannot be null

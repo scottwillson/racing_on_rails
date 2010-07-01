@@ -1,6 +1,6 @@
 # FIXME Assert correct team names on BAR results
 
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
 class MbraBarTest < ActiveSupport::TestCase
   def test_create

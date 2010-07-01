@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 class NameTest < ActiveSupport::TestCase
   def test_create

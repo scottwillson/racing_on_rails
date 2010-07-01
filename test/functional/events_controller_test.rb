@@ -1,5 +1,5 @@
 # :stopdoc:
-require 'test_helper'
+File.expand_path("../../test_helper", __FILE__)
 
 class EventsControllerTest < ActionController::TestCase
   def test_index

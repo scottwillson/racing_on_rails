@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 # Check we can call these methods with errors.
 # Actual values are going to differ between sites.

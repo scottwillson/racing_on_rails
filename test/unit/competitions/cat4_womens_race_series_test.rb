@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   def setup

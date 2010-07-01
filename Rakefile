@@ -8,3 +8,16 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 require 'tasks/rails'
+
+begin
+  require 'hydra'
+  require 'hydra/tasks'
+
+  Hydra::TestTask.new('hydra') do |t|
+    t.add_files 'test/unit/**/*_test.rb'
+    t.add_files 'test/functional/**/*_test.rb'
+    t.add_files 'test/integration/**/*_test.rb'
+  end
+rescue
+  # Don't worry about Hydra
+end

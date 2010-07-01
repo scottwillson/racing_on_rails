@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
 class MtbBarTest < ActiveSupport::TestCase
   def test_no_masters_or_junior_ability_categories

@@ -1,6 +1,6 @@
 # There is duplication between BAR tests, but refactring the tests should wait until the Competition refactoring is complete
 
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
 class OverallBarTest < ActiveSupport::TestCase
   def test_calculate

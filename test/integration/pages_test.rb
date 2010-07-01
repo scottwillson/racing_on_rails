@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
 class PagesTest < ActionController::IntegrationTest
   def test_render_dynamic_page_from_db

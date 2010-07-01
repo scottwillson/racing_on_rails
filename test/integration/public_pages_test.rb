@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 class PublicPagesTest < ActionController::IntegrationTest
   def test_popular_pages

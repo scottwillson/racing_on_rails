@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
 class PagesControllerTest < ActionController::TestCase
   test "show page" do

@@ -1,4 +1,4 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
 class TeamTest < ActiveSupport::TestCase
   def test_find_by_name_or_alias_or_create

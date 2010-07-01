@@ -1,7 +1,7 @@
 # TextMate sets this to 1, which hangs the Firefox driver
 ENV.delete "DYLD_FORCE_FLAT_NAMESPACE"
 
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 require "selenium-webdriver"
 
 class WebDriverTestCase < ActiveSupport::TestCase
