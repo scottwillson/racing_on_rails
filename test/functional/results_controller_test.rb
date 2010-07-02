@@ -425,4 +425,67 @@ class ResultsControllerTest < ActionController::TestCase
   def test_return_404_for_missing_person_event_bad_event
     assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) }
   end
+
+  def test_index_as_xml
+    event = events :banana_belt_1
+    get :index, :event_id => event[:id], :format => "xml"
+    assert_response :success
+    assert_equal "application/xml", @response.content_type
+    [
+      "race > city",
+      "race > distance",
+      "race > field-size",
+      "race > finishers",
+      "race > id",
+      "race > laps",
+      "race > notes",
+      "race > state",
+      "race > time",
+      "race > results",
+      "results > result",
+      "result > age",
+      "result > age-group",
+      "result > category-class",
+      "result > city",
+      "result > custom-attributes",
+      "result > date-of-birth",
+      "result > gender",
+      "result > id",
+      "result > laps",
+      "result > license",
+      "result > number",
+      "result > place",
+      "result > place-in-category",
+      "result > points",
+      "result > points-bonus",
+      "result > points-bonus-penalty",
+      "result > points-from-place",
+      "result > points-penalty",
+      "result > points-total",
+      "result > preliminary",
+      "result > state",
+      "result > time",
+      "result > time-gap-to-leader",
+      "result > time-gap-to-previous",
+      "result > time-gap-to-winner",
+      "result > person",
+      "person > first-name",
+      "person > last-name",
+      "person > license",
+      "person > id",
+      "race > category",
+      "category > ages-begin",
+      "category > ages-end",
+      "category > friendly-param",
+      "category > id",
+      "category > name"
+    ].each { |key| assert_select key }
+  end
+
+  def test_index_as_json
+    event = events :banana_belt_1
+    get :index, :event_id => event[:id], :format => "json"
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+  end
 end
