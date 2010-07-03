@@ -23,7 +23,7 @@ module Api
     end
 
     def event_fields
-      [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly ]
+      [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly, :date ]
     end
 
     def event_includes

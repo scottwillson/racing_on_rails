@@ -37,6 +37,7 @@ class EventsControllerTest < ActionController::TestCase
       "record > parent-id",
       "record > type",
       "record > races",
+      "record > date",
       "races > race",
       "race > city",
       "race > distance",
