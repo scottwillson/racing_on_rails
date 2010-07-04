@@ -883,41 +883,52 @@ class Person < ActiveRecord::Base
     raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
 
     Person.transaction do
-      events_with_results = other_person.results.collect do |result|
-        event = result.event
-        event.disable_notification! if event
-        event
-      end.compact || []
-      if login.blank? && other_person.login.present?
-        self.login = other_person.login
-        self.crypted_password = other_person.crypted_password
-        other_person.update_attribute :login, nil
-      end
-      if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
-        self.member_from = other_person.member_from
-      end
-      if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
-        self.member_to = other_person.member_to
-      end
-      
-      if license.blank?
-        self.license = other_person.license
-      end
+      self.merge_version do
+        events_with_results = other_person.results.collect do |result|
+          event = result.event
+          event.disable_notification! if event
+          event
+        end.compact || []
+        if login.blank? && other_person.login.present?
+          self.login = other_person.login
+          self.crypted_password = other_person.crypted_password
+          other_person.skip_version do
+            other_person.update_attribute :login, nil
+          end
+        end
+        if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
+          self.member_from = other_person.member_from
+        end
+        if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
+          self.member_to = other_person.member_to
+        end
 
-      save!
-      aliases << other_person.aliases
-      events << other_person.events
-      names << other_person.names
-      results << other_person.results
-      race_numbers << other_person.race_numbers
-      Person.delete(other_person.id)
-      existing_alias = aliases.detect{|a| a.name.casecmp(other_person.name) == 0}
-      if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
-        aliases.create(:name => other_person.name) 
-      end
-      events_with_results.each do |event|
-        event.reload
-        event.enable_notification!
+        if license.blank?
+          self.license = other_person.license
+        end
+
+        save!
+        aliases << other_person.aliases
+        events << other_person.events
+        names << other_person.names
+        results << other_person.results
+        race_numbers << other_person.race_numbers
+
+        versions << other_person.versions
+        versions.sort_by(&:created_at).each_with_index do |version, index|
+          version.number = index + 2
+          version.save!
+        end
+
+        Person.delete other_person.id
+        existing_alias = aliases.detect{|a| a.name.casecmp(other_person.name) == 0}
+        if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
+          aliases.create(:name => other_person.name) 
+        end
+        events_with_results.each do |event|
+          event.reload
+          event.enable_notification!
+        end
       end
     end
     true

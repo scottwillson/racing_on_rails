@@ -65,6 +65,11 @@ class PersonTest < ActiveSupport::TestCase
     person_to_keep.password_confirmation = "secret"
     person_to_keep.save!
     person_to_keep_old_password = person_to_keep.crypted_password
+    person_to_keep.city = "Berlin"
+    person_to_keep.save!
+
+    person_to_merge.street = "123 Holly"
+    person_to_merge.save!
     
     assert_not_nil(Person.find_by_first_name_and_last_name(person_to_keep.first_name, person_to_keep.last_name), "#{person_to_keep.name} should be in DB")
     assert_equal(3, Result.find_all_by_person_id(person_to_keep.id).size, "Molly's results")
@@ -119,6 +124,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates Date.today.end_of_year, person_to_keep.member_to, "member_to"
     
     assert_equal "7123811", person_to_keep.license, "license"
+    assert_equal 5, person_to_keep.versions.size, "versions"
+    assert_equal [ 2, 3, 4, 5, 6 ], person_to_keep.versions.map(&:number).sort, "version numbers"
   end
   
   def test_merge_login
@@ -129,13 +136,19 @@ class PersonTest < ActiveSupport::TestCase
     person_to_merge.password = "secret"
     person_to_merge.password_confirmation = "secret"
     person_to_merge.save!
+    sleep 1
     person_to_merge_old_password = person_to_merge.crypted_password
 
+    assert_equal 1, person_to_merge.versions.size, "versions"
+    assert_equal 0, person_to_keep.versions.size, "no versions"
     person_to_keep.merge person_to_merge
+    assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
     
     person_to_keep.reload
     assert_equal "tonkin", person_to_keep.login, "Should merge login"
     assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
+    changes = person_to_keep.versions.last.changes
+    assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
   end
   
   def test_merge_two_logins
