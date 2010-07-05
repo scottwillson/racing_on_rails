@@ -103,7 +103,7 @@ class PeopleController < ApplicationController
       @person.errors.add :email, "can't be blank"
     end
     
-    unless params[:person][:email][Authlogic::Regex.email]
+    if params[:person][:email].blank? || !params[:person][:email][Authlogic::Regex.email]
       @person.errors.add :email, "must been email address"
     end
     

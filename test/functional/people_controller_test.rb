@@ -292,7 +292,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.on(:name), "Should have error on :name"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_with_reversed_fields
@@ -312,7 +312,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.any?, "Should have errors"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_blank_license
@@ -346,7 +346,23 @@ class PeopleControllerTest < ActionController::TestCase
 
     assert_response :success
     assert assigns(:person).errors.on(:email), "Should have error on :email"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
+  end
+  
+  def test_create_dupe_login_no_email
+    ActionMailer::Base.deliveries.clear
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "bob.jones", 
+                      :password => "secret", 
+                      :password_confirmation => "secret"
+                    },
+         :return_to => root_path
+
+    assert_response :success
+    assert assigns(:person).errors.on(:email), "Should have error on :login"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_bad_email
@@ -366,7 +382,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
     assert_response :success
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_new_login
@@ -404,7 +420,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_name_blank
@@ -425,7 +441,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_license_blank
@@ -448,7 +464,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_name_blank_license_blank
@@ -491,7 +507,7 @@ class PeopleControllerTest < ActionController::TestCase
 
    assert_response :success
    assert assigns(:person).errors.on(:login), "Should have error on :login"
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_unmatched_license
@@ -513,7 +529,7 @@ class PeopleControllerTest < ActionController::TestCase
    assert assigns(:person).errors.any?, "Should errors"
    assert_equal 1, assigns(:person).errors.size, "errors"
    assert_response :success
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
    assert_equal people_count, Person.count, "People count"
   end
 
@@ -536,7 +552,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.any?, "Should errors"
     assert_equal 1, assigns(:person).errors.size, "errors"
     assert_response :success
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
     assert_equal people_count, Person.count, "People count"
   end
 
