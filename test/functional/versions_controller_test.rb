@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class VersionsControllerTest < ActionController::TestCase
   def setup
     super
@@ -13,6 +14,4 @@ class VersionsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal person, assigns(:person), "@person"
   end
-  
-  # Test security, SSL
 end

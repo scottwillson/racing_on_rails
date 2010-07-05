@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class BarControllerTest < ActionController::TestCase
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::UrlHelper

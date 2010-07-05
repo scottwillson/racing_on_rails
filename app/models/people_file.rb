@@ -1,8 +1,9 @@
 # Excel or text file of People. Assumes that the first row is a header row. 
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
+# See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
 class PeopleFile < GridFile
-  # TODO 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
-  #    'NCCA club' ...can have this in addition to club and team. should team be many to many?
+  # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
+  #  'NCCA club' ...can have this in addition to club and team. should team be many to many?
 
   COLUMN_MAP = {
     'team'                                   => 'team_name',
@@ -205,6 +206,9 @@ class PeopleFile < GridFile
     end
     return @created, @updated
   end
+  
+  
+  private
   
   def combine_categories(row_hash)
     for field in Person::CATEGORY_FIELDS

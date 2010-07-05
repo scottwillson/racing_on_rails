@@ -1,8 +1,9 @@
+# Build navigational tabs as HTML table
 module TabsHelper
   def tabs(select_current_page = true)
     tabs = Tabs.new(@controller)
     yield tabs
-    tabs.to_html(select_current_page)
+    tabs.to_html select_current_page
   end
 
   class Tabs
@@ -15,11 +16,12 @@ module TabsHelper
     end
 
     def add(name, options = {}, html_options = {}, &block)
-      _html_options = {:onmouseover => "hover(this)", :onmouseout => "hoverOut(this)"}
+      _html_options = { :onmouseover => "hover(this)", :onmouseout => "hoverOut(this)" }
       _html_options.merge!(html_options) if html_options
       @tabs << Tab.new(name, options, _html_options)
     end
-
+    
+    # Show tab named +name+ as selected
     def select(name)
       @selected_name = name
     end

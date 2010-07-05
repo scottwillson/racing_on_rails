@@ -1,3 +1,4 @@
+# Only here to support CombinedTimeTrialResults
 class ResultObserver < ActiveRecord::Observer
   def after_destroy(result)
     return true unless result.event.notification_enabled?

@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class ResultsTest < WebDriverTestCase
   def test_results_editing
     login_as :administrator

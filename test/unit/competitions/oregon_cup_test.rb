@@ -1,5 +1,6 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class OregonCupTest < ActiveSupport::TestCase
   def test_create
     assert_nil(OregonCup.find(:first, :conditions => ['date = ?', Date.new(2003)]), 'Should have no Oregon Cup for 2003')

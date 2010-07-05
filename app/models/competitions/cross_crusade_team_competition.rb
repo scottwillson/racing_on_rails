@@ -1,3 +1,4 @@
+# Team's top ten results for each Event. Last-place points penalty if team has fewer than ten finishers.
 class CrossCrusadeTeamCompetition < Competition
   validates_presence_of :parent
   after_create :add_source_events

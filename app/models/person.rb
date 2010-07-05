@@ -1,8 +1,6 @@
-# A rider who either appears in race results or who is added as a member of a racing association
+# Someone who either appears in race results or who is added as a member of a racing association
 #
-# Names are _not_ unique
-#
-# New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
+# Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ActiveRecord::Base
   include Comparable
   include Names::Nameable
@@ -45,7 +43,7 @@ class Person < ActiveRecord::Base
   
   attr_accessor :year
   
-  CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
+  CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]
 
   def self.per_page
     50
@@ -100,6 +98,7 @@ class Person < ActiveRecord::Base
     end
   end
   
+  # Considers aliases
   def Person.find_all_by_name_like(name, limit = 100)
     return [] if name.blank?
     
@@ -114,7 +113,7 @@ class Person < ActiveRecord::Base
   end
   
   def Person.find_by_info(name, email = nil, home_phone = nil)
-    if !name.blank?
+    if name.present?
       Person.find_by_name(name)
     else
       Person.find(
@@ -155,21 +154,6 @@ class Person < ActiveRecord::Base
         last_name
       else
         ""
-      end
-    end
-  end
-  
-  def Person.find_all_current_email_addresses
-    Person.connection.select_rows(%Q{ 
-      select first_name, last_name, email 
-      from people 
-      where member_to > NOW() and email is not null and email != '' 
-      order by last_name, first_name, email
-    }).collect do |first_name, last_name, email|
-      if first_name.blank? && last_name.blank?
-        email
-      else
-        "#{first_name} #{last_name} <#{email}>"
       end
     end
   end
@@ -237,7 +221,7 @@ class Person < ActiveRecord::Base
     people
   end
   
-  #interprets dates returned in sql above for member export
+  # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
       (lic_date && (Date.parse(lic_date) > ASSOCIATION.today)) ? "current" : "CHECK LIC!"
@@ -268,6 +252,8 @@ class Person < ActiveRecord::Base
     people
   end
   
+  # Workaround Rails date param-parsing. Also convert :team attribute to Team.
+  # Not sure this is needed.
   def attributes=(attributes)
     unless attributes.nil?
       if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
@@ -282,6 +268,7 @@ class Person < ActiveRecord::Base
     super(attributes)
   end
   
+  # Name on year. Could be rolled into Nameable?
   def name(date_or_year = nil)
     year = parse_year(date_or_year)
     name_record_for_year(year).try(:name) || Person.full_name(first_name(year), last_name(year))
@@ -698,6 +685,7 @@ class Person < ActiveRecord::Base
     end
   end
   
+  # Also sets member_to if it is blank
   def member_from=(date)
     if date.nil?
       self[:member_from] = nil
@@ -721,6 +709,7 @@ class Person < ActiveRecord::Base
     self[:member_from] = date_as_date
   end
   
+  # Also sets member_from if it is blank
   def member_to=(date)
     unless date.nil?
       self[:member_from] = ASSOCIATION.today if member_from.nil?
@@ -773,14 +762,14 @@ class Person < ActiveRecord::Base
   end
   
   def city_state
-    if !city.blank?
-      if !state.blank?
+    if city.present?
+      if state.present?
         "#{city}, #{state}"
       else
         "#{city}"
       end
     else
-      if !state.blank?
+      if state.present?
         "#{state}"
       else
         nil
@@ -789,14 +778,14 @@ class Person < ActiveRecord::Base
   end
   
   def city_state_zip
-    if !city.blank?
-      if !state.blank?
+    if city.present?
+      if state.present?
         "#{city}, #{state} #{zip}"
       else
         "#{city} #{zip}"
       end
     else
-      if !state.blank?
+      if state.present?
         "#{state} #{zip}"
       else
         zip || ''
@@ -876,7 +865,7 @@ class Person < ActiveRecord::Base
   # and delete the other person.
   # Also adds the other people' name as a new alias
   def merge(other_person)
-    # TODO Consider just using straight SQL for this --
+    # Consider just using straight SQL for this --
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
     raise(ArgumentError, 'Cannot merge nil person') unless other_person
@@ -921,7 +910,7 @@ class Person < ActiveRecord::Base
         end
 
         Person.delete other_person.id
-        existing_alias = aliases.detect{|a| a.name.casecmp(other_person.name) == 0}
+        existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
         if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
           aliases.create(:name => other_person.name) 
         end

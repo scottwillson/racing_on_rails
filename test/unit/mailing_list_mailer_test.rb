@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class MailingListMailerTest < ActionMailer::TestCase
-  
   def test_post
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"

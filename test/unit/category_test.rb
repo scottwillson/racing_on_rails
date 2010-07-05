@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class CategoryTest < ActiveSupport::TestCase
   def test_acts_as_tree
     senior_men = Category.find_by_name('Senior Men')

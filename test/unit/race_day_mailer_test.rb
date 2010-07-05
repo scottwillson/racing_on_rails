@@ -1,7 +1,9 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class RaceDayMailerTest < ActionMailer::TestCase
   tests RaceDayMailer
+
   def test_members_export
     @expected.subject = "#{ASSOCIATION.name} Members Export"
     @expected.from    = "scott.willson@gmail.com"

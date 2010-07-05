@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class EventTest < ActiveSupport::TestCase
   def test_create
     event = SingleDayEvent.create(:name => 'Saved')

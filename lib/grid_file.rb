@@ -1,6 +1,4 @@
-# TODO Handle Excel with multiple sheet. Array of Grids?
-# TODO Handle logging better
-
+# Read and write Grid to files. To be replaced by Tabular.
 class GridFile < Grid
   
   def GridFile.read_excel(file)

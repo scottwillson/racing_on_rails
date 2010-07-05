@@ -1,4 +1,5 @@
 module PageHelper
+  # Look for a matching Page, but if none, fall back on Rails' template rendering
   def render_page(path, options = {})
     page = Page.find_by_path(path)
     if page
@@ -20,7 +21,7 @@ module PageHelper
       msg = "#{msg} #{page.title}?"
     end
     
-    if !page.children.empty?
+    if page.children.any?
       msg = "#{msg} And delete all of its children?"
     end
     

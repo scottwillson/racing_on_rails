@@ -1,5 +1,6 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class AgeGradedBarTest < ActiveSupport::TestCase  
   def test_calculate_no_results
     results_baseline_count = Result.count

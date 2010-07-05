@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PublicPagesTest < ActionController::IntegrationTest
   def test_popular_pages
     get "/events/"

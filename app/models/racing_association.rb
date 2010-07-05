@@ -1,7 +1,7 @@
-# TODO Should this be in database as full-fledged ActiveRecord?
+# OBRA, WSBA, USA Cycling, etc …
+# Many defaults. Override in environment.rb. Stored in ASSOCIATION constant.
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
-
   attr_accessor :name, :short_name, :state, :email, :membership_email, :person
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
@@ -51,6 +51,7 @@ class RacingAssociation
     @bmx_numbers
   end
   
+  # Offers cyclocross memberships
   def cx_memberships?
     @cx_memberships
   end
@@ -59,10 +60,7 @@ class RacingAssociation
     @default_discipline ||= "Road"
   end
   
-  def default_sanctioned_by
-    @default_sanctioned_by ||= short_name
-  end
-
+  # String
   def default_sanctioned_by
     @default_sanctioned_by ||= short_name
   end
@@ -103,6 +101,7 @@ class RacingAssociation
     @usac_results_format
   end
   
+  # Trust license number in results? Use it to match People instead of name.
   def eager_match_on_license?
     @eager_match_on_license
   end

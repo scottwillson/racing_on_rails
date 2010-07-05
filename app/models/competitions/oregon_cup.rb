@@ -1,12 +1,11 @@
-# Year-long best rider competition for senior men and women
+# Year-long best rider competition for senior men and women. http://obra.org/oregon_cup
 class OregonCup < Competition
-  # TODO Initialize OregonCup with "today" attribute
   def friendly_name
     'Oregon Cup'
   end
   
   def point_schedule
-    [0, 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10]
+    [ 0, 100, 75, 60, 50, 45, 40, 35, 30, 25, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10 ]
   end
 
   # source_results must be in person-order
@@ -35,6 +34,8 @@ class OregonCup < Competition
     results
   end
   
+  # Women are often raced together and then scored separately. Combined Women 1/2/3 results count for Oregon Cup.
+  # Mark Oregon Cup race by adding "Oregon Cup" to event name, race name, event notes, or race notes.
   def remove_duplicate_results(results)
     results.delete_if do |result|
       results.any? do |other_result|
@@ -52,27 +53,27 @@ class OregonCup < Competition
 
   def category_ids_for(race)
     ids = [race.category_id]
-    ids = ids + race.category.descendants.map {|category| category.id}
+    ids = ids + race.category.descendants.map(&:id)
     if race.category == Category.find_or_create_by_name('Senior Women')
       cat_3_women = Category.find_or_create_by_name('Category 3 Women')
       ids = ids + [cat_3_women.id]
-      ids = ids + cat_3_women.descendants.map {|category| category.id}
+      ids = ids + cat_3_women.descendants.map(&:id)
     end
     ids.join(', ')
   end
   
   def create_races
     category = Category.find_or_create_by_name('Senior Men')
-    self.races.create(:category => category)
+    races.create :category => category
 
     category = Category.find_or_create_by_name('Senior Women')
-    self.races.create(:category => category)
+    races.create :category => category
   end
   
   def latest_event_with_results
-    for event in source_events.sort_by(&:date)
-      for race in event.races
-        if !race.results.empty?
+    source_events.sort_by(&:date).each do |event|
+      event.races.each do |race|
+        if race.results.any?
           return event
         end
       end
@@ -80,11 +81,12 @@ class OregonCup < Competition
     nil
   end
   
+  # Unreliable
   def more_events?(today = Date.today)
     !self.next_event(today).nil?
   end
   
-  # FIXME: Needs to sort by date?
+  # Unreliable
   def next_event(today = Date.today)
     for event in source_events.sort_by(&:date)
       if event.date > today

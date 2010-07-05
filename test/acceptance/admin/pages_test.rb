@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class PagesTest < WebDriverTestCase
   def test_pages
     # Check public page render OK with default static templates

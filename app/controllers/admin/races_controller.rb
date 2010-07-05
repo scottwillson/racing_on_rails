@@ -39,7 +39,7 @@ class Admin::RacesController < Admin::AdminController
       flash[:notice] = "Updated #{@race.name}"
       return redirect_to(edit_admin_race_path(@race))
     end
-    render :action => :edit
+    render :edit
   end
 
   # Permanently destroy race and redirect to Event

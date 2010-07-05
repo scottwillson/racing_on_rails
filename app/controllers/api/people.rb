@@ -1,3 +1,4 @@
+# :stopdoc:
 module Api
   module People
     include Api::Base

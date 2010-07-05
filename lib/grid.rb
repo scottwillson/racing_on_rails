@@ -1,5 +1,4 @@
-# @columns.first.name = 'place' if !@columns.empty? and @columns.first.name.blank?
-
+# Parse and render Array of Arrays of Strings. To be replaced by Tabular.
 class Grid
   include ActionView::Helpers::TextHelper
 

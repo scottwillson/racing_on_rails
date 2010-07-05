@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class OregonCupControllerTest < ActionController::TestCase
   def test_index
     OregonCup.create(:date => Date.new(2004))

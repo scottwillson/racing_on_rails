@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class BarResultsTest < ActionController::IntegrationTest
 
   # make sure all discipline pages come up with defaults

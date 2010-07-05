@@ -1,5 +1,6 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class CrossCrusadeOverallTest < ActiveSupport::TestCase  
   def test_recalc_with_no_series
     competition_count = Competition.count

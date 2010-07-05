@@ -2,6 +2,7 @@
 
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class TeamBarTest < ActiveSupport::TestCase
   def test_calculate_tandem
     tandem = Category.find_or_create_by_name("Tandem")

@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PagesControllerTest < ActionController::TestCase
   test "show page" do
     get :show, :path => ["plain"]

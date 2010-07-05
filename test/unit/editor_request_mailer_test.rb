@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class EditorRequestMailerTest < ActionMailer::TestCase
   def test_request
     ActionMailer::Base.deliveries.clear

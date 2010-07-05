@@ -2,6 +2,7 @@
 
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class OverallBarTest < ActiveSupport::TestCase
   def test_calculate
     # Lot of set-up for BAR. Keep it out of fixtures and do one-time here.

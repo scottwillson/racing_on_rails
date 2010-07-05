@@ -13,7 +13,7 @@ module Schedule
         raise(ArgumentError, "Must start on Sunday")
       end
       @days = []
-      for date in start_date..start_date + 6
+      (start_date..start_date + 6).each do |date|
         @days << Day.new(month, date)    
       end
     end

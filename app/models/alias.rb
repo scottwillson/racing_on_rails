@@ -1,5 +1,7 @@
 # Alternate name for a Person or Team. Example: Erik Tonkin might have aliases of 'Eric Tonkin,' and 'E. Tonkin'
 # Must belong to either a Person or Team, but not both. Used by Result when importing results from Excel.
+# Aliases cannot be the same ("shadow") as Person#name or Team#name.
+# This could probably be combined with Name.
 class Alias < ActiveRecord::Base
   belongs_to :person
   belongs_to :team
@@ -33,9 +35,16 @@ class Alias < ActiveRecord::Base
   
   def person_or_team
     unless (person and !team) or (!person and team)
-      errors.add('person or team', 'Must have exactly one person or team')
+      errors.add "person or team", "Must have exactly one person or team"
     end
   end
+
+  def to_s
+    "<#{self.class.name} #{self[:id]} #{self[:name]} #{self[:person_id]} #{self[:team_id]}>"
+  end
+  
+  
+  private
   
   def cannot_shadow_person
     if Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", name])
@@ -47,9 +56,5 @@ class Alias < ActiveRecord::Base
     if Team.exists?(['name = ?', name])
       errors.add('name', "Team named '#{name}' already exists. Cannot create alias that shadows a team's real name.")
     end
-  end
-
-  def to_s
-    "<#{self.class.name} #{self[:id]} #{self[:name]} #{self[:person_id]} #{self[:team_id]}>"
   end
 end

@@ -1,5 +1,6 @@
 require File.expand_path("../../../../test_helper", __FILE__)
 
+# :stopdoc:
 class Admin::Pages::VersionsControllerTest < ActionController::TestCase
   def setup
     super

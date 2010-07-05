@@ -12,6 +12,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   fixtures :all
   
+  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
   def setup
     # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
     webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
@@ -78,6 +79,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     _element.send_keys text
   end
   
+  # Go to login page and login
   def login_as(person_symbol)
     open "/person_session/new"
     type people(person_symbol).login, "person_session_login"
@@ -94,6 +96,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     find_element(:css => "select##{select_element_id} option[value='#{value}']").select
   end
   
+  # Workaround for WebDriver's less-than-stellar alert box handling.
   def click_ok_on_confirm_dialog
     driver.execute_script("window.confirm = function(msg){return true;};")
   end

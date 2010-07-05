@@ -1,3 +1,9 @@
+# CMS web page. Tree structure. Versioned.
+# User render_page helper to look for Page before falling back on Rails templates.
+# Pages uses ERb and can execute Ruby code just like a template, so admin users can
+# do things like <% Person.destroy_all %>!
+#
+# Uses ActsAsVersions, and should be moved to VestalVersions
 class Page < ActiveRecord::Base
   acts_as_tree
   acts_as_versioned :version_column => "lock_version"
@@ -10,10 +16,12 @@ class Page < ActiveRecord::Base
   after_create :update_parent
   after_destroy :update_parent
 
+  # Friendly param. Last segment in +path+
   def set_slug
     self.slug = self.title.downcase.gsub(" ", "_") if slug.blank?
   end
   
+  # Parent +slug+ paths + +slug+
   def set_path
     # Ouch
     _ancestors = ancestors.reverse

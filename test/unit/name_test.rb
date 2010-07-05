@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class NameTest < ActiveSupport::TestCase
   def test_create
     teams(:vanilla).names.create!(:name => "Sacha's Team", :year => 2001)

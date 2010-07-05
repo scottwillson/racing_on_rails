@@ -16,4 +16,5 @@ db/production.sql
 vendor/plugins/selenium-on-rails/log/
 mkmf.log
 *~
-
+doc/app
+doc/README_FOR_APP

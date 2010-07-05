@@ -1,3 +1,4 @@
+# Mailman archives
 class MailingList < ActiveRecord::Base
 
   has_many :posts
@@ -5,7 +6,7 @@ class MailingList < ActiveRecord::Base
   # Range of first Post date and last post date
   # Return nil..nil if no Posts
   # Cache SQL results
-  # FIXME Hack: Just finds first and last post in ENTIRE table. Incorrect, 
+  # Hack: Just finds first and last post in ENTIRE table. Incorrect, 
   # but 50+ times faster
   def dates
     if @dates.nil?
@@ -26,5 +27,4 @@ class MailingList < ActiveRecord::Base
   def to_s
     "<#{self.class} #{id} #{name} #{friendly_name}>"
   end
-
 end

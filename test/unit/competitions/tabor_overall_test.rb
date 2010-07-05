@@ -1,5 +1,6 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class TaborOverallTest < ActiveSupport::TestCase  
   def test_recalc_with_no_tabor_series
     events_count = Event.count

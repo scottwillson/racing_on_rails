@@ -1,9 +1,12 @@
+# Edit teams. All succcessful edit expire cache.
 class Admin::TeamsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 
   in_place_edit_for :team, :name
 
+  # Params
+  # * team_name
   def index
     @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
     if @name.blank?
@@ -20,7 +23,6 @@ class Admin::TeamsController < Admin::AdminController
 
     respond_to do |wants|
       wants.html
-      # TODO Optimize JS call. It shouldn't consider cookie and should pull back only nine results
       wants.js
     end
   end

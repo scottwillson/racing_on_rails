@@ -1,3 +1,5 @@
+# :stopdoc:
+# Spec fields and joins for remote API (XML, JSON) calls
 module Api
   module Base
 

@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class RaceTest < ActiveSupport::TestCase
-  
   def test_new_from_hash
     race = Race.new({
       :event => events(:pir_2),

@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonTest < ActiveSupport::TestCase
   def test_save
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
@@ -746,16 +747,6 @@ class PersonTest < ActiveSupport::TestCase
     people.sort!
     
     assert_equal([r1, r2, r3], people, 'sorted')
-  end
-  
-  def test_find_all_current_email_addresses
-    email = Person.find_all_current_email_addresses
-    expected = [
-      "Bob Jones <member@example.com>",
-      "Mark Matson <mcfatson@gentlelovers.com>",
-      "Ryan Weaver <hotwheels@yahoo.com>"
-    ]
-    assert_equal(expected, email, "email addresses")
   end
   
   def test_add_number

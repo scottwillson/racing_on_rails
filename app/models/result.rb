@@ -1,18 +1,18 @@
 module CreateIfBestResultForRaceExtension
   def create_if_best_result_for_race(attributes)
     source_result = attributes[:source_result]
-    for score in @owner.scores
+    @owner.scores.each do |score|
       same_race  = (score.source_result.race  == source_result.race)
       same_person = (score.source_result.person == source_result.person)
       if same_race && score.source_result.person && same_person
         if attributes[:points] > score.points
-          @owner.scores.delete(score)
+          @owner.scores.delete score
         else
           return nil
         end
       end
     end
-    create(attributes)
+    create attributes
   end
 end
 
@@ -23,12 +23,7 @@ end
 # Result keeps its own copy of +number+ and +team+, even though each Person has
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
-#
-# Doesn't support multiple hotspot points, though it should
 class Result < ActiveRecord::Base
-  # FIXME Make sure names are coerced correctly
-  # TODO Add number (race_number) and license
-
   attr_accessor :updated_by
   serialize :custom_attributes, Hash
 
@@ -181,6 +176,7 @@ class Result < ActiveRecord::Base
     end
   end
 
+  # Save associated Person
   def save_person
     if person && (person.new_record? || person.changed?)
       person.created_by = event
@@ -603,7 +599,7 @@ class Result < ActiveRecord::Base
     other_scores_by_place = other.scores.sort do |x, y|
       x.source_result <=> y.source_result
     end
-    max_results = max(scores_by_place.size, other_scores_by_place.size)
+    max_results = [ scores_by_place.size, other_scores_by_place.size ].max
     return 0 if max_results == 0
     for index in 0..(max_results - 1)
       if scores_by_place.size == index
@@ -634,14 +630,6 @@ class Result < ActiveRecord::Base
       end
     end
     0
-  end
-
-  def max(x, y)
-    if x >= y
-      x
-    else
-      y
-    end
   end
 
   # Poor name. For comparison, we sort by placed, finished, DNF, etc

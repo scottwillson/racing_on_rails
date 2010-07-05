@@ -2,6 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 require "tempfile"
 require "spreadsheet"
 
+# :stopdoc:
 class LifFileTest < ActiveSupport::TestCase
   def test_import
     event = SingleDayEvent.create!(:date => Date.today + 3)

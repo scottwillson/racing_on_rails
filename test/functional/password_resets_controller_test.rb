@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PasswordResetsControllerTest < ActionController::TestCase
   def setup
     super

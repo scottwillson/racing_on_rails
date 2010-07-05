@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class MailingListsTest < WebDriverTestCase
   def test_mailing_lists
     open "/mailing_lists"

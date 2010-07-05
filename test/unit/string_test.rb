@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class StringTest < ActiveSupport::TestCase
   def test_to_excel
     assert_equal("", "".to_excel, "''")

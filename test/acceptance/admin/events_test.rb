@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class EventsTest < WebDriverTestCase
   def test_events
     login_as :administrator

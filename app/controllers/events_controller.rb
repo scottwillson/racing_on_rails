@@ -1,6 +1,18 @@
 class EventsController < ApplicationController
   include Api::Events
   
+  # HTML: Event dashboard for promoter (Person)
+  # XML, JSON: Remote API
+  # == Params
+  # * person_id
+  #
+  # == Returns
+  # JSON and XML results are paginated with a page size of 10
+  # * event: [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly ]
+  # * race: [ :id, :distance, :city, :state, :laps, :field_size, :time, :finishers, :notes ]
+  # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
+  #
+  # See source code of API::Base
   def index
     respond_to do |format|
       format.html {
@@ -15,13 +27,6 @@ class EventsController < ApplicationController
       }
       format.xml { render :xml => events_as_xml }
       format.json { render :json => events_as_json }
-    end
-  end
-
-  def results
-    respond_to do |format|
-      format.xml { render :xml => event_results_as_xml(params[:id]) }
-      format.json { render :json => event_results_as_json(params[:id]) }
     end
   end
 end

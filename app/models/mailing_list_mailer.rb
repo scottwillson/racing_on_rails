@@ -1,4 +1,4 @@
-# Send email to mailing list
+# Send email to mailing list. Also receives email from Mailman for archives. Old, but battle-tested, code.
 class MailingListMailer < ActionMailer::Base
 
   # Reply just to sender of post, not the whole list
@@ -22,7 +22,7 @@ class MailingListMailer < ActionMailer::Base
   end
 
   # Expects raw email from Mailman archiver
-  # TODO: Really need tricky sender logic for web posts? Shouldn't web
+  # Really need tricky sender logic for web posts? Shouldn't web
   # posts be forwarded through list, too? If so, update test data
   def receive(email)
     post = Post.new

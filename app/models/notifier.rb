@@ -1,5 +1,5 @@
+# Password reset instructions email
 class Notifier < ActionMailer::Base
-
   def password_reset_instructions(people)
     Notifier.default_url_options[:host] = RAILS_HOST
     

@@ -1,6 +1,14 @@
 class Array
   require 'enumerator'
   
+  # [a, b, c, d].each_row_with_index.do |row, index|
+  #   puts("#{row}, #{index}")
+  # end
+  # >> [ a, b ], 0
+  # >> [ c, d ], 1
+  #
+  # Used for races table on top of results page. May be a Rails method for this, but doesn't include index, I think.
+  # Then again, I don't think we use index any more, either.
   def each_row_with_index
     return [[], 0] if empty?
     rows = []
@@ -16,9 +24,10 @@ class Array
       yield row, row_index
     end
     
-    [rows, row_index]
+    [ rows, row_index ]
   end
   
+  # Sort by +method+ and preserve existing order. Ruby 1.8 sort_by does not preserve order.
   def stable_sort_by(method, order = :asc)
     if order == :asc
       merge_sort { |x, y|
@@ -73,5 +82,4 @@ class Array
     end
     sorted.concat(left).concat(right)
   end
- 
 end

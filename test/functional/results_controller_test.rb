@@ -1,5 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class ResultsControllerTest < ActionController::TestCase
   def test_event
     banana_belt_1 = events(:banana_belt_1)

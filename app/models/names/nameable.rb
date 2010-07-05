@@ -1,4 +1,5 @@
 module Names
+  # See Name
   module Nameable
     def self.included(base)
       base.before_save :add_name
@@ -24,7 +25,7 @@ module Names
     end
 
     # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
-    # TODO This is a bit naive, needs validation, and more tests
+    # This is a bit naive
     def add_name
       last_year = Date.today.year - 1
       if !@old_name.blank? && results_before_this_year? && !self.names.any? { |name| name.year == last_year }

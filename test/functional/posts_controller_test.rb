@@ -1,7 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
-require 'mailing_list_mailer'
 
-# FIXME Navigation tests are weak. Need to do more than just not blow up
+# :stopdoc:
 class PostsControllerTest < ActionController::TestCase
   def setup
     super

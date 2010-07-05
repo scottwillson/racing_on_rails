@@ -1,6 +1,6 @@
-# :stopdoc:
 File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class EventsControllerTest < ActionController::TestCase
   def test_index
     get :index

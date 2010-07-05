@@ -41,7 +41,7 @@ class RaceNumber < ActiveRecord::Base
     )
   end
   
-  # FIXME Dupe of lousy code from Discipline
+  # Dupe of lousy code from Discipline
   def RaceNumber.discipline_id(discipline)
     case Discipline[discipline]
     when Discipline[:road], Discipline[:track], Discipline[:time_trial], Discipline[:circuit], Discipline[:criterium]

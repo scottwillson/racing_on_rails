@@ -8,6 +8,21 @@ class PeopleController < ApplicationController
   ssl_required :edit, :update, :card, :new_login, :create_login, :account
   ssl_allowed :index
   
+  # Search for People
+  # == Params
+  # * name: case-insensitive SQL 'like' query
+  # * license: JSON and XML only
+  # * page: JSON and XML only
+  #
+  # == Returns
+  # JSON and XML results are paginated with a page size of 10
+  # :id, :first_name, :last_name, :date_of_birth, :license, :gender
+  # :aliases      => :alias, :name
+  # :team         => :name, :city, :state, :website
+  # :race_numbers => :value, :year
+  # :discipline => :only => :name
+  #
+  # See source code of API::Base
   def index
     respond_to do |format|
       format.html { find_people }
@@ -36,11 +51,13 @@ class PeopleController < ApplicationController
     end
   end
   
+  # Print membership card
   def card
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
     render(:template => "admin/people/card.pdf.pdf_writer")
   end
   
+  # Page to create a new login
   def new_login
     if current_person
       flash[:notice] = "You already have a login. You can your login or password on this page."

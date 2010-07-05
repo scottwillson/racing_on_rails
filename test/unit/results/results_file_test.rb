@@ -2,6 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 require "tempfile"
 require "spreadsheet"
 
+# :stopdoc:
 module Results
   # FIXME DNF's not handled correctly.
 

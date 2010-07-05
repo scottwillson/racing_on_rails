@@ -1,3 +1,4 @@
+# :stopdoc:
 module Api
   module Events
     include Api::Base

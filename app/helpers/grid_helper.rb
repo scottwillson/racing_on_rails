@@ -1,9 +1,9 @@
+# Used on most results pages. Efficient, though obviously written by someone who was still learning Ruby.
 module GridHelper
   @@grid_columns = nil
 
   # Class-scope Hash of Columns, keyed by field
   # Used to display results in a grid
-  # TODO Rewrite this a bit smarter
   def grid_columns(column)
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
@@ -55,10 +55,11 @@ module GridHelper
       @@grid_columns[column] = grid_column
     end
 
-    # Return a copy so callers can modify column attributes without affecting other clients
+    # Return a copy so callers can modify column attributes without affecting requests in other threads
     grid_column.dup
   end
 
+  # Preformatted results
   def results_grid(race)
     result_grid_columns = race.result_columns_or_default.collect do |column|
       grid_columns(column)

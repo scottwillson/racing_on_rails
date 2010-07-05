@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class GridTest < ActiveSupport::TestCase
-
   def test_new
     Grid.new
   end
