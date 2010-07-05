@@ -7,6 +7,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
+    ASSOCIATION.now = Time.zone.now
     @expected.date = ASSOCIATION.now
     @expected.body = read_fixture("post")
 
