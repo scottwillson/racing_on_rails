@@ -18,6 +18,7 @@ class RacingAssociation
   attr_accessor :usac_results_format
   attr_accessor :eager_match_on_license
   attr_accessor :add_members_from_results
+  attr_accessor :include_multiday_events_on_schedule
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
   attr_accessor :ssl
@@ -43,6 +44,7 @@ class RacingAssociation
     @eager_match_on_license = false
     @add_members_from_results = true
     @show_events_sanctioning_org_event_id = false
+    @include_multiday_events_on_schedule = false
     @ssl = false
   end
   
@@ -93,6 +95,10 @@ class RacingAssociation
 
   def show_only_association_sanctioned_races_on_calendar?
     @show_only_association_sanctioned_races_on_calendar
+  end
+  
+  def include_multiday_events_on_schedule?
+    @include_multiday_events_on_schedule
   end
   
   def award_cat4_participation_points?
