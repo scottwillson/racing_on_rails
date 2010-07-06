@@ -7,11 +7,25 @@
      { :class => "image" }) if @event.has_results_including_children? }  
   </div>
 } %>
-<% table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 2 do %>
+<% table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
   <% unless @event.races.empty? %>
   <tr id="destroy_races_row">
     <td></td>
+    <td></td>
     <td class="right">
+      
+    </td>
+  </tr>
+  <% end %>
+  <%= render @event.races %>
+  <% unless @event.races.any? %>
+  <tr>
+    <td colspan="3" class="empty">No races. Click [+] to add a race.</td>
+  </tr>
+  <% end %>
+  <% unless @event.new_record? -%>
+  <tr id="create_race_row">
+    <td colspan="2" class="right">
       <%= link_to_remote("Delete all races",
       :url => destroy_races_admin_event_path(@event),
       :html => { :class => "obvious", :id => "destroy_races", :title => "Delete all races" },
@@ -23,41 +37,15 @@
       %>
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
     </td>
-  </tr>
-  <% end %>
-  <% @event.races.each do |race| %>
-  <tr id="race_<%= race.id %>_row">
-    <td class="race">
-      <%= link_to race.name, edit_admin_race_path(race) %>
-      <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
-    </td>
     <td class="right">
-      <%= link_to_remote(image_tag('/images/icons/delete.png'),
-      :url => admin_race_url(race),
-      :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
-      :complete => evaluate_remote_response, 
-      :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?",
-      :method => :delete)
-      %>
-    </td>
-  </tr>
-  <% end %>
-  <% unless @event.races.any? %>
-  <tr>
-    <td colspan="2" class="empty">No races. Click [+] to add a race.</td>
-  </tr>
-  <% end %>
-  <% unless @event.new_record? -%>
-  <tr>
-    <td colspan="2" class="right">
-      <%= link_to image_tag("/images/icons/add.png"), 
-                  new_admin_event_race_path(@event),
-                  :class => "image", :id => "new_race"
+      <%= link_to_remote image_tag("/images/icons/add.png"), 
+                  :url => admin_event_races_path(@event),
+                  :html => { :class => "image", :id => "create_race", :title => "Add race" }
       %>
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td colspan="3">
       <div class="page_buttons">
         <% if administrator? -%>
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>

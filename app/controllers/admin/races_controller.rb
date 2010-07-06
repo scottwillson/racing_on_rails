@@ -1,20 +1,31 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create ]
-  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :update ]
+  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result, :set_race_category_name ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :set_race_category_name, :update ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :set_race_category_name, :update ]
   layout "admin/application"
   
+  in_place_edit_for :race, :category_name
+
   def new
     render :edit
   end
   
   def create
-    if @race.save
-      flash[:notice] = "Created #{@race.name}"
-      redirect_to edit_admin_race_path(@race)
-    else
-      render :edit
+    respond_to do |format|
+      format.html {
+        if @race.save
+          flash[:notice] = "Created #{@race.name}"
+          redirect_to edit_admin_race_path(@race)
+        else
+          render :edit
+        end
+      }
+      format.js {
+        @race.category = Category.find_or_create_by_name("New Category")
+        @enter_edit_mode = true
+        @race.save!
+      }
     end
   end
 
@@ -87,6 +98,7 @@ class Admin::RacesController < Admin::AdminController
   def assign_race
     if params[:id].present?
       @race = Race.find(params[:id])
+      @event = @race.event unless @event
     else
       @race = @event.races.build params[:race]
     end

@@ -255,7 +255,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
 
     begin
       Timeout::timeout(10) do
-        until find_elements(element_finder).any? && case
+        until find_elements(element_finder).any? && case value
           when Regexp
             find_element(element_finder).value[value]
           else
@@ -286,6 +286,34 @@ class WebDriverTestCase < ActiveSupport::TestCase
       assert_match text, element.text
     else
       assert_equal text.to_s, element.text
+    end
+  end
+
+  def wait_for_text(text, element_finder)
+    raise ArgumentError if element_finder.empty? || element_finder.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until find_elements(element_finder).any? && text.to_s == find_element(element_finder).text.to_s
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Element #{element_finder.inspect} with text '#{text}' did not appear within 10 seconds"
+    end
+  end
+  
+  def wait_for_page_source(text)
+    raise ArgumentError if text.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until driver.page_source.include?(text)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "'#{text}' did not appear in page source within 10 seconds"
     end
   end
   

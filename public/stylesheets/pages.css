@@ -377,11 +377,16 @@ form.cat4_womens_race_series td input#result_team_name {
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 32px 4px;  
+  background-position: 32px 4px;
+  padding-top: 4px;
 }
 
-table.event_nav td.race a {
+table.event_nav td.race .in_place_editable {
   margin-left: 48px;
+}
+
+table.event_nav td.delete {
+  width: 16px;
 }
 
 
