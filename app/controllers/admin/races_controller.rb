@@ -1,8 +1,8 @@
 class Admin::RacesController < Admin::AdminController
-  before_filter :assign_event, :only => [ :new, :create ]
+  before_filter :assign_event, :only => [ :new, :create, :propagate ]
   before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result, :set_race_category_name ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :set_race_category_name, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :set_race_category_name, :update ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
   layout "admin/application"
   
   in_place_edit_for :race, :category_name
@@ -84,6 +84,13 @@ class Admin::RacesController < Admin::AdminController
     @result.race.results true
   end
   
+  # Create Races for all +children+ to match parent Event
+  # === Params
+  # * event_id: parent Event ID
+  def propagate
+    @event.propagate_races
+  end
+
   
   private
   

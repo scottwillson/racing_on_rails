@@ -224,4 +224,12 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:race), "@race"
     assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
   end
+  
+  def test_propagate
+    login_as :promoter
+    event = events(:banana_belt_1)
+    xhr :post, :propagate, :event_id => event.to_param
+    assert_response :success
+    assert_template "admin/races/propagate.js.rjs"
+  end
 end

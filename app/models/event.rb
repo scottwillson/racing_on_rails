@@ -319,6 +319,11 @@ class Event < ActiveRecord::Base
     true
   end
 
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    # Do nothing in superclass
+  end
+
   def children_changed(child)
     # Don't trigger callbacks
     Event.update_all ["updated_at = ?", Time.zone.now], ["id = ?", id]
