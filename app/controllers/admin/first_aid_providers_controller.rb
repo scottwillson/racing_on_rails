@@ -1,3 +1,5 @@
+# Work assignments for Event. First aid provider and chief official.
+# Officials can view, but not edit, this page.
 class Admin::FirstAidProvidersController < Admin::AdminController
   before_filter :require_administrator_or_official
   helper :table
@@ -27,6 +29,7 @@ class Admin::FirstAidProvidersController < Admin::AdminController
     end
   end
 
+  # Formatted for "who would like to work this race email"
   def email
     rows = @events.collect do |event|
       [event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]

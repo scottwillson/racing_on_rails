@@ -1,4 +1,5 @@
-class Admin::VelodromesController < Admin::AdminController
+# All succcessful edit expire cache.
+ class Admin::VelodromesController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
   

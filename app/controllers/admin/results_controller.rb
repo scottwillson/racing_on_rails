@@ -1,3 +1,5 @@
+# Allowed in-place editing added manually for each Result field. Dynamic Results columns will not work.
+# All succcessful edit expire cache.
 class Admin::ResultsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
@@ -28,11 +30,15 @@ class Admin::ResultsController < Admin::AdminController
   in_place_edit_for :result, :time_s
   in_place_edit_for :result, :time_total_s
   
+  # Move Results from one Person to another
   def index
     @person = Person.find(params[:person_id])
     @results = Result.find_all_for(@person)
   end
   
+  # == Params
+  # * name
+  # * ignore_id: don't show this Person
   def find_person
     people = Person.find_all_by_name_like(params[:name], 20)
     ignore_id = params[:ignore_id]

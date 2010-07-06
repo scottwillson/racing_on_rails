@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class VelodromesTest < WebDriverTestCase
   def test_velodromes
     login_as :administrator

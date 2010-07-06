@@ -1,3 +1,4 @@
+# Public page of all Teams
 class TeamsController < ApplicationController
   caches_page :index, :show
 

@@ -1,12 +1,13 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class MailingListMailerTest < ActionMailer::TestCase
-  
   def test_post
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
+    ASSOCIATION.now = Time.zone.now
     @expected.date = ASSOCIATION.now
     @expected.body = read_fixture("post")
 

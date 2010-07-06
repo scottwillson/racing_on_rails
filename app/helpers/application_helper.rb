@@ -1,8 +1,7 @@
-# Methods added to this helper will be available to all templates in the application.
-# Application-wide Racing on Rails helper code is in RacingOnRailsControllerHelper
 module ApplicationHelper
+  # Trey to put browser focus (and cursor) on this field
   def focus(form_field_name)
-    render("shared/focus", :object => form_field_name)
+    render "shared/focus", :object => form_field_name
   end
 
   # Wrap +text+ in div tags, unless +text+ is blank
@@ -10,6 +9,7 @@ module ApplicationHelper
     "<div>#{text}</div>" unless text.blank?
   end
   
+  # ASSOCIATION.short_name: page title
   def page_title
     return "#{ASSOCIATION.short_name}: #{@page_title}" if @page_title
     

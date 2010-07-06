@@ -1,4 +1,5 @@
-# Show Schedule, add and edit Events, edit Results for Events
+# Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
+# fewer fields than administrators.
 class Admin::EventsController < Admin::AdminController
   before_filter :assign_event, :only => [ :edit, :update ]
   before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
@@ -246,7 +247,7 @@ class Admin::EventsController < Admin::AdminController
     redirect_to(edit_admin_event_path(child))
   end
 
-  # :nodoc  
+  # Add missing child Events to this Event (their parent)
   def add_children
     parent = Event.find(params[:parent_id])
     parent.missing_children.each do |child|

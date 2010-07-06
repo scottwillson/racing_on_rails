@@ -1,3 +1,4 @@
+# OBRA Alpenrose track page schedule
 class TrackController < ApplicationController
   def index
     @upcoming_events = UpcomingEvents.find_all(:weeks => 52, :discipline => "Track")

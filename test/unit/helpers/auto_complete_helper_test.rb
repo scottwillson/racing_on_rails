@@ -1,6 +1,9 @@
-require 'test_helper'
+require File.expand_path("../../../test_helper", __FILE__)
 
 ActionController::Base.prepend_view_path("#{RAILS_ROOT}/test/fixtures/views")
+
+# :stopdoc:
+class AutoCompleteHelperTest < ActionController::TestCase
 
 class FakeController < ApplicationController
   def nil_attribute
@@ -14,7 +17,6 @@ class FakeController < ApplicationController
   end
 end
 
-class AutoCompleteHelperTest < ActionController::TestCase
   tests FakeController
     
   def test_auto_complete_nil_attribute

@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PasswordResetsTest < ActionController::IntegrationTest
   def test_shared_email_address
     person = people(:member)

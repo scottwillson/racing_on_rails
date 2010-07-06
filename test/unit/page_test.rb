@@ -1,5 +1,6 @@
-require 'test_helper'
+File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PageTest < ActiveSupport::TestCase
   test "create" do
     page = Page.create!(:title => "Simple", :body => "This is a simple page")

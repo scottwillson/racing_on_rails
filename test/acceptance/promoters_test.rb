@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class PromotersTest < WebDriverTestCase
   def test_browse
     SingleDayEvent.create! :name => "Cross Crusade: Alpenrose", :promoter => Person.find_by_name("Brad Ross")

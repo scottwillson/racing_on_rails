@@ -6,12 +6,6 @@
 # Does not simply add +weeks+ to date when selecting events -- applies a week boundary on Monday
 module UpcomingEvents
   class Base < Array
-    # TODO Apply some OO loving
-    # TODO Sort events by date: sort {|x, y| x.date <=> y.date
-    # TODO Sort weekly series:
-    # TODO Rename to List or Array? Maybe change scoping to Events::Upcoming or Upcoming::Events
-    # TODO Is discipline scope really applied correctly for MultiDayEvents?
-
     attr_reader :date, :discipline, :disciplines, :weeks
     
     # Date = start date. Defaults to today

@@ -1,4 +1,5 @@
 module RacingOnRails
+  # Custom VestalVersion::Version that sets +user+
   class Version < VestalVersions::Version
     before_save :set_user
     

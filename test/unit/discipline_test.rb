@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class DisciplineTest < ActiveSupport::TestCase
   # Assume MySQL, which is not case-sensitive
   def test_find_by_name

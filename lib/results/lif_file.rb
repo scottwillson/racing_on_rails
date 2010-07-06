@@ -1,4 +1,5 @@
 module Results
+  # FinishLynx .lif results file for import. Not that any sane person uses it.
   class LifFile
     attr_reader :event, :race, :table
 

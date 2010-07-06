@@ -1,6 +1,7 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 require 'tempfile'
 
+# :stopdoc:
 class GridFileTest < ActiveSupport::TestCase
 
   def test_new

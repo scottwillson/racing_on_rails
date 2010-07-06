@@ -1,11 +1,11 @@
-# Year-long best road rider competition for senior & masters men and women in Washington
+# Year-long best road rider competition for senior & masters men and women in Washington. WSBA member's only.
 class WsbaBarr < Competition
   def friendly_name
     'WSBA BARR'
   end
   
   def point_schedule
-    [0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16]
+    [ 0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16 ]
   end
 
   def create_races
@@ -16,7 +16,7 @@ class WsbaBarr < Competition
       'Women Cat 1-2', 'Women Cat 3', 'Women Cat 4']
 
       category = Category.find_or_create_by_name(category_name)
-      self.races.create(:category => category)
+      races.create(:category => category)
     end
   end
   
@@ -50,10 +50,10 @@ class WsbaBarr < Competition
   def points_for(source_result, team_size = nil)
     points = 0
     Bar.benchmark('points_for') {
-      #field_size = source_result.race.field_size
       results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       if team_size.nil?
-        team_size = (results_in_place > 1) ? 4 : 1 #assume this is a TTT, score divided by 4 regardless of # of riders
+        # assume this is a TTT, score divided by 4 regardless of # of riders
+        team_size = (results_in_place > 1) ? 4 : 1 
       end
       points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
       points = point_schedule[points_index].to_f
@@ -63,7 +63,6 @@ class WsbaBarr < Competition
     points
   end
   
-  # per Rob Whitacre
   def place_members_only?
      true
    end

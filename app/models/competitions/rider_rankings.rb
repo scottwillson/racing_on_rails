@@ -1,11 +1,11 @@
-# WSBA rider rankings. Riders get points for top-10 finishes in any event
+# WSBA rider rankings. Members get points for top-10 finishes in any event
 class RiderRankings < Competition
   def friendly_name
     'Rider Rankings'
   end
 
   def point_schedule
-    [0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16]
+    [ 0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16 ]
   end
 
   # Apply points from point_schedule, and adjust for team size
@@ -43,7 +43,6 @@ class RiderRankings < Competition
   end
 
   # source_results must be in person-order
-  # TODO Probably should work with fully-populated Events instead
   def source_results(race)
     Result.find(:all,
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],

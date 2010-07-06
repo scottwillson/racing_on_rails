@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
   def test_index
     get(:index)
@@ -291,7 +292,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.on(:name), "Should have error on :name"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_with_reversed_fields
@@ -311,7 +312,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.any?, "Should have errors"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_blank_license
@@ -345,7 +346,23 @@ class PeopleControllerTest < ActionController::TestCase
 
     assert_response :success
     assert assigns(:person).errors.on(:email), "Should have error on :email"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
+  end
+  
+  def test_create_dupe_login_no_email
+    ActionMailer::Base.deliveries.clear
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "bob.jones", 
+                      :password => "secret", 
+                      :password_confirmation => "secret"
+                    },
+         :return_to => root_path
+
+    assert_response :success
+    assert assigns(:person).errors.on(:email), "Should have error on :login"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_bad_email
@@ -365,7 +382,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
     assert_response :success
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_new_login
@@ -403,7 +420,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_name_blank
@@ -424,7 +441,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_license_blank
@@ -447,7 +464,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_name_blank_license_blank
@@ -490,7 +507,7 @@ class PeopleControllerTest < ActionController::TestCase
 
    assert_response :success
    assert assigns(:person).errors.on(:login), "Should have error on :login"
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_unmatched_license
@@ -512,7 +529,7 @@ class PeopleControllerTest < ActionController::TestCase
    assert assigns(:person).errors.any?, "Should errors"
    assert_equal 1, assigns(:person).errors.size, "errors"
    assert_response :success
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
    assert_equal people_count, Person.count, "People count"
   end
 
@@ -535,7 +552,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.any?, "Should errors"
     assert_equal 1, assigns(:person).errors.size, "errors"
     assert_response :success
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
     assert_equal people_count, Person.count, "People count"
   end
 
@@ -545,5 +562,53 @@ class PeopleControllerTest < ActionController::TestCase
     get :new_login
     assert_redirected_to edit_person_path(people(:member))
     assert_not_nil flash[:notice], "flash[:notice]"
+  end
+
+  def test_index_as_xml
+    get :index, :license => 7123811, :format => "xml"
+    assert_response :success
+    assert_equal "application/xml", @response.content_type
+    [
+      "person > first-name",
+      "person > last-name",
+      "person > date-of-birth",
+      "person > license",
+      "person > gender",
+      "person > team",
+      "person > race-numbers",
+      "person > aliases",
+      "team > city",
+      "team > state",
+      "team > website",
+      "race-numbers > race-number",
+      "race-number > value",
+      "race-number > year",
+      "race-number > discipline",
+      "discipline > name",
+      "aliases > alias",
+      "alias > name",
+      "alias > alias"
+    ].each do |key|
+      assert_select key
+    end
+  end
+
+  def test_index_as_json
+    get :index, { :format => "json", :name => "ron" }
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+  end
+  
+  def test_find_by_name_as_xml
+    get :index, :name => "ron", :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Molly"
+    assert_select "first-name", "Kevin"
+  end
+  
+  def test_find_by_license_as_xml
+    get :index, :name => "m", :license => 576, :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Mark"
   end
 end

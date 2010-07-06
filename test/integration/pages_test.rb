@@ -1,5 +1,6 @@
-require 'test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PagesTest < ActionController::IntegrationTest
   def test_render_dynamic_page_from_db
     get("/plain")

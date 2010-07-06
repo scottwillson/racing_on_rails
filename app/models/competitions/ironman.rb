@@ -5,7 +5,6 @@ class Ironman < Competition
     'Ironman'
   end
 
-  # TODO Can't we just iterate through all of a person's results? Would need to weed out many results
   def Ironman.years
     years = []
     results = connection.select_all(

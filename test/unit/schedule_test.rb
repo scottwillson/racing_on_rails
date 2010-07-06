@@ -1,8 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
-# TODO Handle multiple emails per promoters
-# TODO Recognize Series and WeeklySeries
-
+# :stopdoc:
 class ScheduleTest < ActiveSupport::TestCase
   def test_create
     piece_of_cake = SingleDayEvent.new({

@@ -1,6 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
-# TODO redirect from showing all BAR results (and fix links)
+# :stopdoc:
 class DeprecatedURLsTest < ActionController::IntegrationTest
   def test_event_results
     event = events(:pir)
@@ -76,15 +76,5 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     get "/teams/#{team.id}"
     assert_response :success
     assert_template "results/team"
-  end
-  
-  def test_admin_racers
-    https! if ASSOCIATION.ssl?
-    post person_session_path, :person_session => { :login => 'admin@example.com', :password => 'secret' }
-    assert_response :redirect
-    
-    get "/admin/racers"
-    assert_redirected_to "/admin/people"
-    assert_response :moved_permanently
   end
 end

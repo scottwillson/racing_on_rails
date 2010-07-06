@@ -1,3 +1,4 @@
+# OBRA OverallBar organized by Masters and Juniors age categories
 class AgeGradedBar < Competition
   after_create :set_parent
 

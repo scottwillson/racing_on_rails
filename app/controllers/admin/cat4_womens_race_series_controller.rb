@@ -1,3 +1,4 @@
+# Add Result to Cat4WomensRaceSeries. The series counts races outside of the association, so they some are added manually.
 class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
 
   before_filter :require_administrator
@@ -7,9 +8,10 @@ class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
     @result = Result.new(params[:result])
   end
   
+  # Create Result and create SingleDayEvent and Race if there is no existing Event with same name and date
   def create_result
     event_for_find = SingleDayEvent.new(params[:event])
-    @event = SingleDayEvent.find(:first, :conditions => { :name => event_for_find.name, :date => event_for_find.date })
+    @event = Event.find(:first, :conditions => { :name => event_for_find.name, :date => event_for_find.date })
     if @event.nil?
       @event = SingleDayEvent.new(params[:event])
       @event.save!
@@ -38,7 +40,7 @@ class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
                                                         :team_name => params[:result][:team_name],
                                                          })
     else
-      render(:action => "new_result")        
+      render :new_result
     end
   end
 end

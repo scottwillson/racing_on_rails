@@ -1,6 +1,6 @@
 # Bike racing team of People
 #
-# Like People, Teams may have many alternate  names. These are modelled as Aliases
+# Like People, Teams may have many alternate names. These are modelled as Aliases. Historical names from previous years are stored as Names.
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
@@ -59,7 +59,7 @@ class Team < ActiveRecord::Base
   def ensure_no_results
     return true if results.empty?
 
-    errors.add_to_base("Cannot delete team with results. #{name} has #{results.count} results.")
+    errors.add_to_base "Cannot delete team with results. #{name} has #{results.count} results."
     false
   end
   
@@ -70,8 +70,8 @@ class Team < ActiveRecord::Base
   
   def add_alias_for_old_name
     if !new_record? && 
-      !@old_name.blank? && 
-      !name.blank? && 
+      @old_name.present? && 
+      name.present? && 
       @old_name.casecmp(name) != 0 && 
       !Alias.exists?(['name = ? and team_id = ?', @old_name, id]) &&
       !Team.exists?(["name = ?", @old_name])
@@ -90,7 +90,7 @@ class Team < ActiveRecord::Base
   end
   
   def has_alias?(alias_name)
-    aliases.detect {|a| a.name.casecmp(alias_name) == 0}
+    aliases.detect { |a| a.name.casecmp(alias_name) == 0 }
   end
 
   # Moves another Team's aliases, results, and people to this Team,

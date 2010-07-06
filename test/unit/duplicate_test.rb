@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class DuplicateTest < ActiveSupport::TestCase
   def test_create
     new_person = {:first_name => 'Magnus', :last_name => 'Tonkin'}

@@ -1,3 +1,4 @@
+# HTML chunks for ArticleCategories UL tree
 module Admin::ArticleCategoriesHelper
   def display_categories(categories, parent_id)
     ret = "<ul>" 

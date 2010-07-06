@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class RacesControllerTest < ActionController::TestCase
   def test_index
     get(:index, :category_id => "#{categories(:sr_p_1_2).to_param}")

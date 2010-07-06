@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase  
   def test_import
     team = Team.create!(:name => "Sorella Forte Elite Team")

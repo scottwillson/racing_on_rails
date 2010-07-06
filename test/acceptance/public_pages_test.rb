@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class PublicPagesTest < WebDriverTestCase
   def test_popular_pages
     open "/"

@@ -1,14 +1,16 @@
+# :stopdoc:
 module Api
-  module People 
+  module People
+    include Api::Base
     
     private
     
     def people_as_xml
-      people.to_xml :only => only, :include => includes
+      people.to_xml :only => person_fields, :include => person_includes
     end
     
     def people_as_json
-      people.to_json :only => only, :include => includes
+      people.to_json :only => person_fields, :include => person_includes
     end
   
     def people
@@ -43,23 +45,6 @@ module Api
       else
         []
       end
-    end
-  
-    def only
-      [ :id, :first_name, :last_name, :date_of_birth, :license, :gender ]
-    end
-  
-    def includes
-      {
-        :aliases      => { :only => [:alias, :name] },
-        :team         => { :only => [:name, :city, :state, :website] },
-        :race_numbers => {
-          :only    => [:value, :year],
-          :include => {
-            :discipline => { :only => :name }
-          }
-        }
-      }
-    end
+    end  
   end
 end

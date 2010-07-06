@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class ResultsTest < ActionController::IntegrationTest
   def test_custom_columns
     goto_login_page_and_login_as :administrator

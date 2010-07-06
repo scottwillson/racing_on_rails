@@ -1,3 +1,5 @@
+# +editor+ would like to become an editor for +person+. Sent in an email with link keyed by +token+.
+# Sends email with link after_create. See EditorRequestMailer.
 class EditorRequest < ActiveRecord::Base
   belongs_to :editor, :class_name => "Person"
   belongs_to :person
@@ -10,6 +12,7 @@ class EditorRequest < ActiveRecord::Base
   
   before_save :destroy_duplicates
   
+  # Set to expire in 1 week. Auto-set token.
   def before_validation
     self.email = person.try(:email)
     self.expires_at = 1.week.from_now
@@ -17,13 +20,15 @@ class EditorRequest < ActiveRecord::Base
   end
   
   def destroy_duplicates
-    EditorRequest.destroy_all(:person_id => person.id, :editor_id => editor)
+    EditorRequest.destroy_all :person_id => person_id, :editor_id => editor_id
   end
   
+  # Send email
   def after_create
     EditorRequestMailer.deliver_request(self)
   end
   
+  # Make +editor+ an editor of +person+
   def grant!
     unless person.editors.include?(editor)
       person.editors << editor

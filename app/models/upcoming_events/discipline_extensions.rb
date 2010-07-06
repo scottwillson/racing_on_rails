@@ -1,6 +1,5 @@
 module UpcomingEvents
   module DisciplineExtensions
-    # TODO Just cache these and make them call find_...
     attr_accessor :upcoming_events
     attr_accessor :upcoming_weekly_series
 

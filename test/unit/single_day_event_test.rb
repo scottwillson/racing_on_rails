@@ -1,7 +1,7 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class SingleDayEventTest < ActiveSupport::TestCase
-  
   def test_find_all_by_year
     begin
       show_only_association_sanctioned_races_on_calendar = ASSOCIATION.show_only_association_sanctioned_races_on_calendar

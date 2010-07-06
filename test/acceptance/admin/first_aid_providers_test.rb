@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class FirstAidProvidersTest < WebDriverTestCase
   def test_first_aid_providers
     # FIXME Punt!

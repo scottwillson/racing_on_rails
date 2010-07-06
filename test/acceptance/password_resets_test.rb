@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class PasswordResetsTest < WebDriverTestCase
   def test_reset_not_logged_in
     open "/person_sessions/new"

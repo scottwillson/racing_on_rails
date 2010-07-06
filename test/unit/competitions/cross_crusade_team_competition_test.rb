@@ -1,9 +1,6 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
-# test_overall_team_competition_living_together
-# member teams only
-# What if nobody races? 1,000 points!
-# Test display
+# :stopdoc:
 class CrossCrusadeTeamCompetitionTest < ActiveSupport::TestCase  
   def test_recalc_with_no_series
     competition_count = Competition.count

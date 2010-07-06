@@ -2,6 +2,7 @@ require "pdf/writer"
 
 module ActionView
   module TemplateHandlers
+    # Generate PDFs with PDFWriter in Rails 2+
     class PDFWriter < TemplateHandler
       include Compilable
 
@@ -17,7 +18,7 @@ module ActionView
 
       def cache_fragment(block, name = {}, options = nil)
         @view.fragment_for(block, name, options) do
-          eval('pdf.render', block.binding)
+          eval "pdf.render", block.binding
         end
       end
     end

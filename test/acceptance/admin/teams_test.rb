@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class TeamsTest < WebDriverTestCase
   def test_teams
     open '/teams'

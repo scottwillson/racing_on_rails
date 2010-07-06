@@ -1,17 +1,11 @@
 # Senior Men, Pro 1/2, Novice Masters 45+
 # 
-# FIXME This is out of date. Categories are now just a simple hierarchy of names
-#
-# There are two kinds of categories: Association and BAR. Association categories are designated by
-# OBRA, USA Cycling, WSBA, etc. and used in race results. BAR categories are used to categorize 
-# results for the Best All-round Rider competition.
+# Categories are just a simple hierarchy of names
 #
 # Categories are basically labels and there is no complex hierarchy. In other words, Senior Men Pro 1/2 and
 # Pro 1/2 are two distinct categories. They are not combinations of Pro and Senior and Men and Cat 1
 #
-# BAR categories may belong to an Overall BAR category
-#
-# Combined BAR categories roll-up multiple discipline BAR categories into one (not currently used)
+# +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
 
   include Comparable
@@ -50,7 +44,7 @@ class Category < ActiveRecord::Base
   
   def parent_is_not_self
     if parent_id && parent_id == id
-      errors.add('parent', 'Category cannot be its own parent')
+      errors.add 'parent', 'Category cannot be its own parent'
     end
   end
   
@@ -59,10 +53,12 @@ class Category < ActiveRecord::Base
     self[:name] || ''
   end
   
+  # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
     self[:name].gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp')
   end
   
+  # Return Range
   def ages
     self.ages_begin..ages_end
   end
@@ -80,16 +76,16 @@ class Category < ActiveRecord::Base
     end
   end
   
+  # All children and children childrens
   def descendants
     _descendants = children(true)
-    for child in children
+    children.each do |child|
       _descendants = _descendants + child.descendants
     end
     _descendants
   end
 
   # Compare by position, then by name
-  # TODO Need this method?
   def <=>(other)
     return 0 if self[:id] and self[:id] == other[:id]
     diff = (position <=> other.position)
@@ -99,9 +95,10 @@ class Category < ActiveRecord::Base
       diff
     end
   end
-    
+  
+  # Lowercase underscore
   def to_friendly_param
-    self.name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
+    name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
   end
 
   def to_s

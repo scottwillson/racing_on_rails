@@ -4,26 +4,30 @@ require 'test_help'
 require "action_view/test_case"
 require "authlogic/test_case"
 
+# Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
 
+  # Activate Authlogic. Reset RacingAssociation.
   def setup
     activate_authlogic
-    ASSOCIATION.now = nil
-    ASSOCIATION.usac_results_format = false
+    reset_association
     super
   end
   
   def teardown
+    super
     assert_no_angle_brackets
     # Discipline class may have loaded earlier with no aliases in database
-    Discipline.reset
+    reset_disciplines
   end
 
+  # Clear ASSOCIATION.now. Reset results format.
   def reset_association
     ASSOCIATION.now = nil
+    ASSOCIATION.usac_results_format = false
   end
   
   def reset_disciplines
@@ -133,7 +137,6 @@ class ActiveSupport::TestCase
     }
   end
   
-  # TODO Add Time assert  
   # Expected = date in yyyy-mm-dd format
   def assert_equal_dates(expected, actual, message = nil, format = "%Y-%m-%d")
     if expected != nil && (expected.is_a?(Date) || expected.is_a?(DateTime) || expected.is_a?(Time))
@@ -210,7 +213,7 @@ class ActiveSupport::TestCase
     }
   end
   
-  #helps with place_members_only calculation, so there are no gaps
+  # helps with place_members_only calculation, so there are no gaps
   def fill_in_missing_results
     Result.all.group_by(&:race).each do |race, results|
        all_results=results.collect(&:place) #get an array of just places for this race       

@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class UpcomingEventsTest < ActiveSupport::TestCase
   # Moved/cancelled?
   # Notes?

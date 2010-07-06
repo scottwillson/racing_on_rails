@@ -1,16 +1,42 @@
-# What appear to be duplicate finds are actually existence tests
+# What appear to be duplicate finds are actually existence tests.
+# Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
+  include Api::Results
+
   caches_page :index, :event, :person_event, :team_event, :person, :team
   
+  # HTML: Formatted links to Events with Results
+  # == Params
+  # * year (optional)
+  # JSON, XML: Remote API
+  # == Returns
+  # JSON and XML results are paginated with a page size of 10
+  # * results: [ :id, :age, :city, :date_of_birth, :license, :number, :place,
+  # :place_in_category, :points, :points_from_place,
+  # :points_bonus_penalty, :points_total, :state, :time,
+  # :time_gap_to_leader, :time_gap_to_previous, :time_gap_to_winner,
+  # :laps, :points_bonus, :points_penalty, :preliminary, :gender,
+  # :category_class, :age_group, :custom_attributes ]
+  #
+  # * person: [ :id, :first_name, :last_name, :license ]
+  # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
+  #
+  # See source code of API::Base
   def index
-    # TODO Create helper method to return Range of first and last of year
-    @year = params['year'].to_i
-    @year = Date.today.year if @year == 0
-    @discipline = Discipline[params['discipline']]
-    @discipline_names = Discipline.find_all_names
-    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+    respond_to do |format|
+      format.html {
+        @year = params['year'].to_i
+        @year = Date.today.year if @year == 0
+        @discipline = Discipline[params['discipline']]
+        @discipline_names = Discipline.find_all_names
+        @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+      }
+      format.xml { render :xml => results_as_xml }
+      format.json { render :json => results_as_json }
+    end
   end
   
+  # All Results for Event
   def event
     @event = Event.find(params[:event_id])
     
@@ -37,6 +63,7 @@ class ResultsController < ApplicationController
     render :event
   end
   
+  # Single Person's Results for a single Event
   def person_event
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
@@ -52,6 +79,7 @@ class ResultsController < ApplicationController
     )
   end
 
+  # Single Team's Results for a single Event
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
@@ -68,6 +96,7 @@ class ResultsController < ApplicationController
     raise ActiveRecord::RecordNotFound unless @result
   end
   
+  # Person's Results for an entire year
   def person
     @person = Person.find(params[:person_id])
     set_date_and_year
@@ -87,6 +116,7 @@ class ResultsController < ApplicationController
     end
   end
   
+  # Teams's Results for an entire year
   def team
     @team = Team.find(params[:team_id])
     set_date_and_year

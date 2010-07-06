@@ -1,3 +1,4 @@
+# Count pre-set list of series source_events + manually-entered non-series events
 class Cat4WomensRaceSeries < Competition
   def friendly_name
     "Cat 4 Womens Race Series"

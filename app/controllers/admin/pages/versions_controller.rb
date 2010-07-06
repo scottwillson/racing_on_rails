@@ -1,3 +1,4 @@
+# Show old versions of Pages
 class Admin::Pages::VersionsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
@@ -20,6 +21,7 @@ class Admin::Pages::VersionsController < Admin::AdminController
     redirect_to(edit_admin_page_path(@version.page))
   end
   
+  # Revert to +version+
   def revert
     version = Page::Version.find(params[:id])
     page = version.page

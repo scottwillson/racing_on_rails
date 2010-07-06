@@ -39,8 +39,8 @@ module Schedule
 
     def add(event)
       day_of_month = event.date.day
-      for week in @weeks
-        for day in week.days
+      @weeks.each do |week|
+        week.days.each do |day|
           if !day.other_month? && day_of_month == day.day_of_month
             day.events << event
             return
