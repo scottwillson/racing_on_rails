@@ -744,7 +744,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_not_logged_in
     destroy_person_session
     get(:index, :year => "2004")
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
 
@@ -798,7 +798,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     @request.session[:person_id] = 31289371283
     @request.session[:person_credentials] = 31289371283
     get(:index)
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_edit_child_event

@@ -53,7 +53,7 @@ class PublicPagesTest < ActionController::IntegrationTest
     https! if ASSOCIATION.ssl?
 
     get "/admin/first_aid_providers"
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
 
     go_to_login
     login :person_session => { :login => "alice", :password => "secret" }

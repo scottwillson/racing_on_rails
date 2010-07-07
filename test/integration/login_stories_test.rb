@@ -76,6 +76,19 @@ class LoginStoriesTest < ActionController::IntegrationTest
       get "/login"
     end
 
+    def test_login_on_nonstandard_port
+      get "http://www.example.com:3000/login"
+      assert_redirected_to "https://www.example.com/login"
+
+      https!
+      get "/login"
+
+      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+      get "/login"
+    end
+
     def test_valid_admin_login
       https!
       get admin_people_path

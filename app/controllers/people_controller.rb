@@ -38,7 +38,7 @@ class PeopleController < ApplicationController
       redirect_to edit_person_path(person)
     else
       session[:return_to] = "/account"
-      redirect_to new_person_session_path
+      redirect_to new_person_session_url(secure_redirect_options)
     end
   end
   

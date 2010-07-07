@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   ActionController::Base.ip_spoofing_check = false
 
   filter_parameter_logging :password, :password_confirmation
-  helper_method :current_person_session, :current_person
+  helper_method :current_person_session, :current_person, :secure_redirect_options
 
   before_filter :toggle_tabs
 
@@ -42,6 +42,7 @@ class ApplicationController < ActionController::Base
 
 
   protected
+  
 
   def toggle_tabs
     @show_tabs = false
@@ -120,33 +121,6 @@ class ApplicationController < ActionController::Base
     @person = Person.find(params[:id])
   end
 
-  def require_same_person_or_administrator
-    unless current_person.administrator? || (@person && current_person == @person)
-      redirect_to unauthorized_path
-    end
-  end
-  
-  def require_same_person_or_administrator_or_editor
-    unless current_person.administrator? || (@person && current_person == @person) || (@person && @person.editors.include?(current_person))
-      redirect_to unauthorized_path
-    end
-  end
-
-  def require_administrator_or_promoter_or_official
-    unless current_person.administrator? || current_person.promoter? || current_person.official?
-      redirect_to unauthorized_path
-    end
-  end
-
-  def require_administrator_or_promoter
-    unless (current_person && current_person.administrator?) || 
-           (@event && current_person == @event.promoter) || 
-           (@race && current_person == @race.event.promoter)
-           
-      redirect_to unauthorized_path
-    end
-  end
-
   def current_person_session
     return @current_person_session if defined?(@current_person_session)
     @current_person_session = PersonSession.find
@@ -163,41 +137,115 @@ class ApplicationController < ActionController::Base
       store_location_and_redirect_to_login
       return false
     end
+    true
   end
 
   def require_administrator
-    unless current_person && current_person.administrator?
+    unless require_person
+      return false
+    end
+
+    unless current_person.administrator?
       session[:return_to] = request.request_uri
       flash[:notice] = "You must be an administrator to access this page"
       store_location_and_redirect_to_login
       return false
     end
+    true
+  end
+
+  def require_administrator_or_promoter
+    unless require_person
+      return false
+    end
+
+    unless administrator? || 
+           (@event && current_person == @event.promoter) || 
+           (@race && current_person == @race.event.promoter)
+           
+      redirect_to unauthorized_path
+      return false
+    end
+    true
   end
 
   def require_administrator_or_official
-    unless current_person && (current_person.administrator? || current_person.official?)
+    unless require_person
+      return false
+    end
+
+    unless administrator? || official?
       session[:return_to] = request.request_uri
       flash[:notice] = "You must be an official or administrator to access this page"
       store_location_and_redirect_to_login
       return false
     end
+    true
+  end
+
+  def require_same_person_or_administrator
+    unless require_person
+      return false
+    end
+
+    unless administrator? || (@person && current_person == @person)
+      redirect_to unauthorized_path
+      return false
+    end
+    true
+  end
+
+  def require_same_person_or_administrator_or_editor
+    unless require_person
+      return false
+    end
+
+    unless administrator? || (@person && current_person == @person) || (@person && @person.editors.include?(current_person))
+      redirect_to unauthorized_path
+      return false
+    end
+    true
+  end
+
+  def require_administrator_or_promoter_or_official
+    unless require_person
+      return false
+    end
+    
+    unless administrator? || promoter? || official?
+      redirect_to unauthorized_path
+      return false
+    end
+    true
   end
 
   def administrator?
-    current_person && current_person.administrator?
+    current_person.try :administrator?
   end
 
   def official?
-    current_person.try(:official?)
+    current_person.try :official?
+  end
+
+  def promoter?
+    current_person.try :promoter?
   end
 
   def store_location_and_redirect_to_login
     if request.format == "js"
       session[:return_to] = request.referrer
-      render :update do |page| page.redirect_to(new_person_session_url) end
+      render :update do |page| page.redirect_to(new_person_session_url(secure_redirect_options)) end
     else
       session[:return_to] = request.request_uri
-      redirect_to new_person_session_url
+      redirect_to new_person_session_url(secure_redirect_options)
+    end
+  end
+  
+  def secure_redirect_options
+    if ASSOCIATION.ssl?
+      { :protocol => "https", :host => request.host }
+    else
+      {}
     end
   end
   
@@ -205,7 +253,6 @@ class ApplicationController < ActionController::Base
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
   end
-
 
   # Returns true if the current action is supposed to run as SSL.
   # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.

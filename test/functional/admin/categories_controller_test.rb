@@ -21,7 +21,7 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
   def test_not_logged_in
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end  
 end

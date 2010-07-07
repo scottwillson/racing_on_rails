@@ -106,7 +106,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_must_be_logged_in
     use_ssl
     get :edit, :id => people(:member).to_param
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
 
   def test_cant_see_other_people_info
@@ -209,7 +209,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_account_not_logged_in
     use_ssl
     get :account
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_account_with_person_not_logged_in

@@ -11,7 +11,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
   
@@ -19,7 +19,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     destroy_person_session
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
 
