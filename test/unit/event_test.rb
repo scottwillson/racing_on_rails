@@ -738,6 +738,10 @@ class EventTest < ActiveSupport::TestCase
     assert !Event.today_and_future.include?(events(:banana_belt_3)), "today_and_future scope should not include Banana Belt event"
   end
 
+  def test_propagate_races
+    events(:kings_valley).propagate_races
+  end
+
   private
   
   def assert_orphans(count, event)

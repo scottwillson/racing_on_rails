@@ -11,7 +11,10 @@ ActionController::Routing::Routes.draw do |map|
                      :set_parent => :get, 
                      :add_children => :get, 
                      :create_from_children => :get, 
-                     :destroy_races => :delete }
+                     :destroy_races => :delete } do |events|
+      events.resources :races, :collection => { :propagate => :post }
+    end
+                     
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :person
     

@@ -224,6 +224,17 @@ class MultiDayEvent < Event
     children.count(reload) > 0 && (children_with_results(reload).size == children.count)
   end
   
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    children.each do |event|
+      races.map(&:category).each do |category|
+        unless event.races.map(&:category).include?(category)
+          event.races.create!(:category => category)
+        end
+      end
+    end
+  end
+
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{children.size}>"
   end

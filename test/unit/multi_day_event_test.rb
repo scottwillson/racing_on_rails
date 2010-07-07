@@ -638,4 +638,29 @@ class MultiDayEventTest < ActiveSupport::TestCase
     event = single_day_event.children.create!
     assert_equal(Date.new(2007, 9, 19), event.date, "New Event child date shold match parent")
   end
+  
+  def test_propagate_races
+    series = events(:banana_belt_series)
+    series.races.create!(:category => categories(:sr_p_1_2))
+    series.races.create!(:category => categories(:senior_women))
+
+    assert_equal 1, events(:banana_belt_1).races.size, "banana_belt_1 races"
+    assert_equal categories(:sr_p_1_2), events(:banana_belt_1).races.first.category, "banana_belt_1 race category"
+    assert_equal 0, events(:banana_belt_2).races.size, "banana_belt_2 races"
+    assert_equal 0, events(:banana_belt_3).races.size, "banana_belt_3 races"
+    
+    series.propagate_races
+    
+    assert_equal 2, events(:banana_belt_1).races.size, "banana_belt_1 races"
+    assert events(:banana_belt_1).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_1 race category"
+    assert events(:banana_belt_1).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_1 race category"
+
+    assert_equal 2, events(:banana_belt_2).races(true).size, "banana_belt_2 races"
+    assert events(:banana_belt_2).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_2 race category"
+    assert events(:banana_belt_2).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_2 race category"
+
+    assert_equal 2, events(:banana_belt_3).races(true).size, "banana_belt_3 races"
+    assert events(:banana_belt_3).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_3 race category"
+    assert events(:banana_belt_3).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_3 race category"
+  end
 end

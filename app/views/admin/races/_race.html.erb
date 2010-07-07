@@ -1,0 +1,18 @@
+<tr id="race_<%= race.id %>_row">
+  <td class="race">
+    <%= in_place_editor_field :race, :category_name, race, false, nil, nil, @enter_edit_mode %>
+    <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
+  </td>
+  <td class="right">
+    <%= link_to "Edit", edit_admin_race_path(race), :id => "edit_race_#{race.id}" %>
+  </td>
+  <td class="right delete">
+    <%= link_to_remote(image_tag('/images/icons/delete.png'),
+    :url => admin_race_url(race),
+    :html => { :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race" },
+    :complete => evaluate_remote_response, 
+    :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?",
+    :method => :delete)
+    %>
+  </td>
+</tr>

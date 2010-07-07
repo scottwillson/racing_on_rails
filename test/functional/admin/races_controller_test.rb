@@ -186,4 +186,50 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_response :success
     assert event.races.none? { |race| race.category_name == "Senior Women" }
   end
+
+  def test_create_xhr
+    event = events(:kings_valley)
+    xhr :post, :create, :event_id => event.to_param
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_equal "New Category", assigns(:race).name, "@race name"
+    assert !assigns(:race).new_record?, "@race should created"
+    assert_template "admin/races/create.js.rjs"
+  end
+
+  def test_create_xhr_promoter
+    login_as :promoter
+    event = events(:banana_belt_1)
+    xhr :post, :create, :event_id => event.to_param
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_equal "New Category", assigns(:race).name, "@race name"
+    assert !assigns(:race).new_record?, "@race should created"
+    assert_template "admin/races/create.js.rjs"
+  end
+  
+  def test_set_race_category_name
+    race = races(:kings_valley_3)
+    xhr :post, :set_race_category_name, :id => race.to_param, :value => "Fixed Gear", :editorId => "race_#{race.id}_category_name"
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
+  end
+  
+  def test_set_race_category_name
+    login_as :promoter
+    race = races(:banana_belt_pro_1_2)
+    xhr :post, :set_race_category_name, :id => race.to_param, :value => "Fixed Gear", :editorId => "race_#{race.id}_category_name"
+    assert_response :success
+    assert_not_nil assigns(:race), "@race"
+    assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
+  end
+  
+  def test_propagate
+    login_as :promoter
+    event = events(:banana_belt_1)
+    xhr :post, :propagate, :event_id => event.to_param
+    assert_response :success
+    assert_template "admin/races/propagate.js.rjs"
+  end
 end

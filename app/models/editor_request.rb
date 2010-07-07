@@ -12,6 +12,8 @@ class EditorRequest < ActiveRecord::Base
   
   before_save :destroy_duplicates
   
+  named_scope :expired, lambda { { :conditions => [ "expires_at <= ?", ASSOCIATION.now ] } }
+  
   # Set to expire in 1 week. Auto-set token.
   def before_validation
     self.email = person.try(:email)

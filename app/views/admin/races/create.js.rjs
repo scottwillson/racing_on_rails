@@ -1,0 +1,1 @@
+page.insert_html :before, "create_race_row", :partial => "admin/races/race", :locals => { :race => @race }
