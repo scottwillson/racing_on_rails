@@ -13,6 +13,14 @@ module Api
       events.to_json :only => event_fields, :include => event_includes
     end
 
+    def event_as_xml
+      event.to_xml :only => event_fields, :include => event_includes
+    end
+
+    def event_as_json
+      event.to_json :only => event_fields, :include => event_includes
+    end
+
     def events
       Event.paginate(
         :include  => { :races => [ :category ] },
@@ -20,6 +28,12 @@ module Api
         :page     => params[:page],
         :per_page => 10
       )
+    end
+
+    def event
+      Event.find(params[:id], :include => {
+        :races => [ :category ]
+      })
     end
   end
 end

@@ -29,4 +29,11 @@ class EventsController < ApplicationController
       format.json { render :json => events_as_json }
     end
   end
+
+  def show
+    respond_to do |format|
+      format.xml { render :xml => event_as_xml }
+      format.json { render :json => event_as_json }
+    end
+  end
 end
