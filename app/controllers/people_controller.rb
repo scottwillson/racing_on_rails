@@ -32,6 +32,13 @@ class PeopleController < ApplicationController
     end
   end
 
+  def show
+    respond_to do |format|
+      format.xml { render :xml => person_as_xml }
+      format.json { render :json => person_as_json }
+    end
+  end
+
   def account
     person = (params[:id] && Person.find(params[:id])) || current_person
     if person

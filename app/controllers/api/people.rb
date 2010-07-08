@@ -12,7 +12,15 @@ module Api
     def people_as_json
       people.to_json :only => person_fields, :include => person_includes
     end
-  
+
+    def person_as_xml
+      person.to_xml :only => person_fields, :include => person_includes
+    end
+
+    def person_as_json
+      person.to_json :only => person_fields, :include => person_includes
+    end
+
     def people
       sql = []
       conditions = [""]
@@ -46,5 +54,13 @@ module Api
         []
       end
     end  
+
+    def person
+      Person.find(params[:id], :include => {
+        :aliases      => [],
+        :team         => [],
+        :race_numbers => [:discipline]
+      })
+    end
   end
 end

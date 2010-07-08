@@ -594,7 +594,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_index_as_json
-    get :index, { :format => "json", :name => "ron" }
+    get :index, :format => "json", :name => "ron"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
@@ -610,5 +610,17 @@ class PeopleControllerTest < ActionController::TestCase
     get :index, :name => "m", :license => 576, :format => "xml"
     assert_response :success
     assert_select "first-name", "Mark"
+  end
+
+  def test_show_as_xml
+    get :show, :id => people(:molly).id, :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Molly"
+    assert_select "last-name", "Cameron"
+  end
+
+  def test_show_as_json
+    get :show, :id => people(:molly).id, :format => "json"
+    assert_response :success
   end
 end
