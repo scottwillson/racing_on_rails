@@ -12,7 +12,7 @@ class EventsController < ApplicationController
   # * race: [ :id, :distance, :city, :state, :laps, :field_size, :time, :finishers, :notes ]
   # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
   #
-  # See source code of API::Base
+  # See source code of Api::Events and Api::Base
   def index
     respond_to do |format|
       format.html {

@@ -21,6 +21,19 @@ module Api
       person.to_json :only => person_fields, :include => person_includes
     end
 
+    # Queries a collection of Person records from the database.
+    # 
+    # == Params
+    # * page
+    # * name
+    # * license
+    # 
+    # == Returns
+    # An array of 0 or more Person records, 10 per page, with the necessary
+    # joins for rendering a JSON or XML service response.
+    # 
+    # If no filtering parameter (i.e. name or license) is provided this
+    # function will return an empty array.
     def people
       sql = []
       conditions = [""]
@@ -55,6 +68,14 @@ module Api
       end
     end  
 
+    # Retrieves a single Person record from the database with the necessary
+    # joins for rendering a JSON or XML service response.
+    # 
+    # == Params
+    # * id
+    # 
+    # == Returns
+    # A Person record, if one is found.
     def person
       Person.find(params[:id], :include => {
         :aliases      => [],

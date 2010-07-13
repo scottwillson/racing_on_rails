@@ -21,7 +21,7 @@ class ResultsController < ApplicationController
   # * person: [ :id, :first_name, :last_name, :license ]
   # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
   #
-  # See source code of API::Base
+  # See source code of Api::Results and Api::Base
   def index
     respond_to do |format|
       format.html {

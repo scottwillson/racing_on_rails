@@ -21,6 +21,15 @@ module Api
       event.to_json :only => event_fields, :include => event_includes
     end
 
+    # Queries a collection of Event records.
+    # 
+    # == Params
+    # * page
+    # 
+    # == Returns
+    # Returns an array of Event records in reverse-chronological order, 10 per
+    # page, each with the necessary joins for rendering a JSON or XML service
+    # response.
     def events
       Event.paginate(
         :include  => { :races => [ :category ] },
@@ -30,6 +39,14 @@ module Api
       )
     end
 
+    # Retrieves a single Event record from the database.
+    # 
+    # == Params
+    # * id
+    # 
+    # == Returns
+    # An Event record, if found, with the necessary joins for rendering a JSON
+    # or XML service response.
     def event
       Event.find(params[:id], :include => {
         :races => [ :category ]

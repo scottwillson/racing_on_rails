@@ -20,9 +20,9 @@ class PeopleController < ApplicationController
   # :aliases      => :alias, :name
   # :team         => :name, :city, :state, :website
   # :race_numbers => :value, :year
-  # :discipline => :only => :name
+  # :discipline   => :only => :name
   #
-  # See source code of API::Base
+  # See source code of Api::People and Api::Base
   def index
     respond_to do |format|
       format.html { find_people }
