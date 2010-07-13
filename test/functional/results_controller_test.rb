@@ -489,4 +489,10 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
+
+  def test_index_filtered_by_person_id
+    person = people :weaver
+    get :index, :person_id => person[:id], :format => "xml"
+    assert_response :success
+  end
 end
