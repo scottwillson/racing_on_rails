@@ -24,10 +24,7 @@ Rails::Initializer.run do |config|
   }
   
   config.gem "authlogic", :version => "2.1.3"
-  config.gem "fastercsv"
   config.gem "tabular", :version => "0.0.4"
-  config.gem "color"
-  config.gem "pdf-writer", :lib => "pdf/writer"
   config.gem "vestal_versions"
   config.gem "sentient_user"
 
@@ -72,9 +69,6 @@ class ActionView::Base
     RacingOnRails::FormBuilder
   end
 end
-
-require "action_view/template_handlers/pdf_writer"
-ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
 
 require 'array'
 require 'nil_class'
