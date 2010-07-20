@@ -10,18 +10,18 @@ class Cat4WomensRaceSeries < Competition
 
   def source_results(race)
     Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place
+      [%Q{ SELECT results.id as id, race_id, person_id, results.team_id, place
           FROM results  
           LEFT JOIN races ON races.id = results.race_id 
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN events ON races.event_id = events.id 
           WHERE (place > 0 or place is null or place = '')
-            and categories.id in (#{category_ids_for(race)})
-            and (events.type = "SingleDayEvent" or events.type is null)
+            and categories.id in (?)
+            and (events.type = "SingleDayEvent" or events.type is null or events.id in (?))
             and events.ironman is true
             and events.date between '#{year}-01-01' and '#{year}-12-31'
           order by person_id
-       }
+       }, category_ids_for(race), source_events.collect(&:id) ]
     )
   end
 
@@ -33,7 +33,8 @@ class Cat4WomensRaceSeries < Competition
       event_ids = source_events.collect(&:id)
       place = source_result.place.to_i
 
-      if event_ids.include?(source_result.event_id) || (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id))
+      if event_ids.include?(source_result.event_id) || 
+         (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id) && source_result.event.parent.races.none?)
         if place >= point_schedule.size
           return 25
         else
