@@ -32,17 +32,17 @@
     </td>
     <td class="beginner_friendly"><%= image_tag("icons/star_green.png") if event.beginner_friendly? %></td>
     <%- if event.cancelled %>
-    <td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
+    <td><span class="cancelled"><%= event.full_name -%></span> <i>cancelled</i></td>
     <%- elsif event.postponed? %>
-    <td><span class="postponed"><%= event.name -%></span> <i>postponed</i></td>
+    <td><span class="postponed"><%= event.full_name -%></span> <i>postponed</i></td>
     <%- else -%>
     <td class="link">
       <%- if event.flyer.present? && event.flyer_approved? -%>
-          <a href="<%= event.flyer -%>"<%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+          <a href="<%= event.flyer -%>"<%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
           MTB
             <%- end -%></a>
             <%- else -%>
-          <%= event.name -%><%= " MTB" if !event.name.include?("MTB") && event.discipline == "Mountain Bike" -%>
+          <%= event.full_name -%><%= " MTB" if !event.full_name.include?("MTB") && event.discipline == "Mountain Bike" -%>
       <%- end -%>
       </td> 
   <%- end -%>
