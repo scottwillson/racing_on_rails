@@ -173,8 +173,8 @@ class Competition < Event
   # Array of ids (integers)
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
-    ids = [race.category_id]
-    ids = ids + race.category.descendants.map { |category| category.id }
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
     ids.join(', ')
   end
   
