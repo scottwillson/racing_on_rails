@@ -16,12 +16,12 @@ class Cat4WomensRaceSeries < Competition
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN events ON races.event_id = events.id 
           WHERE (place > 0 or place is null or place = '')
-            and categories.id in (?)
+            and categories.id in (#{category_ids_for(race)})
             and (events.type = "SingleDayEvent" or events.type is null or events.id in (?))
             and events.ironman is true
             and events.date between '#{year}-01-01' and '#{year}-12-31'
           order by person_id
-       }, category_ids_for(race), source_events.collect(&:id) ]
+       }, source_events.collect(&:id) ]
     )
   end
 
@@ -34,7 +34,9 @@ class Cat4WomensRaceSeries < Competition
       place = source_result.place.to_i
 
       if event_ids.include?(source_result.event_id) || 
-         (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id) && source_result.event.parent.races.none?)
+         (source_result.event.parent_id && 
+          event_ids.include?(source_result.event.parent_id) && 
+          source_result.event.parent.races.none? { |race| cat_4_categories.include?(race.category) })
         if place >= point_schedule.size
           return 25
         else
@@ -49,7 +51,8 @@ class Cat4WomensRaceSeries < Competition
       place = source_result.place.to_i
 
       if (event_ids.include?(source_result.event_id) || 
-          (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id))) && place < point_schedule.size
+          (source_result.event.parent_id && event_ids.include?(source_result.event.parent_id) && source_result.event.parent.races.none?)) &&
+           place < point_schedule.size
         return point_schedule[source_result.place.to_i] || 0
       end
     end
@@ -64,5 +67,10 @@ class Cat4WomensRaceSeries < Competition
   def create_races
     category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
     self.races.create(:category => category)
+  end
+  
+  def cat_4_categories
+    category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
+    [ category ] + category.descendants
   end
 end

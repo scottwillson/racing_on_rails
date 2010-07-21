@@ -251,6 +251,10 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series = Cat4WomensRaceSeries.create!(:date => Date.new(2004))
     event = SingleDayEvent.create!(:discipline => "Time Trial", :date => Date.new(2004))
     series.source_events << event
+    
+    # Non Cat 4 Women race in parent event
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1", :person => people(:weaver))
+    
     fourteen_mile = event.children.create!
     assert_equal 1, fourteen_mile.bar_points, "Children should recieve BAR points"
     assert_equal Date.new(2004), fourteen_mile.date, "Children should share parent date"
