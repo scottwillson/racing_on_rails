@@ -43,11 +43,11 @@ function resizeRelativeToWindow() {
 
 function fixTableColumnWidths(table_id) {
   $(document).ready(function() {
-    var ths = $$('#' + table_id + ' th');
+    var ths = $('#' + table_id + ' th');
 
-    var thWidths = ths.collect(function(th){
-      return th.getWidth() - Number(th.getStyle('paddingLeft').gsub('px', ''));
-    });
+    var thWidths = ths.map(function(index, th){
+      return th.width() - Number(th.getStyle('paddingLeft').gsub('px', ''));
+    }).get();
 
     ths.each(function(th, index) {
       th.setStyle({width: (thWidths[index] - 2) + 'px'});
@@ -104,17 +104,23 @@ function sizeTo100PctVertical(id) {
 
 function autoComplete(model, attribute, path) {
   $(document).ready(function() {
-    new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
-      method: 'GET',
-      paramName: 'name',
-      indicator: attribute + '_auto_complete_progress', 
-      minChars: 3, 
-      afterUpdateElement: afterUpdateElement,
-      frequency: 0.2
-     });
-
-    function afterUpdateElement(element, li) {
-      $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
-    }
+    $(attribute + '_auto_complete').autocomplete({
+      delay: 200,
+      minLength: 3,
+      source: path
+    });
   });  
-}
+}    
+    
+  //   new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
+  //     method: 'GET',
+  //     paramName: 'name',
+  //     indicator: attribute + '_auto_complete_progress', 
+  //     minChars: 3, 
+  //     afterUpdateElement: afterUpdateElement,
+  //     frequency: 0.2
+  //    });
+  // 
+  //   function afterUpdateElement(element, li) {
+  //     $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
+  //   }
