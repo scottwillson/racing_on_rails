@@ -167,16 +167,14 @@
     end -%>
 
 <% if !@event.new_record? && administrator? -%>
-<script type="text/javascript" charset="utf-8">
-<!--
-  new Form.Element.Observer('event_promoter_id', 0, function(element, value) {
-    if (value == '') {
-      Element.hide('edit_promoter_link');
+<% javascript_tag do %>
+  $('event_promoter_id').change(function () {
+    if ($('event_promoter_id').val() == '') {
+      $('edit_promoter_link').hide();
     }
     else {
-      Element.show('edit_promoter_link')
+      $('edit_promoter_link').show();
     }
   });
-// -->
-</script>
+<% end -%>
 <% end -%>
