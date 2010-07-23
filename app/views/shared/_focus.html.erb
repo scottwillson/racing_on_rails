@@ -1,9 +1,7 @@
-<script type="text/javascript" charset="utf-8">
-<!--
-    $(document).ready(function() {
-      if ($('#<%= focus %>:visible')) {
-        $('#<%= focus %>').select();
-      }
-    });
-// -->
-</script>
+<% javascript_tag do %>
+  $(document).ready(function() {
+    if ($('#<%= focus %>:visible')) {
+      $('#<%= focus %>').select();
+    }
+  });
+<% end -%>
