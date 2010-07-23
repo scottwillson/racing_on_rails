@@ -37,11 +37,11 @@
 
 <script type="text/javascript" charset="utf-8"> 
   <% if @page.new_record? %> 
-    Event.observe(window, 'load', function() { 
+    $(document).ready(function() { 
       $('page_title').focus(); 
     }); 
   <% else -%> 
-    Event.observe(window, 'load', function() { 
+    $(document).ready(function() { 
       $('page_body').focus(); 
     }); 
   <% end -%> 

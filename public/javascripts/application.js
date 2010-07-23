@@ -42,7 +42,7 @@ function resizeRelativeToWindow() {
 }
 
 function fixTableColumnWidths(table_id) {
-  Event.observe(window, 'load', function() {
+  $(document).ready(function() {
     var ths = $$('#' + table_id + ' th');
 
     var thWidths = ths.collect(function(th){
@@ -88,7 +88,7 @@ function flash(key, message) {
 }
 
 function pinTo100PctVertical(id) {
-  Event.observe(window, 'load', function() {
+  $(document).ready(function() {
     sizeTo100PctVertical(id);
   });
 
@@ -103,7 +103,7 @@ function sizeTo100PctVertical(id) {
 }
 
 function autoComplete(model, attribute, path) {
-  Event.observe(window, 'load', function() {
+  $(document).ready(function() {
     new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
       method: 'GET',
       paramName: 'name',
