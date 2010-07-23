@@ -2,6 +2,7 @@
 <% table :caption => link_to('Results', results_path(:host => RAILS_HOST)), 
          :class => style_class || "no_top_margin", 
          :insert_header => true,
+         :fix_table_column_widths => false,
          :id => "home_page_results" do %>
   <%- @recent_results.each do |event| -%>
   <tr>
