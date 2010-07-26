@@ -12,17 +12,10 @@
 <script type="text/javascript">
 //<![CDATA[
 
-var inPlaceEditor = new Ajax.InPlaceEditor(
-  '<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>',
-   '<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>',
-   { okControl: false, cancelControl: false, clickToEditText: '', hoverClassName: 'hovering', 
-     savingText: '&nbsp;', htmlResponse: <%= !script %>,
-     onComplete: function(ipe) {},
-     onEnterHover: function(ipe) {},
-     onLeaveHover: function(ipe) {}
+$('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').editable('<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>', {
+  method: 'PUT',
+  name: 'value',
+  select: <%= enter_edit_mode.present? && enter_edit_mode == true %>
 });
-<% if enter_edit_mode -%>
-inPlaceEditor.enterEditMode();
-<% end -%>
 // ]]>
 </script>
