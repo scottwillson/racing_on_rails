@@ -104,23 +104,38 @@ function sizeTo100PctVertical(id) {
 
 function autoComplete(model, attribute, path) {
   $(document).ready(function() {
-    $(attribute + '_auto_complete').autocomplete({
+    $('#' + attribute + '_auto_complete').autocomplete({
       delay: 200,
       minLength: 3,
-      source: path
-    });
+      source: path,
+      focus: function(event, ui) {
+        $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+        return false;
+      },
+      select: function(event, ui) {
+        $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+        $('#event_promoter_id').val(ui.item.person.id);
+        return false;
+      }
+    })
+    .data( "autocomplete" )
+    ._renderItem = function(ul, item) {
+        var description = [];
+        if (item.person.team !== undefined && item.person.team.name !== undefined) {
+          description.push(item.person.team.name);
+        }
+        if (item.person.city !== undefined) {
+          description.push(item.person.city);
+        }
+        if (item.person.state !== undefined) {
+          description.push(item.person.state);
+        }
+        
+        return $('<li id="' + item.person.id + '"></li>')
+          .data( "item.autocomplete", item )
+          .append('<a>' + item.person.first_name + ' ' + item.person.last_name + '<div class="informal">' + description + "</div></a>")
+          .appendTo( ul );
+      };
+    ;
   });  
 }    
-    
-  //   new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
-  //     method: 'GET',
-  //     paramName: 'name',
-  //     indicator: attribute + '_auto_complete_progress', 
-  //     minChars: 3, 
-  //     afterUpdateElement: afterUpdateElement,
-  //     frequency: 0.2
-  //    });
-  // 
-  //   function afterUpdateElement(element, li) {
-  //     $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
-  //   }

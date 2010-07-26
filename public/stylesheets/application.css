@@ -3,7 +3,7 @@ body {
   min-width: 600px;
   font-size: 0.75em;
   line-height: 1.33em;
-  font-family: Verdana, sans-serif;
+  font-family: Verdana, Helvetica, sans-serif;
   text-align: left;
   color: black;
   padding: 16px;
@@ -81,7 +81,7 @@ pre, pre a, pre a:link, pre a:visited {
 {
   border-bottom: none;
   font-size: 1em;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-family: Verdana, Helvetica, sans-serif;
   color: rgb(160, 160, 160);
   font-style: italic;
   white-space: nowrap;

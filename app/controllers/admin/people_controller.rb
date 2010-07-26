@@ -49,12 +49,6 @@ class Admin::PeopleController < Admin::AdminController
     end
 
     @current_year = current_date.year
-
-    respond_to do |wants|
-      wants.html
-      # TODO Optimize JS call. It shouldn't consider cookie and should pull back only nine results
-      wants.js
-    end
   end
 
   # == Params

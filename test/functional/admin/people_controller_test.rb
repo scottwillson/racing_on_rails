@@ -88,8 +88,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal('Test', assigns['name'], "'name' assigns")
   end
   
-  def test_index_rjs
-    xhr :get, :index, :term => "weav"
+  def test_index_json
+    xhr :get, :index, :term => "weav", :format => "json"
     assert_response :success
     assert_template "admin/people/index"
     assert_not_nil assigns["people"], "Should assign people"
