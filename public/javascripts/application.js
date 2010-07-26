@@ -45,12 +45,12 @@ function fixTableColumnWidths(table_id) {
   $(document).ready(function() {
     var ths = $('#' + table_id + ' th');
 
-    var thWidths = ths.map(function(index, th){
-      return th.width() - Number(th.getStyle('paddingLeft').gsub('px', ''));
+    var thWidths = ths.map(function(index, th) {
+      return $(th).width() - Number($(th).css('paddingLeft').replace('px', ''));
     }).get();
 
     ths.each(function(th, index) {
-      th.setStyle({width: (thWidths[index] - 2) + 'px'});
+      $(th).css('width', (thWidths[index] - 2) + 'px');
     });
   });
 }
@@ -77,7 +77,6 @@ function restripeTable(id) {
   });
 }
 
-// TODO Use this!
 function flash(key, message) {
   if ($('info') != null) { $('info').hide() }
   if ($('notice') != null) { $('notice').hide() }
