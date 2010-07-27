@@ -1,3 +1,7 @@
-<%= check_box_tag "#{record.class.name.singularize.downcase}_member_#{record.id}", "1", record.member?, 
-        :onchange => "new Ajax.Request('/admin/#{record.class.name.pluralize.downcase}/#{record.id}/toggle_member', 
-                      {asynchronous:true, evalScripts:true})" %>
+<%= check_box_tag "#{record.class.name.singularize.downcase}_member_#{record.id}", "1", record.member? %>
+
+<% javascript_tag do %>
+$('#<%= "#{record.class.name.singularize.downcase}_member_#{record.id}" %>').click(function() {
+  $.post('<%= "/admin/#{record.class.name.pluralize.downcase}/#{record.id}/toggle_member" %>');
+});
+<% end -%>

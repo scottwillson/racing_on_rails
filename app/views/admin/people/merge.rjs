@@ -1,6 +1,5 @@
 page.remove "person_#{@person_to_merge.id}_row"
 page.replace_html "person_#{@existing_person.id}_aliases", render(:partial => 'aliases', :locals => { :person => @existing_person })
-page.call(:flash, "notice", "Merged #{@merged_person_name} into #{@existing_person.name}")
+page.call :flash, "notice", "Merged #{@merged_person_name} into #{@existing_person.name}"
 page.call :restripeTable, :people_table
 page.call :resetTableColumnWidths, :people_table
-page << %Q{ Droppables.add("person_#{@existing_person.id}_row", {hoverclass:'hovering', onDrop:function(element){$('person_#{@existing_person.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/people/merge?target_id=#{@existing_person.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('person_#{@existing_person.id}_row') }}) }

@@ -6,7 +6,7 @@
         person.name, 
         :url => {:action => "results", :id => person.id}, 
         :update => 'right_person',
-        :before => visual_effect(:fade, 'right_person', :to => 0.4),
+        :before => visual_effect(:highlight, 'right_person', :to => 0.4),
         :complete => visual_effect(:appear, 'right_person'))
       %>
       <br>

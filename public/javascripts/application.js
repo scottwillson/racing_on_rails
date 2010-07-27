@@ -56,34 +56,40 @@ function fixTableColumnWidths(table_id) {
 }
 
 function resetTableColumnWidths(table_id) {
-  $$('#' + table_id + ' th').each(function(th, index){
-    th.setStyle({width: '100%'});
+  $('#' + table_id + ' th').each(function(index, th){
+    $(th).css('width', 'default');
   });
   fixTableColumnWidths(table_id);
 }
 
 function restripeTable(id) {
-  var index = 0;
-  $A($(id).rows).each(function(row) {
-    if (row.className == 'even' || row.className == 'odd') {
-      if (index % 2 == 0) {
-        row.className = 'even';
+  var startIndex = 0;
+  if ($('#' + id + ' tr th').length > 0) {
+    startIndex = 1;
+  }
+  
+  $('#' + id + ' tr').each(function(index, tr) {
+    var row = $(tr);
+    if (index >= startIndex && (row.hasClass('even') || row.hasClass('odd'))) {
+      row.removeClass('even');
+      row.removeClass('odd');
+      if ((index + startIndex) % 2 == 0) {
+        row.addClass('even');
       }
       else {
-        row.className = 'odd';
+        row.addClass('odd');
       }
-      index = index + 1;
     }
   });
 }
 
 function flash(key, message) {
-  if ($('info') != null) { $('info').hide() }
-  if ($('notice') != null) { $('notice').hide() }
-  if ($('warn') != null) { $('warn').hide() }
+  if ($('#info').length > 0) { $('#info').hide() }
+  if ($('#notice').length > 0) { $('#notice').hide() }
+  if ($('#warn').length > 0) { $('#warn').hide() }
   
-  $(key + '_span').update(message);
-  $(key).show();
+  $('#' + key + '_span').html(message);
+  $('#' + key).show();
 }
 
 function pinTo100PctVertical(id) {

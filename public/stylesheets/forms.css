@@ -406,11 +406,11 @@ div.more {
   padding-right: 4px;
 }
 
-a.editable, a:link.editable, a:visited.editable {
+table.base div.in_place_editable, div.in_place_editable {
   border: 1px solid transparent;
 }
 
-a:hover.editable {
+table.base div.in_place_editable:hover, div.in_place_editable:hover {
   background-color: rgb(245, 245, 245);
   border: 1px solid rgb(204, 204, 204);
 }

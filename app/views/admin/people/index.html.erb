@@ -37,18 +37,22 @@
 
 <%= focus('name') %>
 
-<%- for person in @people -%>
-  <%= draggable_element("person_#{person.id}", :revert => true, :delay => 100, :revert => "'failure'",
-                        :onStart => "function() { Droppables.remove('person_#{person.id}_row') }", 
-                        :onEnd => "function() { 
-                                    Droppables.add('person_#{person.id}_row', 
-                                      { hoverclass:'hovering', 
-                                        onDrop:function(element) {
-                                          element.fade();
-                                          new Ajax.Request('/admin/people/merge?target_id=#{person.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
-  %>
-  <%= drop_receiving_element("person_#{person.id}_row", 
-    :url => { :action => "merge", :target_id => person.id },
-    :onDrop => "function(element){$('person_#{person.id}').src='/images/icons/spinner.gif';  element.fade(); new Ajax.Request('/admin/people/merge?target_id=#{person.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('person_#{person.id}_row') }",
-    :hoverclass => 'hovering' ) %>
+<% javascript_tag do %>
+  $(document).ready(function() {
+  <%- @people.each do |person| -%>
+    $(<%= "'#person_#{person.id}'" %>).draggable({ revert: 'invalid', opacity: 0.7 });
+    $(<%= "'#person_#{person.id}_row'" %>).droppable({
+      hoverClass: 'hovering',
+      drop: function(event, ui) {
+        ui.draggable.hide('scale');
+        $.ajax({
+          url: '/admin/people/merge?target_id=<%= person.id %>',
+          type: 'POST',
+          data: ({id: ui.draggable.attr('id')}),
+          dataType: 'script',
+        });
+      }
+    });
+  <% end -%>
+  });
 <%- end -%>

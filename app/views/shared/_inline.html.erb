@@ -11,11 +11,14 @@
 %></div>
 <script type="text/javascript">
 //<![CDATA[
-
-$('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').editable('<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>', {
+var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').editable('<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>', {
   method: 'PUT',
   name: 'value',
-  select: <%= enter_edit_mode.present? && enter_edit_mode == true %>
+  select: true,
+  placeholder: ''
 });
+<% if enter_edit_mode.present? && enter_edit_mode == true -%>
+editable.click();
+<% end -%>
 // ]]>
 </script>
