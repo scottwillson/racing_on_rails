@@ -22,7 +22,7 @@ class ResultsTest < WebDriverTestCase
     click "result_#{result_id}_place"
     wait_for_element :class_name => "editor_field"
     type "DNF", :class_name => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
+    type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
@@ -32,7 +32,7 @@ class ResultsTest < WebDriverTestCase
     click "result_#{result_id}_name"
     wait_for_element :class_name => "editor_field"
     type "Megan Weaver", :class_name => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
+    type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
@@ -47,7 +47,7 @@ class ResultsTest < WebDriverTestCase
     click "result_#{result_id}_team_name"
     wait_for_element :class_name => "editor_field"
     type "River City", :class_name => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
+    type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
