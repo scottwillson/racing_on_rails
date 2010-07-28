@@ -61,11 +61,11 @@ class PeopleTest < WebDriverTestCase
     assert_checked "person_member_#{@alice_id}"
 
     click "person_#{@alice_id}_name"
-    wait_for_element "person_#{@alice_id}_name-inplaceeditor"
+    wait_for_element :css => "form.editor_field input"
 
-    type "A Penn", :class => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
-    wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
+    type "A Penn", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "people_table"
@@ -74,8 +74,8 @@ class PeopleTest < WebDriverTestCase
     click "person_#{@weaver_id}_team_name"
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
 
-    type "River City Bicycles", :class => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type "River City Bicycles", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
