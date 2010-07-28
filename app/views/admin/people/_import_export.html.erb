@@ -25,11 +25,11 @@
 <script type="text/javascript" charset="utf-8">
 //<![CDATA[
   function submit_export() {
-    if ($F('format') == 'scoring_sheet') {
-      this.location = '/admin/people.xls?excel_layout=scoring_sheet&include=' + $F('include')
+    if ($('#format').val() == 'scoring_sheet') {
+      this.location = '/admin/people.xls?excel_layout=scoring_sheet&include=' + $('#include').val();
     }
     else {
-      this.location = '/admin/people.' + $F('format') + '?excel_layout=' + $F('format') + '&include=' + $F('include')
+      this.location = '/admin/people.' + $('#format').val() + '?excel_layout=' + $('#format').val() + '&include=' + $('#include').val();
     }
   }
 // ]]>
