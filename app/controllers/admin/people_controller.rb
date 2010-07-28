@@ -308,9 +308,7 @@ class Admin::PeopleController < Admin::AdminController
     
     @person.update_attribute(:name, params[:value])
     expire_cache
-    render :update do |page|
-      page.replace_html("person_#{@person.id}_name", @person.name)
-    end
+    render :text => @person.name
   end
 
   # Toggle membership on or off

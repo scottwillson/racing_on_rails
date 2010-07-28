@@ -13,7 +13,10 @@ class Admin::CategoriesController < Admin::AdminController
         @unknowns = Category.find_all_unknowns
       }
       format.js {
-        render(:partial => "category", :collection => Category.find(params[:category_id]).children.sort)
+        render :update do |page|
+          @category = Category.find(params[:category_id], :include => :children)
+          page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
+        end
       }
     end
   end

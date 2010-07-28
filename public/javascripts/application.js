@@ -1,30 +1,29 @@
-function toggle_disclosure(e) {
-  var id = this;
-  var disclosureTriangle = $('disclosure_' + id);
-  if (disclosureTriangle.hasClassName("collapsed")) {
-    expandDisclosure(id);
+function toggle_disclosure(categoryId) {
+  var disclosureTriangle = $('#disclosure_' + categoryId);
+  if (disclosureTriangle.is('.collapsed')) {
+    expandDisclosure(categoryId);
   }
   else {
-    disclosureTriangle.removeClassName("expanded");
-    disclosureTriangle.addClassName("collapsed");
-    $('category_' + id + "_children").innerHTML = "";
+    disclosureTriangle.removeClass('expanded');
+    disclosureTriangle.addClass('collapsed');
+    $('#category_' + categoryId + "_children").html('');
   }
 }
 
-function expandDisclosure(id) {
-  var disclosureTriangle = $('disclosure_' + id);
-  disclosureTriangle.removeClassName("collapsed");
-  disclosureTriangle.removeClassName("expanded");
-  disclosureTriangle.addClassName("loading");
-  new Ajax.Updater('category_' + id + "_children", "/admin/categories/" + id + "/children", {
-                    method:"get", 
-                    asynchronous:true, 
-                    evalScripts:true,
-                    onComplete: function(transport) {
-                      disclosureTriangle.removeClassName("loading");
-                      disclosureTriangle.addClassName("expanded");
-                    }
-                  });
+function expandDisclosure(categoryId) {
+  var disclosureTriangle = $('#disclosure_' + categoryId);
+  disclosureTriangle.removeClass('collapsed');
+  disclosureTriangle.removeClass('expanded');
+  disclosureTriangle.addClass('loading');
+  $.ajax({
+    url: '/admin/categories/' + categoryId + '/children',
+    type: 'GET',
+    success: function(data) {
+      disclosureTriangle.removeClass('loading');
+      disclosureTriangle.addClass('expanded');
+    },
+    dataType: 'script'
+  });
 }
 
 function resizeRelativeToWindow() {

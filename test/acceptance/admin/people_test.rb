@@ -128,7 +128,7 @@ class PeopleTest < WebDriverTestCase
     submit "search_form"
     assert_not_in_page_source "Non Results"
   end
-  
+
   def test_export
     login_as :administrator
 
@@ -150,7 +150,7 @@ class PeopleTest < WebDriverTestCase
 
     open '/admin/people'
     assert_current_url(/\/admin\/people/)
-
+    
     type "tonkin", "name"
     type :return, { :name => "name" }, false
     assert_not_in_page_source 'error'

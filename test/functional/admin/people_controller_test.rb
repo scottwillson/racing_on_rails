@@ -117,18 +117,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_update_name
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :post, :set_person_name, 
         :id => molly.to_param,
         :value => "Mollie Cameron",
         :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
-    assert_not_nil(assigns["person"], "Should assign person")
-    assert_equal(molly, assigns['person'], 'Person')
+    assert_response :success
+    assert_template nil
+    assert_equal "Mollie Cameron", @response.body
     molly.reload
-    assert_equal('Mollie', molly.first_name, 'Person first_name after update')
-    assert_equal('Cameron', molly.last_name, 'Person last_name after update')
+    assert_equal "Mollie", molly.first_name, "Person first_name after update"
+    assert_equal "Cameron", molly.last_name, "Person last_name after update"
   end
   
   def test_update_same_name

@@ -1,6 +1,6 @@
 <% @page_title = "Admin: Categories" %>
 
-<% #We're small enough we can recompute competitions on demand. alp -%>
+<%# We're small enough we can recompute competitions on demand. alp -%>
 <% if ASSOCIATION.competitions.include?(:mbra_bar) -%>
   <div class="left">
     <p><% form_tag '/admin/categories/recompute_bar' do -%>
