@@ -15,7 +15,8 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
   method: 'PUT',
   name: 'value',
   select: true,
-  placeholder: ''
+  placeholder: '',
+  cssclass: 'editor_field'
 });
 <% if enter_edit_mode.present? && enter_edit_mode == true -%>
 editable.click();
