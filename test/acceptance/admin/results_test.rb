@@ -20,20 +20,20 @@ class ResultsTest < WebDriverTestCase
 
     result_id = race.results.first.id
     click "result_#{result_id}_place"
-    wait_for_element :class_name => "editor_field"
-    type "DNF", :class_name => "editor_field"
+    wait_for_element :css => "form.editor_field input"
+    type "DNF", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :class_name => "editor_field"
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "results_table"
     assert_text "DNF", "result_#{result_id}_place"
 
     click "result_#{result_id}_name"
-    wait_for_element :class_name => "editor_field"
-    type "Megan Weaver", :class_name => "editor_field"
+    wait_for_element :css => "form.editor_field input"
+    type "Megan Weaver", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :class_name => "editor_field"
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "results_table"
@@ -45,10 +45,10 @@ class ResultsTest < WebDriverTestCase
     assert weaver != megan, "Should create new person, not rename existing one"
 
     click "result_#{result_id}_team_name"
-    wait_for_element :class_name => "editor_field"
-    type "River City", :class_name => "editor_field"
+    wait_for_element :css => "form.editor_field input"
+    type "River City", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :class_name => "editor_field"
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "results_table"

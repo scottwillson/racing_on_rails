@@ -135,7 +135,7 @@ function autoComplete(model, attribute, path) {
           description.push(item.person.state);
         }
         
-        return $('<li id="' + item.person.id + '"></li>')
+        return $('<li id="person_' + item.person.id + '"></li>')
           .data( "item.autocomplete", item )
           .append('<a>' + item.person.first_name + ' ' + item.person.last_name + '<div class="informal">' + description + "</div></a>")
           .appendTo( ul );

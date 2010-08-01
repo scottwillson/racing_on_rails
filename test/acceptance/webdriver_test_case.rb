@@ -59,6 +59,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     driver.navigate.back
   end
   
+  def hover(element_finder)
+    find_element(element_finder).hover
+  end
+  
   def click(element_finder)
     find_element(element_finder).click
     assert_no_errors
