@@ -498,6 +498,10 @@ div.event_results {
   margin-top: 24px;
 }
 
+table.event_results td {
+  padding-right: 8px;
+}
+
 table.person_results td.place {
   width: 24px;
 }
