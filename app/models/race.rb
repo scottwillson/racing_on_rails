@@ -97,6 +97,17 @@ class Race < ActiveRecord::Base
       results.size
     end
   end
+  
+  def calculate_result_columns!
+    self.result_columns = result_columns_or_default
+    result_columns.delete_if do |result_column|
+      results.all? do |result|
+        value = result.send(result_column)
+        value.blank? || value == 0 || value == 0.0
+      end
+    end
+    save!
+  end
 
   def result_columns=(value)
     if value.include?("name")
