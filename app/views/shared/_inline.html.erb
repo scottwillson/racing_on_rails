@@ -16,7 +16,10 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
   name: 'value',
   select: true,
   placeholder: '',
-  cssclass: 'editor_field'
+  cssclass: 'editor_field',
+  callback: function(value, settings) {
+    $.globalEval(value);
+  }
 });
 <% if enter_edit_mode.present? && enter_edit_mode == true -%>
 editable.click();

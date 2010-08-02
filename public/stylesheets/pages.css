@@ -568,6 +568,14 @@ table#preview_import_table th {
   padding-right: 0px;
 }
 
+#merge_form {
+  background-image: url(/images/icons/error.png); 
+  background-position: 0px 2px; 
+  background-repeat: no-repeat;
+  padding-left: 24px;
+  padding-top: 2px;
+}
+
 /* Login */
 .login .options {
   margin-top: 8px;
