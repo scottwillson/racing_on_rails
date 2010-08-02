@@ -180,11 +180,26 @@ div.disclosure {
   visibility: hidden;
 }
 
-table.base td.disclosure a {
-  padding-top: 8px;
-  padding-bottom: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
+table.base td.disclosure {
+  cursor: pointer;
+  text-align: right;
+  width: 16px;
+}
+
+table.results td.result {
+  cursor: move;
+  white-space: nowrap;
+}
+
+table.results td.result .place {
+  float: left;
+  text-align: right;
+  width: 32px;
+}
+
+table.results td.result .event {
+  float: left;
+  margin-left: 8px;
 }
 
 .half_width {
@@ -195,14 +210,16 @@ table.base td.disclosure a {
   float: left;
 }
 
-#left_person tr {
-  cursor: move;  
-}
-
 #right_person {
   float: left;
   margin-left: 12px;
   margin-right: 0px;
+}
+
+#left_person td.page_links,
+#right_person td.page_links {
+  min-width: 40px;
+  width: 40px;
 }
 
 /* Pages */
@@ -227,13 +244,19 @@ table.people td.name {
   background-position: 8px 5px;
 }
 
-table.people div.record,
 table.people div.record {
   background-image: url(/images/icons/user.png);
+  cursor: move;
+}
+
+table.people div.record .in_place_editable,
+table.teams div.record .in_place_editable {
+  cursor: text;
 }
 
 table.teams div.record {
   background-image: url(/images/icons/group.png);
+  cursor: move;
 }
 
 /* Velodromes */

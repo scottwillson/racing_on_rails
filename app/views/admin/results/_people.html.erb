@@ -1,16 +1,16 @@
 <% table :caption => "People" do %>
   <th>&nbsp;</th>
-  <%- for person in people -%>
+  <%- people.each do |person| -%>
   <tr class="<%= cycle("even", "odd") %>">
       <td><%= link_to_remote(
         person.name, 
-        :url => {:action => "results", :id => person.id}, 
+        :url => { :action => "results", :id => person.id }, 
         :update => 'right_person',
         :before => visual_effect(:highlight, 'right_person', :to => 0.4),
         :complete => visual_effect(:appear, 'right_person'))
       %>
       <br>
-      <small><%= [person.team.blank? ? nil : person.team.name, person.city, person.racing_age].compact.join(', ') %></small>
+      <small><%= [ person.team.blank? ? nil : person.team.name, person.city, person.racing_age ].compact.join(', ') %></small>
     </td>
   </tr>
   <%- end -%>

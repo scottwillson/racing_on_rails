@@ -1,28 +1,34 @@
-<% table :caption => [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), :id => "person_#{person.id}" do %>
+<% table :caption => [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), 
+         :class => "results",
+         :id => "person_#{person.id}" do %>
   <tr>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
     <th>&nbsp;</th>
     <th>Race</th>
     <th>Category</th>
     <th class="right">Date</th>
     <th class="right">Pts</th>
+    <th>&nbsp;</th>
   </tr>
   <%- results.sort { |x, y| y.date <=> x.date }.each do |result| -%>
-  <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>">
-    <td class="disclosure"><%= 
-    link_to_function(image_tag('icons/play_blue.png', :class => "collapsed", :id => "disclosure_#{result.id}"), 
-    "toggle_disclosure(#{result.id})",
-    :class => 'disclosure image', :alt => "") if result.competition_result? %></td>
-    <td class="right"><%= result.place %></td>
-    <td><%= link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
+  <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row">
+    <td class="disclosure"><%= image_tag(
+      "icons/play_blue.png", 
+      :class => "disclosure collapsed", 
+      :id => "disclosure_#{result.id}", 
+      :alt => "") if result.competition_result? %></td>
+    <td class="result">
+      <div id="result_<%= result.id %>">
+        <div class="place"><%= result.place %></div>
+        <div class="event"><%= result.event.full_name %></div>
+      </div>
+    </td>
+    <td><%= result.race.name %></td>
+    <td class="right"><%= result.race.event.date.strftime("%D") %></td>
+    <td class="right"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
+    <td class="page_links"><%= link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
       event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('/images/icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
       edit_admin_race_path(result.race), :class => "image") %>
     </td>
-    <td><%= result.event.full_name %></td>
-    <td><%= result.race.name %></td>
-    <td class="right"><%= result.race.event.date.strftime("%D") %></td>
-    <td class="right"><%= number_with_precision(result.points, :precision => 1) if result.points > 0%></td>
   </tr>
   <%- end -%>
 
@@ -33,38 +39,29 @@
   <%- end -%>
 <% end -%>
 
-<%- for result in results -%>
-  <%= draggable_element("result_#{result.id}", :revert => "'failure'", :ghosting => true, :scroll => 'window') -%> 
-<%- end -%>
+<% javascript_tag do %>
+  $(document).ready(function() {
+    $('img.disclosure').click(function() {
+      toggle_disclosure(this);
+    });
 
-<%= drop_receiving_element(
-  "person_#{person.id}", 
-  :onDrop => 'function(dragged, dropped){droppedResult(dragged, dropped)}')
-%>
+    $(<%= "'#person_#{person.id}'" %>).droppable({
+      hoverClass: 'hovering',
+      drop: function(event, ui) {
+        ui.draggable.hide('scale');
+        $('#find_progress_icon').show();
+        $('#people').fadeTo(1, 0.4);
+        $.ajax({
+          url: '/admin/results/move_result?person_id=' + $(this).attr('id'),
+          type: 'POST',
+          data: ({id: ui.draggable.attr('id')}),
+          dataType: 'script',
+        });
+      }
+    });
 
-<script type="text/javascript" charset="utf-8">
-  function toggle_disclosure(id) {
-    var disclosure = $('disclosure_' + id);
-    if (disclosure.className == 'collapsed') {
-      disclosure.src='/images/icons/spinner.gif';
-      new Ajax.Request('/admin/results/' + id + '/scores', 
-        {asynchronous:true, 
-          evalScripts:true, 
-          onComplete:function(request){expand(id)}}); 
-      return false;      
-    }
-    else {
-      disclosure.src = '/images/icons/play_blue.png';
-      disclosure.className = 'collapsed';
-      $$('tr.scores_' + id).each(function(e) {
-    e.remove();
-      });
-  }
-  }
-  
-  function expand(id) {
-    var disclosure = $('disclosure_' + id);
-    disclosure.src = '/images/icons/down_blue.png';
-    disclosure.className = 'expanded';
-  }
-</script>
+    <%- results.each do |result| -%>
+      $(<%= "'#result_#{result.id}'" %>).draggable({ revert: 'invalid', opacity: 0.7 });
+    <%- end -%>
+  });
+<% end -%>

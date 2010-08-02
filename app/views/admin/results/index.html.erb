@@ -1,11 +1,6 @@
 <% @page_title = "Admin: Results: #{@person.name}" %>
 
-<%= form_remote_tag( 
-  :url => {:action => :find_person, :ignore_id => @person.id}, 
-  :update => 'right_person',
-  :before => "Element.show('find_progress_icon')",
-  :complete => "$('left_person').scrollTo(); $('left_person').removeClassName('full_width'); $('left_person').addClassName('half_width'); Element.show('right_person'); Element.hide('find_progress_icon')"
-) %>
+<%= form_tag "", :id => "find_person_form" %>
   <div class="buttons centered">
     <%= label_tag :name, "Move Results to Person" %>
     <%= text_field_tag :name %>
@@ -21,10 +16,63 @@
   <div class="half_width last" id="right_person"></div>
 </div>
 
-<script type="text/javascript">
-  function droppedResult(dragged, dropped) {
-    Element.show('find_progress_icon');
-    new Effect.Fade($('people'), {duration:1.0, from:1.0, to:0.4});
-    new Ajax.Request('/admin/results/move_result?person_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});
+<% javascript_tag do %>
+  $(document).ready(function() {
+    $('#find_person_form').submit(function() {
+      $('#find_progress_icon').show();
+      jQuery.ajax(
+        { complete: function(request) {
+                      $(document).scrollTop(0); 
+                      $('#left_person').removeClass('full_width'); 
+                      $('#left_person').addClass('half_width'); 
+                      $('#right_person').show(); 
+                      $('#find_progress_icon').hide();
+                    }, 
+          data: jQuery.param(jQuery(this).serializeArray()), 
+          success: function(request) { 
+            jQuery('#right_person').html(request);
+          }, 
+          type: 'post',
+          url: '/admin/results/find_person?ignore_id=630815940'
+        }
+      ); 
+      return false;
+    });
+  });
+
+  // function droppedResult(dragged, dropped) {
+  //   Element.show('find_progress_icon');
+  //   new Effect.Fade($('people'), {duration:1.0, from:1.0, to:0.4});
+  //   new Ajax.Request('/admin/results/move_result?person_id=' + encodeURIComponent(dropped.id), {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(dragged.id)});
+  // }
+
+  function toggle_disclosure(element) {
+    var id = /\d+/.exec($(element).attr('id'))[0];
+    if ($(element).is('.collapsed')) {
+      $(element).removeClass('collapsed');
+      element.src='/images/icons/spinner.gif';
+      $.ajax({
+        url: '/admin/results/' + id + '/scores',
+        type: 'post',
+        dataType: 'script',
+        complete: function() {
+          expand(element);          
+        }
+      });
+    }
+    else {
+      element.src = '/images/icons/play_blue.png';
+      $(element).addClass('collapsed');
+      $(element).removeClass('expanded');
+      $('tr.scores_' + id).each(function(index, e) {
+        $(e).remove();
+      });
+    }
   }
-</script>
+
+  function expand(element) {
+    element.src = '/images/icons/down_blue.png';
+    $(element).removeClass('collapsed');
+    $(element).addClass('expanded');
+  }
+<% end -%>
