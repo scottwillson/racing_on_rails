@@ -27,13 +27,22 @@
 
 <%= focus('name') %>
 
-<%- for team in @teams -%>
-  <%= draggable_element("team_#{team.id}", :revert => true, :delay => 100, :revert => "'failure'",
-                        :onStart => "function() { Droppables.remove('team_#{team.id}_row') }", 
-                        :onEnd => "function() { Droppables.add('team_#{team.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
-  %>
-  <%= drop_receiving_element("team_#{team.id}_row", 
-    :url => { :action => "merge", :target_id => team.id },
-    :onDrop => "function(element){$('team_#{team.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('team_#{team.id}_row') }",
-    :hoverclass => 'hovering' ) %>
+<% javascript_tag do %>
+  $(document).ready(function() {
+  <%- @teams.each do |team| -%>
+    $(<%= "'#team_#{team.id}'" %>).draggable({ revert: 'invalid', opacity: 0.7 });
+    $(<%= "'#team_#{team.id}_row'" %>).droppable({
+      hoverClass: 'hovering',
+      drop: function(event, ui) {
+        ui.draggable.hide('scale');
+        $.ajax({
+          url: '/admin/teams/merge?target_id=<%= team.id %>',
+          type: 'POST',
+          data: ({id: ui.draggable.attr('id')}),
+          dataType: 'script',
+        });
+      }
+    });
+  <% end -%>
+  });
 <%- end -%>
