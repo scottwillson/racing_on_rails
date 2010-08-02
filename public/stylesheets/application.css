@@ -127,16 +127,20 @@ p.flash_message, p.message, div.flash_message, div.message {
 {
   background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
+  padding-bottom: 2px;
   padding-left: 20px;
   padding-right: 4px;
+  padding-top: 2px;
 }
 
 #warn_span, .warn, .warn_span
 {
   background-image: url(/images/icons/exclamation.png);
   background-repeat: no-repeat;
+  padding-bottom: 2px;
   padding-left: 20px;
   padding-right: 4px;
+  padding-top: 2px;
 }
 
 h1, h2, h3 {
