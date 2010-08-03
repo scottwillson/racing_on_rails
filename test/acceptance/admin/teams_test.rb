@@ -18,15 +18,15 @@ class TeamsTest < WebDriverTestCase
     assert_text "", "warn"
     assert_text "", "notice"
 
-    assert_table("teams_table", 1, 0, /^Chocolate/)
-    assert_table("teams_table", 2, 0, /^Gentle Lovers/)
-    assert_table("teams_table", 3, 0, /^Team dFL/)
-    assert_table("teams_table", 4, 0, /^Vanilla/)
+    assert_table("teams_table", 1, 1, /^Chocolate/)
+    assert_table("teams_table", 2, 1, /^Gentle Lovers/)
+    assert_table("teams_table", 3, 1, /^Team dFL/)
+    assert_table("teams_table", 4, 1, /^Vanilla/)
 
-    assert_table "teams_table", 1, 1, ""
-    assert_table("teams_table", 2, 1, /^Gentile Lovers/)
-    assert_table "teams_table", 3, 1, ""
-    assert_table("teams_table", 4, 1, /^Vanilla Bicycles/)
+    assert_table "teams_table", 1, 2, ""
+    assert_table("teams_table", 2, 2, /^Gentile Lovers/)
+    assert_table "teams_table", 3, 2, ""
+    assert_table("teams_table", 4, 2, /^Vanilla Bicycles/)
 
     @dfl_id = Team.find_by_name("Team dFL").id
     @vanilla_id = Team.find_by_name("Vanilla").id
