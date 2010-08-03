@@ -125,3 +125,11 @@ input.state_no_zip {
 input.zip {
   width: 82px;
 }
+
+form.editor_field {
+  float: left;
+}
+form.editor_field input {
+/*  left: -3px;
+  top: -10px;
+*/}

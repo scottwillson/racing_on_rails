@@ -17,8 +17,24 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
   select: true,
   placeholder: '',
   cssclass: 'editor_field',
+  height: '16px',
+  width: '96%',
+  onedit: function() {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').addClass('editing');
+    return true;
+  },
+  onblur: function(value, settings) {
+    // $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    // this.reset();
+    return true;
+  },
+  onreset: function() {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    return true;
+  },
   callback: function(value, settings) {
-    $.globalEval(value);
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    <%= "$.globalEval(value);" if script %>
   }
 });
 <% if enter_edit_mode.present? && enter_edit_mode == true -%>

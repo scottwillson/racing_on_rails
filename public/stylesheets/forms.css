@@ -406,15 +406,6 @@ div.more {
   padding-right: 4px;
 }
 
-table.base div.in_place_editable, div.in_place_editable {
-  border: 1px solid transparent;
-}
-
-table.base div.in_place_editable:hover, div.in_place_editable:hover {
-  background-color: rgb(245, 245, 245);
-  border: 1px solid rgb(204, 204, 204);
-}
-
 .auto_complete_progress_spinner {
   position: relative;
   float: left;

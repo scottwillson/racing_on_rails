@@ -9,7 +9,7 @@
 } %>
 <% table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
   <%= render @event.races %>
-  <% unless @event.races.any? %>
+  <% unless @event.new_record? || @event.races.any? %>
   <tr>
     <td colspan="3" class="empty">No races. Click [+] to add a race.</td>
   </tr>
@@ -25,7 +25,7 @@
           ) if @event.races.any? && @event.children.any?
       %>
     </td>
-    <td class="right" colspan="2">
+    <td class="right">
       <%= link_to_remote("Delete all races",
       :url => destroy_races_admin_event_path(@event),
       :html => { :class => "obvious", :id => "destroy_races", :title => "Delete all" },

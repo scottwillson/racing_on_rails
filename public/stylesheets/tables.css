@@ -186,15 +186,17 @@ table.base div.record {
 }
 
 table.base div.in_place_editable {
-  position: relative;
-  left: -4px;
-  margin: 0px;
-  padding-top: 2px;
-  padding-bottom: 3px;
-  padding-left: 3px;
-  padding-right: 2px;
   border: 1px solid transparent;
   min-height: 16px;
+  padding-bottom: 4px;
+  padding-left: 3px;
+  padding-right: 2px;
+  padding-top: 2px;
+  vertical-align: top;
+}
+
+table.base div.in_place_editable.editing {
+  padding: 0px;
 }
 
 /* Ack. Special case non-editable content that shares a row with in-place editable content */
@@ -202,28 +204,30 @@ table.base td.not_editable {
   padding-top: 9px;
 }
 
-table.base div.hovering {
-  width: 100%;
+table.base div.in_place_editable:hover {
   background-color: rgb(245, 245, 245);
   border: 1px solid rgb(204, 204, 204);
 }
 
-input[type="text"].editor_field {
-  position: relative;
-  left: -4px;
-  width: 100%;
-  font-weight: normal;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 0px;
+table.base div.in_place_editable.editing:hover {
+  background-color: default;
+  border: 1px solid transparent;
 }
 
-table.base div.inplaceeditor-saving {
-  background-image: url(/images/icons/spinner.gif);
-  background-position: left;
-  background-repeat: no-repeat;
-  border: none;
+form.editor_field input,
+form.editor_field input[type=text] {
+  border-width: 2px;
+  font-family: Verdana, sans-serif;
+  font-size: 12px;
+  left: -1px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  padding-bottom: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  padding-top: 1px;
+  position: relative;
+  top: -1px;
 }
 
 table.base th.name, table.base th.title {
