@@ -1,18 +1,17 @@
-<tr class="<%= cycle("even", "odd") %>" id="team_<%= team.id %>_row">
+<% content_tag :tr, :class => cycle("even", "odd"), :id => "team_#{team.id}_row" do %>
+  <td class="icon"><%= image_tag "icons/group.png", :id => "team_#{team.id}" %></td>
   <td>
-    <div class="record" id="team_<%= team.id %>">
-      <%= in_place_editor_field(:team, :name, team, true) %>
-    </div>
+    <%= in_place_editor_field(:team, :name, team, true) %>
   </td>
   <td class="not_editable">
-    <%= render(:partial => 'aliases', :locals => { :team => team }) %>
+    <%= render :partial => "aliases", :locals => { :team => team } %>
   </td>
   <td class="check_box">
     <%= render :partial => "shared/member", :locals => { :record => team } %>
   </td>
   <td class="actions not_editable last">
-      <%= link_to 'Results', :controller => '/results', :action => 'team', :id => team.id %>
+      <%= link_to "Results", :controller => "/results", :action => "team", :id => team.id %>
     |
-    <%= link_to 'Edit', edit_admin_team_path(team) %>
+    <%= link_to "Edit", edit_admin_team_path(team) %>
   </td>
-</tr>
+<% end -%>
