@@ -48,6 +48,7 @@ function restripeTable(id) {
   
   $('#' + id + ' tr').each(function(index, tr) {
     var row = $(tr);
+    row.removeClass('merging');
     if (index >= startIndex && (row.hasClass('even') || row.hasClass('odd'))) {
       row.removeClass('even');
       row.removeClass('odd');

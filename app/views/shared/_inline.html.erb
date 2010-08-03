@@ -23,20 +23,20 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
   width: '100%',
   height: '16px',
   onedit: function() {
-    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').addClass('editing');
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').addClass('editing');
     return true;
   },
   onblur: function(value, settings) {
-    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
     this.reset();
     return true;
   },
   onreset: function() {
-    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
     return true;
   },
   callback: function(value, settings) {
-    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
     <%= "$.globalEval(value);" if script %>
   }
 });

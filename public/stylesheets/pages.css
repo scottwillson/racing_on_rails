@@ -1,5 +1,9 @@
 /* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
 
+.ui-draggable {
+  cursor: move;
+}
+
 /* Admin events */
 table#left_nav {
   font-size: 8pt;
@@ -238,34 +242,9 @@ table.pages div.record {
   width: 270px;
 }
 
-/* Promoters */
-table.people td.name {
-  background-repeat: no-repeat;
-  background-position: 8px 5px;
-}
-
-table.people div.record {
-  background-image: url(/images/icons/user.png);
-  cursor: move;
-}
-
-table.people div.record .in_place_editable,
-table.teams div.record .in_place_editable {
-  cursor: text;
-}
-
-table.teams div.record {
-  background-image: url(/images/icons/group.png);
-  cursor: move;
-}
-
 /* Velodromes */
 table.velodromes div.record {
   background-image: url(/images/icons/flag_checked.png);
-}
-
-table.base td.icon {
-  width: 16px;
 }
 
 table.base img.icon {
@@ -274,22 +253,6 @@ table.base img.icon {
   top: -2px;
   padding-left: 4px;
   padding-right: 8px;
-}
-
-table.base td.icon a:hover {
-  border: none;
-  text-decoration: none;
-  background-color: transparent;
-}
-
-table.base td.icon  {
-  padding-right: 8px;
-  padding-top: 3px;
-  padding-bottom: 0px;
-}
-
-table.base td.icon img {
-  border: 0px;
 }
 
 table.base td img.cancel {
