@@ -129,7 +129,9 @@ input.zip {
 form.editor_field {
   float: left;
 }
-form.editor_field input {
-/*  left: -3px;
-  top: -10px;
-*/}
+
+form.editor_field input,
+form.editor_field input[type=text] {
+  left: 0px;
+  top: 0px;
+}

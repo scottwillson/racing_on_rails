@@ -187,11 +187,13 @@ table.base div.record {
 
 table.base div.in_place_editable {
   border: 1px solid transparent;
+  left: -4px;
   min-height: 16px;
   padding-bottom: 4px;
   padding-left: 3px;
   padding-right: 2px;
   padding-top: 2px;
+  position: relative;
   vertical-align: top;
 }
 
@@ -210,7 +212,7 @@ table.base div.in_place_editable:hover {
 }
 
 table.base div.in_place_editable.editing:hover {
-  background-color: default;
+  background-color: transparent;
   border: 1px solid transparent;
 }
 

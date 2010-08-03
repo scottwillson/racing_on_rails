@@ -41,17 +41,18 @@ function resizeRelativeToWindow() {
 }
 
 function fixTableColumnWidths(table_id) {
-  $(document).ready(function() {
-    var ths = $('#' + table_id + ' th');
-
-    var thWidths = ths.map(function(index, th) {
-      return $(th).width() - Number($(th).css('paddingLeft').replace('px', ''));
-    }).get();
-
-    ths.each(function(th, index) {
-      $(th).css('width', (thWidths[index] - 2) + 'px');
-    });
-  });
+  // $(document).ready(function() {
+  //   var ths = $('#' + table_id + ' th');
+  // 
+  //   var thWidths = ths.map(function(index, th) {
+  //     return $(th).innerWidth() - Number($(th).css('paddingLeft').replace('px', ''));
+  //   }).get();
+  // 
+  //   ths.each(function(index, th) {
+  //     console.log(th);
+  //     $(th).css('width', (thWidths[index] - 2) + 'px');
+  //   });
+  // });
 }
 
 function resetTableColumnWidths(table_id) {
