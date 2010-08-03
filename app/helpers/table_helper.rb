@@ -5,7 +5,6 @@ module TableHelper
   # == Arguments
   # * caption
   # * caption_visible. Default true
-  # * fix_table_column_widths. Use JS to set columns to fixed widths to try and prevent odd jumping about after AJAX updates. Default true.
   # * id. CSS ID
   # * style_class or class. CSS style class
   # * collection. Table contents. Only used to show "None"
@@ -15,7 +14,6 @@ module TableHelper
     # TODO Use merge or something
     options[:caption] = nil unless options[:caption]
     options[:caption_visible] = true unless options[:caption_visible]
-    options[:fix_table_column_widths] = true unless options.include?(:fix_table_column_widths)
     options[:new_action] = nil unless options[:new_action]
     options[:id] = nil unless options[:id]
     options[:style_class] = options[:class]

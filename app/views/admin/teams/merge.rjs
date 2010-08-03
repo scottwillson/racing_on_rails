@@ -2,4 +2,3 @@ page.remove "team_#{@team_to_merge.id}_row"
 page.replace_html "team_#{@existing_team.id}_aliases", render(:partial => 'aliases', :locals => { :team => @existing_team })
 page.call :flash, "notice", "Merged #{@merged_team_name} into #{@existing_team.name}"
 page.call :restripeTable, :teams_table
-page.call :resetTableColumnWidths, :teams_table

@@ -40,28 +40,6 @@ function resizeRelativeToWindow() {
   }  
 }
 
-function fixTableColumnWidths(table_id) {
-  // $(document).ready(function() {
-  //   var ths = $('#' + table_id + ' th');
-  // 
-  //   var thWidths = ths.map(function(index, th) {
-  //     return $(th).innerWidth() - Number($(th).css('paddingLeft').replace('px', ''));
-  //   }).get();
-  // 
-  //   ths.each(function(index, th) {
-  //     console.log(th);
-  //     $(th).css('width', (thWidths[index] - 2) + 'px');
-  //   });
-  // });
-}
-
-function resetTableColumnWidths(table_id) {
-  $('#' + table_id + ' th').each(function(index, th){
-    $(th).css('width', 'default');
-  });
-  fixTableColumnWidths(table_id);
-}
-
 function restripeTable(id) {
   var startIndex = 0;
   if ($('#' + id + ' tr th').length > 0) {

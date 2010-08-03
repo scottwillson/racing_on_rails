@@ -1,4 +1,4 @@
-<% table :caption => caption, :class => "no_top_margin", :id => "upcoming_events", :fix_table_column_widths => false do %>
+<% table :caption => caption, :class => "no_top_margin", :id => "upcoming_events" do %>
   <%- if upcoming_events.empty? -%>
   <tr><th>&nbsp;</th></tr>
   <tr><td>No upcoming events in the next <%= pluralize(upcoming_events.weeks, "week") %> </td></tr>
