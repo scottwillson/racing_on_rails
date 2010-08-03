@@ -24,8 +24,8 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
     return true;
   },
   onblur: function(value, settings) {
-    // $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
-    // this.reset();
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').removeClass('editing');
+    this.reset();
     return true;
   },
   onreset: function() {
