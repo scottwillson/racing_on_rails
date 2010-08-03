@@ -412,6 +412,10 @@ table.event_nav td.delete {
   width: 16px;
 }
 
+td.delete_all_races {
+    white-space: nowrap;
+}
+
 
 /* Mailing lists */
 table.archive_navigation, div.archive_navigation, div.archive_navigation div {
