@@ -4,7 +4,6 @@
 
 <% table :class => "people top_margin clear", :id => :people do %>
   <tr>
-    <th class="icon"/>
     <th class="name">Name</th>
     <th class="team">Team</th>
     <th class="aliases">Aliases</th>
@@ -36,33 +35,22 @@
 
 <%= render :partial => 'import_export' %>
 
-<%= focus('name') %>
-
 <% javascript_tag do %>
   $(document).ready(function() {
   <%- @people.each do |person| -%>
-    $(<%= "'#person_#{person.id}'" %>).draggable({ 
-      revert: 'invalid', 
-      opacity: 0.7,
-      helper: function(event) {
-		    return $('<div><%= image_tag "icons/user.png" %>&nbsp;<%= person.name %></div>');
-	    }
-      });
+    $(<%= "'#person_#{person.id}'" %>).draggable({ revert: 'invalid', opacity: 0.7 });
     $(<%= "'#person_#{person.id}_row'" %>).droppable({
       hoverClass: 'hovering',
       drop: function(event, ui) {
-        ui.helper.hide('scale');
-        ui.draggable.closest('tr').hide('fade');
-        $(this).addClass('merging');
+        ui.draggable.hide('scale');
         $.ajax({
           url: '/admin/people/merge?target_id=<%= person.id %>',
           type: 'POST',
           data: ({id: ui.draggable.attr('id')}),
-          dataType: 'script'
+          dataType: 'script',
         });
       }
     });
   <% end -%>
   });
 <%- end -%>
-

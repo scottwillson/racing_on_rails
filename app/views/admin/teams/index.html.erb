@@ -26,8 +26,6 @@
   <%= link_to(image_tag('/images/icons/group_add.png'), { :action => 'new' }, { :class => "image" }) %>
 </div>
 
-<%= focus('name') %>
-
 <% javascript_tag do %>
   $(document).ready(function() {
   <%- @teams.each do |team| -%>

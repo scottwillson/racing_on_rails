@@ -6,7 +6,7 @@
 <% form_tag({}, {:method => "get", :id => "search_form"}) do %>
   <div class="centered">
     <%= label_tag "name" %>
-    <%= text_field_tag "name", @name %>
+    <%= text_field_tag "name", @name, :class => "wants_focus" %>
   </div>
 <% end -%>
 
@@ -33,4 +33,3 @@
 <% if (promoter? || administrator? || official?) %>
 <%= link_to("Export current members to Excel", admin_people_path(:format => "xls", :excel_layout => "scoring_sheet", :include => "members_only"), :id => "export_link") %>
 <% end -%>
-<%= focus('name') %>

@@ -123,3 +123,7 @@ function autoComplete(model, attribute, path) {
     ;
   });  
 }    
+
+$(document).ready(function() {
+  $('.wants_focus:visible').select();
+});

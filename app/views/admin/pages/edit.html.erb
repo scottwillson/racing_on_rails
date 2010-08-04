@@ -5,7 +5,7 @@
 <% form_for [:admin, @page] do |f| -%>
   <div class="column_grid_container top_margin">
     <div class="span-2">
-      <%= f.labelled_text_field :title, "Title", :label => { :class => "top no_top_margin" } %>
+      <%= f.labelled_text_field :title, "Title", :label => { :class => "top no_top_margin" }, :class => @page.new_record? ? "wants_focus" : "" %>
       <%= f.labelled_text_field :slug, "Slug", :label => { :class => "top" } %>
       <%= f.label :parent_id, "Parent", :class => "top" %>
       <%= f.select :parent_id, @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] }, { :include_blank => true } %>
@@ -15,7 +15,7 @@
     </div>
   
     <div class="span-4 last">
-      <%= f.labelled_text_area :body, :class => "box-4 last" %>
+      <%= f.labelled_text_area :body, :class => "box-4 last", :class => @page.new_record? ? "" : "wants_focus" %>
 
       <div class="page_buttons clear span-4 last">
         <div class="updatedon span-2"><%= "Updated: #{updated(@page)}" if @page.updated_at %></div>
@@ -34,15 +34,3 @@
   </div>
 
 <% end -%>
-
-<script type="text/javascript" charset="utf-8"> 
-  <% if @page.new_record? %> 
-    $(document).ready(function() { 
-      $('page_title').focus(); 
-    }); 
-  <% else -%> 
-    $(document).ready(function() { 
-      $('page_body').focus(); 
-    }); 
-  <% end -%> 
-</script>
