@@ -132,6 +132,12 @@ form.editor_field {
 
 form.editor_field input,
 form.editor_field input[type=text] {
-  left: 0px;
-  top: 0px;
+  left: 1px;
+  position: relative;
+  top: 1px;
 }
+
+table.base td.editing {
+  padding-bottom: 8px;
+}
+
