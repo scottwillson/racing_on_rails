@@ -1,9 +1,5 @@
 /* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
 
-.ui-draggable {
-  cursor: move;
-}
-
 /* Admin events */
 table#left_nav {
   font-size: 8pt;
@@ -124,22 +120,36 @@ a.beginner_friendly {
 
 
 /* Categories */
-#category_root, #unknown_category_root {
-  padding-left: 4px;
-  padding-bottom: 12px;
+.category_root {
   border-left: 1px solid rgb(190, 190, 190);
   border-right: 1px solid rgb(190, 190, 190);
   border-top: 1px solid rgb(190, 190, 190);
   border-bottom: 1px solid rgb(190, 190, 190);
-  min-height: 200px;
+  float: left;
+  min-height: 400px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 36px;
+  padding-top: 12px;
+  width: 402px;
+}
+
+.category_root.hovering {
+  border-color: #E9F79B;
+  border-width: 4px;
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-bottom: 33px;
+  padding-top: 9px;
 }
 
 div.disclosure {
   background-repeat: no-repeat;
   background-position: 0px 3px;
+  clear: none;
+  float: left;
+  height: 24px;
   padding-left: 16px;
-  padding-bottom: 16px;
-  display: inline;
 }
 
 .collapsed {
@@ -154,29 +164,41 @@ div.disclosure {
   background-image: url(/images/icons/down_blue.png);
 }
 
-.category {
-  padding-top: 4px;
+.category_root .category {
+  clear: both;
+  float: left;
 }
 
-.category .record {
+.category .category_name {
+  clear: none;
+  float: left;
   padding-left: 24px;
   cursor: move;
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 0px -1px;
-  display: inline;
-}
-
-.category .children {
-  padding-left: 24px;
-}
-
-.category_name {
+  background-position: 0px 2px;
+  line-height: 24px;
+  height: 24px;
+  padding-right: 8px;
   white-space: nowrap;
 }
 
-#category_root div.hovering, #unknown_category_root div.hovering {
+.category .children {
+  clear: both;
+  float: left;
+  padding-left: 24px;
+}
+
+.category_root .category img {
+  padding-top: 4px;
+}
+
+.category_root div.hovering {
   background-color: #E9F79B;
+}
+
+.ui-draggable-dragging.category {
+  background-image: url(/images/icons/star.png);
 }
 
 /* Results admin */
@@ -547,6 +569,10 @@ table#preview_import_table th {
   padding-top: 2px;
 }
 
+.ui-draggable-dragging.person {
+  background-image: url(/images/icons/user.png);
+}
+
 /* Login */
 .login .options {
   margin-top: 8px;
@@ -557,4 +583,8 @@ table#preview_import_table th {
 .version .from,
 .version .to {
   width: 33%;
+}
+
+.ui-draggable-dragging.team {
+  background-image: url(/images/icons/group.png);
 }

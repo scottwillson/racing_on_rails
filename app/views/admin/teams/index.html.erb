@@ -34,7 +34,7 @@
       opacity: 0.7,
       zIndex: 10000,
       helper: function(event) {
-        return $('<div><%= image_tag "icons/group.png" %><div class="name"><%= team.name %></div></div>');
+        return $('<div class="team">' + $(this).attr('data-name') + '</div>');
       }
     });
     $(<%= "'#team_#{team.id}_row'" %>).droppable({

@@ -304,31 +304,29 @@ p.notes {
   width: 600px;
 }
 
+.ui-draggable {
+  cursor: move;
+}
+
 .ui-draggable-dragging {
-  background-color: rgb(100, 100, 100);
-  color: white;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   -khtml-border-radius: 4px;
   border-radius: 4px;
+  background-color: rgb(100, 100, 100);
+  background-position: 8px 4px;
+  background-repeat: no-repeat;
+  color: white;
+  cursor: move;
   font-family: Verdana, Helvetica, sans-serif;
   font-size: 12px;
-  line-height: 16px;
-  height: 16px;
+  min-height: 20px;
+  line-height: 20px;
   margin: 0px;
+  min-width: 120px;
   padding-bottom: 2px;
-  padding-left: 8px;
+  padding-left: 28px;
   padding-right: 8px;
   padding-top: 2px;
-  min-width: 120px;
   vertical-align: middle;
-}
-
-.ui-draggable-dragging img {
-  float: left;
-}
-
-.ui-draggable-dragging .name {
-  float: left;
-  padding-left: 8px;
 }

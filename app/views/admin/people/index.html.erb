@@ -44,7 +44,7 @@
       zIndex: 10000,
       opacity: 0.7,
       helper: function(event) {
-        return $('<div><%= image_tag "icons/user.png" %><div class="name"><%= person.name %></div></div>');
+        return $('<div class="person">' + $(this).attr('data-name') + '</div>');
 	    }
       });
     $(<%= "'#person_#{person.id}_row'" %>).droppable({
