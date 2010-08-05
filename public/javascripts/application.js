@@ -1,45 +1,3 @@
-function toggle_disclosure(categoryId) {
-  var disclosureTriangle = $('#disclosure_' + categoryId);
-  if (disclosureTriangle.is('.collapsed')) {
-    expandDisclosure(categoryId);
-  }
-  else {
-    disclosureTriangle.removeClass('expanded');
-    disclosureTriangle.addClass('collapsed');
-    $('#category_' + categoryId + "_children").html('');
-  }
-}
-
-function expandDisclosure(categoryId) {
-  var disclosureTriangle = $('#disclosure_' + categoryId);
-  disclosureTriangle.removeClass('collapsed');
-  disclosureTriangle.removeClass('expanded');
-  disclosureTriangle.addClass('loading');
-  $.ajax({
-    url: '/admin/categories/' + categoryId + '/children',
-    type: 'GET',
-    success: function(data) {
-      disclosureTriangle.removeClass('loading');
-      disclosureTriangle.addClass('expanded');
-    },
-    dataType: 'script'
-  });
-}
-
-function resizeRelativeToWindow() {
-  var id = "category_root";
-  var document_viewport_height = document.viewport.getHeight();
-  var table_container = $(id);
-  if (document_viewport_height < 100) {
-    table_container.setStyle({ height: 'auto' });
-  }
-  else {
-    var newHeight = table_container.getHeight() + (document_viewport_height - $('frame').getHeight()) - 56;
-    if (newHeight < 50) newHeight = 50;
-    table_container.setStyle({ height: newHeight + 'px' });
-  }  
-}
-
 function restripeTable(id) {
   var startIndex = 0;
   if ($('#' + id + ' tr th').length > 0) {
@@ -71,21 +29,6 @@ function flash(key, message) {
   $('#' + key).show();
 }
 
-function pinTo100PctVertical(id) {
-  $(document).ready(function() {
-    sizeTo100PctVertical(id);
-  });
-
-  Event.observe(window, 'resize', function() {
-    sizeTo100PctVertical(id);
-  });
-}
-
-function sizeTo100PctVertical(id) {
-  newHeight = ($(id).getHeight() + (document.viewport.getHeight() - $('body').offsetHeight)) - 16;
-  $(id).setStyle( { height: newHeight + 'px' })
-}
-
 function autoComplete(model, attribute, path) {
   $(document).ready(function() {
     $('#' + attribute + '_auto_complete').autocomplete({
@@ -102,7 +45,7 @@ function autoComplete(model, attribute, path) {
         return false;
       }
     })
-    .data( "autocomplete" )
+    .data("autocomplete")
     ._renderItem = function(ul, item) {
         var description = [];
         if (item.person.team !== undefined && item.person.team.name !== undefined) {

@@ -23,27 +23,29 @@ class Admin::CategoriesController < Admin::AdminController
     
   # Add category as child
   def add_child
-    category_id = params[:id].gsub('category_', '')
+    category_id = params[:id]
     @category = Category.find(category_id)
     parent_id = params[:parent_id]
-    if parent_id
+    if parent_id.present?
       @parent = Category.find(parent_id)
       @category.parent = @parent    
     else
       @category.parent = nil
     end
+    p "Add #{@category.name} as a parent of #{@parent.try(:name)}"
     @category.save!
     render :update do |page|
-      page.remove("category_#{@category.id}_row")
+      page.remove "category_#{@category.id}_row"
       if @parent
         if @parent.name == ASSOCIATION.short_name
-          page.replace_html("category_root", :partial => "category", :collection => @parent.children.sort)
+          page.replace_html "association_category_root", :partial => "category", :collection => @parent.children.sort
+          page.call :bindCategoryEvents
         else
-          page.call(:expandDisclosure, parent_id)
+          page.call :expandDisclosure, parent_id
         end
-      end
-      if @parent.nil?
-        page.replace_html("unknown_category_root", :partial => "category", :collection => Category.find_all_unknowns.sort)
+      else
+        page.replace_html "unknown_category_root", :partial => "category", :collection => Category.find_all_unknowns.sort
+        page.call :bindCategoryEvents
       end
     end
   end

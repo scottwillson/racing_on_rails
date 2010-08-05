@@ -23,6 +23,12 @@
     <%= javascript_include_tag :fckeditor %>
     <%= javascript_include_tag "jquery.jeditable" %>
     <%= javascript_include_tag "tabs" %>
+    <%= yield :javascript_include_tag %>
+    <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+        <%= yield :javascript -%>
+      });
+    </script>
   </head>
 
   <body>
