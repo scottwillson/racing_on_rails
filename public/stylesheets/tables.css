@@ -170,7 +170,7 @@ table.base td.icon {
   max-width: 16px;
   padding-left: 12px;
   padding-right: 0px;
-  padding-top: 6px;
+  padding-top: 5px;
   width: 16px;
 }
 
@@ -178,10 +178,12 @@ table.base div.in_place_editable {
   border: 1px solid transparent;
   left: -4px;
   min-height: 15px;
+  padding-bottom: 1px;
   padding-left: 3px;
   padding-right: 2px;
+  padding-top: 1px;
   position: relative;
-  top: -1px;
+  top: -3px;
   vertical-align: top;
 }
 
@@ -208,11 +210,10 @@ table.base td.editing div.in_place_editable {
 
 form.editor_field input,
 form.editor_field input[type=text] {
-  border-width: 2px;
   font-family: Verdana, sans-serif;
   font-size: 12px;
   margin-bottom: 0px;
-  margin-top: 0px;
+  margin-top: 2px;
   padding-bottom: 1px;
   padding-left: 1px;
   padding-right: 1px;
