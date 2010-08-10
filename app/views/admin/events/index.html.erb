@@ -39,7 +39,7 @@ end -%>
             <td class="day">
               <div class="number"><%= day.day_of_month -%></div>
               <%- for event in day.events -%>
-            <div class="event"><%= link_to event.name, edit_admin_event_path(event) %></div>
+            <div class="event"><%= link_to event.full_name, edit_admin_event_path(event) %></div>
               <%- end -%>
             <%- end -%>
             </td>

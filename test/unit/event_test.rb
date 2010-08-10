@@ -581,6 +581,10 @@ class EventTest < ActiveSupport::TestCase
     stage = stage_race.children.create!(:name => 'Cascade Classic')
     event = stage.children.create!(:name => 'Cascade Classic - Cascade Lakes Road Race')
     assert_equal('Cascade Classic - Cascade Lakes Road Race', event.full_name, 'stage race results full_name')
+
+    stage_race = MultiDayEvent.create!(:name => 'Frozen Flatlands Omnium')
+    event = stage_race.children.create!(:name => 'Frozen Flatlands Time Trial')
+    assert_equal('Frozen Flatlands Omnium: Frozen Flatlands Time Trial', event.full_name, 'stage race results full_name')
   end
   
   def test_team_name

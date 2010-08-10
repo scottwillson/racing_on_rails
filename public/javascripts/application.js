@@ -57,7 +57,7 @@ function fixTableColumnWidths(table_id) {
 
 function resetTableColumnWidths(table_id) {
   $$('#' + table_id + ' th').each(function(th, index){
-    th.setStyle({width: '100%'});
+    th.setStyle({width: 'default'});
   });
   fixTableColumnWidths(table_id);
 }
