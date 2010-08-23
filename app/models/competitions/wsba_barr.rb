@@ -40,6 +40,7 @@ class WsbaBarr < Competition
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
               and (events.id in (#{event_ids}))
+              and results.bar
          order by person_id
        }
     )
