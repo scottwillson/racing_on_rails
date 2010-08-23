@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonTest < ActiveSupport::TestCase
   def test_save
     assert_nil(Person.find_by_last_name("Hampsten"), "Hampsten should not be in DB")
@@ -40,7 +41,7 @@ class PersonTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:date => 1.years.ago)
     result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
     
@@ -49,7 +50,7 @@ class PersonTest < ActiveSupport::TestCase
 
     assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end
@@ -65,6 +66,11 @@ class PersonTest < ActiveSupport::TestCase
     person_to_keep.password_confirmation = "secret"
     person_to_keep.save!
     person_to_keep_old_password = person_to_keep.crypted_password
+    person_to_keep.city = "Berlin"
+    person_to_keep.save!
+
+    person_to_merge.street = "123 Holly"
+    person_to_merge.save!
     
     assert_not_nil(Person.find_by_first_name_and_last_name(person_to_keep.first_name, person_to_keep.last_name), "#{person_to_keep.name} should be in DB")
     assert_equal(3, Result.find_all_by_person_id(person_to_keep.id).size, "Molly's results")
@@ -119,6 +125,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates Date.today.end_of_year, person_to_keep.member_to, "member_to"
     
     assert_equal "7123811", person_to_keep.license, "license"
+    assert_equal 5, person_to_keep.versions.size, "versions"
+    assert_equal [ 2, 3, 4, 5, 6 ], person_to_keep.versions.map(&:number).sort, "version numbers"
   end
   
   def test_merge_login
@@ -129,13 +137,19 @@ class PersonTest < ActiveSupport::TestCase
     person_to_merge.password = "secret"
     person_to_merge.password_confirmation = "secret"
     person_to_merge.save!
+    sleep 1
     person_to_merge_old_password = person_to_merge.crypted_password
 
+    assert_equal 1, person_to_merge.versions.size, "versions"
+    assert_equal 0, person_to_keep.versions.size, "no versions"
     person_to_keep.merge person_to_merge
+    assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
     
     person_to_keep.reload
     assert_equal "tonkin", person_to_keep.login, "Should merge login"
     assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
+    changes = person_to_keep.versions.last.changes
+    assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
   end
   
   def test_merge_two_logins
@@ -232,7 +246,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
-    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2010, 12, 31), person.member_to, 'Member to')
     person.save!
     person.reload
     assert_equal(true, person.member?, 'member')
@@ -282,7 +296,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2009, 12, 31), person.member_to, 'Member to')
     
     ASSOCIATION.now = Date.new(2009, 12)
     person.member_from = Date.new(2001, 1, 1)
@@ -295,7 +309,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2010, 12, 31), person.member_to, 'Member to')
 
     ASSOCIATION.now = nil
     person.member_from = Date.new(2001, 1, 1)
@@ -318,7 +332,7 @@ class PersonTest < ActiveSupport::TestCase
     
     person.member = false
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal(Date.new(2008, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Date.new(2008, 12, 31), person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')
 
     # From, to in future
@@ -626,6 +640,16 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([weaver], Person.find_all_by_name_like("O'Weaver"), "'O'Weaver' should find O'Weaver via alias")
   end
   
+  def test_find_by_name
+    assert_equal people(:weaver), Person.find_by_name("Ryan Weaver"), "find_by_name"
+    
+    person = Person.create!(:first_name => "Sam")
+    assert_equal person, Person.find_by_name("Sam"), "find_by_name first_name only"
+    
+    person = Person.create!(:last_name => "Richardson")
+    assert_equal person, Person.find_by_name("Richardson"), "find_by_name last_name only"
+  end
+  
   def test_hometown
     person = Person.new
     assert_equal('', person.hometown, 'New Person hometown')
@@ -725,16 +749,6 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([r1, r2, r3], people, 'sorted')
   end
   
-  def test_find_all_current_email_addresses
-    email = Person.find_all_current_email_addresses
-    expected = [
-      "Bob Jones <member@example.com>",
-      "Mark Matson <mcfatson@gentlelovers.com>",
-      "Ryan Weaver <hotwheels@yahoo.com>"
-    ]
-    assert_equal(expected, email, "email addresses")
-  end
-  
   def test_add_number
     person = Person.create!
     person.add_number("7890", nil)
@@ -805,6 +819,25 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
     assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
+  end
+
+  def test_find_or_create_by_name
+    person = Person.find_or_create_by_name("Erik Tonkin")
+    assert_equal people(:tonkin), person, "Should find existing person"
+
+    person = Person.find_or_create_by_name("Sam Richardson")
+    assert_equal "Sam Richardson", person.name, "New person name"
+    assert_equal "Sam", person.first_name, "New person first_name"
+    assert_equal "Richardson", person.last_name, "New person last_name"
+    person_2 = Person.find_or_create_by_name("Sam Richardson")
+    assert_equal person, person_2, "Should find new person"
+
+    person = Person.find_or_create_by_name("Sam")
+    assert_equal "Sam", person.name, "New person name"
+    assert_equal "Sam", person.first_name, "New person first_name"
+    assert_equal nil, person.last_name, "New person last_name"
+    person_2 = Person.find_or_create_by_name("Sam")
+    assert_equal person, person_2, "Should find new person"
   end
   
   def test_create
@@ -904,7 +937,63 @@ class PersonTest < ActiveSupport::TestCase
     assert !Person.exists?(person)
     assert people(:alice).editable_people(true).empty?, "should remove editors"
   end
+
+  def test_multiple_names
+    person = people(:weaver)
+
+    person.names.create!(:first_name => "R", :last_name => "Weavedog", :name => "R Weavedog", :year => 2001)
+    person.names.create!(:first_name => "Mister", :last_name => "Weavedog", :name => "Mister Weavedog", :year => 2002)
+    person.names.create!(:first_name => "Ryan", :last_name => "Farris", :name => "Ryan Farris", :year => 2003)
+
+    assert_equal(3, person.names.size, "Historical names. #{person.names.map {|n| n.name}.join(', ')}")
+
+    assert_equal("R Weavedog", person.name(2000), "Historical name 2000")
+    assert_equal("R", person.first_name(2000), "Historical first_name 2000")
+    assert_equal("Weavedog", person.last_name(2000), "Historical last_name 2000")
+
+    assert_equal("R Weavedog", person.name(2001), "Historical name 2001")
+    assert_equal("R", person.first_name(2001), "Historical first_name 2001")
+    assert_equal("Weavedog", person.last_name(2001), "Historical last_name 2001")
+
+    assert_equal("Mister Weavedog", person.name(2002), "Historical name 2002")
+    assert_equal("Mister", person.first_name(2002), "Historical first_name 2002")
+    assert_equal("Weavedog", person.last_name(2002), "Historical last_name 2002")
+
+    assert_equal("Ryan Farris", person.name(2003), "Historical name 2003")
+    assert_equal("Ryan Farris", person.name(2004), "Historical name 2004")
+    assert_equal("Ryan Farris", person.name(Date.today.year - 1), "Historical name last year")
+    assert_equal("Ryan Weaver", person.name(Date.today.year), "Name this year")
+    assert_equal("Ryan Weaver", person.name(Date.today.year + 1), "Name next year")
+  end
   
+  def test_create_new_name_if_there_are_results_from_previous_year
+    person = people(:weaver)
+    event = SingleDayEvent.create!(:date => 1.years.ago)
+    old_result = event.races.create!(:category => categories(:senior_men)).results.create!(:person => person)
+    assert_equal("Ryan Weaver", old_result.name, "Name on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+    
+    event = SingleDayEvent.create!(:date => Date.today)
+    result = event.races.create!(:category => categories(:senior_men)).results.create!(:person => person)
+    assert_equal("Ryan Weaver", old_result.name, "Name on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+    
+    person.name = "Rob Farris"
+    person.save!
+
+    assert_equal(1, person.names(true).size, "names")
+
+    assert_equal("Ryan Weaver", old_result.name, "name should stay the same on old result")
+    assert_equal("Ryan", old_result.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+
+    assert_equal("Rob Farris", result.name, "name should change on this year's result")
+    assert_equal("Rob", result.first_name, "first_name on result")
+    assert_equal("Farris", result.last_name, "last_name on result")
+  end
+
   def test_renewed
     person = Person.create!
     assert !person.renewed?, "New person"

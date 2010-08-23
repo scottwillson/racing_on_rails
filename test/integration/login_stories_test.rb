@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class LoginStoriesTest < ActionController::IntegrationTest
   if ASSOCIATION.ssl?
     # logged-in?, person_id?, same person?, admin?
@@ -64,6 +65,19 @@ class LoginStoriesTest < ActionController::IntegrationTest
 
     def test_login
       get "/login"
+      assert_redirected_to "https://www.example.com/login"
+
+      https!
+      get "/login"
+
+      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+      get "/login"
+    end
+
+    def test_login_on_nonstandard_port
+      get "http://www.example.com:3000/login"
       assert_redirected_to "https://www.example.com/login"
 
       https!

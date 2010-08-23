@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class EventTest < ActiveSupport::TestCase
   def test_create
     event = SingleDayEvent.create(:name => 'Saved')
@@ -278,6 +279,11 @@ class EventTest < ActiveSupport::TestCase
     assert(kings_valley.races.empty?, "Should not have races")
   end
   
+  def test_destroy_all
+    SingleDayEvent.destroy_all
+    Event.destroy_all
+  end
+  
   def test_no_delete_with_results
     kings_valley = events(:kings_valley)
     assert(!kings_valley.destroy, 'Should not be destroyed')
@@ -386,6 +392,20 @@ class EventTest < ActiveSupport::TestCase
     assert_equal event_1, event_1_copy, "event_1 == event_1_copy"
     assert event_1_copy != event_2, "event_1_copy != event_2"
     assert event_2 != event_1_copy, "event_2 != event_1_copy"
+  end
+  
+  def test_set
+    event_1 = SingleDayEvent.create!
+    event_2 = SingleDayEvent.create!
+    set = Set.new
+    set << event_1
+    set << event_2
+    set << event_1
+    set << event_2
+    set << event_1
+    set << event_2
+    
+    assert_same_elements [ event_1, event_2 ], set.to_a, "Set equality"
   end
   
   def test_multi_day_event_children_with_no_parent
@@ -561,6 +581,10 @@ class EventTest < ActiveSupport::TestCase
     stage = stage_race.children.create!(:name => 'Cascade Classic')
     event = stage.children.create!(:name => 'Cascade Classic - Cascade Lakes Road Race')
     assert_equal('Cascade Classic - Cascade Lakes Road Race', event.full_name, 'stage race results full_name')
+
+    stage_race = MultiDayEvent.create!(:name => 'Frozen Flatlands Omnium')
+    event = stage_race.children.create!(:name => 'Frozen Flatlands Time Trial')
+    assert_equal('Frozen Flatlands Omnium: Frozen Flatlands Time Trial', event.full_name, 'stage race results full_name')
   end
   
   def test_team_name
@@ -700,6 +724,26 @@ class EventTest < ActiveSupport::TestCase
       parent.categories, 
       "categories for event with two races"
     )
+  end
+
+  def test_editable_by
+    assert_equal [], Event.editable_by(people(:alice)), "Alice can't edit any events"
+    assert_same_elements [ events(:banana_belt_series), events(:banana_belt_1), events(:banana_belt_2), events(:banana_belt_3),
+                           events(:mt_hood), events(:mt_hood_1), events(:mt_hood_2), events(:series_parent), events(:lost_series_child) ], 
+      Event.editable_by(people(:promoter)), 
+      "Promoter can edit his events"
+      
+    assert_equal_enumerables Event.all, Event.editable_by(people(:administrator)), "Administrator can edit all events"
+  end
+  
+  def test_today_and_future
+    assert Event.today_and_future.include?(events(:lost_series_child)), "today_and_future scope should include Lost Series child event"
+    assert Event.today_and_future.include?(events(:future_national_federation_event)), "today_and_future scope should include future event"
+    assert !Event.today_and_future.include?(events(:banana_belt_3)), "today_and_future scope should not include Banana Belt event"
+  end
+
+  def test_propagate_races
+    events(:kings_valley).propagate_races
   end
 
   private

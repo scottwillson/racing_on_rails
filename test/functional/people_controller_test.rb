@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
   def test_index
     get(:index)
@@ -105,7 +106,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_must_be_logged_in
     use_ssl
     get :edit, :id => people(:member).to_param
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
 
   def test_cant_see_other_people_info
@@ -129,7 +130,47 @@ class PeopleControllerTest < ActionController::TestCase
     login_as :member
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
-    assert_equal teams(:gentle_lovers), person.reload.team(true), "Team should be updated"
+    person = Person.find(person.id)
+    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal 1, person.versions.size, "versions"
+    version = person.versions.last
+    assert_equal person, version.user, "version user"
+    changes = version.changes
+    assert_equal 1, changes.size, "changes"
+    change = changes["team_id"]
+    assert_not_nil change, "Should have change for team ID"
+    assert_equal nil, change.first, "Team ID before"
+    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal "Bob Jones", person.last_updated_by, "last_updated_by"
+    # VestalVersions convention
+    assert_nil person.updated_by, "updated_by"
+  end
+  
+  def test_update_no_name
+    use_ssl
+    editor = Person.create!(:login => "my_login")
+    editor.roles << roles(:administrator)
+    editor.save!
+    
+    login_as editor
+    
+    person = people(:member)
+    put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
+    assert_redirected_to edit_person_path(person)
+    person = Person.find(person.id)
+    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal 1, person.versions.size, "versions"
+    version = person.versions.last
+    assert_equal editor, version.user, "version user"
+    changes = version.changes
+    assert_equal 1, changes.size, "changes"
+    change = changes["team_id"]
+    assert_not_nil change, "Should have change for team ID"
+    assert_equal nil, change.first, "Team ID before"
+    assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
+    assert_equal "my_login", person.last_updated_by, "last_updated_by"
+    # VestalVersions convention
+    assert_nil person.updated_by, "updated_by"
   end
   
   def test_update_by_editor
@@ -168,7 +209,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_account_not_logged_in
     use_ssl
     get :account
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_account_with_person_not_logged_in
@@ -251,7 +292,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.on(:name), "Should have error on :name"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_with_reversed_fields
@@ -271,7 +312,7 @@ class PeopleControllerTest < ActionController::TestCase
  
     assert_response :success
     assert assigns(:person).errors.any?, "Should have errors"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_blank_license
@@ -305,7 +346,23 @@ class PeopleControllerTest < ActionController::TestCase
 
     assert_response :success
     assert assigns(:person).errors.on(:email), "Should have error on :email"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
+  end
+  
+  def test_create_dupe_login_no_email
+    ActionMailer::Base.deliveries.clear
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "bob.jones", 
+                      :password => "secret", 
+                      :password_confirmation => "secret"
+                    },
+         :return_to => root_path
+
+    assert_response :success
+    assert assigns(:person).errors.on(:email), "Should have error on :login"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_create_login_bad_email
@@ -325,7 +382,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
     assert_response :success
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
   def test_new_login
@@ -363,7 +420,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_name_blank
@@ -384,7 +441,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_login_blank_license_blank
@@ -407,7 +464,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.on(:login), "Should have error on :login"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_name_blank_license_blank
@@ -450,7 +507,7 @@ class PeopleControllerTest < ActionController::TestCase
 
    assert_response :success
    assert assigns(:person).errors.on(:login), "Should have error on :login"
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
   def test_create_login_unmatched_license
@@ -472,7 +529,7 @@ class PeopleControllerTest < ActionController::TestCase
    assert assigns(:person).errors.any?, "Should errors"
    assert_equal 1, assigns(:person).errors.size, "errors"
    assert_response :success
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
    assert_equal people_count, Person.count, "People count"
   end
 
@@ -495,7 +552,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert assigns(:person).errors.any?, "Should errors"
     assert_equal 1, assigns(:person).errors.size, "errors"
     assert_response :success
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
     assert_equal people_count, Person.count, "People count"
   end
 
@@ -505,5 +562,65 @@ class PeopleControllerTest < ActionController::TestCase
     get :new_login
     assert_redirected_to edit_person_path(people(:member))
     assert_not_nil flash[:notice], "flash[:notice]"
+  end
+
+  def test_index_as_xml
+    get :index, :license => 7123811, :format => "xml"
+    assert_response :success
+    assert_equal "application/xml", @response.content_type
+    [
+      "person > first-name",
+      "person > last-name",
+      "person > date-of-birth",
+      "person > license",
+      "person > gender",
+      "person > team",
+      "person > race-numbers",
+      "person > aliases",
+      "team > city",
+      "team > state",
+      "team > website",
+      "race-numbers > race-number",
+      "race-number > value",
+      "race-number > year",
+      "race-number > discipline",
+      "discipline > name",
+      "aliases > alias",
+      "alias > name",
+      "alias > alias"
+    ].each do |key|
+      assert_select key
+    end
+  end
+
+  def test_index_as_json
+    get :index, :format => "json", :name => "ron"
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+  end
+  
+  def test_find_by_name_as_xml
+    get :index, :name => "ron", :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Molly"
+    assert_select "first-name", "Kevin"
+  end
+  
+  def test_find_by_license_as_xml
+    get :index, :name => "m", :license => 576, :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Mark"
+  end
+
+  def test_show_as_xml
+    get :show, :id => people(:molly).id, :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Molly"
+    assert_select "last-name", "Cameron"
+  end
+
+  def test_show_as_json
+    get :show, :id => people(:molly).id, :format => "json"
+    assert_response :success
   end
 end

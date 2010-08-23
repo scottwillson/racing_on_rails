@@ -1,7 +1,7 @@
-# Display email link to promoter. Uses event email if there is one.
-# Displays promoter email in promoter's name is blank.
-# Displays just promoter's name if there are no email addresses.
 module EventsHelper
+  # Display email link to promoter. Uses event email if there is one.
+  # Displays promoter email in promoter's name is blank.
+  # Displays just promoter's name if there are no email addresses.
   def link_to_event_email(event)
     email = event.email if event.email.present?
     email = event.promoter.email if !email && event.promoter && event.promoter.email.present?
@@ -33,7 +33,6 @@ module EventsHelper
 
   # Show link even if not approved
   def link_to_flyer(event)
-    # TODO Add more options and use throughout
     return unless event
     
     if event.flyer.blank?

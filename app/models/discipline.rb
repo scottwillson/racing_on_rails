@@ -1,5 +1,5 @@
 # Road, track, criterium, time trial ...
-# TODO Add parent-child. Example: Road is parent for Criterium, Time Trial
+# Cached. Call +reset+ to clear cache.
 class Discipline < ActiveRecord::Base
   include UpcomingEvents::DisciplineExtensions
 
@@ -61,7 +61,7 @@ class Discipline < ActiveRecord::Base
     when "Road"
       [nil, "", 'Circuit', "Criterium", "Road", "Time Trial", "Singlespeed", "Tour"]
     when "Mountain Bike"
-      ['Downhill', 'Mountain Bike', 'Super D']
+      ['Downhill', 'Mountain Bike', 'Super D', "Short Track"]
     else
       [name]
     end
@@ -69,7 +69,7 @@ class Discipline < ActiveRecord::Base
 
   # Deprecated. Should use standard Discipline names.
   def pretty_name
-    (name.gsub('_', " ").gsub(/\b\w/) {|s| s.upcase })
+    name.gsub('_', " ").gsub(/\b\w/) {|s| s.upcase }
   end
 
   def to_param

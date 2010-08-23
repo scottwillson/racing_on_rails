@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   def setup
     super
@@ -15,6 +16,23 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     ASSOCIATION.award_cat4_participation_points = @award_cat4_participation_points
     ASSOCIATION.cat4_womens_race_series_points = @cat4_womens_race_series_points
     ASSOCIATION.cat4_womens_race_series_category = @cat4_womens_race_series_category
+  end
+  
+  def test_calculate_omnium
+    series = Cat4WomensRaceSeries.create!(:date => Date.new(2005))
+    omnium = MultiDayEvent.create!(:date => Date.new(2005))
+    series.source_events << omnium
+    
+    road_race = omnium.children.create!(:date => Date.new(2005))
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    person = people(:alice)
+    omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    
+    Cat4WomensRaceSeries.calculate!(2005)
+    result = series.races.first.results.first
+    assert_equal 115, result.points, "Should have points for omnium only"
+    assert_equal 2, result.scores.size, "Should have one score"
   end
   
   def test_calculate_no_results
@@ -233,6 +251,10 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     series = Cat4WomensRaceSeries.create!(:date => Date.new(2004))
     event = SingleDayEvent.create!(:discipline => "Time Trial", :date => Date.new(2004))
     series.source_events << event
+    
+    # Non Cat 4 Women race in parent event
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1", :person => people(:weaver))
+    
     fourteen_mile = event.children.create!
     assert_equal 1, fourteen_mile.bar_points, "Children should recieve BAR points"
     assert_equal Date.new(2004), fourteen_mile.date, "Children should share parent date"

@@ -1,11 +1,14 @@
-# A rider who either appears in race results or who is added as a member of a racing association
+# Someone who either appears in race results or who is added as a member of a racing association
 #
-# Names are _not_ unique
-#
-# New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
+# Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ActiveRecord::Base
   include Comparable
+  include Names::Nameable
+  include SentientUser
 
+  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
+                         :perishable_token, :persistence_token, :single_access_token ]
+  
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
     config.validates_format_of_login_field_options :with => Authlogic::Regex.login, 
@@ -22,6 +25,8 @@ class Person < ActiveRecord::Base
   before_validation :find_associated_records, :make_login_blanks_nil
   validate :membership_dates
   before_save :destroy_shadowed_aliases
+  before_create :set_created_by
+  before_save :set_last_updated_by
   after_save :add_alias_for_old_name
 
   has_many :aliases
@@ -38,7 +43,7 @@ class Person < ActiveRecord::Base
   
   attr_accessor :year
   
-  CATEGORY_FIELDS = [:bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category]
+  CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]
 
   def self.per_page
     50
@@ -54,7 +59,7 @@ class Person < ActiveRecord::Base
     else
       Person.find(
         :all,
-        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name],
+        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name],
         :order => 'last_name, first_name')
     end
   end
@@ -73,7 +78,7 @@ class Person < ActiveRecord::Base
     if name.present?
       return Person.find(
         :all,
-        :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
+        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
       ) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
       Person.find(
@@ -93,13 +98,14 @@ class Person < ActiveRecord::Base
     end
   end
   
+  # Considers aliases
   def Person.find_all_by_name_like(name, limit = 100)
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
     Person.find(
       :all, 
-      :conditions => ["trim(concat(first_name, ' ', last_name)) like ? or aliases.name like ?", name_like, name_like],
+      :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
       :order => 'last_name, first_name'
@@ -107,7 +113,7 @@ class Person < ActiveRecord::Base
   end
   
   def Person.find_by_info(name, email = nil, home_phone = nil)
-    if !name.blank?
+    if name.present?
       Person.find_by_name(name)
     else
       Person.find(
@@ -121,10 +127,14 @@ class Person < ActiveRecord::Base
   def Person.find_by_name(name)
     Person.find(
       :first, 
-      :conditions => ["trim(concat(first_name, ' ', last_name)) = ?", name]
+      :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
     )
   end
   
+  def Person.find_or_create_by_name(name)
+    Person.find_by_name(name) || Person.create(:name => name)
+  end
+
   def Person.find_by_number(number)
     Person.find(:all, 
                :include => :race_numbers,
@@ -144,21 +154,6 @@ class Person < ActiveRecord::Base
         last_name
       else
         ""
-      end
-    end
-  end
-  
-  def Person.find_all_current_email_addresses
-    Person.connection.select_rows(%Q{ 
-      select first_name, last_name, email 
-      from people 
-      where member_to > NOW() and email is not null and email != '' 
-      order by last_name, first_name, email
-    }).collect do |first_name, last_name, email|
-      if first_name.blank? && last_name.blank?
-        email
-      else
-        "#{first_name} #{last_name} <#{email}>"
       end
     end
   end
@@ -226,7 +221,7 @@ class Person < ActiveRecord::Base
     people
   end
   
-  #interprets dates returned in sql above for member export
+  # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
       (lic_date && (Date.parse(lic_date) > ASSOCIATION.today)) ? "current" : "CHECK LIC!"
@@ -245,6 +240,11 @@ class Person < ActiveRecord::Base
       results.last.person
     end
   end
+
+  def Person.deliver_password_reset_instructions!(people)
+    people.each(&:reset_perishable_token!)
+    Notifier.deliver_password_reset_instructions(people)
+  end
   
   def people_with_same_name
     people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
@@ -252,6 +252,8 @@ class Person < ActiveRecord::Base
     people
   end
   
+  # Workaround Rails date param-parsing. Also convert :team attribute to Team.
+  # Not sure this is needed.
   def attributes=(attributes)
     unless attributes.nil?
       if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
@@ -265,11 +267,23 @@ class Person < ActiveRecord::Base
     end
     super(attributes)
   end
-
-  def name
-    Person.full_name(first_name, last_name)
+  
+  # Name on year. Could be rolled into Nameable?
+  def name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:name) || Person.full_name(first_name(year), last_name(year))
   end
-
+  
+  def first_name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:first_name) || read_attribute(:first_name)
+  end
+  
+  def last_name(date_or_year = nil)
+    year = parse_year(date_or_year)
+    name_record_for_year(year).try(:last_name) || read_attribute(:last_name)
+  end
+  
   def email_with_name
     "#{name} <#{email}>"
   end
@@ -378,6 +392,22 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def possessive_pronoun
+    if gender == "F"
+      "her"
+    else
+      "his"
+    end
+  end
+  
+  def third_person_pronoun
+    if gender == "F"
+      "her"
+    else
+      "him"
+    end
+  end
+
   # Non-nil for happier sorting
   def gender
     self[:gender] || ''
@@ -624,15 +654,14 @@ class Person < ActiveRecord::Base
 
   # Is Person a current member of the bike racing association?
   def member?(date = ASSOCIATION.today)
-    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
-    !self.member_to.nil? && !self.member_from.nil? && (self.member_from <= date && self.member_to >= date)
+    member_to.present? && member_from.present? && (member_from.to_date <= date.to_date && member_to.to_date >= date.to_date)
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
   def member_in_year?(date = ASSOCIATION.today)
-    date = Date.new(date.year, date.month, date.day) if date.is_a? Time
     year = date.year
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
+    member_to.present? && member_from.present? && (member_from.year <= year && member_to.year >= year)
   end
   
   def member
@@ -642,18 +671,21 @@ class Person < ActiveRecord::Base
   # Is Person a current member of the bike racing association?
   def member=(value)
     if value
-      self.member_from = ASSOCIATION.today if self.member_from.nil? || self.member_from >= ASSOCIATION.today
-      self.member_to = Date.new(ASSOCIATION.effective_year, 12, 31) unless self.member_to && (self.member_to >= Date.new(ASSOCIATION.effective_year, 12, 31))
+      self.member_from = ASSOCIATION.today if member_from.nil? || member_from.to_date >= ASSOCIATION.today.to_date
+      unless member_to && (member_to.to_date >= Time.zone.local(ASSOCIATION.effective_year, 12, 31).to_date)
+        self.member_to = Time.zone.local(ASSOCIATION.effective_year, 12, 31) 
+      end
     elsif !value && member?
       if self.member_from.year == ASSOCIATION.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Date.new(ASSOCIATION.year - 1, 12, 31)
+        self.member_to = Time.zone.local(ASSOCIATION.year - 1, 12, 31)
       end
     end
   end
   
+  # Also sets member_to if it is blank
   def member_from=(date)
     if date.nil?
       self[:member_from] = nil
@@ -677,29 +709,30 @@ class Person < ActiveRecord::Base
     self[:member_from] = date_as_date
   end
   
+  # Also sets member_from if it is blank
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = ASSOCIATION.today if self.member_from.nil?
-      self[:member_from] = date if self.member_from > date
+      self[:member_from] = ASSOCIATION.today if member_from.nil?
+      self[:member_from] = date if member_from.to_date > date.to_date
     end
     self[:member_to] = date
   end
   
   # Validates member_from and member_to
   def membership_dates
-    if member_to and member_from.nil?
+    if member_to && !member_from
       errors.add('member_from', "cannot be nil if member_to is not nil (#{member_to})")
     end
-    if member_from and member_to.nil?
+    if member_from && !member_to
       errors.add('member_to', "cannot be nil if member_from is not nil (#{member_from})")
     end
-    if member_from and member_to and member_from > member_to
+    if member_from && member_to && member_from.to_date > member_to.to_date
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
   end
 
   def renewed?
-    self.member_to && (self.member_to.year >= ASSOCIATION.effective_year)
+    member_to && member_to.year >= ASSOCIATION.effective_year
   end
 
   def renew!(license_type)
@@ -721,11 +754,6 @@ class Person < ActiveRecord::Base
     created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
   end
 
-  def deliver_password_reset_instructions!
-    reset_perishable_token!
-    Notifier.deliver_password_reset_instructions(self)
-  end
-
   def state=(value)
     if value and value.size == 2
       value.upcase!
@@ -734,14 +762,14 @@ class Person < ActiveRecord::Base
   end
   
   def city_state
-    if !city.blank?
-      if !state.blank?
+    if city.present?
+      if state.present?
         "#{city}, #{state}"
       else
         "#{city}"
       end
     else
-      if !state.blank?
+      if state.present?
         "#{state}"
       else
         nil
@@ -750,14 +778,14 @@ class Person < ActiveRecord::Base
   end
   
   def city_state_zip
-    if !city.blank?
-      if !state.blank?
+    if city.present?
+      if state.present?
         "#{city}, #{state} #{zip}"
       else
         "#{city} #{zip}"
       end
     else
-      if !state.blank?
+      if state.present?
         "#{state} #{zip}"
       else
         zip || ''
@@ -837,47 +865,59 @@ class Person < ActiveRecord::Base
   # and delete the other person.
   # Also adds the other people' name as a new alias
   def merge(other_person)
-    # TODO Consider just using straight SQL for this --
+    # Consider just using straight SQL for this --
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
     raise(ArgumentError, 'Cannot merge nil person') unless other_person
     raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
 
     Person.transaction do
-      events_with_results = other_person.results.collect do |result|
-        event = result.event
-        event.disable_notification! if event
-        event
-      end.compact || []
-      if login.blank? && other_person.login.present?
-        self.login = other_person.login
-        self.crypted_password = other_person.crypted_password
-        other_person.update_attribute :login, nil
-      end
-      if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
-        self.member_from = other_person.member_from
-      end
-      if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
-        self.member_to = other_person.member_to
-      end
-      
-      if license.blank?
-        self.license = other_person.license
-      end
+      self.merge_version do
+        events_with_results = other_person.results.collect do |result|
+          event = result.event
+          event.disable_notification! if event
+          event
+        end.compact || []
+        if login.blank? && other_person.login.present?
+          self.login = other_person.login
+          self.crypted_password = other_person.crypted_password
+          other_person.skip_version do
+            other_person.update_attribute :login, nil
+          end
+        end
+        if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)
+          self.member_from = other_person.member_from
+        end
+        if member_to.nil? || (other_person.member_to && other_person.member_to > member_to)
+          self.member_to = other_person.member_to
+        end
 
-      save!
-      aliases << other_person.aliases
-      events << other_person.events
-      results << other_person.results
-      race_numbers << other_person.race_numbers
-      Person.delete(other_person.id)
-      existing_alias = aliases.detect{|a| a.name.casecmp(other_person.name) == 0}
-      if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
-        aliases.create(:name => other_person.name) 
-      end
-      events_with_results.each do |event|
-        event.reload
-        event.enable_notification!
+        if license.blank?
+          self.license = other_person.license
+        end
+
+        save!
+        aliases << other_person.aliases
+        events << other_person.events
+        names << other_person.names
+        results << other_person.results
+        race_numbers << other_person.race_numbers
+
+        versions << other_person.versions
+        versions.sort_by(&:created_at).each_with_index do |version, index|
+          version.number = index + 2
+          version.save!
+        end
+
+        Person.delete other_person.id
+        existing_alias = aliases.detect{ |a| a.name.casecmp(other_person.name) == 0 }
+        if existing_alias.nil? and Person.find_all_by_name(other_person.name).empty?
+          aliases.create(:name => other_person.name) 
+        end
+        events_with_results.each do |event|
+          event.reload
+          event.enable_notification!
+        end
       end
     end
     true
@@ -894,6 +934,22 @@ class Person < ActiveRecord::Base
       end
     end
   end
+
+  def can_edit?(person)
+    person == self || person.editors.include?(self)
+  end
+  
+  def set_last_updated_by
+    if Person.current
+      self.last_updated_by = Person.current.name_or_login
+    end
+  end
+  
+  def set_created_by
+    if created_by.nil? && Person.current
+      self.created_by = Person.current
+    end
+  end
   
   # If name changes to match existing alias, destroy the alias
   def destroy_shadowed_aliases
@@ -906,9 +962,13 @@ class Person < ActiveRecord::Base
        !name.blank? && 
        @old_name.casecmp(name) != 0 && 
        !Alias.exists?(['name = ? and person_id = ?', @old_name, id]) && 
-       !Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", @old_name])
-
-      Alias.create!(:name => @old_name, :person => self)
+       !Person.exists?(["trim(concat_ws(' ', first_name, last_name)) = ?", @old_name])
+      
+      new_alias = Alias.new(:name => @old_name, :person => self)
+      unless new_alias.save
+        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+      end
+      new_alias
     end
   end
 

@@ -1,4 +1,5 @@
 module RacingOnRails
+  # Label + form fields HTML
   module FormTagHelper
     extend ActionView::Helpers::FormTagHelper
     

@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonMailerTest < ActionMailer::TestCase
   def test_new_login_confirmation
     ActionMailer::Base.deliveries.clear

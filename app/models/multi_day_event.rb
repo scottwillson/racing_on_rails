@@ -8,7 +8,7 @@
 #
 # Cannot have a parent event
 #
-# TODO Build new child event should populate child event with parent data
+# New child event should populate child event with parent data, but they don't
 class MultiDayEvent < Event
   validates_presence_of :name, :date
   validate_on_create { :parent.nil? }
@@ -179,6 +179,9 @@ class MultiDayEvent < Event
     @every = _every.map { |day| Date::DAYNAMES.index(day) }
   end
   
+  # +format+:
+  # * :short: 6/7-6/12
+  # * :long: 6/7/2010-6/12/2010
   def date_range_s(format = :short)
     if format == :long
       if start_date == end_date
@@ -207,6 +210,7 @@ class MultiDayEvent < Event
     end
   end
   
+  # Unassociated events with same name in same year
   def missing_children
     return [] unless name && date
     
@@ -215,10 +219,22 @@ class MultiDayEvent < Event
                                           name, date.year])
   end
   
+  # All children have results?
   def completed?(reload = false)
     children.count(reload) > 0 && (children_with_results(reload).size == children.count)
   end
   
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    children.each do |event|
+      races.map(&:category).each do |category|
+        unless event.races.map(&:category).include?(category)
+          event.races.create!(:category => category)
+        end
+      end
+    end
+  end
+
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{children.size}>"
   end

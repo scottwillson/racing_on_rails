@@ -1,11 +1,11 @@
 # Bike racing team of People
 #
-# Like People, Teams may have many alternate  names. These are modelled as Aliases
+# Like People, Teams may have many alternate names. These are modelled as Aliases. Historical names from previous years are stored as Names.
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
+  include Names::Nameable
 
-  before_save :add_historical_name
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
   after_save :reset_old_name
@@ -17,7 +17,6 @@ class Team < ActiveRecord::Base
   has_many :aliases
   belongs_to :created_by, :polymorphic => true
   has_many :events
-  has_many :historical_names, :order => "year"
   has_many :people
   has_many :results
 
@@ -60,19 +59,8 @@ class Team < ActiveRecord::Base
   def ensure_no_results
     return true if results.empty?
 
-    errors.add_to_base("Cannot delete team with results. #{name} has #{results.count} results.")
+    errors.add_to_base "Cannot delete team with results. #{name} has #{results.count} results."
     false
-  end
-  
-  def results_before_this_year?
-    # Exists? doesn't support joins
-    count = Team.count_by_sql([%Q{
-      select results.id from teams, results, races, events 
-      where teams.id = ? and teams.id = results.team_id 
-        and results.race_id = races.id
-        and races.event_id = events.id and events.date < ? limit 1
-    }, self.id, Date.today.beginning_of_year])
-    count > 0
   end
   
   # If name changes to match existing alias, destroy the alias
@@ -82,22 +70,17 @@ class Team < ActiveRecord::Base
   
   def add_alias_for_old_name
     if !new_record? && 
-      !@old_name.blank? && 
-      !name.blank? && 
+      @old_name.present? && 
+      name.present? && 
       @old_name.casecmp(name) != 0 && 
       !Alias.exists?(['name = ? and team_id = ?', @old_name, id]) &&
       !Team.exists?(["name = ?", @old_name])
 
-      Alias.create!(:name => @old_name, :team => self)
-    end
-  end
-
-  # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
-  # TODO This is a bit naive, needs validation, and more tests
-  def add_historical_name
-    last_year = Date.today.year - 1
-    if !@old_name.blank? && results_before_this_year? && !self.historical_names.any? { |name| name.year == last_year }
-      self.historical_names.create(:name => @old_name, :year => last_year)
+      new_alias = Alias.create!(:name => @old_name, :team => self)
+      unless new_alias.save
+        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+      end
+      new_alias
     end
   end
   
@@ -107,7 +90,7 @@ class Team < ActiveRecord::Base
   end
   
   def has_alias?(alias_name)
-    aliases.detect {|a| a.name.casecmp(alias_name) == 0}
+    aliases.detect { |a| a.name.casecmp(alias_name) == 0 }
   end
 
   # Moves another Team's aliases, results, and people to this Team,
@@ -143,53 +126,27 @@ class Team < ActiveRecord::Base
   
   # Preserve team names in old results by creating a new Team for them, and moving the results.
   #
-  # Results are preserved by creating a new Team from the most recent HistoricalName. If a Team
-  # already exists with the HistoricalName's name, results will move to existing Team.
+  # Results are preserved by creating a new Team from the most recent Name. If a Team
+  # already exists with the Name's name, results will move to existing Team.
   # This may be unxpected, can't think of a better way to handle it in this model.
   def create_team_for_historical_results!
-    historical_name = historical_names.sort_by(&:year).reverse!.first
+    name = names.sort_by(&:year).reverse!.first
     
-    if historical_name
-      team = Team.find_or_create_by_name(historical_name.name)
+    if name
+      team = Team.find_or_create_by_name(name.name)
       results.each do |result|
-        team.results << result if result.date.year <= historical_name.year
+        team.results << result if result.date.year <= name.year
       end
       
-      historical_name.destroy
-      historical_names.each do |name|
-        team.historical_names << name unless name == historical_name
+      name.destroy
+      names.each do |name|
+        team.names << name unless name == name
       end
     end
   end
   
   def member_in_year?(date = Date.today)
     member
-  end
-  
-  # Team names change over time
-  def name(date_or_year = nil)
-    return read_attribute(:name) unless date_or_year && !self.historical_names.empty?
-    
-    # TODO Tune this
-    if date_or_year.is_a? Integer
-      year = date_or_year
-    else
-      year = date_or_year.year
-    end
-    
-    # Assume historical_names always sorted
-    if year <= self.historical_names.first.year
-      return self.historical_names.first.name
-    elsif year >= self.historical_names.last.year && year < Date.today.year
-      return self.historical_names.last.name
-    end
-    
-    name_for_year = self.historical_names.detect { |n| n.year == year }
-    if name_for_year
-      name_for_year.name
-    else
-      read_attribute(:name)
-    end
   end
   
   def name=(value)

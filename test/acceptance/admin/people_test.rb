@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class PeopleTest < WebDriverTestCase
   def test_people
     login_as :administrator
@@ -63,7 +64,7 @@ class PeopleTest < WebDriverTestCase
     wait_for_element "person_#{@alice_id}_name-inplaceeditor"
 
     type "A Penn", :class => "editor_field"
-    submit :class => "inplaceeditor-form"
+     type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
@@ -74,7 +75,7 @@ class PeopleTest < WebDriverTestCase
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
 
     type "River City Bicycles", :class => "editor_field"
-    submit :class => "inplaceeditor-form"
+     type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
@@ -93,6 +94,8 @@ class PeopleTest < WebDriverTestCase
     assert_title(/Admin: People: Mark Matson$/)
     type "411 911 1212", "person_home_phone"
     click "save"
+    
+    click :css => "a[href='/people/#{@matson_id}/versions']"
 
     open '/admin/people'
     click :css => "a[href='/admin/people/new']"

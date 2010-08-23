@@ -1,13 +1,14 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class MailingListMailerTest < ActionMailer::TestCase
-  
   def test_post
     obra_chat = mailing_lists(:obra_chat)
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
-    @expected.date = Time.zone.now
+    ASSOCIATION.now = Time.zone.now
+    @expected.date = ASSOCIATION.now
     @expected.body = read_fixture("post")
 
     post = Post.new
@@ -16,7 +17,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = @expected.date
+    post.date = ASSOCIATION.now
     post_email = MailingListMailer.create_post(post)
     assert_equal(@expected.encoded, post_email.encoded)
   end
@@ -34,7 +35,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = @expected.date
+    post.date = Time.zone.now
     post_email = MailingListMailer.create_private_reply(post, "Scout <scout@butlerpress.com>")
     assert_equal(@expected.encoded, post_email.encoded)
   end

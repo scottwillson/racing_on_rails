@@ -1,9 +1,9 @@
-# Add, delete, and edit Person information. Also merge 
+# Add, delete, and edit Person information. Also merge.
 class Admin::PeopleController < Admin::AdminController
   before_filter :require_person
-  before_filter :require_administrator, :expect => :index
+  # Funky permissions filtering here to allow officials and promoters download Excel file
   skip_filter :require_administrator, :only => :index
-  before_filter :require_administrator_or_promoter, :only => :index
+  before_filter :require_administrator_or_promoter_or_official, :only => :index
   before_filter :remember_event
   layout 'admin/application', :except => [:card, :cards]
   exempt_from_layout 'xls.erb', 'ppl.erb'
@@ -57,6 +57,10 @@ class Admin::PeopleController < Admin::AdminController
     end
   end
 
+  # == Params
+  # * excel_layout: "scoring_sheet" for fewer columns -- intended for scoring race results. "endicia" for card stickers.
+  # * include: "print_cards"
+  # * format: "ppl" for FInishLynx scoring
   def export
     date = current_date
     if params['excel_layout'] == 'scoring_sheet'
@@ -90,7 +94,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.new
     @race_numbers = []
     @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
-    render(:action => "edit")
+    render :edit
   end
   
   def edit
@@ -113,7 +117,6 @@ class Admin::PeopleController < Admin::AdminController
   # New blank numbers are ignored
   def create
     expire_cache
-    params[:person][:created_by] = current_person
     @person = Person.create(params[:person])
     
     if params[:number_value]
@@ -123,8 +126,7 @@ class Admin::PeopleController < Admin::AdminController
             :discipline_id => params[:discipline_id][index], 
             :number_issuer_id => params[:number_issuer_id][index], 
             :year => params[:number_year],
-            :value => number_value,
-            :updated_by => current_person.name
+            :value => number_value
           )
           unless race_number.errors.empty?
             @person.errors.add_to_base(race_number.errors.full_messages)
@@ -161,7 +163,6 @@ class Admin::PeopleController < Admin::AdminController
     begin
       expire_cache
       @person = Person.find(params[:id])
-      params[:person][:updated_by] = current_person.name
       @person.update_attributes(params[:person])
       if params[:number]
         for number_id in params[:number].keys
@@ -237,6 +238,7 @@ class Admin::PeopleController < Admin::AdminController
     render("preview_import", :layout => "admin/people/preview_import")
   end
   
+  # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
   def import
     if params[:commit] == 'Cancel'
       session[:people_file_path] = nil
@@ -263,10 +265,11 @@ class Admin::PeopleController < Admin::AdminController
       expire_cache
 
     else
-      raise("Expected 'Import' or 'Cancel'")
+      raise "Expected 'Import' or 'Cancel'"
     end
   end
   
+  # Unresolved duplicates after import
   def duplicates
     @duplicates = Duplicate.find(:all)
     @duplicates.sort! do |x, y|
@@ -316,10 +319,11 @@ class Admin::PeopleController < Admin::AdminController
     end
   end
 
+  # Toggle membership on or off
   def toggle_member
     person = Person.find(params[:id])
-    person.toggle!(:member)
-    render(:partial => "shared/member", :locals => { :record => person })
+    person.toggle! :member
+    render :partial => "shared/member", :locals => { :record => person }
   end
   
   def destroy
@@ -332,12 +336,13 @@ class Admin::PeopleController < Admin::AdminController
     expire_cache
   end
 
+  # Show choices for Person merge
   def merge?(original_name, existing_people, person)
     @person = person
     @existing_people = existing_people
     @original_name = original_name
     render :update do |page| 
-      page.replace_html("person_#{@person.id}_row", :partial => 'merge_confirm', :locals => { :person => @person })
+      page.replace_html("person_#{@person.id}_row", :partial => "merge_confirm", :locals => { :person => @person })
     end
   end
   
@@ -397,6 +402,7 @@ class Admin::PeopleController < Admin::AdminController
     end
   end
   
+  # Membership card stickers/labels
   def cards
     @people = Person.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @people.empty?
@@ -406,9 +412,10 @@ class Admin::PeopleController < Admin::AdminController
     end
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render(:template => "admin/people/cards.pdf.pdf_writer")
+    render :template => "admin/people/cards.pdf.pdf_writer"
   end
   
+  # Single membership card
   def card
     @person = Person.find(params[:id])
     @people = [@person]
@@ -421,6 +428,7 @@ class Admin::PeopleController < Admin::AdminController
     render(:template => "admin/people/card.pdf.pdf_writer")
   end
   
+  # :stopdoc:
   def rescue_action_in_public(exception)
     headers.delete("Content-Disposition")
     super

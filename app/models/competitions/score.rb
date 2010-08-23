@@ -1,4 +1,4 @@
-# Tie a Competition Result to it's source Result from a SingleDayEvent, and holds the points earned for the Competition
+# Tie a Competition Result to its source Result from a SingleDayEvent, and holds the points earned for the Competition
 #
 # Example: John Walrod places 3rd in the Mudslinger Singlespeed race. This earns him points for both the Singlespeed BAR
 # and the Ironman:

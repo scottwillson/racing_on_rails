@@ -1,0 +1,535 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>
+      Racing on Rails: We're sorry, but we're working on the site
+    </title>
+    
+    <style type="text/css" media="screen">
+    /* -------------------------------------------------------------- 
+       * Resets default browser CSS.
+    -------------------------------------------------------------- */
+
+    html, body, div, span, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, code,
+    del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      font-weight: inherit;
+      font-style: inherit;
+      font-size: 100%;
+      font-family: inherit;
+      vertical-align: baseline;
+      text-align: left;
+    }
+
+    body { 
+      line-height: 1.5; 
+    }
+
+    /* Tables still need 'cellspacing="0"' in the markup. */
+    table { border-collapse: separate; border-spacing: 0; }
+    caption, th, td { text-align: left; font-weight: normal; }
+    table, td, th { vertical-align: top; }
+
+    /* Remove possible quote marks (") from <q>, <blockquote>. */
+    blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+    blockquote, q { quotes: "" ""; }
+
+    /* Remove annoying border on linked images. */
+    a img { border: none; }
+      
+    </style>
+    
+    <style type="text/css" media="screen">
+    body {
+      text-align: center;
+      min-width: 600px;
+      font-size: 0.75em;
+      line-height: 1.33em;
+      font-family: Verdana, sans-serif;
+      text-align: left;
+      color: black;
+      padding: 16px;
+    }
+
+    div.frame {
+      border: 1px solid rgb(190, 190, 190);
+      background-color: rgb(250, 250, 250);
+    }
+
+    div.content {
+      text-align: center;
+      margin-top: 0px;
+      margin-bottom: 21px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 13px;
+    }
+
+    .shadow_1 {
+      border: 1px solid rgb(240, 240, 240);
+    }
+
+    .shadow_2 {
+      border: 1px solid rgb(245, 245, 245);
+    }
+
+    div.inline {
+      float: left;
+    }
+
+    .left, .centered .left {
+      text-align: left;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .centered {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      display: table;
+    }
+
+    .centered p, .centered table {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .centered input[type=file] {
+      width: auto;
+    }
+
+    .full_width, div.full_width {
+      width: 100%;
+    }
+
+    .half_width {
+      width: 48%;
+    }
+
+    pre, pre a, pre a:link, pre a:visited {
+      font-size: 10px;
+      font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+    }
+
+    .updatedon, .weak
+    {
+      font-size: 1em;
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      color: rgb(160, 160, 160);
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    .invisible {
+      visibility: hidden;
+    }
+
+    .created_at {
+      margin-right: 24px;
+    }
+
+    .note
+    {
+      padding-top: 4px;
+      color: rgb(160, 160, 160);
+      font-style: italic;
+      text-align: center;
+      width: 160px;
+    }
+
+    .flash_message, .message
+    {
+      width: 450px;
+      font-family: Verdana, Helvetica, sans-serif;
+      white-space: normal;
+      text-align: center;
+      margin-top: 16px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    p.message, div.message {
+      text-align: left;
+    }
+
+    p.flash_message, p.message, div.flash_message, div.message {
+      line-height: 16px;
+    }
+
+    #notice_span
+    {
+      background-image: url(/images/icons/information.png);
+      background-repeat: no-repeat;
+      padding-left: 20px;
+      padding-right: 4px;
+    }
+
+    #warn_span, .warn
+    {
+      color: red;
+      background-image: url(/images/icons/exclamation.png);
+      background-repeat: no-repeat;
+      padding-left: 20px;
+      padding-right: 4px;
+    }
+
+    #warn a, .warn a, #warn a:link, .warn a:link, #warn a:visited, .warn a:visited {
+      color: red;
+      border-bottom-color: red;
+    }
+
+    h1, h2, h3 {
+      font-weight: bold;
+      color: rgb(50, 50, 50);
+      clear: both;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-style: italic;
+      line-height: 24px;
+    }
+
+    h2 {
+      padding-top: 32px;
+      font-size: 18px;
+      line-height: 24px;
+      text-align: center;
+    }
+
+    h3 {
+      padding-top: 32px;
+      color: rgb(66, 66, 66);
+      text-align: center;
+    }
+
+    /* Main navigation */
+
+    div.nav {
+      text-align: left;
+    }
+
+    div.nav#top {
+      height: 51px;
+      background-image: url(/images/backgrounds/bar.gif);
+      text-align: left;
+      border-bottom: 1px solid rgb(190, 190, 190);
+    }
+
+    div.nav#bottom {
+      text-align: left;
+      height: 23px;
+      line-height: 23px;
+      background-image: url(/images/backgrounds/bar_low.gif);
+      border-top: 1px solid rgb(190, 190, 190);
+    }
+
+    div.nav h1 {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-left: 10px;
+      padding-top: 6px;
+      text-align: left;
+      line-height: 24px;
+    }
+
+    div.nav h1 a {
+      font-size: 22px;
+      font-weight: bold;
+      font-style: italic;
+      color: rgb(109, 109, 109);
+      border-bottom: none;
+    }
+
+    div.breadcrumb {
+      margin-left: 10px;
+    }
+
+    div.nav#bottom div.breadcrumb {
+      margin-top: 0px;
+    }
+
+    div.breadcrumb a {
+      font-weight: bold;
+      color:  rgb(109, 109, 109);
+      border-bottom: none;
+    }
+
+
+    /* Links */
+
+    a:link
+    {
+      border-bottom-style: dotted;
+      border-bottom-width: 2px;
+      border-bottom-color: #D0FA30;
+      color: black;
+      text-decoration: none;
+    }
+
+    a.underlined
+    {
+      border-bottom-style: dotted;
+      border-bottom-width: 2px;
+      border-bottom-color: #D0FA30;
+    }
+
+    a:visited
+    {
+      border-bottom-style: dotted;
+      border-bottom-width: 2px;
+      border-bottom-color: #D0FA30;
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover
+    {
+      color: black;
+      background: #D0FA30;
+    }
+
+    a.image, a.image:hover, a.image:visited, a.image:active, table.base a.image, table.base a.image:hover, table.base a.image:visited, table.base a.image:active, div.table_container .caption a.image:hover
+    {
+      text-decoration: none;
+      background: inherit;
+      border-bottom: none;
+    }
+
+    a:active
+    {
+      color: black;
+      background: #D0FA30;
+    }
+
+    ol {
+      padding-left: 28px;
+    }
+
+    ul.links
+    {
+      padding-left: 0px;
+      list-style-type: none;
+      text-align: left;
+      line-height: 160%;
+    }
+
+    /* Mainly for form labels */
+    br {
+      clear: both;
+    }
+
+    p {
+      margin-top: 16px;
+    }
+
+    div.pagination {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      background-image: none;  
+    }
+
+    div.pagination .current {
+      background-image: none; 
+      padding-left: 0px;
+    }
+
+    p.notes {
+      width: 600px;
+    }
+    </style>
+    
+    <style type="text/css" media="screen">
+    /* -------------------------------------------------------------- 
+
+    Based on Blueprint CSS
+    * Sets up grid of 12 columns.
+
+    By default, the grid is 880px wide, with 6 columns 
+    spanning 130px, and a 20px margin between columns.
+
+    --- 3-col ---
+    left margin + frame: 20 + 3 + 17
+    col 280
+    gutter 20
+    col 280
+    gutter 20
+    col 280
+    right margin + frame: 20 + 3 + 17
+
+    --- 2-col ---
+    left margin + frame: 20 + 3 + 17
+    col 430
+    gutter 20
+    col 430
+    right margin + frame: 20 + 3 + 17
+
+
+    18 cols (40) + 17 gutters (8) =
+    (x * 40) + ((x + 1) * 8) = 880
+    40x + 8x + 8 = 880
+    48x = 872
+
+    -------------------------------------------------------------- */
+
+    /* A container should group all your columns. */
+    .column_grid_container {
+      width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+
+    /* Columns
+    -------------------------------------------------------------- */
+
+    /* Sets up basic grid floating and margin. */
+    div.span-1, div.span-2, div.span-3, div.span-4, div.span-5, div.span-6, 
+    div.box-2, div.box-3, div.box-4, div.box-5, div.box-6 {
+      float: left;
+      margin-right: 20px;
+    }
+
+    /* The last column in a row needs this class. */
+    div.last { margin-right: 0; }
+
+    /* Use these classes to set the width of a column. */
+    div.span-1  { width: 130px; }
+    div.span-2  { width: 280px; }
+    div.span-3  { width: 430px; }
+    div.span-4  { width: 580px; }
+    div.span-5  { width: 730px; }
+    div.span-6  { width: 880px; margin: 0; }
+
+    /* Div and tables with borders */
+    div.box-2  { width: 278px; }
+    div.box-3  { width: 428px; }
+    div.box-4  { width: 578px; }
+    div.box-5  { width: 628px; }
+
+    /* Add these to a column to append empty cols. */
+    div.append-1  { padding-right: 150px; }  
+    div.append-2  { padding-right: 300px; } 
+    div.append-3  { padding-right: 450px; } 
+    div.append-4  { padding-right: 600px; } 
+    div.append-5  { padding-right: 750px; } 
+
+    /* Add these to a column to prepend empty cols. */
+    div.prepend-1  { padding-left: 150px; }  
+    div.prepend-2  { padding-left: 300px; } 
+    div.prepend-3  { padding-left: 450px; } 
+    div.prepend-4  { padding-left: 600px; } 
+    div.prepend-5  { padding-left: 750px; } 
+
+
+    /* Use this to create a horizontal ruler across a column. */
+    hr {
+      background: #ddd; 
+      color: #ddd;
+      clear: both; 
+      float: none; 
+      width: 100%; 
+      height: .1em;
+      margin: 0 0 1.45em;
+      border: none; 
+    }
+
+    hr.space {
+      background: inherit;
+      color: inherit;
+      border: inherit;
+    }
+
+
+    /* Clearing floats without extra markup
+       Based on How To Clear Floats Without Structural Markup by PiE
+       [http://www.positioniseverything.net/easyclearing.html] */
+
+    .clearfix:after, .column_grid_container:after, .container:after {
+        content: "."; 
+        display: block;
+        height: 0; 
+        clear: both; 
+        visibility: hidden;
+    }
+    .clearfix, .column_grid_container, .container:after {display: inline-block;}
+    * html .clearfix,
+    * html .column_grid_container,
+    * html .container:after {height: 1%;}
+    .clearfix, .column_grid_container, .container:after {display: block;}
+
+    /* Regular clearing
+       apply to column that should drop below previous ones. */
+
+    .clear { clear:both; }
+
+    div.show_grid {
+      background-position: 13px 0px;
+      background-image: url(/images/backgrounds/grid.png);
+    }
+
+    .no_top_margin {
+      margin-top: 0px !important;
+    }
+
+    h3.no_top_margin {
+      padding-top: 0px;
+    }
+
+    .top_margin {
+      margin-top: 16px;
+    }      
+    </style>
+    
+    <style type="text/css" media="screen">
+      img.error {
+        border: 1px solid rgb(109, 109, 109);
+      }
+    </style>
+    
+  </head>
+  <body>
+  <div class="shadow_2">
+    <div class="shadow_1">
+      <div class="frame">
+        <div class="nav" id="top">
+          <h1><a href="/">Racing on Rails</a></h1>
+          <div class="breadcrumb"><a href="/">Home</a></div>
+        </div>
+        <div class="content container">
+          <h1 class="centered">We're sorry, but the site is down for maintenance.</h1>
+          <p class="centered">Please try back again in a few minutes.</p>
+          <image src="/images/photos/maintenance.jpg" class="top_margin error" />
+          <br/>
+          Photo: <a href="http://cheryljwillson.com/gallery/main.php">Cheryl J. Willson</a>
+        </div>
+          <div class="nav" id="bottom">
+          <div class="breadcrumb">
+            <a href="/">Home</a> |
+            <a href="/results" id="results_link">Results</a> |
+            <a href="/schedule" id="schedule_link">Schedule</a> | 
+            <a href="/person_session/new" id="account_link">Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

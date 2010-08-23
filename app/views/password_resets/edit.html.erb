@@ -3,6 +3,7 @@
 
 <% form_for @person, :url => password_reset_path, :method => :put do |f| %>
   <div class="centered">
+    <h2><%= @person.name %></h2>
     <%= f.error_messages %>
     <%= f.label :password, "New Password", :style => "width: 150px;" %>
     <%= f.password_field :password %>

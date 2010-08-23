@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class DisciplineTest < ActiveSupport::TestCase
   # Assume MySQL, which is not case-sensitive
   def test_find_by_name
@@ -50,7 +51,7 @@ class DisciplineTest < ActiveSupport::TestCase
   
   def test_names
     assert_equal(%w{ Circuit }, Discipline[:circuit].names, "Circuit names")
-    assert_equal(["Downhill", "Mountain Bike", "Super D"], Discipline[:mountain_bike].names, "Mountain Bike names")
+    assert_equal(["Downhill", "Mountain Bike", "Super D", "Short Track"], Discipline[:mountain_bike].names, "Mountain Bike names")
     assert_equal(["Downhill"], Discipline[:downhill].names, "Downhill names")
   end
 end

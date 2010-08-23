@@ -28,7 +28,7 @@
 <%= focus('name') %>
 
 <%- for team in @teams -%>
-  <%= draggable_element("team_#{team.id}", :revert => true, :delay => 100,
+  <%= draggable_element("team_#{team.id}", :revert => true, :delay => 100, :revert => "'failure'",
                         :onStart => "function() { Droppables.remove('team_#{team.id}_row') }", 
                         :onEnd => "function() { Droppables.add('team_#{team.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
   %>

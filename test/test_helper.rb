@@ -4,24 +4,72 @@ require 'test_help'
 require "action_view/test_case"
 require "authlogic/test_case"
 
+# Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
   self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
 
+  # Activate Authlogic. Reset RacingAssociation.
   def setup
     activate_authlogic
-    ASSOCIATION.now = nil
+    reset_association
     super
   end
   
   def teardown
+    super
+    assert_no_angle_brackets
+    # Discipline class may have loaded earlier with no aliases in database
+    reset_disciplines
+  end
+
+  # Clear ASSOCIATION.now. Reset results format.
+  def reset_association
+    ASSOCIATION.now = nil
+    ASSOCIATION.usac_results_format = false
+  end
+  
+  def reset_disciplines
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
   end
 
-  def login_as(person_fixture_symbol)
-    PersonSession.create people(person_fixture_symbol).reload
+  # person = fixture symbol or Person
+  def login_as(person)
+    case person
+    when Symbol
+      PersonSession.create people(person).reload
+    when Person
+      PersonSession.create person.reload
+    else
+      raise "Don't recogonize #{person}"
+    end
+  end
+  
+  def logout
+    session[:person_credentials_id] = nil
+    session[:person_credentials] = nil
+  end
+  
+  # person = fixture symbol or Person
+  def goto_login_page_and_login_as(person, password = "secret")
+    person = case person
+    when Symbol
+      people(person)
+    when Person
+      person
+    else
+      raise "Don't recognize #{person}"
+    end
+    
+    https! if ASSOCIATION.ssl?
+    get new_person_session_path
+    assert_response :success
+    assert_template "person_sessions/new"
+    
+    post person_session_path, :person_session => { :login => person.login, :password => password }
+    assert_response :redirect
   end
 
   # Assert two Enumerable objects contain exactly same object in any order
@@ -89,7 +137,6 @@ class ActiveSupport::TestCase
     }
   end
   
-  # TODO Add Time assert  
   # Expected = date in yyyy-mm-dd format
   def assert_equal_dates(expected, actual, message = nil, format = "%Y-%m-%d")
     if expected != nil && (expected.is_a?(Date) || expected.is_a?(DateTime) || expected.is_a?(Time))
@@ -120,6 +167,15 @@ class ActiveSupport::TestCase
       assert_equal("layouts/#{expected}", @response.layout, "layout")
     else
       assert_nil(@response.layout, "no layout")
+    end
+  end
+
+  # Detect HTML escaping screw-ups
+  def assert_no_angle_brackets
+    if @response && @response.body.present?
+      body_string = @responsebody.to_s
+      assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
+      assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
     end
   end
 
@@ -157,7 +213,7 @@ class ActiveSupport::TestCase
     }
   end
   
-  #helps with place_members_only calculation, so there are no gaps
+  # helps with place_members_only calculation, so there are no gaps
   def fill_in_missing_results
     Result.all.group_by(&:race).each do |race, results|
        all_results=results.collect(&:place) #get an array of just places for this race       
@@ -170,5 +226,9 @@ class ActiveSupport::TestCase
          end         
        }
     end
+  end
+  
+  def secure_redirect_options
+    @controller.send :secure_redirect_options
   end
 end

@@ -1,18 +1,18 @@
 module CreateIfBestResultForRaceExtension
   def create_if_best_result_for_race(attributes)
     source_result = attributes[:source_result]
-    for score in @owner.scores
+    @owner.scores.each do |score|
       same_race  = (score.source_result.race  == source_result.race)
       same_person = (score.source_result.person == source_result.person)
       if same_race && score.source_result.person && same_person
         if attributes[:points] > score.points
-          @owner.scores.delete(score)
+          @owner.scores.delete score
         else
           return nil
         end
       end
     end
-    create(attributes)
+    create attributes
   end
 end
 
@@ -23,13 +23,9 @@ end
 # Result keeps its own copy of +number+ and +team+, even though each Person has
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
-#
-# Doesn't support multiple hotspot points, though it should
 class Result < ActiveRecord::Base
-  # FIXME Make sure names are coerced correctly
-  # TODO Add number (race_number) and license
-
   attr_accessor :updated_by
+  serialize :custom_attributes, Hash
 
   before_save :find_associated_records
   before_save :save_person
@@ -180,6 +176,7 @@ class Result < ActiveRecord::Base
     end
   end
 
+  # Save associated Person
   def save_person
     if person && (person.new_record? || person.changed?)
       person.created_by = event
@@ -313,7 +310,7 @@ class Result < ActiveRecord::Base
 
   def first_name
     if person and !person.first_name.blank?
-      person.first_name
+      person.first_name(date)
     else
       ""
     end
@@ -329,7 +326,7 @@ class Result < ActiveRecord::Base
 
   def last_name
     if (person and !person.last_name.blank?)
-      person.last_name
+      person.last_name(date)
     else
       ""
     end
@@ -348,7 +345,7 @@ class Result < ActiveRecord::Base
     if person == nil
       ""
     else
-      person.name
+      person.name(date)
     end
   end
 
@@ -358,27 +355,15 @@ class Result < ActiveRecord::Base
 
   # person.name
   def name=(value)
-    if value.blank?
-      self.person = nil
-      return value
-    end
-
-    if person
-      person_for_name = Person.new(:name => value)
-      existing_people = Person.find_all_by_name_or_alias(person_for_name.first_name, person_for_name.last_name)
-      if existing_people.size == 1
-        self.person = existing_people.first
-      else
-        person_id_will_change!
-        person.name = value
-      end
-    else
+    if value.present?
       self.person = Person.new(:name => value)
+    else
+      self.person = nil
     end
   end
 
   def person_name=(value)
-    name = value
+    self.name = value
   end
 
   # Team name when result was created
@@ -488,6 +473,11 @@ class Result < ActiveRecord::Base
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
   def time_gap_to_leader_s=(time_gap_to_leader_s)
     self.time_gap_to_leader = s_to_time(time_gap_to_leader_s)
+  end
+
+  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
+  def time_gap_to_winner_s
+    time_to_s time_gap_to_winner
   end
 
   # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
@@ -609,7 +599,7 @@ class Result < ActiveRecord::Base
     other_scores_by_place = other.scores.sort do |x, y|
       x.source_result <=> y.source_result
     end
-    max_results = max(scores_by_place.size, other_scores_by_place.size)
+    max_results = [ scores_by_place.size, other_scores_by_place.size ].max
     return 0 if max_results == 0
     for index in 0..(max_results - 1)
       if scores_by_place.size == index
@@ -642,14 +632,6 @@ class Result < ActiveRecord::Base
     0
   end
 
-  def max(x, y)
-    if x >= y
-      x
-    else
-      y
-    end
-  end
-
   # Poor name. For comparison, we sort by placed, finished, DNF, etc
   def major_place
     if place.to_i > 0
@@ -669,6 +651,14 @@ class Result < ActiveRecord::Base
 
   def place_as_integer
     place.to_i
+  end
+  
+  def method_missing(sym, *args, &block)
+    if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
+      custom_attributes[sym]
+    else
+      super
+    end
   end
 
   # All numbered places first, then blanks, followed by DNF, DQ, and DNS

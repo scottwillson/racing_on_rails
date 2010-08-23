@@ -1,7 +1,7 @@
 # All categories' results in a time trial by time
 # Adds +combined_results+ if Time Trial Event.
 # Destroy +combined_results+ if they exist, but should not
-# TODO Combine with Competition. Really a special-case of Competition
+# All the calculation happens synchronously, which isn't ideal. Logic overlaps heavily with Competition as well.
 class CombinedTimeTrialResults < Event
   before_save :set_mandatory_defaults
   after_create :calculate!

@@ -1,3 +1,4 @@
+# See Bar class
 class OverallBar < Competition
   def find_race(discipline, category)
     if Discipline[:overall] == discipline
@@ -71,7 +72,7 @@ class OverallBar < Competition
       categories = [race.category]      
     end
     
-    categories.map(&:id).join(", ")
+    categories.map(&:id).join ", "
   end
 
   # Only count the top 5 disciplines

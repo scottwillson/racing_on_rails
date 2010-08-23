@@ -1,6 +1,6 @@
-# :stopdoc:
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
   def setup
     super
@@ -41,7 +41,7 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
   def test_non_official
     login_as :member
     get :index
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_select ".in_place_editable", 0, "Should be read-only for officials"
   end
   

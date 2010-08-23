@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonSessionsControllerTest < ActionController::TestCase
   def setup
     super
@@ -62,7 +63,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
     delete :destroy
     
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"    
@@ -74,7 +75,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
 
     delete :destroy
     
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"    
@@ -84,7 +85,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   def test_logout_no_session
     delete :destroy
     
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil assigns["person_session"], "@person_session"
     assert_nil session[:person_credentials], "Should not have :person_credentials in session"
     assert_nil cookies["person_credentials"], "person_credentials cookie"    

@@ -1,6 +1,8 @@
 require 'rack/utils'
 
 module Rack
+  # Test custom static asset overrides in development mode.
+  # Looks for stylesheets, JavaScripts, etc. in local/public. Handled by web server in production.
   class LocalStatic
     FILE_METHODS = %w(GET HEAD).freeze
 

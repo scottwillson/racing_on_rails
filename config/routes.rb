@@ -11,7 +11,10 @@ ActionController::Routing::Routes.draw do |map|
                      :set_parent => :get, 
                      :add_children => :get, 
                      :create_from_children => :get, 
-                     :destroy_races => :delete }
+                     :destroy_races => :delete } do |events|
+      events.resources :races, :collection => { :propagate => :post }
+    end
+                     
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :person
     
@@ -126,6 +129,7 @@ ActionController::Routing::Routes.draw do |map|
                   person.resource :membership
                   person.resources :orders
                   person.resources :results
+                  person.resources :versions
                 end
   
   # Deprecated URLs
@@ -176,11 +180,11 @@ ActionController::Routing::Routes.draw do |map|
   map.login "/login", :controller => "person_sessions", :action => "new"
   map.connect "/account/logout", :controller => "person_sessions", :action => "destroy"
   map.connect "/account/login", :controller => "person_sessions", :action => "new"
-  map.connect "/account", :controller => "people", :action => "account"
+  map.account "/account", :controller => "people", :action => "account"
 
   map.connect "/:controller", :action => "index"
   map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
-  
+
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'
 

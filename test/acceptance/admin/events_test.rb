@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class EventsTest < WebDriverTestCase
   def test_events
     login_as :administrator
@@ -48,7 +49,6 @@ class EventsTest < WebDriverTestCase
     if chrome?
       type "Candi Murray", "promoter_auto_complete"
     else
-      # click "promoter_auto_complete"
       type "candi m", "promoter_auto_complete"
       wait_for_element "person_#{candi.id}"
 
@@ -90,7 +90,6 @@ class EventsTest < WebDriverTestCase
     open "/admin/events?year=#{Date.today.year}"
     click :link_text => "Sausalito Criterium"
 
-    # click "team_auto_complete"
     type "Gentle Lovers", "team_auto_complete"
     gl = Team.find_by_name('Gentle Lovers')
     unless chrome?
@@ -140,6 +139,7 @@ class EventsTest < WebDriverTestCase
       open "/admin/events?year=2003"
 
       click :link_text => "Kings Valley Road Race"
+      wait_for_current_url %r{/admin/events/\d+/edit}
       assert_not_in_page_source "Senior Men Pro 1/2"
       assert_not_in_page_source "Senior Men 3"
     end

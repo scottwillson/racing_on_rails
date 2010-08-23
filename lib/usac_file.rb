@@ -1,6 +1,5 @@
-#compares current members to USAC database for current year
-#updates member_usac_to column to 12/31/{year}
-
+# compares current members to USAC database for current year
+# updates member_usac_to column to 12/31/{year}
 class UsacFile
   
   attr_accessor :members_list
@@ -21,7 +20,7 @@ class UsacFile
     "Complete" => "all"
   }
   
-  #prefix each file with common filename hooey
+  # prefix each file with common filename hooey
   REGION_FILES.each_pair do |key,value| 
     REGION_FILES[key] = "/promoters/wp_p_uscf_" + value + ".csv"
   end

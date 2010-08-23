@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class IronmanControllerTest < ActionController::TestCase
   def test_index
     big_team = Team.create(:name => "T" * 60)

@@ -1,4 +1,5 @@
-# Show Schedule, add and edit Events, edit Results for Events
+# Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
+# fewer fields than administrators.
 class Admin::EventsController < Admin::AdminController
   before_filter :assign_event, :only => [ :edit, :update ]
   before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
@@ -146,6 +147,7 @@ class Admin::EventsController < Admin::AdminController
   # * notice
   def upload
     uploaded_file = params[:results_file]
+    
     path = "#{Dir.tmpdir}/#{uploaded_file.original_filename}"
     File.open(path, "wb") do |f|
       f.print(uploaded_file.read)
@@ -153,17 +155,21 @@ class Admin::EventsController < Admin::AdminController
 
     temp_file = File.new(path)
     event = Event.find(params[:id])
-    if params[:usac_results_format]
-      results_file = ResultsFile.new(temp_file, event, :usac_results_format => (params[:usac_results_format] == "true"))
+    
+    if File.extname(path) == ".lif"
+      results_file = Results::LifFile.new(temp_file, event)
     else
-      results_file = ResultsFile.new(temp_file, event)
+      results_file = Results::ResultsFile.new(temp_file, event)
     end
+    
     results_file.import
     expire_cache
-    flash[:notice] = "Uploaded results for #{uploaded_file.original_filename}"
-    unless results_file.invalid_columns.empty?
-      flash[:warn] = "Invalid columns in uploaded file: #{results_file.invalid_columns.join(', ')}"
-      flash[:warn] = flash[:warn] + " (If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format
+    FileUtils.rm temp_file rescue nil
+    
+    flash[:notice] = "Imported #{uploaded_file.original_filename}. "
+    unless results_file.custom_columns.empty?
+      flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:humanize).join(", ")}. "
+      flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format?
     end
     
     redirect_to(edit_admin_event_path(event))
@@ -241,7 +247,7 @@ class Admin::EventsController < Admin::AdminController
     redirect_to(edit_admin_event_path(child))
   end
 
-  # :nodoc  
+  # Add missing child Events to this Event (their parent)
   def add_children
     parent = Event.find(params[:parent_id])
     parent.missing_children.each do |child|

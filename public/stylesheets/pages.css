@@ -167,6 +167,14 @@ div.disclosure {
   padding-left: 24px;
 }
 
+.category_name {
+  white-space: nowrap;
+}
+
+#category_root div.hovering, #unknown_category_root div.hovering {
+  background-color: #E9F79B;
+}
+
 /* Results admin */
 #find_progress_icon {
   visibility: hidden;
@@ -369,11 +377,16 @@ form.cat4_womens_race_series td input#result_team_name {
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 32px 4px;  
+  background-position:8px 4px;
+  padding-top: 4px;
 }
 
-table.event_nav td.race a {
-  margin-left: 48px;
+table.event_nav td.race .in_place_editable {
+  margin-left: 20px;
+}
+
+table.event_nav td.delete {
+  width: 16px;
 }
 
 
@@ -491,6 +504,15 @@ table.numbers label.inline {
   width: 120px;
 }
 
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
+}
+
 /* Mailing list archive */
 #archived_post_body {
   float: left;
@@ -526,4 +548,11 @@ table#preview_import_table th {
 /* Login */
 .login .options {
   margin-top: 8px;
+}
+
+/* Versions */
+.version .what,
+.version .from,
+.version .to {
+  width: 33%;
 }

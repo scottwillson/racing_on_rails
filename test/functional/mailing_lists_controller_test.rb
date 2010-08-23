@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class MailingListsControllerTest < ActionController::TestCase
   def test_index
     opts = {:controller => "mailing_lists", :action => "index"}

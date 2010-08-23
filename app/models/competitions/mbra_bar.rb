@@ -5,11 +5,6 @@
 #
 # This class implements a number of MBRA-specific rules.
 class MbraBar < Competition
-
-  # TODO Add add_child(...) to Race
-  # check placings for ties
-  # remove one-day licensees
-  
   validate :valid_dates
 
   def MbraBar.calculate!(year = Date.today.year)
@@ -19,7 +14,9 @@ class MbraBar < Competition
         date = Date.new(year, 1, 1)
 
         # Age Graded BAR and Overall BAR do their own calculations
-        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
+        Discipline.find_all_bar.reject { |discipline|
+          discipline == Discipline[:age_graded] || discipline == Discipline[:overall]
+        }.each do |discipline|
           bar = MbraBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = MbraBar.create!(
@@ -50,13 +47,12 @@ class MbraBar < Competition
   def calculate_threshold_number_of_races
     # 70% of the races (rounded to the nearest whole number) count in the BAR standings.
     @threshold_number_of_races = (Event.find_all_bar_for_discipline(self.discipline, self.date.year).size * 0.7).round.to_i
-#    @threshold_number_of_races = 1 if @threshold_number_of_races < 1 #unlikely but possible
   end
 
   def point_schedule
     @point_schedule = @point_schedule || []
   end
-  #  
+
   # Riders obtain points inversely proportional to the starting field size, 
   # plus bonuses for first, second and third place (6, 3, and 1 points respectively).
   # DNF: 1/2  point
@@ -104,9 +100,6 @@ class MbraBar < Competition
 
   # Apply points from point_schedule
   def points_for(source_result, team_size = nil)
-    # TODO Consider indexing place
-    # TODO Consider caching/precalculating team size
-    # TODO Consider caching/precalculating point schedule
     calculate_point_schedule(source_result.race.field_size)
     points = 0
     MbraBar.benchmark('points_for') {
@@ -116,7 +109,6 @@ class MbraBar < Competition
         # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
         #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
         #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-        #TODO a gap in the placings for a race (e.g. place 1, 3, 4) will cause an error here. I should check for this.
         points = point_schedule[source_result.place.to_i] * source_result.race.bar_points #/ team_size.to_f
       end
     }
@@ -141,16 +133,16 @@ class MbraBar < Competition
   end
 
   def after_create_all_results
-# Riders upgrading during the season will take 1/2 of their points (up to 30 points max)
-# with them to the higher category. The upgrading rider's accumulated points are allowed to stand at the
-# lower category.
-# After computing BAR results, look for Cat n BAR results for anyone in the Cat n - 1 BAR and add in half their Cat n points.
-    for category_pair in [
+    # Riders upgrading during the season will take 1/2 of their points (up to 30 points max)
+    # with them to the higher category. The upgrading rider's accumulated points are allowed to stand at the
+    # lower category.
+    # After computing BAR results, look for Cat n BAR results for anyone in the Cat n - 1 BAR and add in half their Cat n points.
+    [
       ["cat_up" => "Cat 1/2 Men", "cat_down" => "Cat 3 Men"],
       ["cat_up" => "Cat 3 Men", "cat_down" => "Cat 4 Men"],
       ["cat_up" => "Cat 4 Men", "cat_down" => "Cat 5 Men"],
       ["cat_up" => "Cat 1/2/3 Women", "cat_down" => "Cat 4 Women"]
-    ]
+    ].each do |category_pair|
       cat = category_pair[0]["cat_up"]
       cat_up_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_up"] }
       cat_down_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_down"] }

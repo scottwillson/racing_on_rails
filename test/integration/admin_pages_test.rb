@@ -1,6 +1,7 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
-class PublicPagesTest < ActionController::IntegrationTest
+# :stopdoc:
+class AdminPagesTest < ActionController::IntegrationTest
   if ASSOCIATION.ssl?
     def test_events
       get admin_events_path

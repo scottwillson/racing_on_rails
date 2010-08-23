@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class IronmanTest < ActiveSupport::TestCase
   def test_calculate
     original_results_count = Result.count

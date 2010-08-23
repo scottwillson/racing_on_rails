@@ -1,6 +1,17 @@
-RAILS_GEM_VERSION = '>=2.3.0' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '=2.3.5' unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
+
+if Gem::VERSION >= "1.3.6"
+    module Rails
+        class GemDependency
+            def requirement
+                r = super
+                (r == Gem::Requirement.default) ? nil : r
+            end
+        end
+    end
+end
 
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
@@ -8,15 +19,17 @@ Rails::Initializer.run do |config|
   config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {
-    :session_key => '_racing_on_rails_session',
+    :key => '_racing_on_rails_session',
     :secret      => '9998d23d32c59a8161aba78b03630a93'
   }
   
-  config.gem "authlogic"
+  config.gem "authlogic", :version => "2.1.3"
   config.gem "fastercsv"
-  config.gem "tabular"
+  config.gem "tabular", :version => "0.0.4"
   config.gem "color"
   config.gem "pdf-writer", :lib => "pdf/writer"
+  config.gem "vestal_versions"
+  config.gem "sentient_user"
 
   if RAILS_ENV == "acceptance"
     config.gem "selenium-webdriver"

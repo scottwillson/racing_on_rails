@@ -1,8 +1,8 @@
-# TODO Should this be in database as full-fledged ActiveRecord?
+# OBRA, WSBA, USA Cycling, etc …
+# Many defaults. Override in environment.rb. Stored in ASSOCIATION constant.
 # bar_point_schedule should be stored in the database with the BAR?
 class RacingAssociation
-
-  attr_accessor :name, :short_name, :state, :email, :membership_email
+  attr_accessor :name, :short_name, :state, :email, :membership_email, :person
   attr_accessor :masters_age
   attr_accessor :gender_specific_numbers, :rental_numbers, :bmx_numbers, :default_discipline, :cx_memberships
   attr_accessor :competitions
@@ -18,6 +18,7 @@ class RacingAssociation
   attr_accessor :usac_results_format
   attr_accessor :eager_match_on_license
   attr_accessor :add_members_from_results
+  attr_accessor :include_multiday_events_on_schedule
   attr_accessor :show_events_sanctioning_org_event_id
   attr_accessor :exempt_team_categories
   attr_accessor :ssl
@@ -43,13 +44,16 @@ class RacingAssociation
     @eager_match_on_license = false
     @add_members_from_results = true
     @show_events_sanctioning_org_event_id = false
+    @include_multiday_events_on_schedule = false
     @ssl = false
   end
   
+  # TODO Shouldn't this be in disciplines?
   def bmx_numbers?
     @bmx_numbers
   end
   
+  # Offers cyclocross memberships
   def cx_memberships?
     @cx_memberships
   end
@@ -58,10 +62,7 @@ class RacingAssociation
     @default_discipline ||= "Road"
   end
   
-  def default_sanctioned_by
-    @default_sanctioned_by ||= short_name
-  end
-
+  # String
   def default_sanctioned_by
     @default_sanctioned_by ||= short_name
   end
@@ -94,6 +95,10 @@ class RacingAssociation
     @show_only_association_sanctioned_races_on_calendar
   end
   
+  def include_multiday_events_on_schedule?
+    @include_multiday_events_on_schedule
+  end
+  
   def award_cat4_participation_points?
     @award_cat4_participation_points
   end
@@ -102,6 +107,7 @@ class RacingAssociation
     @usac_results_format
   end
   
+  # Trust license number in results? Use it to match People instead of name.
   def eager_match_on_license?
     @eager_match_on_license
   end
@@ -114,6 +120,11 @@ class RacingAssociation
     @show_events_sanctioning_org_event_id
   end
   
+  # Person record for RacingAssociation
+  def person
+    Person.find_or_create_by_name(short_name)
+  end
+  
   def ssl?
     @ssl
   end
@@ -123,14 +134,14 @@ class RacingAssociation
     @now || Time.zone.now
   end
   
-  # Returns now.to_date, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
   def today
-    now.to_date
+    now.beginning_of_day
   end
   
-  # Returns now.to_date.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
   def year
-    now.to_date.year
+    now.year
   end
   
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.

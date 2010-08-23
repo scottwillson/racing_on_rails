@@ -1,5 +1,7 @@
 module RacingOnRails
+  # Label + form fields HTML. Wrap checkboxes in divs (probably should do this for all label + field chunks).
   class FormBuilder < ActionView::Helpers::FormBuilder
+    # Set +editable+ to false for read-only
     def labelled_text_field(method, text = method.to_s.titleize, text_field_options = {})
       label_options = text_field_options.delete(:label) || {}
       if text_field_options[:editable] == false
@@ -9,6 +11,7 @@ module RacingOnRails
       end
     end
 
+    # Set +editable+ to false for read-only
     def labelled_select(method, select_options, options = {})
       label_options = options.delete(:label) || {}
       text = label_options.delete(:text) if label_options
@@ -19,6 +22,7 @@ module RacingOnRails
       end
     end
 
+    # List from Countries::COUNTRIES
     def labelled_country_select(method, options = {})
       labelled_select method, ASSOCIATION.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
     end
@@ -28,6 +32,7 @@ module RacingOnRails
       %Q{#{label(method, "#{text}", label_options)} #{password_field(method, password_field_options)}}
     end
 
+    # Set +editable+ to false for read-only
     def labelled_check_box(method, text = nil, check_box_options = {})
       label_options = check_box_options.delete(:label) || {}
       if check_box_options[:editable] == false
@@ -41,6 +46,7 @@ module RacingOnRails
       %Q{<div class="radio">#{radio_button(method, value)}#{label(method, text || method.to_s.titleize)}</div>}
     end
     
+    # Set +editable+ to false for read-only
     def labelled_text_area(method, options = {})
       label_options = options.delete(:label) || {}
       text = label_options[:text] if label_options
@@ -51,7 +57,6 @@ module RacingOnRails
       end
     end
     
-    # TODO get attribute from record
     def labelled_text(method, text = nil, label_text = nil, label_options = {})
       %Q{#{label(method, "#{label_text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{text || @object.send(method)}</div>}
     end

@@ -1,9 +1,8 @@
-# @columns.first.name = 'place' if !@columns.empty? and @columns.first.name.blank?
-
+# Parse and render Array of Arrays of Strings. To be replaced by Tabular.
 class Grid
   include ActionView::Helpers::TextHelper
 
-  attr_accessor :columns, :rows, :invalid_columns
+  attr_accessor :columns, :rows, :custom_columns
   attr_reader :column_count, :padding, :delimiter, :quoted, :column_map
 
   # The Grid class maps columns by default -- it changes them to lowercase and replaces
@@ -30,7 +29,7 @@ class Grid
     options.flatten! if options
     @truncated = false
     @calculated_padding = false
-    @invalid_columns = []
+    @custom_columns = []
 
     if (options.nil? || options.empty?)
       options_hash = {}
@@ -202,7 +201,7 @@ class Grid
     for column in @columns
       if column.field.nil? || !(@row_class_instance.respond_to?("#{column.field}="))
         column.field = nil
-        @invalid_columns << column.name unless column.name.blank?
+        @custom_columns << column.name unless column.name.blank?
       end
     end
   end

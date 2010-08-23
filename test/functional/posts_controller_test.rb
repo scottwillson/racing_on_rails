@@ -1,7 +1,6 @@
-require "test_helper"
-require 'mailing_list_mailer'
+require File.expand_path("../../test_helper", __FILE__)
 
-# FIXME Navigation tests are weak. Need to do more than just not blow up
+# :stopdoc:
 class PostsControllerTest < ActionController::TestCase
   def setup
     super
@@ -134,7 +133,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_01 = Post.create({
       :mailing_list => obra_race,
       :subject => "BB 1 Race Results",
-      :date => Date.new(2004, 12, 1),
+      :date => Time.zone.local(2004, 12, 1),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -143,7 +142,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_11_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Cherry Pie Race Results",
-      :date => Date.new(2004, 11, 30),
+      :date => Time.zone.local(2004, 11, 30),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."

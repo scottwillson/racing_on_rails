@@ -1,4 +1,6 @@
 class PeopleController < ApplicationController
+  include Api::People
+  
   before_filter :require_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
@@ -6,23 +8,44 @@ class PeopleController < ApplicationController
   ssl_required :edit, :update, :card, :new_login, :create_login, :account
   ssl_allowed :index
   
+  # Search for People
+  # == Params
+  # * name: case-insensitive SQL 'like' query
+  # * license: JSON and XML only
+  # * page: JSON and XML only
+  #
+  # == Returns
+  # JSON and XML results are paginated with a page size of 10
+  # :id, :first_name, :last_name, :date_of_birth, :license, :gender
+  # :aliases      => :alias, :name
+  # :team         => :name, :city, :state, :website
+  # :race_numbers => :value, :year
+  # :discipline   => :only => :name
+  #
+  # See source code of Api::People and Api::Base
   def index
-    @people = []
-    @name = params['name'] || ''
-    @name.strip!
-    if @name.present?
-      @people = Person.find_all_by_name_like(@name)
-      @people = @people.paginate(:page => params[:page])
+    respond_to do |format|
+      format.html { find_people }
+      format.js { find_people }
+      format.xml { render :xml => people_as_xml }
+      format.json { render :json => people_as_json }
     end
   end
-  
+
+  def show
+    respond_to do |format|
+      format.xml { render :xml => person_as_xml }
+      format.json { render :json => person_as_json }
+    end
+  end
+
   def account
     person = (params[:id] && Person.find(params[:id])) || current_person
     if person
       redirect_to edit_person_path(person)
     else
       session[:return_to] = "/account"
-      redirect_to new_person_session_path
+      redirect_to new_person_session_url(secure_redirect_options)
     end
   end
   
@@ -35,11 +58,13 @@ class PeopleController < ApplicationController
     end
   end
   
+  # Print membership card
   def card
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
     render(:template => "admin/people/card.pdf.pdf_writer")
   end
   
+  # Page to create a new login
   def new_login
     if current_person
       flash[:notice] = "You already have a login. You can your login or password on this page."
@@ -85,7 +110,7 @@ class PeopleController < ApplicationController
       @person.errors.add :email, "can't be blank"
     end
     
-    unless params[:person][:email][Authlogic::Regex.email]
+    if params[:person][:email].blank? || !params[:person][:email][Authlogic::Regex.email]
       @person.errors.add :email, "must been email address"
     end
     
@@ -116,6 +141,19 @@ class PeopleController < ApplicationController
       end
     else
       render :new_login
+    end
+  end
+
+  
+  private
+
+  def find_people
+    @people = []
+    @name = params['name'] || ''
+    @name.strip!
+    if @name.present?
+      @people = Person.find_all_by_name_like(@name)
+      @people = @people.paginate(:page => params[:page])
     end
   end
 end

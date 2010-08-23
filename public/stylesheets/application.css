@@ -73,8 +73,13 @@ pre, pre a, pre a:link, pre a:visited {
   font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
 }
 
-.updatedon, .weak
+.updatedon, .weak,
+.updatedon a, .weak a,
+.updatedon a:link, .weak a:link,
+.updatedon a:visited, .weak a:visited,
+.updatedon a:active, .weak a:active
 {
+  border-bottom: none;
   font-size: 1em;
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   color: rgb(160, 160, 160);

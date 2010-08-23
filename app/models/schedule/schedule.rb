@@ -23,7 +23,8 @@ module Schedule
 
     # Import Schedule from Excel +filename+.
     #
-    # *Warning:* Deletes all events after the schedule's first event date
+    # *Warning:* Deletes all events after the schedule's first event date.
+    # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
     # === Returns
     # * date of first event
     def Schedule.import(file_path)
@@ -42,6 +43,8 @@ module Schedule
     # Events with results _will not_ be destroyed
     def Schedule.delete_all_future_events(date)
       logger.debug("Delete all events after #{date}")
+      # Avoid lock version errors by destroying child events first
+      SingleDayEvent.destroy_all(["date >= ?", date])
       Event.destroy_all(["date >= ?", date])
     end
 
@@ -179,32 +182,6 @@ module Schedule
           raise(IndexError, "Could not find month for #{event.date.month} in year #{year}")
         end
         month.add(event)
-      end
-    end
-  end
-
-  # Hash that keeps a count for each key
-  class HashBag < Hash
-
-    def initialize
-      @counts = {}
-      super
-    end
-
-    def []=(key, value)
-      count = count(key)
-      count = count + 1
-      @counts[key] = count
-      super
-    end
-
-    def count(key)
-      count = @counts[key]
-
-      if count != nil
-        count    
-      else
-        0
       end
     end
   end

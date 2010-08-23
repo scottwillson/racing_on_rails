@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class OfficialsTest < WebDriverTestCase
   def test_view_assignments
     open "/admin/first_aid_providers"

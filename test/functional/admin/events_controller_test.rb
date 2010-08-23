@@ -1,6 +1,6 @@
-# :stopdoc:
-require 'test_helper'
+require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class Admin::EventsControllerTest < ActionController::TestCase
 
   include ActionView::Helpers::TagHelper
@@ -95,8 +95,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
     post :upload, :id => mt_hood_1.to_param, 
-                  :results_file => fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary),
-                  :usac_results_format => "false"
+                  :results_file => fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
 
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
     assert_redirected_to edit_admin_event_path(mt_hood_1)
@@ -104,18 +103,44 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
 
-  def test_upload_invalid_columns
+  def test_upload_usac
+    ASSOCIATION.usac_results_format = true
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.races.empty?, 'Should have no races before import')
+
+    post :upload, :id => mt_hood_1.to_param, 
+                  :results_file => fixture_file_upload("results/tt_usac.xls", "application/vnd.ms-excel", :binary)
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert_redirected_to edit_admin_event_path(mt_hood_1)
+    assert(flash.has_key?(:notice))
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+  end
+
+  def test_upload_lif
+    mt_hood_1 = events(:mt_hood_1)
+    assert(mt_hood_1.races.empty?, 'Should have no races before import')
+
+    post :upload, :id => mt_hood_1.to_param, 
+                  :results_file => fixture_file_upload("results/OutputFile.lif", nil, :binary)
+
+    assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+    assert_redirected_to edit_admin_event_path(mt_hood_1)
+    assert(flash.has_key?(:notice))
+    assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
+  end
+
+  def test_upload_custom_columns
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
     
     post :upload, :id => mt_hood_1.to_param, 
-                  :results_file => fixture_file_upload("results/invalid_columns.xls", "application/vnd.ms-excel", :binary),
-                  :usac_results_format => "false"
+                  :results_file => fixture_file_upload("results/custom_columns.xls", "application/vnd.ms-excel", :binary)
     assert_redirected_to edit_admin_event_path(mt_hood_1)
 
     assert_response :redirect
     assert(flash.has_key?(:notice))
-    assert(flash.has_key?(:warn))
+    assert(!flash.has_key?(:warn))
     assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
   end
   
@@ -342,7 +367,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert(mt_hood_1.races(true).empty?, 'Should have no races before import')
     
     file = fixture_file_upload("results/dupe_people.xls", "application/vnd.ms-excel", :binary)
-    post :upload, :id => mt_hood_1.to_param, :results_file => file, :usac_results_format => "false"
+    post :upload, :id => mt_hood_1.to_param, :results_file => file
     
     assert_response :redirect
     
@@ -719,7 +744,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_not_logged_in
     destroy_person_session
     get(:index, :year => "2004")
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
 
@@ -773,7 +798,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     @request.session[:person_id] = 31289371283
     @request.session[:person_credentials] = 31289371283
     get(:index)
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_edit_child_event

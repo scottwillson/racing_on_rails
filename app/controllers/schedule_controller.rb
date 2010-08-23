@@ -39,6 +39,7 @@ class ScheduleController < ApplicationController
     @discipline = Discipline[params["discipline"]]
     @discipline_names = Discipline.find_all_names
     events = SingleDayEvent.find_all_by_year(@year, @discipline)
+    events += MultiDayEvent.find_all_by_year(@year, @discipline) if ASSOCIATION.include_multiday_events_on_schedule?
     @schedule = Schedule::Schedule.new(@year, events)
   end
 end

@@ -57,7 +57,7 @@ function fixTableColumnWidths(table_id) {
 
 function resetTableColumnWidths(table_id) {
   $$('#' + table_id + ' th').each(function(th, index){
-    th.setStyle({width: '100%'});
+    th.setStyle({width: 'default'});
   });
   fixTableColumnWidths(table_id);
 }
@@ -79,9 +79,9 @@ function restripeTable(id) {
 
 // TODO Use this!
 function flash(key, message) {
-  $('info').hide();
-  $('notice').hide();
-  $('warn').hide();
+  if ($('info') != null) { $('info').hide() }
+  if ($('notice') != null) { $('notice').hide() }
+  if ($('warn') != null) { $('warn').hide() }
   
   $(key + '_span').update(message);
   $(key).show();

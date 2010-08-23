@@ -1,5 +1,6 @@
-require File.dirname(__FILE__) + '/../../test_helper'
+require File.expand_path("../../../test_helper", __FILE__)
 
+# :stopdoc:
 class RiderRankingsTest < ActiveSupport::TestCase
   def test_new
     RiderRankings.calculate!

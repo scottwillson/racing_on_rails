@@ -4,7 +4,7 @@
   <div class="column_grid_container top_margin">
     <% form_tag password_resets_path do %>
       <div class="prepend-2 span-3 append-1 last">
-        <%= labelled_text_field_tag :email, "Send password reset instructions to email address", "", :label => { :class => "top" } %>
+        <%= labelled_text_field_tag :email, "Send password reset instructions to email address", @email, :label => { :class => "top" } %>
       </div>
       <div class="prepend-2 span-2 append-2 last right">
         <%= submit_tag "Reset My Password", :class => :right %>

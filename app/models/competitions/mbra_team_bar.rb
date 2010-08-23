@@ -9,6 +9,7 @@ class MbraTeamBar < Competition
         # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
           bar = MbraTeamBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
             bar = MbraTeamBar.create!(
               :name => "#{year} #{discipline.name} BAT",
@@ -19,6 +20,7 @@ class MbraTeamBar < Competition
         end
 
         MbraTeamBar.find(:all, :conditions => { :date => date }).each do |bar|
+          logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.destroy_races
           bar.create_races
           bar.calculate!
@@ -45,7 +47,7 @@ class MbraTeamBar < Competition
   end
 
   # Find the source results from discipline BAR's competition results.
-  #this does not work for mbra due to the 70%-of-events rule for bar that does not apply to bat
+  # this does not work for mbra due to the 70%-of-events rule for bar that does not apply to bat
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
@@ -68,14 +70,14 @@ class MbraTeamBar < Competition
       )
   end
   
-  #create a competition_result for each team appearing in this set of results, which is per race
+  # create a competition_result for each team appearing in this set of results, which is per race
   def create_competition_results_for(results, race)
     competition_result = nil
     for source_result in results
       logger.debug("#{self.class.name} scoring result: #{source_result.event.name} | #{source_result.race.name} | #{source_result.place} | #{source_result.name} | #{source_result.team_name}") if logger.debug?
       # e.g., MbraTeamBar scoring result: Belt Creek Omnium - Highwood TT | Master A Men | 4 | Steve Zellmer | Northern Rockies Cycling
 
-      #I don't need this now: no allowance for TTT or tandem teams with members of multiple teams
+      # I don't need this now: no allowance for TTT or tandem teams with members of multiple teams
       #  teams = extract_teams_from(source_result)
       #  logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
       #  for team in teams
@@ -91,10 +93,10 @@ class MbraTeamBar < Competition
           competition_result = race.results.create(:team => source_result.team) if competition_result.nil?
         end
 
-        #limit to top two results for team for each source race by 
-        #removing the lowest score for the event after every result.
-        #I do it this way because results do not arrive in postion order.
-        #Sql sorting does not work as position is a varchar field.
+        # limit to top two results for team for each source race by 
+        # removing the lowest score for the event after every result.
+        # I do it this way because results do not arrive in postion order.
+        # SQL sorting does not work as position is a varchar field.
         score = competition_result.scores.create(
           :source_result => source_result,
           :competition_result => competition_result,
@@ -110,26 +112,6 @@ class MbraTeamBar < Competition
       end
     end
   end
-
-  # Simple logic to split team results (tandem, team TTs) between teams
-  # Just splits on first slash, so "Bike Gallery/Veloce" becomes "Bike Gallery" and "Veloce"  
-  # This method probably gets things wrong sometimes
-  #  def extract_teams_from(source_result)
-  #    return [] unless source_result.team
-  #
-  #    if source_result.race.category.name.include?('Tandem')
-  #      teams = []
-  #      team_names = source_result.team.name.split("/")
-  #      teams << Team.find_by_name_or_alias_or_create(team_names.first)
-  #      if team_names.size > 1
-  #        name = team_names[1, team_names.size - 1].join("/")
-  #        teams << Team.find_by_name_or_alias_or_create(name)
-  #      end
-  #      teams
-  #    else
-  #      [source_result.team]
-  #    end
-  #  end
 
   def first_result_for_team(source_result, competition_result)
     competition_result.nil? || source_result.team != competition_result.team
@@ -156,7 +138,9 @@ class MbraTeamBar < Competition
   end
 
   def create_races
+    logger.debug("In create_races: discipline #{discipline}") if logger.debug?
     Discipline[discipline].bar_categories.each do |category|
+      logger.debug("In create_race: category #{category}") if logger.debug?
       races.create!(:category => category)
     end
   end
@@ -164,5 +148,4 @@ class MbraTeamBar < Competition
   def friendly_name
     'MBRA BAT'
   end
-
 end

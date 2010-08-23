@@ -1,7 +1,7 @@
 class PersonSessionsController < ApplicationController
   ssl_required :new, :create, :destroy
 
-  before_filter :require_person, :only => [ :show ]
+  before_filter :require_person, :only => :show
   
   def new
     if current_person
@@ -17,9 +17,9 @@ class PersonSessionsController < ApplicationController
     if @person_session.save
       flash.discard
       if @person_session.person.administrator?
-        redirect_back_or_default admin_home_url
+        redirect_back_or_default admin_home_url(secure_redirect_options)
       else
-        redirect_back_or_default edit_person_path(@person_session.person)
+        redirect_back_or_default edit_person_url(@person_session.person, secure_redirect_options)
       end
     else
       render :new
@@ -29,6 +29,6 @@ class PersonSessionsController < ApplicationController
   def destroy
     session[:return_to] = nil
     current_person_session.destroy if current_person_session
-    redirect_back_or_default new_person_session_url
+    redirect_back_or_default new_person_session_url(secure_redirect_options)
   end
 end

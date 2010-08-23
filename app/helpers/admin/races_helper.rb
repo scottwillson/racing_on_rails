@@ -1,4 +1,5 @@
 module Admin::RacesHelper
+  # Build links like Cascade Classic: Mt. Bachelor Stage: Senior Men
   def link_to_events(race)
     html = ""
 

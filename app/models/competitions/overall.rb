@@ -1,3 +1,4 @@
+# Common superclass for Omniums and Series standings.
 # Easy to miss override: Overall results only include members
 class Overall < Competition
  validates_presence_of :parent
@@ -64,7 +65,6 @@ class Overall < Competition
   end
 
   # If same rider places twice in same race, only highest result counts
-  # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
     competition_result = nil
     results.each_with_index do |source_result, index|

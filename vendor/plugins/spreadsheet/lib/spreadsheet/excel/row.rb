@@ -53,6 +53,9 @@ class Row < Spreadsheet::Row
     return data if data.is_a?(DateTime)
     base = @worksheet.date_base
     date = base + data.to_f
+    if LEAP_ERROR > base
+      date -= 1
+    end
     hour = (data % 1) * 24
     min  = (hour % 1) * 60
     sec  = ((min % 1) * 60).round
@@ -63,13 +66,12 @@ class Row < Spreadsheet::Row
       min += 1
     end
     if min > 59
+      min = 0
       hour += 1
     end
     if hour > 23
+      hour = 0
       date += 1
-    end
-    if LEAP_ERROR > base
-      date -= 1
     end
     DateTime.new(date.year, date.month, date.day, hour, min, sec)
   end
@@ -94,9 +96,11 @@ class Row < Spreadsheet::Row
       min += 1
     end
     if min > 59
+      min = 0
       hour += 1
     end
     if hour > 23
+      hour = 0
       date += 1
     end
     year = date.year

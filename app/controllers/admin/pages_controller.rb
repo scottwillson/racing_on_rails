@@ -1,16 +1,4 @@
-# TODO Auto-size editing page textarea
-# TODO Consolidate duplicated Page finding code
-# TODO Page link helpers?
-# TODO Consider FKs and indexes
-# TODO Caching
-# TODO Partials should respect relative paths
-# TODO Diff pages
-# TODO Keywords?
-# TODO Other mark-up?
-# TODO Import/export as YAML
-# TODO Auto-refresh preview
-# TODO Change parent to child (requires fancier logic. For now, just move page to root first)
-# TODO publish-on dates
+# Admin editing for Pages in built-in CMS. All editing actions expire the cache.
 class Admin::PagesController < Admin::AdminController
   before_filter :require_administrator, :except => [ :show ]
   in_place_edit_for :page, :title

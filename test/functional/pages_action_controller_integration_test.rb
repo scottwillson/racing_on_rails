@@ -1,7 +1,8 @@
-require 'test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
-ActionController::Base.prepend_view_path("test/fixtures/views")
+ActionController::Base.prepend_view_path "test/fixtures/views"
 
+# :stopdoc:
 class FakeController < ApplicationController
   def index
     render_page

@@ -1,14 +1,10 @@
+# Sum all of Team's discipline BAR's results
 # team = source_result.team
-# FIXME: Can't just sum up person results -- need to get source race results
-# Example:
-# 5th  Banana Belt Road Race  
-#
-# TODO Consolidate with other BARs. Consider subclasses
 class TeamBar < Competition
   after_create :set_parent
   
   def point_schedule
-    [0, 30, 25, 22, 19, 17, 15, 13, 11, 9, 7, 5, 4, 3, 2, 1]
+    [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
 
   # Find the source results from discipline BAR's competition results.
@@ -36,7 +32,6 @@ class TeamBar < Competition
     )
   end
 
-  # FIXME Check that team size is considered correctly
   # Duplicate calculation of points here with BAR
   # Could derive points from competition_result.scores
   def create_competition_results_for(results, race)
@@ -70,7 +65,6 @@ class TeamBar < Competition
   # Simple logic to split team results (tandem, team TTs) between teams
   # Just splits on first slash, so "Bike Gallery/Veloce" becomes "Bike Gallery" and "Veloce"  
   # This method probably gets things wrong sometimes
-  # TODO Move this (and maybe other methods) logic to Result or Score
   def extract_teams_from(source_result)
     return [] unless source_result.team
   
@@ -84,9 +78,9 @@ class TeamBar < Competition
       end
       teams
     elsif source_result.team.name == 'Forza Jet Velo'
-      [Team.find_or_create_by_name('Half Fast Velo')]
+      [ Team.find_or_create_by_name('Half Fast Velo') ]
     else
-      [source_result.team]
+      [ source_result.team ]
     end
   end
 
@@ -96,8 +90,6 @@ class TeamBar < Competition
 
   # Apply points from point_schedule, and adjust for field size
   def points_for(source_result, team_size = nil)
-    # TODO Consider indexing place
-    # TODO Consider caching/precalculating team size
     points = 0
     Bar.benchmark('points_for') {
       field_size = source_result.race.field_size
@@ -123,6 +115,6 @@ class TeamBar < Competition
   end
 
   def friendly_name
-    'Team BAR'
+    "Team BAR"
   end
 end

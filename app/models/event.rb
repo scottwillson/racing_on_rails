@@ -24,6 +24,13 @@
 # * competition_event_memberships: many-to-many from Events to Competitions. Example: Banana Belt I
 #   can be a member of the Oregon Cup and the OBRA Road BAR. And the Oregon Cup also includes Kings Valley RR,
 #   Table Rock RR, etc. CompetitionEventMembership is a meaningul class in its own right.
+#
+# Changes to parent Event's attributes are propogated to children, unless the children's attributes are already different.
+# See PROPOGATED_ATTRIBUTES
+# 
+# It's debatable whether we need STI subclasses or not.
+#
+# All notification code just supports combined TT results, and should be moved to background processing
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
     city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
@@ -75,6 +82,11 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   
+  named_scope :editable_by, lambda { |person| 
+    {:conditions => { :promoter_id => person.id } } unless person.administrator?
+  }
+  named_scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
+  
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
@@ -93,6 +105,7 @@ class Event < ActiveRecord::Base
   end
   
   # Return [weekly_series, events] that have results
+  # Honors ASSOCIATION.show_only_association_sanctioned_races_on_calendar
   def Event.find_all_with_results(year = Date.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
@@ -222,11 +235,9 @@ class Event < ActiveRecord::Base
     NumberIssuer.find_by_name(ASSOCIATION.short_name)
   end
   
-  # TODO Could be replaced with a select join if too slow
-  # TODO Use has_results?
   def validate_no_results
     races(true).each do |race|
-      if !race.results(true).empty?
+      if race.results(true).any?
         errors.add('results', 'Cannot destroy event with results')
         return false 
       end
@@ -280,6 +291,7 @@ class Event < ActiveRecord::Base
     enable_notification!
   end
 
+  # All races' Categories and all children's races' Categories
   def categories
     _categories = races.map(&:category)
     children.inject(_categories) { |cats, child| cats + child.categories }
@@ -293,9 +305,13 @@ class Event < ActiveRecord::Base
       attribute = change.first
       was = change.last.first
       if was.blank?
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]])
+        SingleDayEvent.update_all(
+          ["#{attribute}=?", self[attribute]], 
+          ["(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, 
+          self[:id]]
+        )
       else
-        SingleDayEvent.update_all(["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]])
+        SingleDayEvent.update_all ["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]]
       end
     end
     
@@ -303,9 +319,14 @@ class Event < ActiveRecord::Base
     true
   end
 
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    # Do nothing in superclass
+  end
+
   def children_changed(child)
     # Don't trigger callbacks
-    Event.update_all(["updated_at = ?", Time.zone.now], ["id = ?", id])
+    Event.update_all ["updated_at = ?", Time.zone.now], ["id = ?", id]
     true
   end
   
@@ -352,7 +373,6 @@ class Event < ActiveRecord::Base
   end
 
   # Format for schedule page primarily
-  # TODO is this used?
   def short_date
     return '' unless date
     prefix = ' ' if date.month < 10
@@ -391,14 +411,14 @@ class Event < ActiveRecord::Base
   end
   
   def city_state
-    if !city.blank?
-      if !state.blank?
+    if city.present?
+      if state.present?
         "#{city}, #{state}"
       else
         city
       end
     else
-      if !state.blank?
+      if state.present?
         state
       else
         ''
@@ -407,9 +427,10 @@ class Event < ActiveRecord::Base
   end
   
   def location
-    self.city_state
+    city_state
   end
   
+  # Will split on comma if city, state
   def location=(value)
     if value.present?
       self.city, self.state = value.split(",")
@@ -457,6 +478,7 @@ class Event < ActiveRecord::Base
     @new_team_name = value
   end
   
+  # Find or create associated Team based on new_team_name
   def set_team
     if new_team_name.present?
       self.team = Team.find_by_name_or_alias_or_create(new_team_name)
@@ -486,6 +508,7 @@ class Event < ActiveRecord::Base
     end
   end
   
+  # Try to intelligently combined parent name and child name for schedule pages
   def full_name
     if parent.nil?
       name
@@ -505,7 +528,7 @@ class Event < ActiveRecord::Base
   end
 
   def missing_children?
-    !missing_children.empty?
+    missing_children.any?
   end
   
   # Always return empty Array
@@ -514,7 +537,7 @@ class Event < ActiveRecord::Base
   end
   
   def multi_day_event_children_with_no_parent?
-    !multi_day_event_children_with_no_parent.empty?
+    multi_day_event_children_with_no_parent.any?
   end
   
   def multi_day_event_children_with_no_parent
@@ -537,7 +560,6 @@ class Event < ActiveRecord::Base
     nil
   end
   
-  # TODO Use acts as tree
   def root
     node = self
     node = node.parent while node.parent

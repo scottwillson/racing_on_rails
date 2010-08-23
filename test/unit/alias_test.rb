@@ -1,7 +1,7 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class AliasTest < ActiveSupport::TestCase
-
   def test_new
     weaver = people(:weaver)
     assert_nil(Alias.find_by_name('Weaver'), 'Weaver should not exist')

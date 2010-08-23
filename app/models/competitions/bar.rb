@@ -3,16 +3,9 @@
 # Also calculates a team BAR.
 # Recalculating the BAR at years-end can take nearly 30 minutes even on a fast server. Recalculation must be manually triggered.
 # This class implements a number of OBRA-specific rules and should be generalized and simplified.
-# The BAR categories and disciplines are all configured in the databsase. Race categories need to have a bar_category_id to 
+# The BAR categories and disciplines are all configured in the database. Race categories need to have a bar_category_id to 
 # show up in the BAR; disciplines must exist in the disciplines table and discipline_bar_categories.
-# FIXME This documentation is out of date
-# TODO Consider using parent BAR again with child Competitions. Should that just be Overall BAR?
 class Bar < Competition
-
-  # TODO Add add_child(...) to Race
-  # check placings for ties
-  # remove one-day licensees
-  
   validate :valid_dates
 
   def Bar.calculate!(year = Date.today.year)
@@ -24,7 +17,9 @@ class Bar < Competition
         overall_bar = OverallBar.find_or_create_for_year(year)
 
         # Age Graded BAR, Team BAR and Overall BAR do their own calculations
-        Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall] || discipline == Discipline[:team]}.each do |discipline|
+        Discipline.find_all_bar.reject { |discipline|
+          [ Discipline[:age_graded], Discipline[:overall], Discipline[:team] ].include?(discipline)
+        }.each do |discipline|
           bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(
@@ -67,7 +62,6 @@ class Bar < Competition
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
-  # TODO Duplicate of Discipline.names?
   def source_results(race)
     race_disciplines = case race.discipline
     when "Road"
@@ -109,8 +103,6 @@ class Bar < Competition
 
   # Apply points from point_schedule, and adjust for field size
   def points_for(source_result, team_size = nil)
-    # TODO Consider indexing place
-    # TODO Consider caching/precalculating team size
     points = 0
     Bar.benchmark('points_for') {
       field_size = source_result.race.field_size

@@ -1,0 +1,25 @@
+<% @show_tabs = (promoter? || administrator? || official?) -%>
+
+<h2><%= @person.name %></h2>
+
+<div class="column_grid_container">
+  <p class="centered">
+    <% if @person.versions.empty? %>
+      <strong>No other versions</strong>
+    <% end -%>
+  </p>
+  
+  <%= render :partial => "version", :collection => @person.versions.sort_by(&:updated_at).reverse %>
+
+  <div class="page_buttons span-6 last">
+    <div class="updatedon span-2">
+      <span class="created_at">
+        <%= render :partial => "people/created_updated" %>
+    </div>
+  
+    <div class="right span-4 last">
+      <%= link_to("Edit Account", edit_admin_person_path(@person), :class => "obvious") if administrator? %>
+      <%= link_to("Edit Account", edit_person_path(@person), :class => "obvious") unless administrator? %>
+    </div>
+  </div>
+</div>

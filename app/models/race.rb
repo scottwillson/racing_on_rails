@@ -1,7 +1,11 @@
 # A Race is essentionally a collection of Results labelled with a Category. Races must belong to a parent Event.
-# TODO Use Discipline class, not String
 #
 # Races only have some of their attributes populated. These attributes are listed in the +result_columns+ Array.
+#
+# People use say "category" where we use Race in code. Could rename this EventCategory.
+#
+# Race +result_columns+: populated columns displayed on results page. Usually Result attributes, but also creates
+# virtual "custom" columns.
 class Race < ActiveRecord::Base
 
   include Comparable
@@ -11,26 +15,21 @@ class Race < ActiveRecord::Base
   RESULT = Result.new
   
   validates_presence_of :event, :category
-  validate :result_columns_valid?
 
   before_validation :find_associated_records
   
   belongs_to :category
   serialize :result_columns, Array
+  serialize :custom_columns, Array
   belongs_to :event
   has_many :results, :dependent => :destroy
-  
-  # Convenience method to get the Race's Category's BAR Category
-  # :deprecated:
-  def bar_category_name
-    category.parent.name if category and category.parent
-  end
   
   # Defaults to Event's BAR points
   def bar_points
     self[:bar_points] || self.event.bar_points
   end
   
+  # 0..3
   def bar_points=(value)
     if value == self.event.bar_points or value.nil?
       self[:bar_points] = nil
@@ -65,6 +64,7 @@ class Race < ActiveRecord::Base
     self.category_name
   end
   
+  # Combine with event name
   def full_name
     if name == self.event.full_name
       name
@@ -82,16 +82,16 @@ class Race < ActiveRecord::Base
   end
   
   def date
-    event && event.date
+    event.try :date
   end
   
   def year
     event && event.date && event.date.year
   end
   
-  # FIXME: Incorrectly doubles tandem and other team events' field sizes
+  # Incorrectly doubles tandem and other team events' field sizes
   def field_size
-    if self[:field_size] and self[:field_size] > 0
+    if self[:field_size].present? && self[:field_size] > 0
       self[:field_size]
     else
       results.size
@@ -132,14 +132,8 @@ class Race < ActiveRecord::Base
     columns
   end
   
-  # Are there are +result_columns+ that don't map to a Result attribute
-  def result_columns_valid?
-    return if self.result_columns.nil?
-    for column in self.result_columns
-      if column.blank? or !RESULT.respond_to?(column.to_sym)
-        errors.add('result_columns', "'#{column}' is not a valid result column")
-      end
-    end
+  def custom_columns
+    self[:custom_columns] ||= []
   end
   
   # Ensure child team and people are not duplicates of existing records
@@ -158,10 +152,13 @@ class Race < ActiveRecord::Base
   end
 
   def has_result(row_hash)
-    if !row_hash["place"].blank? and row_hash["place"] != "1" && row_hash["place"] != "0"
+    if row_hash["place"].present? && row_hash["place"] != "1" && row_hash["place"] != "0"
       return true
     end
-    if row_hash["person.first_name"].blank? and row_hash["person.last_name"].blank? and row_hash["person.road_number"].blank? and row_hash["team.name"].blank?
+    if row_hash["person.first_name"].blank? && 
+       row_hash["person.last_name"].blank? &&
+       row_hash["person.road_number"].blank? &&
+       row_hash["team.name"].blank?
       return false
     end
     true
@@ -201,18 +198,23 @@ class Race < ActiveRecord::Base
     event_notification_was_enabled = event.notification_enabled?
     event.disable_notification!
     begin
-      last_members_only_place = 0 #count up from zero
-      last_result_place = 0 #assuming first result starting at zero+one (better than sorting results twice?)
+      # count up from zero
+      last_members_only_place = 0
+      # assuming first result starting at zero+one (better than sorting results twice?)
+      last_result_place = 0
       results.sort.each do |result|
         place_before = result.members_only_place.to_i
         result.members_only_place = ''
         if result.place.to_i > 0         
-          if ((result.person.nil? or (result.person and result.person.member?(result.date))) and not non_members_on_team(result))
-            last_members_only_place+=1 if (result.place.to_i!=last_members_only_place && result.place.to_i!=last_result_place) #only increment if we have moved onto a new place
+          if ((result.person.nil? || (result.person && result.person.member?(result.date))) && !non_members_on_team(result))
+            # only increment if we have moved onto a new place
+            last_members_only_place += 1 if (result.place.to_i != last_members_only_place && result.place.to_i!=last_result_place)
             result.members_only_place = last_members_only_place.to_s
           end
-          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          last_result_place = result.place.to_i #store to know when switching to new placement (team result feature)
+          # Slight optimization. Most of the time, no point in saving a result that hasn't changed
+          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place 
+          # store to know when switching to new placement (team result feature)
+          last_result_place = result.place.to_i
         end
       end
     ensure
@@ -222,22 +224,25 @@ class Race < ActiveRecord::Base
   
   def non_members_on_team(result)
     non_members = false
-    exempt_cats = ASSOCIATION.exempt_team_categories #if this is undeclared in environment.rb, assume this rule does not apply
-     if (exempt_cats.nil? or exempt_cats.include?(result.race.category.name))
+    # if this is undeclared in environment.rb, assume this rule does not apply
+    exempt_cats = ASSOCIATION.exempt_team_categories
+     if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
        return non_members
      else
        other_results_in_place = Result.find(:all, :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
        other_results_in_place.each { |orip|
           unless orip.person.nil?
-            if not orip.person.member?(result.date)
-             #might as well blank out this result while we're here, saves some future work
+            if !orip.person.member?(result.date)
+             # might as well blank out this result while we're here, saves some future work
              result.members_only_place = ''
-             result.update_attribute('members_only_place', result.members_only_place)
-             non_members=true #could also use other_results_in_place.size if needed for calculations
+             result.update_attribute 'members_only_place', result.members_only_place
+             # could also use other_results_in_place.size if needed for calculations
+             non_members = true
             end
           end
        }
-       return non_members #still false if no others found, or all are members, or could not be determined (non-person)
+       # still false if no others found, or all are members, or could not be determined (non-person)
+       non_members
      end
    end
   
@@ -282,6 +287,7 @@ class Race < ActiveRecord::Base
     result.destroy
   end
   
+  # By category name
   def <=>other
     category.name <=> other.category.name
   end

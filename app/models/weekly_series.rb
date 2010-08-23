@@ -17,7 +17,7 @@ class WeeklySeries < Series
   end
   
   # Formatted list. Examples:
-  # * Tueday PIR: Tu
+  # * Tuesday PIR: Tu
   # * Track classes: M, W, F
   def days_of_week_as_string(date_range, reload = false)
     case days_of_week(date_range, reload).size

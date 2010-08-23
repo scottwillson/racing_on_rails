@@ -23,26 +23,18 @@ class Post < ActiveRecord::Base
     self.date = Time.zone.now if date.nil?
   end
   
-  # Hack used when importing old Topica email
-  def add_time
-    if (date.hour == 0 or date.hour == 12) and date.min == 0 and date.sec == 0
-      self.date = date + id    
-    end
-  end
-  
   def remove_list_prefix
     subject.gsub!(/\[#{mailing_list.subject_line_prefix}\]\s*/, "")
     subject.strip!
-  end
-  
-  def remove_topica_footer
-    return if body.blank?
-    self.body = body.gsub(/<map name=\'unsubbed_gray_map\'.*<img[^>]+>/m, "")
   end
 
   def from_email_address=(value)
     @from_email_address = value
     update_sender
+  end
+
+  def topica?
+    topica_message_id.present?
   end
 
   def from_name=(value)
@@ -69,17 +61,11 @@ class Post < ActiveRecord::Base
     return sender
   end
   
-  def topica?
-    !topica_message_id.blank?
-  end
-  
-  # Used by Topica import only?
   def update_sender
-    if !@from_name.blank? and from_email_address and !@from_email_address.empty? and !(@from_name.to_s == @from_email_address.to_s )
+    if @from_name.present? && from_email_address.present? && @from_email_address.any? && !(@from_name.to_s == @from_email_address.to_s )
       self.sender = "#{@from_name} <#{@from_email_address}>"
     else
       self.sender = @from_email_address.to_s
     end
   end
-
 end

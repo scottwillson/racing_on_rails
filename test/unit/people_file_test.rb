@@ -1,12 +1,13 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase  
   def test_import
     team = Team.create!(:name => "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(:date => 1.years.ago)
     result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
@@ -83,7 +84,7 @@ Downhill/Cross Country: Downhill}
     
     assert_equal(1, Team.count(:conditions => { :name => "Sorella Forte Elite Team"} ), "Should have one Sorella Forte in database")
     team = Team.find_by_name("Sorella Forte Elite Team")
-    assert_equal(0, team.historical_names(true).size, "historical_names")
+    assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
   end

@@ -1,9 +1,9 @@
+# Used on most results pages. Efficient, though obviously written by someone who was still learning Ruby.
 module GridHelper
   @@grid_columns = nil
 
   # Class-scope Hash of Columns, keyed by field
   # Used to display results in a grid
-  # TODO Rewrite this a bit smarter
   def grid_columns(column)
     if @@grid_columns.nil?
       @@grid_columns = Hash.new
@@ -41,19 +41,25 @@ module GridHelper
       @@grid_columns['time_bonus_penalty'].field = :time_bonus_penalty_s
       @@grid_columns['time_gap_to_leader'] = Column.new(:name => 'time_gap_to_leader', :description => 'Down', :size => 6, :justification => Column::RIGHT)
       @@grid_columns['time_gap_to_leader'].field = :time_gap_to_leader_s
+      @@grid_columns['time_gap_to_winner'] = Column.new(:name => 'time_gap_to_winner', :description => 'Down', :size => 6, :justification => Column::RIGHT)
+      @@grid_columns['time_gap_to_winner'].field = :time_gap_to_winner_s
       @@grid_columns['time_total'] = Column.new(:name => 'time_total', :description => 'Overall', :size => 8, :justification => Column::RIGHT)
       @@grid_columns['time_total'].field = :time_total_s
     end
     grid_column = @@grid_columns[column.to_s]
     if grid_column.nil?
-      grid_column = Column.new(:name => column)
+      grid_column = Column.new(:name => column, :description => column.humanize)
+      if column.to_s[/^run/] || column.to_s[/^heat/] || column.to_s[/^time/] || column.to_s[/^point/] || column.to_s[/^pts/]  || column.to_s[/^hot_spot/]
+        grid_column.justification = Column::RIGHT
+      end
       @@grid_columns[column] = grid_column
     end
 
-    # Return a copy so callers can modify column attributes without affecting other clients
+    # Return a copy so callers can modify column attributes without affecting requests in other threads
     grid_column.dup
   end
 
+  # Preformatted results
   def results_grid(race)
     result_grid_columns = race.result_columns_or_default.collect do |column|
       grid_columns(column)
@@ -61,7 +67,7 @@ module GridHelper
     rows = race.results.sort.collect do |result|
       row = []
       for grid_column in result_grid_columns
-        if grid_column.field and result.respond_to?(grid_column.field)
+        if grid_column.field
           cell = result.send(grid_column.field).to_s
           cell = '' if cell == '0.0'
           row << cell

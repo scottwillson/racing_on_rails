@@ -25,8 +25,8 @@ class EditorRequestsController < ApplicationController
       end
     end
     
-    if params[:return_to] == "admin"
-      redirect_to edit_admin_person_path(@person)
+    if params[:return_to].present?
+      redirect_to params[:return_to]
     else
       redirect_to edit_person_path(@editor)
     end

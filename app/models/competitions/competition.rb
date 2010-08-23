@@ -1,7 +1,15 @@
 require 'fileutils'
 
-# Year-long competition that derive their results from other Events:
-# BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
+# Results that derive their results from other Events. Se TYPES.
+# Year-long: BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
+# Event-based: Cross Crusade, Mount Tabor Series.
+#
+# +point_schedule+: Array. How many points for each place?
+# +source_events+: Which events count toward Competition? Not all Competitions use this relationship.
+# Many dynamically choose their source events each time they calculate.
+# +competition_event_memberships+: Relationship between source_events and competition.
+#
+# +calculate!+ is the main method
 class Competition < Event
   include FileUtils
   
@@ -20,9 +28,6 @@ class Competition < Event
     TeamBar
   }
 
-  # TODO Validate dates
-  # TODO Use class methods to set things like friendly_name
-  # TODO Just how much memory is this thing hanging on to?
   attr_accessor :point_schedule
 
   after_create  :create_races
@@ -44,13 +49,9 @@ class Competition < Event
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
   # Destroys existing Competition for the year first.
-  # TODO store intermeditate results in database?
   def Competition.calculate!(year = Date.today.year)
-    # TODO: Use FKs in database to cascade delete
-    # TODO Use Hashs or class instead of iterating through Arrays!
     benchmark(name, Logger::INFO, false) {
       transaction do
-        # TODO move to superclass
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
         competition = self.find_or_create_by_date(date)
@@ -133,18 +134,21 @@ class Competition < Event
     true
   end
 
+  # Some competitions are only open to RacingAssociation members, and non-members are dropped from the results.
   def calculate_members_only_places
     if place_members_only?
+      # Uses batch_size, Rails 2.3 db cursor, to limit load on memory
       Race.find_each(:include => :event,
                 :conditions => [ "events.type != ? and events.date between ? and ?", 
                                  self.class.name.demodulize, start_date, end_date ],
-                :batch_size => 50 #Rails 2.3 db cursor feature to limit load on memory
+                :batch_size => 50
                 ) do |r|
                   r.calculate_members_only_places!
                 end
     end
   end
   
+  # Rebuild results
   def calculate!
     races.each do |race|
       results = source_results_with_benchmark(race)
@@ -170,8 +174,8 @@ class Competition < Event
   # Array of ids (integers)
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
-    ids = [race.category_id]
-    ids = ids + race.category.descendants.map { |category| category.id }
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
     ids.join(', ')
   end
   
@@ -233,6 +237,7 @@ class Competition < Event
     true 
   end
   
+  # Member this +date+ year?
   def member?(person_or_team, date)
     person_or_team && person_or_team.member_in_year?(date)
   end
@@ -247,8 +252,6 @@ class Competition < Event
   
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
-    # TODO Consider indexing place
-    # TODO Consider caching/precalculating team size
     team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
     if place_members_only?
       points = point_schedule[source_result.members_only_place.to_i].to_f
@@ -256,16 +259,17 @@ class Competition < Event
       points = point_schedule[source_result.place.to_i].to_f
     end
     if points
-      points * points_factor(source_result)  / team_size.to_f
+      points * points_factor(source_result) / team_size.to_f
     else
       0
     end
   end
   
-  #get the multiplier from the CompetitionEventsMembership if it exists
+  # multiplier from the CompetitionEventsMembership if it exists
   def points_factor(source_result)
     cem = source_result.event.competition_event_memberships.detect{|comp| comp.competition_id == self.id}
-    cem ? cem.points_factor : 1 #factor is one if membership is not found
+    # factor is one if membership is not found
+    cem ? cem.points_factor : 1 
   end
   
   def requires_combined_results?

@@ -1,7 +1,7 @@
 # TextMate sets this to 1, which hangs the Firefox driver
 ENV.delete "DYLD_FORCE_FLAT_NAMESPACE"
 
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 require "selenium-webdriver"
 
 class WebDriverTestCase < ActiveSupport::TestCase
@@ -12,6 +12,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   fixtures :all
   
+  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
   def setup
     # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
     webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
@@ -25,8 +26,19 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def teardown
-    @driver.try :quit
-    super
+    begin
+      begin
+        Timeout::timeout(5) do
+          driver.try :quit
+        end
+      rescue Timeout::Error => e
+        Rails.logger.warn "Could not quit Firefox driver"
+        driver.try(:quit) rescue nil
+      end
+      super
+    rescue Exception => e
+      Rails.logger.error e
+    end
   end
   
   def open(url, expect_error_page = false)
@@ -67,6 +79,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     _element.send_keys text
   end
   
+  # Go to login page and login
   def login_as(person_symbol)
     open "/person_session/new"
     type people(person_symbol).login, "person_session_login"
@@ -83,6 +96,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     find_element(:css => "select##{select_element_id} option[value='#{value}']").select
   end
   
+  # Workaround for WebDriver's less-than-stellar alert box handling.
   def click_ok_on_confirm_dialog
     driver.execute_script("window.confirm = function(msg){return true;};")
   end
@@ -241,7 +255,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
 
     begin
       Timeout::timeout(10) do
-        until find_elements(element_finder).any? && case
+        until find_elements(element_finder).any? && case value
           when Regexp
             find_element(element_finder).value[value]
           else
@@ -272,6 +286,34 @@ class WebDriverTestCase < ActiveSupport::TestCase
       assert_match text, element.text
     else
       assert_equal text.to_s, element.text
+    end
+  end
+
+  def wait_for_text(text, element_finder)
+    raise ArgumentError if element_finder.empty? || element_finder.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until find_elements(element_finder).any? && text.to_s == find_element(element_finder).text.to_s
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Element #{element_finder.inspect} with text '#{text}' did not appear within 10 seconds"
+    end
+  end
+  
+  def wait_for_page_source(text)
+    raise ArgumentError if text.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until driver.page_source.include?(text)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "'#{text}' did not appear in page source within 10 seconds"
     end
   end
   

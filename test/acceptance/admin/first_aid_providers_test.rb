@@ -1,5 +1,6 @@
 require "acceptance/webdriver_test_case"
 
+# :stopdoc:
 class FirstAidProvidersTest < WebDriverTestCase
   def test_first_aid_providers
     # FIXME Punt!
@@ -16,7 +17,7 @@ class FirstAidProvidersTest < WebDriverTestCase
       click :xpath => "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
       wait_for_element :class => "editor_field"
       type "Megan Weaver", :class => "editor_field"
-      submit :class => "inplaceeditor-form"
+       type :return, { :class_name => "editor_field" }, false
       wait_for_no_element :class => "editor_field"
 
       refresh

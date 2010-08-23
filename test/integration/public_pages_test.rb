@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class PublicPagesTest < ActionController::IntegrationTest
   def test_popular_pages
     get "/events/"
@@ -47,6 +48,18 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_response :success
     assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
   end
+  
+  def test_first_aid_providers
+    https! if ASSOCIATION.ssl?
+
+    get "/admin/first_aid_providers"
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
+
+    go_to_login
+    login :person_session => { :login => "alice", :password => "secret" }
+    get "/admin/first_aid_providers"
+    assert_response :success
+  end
 
   private
   
@@ -56,8 +69,9 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_response :success
     assert_template "person_sessions/new"
   end
-  
+
   def login(options)
+    https! if ASSOCIATION.ssl?
     post person_session_path, options
     assert_response :redirect
   end

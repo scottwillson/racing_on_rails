@@ -1,3 +1,4 @@
+# Send membership data to SportsBase
 class RaceDayMailer < ActionMailer::Base
   def members_export(people, sent_on_time = Time.zone.now)
     subject    "#{ASSOCIATION.name} Members Export"
@@ -10,6 +11,5 @@ class RaceDayMailer < ActionMailer::Base
     attachment "text/plain" do |a|
       a.body = render(:file => "members_export", :body => { :people => people })
     end
-
   end
 end

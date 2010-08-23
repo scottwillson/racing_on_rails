@@ -1,3 +1,6 @@
+# Used by Grid.
+#
+# Eventually wil be replaced by Tabular
 class Column
 
   LEFT  = :left unless defined?(LEFT)

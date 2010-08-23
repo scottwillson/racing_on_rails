@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class EditorRequestsControllerTest < ActionController::TestCase
   def setup
     super
@@ -46,7 +47,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   
   def test_must_login
     post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_security

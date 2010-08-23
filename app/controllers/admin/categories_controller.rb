@@ -44,4 +44,17 @@ class Admin::CategoriesController < Admin::AdminController
       end
     end
   end
+
+  # Calculate MbraBar only
+  def recompute_bar
+    MbraBar.calculate!
+    redirect_to :action => :index
+  end
+
+  # Calculate MbraTeamBar only
+  def recompute_team_bar
+    MbraTeamBar.calculate!
+    redirect_to :action => :index
+  end
+
 end

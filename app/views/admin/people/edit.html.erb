@@ -64,6 +64,15 @@
     <%= f.labelled_text_field :login, nil, :autocomplete => "off" %>
     <%= f.labelled_password_field :password, nil, :autocomplete => "off" %>
     <%= f.labelled_password_field :password_confirmation, "Confirm Password", :autocomplete => "off" %>
+    <% if @person.last_login_at -%>
+    <%= f.labelled_text :last_login_at, 
+                        link_to(@person.last_login_at.to_s(:long_and_friendly_date_and_time), 
+                          {},
+                          { :title => "OK/Fail: #{@person.login_count}/#{@person.failed_login_count}\nCurrent: #{@person.current_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.current_login_ip}\nLast: #{@person.last_login_at.to_s(:long_and_friendly_date_and_time)} from #{@person.last_login_ip}" }
+                        ) -%>
+    <% else -%>
+    <%= f.labelled_text :last_login_at, "Never" -%>
+    <% end -%>    
   </div>
 
   <hr class="space" />
@@ -85,7 +94,6 @@
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
     <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if ASSOCIATION.cx_memberships? %>
-    <%= f.labelled_check_box :official %>
 
     <%= f.labelled_check_box :membership_card, "Has Card?" %>
     <%= f.labelled_check_box :print_card, 
@@ -93,6 +101,7 @@
                              {:class => 'obvious'})}" unless @person.new_record? %>
 
     <%= f.labelled_text :card_printed_at, @person.card_printed_at ? @person.card_printed_at.to_s(:long_ordinal) : "Never" %>
+    <%= f.labelled_check_box :official %>
   </div>
 
   <div class="span-3 last">
@@ -110,17 +119,20 @@
   <hr class="space" />
 
   <div class="clear span-6 last">
-    <%= render(:partial => "people/events", :locals => { :person => @person }) unless @person.events.empty? %>
+    <%= render :partial => "people/account_permissions", 
+                :locals => { :person => @person, 
+                             :account_permissions => @person.account_permissions, 
+                             :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
+                           }
+    %>
+    <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find(:all, :conditions => [ 
+       "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+     ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
   </div>
 
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
-      <span class="created_at">
-        <% if @person.created_at %>Created <%= time_ago_in_words(@person.created_at, true) + " ago" %><% end %>
-        <% if @person.created_by %>by <%= truncate_from_end(@person.created_by.name) %><% end %>
-      </span>
-      <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
-      <% if @person.updated_by %>by <%= truncate_from_end(@person.updated_by) %><% end %>
+      <%= render :partial => "people/created_updated" %>
     </div>
     <div class="right span-4 last">
       <%= link_to("Move Results", admin_person_results_path(@person)) unless @person.new_record? %>  

@@ -1,5 +1,6 @@
-require "test_helper"
+require File.expand_path("../../test_helper", __FILE__)
 
+# :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   def test_create
     combined_results = CombinedTimeTrialResults.create!(:parent => events(:jack_frost_2002))
