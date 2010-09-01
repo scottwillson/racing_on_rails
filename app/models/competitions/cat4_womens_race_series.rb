@@ -65,12 +65,14 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def create_races
-    category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
-    self.races.create(:category => category)
+    races.create :category => category
   end
   
   def cat_4_categories
-    category = Category.find_or_create_by_name(ASSOCIATION.cat4_womens_race_series_category || "Women Cat 4")
     [ category ] + category.descendants
+  end
+  
+  def category
+    @category ||= ASSOCIATION.cat4_womens_race_series_category || Category.find_or_create_by_name("Women Cat 4")
   end
 end

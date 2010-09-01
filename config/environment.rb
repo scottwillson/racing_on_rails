@@ -82,16 +82,6 @@ require 'string'
 require "local_static"
 require "action_view/inline_template_extension"
 
-unless defined?(ASSOCIATION)
-  ASSOCIATION = RacingAssociation.new
-  ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
-  ASSOCIATION.short_name = 'CBRA'
-  ASSOCIATION.state = 'OR'
-  ASSOCIATION.rental_numbers = 51..99 if RAILS_ENV == 'test'
-  
-  SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
-end
-
 RAILS_HOST  = 'localhost:3000' unless defined?(RAILS_HOST)
 STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
 ActionMailer::Base.default_url_options[:host] = RAILS_HOST

@@ -510,7 +510,7 @@ module Results
     
       race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
       race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"999999999", :team_name =>"Jittery Joe's", :points => "23.0")
-      if SANCTIONING_ORGANIZATIONS.include?("USA Cycling")
+      if ASSOCIATION.sanctioning_organizations.include?("USA Cycling")
         race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Tonkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
       else
         race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Torkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")

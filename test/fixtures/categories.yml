@@ -1,5 +1,5 @@
 association:
-  name: <%= ASSOCIATION.short_name %>
+  name: <%= ASSOCIATION_SHORT_NAME %>
 senior_men:
   name: Senior Men
   friendly_param: senior_men

@@ -152,8 +152,8 @@ create table `editor_requests` (
   key `index_editor_requests_on_person_id` (`person_id`),
   key `index_editor_requests_on_expires_at` (`expires_at`),
   key `index_editor_requests_on_token` (`token`),
-  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `events` (
@@ -388,8 +388,8 @@ create table `people_people` (
   unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
   key `index_people_people_on_editor_id` (`editor_id`),
   key `index_people_people_on_person_id` (`person_id`),
-  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade
+  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
+  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
 ) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
 
 create table `people_roles` (
@@ -469,6 +469,47 @@ create table `races` (
   key `index_races_on_bar_points` (`bar_points`),
   constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
   constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
+) engine=innodb default charset=utf8;
+
+create table `racing_associations` (
+  `id` int(11) not null auto_increment,
+  `add_members_from_results` tinyint(1) not null default '1',
+  `always_insert_table_headers` tinyint(1) not null default '1',
+  `award_cat4_participation_points` tinyint(1) not null default '1',
+  `bmx_numbers` tinyint(1) not null default '0',
+  `cx_memberships` tinyint(1) not null default '0',
+  `eager_match_on_license` tinyint(1) not null default '0',
+  `flyers_in_new_window` tinyint(1) not null default '0',
+  `gender_specific_numbers` tinyint(1) not null default '0',
+  `include_multiday_events_on_schedule` tinyint(1) not null default '0',
+  `show_calendar_view` tinyint(1) not null default '1',
+  `show_events_velodrome` tinyint(1) not null default '1',
+  `show_license` tinyint(1) not null default '1',
+  `show_only_association_sanctioned_races_on_calendar` tinyint(1) not null default '1',
+  `show_practices_on_calendar` tinyint(1) not null default '0',
+  `ssl` tinyint(1) not null default '0',
+  `lock_version` int(11) not null default '0',
+  `masters_age` int(11) not null default '35',
+  `cat4_womens_race_series_category_id` int(11) default null,
+  `cat4_womens_race_series_points` varchar(255) default null,
+  `competitions` varchar(255) default null,
+  `country_code` varchar(255) not null default 'US',
+  `default_discipline` varchar(255) not null default 'road',
+  `email` varchar(255) not null default 'scott.willson@gmail.com',
+  `exempt_team_categories` varchar(255) not null default '0',
+  `membership_email` varchar(255) not null default 'scott.willson@gmail.com',
+  `name` varchar(255) not null default 'cascadia bicycle racing association',
+  `rental_numbers_start` int(11) not null default '51',
+  `rental_numbers_end` int(11) not null default '99',
+  `sanctioning_organizations` varchar(255) default null,
+  `short_name` varchar(255) not null default 'cbra',
+  `show_events_sanctioning_org_event_id` varchar(255) not null default '0',
+  `state` varchar(255) not null default 'or',
+  `usac_region` varchar(255) not null default 'north west',
+  `usac_results_format` varchar(255) not null default '0',
+  `created_at` datetime default null,
+  `updated_at` datetime default null,
+  primary key (`id`)
 ) engine=innodb default charset=utf8;
 
 create table `results` (
@@ -790,6 +831,8 @@ insert into schema_migrations (version) values ('20100616224058');
 insert into schema_migrations (version) values ('20100616230454');
 
 insert into schema_migrations (version) values ('20100701032620');
+
+insert into schema_migrations (version) values ('20100831151754');
 
 insert into schema_migrations (version) values ('21');
 
