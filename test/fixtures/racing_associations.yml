@@ -1,3 +1,9 @@
 association:
- short_name: cbra
- name: Cascadia Bicycle Racing Association
+  short_name: CBRA
+  name: Cascadia Bicycle Racing Association
+  sanctioning_organizations: [ CBRA, USA Cycling ]
+  default_sanctioned_by: CBRA
+  administrator_tabs: !ruby/object:Set
+    hash: {}
+  competitions: !ruby/object:Set
+    hash: {}

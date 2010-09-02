@@ -9,7 +9,6 @@ class RacingAssociation < ActiveRecord::Base
 
   belongs_to :cat4_womens_race_series_category, :class_name => "Category"
 
-  attr_accessor :default_sanctioned_by
   attr_accessor :now
   attr_accessor :person
   attr_accessor :rental_numbers
@@ -19,36 +18,34 @@ class RacingAssociation < ActiveRecord::Base
   serialize :competitions
   serialize :sanctioning_organizations
   
-  def administrator_tabs
-    @administrator_tabs ||= Set.new([ 
+  default_value_for :administrator_tabs do
+    Set.new([ 
       :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
     ])
   end
   
-  def competitions
-    @competitions ||= Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
+  default_value_for :competitions do
+    Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
   end
   
   # String
-  def default_sanctioned_by
-    @default_sanctioned_by ||= short_name
+  default_value_for :default_sanctioned_by do |r|
+    r.short_name
+  end
+  
+  default_value_for :rental_numbers do |r|
+    (r.rental_numbers_start)..(r.rental_numbers_end)
+  end
+  
+  default_value_for :sanctioning_organizations do
+    [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
   end
 
   # Person record for RacingAssociation
   def person
     @person ||= Person.find_or_create_by_name(short_name)
   end
-  
-  def rental_numbers
-    @rental_numbers ||= rental_numbers_start..rental_numbers_end
-  end
-  
-  def sanctioning_organizations
-    @sanctioning_organizations ||= [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
-  end
-  Set.new([ 
-    :schedule, :first_aid, :people, :teams, :velodromes, :categories, :cat4_womens_race_series, :article_categories, :articles, :pages 
-  ])
+
   # Defaults to Time.now, but can be explicitly set for tests or data cleanup
   def now
     @now || Time.zone.now

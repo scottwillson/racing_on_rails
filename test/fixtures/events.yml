@@ -198,7 +198,6 @@ lost_series_child:
   name: Lost Series
   discipline: Road
   sanctioned_by: <%= ASSOCIATION_DEFAULT_SANCTIONED_BY %>
-  sanctioned_by: <%= ASSOCIATION.short_name %>
   promoter_id: 3
   date: <%= Date.today %>
   type: SingleDayEvent
