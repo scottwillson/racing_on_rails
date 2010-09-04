@@ -90,12 +90,12 @@ class Result < ActiveRecord::Base
 
     # This logic should be in Person
     if person && 
-       ASSOCIATION.add_members_from_results? &&
+       RacingAssociation.current.add_members_from_results? &&
        person.new_record? &&
        person.first_name.present? &&
        person.last_name.present? &&
        person[:member_from].blank? &&
-       event.number_issuer.name == ASSOCIATION.short_name &&
+       event.number_issuer.name == RacingAssociation.current.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
       person.member_from = race.date
@@ -122,7 +122,7 @@ class Result < ActiveRecord::Base
     matches = Set.new
     
     #license first if present and source is reliable (USAC)
-    if ASSOCIATION.eager_match_on_license? && license.present?
+    if RacingAssociation.current.eager_match_on_license? && license.present?
       matches = matches + Person.find_all_by_license(license)
       return matches if matches.size == 1
     end
@@ -169,7 +169,7 @@ class Result < ActiveRecord::Base
   # FIXME optimize default number issuer business
   def update_person_number
     discipline = Discipline[event.discipline]
-    default_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    default_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
       person.updated_by = self.updated_by
       person.add_number(number, discipline, event.number_issuer, event.date.year)

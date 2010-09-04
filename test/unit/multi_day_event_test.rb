@@ -339,7 +339,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.discipline = "Cyclocross"
     single_event_1.flyer = "http://www.letour.fr"
     single_event_1.promoter = nil
-    single_event_1.sanctioned_by = ASSOCIATION.short_name
+    single_event_1.sanctioned_by = RacingAssociation.current.short_name
     single_event_1.save!
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
@@ -364,7 +364,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Cyclocross", results["discipline"], "SingleDayEvent discipline")
     assert_equal("http://www.letour.fr", results["flyer"], "SingleDayEvent flyer")
     assert_nil(results["promoter_id"], "SingleDayEvent promoter_id")
-    assert_equal(ASSOCIATION.short_name, results["sanctioned_by"], "SingleDayEvent sanctioned_by")
+    assert_equal(RacingAssociation.current.short_name, results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("France", results["state"], "SingleDayEvent state")
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
@@ -533,7 +533,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(:state => nil)
-    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+    assert_equal(RacingAssociation.current.state, child.state, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(:state => "NY")
@@ -541,7 +541,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!
-    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+    assert_equal(RacingAssociation.current.state, child.state, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(:state => "")
     child = parent.children.create!

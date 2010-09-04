@@ -54,9 +54,9 @@ class MultiDayEvent < Event
   def MultiDayEvent.find_all_by_year(year, discipline = nil)
     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
 
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       conditions.first << " and sanctioned_by = ?"
-      conditions << ASSOCIATION.default_sanctioned_by
+      conditions << RacingAssociation.current.default_sanctioned_by
     end
     
     if discipline

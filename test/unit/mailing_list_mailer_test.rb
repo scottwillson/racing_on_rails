@@ -7,8 +7,8 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
-    ASSOCIATION.now = Time.zone.now
-    @expected.date = ASSOCIATION.now
+    RacingAssociation.current.now = Time.zone.now
+    @expected.date = RacingAssociation.current.now
     @expected.body = read_fixture("post")
 
     post = Post.new
@@ -17,7 +17,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = ASSOCIATION.now
+    post.date = RacingAssociation.current.now
     post_email = MailingListMailer.create_post(post)
     assert_equal(@expected.encoded, post_email.encoded)
   end

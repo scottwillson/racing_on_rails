@@ -958,7 +958,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'all')
 
     assert_response(:success)
-    today = ASSOCIATION.effective_today
+    today = RacingAssociation.current.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
@@ -994,7 +994,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'members_only')
 
     assert_response(:success)
-    today = ASSOCIATION.effective_today
+    today = RacingAssociation.current.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
@@ -1007,7 +1007,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:index, :format => 'xls', :include => 'members_only', :excel_layout => "scoring_sheet")
 
     assert_response(:success)
-    today = ASSOCIATION.effective_today
+    today = RacingAssociation.current.effective_today
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     assert_not_nil(@response.headers['Content-Length'], 'Should set content length')

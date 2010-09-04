@@ -10,12 +10,12 @@
       <%= f.hidden_field :event_id %>
       <%= f.labelled_text_field :category_name %>
 
-      <% if ASSOCIATION.competitions.include?(:bar) -%>
+      <% if RacingAssociation.current.competitions.include?(:bar) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "BAR Category" %><br/><br/>
       <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "BAR Points"}, :editable => administrator? %>
       <%- end %>
 
-      <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
+      <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
       <%= f.labelled_text :bar_category, competition_category_name(@race), "Rankings Cat" %><br/><br/>
       <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "Raking Pts"}, :editable => administrator? %>
       <%- end %>

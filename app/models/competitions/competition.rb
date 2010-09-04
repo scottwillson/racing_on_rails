@@ -38,11 +38,11 @@ class Competition < Event
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
   
-  def self.find_for_year(year = ASSOCIATION.year)
+  def self.find_for_year(year = RacingAssociation.current.year)
     self.find_by_date(Date.new(year, 1, 1))
   end
   
-  def self.find_or_create_for_year(year = ASSOCIATION.year)
+  def self.find_or_create_for_year(year = RacingAssociation.current.year)
     self.find_for_year(year) || self.create(:date => (Date.new(year, 1, 1)))
   end
   

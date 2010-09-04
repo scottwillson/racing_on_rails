@@ -47,15 +47,15 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     html = @response.body
     
     assert_equal(
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?,
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?,
       !html[events(:future_national_federation_event).name], 
       "Schedule should only show events sanctioned by Association"
     )
     
     assert_equal(
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?, 
       !html[events(:usa_cycling_event_with_results).name], 
-      "Schedule page should honor ASSOCIATION.show_only_association_sanctioned_races_on_calendar?"
+      "Schedule page should honor RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?"
     )
   end
   

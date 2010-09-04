@@ -62,9 +62,9 @@ module UpcomingEvents
   
     # Awkward method to add sanctioned_by to conditions
     def scope_by_sanctioned(conditions)
-      if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+      if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
         conditions[0] = conditions.first + ' and events.sanctioned_by = ?'
-        conditions << ASSOCIATION.default_sanctioned_by
+        conditions << RacingAssociation.current.default_sanctioned_by
       else
         conditions
       end

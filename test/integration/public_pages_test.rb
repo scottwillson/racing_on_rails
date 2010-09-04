@@ -34,23 +34,23 @@ class PublicPagesTest < ActionController::IntegrationTest
     
     get "/people/#{result.person.to_param}"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.name}/
     
     get "/people/#{result.person.to_param}/results"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.name}/
     
     get "/teams/#{result.team.to_param}"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.team_name}/
     
     get "/teams/#{result.team.to_param}/results"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.team_name}/
   end
   
   def test_first_aid_providers
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
 
     get "/admin/first_aid_providers"
     assert_redirected_to(new_person_session_url(secure_redirect_options))
@@ -64,14 +64,14 @@ class PublicPagesTest < ActionController::IntegrationTest
   private
   
   def go_to_login
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"
   end
 
   def login(options)
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     post person_session_path, options
     assert_response :redirect
   end

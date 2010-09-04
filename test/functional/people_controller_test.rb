@@ -393,7 +393,7 @@ class PeopleControllerTest < ActionController::TestCase
   
   def test_new_login_http
     get :new_login
-    if ASSOCIATION.ssl?
+    if RacingAssociation.current.ssl?
       assert_redirected_to new_login_people_url(:protocol => "https")
     else
       assert_response :success

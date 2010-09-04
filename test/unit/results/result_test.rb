@@ -471,19 +471,19 @@ class ResultTest < ActiveSupport::TestCase
     assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
-    assert_equal(ASSOCIATION.add_members_from_results?, result.person.member?, "Person should be member")
+    assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     # Rental
     begin
-      original_rental_numbers = ASSOCIATION.rental_numbers
-      ASSOCIATION.rental_numbers = 0..99
+      original_rental_numbers = RacingAssociation.current.rental_numbers
+      RacingAssociation.current.rental_numbers = 0..99
       result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
       assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
       road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
       assert_nil(road_number, 'Current road number')
       assert(!result.person.member?, "Person with rental number should not be member")
     ensure
-      ASSOCIATION.rental_numbers = original_rental_numbers
+      RacingAssociation.current.rental_numbers = original_rental_numbers
     end
   end
 
@@ -579,7 +579,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_differentiate_people_by_number_ignore_different_names
-    ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(false)
+    RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(false)
     
     person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
     person.reload
@@ -611,7 +611,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_differentiate_people_by_number_ignore_different_names_eager_match
-    ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(true)
+    RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(true)
     
     person = Person.create!(:name => "Joe Racer")
     Person.connection.execute "update people set updated_at = '#{Time.local(2008).utc.to_s(:db)}' where id = #{person.id}"
@@ -801,7 +801,7 @@ class ResultTest < ActiveSupport::TestCase
   end
   
   def test_find_people_among_duplicates
-    ASSOCIATION.now = Date.new(Date.today.year, 6)
+    RacingAssociation.current.now = Date.new(Date.today.year, 6)
     Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
     
     jt_1 = Person.create!(:name => "John Thompson")
@@ -925,7 +925,7 @@ class ResultTest < ActiveSupport::TestCase
     person = result.person
     person.reload
     
-    if ASSOCIATION.add_members_from_results?
+    if RacingAssociation.current.add_members_from_results?
       assert(person.member?, "Finisher with racing association number should be member")
     else
       assert(!person.member?, "Finisher with racing association number should be member if RacingAssociation doesn't allow this")

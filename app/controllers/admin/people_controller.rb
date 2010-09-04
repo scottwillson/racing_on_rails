@@ -93,7 +93,7 @@ class Admin::PeopleController < Admin::AdminController
     @year = current_date.year
     @person = Person.new
     @race_numbers = []
-    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+    @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     render :edit
   end
   
@@ -101,7 +101,7 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @year = current_date.year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+    @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
   end
   
   # Create new Person
@@ -143,7 +143,7 @@ class Admin::PeopleController < Admin::AdminController
     else
       @year = current_date.year
       @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
-      @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
       render :edit
     end
   end
@@ -208,8 +208,8 @@ class Admin::PeopleController < Admin::AdminController
         return redirect_to(edit_admin_person_path(@person))
       end
     end
-    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
-    @year = params[:year] || ASSOCIATION.effective_year
+    @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+    @year = params[:year] || RacingAssociation.current.effective_year
     @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     render :edit
   end
@@ -372,7 +372,7 @@ class Admin::PeopleController < Admin::AdminController
       @person = Person.new
       @race_numbers = []
     end
-    @years = (2005..(ASSOCIATION.next_year)).to_a.reverse
+    @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
   end
   
@@ -421,7 +421,7 @@ class Admin::PeopleController < Admin::AdminController
     @people = [@person]
     @person.print_card = false
     @person.membership_card = true
-    @person.card_printed_at = ASSOCIATION.now
+    @person.card_printed_at = RacingAssociation.current.now
     @person.save!
     
     # Workaround Rails 2.3 bug. Unit tests can't find correct template.
@@ -455,7 +455,7 @@ class Admin::PeopleController < Admin::AdminController
     if params[:date].present?
       Date.parse(params[:date])
     else
-      ASSOCIATION.effective_today
+      RacingAssociation.current.effective_today
     end
   end
   

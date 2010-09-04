@@ -6,12 +6,12 @@ class SingleDayEvent < Event
   
   before_create :set_bar_points
 
-  def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = ASSOCIATION.show_only_association_sanctioned_races_on_calendar)
-    conditions = ["date between ? and ? and practice in (?)", "#{year}-01-01", "#{year}-12-31", [ASSOCIATION.show_practices_on_calendar?, false]]
+  def SingleDayEvent.find_all_by_year(year, discipline = nil, sanctioned_by = RacingAssociation.current.show_only_association_sanctioned_races_on_calendar)
+    conditions = ["date between ? and ? and practice in (?)", "#{year}-01-01", "#{year}-12-31", [RacingAssociation.current.show_practices_on_calendar?, false]]
 
     if sanctioned_by
       conditions.first << " and sanctioned_by = ?"
-      conditions << ASSOCIATION.default_sanctioned_by
+      conditions << RacingAssociation.current.default_sanctioned_by
     end
     
     if discipline

@@ -1,8 +1,8 @@
 Hi <%= @editor_request.editor.name %>,
 
-<%= @editor_request.person.name %> has granted you access to their <%= ASSOCIATION.name %> account:
+<%= @editor_request.person.name %> has granted you access to their <%= RacingAssociation.current.name %> account:
 
 <%= link_to @edit_url, @edit_url %>
 
 If the link does not work, try copying and pasting it into your browser.
-If it still doesn't work, please contact <%= mail_to ASSOCIATION.email %>.
+If it still doesn't work, please contact <%= mail_to RacingAssociation.current.email %>.

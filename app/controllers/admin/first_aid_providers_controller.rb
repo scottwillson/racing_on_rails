@@ -6,11 +6,11 @@ class Admin::FirstAidProvidersController < Admin::AdminController
   layout "admin/application"
 
   def index
-    @year = ASSOCIATION.effective_year
+    @year = RacingAssociation.current.effective_year
     
     @past_events = params[:past_events] || false
     if @past_events
-      conditions = ['date >= ?', ASSOCIATION.effective_today ]
+      conditions = ['date >= ?', RacingAssociation.current.effective_today ]
     else
       conditions = ['date >= CURDATE()']
     end

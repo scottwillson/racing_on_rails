@@ -104,7 +104,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
 
   def test_upload_usac
-    ASSOCIATION.usac_results_format = true
+    RacingAssociation.current.usac_results_format = true
     mt_hood_1 = events(:mt_hood_1)
     assert(mt_hood_1.races.empty?, 'Should have no races before import')
 
@@ -722,7 +722,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   
   def test_add_children
     lost_series_child = events(:lost_series_child)
-    start_date = ASSOCIATION.now.to_date + 30
+    start_date = RacingAssociation.current.now.to_date + 30
     lost_series_child.date = start_date
     lost_series_child.save!
     

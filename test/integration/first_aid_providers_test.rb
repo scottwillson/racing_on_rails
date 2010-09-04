@@ -5,7 +5,7 @@ class FirstAidProvidersTest < ActionController::IntegrationTest
 
   # Test sorting
   def test_all_disciplines_empty_results
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
 

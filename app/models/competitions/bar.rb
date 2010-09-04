@@ -86,7 +86,7 @@ class Bar < Competition
                   place between 1 AND #{point_schedule.size - 1}
                     and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries', 'TaborOverall') or events.type is NULL)
                     and bar = true
-                    and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
+                    and events.sanctioned_by = "#{RacingAssociation.current.default_sanctioned_by}"
                     and categories.id in (#{category_ids})
                     and (events.discipline in (#{race_disciplines})
                       or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))

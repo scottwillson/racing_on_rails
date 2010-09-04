@@ -16,7 +16,7 @@ class HomeController < ApplicationController
       :joins => [:races => :results],
       :conditions => [
         'events.date > ? and events.sanctioned_by = ?', 
-        cutoff, ASSOCIATION.default_sanctioned_by
+        cutoff, RacingAssociation.current.default_sanctioned_by
       ],
       :order => 'events.date desc'
     )

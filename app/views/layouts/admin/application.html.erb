@@ -5,9 +5,9 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>
       <%- if @page_title -%>
-      <%= ASSOCIATION.short_name %>: <%= @page_title -%>
+      <%= RacingAssociation.current.short_name %>: <%= @page_title -%>
       <%- else -%>
-      <%= ASSOCIATION.name %>
+      <%= RacingAssociation.current.name %>
       <%- end %>
     </title>
     <%= render :partial => "layouts/stylesheets" %>
@@ -19,8 +19,8 @@
     <div class="shadow_1">
       <div class="frame" id="frame">
         <div class="nav" id="top">
-          <h1><%= link_to ASSOCIATION.name, '/' %></h1>
-          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, :controller => '/' %></div>
+          <h1><%= link_to RacingAssociation.current.name, '/' %></h1>
+          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, :controller => '/' %></div>
         </div>
         <div class="content container">
         <%= render :partial => "shared/tabs" %>
@@ -29,7 +29,7 @@
         </div>
         <div class="nav" id="bottom">
           <div class="breadcrumb">
-            <%= link_to ASSOCIATION.short_name, '/' %> | 
+            <%= link_to RacingAssociation.current.short_name, '/' %> | 
       <%= link_to "Logout", person_session_path, :method => :delete, :id => "account_link" %>
       </div>
         </div>

@@ -14,7 +14,7 @@ class EditorRequestMailerTest < ActionMailer::TestCase
 
     assert_equal [ "Ryan Weaver" ], email.to_addrs.map(&:name)
     assert_equal [ "hotwheels@yahoo.com" ], email.to_addrs.map(&:address)
-    assert_equal "#{editor.name} would like access to your #{ASSOCIATION.short_name} account", email.subject
+    assert_equal "#{editor.name} would like access to your #{RacingAssociation.current.short_name} account", email.subject
     assert_match(editor_request.token, email.body)
   end
 
@@ -32,6 +32,6 @@ class EditorRequestMailerTest < ActionMailer::TestCase
 
     assert_equal [ "Molly Cameron" ], email.to_addrs.map(&:name)
     assert_equal [ "molly@example.com" ], email.to_addrs.map(&:address)
-    assert_equal "Ryan Weaver #{ASSOCIATION.short_name} account access granted", email.subject
+    assert_equal "Ryan Weaver #{RacingAssociation.current.short_name} account access granted", email.subject
   end
 end

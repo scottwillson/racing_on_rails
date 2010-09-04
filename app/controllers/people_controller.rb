@@ -96,7 +96,7 @@ class PeopleController < ApplicationController
       
       if @person.nil?
         @person = Person.new
-        @person.errors.add_to_base "Didn't match your name and license number. Please check your #{ASSOCIATION.short_name} membership card."
+        @person.errors.add_to_base "Didn't match your name and license number. Please check your #{RacingAssociation.current.short_name} membership card."
       end
     end
     @person = Person.new if @person.nil?

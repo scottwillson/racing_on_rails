@@ -4,7 +4,7 @@ class Notifier < ActionMailer::Base
     Notifier.default_url_options[:host] = RAILS_HOST
     
     subject       "Password Reset Instructions"
-    from          "#{ASSOCIATION.short_name} <#{ASSOCIATION.email}>"
+    from          "#{RacingAssociation.current.short_name} <#{RacingAssociation.current.email}>"
     recipients    people.first.email_with_name
     sent_on       Time.zone.now
     body          :edit_password_reset_urls => people.map { |person| edit_password_reset_url(person.perishable_token) }, :people => people

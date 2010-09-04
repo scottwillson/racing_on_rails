@@ -1,6 +1,6 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<% if ASSOCIATION.show_calendar_view? -%>
+<% if RacingAssociation.current.show_calendar_view? -%>
 <p class="centered"><%= link_to 'Schedule in calendar format', {:action => 'index'}, {:class => 'obvious'} %></p>
 <hr class="space" />
 <% end -%>
@@ -38,7 +38,7 @@
     <%- else -%>
     <td class="link">
       <%- if event.flyer.present? && event.flyer_approved? -%>
-          <a href="<%= event.flyer -%>"<%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+          <a href="<%= event.flyer -%>"<%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
           MTB
             <%- end -%></a>
             <%- else -%>

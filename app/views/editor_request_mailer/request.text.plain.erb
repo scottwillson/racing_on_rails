@@ -1,11 +1,11 @@
 Hi <%= @editor_request.person.name %>,
 
-<%= @editor_request.editor.name %> would like access to your <%= ASSOCIATION.name %> account.
+<%= @editor_request.editor.name %> would like access to your <%= RacingAssociation.current.name %> account.
 
 If that's OK with you, please click this link:
 <%= link_to @edit_url, @edit_url %>
 
 If the link does not work, try copying and pasting it into your browser.
-If it still doesn't work, please contact <%= mail_to ASSOCIATION.email %>.
+If it still doesn't work, please contact <%= mail_to RacingAssociation.current.email %>.
 
-If you do want <%= @editor_request.editor.name %> to have access to your <%= ASSOCIATION.name %> account, please ignore this email.
+If you do want <%= @editor_request.editor.name %> to have access to your <%= RacingAssociation.current.name %> account, please ignore this email.

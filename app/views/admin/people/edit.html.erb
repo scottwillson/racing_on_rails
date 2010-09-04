@@ -93,7 +93,7 @@
     <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Date.today -%>
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>
-    <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if ASSOCIATION.cx_memberships? %>
+    <%= f.labelled_check_box(:ccx_only, "Cyclocross only?") if RacingAssociation.current.cx_memberships? %>
 
     <%= f.labelled_check_box :membership_card, "Has Card?" %>
     <%= f.labelled_check_box :print_card, 
@@ -126,7 +126,7 @@
                            }
     %>
     <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find(:all, :conditions => [ 
-       "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+       "parent_id is null and date between ? and ?", RacingAssociation.current.now.beginning_of_year, RacingAssociation.current.now.end_of_year 
      ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
   </div>
 

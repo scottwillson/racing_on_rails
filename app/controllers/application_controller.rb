@@ -133,7 +133,7 @@ class ApplicationController < ActionController::Base
 
   def require_person
     unless current_person
-      flash[:notice] = "Please login to your #{ASSOCIATION.short_name} account"
+      flash[:notice] = "Please login to your #{RacingAssociation.current.short_name} account"
       store_location_and_redirect_to_login
       return false
     end
@@ -242,7 +242,7 @@ class ApplicationController < ActionController::Base
   end
   
   def secure_redirect_options
-    if ASSOCIATION.ssl?
+    if RacingAssociation.current.ssl?
       { :protocol => "https", :host => request.host }
     else
       {}
@@ -257,7 +257,7 @@ class ApplicationController < ActionController::Base
   # Returns true if the current action is supposed to run as SSL.
   # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
   def ssl_required?
-    ASSOCIATION.ssl? &&
+    RacingAssociation.current.ssl? &&
     self.class.read_inheritable_attribute(:ssl_required_actions) &&
     self.class.read_inheritable_attribute(:ssl_required_actions).include?(action_name.to_sym)
   end

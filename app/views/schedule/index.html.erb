@@ -15,7 +15,7 @@ end -%>
 <%= render_page "schedule/others" %>
 <p class="centered"><%= link_to "Schedule in list format", {:action => 'list'}, {:class => 'obvious'} %> with race organizer contact information</p>
 
-<% if ASSOCIATION.competitions.include?(:atra_points_series) -%>
+<% if RacingAssociation.current.competitions.include?(:atra_points_series) -%>
 <p class="centered"><%= image_tag "icons/red_star.gif", :style => "margin: 0px; padding-top: 2px;" %>&nbsp;ATRA National Championship Series (NCS)</p>
 <%- end %>
 
@@ -47,7 +47,7 @@ end -%>
         <span class="postponed"><%= event.full_name -%></span> <i>postponed</i>
             <%- else -%>
               <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.full_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>
+            <a href="<%= event.flyer -%>" class="obvious" <%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%></a>
               <%- else -%>
             <%= event.full_name -%><%= " MTB" if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
               <%- end -%>

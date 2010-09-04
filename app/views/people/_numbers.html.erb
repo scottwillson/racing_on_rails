@@ -1,16 +1,16 @@
-<% table :caption => "#{ASSOCIATION.effective_year} Numbers", 
+<% table :caption => "#{RacingAssociation.current.effective_year} Numbers", 
          :class => "numbers box-2 clear",
          :id => "numbers",
          :insert_header => true, 
          :columns => 2 do %>
-  <% if ASSOCIATION.show_license %>
+  <% if RacingAssociation.current.show_license %>
   <tr>
-    <td><%= ASSOCIATION.short_name %> License/Membership #</td>
+    <td><%= RacingAssociation.current.short_name %> License/Membership #</td>
     <td class="right"><%= @person.license %></td>
   </tr>
   <% end %>
   
-  <% @person.race_numbers.select { |n| n.year == ASSOCIATION.effective_year }.each do |number| -%>
+  <% @person.race_numbers.select { |n| n.year == RacingAssociation.current.effective_year }.each do |number| -%>
   <tr>
     <td><%= number.number_issuer.name %> <%= number.discipline.name %></td>
     <td class="right"><%= number.value %></td>

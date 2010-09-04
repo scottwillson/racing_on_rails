@@ -5,7 +5,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def point_schedule
-    ASSOCIATION.cat4_womens_race_series_points || [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
+    RacingAssociation.current.cat4_womens_race_series_points || [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
   end
 
   def source_results(race)
@@ -26,7 +26,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def points_for(source_result, team_size = nil)
-    if ASSOCIATION.award_cat4_participation_points?
+    if RacingAssociation.current.award_cat4_participation_points?
       # If it's a finish without a number, it's always 15 points
       return 15 if source_result.place.blank?
     
@@ -73,6 +73,6 @@ class Cat4WomensRaceSeries < Competition
   end
   
   def category
-    @category ||= ASSOCIATION.cat4_womens_race_series_category || Category.find_or_create_by_name("Women Cat 4")
+    @category ||= RacingAssociation.current.cat4_womens_race_series_category || Category.find_or_create_by_name("Women Cat 4")
   end
 end

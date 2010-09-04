@@ -27,12 +27,12 @@ class CategoryTest < ActiveSupport::TestCase
   
   def test_find_all_unknowns
     unknown = Category.create(:name => 'Canine')
-    assoc_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
+    assoc_category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
 
     unknowns = Category.find_all_unknowns
     assert_not_nil(unknowns, 'Orphans should not be nil')
     assert(unknowns.include?(unknown), "Orphans should include 'Canine' category")
-    assert(!unknowns.include?(assoc_category), "Orphans should not include '#{ASSOCIATION.short_name}' category")
+    assert(!unknowns.include?(assoc_category), "Orphans should not include '#{RacingAssociation.current.short_name}' category")
   end
   
   def test_equal

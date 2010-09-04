@@ -82,9 +82,9 @@ class ResultsControllerTest < ActionController::TestCase
     
     assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
     assert_equal(
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?, 
       !assigns["events"].include?(events(:usa_cycling_event_with_results)), 
-      "Honor ASSOCIATION.show_only_association_sanctioned_races_on_calendar?"
+      "Honor RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?"
     )
   end
   
@@ -107,7 +107,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
     
   def test_index_all_subclasses
-    ASSOCIATION.now = Time.local(2007, 5)
+    RacingAssociation.current.now = Time.local(2007, 5)
     SingleDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
     SingleDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
     SingleDayEvent.create!(:name => 'SingleDayEvent no races', :date => Date.new(2007, 4, 12))
@@ -176,7 +176,7 @@ class ResultsControllerTest < ActionController::TestCase
     
     assert_not_nil(assigns['events'], "Should assign 'events'")
     
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar?
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
       expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races, 
                 multi_day_event_with_child_races, series_with_races_and_child_races]
     else
@@ -354,7 +354,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_ssl
-    if ASSOCIATION.ssl?
+    if RacingAssociation.current.ssl?
       use_ssl
       get :index
       assert_redirected_to "http://test.host/results"

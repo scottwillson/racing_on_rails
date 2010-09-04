@@ -7,11 +7,11 @@ class Admin::AdminController < ApplicationController
   private
     # Force SSL for admin controllers. Overriding SSL gem.
     def ssl_required?
-      ASSOCIATION.ssl?
+      RacingAssociation.current.ssl?
     end
 
     # Counter-intuitive. "True" means that we don't care if it's HTTPS or HTTP. Overriding SSLRequirement em.
     def ssl_allowed?
-      !ASSOCIATION.ssl?
+      !RacingAssociation.current.ssl?
     end
 end

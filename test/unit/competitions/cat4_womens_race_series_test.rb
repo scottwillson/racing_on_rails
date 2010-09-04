@@ -4,18 +4,18 @@ require File.expand_path("../../../test_helper", __FILE__)
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   def setup
     super
-    @award_cat4_participation_points = ASSOCIATION.award_cat4_participation_points
-    ASSOCIATION.award_cat4_participation_points = true
-    @cat4_womens_race_series_points = ASSOCIATION.cat4_womens_race_series_points
-    ASSOCIATION.cat4_womens_race_series_points = nil
-    @cat4_womens_race_series_category = ASSOCIATION.cat4_womens_race_series_category
-    ASSOCIATION.cat4_womens_race_series_category = nil
+    @award_cat4_participation_points = RacingAssociation.current.award_cat4_participation_points
+    RacingAssociation.current.award_cat4_participation_points = true
+    @cat4_womens_race_series_points = RacingAssociation.current.cat4_womens_race_series_points
+    RacingAssociation.current.cat4_womens_race_series_points = nil
+    @cat4_womens_race_series_category = RacingAssociation.current.cat4_womens_race_series_category
+    RacingAssociation.current.cat4_womens_race_series_category = nil
   end
   
   def teardown
-    ASSOCIATION.award_cat4_participation_points = @award_cat4_participation_points
-    ASSOCIATION.cat4_womens_race_series_points = @cat4_womens_race_series_points
-    ASSOCIATION.cat4_womens_race_series_category = @cat4_womens_race_series_category
+    RacingAssociation.current.award_cat4_participation_points = @award_cat4_participation_points
+    RacingAssociation.current.cat4_womens_race_series_points = @cat4_womens_race_series_points
+    RacingAssociation.current.cat4_womens_race_series_category = @cat4_womens_race_series_category
   end
   
   def test_calculate_omnium
@@ -140,7 +140,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   end
   
   def test_do_no_taward_cat4_participation_points
-    ASSOCIATION.award_cat4_participation_points = false
+    RacingAssociation.current.award_cat4_participation_points = false
 
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
     banana_belt = events(:banana_belt_1)

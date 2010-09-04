@@ -17,10 +17,10 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(Date.today, event.date, "New event should have today's date")
     formatted_date = Date.today.strftime("%m-%d-%Y")
     assert_equal("New Event #{formatted_date}", event.name, "event name")
-    assert_equal(ASSOCIATION.state, event.state, "event.state")
+    assert_equal(RacingAssociation.current.state, event.state, "event.state")
     assert_equal("Road", event.discipline, "event.discipline")
-    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "New event sanctioned_by default")
-    number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "New event sanctioned_by default")
+    number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
     assert_equal(true, event.notification?, "event notification?")
   end
@@ -29,7 +29,7 @@ class EventTest < ActiveSupport::TestCase
     weekly_series, events = Event.find_all_with_results
     assert_equal([], weekly_series, "weekly_series")
     expected = []
-    unless ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+    unless RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       expected << events(:usa_cycling_event_with_results)
     end
     assert_equal(expected, events, "events")
@@ -72,7 +72,7 @@ class EventTest < ActiveSupport::TestCase
     
     weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Road"])
     expected = []
-    unless ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+    unless RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       expected << events(:usa_cycling_event_with_results)
     end
     expected << circuit_race
@@ -346,7 +346,7 @@ class EventTest < ActiveSupport::TestCase
   def test_default_number_issuer
     event = SingleDayEvent.create!(:name => 'Unsanctioned')
     event.reload
-    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, 'sanctioned_by')
+    assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, 'sanctioned_by')
     assert_equal(number_issuers(:association), event.number_issuer(true), 'number_issuer')
   end
   
@@ -416,8 +416,8 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:kings_valley_2004).multi_day_event_children_with_no_parent?)
     assert(events(:kings_valley_2004).multi_day_event_children_with_no_parent.empty?)
     
-    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
-    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year, 9, 12))
+    MultiDayEvent.create!(:name => 'PIR', :date => Date.new(RacingAssociation.current.year, 9, 12))
+    event = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(RacingAssociation.current.year, 9, 12))
     assert(!(event.multi_day_event_children_with_no_parent?))
     assert(event.multi_day_event_children_with_no_parent.empty?)
       
@@ -426,16 +426,16 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:banana_belt_2).multi_day_event_children_with_no_parent?)
     assert(!events(:banana_belt_3).multi_day_event_children_with_no_parent?)
       
-    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 1, 9, 5))
+    pir_1 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(RacingAssociation.current.year + 1, 9, 5))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
-    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 12))
+    pir_2 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(RacingAssociation.current.year + 2, 9, 12))
     assert(!pir_1.multi_day_event_children_with_no_parent?)
     assert(!pir_2.multi_day_event_children_with_no_parent?)
     assert(pir_1.multi_day_event_children_with_no_parent.empty?)
     assert(pir_2.multi_day_event_children_with_no_parent.empty?)
 
-    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(ASSOCIATION.year + 2, 9, 17))
+    pir_3 = SingleDayEvent.create!(:name => 'PIR', :date => Date.new(RacingAssociation.current.year + 2, 9, 17))
     # Need to completely reset state
     pir_1 = SingleDayEvent.find(pir_1.id)
     pir_2 = SingleDayEvent.find(pir_2.id)
@@ -450,7 +450,7 @@ class EventTest < ActiveSupport::TestCase
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
   
-    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(ASSOCIATION.year - 2, 7, 13))
+    mt_hood_3 = SingleDayEvent.create(:name => 'Mt. Hood Classic', :date => Date.new(RacingAssociation.current.year - 2, 7, 13))
     assert(!events(:mt_hood).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_1).multi_day_event_children_with_no_parent?)
     assert(!events(:mt_hood_2).multi_day_event_children_with_no_parent?)
@@ -508,7 +508,7 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_location
-    assert_equal(ASSOCIATION.state, SingleDayEvent.create!.location, "New event location")
+    assert_equal(RacingAssociation.current.state, SingleDayEvent.create!.location, "New event location")
     assert_equal("Canton, OH", SingleDayEvent.create!(:city => "Canton", :state => "OH").location, "City, state location")
 
     event = SingleDayEvent.create!(:city => "Vatican City")

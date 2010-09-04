@@ -1,5 +1,5 @@
 # OBRA, WSBA, USA Cycling, etc …
-# Many defaults. Override in environment.rb. Stored in ASSOCIATION constant.
+# Many defaults. Override in environment.rb. Stored in RacingAssociation.current constant.
 # bar_point_schedule should be stored in the database with the BAR?
 #
 # cx_memberships? Offers cyclocross memberships
@@ -40,7 +40,15 @@ class RacingAssociation < ActiveRecord::Base
   default_value_for :sanctioning_organizations do
     [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
   end
+  
+  def self.current
+    @current ||= RacingAssociation.first
+  end
 
+  def self.current=(value)
+    @current = value
+  end
+  
   # Person record for RacingAssociation
   def person
     @person ||= Person.find_or_create_by_name(short_name)

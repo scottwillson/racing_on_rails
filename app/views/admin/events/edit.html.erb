@@ -62,7 +62,7 @@
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
 
-        <% if ASSOCIATION.show_events_velodrome? && administrator? -%>
+        <% if RacingAssociation.current.show_events_velodrome? && administrator? -%>
         <%= f.labelled_select(:velodrome_id, Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, :include_blank => true) %>
         <% end -%>
         
@@ -104,25 +104,25 @@
       
       <div class="span-3 last top_margin">
         <% if administrator? -%>
-        <% if ASSOCIATION.sanctioning_organizations.many? -%>
-        <%= f.labelled_select :sanctioned_by, ASSOCIATION.sanctioning_organizations %>
+        <% if RacingAssociation.current.sanctioning_organizations.many? -%>
+        <%= f.labelled_select :sanctioned_by, RacingAssociation.current.sanctioning_organizations %>
         <%- end %>
 
-        <% if ASSOCIATION.show_events_sanctioning_org_event_id? -%>
+        <% if RacingAssociation.current.show_events_sanctioning_org_event_id? -%>
           <%= f.labelled_text_field :sanctioning_org_event_id, "Sanctioning Org Event ID" %>
         <% end -%>
 
         <%= f.labelled_select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]}) %>
         <br/>
         
-        <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if ASSOCIATION.competitions.include?(:atra_points_series) %>
+        <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if RacingAssociation.current.competitions.include?(:atra_points_series) %>
         <% end -%>
 
-        <% if ASSOCIATION.competitions.include?(:bar) -%>
+        <% if RacingAssociation.current.competitions.include?(:bar) -%>
         <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "BAR Points"}, :editable => administrator? %>
         <%- end %>
         
-        <% if ASSOCIATION.competitions.include?(:rider_rankings) -%>
+        <% if RacingAssociation.current.competitions.include?(:rider_rankings) -%>
         <%= f.labelled_select :bar_points, bar_points_and_labels, :label => { :text => "Rankings Pts"}, :editable => administrator? %>
         <%- end %>
 
@@ -131,7 +131,7 @@
           <%= f.labelled_check_box :auto_combined_results, "Auto-calc combined results" %>
         <%- end -%>
 
-        <%= f.labelled_check_box(:ironman) if ASSOCIATION.competitions.include?(:ironman) %>
+        <%= f.labelled_check_box(:ironman) if RacingAssociation.current.competitions.include?(:ironman) %>
         <% end -%>
         
         <%= f.labelled_text_field :flyer, nil, :editable => administrator? %>

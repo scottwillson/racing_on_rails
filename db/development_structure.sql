@@ -1,925 +1,925 @@
-create table `aliases` (
-  `id` int(11) not null auto_increment,
-  `alias` varchar(255) default null,
-  `name` varchar(255) default null,
-  `person_id` int(11) default null,
-  `team_id` int(11) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  unique key `idx_name` (`name`),
-  key `idx_id` (`alias`),
-  key `idx_racer_id` (`person_id`),
-  key `idx_team_id` (`team_id`),
-  constraint `aliases_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `aliases_team_id_fk` foreign key (`team_id`) references `teams` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `aliases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `alias` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `person_id` int(11) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_name` (`name`),
+  KEY `idx_id` (`alias`),
+  KEY `idx_racer_id` (`person_id`),
+  KEY `idx_team_id` (`team_id`),
+  CONSTRAINT `aliases_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `aliases_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `article_categories` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) collate utf8_unicode_ci default null,
-  `parent_id` int(11) default '0',
-  `position` int(11) default '0',
-  `description` varchar(255) collate utf8_unicode_ci default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+CREATE TABLE `article_categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `parent_id` int(11) DEFAULT '0',
+  `position` int(11) DEFAULT '0',
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-create table `articles` (
-  `id` int(11) not null auto_increment,
-  `title` varchar(255) collate utf8_unicode_ci default null,
-  `heading` varchar(255) collate utf8_unicode_ci default null,
-  `description` varchar(255) collate utf8_unicode_ci default null,
-  `display` tinyint(1) default null,
-  `body` text collate utf8_unicode_ci,
-  `position` int(11) default '0',
-  `article_category_id` int(11) default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+CREATE TABLE `articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `heading` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `display` tinyint(1) DEFAULT NULL,
+  `body` text COLLATE utf8_unicode_ci,
+  `position` int(11) DEFAULT '0',
+  `article_category_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-create table `bids` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) not null,
-  `email` varchar(255) not null,
-  `phone` varchar(255) not null,
-  `amount` int(11) not null,
-  `approved` tinyint(1) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `bids` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `approved` tinyint(1) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `categories` (
-  `id` int(11) not null auto_increment,
-  `position` int(11) not null default '0',
-  `name` varchar(64) not null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `parent_id` int(11) default null,
-  `ages_begin` int(11) default '0',
-  `ages_end` int(11) default '999',
-  `friendly_param` varchar(255) not null,
-  primary key (`id`),
-  unique key `categories_name_index` (`name`),
-  key `parent_id` (`parent_id`),
-  key `index_categories_on_friendly_param` (`friendly_param`),
-  constraint `categories_categories_id_fk` foreign key (`parent_id`) references `categories` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `position` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(64) NOT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `ages_begin` int(11) DEFAULT '0',
+  `ages_end` int(11) DEFAULT '999',
+  `friendly_param` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `categories_name_index` (`name`),
+  KEY `parent_id` (`parent_id`),
+  KEY `index_categories_on_friendly_param` (`friendly_param`),
+  CONSTRAINT `categories_categories_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `competition_event_memberships` (
-  `id` int(11) not null auto_increment,
-  `competition_id` int(11) not null,
-  `event_id` int(11) not null,
-  `points_factor` float default '1',
-  primary key (`id`),
-  key `index_competition_event_memberships_on_competition_id` (`competition_id`),
-  key `index_competition_event_memberships_on_event_id` (`event_id`),
-  constraint `competition_event_memberships_competitions_id_fk` foreign key (`competition_id`) references `events` (`id`) on delete cascade,
-  constraint `competition_event_memberships_events_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `competition_event_memberships` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `competition_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `points_factor` float DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `index_competition_event_memberships_on_competition_id` (`competition_id`),
+  KEY `index_competition_event_memberships_on_event_id` (`event_id`),
+  CONSTRAINT `competition_event_memberships_competitions_id_fk` FOREIGN KEY (`competition_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `competition_event_memberships_events_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `discipline_aliases` (
-  `discipline_id` int(11) not null default '0',
-  `alias` varchar(64) not null default '',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  key `idx_alias` (`alias`),
-  key `idx_discipline_id` (`discipline_id`),
-  constraint `discipline_aliases_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `discipline_aliases` (
+  `discipline_id` int(11) NOT NULL DEFAULT '0',
+  `alias` varchar(64) NOT NULL DEFAULT '',
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  KEY `idx_alias` (`alias`),
+  KEY `idx_discipline_id` (`discipline_id`),
+  CONSTRAINT `discipline_aliases_disciplines_id_fk` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `discipline_bar_categories` (
-  `category_id` int(11) not null default '0',
-  `discipline_id` int(11) not null default '0',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  unique key `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
-  key `idx_category_id` (`category_id`),
-  key `idx_discipline_id` (`discipline_id`),
-  constraint `discipline_bar_categories_categories_id_fk` foreign key (`category_id`) references `categories` (`id`) on delete cascade,
-  constraint `discipline_bar_categories_disciplines_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `discipline_bar_categories` (
+  `category_id` int(11) NOT NULL DEFAULT '0',
+  `discipline_id` int(11) NOT NULL DEFAULT '0',
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  UNIQUE KEY `discipline_bar_categories_category_id_index` (`category_id`,`discipline_id`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_discipline_id` (`discipline_id`),
+  CONSTRAINT `discipline_bar_categories_categories_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `discipline_bar_categories_disciplines_id_fk` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `disciplines` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(64) not null default '',
-  `bar` tinyint(1) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `numbers` tinyint(1) default '0',
-  primary key (`id`),
-  unique key `index_disciplines_on_name` (`name`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `disciplines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL DEFAULT '',
+  `bar` tinyint(1) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `numbers` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_disciplines_on_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `duplicates` (
-  `id` int(11) not null auto_increment,
+CREATE TABLE `duplicates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `new_attributes` text,
-  primary key (`id`)
-) engine=innodb default charset=utf8;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `duplicates_people` (
-  `person_id` int(11) default null,
-  `duplicate_id` int(11) default null,
-  unique key `index_duplicates_racers_on_racer_id_and_duplicate_id` (`person_id`,`duplicate_id`),
-  key `index_duplicates_racers_on_racer_id` (`person_id`),
-  key `index_duplicates_racers_on_duplicate_id` (`duplicate_id`),
-  constraint `duplicates_people_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `duplicates_racers_duplicates_id_fk` foreign key (`duplicate_id`) references `duplicates` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `duplicates_people` (
+  `person_id` int(11) DEFAULT NULL,
+  `duplicate_id` int(11) DEFAULT NULL,
+  UNIQUE KEY `index_duplicates_racers_on_racer_id_and_duplicate_id` (`person_id`,`duplicate_id`),
+  KEY `index_duplicates_racers_on_racer_id` (`person_id`),
+  KEY `index_duplicates_racers_on_duplicate_id` (`duplicate_id`),
+  CONSTRAINT `duplicates_people_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `duplicates_racers_duplicates_id_fk` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `editor_requests` (
-  `id` int(11) not null auto_increment,
-  `lock_version` int(11) not null default '0',
-  `person_id` int(11) not null,
-  `editor_id` int(11) not null,
-  `expires_at` datetime not null,
-  `token` varchar(255) collate utf8_unicode_ci not null,
-  `email` varchar(255) collate utf8_unicode_ci not null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  unique key `index_editor_requests_on_editor_id_and_person_id` (`editor_id`,`person_id`),
-  key `index_editor_requests_on_editor_id` (`editor_id`),
-  key `index_editor_requests_on_person_id` (`person_id`),
-  key `index_editor_requests_on_expires_at` (`expires_at`),
-  key `index_editor_requests_on_token` (`token`),
-  constraint `editor_requests_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
-  constraint `editor_requests_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+CREATE TABLE `editor_requests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `person_id` int(11) NOT NULL,
+  `editor_id` int(11) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_editor_requests_on_editor_id_and_person_id` (`editor_id`,`person_id`),
+  KEY `index_editor_requests_on_editor_id` (`editor_id`),
+  KEY `index_editor_requests_on_person_id` (`person_id`),
+  KEY `index_editor_requests_on_expires_at` (`expires_at`),
+  KEY `index_editor_requests_on_token` (`token`),
+  CONSTRAINT `editor_requests_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `editor_requests_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-create table `events` (
-  `id` int(11) not null auto_increment,
-  `parent_id` int(11) default null,
-  `city` varchar(128) default null,
-  `date` date default null,
-  `discipline` varchar(32) default null,
-  `flyer` varchar(255) default null,
-  `name` varchar(255) default null,
-  `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default null,
-  `state` varchar(64) default null,
-  `type` varchar(32) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `flyer_approved` tinyint(1) not null default '0',
-  `cancelled` tinyint(1) default '0',
-  `notification` tinyint(1) default '1',
-  `number_issuer_id` int(11) default null,
-  `first_aid_provider` varchar(255) default null,
-  `pre_event_fees` float default null,
-  `post_event_fees` float default null,
-  `flyer_ad_fee` float default null,
-  `prize_list` varchar(255) default null,
-  `velodrome_id` int(11) default null,
-  `time` varchar(255) default null,
-  `instructional` tinyint(1) default '0',
-  `practice` tinyint(1) default '0',
-  `atra_points_series` tinyint(1) not null default '0',
-  `bar_points` int(11) not null,
-  `ironman` tinyint(1) not null,
-  `auto_combined_results` tinyint(1) not null default '1',
-  `promoter_id` int(11) default null,
-  `team_id` int(11) default null,
-  `sanctioning_org_event_id` varchar(16) default null,
-  `phone` varchar(255) default null,
-  `email` varchar(255) default null,
-  `postponed` tinyint(1) not null default '0',
-  `chief_referee` varchar(255) default null,
-  `beginner_friendly` tinyint(1) not null default '0',
-  `website` varchar(255) default null,
-  `registration_link` varchar(255) default null,
-  primary key (`id`),
-  key `idx_disciplined` (`discipline`),
-  key `parent_id` (`parent_id`),
-  key `idx_type` (`type`),
-  key `events_number_issuer_id_index` (`number_issuer_id`),
-  key `velodrome_id` (`velodrome_id`),
-  key `index_events_on_type` (`type`),
-  key `idx_date` (`date`),
-  key `index_events_on_sanctioned_by` (`sanctioned_by`),
-  key `index_events_on_bar_points` (`bar_points`),
-  key `index_events_on_promoter_id` (`promoter_id`),
-  constraint `events_events_id_fk` foreign key (`parent_id`) references `events` (`id`) on delete cascade,
-  constraint `events_number_issuers_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
-  constraint `events_promoter_id` foreign key (`promoter_id`) references `people` (`id`) on delete set null,
-  constraint `events_velodrome_id_fk` foreign key (`velodrome_id`) references `velodromes` (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL,
+  `city` varchar(128) DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `discipline` varchar(32) DEFAULT NULL,
+  `flyer` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `notes` varchar(255) DEFAULT '',
+  `sanctioned_by` varchar(255) DEFAULT NULL,
+  `state` varchar(64) DEFAULT NULL,
+  `type` varchar(32) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `flyer_approved` tinyint(1) NOT NULL DEFAULT '0',
+  `cancelled` tinyint(1) DEFAULT '0',
+  `notification` tinyint(1) DEFAULT '1',
+  `number_issuer_id` int(11) DEFAULT NULL,
+  `first_aid_provider` varchar(255) DEFAULT NULL,
+  `pre_event_fees` float DEFAULT NULL,
+  `post_event_fees` float DEFAULT NULL,
+  `flyer_ad_fee` float DEFAULT NULL,
+  `prize_list` varchar(255) DEFAULT NULL,
+  `velodrome_id` int(11) DEFAULT NULL,
+  `time` varchar(255) DEFAULT NULL,
+  `instructional` tinyint(1) DEFAULT '0',
+  `practice` tinyint(1) DEFAULT '0',
+  `atra_points_series` tinyint(1) NOT NULL DEFAULT '0',
+  `bar_points` int(11) NOT NULL,
+  `ironman` tinyint(1) NOT NULL,
+  `auto_combined_results` tinyint(1) NOT NULL DEFAULT '1',
+  `promoter_id` int(11) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `sanctioning_org_event_id` varchar(16) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `postponed` tinyint(1) NOT NULL DEFAULT '0',
+  `chief_referee` varchar(255) DEFAULT NULL,
+  `beginner_friendly` tinyint(1) NOT NULL DEFAULT '0',
+  `website` varchar(255) DEFAULT NULL,
+  `registration_link` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_disciplined` (`discipline`),
+  KEY `parent_id` (`parent_id`),
+  KEY `idx_type` (`type`),
+  KEY `events_number_issuer_id_index` (`number_issuer_id`),
+  KEY `velodrome_id` (`velodrome_id`),
+  KEY `index_events_on_type` (`type`),
+  KEY `idx_date` (`date`),
+  KEY `index_events_on_sanctioned_by` (`sanctioned_by`),
+  KEY `index_events_on_bar_points` (`bar_points`),
+  KEY `index_events_on_promoter_id` (`promoter_id`),
+  CONSTRAINT `events_events_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `events_number_issuers_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
+  CONSTRAINT `events_promoter_id` FOREIGN KEY (`promoter_id`) REFERENCES `people` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `events_velodrome_id_fk` FOREIGN KEY (`velodrome_id`) REFERENCES `velodromes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `import_files` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) not null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `import_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `mailing_lists` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default '',
-  `friendly_name` varchar(255) not null default '',
-  `subject_line_prefix` varchar(255) not null default '',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
+CREATE TABLE `mailing_lists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `friendly_name` varchar(255) NOT NULL DEFAULT '',
+  `subject_line_prefix` varchar(255) NOT NULL DEFAULT '',
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   `description` text,
-  primary key (`id`),
-  key `idx_name` (`name`)
-) engine=innodb default charset=utf8;
+  PRIMARY KEY (`id`),
+  KEY `idx_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `names` (
-  `id` int(11) not null auto_increment,
-  `nameable_id` int(11) not null,
-  `name` varchar(255) not null,
-  `year` int(11) not null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `lock_version` int(11) not null default '0',
-  `nameable_type` varchar(255) default null,
-  `first_name` varchar(255) default null,
-  `last_name` varchar(255) default null,
-  primary key (`id`),
-  key `team_id` (`nameable_id`),
-  key `index_names_on_name` (`name`),
-  key `index_names_on_year` (`year`),
-  key `index_names_on_nameable_type` (`nameable_type`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `names` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nameable_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `year` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `nameable_type` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `team_id` (`nameable_id`),
+  KEY `index_names_on_name` (`name`),
+  KEY `index_names_on_year` (`year`),
+  KEY `index_names_on_nameable_type` (`nameable_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `number_issuers` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default '',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  unique key `number_issuers_name_index` (`name`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `number_issuers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `number_issuers_name_index` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `page_versions` (
-  `id` int(11) not null auto_increment,
-  `page_id` int(11) not null,
-  `parent_id` int(11) default null,
+CREATE TABLE `page_versions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `page_id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
   `body` text,
-  `path` varchar(255) default null,
-  `slug` varchar(255) default null,
-  `title` varchar(255) default null,
-  `lock_version` int(11) default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `author_id` int(11) not null,
-  primary key (`id`),
-  key `index_page_versions_on_page_id` (`page_id`)
-) engine=innodb default charset=utf8;
+  `path` varchar(255) DEFAULT NULL,
+  `slug` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `lock_version` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `author_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_page_versions_on_page_id` (`page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `pages` (
-  `id` int(11) not null auto_increment,
-  `parent_id` int(11) default null,
-  `body` text not null,
-  `path` varchar(255) not null default '',
-  `slug` varchar(255) not null default '',
-  `title` varchar(255) not null default '',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `lock_version` int(11) not null default '0',
-  `author_id` int(11) not null,
-  primary key (`id`),
-  unique key `index_pages_on_path` (`path`),
-  key `parent_id` (`parent_id`),
-  key `index_pages_on_slug` (`slug`),
-  key `pages_author_id` (`author_id`),
-  constraint `pages_author_id` foreign key (`author_id`) references `people` (`id`),
-  constraint `pages_parent_id_fk` foreign key (`parent_id`) references `pages` (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `pages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL,
+  `body` text NOT NULL,
+  `path` varchar(255) NOT NULL DEFAULT '',
+  `slug` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `author_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_pages_on_path` (`path`),
+  KEY `parent_id` (`parent_id`),
+  KEY `index_pages_on_slug` (`slug`),
+  KEY `pages_author_id` (`author_id`),
+  CONSTRAINT `pages_author_id` FOREIGN KEY (`author_id`) REFERENCES `people` (`id`),
+  CONSTRAINT `pages_parent_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `people` (
-  `id` int(11) not null auto_increment,
-  `first_name` varchar(64) default null,
-  `last_name` varchar(255) default null,
-  `city` varchar(128) default null,
-  `date_of_birth` date default null,
-  `license` varchar(64) default null,
+CREATE TABLE `people` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(64) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `city` varchar(128) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `license` varchar(64) DEFAULT NULL,
   `notes` text,
-  `state` varchar(64) default null,
-  `team_id` int(11) default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `cell_fax` varchar(255) default null,
-  `ccx_category` varchar(255) default null,
-  `dh_category` varchar(255) default null,
-  `email` varchar(255) default null,
-  `gender` varchar(2) default null,
-  `home_phone` varchar(255) default null,
-  `mtb_category` varchar(255) default null,
-  `member_from` date default null,
-  `occupation` varchar(255) default null,
-  `road_category` varchar(255) default null,
-  `street` varchar(255) default null,
-  `track_category` varchar(255) default null,
-  `work_phone` varchar(255) default null,
-  `zip` varchar(255) default null,
-  `member_to` date default null,
-  `print_card` tinyint(1) default '0',
-  `ccx_only` tinyint(1) not null default '0',
-  `last_updated_by` varchar(255) default null,
-  `bmx_category` varchar(255) default null,
-  `wants_email` tinyint(1) not null default '0',
-  `wants_mail` tinyint(1) not null default '0',
-  `volunteer_interest` tinyint(1) not null default '0',
-  `official_interest` tinyint(1) not null default '0',
-  `race_promotion_interest` tinyint(1) not null default '0',
-  `team_interest` tinyint(1) not null default '0',
-  `created_by_type` varchar(255) default null,
-  `member_usac_to` date default null,
-  `crypted_password` varchar(255) default null,
-  `password_salt` varchar(255) default null,
-  `persistence_token` varchar(255) not null,
-  `single_access_token` varchar(255) default null,
-  `perishable_token` varchar(255) default null,
-  `login_count` int(11) not null default '0',
-  `failed_login_count` int(11) not null default '0',
-  `current_login_at` datetime default null,
-  `last_login_at` datetime default null,
-  `current_login_ip` varchar(255) default null,
-  `last_login_ip` varchar(255) default null,
-  `login` varchar(100) default null,
-  `created_by_id` int(11) default null,
-  `status` varchar(255) default null,
-  `license_expiration_date` date default null,
-  `club_name` varchar(255) default null,
-  `ncca_club_name` varchar(255) default null,
-  `emergency_contact` varchar(255) default null,
-  `emergency_contact_phone` varchar(255) default null,
-  `card_printed_at` datetime default null,
-  `license_type` varchar(255) default null,
-  `country_code` varchar(2) default 'US',
-  `membership_card` tinyint(1) not null default '0',
-  `official` tinyint(1) not null default '0',
-  primary key (`id`),
-  unique key `index_people_on_login` (`login`),
-  key `idx_last_name` (`last_name`),
-  key `idx_first_name` (`first_name`),
-  key `idx_team_id` (`team_id`),
-  key `index_racers_on_member_to` (`member_to`),
-  key `index_racers_on_member_from` (`member_from`),
-  key `index_people_on_crypted_password` (`crypted_password`),
-  key `index_people_on_persistence_token` (`persistence_token`),
-  key `index_people_on_perishable_token` (`perishable_token`),
-  key `index_people_on_single_access_token` (`single_access_token`),
-  key `index_people_on_created_by_id` (`created_by_id`),
-  key `index_people_on_email` (`email`),
-  key `index_people_on_license` (`license`),
-  key `index_people_on_print_card` (`print_card`),
-  constraint `people_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
-) engine=innodb default charset=utf8;
+  `state` varchar(64) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `cell_fax` varchar(255) DEFAULT NULL,
+  `ccx_category` varchar(255) DEFAULT NULL,
+  `dh_category` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `gender` varchar(2) DEFAULT NULL,
+  `home_phone` varchar(255) DEFAULT NULL,
+  `mtb_category` varchar(255) DEFAULT NULL,
+  `member_from` date DEFAULT NULL,
+  `occupation` varchar(255) DEFAULT NULL,
+  `road_category` varchar(255) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `track_category` varchar(255) DEFAULT NULL,
+  `work_phone` varchar(255) DEFAULT NULL,
+  `zip` varchar(255) DEFAULT NULL,
+  `member_to` date DEFAULT NULL,
+  `print_card` tinyint(1) DEFAULT '0',
+  `ccx_only` tinyint(1) NOT NULL DEFAULT '0',
+  `last_updated_by` varchar(255) DEFAULT NULL,
+  `bmx_category` varchar(255) DEFAULT NULL,
+  `wants_email` tinyint(1) NOT NULL DEFAULT '0',
+  `wants_mail` tinyint(1) NOT NULL DEFAULT '0',
+  `volunteer_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `official_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `team_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `created_by_type` varchar(255) DEFAULT NULL,
+  `member_usac_to` date DEFAULT NULL,
+  `crypted_password` varchar(255) DEFAULT NULL,
+  `password_salt` varchar(255) DEFAULT NULL,
+  `persistence_token` varchar(255) NOT NULL,
+  `single_access_token` varchar(255) DEFAULT NULL,
+  `perishable_token` varchar(255) DEFAULT NULL,
+  `login_count` int(11) NOT NULL DEFAULT '0',
+  `failed_login_count` int(11) NOT NULL DEFAULT '0',
+  `current_login_at` datetime DEFAULT NULL,
+  `last_login_at` datetime DEFAULT NULL,
+  `current_login_ip` varchar(255) DEFAULT NULL,
+  `last_login_ip` varchar(255) DEFAULT NULL,
+  `login` varchar(100) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `license_expiration_date` date DEFAULT NULL,
+  `club_name` varchar(255) DEFAULT NULL,
+  `ncca_club_name` varchar(255) DEFAULT NULL,
+  `emergency_contact` varchar(255) DEFAULT NULL,
+  `emergency_contact_phone` varchar(255) DEFAULT NULL,
+  `card_printed_at` datetime DEFAULT NULL,
+  `license_type` varchar(255) DEFAULT NULL,
+  `country_code` varchar(2) DEFAULT 'US',
+  `membership_card` tinyint(1) NOT NULL DEFAULT '0',
+  `official` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_people_on_login` (`login`),
+  KEY `idx_last_name` (`last_name`),
+  KEY `idx_first_name` (`first_name`),
+  KEY `idx_team_id` (`team_id`),
+  KEY `index_racers_on_member_to` (`member_to`),
+  KEY `index_racers_on_member_from` (`member_from`),
+  KEY `index_people_on_crypted_password` (`crypted_password`),
+  KEY `index_people_on_persistence_token` (`persistence_token`),
+  KEY `index_people_on_perishable_token` (`perishable_token`),
+  KEY `index_people_on_single_access_token` (`single_access_token`),
+  KEY `index_people_on_created_by_id` (`created_by_id`),
+  KEY `index_people_on_email` (`email`),
+  KEY `index_people_on_license` (`license`),
+  KEY `index_people_on_print_card` (`print_card`),
+  CONSTRAINT `people_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `people_people` (
-  `person_id` int(11) not null,
-  `editor_id` int(11) not null,
-  unique key `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
-  key `index_people_people_on_editor_id` (`editor_id`),
-  key `index_people_people_on_person_id` (`person_id`),
-  constraint `people_people_ibfk_1` foreign key (`editor_id`) references `people` (`id`) on delete cascade,
-  constraint `people_people_ibfk_2` foreign key (`person_id`) references `people` (`id`) on delete cascade
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+CREATE TABLE `people_people` (
+  `person_id` int(11) NOT NULL,
+  `editor_id` int(11) NOT NULL,
+  UNIQUE KEY `index_people_people_on_editor_id_and_person_id` (`editor_id`,`person_id`),
+  KEY `index_people_people_on_editor_id` (`editor_id`),
+  KEY `index_people_people_on_person_id` (`person_id`),
+  CONSTRAINT `people_people_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `people_people_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-create table `people_roles` (
-  `role_id` int(11) not null,
-  `person_id` int(11) not null,
-  key `role_id` (`role_id`),
-  key `index_people_roles_on_person_id` (`person_id`),
-  constraint `people_roles_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade,
-  constraint `roles_users_role_id_fk` foreign key (`role_id`) references `roles` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `people_roles` (
+  `role_id` int(11) NOT NULL,
+  `person_id` int(11) NOT NULL,
+  KEY `role_id` (`role_id`),
+  KEY `index_people_roles_on_person_id` (`person_id`),
+  CONSTRAINT `people_roles_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `posts` (
-  `id` int(11) not null auto_increment,
-  `body` text not null,
-  `date` datetime not null,
-  `sender` varchar(255) not null default '',
-  `subject` varchar(255) not null default '',
-  `topica_message_id` varchar(255) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `mailing_list_id` int(11) not null default '0',
-  primary key (`id`),
-  unique key `idx_topica_message_id` (`topica_message_id`),
-  key `idx_date` (`date`),
-  key `idx_sender` (`sender`),
-  key `idx_subject` (`subject`),
-  key `idx_mailing_list_id` (`mailing_list_id`),
-  key `idx_date_list` (`date`,`mailing_list_id`),
-  constraint `posts_mailing_list_id_fk` foreign key (`mailing_list_id`) references `mailing_lists` (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `body` text NOT NULL,
+  `date` datetime NOT NULL,
+  `sender` varchar(255) NOT NULL DEFAULT '',
+  `subject` varchar(255) NOT NULL DEFAULT '',
+  `topica_message_id` varchar(255) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `mailing_list_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_topica_message_id` (`topica_message_id`),
+  KEY `idx_date` (`date`),
+  KEY `idx_sender` (`sender`),
+  KEY `idx_subject` (`subject`),
+  KEY `idx_mailing_list_id` (`mailing_list_id`),
+  KEY `idx_date_list` (`date`,`mailing_list_id`),
+  CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `race_numbers` (
-  `id` int(11) not null auto_increment,
-  `person_id` int(11) not null default '0',
-  `discipline_id` int(11) not null default '0',
-  `number_issuer_id` int(11) not null default '0',
-  `value` varchar(255) not null default '',
-  `year` int(11) not null default '0',
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `updated_by` varchar(255) default null,
-  primary key (`id`),
-  key `racer_id` (`person_id`),
-  key `discipline_id` (`discipline_id`),
-  key `number_issuer_id` (`number_issuer_id`),
-  key `race_numbers_value_index` (`value`),
-  key `index_race_numbers_on_year` (`year`),
-  constraint `race_numbers_discipline_id_fk` foreign key (`discipline_id`) references `disciplines` (`id`),
-  constraint `race_numbers_number_issuer_id_fk` foreign key (`number_issuer_id`) references `number_issuers` (`id`),
-  constraint `race_numbers_person_id` foreign key (`person_id`) references `people` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+CREATE TABLE `race_numbers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `person_id` int(11) NOT NULL DEFAULT '0',
+  `discipline_id` int(11) NOT NULL DEFAULT '0',
+  `number_issuer_id` int(11) NOT NULL DEFAULT '0',
+  `value` varchar(255) NOT NULL DEFAULT '',
+  `year` int(11) NOT NULL DEFAULT '0',
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `racer_id` (`person_id`),
+  KEY `discipline_id` (`discipline_id`),
+  KEY `number_issuer_id` (`number_issuer_id`),
+  KEY `race_numbers_value_index` (`value`),
+  KEY `index_race_numbers_on_year` (`year`),
+  CONSTRAINT `race_numbers_discipline_id_fk` FOREIGN KEY (`discipline_id`) REFERENCES `disciplines` (`id`),
+  CONSTRAINT `race_numbers_number_issuer_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
+  CONSTRAINT `race_numbers_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `races` (
-  `id` int(11) not null auto_increment,
-  `category_id` int(11) not null,
-  `city` varchar(128) default null,
-  `distance` int(11) default null,
-  `state` varchar(64) default null,
-  `field_size` int(11) default null,
-  `laps` int(11) default null,
-  `time` float default null,
-  `finishers` int(11) default null,
-  `notes` varchar(255) default '',
-  `sanctioned_by` varchar(255) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `result_columns` varchar(255) default null,
-  `bar_points` int(11) default null,
-  `event_id` int(11) not null,
+CREATE TABLE `races` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) NOT NULL,
+  `city` varchar(128) DEFAULT NULL,
+  `distance` int(11) DEFAULT NULL,
+  `state` varchar(64) DEFAULT NULL,
+  `field_size` int(11) DEFAULT NULL,
+  `laps` int(11) DEFAULT NULL,
+  `time` float DEFAULT NULL,
+  `finishers` int(11) DEFAULT NULL,
+  `notes` varchar(255) DEFAULT '',
+  `sanctioned_by` varchar(255) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `result_columns` varchar(255) DEFAULT NULL,
+  `bar_points` int(11) DEFAULT NULL,
+  `event_id` int(11) NOT NULL,
   `custom_columns` text,
-  primary key (`id`),
-  key `idx_category_id` (`category_id`),
-  key `index_races_on_event_id` (`event_id`),
-  key `index_races_on_bar_points` (`bar_points`),
-  constraint `races_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
-  constraint `races_event_id_fk` foreign key (`event_id`) references `events` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
+  PRIMARY KEY (`id`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `index_races_on_event_id` (`event_id`),
+  KEY `index_races_on_bar_points` (`bar_points`),
+  CONSTRAINT `races_category_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
+  CONSTRAINT `races_event_id_fk` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `racing_associations` (
-  `id` int(11) not null auto_increment,
-  `add_members_from_results` tinyint(1) not null default '1',
-  `always_insert_table_headers` tinyint(1) not null default '1',
-  `award_cat4_participation_points` tinyint(1) not null default '1',
-  `bmx_numbers` tinyint(1) not null default '0',
-  `cx_memberships` tinyint(1) not null default '0',
-  `eager_match_on_license` tinyint(1) not null default '0',
-  `flyers_in_new_window` tinyint(1) not null default '0',
-  `gender_specific_numbers` tinyint(1) not null default '0',
-  `include_multiday_events_on_schedule` tinyint(1) not null default '0',
-  `show_calendar_view` tinyint(1) not null default '1',
-  `show_events_velodrome` tinyint(1) not null default '1',
-  `show_license` tinyint(1) not null default '1',
-  `show_only_association_sanctioned_races_on_calendar` tinyint(1) not null default '1',
-  `show_practices_on_calendar` tinyint(1) not null default '0',
-  `ssl` tinyint(1) not null default '0',
-  `cat4_womens_race_series_category_id` int(11) default null,
-  `lock_version` int(11) not null default '0',
-  `masters_age` int(11) not null default '35',
-  `rental_numbers_end` int(11) not null default '99',
-  `rental_numbers_start` int(11) not null default '51',
-  `cat4_womens_race_series_points` varchar(255) default null,
-  `administrator_tabs` varchar(255) default null,
-  `competitions` varchar(255) default null,
-  `country_code` varchar(255) not null default 'US',
-  `default_discipline` varchar(255) not null default 'road',
-  `default_sanctioned_by` varchar(255) default null,
-  `email` varchar(255) not null default 'scott.willson@gmail.com',
-  `exempt_team_categories` varchar(255) not null default '0',
-  `membership_email` varchar(255) not null default 'scott.willson@gmail.com',
-  `name` varchar(255) not null default 'cascadia bicycle racing association',
-  `sanctioning_organizations` varchar(255) default null,
-  `short_name` varchar(255) not null default 'cbra',
-  `show_events_sanctioning_org_event_id` varchar(255) not null default '0',
-  `state` varchar(255) not null default 'or',
-  `usac_region` varchar(255) not null default 'north west',
-  `usac_results_format` varchar(255) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8;
+CREATE TABLE `racing_associations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `add_members_from_results` tinyint(1) NOT NULL DEFAULT '1',
+  `always_insert_table_headers` tinyint(1) NOT NULL DEFAULT '1',
+  `award_cat4_participation_points` tinyint(1) NOT NULL DEFAULT '1',
+  `bmx_numbers` tinyint(1) NOT NULL DEFAULT '0',
+  `cx_memberships` tinyint(1) NOT NULL DEFAULT '0',
+  `eager_match_on_license` tinyint(1) NOT NULL DEFAULT '0',
+  `flyers_in_new_window` tinyint(1) NOT NULL DEFAULT '0',
+  `gender_specific_numbers` tinyint(1) NOT NULL DEFAULT '0',
+  `include_multiday_events_on_schedule` tinyint(1) NOT NULL DEFAULT '0',
+  `show_calendar_view` tinyint(1) NOT NULL DEFAULT '1',
+  `show_events_velodrome` tinyint(1) NOT NULL DEFAULT '1',
+  `show_license` tinyint(1) NOT NULL DEFAULT '1',
+  `show_only_association_sanctioned_races_on_calendar` tinyint(1) NOT NULL DEFAULT '1',
+  `show_practices_on_calendar` tinyint(1) NOT NULL DEFAULT '0',
+  `ssl` tinyint(1) NOT NULL DEFAULT '0',
+  `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
+  `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `masters_age` int(11) NOT NULL DEFAULT '35',
+  `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
+  `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
+  `cat4_womens_race_series_points` varchar(255) DEFAULT NULL,
+  `administrator_tabs` varchar(255) DEFAULT NULL,
+  `competitions` varchar(255) DEFAULT NULL,
+  `country_code` varchar(255) NOT NULL DEFAULT 'US',
+  `default_discipline` varchar(255) NOT NULL DEFAULT 'Road',
+  `default_sanctioned_by` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `exempt_team_categories` varchar(255) NOT NULL DEFAULT '0',
+  `membership_email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `name` varchar(255) NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
+  `sanctioning_organizations` varchar(255) DEFAULT NULL,
+  `short_name` varchar(255) NOT NULL DEFAULT 'CBRA',
+  `show_events_sanctioning_org_event_id` varchar(255) NOT NULL DEFAULT '0',
+  `state` varchar(255) NOT NULL DEFAULT 'OR',
+  `usac_region` varchar(255) NOT NULL DEFAULT 'North West',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `results` (
-  `id` int(11) not null auto_increment,
-  `category_id` int(11) default null,
-  `person_id` int(11) default null,
-  `race_id` int(11) not null,
-  `team_id` int(11) default null,
-  `age` int(11) default null,
-  `city` varchar(128) default null,
-  `date_of_birth` datetime default null,
-  `is_series` tinyint(1) default null,
-  `license` varchar(64) default '',
-  `notes` varchar(255) default null,
-  `number` varchar(16) default '',
-  `place` varchar(8) default '',
-  `place_in_category` int(11) default '0',
-  `points` float default '0',
-  `points_from_place` float default '0',
-  `points_bonus_penalty` float default '0',
-  `points_total` float default '0',
-  `state` varchar(64) default null,
-  `status` char(3) default null,
-  `time` double default null,
-  `time_bonus_penalty` double default null,
-  `time_gap_to_leader` double default null,
-  `time_gap_to_previous` double default null,
-  `time_gap_to_winner` double default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `time_total` double default null,
-  `laps` int(11) default null,
-  `members_only_place` varchar(8) default null,
-  `points_bonus` int(11) not null default '0',
-  `points_penalty` int(11) not null default '0',
-  `preliminary` tinyint(1) default null,
-  `bar` tinyint(1) default '1',
-  `gender` varchar(8) default null,
-  `category_class` varchar(16) default null,
-  `age_group` varchar(16) default null,
+CREATE TABLE `results` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) DEFAULT NULL,
+  `person_id` int(11) DEFAULT NULL,
+  `race_id` int(11) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `city` varchar(128) DEFAULT NULL,
+  `date_of_birth` datetime DEFAULT NULL,
+  `is_series` tinyint(1) DEFAULT NULL,
+  `license` varchar(64) DEFAULT '',
+  `notes` varchar(255) DEFAULT NULL,
+  `number` varchar(16) DEFAULT '',
+  `place` varchar(8) DEFAULT '',
+  `place_in_category` int(11) DEFAULT '0',
+  `points` float DEFAULT '0',
+  `points_from_place` float DEFAULT '0',
+  `points_bonus_penalty` float DEFAULT '0',
+  `points_total` float DEFAULT '0',
+  `state` varchar(64) DEFAULT NULL,
+  `status` char(3) DEFAULT NULL,
+  `time` double DEFAULT NULL,
+  `time_bonus_penalty` double DEFAULT NULL,
+  `time_gap_to_leader` double DEFAULT NULL,
+  `time_gap_to_previous` double DEFAULT NULL,
+  `time_gap_to_winner` double DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `time_total` double DEFAULT NULL,
+  `laps` int(11) DEFAULT NULL,
+  `members_only_place` varchar(8) DEFAULT NULL,
+  `points_bonus` int(11) NOT NULL DEFAULT '0',
+  `points_penalty` int(11) NOT NULL DEFAULT '0',
+  `preliminary` tinyint(1) DEFAULT NULL,
+  `bar` tinyint(1) DEFAULT '1',
+  `gender` varchar(8) DEFAULT NULL,
+  `category_class` varchar(16) DEFAULT NULL,
+  `age_group` varchar(16) DEFAULT NULL,
   `custom_attributes` text,
-  primary key (`id`),
-  key `idx_category_id` (`category_id`),
-  key `idx_race_id` (`race_id`),
-  key `idx_racer_id` (`person_id`),
-  key `idx_team_id` (`team_id`),
-  key `index_results_on_place` (`place`),
-  key `index_results_on_members_only_place` (`members_only_place`),
-  constraint `results_category_id_fk` foreign key (`category_id`) references `categories` (`id`),
-  constraint `results_person_id` foreign key (`person_id`) references `people` (`id`),
-  constraint `results_race_id_fk` foreign key (`race_id`) references `races` (`id`) on delete cascade,
-  constraint `results_team_id_fk` foreign key (`team_id`) references `teams` (`id`)
-) engine=innodb default charset=utf8;
-
-create table `roles` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`)
-) engine=innodb default charset=utf8;
-
-create table `schema_migrations` (
-  `version` varchar(255) not null,
-  unique key `unique_schema_migrations` (`version`)
-) engine=innodb default charset=utf8;
-
-create table `scores` (
-  `id` int(11) not null auto_increment,
-  `competition_result_id` int(11) default null,
-  `source_result_id` int(11) default null,
-  `points` float default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `date` date default null,
-  `description` varchar(255) default null,
-  `event_name` varchar(255) default null,
-  primary key (`id`),
-  key `scores_competition_result_id_index` (`competition_result_id`),
-  key `scores_source_result_id_index` (`source_result_id`),
-  constraint `scores_competition_result_id_fk` foreign key (`competition_result_id`) references `results` (`id`) on delete cascade,
-  constraint `scores_source_result_id_fk` foreign key (`source_result_id`) references `results` (`id`) on delete cascade
-) engine=innodb default charset=utf8;
-
-create table `teams` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) not null default '',
-  `city` varchar(128) default null,
-  `state` varchar(64) default null,
-  `notes` varchar(255) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  `member` tinyint(1) default '0',
-  `website` varchar(255) default null,
-  `sponsors` varchar(1000) default null,
-  `contact_name` varchar(255) default null,
-  `contact_email` varchar(255) default null,
-  `contact_phone` varchar(255) default null,
-  `show_on_public_page` tinyint(1) default '0',
-  `created_by_type` varchar(255) default null,
-  `created_by_id` int(11) default null,
-  primary key (`id`),
-  unique key `idx_name` (`name`),
-  key `index_teams_on_created_by_id` (`created_by_id`)
-) engine=innodb default charset=utf8;
-
-create table `velodromes` (
-  `id` int(11) not null auto_increment,
-  `name` varchar(255) default null,
-  `website` varchar(255) default null,
-  `lock_version` int(11) not null default '0',
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  key `index_velodromes_on_name` (`name`)
-) engine=innodb default charset=utf8;
+  PRIMARY KEY (`id`),
+  KEY `idx_category_id` (`category_id`),
+  KEY `idx_race_id` (`race_id`),
+  KEY `idx_racer_id` (`person_id`),
+  KEY `idx_team_id` (`team_id`),
+  KEY `index_results_on_place` (`place`),
+  KEY `index_results_on_members_only_place` (`members_only_place`),
+  CONSTRAINT `results_category_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
+  CONSTRAINT `results_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
+  CONSTRAINT `results_race_id_fk` FOREIGN KEY (`race_id`) REFERENCES `races` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `results_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  UNIQUE KEY `unique_schema_migrations` (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `scores` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `competition_result_id` int(11) DEFAULT NULL,
+  `source_result_id` int(11) DEFAULT NULL,
+  `points` float DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `event_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `scores_competition_result_id_index` (`competition_result_id`),
+  KEY `scores_source_result_id_index` (`source_result_id`),
+  CONSTRAINT `scores_competition_result_id_fk` FOREIGN KEY (`competition_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `scores_source_result_id_fk` FOREIGN KEY (`source_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `city` varchar(128) DEFAULT NULL,
+  `state` varchar(64) DEFAULT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `member` tinyint(1) DEFAULT '0',
+  `website` varchar(255) DEFAULT NULL,
+  `sponsors` varchar(1000) DEFAULT NULL,
+  `contact_name` varchar(255) DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `contact_phone` varchar(255) DEFAULT NULL,
+  `show_on_public_page` tinyint(1) DEFAULT '0',
+  `created_by_type` varchar(255) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_name` (`name`),
+  KEY `index_teams_on_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `velodromes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `lock_version` int(11) NOT NULL DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_velodromes_on_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table `versions` (
-  `id` int(11) not null auto_increment,
-  `versioned_id` int(11) default null,
-  `versioned_type` varchar(255) collate utf8_unicode_ci default null,
-  `user_id` int(11) default null,
-  `user_type` varchar(255) collate utf8_unicode_ci default null,
-  `user_name` varchar(255) collate utf8_unicode_ci default null,
-  `changes` text collate utf8_unicode_ci,
-  `number` int(11) default null,
-  `tag` varchar(255) collate utf8_unicode_ci default null,
-  `created_at` datetime default null,
-  `updated_at` datetime default null,
-  primary key (`id`),
-  key `index_versions_on_versioned_id_and_versioned_type` (`versioned_id`,`versioned_type`),
-  key `index_versions_on_user_id_and_user_type` (`user_id`,`user_type`),
-  key `index_versions_on_user_name` (`user_name`),
-  key `index_versions_on_number` (`number`),
-  key `index_versions_on_tag` (`tag`),
-  key `index_versions_on_created_at` (`created_at`)
-) engine=innodb default charset=utf8 collate=utf8_unicode_ci;
+CREATE TABLE `versions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `versioned_id` int(11) DEFAULT NULL,
+  `versioned_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `changes` text COLLATE utf8_unicode_ci,
+  `number` int(11) DEFAULT NULL,
+  `tag` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_versions_on_versioned_id_and_versioned_type` (`versioned_id`,`versioned_type`),
+  KEY `index_versions_on_user_id_and_user_type` (`user_id`,`user_type`),
+  KEY `index_versions_on_user_name` (`user_name`),
+  KEY `index_versions_on_number` (`number`),
+  KEY `index_versions_on_tag` (`tag`),
+  KEY `index_versions_on_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-insert into schema_migrations (version) values ('1');
+INSERT INTO schema_migrations (version) VALUES ('1');
 
-insert into schema_migrations (version) values ('10');
+INSERT INTO schema_migrations (version) VALUES ('10');
 
-insert into schema_migrations (version) values ('11');
+INSERT INTO schema_migrations (version) VALUES ('11');
 
-insert into schema_migrations (version) values ('12');
+INSERT INTO schema_migrations (version) VALUES ('12');
 
-insert into schema_migrations (version) values ('13');
+INSERT INTO schema_migrations (version) VALUES ('13');
 
-insert into schema_migrations (version) values ('14');
+INSERT INTO schema_migrations (version) VALUES ('14');
 
-insert into schema_migrations (version) values ('15');
+INSERT INTO schema_migrations (version) VALUES ('15');
 
-insert into schema_migrations (version) values ('16');
+INSERT INTO schema_migrations (version) VALUES ('16');
 
-insert into schema_migrations (version) values ('17');
+INSERT INTO schema_migrations (version) VALUES ('17');
 
-insert into schema_migrations (version) values ('18');
+INSERT INTO schema_migrations (version) VALUES ('18');
 
-insert into schema_migrations (version) values ('19');
+INSERT INTO schema_migrations (version) VALUES ('19');
 
-insert into schema_migrations (version) values ('2');
+INSERT INTO schema_migrations (version) VALUES ('2');
 
-insert into schema_migrations (version) values ('20');
+INSERT INTO schema_migrations (version) VALUES ('20');
 
-insert into schema_migrations (version) values ('20080901043711');
+INSERT INTO schema_migrations (version) VALUES ('20080901043711');
 
-insert into schema_migrations (version) values ('20080923001805');
+INSERT INTO schema_migrations (version) VALUES ('20080923001805');
 
-insert into schema_migrations (version) values ('20080928152814');
+INSERT INTO schema_migrations (version) VALUES ('20080928152814');
 
-insert into schema_migrations (version) values ('20081001234859');
+INSERT INTO schema_migrations (version) VALUES ('20081001234859');
 
-insert into schema_migrations (version) values ('20081101221844');
+INSERT INTO schema_migrations (version) VALUES ('20081101221844');
 
-insert into schema_migrations (version) values ('20081102001855');
+INSERT INTO schema_migrations (version) VALUES ('20081102001855');
 
-insert into schema_migrations (version) values ('20081214033053');
+INSERT INTO schema_migrations (version) VALUES ('20081214033053');
 
-insert into schema_migrations (version) values ('20090116235413');
+INSERT INTO schema_migrations (version) VALUES ('20090116235413');
 
-insert into schema_migrations (version) values ('20090117215129');
+INSERT INTO schema_migrations (version) VALUES ('20090117215129');
 
-insert into schema_migrations (version) values ('20090212200352');
+INSERT INTO schema_migrations (version) VALUES ('20090212200352');
 
-insert into schema_migrations (version) values ('20090217170845');
+INSERT INTO schema_migrations (version) VALUES ('20090217170845');
 
-insert into schema_migrations (version) values ('20090217170956');
+INSERT INTO schema_migrations (version) VALUES ('20090217170956');
 
-insert into schema_migrations (version) values ('20090217212657');
+INSERT INTO schema_migrations (version) VALUES ('20090217212657');
 
-insert into schema_migrations (version) values ('20090217212924');
+INSERT INTO schema_migrations (version) VALUES ('20090217212924');
 
-insert into schema_migrations (version) values ('20090224224826');
+INSERT INTO schema_migrations (version) VALUES ('20090224224826');
 
-insert into schema_migrations (version) values ('20090225004224');
+INSERT INTO schema_migrations (version) VALUES ('20090225004224');
 
-insert into schema_migrations (version) values ('20090305222446');
+INSERT INTO schema_migrations (version) VALUES ('20090305222446');
 
-insert into schema_migrations (version) values ('20090310155100');
+INSERT INTO schema_migrations (version) VALUES ('20090310155100');
 
-insert into schema_migrations (version) values ('20090310155105');
+INSERT INTO schema_migrations (version) VALUES ('20090310155105');
 
-insert into schema_migrations (version) values ('20090312003519');
+INSERT INTO schema_migrations (version) VALUES ('20090312003519');
 
-insert into schema_migrations (version) values ('20090313231845');
+INSERT INTO schema_migrations (version) VALUES ('20090313231845');
 
-insert into schema_migrations (version) values ('20090316162742');
+INSERT INTO schema_migrations (version) VALUES ('20090316162742');
 
-insert into schema_migrations (version) values ('20090324032935');
+INSERT INTO schema_migrations (version) VALUES ('20090324032935');
 
-insert into schema_migrations (version) values ('20090326190925');
+INSERT INTO schema_migrations (version) VALUES ('20090326190925');
 
-insert into schema_migrations (version) values ('20090326192755');
+INSERT INTO schema_migrations (version) VALUES ('20090326192755');
 
-insert into schema_migrations (version) values ('20090328185643');
+INSERT INTO schema_migrations (version) VALUES ('20090328185643');
 
-insert into schema_migrations (version) values ('20090409205042');
+INSERT INTO schema_migrations (version) VALUES ('20090409205042');
 
-insert into schema_migrations (version) values ('20090422162313');
+INSERT INTO schema_migrations (version) VALUES ('20090422162313');
 
-insert into schema_migrations (version) values ('20090422173446');
+INSERT INTO schema_migrations (version) VALUES ('20090422173446');
 
-insert into schema_migrations (version) values ('20090423002956');
+INSERT INTO schema_migrations (version) VALUES ('20090423002956');
 
-insert into schema_migrations (version) values ('20090504040327');
+INSERT INTO schema_migrations (version) VALUES ('20090504040327');
 
-insert into schema_migrations (version) values ('20090504040328');
+INSERT INTO schema_migrations (version) VALUES ('20090504040328');
 
-insert into schema_migrations (version) values ('20090505151122');
+INSERT INTO schema_migrations (version) VALUES ('20090505151122');
 
-insert into schema_migrations (version) values ('20090514202305');
+INSERT INTO schema_migrations (version) VALUES ('20090514202305');
 
-insert into schema_migrations (version) values ('20090515031733');
+INSERT INTO schema_migrations (version) VALUES ('20090515031733');
 
-insert into schema_migrations (version) values ('20090519034739');
+INSERT INTO schema_migrations (version) VALUES ('20090519034739');
 
-insert into schema_migrations (version) values ('20090528023747');
+INSERT INTO schema_migrations (version) VALUES ('20090528023747');
 
-insert into schema_migrations (version) values ('20090604213033');
+INSERT INTO schema_migrations (version) VALUES ('20090604213033');
 
-insert into schema_migrations (version) values ('20090606004452');
+INSERT INTO schema_migrations (version) VALUES ('20090606004452');
 
-insert into schema_migrations (version) values ('20090606191333');
+INSERT INTO schema_migrations (version) VALUES ('20090606191333');
 
-insert into schema_migrations (version) values ('20090607004047');
+INSERT INTO schema_migrations (version) VALUES ('20090607004047');
 
-insert into schema_migrations (version) values ('20090611215912');
+INSERT INTO schema_migrations (version) VALUES ('20090611215912');
 
-insert into schema_migrations (version) values ('20090620000926');
+INSERT INTO schema_migrations (version) VALUES ('20090620000926');
 
-insert into schema_migrations (version) values ('20090621233142');
+INSERT INTO schema_migrations (version) VALUES ('20090621233142');
 
-insert into schema_migrations (version) values ('20090623033141');
+INSERT INTO schema_migrations (version) VALUES ('20090623033141');
 
-insert into schema_migrations (version) values ('20090624002909');
+INSERT INTO schema_migrations (version) VALUES ('20090624002909');
 
-insert into schema_migrations (version) values ('20090707152828');
+INSERT INTO schema_migrations (version) VALUES ('20090707152828');
 
-insert into schema_migrations (version) values ('20090708162116');
+INSERT INTO schema_migrations (version) VALUES ('20090708162116');
 
-insert into schema_migrations (version) values ('20090708162118');
+INSERT INTO schema_migrations (version) VALUES ('20090708162118');
 
-insert into schema_migrations (version) values ('20090730022816');
+INSERT INTO schema_migrations (version) VALUES ('20090730022816');
 
-insert into schema_migrations (version) values ('20090815135542');
+INSERT INTO schema_migrations (version) VALUES ('20090815135542');
 
-insert into schema_migrations (version) values ('20090930060618');
+INSERT INTO schema_migrations (version) VALUES ('20090930060618');
 
-insert into schema_migrations (version) values ('20091006194727');
+INSERT INTO schema_migrations (version) VALUES ('20091006194727');
 
-insert into schema_migrations (version) values ('20091007232822');
+INSERT INTO schema_migrations (version) VALUES ('20091007232822');
 
-insert into schema_migrations (version) values ('20091009021956');
+INSERT INTO schema_migrations (version) VALUES ('20091009021956');
 
-insert into schema_migrations (version) values ('20091011235631');
+INSERT INTO schema_migrations (version) VALUES ('20091011235631');
 
-insert into schema_migrations (version) values ('20091015052458');
+INSERT INTO schema_migrations (version) VALUES ('20091015052458');
 
-insert into schema_migrations (version) values ('20091122223629');
+INSERT INTO schema_migrations (version) VALUES ('20091122223629');
 
-insert into schema_migrations (version) values ('20091129235114');
+INSERT INTO schema_migrations (version) VALUES ('20091129235114');
 
-insert into schema_migrations (version) values ('20091201031927');
+INSERT INTO schema_migrations (version) VALUES ('20091201031927');
 
-insert into schema_migrations (version) values ('20091220162338');
+INSERT INTO schema_migrations (version) VALUES ('20091220162338');
 
-insert into schema_migrations (version) values ('20100107001744');
+INSERT INTO schema_migrations (version) VALUES ('20100107001744');
 
-insert into schema_migrations (version) values ('20100113032309');
+INSERT INTO schema_migrations (version) VALUES ('20100113032309');
 
-insert into schema_migrations (version) values ('20100121041557');
+INSERT INTO schema_migrations (version) VALUES ('20100121041557');
 
-insert into schema_migrations (version) values ('20100210042552');
+INSERT INTO schema_migrations (version) VALUES ('20100210042552');
 
-insert into schema_migrations (version) values ('20100211042204');
+INSERT INTO schema_migrations (version) VALUES ('20100211042204');
 
-insert into schema_migrations (version) values ('20100320020606');
+INSERT INTO schema_migrations (version) VALUES ('20100320020606');
 
-insert into schema_migrations (version) values ('20100320224529');
+INSERT INTO schema_migrations (version) VALUES ('20100320224529');
 
-insert into schema_migrations (version) values ('20100406002503');
+INSERT INTO schema_migrations (version) VALUES ('20100406002503');
 
-insert into schema_migrations (version) values ('20100407222156');
+INSERT INTO schema_migrations (version) VALUES ('20100407222156');
 
-insert into schema_migrations (version) values ('20100511224150');
+INSERT INTO schema_migrations (version) VALUES ('20100511224150');
 
-insert into schema_migrations (version) values ('20100601154817');
+INSERT INTO schema_migrations (version) VALUES ('20100601154817');
 
-insert into schema_migrations (version) values ('20100608160458');
+INSERT INTO schema_migrations (version) VALUES ('20100608160458');
 
-insert into schema_migrations (version) values ('20100613014859');
+INSERT INTO schema_migrations (version) VALUES ('20100613014859');
 
-insert into schema_migrations (version) values ('20100613220247');
+INSERT INTO schema_migrations (version) VALUES ('20100613220247');
 
-insert into schema_migrations (version) values ('20100616224058');
+INSERT INTO schema_migrations (version) VALUES ('20100616224058');
 
-insert into schema_migrations (version) values ('20100616230454');
+INSERT INTO schema_migrations (version) VALUES ('20100616230454');
 
-insert into schema_migrations (version) values ('20100701032620');
+INSERT INTO schema_migrations (version) VALUES ('20100701032620');
 
-insert into schema_migrations (version) values ('20100831151754');
+INSERT INTO schema_migrations (version) VALUES ('20100831151754');
 
-insert into schema_migrations (version) values ('21');
+INSERT INTO schema_migrations (version) VALUES ('21');
 
-insert into schema_migrations (version) values ('22');
+INSERT INTO schema_migrations (version) VALUES ('22');
 
-insert into schema_migrations (version) values ('23');
+INSERT INTO schema_migrations (version) VALUES ('23');
 
-insert into schema_migrations (version) values ('24');
+INSERT INTO schema_migrations (version) VALUES ('24');
 
-insert into schema_migrations (version) values ('25');
+INSERT INTO schema_migrations (version) VALUES ('25');
 
-insert into schema_migrations (version) values ('26');
+INSERT INTO schema_migrations (version) VALUES ('26');
 
-insert into schema_migrations (version) values ('27');
+INSERT INTO schema_migrations (version) VALUES ('27');
 
-insert into schema_migrations (version) values ('28');
+INSERT INTO schema_migrations (version) VALUES ('28');
 
-insert into schema_migrations (version) values ('29');
+INSERT INTO schema_migrations (version) VALUES ('29');
 
-insert into schema_migrations (version) values ('3');
+INSERT INTO schema_migrations (version) VALUES ('3');
 
-insert into schema_migrations (version) values ('30');
+INSERT INTO schema_migrations (version) VALUES ('30');
 
-insert into schema_migrations (version) values ('31');
+INSERT INTO schema_migrations (version) VALUES ('31');
 
-insert into schema_migrations (version) values ('32');
+INSERT INTO schema_migrations (version) VALUES ('32');
 
-insert into schema_migrations (version) values ('33');
+INSERT INTO schema_migrations (version) VALUES ('33');
 
-insert into schema_migrations (version) values ('34');
+INSERT INTO schema_migrations (version) VALUES ('34');
 
-insert into schema_migrations (version) values ('35');
+INSERT INTO schema_migrations (version) VALUES ('35');
 
-insert into schema_migrations (version) values ('36');
+INSERT INTO schema_migrations (version) VALUES ('36');
 
-insert into schema_migrations (version) values ('37');
+INSERT INTO schema_migrations (version) VALUES ('37');
 
-insert into schema_migrations (version) values ('38');
+INSERT INTO schema_migrations (version) VALUES ('38');
 
-insert into schema_migrations (version) values ('39');
+INSERT INTO schema_migrations (version) VALUES ('39');
 
-insert into schema_migrations (version) values ('4');
+INSERT INTO schema_migrations (version) VALUES ('4');
 
-insert into schema_migrations (version) values ('40');
+INSERT INTO schema_migrations (version) VALUES ('40');
 
-insert into schema_migrations (version) values ('41');
+INSERT INTO schema_migrations (version) VALUES ('41');
 
-insert into schema_migrations (version) values ('42');
+INSERT INTO schema_migrations (version) VALUES ('42');
 
-insert into schema_migrations (version) values ('43');
+INSERT INTO schema_migrations (version) VALUES ('43');
 
-insert into schema_migrations (version) values ('44');
+INSERT INTO schema_migrations (version) VALUES ('44');
 
-insert into schema_migrations (version) values ('45');
+INSERT INTO schema_migrations (version) VALUES ('45');
 
-insert into schema_migrations (version) values ('46');
+INSERT INTO schema_migrations (version) VALUES ('46');
 
-insert into schema_migrations (version) values ('47');
+INSERT INTO schema_migrations (version) VALUES ('47');
 
-insert into schema_migrations (version) values ('48');
+INSERT INTO schema_migrations (version) VALUES ('48');
 
-insert into schema_migrations (version) values ('49');
+INSERT INTO schema_migrations (version) VALUES ('49');
 
-insert into schema_migrations (version) values ('5');
+INSERT INTO schema_migrations (version) VALUES ('5');
 
-insert into schema_migrations (version) values ('50');
+INSERT INTO schema_migrations (version) VALUES ('50');
 
-insert into schema_migrations (version) values ('51');
+INSERT INTO schema_migrations (version) VALUES ('51');
 
-insert into schema_migrations (version) values ('52');
+INSERT INTO schema_migrations (version) VALUES ('52');
 
-insert into schema_migrations (version) values ('53');
+INSERT INTO schema_migrations (version) VALUES ('53');
 
-insert into schema_migrations (version) values ('54');
+INSERT INTO schema_migrations (version) VALUES ('54');
 
-insert into schema_migrations (version) values ('55');
+INSERT INTO schema_migrations (version) VALUES ('55');
 
-insert into schema_migrations (version) values ('56');
+INSERT INTO schema_migrations (version) VALUES ('56');
 
-insert into schema_migrations (version) values ('57');
+INSERT INTO schema_migrations (version) VALUES ('57');
 
-insert into schema_migrations (version) values ('6');
+INSERT INTO schema_migrations (version) VALUES ('6');
 
-insert into schema_migrations (version) values ('7');
+INSERT INTO schema_migrations (version) VALUES ('7');
 
-insert into schema_migrations (version) values ('8');
+INSERT INTO schema_migrations (version) VALUES ('8');
 
-insert into schema_migrations (version) values ('9');
+INSERT INTO schema_migrations (version) VALUES ('9');

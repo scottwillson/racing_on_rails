@@ -176,7 +176,7 @@ Downhill/Cross Country: Downhill}
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
     road_numbers = RaceNumber.find(:all, :conditions => [ 
-        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, ASSOCIATION.year
+        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, RacingAssociation.current.year
       ])
     assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
     assert road_numbers.any? { |number| number.value == "824" }, "Should preseve Brian Abers road number"

@@ -77,7 +77,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(1, Alias.find_all_by_person_id(person_to_keep.id).size, "Mollys's aliases")
     assert_equal(1, person_to_keep.race_numbers.count, "Target person's race numbers")
     assert_equal("202", person_to_keep.race_numbers.first.value, "Target person's race number value")
-    association = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    association = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     assert_equal(association, person_to_keep.race_numbers.first.number_issuer, "Target person's race number issuer")
     
     assert_not_nil(Person.find_by_first_name_and_last_name(person_to_merge.first_name, person_to_merge.last_name), "#{person_to_merge.name} should be in DB")
@@ -231,7 +231,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(person.member_from, 'Member on')
     assert_nil(person.member_to, 'Member to')
 
-    ASSOCIATION.now = Date.new(2009, 6)
+    RacingAssociation.current.now = Date.new(2009, 6)
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
@@ -242,7 +242,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
     assert_equal(Date.new(2009, 12, 31), person.member_to, 'Member to')
 
-    ASSOCIATION.now = Date.new(2009, 12)
+    RacingAssociation.current.now = Date.new(2009, 12)
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
@@ -253,7 +253,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(Date.new(2009, 6), person.member_from, 'Member on')
     assert_equal(Date.new(2010, 12, 31), person.member_to, 'Member to')
     
-    ASSOCIATION.now = Date.new(2010)
+    RacingAssociation.current.now = Date.new(2010)
     person.member_from = Date.new(2010)
     person.member_to = Date.new(2010, 12, 31)
     person.member = false
@@ -267,7 +267,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(person.member_to, 'Member to')
     
     # From nil, to nil
-    ASSOCIATION.now = Date.new(2009)
+    RacingAssociation.current.now = Date.new(2009)
     person.member_from = nil
     person.member_to = nil
     assert_equal(false, person.member?, 'member?')
@@ -285,7 +285,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     
     # From, to in past
-    ASSOCIATION.now = Date.new(2009, 11)
+    RacingAssociation.current.now = Date.new(2009, 11)
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -298,7 +298,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
     assert_equal_dates(Date.new(2009, 12, 31), person.member_to, 'Member to')
     
-    ASSOCIATION.now = Date.new(2009, 12)
+    RacingAssociation.current.now = Date.new(2009, 12)
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -311,7 +311,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(Date.new(2001, 1, 1), person.member_from, 'Member from')
     assert_equal_dates(Date.new(2010, 12, 31), person.member_to, 'Member to')
 
-    ASSOCIATION.now = nil
+    RacingAssociation.current.now = nil
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -321,7 +321,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     
     # From in past, to in future
-    ASSOCIATION.now = Date.new(2009, 1)
+    RacingAssociation.current.now = Date.new(2009, 1)
     person.member_from = Date.new(2001, 1, 1)
     person.member_to = Date.new(3000, 12, 31)
     assert_equal(true, person.member?, 'member?')
@@ -463,17 +463,17 @@ class PersonTest < ActiveSupport::TestCase
     person = Person.new
     assert(!person.master?, 'Master?')
     
-    person.date_of_birth = Date.new((ASSOCIATION.masters_age - 1).years.ago.year, 1, 1)
+    person.date_of_birth = Date.new((RacingAssociation.current.masters_age - 1).years.ago.year, 1, 1)
     assert(!person.master?, 'Master?')
 
-    person.date_of_birth = Date.new(ASSOCIATION.masters_age.years.ago.year, 12, 31)
+    person.date_of_birth = Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31)
     assert(person.master?, 'Master?')
     
     person.date_of_birth = Date.new(17.years.ago.year, 1, 1)
     assert(!person.master?, 'Master?')
 
     # Greater then 36 or so years in the past will give an ArgumentError on Windows
-    person.date_of_birth = Date.new((ASSOCIATION.masters_age + 1).years.ago.year, 12, 31)
+    person.date_of_birth = Date.new((RacingAssociation.current.masters_age + 1).years.ago.year, 12, 31)
     assert(person.master?, 'Master?')
   end
   
@@ -658,11 +658,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal('Newport', person.hometown, 'Person hometown')
     
     person.city = nil
-    person.state = ASSOCIATION.state
+    person.state = RacingAssociation.current.state
     assert_equal('', person.hometown, 'Person hometown')
     
     person.city = 'Fossil'
-    person.state = ASSOCIATION.state
+    person.state = RacingAssociation.current.state
     assert_equal('Fossil', person.hometown, 'Person hometown')
     
     person.city = nil
@@ -998,11 +998,11 @@ class PersonTest < ActiveSupport::TestCase
     person = Person.create!
     assert !person.renewed?, "New person"
 
-    ASSOCIATION.now = Date.new(2009, 11, 30)
+    RacingAssociation.current.now = Date.new(2009, 11, 30)
     person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
     assert person.renewed?, "Before Dec 1"
 
-    ASSOCIATION.now = Date.new(2009, 12, 1)
+    RacingAssociation.current.now = Date.new(2009, 12, 1)
     person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
     assert !person.renewed?, "On Dec 1"
   end

@@ -22,7 +22,7 @@ module TableHelper
     options.delete(:class)
     options[:collection] = options[:collection]
     options[:columns] = options[:columns] || 1
-    options[:insert_header] = nil unless (options[:insert_header] && ASSOCIATION.always_insert_table_headers?)
+    options[:insert_header] = nil unless (options[:insert_header] && RacingAssociation.current.always_insert_table_headers?)
     block_to_partial "table/base", options, &block
   end
 

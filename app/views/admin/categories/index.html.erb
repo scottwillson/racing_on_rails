@@ -1,7 +1,7 @@
 <% @page_title = "Admin: Categories" %>
 
 <% #We're small enough we can recompute competitions on demand. alp -%>
-<% if ASSOCIATION.competitions.include?(:mbra_bar) -%>
+<% if RacingAssociation.current.competitions.include?(:mbra_bar) -%>
   <div class="left">
     <p><% form_tag '/admin/categories/recompute_bar' do -%>
       <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
@@ -14,7 +14,7 @@
 
 <div class="column_grid_container">
   <div class="table_container box-3">
-    <div class="caption"><%= ASSOCIATION.short_name %></div>
+    <div class="caption"><%= RacingAssociation.current.short_name %></div>
     <div class="category" id="category_root">
       <%= render :partial => "category", :collection => @category.children.sort %>
     </div>

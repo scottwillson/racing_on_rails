@@ -26,7 +26,7 @@ module Results
     end
     
     def test_race_usac
-      ASSOCIATION.usac_results_format = true
+      RacingAssociation.current.usac_results_format = true
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), SingleDayEvent.new)
       book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls")
       results_file.create_rows(book.worksheet(0))
@@ -57,7 +57,7 @@ module Results
     end
     
     def test_create_columns_usac
-      ASSOCIATION.usac_results_format = true
+      RacingAssociation.current.usac_results_format = true
       book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls")
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), SingleDayEvent.new)
@@ -78,7 +78,7 @@ module Results
     end
   
     def test_import_excel
-      current_members = Person.find(:all, :conditions => ["member_to >= ?", ASSOCIATION.now])
+      current_members = Person.find(:all, :conditions => ["member_to >= ?", RacingAssociation.current.now])
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
       source_path = "#{File.dirname(__FILE__)}/../../fixtures/results/pir_2006_format.xls"
       results_file = ResultsFile.new(File.new(source_path), event)
@@ -106,7 +106,7 @@ module Results
             if RaceNumber.rental?(result.number, Discipline[event.discipline])
               assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
             else
-              if ASSOCIATION.add_members_from_results? || current_members.include?(result.person)
+              if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
                 assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
                   Date.today, 
@@ -117,7 +117,7 @@ module Results
               end
             end
             # test result by license (some with name misspelled)
-            if result.license && ASSOCIATION.eager_match_on_license?
+            if result.license && RacingAssociation.current.eager_match_on_license?
               person_by_lic = Person.find_by_license(result.license)
               assert_equal(result.person, person_by_lic, "Result should be assigned to #{person_by_lic.name} by license but was given to #{result.person.name}") if person_by_lic
             end
@@ -416,7 +416,7 @@ module Results
       event = SingleDayEvent.create(:discipline => 'Downhill')
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/custom_columns.xls"), event)
       results_file.import
-      assert_equal(["bogus_column_name"], results_file.custom_columns.to_a, 'Custom columns')
+      assert_equal ["bogus_column_name"], results_file.custom_columns.to_a, "Custom columns"
     end
 
     def test_times
@@ -510,7 +510,7 @@ module Results
     
       race = Race.new(:category => Category.new(:name => "Senior Men Pro 1/2/3"))
       race.results << Result.new(:place => "1", :first_name => "Evan", :last_name => "Elken", :number =>"154", :license =>"999999999", :team_name =>"Jittery Joe's", :points => "23.0")
-      if ASSOCIATION.sanctioning_organizations.include?("USA Cycling")
+      if RacingAssociation.current.sanctioning_organizations.include?("USA Cycling")
         race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Tonkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
       else
         race.results << Result.new(:place => "2", :first_name => "Erik", :last_name => "Torkin", :number =>"102", :license =>"7123811", :team_name =>"Bike Gallery/Trek/VW", :points => "19.0")
@@ -632,7 +632,7 @@ module Results
     end
   
     def test_import_excel_usac_format
-      ASSOCIATION.usac_results_format = true
+      RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2008, 5, 11))
       source_path = "#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"
       results_file = ResultsFile.new(File.new(source_path), event)
@@ -687,7 +687,7 @@ module Results
     end
     
     def test_race_notes_usac
-      ASSOCIATION.usac_results_format = true
+      RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!
       results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), event)
       results_file.import

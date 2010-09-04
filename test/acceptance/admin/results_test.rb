@@ -54,7 +54,7 @@ class ResultsTest < WebDriverTestCase
     wait_for_element "results_table"
     assert_page_source "River City"
     
-    if ASSOCIATION.competitions.include? :bar
+    if RacingAssociation.current.competitions.include? :bar
       assert_checked "result_#{result_id}_bar"
       click "result_#{result_id}_bar"
       refresh

@@ -12,8 +12,8 @@
     <div class="shadow_1">
       <div class="frame">
         <div class="nav" id="top">
-          <h1><%= link_to ASSOCIATION.name, "/" %></h1>
-          <div class="breadcrumb"><%= link_to ASSOCIATION.short_name, "/" %></div>
+          <h1><%= link_to RacingAssociation.current.name, "/" %></h1>
+          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, "/" %></div>
         </div>
         <div class="content container">
           <%= render :partial => "shared/tabs" %>
@@ -22,7 +22,7 @@
         </div>
           <div class="nav" id="bottom">
           <div class="breadcrumb">
-            <%= link_to ASSOCIATION.short_name, :controller => 'home', :action => 'index' %> |
+            <%= link_to RacingAssociation.current.short_name, :controller => 'home', :action => 'index' %> |
             <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
             <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %> | 
       <% if current_person %>
