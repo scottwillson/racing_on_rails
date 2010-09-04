@@ -16,7 +16,7 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.boolean :show_only_association_sanctioned_races_on_calendar, :default => true, :null => false
       t.boolean :show_practices_on_calendar, :default                         => false, :null => false
       t.boolean :ssl, :default                                                => false, :null => false
-      t.boolean :usac_results_format, :default                                 => false, :null => false
+      t.boolean :usac_results_format, :default                                => false, :null => false
       t.integer :cat4_womens_race_series_category_id
       t.integer :lock_version, :default                                       => 0, :null => false
       t.integer :masters_age, :default                                        => 35, :null => false
@@ -32,6 +32,7 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.string :exempt_team_categories, :default                              => false, :null => false
       t.string :membership_email, :default                                    => "scott.willson@gmail.com", :null => false
       t.string :name, :default                                                => "Cascadia Bicycle Racing Association", :null => false
+      t.string :rails_host, :default                                          => "localhost:3000"
       t.string :sanctioning_organizations
       t.string :short_name, :default                                          => "CBRA", :null => false
       t.string :show_events_sanctioning_org_event_id, :default                => false, :null => false

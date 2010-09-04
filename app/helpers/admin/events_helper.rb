@@ -3,8 +3,8 @@ module Admin::EventsHelper
   
   # Build a caption and footer links and render events/upcoming partial
   def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
-    caption ||= link_to("Schedule", :only_path  => false, :host => RAILS_HOST, :controller => 'schedule')
-    footer ||= link_to('More &hellip;', :only_path => false, :host => RAILS_HOST, :controller => 'schedule')
+    caption ||= link_to("Schedule", :only_path  => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
+    footer ||= link_to('More &hellip;', :only_path => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
     render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption, :footer => footer }
   end
   

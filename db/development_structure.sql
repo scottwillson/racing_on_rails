@@ -504,6 +504,7 @@ CREATE TABLE `racing_associations` (
   `exempt_team_categories` varchar(255) NOT NULL DEFAULT '0',
   `membership_email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
   `name` varchar(255) NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
+  `rails_host` varchar(255) DEFAULT 'localhost:3000',
   `sanctioning_organizations` varchar(255) DEFAULT NULL,
   `short_name` varchar(255) NOT NULL DEFAULT 'CBRA',
   `show_events_sanctioning_org_event_id` varchar(255) NOT NULL DEFAULT '0',

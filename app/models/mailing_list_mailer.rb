@@ -3,6 +3,9 @@ class MailingListMailer < ActionMailer::Base
 
   # Reply just to sender of post, not the whole list
   def private_reply(post, to)
+    # Not thread-safe. Won't work for multiple associations.
+    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
+    
     raise("'To' cannot be blank") if to.blank?
     @subject    = post.subject
     @body       = post.body
@@ -13,6 +16,9 @@ class MailingListMailer < ActionMailer::Base
   end
 
   def post(post)
+    # Not thread-safe. Won't work for multiple associations.
+    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
+    
     @subject    = post.subject
     @body       = post.body
     @recipients = post.mailing_list.name

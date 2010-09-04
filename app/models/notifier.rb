@@ -1,7 +1,7 @@
 # Password reset instructions email
 class Notifier < ActionMailer::Base
   def password_reset_instructions(people)
-    Notifier.default_url_options[:host] = RAILS_HOST
+    Notifier.default_url_options[:host] = RacingAssociation.current.rails_host
     
     subject       "Password Reset Instructions"
     from          "#{RacingAssociation.current.short_name} <#{RacingAssociation.current.email}>"

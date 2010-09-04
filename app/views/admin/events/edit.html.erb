@@ -82,7 +82,7 @@
        
       <div class="prepend-1 span-2 last" id="promoter_links">
         <%= link_to_function("Edit", nil, :class => "obvious", :id => "edit_promoter_link") do |page|
-          page << "window.location.href = 'http://#{RAILS_HOST}/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
+          page << "window.location.href = 'http://#{RacingAssociation.current.rails_host}/admin/people/' + $F('event_promoter_id') + '/edit?event_id=#{@event.id}'; return false;"
         end %>
       </div>
       <% end -%>

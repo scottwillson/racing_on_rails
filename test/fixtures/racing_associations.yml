@@ -7,3 +7,4 @@ association:
     hash: {}
   competitions: !ruby/object:Set
     hash: {}
+  rails_host: localhost:3000

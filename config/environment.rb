@@ -19,8 +19,8 @@ Rails::Initializer.run do |config|
   config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
   
   config.action_controller.session = {
-    :key => '_racing_on_rails_session',
-    :secret      => '9998d23d32c59a8161aba78b03630a93'
+    :key => "_racing_on_rails_session",
+    :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
   config.gem "authlogic", :version => "2.1.3"
@@ -76,15 +76,13 @@ end
 require "action_view/template_handlers/pdf_writer"
 ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
 
-require 'array'
-require 'nil_class'
-require 'string'
+require "array"
+require "nil_class"
+require "string"
 require "local_static"
 require "action_view/inline_template_extension"
 
-RAILS_HOST  = 'localhost:3000' unless defined?(RAILS_HOST)
-STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
-ActionMailer::Base.default_url_options[:host] = RAILS_HOST
+STATIC_HOST = "localhost" unless defined?(STATIC_HOST)
 
 # Limit number of people, teams, etc. returned in search
 SEARCH_RESULTS_LIMIT          = 100 unless defined?(SEARCH_RESULTS_LIMIT)
