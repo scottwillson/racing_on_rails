@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
-  before_filter :toggle_tabs
+  before_filter :clear_racing_association, :toggle_tabs
 
   def self.expire_cache
     begin
@@ -43,7 +43,10 @@ class ApplicationController < ActionController::Base
 
   protected
   
-
+  def clear_racing_association
+    RacingAssociation.current = nil
+  end
+  
   def toggle_tabs
     @show_tabs = false
   end
