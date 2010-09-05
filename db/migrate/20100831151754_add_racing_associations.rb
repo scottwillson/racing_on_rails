@@ -46,9 +46,6 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.string :usac_region, :default                                         => "North West", :null => false
       t.timestamps
     end
-    
-    RacingAssociation.reset_column_information
-    RacingAssociation.create!
   end
 
   def self.down
