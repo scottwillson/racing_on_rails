@@ -142,8 +142,8 @@ CREATE TABLE `editor_requests` (
   `person_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
   `expires_at` datetime NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -154,7 +154,7 @@ CREATE TABLE `editor_requests` (
   KEY `index_editor_requests_on_token` (`token`),
   CONSTRAINT `editor_requests_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `editor_requests_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -390,7 +390,7 @@ CREATE TABLE `people_people` (
   KEY `index_people_people_on_person_id` (`person_id`),
   CONSTRAINT `people_people_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `people_people_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `people_roles` (
   `role_id` int(11) NOT NULL,
@@ -641,13 +641,13 @@ CREATE TABLE `velodromes` (
 CREATE TABLE `versions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `versioned_id` int(11) DEFAULT NULL,
-  `versioned_type` varchar(255) DEFAULT NULL,
+  `versioned_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `user_type` varchar(255) DEFAULT NULL,
-  `user_name` varchar(255) DEFAULT NULL,
-  `changes` text,
+  `user_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `changes` text COLLATE utf8_unicode_ci,
   `number` int(11) DEFAULT NULL,
-  `tag` varchar(255) DEFAULT NULL,
+  `tag` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -657,7 +657,7 @@ CREATE TABLE `versions` (
   KEY `index_versions_on_number` (`number`),
   KEY `index_versions_on_tag` (`tag`),
   KEY `index_versions_on_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO schema_migrations (version) VALUES ('1');
 
