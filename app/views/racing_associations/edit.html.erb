@@ -1,0 +1,85 @@
+<% @show_tabs = true %>
+<%= error_messages_for "racing_association" %>
+
+<h2><%= @racing_association.name %></h2>
+
+<div class="column_grid_container">
+  <% form_for @racing_association do |f| -%>
+    <div class="span-3">
+      <h3>Association</h3>
+      <%= f.labelled_text_field :name %>
+      <%= f.labelled_text_field :short_name %>
+      <%= f.labelled_text_field :state, "State/Province" %>
+      <%= f.labelled_text_field :country_code %>
+      <%= f.labelled_text_field :usac_region %>
+      <%= f.labelled_text_field :email %>
+      <%= f.labelled_text_field :membership_email %>
+      <%= f.labelled_text_field :exception_recipients %>
+      <%= f.labelled_text_field :default_discipline %>
+      <%= f.labelled_text_field :default_sanctioned_by %>
+    </div>
+    <div class="span-3 last">
+      <h3>Display</h3>
+      <%= f.labelled_check_box :always_insert_table_headers %>
+      <%= f.labelled_check_box :flyers_in_new_window %>
+      <%= f.labelled_check_box :include_multiday_events_on_schedule %>
+      <%= f.labelled_check_box :show_all_teams_on_public_page %>
+      <%= f.labelled_check_box :show_calendar_view %>
+      <%= f.labelled_check_box :show_events_velodrome %>
+      <%= f.labelled_check_box :show_license %>
+      <%= f.labelled_check_box :show_only_association_sanctioned_races_on_calendar %>
+      <%= f.labelled_check_box :show_practices_on_calendar %>
+      <%= f.labelled_check_box :show_events_sanctioning_org_event_id, "Show Sanctioning Organization's Event ID" %>
+      <%= f.labelled_text_field :weeks_of_recent_results %>
+      <%= f.labelled_text_field :weeks_of_upcoming_events %>
+    </div>
+
+    <hr class="space" />
+    
+    <div class="span-3">
+      <h3>Result Import</h3>
+      <%= f.labelled_check_box :add_members_from_results %>
+      <%= f.labelled_check_box :eager_match_on_license %>
+      <%= f.labelled_check_box :usac_results_format, "USAC Results Format" %>
+    </div>
+    <div class="span-3 last">
+      <h3>Competitions</h3>
+      <%= f.labelled_check_box :award_cat4_participation_points, "Award Participation Points for Cat 4 Women's Series" %>
+      <%= f.labelled_text_field :cat4_womens_race_series_points, "Cat 4 Women's Series Points" %>
+      <%= f.labelled_text_field :exempt_team_categories %>
+    </div>
+
+    <hr class="space" />
+    
+    <div class="span-3">
+      <h3>Numbers and Membership</h3>
+      <%= f.labelled_check_box :bmx_numbers, "BMX Numbers" %>
+      <%= f.labelled_check_box :cx_memberships, "Cyclocross Memberships" %>
+      <%= f.labelled_check_box :gender_specific_numbers %>
+      <%= f.labelled_text_field :masters_age %>
+      <%= f.labelled_text_field :rental_numbers_start %>
+      <%= f.labelled_text_field :rental_numbers_end %>
+    </div>
+    <div class="span-3 last">
+      <h3>Server</h3>
+      <%= f.labelled_check_box :ssl, "SSL" %>
+      <%= f.labelled_text_field :search_results_limit %>
+      <%= f.labelled_text_field :rails_host %>
+      <%= f.labelled_text_field :static_host %>
+    </div>
+
+    <hr class="space" />
+    
+    <div class="page_buttons clear span-6 last">
+      <div class="updatedon span-2">
+        <% if @racing_association.updated_at %>Updated <%= time_ago_in_words(@racing_association.updated_at, true) + " ago" %><% end %>
+      </div>
+      <div class="right span-3 last">
+        <%= submit_tag "Save", :id => "save" %>
+      </div>
+    </div>
+
+  <% end -%>
+</div>
+
+<%= focus "racing_association_name" %>

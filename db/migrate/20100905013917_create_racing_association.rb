@@ -161,7 +161,7 @@ class CreateRacingAssociation < ActiveRecord::Migration
       end
       racing_association.save!
 
-    when "racing_on_rails"
+    when "racing_on_rails_production"
       # Use defaults
       RacingAssociation.create!
     else

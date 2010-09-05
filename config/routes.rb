@@ -132,6 +132,8 @@ ActionController::Routing::Routes.draw do |map|
                   person.resources :versions
                 end
   
+  map.resources :racing_associations
+  
   # Deprecated URLs
   map.connect "/results/:year/:discipline/:event_id", 
               :controller => "results", 
