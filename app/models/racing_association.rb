@@ -17,6 +17,7 @@ class RacingAssociation < ActiveRecord::Base
   serialize :administrator_tabs
   serialize :cat4_womens_race_series_points
   serialize :competitions
+  serialize :exception_recipients
   serialize :sanctioning_organizations
   
   default_value_for :administrator_tabs do
@@ -32,6 +33,10 @@ class RacingAssociation < ActiveRecord::Base
   # String
   default_value_for :default_sanctioned_by do |r|
     r.short_name
+  end
+  
+  default_value_for :exception_recipients do
+    "scott.willson@gmail.com"
   end
   
   default_value_for :rental_numbers do |r|
