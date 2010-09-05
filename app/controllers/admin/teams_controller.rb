@@ -15,9 +15,9 @@ class Admin::TeamsController < Admin::AdminController
       session['team_name'] = @name
       cookies[:team_name] = { :value => @name, :expires => Time.zone.now + 36000 }
       name_like = "%#{@name}%"
-      @teams = Team.find_all_by_name_like(@name, SEARCH_RESULTS_LIMIT)
-      if @teams.size == SEARCH_RESULTS_LIMIT
-        flash[:warn] = "First #{SEARCH_RESULTS_LIMIT} teams"
+      @teams = Team.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
+      if @teams.size == RacingAssociation.current.search_results_limit
+        flash[:warn] = "First #{RacingAssociation.current.search_results_limit} teams"
       end
     end
 

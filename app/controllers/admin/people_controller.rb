@@ -22,7 +22,7 @@ class Admin::PeopleController < Admin::AdminController
   #  * Scott Willson
   #  * Jim Andersen (with an 'Jim Anderson' alias)
   # Store previous search in session and cookie as 'person_name'.
-  # Limit results to SEARCH_RESULTS_LIMIT
+  # Limit results to RacingAssociation.current.search_results_limit
   # === Params
   # * name
   # === Assigns
@@ -40,12 +40,12 @@ class Admin::PeopleController < Admin::AdminController
     if @name.blank?
       @people = []
     else
-      @people = Person.find_all_by_name_like(@name, SEARCH_RESULTS_LIMIT)
+      @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
       @people = @people + Person.find_by_number(@name)
       @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
     end
-    if @people.size == SEARCH_RESULTS_LIMIT
-      flash[:notice] = "First #{SEARCH_RESULTS_LIMIT} people"
+    if @people.size == RacingAssociation.current.search_results_limit
+      flash[:notice] = "First #{RacingAssociation.current.search_results_limit} people"
     end
 
     @current_year = current_date.year

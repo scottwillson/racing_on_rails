@@ -76,7 +76,7 @@ tabor_cr:
   sanctioned_by: CBRA
   promoter: nate_hobson
   promoter_id: 4
-  flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
+  flyer: http://localhost/flyers/2006/tabor_cr.html
   flyer_approved: false
   type: SingleDayEvent
   number_issuer: association
@@ -88,7 +88,7 @@ pir_series:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  flyer: http://localhost/flyers/2005/pir.html
   flyer_approved: true
   sanctioned_by: CBRA
   promoter_id: 1
@@ -103,7 +103,7 @@ pir:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  flyer: http://localhost/flyers/2005/pir.html
   sanctioned_by: CBRA
   promoter_id: 1
   type: SingleDayEvent
@@ -117,7 +117,7 @@ pir_2:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  flyer: http://localhost/flyers/2005/pir.html
   sanctioned_by: CBRA
   promoter_id: 1
   sanctioned_by: CBRA

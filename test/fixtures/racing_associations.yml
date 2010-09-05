@@ -8,3 +8,4 @@ association:
   competitions: !ruby/object:Set
     hash: {}
   rails_host: localhost:3000
+  static_host: localhost

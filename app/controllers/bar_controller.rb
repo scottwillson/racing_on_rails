@@ -18,9 +18,9 @@ class BarController < ApplicationController
     end
     
     if year < 2007 && discipline == Discipline[:age_graded]
-      return redirect_to("http://#{STATIC_HOST}/bar/#{year}/overall_by_age.html")
+      return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{year}/overall_by_age.html")
     elsif year < 2006 && year >= 2001
-      return redirect_to("http://#{STATIC_HOST}/bar/#{year}")
+      return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{year}")
     end
     
     @overall_bar = OverallBar.find_for_year(year)

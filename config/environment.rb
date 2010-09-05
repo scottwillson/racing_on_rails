@@ -81,14 +81,3 @@ require "nil_class"
 require "string"
 require "local_static"
 require "action_view/inline_template_extension"
-
-STATIC_HOST = "localhost" unless defined?(STATIC_HOST)
-
-# Limit number of people, teams, etc. returned in search
-SEARCH_RESULTS_LIMIT          = 100 unless defined?(SEARCH_RESULTS_LIMIT)
-
-# Homepage display
-WEEKS_OF_RECENT_RESULTS       = 2 unless defined?(WEEKS_OF_RECENT_RESULTS)
-WEEKS_OF_UPCOMING_EVENTS      = 5 unless defined?(WEEKS_OF_UPCOMING_EVENTS)
-
-SHOW_ALL_TEAMS_ON_PUBLIC_PAGE = false unless defined?(SHOW_ALL_TEAMS_ON_PUBLIC_PAGE)

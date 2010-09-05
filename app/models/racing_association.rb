@@ -4,6 +4,7 @@
 #
 # cx_memberships? Offers cyclocross memberships
 # eager_match_on_license? Trust license number in results? Use it to match People instead of name.
+# search_results_limit: Limit number of people, teams, etc. returned in search
 class RacingAssociation < ActiveRecord::Base
   # TODO bmx_numbers? Shouldn't this be in disciplines?
 

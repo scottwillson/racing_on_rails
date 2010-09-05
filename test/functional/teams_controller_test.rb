@@ -11,7 +11,7 @@ class TeamsControllerTest < ActionController::TestCase
     get(:index)
     assert_response(:success)
     assert_not_nil(assigns(:teams), "Should assign @teams")
-    assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
-    assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless SHOW_ALL_TEAMS_ON_PUBLIC_PAGE
+    assert(!assigns(:teams).include?(nonmember), "Should only show member teams") unless RacingAssociation.current.show_all_teams_on_public_page?
+    assert(!assigns(:teams).include?(hidden_team), "Should not show hidden teams") unless RacingAssociation.current.show_all_teams_on_public_page?
   end
 end

@@ -413,7 +413,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
          "commit"=>"Save", 
          :id => banana_belt.to_param,
          "event"=>{"city"=>"Forest Grove", "name"=>"Banana Belt One","date"=>"2006-03-12",
-                   "flyer"=>"http://#{STATIC_HOST}/flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
+                   "flyer"=>"http://#{RacingAssociation.current.static_host}/flyers/2006/banana_belt.html", "sanctioned_by"=>"UCI", "flyer_approved"=>"1", 
                    "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
                   "promoter_id" => people(:promoter).to_param, 'number_issuer_id' => norba.to_param}
     )
@@ -423,7 +423,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     assert_equal('Banana Belt One', banana_belt.name, 'name')
     assert_equal('Forest Grove', banana_belt.city, 'city')
     assert_equal(Date.new(2006, 03, 12), banana_belt.date, 'date')
-    assert_equal("http://#{STATIC_HOST}/flyers/2006/banana_belt.html", banana_belt.flyer, 'flyer')
+    assert_equal("http://#{RacingAssociation.current.static_host}/flyers/2006/banana_belt.html", banana_belt.flyer, 'flyer')
     assert_equal('UCI', banana_belt.sanctioned_by, 'sanctioned_by')
     assert_equal(true, banana_belt.flyer_approved, 'flyer_approved')
     assert_equal('Track', banana_belt.discipline, 'discipline')

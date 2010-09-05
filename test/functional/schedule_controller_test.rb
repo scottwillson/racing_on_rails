@@ -10,7 +10,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :name => "Banana Belt I",
       :city => "Hagg Lake",
       :date => Date.new(year, 1, 22),
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/banana_belt.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
     events << banana_belt
@@ -21,7 +21,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :city => "Blodgett",
       :date => Date.new(year, 12, 27),
       :discipline => "Mountain Bike",
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
@@ -67,7 +67,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :name => "Banana Belt I",
       :city => "Hagg Lake",
       :date => Date.new(year, 1, 22),
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/banana_belt.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
     events << banana_belt
@@ -78,7 +78,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :city => "Blodgett",
       :date => Date.new(year, 12, 27),
       :discipline => "Mountain Bike",
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
@@ -100,7 +100,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :name => "Banana Belt I",
       :city => "Hagg Lake",
       :date => Date.new(year, 1, 22),
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/banana_belt.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
     events << banana_belt
@@ -111,7 +111,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :city => "Blodgett",
       :date => Date.new(year, 12, 27),
       :discipline => "Mountain Bike",
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
@@ -133,7 +133,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :name => "Banana Belt I",
       :city => "Hagg Lake",
       :date => Date.new(year, 1, 22),
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/banana_belt.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
     events << banana_belt
@@ -144,7 +144,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :city => "Blodgett",
       :date => Date.new(year, 12, 27),
       :discipline => "Mountain Bike",
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
@@ -171,7 +171,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :name => "Banana Belt I",
       :city => "Hagg Lake",
       :date => Date.new(year, 1, 22),
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/banana_belt.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )
     events << banana_belt
@@ -182,7 +182,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :city => "Blodgett",
       :date => Date.new(year, 12, 27),
       :discipline => "Mountain Bike",
-      :flyer => "http://#{STATIC_HOST}/flyers/2005/mud_slinger.html",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
       :flyer_approved => false,
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )

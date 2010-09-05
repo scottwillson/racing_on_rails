@@ -53,7 +53,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_find_limit
-    for i in 0..SEARCH_RESULTS_LIMIT
+    for i in 0..RacingAssociation.current.search_results_limit
       Person.create(:name => "Test Person #{i}")
     end
     get(:index, :name => 'Test')

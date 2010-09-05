@@ -10,6 +10,7 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.boolean :flyers_in_new_window, :default                               => false, :null => false
       t.boolean :gender_specific_numbers, :default                            => false, :null => false
       t.boolean :include_multiday_events_on_schedule, :default                => false, :null => false
+      t.boolean :show_all_teams_on_public_page, :default                      => false, :null => false
       t.boolean :show_calendar_view, :default                                 => true, :null => false
       t.boolean :show_events_velodrome, :default                              => true, :null => false
       t.boolean :show_license, :default                                       => true, :null => false
@@ -22,6 +23,9 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.integer :masters_age, :default                                        => 35, :null => false
       t.integer :rental_numbers_end, :default                                 => 99, :null => false
       t.integer :rental_numbers_start, :default                               => 51, :null => false
+      t.integer :search_results_limit, :default                               => 100, :null => false
+      t.integer :weeks_of_recent_results, :default                            => 2, :null => false
+      t.integer :weeks_of_upcoming_events, :default                           => 5, :null => false
       t.string  :cat4_womens_race_series_points
       t.string :administrator_tabs
       t.string :competitions
@@ -37,6 +41,7 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.string :short_name, :default                                          => "CBRA", :null => false
       t.string :show_events_sanctioning_org_event_id, :default                => false, :null => false
       t.string :state, :default                                               => "OR", :null => false
+      t.string :static_host, :default                                         => "localhost", :null => false
       t.string :usac_region, :default                                         => "North West", :null => false
       t.timestamps
     end

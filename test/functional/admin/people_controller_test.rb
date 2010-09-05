@@ -75,14 +75,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   end
 
   def test_find_limit
-    for i in 0..SEARCH_RESULTS_LIMIT
+    for i in 0..RacingAssociation.current.search_results_limit
       Person.create(:name => "Test Person #{i}")
     end
     get(:index, :name => 'Test')
     assert_response(:success)
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(SEARCH_RESULTS_LIMIT, assigns['people'].size, "Search for '' should find all people")
+    assert_equal(RacingAssociation.current.search_results_limit, assigns['people'].size, "Search for '' should find all people")
     assert_not_nil(assigns["name"], "Should assign name")
     assert(!flash.empty?, 'flash not empty?')
     assert_equal('Test', assigns['name'], "'name' assigns")

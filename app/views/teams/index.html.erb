@@ -2,7 +2,7 @@
 
 <h2>OBRA-registered teams in Oregon and SW Washington.</h2>
 
-<p align="left">A list of <%= link_to "clubs rides", "http://#{STATIC_HOST}/teams/rides.html", :class => "obvious" %> is available if you're looking for a group ride.</p>
+<p align="left">A list of <%= link_to "clubs rides", "http://#{RacingAssociation.current.static_host}/teams/rides.html", :class => "obvious" %> is available if you're looking for a group ride.</p>
 
 <% table :caption => "Teams", :id => "teams" do %>
   <tr>
