@@ -9,3 +9,4 @@ association:
     hash: {}
   rails_host: localhost:3000
   static_host: localhost
+  exception_recipients: [ "dev@example.com" ]

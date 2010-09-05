@@ -33,6 +33,7 @@ class AddRacingAssociations < ActiveRecord::Migration
       t.string :default_discipline, :default                                  => "Road", :null => false
       t.string :default_sanctioned_by
       t.string :email, :default                                               => "scott.willson@gmail.com", :null => false
+      t.string :exception_recipients
       t.string :exempt_team_categories, :default                              => false, :null => false
       t.string :membership_email, :default                                    => "scott.willson@gmail.com", :null => false
       t.string :name, :default                                                => "Cascadia Bicycle Racing Association", :null => false
