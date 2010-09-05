@@ -39,11 +39,6 @@ class PublicPagesTest < WebDriverTestCase
     assert_table "person_results_table", 1, 0, "2"
     assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
     assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
-    if RacingAssociation.current.short_name == "MBRA"
-     assert_table "person_results_table", 1, 3, "Gentle Lovers"
-    else
-     assert_table "person_results_table", 1, 3, "12/31/2004"
-    end
  
     open "/people/#{people(:alice).to_param}/2002"
     find_element(:link_text => "Jack Frost").click
