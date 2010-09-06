@@ -34,19 +34,19 @@ class PublicPagesTest < ActionController::IntegrationTest
     
     get "/people/#{result.person.to_param}"
     assert_response :success
-    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /Results: #{result.name}/
     
     get "/people/#{result.person.to_param}/results"
     assert_response :success
-    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /Results: #{result.name}/
     
     get "/teams/#{result.team.to_param}"
     assert_response :success
-    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /Results: #{result.team_name}/
     
     get "/teams/#{result.team.to_param}/results"
     assert_response :success
-    assert_select "title", /#{RacingAssociation.current.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /Results: #{result.team_name}/
   end
   
   def test_first_aid_providers
