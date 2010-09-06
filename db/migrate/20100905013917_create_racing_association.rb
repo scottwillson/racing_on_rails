@@ -108,7 +108,6 @@ class CreateRacingAssociation < ActiveRecord::Migration
         ]),
         :award_cat4_participation_points => false,
         :cat4_womens_race_series_points => [ 0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16 ],
-        :cat4_womens_race_series_category => "Category 4 Women",
         :ssl => true,
         :membership_email => %w(kenji@obra.org),
         :sanctioning_organizations => [ "ATRA", "FIAC", "OBRA", "UCI", "USA Cycling" ],

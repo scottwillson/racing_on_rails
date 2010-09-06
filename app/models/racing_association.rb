@@ -30,6 +30,10 @@ class RacingAssociation < ActiveRecord::Base
     Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
   end
   
+  default_value_for :cat4_womens_race_series_category do
+    Category.find_or_create_by_name "Category 4 Women"
+  end
+  
   # String
   default_value_for :default_sanctioned_by do |r|
     r.short_name
