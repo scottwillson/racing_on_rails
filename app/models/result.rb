@@ -41,6 +41,8 @@ class Result < ActiveRecord::Base
 
   validates_presence_of :race
 
+  include Export::Results
+
   def Result.find_all_for(person)
     if person.is_a? Person
       person_id = person.id
