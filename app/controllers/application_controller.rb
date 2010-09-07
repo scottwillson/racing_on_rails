@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
-  before_filter :clear_racing_association, :toggle_tabs
+  before_filter :set_racing_association, :toggle_tabs
 
   def self.expire_cache
     begin
@@ -43,8 +43,17 @@ class ApplicationController < ActionController::Base
 
   protected
   
-  def clear_racing_association
-    RacingAssociation.current = nil
+  def set_racing_association
+    case request.host
+    when "dev.albertabicycle.ab.ca"
+      RacingAssociation.current = RacingAssociation.find_by_short_name("ABA")
+      self.prepend_view_path(File.join(Rails.root, 'local', "aba", "app", 'views'))
+    when "dev.raceatra.com"
+      RacingAssociation.current = RacingAssociation.find_by_short_name("ATRA")
+      self.prepend_view_path(File.join(Rails.root, 'local', "atra", "app", 'views'))
+    else
+      RacingAssociation.current = RacingAssociation.first
+    end
   end
   
   def toggle_tabs

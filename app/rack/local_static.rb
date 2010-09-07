@@ -8,14 +8,22 @@ module Rack
 
     def initialize(app)
       @app = app
-      @local_file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "local", "public"))
     end
 
     def call(env)
       path        = env['PATH_INFO'].chomp('/')
       method      = env['REQUEST_METHOD']
       cached_path = (path.empty? ? 'index' : path) + ::ActionController::Base.page_cache_extension
-
+      
+      case env["HTTP_HOST"]
+      when /dev\.albertabicycle\.ab\.ca/
+        @local_file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "local", "aba", "public"))
+      when /dev\.raceatra\.com/
+        @local_file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "local", "atra", "public"))
+      else
+        @local_file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "public"))
+      end
+      
       if FILE_METHODS.include?(method)
         if local_file_exist?(path)
           return @local_file_server.call(env)

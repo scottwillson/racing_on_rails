@@ -46,26 +46,7 @@ Rails::Initializer.run do |config|
   config.active_record.schema_format = :sql
 
   config.active_record.observers = :event_observer, :result_observer
-
-  # Ugh. Make config accessible to overrides
-  @config = config
-  
-  if File.exist?("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
-    load("#{RAILS_ROOT}/local/config/environments/#{RAILS_ENV}.rb")
-  end
-  
-  # See Rails::Configuration for more options
-  if File.exists?("#{RAILS_ROOT}/local/config/database.yml")
-    config.database_configuration_file = "#{RAILS_ROOT}/local/config/database.yml"
-  end
 end
-
-# Local config customization
-load("#{RAILS_ROOT}/local/config/environment.rb") if File.exist?("#{RAILS_ROOT}/local/config/environment.rb")
-
-# Prefer local templates, partials etc. if they exist.  Otherwise, use the base
-# application's generic files.
-ActionController::Base.view_paths = ActionView::Base.process_view_paths(["#{RAILS_ROOT}/local/app/views", "#{RAILS_ROOT}/app/views"])
 
 class ActionView::Base
   def self.default_form_builder
