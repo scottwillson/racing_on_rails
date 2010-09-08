@@ -230,12 +230,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["competition_results"], "Should assign competition_results")
   end
   
-  def test_team
-  	team = teams(:vanilla)
-    get(:deprecated_team, :team_id => team.to_param)
-    assert_redirected_to(team_results_path(team))
-  end
-  
   def test_competition
     Bar.calculate!(2004)
     bar = Bar.find_by_year_and_discipline(2004, "Road")
@@ -299,24 +293,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template("results/team_event")
     assert_equal(result, assigns["result"], "Should assign result")
-  end
-
-  def test_show_person_result
-    result = results(:tonkin_kings_valley)
-    get(:show, :id => result.to_param)
-    assert_redirected_to event_person_results_path(result.event, result.person)
-  end  
-
-  def test_show_team_result
-    result = races(:kings_valley_3).results.create!(:team => teams(:vanilla))
-    get(:show, :id => result.to_param)
-    assert_redirected_to event_team_results_path(result.event, teams(:vanilla))
-  end
-  
-  def test_show_result_no_team_no_person
-    result = races(:kings_valley_3).results.create!
-    get(:show, :id => result.to_param)
-    assert_redirected_to(event_results_path(result.event))
   end
   
   def test_person_with_overall_results

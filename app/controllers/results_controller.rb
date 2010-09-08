@@ -132,43 +132,6 @@ class ResultsController < ApplicationController
     end
   end
   
-  def deprecated_team
-    team = Team.find(params[:team_id])
-    redirect_to(team_results_path(team), :status => :moved_permanently)
-  end
-  
-  def deprecated_event
-    event = Event.find(params[:event_id])
-    redirect_to(event_results_path(event), :status => :moved_permanently)
-  end
-  
-  def racer
-    person = Person.find(params[:person_id])
-    redirect_to person_results_path(person), :status => :moved_permanently
-  end
-  
-  def competition
-    event = Event.find(params[:event_id])
-    if params[:person_id]
-      person = Person.find(params[:person_id])
-      redirect_to(event_person_results_path(event, person), :status => :moved_permanently)
-    else
-      team = Team.find(params[:team_id])
-      redirect_to(event_team_results_path(event, team), :status => :moved_permanently)
-    end
-  end
-
-  def show
-    result = Result.find(params[:id])
-    if result.person
-      redirect_to event_person_results_path(result.event, result.person), :status => :moved_permanently
-    elsif result.team
-      redirect_to event_team_results_path(result.event, result.team), :status => :moved_permanently
-    else
-      redirect_to event_results_path(result.event), :status => :moved_permanently
-    end
-  end
-  
   
   private
   
