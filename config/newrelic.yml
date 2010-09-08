@@ -18,7 +18,7 @@ common: &default_settings
 
   error_collector:
     enabled: true
-    capture_source: true    
+    capture_source: true
     ignore_errors: ActionController::RoutingError
 
 development:
