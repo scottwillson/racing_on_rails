@@ -250,12 +250,16 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   end
   
   def test_custom_category_name
+    racing_association = RacingAssociation.current
+    category_4_women = Category.find_or_create_by_name(:name => "Women Cat 4")
+    racing_association.cat4_womens_race_series_category = category_4_women
+    racing_association.save!
+    
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
     event = SingleDayEvent.create(:date => Date.new(2004))
-    women_cat_4 = Category.find_by_name("Women Cat 4")
-    race_1 = event.races.create!(:category => women_cat_4)
+    race_1 = event.races.create!(:category => category_4_women)
     race_1.results.create!(:place => "2", :person => people(:molly))
-    race_2 = event.races.create!(:category => women_cat_4)
+    race_2 = event.races.create!(:category => category_4_women)
     race_2.results.create!(:place => "5", :person => people(:alice))
     series.source_events << event
 
