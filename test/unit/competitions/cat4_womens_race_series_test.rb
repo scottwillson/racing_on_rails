@@ -2,22 +2,6 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
-  def setup
-    super
-    @award_cat4_participation_points = RacingAssociation.current.award_cat4_participation_points
-    RacingAssociation.current.award_cat4_participation_points = true
-    @cat4_womens_race_series_points = RacingAssociation.current.cat4_womens_race_series_points
-    RacingAssociation.current.cat4_womens_race_series_points = nil
-    @cat4_womens_race_series_category = RacingAssociation.current.cat4_womens_race_series_category
-    RacingAssociation.current.cat4_womens_race_series_category = nil
-  end
-  
-  def teardown
-    RacingAssociation.current.award_cat4_participation_points = @award_cat4_participation_points
-    RacingAssociation.current.cat4_womens_race_series_points = @cat4_womens_race_series_points
-    RacingAssociation.current.cat4_womens_race_series_category = @cat4_womens_race_series_category
-  end
-  
   def test_calculate_omnium
     series = Cat4WomensRaceSeries.create!(:date => Date.new(2005))
     omnium = MultiDayEvent.create!(:date => Date.new(2005))
@@ -139,7 +123,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(65, race.results[1].points, 'Points')
   end
   
-  def test_do_no_taward_cat4_participation_points
+  def test_do_not_award_cat4_participation_points
     RacingAssociation.current.award_cat4_participation_points = false
 
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
@@ -223,6 +207,31 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
   end
   
   def test_more_than_one_cat_4_race
+    series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
+    event = SingleDayEvent.create(:date => Date.new(2004))
+    women_cat_4 = Category.find_by_name("Women Cat 4")
+    race_1 = event.races.create!(:category => women_cat_4)
+    race_1.results.create!(:place => "2", :person => people(:molly))
+    race_2 = event.races.create!(:category => women_cat_4)
+    race_2.results.create!(:place => "5", :person => people(:alice))
+    series.source_events << event
+
+    Cat4WomensRaceSeries.calculate!(2004)
+    series.reload    
+    assert_equal(1, series.races.size, 'Races')
+    
+    race = series.races.first
+    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    race.results.sort!
+    assert_equal('1', race.results[0].place, 'Place')
+    assert_equal(people(:molly), race.results[0].person, 'Person')
+    assert_equal(95, race.results[0].points, 'Points')
+    assert_equal('2', race.results[1].place, 'Place')
+    assert_equal(people(:alice), race.results[1].person, 'Person')
+    assert_equal(80, race.results[1].points, 'Points')
+  end
+  
+  def test_custom_category_name
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
     event = SingleDayEvent.create(:date => Date.new(2004))
     women_cat_4 = Category.find_by_name("Women Cat 4")

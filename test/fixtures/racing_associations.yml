@@ -10,3 +10,5 @@ association:
   rails_host: localhost:3000
   static_host: localhost
   exception_recipients: [ "dev@example.com" ]
+  award_cat4_participation_points: true
+  
