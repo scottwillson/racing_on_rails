@@ -19,6 +19,24 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal 2, result.scores.size, "Should have one score"
   end
   
+  def test_calculate_omnium_no_participation_points
+    RacingAssociation.current.award_cat4_participation_points = false
+    series = Cat4WomensRaceSeries.create!(:date => Date.new(2005))
+    omnium = MultiDayEvent.create!(:date => Date.new(2005))
+    series.source_events << omnium
+    
+    road_race = omnium.children.create!(:date => Date.new(2005))
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    person = people(:alice)
+    omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    
+    Cat4WomensRaceSeries.calculate!(2005)
+    result = series.races.first.results.first
+    assert_equal 100, result.points, "Should have points for omnium only"
+    assert_equal 1, result.scores.size, "Should have one score"
+  end
+  
   def test_calculate_no_results
     original_results_count = Result.count
     assert_equal(0, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries before calculate!")
