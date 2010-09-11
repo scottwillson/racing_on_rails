@@ -2,7 +2,7 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  caches_page :index, :list, :calendar
+  caches_page :index, :list
   
   before_filter :assign_schedule_data
   
