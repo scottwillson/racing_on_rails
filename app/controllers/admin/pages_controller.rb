@@ -10,7 +10,7 @@ class Admin::PagesController < Admin::AdminController
   
   def new
     @page = Page.new(params[:page])
-    render(:edit)
+    render :edit
   end
   
   def create
@@ -22,7 +22,7 @@ class Admin::PagesController < Admin::AdminController
       expire_cache
       redirect_to(edit_admin_page_path(@page))
     else
-      render(:edit)
+      render :edit
     end
   end
   
@@ -38,7 +38,7 @@ class Admin::PagesController < Admin::AdminController
       expire_cache
       redirect_to(edit_admin_page_path(@page))
     else
-      render(:action => :edit)
+      render :edit
     end
   end
   

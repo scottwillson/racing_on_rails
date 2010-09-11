@@ -1,6 +1,4 @@
 class CompetitionsController < ApplicationController
-  caches_page :show
-
   def show
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
@@ -26,5 +24,6 @@ class CompetitionsController < ApplicationController
     else
       @event = competition_class.new(:date => date)
     end
+    expires_in 10.minutes, :public => true
   end
 end

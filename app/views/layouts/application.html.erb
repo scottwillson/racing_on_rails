@@ -22,9 +22,9 @@
         </div>
           <div class="nav" id="bottom">
           <div class="breadcrumb">
-            <%= link_to RacingAssociation.current.short_name, :controller => 'home', :action => 'index' %> |
-            <%= link_to "Results", { :controller => "results" }, { :id => "results_link" } %> |
-            <%= link_to "Schedule", schedule_path, { :id => "schedule_link" } %> | 
+            <%= link_to RacingAssociation.current.short_name, "/" %> |
+            <%= link_to "Results", "/results", :id => "results_link" %> |
+            <%= link_to "Schedule", "/schedule", :id => "schedule_link" %> | 
       <% if current_person %>
       <%= link_to "Logout", person_session_path, :method => :delete, :id => "account_link" %>
       <% else %>

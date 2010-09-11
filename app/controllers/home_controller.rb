@@ -1,7 +1,5 @@
 # Homepage
 class HomeController < ApplicationController
-  caches_page :index
-        
   # Show homepage
   # === Assigns
   # * upcoming_events: instance of UpcomingEvents with default parameters
@@ -27,7 +25,9 @@ class HomeController < ApplicationController
       :conditions => ['created_at > ? and article_category_id = ?', cutoff, @news_category],
       :order => 'created_at desc'
     )
+    
+    expires_in 10.minutes, :public => true
 
-    render_page  
+    render_page
   end
 end

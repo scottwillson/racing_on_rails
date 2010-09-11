@@ -2,8 +2,6 @@
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
   include Api::Results
-
-  caches_page :index, :event, :person_event, :team_event, :person, :team
   
   # HTML: Formatted links to Events with Results
   # == Params
@@ -23,6 +21,7 @@ class ResultsController < ApplicationController
   #
   # See source code of Api::Results and Api::Base
   def index
+    expires_in 1.day, :public => true
     respond_to do |format|
       format.html {
         @year = params['year'].to_i
@@ -60,7 +59,7 @@ class ResultsController < ApplicationController
       :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :names } ] } ] ]
     )
     
-    render :event
+    expires_in 10.minutes, :public => true
   end
   
   # Single Person's Results for a single Event
@@ -77,6 +76,7 @@ class ResultsController < ApplicationController
                   ],
       :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
     )
+    expires_in 10.minutes, :public => true
   end
 
   # Single Team's Results for a single Event
@@ -94,6 +94,7 @@ class ResultsController < ApplicationController
       :conditions => ['events.id = ? and teams.id = ?', params[:event_id], params[:team_id]]
     )
     raise ActiveRecord::RecordNotFound unless @result
+    expires_in 10.minutes, :public => true
   end
   
   # Person's Results for an entire year
@@ -114,6 +115,7 @@ class ResultsController < ApplicationController
     @competition_results, @event_results = results.partition do |result|
       result.event.is_a?(Competition)
     end
+    expires_in 10.minutes, :public => true
   end
   
   # Teams's Results for an entire year
@@ -130,6 +132,7 @@ class ResultsController < ApplicationController
     @results.reject! do |result|
       result.race.event.is_a?(Competition)
     end
+    expires_in 10.minutes, :public => true
   end
   
   

@@ -20,7 +20,7 @@ class PagesTest < WebDriverTestCase
     type "This year is cancelled", "page_body"
 
     click "save"
-
+    sleep 3
     open "/schedule"
     assert_page_source "This year is cancelled"
 
