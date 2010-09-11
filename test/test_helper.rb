@@ -24,7 +24,6 @@ class ActiveSupport::TestCase
     reset_disciplines
   end
 
-  # Clear RacingAssociation.current.now. Reset results format.
   def reset_association
     RacingAssociation.current = nil
   end

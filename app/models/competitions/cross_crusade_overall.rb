@@ -15,6 +15,7 @@ class CrossCrusadeOverall < Overall
     races.create!(:category => Category.find_or_create_by_name("Masters 35+ B"))
     races.create!(:category => Category.find_or_create_by_name("Masters 35+ C"))
     races.create!(:category => Category.find_or_create_by_name("Masters 50+"))
+    races.create!(:category => Category.find_or_create_by_name("Masters 60+"))
     races.create!(:category => Category.find_or_create_by_name("Junior Men"))
     races.create!(:category => Category.find_or_create_by_name("Junior Women"))
     races.create!(:category => Category.find_or_create_by_name("Women A"))
