@@ -1,2 +1,26 @@
+workers:
+  - type: local
+    runners: 2
+  - type: ssh
+    # connect: 192.168.2.10
+    connect: sw@Al.local
+    directory: /Users/sw/devel/racing_on_rails
+    runners: 1
+  - type: ssh
+    # connect: 192.168.2.6
+    connect: sw@soapbox.local
+    directory: /home/sw/devel/racing_on_rails
+    runners: 2
+  - type: ssh
+    connect: sw@brooklyn.local
+    directory: /home/sw/devel/racing_on_rails
+    runners: 1
+sync:
+    directory: /Users/sw/devel/racing_on_rails
+    exclude:
+      - tmp
+      - log
+      - doc
+      - .git
 listeners:
     - Hydra::Listener::MinimalOutput.new
