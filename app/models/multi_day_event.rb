@@ -53,12 +53,20 @@ class MultiDayEvent < Event
 
   def MultiDayEvent.find_all_by_year(year, discipline = nil)
     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
+    MultiDayEvent.find_all_by_conditions(conditions, discipline)
+  end
 
+  def MultiDayEvent.find_all_by_unix_dates(start_date, end_date,  discipline = nil)
+    conditions = ["date between ? and ?", "#{Time.at(start_date.to_i).strftime('%Y-%m-%d')}", "#{Time.at(end_date.to_i).strftime('%Y-%m-%d')}"]
+    MultiDayEvent.find_all_by_conditions(conditions, discipline)
+  end
+
+  def MultiDayEvent.find_all_by_conditions(conditions, discipline = nil)
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       conditions.first << " and sanctioned_by = ?"
       conditions << RacingAssociation.current.default_sanctioned_by
     end
-    
+
     if discipline
       conditions.first << " and discipline = ?"
       conditions << discipline.name
