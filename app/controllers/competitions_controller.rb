@@ -24,6 +24,6 @@ class CompetitionsController < ApplicationController
     else
       @event = competition_class.new(:date => date)
     end
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
   end
 end

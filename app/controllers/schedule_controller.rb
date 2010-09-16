@@ -12,7 +12,7 @@ class ScheduleController < ApplicationController
   # * year
   # * schedule: instance of year's Schedule::Schedule
   def index
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
     render_page
   end
 
@@ -23,12 +23,12 @@ class ScheduleController < ApplicationController
   # * year
   # * schedule: instance of year's Schedule::Schedule
   def list
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
     render_page
   end
 
   def calendar
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
     render_page
   end
 

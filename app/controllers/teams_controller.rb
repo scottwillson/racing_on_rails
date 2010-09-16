@@ -7,6 +7,6 @@ class TeamsController < ApplicationController
       @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
     end
     @discipline_names = Discipline.find_all_names
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
   end
 end

@@ -26,7 +26,7 @@ class HomeController < ApplicationController
       :order => 'created_at desc'
     )
     
-    expires_in 10.minutes, :public => true
+    expires_in 1.hour, :public => true
 
     render_page
   end
