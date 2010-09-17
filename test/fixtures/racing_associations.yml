@@ -11,4 +11,4 @@ association:
   static_host: localhost
   exception_recipients: [ "dev@example.com" ]
   award_cat4_participation_points: true
-  
+  cat4_womens_race_series_points: ""
