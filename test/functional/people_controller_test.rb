@@ -14,6 +14,13 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select "a#export_link", :count => 0
   end
 
+  def test_list
+    get(:list, :q => 'jone')
+    assert_response(:success)
+    assert_not_nil(@response.body.index("Jones"), 'Search for jone should find Jones #{@response.to_s}')
+    assert_not_nil(@response.body.index("2"), 'Search for jone should return ID of 2')
+  end
+
   def test_index_as_promoter
     PersonSession.create(people(:promoter))
     get(:index)

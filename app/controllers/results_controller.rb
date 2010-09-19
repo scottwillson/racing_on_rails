@@ -114,6 +114,7 @@ class ResultsController < ApplicationController
     @competition_results, @event_results = results.partition do |result|
       result.event.is_a?(Competition)
     end
+    render :layout => !request.xhr?
   end
   
   # Teams's Results for an entire year
