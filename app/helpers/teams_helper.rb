@@ -7,4 +7,9 @@ module TeamsHelper
       team.contact_name
     end
   end
+
+  def list_all_teams
+    teams = Team.find(:all)
+    render :partial => "teams/list", :locals => { :teams => teams }
+  end
 end

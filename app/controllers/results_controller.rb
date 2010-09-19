@@ -116,6 +116,7 @@ class ResultsController < ApplicationController
       result.event.is_a?(Competition)
     end
     expires_in 1.hour, :public => true
+    render :layout => !request.xhr?
   end
   
   # Teams's Results for an entire year

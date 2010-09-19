@@ -5,7 +5,11 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def point_schedule
-    RacingAssociation.current.cat4_womens_race_series_points || [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
+    if RacingAssociation.current.cat4_womens_race_series_points.empty?
+      [ 0, 100, 95, 90, 85, 80, 75, 72, 70, 68, 66, 64, 62, 60, 58, 56 ]
+    else
+      RacingAssociation.current.cat4_womens_race_series_points
+    end
   end
 
   def source_results(race)

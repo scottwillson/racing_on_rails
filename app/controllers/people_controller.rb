@@ -32,6 +32,12 @@ class PeopleController < ApplicationController
     end
   end
 
+  def list
+    people_list = ''
+    Person.find_all_by_name_like(params['q']).each { |person| people_list += (person.name + '|' + person.id.to_s + "\n") }
+    render :text => people_list
+  end
+
   def show
     respond_to do |format|
       format.xml { render :xml => person_as_xml }
