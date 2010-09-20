@@ -66,6 +66,7 @@ class PostsController < ApplicationController
     elsif params["next"]
       return redirect_to(:id => params["next_id"])
     end
+    expires_in 1.hour, :public => true
     @post = Post.find(params["id"])
   end
   
