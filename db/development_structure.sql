@@ -629,6 +629,7 @@ CREATE TABLE `racing_associations` (
   `usac_region` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'North West',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `cat4_womens_race_series_end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -990,6 +991,8 @@ INSERT INTO schema_migrations (version) VALUES ('20100701032620');
 INSERT INTO schema_migrations (version) VALUES ('20100831151754');
 
 INSERT INTO schema_migrations (version) VALUES ('20100905013917');
+
+INSERT INTO schema_migrations (version) VALUES ('20100920160034');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

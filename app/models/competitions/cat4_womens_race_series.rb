@@ -13,6 +13,7 @@ class Cat4WomensRaceSeries < Competition
   end
 
   def source_results(race)
+    end_date = RacingAssociation.current.cat4_womens_race_series_end_date || Time.zone.now.end_of_year.to_date
     Result.find_by_sql(
       [%Q{ SELECT results.id as id, race_id, person_id, results.team_id, place
           FROM results  
@@ -23,7 +24,7 @@ class Cat4WomensRaceSeries < Competition
             and categories.id in (#{category_ids_for(race)})
             and (events.type = "SingleDayEvent" or events.type is null or events.id in (?))
             and events.ironman is true
-            and events.date between '#{year}-01-01' and '#{year}-12-31'
+            and events.date between '#{year}-01-01' and '#{end_date.to_s(:db)}'
           order by person_id
        }, source_events.collect(&:id) ]
     )

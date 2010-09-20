@@ -108,37 +108,39 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     # Other competitions don't count!
     RiderRankings.calculate!(2004)
 
-    results_baseline_count = Result.count
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries before calculate! (but after create)")
-    Cat4WomensRaceSeries.calculate!(2004)
-    bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
-    assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
-    assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
-    # Should delete old Cat4WomensRaceSeries
-    Cat4WomensRaceSeries.calculate!(2004)
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
-    bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
-    assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
-    assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Cat4WomensRaceSeries date")
-    assert_equal("2004 Cat 4 Womens Race Series", bar.name, "2004 Bar name")
-    assert_equal_dates(Date.today, bar.updated_at, "Cat4WomensRaceSeries last updated")
-    assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
-    
-    assert_equal(1, bar.races.size, 'Races')
-    
-    race = bar.races.first
-    assert_equal(women_cat_4, race.category, 'Category')
-    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    Timecop.freeze Time.zone.local(2004, 12, 15) do
+      results_baseline_count = Result.count
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries before calculate! (but after create)")
+      Cat4WomensRaceSeries.calculate!(2004)
+      bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+      assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
+      assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
+      # Should delete old Cat4WomensRaceSeries
+      Cat4WomensRaceSeries.calculate!(2004)
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
+      bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+      assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
+      assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Cat4WomensRaceSeries date")
+      assert_equal("2004 Cat 4 Womens Race Series", bar.name, "2004 Bar name")
+      assert_equal_dates(Date.today, bar.updated_at, "Cat4WomensRaceSeries last updated")
+      assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
 
-    race.results.sort!
-    assert_equal('1', race.results[0].place, 'Place')
-    assert_equal(alice, race.results[0].person, 'Person')
-    assert_equal(102, race.results[0].points, 'Points')
+      assert_equal(1, bar.races.size, 'Races')
 
-    assert_equal('2', race.results[1].place, 'Place')
-    assert_equal(molly, race.results[1].person, 'Person')
-    assert_equal(65, race.results[1].points, 'Points')
+      race = bar.races.first
+      assert_equal(women_cat_4, race.category, 'Category')
+      assert_equal(2, race.results.size, 'Category 4 Women race results')
+
+      race.results.sort!
+      assert_equal('1', race.results[0].place, 'Place')
+      assert_equal(alice, race.results[0].person, 'Person')
+      assert_equal(102, race.results[0].points, 'Points')
+
+      assert_equal('2', race.results[1].place, 'Place')
+      assert_equal(molly, race.results[1].person, 'Person')
+      assert_equal(65, race.results[1].points, 'Points')
+    end
   end
   
   def test_do_not_award_cat4_participation_points
