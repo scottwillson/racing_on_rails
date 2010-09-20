@@ -38,6 +38,7 @@ Rails::Initializer.run do |config|
 
   if RAILS_ENV == "test"
     config.gem "mocha"
+    config.gem "timecop"
   end
 
   config.time_zone = "Pacific Time (US & Canada)"
