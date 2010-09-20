@@ -18,12 +18,12 @@ class ApplicationController < ActionController::Base
     begin
       if Rails.env.production?
         Thread.new {
-          system "varnishadm", "-T 69.30.43.18:2000", "'purge.url .*'"
-          system "varnishadm", "-T 69.30.43.19:2000", "'purge.url .*'"
+          system "varnishadm -T 69.30.43.18:2000 'purge.url .*'"
+          system "varnishadm -T 69.30.43.19:2000 'purge.url .*'"
         }
       else
         Thread.new {
-          system "varnishadm", "-T 0.0.0.0:2000", "'purge.url .*'"
+          system "varnishadm -T 0.0.0.0:2000 'purge.url .*'"
         }
       end
     rescue Exception => e
