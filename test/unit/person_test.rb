@@ -917,9 +917,12 @@ class PersonTest < ActiveSupport::TestCase
   end
   
   def test_ignore_blank_login_fields
+    Person.create!
     person = Person.create!(:password => "", :password_confirmation => "", :login => "")
     person.reload
-    assert_nil person.login, "login should be nil, not blank"
+    person.save!
+    person.name = "New Guy"
+    person.save!
   end
   
   def test_authlogic_should_not_set_updated_at_on_load
