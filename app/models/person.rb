@@ -16,6 +16,7 @@ class Person < ActiveRecord::Base
                                                    :allow_nil => true,
                                                    :allow_blank => true
 
+    config.validates_uniqueness_of_login_field_options :allow_blank => true, :allow_nil => true
     config.validates_confirmation_of_password_field_options :unless => Proc.new { |user| user.password.blank? }    
     config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
