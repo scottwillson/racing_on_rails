@@ -1004,13 +1004,13 @@ class PersonTest < ActiveSupport::TestCase
 
     assert_equal(1, person.names(true).size, "names")
 
-    assert_equal("Ryan Weaver", old_result.name, "name should stay the same on old result")
-    assert_equal("Ryan", old_result.first_name, "first_name on old result")
-    assert_equal("Weaver", old_result.last_name, "last_name on old result")
+    assert_equal("Ryan Weaver", old_result.reload.name, "name should stay the same on old result")
+    assert_equal("Ryan", old_result.reload.first_name, "first_name on old result")
+    assert_equal("Weaver", old_result.reload.last_name, "last_name on old result")
 
-    assert_equal("Rob Farris", result.name, "name should change on this year's result")
-    assert_equal("Rob", result.first_name, "first_name on result")
-    assert_equal("Farris", result.last_name, "last_name on result")
+    assert_equal("Rob Farris", result.reload.name, "name should change on this year's result")
+    assert_equal("Rob", result.reload.first_name, "first_name on result")
+    assert_equal("Farris", result.reload.last_name, "last_name on result")
   end
 
   def test_renewed

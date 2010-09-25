@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
@@ -46,7 +46,7 @@ Rails::Initializer.run do |config|
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
-  config.active_record.observers = :event_observer, :result_observer
+  config.active_record.observers = :event_observer, :name_observer, :person_observer, :result_observer, :team_observer
 
   # Ugh. Make config accessible to overrides
   @config = config

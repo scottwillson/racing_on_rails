@@ -30,7 +30,7 @@ class WsbaBarr < Competition
     event_ids = event_ids.join(', ')
     
     results = Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place, members_only_place
+      %Q{ SELECT results.*
           FROM results  
           LEFT OUTER JOIN races ON races.id = results.race_id 
           LEFT OUTER JOIN categories ON categories.id = races.category_id

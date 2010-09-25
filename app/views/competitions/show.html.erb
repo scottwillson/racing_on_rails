@@ -47,7 +47,7 @@
   else
     truncate(result.name)
   end
- %><%= ' ' * (30 - truncate(result.name).length) -%>
+ %><%= ' ' * (30 - truncate(result.name || "").length) -%>
    <%= truncate(result.person_team_name, :length => 40).ljust(40) -%>
    <%= number_with_precision(result.points, :precision => 1).rjust(6) -%>
 <%- end -%></pre></td>

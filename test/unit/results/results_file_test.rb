@@ -522,7 +522,7 @@ module Results
       race.results << Result.new(:place => "7", :first_name => "Nathan", :last_name => "Dills", :number =>"J25", :team_name =>"Bike Gallery/TREK", :points => "5.0")
       race.results << Result.new(:place => "8", :first_name => "David", :last_name => "Oliphant", :number =>"112", :team_name =>"Team TAI", :points => "4.0")
       race.results << Result.new(:place => "9", :first_name => "Richard", :last_name => "Barrows", :number =>"568", :team_name =>"North River Racing", :points => "3.0")
-      race.results << Result.new(:place => "10", :first_name => "George", :last_name => "Gardner", :number =>"385", :team_name =>"", :points => "2.0")
+      race.results << Result.new(:place => "10", :first_name => "George", :last_name => "Gardner", :number =>"385", :team_name => nil, :points => "2.0")
       race.results << Result.new(:place => "11", :first_name => "Kendall", :last_name => "Kuhar", :number =>"152", :team_name =>"Bike N Hike/Giant", :points => "1.0")
       race.results << Result.new(:place => "12", :first_name => "Ryan", :last_name => "Weaver", :number =>"341", :team_name =>"Gentle Lovers")
       race.results << Result.new(:place => "13", :first_name => "Sal", :last_name => "Collura", :number =>"A99", :team_name =>"Hutch's")

@@ -237,7 +237,7 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(1, team.names(true).size, "names")
 
     assert_equal("Twin Peaks", old_result.team_name, "Team name should stay the same on old result")
-    assert_equal("Tecate-Una Mas", result.team_name, "Team name should change on this year's result")
+    assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name should change on this year's result")
   end
   
   def test_results_before_this_year

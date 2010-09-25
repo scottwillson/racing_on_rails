@@ -66,7 +66,7 @@ module GridHelper
     end
     rows = race.results.sort.collect do |result|
       row = []
-      for grid_column in result_grid_columns
+      result_grid_columns.each do |grid_column|
         if grid_column.field
           cell = result.send(grid_column.field).to_s
           cell = '' if cell == '0.0'

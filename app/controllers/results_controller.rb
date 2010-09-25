@@ -54,10 +54,12 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    @event = Event.find(
-      params[:event_id],
-      :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :names } ] } ] ]
-    )
+    ResultsController::benchmark "Load results" do
+      @event = Event.find(
+        params[:event_id],
+        :include => [ :races => [ :category, :results ] ]
+      )
+    end
     
     expires_in 1.hour, :public => true
   end

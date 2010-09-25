@@ -29,6 +29,7 @@ class Result < ActiveRecord::Base
 
   before_save :find_associated_records
   before_save :save_person
+  before_save :cache_attributes
   after_save :update_person_number
   after_destroy [ :destroy_people, :destroy_teams ]
 
@@ -183,6 +184,16 @@ class Result < ActiveRecord::Base
       person.save!
     end
   end
+  
+  # Cache expensive cross-table lookups
+  def cache_attributes
+    self[:category_name] = category.try(:name)
+    self[:first_name]    = person.try(:first_name, date)
+    self[:last_name]     = person.try(:last_name, date)
+    self[:name]          = person.try(:name, date)
+    self[:team_name]     = team.try(:name, date)
+    self.year            = event.year
+  end
 
   # Destroy People that only exist because they were created by importing results
   def destroy_people
@@ -216,16 +227,13 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def category_name
-    (category && category.name) || ""
-  end
-
   def category_name=(name)
     if name.blank?
       self.category = nil
     else
       self.category = Category.find_or_create_by_name(name)
     end
+    self[:category_name] = name
   end
 
   # TODO refactor to something like act_as_competitive or create CompetitionResult
@@ -308,28 +316,14 @@ class Result < ActiveRecord::Base
     write_attribute(:points_from_place, value)
   end
 
-  def first_name
-    if person and !person.first_name.blank?
-      person.first_name(date)
-    else
-      ""
-    end
-  end
-
   def first_name=(value)
     if self.person
       self.person.first_name = value
     else
       self.person = Person.new(:first_name => value)
     end
-  end
-
-  def last_name
-    if (person and !person.last_name.blank?)
-      person.last_name(date)
-    else
-      ""
-    end
+    self[:first_name] = value
+    self[:name] = self.person.try(:name, date)
   end
 
   def last_name=(value)
@@ -338,15 +332,8 @@ class Result < ActiveRecord::Base
     else
       self.person = Person.new(:last_name => value)
     end
-  end
-
-  # person.name
-  def name
-    if person == nil
-      ""
-    else
-      person.name(date)
-    end
+    self[:last_name] = value
+    self[:name] = self.person.try(:name, date)
   end
 
   def person_name
@@ -357,22 +344,18 @@ class Result < ActiveRecord::Base
   def name=(value)
     if value.present?
       self.person = Person.new(:name => value)
+      self[:first_name] = person.first_name
+      self[:last_name] = person.last_name
     else
       self.person = nil
+      self[:first_name] = nil
+      self[:last_name] = nil
     end
+    self[:name] = value
   end
 
   def person_name=(value)
     self.name = value
-  end
-
-  # Team name when result was created
-  def team_name
-    if self.team
-      team.name(date) || ""
-    else
-      ""
-    end
   end
 
   # Person's current team name
@@ -392,6 +375,7 @@ class Result < ActiveRecord::Base
     if person && person.team_name != value
       person.team = team
     end
+    self[:team_name] = value
   end
 
   def time=(value)

@@ -136,16 +136,6 @@ CREATE TABLE `duplicates_people` (
   CONSTRAINT `duplicates_racers_duplicates_id_fk` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `duplicates_racers` (
-  `racer_id` int(11) DEFAULT NULL,
-  `duplicate_id` int(11) DEFAULT NULL,
-  UNIQUE KEY `index_duplicates_racers_on_racer_id_and_duplicate_id` (`racer_id`,`duplicate_id`),
-  KEY `index_duplicates_racers_on_racer_id` (`racer_id`),
-  KEY `index_duplicates_racers_on_duplicate_id` (`duplicate_id`),
-  CONSTRAINT `duplicates_racers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `duplicates_racers_ibfk_2` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `editor_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lock_version` int(11) NOT NULL DEFAULT '0',
@@ -165,11 +155,6 @@ CREATE TABLE `editor_requests` (
   CONSTRAINT `editor_requests_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `editor_requests_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `engine_schema_info` (
-  `engine_name` varchar(255) DEFAULT NULL,
-  `version` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -230,35 +215,6 @@ CREATE TABLE `events` (
   CONSTRAINT `events_velodrome_id_fk` FOREIGN KEY (`velodrome_id`) REFERENCES `velodromes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `historical_names` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `team_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `year` int(11) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `team_id` (`team_id`),
-  KEY `index_names_on_name` (`name`),
-  KEY `index_names_on_year` (`year`),
-  CONSTRAINT `historical_names_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `images` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `caption` varchar(255) DEFAULT NULL,
-  `html_options` varchar(255) DEFAULT NULL,
-  `link` varchar(255) DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `source` varchar(255) NOT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `images_name_index` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -298,18 +254,6 @@ CREATE TABLE `names` (
   KEY `index_names_on_year` (`year`),
   KEY `index_names_on_nameable_type` (`nameable_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `news_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `text` varchar(255) NOT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `news_items_date_index` (`date`),
-  KEY `news_items_text_index` (`text`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -478,19 +422,6 @@ CREATE TABLE `posts` (
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `promoters` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT '',
-  `phone` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `promoter_info` (`name`,`email`,`phone`),
-  KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) NOT NULL DEFAULT '0',
@@ -512,48 +443,6 @@ CREATE TABLE `race_numbers` (
   CONSTRAINT `race_numbers_number_issuer_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `race_numbers_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `racers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(64) DEFAULT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `city` varchar(128) DEFAULT NULL,
-  `date_of_birth` date DEFAULT NULL,
-  `license` varchar(64) DEFAULT NULL,
-  `notes` text,
-  `state` varchar(64) DEFAULT NULL,
-  `team_id` int(11) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `cell_fax` varchar(255) DEFAULT NULL,
-  `ccx_category` varchar(255) DEFAULT NULL,
-  `dh_category` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `gender` char(2) DEFAULT NULL,
-  `home_phone` varchar(255) DEFAULT NULL,
-  `mtb_category` varchar(255) DEFAULT NULL,
-  `member_from` date DEFAULT NULL,
-  `occupation` varchar(255) DEFAULT NULL,
-  `road_category` varchar(255) DEFAULT NULL,
-  `street` varchar(255) DEFAULT NULL,
-  `track_category` varchar(255) DEFAULT NULL,
-  `work_phone` varchar(255) DEFAULT NULL,
-  `zip` varchar(255) DEFAULT NULL,
-  `member_to` date DEFAULT NULL,
-  `print_card` tinyint(1) DEFAULT '0',
-  `print_mailing_label` tinyint(1) DEFAULT '0',
-  `ccx_only` tinyint(1) NOT NULL DEFAULT '0',
-  `updated_by` varchar(255) DEFAULT NULL,
-  `bmx_category` varchar(255) DEFAULT NULL,
-  `wants_email` tinyint(1) NOT NULL DEFAULT '1',
-  `wants_mail` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `idx_last_name` (`last_name`),
-  KEY `idx_first_name` (`first_name`),
-  KEY `idx_team_id` (`team_id`),
-  CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `races` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -609,29 +498,29 @@ CREATE TABLE `racing_associations` (
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `weeks_of_recent_results` int(11) NOT NULL DEFAULT '2',
   `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '5',
-  `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `competitions` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country_code` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'US',
-  `default_discipline` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Road',
-  `default_sanctioned_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
-  `exception_recipients` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `exempt_team_categories` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `membership_email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
-  `rails_host` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'localhost:3000',
-  `sanctioning_organizations` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `short_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'CBRA',
-  `show_events_sanctioning_org_event_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `state` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'OR',
-  `static_host` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
-  `usac_region` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'North West',
+  `cat4_womens_race_series_points` varchar(255) DEFAULT NULL,
+  `administrator_tabs` varchar(255) DEFAULT NULL,
+  `competitions` varchar(255) DEFAULT NULL,
+  `country_code` varchar(255) NOT NULL DEFAULT 'US',
+  `default_discipline` varchar(255) NOT NULL DEFAULT 'Road',
+  `default_sanctioned_by` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `exception_recipients` varchar(255) DEFAULT NULL,
+  `exempt_team_categories` varchar(255) NOT NULL DEFAULT '0',
+  `membership_email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `name` varchar(255) NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
+  `rails_host` varchar(255) DEFAULT 'localhost:3000',
+  `sanctioning_organizations` varchar(255) DEFAULT NULL,
+  `short_name` varchar(255) NOT NULL DEFAULT 'CBRA',
+  `show_events_sanctioning_org_event_id` varchar(255) NOT NULL DEFAULT '0',
+  `state` varchar(255) NOT NULL DEFAULT 'OR',
+  `static_host` varchar(255) NOT NULL DEFAULT 'localhost',
+  `usac_region` varchar(255) NOT NULL DEFAULT 'North West',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `cat4_womens_race_series_end_date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -673,6 +562,12 @@ CREATE TABLE `results` (
   `category_class` varchar(16) DEFAULT NULL,
   `age_group` varchar(16) DEFAULT NULL,
   `custom_attributes` text,
+  `category_name` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `team_name` varchar(255) DEFAULT NULL,
+  `year` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_category_id` (`category_id`),
   KEY `idx_race_id` (`race_id`),
@@ -716,29 +611,6 @@ CREATE TABLE `scores` (
   CONSTRAINT `scores_source_result_id_fk` FOREIGN KEY (`source_result_id`) REFERENCES `results` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `standings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) NOT NULL DEFAULT '0',
-  `bar_points` int(11) DEFAULT '1',
-  `name` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `ironman` tinyint(1) DEFAULT '1',
-  `position` int(11) DEFAULT '0',
-  `discipline` varchar(32) DEFAULT NULL,
-  `notes` varchar(255) DEFAULT '',
-  `source_id` int(11) DEFAULT NULL,
-  `type` varchar(32) DEFAULT NULL,
-  `auto_combined_standings` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `event_id` (`event_id`),
-  KEY `source_id` (`source_id`),
-  CONSTRAINT `standings_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `standings_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `standings_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 CREATE TABLE `teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -761,18 +633,6 @@ CREATE TABLE `teams` (
   UNIQUE KEY `idx_name` (`name`),
   KEY `index_teams_on_created_by_id` (`created_by_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -995,6 +855,8 @@ INSERT INTO schema_migrations (version) VALUES ('20100905013917');
 INSERT INTO schema_migrations (version) VALUES ('20100920160034');
 
 INSERT INTO schema_migrations (version) VALUES ('20100924041956');
+
+INSERT INTO schema_migrations (version) VALUES ('20100924161426');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

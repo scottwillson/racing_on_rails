@@ -7,7 +7,7 @@ class OregonJuniorCyclocrossSeries < Competition
     return [] if source_events.empty?
     
     Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
+      %Q{ SELECT results.* FROM results  
           LEFT JOIN races ON races.id = results.race_id 
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN events ON races.event_id = events.id 

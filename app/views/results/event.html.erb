@@ -54,15 +54,21 @@
   <%= render :partial => "questions", :locals => { :event => @event } %>
   <% end -%>
 
+  <% benchmark("Render results") do %>
   <% @event.races_with_results.sort.each do |race| %>
   <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
   <% table :caption => race.name, :class => "event_results" do %>
     <tr><th>&nbsp;</th></tr>
     <tr>
       <td>
-    <%= results_grid(race) -%>
+        <pre><% race.result_columns_or_default.each do |column| %><%= column %> <% end -%>
+<% race.results.each do |result| %>
+<% race.result_columns_or_default.each do |column| %><%= result.send(column) %> <% end -%>
+<% end %>
+</pre>
       </td>
     </tr>
   <%- end -%>
+<%- end -%>
 <%- end -%>
 </div>

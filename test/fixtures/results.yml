@@ -3,55 +3,67 @@ tonkin_banana_belt:
   person: tonkin
   team: kona
   place: 1
+  year: 2004
 weaver_banana_belt:
   race: banana_belt_pro_1_2
   person: weaver
   place: 2
+  year: 2004
 matson_banana_belt:
   race: banana_belt_pro_1_2
   person: matson
   team: kona
   place: 3
+  year: 2004
 molly_banana_belt:
   race: banana_belt_pro_1_2
   person: molly
   team: vanilla
   place: 16
+  year: 2004
 alice_kings_valley_women_2004:
   race: kings_valley_women_2004
   person: alice
   team: gentle_lovers
   place: 2
+  year: 2004
 molly_kings_valley_women_2004:
   race: kings_valley_women_2004
   person: molly
   team: vanilla
   place: 15
+  year: 2004
 tonkin_kings_valley:
   race: kings_valley_pro_1_2
   person: tonkin
   team: kona
   place: 16
+  year: 2003
 weaver_kings_valley:
   race: kings_valley_pro_1_2
   person: weaver
   place: 17
+  year: 2003
 molly_jack_frost:
   race: jack_frost_masters_35_plus_women
   person: molly
   place: 1
   time: 1800
+  year: 2004
 alice_jack_frost:
   race: jack_frost_masters_35_plus_women
   person: alice
   place: 2
   time: 2112
+  year: 2004
 weaver_jack_frost:
   race: jack_frost_pro_1_2
   person: weaver
   place: 9
   time: 1801
+  year: 2004
 weaver_copperopolis:
   race: copperopolis_pro_1_2
   person: weaver
   place: 13
+  year: 2004

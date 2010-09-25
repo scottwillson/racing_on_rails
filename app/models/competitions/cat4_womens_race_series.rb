@@ -15,7 +15,7 @@ class Cat4WomensRaceSeries < Competition
   def source_results(race)
     end_date = RacingAssociation.current.cat4_womens_race_series_end_date || Time.zone.now.end_of_year.to_date
     Result.find_by_sql(
-      [%Q{ SELECT results.id as id, race_id, person_id, results.team_id, place
+      [%Q{ SELECT results.*
           FROM results  
           LEFT JOIN races ON races.id = results.race_id 
           LEFT JOIN categories ON categories.id = races.category_id 
