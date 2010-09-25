@@ -15,17 +15,17 @@ module GridHelper
       @@grid_columns['city'] = Column.new(:name => 'city', :description => 'City', :size => 15, :fixed_size => true)
       @@grid_columns['date_of_birth'] = Column.new(:name => 'date_of_birth', :description => 'Date of Birth', :size => 15)
       @@grid_columns['first_name'] = Column.new(:name => 'first_name', :description => 'First Name', :size => 12, :fixed_size => true)
-      @@grid_columns['first_name'].link = 'link_to_result(cell, result)'
+      @@grid_columns['first_name'].link = :person
       @@grid_columns['gender'] = Column.new(:name => 'gender', :description => 'Gender', :size => 6, :fixed_size => true)
       @@grid_columns['laps'] = Column.new(:name => 'laps', :description => 'Laps', :size => 4, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['last_name'] = Column.new(:name => 'last_name', :description => 'Last Name', :size => 18, :fixed_size => true)
-      @@grid_columns['last_name'].link = 'link_to_result(cell, result)'
+      @@grid_columns['last_name'].link = :person
       @@grid_columns['license'] = Column.new(:name => 'license', :description => 'Lic', :size => 7)
       @@grid_columns['name'] = Column.new(:name => 'name', :description => 'Name', :size => 30, :fixed_size => true)
-      @@grid_columns['name'].link = 'link_to_result(cell, result)'
+      @@grid_columns['name'].link = :person
       @@grid_columns['notes'] = Column.new(:name => 'notes', :description => 'Notes', :size => 12)
       @@grid_columns['number'] = Column.new(:name => 'number', :description => 'Num', :size => 4, :justification => Column::RIGHT)
-      @@grid_columns['number'].link = 'link_to_result(cell, result)'
+      @@grid_columns['number'].link = :person
       @@grid_columns['place'] = Column.new(:name => 'place', :description => 'Pl', :size => 3, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points'] = Column.new(:name => 'points', :description => 'Points', :size => 6, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['points_bonus'] = Column.new(:name => 'points_bonus', :description => 'Bonus', :size => 6, :fixed_size => true, :justification => Column::RIGHT)
@@ -34,7 +34,7 @@ module GridHelper
       @@grid_columns['points_total'] = Column.new(:name => 'points_total', :description => 'Total Pts', :size => 10, :fixed_size => true, :justification => Column::RIGHT)
       @@grid_columns['state'] = Column.new(:name => 'state', :description => 'ST', :size => 3)
       @@grid_columns['team_name'] = Column.new(:name => 'team_name', :description => 'Team', :size => 40)
-      @@grid_columns['team_name'].link = 'link_to_team_result(cell, result)'
+      @@grid_columns['team_name'].link = :team
       @@grid_columns['time'] = Column.new(:name => 'time', :description => 'Time', :size => 8, :justification => Column::RIGHT)
       @@grid_columns['time'].field = :time_s
       @@grid_columns['time_bonus_penalty'] = Column.new(:name => 'time_bonus_penalty', :description => 'Bon/Pen', :size => 7, :justification => Column::RIGHT)
@@ -61,34 +61,35 @@ module GridHelper
 
   # Preformatted results
   def results_grid(race)
-    result_grid_columns = race.result_columns_or_default.collect do |column|
-      grid_columns(column)
-    end
-    rows = race.results.sort.collect do |result|
-      row = []
-      result_grid_columns.each do |grid_column|
-        if grid_column.field
-          cell = result.send(grid_column.field).to_s
-          cell = '' if cell == '0.0'
-          row << cell
-        else
-          row << ''
-        end
-      end
-      row
-    end
-    results_grid = Grid.new(rows, :columns => result_grid_columns)
-    results_grid.truncate_rows
-    results_grid.calculate_padding
-
-    race.results.sort.each_with_index do |result, row_index|
-      result_grid_columns.each_with_index do |grid_column, index|
-        if grid_column.link
-          cell = results_grid[row_index][index]
-          results_grid[row_index][index] = eval(grid_column.link) unless cell.blank?
-        end
-      end
-    end
-    "<pre>#{results_grid.to_s(true)}#{race.notes unless race.notes.blank?}</pre>"
+    # race.results.sort!
+    # result_grid_columns = race.result_columns_or_default.collect do |column|
+    #   grid_columns(column)
+    # end
+    # rows = race.results.collect do |result|
+    #   row = []
+    #   result_grid_columns.each do |grid_column|
+    #     if grid_column.field
+    #       cell = result.send(grid_column.field).to_s
+    #       cell = '' if cell == '0.0'
+    #       row << cell
+    #     else
+    #       row << ''
+    #     end
+    #   end
+    #   row
+    # end
+    # results_grid = Grid.new(rows, :columns => result_grid_columns)
+    # results_grid.truncate_rows
+    # # results_grid.calculate_padding
+    # 
+    # race.results.sort.each_with_index do |result, row_index|
+    #   result_grid_columns.each_with_index do |grid_column, index|
+    #     cell = results_grid[row_index][index]
+    #     if grid_column.link && cell.present?
+    #       results_grid[row_index][index] = link_to_result(cell, result)
+    #     end
+    #   end
+    # end
+    # "<pre>#{results_grid.to_s(true)}#{race.notes unless race.notes.blank?}</pre>"
   end
 end
