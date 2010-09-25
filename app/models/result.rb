@@ -188,6 +188,8 @@ class Result < ActiveRecord::Base
   # Cache expensive cross-table lookups
   def cache_attributes
     self[:category_name] = category.try(:name)
+    self[:competition_result] = competition_result?
+    self[:team_competition_result] = team_competition_result?
     self[:first_name]    = person.try(:first_name, date)
     self[:last_name]     = person.try(:last_name, date)
     self[:name]          = person.try(:name, date)
@@ -195,6 +197,13 @@ class Result < ActiveRecord::Base
     self.year            = event.year
   end
 
+  def cache_attributes!
+    event.disable_notification!
+    cache_attributes
+    save!
+    event.enable_notification!
+  end
+  
   # Destroy People that only exist because they were created by importing results
   def destroy_people
     if person && person.results.count == 0 && person.created_from_result? && !person.updated_after_created?
@@ -236,14 +245,20 @@ class Result < ActiveRecord::Base
     self[:category_name] = name
   end
 
-  # TODO refactor to something like act_as_competitive or create CompetitionResult
-  # TODO Is this method triggering additional DB calls?
   def competition_result?
-    event.is_a?(Competition)
+    if competition_result.nil?
+      @competition_result = event.is_a?(Competition)
+    else
+      competition_result
+    end
   end
 
   def team_competition_result?
-    event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+    if team_competition_result.nil?
+      @team_competition_result = event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+    else
+      team_competition_result
+    end
   end
 
   # Not blank, DNF, DNS, DQ.

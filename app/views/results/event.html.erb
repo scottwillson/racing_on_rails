@@ -61,11 +61,7 @@
     <tr><th>&nbsp;</th></tr>
     <tr>
       <td>
-        <pre><% race.result_columns_or_default.each do |column| %><%= column %> <% end -%>
-<% race.results.each do |result| %>
-<% race.result_columns_or_default.each do |column| %><%= result.send(column) %> <% end -%>
-<% end %>
-</pre>
+        <%= results_grid(race) -%>
       </td>
     </tr>
   <%- end -%>
