@@ -21,7 +21,7 @@ module ResultsHelper
     return text unless result.team
 
     if result.team_competition_result?
-      link_to text, event_team_results_path(result.event, result.team)
+      link_to text, event_team_result_path(result.event, result.team, result.race)
     else
       link_to text, team_results_path(result.team)
     end

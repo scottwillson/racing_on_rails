@@ -73,6 +73,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/events/:event_id/results", :controller => "results", :action => "event"
   map.connect "/events/:event_id/people/:person_id/results", :controller => "results", :action => "person_event"
   map.connect "/events/:event_id/teams/:team_id/results", :controller => "results", :action => "team_event"
+  map.connect "/events/:event_id/teams/:team_id/results/:race_id", :controller => "results", :action => "team_event"
   map.connect "/events/:event_id", :controller => "results", :action => "event"
   map.resources :events do |events|
     events.resources :results
