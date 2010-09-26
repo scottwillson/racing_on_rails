@@ -1,4 +1,6 @@
 class CompetitionsController < ApplicationController
+  caches_page :show
+  
   def show
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)

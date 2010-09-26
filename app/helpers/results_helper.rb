@@ -41,7 +41,7 @@ module ResultsHelper
     when "name"
       link_to_results result.name, result
     when "team_name"
-      link_to_team_result result.team_name, result
+      link_to text, event_team_result_path(result.event, result.team, result.race)
     else
       result.send column
     end

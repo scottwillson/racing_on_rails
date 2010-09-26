@@ -16,7 +16,7 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_select "a", result.name
     assert_select "h2", result.name
     
-    get "/events/#{result.event.to_param}/teams/#{result.team.to_param}/results"
+    get "/events/#{result.event.to_param}/teams/#{result.team.to_param}/results/#{result.race.to_param}"
     assert_response :success
     assert_select "a", result.team_name
     assert_select "h2", result.team_name

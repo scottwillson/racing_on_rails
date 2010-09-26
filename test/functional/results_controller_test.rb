@@ -288,7 +288,7 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(result, 'result')
     assert_not_nil result.team, "result.team" 
 
-    get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param)
+    get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param, :race_id => result.race.to_param)
 
     assert_response(:success)
     assert_template("results/team_event")

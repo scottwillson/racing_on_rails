@@ -1,5 +1,7 @@
 # Homepage
 class HomeController < ApplicationController
+  caches_page :index
+
   # Show homepage
   # === Assigns
   # * upcoming_events: instance of UpcomingEvents with default parameters
@@ -22,7 +24,7 @@ class HomeController < ApplicationController
     @news_category = ArticleCategory.find( :all, :conditions => ["name = 'news'"] )
     @recent_news = Article.find(
       :all,
-      :conditions => ['created_at > ? and article_category_id = ?', cutoff, @news_category],
+      :conditions => ['(created_at > ? OR updated_at > ?) and article_category_id = ?', cutoff, cutoff, @news_category],
       :order => 'created_at desc'
     )
     
