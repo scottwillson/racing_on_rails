@@ -16,16 +16,23 @@ class ApplicationController < ActionController::Base
 
   def self.expire_cache
     begin
-      if Rails.env.production?
-        Thread.new {
-          system "/usr/local/bin/varnishadm -T 69.30.43.18:2000 'purge.url .*'"
-          system "/usr/local/bin/varnishadm -T 69.30.43.19:2000 'purge.url .*'"
-        }
-      else
-        Thread.new {
-          system "varnishadm -T 0.0.0.0:2000 'purge.url .*'"
-        }
-      end
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "bar"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "cat4_womens_race_series"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "competitions"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "events"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "people"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "rider_rankings"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "results"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "schedule"))
+      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "teams"))
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "bar.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "cat4_womens_race_series.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "home.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "index.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "results.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "rider_rankings.html"), :force => true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "schedule.html"), :force =>true)
+      FileUtils.rm(File.join(RAILS_ROOT, "public", "teams.html"), :force =>true)
     rescue Exception => e
       logger.error e
     end

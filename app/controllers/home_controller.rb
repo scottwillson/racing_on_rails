@@ -1,5 +1,7 @@
 # Homepage
 class HomeController < ApplicationController
+  caches_page :index
+
   # Show homepage
   # === Assigns
   # * upcoming_events: instance of UpcomingEvents with default parameters

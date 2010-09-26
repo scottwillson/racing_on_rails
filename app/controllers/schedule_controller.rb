@@ -2,8 +2,9 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-
   before_filter :assign_schedule_data
+  
+  caches_page :index, :calendar, :list
   
   # Default calendar format
   # === Params
