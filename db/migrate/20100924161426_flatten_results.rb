@@ -12,8 +12,19 @@ class FlattenResults < ActiveRecord::Migration
       t.index :year
     end
     
-    Result.find_each do |result|
-      result.cache_attributes!
+    Result.transaction do
+      ActiveRecord::Base.lock_optimistically = false
+      Event.update_all "notification = false"
+      ActiveRecord::Base.lock_optimistically = true
+      
+      Result.find_each(:include => [ { :race => :event }, :person, :team ]) do |result|
+        result.cache_attributes
+        result.save!
+      end
+
+      ActiveRecord::Base.lock_optimistically = false
+      Event.update_all "notification = true"
+      ActiveRecord::Base.lock_optimistically = true
     end
   end
 

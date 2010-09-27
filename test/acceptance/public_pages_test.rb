@@ -32,10 +32,6 @@ class PublicPagesTest < WebDriverTestCase
     click :link_text => "Pennington"
     wait_for_current_url(/people/)
     wait_for_element "person_results"
-    
-    assert_page_source "None"
-    
-    open "/people/#{people(:alice).to_param}/2004"
     assert_table "person_results_table", 1, 0, "2"
     assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
     assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"

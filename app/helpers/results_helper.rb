@@ -8,26 +8,29 @@ module ResultsHelper
     end
     
     if result.competition_result?
-      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results\"#{html_options}>#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
     else
-      "<a href=\"/people/#{result.person_id}/results\"#{html_options}>#{text}</a>"
+      "<a href=\"/people/#{result.person_id}/#{result.year}\"#{html_options}>#{text}</a>"
     end
   end
 
   # Link to Person Result detail page
-  def link_to_team_result(text, result)
+  def link_to_team_results(text, result)
     return text unless result.team_id
 
     if result.team_competition_result?
-      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results\">#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
     else
-      "<a href=\"/teams/#{result.team_id}/results\">#{text}</a>"
+      "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
     end
   end
   
+  def result_header(column)
+    ResultColumn[column].description
+  end
+
   def result_cell_class(column)
-    case column
-    when "laps", "number", "place", "points"
+    if ResultColumn[column].alignment == :right
       " class=\"right\""
     end
   end
@@ -41,9 +44,9 @@ module ResultsHelper
     when "name"
       link_to_results result.name, result
     when "team_name"
-      link_to text, event_team_result_path(result.event, result.team, result.race)
+      link_to_team_results result.team_name, result
     else
-      result.send column
+      result.send ResultColumn[column].display_method
     end
   end
 end

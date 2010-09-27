@@ -59,8 +59,8 @@
   <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
   <% table :caption => race.name, :class => "event_results" do %>
     <tr>
-      <%- race.result_columns_or_default.each do |column| -%>
-      <th<%= result_cell_class column %>><%= column.titleize %></th>
+      <%- race.result_columns_or_default.map.each do |column| -%>
+      <th class="<%= column %>"><%= result_header column %></th>
       <%- end -%>
     </tr>
     <%- race.results.each do |result| -%>
