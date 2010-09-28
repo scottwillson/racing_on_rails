@@ -3,6 +3,13 @@ tonkin_banana_belt:
   person: tonkin
   team: kona
   place: 1
+  date: 2004-01-04
+  event_end_date: 2004-01-04
+  event_date_range_s: 01/04
+  event_full_name: "Banana Belt Series: Banana Belt I"
+  event: banana_belt_1
+  race_full_name: "Banana Belt Series: Banana Belt I: Pro 1/2"
+  race_name: Senior Men Pro 1/2  
   year: 2004
   first_name: Erik
   last_name: Tonkin
@@ -12,6 +19,13 @@ weaver_banana_belt:
   race: banana_belt_pro_1_2
   person: weaver
   place: 2
+  date: 2004-01-04
+  event_end_date: 2004-01-04
+  event_date_range_s: 01/04
+  event_full_name: "Banana Belt Series: Banana Belt I"
+  event: banana_belt_1
+  race_full_name: "Banana Belt Series: Banana Belt I: Pro 1/2"
+  race_name: Senior Men Pro 1/2  
   year: 2004
   first_name: Ryan
   last_name: Weaver
@@ -22,6 +36,13 @@ matson_banana_belt:
   person: matson
   team: kona
   place: 3
+  date: 2004-01-04
+  event_end_date: 2004-01-04
+  event_date_range_s: 01/04
+  event_full_name: "Banana Belt Series: Banana Belt I"
+  event: banana_belt_1
+  race_full_name: "Banana Belt Series: Banana Belt I: Pro 1/2"
+  race_name: Senior Men Pro 1/2  
   year: 2004
   first_name: Mark
   last_name: Matson
@@ -32,6 +53,13 @@ molly_banana_belt:
   person: molly
   team: vanilla
   place: 16
+  date: 2004-01-04
+  event_end_date: 2004-01-04
+  event_date_range_s: 01/04
+  event_full_name: "Banana Belt Series: Banana Belt I"
+  event: banana_belt_1
+  race_full_name: "Banana Belt Series: Banana Belt I: Pro 1/2"
+  race_name: Senior Men Pro 1/2  
   year: 2004
   first_name: Molly
   last_name: Cameron
@@ -42,6 +70,13 @@ alice_kings_valley_women_2004:
   person: alice
   team: gentle_lovers
   place: 2
+  date: 2004-12-31
+  event_end_date: 2004-12-31
+  event_date_range_s: 12/31
+  event_full_name: Kings Valley Road Race
+  event: kings_valley_2004
+  race_full_name: Kings Valley Road Race
+  race_name: Senior Women 1/2/3
   year: 2004
   first_name: Alice
   last_name: Pennington
@@ -52,6 +87,13 @@ molly_kings_valley_women_2004:
   person: molly
   team: vanilla
   place: 15
+  date: 2004-12-31
+  event_end_date: 2004-12-31
+  event_date_range_s: 12/31
+  event_full_name: Kings Valley Road Race
+  event: kings_valley_2004
+  race_full_name: Kings Valley Road Race
+  race_name: Senior Women 1/2/3
   year: 2004
   first_name: Molly
   last_name: Cameron
@@ -62,6 +104,13 @@ tonkin_kings_valley:
   person: tonkin
   team: kona
   place: 16
+  date: 2003-12-31
+  event_end_date: 2003-12-31
+  event_date_range_s: 12/31
+  event_full_name: Kings Valley Road Race
+  event: kings_valley
+  race_full_name: Kings Valley Road Race
+  race_name: Senior Men Pro 1/2
   year: 2003
   first_name: Erik
   last_name: Tonkin
@@ -71,6 +120,13 @@ weaver_kings_valley:
   race: kings_valley_pro_1_2
   person: weaver
   place: 17
+  date: 2003-12-31
+  event_end_date: 2003-12-31
+  event_date_range_s: 12/31
+  event_full_name: Kings Valley Road Race
+  event: kings_valley
+  race_full_name: Kings Valley Road Race
+  race_name: Senior Men Pro 1/2
   year: 2003
   first_name: Ryan
   last_name: Weaver
@@ -80,7 +136,14 @@ molly_jack_frost:
   person: molly
   place: 1
   time: 1800
-  year: 2004
+  date: 2002-01-17
+  event_end_date: 2002-01-17
+  event_date_range_s: 01/15
+  event_full_name: Jack Frost
+  event: jack_frost_2002
+  race_full_name: Jack Frost
+  race_name: Masters Women 35+
+  year: 2002
   first_name: Molly
   last_name: Cameron
   name: Molly Cameron
@@ -89,7 +152,14 @@ alice_jack_frost:
   person: alice
   place: 2
   time: 2112
-  year: 2004
+  date: 2002-01-17
+  event_end_date: 2002-01-17
+  event_date_range_s: 01/15
+  event_full_name: Jack Frost
+  event: jack_frost_2002
+  race_full_name: Jack Frost
+  race_name: Masters Women 35+
+  year: 2002
   first_name: Alice
   last_name: Pennington
   name: Alice Pennington
@@ -98,7 +168,14 @@ weaver_jack_frost:
   person: weaver
   place: 9
   time: 1801
-  year: 2004
+  date: 2002-01-17
+  event_end_date: 2002-01-17
+  event_date_range_s: 01/15
+  event_full_name: Jack Frost
+  event: jack_frost_2002
+  race_full_name: Jack Frost
+  race_name: Senior Men Pro 1/2
+  year: 2002
   first_name: Ryan
   last_name: Weaver
   name: Ryan Weaver
@@ -106,7 +183,14 @@ weaver_copperopolis:
   race: copperopolis_pro_1_2
   person: weaver
   place: 13
-  year: 2004
+  date: <%= Date.today - 4 %>
+  event_end_date: <%= Date.today - 4 %>
+  event_date_range_s: 08/2010
+  event_full_name: Copperopolis
+  event: copperopolis
+  race_full_name: Copperopolis
+  race_name: Senior Men Pro 1/2
+  year: <%= Date.today.year %>
   first_name: Ryan
   last_name: Weaver
   name: Ryan Weaver

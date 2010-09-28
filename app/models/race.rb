@@ -66,7 +66,7 @@ class Race < ActiveRecord::Base
   
   # Combine with event name
   def full_name
-    if name == self.event.full_name
+    if name == event.full_name
       name
     elsif event.full_name[name]
       event.full_name

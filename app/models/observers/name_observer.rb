@@ -4,13 +4,13 @@ class NameObserver < ActiveRecord::Observer
     when Person
       name.nameable.results.all.each do |result|
         if result[:name] != name.nameable.name(result.year)
-          result.cache_attributes!
+          result.cache_attributes! :non_event
         end
       end
     when Team
       name.nameable.results.all.each do |result|
         if result[:team_name] != name.nameable.name(result.year)
-          result.cache_attributes!
+          result.cache_attributes! :non_event
         end
       end
     end

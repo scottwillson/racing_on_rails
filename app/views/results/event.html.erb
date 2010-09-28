@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@event.date.year}: #{@event.full_name}" %>
 
-<h2><%= public_link_to_flyer(@event) %></h2>
+<h2><%= public_link_to_flyer @event %></h2>
 
 <div class="centered">
   <%= @event.city_state %><br/>
@@ -55,7 +55,7 @@
   <% end -%>
 
   <% benchmark("Render results", :silence => false) do %>
-  <% @event.races.sort.each do |race| %>
+  <% @event.races_with_results.sort.each do |race| %>
   <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
   <% table :caption => race.name, :class => "event_results" do %>
     <tr>

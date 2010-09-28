@@ -46,7 +46,9 @@ Rails::Initializer.run do |config|
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
-  config.active_record.observers = :event_observer, :name_observer, :person_observer, :result_observer, :team_observer
+  unless ENV["SKIP_OBSERVERS"]
+    config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :result_observer, :team_observer
+  end
 
   # Ugh. Make config accessible to overrides
   @config = config

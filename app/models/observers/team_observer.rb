@@ -8,7 +8,7 @@ class TeamObserver < ActiveRecord::Observer
     if team.name_changed?
       team.results.all.each do |result|
         if result.team_name != team.name(result.year)
-          result.cache_attributes!
+          result.cache_attributes! :non_event
         end
       end
     end

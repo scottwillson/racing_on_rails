@@ -429,7 +429,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   def test_full_name
     stage_race = events(:mt_hood)
-    assert_equal('Mt. Hood Classic', stage_race.full_name, 'stage_race full_name')
+    assert_equal('Mt. Hood Classic', stage_race.name, 'stage_race full_name')
   end
   
   def test_custom_create

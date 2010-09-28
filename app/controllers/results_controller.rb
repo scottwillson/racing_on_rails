@@ -72,13 +72,8 @@ class ResultsController < ApplicationController
     @person = Person.find(params[:person_id])
     @results = Result.find(
       :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, {:team => :names} ] }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
+      :include => { :scores => [ :source_result, :competition_result ] },
+      :conditions => ['results.event_id = ? and person_id = ?', params[:event_id], params[:person_id]]
     )
     expires_in 1.hour, :public => true
   end
@@ -89,13 +84,8 @@ class ResultsController < ApplicationController
     @event = Event.find(params[:event_id])
     @result = Result.find(
       :first,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, [ :person, { :team => :names }] ] }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => ['events.id = ? and teams.id = ? and races.id = ?', params[:event_id], params[:team_id], params[:race_id]]
+      :include => { :scores => [ :source_result, :competition_result ] },
+      :conditions => ['results.event_id = ? and team_id = ? and race_id = ?', params[:event_id], params[:team_id], params[:race_id]]
     )
     raise ActiveRecord::RecordNotFound unless @result
     expires_in 1.hour, :public => true
@@ -105,20 +95,15 @@ class ResultsController < ApplicationController
   def person
     @person = Person.find(params[:person_id])
     set_date_and_year
-    results = Result.find(
-      :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => [ "people.id = ? and events.date between ? and ?", @person.id, @date.beginning_of_year, @date.end_of_year ]
+    @event_results = Result.find(
+     :all,
+     :conditions => [ "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year ]
     )
-    
-    @competition_results, @event_results = results.partition do |result|
-      result.event.is_a?(Competition)
-    end
+    @competition_results = Result.find(
+     :all,
+     :include => { :scores => [ :source_result, :competition_result ] },
+     :conditions => [ "person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year ]
+    )
     expires_in 1.hour, :public => true
     render :layout => !request.xhr?
   end
@@ -129,14 +114,8 @@ class ResultsController < ApplicationController
     set_date_and_year
     @results = Result.find(
       :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }
-                  ],
-      :conditions => [ "teams.id = ? and events.date between ? and ?", @team.id, @date.beginning_of_year, @date.end_of_year ]
+      :conditions => [ "team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year ]
     )
-    @results.reject! do |result|
-      result.race.event.is_a?(Competition)
-    end
     expires_in 1.hour, :public => true
   end
   

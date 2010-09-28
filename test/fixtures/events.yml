@@ -16,7 +16,7 @@ banana_belt_1:
   sanctioned_by: CBRA
   promoter_id: 3
   updated_at: 2004-01-05
-  number_issuer: stag_race
+  number_issuer: stage_race
   date: 2004-01-04
   type: SingleDayEvent
   number_issuer: association

@@ -29,13 +29,15 @@ class Result < ActiveRecord::Base
 
   before_save :find_associated_records
   before_save :save_person
-  before_save :cache_attributes
+  before_save :cache_non_event_attributes
+  before_create :cache_event_attributes
   after_save :update_person_number
   after_destroy [ :destroy_people, :destroy_teams ]
 
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
   belongs_to :category
+  belongs_to :event
   belongs_to :race
   belongs_to :person
   belongs_to :team
@@ -186,20 +188,32 @@ class Result < ActiveRecord::Base
   end
   
   # Cache expensive cross-table lookups
-  def cache_attributes
+  def cache_non_event_attributes
     self[:category_name] = category.try(:name)
-    self[:competition_result] = competition_result?
-    self[:team_competition_result] = team_competition_result?
     self[:first_name]    = person.try(:first_name, date)
     self[:last_name]     = person.try(:last_name, date)
     self[:name]          = person.try(:name, date)
     self[:team_name]     = team.try(:name, date)
-    self.year            = event.year
+  end
+  
+  def cache_event_attributes
+    self[:competition_result]      = competition_result?
+    self[:date]                    = event.date
+    self[:event_date_range_s]      = event.date_range_s
+    self[:event_end_date]          = event.end_date
+    self[:event_full_name]         = event.full_name
+    self[:event_id]                = event.id
+    self[:race_full_name]          = race.try(:full_name)
+    self[:race_name]               = race.try(:name)
+    self[:team_competition_result] = team_competition_result?
+    self.year                      = event.year
   end
 
-  def cache_attributes!
+  def cache_attributes!(*args)
+    args = args.extract_options!
     event.disable_notification!
-    cache_attributes
+    cache_event_attributes if args.include?(:event)
+    cache_non_event_attributes if args.empty? || args.include?(:non_event)
     save!
     event.enable_notification!
   end
@@ -288,9 +302,7 @@ class Result < ActiveRecord::Base
   end
 
   def event_id
-    if race || race(true)
-      race.event_id
-    end
+    self[:event_id] || (race || race(true)).try(:event_id)
   end
 
   def event(reload = false)
@@ -392,7 +404,7 @@ class Result < ActiveRecord::Base
     end
     self[:team_name] = value
   end
-
+  
   def time=(value)
     set_time_value(:time, value)
   end
