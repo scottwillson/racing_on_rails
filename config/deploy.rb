@@ -28,6 +28,12 @@ namespace :deploy do
     run "chmod -R g+w #{release_path}/local"
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
+
+  task :copy_cache do
+    %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
+      run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
+    end
+  end
   
   task :wait_for_mongrels_to_stop do
     # Give Mongrels a chance to really stop
@@ -44,5 +50,5 @@ namespace :deploy do
   end
 end
 
-after "deploy:update_code", "deploy:local_code"
+after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
 after "deploy:stop", "deploy:wait_for_mongrels_to_stop"
