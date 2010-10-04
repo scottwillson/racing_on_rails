@@ -59,7 +59,7 @@ class RaceNumber < ActiveRecord::Base
   
   # Different disciplines have different rules about what is a rental number
   def RaceNumber.rental?(number, discipline = Discipline[:road])
-    if ASSOCIATION.rental_numbers.nil?
+    if RacingAssociation.current.rental_numbers.nil?
       return false
     end
     
@@ -67,23 +67,23 @@ class RaceNumber < ActiveRecord::Base
       return true
     end
 
-    if ASSOCIATION.rental_numbers.nil? || discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill] || number.strip[/^\d+$/].nil?
+    if RacingAssociation.current.rental_numbers.nil? || discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill] || number.strip[/^\d+$/].nil?
       return false
     end
     
     numeric_value = number.to_i    
-    if ASSOCIATION.rental_numbers.include?(numeric_value)
+    if RacingAssociation.current.rental_numbers.include?(numeric_value)
       return true
     end
     
     false
   end
   
-  # Default to Road, ASSOCIATION, and current year
+  # Default to Road, RacingAssociation.current, and current year
   def defaults
     self.discipline = Discipline[:road] unless self.discipline
-    self.number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name) unless self.number_issuer
-    self.year = ASSOCIATION.effective_year unless (self.year and self.year > 1800)
+    self.number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) unless self.number_issuer
+    self.year = RacingAssociation.current.effective_year unless (self.year and self.year > 1800)
   end
   
   def get_person_id
@@ -107,8 +107,8 @@ class RaceNumber < ActiveRecord::Base
   def unique_number 
     _discipline = Discipline.find(self[:discipline_id])
     if RaceNumber.rental?(self[:value], _discipline)
-      errors.add('value', "#{value} is a rental number. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
-      person.errors.add('value', "#{value} is a rental number. #{ASSOCIATION.short_name} rental numbers: #{ASSOCIATION.rental_numbers}")
+      errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
+      person.errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       return false 
     end
     

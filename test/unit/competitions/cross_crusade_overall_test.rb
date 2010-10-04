@@ -42,12 +42,12 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
-    assert_equal(19, overall.races.size, "Overall races")
+    assert_equal 20, overall.races.size, "Overall races"
     
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
-    assert_equal(19, overall.races.size, "Overall races")
+    assert_equal 20, overall.races.size, "Overall races"
     
     assert_equal "Series Overall", overall.name, "Overall name"
     assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"

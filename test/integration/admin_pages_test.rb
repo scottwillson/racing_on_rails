@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class AdminPagesTest < ActionController::IntegrationTest
-  if ASSOCIATION.ssl?
+  if RacingAssociation.current.ssl?
     def test_events
       get admin_events_path
       assert_redirected_to "https://www.example.com/admin/events"
@@ -23,14 +23,14 @@ class AdminPagesTest < ActionController::IntegrationTest
   private
 
   def go_to_login
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"
   end
 
   def login(options)
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     post person_session_path, options
     assert_response :redirect
   end

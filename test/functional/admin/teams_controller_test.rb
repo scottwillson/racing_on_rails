@@ -11,7 +11,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
   
@@ -19,7 +19,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     destroy_person_session
     vanilla = teams(:vanilla)
     get(:edit_name, :id => vanilla.to_param)
-    assert_redirected_to(new_person_session_path)
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
 
@@ -82,7 +82,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   end
 
   def test_find_limit
-    for i in 0..SEARCH_RESULTS_LIMIT
+    for i in 0..RacingAssociation.current.search_results_limit
       Team.create(:name => "Test Team #{i}")
     end
     
@@ -90,7 +90,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_template("admin/teams/index")
     assert_not_nil(assigns["teams"], "Should assign teams")
-    assert_equal(SEARCH_RESULTS_LIMIT, assigns['teams'].size, "Search for '' should find all teams")
+    assert_equal(RacingAssociation.current.search_results_limit, assigns['teams'].size, "Search for '' should find all teams")
     assert_not_nil(assigns["name"], "Should assign name")
     assert(!flash.empty?, 'flash not empty?')
     assert_equal('Test', assigns['name'], "'name' assigns")

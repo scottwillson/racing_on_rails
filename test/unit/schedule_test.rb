@@ -136,7 +136,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert(cream_puff.instance_of?(SingleDayEvent), "Cream Puff should be SingleDayEvent")
     assert_equal(0, cream_puff.date.wday, "Cream Puff day of week")
     assert_equal("Oakridge", cream_puff.city, "Cream Puff city")
-    assert_equal(ASSOCIATION.state, cream_puff.state, "Cream Puff state")
+    assert_equal(RacingAssociation.current.state, cream_puff.state, "Cream Puff state")
     assert_equal("Mountain Bike", cream_puff.discipline, "Cream Puff discipline")
     assert_equal_dates(Date.today, cream_puff.updated_at, "Cream Puff updated_at")
     assert_equal_dates("2006-06-25", cream_puff.date, "Cream Puff date")
@@ -145,12 +145,12 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal("Don Person", cream_puff.promoter.name, "Cream Puff promoter name")
     assert_equal("541-935-4996", cream_puff.promoter.home_phone, "Cream Puff promoter home_phone")
     assert_equal("don@mtbtires.com", cream_puff.promoter.email, "Cream Puff promoter email")
-    assert_equal(ASSOCIATION.default_sanctioned_by, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, cream_puff.sanctioned_by, "Cream Puff sanctioned_by")
     
     for event in fast_twitch_series.children
       assert_not_nil(event, "Should have imported Fast Twitch Fridays")
       assert_equal("Portland", event.city, "Fast Twitch Fridays city")
-      assert_equal(ASSOCIATION.state, event.state, "Fast Twitch Fridays state")
+      assert_equal(RacingAssociation.current.state, event.state, "Fast Twitch Fridays state")
       assert_equal("Track", event.discipline, "Fast Twitch Fridays discipline")
       assert_equal_dates(Date.today, event.updated_at, "Fast Twitch Fridays lastUpdated")
       assert_equal(5, event.date.wday, "Fast Twitch Fridays day of week")
@@ -159,7 +159,7 @@ class ScheduleTest < ActiveSupport::TestCase
       assert_equal("Jen Featheringill", event.promoter.name, "Fast Twitch Fridays promoter name")
       assert_equal("503-227-4439", event.promoter.home_phone, "Fast Twitch Fridays promoter name")
       assert_equal("bike-central@bike-central.com", event.promoter.email, "Fast Twitch Fridays promoter name")
-      assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "Fast Twitch sanctioned_by")
+      assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "Fast Twitch sanctioned_by")
       assert_equal(fast_twitch_series, event.parent, "Fast Twitch Fridays parent")
       assert_equal(nil, event.flyer, "Fast Twitch flyer")
     end
@@ -347,12 +347,12 @@ class ScheduleTest < ActiveSupport::TestCase
     assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
     assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
     assert_equal("Butte", butte_hc.city, "Butte Hillclimb city")
-    assert_equal(ASSOCIATION.state, butte_hc.state, "Butte Hillclimb state")
+    assert_equal(RacingAssociation.current.state, butte_hc.state, "Butte Hillclimb state")
     assert_equal("Road", butte_hc.discipline, "Butte Hillclimb discipline")
     assert_equal_dates(Date.today, butte_hc.updated_at, "Butte Hillclimb updated_at")
     assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
     assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
-    assert_equal(ASSOCIATION.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
     assert !butte_hc.flyer_approved?, "flyer_approved?"
 
     valentine_ct = Event.find_by_name("Valentine Criterium")
@@ -380,12 +380,12 @@ class ScheduleTest < ActiveSupport::TestCase
     assert(butte_hc.instance_of?(SingleDayEvent), "Butte Hillclimb should be SingleDayEvent")
     assert_equal(5, butte_hc.date.wday, "Butte Hillclimb day of week")
     assert_equal("Butte", butte_hc.city, "Butte Hillclimb city")
-    assert_equal(ASSOCIATION.state, butte_hc.state, "Butte Hillclimb state")
+    assert_equal(RacingAssociation.current.state, butte_hc.state, "Butte Hillclimb state")
     assert_equal("Road", butte_hc.discipline, "Butte Hillclimb discipline")
     assert_equal_dates(Date.today, butte_hc.updated_at, "Butte Hillclimb updated_at")
     assert_equal_dates("1999-01-01", butte_hc.date, "Butte Hillclimb date")
     assert_nil(butte_hc.promoter, "Butte Hillclimb promoter")
-    assert_equal(ASSOCIATION.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, butte_hc.sanctioned_by, "Butte Hillclimb sanctioned_by")
     assert !butte_hc.flyer_approved?, "flyer_approved?"
 
     valentine_ct = Event.find_by_name("Valentine Criterium")

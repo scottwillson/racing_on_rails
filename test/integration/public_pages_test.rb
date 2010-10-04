@@ -16,7 +16,7 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_select "a", result.name
     assert_select "h2", result.name
     
-    get "/events/#{result.event.to_param}/teams/#{result.team.to_param}/results"
+    get "/events/#{result.event.to_param}/teams/#{result.team.to_param}/results/#{result.race.to_param}"
     assert_response :success
     assert_select "a", result.team_name
     assert_select "h2", result.team_name
@@ -34,26 +34,26 @@ class PublicPagesTest < ActionController::IntegrationTest
     
     get "/people/#{result.person.to_param}"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /Results: #{result.name}/
     
     get "/people/#{result.person.to_param}/results"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.name}/
+    assert_select "title", /Results: #{result.name}/
     
     get "/teams/#{result.team.to_param}"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /Results: #{result.team_name}/
     
     get "/teams/#{result.team.to_param}/results"
     assert_response :success
-    assert_select "title", /#{ASSOCIATION.short_name}(.*)Results: #{result.team_name}/
+    assert_select "title", /Results: #{result.team_name}/
   end
   
   def test_first_aid_providers
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
 
     get "/admin/first_aid_providers"
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
 
     go_to_login
     login :person_session => { :login => "alice", :password => "secret" }
@@ -64,14 +64,14 @@ class PublicPagesTest < ActionController::IntegrationTest
   private
   
   def go_to_login
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"
   end
 
   def login(options)
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     post person_session_path, options
     assert_response :redirect
   end

@@ -52,7 +52,7 @@ class Overall < Competition
     category_ids = category_ids_for(race)
     
     Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
+      %Q{ SELECT results.* FROM results  
           JOIN races ON races.id = results.race_id 
           JOIN categories ON categories.id = races.category_id 
           JOIN events ON races.event_id = events.id 

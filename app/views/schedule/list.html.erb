@@ -1,6 +1,6 @@
 <% @page_title = "Schedule: #{@year}" %>
 
-<% if ASSOCIATION.show_calendar_view? -%>
+<% if RacingAssociation.current.show_calendar_view? -%>
 <p class="centered"><%= link_to 'Schedule in calendar format', {:action => 'index'}, {:class => 'obvious'} %></p>
 <hr class="space" />
 <% end -%>
@@ -22,29 +22,27 @@
     <th>Discipline</th>
     <th>Location</th>
   </tr>
-<%- for month in @schedule.months -%>
-  <%- for week in month.weeks -%>
-    <%- for day in week.days -%>
-      <%- for event in day.events -%>
+<%- @schedule.months.each do |month| -%>
+  <%- month.weeks.each do |week| -%>
+    <%- week.days.each do |day| -%>
+      <%- day.events.each do |event| -%>
   <tr class="<%= cycle("even", "odd") %>">
     <td class="date">
       <%= event.date.strftime("%a %m/%d") if event.date -%>
     </td>
     <td class="beginner_friendly"><%= image_tag("icons/star_green.png") if event.beginner_friendly? %></td>
     <%- if event.cancelled %>
-    <td><span class="cancelled"><%= event.name -%></span> <i>cancelled</i></td>
+    <td><span class="cancelled"><%= event.full_name -%></span> <i>cancelled</i></td>
     <%- elsif event.postponed? %>
-    <td><span class="postponed"><%= event.name -%></span> <i>postponed</i></td>
+    <td><span class="postponed"><%= event.full_name -%></span> <i>postponed</i></td>
     <%- else -%>
     <td class="link">
-      <%- if (!event.flyer.blank? and event.flyer_approved?) -%>
-          <a href="<%= event.flyer -%>"<%= "target='_blank'" if ASSOCIATION.flyers_in_new_window? %>><%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
+      <%- if event.flyer.present? && event.flyer_approved? -%>
+          <a href="<%= event.flyer -%>"<%= "target='_blank'" if RacingAssociation.current.flyers_in_new_window? %>><%= event.full_name -%><%- if (!event.full_name.include?("MTB") and event.discipline == "Mountain Bike") -%>
           MTB
             <%- end -%></a>
             <%- else -%>
-          <%= event.name -%><%- if (!event.name.include?("MTB") and event.discipline == "Mountain Bike") -%>
-          MTB
-            <%- end -%>
+          <%= event.full_name -%><%= " MTB" if !event.full_name.include?("MTB") && event.discipline == "Mountain Bike" -%>
       <%- end -%>
       </td> 
   <%- end -%>

@@ -17,7 +17,7 @@ class Admin::EventsController < Admin::AdminController
   # * year
   def index
     @year = params["year"].to_i
-    @year = ASSOCIATION.effective_year if @year == 0
+    @year = RacingAssociation.current.effective_year if @year == 0
     @competitions = Event.find(
                         :all, 
                         :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
@@ -45,13 +45,13 @@ class Admin::EventsController < Admin::AdminController
   # * event: Unsaved SingleDayEvent
   def new
     if params[:year].blank?
-      date = ASSOCIATION.effective_year
+      date = RacingAssociation.current.effective_year
     else
       year = params[:year]
       date = Date.new(year.to_i)
     end
     assign_new_event
-    association_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    association_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if association_number_issuer
       @event.number_issuer_id = association_number_issuer.id
     end
@@ -169,7 +169,7 @@ class Admin::EventsController < Admin::AdminController
     flash[:notice] = "Imported #{uploaded_file.original_filename}. "
     unless results_file.custom_columns.empty?
       flash[:notice] = flash[:notice] + "Found custom columns: #{results_file.custom_columns.map(&:humanize).join(", ")}. "
-      flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if ASSOCIATION.usac_results_format?
+      flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
     end
     
     redirect_to(edit_admin_event_path(event))

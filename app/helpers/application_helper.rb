@@ -9,15 +9,15 @@ module ApplicationHelper
     "<div>#{text}</div>" unless text.blank?
   end
   
-  # ASSOCIATION.short_name: page title
+  # RacingAssociation.current.short_name: page title
   def page_title
-    return "#{ASSOCIATION.short_name}: #{@page_title}" if @page_title
+    return "#{RacingAssociation.current.short_name}: #{@page_title}" if @page_title
     
     if @page && !@page.title.blank?
-      return "#{ASSOCIATION.short_name}: #{@page.title}"
+      return "#{RacingAssociation.current.short_name}: #{@page.title}"
     end
     
-    "#{ASSOCIATION.short_name}: #{controller.controller_name.titleize}: #{controller.action_name.titleize}"
+    "#{RacingAssociation.current.short_name}: #{controller.controller_name.titleize}: #{controller.action_name.titleize}"
   end
   
   # Defaults to text length of 20

@@ -4,16 +4,16 @@ require File.expand_path("../../test_helper", __FILE__)
 class SingleDayEventTest < ActiveSupport::TestCase
   def test_find_all_by_year
     begin
-      show_only_association_sanctioned_races_on_calendar = ASSOCIATION.show_only_association_sanctioned_races_on_calendar
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = true
+      show_only_association_sanctioned_races_on_calendar = RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
       events = SingleDayEvent.find_all_by_year(2004)
       assert_equal(4, events.size, "test_find_all_by_year for 2004 events only found: #{events.join(', ')}")
 
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = false
       events = SingleDayEvent.find_all_by_year(2004)
       assert_equal(5, events.size, "test_find_all_by_year for 2004 events only found: #{events.join(', ')}")
     ensure
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end
   end
 
@@ -26,10 +26,10 @@ class SingleDayEventTest < ActiveSupport::TestCase
   def test_create
     event = SingleDayEvent.create!
     assert_equal nil, event.first_aid_provider, "New event first aid provider"
-    assert_equal(ASSOCIATION.state, event.state, "default state")
+    assert_equal(RacingAssociation.current.state, event.state, "default state")
     assert_equal_dates(Date.today, event.date, "default date")
     assert(event.name[/^New Event/], "default name")
-    assert_equal(ASSOCIATION.default_sanctioned_by, event.sanctioned_by, "default sanctioned_by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "default sanctioned_by")
 
     event = SingleDayEvent.create!(:name => 'Copperopolis')
     assert_equal nil, event.first_aid_provider, "New event first aid provider"

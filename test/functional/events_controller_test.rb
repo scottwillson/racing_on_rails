@@ -1,4 +1,4 @@
-File.expand_path("../../test_helper", __FILE__)
+require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class EventsControllerTest < ActionController::TestCase
@@ -37,6 +37,7 @@ class EventsControllerTest < ActionController::TestCase
       "record > parent-id",
       "record > type",
       "record > races",
+      "record > date",
       "races > race",
       "race > city",
       "race > distance",
@@ -54,5 +55,15 @@ class EventsControllerTest < ActionController::TestCase
       "category > id",
       "category > name"
     ].each { |key| assert_select key }
+  end
+
+  def test_show_as_xml
+    get :show, :id => events(:banana_belt_series).id, :format => "xml"
+    assert_response :success
+  end
+
+  def test_show_as_json
+    get :show, :id => events(:banana_belt_series).id, :format => "json"
+    assert_response :success
   end
 end

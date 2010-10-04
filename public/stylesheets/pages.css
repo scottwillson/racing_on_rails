@@ -377,11 +377,16 @@ form.cat4_womens_race_series td input#result_team_name {
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 32px 4px;  
+  background-position:8px 4px;
+  padding-top: 4px;
 }
 
-table.event_nav td.race a {
-  margin-left: 48px;
+table.event_nav td.race .in_place_editable {
+  margin-left: 20px;
+}
+
+table.event_nav td.delete {
+  width: 16px;
 }
 
 
@@ -468,6 +473,56 @@ table.first_aid_providers td.name {
 
 div.event_results {
   margin-top: 24px;
+}
+
+div.table_container table.event_results th.place,
+div.table_container table.event_results th.laps {
+  padding-left: 0px;
+  padding-right: 8px;
+  text-align: right;
+  width: 24px;  
+}
+
+div.table_container table.event_results th.state,
+div.table_container table.event_results th.age {
+  width: 24px;  
+}
+
+div.table_container table.event_results th.time_bonus_penalty,
+div.table_container table.event_results th.points,
+div.table_container table.event_results th.points_bonus,
+div.table_container table.event_results th.points_penalty,
+div.table_container table.event_results th.points_from_place,
+div.table_container table.event_results th.points_total,
+div.table_container table.event_results th.number {
+  padding-left: 0px;
+  padding-right: 8px;
+  text-align: right;
+  width: 55px;  
+}
+
+div.table_container table.event_results th.time_total,
+div.table_container table.event_results th.time_gap_to_winner,
+div.table_container table.event_results th.time_gap_to_leader,
+div.table_container table.event_results th.time {
+  padding-left: 0px;
+  padding-right: 8px;
+  text-align: right;
+  width: 80px;
+}
+
+div.table_container table.event_results th.first_name,
+div.table_container table.event_results th.city {
+  width: 100px;
+}
+
+div.table_container table.event_results th.category_name,
+div.table_container table.event_results th.last_name {
+  width: 120px;
+}
+
+div.table_container table.event_results th.name {
+  width: 220px;
 }
 
 table.person_results td.place {

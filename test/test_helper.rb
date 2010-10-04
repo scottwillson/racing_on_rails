@@ -24,10 +24,8 @@ class ActiveSupport::TestCase
     reset_disciplines
   end
 
-  # Clear ASSOCIATION.now. Reset results format.
   def reset_association
-    ASSOCIATION.now = nil
-    ASSOCIATION.usac_results_format = false
+    RacingAssociation.current = nil
   end
   
   def reset_disciplines
@@ -63,7 +61,7 @@ class ActiveSupport::TestCase
       raise "Don't recognize #{person}"
     end
     
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"
@@ -184,7 +182,7 @@ class ActiveSupport::TestCase
   end
   
   def use_ssl
-    (@request.env['HTTPS'] = 'on') if ASSOCIATION.ssl?
+    (@request.env['HTTPS'] = 'on') if RacingAssociation.current.ssl?
   end
 
   def use_http
@@ -226,5 +224,9 @@ class ActiveSupport::TestCase
          end         
        }
     end
+  end
+  
+  def secure_redirect_options
+    @controller.send :secure_redirect_options
   end
 end

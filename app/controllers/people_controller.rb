@@ -20,9 +20,9 @@ class PeopleController < ApplicationController
   # :aliases      => :alias, :name
   # :team         => :name, :city, :state, :website
   # :race_numbers => :value, :year
-  # :discipline => :only => :name
+  # :discipline   => :only => :name
   #
-  # See source code of API::Base
+  # See source code of Api::People and Api::Base
   def index
     respond_to do |format|
       format.html { find_people }
@@ -32,13 +32,26 @@ class PeopleController < ApplicationController
     end
   end
 
+  def list
+    people_list = ''
+    Person.find_all_by_name_like(params['q']).each { |person| people_list += (person.name + '|' + person.id.to_s + "\n") }
+    render :text => people_list
+  end
+
+  def show
+    respond_to do |format|
+      format.xml { render :xml => person_as_xml }
+      format.json { render :json => person_as_json }
+    end
+  end
+
   def account
     person = (params[:id] && Person.find(params[:id])) || current_person
     if person
       redirect_to edit_person_path(person)
     else
       session[:return_to] = "/account"
-      redirect_to new_person_session_path
+      redirect_to new_person_session_url(secure_redirect_options)
     end
   end
   
@@ -89,7 +102,7 @@ class PeopleController < ApplicationController
       
       if @person.nil?
         @person = Person.new
-        @person.errors.add_to_base "Didn't match your name and license number. Please check your #{ASSOCIATION.short_name} membership card."
+        @person.errors.add_to_base "Didn't match your name and license number. Please check your #{RacingAssociation.current.short_name} membership card."
       end
     end
     @person = Person.new if @person.nil?

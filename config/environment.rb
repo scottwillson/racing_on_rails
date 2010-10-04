@@ -16,11 +16,11 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions )
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers )
   
   config.action_controller.session = {
-    :key => '_racing_on_rails_session',
-    :secret      => '9998d23d32c59a8161aba78b03630a93'
+    :key => "_racing_on_rails_session",
+    :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
   config.gem "authlogic", :version => "2.1.3"
@@ -35,6 +35,7 @@ Rails::Initializer.run do |config|
 
   if RAILS_ENV == "test"
     config.gem "mocha"
+    config.gem "timecop"
   end
 
   config.time_zone = "Pacific Time (US & Canada)"
@@ -42,7 +43,9 @@ Rails::Initializer.run do |config|
   # Racing on Rails has many foreign key constraints, so :sql is required
   config.active_record.schema_format = :sql
 
-  config.active_record.observers = :event_observer, :result_observer
+  unless ENV["SKIP_OBSERVERS"]
+    config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :result_observer, :team_observer
+  end
 
   # Ugh. Make config accessible to overrides
   @config = config
@@ -73,28 +76,8 @@ end
 require 'array'
 require 'nil_class'
 require 'string'
+# require "action_view/template_handlers/pdf_writer"
+# ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
+
 require "local_static"
 require "action_view/inline_template_extension"
-
-unless defined?(ASSOCIATION)
-  ASSOCIATION = RacingAssociation.new
-  ASSOCIATION.name = 'Cascadia Bicycle Racing Association'
-  ASSOCIATION.short_name = 'CBRA'
-  ASSOCIATION.state = 'OR'
-  ASSOCIATION.rental_numbers = 51..99 if RAILS_ENV == 'test'
-  
-  SANCTIONING_ORGANIZATIONS = ["FIAC", "CBRA", "UCI", "USA Cycling"] unless defined?(SANCTIONING_ORGANIZATIONS)
-end
-
-RAILS_HOST  = 'localhost:3000' unless defined?(RAILS_HOST)
-STATIC_HOST = 'localhost' unless defined?(STATIC_HOST)
-ActionMailer::Base.default_url_options[:host] = RAILS_HOST
-
-# Limit number of people, teams, etc. returned in search
-SEARCH_RESULTS_LIMIT          = 100 unless defined?(SEARCH_RESULTS_LIMIT)
-
-# Homepage display
-WEEKS_OF_RECENT_RESULTS       = 2 unless defined?(WEEKS_OF_RECENT_RESULTS)
-WEEKS_OF_UPCOMING_EVENTS      = 5 unless defined?(WEEKS_OF_UPCOMING_EVENTS)
-
-SHOW_ALL_TEAMS_ON_PUBLIC_PAGE = false unless defined?(SHOW_ALL_TEAMS_ON_PUBLIC_PAGE)

@@ -2,8 +2,7 @@
   <div>Events</div>
   <div class="right">
   #{link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
-     {:controller => '/results', :action => 'event', :year => @event.date.year, 
-     :discipline => @event.discipline, :id => @event.id},
+     event_results_path(@event),
      { :class => "image" }) if @event.has_results_including_children? }  
   </div>
 } %>

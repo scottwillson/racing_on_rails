@@ -6,5 +6,5 @@
 
 <p class="centered">
   <%= link_to "Your Account", edit_person_path(@person) %>  |
-  <%= link_to "#{ASSOCIATION.name} Home", root_path %>
+  <%= link_to "#{RacingAssociation.current.name} Home", root_path %>
 </p>

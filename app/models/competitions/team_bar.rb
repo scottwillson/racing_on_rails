@@ -12,7 +12,7 @@ class TeamBar < Competition
   # less duplicate code
   def source_results(race)
     Result.find_by_sql(
-      %Q{SELECT results.points, results.id as id, race_id, person_id, results.team_id, place
+      %Q{SELECT results.*
               FROM results 
               LEFT OUTER JOIN races ON races.id = results.race_id
               LEFT OUTER JOIN events ON races.event_id = events.id
@@ -28,7 +28,7 @@ class TeamBar < Competition
                 where competition_events.type = 'Bar'
                   and competition_events.date >= '#{date.year}-01-01'
                   and competition_events.date <= '#{date.year}-12-31')
-              order by team_id}
+              order by results.team_id}
     )
   end
 
@@ -36,7 +36,7 @@ class TeamBar < Competition
   # Could derive points from competition_result.scores
   def create_competition_results_for(results, race)
     competition_result = nil
-    for source_result in results
+    results.each do |source_result|
       logger.debug("#{self.class.name} scoring result: #{source_result.race.name} #{source_result.place} #{source_result.name} #{source_result.team_name}") if logger.debug?
 
       teams = extract_teams_from(source_result)

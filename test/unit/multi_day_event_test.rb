@@ -339,7 +339,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.discipline = "Cyclocross"
     single_event_1.flyer = "http://www.letour.fr"
     single_event_1.promoter = nil
-    single_event_1.sanctioned_by = ASSOCIATION.short_name
+    single_event_1.sanctioned_by = RacingAssociation.current.short_name
     single_event_1.save!
 
     results = Event.connection.select_one("select * from events where id=#{single_event_1.id}")
@@ -364,7 +364,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Cyclocross", results["discipline"], "SingleDayEvent discipline")
     assert_equal("http://www.letour.fr", results["flyer"], "SingleDayEvent flyer")
     assert_nil(results["promoter_id"], "SingleDayEvent promoter_id")
-    assert_equal(ASSOCIATION.short_name, results["sanctioned_by"], "SingleDayEvent sanctioned_by")
+    assert_equal(RacingAssociation.current.short_name, results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("France", results["state"], "SingleDayEvent state")
 
     results = Event.connection.select_one("select * from events where id=#{multi_day_event.id}")
@@ -429,7 +429,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   def test_full_name
     stage_race = events(:mt_hood)
-    assert_equal('Mt. Hood Classic', stage_race.full_name, 'stage_race full_name')
+    assert_equal('Mt. Hood Classic', stage_race.name, 'stage_race full_name')
   end
   
   def test_custom_create
@@ -533,7 +533,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(:state => nil)
-    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+    assert_equal(RacingAssociation.current.state, child.state, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!
     child = parent.children.create!(:state => "NY")
@@ -541,7 +541,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
     parent = MultiDayEvent.create!
     child = parent.children.create!
-    assert_equal(ASSOCIATION.state, child.state, "child should inherit parent values unless specified")
+    assert_equal(RacingAssociation.current.state, child.state, "child should inherit parent values unless specified")
 
     parent = MultiDayEvent.create!(:state => "")
     child = parent.children.create!
@@ -637,5 +637,30 @@ class MultiDayEventTest < ActiveSupport::TestCase
     
     event = single_day_event.children.create!
     assert_equal(Date.new(2007, 9, 19), event.date, "New Event child date shold match parent")
+  end
+  
+  def test_propagate_races
+    series = events(:banana_belt_series)
+    series.races.create!(:category => categories(:sr_p_1_2))
+    series.races.create!(:category => categories(:senior_women))
+
+    assert_equal 1, events(:banana_belt_1).races.size, "banana_belt_1 races"
+    assert_equal categories(:sr_p_1_2), events(:banana_belt_1).races.first.category, "banana_belt_1 race category"
+    assert_equal 0, events(:banana_belt_2).races.size, "banana_belt_2 races"
+    assert_equal 0, events(:banana_belt_3).races.size, "banana_belt_3 races"
+    
+    series.propagate_races
+    
+    assert_equal 2, events(:banana_belt_1).races.size, "banana_belt_1 races"
+    assert events(:banana_belt_1).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_1 race category"
+    assert events(:banana_belt_1).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_1 race category"
+
+    assert_equal 2, events(:banana_belt_2).races(true).size, "banana_belt_2 races"
+    assert events(:banana_belt_2).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_2 race category"
+    assert events(:banana_belt_2).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_2 race category"
+
+    assert_equal 2, events(:banana_belt_3).races(true).size, "banana_belt_3 races"
+    assert events(:banana_belt_3).races.any? { |r| r.category == categories(:sr_p_1_2)}, "banana_belt_3 race category"
+    assert events(:banana_belt_3).races.any? { |r| r.category == categories(:senior_women)}, "banana_belt_3 race category"
   end
 end

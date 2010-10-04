@@ -172,8 +172,8 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
 
     weaver_jack_frost.reload
-    assert_equal("", weaver_jack_frost.first_name, 'first_name')
-    assert_equal("", weaver_jack_frost.last_name, 'last_name')
+    assert_equal(nil, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(nil, weaver_jack_frost.last_name, 'last_name')
     assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
     assert_nil(weaver_jack_frost.person(true), 'person')
   end
@@ -233,8 +233,8 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_response(:success)
 
     weaver_jack_frost.reload
-    assert_equal("", weaver_jack_frost.first_name, 'first_name')
-    assert_equal("", weaver_jack_frost.last_name, 'last_name')
+    assert_equal(nil, weaver_jack_frost.first_name, 'first_name')
+    assert_equal(nil, weaver_jack_frost.last_name, 'last_name')
     assert_equal(original_team_name, weaver_jack_frost.team_name, 'team_name')
     assert_nil(weaver_jack_frost.person(true), 'person')
   end

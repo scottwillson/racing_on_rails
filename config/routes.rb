@@ -11,7 +11,10 @@ ActionController::Routing::Routes.draw do |map|
                      :set_parent => :get, 
                      :add_children => :get, 
                      :create_from_children => :get, 
-                     :destroy_races => :delete }
+                     :destroy_races => :delete } do |events|
+      events.resources :races, :collection => { :propagate => :post }
+    end
+                     
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :person
     
@@ -70,6 +73,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/events/:event_id/results", :controller => "results", :action => "event"
   map.connect "/events/:event_id/people/:person_id/results", :controller => "results", :action => "person_event"
   map.connect "/events/:event_id/teams/:team_id/results", :controller => "results", :action => "team_event"
+  map.connect "/events/:event_id/teams/:team_id/results/:race_id", :controller => "results", :action => "team_event"
   map.connect "/events/:event_id", :controller => "results", :action => "event"
   map.resources :events do |events|
     events.resources :results
@@ -117,6 +121,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect "/people/:person_id", :controller => "results", :action => "person", 
               :requirements => { :person_id => /\d+/ }, 
               :conditions => { :method => :get }
+  map.connect "/people/list", :controller => "people", :action => "list"
   map.resources :people, 
                 :member => { :card => :get, :account => :get, :membership => :get },
                 :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post } do |person|
@@ -129,17 +134,7 @@ ActionController::Routing::Routes.draw do |map|
                   person.resources :versions
                 end
   
-  # Deprecated URLs
-  map.connect "/results/:year/:discipline/:event_id", 
-              :controller => "results", 
-              :action => "deprecated_event", 
-              :requirements => { :year => /(19|20)\d\d/, :discipline => /\w+.*/, :event_id => /\d+/ }
-  map.connect "/results/show/:id", :controller => "results", :action => "show"
-  map.connect "/results/competition/:event_id/racer/:person_id", :controller => "results", :action => "competition"
-  map.connect "/results/competition/:event_id/team/:team_id", :controller => "results", :action => "competition"
-  map.connect "/results/event/:event_id", :controller => "results", :action => "deprecated_event", :requirements => { :event_id => /\d+/ }
-  map.connect "/results/racer/:person_id", :controller => "results", :action => "racer", :requirements => { :person_id => /\d+/ }
-  map.connect "/results/team/:team_id", :controller => "results", :action => "deprecated_team", :requirements => { :team_id => /\d+/ }
+  map.resources :racing_associations
 
   map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/ }
   map.connect "/results/:year", :controller => "results", :action => "index", :requirements => { :year => /(19|20)\d\d/ }

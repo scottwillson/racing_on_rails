@@ -74,7 +74,7 @@ module Schedule
         if discipline != nil
           row[:discipline] = discipline.name
         else
-          row[:discipline] = ASSOCIATION.default_discipline
+          row[:discipline] = RacingAssociation.current.default_discipline
         end
       end
       

@@ -6,6 +6,7 @@ class PagesTest < WebDriverTestCase
     # Check public page render OK with default static templates
     open "/schedule"
     assert_page_source(/Schedule|Calendar/)
+    
     assert_not_in_page_source "This year is cancelled"
     assert_title(/Schedule|Calendar/)
 
@@ -22,6 +23,10 @@ class PagesTest < WebDriverTestCase
     click "save"
 
     open "/schedule"
+    # Firefox honors the expires time, so the old page is still shown
+    assert_not_in_page_source "This year is cancelled"
+
+    refresh
     assert_page_source "This year is cancelled"
 
     open "/admin/pages"

@@ -12,7 +12,7 @@ class EventsController < ApplicationController
   # * race: [ :id, :distance, :city, :state, :laps, :field_size, :time, :finishers, :notes ]
   # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
   #
-  # See source code of API::Base
+  # See source code of Api::Events and Api::Base
   def index
     respond_to do |format|
       format.html {
@@ -20,13 +20,20 @@ class EventsController < ApplicationController
           @person = Person.find(params[:person_id])
           @events = @person.events.find(
                       :all, 
-                      :conditions => [ "date between ? and ?", ASSOCIATION.effective_today.beginning_of_year, ASSOCIATION.effective_today.end_of_year ])
+                      :conditions => [ "date between ? and ?", RacingAssociation.current.effective_today.beginning_of_year, RacingAssociation.current.effective_today.end_of_year ])
         else
           redirect_to schedule_path
         end
       }
       format.xml { render :xml => events_as_xml }
       format.json { render :json => events_as_json }
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.xml { render :xml => event_as_xml }
+      format.json { render :json => event_as_json }
     end
   end
 end

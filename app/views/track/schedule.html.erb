@@ -2,9 +2,9 @@
 
 <div class="tabs">
   <%= link_to "Track Home", track_path %> |
-  <%= link_to "History", "http://#{STATIC_HOST}/track/history/index.html" %> |
-  <%= link_to "Information", "http://#{STATIC_HOST}/track/information/index.html" %> |
-  <%= link_to "Records", "http://#{STATIC_HOST}/track/records/index.html" %> |
+  <%= link_to "History", "http://#{RacingAssociation.current.static_host}/track/history/index.html" %> |
+  <%= link_to "Information", "http://#{RacingAssociation.current.static_host}/track/information/index.html" %> |
+  <%= link_to "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html" %> |
   <%= link_to "Schedule", track_schedule_path %> |
 </div>
 
@@ -13,7 +13,7 @@
     <table bgcolor="#000000" cellspacing="0">
       <tr>
         <td colspan="3">
-           <%= image_tag "http://#{STATIC_HOST}/track/images/photos/points_qualifier.jpg", :border => 0, :width => "280", :alt => "AVC points qualifier" %>
+           <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/photos/points_qualifier.jpg", :border => 0, :width => "280", :alt => "AVC points qualifier" %>
         </td>
       </tr>
       <tr bgcolor="black">

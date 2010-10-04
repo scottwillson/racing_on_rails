@@ -16,6 +16,7 @@ class Competition < Event
   TYPES = %w{
     AgeGradedBar
     Bar
+    CascadeCrossOverall
     Cat4WomensRaceSeries
     CrossCrusadeOverall
     CrossCrusadeTeamCompetition
@@ -37,11 +38,11 @@ class Competition < Event
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
   
-  def self.find_for_year(year = ASSOCIATION.year)
+  def self.find_for_year(year = RacingAssociation.current.year)
     self.find_by_date(Date.new(year, 1, 1))
   end
   
-  def self.find_or_create_for_year(year = ASSOCIATION.year)
+  def self.find_or_create_for_year(year = RacingAssociation.current.year)
     self.find_for_year(year) || self.create(:date => (Date.new(year, 1, 1)))
   end
   
@@ -173,8 +174,8 @@ class Competition < Event
   # Array of ids (integers)
   # +race+ category, +race+ category's siblings, and any competition categories
   def category_ids_for(race)
-    ids = [race.category_id]
-    ids = ids + race.category.descendants.map { |category| category.id }
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
     ids.join(', ')
   end
   

@@ -1,4 +1,4 @@
 stage_race:
-  name: 'Elkhorn Stage Race'
+  name: Elkhorn Stage Race
 association:
-  name: <%= ASSOCIATION.short_name %>
+  name: CBRA

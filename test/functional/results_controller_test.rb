@@ -82,9 +82,9 @@ class ResultsControllerTest < ActionController::TestCase
     
     assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
     assert_equal(
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar?, 
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?, 
       !assigns["events"].include?(events(:usa_cycling_event_with_results)), 
-      "Honor ASSOCIATION.show_only_association_sanctioned_races_on_calendar?"
+      "Honor RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?"
     )
   end
   
@@ -107,7 +107,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
     
   def test_index_all_subclasses
-    ASSOCIATION.now = Time.local(2007, 5)
+    RacingAssociation.current.now = Time.local(2007, 5)
     SingleDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
     SingleDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
     SingleDayEvent.create!(:name => 'SingleDayEvent no races', :date => Date.new(2007, 4, 12))
@@ -176,7 +176,7 @@ class ResultsControllerTest < ActionController::TestCase
     
     assert_not_nil(assigns['events'], "Should assign 'events'")
     
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar?
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
       expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races, 
                 multi_day_event_with_child_races, series_with_races_and_child_races]
     else
@@ -228,12 +228,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_equal(assigns["person"], big_person, "person")
     assert_not_nil(assigns["event_results"], "Should assign event_results")
     assert_not_nil(assigns["competition_results"], "Should assign competition_results")
-  end
-  
-  def test_team
-  	team = teams(:vanilla)
-    get(:deprecated_team, :team_id => team.to_param)
-    assert_redirected_to(team_results_path(team))
   end
   
   def test_competition
@@ -294,29 +288,11 @@ class ResultsControllerTest < ActionController::TestCase
     assert_not_nil(result, 'result')
     assert_not_nil result.team, "result.team" 
 
-    get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param)
+    get(:team_event, :event_id => bar.to_param, :team_id => result.team.to_param, :race_id => result.race.to_param)
 
     assert_response(:success)
     assert_template("results/team_event")
     assert_equal(result, assigns["result"], "Should assign result")
-  end
-
-  def test_show_person_result
-    result = results(:tonkin_kings_valley)
-    get(:show, :id => result.to_param)
-    assert_redirected_to event_person_results_path(result.event, result.person)
-  end  
-
-  def test_show_team_result
-    result = races(:kings_valley_3).results.create!(:team => teams(:vanilla))
-    get(:show, :id => result.to_param)
-    assert_redirected_to event_team_results_path(result.event, teams(:vanilla))
-  end
-  
-  def test_show_result_no_team_no_person
-    result = races(:kings_valley_3).results.create!
-    get(:show, :id => result.to_param)
-    assert_redirected_to(event_results_path(result.event))
   end
   
   def test_person_with_overall_results
@@ -354,7 +330,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_ssl
-    if ASSOCIATION.ssl?
+    if RacingAssociation.current.ssl?
       use_ssl
       get :index
       assert_redirected_to "http://test.host/results"
@@ -488,5 +464,11 @@ class ResultsControllerTest < ActionController::TestCase
     get :index, :event_id => event[:id], :format => "json"
     assert_response :success
     assert_equal "application/json", @response.content_type
+  end
+
+  def test_index_filtered_by_person_id
+    person = people :weaver
+    get :index, :person_id => person[:id], :format => "xml"
+    assert_response :success
   end
 end

@@ -16,13 +16,15 @@ class Person < ActiveRecord::Base
                                                    :allow_nil => true,
                                                    :allow_blank => true
 
+    config.validates_uniqueness_of_login_field_options :allow_blank => true, :allow_nil => true
+    config.validates_confirmation_of_password_field_options :unless => Proc.new { |user| user.password.blank? }    
     config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validate_email_field false
     config.disable_perishable_token_maintenance true
   end
 
-  before_validation :find_associated_records, :make_login_blanks_nil
+  before_validation :find_associated_records
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   before_create :set_created_by
@@ -138,7 +140,7 @@ class Person < ActiveRecord::Base
   def Person.find_by_number(number)
     Person.find(:all, 
                :include => :race_numbers,
-               :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ ASSOCIATION.year, ASSOCIATION.next_year ], number ])
+               :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
   end
 
   # if/else to avoid strip
@@ -159,8 +161,8 @@ class Person < ActiveRecord::Base
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = ASSOCIATION.today, include_people = "members_only")
-    association_number_issuer_id = NumberIssuer.find_by_name(ASSOCIATION.short_name).id
+  def Person.find_all_for_export(date = RacingAssociation.current.today, include_people = "members_only")
+    association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
     if include_people == "members_only"
       where_clause = "WHERE (member_to >= '#{date.to_s}')" 
     elsif include_people == "print_cards"
@@ -224,7 +226,7 @@ class Person < ActiveRecord::Base
   # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
-      (lic_date && (Date.parse(lic_date) > ASSOCIATION.today)) ? "current" : "CHECK LIC!"
+      (lic_date && (Date.parse(lic_date) > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
     end
@@ -469,7 +471,7 @@ class Person < ActiveRecord::Base
   # 30 years old or older
   def master?
     if date_of_birth
-      date_of_birth <= Date.new(ASSOCIATION.masters_age.years.ago.year, 12, 31)
+      date_of_birth <= Date.new(RacingAssociation.current.masters_age.years.ago.year, 12, 31)
     end
   end
   
@@ -490,7 +492,7 @@ class Person < ActiveRecord::Base
   # Oldest age person will be at any point in year
   def racing_age
     if date_of_birth
-      (ASSOCIATION.year - date_of_birth.year).ceil
+      (RacingAssociation.current.year - date_of_birth.year).ceil
     end
   end
   
@@ -526,12 +528,12 @@ class Person < ActiveRecord::Base
   def number(discipline_param, reload = false, year = nil)
     return nil if discipline_param.nil?
 
-    year = year || ASSOCIATION.year
+    year = year || RacingAssociation.current.year
     if discipline_param.is_a?(Discipline)
       discipline_param = discipline_param.to_param
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == year && race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && race_number.number_issuer.name == ASSOCIATION.short_name
+      race_number.year == year && race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && race_number.number_issuer.name == RacingAssociation.current.short_name
     end
     if number
       number.value
@@ -542,8 +544,8 @@ class Person < ActiveRecord::Base
   
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
   def add_number(value, discipline, association = nil, _year = year)
-    association = NumberIssuer.find_by_name(ASSOCIATION.short_name) if association.nil?
-    _year ||= ASSOCIATION.year
+    association = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if association.nil?
+    _year ||= RacingAssociation.current.year
 
     if discipline.nil? || !discipline.numbers?
       discipline = Discipline[:road]
@@ -551,7 +553,7 @@ class Person < ActiveRecord::Base
     
     if value.blank?
       unless new_record?
-        # Delete ALL numbers for ASSOCIATION and this discipline?
+        # Delete ALL numbers for RacingAssociation.current and this discipline?
         # FIXME Delete number individually in UI
         RaceNumber.destroy_all(
           ['person_id=? and discipline_id=? and year=? and number_issuer_id=?', 
@@ -636,13 +638,6 @@ class Person < ActiveRecord::Base
   def xc_number=(value)
     add_number(value, Discipline[:mountain_bike])
   end
-
-  # Handle updates to people without logins
-  def make_login_blanks_nil
-    self.login = nil if login.blank?
-    self.password = nil if password.blank?
-    self.password_confirmation = nil if password_confirmation.blank?
-  end
   
   def administrator?
     roles.any? { |role| role.name == "Administrator" }
@@ -653,12 +648,12 @@ class Person < ActiveRecord::Base
   end
 
   # Is Person a current member of the bike racing association?
-  def member?(date = ASSOCIATION.today)
+  def member?(date = RacingAssociation.current.today)
     member_to.present? && member_from.present? && (member_from.to_date <= date.to_date && member_to.to_date >= date.to_date)
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
-  def member_in_year?(date = ASSOCIATION.today)
+  def member_in_year?(date = RacingAssociation.current.today)
     year = date.year
     !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
     member_to.present? && member_from.present? && (member_from.year <= year && member_to.year >= year)
@@ -671,16 +666,16 @@ class Person < ActiveRecord::Base
   # Is Person a current member of the bike racing association?
   def member=(value)
     if value
-      self.member_from = ASSOCIATION.today if member_from.nil? || member_from.to_date >= ASSOCIATION.today.to_date
-      unless member_to && (member_to.to_date >= Time.zone.local(ASSOCIATION.effective_year, 12, 31).to_date)
-        self.member_to = Time.zone.local(ASSOCIATION.effective_year, 12, 31) 
+      self.member_from = RacingAssociation.current.today if member_from.nil? || member_from.to_date >= RacingAssociation.current.today.to_date
+      unless member_to && (member_to.to_date >= Time.zone.local(RacingAssociation.current.effective_year, 12, 31).to_date)
+        self.member_to = Time.zone.local(RacingAssociation.current.effective_year, 12, 31) 
       end
     elsif !value && member?
-      if self.member_from.year == ASSOCIATION.year
+      if self.member_from.year == RacingAssociation.current.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Time.zone.local(ASSOCIATION.year - 1, 12, 31)
+        self.member_to = Time.zone.local(RacingAssociation.current.year - 1, 12, 31)
       end
     end
   end
@@ -712,7 +707,7 @@ class Person < ActiveRecord::Base
   # Also sets member_from if it is blank
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = ASSOCIATION.today if member_from.nil?
+      self[:member_from] = RacingAssociation.current.today if member_from.nil?
       self[:member_from] = date if member_from.to_date > date.to_date
     end
     self[:member_to] = date
@@ -732,7 +727,7 @@ class Person < ActiveRecord::Base
   end
 
   def renewed?
-    member_to && member_to.year >= ASSOCIATION.effective_year
+    member_to && member_to.year >= RacingAssociation.current.effective_year
   end
 
   def renew!(license_type)
@@ -798,7 +793,7 @@ class Person < ActiveRecord::Base
       if state.blank?
         ''
       else
-        if state == ASSOCIATION.state
+        if state == RacingAssociation.current.state
           ''
         else
           state
@@ -808,7 +803,7 @@ class Person < ActiveRecord::Base
       if state.blank?
         city
       else
-        if state == ASSOCIATION.state
+        if state == RacingAssociation.current.state
           city
         else
           "#{city}, #{state}"

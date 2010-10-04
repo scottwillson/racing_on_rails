@@ -105,7 +105,7 @@ class Event < ActiveRecord::Base
   end
   
   # Return [weekly_series, events] that have results
-  # Honors ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+  # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
   def Event.find_all_with_results(year = Date.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
@@ -137,9 +137,9 @@ class Event < ActiveRecord::Base
       ))
     end
     
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       events.reject! do |event|
-        event.sanctioned_by != ASSOCIATION.default_sanctioned_by
+        event.sanctioned_by != RacingAssociation.current.default_sanctioned_by
       end
     end
     
@@ -176,8 +176,8 @@ class Event < ActiveRecord::Base
     set_defaults
   end
     
-  # Defaults state to ASSOCIATION.state, date to today, name to New Event mm-dd-yyyy
-  # NumberIssuer: ASSOCIATION.short_name
+  # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
+  # NumberIssuer: RacingAssociation.current.short_name
   # Child events use their parent's values unless explicity override. And you cannot override
   # parent values by passing in blank or nil attributes to initialize, as there is
   # no way to differentiate missing values from nils or blanks.
@@ -224,15 +224,15 @@ class Event < ActiveRecord::Base
   end
   
   def default_state
-    ASSOCIATION.state
+    RacingAssociation.current.state
   end
   
   def default_sanctioned_by
-    ASSOCIATION.default_sanctioned_by
+    RacingAssociation.current.default_sanctioned_by
   end
   
   def default_number_issuer
-    NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    NumberIssuer.find_by_name(RacingAssociation.current.short_name)
   end
   
   def validate_no_results
@@ -317,6 +317,11 @@ class Event < ActiveRecord::Base
     
     children.each { |child| child.update_children }
     true
+  end
+
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    # Do nothing in superclass
   end
 
   def children_changed(child)

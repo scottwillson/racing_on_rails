@@ -2,20 +2,39 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
-  def setup
-    super
-    @award_cat4_participation_points = ASSOCIATION.award_cat4_participation_points
-    ASSOCIATION.award_cat4_participation_points = true
-    @cat4_womens_race_series_points = ASSOCIATION.cat4_womens_race_series_points
-    ASSOCIATION.cat4_womens_race_series_points = nil
-    @cat4_womens_race_series_category = ASSOCIATION.cat4_womens_race_series_category
-    ASSOCIATION.cat4_womens_race_series_category = nil
+  def test_calculate_omnium
+    series = Cat4WomensRaceSeries.create!(:date => Date.new(2005))
+    omnium = MultiDayEvent.create!(:date => Date.new(2005))
+    series.source_events << omnium
+    
+    road_race = omnium.children.create!(:date => Date.new(2005))
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    person = people(:alice)
+    omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    
+    Cat4WomensRaceSeries.calculate!(2005)
+    result = series.races.first.results.first
+    assert_equal 115, result.points, "Should have points for omnium only"
+    assert_equal 2, result.scores.size, "Should have one score"
   end
   
-  def teardown
-    ASSOCIATION.award_cat4_participation_points = @award_cat4_participation_points
-    ASSOCIATION.cat4_womens_race_series_points = @cat4_womens_race_series_points
-    ASSOCIATION.cat4_womens_race_series_category = @cat4_womens_race_series_category
+  def test_calculate_omnium_no_participation_points
+    RacingAssociation.current.award_cat4_participation_points = false
+    series = Cat4WomensRaceSeries.create!(:date => Date.new(2005))
+    omnium = MultiDayEvent.create!(:date => Date.new(2005))
+    series.source_events << omnium
+    
+    road_race = omnium.children.create!(:date => Date.new(2005))
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    person = people(:alice)
+    omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
+    
+    Cat4WomensRaceSeries.calculate!(2005)
+    result = series.races.first.results.first
+    assert_equal 100, result.points, "Should have points for omnium only"
+    assert_equal 1, result.scores.size, "Should have one score"
   end
   
   def test_calculate_no_results
@@ -89,41 +108,43 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     # Other competitions don't count!
     RiderRankings.calculate!(2004)
 
-    results_baseline_count = Result.count
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries before calculate! (but after create)")
-    Cat4WomensRaceSeries.calculate!(2004)
-    bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
-    assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
-    assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
-    # Should delete old Cat4WomensRaceSeries
-    Cat4WomensRaceSeries.calculate!(2004)
-    assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
-    bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
-    assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
-    assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Cat4WomensRaceSeries date")
-    assert_equal("2004 Cat 4 Womens Race Series", bar.name, "2004 Bar name")
-    assert_equal_dates(Date.today, bar.updated_at, "Cat4WomensRaceSeries last updated")
-    assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
-    
-    assert_equal(1, bar.races.size, 'Races')
-    
-    race = bar.races.first
-    assert_equal(women_cat_4, race.category, 'Category')
-    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    Timecop.freeze Time.zone.local(2004, 12, 15) do
+      results_baseline_count = Result.count
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries before calculate! (but after create)")
+      Cat4WomensRaceSeries.calculate!(2004)
+      bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+      assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
+      assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
+      # Should delete old Cat4WomensRaceSeries
+      Cat4WomensRaceSeries.calculate!(2004)
+      assert_equal(1, Cat4WomensRaceSeries.count, "Cat4WomensRaceSeries events after calculate!")
+      bar = Cat4WomensRaceSeries.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+      assert_not_nil(bar, "2004 Cat4WomensRaceSeries after calculate!")
+      assert_equal(Date.new(2004, 1, 1), bar.date, "2004 Cat4WomensRaceSeries date")
+      assert_equal("2004 Cat 4 Womens Race Series", bar.name, "2004 Bar name")
+      assert_equal_dates(Date.today, bar.updated_at, "Cat4WomensRaceSeries last updated")
+      assert_equal(results_baseline_count + 2, Result.count, "Total count of results in DB")
 
-    race.results.sort!
-    assert_equal('1', race.results[0].place, 'Place')
-    assert_equal(alice, race.results[0].person, 'Person')
-    assert_equal(102, race.results[0].points, 'Points')
+      assert_equal(1, bar.races.size, 'Races')
 
-    assert_equal('2', race.results[1].place, 'Place')
-    assert_equal(molly, race.results[1].person, 'Person')
-    assert_equal(65, race.results[1].points, 'Points')
+      race = bar.races.first
+      assert_equal(women_cat_4, race.category, 'Category')
+      assert_equal(2, race.results.size, 'Category 4 Women race results')
+
+      race.results.sort!
+      assert_equal('1', race.results[0].place, 'Place')
+      assert_equal(alice, race.results[0].person, 'Person')
+      assert_equal(102, race.results[0].points, 'Points')
+
+      assert_equal('2', race.results[1].place, 'Place')
+      assert_equal(molly, race.results[1].person, 'Person')
+      assert_equal(65, race.results[1].points, 'Points')
+    end
   end
   
-  def test_do_no_taward_cat4_participation_points
-    ASSOCIATION.award_cat4_participation_points = false
+  def test_do_not_award_cat4_participation_points
+    RacingAssociation.current.award_cat4_participation_points = false
 
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
     banana_belt = events(:banana_belt_1)
@@ -230,10 +251,43 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(80, race.results[1].points, 'Points')
   end
   
+  def test_custom_category_name
+    racing_association = RacingAssociation.current
+    category_4_women = Category.find_or_create_by_name(:name => "Women Cat 4")
+    racing_association.cat4_womens_race_series_category = category_4_women
+    racing_association.save!
+    
+    series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
+    event = SingleDayEvent.create(:date => Date.new(2004))
+    race_1 = event.races.create!(:category => category_4_women)
+    race_1.results.create!(:place => "2", :person => people(:molly))
+    race_2 = event.races.create!(:category => category_4_women)
+    race_2.results.create!(:place => "5", :person => people(:alice))
+    series.source_events << event
+
+    Cat4WomensRaceSeries.calculate!(2004)
+    series.reload    
+    assert_equal(1, series.races.size, 'Races')
+    
+    race = series.races.first
+    assert_equal(2, race.results.size, 'Category 4 Women race results')
+    race.results.sort!
+    assert_equal('1', race.results[0].place, 'Place')
+    assert_equal(people(:molly), race.results[0].person, 'Person')
+    assert_equal(95, race.results[0].points, 'Points')
+    assert_equal('2', race.results[1].place, 'Place')
+    assert_equal(people(:alice), race.results[1].person, 'Person')
+    assert_equal(80, race.results[1].points, 'Points')
+  end
+  
   def test_child_events
     series = Cat4WomensRaceSeries.create!(:date => Date.new(2004))
     event = SingleDayEvent.create!(:discipline => "Time Trial", :date => Date.new(2004))
     series.source_events << event
+    
+    # Non Cat 4 Women race in parent event
+    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1", :person => people(:weaver))
+    
     fourteen_mile = event.children.create!
     assert_equal 1, fourteen_mile.bar_points, "Children should recieve BAR points"
     assert_equal Date.new(2004), fourteen_mile.date, "Children should share parent date"

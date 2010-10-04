@@ -1,5 +1,5 @@
 <% table :caption => "Categories", :class => "box-2 person_categories", :insert_header => true, :columns => 2 do %>
-  <%- if ASSOCIATION.bmx_numbers? -%>
+  <%- if RacingAssociation.current.bmx_numbers? -%>
   <tr>
     <td>BMX</td>
     <td><%= person.bmx_category %></td>

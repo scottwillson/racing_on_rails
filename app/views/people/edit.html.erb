@@ -89,7 +89,7 @@
                          }
   %>
   <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find(:all, :conditions => [ 
-     "parent_id is null and date between ? and ?", ASSOCIATION.now.beginning_of_year, ASSOCIATION.now.end_of_year 
+     "parent_id is null and date between ? and ?", RacingAssociation.current.now.beginning_of_year, RacingAssociation.current.now.end_of_year 
    ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
 
   <hr class="space" />

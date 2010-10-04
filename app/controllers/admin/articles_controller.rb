@@ -36,7 +36,7 @@ class Admin::ArticlesController < Admin::AdminController
 
     if @article.save
       flash[:notice] = 'Article was successfully created.'
-      format.html redirect_to admin_articles_url
+      redirect_to admin_articles_url
     else
       render :new
     end

@@ -49,7 +49,6 @@ class EventsTest < WebDriverTestCase
     if chrome?
       type "Candi Murray", "promoter_auto_complete"
     else
-      # click "promoter_auto_complete"
       type "candi m", "promoter_auto_complete"
       wait_for_element "person_#{candi.id}"
 
@@ -91,7 +90,6 @@ class EventsTest < WebDriverTestCase
     open "/admin/events?year=#{Date.today.year}"
     click :link_text => "Sausalito Criterium"
 
-    # click "team_auto_complete"
     type "Gentle Lovers", "team_auto_complete"
     gl = Team.find_by_name('Gentle Lovers')
     unless chrome?

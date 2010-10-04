@@ -2,7 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class LoginStoriesTest < ActionController::IntegrationTest
-  if ASSOCIATION.ssl?
+  if RacingAssociation.current.ssl?
     # logged-in?, person_id?, same person?, admin?
     def test_member_account
       get "/account"
@@ -76,6 +76,19 @@ class LoginStoriesTest < ActionController::IntegrationTest
       get "/login"
     end
 
+    def test_login_on_nonstandard_port
+      get "http://www.example.com:3000/login"
+      assert_redirected_to "https://www.example.com/login"
+
+      https!
+      get "/login"
+
+      login :person_session => { :login => 'bob.jones', :password => 'secret' }
+      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+
+      get "/login"
+    end
+
     def test_valid_admin_login
       https!
       get admin_people_path
@@ -83,7 +96,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
+      assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to admin_people_path
@@ -122,7 +135,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
+      assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
     end
 
   # No-SSL tests
@@ -199,7 +212,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
+      assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to admin_people_path
@@ -236,7 +249,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
       follow_redirect!
       assert_response :success
       assert_template "person_sessions/new"
-      assert_equal "Please login to your #{ASSOCIATION.short_name} account", flash[:notice]
+      assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
     end
 
   end
@@ -249,7 +262,7 @@ class LoginStoriesTest < ActionController::IntegrationTest
   private
   
   def go_to_login
-    https! if ASSOCIATION.ssl?
+    https! if RacingAssociation.current.ssl?
     get new_person_session_path
     assert_response :success
     assert_template "person_sessions/new"

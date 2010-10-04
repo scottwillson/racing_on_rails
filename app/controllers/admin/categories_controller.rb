@@ -9,7 +9,7 @@ class Admin::CategoriesController < Admin::AdminController
   def index
     respond_to do |format|
       format.html {
-        @category = Category.find_or_create_by_name(ASSOCIATION.short_name)
+        @category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
         @unknowns = Category.find_all_unknowns
       }
       format.js {
@@ -33,7 +33,7 @@ class Admin::CategoriesController < Admin::AdminController
     render :update do |page|
       page.remove("category_#{@category.id}_row")
       if @parent
-        if @parent.name == ASSOCIATION.short_name
+        if @parent.name == RacingAssociation.current.short_name
           page.replace_html("category_root", :partial => "category", :collection => @parent.children.sort)
         else
           page.call(:expandDisclosure, parent_id)

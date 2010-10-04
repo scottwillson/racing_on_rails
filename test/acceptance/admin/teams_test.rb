@@ -40,7 +40,7 @@ class TeamsTest < WebDriverTestCase
     wait_for_element "teams_table"
     assert_not_checked "team_member_#{@gl_id}"
 
-    click :css => "a[href='/results/team/#{@dfl_id}']"
+    click :css => "a[href='/teams/#{@dfl_id}']"
     assert_page_source "Team dFL"
 
     open '/admin/teams'

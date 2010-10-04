@@ -24,7 +24,7 @@ class RiderRankings < Competition
   end
   
   def create_races
-    association_category = Category.find_or_create_by_name(ASSOCIATION.short_name)
+    association_category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
     for category_name in [
       'Junior Men A', 'Junior Men B', 'Junior Men C', 'Junior Men D',
       'Junior Women A', 'Junior Women B', 'Junior Women C', 'Junior Women D',
@@ -50,7 +50,7 @@ class RiderRankings < Competition
                   members_only_place between 1 AND #{point_schedule.size - 1}
                     and results.person_id is not null
                     and events.type = 'SingleDayEvent' 
-                    and events.sanctioned_by = "#{ASSOCIATION.default_sanctioned_by}"
+                    and events.sanctioned_by = "#{RacingAssociation.current.default_sanctioned_by}"
                     and categories.id in (#{category_ids_for(race)})
                     and (races.bar_points > 0 or (races.bar_points is null and events.bar_points > 0))
                     and events.date >= '#{date.year}-01-01' 

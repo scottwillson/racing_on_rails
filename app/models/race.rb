@@ -66,7 +66,7 @@ class Race < ActiveRecord::Base
   
   # Combine with event name
   def full_name
-    if name == self.event.full_name
+    if name == event.full_name
       name
     elsif event.full_name[name]
       event.full_name
@@ -127,7 +127,7 @@ class Race < ActiveRecord::Base
         column
       end
     end
-    columns << "bar" if ASSOCIATION.competitions.include?(:bar)
+    columns << "bar" if RacingAssociation.current.competitions.include?(:bar)
     columns.uniq!
     columns
   end
@@ -225,7 +225,7 @@ class Race < ActiveRecord::Base
   def non_members_on_team(result)
     non_members = false
     # if this is undeclared in environment.rb, assume this rule does not apply
-    exempt_cats = ASSOCIATION.exempt_team_categories
+    exempt_cats = RacingAssociation.current.exempt_team_categories
      if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
        return non_members
      else

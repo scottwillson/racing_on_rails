@@ -1,11 +1,11 @@
-<h2>Your new <%= ASSOCIATION.short_name %> login is ready to go!</h2>
+<h2>Your new <%= RacingAssociation.current.short_name %> login is ready to go!</h2>
 
 <p>
   Login: <%= @person.login %></br>
   <%= link_to "Your account", account_person_url(@person) %>
 </p>
 
-<p><%= ASSOCIATION.short_name %> respects your privacy. Information regarding your personal information can be viewed at http://obra.org/privacy</p>
+<p><%= RacingAssociation.current.short_name %> respects your privacy. Information regarding your personal information can be viewed at http://obra.org/privacy</p>
 
 <h4>
   Welcome, <%= @person.name_or_login %>

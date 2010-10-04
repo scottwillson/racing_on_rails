@@ -6,9 +6,9 @@
   <tr>
     <td class="number_year"><select name='number_year' id='number_year'><%= options_for_select years, year %></select></td>
   </tr>
-  <% if ASSOCIATION.show_license %>
+  <% if RacingAssociation.current.show_license %>
   <tr>
-    <td><label class="inline"><%= ASSOCIATION.short_name %> Membership</label> <%= text_field 'person', 'license' %></td>
+    <td><label class="inline"><%= RacingAssociation.current.short_name %> Membership</label> <%= text_field 'person', 'license' %></td>
   </tr>
   <% end %>
   <% for @number in race_numbers %>

@@ -53,12 +53,20 @@ class MultiDayEvent < Event
 
   def MultiDayEvent.find_all_by_year(year, discipline = nil)
     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
+    MultiDayEvent.find_all_by_conditions(conditions, discipline)
+  end
 
-    if ASSOCIATION.show_only_association_sanctioned_races_on_calendar
+  def MultiDayEvent.find_all_by_unix_dates(start_date, end_date,  discipline = nil)
+    conditions = ["date between ? and ?", "#{Time.at(start_date.to_i).strftime('%Y-%m-%d')}", "#{Time.at(end_date.to_i).strftime('%Y-%m-%d')}"]
+    MultiDayEvent.find_all_by_conditions(conditions, discipline)
+  end
+
+  def MultiDayEvent.find_all_by_conditions(conditions, discipline = nil)
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       conditions.first << " and sanctioned_by = ?"
-      conditions << ASSOCIATION.default_sanctioned_by
+      conditions << RacingAssociation.current.default_sanctioned_by
     end
-    
+
     if discipline
       conditions.first << " and discipline = ?"
       conditions << discipline.name
@@ -224,6 +232,17 @@ class MultiDayEvent < Event
     children.count(reload) > 0 && (children_with_results(reload).size == children.count)
   end
   
+  # Synch Races with children. More accurately: create a new Race on each child Event for each Race on the parent.
+  def propagate_races
+    children.each do |event|
+      races.map(&:category).each do |category|
+        unless event.races.map(&:category).include?(category)
+          event.races.create!(:category => category)
+        end
+      end
+    end
+  end
+
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date} #{children.size}>"
   end

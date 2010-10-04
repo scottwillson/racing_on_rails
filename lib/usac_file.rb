@@ -27,7 +27,7 @@ class UsacFile
   
   def initialize(person='promo', pword='races')
     Net::HTTP.start(USAC_SITE) do |http|
-      req = Net::HTTP::Get.new(REGION_FILES[ASSOCIATION.usac_region])
+      req = Net::HTTP::Get.new(REGION_FILES[RacingAssociation.current.usac_region])
       req.basic_auth person, pword
       response = http.request(req)
       

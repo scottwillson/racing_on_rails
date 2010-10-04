@@ -1,7 +1,7 @@
 <% table :caption => "Results", :class => "results top_margin last", :id => :results do %>
   <tr>
     <% race.result_columns_or_default_for_editing.each do |column| -%>
-    <th><%= grid_columns(column).description %></th>
+    <th><%= result_header column %></th>
     <% end -%>
     <th class="actions span-2 last"></th>
   </tr>

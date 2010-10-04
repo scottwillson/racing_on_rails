@@ -29,12 +29,15 @@ class Result < ActiveRecord::Base
 
   before_save :find_associated_records
   before_save :save_person
+  before_save :cache_non_event_attributes
+  before_create :cache_event_attributes
   after_save :update_person_number
   after_destroy [ :destroy_people, :destroy_teams ]
 
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy
   belongs_to :category
+  belongs_to :event
   belongs_to :race
   belongs_to :person
   belongs_to :team
@@ -90,12 +93,12 @@ class Result < ActiveRecord::Base
 
     # This logic should be in Person
     if person && 
-       ASSOCIATION.add_members_from_results? &&
+       RacingAssociation.current.add_members_from_results? &&
        person.new_record? &&
        person.first_name.present? &&
        person.last_name.present? &&
        person[:member_from].blank? &&
-       event.number_issuer.name == ASSOCIATION.short_name &&
+       event.number_issuer.name == RacingAssociation.current.short_name &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
       person.member_from = race.date
@@ -122,7 +125,7 @@ class Result < ActiveRecord::Base
     matches = Set.new
     
     #license first if present and source is reliable (USAC)
-    if ASSOCIATION.eager_match_on_license? && license.present?
+    if RacingAssociation.current.eager_match_on_license? && license.present?
       matches = matches + Person.find_all_by_license(license)
       return matches if matches.size == 1
     end
@@ -169,7 +172,7 @@ class Result < ActiveRecord::Base
   # FIXME optimize default number issuer business
   def update_person_number
     discipline = Discipline[event.discipline]
-    default_number_issuer = NumberIssuer.find_by_name(ASSOCIATION.short_name)
+    default_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
       person.updated_by = self.updated_by
       person.add_number(number, discipline, event.number_issuer, event.date.year)
@@ -183,7 +186,38 @@ class Result < ActiveRecord::Base
       person.save!
     end
   end
+  
+  # Cache expensive cross-table lookups
+  def cache_non_event_attributes
+    self[:category_name] = category.try(:name)
+    self[:first_name]    = person.try(:first_name, date)
+    self[:last_name]     = person.try(:last_name, date)
+    self[:name]          = person.try(:name, date)
+    self[:team_name]     = team.try(:name, date)
+  end
+  
+  def cache_event_attributes
+    self[:competition_result]      = competition_result?
+    self[:date]                    = event.date
+    self[:event_date_range_s]      = event.date_range_s
+    self[:event_end_date]          = event.end_date
+    self[:event_full_name]         = event.full_name
+    self[:event_id]                = event.id
+    self[:race_full_name]          = race.try(:full_name)
+    self[:race_name]               = race.try(:name)
+    self[:team_competition_result] = team_competition_result?
+    self.year                      = event.year
+  end
 
+  def cache_attributes!(*args)
+    args = args.extract_options!
+    event.disable_notification!
+    cache_event_attributes if args.include?(:event)
+    cache_non_event_attributes if args.empty? || args.include?(:non_event)
+    save!
+    event.enable_notification!
+  end
+  
   # Destroy People that only exist because they were created by importing results
   def destroy_people
     if person && person.results.count == 0 && person.created_from_result? && !person.updated_after_created?
@@ -216,26 +250,29 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def category_name
-    (category && category.name) || ""
-  end
-
   def category_name=(name)
     if name.blank?
       self.category = nil
     else
       self.category = Category.find_or_create_by_name(name)
     end
+    self[:category_name] = name
   end
 
-  # TODO refactor to something like act_as_competitive or create CompetitionResult
-  # TODO Is this method triggering additional DB calls?
   def competition_result?
-    event.is_a?(Competition)
+    if competition_result.nil?
+      @competition_result = event.is_a?(Competition)
+    else
+      competition_result
+    end
   end
 
   def team_competition_result?
-    event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+    if team_competition_result.nil?
+      @team_competition_result = event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+    else
+      team_competition_result
+    end
   end
 
   # Not blank, DNF, DNS, DQ.
@@ -265,9 +302,7 @@ class Result < ActiveRecord::Base
   end
 
   def event_id
-    if race || race(true)
-      race.event_id
-    end
+    self[:event_id] || (race || race(true)).try(:event_id)
   end
 
   def event(reload = false)
@@ -308,28 +343,14 @@ class Result < ActiveRecord::Base
     write_attribute(:points_from_place, value)
   end
 
-  def first_name
-    if person and !person.first_name.blank?
-      person.first_name(date)
-    else
-      ""
-    end
-  end
-
   def first_name=(value)
     if self.person
       self.person.first_name = value
     else
       self.person = Person.new(:first_name => value)
     end
-  end
-
-  def last_name
-    if (person and !person.last_name.blank?)
-      person.last_name(date)
-    else
-      ""
-    end
+    self[:first_name] = value
+    self[:name] = self.person.try(:name, date)
   end
 
   def last_name=(value)
@@ -338,15 +359,8 @@ class Result < ActiveRecord::Base
     else
       self.person = Person.new(:last_name => value)
     end
-  end
-
-  # person.name
-  def name
-    if person == nil
-      ""
-    else
-      person.name(date)
-    end
+    self[:last_name] = value
+    self[:name] = self.person.try(:name, date)
   end
 
   def person_name
@@ -357,22 +371,18 @@ class Result < ActiveRecord::Base
   def name=(value)
     if value.present?
       self.person = Person.new(:name => value)
+      self[:first_name] = person.first_name
+      self[:last_name] = person.last_name
     else
       self.person = nil
+      self[:first_name] = nil
+      self[:last_name] = nil
     end
+    self[:name] = value
   end
 
   def person_name=(value)
     self.name = value
-  end
-
-  # Team name when result was created
-  def team_name
-    if self.team
-      team.name(date) || ""
-    else
-      ""
-    end
   end
 
   # Person's current team name
@@ -392,8 +402,9 @@ class Result < ActiveRecord::Base
     if person && person.team_name != value
       person.team = team
     end
+    self[:team_name] = value
   end
-
+  
   def time=(value)
     set_time_value(:time, value)
   end

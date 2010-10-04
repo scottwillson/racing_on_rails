@@ -37,7 +37,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
                                         :first_name => "Cheryl", :last_name => "Willson" },
                            :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 
-                                       :sanctioned_by => ASSOCIATION.short_name},
+                                       :sanctioned_by => RacingAssociation.current.short_name},
                            :commit => "Save" 
                          }
 
@@ -48,7 +48,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     new_event = SingleDayEvent.find_by_name("Mount Hamilton Road Race")
     assert_not_nil(new_event, "Should have created Mount Hamilton Road Race")
     assert_equal_dates("2009-04-01", new_event.date, "New event date")
-    assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(RacingAssociation.current.short_name, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(1, new_event.races.count, "New event should have one race")
     race = new_event.races.first
@@ -89,7 +89,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)
     assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(ASSOCIATION.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(2, new_event.races.count, "New event races: #{event.races}")
     race = new_event.races.detect {|race| race.category == women_cat_4 }
@@ -170,7 +170,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
     new_event = SingleDayEvent.find_by_name(event.name)
     assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(ASSOCIATION.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(RacingAssociation.current.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(2, new_event.races.count, "New event should have one race: #{new_event.races}")
     race = new_event.races.detect {|race| race.category == sr_women_4 }
@@ -198,7 +198,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
                                         :first_name => "", :last_name => "" },
                            :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 
-                                       :sanctioned_by => ASSOCIATION.short_name},
+                                       :sanctioned_by => RacingAssociation.current.short_name},
                            :commit => "Save" 
                          }
 
@@ -207,7 +207,7 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     new_event = SingleDayEvent.find_by_name("Mount Hamilton Road Race")
     assert_not_nil(new_event, "Should have created Mount Hamilton Road Race")
     assert_equal_dates("2009-04-01", new_event.date, "New event date")
-    assert_equal(ASSOCIATION.short_name, new_event.sanctioned_by, "Sanctioned by")
+    assert_equal(RacingAssociation.current.short_name, new_event.sanctioned_by, "Sanctioned by")
 
     assert_equal(1, new_event.races.count, "New event should have one race")
     race = new_event.races.first

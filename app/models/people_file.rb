@@ -223,6 +223,9 @@ class PeopleFile < GridFile
   end
   
   def delete_unwanted_member_from(row_hash, person)
+    # Just in case
+    row_hash.delete(:login)
+    
     if row_hash[:member_from].blank?
       row_hash.delete(:member_from)
       return

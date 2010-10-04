@@ -3,15 +3,15 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class RaceNumberTest < ActiveSupport::TestCase
   def test_defaults
-    assert_not_nil(NumberIssuer.find_by_name(ASSOCIATION.short_name), 'Number issuer exists')
+    assert_not_nil(NumberIssuer.find_by_name(RacingAssociation.current.short_name), 'Number issuer exists')
     race_number = RaceNumber.new(:value => '999', :person => people(:alice))
     race_number.save!
-    assert_equal(ASSOCIATION.effective_year, race_number.year, 'year default')
+    assert_equal(RacingAssociation.current.effective_year, race_number.year, 'year default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
 
     race_number = RaceNumber.create!(:person => people(:alice), :value => '100')
-    assert_equal(ASSOCIATION.effective_year, race_number.year, 'year default')
+    assert_equal(RacingAssociation.current.effective_year, race_number.year, 'year default')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'number issuer default')
     assert_equal(disciplines(:road), race_number.discipline, 'year discipline')
   end
@@ -125,8 +125,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     
     begin
-      original_rental_numbers = ASSOCIATION.rental_numbers
-      ASSOCIATION.rental_numbers = 11..99
+      original_rental_numbers = RacingAssociation.current.rental_numbers
+      RacingAssociation.current.rental_numbers = 11..99
       assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
       assert(!RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
       assert(!RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
@@ -145,7 +145,7 @@ class RaceNumberTest < ActiveSupport::TestCase
       assert(!RaceNumber.rental?('A50'), 'A50 not rental')
       assert(!RaceNumber.rental?('50Z'), '50Z not rental')
 
-      ASSOCIATION.rental_numbers = nil
+      RacingAssociation.current.rental_numbers = nil
       assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
       assert(RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
       assert(RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road)).valid?)
@@ -162,7 +162,7 @@ class RaceNumberTest < ActiveSupport::TestCase
       assert(!RaceNumber.rental?('A50'), 'A50 not rental')
       assert(!RaceNumber.rental?('50Z'), '50Z not rental')
     ensure
-      ASSOCIATION.rental_numbers = original_rental_numbers
+      RacingAssociation.current.rental_numbers = original_rental_numbers
     end
   end
   
@@ -190,8 +190,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     tonkin = people(:tonkin)
     
     begin
-      original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
-      ASSOCIATION.gender_specific_numbers = false
+      original_gender_specific_numbers = RacingAssociation.current.gender_specific_numbers?
+      RacingAssociation.current.gender_specific_numbers = false
 
       race_number = RaceNumber.new(:person => alice, :value => '9103')
       assert(race_number.valid?, "Default non-gender-specific number: #{race_number.errors.full_messages}")
@@ -202,8 +202,8 @@ class RaceNumberTest < ActiveSupport::TestCase
       race_number = RaceNumber.new(:person => alice, :value => '200')
       assert(race_number.valid?, 'Dupe number for different gender should be valid')
 
-      original_gender_specific_numbers = ASSOCIATION.gender_specific_numbers?
-      ASSOCIATION.gender_specific_numbers = true
+      original_gender_specific_numbers = RacingAssociation.current.gender_specific_numbers?
+      RacingAssociation.current.gender_specific_numbers = true
 
       race_number = RaceNumber.create!(:person => alice, :value => '200')
       assert(race_number.valid?, 'Dupe number for different gender should be valid')
@@ -211,7 +211,7 @@ class RaceNumberTest < ActiveSupport::TestCase
       race_number = RaceNumber.new(:person => people(:molly), :value => '200')
       assert(race_number.valid?, 'Dupe number for same gender should be valid')
     ensure
-      ASSOCIATION.gender_specific_numbers = original_gender_specific_numbers
+      RacingAssociation.current.gender_specific_numbers = original_gender_specific_numbers
     end
   end
 end

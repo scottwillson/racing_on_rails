@@ -30,22 +30,21 @@ end -%>
     <td valign="top" width="50%">
       <% unless @oregon_cup.new_record? %>
       <% for race in @oregon_cup.races %>
-      <% unless race.results.empty? %>
-      <table class="base">
+      <% table :caption => race.name, :class => "event_results" do %>
+        <% result_columns = %w{ place name team_name points } %>
         <tr>
-          <th><%= race.name %></th>
+          <%- result_columns.map.each do |column| -%>
+          <th class="<%= column %>"><%= result_header column %></th>
+          <%- end -%>
         </tr>
-        <tr>
-          <td><pre><%- for result in race.results.sort %>
-<%= "#{result.place.rjust(3)}  " -%>
-<%= link_to(truncate(result.name), "/results/show/#{result.id}") %><%= ' ' * (30 - truncate(result.name).length) -%>
-<%= truncate(result.team_name, :length => 40).ljust(40) -%>
-<%= format("%0.0f",result.points).rjust(6) -%>
-<%- end -%></pre></td>
+        <%- race.results.sort.each do |result| -%>
+        <tr class="<%= cycle "even", "odd" %>">
+          <%- result_columns.each do |column| -%>
+          <td<%= result_cell_class column %>><%= result_cell result, column %></td>
+          <%- end -%>
         </tr>
-      </table>
-
-      <% end %>
+        <%- end -%>
+      <%- end -%>
       <% end %>
       <% end %>  
     </td>

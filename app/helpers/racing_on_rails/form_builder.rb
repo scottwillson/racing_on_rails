@@ -24,7 +24,7 @@ module RacingOnRails
 
     # List from Countries::COUNTRIES
     def labelled_country_select(method, options = {})
-      labelled_select method, ASSOCIATION.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
+      labelled_select method, RacingAssociation.current.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
     end
     
     def labelled_password_field(method, text = method.to_s.titleize, password_field_options = {})

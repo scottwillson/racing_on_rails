@@ -10,38 +10,49 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_person_first_last_name
     result = Result.new
-    assert_equal("", result.first_name, "Person first name w/nil person")
-    assert_equal("", result.last_name, "Person last name w/nil person")
-    assert_equal("", result.team_name, "Person team name w/nil person")
+    assert_equal(nil, result.first_name, "Person first name w/nil person")
+    assert_equal(nil, result.last_name, "Person last name w/nil person")
+    assert_equal(nil, result.team_name, "Person team name w/nil person")
   end
 
   def test_name
     result = Result.new
-    assert_equal("", result.name, "Person name w/nil person")
+    assert_equal(nil, result.name, "Person name w/nil person")
 
-    result = Result.new(:person => people(:weaver))
+    result = races(:banana_belt_pro_1_2).results.create!(:person => people(:weaver))
     assert_equal("Ryan Weaver", result.name, "Person name")
 
     person = Person.new(:last_name => 'Willson')
-    result = Result.new(:person => person)
+    result = races(:banana_belt_pro_1_2).results.create!(:person => person)
+    assert_equal("Willson", result.person.name, "Person name")
     assert_equal("Willson", result.name, "Person name")
+    result.save!
+    assert_equal("Willson", result.reload.name, "Person name")
 
     person = Person.new(:first_name => 'Clara')
     result = Result.new(:person => person)
-    assert_equal("Clara", result.name, "Person name")
+    assert_equal("Clara", result.person.name, "Person name")
 
     result = Result.new
-    assert_equal("", result.name, "Person name")
+    assert_equal(nil, result.name, "Person name")
     result.name = 'Clara Hughes'
     assert_equal("Clara Hughes", result.name, "Person name")
     assert_equal("Clara", result.first_name, "Person first_name")
     assert_equal("Hughes", result.last_name, "Person last_name")
 
-    result = Result.new
+    result = Result.new(:race => races(:banana_belt_pro_1_2))
     result.name = 'Walrod, Marjon'
-    assert_equal("Marjon Walrod", result.name, "Person name")
+    assert_equal("Walrod, Marjon", result.name, "Person name")
     assert_equal("Marjon", result.first_name, "Person first_name")
     assert_equal("Walrod", result.last_name, "Person last_name")
+    assert_equal "Marjon", result[:first_name], ":first_name"
+    assert_equal "Walrod", result[:last_name], ":last_name"
+    assert_equal "Walrod, Marjon", result[:name], ":name"
+    
+    result.save!
+    assert_equal "Marjon", result[:first_name], ":first_name"
+    assert_equal "Walrod", result[:last_name], ":last_name"
+    assert_equal "Marjon Walrod", result[:name], ":name"
   end
 
   def test_save
@@ -115,8 +126,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_last_name
-    attributes = {:place => "22", :last_name => "Ulrich"}
-    result = Result.new(attributes)
+    result = Result.new(:place => "22", :last_name => "Ulrich")
     assert_equal("Ulrich", result.last_name, "person.last_name")
     assert_equal("Ulrich", result.person.last_name, "person.last_name")
 
@@ -127,21 +137,28 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_team_name
     attributes = {:place => "22", :team_name => "T-Mobile"}
-    result = Result.new(attributes)
+    result = races(:banana_belt_pro_1_2).results.build(attributes)
     assert_equal("T-Mobile", result.team_name, "person.team_name")
     assert_equal("T-Mobile", result.team.name, "person.team")
 
     result.team_name = "CSC"
     assert_equal("CSC", result.team_name, "person.team_name")
     assert_equal("CSC", result.team.name, "person.team")
+    assert_equal("CSC", result[:team_name], "person.team_name")
+    
+    result.save!
+    assert_equal("CSC", result[:team_name], "person.team_name")
   end
 
   def test_category_name
-    attributes = {:place => "22", :last_name => "Ulrich"}
-    result = Result.new(attributes)
-    assert_equal("", result.category_name, "category_name")
+    result = Result.new(:place => "22", :last_name => "Ulrich")
+    assert_equal(nil, result.category_name, "category_name")
 
     result.category = Category.find_by_name("Senior Men Pro 1/2")
+    assert_equal("Senior Men Pro 1/2", result.category.name, "category_name")
+    assert_equal(nil, result.category_name, "category_name")
+    result.race = races(:banana_belt_pro_1_2)
+    result.save!
     assert_equal("Senior Men Pro 1/2", result.category_name, "category_name")
 
     result = Result.new
@@ -152,7 +169,7 @@ class ResultTest < ActiveSupport::TestCase
     assert_equal("", result.category_name, "category_name")
 
     result.category_name = nil
-    assert_equal('', result.category_name, "category_name")
+    assert_equal(nil, result.category_name, "category_name")
   end
 
   def test_person_team
@@ -449,8 +466,8 @@ class ResultTest < ActiveSupport::TestCase
     # no person, no team
     result = race.results.create!(:place => 1, :number => '')
     result.save!
-    assert_equal('', result.name, 'person name')
-    assert_equal('', result.team_name, 'team name')
+    assert_equal(nil, result.name, 'person name')
+    assert_equal(nil, result.team_name, 'team name')
   end
 
   def test_save_number
@@ -471,19 +488,19 @@ class ResultTest < ActiveSupport::TestCase
     assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
-    assert_equal(ASSOCIATION.add_members_from_results?, result.person.member?, "Person should be member")
+    assert_equal(RacingAssociation.current.add_members_from_results?, result.person.member?, "Person should be member")
 
     # Rental
     begin
-      original_rental_numbers = ASSOCIATION.rental_numbers
-      ASSOCIATION.rental_numbers = 0..99
+      original_rental_numbers = RacingAssociation.current.rental_numbers
+      RacingAssociation.current.rental_numbers = 0..99
       result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
       assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
       road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
       assert_nil(road_number, 'Current road number')
       assert(!result.person.member?, "Person with rental number should not be member")
     ensure
-      ASSOCIATION.rental_numbers = original_rental_numbers
+      RacingAssociation.current.rental_numbers = original_rental_numbers
     end
   end
 
@@ -579,7 +596,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_differentiate_people_by_number_ignore_different_names
-    ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(false)
+    RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(false)
     
     person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
     person.reload
@@ -611,7 +628,7 @@ class ResultTest < ActiveSupport::TestCase
   end
 
   def test_differentiate_people_by_number_ignore_different_names_eager_match
-    ASSOCIATION.expects(:eager_match_on_license?).at_least_once.returns(true)
+    RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(true)
     
     person = Person.create!(:name => "Joe Racer")
     Person.connection.execute "update people set updated_at = '#{Time.local(2008).utc.to_s(:db)}' where id = #{person.id}"
@@ -801,7 +818,7 @@ class ResultTest < ActiveSupport::TestCase
   end
   
   def test_find_people_among_duplicates
-    ASSOCIATION.now = Date.new(Date.today.year, 6)
+    RacingAssociation.current.now = Date.new(Date.today.year, 6)
     Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
     
     jt_1 = Person.create!(:name => "John Thompson")
@@ -925,7 +942,7 @@ class ResultTest < ActiveSupport::TestCase
     person = result.person
     person.reload
     
-    if ASSOCIATION.add_members_from_results?
+    if RacingAssociation.current.add_members_from_results?
       assert(person.member?, "Finisher with racing association number should be member")
     else
       assert(!person.member?, "Finisher with racing association number should be member if RacingAssociation doesn't allow this")
@@ -975,8 +992,8 @@ class ResultTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:date => Date.today)
     result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
 
-    assert_equal("Tecate-Una Mas", result.team_name, "Team name on this year's result")
-    assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
+    assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name on this year's result")
+    assert_equal("Twin Peaks", old_result.reload.team_name, "Team name on old result")
   end
 
   def test_bar

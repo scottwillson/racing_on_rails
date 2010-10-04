@@ -23,8 +23,8 @@ class UpcomingEventsTest < ActiveSupport::TestCase
 
   def test_different_dates
     begin
-      show_only_association_sanctioned_races_on_calendar = ASSOCIATION.show_only_association_sanctioned_races_on_calendar
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = true
+      show_only_association_sanctioned_races_on_calendar = RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = true
       
       # Tuesday
       may_day_rr =      SingleDayEvent.create!(:date => Date.new(2007, 5, 22), :name => 'May Day Road Race', :discipline => 'Road', :flyer_approved => true)
@@ -143,13 +143,13 @@ class UpcomingEventsTest < ActiveSupport::TestCase
       assert_equal_events([may_day_rr, lucky_lab_tt], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
     
       # Include ALL events regardless of sanctioned_by
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = false
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = false
       upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 05, 20))
       assert_equal_events([saltzman_hc, may_day_rr, lucky_lab_tt, not_obra, woodland_rr, tst_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
       
       assert(upcoming_events['Road'].upcoming_events.all? { |e| e.flyer_approved? }, "All events should have approved flyers")
     ensure
-      ASSOCIATION.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
+      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar = show_only_association_sanctioned_races_on_calendar
     end
   end
   

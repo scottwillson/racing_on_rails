@@ -3,7 +3,7 @@
 class ResultsController < ApplicationController
   include Api::Results
 
-  caches_page :index, :event, :person_event, :team_event, :person, :team
+  caches_page :index, :event, :person, :person_event, :team
   
   # HTML: Formatted links to Events with Results
   # == Params
@@ -21,8 +21,9 @@ class ResultsController < ApplicationController
   # * person: [ :id, :first_name, :last_name, :license ]
   # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
   #
-  # See source code of API::Base
+  # See source code of Api::Results and Api::Base
   def index
+    expires_in 1.hour, :public => true
     respond_to do |format|
       format.html {
         @year = params['year'].to_i
@@ -55,12 +56,14 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    @event = Event.find(
-      params[:event_id],
-      :include => [ :races => [ :category, { :results => [ :person, { :race => :event }, { :team  => :names } ] } ] ]
-    )
+    ResultsController::benchmark "Load results", Logger::DEBUG, false do
+      @event = Event.find(
+        params[:event_id],
+        :include => [ :races => [ :category, :results ] ]
+      )
+    end
     
-    render :event
+    expires_in 1.hour, :public => true
   end
   
   # Single Person's Results for a single Event
@@ -69,14 +72,10 @@ class ResultsController < ApplicationController
     @person = Person.find(params[:person_id])
     @results = Result.find(
       :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, {:team => :names} ] }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => ['events.id = ? and people.id = ?', params[:event_id], params[:person_id]]
+      :include => { :scores => [ :source_result, :competition_result ] },
+      :conditions => ['results.event_id = ? and person_id = ?', params[:event_id], params[:person_id]]
     )
+    expires_in 1.hour, :public => true
   end
 
   # Single Team's Results for a single Event
@@ -85,35 +84,28 @@ class ResultsController < ApplicationController
     @event = Event.find(params[:event_id])
     @result = Result.find(
       :first,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => [{ :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }, [ :person, { :team => :names }] ] }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => ['events.id = ? and teams.id = ?', params[:event_id], params[:team_id]]
+      :include => { :scores => [ :source_result, :competition_result ] },
+      :conditions => ['results.event_id = ? and team_id = ? and race_id = ?', params[:event_id], params[:team_id], params[:race_id]]
     )
     raise ActiveRecord::RecordNotFound unless @result
+    expires_in 1.hour, :public => true
   end
   
   # Person's Results for an entire year
   def person
     @person = Person.find(params[:person_id])
     set_date_and_year
-    results = Result.find(
-      :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] },
-                  { :scores => [ 
-                    { :source_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } }, 
-                    { :competition_result => { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] } } ] }
-                  ],
-      :conditions => [ "people.id = ? and events.date between ? and ?", @person.id, @date.beginning_of_year, @date.end_of_year ]
+    @event_results = Result.find(
+     :all,
+     :conditions => [ "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year ]
     )
-    
-    @competition_results, @event_results = results.partition do |result|
-      result.event.is_a?(Competition)
-    end
+    @competition_results = Result.find(
+     :all,
+     :include => { :scores => [ :source_result, :competition_result ] },
+     :conditions => [ "person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year ]
+    )
+    expires_in 1.hour, :public => true
+    render :layout => !request.xhr?
   end
   
   # Teams's Results for an entire year
@@ -122,51 +114,9 @@ class ResultsController < ApplicationController
     set_date_and_year
     @results = Result.find(
       :all,
-      :include => [ :team, :person, :category, 
-                  { :race => [ { :event => [ { :parent => :parent }, :children ] }, :category ] }
-                  ],
-      :conditions => [ "teams.id = ? and events.date between ? and ?", @team.id, @date.beginning_of_year, @date.end_of_year ]
+      :conditions => [ "team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year ]
     )
-    @results.reject! do |result|
-      result.race.event.is_a?(Competition)
-    end
-  end
-  
-  def deprecated_team
-    team = Team.find(params[:team_id])
-    redirect_to(team_results_path(team), :status => :moved_permanently)
-  end
-  
-  def deprecated_event
-    event = Event.find(params[:event_id])
-    redirect_to(event_results_path(event), :status => :moved_permanently)
-  end
-  
-  def racer
-    person = Person.find(params[:person_id])
-    redirect_to person_results_path(person), :status => :moved_permanently
-  end
-  
-  def competition
-    event = Event.find(params[:event_id])
-    if params[:person_id]
-      person = Person.find(params[:person_id])
-      redirect_to(event_person_results_path(event, person), :status => :moved_permanently)
-    else
-      team = Team.find(params[:team_id])
-      redirect_to(event_team_results_path(event, team), :status => :moved_permanently)
-    end
-  end
-
-  def show
-    result = Result.find(params[:id])
-    if result.person
-      redirect_to event_person_results_path(result.event, result.person), :status => :moved_permanently
-    elsif result.team
-      redirect_to event_team_results_path(result.event, result.team), :status => :moved_permanently
-    else
-      redirect_to event_results_path(result.event), :status => :moved_permanently
-    end
+    expires_in 1.hour, :public => true
   end
   
   

@@ -1,10 +1,11 @@
 # BAR = Best All-around Rider
 # FIXME Add test for overall and make logic cleaner
 class BarController < ApplicationController
-  caches_page :show
+  caches_page :index, :show
   
   def index
     @overall_bar = OverallBar.find_for_year
+    expires_in 1.hour, :public => true
   end
 
   # Default to Overall BAR with links to disciplines
@@ -18,9 +19,9 @@ class BarController < ApplicationController
     end
     
     if year < 2007 && discipline == Discipline[:age_graded]
-      return redirect_to("http://#{STATIC_HOST}/bar/#{year}/overall_by_age.html")
+      return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{year}/overall_by_age.html")
     elsif year < 2006 && year >= 2001
-      return redirect_to("http://#{STATIC_HOST}/bar/#{year}")
+      return redirect_to("http://#{RacingAssociation.current.static_host}/bar/#{year}")
     end
     
     @overall_bar = OverallBar.find_for_year(year)
@@ -47,6 +48,7 @@ class BarController < ApplicationController
                            :include => [ :person, :team ],
                            :conditions => [ 'race_id = ?', @race.id ]
     ) if @race
+    expires_in 1.hour, :public => true
   end
   
   # BAR category mappings
@@ -55,5 +57,6 @@ class BarController < ApplicationController
     date = Date.new(@year.to_i, 1, 1)
     @bar = Bar.find(:first, :conditions => ['date = ?', date])
     @excluded_categories = Category.find(:all, :conditions => ['parent_id is null'])
+    expires_in 1.hour, :public => true
   end
 end

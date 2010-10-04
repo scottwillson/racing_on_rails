@@ -249,23 +249,22 @@ class Grid
     text = ''
     for index in 0..(column_count - 1)
       cell = row[index] || ''
-      padding = column_size(index) - cell.size
-      if padding > 0
+      if cell.size <= column_size(index)
         if @columns[index].justification == Column::LEFT
-          cell = cell + (" " * padding)
+          cell = cell.ljust(column_size(index))
         else
-          cell = (" " * padding) + cell
+          cell = cell.rjust(column_size(index))
         end
-      end
-      if padding < 0
+      else
         cell = truncate(cell, :length => column_size(index))
       end
-      text = text + cell
-      unless index + 1 == row.size
-        text = text + "   "
+      if index + 1 == row.size
+        text = "#{text}#{cell}"
+      else
+        text = "#{text}#{cell}   "
       end
     end
-    text + "\n"
+    "#{text}\n"
   end
 
   def row_to_s(row, row_index)
@@ -273,24 +272,25 @@ class Grid
     for index in 0..(column_count - 1)
       cell = row[index] || ''
       if @columns[index].justification == Column::LEFT
-        cell = cell + (" " * @padding[row_index][index])
+        cell = cell.ljust(column_size(index))
       else
-        cell = (" "  * @padding[row_index][index]) + cell
+        cell = cell.rjust(column_size(index))
       end
-      text = text + cell
-      unless index + 1 == row.size
-        text = text + "   "
+      if index + 1 == row.size
+        text = "#{text}#{cell}"
+      else
+        text = "#{text}#{cell}   "
       end
     end
-    text + "\n"
+    "#{text}\n"
   end
 
   def truncate_rows
     @truncated = true
     for row in rows
       for index in 0..(column_count - 1)
-        cell = row[index] || ''
-        if cell.size > column_size(index)
+        cell = row[index]
+        if cell && cell.size > column_size(index)
           row[index] = truncate(cell, :length => column_size(index))
         end
       end

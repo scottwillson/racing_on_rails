@@ -7,8 +7,8 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
-    ASSOCIATION.now = Time.zone.now
-    @expected.date = ASSOCIATION.now
+    RacingAssociation.current.now = Time.zone.now
+    @expected.date = RacingAssociation.current.now
     @expected.body = read_fixture("post")
 
     post = Post.new
@@ -17,7 +17,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = ASSOCIATION.now
+    post.date = RacingAssociation.current.now
     post_email = MailingListMailer.create_post(post)
     assert_equal(@expected.encoded, post_email.encoded)
   end
@@ -115,7 +115,7 @@ Check it out: http://www.google.com/\n\n\357\277\274\n}
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{Hey, this is from Bloodhound in the basement.
 
-http://STATIC_HOST
+http://RacingAssociation.current.static_host
 
 I am the lonely, forgotten computer.
 
@@ -537,7 +537,7 @@ Content-Transfer-Encoding: quoted-printable
 
 Hey, this is from Bloodhound in the basement.
 
-http://STATIC_HOST
+http://RacingAssociation.current.static_host
 
 I am the lonely, forgotten computer.
 
@@ -569,7 +569,7 @@ FONT-FAMILY: Arial, Helvetica
 the <FONT face=3D"Comic Sans MS">basement</FONT>.</FONT></DIV>
 <DIV><FONT face=3DArial color=3D#000000 size=3D2></FONT>&nbsp;</DIV>
 <DIV><FONT color=3D#000000><A=20
-href=3D"http://STATIC_HOST">http://STATIC_HOST</A></FONT></DIV>
+href=3D"http://RacingAssociation.current.static_host">http://RacingAssociation.current.static_host</A></FONT></DIV>
 <DIV><FONT color=3D#000000></FONT>&nbsp;</DIV>
 <DIV><FONT face=3DArial size=3D2>I am the lonely, forgotten =
 computer.</FONT></DIV>

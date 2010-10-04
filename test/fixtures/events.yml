@@ -2,7 +2,7 @@
 banana_belt_series:
   name: Banana Belt Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   date: 2004-01-04
   type: Series
@@ -13,10 +13,10 @@ banana_belt_1:
   parent: banana_belt_series
   name: Banana Belt I
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   updated_at: 2004-01-05
-  number_issuer: stag_race
+  number_issuer: stage_race
   date: 2004-01-04
   type: SingleDayEvent
   number_issuer: association
@@ -26,7 +26,7 @@ banana_belt_2:
   parent: banana_belt_series
   name: Banana Belt II
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   date: 2004-01-11
   type: SingleDayEvent
@@ -37,7 +37,7 @@ banana_belt_3:
   parent: banana_belt_series
   name: Banana Belt III
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   date: 2004-01-18
   type: SingleDayEvent
@@ -64,7 +64,7 @@ kings_valley:
   name: Kings Valley Road Race
   date: 2003-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   type: SingleDayEvent
   number_issuer: association
   bar_points: 1
@@ -73,10 +73,10 @@ tabor_cr:
   name: Mt. Tabor Circuit Race
   date: 2005-07-01
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter: nate_hobson
   promoter_id: 4
-  flyer: http://<%= STATIC_HOST %>/flyers/2006/tabor_cr.html
+  flyer: http://localhost/flyers/2006/tabor_cr.html
   flyer_approved: false
   type: SingleDayEvent
   number_issuer: association
@@ -88,9 +88,9 @@ pir_series:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
+  flyer: http://localhost/flyers/2005/pir.html
   flyer_approved: true
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 1
   type: WeeklySeries
   number_issuer: association
@@ -103,8 +103,8 @@ pir:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  flyer: http://localhost/flyers/2005/pir.html
+  sanctioned_by: CBRA
   promoter_id: 1
   type: SingleDayEvent
   number_issuer: association
@@ -117,10 +117,10 @@ pir_2:
   city: Portland
   state: OR
   discipline: Road
-  flyer: http://<%= STATIC_HOST %>/flyers/2005/pir.html
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  flyer: http://localhost/flyers/2005/pir.html
+  sanctioned_by: CBRA
   promoter_id: 1
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: CBRA
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
@@ -129,7 +129,7 @@ kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -141,7 +141,7 @@ mt_hood:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   number_issuer: association
   type: MultiDayEvent
@@ -154,7 +154,7 @@ mt_hood_1:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   city: Hood River
   number_issuer: association
@@ -169,7 +169,7 @@ mt_hood_2:
   state: OR
   discipline: Road
   flyer: http://www.hoodriversr.net/
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   number_issuer: association
   type: SingleDayEvent
@@ -179,7 +179,7 @@ kings_valley_2004:
   name: Kings Valley Road Race
   date: 2004-12-31
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -187,7 +187,7 @@ kings_valley_2004:
 series_parent:
   name: Lost Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
+  sanctioned_by: CBRA
   promoter_id: 3
   date: <%= Date.today %>
   type: Series
@@ -197,8 +197,7 @@ series_parent:
 lost_series_child:
   name: Lost Series
   discipline: Road
-  sanctioned_by: <%= ASSOCIATION.default_sanctioned_by %>
-  sanctioned_by: <%= ASSOCIATION.short_name %>
+  sanctioned_by: CBRA
   promoter_id: 3
   date: <%= Date.today %>
   type: SingleDayEvent

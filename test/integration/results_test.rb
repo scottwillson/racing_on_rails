@@ -15,7 +15,8 @@ class ResultsTest < ActionController::IntegrationTest
     assert_response :success
     
     get event_path(event)
-      
+    assert_response :success
+    
     assert @response.body["Run 1"]
     assert @response.body["Run 2"]
   end

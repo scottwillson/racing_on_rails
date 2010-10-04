@@ -14,14 +14,15 @@ class ResultsTest < WebDriverTestCase
     click :link_text => "Copperopolis Road Race"
     wait_for_current_url(/\/admin\/events\/\d+\/edit/)
 
-    click :link_text => "Senior Men Pro 1/2"
+    race = Event.find_by_name('Copperopolis Road Race').races.first
+    click "edit_race_#{race.id}"
     wait_for_current_url(/\/admin\/races\/\d+\/edit/)
 
-    result_id = Event.find_by_name('Copperopolis Road Race').races.first.results.first.id
+    result_id = race.results.first.id
     click "result_#{result_id}_place"
     wait_for_element :class_name => "editor_field"
     type "DNF", :class_name => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type :return, { :class_name => "editor_field" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
@@ -31,7 +32,7 @@ class ResultsTest < WebDriverTestCase
     click "result_#{result_id}_name"
     wait_for_element :class_name => "editor_field"
     type "Megan Weaver", :class_name => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type :return, { :class_name => "editor_field" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
@@ -46,14 +47,14 @@ class ResultsTest < WebDriverTestCase
     click "result_#{result_id}_team_name"
     wait_for_element :class_name => "editor_field"
     type "River City", :class_name => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type :return, { :class_name => "editor_field" }, false
     wait_for_no_element :class_name => "editor_field"
 
     refresh
     wait_for_element "results_table"
     assert_page_source "River City"
     
-    if ASSOCIATION.competitions.include? :bar
+    if RacingAssociation.current.competitions.include? :bar
       assert_checked "result_#{result_id}_bar"
       click "result_#{result_id}_bar"
       refresh

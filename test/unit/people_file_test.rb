@@ -15,6 +15,7 @@ class PersonFileTest < ActiveSupport::TestCase
     tonkin.member=(false)
     tonkin.ccx_category = 'A'
     tonkin.notes = 'Spent Christmans in Belgium'
+    tonkin.login = "sellwood"
     tonkin.save!
 
     file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
@@ -50,6 +51,7 @@ Downhill/Cross Country: Downhill}
     assert_equal(notes, tonkin.notes, 'notes')
     assert(tonkin.print_card?, 'Tonkin.print_card? after import')
     assert_nil(tonkin.card_printed_at, 'Tonkin.card_printed_at after import')
+    assert_equal "sellwood", tonkin.login, "Should not reset login after import"
 
     sautter = Person.find_all_by_name('C Sautter').first
     assert_equal('C Sautter', sautter.name, 'Sautter name')
@@ -176,7 +178,7 @@ Downhill/Cross Country: Downhill}
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
     road_numbers = RaceNumber.find(:all, :conditions => [ 
-        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, ASSOCIATION.year
+        "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, RacingAssociation.current.year
       ])
     assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
     assert road_numbers.any? { |number| number.value == "824" }, "Should preseve Brian Abers road number"

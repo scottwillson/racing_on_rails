@@ -295,7 +295,7 @@ module Results
     end
     
     def usac_results_format?
-      ASSOCIATION.usac_results_format?
+      RacingAssociation.current.usac_results_format?
     end
     
     def debug?

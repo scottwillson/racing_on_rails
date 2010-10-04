@@ -14,6 +14,13 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select "a#export_link", :count => 0
   end
 
+  def test_list
+    get(:list, :q => 'jone')
+    assert_response(:success)
+    assert_not_nil(@response.body.index("Jones"), 'Search for jone should find Jones #{@response.to_s}')
+    assert_not_nil(@response.body.index("2"), 'Search for jone should return ID of 2')
+  end
+
   def test_index_as_promoter
     PersonSession.create(people(:promoter))
     get(:index)
@@ -53,7 +60,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_find_limit
-    for i in 0..SEARCH_RESULTS_LIMIT
+    for i in 0..RacingAssociation.current.search_results_limit
       Person.create(:name => "Test Person #{i}")
     end
     get(:index, :name => 'Test')
@@ -106,7 +113,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_must_be_logged_in
     use_ssl
     get :edit, :id => people(:member).to_param
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
 
   def test_cant_see_other_people_info
@@ -209,7 +216,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_account_not_logged_in
     use_ssl
     get :account
-    assert_redirected_to new_person_session_path
+    assert_redirected_to(new_person_session_url(secure_redirect_options))
   end
   
   def test_account_with_person_not_logged_in
@@ -393,7 +400,7 @@ class PeopleControllerTest < ActionController::TestCase
   
   def test_new_login_http
     get :new_login
-    if ASSOCIATION.ssl?
+    if RacingAssociation.current.ssl?
       assert_redirected_to new_login_people_url(:protocol => "https")
     else
       assert_response :success
@@ -594,7 +601,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_index_as_json
-    get :index, { :format => "json", :name => "ron" }
+    get :index, :format => "json", :name => "ron"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
@@ -610,5 +617,17 @@ class PeopleControllerTest < ActionController::TestCase
     get :index, :name => "m", :license => 576, :format => "xml"
     assert_response :success
     assert_select "first-name", "Mark"
+  end
+
+  def test_show_as_xml
+    get :show, :id => people(:molly).id, :format => "xml"
+    assert_response :success
+    assert_select "first-name", "Molly"
+    assert_select "last-name", "Cameron"
+  end
+
+  def test_show_as_json
+    get :show, :id => people(:molly).id, :format => "json"
+    assert_response :success
   end
 end

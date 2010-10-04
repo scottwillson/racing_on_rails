@@ -17,12 +17,12 @@
       <hr class="space" />
       
       <div class="help">
-        Current or past <%= ASSOCIATION.short_name %> member? Enter your license number and 
+        Current or past <%= RacingAssociation.current.short_name %> member? Enter your license number and 
         name&mdash;we can link to your account. Your license number is on your 
-        <%= ASSOCIATION.short_name %> membership card, under the bar code.
+        <%= RacingAssociation.current.short_name %> membership card, under the bar code.
       </div>
 
-      <div><%= f.labelled_text_field :license, "#{ASSOCIATION.short_name} License #", :autocomplete => "off" %></div>
+      <div><%= f.labelled_text_field :license, "#{RacingAssociation.current.short_name} License #", :autocomplete => "off" %></div>
     </div>
 
     <div class="prepend-1 span-3 append-2 page_buttons right last">
@@ -31,7 +31,7 @@
   
     <div class="prepend-1 span-4 append-1 top_margin">
       <hr class="top_margin" />
-      <%= ASSOCIATION.short_name %> respects your privacy and security.
+      <%= RacingAssociation.current.short_name %> respects your privacy and security.
       Your personal information is encrypted and backed-up.
       We never store your credit card number.
       If it's OK with you, we will mail and email you about bike racing.
