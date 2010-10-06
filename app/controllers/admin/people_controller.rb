@@ -410,9 +410,6 @@ class Admin::PeopleController < Admin::AdminController
     else
       Person.update_all("print_card=0, membership_card=1", ['id in (?)', @people.collect{|person| person.id}])
     end
-    
-    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render :template => "admin/people/cards.pdf.pdf_writer"
   end
   
   # Single membership card
@@ -423,20 +420,12 @@ class Admin::PeopleController < Admin::AdminController
     @person.membership_card = true
     @person.card_printed_at = RacingAssociation.current.now
     @person.save!
-    
-    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render(:template => "admin/people/card.pdf.pdf_writer")
-  end
-  
-  # :stopdoc:
-  def rescue_action_in_public(exception)
-    headers.delete("Content-Disposition")
-    super
-  end
 
-  def rescue_action_locally(exception)
-    headers.delete("Content-Disposition")
-    super
+    respond_to do |format|
+      format.pdf do
+        send_data Card.new(@person).to_pdf, :filename => "card.pdf", :type => "application/pdf"
+      end
+    end
   end
   
   private
