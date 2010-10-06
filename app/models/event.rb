@@ -91,6 +91,7 @@ class Event < ActiveRecord::Base
   attr_reader :new_team_name
 
   include Comparable
+  include Export::Events
 
   # Return list of every year that has at least one event
   def Event.find_all_years

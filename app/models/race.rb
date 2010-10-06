@@ -9,6 +9,7 @@
 class Race < ActiveRecord::Base
 
   include Comparable
+  include Export::Races
 
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
   # Prototype Result used for checking valid column names
