@@ -19,7 +19,7 @@ module ResultsHelper
     return text unless result.team_id
 
     if result.team_competition_result?
-      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>"
     else
       "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
     end
