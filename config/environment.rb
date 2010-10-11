@@ -24,7 +24,7 @@ Rails::Initializer.run do |config|
   }
   
   config.gem "authlogic", :version => "2.1.3"
-  config.gem "tabular", :version => "0.0.4"
+  config.gem "tabular"
   config.gem "mysql2"
   config.gem "vestal_versions"
   config.gem "sentient_user"

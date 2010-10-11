@@ -27,7 +27,7 @@ class WeeklySeriesTest < ActiveSupport::TestCase
     
     assert_equal(30, pir.children.size, 'PIR events')
     date = WeeklySeries.connection.select_value("select date from events where id = #{pir.id}")
-    assert_equal('2008-04-01', date, 'PIR data in database')
+    assert_equal_dates('2008-04-01', date, 'PIR data in database')
     
     assert_equal(Date.new(2008, 4, 1), pir.start_date, 'PIR start date')
     assert_equal(Date.new(2008, 4, 1), pir.date, 'PIR date')

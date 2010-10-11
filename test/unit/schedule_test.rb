@@ -126,7 +126,7 @@ class ScheduleTest < ActiveSupport::TestCase
     assert_equal_dates("2006-08-25", fast_twitch_series.end_date, "Fast Twitch end date")
     assert_equal(fast_twitch_series.start_date, fast_twitch_series.date, "Fast Twitch start date and date")
     sql_results = fast_twitch_series.connection.select_one("select date from events where id=#{fast_twitch_series.id}")
-    assert_equal("2006-05-12", sql_results["date"], "Fast Twitch start date and date column from DB")
+    assert_equal_dates("2006-05-12", sql_results["date"], "Fast Twitch start date and date column from DB")
     assert_equal(nil, sql_results["flyer"], "Fast Twitch parent series flyer")
 
     assert_not_nil(cream_puff, "Should have imported Cream Puff")

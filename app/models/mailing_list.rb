@@ -13,7 +13,7 @@ class MailingList < ActiveRecord::Base
       first_post = connection.select_value("select min(date) from posts")
       if first_post
         last_post = connection.select_value("select max(date) from posts")
-        @dates = Date.parse(first_post)..Date.parse(last_post)
+        @dates = first_post..last_post
       end
     end
     return @dates
