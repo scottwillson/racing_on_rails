@@ -815,7 +815,7 @@ class PersonTest < ActiveSupport::TestCase
     people = Person.find_all_for_export
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
     assert_equal("Kona", people[2]["team_name"], "Row 2 team")
-    assert_equal("30", people[4]["racing_age"], "Row 4 racing_age")
+    assert_equal(30, people[4]["racing_age"], "Row 4 racing_age")
     assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
     assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
