@@ -423,7 +423,7 @@ class Admin::PeopleController < Admin::AdminController
 
     respond_to do |format|
       format.pdf do
-        send_data Card.new(@person).to_pdf, :filename => "card.pdf", :type => "application/pdf"
+        send_data Card.to_pdf(@person).render_file("card.pdf"), :filename => "card.pdf", :type => "application/pdf"
       end
     end
   end

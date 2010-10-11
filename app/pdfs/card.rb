@@ -1,56 +1,55 @@
-class Card < Prawn::Document
-  attr_reader :person
-  
-  def initialize(person)
-    @person = person
-  end
-  
-  def to_pdf
-    top_margin = 36
-    bottom_margin = 36
-    left_margin = 14
+class Card  
+  def self.to_pdf(person)
+    Prawn::Document.generate("hello_foo.pdf") do
+      top_margin = 36
+      bottom_margin = 36
+      left_margin = 14
 
-    index = 0
+      index = 0
 
-    pointer = 742.8 - ((index % 3) * 268.4)
-    text "#{RacingAssociation.current.effective_year} Member"
-    # text "#{RacingAssociation.current.effective_year} Member", :align => :center, :size => 12, :absolute_left => 46, :absolute_right => 311.4
+      pointer = 742.8 - ((index % 3) * 268.4)
+      text "#{RacingAssociation.current.effective_year} Member"
+    end
+    # card_top = (pdf.page_height - pdf.top_margin) - (((index % 15) / 3) * 144)
+    # pdf.y = card_top
+    # card_left_side = pdf.left_margin + ((index % 3) * 199)
     # 
-    # rectangle [31, 584.8 - ((index % 3) * 268.4)], 288, 162
-    # stroke
+    # pdf.select_font 'Helvetica-Bold'
+    # pdf.fill_color Color::RGB.new(0, 0, 0)
+    # pdf.text person.name || '', :font_size => 13, :absolute_left => card_left_side
+    # pdf.font_size = 10
+    # pdf.text 'Categories:', :absolute_left => card_left_side
     # 
-    # pointer = 689.8 - ((index % 3) * 268.4)
-    # font 'Helvetica-Bold'
-    # text "#{RacingAssociation.current.effective_year} Membership Card", :align => :center, :size => 12, :absolute_left => 336.4, :absolute_right => 579.5
-    # text(person.name || '', :align => :left, :size => 10, :absolute_left => 348, :absolute_right => 579.5)
+    # previous_y = pdf.y
+    # pdf.text("Road: #{person.road_category}", :absolute_left => card_left_side)
+    # pdf.pointer = previous_y
+    # pdf.text("MTB: #{abbreviate_category(person.mtb_category)}", :absolute_left => card_left_side + 75)
     # 
-    # previous_y = y
-    # text("Road Cat: #{person.road_category}", :align => :left, :size => 9, :absolute_left => 348, :absolute_right => 579.5)
-    # pointer = previous_y
-    # text("Road # #{person.road_number}", :align => :left, :size => 9, :absolute_left => 458, :absolute_right => 579.5)
+    # previous_y = pdf.y
+    # pdf.text("Track: #{person.track_category}", :absolute_left => card_left_side)
+    # pdf.pointer = previous_y
+    # pdf.text("DH: #{abbreviate_category(person.dh_category)}", :absolute_left => card_left_side + 75)
     # 
-    # previous_y = y
-    # text("CCX Cat: #{person.ccx_category}", :align => :left, :size => 9, :absolute_left => 348, :absolute_right => 579.5)
-    # pointer = previous_y
-    # text("Track Cat: #{person.track_category}", :align => :left, :size => 9, :absolute_left => 458, :absolute_right => 579.5)
+    # previous_y = pdf.y
+    # pdf.text("CCX: #{abbreviate_category(person.ccx_category)}", :absolute_left => card_left_side)
+    # pdf.pointer = previous_y
+    # pdf.text("Age: #{person.racing_age}", :absolute_left => card_left_side + 75)
     # 
-    # previous_y = y
-    # text("Mtn Cat: #{person.mtb_category}", :align => :left, :size => 9, :absolute_left => 348, :absolute_right => 579.5)
-    # pointer = previous_y
-    # text("Mtn # #{person.xc_number}", :align => :left, :size => 9, :absolute_left => 458, :absolute_right => 579.5)
+    # previous_y = pdf.y
+    # pdf.text("Road # #{person.road_number}", :absolute_left => card_left_side)
+    # pdf.text("OBRA License # #{person.license}", :absolute_left => card_left_side)
+    # pdf.pointer = previous_y
+    # pdf.text("CX Age: #{person.cyclocross_racing_age}", :absolute_left => card_left_side + 75)
     # 
-    # previous_y = y
-    # text("Downhill Cat: #{person.dh_category}", :align => :left, :size => 9, :absolute_left => 348, :absolute_right => 579.5)
-    # pointer = previous_y
-    # text("SS # #{person.singlespeed_number}", :align => :left, :size => 9, :absolute_left => 458, :absolute_right => 579.5)
+    # pdf.fill_color Color::RGB::Pink
+    # pdf.rectangle(card_left_side + 164, card_top - 90, 20, 84).fill
     # 
-    # text("Racing Age: #{person.racing_age}", :align => :left, :size => 9, :absolute_left => 348, :absolute_right => 579.5)
-    # 
-    # font 'Helvetica'
-    # text "Membership expires 12/31/#{RacingAssociation.current.effective_year}", :align => :center, :size => 8, :absolute_left => 336.4, :absolute_right => 579.5
-    # top_margin = 36
-    # bottom_margin = 36
-    # left_margin = 14
-    render
+    # pdf.fill_color Color::RGB::Black
+    # pdf.font_size = 14
+    # pdf.y = card_top - 12
+    # pdf.text('2', :justification => :center, :absolute_left => card_left_side + 164, :absolute_right => card_left_side + 184)
+    # pdf.text('0', :justification => :center, :absolute_left => card_left_side + 164, :absolute_right => card_left_side + 184)
+    # pdf.text('1', :justification => :center, :absolute_left => card_left_side + 164, :absolute_right => card_left_side + 184)
+    # pdf.text('0', :justification => :center, :absolute_left => card_left_side + 164, :absolute_right => card_left_side + 184)
   end
 end
