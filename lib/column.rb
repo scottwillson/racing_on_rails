@@ -80,6 +80,10 @@ class Column
     !@field.nil?
   end
 
+  def present?
+    name.present?
+  end
+  
   def to_s
     name
   end

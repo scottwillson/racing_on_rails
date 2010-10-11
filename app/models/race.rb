@@ -99,13 +99,13 @@ class Race < ActiveRecord::Base
   end
 
   def result_columns=(value)
-    if value.include?("name")
+    if value && value.include?("name")
       name_index = value.index("name")
       value[name_index] = "first_name"
       value.insert(name_index + 1, "last_name")
     end
 
-    if value.include?("place") && value.first != "place"
+    if value && value.include?("place") && value.first != "place"
       value.delete("place")
       value.insert(0, "place")
     end

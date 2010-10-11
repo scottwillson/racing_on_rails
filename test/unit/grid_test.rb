@@ -38,11 +38,11 @@ class GridTest < ActiveSupport::TestCase
   
   def test_new_many_lines
     text = <<END
-      Place \tNumber\tLast Name\tFirst Name\tTeam\tCategory Raced
-      1\t189\tWillson\tScott\tGentle Lover\tSenior Men 1/2/3\t11\t\t11
-      2\t190\tPhinney\tHarry\tCCCP\tSenior Men 1/2/3\t9\t\t
-      3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
-      dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
+Place \tNumber\tLast Name\tFirst Name\tTeam\tCategory Raced
+1\t189\tWillson\tScott\tGentle Lover\tSenior Men 1/2/3\t11\t\t11
+2\t190\tPhinney\tHarry\tCCCP\tSenior Men 1/2/3\t9\t\t
+3\t10a\tHolland\tSteve\tHuntair\tSenior Men 1/2/3\t\t3\t
+dnf\t100\tBourcier\tPaul\tHutch's\tSenior Men 1/2/3\t\t\t1
 END
     grid = Grid.new(text)
     assert_equal(9, grid.column_count, "column count")

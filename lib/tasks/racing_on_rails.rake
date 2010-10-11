@@ -53,7 +53,7 @@ end
 namespace :db do
   namespace :structure do
     desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
-    task :dump do
+    task :dump => :environment do
       sql = File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
 

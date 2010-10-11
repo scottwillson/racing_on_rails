@@ -1083,7 +1083,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     assert_not_nil(assigns["person"], "@person")
-    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
+    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join)
 
     assert_redirected_to(edit_admin_person_path(candi_murray))
     
