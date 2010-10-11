@@ -48,7 +48,7 @@ module Schedule
       Event.destroy_all(["date >= ?", date])
     end
 
-    # Read GridFile +file+, split city and state, read and create promoter
+    # Read +file+, split city and state, read and create promoter
     def Schedule.parse_events(file)
       events = []
       file.rows.each do |row|

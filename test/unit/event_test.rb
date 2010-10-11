@@ -620,9 +620,9 @@ class EventTest < ActiveSupport::TestCase
     child_event = series.children.create!
     overall = series.create_overall
     
-    assert(series.valid?, series.errors.full_messages)
-    assert(child_event.valid?, series.errors.full_messages)
-    assert(overall.valid?, series.errors.full_messages)
+    assert(series.valid?, series.errors.full_messages.join(", "))
+    assert(child_event.valid?, series.errors.full_messages.join(", "))
+    assert(overall.valid?, series.errors.full_messages.join(", "))
     
     assert_equal_events([child_event], series.children(true), "series.children should not include competitions")
     assert_equal_events([overall], series.child_competitions(true), "series.child_competitions should only include competitions")

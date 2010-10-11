@@ -1,4 +1,4 @@
-RAILS_GEM_VERSION = '=2.3.5' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '=2.3.9'  unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
@@ -24,10 +24,8 @@ Rails::Initializer.run do |config|
   }
   
   config.gem "authlogic", :version => "2.1.3"
-  config.gem "fastercsv"
   config.gem "tabular", :version => "0.0.4"
-  config.gem "color"
-  config.gem "pdf-writer", :lib => "pdf/writer"
+  config.gem "mysql2"
   config.gem "vestal_versions"
   config.gem "sentient_user"
 
@@ -76,11 +74,8 @@ class ActionView::Base
   end
 end
 
-require "action_view/template_handlers/pdf_writer"
-ActionView::Template.register_template_handler :pdf_writer, ActionView::TemplateHandlers::PDFWriter
-
-require "array"
-require "nil_class"
-require "string"
+require 'array'
+require 'nil_class'
+require 'string'
 require "local_static"
 require "action_view/inline_template_extension"

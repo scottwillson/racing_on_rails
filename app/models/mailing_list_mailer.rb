@@ -85,13 +85,13 @@ class MailingListMailer < ActionMailer::Base
     end
     
     post.from_name = email.friendly_from
-    post.from_email_address = email.from
+    post.from_email_address = email.from.first
     post.date = email.date
     begin
       post.save!
     rescue => save_error
       Rails.logger.error("Could not save post: #{save_error}")
-      if post and !post.errors.empty?
+      if post && post.errors.any?
         Rails.logger.error(post.errors.full_messages)
       end
       raise

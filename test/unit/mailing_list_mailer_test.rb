@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -97,7 +99,10 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
     expected_body = %Q{Rich text message with some formatting and a small attachment.
 
-Check it out: http://www.google.com/\n\n\357\277\274\n}
+Check it out: http://www.google.com/
+
+￼
+}
     assert_equal(expected_body, post_from_db.body, "body")
   end
   

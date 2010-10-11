@@ -3,26 +3,23 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class ScheduleTest < ActiveSupport::TestCase
   def test_create
-    piece_of_cake = SingleDayEvent.new({
+    piece_of_cake = SingleDayEvent.new(
       :name => "Piece of Cake Road Event",
       :city => "Shedds",
-      :date => Date.new(2007, 3, 17,
-      :id => 4456)
-    })
+      :date => Date.new(2007, 3, 17)
+    )
     
-    kings_valley = SingleDayEvent.new({
+    kings_valley = SingleDayEvent.new(
       :name => "Kings Valley Road Event",
       :city => "Kings Valley",
-      :date => Date.new(2007, 3, 6,
-      :id => 4456)
-    })
+      :date => Date.new(2007, 3, 6)
+    )
     
-    state_crit = SingleDayEvent.new({
+    state_crit = SingleDayEvent.new(
       :name => "State Championship Criterium",
       :city => "gresham",
-      :date => Date.new(2007, 3, 17,
-      :id => 4456)
-    })
+      :date => Date.new(2007, 3, 17)
+    )
     
     events = [piece_of_cake, kings_valley, state_crit]
     

@@ -353,7 +353,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"ABA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
     
     assert_not_nil assigns(:event), "@event"
-    assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages
+    assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages.join
     assert_redirected_to edit_admin_event_path(assigns(:event))
   end
   
