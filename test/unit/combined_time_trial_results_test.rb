@@ -150,16 +150,23 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   
   def test_destroy
     series = Series.create!(:discipline => "Time Trial")
+    assert_equal true, series.notification?, "event notification?"
+    assert_equal true, series.notification_enabled?, "event notification_enabled?"
     series.races.create!(:category => categories(:senior_men)).results.create!(:time => 1000, :place => "1")
     
     event = series.children.create!
     event.races.create!(:category => categories(:senior_men)).results.create!(:time => 500, :place => "1")
+    assert_equal true, event.notification?, "event notification?"
     
     assert_not_nil(series.combined_results(true), "Series parent should have combined results")
     assert_not_nil(event.combined_results(true), "Series child event parent should have combined results")
     
     series.reload
     event.reload
+    assert_equal true, series.notification?, "event notification?"
+    assert_equal true, series.notification?, "event notification_enabled?"
+    assert_equal true, event.notification?, "event notification?"
+    assert_equal true, event.notification_enabled?, "event notification_enabled?"
     event.destroy_races
     event.combined_results.destroy_races
     assert_nil(event.combined_results(true), "Series child event parent should not have combined results")

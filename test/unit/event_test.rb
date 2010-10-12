@@ -22,7 +22,10 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(RacingAssociation.current.default_sanctioned_by, event.sanctioned_by, "New event sanctioned_by default")
     number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     assert_equal(number_issuer, event.number_issuer, "New event number_issuer default")
-    assert_equal(true, event.notification?, "event notification?")
+    assert_equal true, event.notification?, "event notification?"
+    event.save!
+    event.reload
+    assert_equal true, event.notification?, "event notification?"
   end
   
   def test_find_all_with_results

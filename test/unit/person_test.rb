@@ -613,10 +613,13 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates('1978-01-01', person.date_of_birth, 'date_of_birth from 78')
   end
   
-  def test_birthdate
+  def test_date_of_birth
     person = Person.new(:date_of_birth => '1973-10-04')
-    assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 0073-10-04')
-    assert_equal_dates('1973-10-04', person.birthdate, 'birthdate from 0073-10-04')
+    assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 1973-10-04')
+    assert_equal_dates('1973-10-04', person.birthdate, 'birthdate from 173-10-04')
+
+    person = Person.new(:date_of_birth => "05/07/73")
+    assert_equal_dates "1973-05-07", person.date_of_birth, "date_of_birth from 05/07/73"
   end
   
   def test_find_by_number

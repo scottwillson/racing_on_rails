@@ -265,7 +265,8 @@ class Person < ActiveRecord::Base
       if attributes[:team] and attributes[:team].is_a?(Hash)
         attributes[:team] = Team.new(attributes[:team])
         attributes[:team][:created_by] = attributes[:created_by] if new_record?
-      end 
+      end
+      self.updated_by = attributes[:updated_by]
     end
     super(attributes)
   end
@@ -433,27 +434,32 @@ class Person < ActiveRecord::Base
   
   def date_of_birth=(value)
     if value.is_a?(String)
-      value.gsub!(/^00/, '19')
-      value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+      if value[%r{^\d\d/\d\d/\d\d$}]
+        value.gsub! %r{(\d+)/(\d+)/(\d+)}, '19\3/\1/\2'
+      else
+        value.gsub!(/^00/, '19')
+        value.gsub!(/^(\d+\/\d+\/)(\d\d)$/, '\119\2')
+      end
     end
-    if value and value.to_s.size < 5
+    
+    if value && value.to_s.size < 5
       int_value = value.to_i
-      if int_value > 10 and int_value <= 99
+      if int_value > 10 && int_value <= 99
         value = "01/01/19#{value}"
       end
-      if int_value > 0 and int_value <= 10
+      if int_value > 0 && int_value <= 10
         value = "01/01/20#{value}"
       end
     end
     
     # Don't overwrite month and day if we're just passing in the same year
-    if self[:date_of_birth] and value
+    if self[:date_of_birth] && value
       if value.is_a?(String)
         new_date = Date.parse(value)
       else
         new_date = value
       end
-      if new_date.year == self[:date_of_birth].year and new_date.month == 1 and new_date.day == 1
+      if new_date.year == self[:date_of_birth].year && new_date.month == 1 && new_date.day == 1
         return
       end
     end

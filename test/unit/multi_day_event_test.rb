@@ -33,6 +33,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates(beginning_of_year, series.date, "PIR series date")
     assert_equal_dates(beginning_of_year, series.start_date, "PIR series start date")
     assert_equal_dates(beginning_of_year, series.end_date, "PIR series end date")
+    assert_equal true, series.notification?, "event notification?"
     
     series.save!
     assert_equal_dates(beginning_of_year, series.date, "PIR series date")

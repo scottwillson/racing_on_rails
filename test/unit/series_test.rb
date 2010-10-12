@@ -5,6 +5,7 @@ class SeriesTest < ActiveSupport::TestCase
   def test_new
     series = Series.new
     series.save!
+    assert_equal true, series.notification?, "event notification?"
   end
   
   def test_friendly_class_name

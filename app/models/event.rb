@@ -362,7 +362,7 @@ class Event < ActiveRecord::Base
   # and CombinedTimeTrialResults recalcs
   # Check database to ensure most recent value is used, and not a association's out-of-date cached value
   def notification_enabled?
-    connection.select_value("select notification from events where id = #{id}") == "1"
+    connection.select_value("select notification from events where id = #{id}") == 1
   end
 
   # Set point value/factor for this Competition. Convenience method to hide CompetitionEventMembership complexity.
