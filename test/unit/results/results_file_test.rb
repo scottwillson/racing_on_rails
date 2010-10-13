@@ -109,7 +109,7 @@ module Results
               assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
             else
               if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
-                assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
+                assert(result.person(true).member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
                   Date.today, 
                   result.person.member_from, 

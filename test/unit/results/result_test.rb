@@ -234,10 +234,10 @@ class ResultTest < ActiveSupport::TestCase
 
   def test_time_s
     result = Result.new
-    assert_in_delta(0.0, result.time, 0.0001, "no time")
-    assert_equal('', result.time_s, 'no time_s')
+    assert_equal nil, result.time, "no time"
+    assert_equal '', result.time_s, 'no time_s'
     result.time_s = ''
-    assert_in_delta(0.0, result.time, 0.0001, "no time")
+    assert_in_delta 0.0, result.time, 0.0001, "no time"
     
     result.time = 2597.0
     assert_in_delta(2597.0, result.time, 0.0001, "time")

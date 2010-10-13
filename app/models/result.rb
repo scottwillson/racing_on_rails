@@ -59,24 +59,6 @@ class Result < ActiveRecord::Base
     )
   end
 
-  def attributes=(attributes)
-    unless attributes.nil?
-      if attributes[:first_name]
-        self.first_name = attributes[:first_name]
-      end
-      if attributes[:last_name]
-        self.last_name = attributes[:last_name]
-      end
-      if attributes[:team_name]
-        self.team_name = attributes[:team_name]
-      end
-      if attributes[:category] && attributes[:category].is_a?(String)
-        attributes[:category] = Category.find_or_create_by_name(attributes[:category])
-      end
-    end
-    super(attributes)
-  end
-
   # Replace any new +person+, or +team+ with one that already exists if name matches
   def find_associated_records
     _person = person
@@ -183,8 +165,12 @@ class Result < ActiveRecord::Base
 
   # Save associated Person
   def save_person
+    logger.debug "save_person race.date: #{race.date} #{person.try :new_record?} #{person.try :changed?} member_from: #{person.try :member_from} member_to: #{person.try :member_to}"
     if person && (person.new_record? || person.changed?)
-      person.created_by = event
+      if person.new_record?
+        person.created_by = event
+      end
+      logger.debug "SAVE!"
       person.save!
     end
   end

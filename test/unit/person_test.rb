@@ -212,6 +212,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(person.name, '', 'name')
   end
   
+  def test_set_name
+    person = Person.new(:first_name => "R. Jim", :last_name => "Smith")
+    assert_equal "R. Jim", person.first_name, "first_name"
+  end
+  
   def test_name_or_login
     assert_equal nil, Person.new.name_or_login
     assert_equal "dario@example.com", Person.new(:email => "dario@example.com").name_or_login

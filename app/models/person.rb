@@ -262,11 +262,13 @@ class Person < ActiveRecord::Base
         attributes["member_to(2i)"] = '12'
         attributes["member_to(3i)"] = '31'
       end
-      if attributes[:team] and attributes[:team].is_a?(Hash)
-        attributes[:team] = Team.new(attributes[:team])
-        attributes[:team][:created_by] = attributes[:created_by] if new_record?
+      if attributes[:team] && attributes[:team].is_a?(Hash)
+        team = Team.new(attributes[:team])
+        team.created_by = attributes[:created_by]
+        attributes[:team] = team
       end
       self.updated_by = attributes[:updated_by]
+      self.created_by = attributes[:created_by]
     end
     super(attributes)
   end
@@ -331,7 +333,7 @@ class Person < ActiveRecord::Base
   # Tries to split +name+ into +first_name+ and +last_name+
   # TODO Handle name, Jr.
   # This looks too complicated …
-  def name=(value)  
+  def name=(value)
     @old_name = name unless @old_name
     if value.blank?
       self.first_name = ''
@@ -383,7 +385,7 @@ class Person < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value, :created_by => new_record? ? created_by : nil) unless self.team
+      self.team = Team.new(:name => value, :created_by => new_record? ? self.created_by : nil) unless self.team
     end
   end
 
@@ -661,7 +663,7 @@ class Person < ActiveRecord::Base
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
   def member_in_year?(date = RacingAssociation.current.today)
     year = date.year
-    !self.member_to.nil? && !self.member_from.nil? && (self.member_from.year <= year && self.member_to.year >= year)
+    member_to && member_from && (member_from.year <= year && member_to.year >= year)
     member_to.present? && member_from.present? && (member_from.year <= year && member_to.year >= year)
   end
   
@@ -694,17 +696,16 @@ class Person < ActiveRecord::Base
       return date
     end
 
-    date_as_date = date
-    case date_as_date
+    date_as_date = case date
     when Date
-      # Nothing to do
+      date
     when DateTime, Time
-      date_as_date = Date.new(date.year, date.month, date.day)
+      Date.new(date.year, date.month, date.day)
     else
-      date_as_date = Date.parse(date)
+      Date.parse(date)
     end
 
-    if self.member_to.nil?
+    if member_to.nil?
       self[:member_to] = Date.new(date_as_date.year, 12, 31)
     end
     self[:member_from] = date_as_date
