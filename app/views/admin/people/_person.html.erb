@@ -20,8 +20,8 @@
     <%= render :partial => "shared/member", :locals => { :record => person } %>
   </td>
   <td class="actions not_editable last">
-      <%= link_to 'Results', admin_person_results_path(person) %>
+      <%= link_to 'Results', admin_person_results_path(person), :id => "#{person.id}_results" %>
     |
-    <%= link_to 'Edit', edit_admin_person_path(person) %>
+    <%= link_to 'Edit', edit_admin_person_path(person), :id => "edit_#{person.id}" %>
   </td>
 </tr>

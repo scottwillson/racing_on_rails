@@ -362,20 +362,12 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def download_directory
     @download_directory ||= (
-    if Selenium::WebDriver::Platform.mac? && chrome?
-      File.expand_path("~/Downloads")
-    else
       "/tmp/webdriver-downloads"
-    end
     )
   end
   
   def remove_download(filename)
     FileUtils.rm_f "#{download_directory}/#{filename}"
-  end
-  
-  def chrome?
-    driver.bridge.browser == :chrome
   end
 end
 

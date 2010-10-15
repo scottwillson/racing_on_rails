@@ -5,14 +5,12 @@
     </div>
   </td>
   <td class="not_editable">
-    <%= render(:partial => 'aliases', :locals => { :team => team }) %>
+    <%= render(:partial => "aliases", :locals => { :team => team }) %>
   </td>
   <td class="check_box">
     <%= render :partial => "shared/member", :locals => { :record => team } %>
   </td>
   <td class="actions not_editable last">
-      <%= link_to "Results", team_path(team) %>
-    |
-    <%= link_to 'Edit', edit_admin_team_path(team) %>
+    <%= link_to "Results", team_path(team) %> | <%= link_to "Edit", edit_admin_team_path(team), :id => "edit_#{team.id}" %>
   </td>
 </tr>
