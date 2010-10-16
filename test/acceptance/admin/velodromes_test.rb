@@ -22,7 +22,8 @@ class VelodromesTest < WebDriverTestCase
     wait_for_element "velodromes_table"
     assert_table("velodromes_table", 2, 1, /^http:\/\/example.com/)
 
-    click :css => "a[href='/admin/velodromes/#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}/edit']"
+    click "edit_#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}"
+    wait_for_element "velodrome_name"
     assert_value "Valley Preferred Cycling Center", "velodrome_name"
     assert_value "http://example.com", "velodrome_website"
 

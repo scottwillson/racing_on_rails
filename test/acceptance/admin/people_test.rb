@@ -64,7 +64,7 @@ class PeopleTest < WebDriverTestCase
     wait_for_element "person_#{@alice_id}_name-inplaceeditor"
 
     type "A Penn", :class => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
@@ -75,22 +75,23 @@ class PeopleTest < WebDriverTestCase
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
 
     type "River City Bicycles", :class => "editor_field"
-     type :return, { :class_name => "editor_field" }, false
+    type :return, { :class_name => "editor_field" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
     wait_for_element "people_table"
     assert_table("people_table", 6, 1, /^River City Bicycles/)
 
-    click :css => "a[href='/admin/people/#{@molly_id}/results']"
+    click "#{@molly_id}_results"
+    wait_for_element "person_#{@molly_id}_table"
     assert_title(/Admin: Results: Molly Cameron$/)
 
     open "/admin/people"
-    click :css => "a[href='/admin/people/#{@weaver_id}/results']"
+    click "#{@weaver_id}_results"
     assert_title(/Admin: Results: Ryan Weaver$/)
 
     open "/admin/people"
-    click :css => "a[href='/admin/people/#{@matson_id}/edit']"
+    click "edit_#{@matson_id}"
     assert_title(/Admin: People: Mark Matson$/)
     type "411 911 1212", "person_home_phone"
     click "save"
@@ -98,7 +99,7 @@ class PeopleTest < WebDriverTestCase
     click :css => "a[href='/people/#{@matson_id}/versions']"
 
     open '/admin/people'
-    click :css => "a[href='/admin/people/new']"
+    click "new_person"
     assert_title(/Admin: People: New Person/)
 
     open "/admin/people/#{@matson.id}/edit"

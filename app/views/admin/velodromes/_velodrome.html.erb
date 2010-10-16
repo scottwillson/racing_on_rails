@@ -8,6 +8,6 @@
     <%= in_place_editor_field(:velodrome, :website, velodrome) %>
   </td>
   <td class="actions last">
-    <%= link_to "Edit", edit_admin_velodrome_path(velodrome) %>
+    <%= link_to "Edit", edit_admin_velodrome_path(velodrome), :id => "edit_#{velodrome.id}" %>
   </td>
 </tr>

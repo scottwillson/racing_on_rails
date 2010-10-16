@@ -46,16 +46,12 @@ class EventsTest < WebDriverTestCase
     assert_value "Tim Brown", "promoter_auto_complete"
 
     candi = Person.find_by_name('Candi Murray')
-    if chrome?
-      type "Candi Murray", "promoter_auto_complete"
-    else
-      type "candi m", "promoter_auto_complete"
-      wait_for_element "person_#{candi.id}"
-
-      click "person_#{candi.id}"
-      assert_value candi.id, "event_promoter_id"
-      assert_value "Candi Murray", "promoter_auto_complete"
-    end
+    type "candi m", "promoter_auto_complete"
+    wait_for_element "person_#{candi.id}"
+    
+    click "person_#{candi.id}"
+    assert_value candi.id, "event_promoter_id"
+    assert_value "Candi Murray", "promoter_auto_complete"
 
     click "save"
 
@@ -92,13 +88,11 @@ class EventsTest < WebDriverTestCase
 
     type "Gentle Lovers", "team_auto_complete"
     gl = Team.find_by_name('Gentle Lovers')
-    unless chrome?
-      wait_for_element "team_#{gl.id}"
-      wait_for_displayed "team_#{gl.id}"
-      click "team_#{gl.id}"
-      assert_value gl.id, "event_team_id"
-      assert_value "Gentle Lovers", "team_auto_complete"
-    end
+    wait_for_element "team_#{gl.id}"
+    wait_for_displayed "team_#{gl.id}"
+    click "team_#{gl.id}"
+    assert_value gl.id, "event_team_id"
+    assert_value "Gentle Lovers", "team_auto_complete"
 
     click "save"
 
@@ -132,17 +126,15 @@ class EventsTest < WebDriverTestCase
     open "/admin/events?year=2003"
     click :link_text => "Kings Valley Road Race"
 
-    unless chrome?
-      click_ok_on_confirm_dialog
-      click "destroy_races"
+    click_ok_on_confirm_dialog
+    click "destroy_races"
 
-      open "/admin/events?year=2003"
+    open "/admin/events?year=2003"
 
-      click :link_text => "Kings Valley Road Race"
-      wait_for_current_url %r{/admin/events/\d+/edit}
-      assert_not_in_page_source "Senior Men Pro 1/2"
-      assert_not_in_page_source "Senior Men 3"
-    end
+    click :link_text => "Kings Valley Road Race"
+    wait_for_current_url %r{/admin/events/\d+/edit}
+    assert_not_in_page_source "Senior Men Pro 1/2"
+    assert_not_in_page_source "Senior Men 3"
 
     click "new_event"
     wait_for_current_url(/\/events\/new/)
