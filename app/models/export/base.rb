@@ -6,6 +6,8 @@ module Export
       # remove any existing tmp file
       path = Base.tmp_path basename
       path.unlink if path.exist?
+      path.dirname.mkdir_p unless path.dirname.exist?
+      FileUtils.chmod 0777, path.dirname
 
       # ensure the /public/export directory exists
       target = Base.public_path basename
@@ -17,7 +19,7 @@ module Export
     end
 
     def Base.tmp_path(basename)
-      Pathname.new File.join(Dir.tmpdir, basename)
+      Pathname.new File.join("#{Rails.root}/tmp/export", basename)
     end
 
     def Base.public_path(basename)
