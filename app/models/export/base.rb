@@ -6,7 +6,7 @@ module Export
       # remove any existing tmp file
       path = Base.tmp_path basename
       path.unlink if path.exist?
-      path.dirname.mkdir_p unless path.dirname.exist?
+      FileUtils.mkdir_p path.dirname unless path.dirname.exist?
       FileUtils.chmod 0777, path.dirname
 
       # ensure the /public/export directory exists
