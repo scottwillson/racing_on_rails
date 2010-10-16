@@ -19,3 +19,4 @@ mkmf.log
 doc/app
 doc/README_FOR_APP
 *.rbc
+public/export
