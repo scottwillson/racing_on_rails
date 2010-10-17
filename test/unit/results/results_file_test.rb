@@ -104,12 +104,12 @@ module Results
           end
           assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
           assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-          if result.person
+          if result.person(true)
             if RaceNumber.rental?(result.number, Discipline[event.discipline])
               assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
             else
               if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
-                assert(result.person(true).member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
+                assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
                   Date.today, 
                   result.person.member_from, 
