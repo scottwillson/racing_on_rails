@@ -358,7 +358,9 @@ class Result < ActiveRecord::Base
   # person.name
   def name=(value)
     if value.present?
-      self.person = Person.new(:name => value)
+      if person.try(:name) != value
+        self.person = Person.new(:name => value)
+      end
       self[:first_name] = person.first_name
       self[:last_name] = person.last_name
     else
