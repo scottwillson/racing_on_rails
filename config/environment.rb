@@ -1,4 +1,4 @@
-RAILS_GEM_VERSION = '=2.3.9'  unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.10'  unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -23,8 +23,8 @@ Rails::Initializer.run do |config|
     :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
-  config.gem "authlogic", :version => "2.1.3"
-  config.gem "tabular"
+  config.gem "authlogic"
+  config.gem "tabular", :version => ">0.0.5"
   config.gem "mysql2"
   config.gem "vestal_versions"
   config.gem "sentient_user"
@@ -75,7 +75,5 @@ class ActionView::Base
 end
 
 require 'array'
-require 'nil_class'
-require 'string'
 require "local_static"
 require "action_view/inline_template_extension"
