@@ -267,8 +267,9 @@ class Person < ActiveRecord::Base
         team.created_by = attributes[:created_by]
         attributes[:team] = team
       end
-      self.updated_by = attributes[:updated_by]
       self.created_by = attributes[:created_by]
+      self.updated_by = attributes[:updated_by]
+      self.year = attributes[:year]
     end
     super(attributes)
   end
