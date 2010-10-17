@@ -142,7 +142,7 @@ class PeopleFile < GridFile
     
     Person.transaction do
       begin
-        for row in rows
+        rows.each do |row|
           row_hash = row.to_hash
           row_hash[:year] = year if year
           row_hash[:updated_by] = "Membership import: #{import_file.name}"
