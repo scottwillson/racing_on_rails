@@ -1,0 +1,65 @@
+Tabular is a Ruby library for reading, writing, and manipulating CSV, tab-delimited and Excel data.
+
+I extracted it from production code. Still extracting it, actually. I need to read structured data and manipulate it via a common interface before persisting it with ActiveRecord.
+
+Install
+-------
+sudo gem install tabular
+
+(The gem is hosted on Gemcutter, not RubyForge)
+
+
+Dependencies
+------------
+For tab-delimited data: Ruby standard lib
+
+For CSV: FasterCSV (http://fastercsv.rubyforge.org/)
+sudo gem install fastercsv
+
+For Excel: Spreadsheet gem (http://spreadsheet.rubyforge.org/)
+sudo gem install spreadsheet
+
+
+Examples
+--------
+>> table = Table.read("test/fixtures/sample.csv")
+>> table.rows.size
+=> 4
+
+Access Table Rows by index:
+>> table[0]
+
+And Row cells as a Hash:
+>> table[0][:last_name]
+=> "Willson"
+
+
+Usage
+-----
+Table.read assumes that .txt files are tab-delimited, .csv files are comma-delimited, and .xls files are Excel. It assumes that the first row is the header row, and normalizes the header to lower-case with underscores. E.g., "Last Name" becomes "last_name".
+
+Table.new accepts an Array of Arrays.
+
+Table.new also accepts an options hash.
+
+:columns option to map columns to a different key or type:
+:city_state => :location -- Maps :city_state column to :location. A column with a "City State" header would be accessed as row[:location]
+:flyer_approved  => { :column_type => :boolean } -- Coerce :flyer_approved column cells to booleans.
+
+:as => [:csv, :xls, :txt] to override file format
+
+
+Tests
+-----
+There's basic test coverage. More comprehensive test coverage needs to be extracted from original projects. Run 'rake test'.
+
+
+Changes
+-------
+0.0.5 Parse 'invalid' m/d/yy dates
+
+
+Copyright
+---------
+
+Copyright (c) 2010 Scott Willson. See LICENSE for details.
