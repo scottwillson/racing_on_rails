@@ -527,7 +527,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     )
     event = assigns(:event)
     assert_not_nil(event, "@event")
-    assert(event.errors.empty?, event.errors.full_messages)
+    assert event.errors.empty?, event.errors.full_messages.join
     assert_redirected_to edit_admin_event_path(event)
     assert(event.is_a?(SingleDayEvent), "Mt Hood should be a SingleDayEvent")
 
