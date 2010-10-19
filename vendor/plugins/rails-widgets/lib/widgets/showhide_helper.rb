@@ -43,9 +43,9 @@ module Widgets
       html[:class] ||= "#{name}_for_#{normalize_class_name(record)}"
       html[:style] = 'display:none;'
       @css_class = html[:class]
-      concat(render_css('showhide'), block.binding) if generate_css?
+      concat(render_css('showhide')) if generate_css?
       # Taken from ActionView::Helpers::RecordTagHelper
-      concat content_tag(:div, capture(&block), html), block.binding
+      concat content_tag(:div, capture(&block), html)
       nil
     end
 
@@ -84,7 +84,7 @@ module Widgets
     #
     # Taken from ActionView::Helpers::RecordTagHelper
     def content_box_for(tag_name, *args, &block)
-      concat content_tag(tag_name, capture(&block), args), block.binding
+      concat content_tag(tag_name, capture(&block), args)
     end
   end
 end

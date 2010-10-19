@@ -1,11 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 
-class NavigationHelperTest < Test::Unit::TestCase
+class NavigationHelperTest < ActionView::TestCase
   attr_accessor :params
-  include ActionView::Helpers::TagHelper
-  include ActionView::Helpers::TextHelper
-  include ActionView::Helpers::UrlHelper
-  include ActionView::Helpers::CaptureHelper
   include Widgets::NavigationHelper
   
   def setup
@@ -23,9 +19,8 @@ class NavigationHelperTest < Test::Unit::TestCase
       <div class="main_navigation" id="main_navigation"></div>
     END
     
-    _erbout = ''
     render_navigation :main do; end # empty navigation
-    assert_equal expected.strip, _erbout;
+    assert_equal expected.strip, output_buffer;
   end
   
   def test_navigation_with_two_items
@@ -37,13 +32,12 @@ class NavigationHelperTest < Test::Unit::TestCase
       </div>
     END
     
-    _erbout = ''
     render_navigation do
       add_item :name => 'seesaw', :link => 'http://www.seesaw.it'
       add_item :name => 'blog', :link => 'http://blog.seesaw.it'
     end
     
-    assert_html expected, _erbout;
+    assert_html expected, output_buffer;
   end
   
 end
