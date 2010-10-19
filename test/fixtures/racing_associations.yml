@@ -4,7 +4,7 @@ association:
   sanctioning_organizations: [ CBRA, USA Cycling ]
   default_sanctioned_by: CBRA
   administrator_tabs: !ruby/object:Set
-    hash: { schedule: true, first_aid: true }
+    hash: {}
   competitions: !ruby/object:Set
     hash: {}
   rails_host: localhost:3000

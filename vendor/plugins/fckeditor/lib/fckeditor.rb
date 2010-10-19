@@ -35,8 +35,7 @@ module Fckeditor
         inputs = "<textarea id='#{id}' #{cols} #{rows} name='#{object}[#{field}]'>#{value}</textarea>\n"
       end
       
-      # Fix for rails 2.2.2+ js_path = "#{request.relative_url_root}/javascripts"
-      js_path = "#{ActionController::Base.relative_url_root}/javascripts"
+      js_path = "#{request.relative_url_root}/javascripts"
       base_path = "#{js_path}/fckeditor/"
       return inputs <<
         javascript_tag("var oFCKeditor = new FCKeditor('#{id}', '#{width}', '#{height}', '#{toolbarSet}');\n" <<
@@ -82,6 +81,7 @@ module Fckeditor
   end
 end
 
+include ActionView
 module ActionView::Helpers::AssetTagHelper
   alias_method :rails_javascript_include_tag, :javascript_include_tag
   
