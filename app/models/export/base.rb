@@ -3,10 +3,12 @@ module Export
     Event.export
     Race.export
     Result.export
-    `rm #{Rails.root}/public/export/*.bz2`
-    `tar --create --bzip2 --file=#{Rails.root}/public/export/#{RacingAssociation.current.short_name.downcase}.tar.bz2 #{Rails.root}/public/export/*.*`
-    `rm #{Rails.root}/public/export/*.txt`
-    `rm #{Rails.root}/public/export/*.csv`
+    Dir.chdir("#{Rails.root}/public/export") do
+      `rm *.bz2`
+      `tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`
+      `rm *.txt`
+      `rm *.csv`
+    end
   end
   
   module Base
