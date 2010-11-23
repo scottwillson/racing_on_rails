@@ -1,5 +1,6 @@
 module Export
   def Export.export_all
+    Category.export
     Event.export
     Race.export
     Result.export
