@@ -19,3 +19,5 @@ mkmf.log
 doc/app
 doc/README_FOR_APP
 .gitmodules
+*.rbc
+public/export

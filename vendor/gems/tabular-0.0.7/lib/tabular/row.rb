@@ -1,3 +1,5 @@
+require "date"
+
 module Tabular
   # Associate list of cells. Each Table has a list of Rows. Access Row cells via symbols. Ex: row[:city]
   class Row
@@ -78,7 +80,20 @@ module Tabular
               if @array[index].is_a?(Date) || @array[index].is_a?(DateTime) || @array[index].is_a?(Time)
                 @hash[column.key] = @array[index]
               else
-                @hash[column.key] = Date.parse(@array[index], true)
+                begin
+                  if @array[index]
+                    @hash[column.key] = Date.parse(@array[index], true)
+                  else
+                    @hash[column.key] = nil
+                  end
+                rescue ArgumentError => e
+                  date = parse_invalid_date(@array[index])
+                  if date
+                    @hash[column.key] = date
+                  else
+                    raise ArgumentError, "'#{@array[index]}' is not a valid date"
+                  end
+                end
               end
             else
               @hash[column.key] = @array[index]
@@ -87,6 +102,34 @@ module Tabular
         end
       end
       @hash
+    end
+    
+    
+    private
+    
+    # Handle common m/d/yy case that Date.parse dislikes
+    def parse_invalid_date(value)
+      return unless value
+      
+      parts = value.split("/")
+      return unless parts.size == 3
+
+      month = parts[0].to_i
+      day = parts[1].to_i
+      year = parts[2].to_i
+      return unless month >=1 && month <= 12 && day >= 1 && day <= 31
+
+      if year == 0
+        year = 2000
+      elsif year > 0 && year < 69
+        year = 2000 + year
+      elsif year > 69 && year < 100
+        year = 1900 + year
+      elsif year < 1900 || year > 2050
+        return nil
+      end
+      
+      Date.new(year, month, day)
     end
   end
 end

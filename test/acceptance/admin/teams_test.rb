@@ -8,7 +8,7 @@ class TeamsTest < WebDriverTestCase
     @gl_id = Team.find_by_name("Gentle Lovers").id
     click :css => "a[href='/teams/#{@gl_id}']"
 
-    login_as :administrator 
+    login_as :administrator
 
     open '/admin/teams'
     assert_page_source "Enter part of a team's name"
@@ -44,7 +44,8 @@ class TeamsTest < WebDriverTestCase
     assert_page_source "Team dFL"
 
     open '/admin/teams'
-    click :css => "a[href='/admin/teams/#{@vanilla_id}/edit']"
+    click "edit_#{@vanilla_id}"
+    wait_for_element "team_name"
     assert_page_source "Vanilla"
 
     type "SpeedVagen", "team_name"

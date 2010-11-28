@@ -3,7 +3,11 @@ require "helper"
 module Tabular
   class TableTest < Test::Unit::TestCase
     def test_read_from_blank_txt_file
-      table = Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/blank.txt"))
+      Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/blank.txt"))
+    end
+    
+    def test_read_quoted_txt_file
+      Table.read(File.expand_path(File.dirname(__FILE__) + "/fixtures/quoted.txt"))
     end
     
     # "Place ","Number","Last Name","First Name","Team","Category Raced"

@@ -25,7 +25,7 @@ module Api
 
     # Fields to include when rendering an Event object
     def event_fields
-      [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly, :date ]
+      [ :id, :parent_id, :name, :type, :discipline, :city, :state, :cancelled, :beginner_friendly, :date ]
     end
 
     # Related objects to include when rendering an Event object

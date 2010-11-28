@@ -38,9 +38,9 @@ module Tabular
       when :txt
         require "csv"
         if RUBY_VERSION < "1.9"
-          ::CSV.open(file_path, "r","\t").collect { |row| row }
+          ::CSV.open(file_path, "r", "\t").collect { |row| row }
         else
-          CSV.read(file_path)
+          CSV.read(file_path, :col_sep => "\t")
         end
       when :csv
         if RUBY_VERSION < "1.9"

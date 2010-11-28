@@ -25,9 +25,9 @@ Rails::Initializer.run do |config|
   
   config.gem "authlogic", :version => "2.1.3"
   config.gem "fastercsv"
-  config.gem "tabular", :version => "0.0.4"
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
+  config.gem "tabular"
   config.gem "vestal_versions"
   config.gem "sentient_user"
 

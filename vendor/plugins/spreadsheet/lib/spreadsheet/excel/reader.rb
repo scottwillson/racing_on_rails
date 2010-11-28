@@ -16,10 +16,11 @@ module Spreadsheet
 class Reader
   include Spreadsheet::Encodings
   include Spreadsheet::Excel::Internals
-  ROW_BLOCK_OPS = [
-    :blank, :boolerr, :dbcell, :formula, :label, :labelsst, :mulblank, :mulrk,
-    :number, :rk, :rstring,
-  ]
+  ROW_BLOCK_OPS = {
+    :blank  => true, :boolerr  => true, :dbcell   => true, :formula => true,
+    :label  => true, :labelsst => true, :mulblank => true, :mulrk   => true,
+    :number => true, :rk       => true, :rstring  => true,
+  }
   def initialize opts = {}
     @pos = 0
     @bigendian = opts.fetch(:bigendian) {
@@ -378,6 +379,10 @@ class Reader
       formula.value = value
     elsif rtype == 0
       pos, op, len, work = get_next_chunk
+      if op == :sharedfmla
+        ## TODO: formula-support in 0.8.0
+        pos, op, len, work = get_next_chunk
+      end
       if op == :string
         formula.value = client read_string(work, 2), @workbook.encoding
       else
@@ -805,6 +810,7 @@ class Reader
   end
   def read_worksheet worksheet, offset
     @pos = offset
+    @detected_rows = {}
     previous = nil
     while tuple = get_next_chunk
       pos, op, len, work = tuple
@@ -836,6 +842,10 @@ class Reader
         read_hlink worksheet, work, pos, len
       when :window2
         read_window2 worksheet, work, pos, len
+      else
+        if ROW_BLOCK_OPS.include?(op)
+          set_missing_row_address worksheet, work, pos, len
+        end
       end
       previous = op
     end
@@ -1021,6 +1031,21 @@ class Reader
     cells = @current_row_block[[worksheet, row]] ||= Row.new(nil, row)
     cells.formats[column] = @workbook.format(xf) unless xf == 0
     cells[column] = value
+  end
+  def set_missing_row_address worksheet, work, pos, len
+    # Offset  Size  Contents
+    #      0     2  Index of this row
+    #      2     2  Index to this column
+    row_index, column_index = work.unpack 'v2'
+    unless worksheet.offsets[row_index]
+      @current_row_block_offset ||= [pos]
+      data = {
+        :index          => row_index,
+        :row_block      => @current_row_block_offset,
+        :offset         => @current_row_block_offset[0],
+      }
+      worksheet.set_row_address row_index, data
+    end
   end
   def set_row_address worksheet, work, pos, len
     # Offset  Size  Contents

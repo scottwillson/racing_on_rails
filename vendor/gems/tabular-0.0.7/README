@@ -54,6 +54,11 @@ Tests
 There's basic test coverage. More comprehensive test coverage needs to be extracted from original projects. Run 'rake test'.
 
 
+Changes
+-------
+0.0.5 Parse 'invalid' m/d/yy dates
+
+
 Copyright
 ---------
 

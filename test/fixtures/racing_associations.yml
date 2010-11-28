@@ -4,11 +4,12 @@ association:
   sanctioning_organizations: [ CBRA, USA Cycling ]
   default_sanctioned_by: CBRA
   administrator_tabs: !ruby/object:Set
-    hash: {}
+    hash: { schedule: true, first_aid: true }
   competitions: !ruby/object:Set
     hash: {}
   rails_host: localhost:3000
   static_host: localhost
   exception_recipients: [ "dev@example.com" ]
+  membership_email: [ "membership@example.com" ]
   award_cat4_participation_points: true
   cat4_womens_race_series_points: ""
