@@ -420,10 +420,12 @@ class Admin::PeopleController < Admin::AdminController
     @person.membership_card = true
     @person.card_printed_at = RacingAssociation.current.now
     @person.save!
-
+    
     respond_to do |format|
       format.pdf do
-        send_data Card.to_pdf(@person).render_file("card.pdf"), :filename => "card.pdf", :type => "application/pdf"
+        send_data Card.new.to_pdf(@person), 
+                  :filename => "card.pdf", 
+                  :type => "application/pdf"
       end
     end
   end

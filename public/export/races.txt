@@ -1,0 +1,10 @@
+id
+event_id
+category_id
+city
+state
+distance
+field_size
+laps
+time
+finishers

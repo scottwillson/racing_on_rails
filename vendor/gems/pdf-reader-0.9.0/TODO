@@ -1,0 +1,45 @@
+v0.8
+- add extra callbacks
+  - list implemented features
+    - encrypted? tagged? bookmarks? annotated? optimised?
+- Allow more than just page content and metadata to be parsed (see spec section 3.6.1)
+  - bookmarks?
+  - outline?
+  - articles?
+  - viewer prefs?
+- Don't remove comment when tokenising in the middle of a string
+- Tweak encoding mappings to differentiate between bytes that are invalid for an encoding, and bytes that are unchanged.
+  poppler seems to do this in a quite reasonable way. Original Encoding -> Glyph Names -> Unicode. As of 0.6 we go straight
+  from the Original encoding to Unicode.
+- detect when a font's encoding is a CMap (generally used for pre-Unicode, multibyte asian encodings), and display a user friendly error
+- Improve interpretation of non content stream data (ie metadata). recognise dates, etc
+- Fix inheritance of page attributes. Resources has been done, but plenty of other attributes
+  are inheritable. See table 3.2.7 in the spec
+
+v0.9
+- Add a way to extract raster images
+  - see XObjects section of spec (section 4.7)
+- Add a way to extract font data?
+
+Sometime
+- Support for CJK text (convert to UTF-8 like all other encodings. See Section 5.9 of the PDF spec)
+  - Will require significantly improved handling of CMaps, including creating a bunch of predefined ones
+
+- Work out why specs/data/zlib*.pdf isn't parsed correctly when all the major PDF viewers can display it correctly
+
+- Ship some extra receivers in the standard package, particuarly ones that are useful for running
+  rspec over generated PDF files
+
+- When we encounter Identity-H encoded text with no ToUnicode CMap, render the glyphs and treat them as images, as there's no
+  sensible way to convert them to unicode
+
+- Add support for additional filters: ASCIIHexDecode, ASCII85Decode, LZWDecode, RunLengthDecode, CCITTFaxDecode, JBIG2Decode, DCTDecode, JPXDecode, Crypt?
+
+- Add support for additional encodings:
+  - Identity-V(I *think* this relates to vertical text. Not sure how we'd support it sensibly)
+
+- Investigate how R->L text is handled
+
+- fix all callbacks to only ever return basic ruby objects (strings, ints,
+  attays, symbols, hashes, etc). No PDF::Reader::Reference or
+  PDF::Reader::Font, etc.

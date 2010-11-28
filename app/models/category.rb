@@ -42,6 +42,12 @@ class Category < ActiveRecord::Base
     end
   end
   
+  # Sr, Mst, Jr, Cat, Beg, Exp
+  def Category.short_name(name)
+    return name if name.blank?
+    name.gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp').gsub("Clydesdale", "Clyd")
+  end
+  
   def parent_is_not_self
     if parent_id && parent_id == id
       errors.add 'parent', 'Category cannot be its own parent'
@@ -55,7 +61,7 @@ class Category < ActiveRecord::Base
   
   # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
-    self[:name].gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp')
+    Category.short_name name
   end
   
   # Return Range
