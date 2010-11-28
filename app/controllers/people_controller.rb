@@ -66,8 +66,13 @@ class PeopleController < ApplicationController
   
   # Print membership card
   def card
-    # Workaround Rails 2.3 bug. Unit tests can't find correct template.
-    render(:template => "admin/people/card.pdf.pdf_writer")
+    respond_to do |format|
+      format.pdf do
+        send_data Card.new.to_pdf(@person), 
+                  :filename => "card.pdf", 
+                  :type => "application/pdf"
+      end
+    end
   end
   
   # Page to create a new login

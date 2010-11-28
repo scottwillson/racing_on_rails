@@ -410,6 +410,14 @@ class Admin::PeopleController < Admin::AdminController
     else
       Person.update_all("print_card=0, membership_card=1", ['id in (?)', @people.collect{|person| person.id}])
     end
+
+    respond_to do |format|
+      format.pdf do
+        send_data Card.new.to_pdf(@people), 
+                  :filename => "cards.pdf", 
+                  :type => "application/pdf"
+      end
+    end
   end
   
   # Single membership card

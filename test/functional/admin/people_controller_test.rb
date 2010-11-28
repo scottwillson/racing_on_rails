@@ -915,7 +915,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:cards, :format => "pdf")
 
     assert_response(:success)
-    assert_template("admin/people/cards")
+    assert_template("")
     assert_layout(nil)
     assert_equal(1, assigns['people'].size, 'Should assign people')
     tonkin.reload
@@ -932,7 +932,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:cards, :format => "pdf")
 
     assert_response(:success)
-    assert_template("admin/people/cards")
+    assert_template("")
     assert_layout(nil)
     assert_equal(4, assigns['people'].size, 'Should assign people')
     for person in people
