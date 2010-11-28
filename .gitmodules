@@ -1,3 +1,0 @@
-[submodule "vendor/prawn"]
-	path = vendor/prawn
-	url = git://github.com/sandal/prawn.git
