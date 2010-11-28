@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs  #{RAILS_ROOT}/vendor/prawn/lib )
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs  )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
@@ -27,6 +27,8 @@ Rails::Initializer.run do |config|
   config.gem "fastercsv"
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
+  config.gem "prawn"
+  config.gem "prawn-core", :lib => "prawn/core"
   config.gem "tabular"
   config.gem "vestal_versions"
   config.gem "sentient_user"
