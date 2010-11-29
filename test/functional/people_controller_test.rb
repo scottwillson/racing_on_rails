@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -35,7 +37,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_find
-    get(:index, :name => 'weav')
+    get(:index, :name => "weav")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')

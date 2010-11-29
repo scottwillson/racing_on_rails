@@ -160,8 +160,7 @@ class PeopleController < ApplicationController
 
   def find_people
     @people = []
-    @name = params['name'] || ''
-    @name.strip!
+    @name = params["name"].try(:strip!)
     if @name.present?
       @people = Person.find_all_by_name_like(@name)
       @people = @people.paginate(:page => params[:page])
