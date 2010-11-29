@@ -19,7 +19,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
     FileUtils.rm_rf download_directory
     FileUtils.mkdir_p download_directory
-    Test::Unit::UI::WebDriverTestRunner.driver = driver
+    # Test::Unit::UI::WebDriverTestRunner.driver = driver
     @base_url = "http://localhost:3000"
     driver.manage.delete_all_cookies
     super
@@ -378,7 +378,7 @@ end
 # Hack. Use our custom TestRunner in place of the default console runner.
 # SeleniumTestRunner extends console TestRunner. Main difference is screendumps and snapshots.
 # You'd think there would be a easier, cleaner way to do this.
-Test::Unit::AutoRunner::RUNNERS[:console] = proc do |r|
-  require 'test/unit/ui/webdriver_test_runner'
-  Test::Unit::UI::WebDriverTestRunner
-end
+# Test::Unit::AutoRunner::RUNNERS[:console] = proc do |r|
+#   require 'test/unit/ui/webdriver_test_runner'
+#   Test::Unit::UI::WebDriverTestRunner
+# end
