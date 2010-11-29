@@ -6,7 +6,7 @@
     <h2><%= @person.name %></h2>
     <%= f.error_messages %>
     <%= f.label :password, "New Password", :style => "width: 150px;" %>
-    <%= f.password_field :password %>
+    <%= f.password_field :password, :class => "wants_focus" %>
     <br />
     <%= f.label :password_confirmation, "Confirm New Password", :style => "width: 150px;" %>
     <%= f.password_field :password_confirmation %>
@@ -15,5 +15,3 @@
     </div>
   </div>
 <% end %>
-
-<%= focus("person_password") %>

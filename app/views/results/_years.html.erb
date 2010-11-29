@@ -1,5 +1,9 @@
 <%= tabs do |tabs|
-    (Date.today.year).downto(2006) do |year|
-      tabs.add(year, :year => year)
+  Event.find_all_years.each do |year|
+    if year == @year
+      tabs.add(year.to_s, :year => nil, :discipline => @discipline)
+    else
+      tabs.add(year.to_s, :year => year, :discipline => @discipline)
     end
-  end  %>
+  end
+end -%>

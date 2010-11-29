@@ -63,9 +63,9 @@ class Admin::ResultsController < Admin::AdminController
   def scores
     @result = Result.find(params[:id])
     @scores = @result.scores
-    render(:update) {|page|
-      page.insert_html(:after, "result_#{params[:id]}", :partial => 'score', :collection => @scores)
-    }
+    render :update do |page|
+      page.insert_html :after, "result_#{params[:id]}_row", :partial => 'score', :collection => @scores
+    end
   end
   
   def move_result
@@ -77,11 +77,11 @@ class Admin::ResultsController < Admin::AdminController
     result.person = person
     result.save!
     expire_cache
-    render(:update) do |page|
-      page.replace("person_#{person.id}", :partial => 'person', :locals => {:person => person, :results => person.results})
-      page.replace("person_#{original_result_owner.id}", :partial => 'person', :locals => {:person => original_result_owner, :results => original_result_owner.results})
-      page.visual_effect(:appear, "people", :duration => 0.6)
-      page.hide('find_progress_icon')
+    render :update do |page|
+      page.replace "person_#{person.id}", :partial => "person", :locals => { :person => person, :results => person.results }
+      page.replace "person_#{original_result_owner.id}", :partial => "person", :locals => { :person => original_result_owner, :results => original_result_owner.results }
+      page[:people].css "opacity", 1
+      page.hide 'find_progress_icon'
     end
   end
 end

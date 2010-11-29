@@ -1,14 +1,8 @@
-<div class="category" id="category_<%= category.id %>_row">
-    <div class="disclosure category<%= " collapsed" unless category.children.empty? %>" id="disclosure_<%= category.id %>">&nbsp;</div>
-    <div class="record category_name" id="category_<%= category.id %>"><%= category.name %></div>
+<div class="category" id="category_<%= category.id %>_row" data-id="<%= category.id %>">
+    <div class="disclosure <%= "collapsed" unless category.children.empty? %>" id="disclosure_<%= category.id %>" data-id="<%= category.id %>">&nbsp;</div>
+    <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><%= category.name %></div>
     <%= link_to(image_tag('/images/icons/table.png'), 
       category_races_path(category), 
-      {:title => 'View races', :class => "image"}) unless category.races.empty? %>
+      :title => 'View races', :class => "image") unless category.races.empty? %>
     <div class="children" id="category_<%= category.id %>_children"></div>
 </div>
-
-<script type="text/javascript" charset="utf-8">
-  Event.observe('disclosure_' + <%= category.id %>, 'click', toggle_disclosure.bindAsEventListener(<%= category.id %>));  
-</script>
-<%= drop_receiving_element("category_#{category.id}_row", :url => {:action => "add_child", :parent_id => category.id}, :hoverclass => 'hovering') %>
-<%= draggable_element("category_#{category.id}", :revert => "'failure'", :ghosting => true, :scroll => "window") %>

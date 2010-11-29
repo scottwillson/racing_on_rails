@@ -13,10 +13,10 @@ class VelodromesTest < WebDriverTestCase
     assert_table("velodromes_table", 2, 1, /^http:\/\/www.lvvelo.org\//)
 
     click "velodrome_#{Velodrome.find_by_name('Valley Preferred Cycling Center').id}_website"
-    wait_for_element :class_name => "editor_field"
-    type "http://example.com", :class_name => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
-    wait_for_no_element :class_name => "editor_field"
+    wait_for_element :class_name => "form.editor_field input"
+    type "http://example.com", :class_name => "form.editor_field input"
+     type :return, { :class_name => "form.editor_field input" }, false
+    wait_for_no_element :class_name => "form.editor_field input"
 
     refresh
     wait_for_element "velodromes_table"

@@ -3,10 +3,10 @@
 <% #We're small enough we can recompute competitions on demand. alp -%>
 <% if RacingAssociation.current.competitions.include?(:mbra_bar) -%>
   <div class="left">
-    <p><% form_tag '/admin/categories/recompute_bar' do -%>
+    <p><% form_tag "/admin/categories/recompute_bar" do -%>
       <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
     <% end -%></p>
-    <p><% form_tag '/admin/categories/recompute_team_bar' do -%>
+    <p><% form_tag "/admin/categories/recompute_team_bar" do -%>
       <%= submit_tag "Recompute MBRA BAT", :id => "recompute_bar" %>
     <% end -%></p>
   </div>
@@ -15,19 +15,19 @@
 <div class="column_grid_container">
   <div class="table_container box-3">
     <div class="caption"><%= RacingAssociation.current.short_name %></div>
-    <div class="category" id="category_root">
+    <div class="category category_root" id="association_category_root" data-id="<%= @category.id %>">
       <%= render :partial => "category", :collection => @category.children.sort %>
     </div>
   </div>
 
   <div class="table_container box-3 last">
     <div class="caption">Unknown</div>
-    <div class="category" id="unknown_category_root">
+    <div class="category category_root" id="unknown_category_root" data-id="">
       <%= render :partial => "category", :collection => @unknowns.sort %>
     </div>
   </div>
 </div>
 
-<%= drop_receiving_element("category_root", :url => {:action => "add_child", :parent_id => @category.id}, :hoverclass => "hovering") %>
-<%= drop_receiving_element("unknown_category_root", :url => {:action => "add_child"}, :hoverclass => "hovering") %>
-
+<% content_for :javascript_include_tag do -%>
+  <%= javascript_include_tag "categories" %>
+<% end -%>

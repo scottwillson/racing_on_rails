@@ -33,7 +33,7 @@ class Admin::PeopleController < Admin::AdminController
     end
     
     @people = []
-    @name = params['name'] || session['person_name'] || cookies[:person_name] || ''
+    @name = params[:term] || params[:name] || session[:person_name] || cookies[:person_name] || ''
     @name.strip!
     session['person_name'] = @name
     cookies[:person_name] = { :value => @name, :expires => Time.zone.now + 36000 }
@@ -49,12 +49,6 @@ class Admin::PeopleController < Admin::AdminController
     end
 
     @current_year = current_date.year
-
-    respond_to do |wants|
-      wants.html
-      # TODO Optimize JS call. It shouldn't consider cookie and should pull back only nine results
-      wants.js
-    end
   end
 
   # == Params
@@ -314,9 +308,7 @@ class Admin::PeopleController < Admin::AdminController
     
     @person.update_attribute(:name, params[:value])
     expire_cache
-    render :update do |page|
-      page.replace_html("person_#{@person.id}_name", @person.name)
-    end
+    render :text => @person.name
   end
 
   # Toggle membership on or off

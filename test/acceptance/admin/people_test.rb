@@ -13,41 +13,41 @@ class PeopleTest < WebDriverTestCase
     assert_text "", "warn"
     assert_text "", "notice"
 
-    assert_table("people_table", 1, 0, /^Molly Cameron/)
-    assert_table("people_table", 2, 0, /^Mark Matson/)
-    assert_table("people_table", 3, 0, /^Candi Murray/)
-    assert_table("people_table", 4, 0, /^Alice Pennington/)
-    assert_table("people_table", 5, 0, /^Brad Ross/)
-    assert_table("people_table", 6, 0, /^Ryan Weaver/)
+    assert_table("people_table", 1, 1, /^Molly Cameron/)
+    assert_table("people_table", 2, 1, /^Mark Matson/)
+    assert_table("people_table", 3, 1, /^Candi Murray/)
+    assert_table("people_table", 4, 1, /^Alice Pennington/)
+    assert_table("people_table", 5, 1, /^Brad Ross/)
+    assert_table("people_table", 6, 1, /^Ryan Weaver/)
 
-    assert_table("people_table", 1, 1, /^Vanilla/)
-    assert_table("people_table", 2, 1, /^Kona/)
-    assert_table("people_table", 4, 1, /^Gentle Lovers/)
-    assert_table("people_table", 6, 1, /^Gentle Lovers/)
+    assert_table("people_table", 1, 2, /^Vanilla/)
+    assert_table("people_table", 2, 2, /^Kona/)
+    assert_table("people_table", 4, 2, /^Gentle Lovers/)
+    assert_table("people_table", 6, 2, /^Gentle Lovers/)
                 
-    assert_table("people_table", 1, 2, /^Mollie Cameron/)
-    assert_table "people_table", 2, 2, ""
-    assert_table "people_table", 3, 2, ""
-    assert_table "people_table", 4, 2, ""
-    assert_table "people_table", 5, 2, ""
-    assert_table "people_table", 6, 2, ""
+    assert_table("people_table", 1, 3, /^Mollie Cameron/)
+    assert_table "people_table", 2, 3, ""
+    assert_table "people_table", 3, 3, ""
+    assert_table "people_table", 4, 3, ""
+    assert_table "people_table", 5, 3, ""
+    assert_table "people_table", 6, 3, ""
 
     if Date.today.month < 12
-      assert_table "people_table", 1, 3, "202"
-      assert_table "people_table", 2, 3, "340"
-      assert_table "people_table", 3, 3, ""
-      assert_table "people_table", 4, 3, "230"
-      assert_table "people_table", 5, 3, ""
-      assert_table "people_table", 6, 3, "341"
+      assert_table "people_table", 1, 4, "202"
+      assert_table "people_table", 2, 4, "340"
+      assert_table "people_table", 3, 4, ""
+      assert_table "people_table", 4, 4, "230"
+      assert_table "people_table", 5, 4, ""
+      assert_table "people_table", 6, 4, "341"
     end
 
-    assert_table "people_table", 1, 4, ""
-    assert_table "people_table", 2, 4, ""
-    assert_table "people_table", 3, 4, ""
-    assert_table "people_table", 4, 4, ""
-    assert_table "people_table", 5, 4, ""
+    assert_table "people_table", 1, 5, ""
+    assert_table "people_table", 2, 5, ""
+    assert_table "people_table", 3, 5, ""
+    assert_table "people_table", 4, 5, ""
+    assert_table "people_table", 5, 5, ""
     if Date.today.month < 12
-      assert_table "people_table", 6, 4, "437"
+      assert_table "people_table", 6, 5, "437"
     end
 
     @molly_id = Person.find_by_name("Molly Cameron").id
@@ -61,26 +61,26 @@ class PeopleTest < WebDriverTestCase
     assert_checked "person_member_#{@alice_id}"
 
     click "person_#{@alice_id}_name"
-    wait_for_element "person_#{@alice_id}_name-inplaceeditor"
+    wait_for_element :css => "form.editor_field input"
 
-    type "A Penn", :class => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
-    wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
+    type "A Penn", :class => "form.editor_field input"
+    type :return, { :class_name => "form.editor_field input" }, false
+    wait_for_no_element "form.editor_field input"
 
     refresh
     wait_for_element "people_table"
-    assert_table("people_table", 4, 0, /^A Penn/)
+    assert_table("people_table", 4, 1, /^A Penn/)
 
     click "person_#{@weaver_id}_team_name"
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
 
-    type "River City Bicycles", :class => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
+    type "River City Bicycles", :class => "form.editor_field input"
+    type :return, { :class_name => "form.editor_field input" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
 
     refresh
     wait_for_element "people_table"
-    assert_table("people_table", 6, 1, /^River City Bicycles/)
+    assert_table("people_table", 6, 2, /^River City Bicycles/)
 
     click "#{@molly_id}_results"
     wait_for_element "person_#{@molly_id}_table"
@@ -129,7 +129,7 @@ class PeopleTest < WebDriverTestCase
     submit "search_form"
     assert_not_in_page_source "Non Results"
   end
-  
+
   def test_export
     login_as :administrator
 
@@ -151,7 +151,7 @@ class PeopleTest < WebDriverTestCase
 
     open '/admin/people'
     assert_current_url(/\/admin\/people/)
-
+    
     type "tonkin", "name"
     type :return, { :name => "name" }, false
     assert_not_in_page_source 'error'

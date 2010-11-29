@@ -19,6 +19,7 @@ table.tabs td {
   border-left: 1px solid rgb(190, 190, 190);
 }
 
-table.tabs td.first {
+table.tabs td.first,
+table.tabs td.first_selected {
   border-left: none;
 }

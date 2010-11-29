@@ -12,7 +12,7 @@
 <div class="column_grid_container">
   <% form_for [:admin, @team] do |f| -%>
     <div class="span-3">
-      <%= f.labelled_text_field :name %>
+      <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus" : "" %>
       <%= f.labelled_text_field :contact_name %>
       <%= f.labelled_text_field :contact_email %>
       <%= f.labelled_text_field :contact_phone %>
@@ -79,5 +79,3 @@
 
   <% end -%>
 </div>
-
-<%= focus("team_name") %>

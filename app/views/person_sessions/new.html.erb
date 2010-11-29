@@ -6,9 +6,9 @@
     <% form_for @person_session, :url => person_session_path do |f| %>
       <%= f.error_messages :header_message => nil, :message => nil %>
       <div>
-        <%= f.labelled_text_field :login %>
+        <%= f.labelled_text_field :login, nil, :class => @person_session.login.blank? ? "wants_focus" : "" %>
         <%= f.label :password %>
-        <%= f.password_field :password %>
+        <%= f.password_field :password, :class => @person_session.login.blank? ? "" : "wants_focus" %>
       </div>
       <div class="page_buttons span-3 last right">
         <%= submit_tag "Login", :id => "login_button" %>
@@ -35,6 +35,3 @@
     <% end -%>
   </div>
 </div>
-
-<%= focus("person_session_login") if @person_session.login.blank? %>
-<%= focus("person_session_password") unless @person_session.login.blank? %>

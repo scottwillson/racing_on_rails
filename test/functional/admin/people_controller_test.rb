@@ -87,14 +87,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(!flash.empty?, 'flash not empty?')
     assert_equal('Test', assigns['name'], "'name' assigns")
   end
-  
-  def test_index_rjs
-    get(:index, :name => 'weav', :format => "js")
-    assert_response(:success)
-    assert_template("admin/people/index")
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')
-  end
 
   def test_blank_name
     molly = people(:molly)
@@ -125,18 +117,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_update_name
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :post, :set_person_name, 
         :id => molly.to_param,
         :value => "Mollie Cameron",
         :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
-    assert_not_nil(assigns["person"], "Should assign person")
-    assert_equal(molly, assigns['person'], 'Person')
+    assert_response :success
+    assert_template nil
+    assert_equal "Mollie Cameron", @response.body
     molly.reload
-    assert_equal('Mollie', molly.first_name, 'Person first_name after update')
-    assert_equal('Cameron', molly.last_name, 'Person last_name after update')
+    assert_equal "Mollie", molly.first_name, "Person first_name after update"
+    assert_equal "Cameron", molly.last_name, "Person last_name after update"
   end
   
   def test_update_same_name

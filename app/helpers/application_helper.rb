@@ -1,9 +1,4 @@
 module ApplicationHelper
-  # Trey to put browser focus (and cursor) on this field
-  def focus(form_field_name)
-    render "shared/focus", :object => form_field_name
-  end
-
   # Wrap +text+ in div tags, unless +text+ is blank
   def div(text)
     "<div>#{text}</div>" unless text.blank?

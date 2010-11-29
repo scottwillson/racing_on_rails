@@ -8,7 +8,7 @@
         Most people use their email address as a login, but it's up to you
       </div>
 
-      <div><%= f.labelled_text_field :login %></div>
+      <div><%= f.labelled_text_field :login, nil, :class => @person.new_record? ? "wants_focus" : "" %></div>
       <div><%= f.labelled_text_field :email %></div>
       <div><%= f.labelled_text_field :name %></div>
       <div><%= f.labelled_password_field :password %></div>
@@ -39,5 +39,3 @@
     </div>
   </div>
 <% end -%>
-
-<%= focus "person_login" -%>

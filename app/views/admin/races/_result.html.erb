@@ -2,7 +2,7 @@
   <% result.race.result_columns_or_default_for_editing.each do |column| %>
   <td><%= 
     if result.respond_to?(column) && !result.new_record?
-      if column == "bar"
+      if column.field == :bar
         check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
                 :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}?value=#{result.bar? ? "0" : "1"}', 
                               {asynchronous:true, evalScripts:true})"

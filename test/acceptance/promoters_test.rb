@@ -14,10 +14,10 @@ class PromotersTest < WebDriverTestCase
     
     click "create_race"
     wait_for_element :css => "td.race"
-    type "Senior Women", :class_name => "editor_field"
-    type :return, { :class_name => "editor_field" }, false
+    type "Senior Women", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element :class_name => "editor_field"
-    wait_for_page_source "Senior Women"
+    wait_for_no_element :css => "form.editor_field input"
     race = series.races(true).first
     assert_equal "Senior Women", race.category_name, "Should update category name"
 

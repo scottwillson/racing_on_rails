@@ -15,10 +15,10 @@ class FirstAidProvidersTest < WebDriverTestCase
 
       assert_element :xpath => "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
       click :xpath => "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
-      wait_for_element :class => "editor_field"
-      type "Megan Weaver", :class => "editor_field"
-       type :return, { :class_name => "editor_field" }, false
-      wait_for_no_element :class => "editor_field"
+      wait_for_element :css => "form.editor_field input"
+      type "Megan Weaver", :css => "form.editor_field input"
+       type :return, { :css => "form.editor_field input" }, false
+      wait_for_no_element :css => "form.editor_field input"
 
       refresh
       wait_for_element "events_table"

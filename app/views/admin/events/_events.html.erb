@@ -21,7 +21,7 @@
   <%- end -%>
   <tr>
     <td class='nowrap'>
-      <% if @event.children_and_child_competitions.empty? && administrator? -%>
+      <% if @event.children_and_child_competitions.empty? && administrator? && !@event.new_record? -%>
       <span class="weak">No events. Click button to add a new child event.</span>
       <% end -%>
     </td>
