@@ -95,7 +95,7 @@ class Event < ActiveRecord::Base
 
   # Return list of every year that has at least one event
   def Event.find_all_years
-    years = [ ASSOCIATION.effective_year ] +
+    years = [ RacingAssociation.current.effective_year ] +
     connection.select_values(
       "select distinct extract(year from date) from events"
     ).map(&:to_i)
