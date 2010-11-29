@@ -1,4 +1,17 @@
 module Export
+  def Export.export_all
+    Category.export
+    Event.export
+    Race.export
+    Result.export
+    Dir.chdir("#{Rails.root}/public/export") do
+      `rm *.bz2`
+      `tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`
+      `rm *.txt`
+      `rm *.csv`
+    end
+  end
+  
   module Base
     private
 

@@ -535,7 +535,17 @@ module Spreadsheet
       assert_equal 00, time.min
       assert_equal 00, time.sec
       time = sheet[1,0]
+      assert_equal 1899, time.year
+      assert_equal 12, time.month
+      assert_equal 30, time.day
       assert_equal 22, time.hour
+      assert_equal 30, time.min
+      assert_equal 45, time.sec
+      time = sheet[0,1]
+      assert_equal 1899, time.year
+      assert_equal 12, time.month
+      assert_equal 31, time.day
+      assert_equal 4, time.hour
       assert_equal 30, time.min
       assert_equal 45, time.sec
     end
@@ -1233,6 +1243,32 @@ module Spreadsheet
       assert_equal date2, sheet[1,1]
       assert_equal date1, sheet.row(0).date(0)
       assert_equal datetime1, sheet.row(1).datetime(0)
+    end
+    def test_sharedfmla
+      path = File.join @data, 'test_formula.xls'
+      book = Spreadsheet.open path
+      assert_instance_of Excel::Workbook, book
+      sheet = book.worksheet 0
+      64.times do |idx|
+        assert_equal '5026', sheet[idx.next, 2].value
+      end
+    end
+    def test_missing_row_op
+      path = File.join @data, 'test_missing_row.xls'
+      book = Spreadsheet.open path
+      assert_instance_of Excel::Workbook, book
+      sheet = book.worksheet 0
+      assert_not_nil sheet[1,0]
+      assert_not_nil sheet[2,1]
+    end
+    def test_changes
+      path = File.join @data, 'test_changes.xls'
+      book = Spreadsheet.open path
+      assert_instance_of Excel::Workbook, book
+      sheet = book.worksheet 1
+      sheet[20,0] = 'Ciao Mundo!'
+      target = File.join @var, 'test_changes.xls'
+      assert_nothing_raised do book.write target end
     end
   end
 end

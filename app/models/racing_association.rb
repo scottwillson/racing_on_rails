@@ -71,7 +71,7 @@ class RacingAssociation < ActiveRecord::Base
   
   # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
   def today
-    now.beginning_of_day
+    now.to_date
   end
   
   # Returns now.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.

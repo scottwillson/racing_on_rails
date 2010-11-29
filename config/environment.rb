@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers )
+  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
@@ -26,6 +26,10 @@ Rails::Initializer.run do |config|
   config.gem "authlogic"
   config.gem "tabular", :version => ">0.0.5"
   config.gem "mysql2"
+  config.gem "pdf-reader", :lib => "pdf/reader"
+  config.gem "Ascii85", :lib => "ascii85"
+  config.gem "prawn"
+  config.gem "prawn-core", :lib => "prawn/core"
   config.gem "vestal_versions"
   config.gem "sentient_user"
 
