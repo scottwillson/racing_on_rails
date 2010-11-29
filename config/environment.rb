@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
