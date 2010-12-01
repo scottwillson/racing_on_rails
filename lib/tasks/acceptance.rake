@@ -18,11 +18,11 @@ namespace :test do
 
   namespace :server do
     task :start do
-	  if RUBY_PLATFORM[/mswin|ming/]
-	    require "win32/process"
-		include Windows::Process
-	  end
-	  
+      if RUBY_PLATFORM[/mswin|ming/]
+        require "win32/process"
+        include Windows::Process
+      end
+
       @pid = fork do
         # Since we can't use shell redirects without screwing 
         # up the pid, we'll reopen stdin and stdout instead

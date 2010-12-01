@@ -630,7 +630,6 @@ module MiniTest
     end
 
     def _run_suite suite, type
-      p "_run_suite #{suite}"
       header = "#{type}_suite_header"
       puts send(header, suite) if respond_to? header
 
@@ -743,7 +742,6 @@ module MiniTest
       puts "Run options: #{help}"
 
       self.class.plugins.each do |plugin|
-        p "plugin -- #{plugin}"
         send plugin
         break unless report.empty?
       end
@@ -786,7 +784,6 @@ module MiniTest
       # Runs the tests reporting the status to +runner+
 
       def run runner
-        p "MiniTest run #{runner}"
         trap "INFO" do
           time = Time.now - runner.start_time
           warn "%s#%s %.2fs" % [self.class, self.__name__, time]

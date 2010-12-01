@@ -2,9 +2,12 @@
 ENV.delete "DYLD_FORCE_FLAT_NAMESPACE"
 
 require File.expand_path("../../test_helper", __FILE__)
+# require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
 require "selenium-webdriver"
 
 class WebDriverTestCase < ActiveSupport::TestCase
+  DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
+  
   attr_accessor :base_url
   attr_accessor :driver
   
@@ -17,10 +20,8 @@ class WebDriverTestCase < ActiveSupport::TestCase
     # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
     webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
     @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
-    FileUtils.rm_rf download_directory
-    FileUtils.mkdir_p download_directory
-    # Test::Unit::UI::WebDriverTestRunner.driver = driver
-    @base_url = "http://localhost:3000"
+    FileUtils.rm_rf DOWNLOAD_DIRECTORY
+    FileUtils.mkdir_p DOWNLOAD_DIRECTORY
     driver.manage.delete_all_cookies
     super
   end
@@ -42,7 +43,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def open(url, expect_error_page = false)
-    driver.get base_url + url
+    driver.get "http://localhost:3000" + url
     if expect_error_page
       assert_errors
     else
@@ -216,7 +217,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   def wait_for_download(glob_pattern)
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
     Timeout::timeout(10) do
-      while Dir.glob("#{download_directory}/#{glob_pattern}").empty?
+      while Dir.glob("#{DOWNLOAD_DIRECTORY}/#{glob_pattern}").empty?
         sleep 0.25
       end
     end
@@ -364,21 +365,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     end
   end
   
-  def download_directory
-    @download_directory ||= (
-      "/tmp/webdriver-downloads"
-    )
-  end
-  
   def remove_download(filename)
-    FileUtils.rm_f "#{download_directory}/#{filename}"
+    FileUtils.rm_f "#{DOWNLOAD_DIRECTORY}/#{filename}"
   end
 end
-
-# Hack. Use our custom TestRunner in place of the default console runner.
-# SeleniumTestRunner extends console TestRunner. Main difference is screendumps and snapshots.
-# You'd think there would be a easier, cleaner way to do this.
-# Test::Unit::AutoRunner::RUNNERS[:console] = proc do |r|
-#   require 'test/unit/ui/webdriver_test_runner'
-#   Test::Unit::UI::WebDriverTestRunner
-# end
