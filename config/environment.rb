@@ -39,6 +39,7 @@ Rails::Initializer.run do |config|
   end
 
   if RAILS_ENV == "test"
+    config.gem "minitest", :lib => "minitest/unit"
     config.gem "mocha"
     config.gem "timecop"
   end
