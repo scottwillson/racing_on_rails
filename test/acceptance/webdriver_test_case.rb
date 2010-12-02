@@ -2,44 +2,61 @@
 ENV.delete "DYLD_FORCE_FLAT_NAMESPACE"
 
 require File.expand_path("../../test_helper", __FILE__)
-# require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
+require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
 require "selenium-webdriver"
+
+MiniTest::Unit.after_tests {
+  begin
+    begin
+      Timeout::timeout(5) do
+        MiniTest::Unit.driver.try :quit
+      end
+    rescue Timeout::Error => e
+      Rails.logger.warn "Could not quit Firefox driver"
+      MiniTest::Unit.driver.try(:quit) rescue nil
+    end
+    File.open("#{MiniTest::Unit.results_path}/index.html", "a") do |f|
+      f.puts "</body>"
+      f.puts "</html>"
+    end
+  rescue Exception => e
+    Rails.logger.error e
+  end
+}
 
 class WebDriverTestCase < ActiveSupport::TestCase
   DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
-  
-  attr_accessor :base_url
-  attr_accessor :driver
   
   self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
   fixtures :all
   
-  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
   def setup
-    # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
-    webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
-    @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
-    FileUtils.rm_rf DOWNLOAD_DIRECTORY
-    FileUtils.mkdir_p DOWNLOAD_DIRECTORY
+    ApplicationController.expire_cache
     driver.manage.delete_all_cookies
+    File.open("#{MiniTest::Unit.results_path}/index.html", "a") do |f|
+      f.puts "<p>#{self.class.name}</p>"
+    end
     super
   end
   
-  def teardown
-    begin
-      begin
-        Timeout::timeout(5) do
-          driver.try :quit
-        end
-      rescue Timeout::Error => e
-        Rails.logger.warn "Could not quit Firefox driver"
-        driver.try(:quit) rescue nil
+  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
+  def driver
+    unless MiniTest::Unit.driver
+      FileUtils.rm_rf MiniTest::Unit.results_path
+      FileUtils.mkdir_p MiniTest::Unit.results_path
+      File.open("#{MiniTest::Unit.results_path}/index.html", "w") do |f|
+        f.puts "<html>"
+        f.puts "<body>"
       end
-      super
-    rescue Exception => e
-      Rails.logger.error e
+
+      # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
+      webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
+      MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
+      FileUtils.rm_rf DOWNLOAD_DIRECTORY
+      FileUtils.mkdir_p DOWNLOAD_DIRECTORY
     end
+    MiniTest::Unit.driver
   end
   
   def open(url, expect_error_page = false)
