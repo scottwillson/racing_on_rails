@@ -1,4 +1,4 @@
-RAILS_GEM_VERSION = '=2.3.5' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.10'  unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -16,7 +16,7 @@ end
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.load_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs  )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
@@ -24,24 +24,14 @@ Rails::Initializer.run do |config|
   }
   
   config.gem "authlogic"
-  config.gem "fastercsv"
+  config.gem "tabular", :version => ">0.0.5"
+  config.gem "mysql2"
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
   config.gem "prawn"
   config.gem "prawn-core", :lib => "prawn/core"
-  config.gem "tabular"
   config.gem "vestal_versions"
   config.gem "sentient_user"
-
-  if RAILS_ENV == "acceptance"
-    config.gem "selenium-webdriver"
-    config.gem "mocha"
-  end
-
-  if RAILS_ENV == "test"
-    config.gem "mocha"
-    config.gem "timecop"
-  end
 
   config.time_zone = "Pacific Time (US & Canada)"
   
@@ -78,8 +68,6 @@ class ActionView::Base
   end
 end
 
-require "array"
-require "nil_class"
-require "string"
+require 'array'
 require "local_static"
 require "action_view/inline_template_extension"

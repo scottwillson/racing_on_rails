@@ -2,47 +2,65 @@
 ENV.delete "DYLD_FORCE_FLAT_NAMESPACE"
 
 require File.expand_path("../../test_helper", __FILE__)
+require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
 require "selenium-webdriver"
 
+MiniTest::Unit.after_tests {
+  begin
+    begin
+      Timeout::timeout(5) do
+        MiniTest::Unit.driver.try :quit
+      end
+    rescue Timeout::Error => e
+      Rails.logger.warn "Could not quit Firefox driver"
+      MiniTest::Unit.driver.try(:quit) rescue nil
+    end
+    File.open("#{MiniTest::Unit.results_path}/index.html", "a") do |f|
+      f.puts "</body>"
+      f.puts "</html>"
+    end
+  rescue Exception => e
+    Rails.logger.error e
+  end
+}
+
 class WebDriverTestCase < ActiveSupport::TestCase
-  attr_accessor :base_url
-  attr_accessor :driver
+  DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
   
   self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = false
   fixtures :all
   
-  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
   def setup
-    # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
-    webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
-    @driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
-    FileUtils.rm_rf download_directory
-    FileUtils.mkdir_p download_directory
-    Test::Unit::UI::WebDriverTestRunner.driver = driver
-    @base_url = "http://localhost:3000"
+    ApplicationController.expire_cache
     driver.manage.delete_all_cookies
+    File.open("#{MiniTest::Unit.results_path}/index.html", "a") do |f|
+      f.puts "<p>#{self.class.name}</p>"
+    end
     super
   end
   
-  def teardown
-    begin
-      begin
-        Timeout::timeout(5) do
-          driver.try :quit
-        end
-      rescue Timeout::Error => e
-        Rails.logger.warn "Could not quit Firefox driver"
-        driver.try(:quit) rescue nil
+  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
+  def driver
+    unless MiniTest::Unit.driver
+      FileUtils.rm_rf MiniTest::Unit.results_path
+      FileUtils.mkdir_p MiniTest::Unit.results_path
+      File.open("#{MiniTest::Unit.results_path}/index.html", "w") do |f|
+        f.puts "<html>"
+        f.puts "<body>"
       end
-      super
-    rescue Exception => e
-      Rails.logger.error e
+ 
+      # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
+      webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
+      MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
+      FileUtils.rm_rf DOWNLOAD_DIRECTORY
+      FileUtils.mkdir_p DOWNLOAD_DIRECTORY
     end
+    MiniTest::Unit.driver
   end
   
   def open(url, expect_error_page = false)
-    driver.get base_url + url
+    driver.get "http://localhost:3000" + url
     if expect_error_page
       assert_errors
     else
@@ -59,6 +77,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     driver.navigate.back
   end
   
+  def hover(element_finder)
+    find_element(element_finder).hover
+  end
+
   def click(element_finder)
     find_element(element_finder).click
     assert_no_errors
@@ -211,10 +233,14 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def wait_for_download(glob_pattern)
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
-    Timeout::timeout(10) do
-      while Dir.glob("#{download_directory}/#{glob_pattern}").empty?
-        sleep 0.25
+    begin
+      Timeout::timeout(10) do
+        while Dir.glob("#{DOWNLOAD_DIRECTORY}/#{glob_pattern}").empty?
+          sleep 0.25
+        end
       end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{DOWNLOAD_DIRECTORY} within seconds 10 seconds. Found: #{Dir.entries(DOWNLOAD_DIRECTORY).join(", ")}"
     end
   end
   
@@ -360,21 +386,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     end
   end
   
-  def download_directory
-    @download_directory ||= (
-      "/tmp/webdriver-downloads"
-    )
-  end
-  
   def remove_download(filename)
-    FileUtils.rm_f "#{download_directory}/#{filename}"
+    FileUtils.rm_f "#{DOWNLOAD_DIRECTORY}/#{filename}"
   end
-end
-
-# Hack. Use our custom TestRunner in place of the default console runner.
-# SeleniumTestRunner extends console TestRunner. Main difference is screendumps and snapshots.
-# You'd think there would be a easier, cleaner way to do this.
-Test::Unit::AutoRunner::RUNNERS[:console] = proc do |r|
-  require 'test/unit/ui/webdriver_test_runner'
-  Test::Unit::UI::WebDriverTestRunner
 end

@@ -3,8 +3,9 @@ require "acceptance/webdriver_test_case"
 # :stopdoc:
 class PromotersTest < WebDriverTestCase
   def test_browse
-    series = Series.create!(:name => "Cross Crusade", :promoter => Person.find_by_name("Brad Ross"))
-    event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => Person.find_by_name("Brad Ross"))
+    year = RacingAssociation.current.effective_year
+    series = Series.create!(:name => "Cross Crusade", :promoter => Person.find_by_name("Brad Ross"), :date => Date.new(year, 10))
+    event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => Person.find_by_name("Brad Ross"), :date => Date.new(year, 10))
     series.children << event
     login_as :promoter
     

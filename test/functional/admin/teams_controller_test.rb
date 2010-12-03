@@ -122,7 +122,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(vanilla, assigns['team'], 'Team')
-    assert(assigns['team'].errors.empty?, assigns['team'].errors.full_messages)
+    assert assigns['team'].errors.empty?, assigns['team'].errors.full_messages.join
     assert_template(nil)
     vanilla.reload
     assert_equal('Vaniller', vanilla.name, 'Team name after update')
@@ -189,7 +189,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     )
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
-    assert(assigns["team"].errors.empty?, assigns["team"].errors.full_messages)
+    assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
     assert_template(nil)
     assert_equal(vanilla, assigns['team'], 'Team')
     vanilla.reload
@@ -254,7 +254,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     )
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
-    assert(assigns["team"].errors.empty?, assigns["team"].errors.full_messages)
+    assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
     assert_template(nil)
     assert_equal(landshark, assigns['team'], 'Team')
     landshark.reload

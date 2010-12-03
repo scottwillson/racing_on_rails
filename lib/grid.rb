@@ -23,8 +23,6 @@ class Grid
   # TODO Consider using regex for column maps
   def initialize(source = '', *options)
     raise ArgumentError("'source' cannot be nil") if source.nil?
-
-    Rails.logger.debug("Grid (#{Time.zone.now}) new")
     
     options.flatten! if options
     @truncated = false
@@ -64,8 +62,7 @@ class Grid
     if options_hash[:columns]
       columns_array = options_hash[:columns]
     end
-    
-    @columns = create_columns(columns_array)
+    self.columns = create_columns(columns_array)
     self.rows = source
   end
 
@@ -85,10 +82,10 @@ class Grid
 
   # Delimited String or Array of Strings or Arrays
   def rows=(source)
-    for row in source
+    source.each do |row|
       row = row.split(/#{@delimiter}/) unless row.is_a?(Array)
       index = 0
-      row = row.collect {|cell|
+      row = row.collect do |cell|
         if cell
           cell.strip!
           if quoted
@@ -97,7 +94,7 @@ class Grid
           end
 
           if index >= column_count
-            columns << Column.new
+            self.columns << Column.new
           end
           
           column = columns[index]
@@ -108,7 +105,7 @@ class Grid
 
         index = index + 1
         cell
-      }
+      end
       
       rows << Row.new(row, self)
     end
@@ -119,7 +116,7 @@ class Grid
   end
   
   def columns
-    @columns = @columns || []
+    @columns ||= []
   end
 
   def column_count
@@ -135,11 +132,11 @@ class Grid
   end
 
   def create_columns(columns_array)
-    @columns = []
+    self.columns = []
     return if columns_array.nil?
 
     columns_array = columns_array.split(/#{@delimiter}/) unless columns_array.is_a?(Array)
-    @columns = columns_array.collect do |column_name|
+    self.columns = columns_array.collect do |column_name|
       description = column_name
       if column_name.is_a?(Column)
         column_name
@@ -182,7 +179,7 @@ class Grid
     after_columns_created
     validate_columns
     
-    for column in @columns
+    columns.each do |column|
       unless column.description.blank?
         if !column.fixed_size && (column.description.size > column.size)
           column.size = column.description.size 
@@ -198,7 +195,7 @@ class Grid
   def validate_columns
     return unless @row_class_instance
     
-    for column in @columns
+    columns.each do |column|
       if column.field.nil? || !(@row_class_instance.respond_to?("#{column.field}="))
         column.field = nil
         @custom_columns << column.name unless column.name.blank?
@@ -233,8 +230,8 @@ class Grid
     end
   
     text = ""
-    if include_columns and @columns and !@columns.empty? and !@columns.to_s.blank?
-      descriptions = @columns.collect do |column|
+    if include_columns && columns && columns.any?(&:present?)
+      descriptions = columns.collect do |column|
         column.description
       end
       text = text + header_to_s(descriptions)
@@ -250,7 +247,7 @@ class Grid
     for index in 0..(column_count - 1)
       cell = row[index] || ''
       if cell.size <= column_size(index)
-        if @columns[index].justification == Column::LEFT
+        if columns[index].justification == Column::LEFT
           cell = cell.ljust(column_size(index))
         else
           cell = cell.rjust(column_size(index))
@@ -271,7 +268,7 @@ class Grid
     text = ''
     for index in 0..(column_count - 1)
       cell = row[index] || ''
-      if @columns[index].justification == Column::LEFT
+      if columns[index].justification == Column::LEFT
         cell = cell.ljust(column_size(index))
       else
         cell = cell.rjust(column_size(index))

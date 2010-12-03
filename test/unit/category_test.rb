@@ -16,7 +16,7 @@ class CategoryTest < ActiveSupport::TestCase
 
     category = Category.find_or_create_by_name('Clydesdale')
     assert_not_nil(category, 'category')
-    assert(category.errors.empty?, category.errors.full_messages)
+    assert(category.errors.empty?, category.errors.full_messages.join(", "))
     assert_equal('Clydesdale', category.name, 'category.name')
   end
   

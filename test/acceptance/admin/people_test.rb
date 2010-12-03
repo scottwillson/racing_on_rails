@@ -140,10 +140,10 @@ class PeopleTest < WebDriverTestCase
     assert_element 'format'
     assert_value 'xls', 'format'
 
-    remove_download "people_2010_1_1.xls"
+    remove_download "people_2011_1_1.xls"
     click 'export_button'
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
-    wait_for_download "people_2010_1_1.xls"
+    wait_for_download "people_2011_1_1.xls"
     assert_no_errors
 
     open '/admin/teams'

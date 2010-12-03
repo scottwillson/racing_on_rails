@@ -29,7 +29,7 @@ class MultiDayEvent < Event
              def create!(attributes = {})
                attributes[:parent_id] = @owner.id
                attributes[:parent] = @owner
-               PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
+               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
                (event.date = @owner.date) unless attributes[:date]
                event.parent = @owner
@@ -41,7 +41,7 @@ class MultiDayEvent < Event
              def create(attributes = {})
                attributes[:parent_id] = @owner.id
                attributes[:parent] = @owner
-               PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
+               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
                (event.date = @owner.date) unless  attributes[:date]
                event.parent = @owner

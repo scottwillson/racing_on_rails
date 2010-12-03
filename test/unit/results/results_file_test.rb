@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require File.expand_path("../../../test_helper", __FILE__)
 require "tempfile"
 require "spreadsheet"
@@ -102,7 +104,7 @@ module Results
           end
           assert_equal(expected_result.team_name, result.team_name, "team name for race #{index} result #{result_index}")
           assert_equal(expected_result.points, result.points, "points for race #{index} result #{result_index}")
-          if result.person
+          if result.person(true)
             if RaceNumber.rental?(result.number, Discipline[event.discipline])
               assert(!result.person.member?(race_date), "Person should not be a member because he has a rental number")
             else

@@ -212,6 +212,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(person.name, '', 'name')
   end
   
+  def test_set_name
+    person = Person.new(:first_name => "R. Jim", :last_name => "Smith")
+    assert_equal "R. Jim", person.first_name, "first_name"
+  end
+  
   def test_name_or_login
     assert_equal nil, Person.new.name_or_login
     assert_equal "dario@example.com", Person.new(:email => "dario@example.com").name_or_login
@@ -613,10 +618,13 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates('1978-01-01', person.date_of_birth, 'date_of_birth from 78')
   end
   
-  def test_birthdate
+  def test_date_of_birth
     person = Person.new(:date_of_birth => '1973-10-04')
-    assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 0073-10-04')
-    assert_equal_dates('1973-10-04', person.birthdate, 'birthdate from 0073-10-04')
+    assert_equal_dates('1973-10-04', person.date_of_birth, 'date_of_birth from 1973-10-04')
+    assert_equal_dates('1973-10-04', person.birthdate, 'birthdate from 173-10-04')
+
+    person = Person.new(:date_of_birth => "05/07/73")
+    assert_equal_dates "1973-05-07", person.date_of_birth, "date_of_birth from 05/07/73"
   end
   
   def test_find_by_number
@@ -815,7 +823,7 @@ class PersonTest < ActiveSupport::TestCase
     people = Person.find_all_for_export
     assert_equal("Molly", people[0]["first_name"], "Row 0 first_name")
     assert_equal("Kona", people[2]["team_name"], "Row 2 team")
-    assert_equal("30", people[4]["racing_age"], "Row 4 racing_age")
+    assert_equal(30, people[4]["racing_age"], "Row 4 racing_age")
     assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
     assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")

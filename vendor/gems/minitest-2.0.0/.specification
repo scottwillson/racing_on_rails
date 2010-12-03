@@ -29,6 +29,7 @@ extra_rdoc_files: []
 
 files: 
 - lib
+- lib/minitest
 has_rdoc: true
 homepage: 
 licenses: []

@@ -539,9 +539,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
                         "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", 
                         "date_of_birth(1i)"=>"", "email"=>"", "state"=>""}, "commit"=>"Save"})
     
-    if assigns['person']
-      assert(assigns['person'].errors.empty?, assigns['person'].errors.full_messages)
-    end
+    assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
     
     assert(flash.empty?, "Flash should be empty, but was: #{flash}")
     knowlsons = Person.find_all_by_name('Jon Knowlson')
@@ -568,9 +566,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         :number_year => '2007', "official" => "0",
       "commit"=>"Save"})
     
-    if assigns['person']
-      assert(assigns['person'].errors.empty?, assigns['person'].errors.full_messages)
-    end
+    assert assigns['person'].errors.empty?, assigns['person'].errors.full_messages.join
     
     assert(flash.empty?, "flash empty? #{flash}")
     knowlsons = Person.find_all_by_name('Jon Knowlson')
@@ -980,7 +976,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   end
   
   def test_export_to_excel_with_date
-    get(:index, :format => 'xls', :include => 'all', :date => "12/31/2008")
+    get(:index, :format => 'xls', :include => 'all', :date => "2008-12-31")
 
     assert_response(:success)
     today = Date.today
@@ -1083,7 +1079,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     assert_not_nil(assigns["person"], "@person")
-    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages)
+    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join)
 
     assert_redirected_to(edit_admin_person_path(candi_murray))
     

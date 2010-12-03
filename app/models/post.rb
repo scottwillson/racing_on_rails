@@ -12,7 +12,7 @@ class Post < ActiveRecord::Base
     logger.debug("Post.find_for_dates(#{mailing_list}, #{month_start}, #{month_end})")
     mailing_list.posts.find(
       :all,
-      :select => ["id, date, sender, subject, topica_message_id" ],
+      :select => "id, date, sender, subject, topica_message_id" ,
       :conditions => [ "date between ? and ?", month_start, month_end ],
       :order => "date desc"
     )
@@ -62,7 +62,7 @@ class Post < ActiveRecord::Base
   end
   
   def update_sender
-    if @from_name.present? && from_email_address.present? && @from_email_address.any? && !(@from_name.to_s == @from_email_address.to_s )
+    if @from_name.present? && from_email_address.present? && @from_email_address.present? && !(@from_name.to_s == @from_email_address.to_s )
       self.sender = "#{@from_name} <#{@from_email_address}>"
     else
       self.sender = @from_email_address.to_s

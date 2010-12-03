@@ -8,4 +8,14 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_equal(nil, truncate_from_end(nil), "nil")
     assert_equal("upload.xls", truncate_from_end("upload.xls"), "upload.xls")
   end
+
+  def test_to_excel
+    assert_equal("", to_excel(""), "''")
+    assert_equal(nil, to_excel(nil), "nil")
+    assert_equal("word", to_excel("word"), "word")
+    assert_equal("This is a sentence", to_excel("This is a sentence"), "This is a sentence")
+    assert_equal("This has a tab", to_excel("This has\ta tab"), 'This has\ta tab')
+    assert_equal("This has   tabs ", to_excel("This has\t\t\ttabs\t"), 'This has\t\t\ttabs\t')
+    assert_equal("expected  ", to_excel("expected\r\n"), "expected\r\n")
+  end
 end
