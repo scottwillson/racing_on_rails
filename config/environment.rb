@@ -23,6 +23,9 @@ Rails::Initializer.run do |config|
     :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
+  if RUBY_VERSION["1.8"]
+    config.gem "fastercsv"
+  end
   config.gem "rack", :version => "1.1.0"
   config.gem "authlogic"
   config.gem "tabular", :version => ">0.0.5"
