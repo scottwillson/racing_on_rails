@@ -233,10 +233,14 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def wait_for_download(glob_pattern)
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
-    Timeout::timeout(10) do
-      while Dir.glob("#{DOWNLOAD_DIRECTORY}/#{glob_pattern}").empty?
-        sleep 0.25
+    begin
+      Timeout::timeout(10) do
+        while Dir.glob("#{DOWNLOAD_DIRECTORY}/#{glob_pattern}").empty?
+          sleep 0.25
+        end
       end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{DOWNLOAD_DIRECTORY} within seconds 10 seconds. Found: #{Dir.entries(DOWNLOAD_DIRECTORY).join(", ")}"
     end
   end
   
