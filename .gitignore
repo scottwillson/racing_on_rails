@@ -23,3 +23,5 @@ doc/README_FOR_APP
 public/export
 public/export/*.csv
 public/export/*.txt
+*.swp
+
