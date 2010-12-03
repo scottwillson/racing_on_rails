@@ -37,6 +37,7 @@ class PromotersTest < WebDriverTestCase
 
     click "events_tab"
     click :link_text => "Cross Crusade"
+    click_ok_on_confirm_dialog
     click "propagate_races"
   end
 end
