@@ -33,16 +33,6 @@ Rails::Initializer.run do |config|
   config.gem "vestal_versions"
   config.gem "sentient_user"
 
-  if RAILS_ENV == "acceptance"
-    config.gem "selenium-webdriver"
-    config.gem "mocha"
-  end
-
-  if RAILS_ENV == "test"
-    config.gem "mocha"
-    config.gem "timecop"
-  end
-
   config.time_zone = "Pacific Time (US & Canada)"
   
   # Racing on Rails has many foreign key constraints, so :sql is required
