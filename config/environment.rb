@@ -23,7 +23,7 @@ Rails::Initializer.run do |config|
     :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
-  config.gem "authlogic", :version => "2.1.3"
+  config.gem "authlogic"
   config.gem "fastercsv"
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"

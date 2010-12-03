@@ -64,8 +64,8 @@ module Authlogic
         #   u.password = "new pass"
         #   u.valid_password?("old pass")
         #
-        # Should the last line above return true or false? The record hasn't been saved yet, so most would assume yes.
-        # Other would assume no. So I let you decide by giving you this option.
+        # Should the last line above return true or false? The record hasn't been saved yet, so most would assume true.
+        # Other would assume false. So I let you decide by giving you this option.
         #
         # * <tt>Default:</tt> true
         # * <tt>Accepts:</tt> Boolean
@@ -180,6 +180,17 @@ module Authlogic
         def self.included(klass)
           return if klass.crypted_password_field.nil?
           klass.define_callbacks *METHODS
+          
+          # If Rails 3, support the new callback syntax
+          if klass.send(klass.respond_to?(:singleton_class) ? :singleton_class : :metaclass).method_defined?(:set_callback)
+            METHODS.each do |method|
+              klass.class_eval <<-"end_eval", __FILE__, __LINE__
+                def self.#{method}(*methods, &block)
+                  set_callback :#{method}, *methods, &block
+                end
+              end_eval
+            end
+          end
         end
         
         private
