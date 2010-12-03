@@ -21,3 +21,5 @@ doc/README_FOR_APP
 .gitmodules
 *.rbc
 public/export
+public/export/*.csv
+public/export/*.txt
