@@ -122,6 +122,11 @@ class WebDriverTestCase < ActiveSupport::TestCase
   def click_ok_on_confirm_dialog
     driver.execute_script("window.confirm = function(msg){return true;};")
   end
+ 
+  # Workaround for WebDriver's less-than-stellar alert box handling.
+  def click_ok_on_alert_dialog
+    driver.execute_script("window.alert = function(msg){return true;};")
+  end
   
   def assert_no_errors
     assert_not_in_page_source(/Template is missing|Unknown action|Routing Error|RuntimeError|error occurred|Application Trace|RecordNotFound/)
