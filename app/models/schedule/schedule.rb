@@ -2,8 +2,10 @@ module Schedule
   # Single year's event schedule. Hierarchical model or Arrays: Schedule --> Month --> Week --> Day --> SingleDayEvent
   class Schedule
     COLUMNS_MAP = {
+      :race_name       => :name,
       :race            => :name,
       :event           => :name,
+      :type            => :discipline,
       :city_state      => :location,
       :promoter        => :promoter_name,
       :phone           => :promoter_phone,
@@ -37,6 +39,7 @@ module Schedule
         multi_day_events = find_multi_day_events(events)
         save(events, multi_day_events)
       end
+      
       start_date
     end
     
@@ -44,8 +47,8 @@ module Schedule
     def Schedule.delete_all_future_events(date)
       logger.debug("Delete all events after #{date}")
       # Avoid lock version errors by destroying child events first
-      SingleDayEvent.destroy_all(["date >= ?", date])
-      Event.destroy_all(["date >= ?", date])
+      SingleDayEvent.destroy_all(["date >= ? and events.id not in (select event_id from races)", date])
+      Event.destroy_all(["date >= ? and events.id not in (select event_id from races)", date])
     end
 
     # Read +file+, split city and state, read and create promoter
@@ -61,13 +64,17 @@ module Schedule
     end
 
     def Schedule.has_event?(row)
-      row[:name].present? && row[:date].present?
+      row[:name].present? && row[:date].present? && (row[:notes].blank? || !row[:notes]["Not on calendar"])
     end
 
     # Read Table Row and create SingleDayEvent
     def Schedule.parse(row)
       logger.debug(row.inspect) if logger.debug?
       event = nil
+
+      if row[:discipline] == "Clinic"
+        row[:instructional] = true
+      end
 
       if row[:discipline]
         discipline = Discipline.find_via_alias(row[:discipline])
@@ -116,7 +123,12 @@ module Schedule
       event_hash.delete(:promoter_email)
       event_hash.delete(:promoter_phone)
       event_hash[:promoter] = promoter
+
+      event_hash.delete(:series)
+
+      
       event = SingleDayEvent.new(event_hash)
+      event.notification = false
       
       if logger.debug? then logger.debug("Add #{event.name} to schedule") end
       event
@@ -147,22 +159,23 @@ module Schedule
     end
 
     def Schedule.add_one_day_events_to_parents(events, multi_day_events)
-      for event in events
+      events.each do |event|
         parent = multi_day_events[event.name]
-        if !parent.nil?
+        if parent
           parent.events << event
         end
       end
     end
 
     def Schedule.save(events, multi_day_events)
-      for event in events
+      events.each do |event|
         logger.debug("Save #{event.name}")
         event.save!
       end
-      for event in multi_day_events
+      multi_day_events.each do |event|
         logger.debug("Save #{event.name}")
         event.save!
+        event.update_date
       end
     end
     
@@ -176,7 +189,7 @@ module Schedule
       for month in 1..12
         @months << Month.new(year, month)
       end
-      for event in events
+      events.each do |event|
         month = @months[event.date.month - 1]
         if month.nil?
           raise(IndexError, "Could not find month for #{event.date.month} in year #{year}")
