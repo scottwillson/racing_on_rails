@@ -12,3 +12,17 @@ http://groups.google.com/group/racing-on-rails
 
 Source Code
 http://github.com/scottwillson/racing_on_rails/tree/master
+
+
+Requirements
+Ruby 1.8.7 (1.9.2 preferred)
+MySQL
+
+Gems
+rake
+mysql2
+
+Dev
+git
+ffi 0.6.3
+childprocess
