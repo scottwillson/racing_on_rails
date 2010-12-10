@@ -875,6 +875,7 @@ class Person < ActiveRecord::Base
     raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
 
     Person.transaction do
+      ActiveRecord::Base.lock_optimistically = false
       self.merge_version do
         events_with_results = other_person.results.collect do |result|
           event = result.event
@@ -922,6 +923,7 @@ class Person < ActiveRecord::Base
           event.enable_notification!
         end
       end
+      ActiveRecord::Base.lock_optimistically = true
     end
     true
   end
