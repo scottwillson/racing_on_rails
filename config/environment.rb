@@ -36,6 +36,7 @@ Rails::Initializer.run do |config|
   config.gem "prawn-core", :lib => "prawn/core"
   config.gem "vestal_versions"
   config.gem "sentient_user"
+  config.gem "newrelic_rpm"
 
   config.time_zone = "Pacific Time (US & Canada)"
   
