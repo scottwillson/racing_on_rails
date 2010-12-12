@@ -27,6 +27,9 @@ module Schedule
     #
     # *Warning:* Deletes all events after the schedule's first event date.
     # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
+    #
+    # file_path = schedule file to import
+    #
     # === Returns
     # * date of first event
     def Schedule.import(file_path)
@@ -34,10 +37,10 @@ module Schedule
       Event.transaction do
         table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
         start_date = table[0][:date]
-        delete_all_future_events(start_date)
+        delete_all_future_events start_date
         events = parse_events(table)
         multi_day_events = find_multi_day_events(events)
-        save(events, multi_day_events)
+        save events, multi_day_events
       end
       
       start_date
@@ -45,10 +48,10 @@ module Schedule
     
     # Events with results _will not_ be destroyed
     def Schedule.delete_all_future_events(date)
-      logger.debug("Delete all events after #{date}")
+      logger.debug "Delete all events after #{date}"
       # Avoid lock version errors by destroying child events first
-      SingleDayEvent.destroy_all(["date >= ? and events.id not in (select event_id from races)", date])
-      Event.destroy_all(["date >= ? and events.id not in (select event_id from races)", date])
+      SingleDayEvent.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
+      Event.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
     end
 
     # Read +file+, split city and state, read and create promoter
@@ -120,28 +123,28 @@ module Schedule
                   )
       end
 
-      event_hash.delete(:promoter_email)
-      event_hash.delete(:promoter_phone)
+      event_hash.delete :promoter_email
+      event_hash.delete :promoter_phone
       event_hash[:promoter] = promoter
 
-      event_hash.delete(:series)
+      event_hash.delete :series
 
       
       event = SingleDayEvent.new(event_hash)
       event.notification = false
       
-      if logger.debug? then logger.debug("Add #{event.name} to schedule") end
+       logger.debug("Add #{event.name} to schedule") if logger.debug?
       event
     end
 
     # Try and create parent MultiDayEvents from imported SingleDayEvents
     def Schedule.find_multi_day_events(events)
-      logger.debug("Find multi-day events")
+      logger.debug "Find multi-day events"
 
       # Hash of Arrays keyed by event name
       events_by_name = Hash.new
       events.each do |event|
-        logger.debug("Find multi-day events #{event.name}")
+        logger.debug "Find multi-day events #{event.name}"
         event_array = events_by_name[event.name] || Array.new
         event_array << event
         events_by_name[event.name] = event_array if event_array.size == 1
@@ -149,7 +152,7 @@ module Schedule
   
       multi_day_events = []
       events_by_name.each do |name, event_array|
-        logger.debug("Create multi-day event #{name}")
+        logger.debug "Create multi-day event #{name}"
         if event_array.size > 1
           multi_day_events << MultiDayEvent.create_from_children(event_array)
         end
@@ -169,11 +172,11 @@ module Schedule
 
     def Schedule.save(events, multi_day_events)
       events.each do |event|
-        logger.debug("Save #{event.name}")
+        logger.debug "Save #{event.name}"
         event.save!
       end
       multi_day_events.each do |event|
-        logger.debug("Save #{event.name}")
+        logger.debug "Save #{event.name}"
         event.save!
         event.update_date
       end
@@ -186,15 +189,15 @@ module Schedule
     def initialize(year, events)
       @year = year.to_i
       @months = []
-      for month in 1..12
+      (1..12).each do |month|
         @months << Month.new(year, month)
       end
       events.each do |event|
         month = @months[event.date.month - 1]
         if month.nil?
-          raise(IndexError, "Could not find month for #{event.date.month} in year #{year}")
+          raise IndexError, "Could not find month for #{event.date.month} in year #{year}"
         end
-        month.add(event)
+        month.add event
       end
     end
   end

@@ -1,6 +1,6 @@
 <%= tabs do |tabs|
   years = Event.find_all_years
-  current_year = Date.today.year
+  current_year = RacingAssociation.current.effective_year
   
   unless years.include?(current_year)
     years << current_year
