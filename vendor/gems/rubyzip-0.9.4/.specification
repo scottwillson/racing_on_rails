@@ -74,7 +74,6 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      hash: 1854618801185822943
       segments: 
       - 0
       version: "0"
