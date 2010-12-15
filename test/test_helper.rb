@@ -1,6 +1,6 @@
-ENV["RAILS_ENV"] = "test"
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-require 'test_help'
+ENV["::Rails.env"] = "test"
+require File.expand_path('../../config/environment', __FILE__)
+require "rails/test_help"
 require "action_view/test_case"
 require "authlogic/test_case"
 
@@ -194,19 +194,19 @@ class ActiveSupport::TestCase
   end
 
   def print_all_events
-    Event.find(:all, :order => :date).each {|event|
+    Event.find.all( :order => :date).each {|event|
       p "#{event.date} #{event.name} #{event.id} #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }
   end
   
   def print_all_results
-    Result.find(:all, :order => :person_id).each {|result|
+    Result.find.all( :order => :person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end
   
   def print_all_categories
-    Category.find(:all, :order => 'parent_id, name').each {|category|
+    Category.find.all( :order => 'parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
     }
   end

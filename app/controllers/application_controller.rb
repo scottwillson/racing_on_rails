@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
   helper :all
-  include ExceptionNotifiable
+  protect_from_forgery
+  
+  # FIXME include ExceptionNotifiable
   include SentientController
   include SslRequirement
-  
-  local_addresses.clear
 
   # HP"s proxy, among others, gets this wrong
   ActionController::Base.ip_spoofing_check = false
@@ -16,23 +16,23 @@ class ApplicationController < ActionController::Base
 
   def self.expire_cache
     begin
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "bar"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "cat4_womens_race_series"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "competitions"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "events"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "people"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "rider_rankings"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "results"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "schedule"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "teams"))
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "bar.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "cat4_womens_race_series.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "home.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "index.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "results.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "rider_rankings.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "schedule.html"), :force =>true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "teams.html"), :force =>true)
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "bar"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "competitions"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "events"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "people"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "rider_rankings"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "results"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "schedule"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "teams"))
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "bar.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "home.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "index.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "results.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "rider_rankings.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.html"), :force =>true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "teams.html"), :force =>true)
     rescue Exception => e
       logger.error e
     end
@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
       }
       format.js {
         log_error(exception)
-        ExceptionNotifier.deliver_exception_notification(exception, self, request, {})
+        # FIXME ExceptionNotifier.deliver_exception_notification(exception, self, request, {})
         render "shared/exception", :locals => { :exception => exception }
       }
       format.all {
@@ -95,9 +95,9 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/404.html"
         if File.exists?(local_path)
-          render :file => "#{RAILS_ROOT}/local/public/404.html", :status => "404 Not Found"
+          render :file => "#{::Rails.root.to_s}/local/public/404.html", :status => "404 Not Found"
         else
-          render :file => "#{RAILS_ROOT}/public/404.html", :status => "404 Not Found"
+          render :file => "#{::Rails.root.to_s}/public/404.html", :status => "404 Not Found"
         end
       }
       type.all  { render :nothing => true, :status => "404 Not Found" }
@@ -109,9 +109,9 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/500.html"
         if File.exists?(local_path)
-          render :file => "#{RAILS_ROOT}/local/public/500.html", :status => "500 Error"
+          render :file => "#{::Rails.root.to_s}/local/public/500.html", :status => "500 Error"
         else
-          render :file => "#{RAILS_ROOT}/public/500.html", :status => "500 Error"
+          render :file => "#{::Rails.root.to_s}/public/500.html", :status => "500 Error"
         end
       }
       type.all  { render :nothing => true, :status => "500 Error" }

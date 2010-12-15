@@ -23,7 +23,7 @@ class UpdateBarFor2010 < ActiveRecord::Migration
     short_track.bar_categories << Category.find_or_create_by_name("Category 1 Men")
     short_track.bar_categories << Category.find_or_create_by_name("Category 1 Women")
     
-    Discipline.find(:all, :conditions => "bar is true").each do |discipline|
+    Discipline.find.all( :conditions => "bar is true").each do |discipline|
       discipline.bar_categories << Category.find_or_create_by_name("Clydesdale")
     end
     

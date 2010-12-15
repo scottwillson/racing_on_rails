@@ -30,7 +30,7 @@ class Admin::RacesController < Admin::AdminController
   end
 
   def edit
-    @disciplines = [''] + Discipline.find(:all).collect do |discipline|
+    @disciplines = [''] + Discipline.find.all().collect do |discipline|
       discipline.name
     end
     @disciplines.sort!

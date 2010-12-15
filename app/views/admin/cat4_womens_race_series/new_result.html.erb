@@ -4,7 +4,7 @@
 <%= error_messages_for "race" -%>
 <%= error_messages_for "result" -%>
 
-<% form_for(:result, 
+<%= form_for(:result, 
             :url => { :controller => "cat4_womens_race_series", :action => "results" },
             :html => { :autocomplete => "off", :class => "cat4_womens_race_series" }) do |f| %>
 

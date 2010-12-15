@@ -17,7 +17,7 @@ class MbraBar < Competition
         Discipline.find_all_bar.reject { |discipline|
           discipline == Discipline[:age_graded] || discipline == Discipline[:overall]
         }.each do |discipline|
-          bar = MbraBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          bar = MbraBar.first(:conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = MbraBar.create!(
               :name => "#{year} #{discipline.name} BAR",
@@ -27,7 +27,7 @@ class MbraBar < Competition
           end
         end
 
-        MbraBar.find(:all, :conditions => { :date => date }).each do |bar|
+        MbraBar.find.all( :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
           bar.calculate_threshold_number_of_races
@@ -41,7 +41,7 @@ class MbraBar < Competition
   end
   
   def MbraBar.find_by_year_and_discipline(year, discipline_name)
-    MbraBar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
+    MbraBar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
   
   def calculate_threshold_number_of_races
@@ -79,7 +79,7 @@ class MbraBar < Competition
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
 
-    Result.find(:all,
+    Result.find.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                     (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)

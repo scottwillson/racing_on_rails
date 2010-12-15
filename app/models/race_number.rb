@@ -30,8 +30,7 @@ class RaceNumber < ActiveRecord::Base
     discipline_id = RaceNumber.discipline_id(_event.discipline)
     return [] unless discipline_id
     
-    race_numbers = RaceNumber.find(
-      :all, 
+    race_numbers = RaceNumber.all(
       :conditions => ['value=? and discipline_id = ? and number_issuer_id=? and year=?',
                       value, 
                       discipline_id, 

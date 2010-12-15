@@ -88,14 +88,12 @@ module PostsHelper
   end
   
   def post_navigation(post)
-    previous_post = Post.find(
-      :first, 
+    previous_post = Post.first(
       :conditions => ["mailing_list_id = ? and date < ?", post.mailing_list.id, post.date], 
       :order => "date desc", 
       :limit => 1
     )
-    next_post = Post.find(
-      :first, 
+    next_post = Post.first(
       :conditions => ["mailing_list_id = ? and date > ?", post.mailing_list.id, post.date], 
       :order => "date asc", 
       :limit => 1

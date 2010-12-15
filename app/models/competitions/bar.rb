@@ -20,7 +20,7 @@ class Bar < Competition
         Discipline.find_all_bar.reject { |discipline|
           [ Discipline[:age_graded], Discipline[:overall], Discipline[:team] ].include?(discipline)
         }.each do |discipline|
-          bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          bar = Bar.first(:conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(
               :parent => overall_bar,
@@ -31,7 +31,7 @@ class Bar < Competition
           end
         end
 
-        Bar.find(:all, :conditions => { :date => date }).each do |bar|
+        Bar.find.all( :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter
@@ -44,7 +44,7 @@ class Bar < Competition
   end
   
   def Bar.find_by_year_and_discipline(year, discipline_name)
-    Bar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
+    Bar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
 
   def point_schedule
@@ -80,7 +80,7 @@ class Bar < Competition
       category_ids << ", #{category_4_5_men.id}"
     end
 
-    Result.find(:all,
+    Result.find.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                   place between 1 AND #{point_schedule.size - 1}

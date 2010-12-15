@@ -3,7 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class OregonCupTest < ActiveSupport::TestCase
   def test_create
-    assert_nil(OregonCup.find(:first, :conditions => ['date = ?', Date.new(2003)]), 'Should have no Oregon Cup for 2003')
+    assert_nil(OregonCup.first(:conditions => ['date = ?', Date.new(2003)]), 'Should have no Oregon Cup for 2003')
     or_cup = OregonCup.create!(:date => Date.new(2003))
     assert(or_cup.errors.empty?, "New OR Cup should have no errors, but has: #{or_cup.errors.full_messages}")
     assert_equal(2, or_cup.races.size, 'races')
@@ -101,7 +101,7 @@ class OregonCupTest < ActiveSupport::TestCase
     assert_equal(1, OregonCup.count, "Oregon Cups before calculate!")
     OregonCup.calculate!(2004)
     assert_equal(1, OregonCup.count, "Oregon Cup events after calculate!")
-    or_cup = OregonCup.find(:first, :conditions => ['date = ?', Date.new(2004)])
+    or_cup = OregonCup.first(:conditions => ['date = ?', Date.new(2004)])
     assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')
     assert_equal(2, or_cup.source_events.count, "Oregon Cup events after calculate!")
     results = 0
@@ -111,7 +111,7 @@ class OregonCupTest < ActiveSupport::TestCase
     assert_equal(6, results, "Oregon Cup results after calculate!")
 
     OregonCup.calculate!(2004)
-    or_cup = OregonCup.find(:first, :conditions => ['date = ?', Date.new(2004)])
+    or_cup = OregonCup.first(:conditions => ['date = ?', Date.new(2004)])
     assert_not_nil(or_cup, 'Should have Oregon Cup for 2004')
     assert_equal(1, OregonCup.count, "Oregon Cup events after calculate!")
     results = 0

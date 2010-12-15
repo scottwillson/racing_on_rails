@@ -18,7 +18,7 @@ class RaceDayMailerTest < ActionMailer::TestCase
   
   def read_fixture(action)
     template = ERB.new(
-        IO.readlines(File.join(RAILS_ROOT, 'test', 'fixtures', self.class.mailer_class.name.underscore, action)).join
+        IO.readlines(File.join(::Rails.root.to_s, 'test', 'fixtures', self.class.mailer_class.name.underscore, action)).join
     )
     template.result(binding)
   end

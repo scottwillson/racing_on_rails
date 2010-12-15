@@ -132,7 +132,7 @@ Downhill/Cross Country: Downhill}
       :license => "1516"
     )
     number = scott.race_numbers.create!(:value => '422', :year => Date.today.year - 1)
-    number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
+    number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
     
@@ -177,7 +177,7 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
-    road_numbers = RaceNumber.find(:all, :conditions => [ 
+    road_numbers = RaceNumber.find.all( :conditions => [ 
         "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, RacingAssociation.current.year
       ])
     assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
@@ -233,7 +233,7 @@ Downhill/Cross Country: Downhill}
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
     
     scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
-    number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
+    number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
   end

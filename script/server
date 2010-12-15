@@ -17,8 +17,8 @@ end
 options = {
   :Port        => 3000,
   :Host        => "0.0.0.0",
-  :environment => (ENV['RAILS_ENV'] || "development").dup,
-  :config      => RAILS_ROOT + "/config.ru",
+  :environment => (ENV['::Rails.env'] || "development").dup,
+  :config      => ::Rails.root.to_s + "/config.ru",
   :detach      => false,
   :debugger    => false,
   :path        => nil
@@ -58,18 +58,18 @@ puts "=> Booting #{ActiveSupport::Inflector.demodulize(server)}"
 puts "=> Rails #{Rails.version} application starting on http://#{options[:Host]}:#{options[:Port]}#{options[:path]}"
 
 %w(cache pids sessions sockets).each do |dir_to_make|
-  FileUtils.mkdir_p(File.join(RAILS_ROOT, 'tmp', dir_to_make))
+  FileUtils.mkdir_p(File.join(::Rails.root.to_s, 'tmp', dir_to_make))
 end
 
 if options[:detach]
   Process.daemon
-  pid = "#{RAILS_ROOT}/tmp/pids/server.pid"
+  pid = "#{::Rails.root.to_s}/tmp/pids/server.pid"
   File.open(pid, 'w'){ |f| f.write(Process.pid) }
   at_exit { File.delete(pid) if File.exist?(pid) }
 end
 
-ENV["RAILS_ENV"] = options[:environment]
-RAILS_ENV.replace(options[:environment]) if defined?(RAILS_ENV)
+ENV["::Rails.env"] = options[:environment]
+::Rails.env.replace(options[:environment]) if defined?(::Rails.env)
 
 if File.exist?(options[:config])
   config = options[:config]
@@ -84,7 +84,7 @@ if File.exist?(options[:config])
     inner_app = Object.const_get(File.basename(config, '.rb').capitalize)
   end
 else
-  require RAILS_ROOT + "/config/environment"
+  require ::Rails.root.to_s + "/config/environment"
   inner_app = ActionController::Dispatcher.new
 end
 

@@ -4,7 +4,7 @@ module ActionView #:nodoc:
   class InlineTemplate #:nodoc:
     def relative_path
       path = File.expand_path(filename)
-      path.sub!(/^#{Regexp.escape(File.expand_path(RAILS_ROOT))}\//, '') if defined?(RAILS_ROOT)
+      path.sub!(/^#{Regexp.escape(File.expand_path(::Rails.root.to_s))}\//, '') if defined?(::Rails.root.to_s)
       path
     end    
   end

@@ -36,7 +36,7 @@ module Export
     end
 
     def Base.public_path(basename)
-      Pathname.new File.join(RAILS_ROOT, "public", "export", basename)
+      Pathname.new File.join(::Rails.root.to_s, "public", "export", basename)
     end
   end
 end

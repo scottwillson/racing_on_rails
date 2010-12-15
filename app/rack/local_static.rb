@@ -8,7 +8,7 @@ module Rack
 
     def initialize(app)
       @app = app
-      @local_file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "local", "public"))
+      @local_file_server = ::Rack::File.new(::File.join(::Rails.root.to_s, "local", "public"))
     end
 
     def call(env)

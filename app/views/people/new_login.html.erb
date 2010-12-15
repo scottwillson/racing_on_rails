@@ -1,6 +1,6 @@
 <h2>New Login</h2>
 
-<% form_for :person, :url => create_login_people_path do |f| -%>
+<%= form_for :person, :url => create_login_people_path do |f| -%>
   <%= f.error_messages :message => nil, :header_message => nil, :object_name => nil %>
   <div class="column_grid_container">
     <div class="prepend-1 span-3 append-2 last">

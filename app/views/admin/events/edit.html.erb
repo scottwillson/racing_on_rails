@@ -11,7 +11,7 @@
     <%= render :partial => "races", :object => @event %>
   </div>
   <div class="span-3 last">
-     <% form_for(:event, 
+     <%= form_for(:event, 
                  @event, 
                  :url => @event.new_record? ? admin_events_path : admin_event_path(@event), 
                  :html => { :method => form_method_for(@event) }) do |f| -%>
@@ -63,7 +63,7 @@
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
 
         <% if RacingAssociation.current.show_events_velodrome? && administrator? -%>
-        <%= f.labelled_select(:velodrome_id, Velodrome.find(:all).sort_by(&:name).collect {|v| [ v.name, v.id ] }, :include_blank => true) %>
+        <%= f.labelled_select(:velodrome_id, Velodrome.find.all().sort_by(&:name).collect {|v| [ v.name, v.id ] }, :include_blank => true) %>
         <% end -%>
         
         <% if administrator? %>
@@ -112,7 +112,7 @@
           <%= f.labelled_text_field :sanctioning_org_event_id, "Sanctioning Org Event ID" %>
         <% end -%>
 
-        <%= f.labelled_select(:number_issuer_id, NumberIssuer.find(:all, :order => 'name').collect {|i| [i.name, i.id]}) %>
+        <%= f.labelled_select(:number_issuer_id, NumberIssuer.find.all( :order => 'name').collect {|i| [i.name, i.id]}) %>
         <br/>
         
         <%= f.labelled_check_box :atra_points_series, "ATRA National Championship Series (NCS)" if RacingAssociation.current.competitions.include?(:atra_points_series) %>

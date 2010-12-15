@@ -26,7 +26,7 @@ class ConvertToUtf8 < ActiveRecord::Migration
     system "mysql --user=#{db_user} --password='#{db_pass}' --default-character-set=utf8 #{db_name} < #{utf8_dump}"
     say "done"
     
-    unless RAILS_ENV == "production" || RAILS_ENV == "staging"
+    unless ::Rails.env == "production" || ::Rails.env == "staging"
       # What could possibly go wrong?
       say "Recreating test database..."
       test_db_name = db_name.gsub("development", "test")

@@ -133,14 +133,14 @@ class OverallBarTest < ActiveSupport::TestCase
     sr_men_road_bar.results.create!(:place => 305, :person => people(:alice))
     
     OverallBar.calculate!(2004)
-    bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = OverallBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 Bar after calculate!")
     assert_equal(1, OverallBar.count, "Overall BARs after calculate! #{OverallBar.all.map(&:date).join(", ")}")
     assert_equal(original_results_count + 23, Result.count, "Total count of results in DB")
     # Should delete old BAR
     OverallBar.calculate!(2004)
     assert_equal(1, OverallBar.count, "Bar events after calculate!")
-    overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(overall_bar, "2004 Bar after calculate!")
     assert_equal(Date.new(2004, 1, 1), overall_bar.date, "2004 Bar date")
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Bar name")
@@ -229,7 +229,7 @@ class OverallBarTest < ActiveSupport::TestCase
 
     Bar.calculate!(2004)
     OverallBar.calculate!(2004)
-    overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(overall_bar, "2004 OverallBar after calculate!")
     
     overall_tandem_bar = overall_bar.races.detect do |race|
@@ -265,7 +265,7 @@ class OverallBarTest < ActiveSupport::TestCase
     assert_equal(1, OverallBar.count, "Bar events after calculate!")
     assert_equal(original_results_count + 4, Result.count, "Total count of results in DB")
 
-    overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(2001, 1, 1)])
+    overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(2001, 1, 1)])
     assert_not_nil(overall_bar, "2001 OverallBar after calculate!")
     overall_junior_men_mtb_bar = overall_bar.races.detect do |race|
       race.category == junior_men
@@ -301,7 +301,7 @@ class OverallBarTest < ActiveSupport::TestCase
     # Calculate previous years' BAR
     Bar.calculate!(previous_year)
     OverallBar.calculate!(previous_year)
-    previous_year_overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    previous_year_overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(previous_year, 1, 1)])
     
     # Assert it has results
     previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men)}
@@ -318,11 +318,11 @@ class OverallBarTest < ActiveSupport::TestCase
     OverallBar.calculate!(current_year)
 
     # Assert both BARs have results
-    previous_year_overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    previous_year_overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(previous_year, 1, 1)])
     previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men)}
     assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
     
-    current_year_overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    current_year_overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(current_year, 1, 1)])
     current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men)}
     assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
 
@@ -331,11 +331,11 @@ class OverallBarTest < ActiveSupport::TestCase
     OverallBar.calculate!(current_year)
 
     # Assert both BARs have results
-    previous_year_overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(previous_year, 1, 1)])
+    previous_year_overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(previous_year, 1, 1)])
     previous_year_sr_men_overall_bar = previous_year_overall_bar.races.detect {|race| race.category == categories(:senior_men)}
     assert(!previous_year_sr_men_overall_bar.results.empty?, 'Previous year BAR should have results')
     
-    current_year_overall_bar = OverallBar.find(:first, :conditions => ['date = ?', Date.new(current_year, 1, 1)])
+    current_year_overall_bar = OverallBar.first(:conditions => ['date = ?', Date.new(current_year, 1, 1)])
     current_year_sr_men_overall_bar = current_year_overall_bar.races.detect {|race| race.category == categories(:senior_men)}
     assert(!current_year_sr_men_overall_bar.results.empty?, 'Current year BAR should have results')
   end

@@ -12,7 +12,7 @@ class EditorRequest < ActiveRecord::Base
   
   before_save :destroy_duplicates
   
-  named_scope :expired, lambda { { :conditions => [ "expires_at <= ?", RacingAssociation.current.now ] } }
+  scope :expired, lambda { { :conditions => [ "expires_at <= ?", RacingAssociation.current.now ] } }
   
   # Set to expire in 1 week. Auto-set token.
   def before_validation

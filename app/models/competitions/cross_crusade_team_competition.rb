@@ -7,8 +7,7 @@ class CrossCrusadeTeamCompetition < Competition
   def CrossCrusadeTeamCompetition.calculate!(year = Date.today.year)
     benchmark("#{name} calculate!", Logger::INFO, false) {
       transaction do
-        series = Series.find(
-                       :first, 
+        series = Series.first(
                        :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
 
         if series && series.has_results_including_children?(true)

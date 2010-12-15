@@ -5,9 +5,9 @@ namespace :racing_on_rails do
     puts "Bootstrap task will delete your Racing on Rails development database."
     db_password = ask("MySQL root password (press return for no password): ")
     puts "Create databases"
-    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(RAILS_ROOT + "/db/create_databases.sql")}`
+    puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/create_databases.sql")}`
     puts "Populate development database"
-    puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(RAILS_ROOT + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
+    puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(::Rails.root.to_s + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
     Rake::Task["db:fixtures:load"].invoke
     puts "Start server"
     puts "Please open http://localhost:3000/ in your web browser"
@@ -17,7 +17,7 @@ end
 
 desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
 task :cruise do
-  ENV['CC_BUILD_ARTIFACTS'] = File.expand_path("#{RAILS_ROOT}/log/acceptance")
+  ENV['CC_BUILD_ARTIFACTS'] = File.expand_path("#{::Rails.root.to_s}/log/acceptance")
 
   # Use Xvfb to create an X session for browser-based acceptance tests
   if RUBY_PLATFORM[/freebsd/] || RUBY_PLATFORM[/linux/]
@@ -54,10 +54,10 @@ namespace :db do
   namespace :structure do
     desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
     task :dump => :environment do
-      sql = File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql").readlines.join
+      sql = File.open("#{::Rails.root.to_s}/db/#{::Rails.env}_structure.sql").readlines.join
       sql.gsub!(/AUTO_INCREMENT=\d+ +/i, "")
 
-      File.open("#{RAILS_ROOT}/db/#{RAILS_ENV}_structure.sql", "w") do |file|
+      File.open("#{::Rails.root.to_s}/db/#{::Rails.env}_structure.sql", "w") do |file|
         file << sql
       end
     end

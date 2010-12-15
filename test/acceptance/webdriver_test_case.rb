@@ -51,7 +51,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
       end
  
       # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
-      webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/fixtures/webdriver-profile")
+      webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/files/webdriver-profile")
       MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
       FileUtils.rm_rf DOWNLOAD_DIRECTORY
       FileUtils.mkdir_p DOWNLOAD_DIRECTORY

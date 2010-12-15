@@ -1,184 +1,191 @@
-ActionController::Routing::Routes.draw do |map|
-  map.namespace(:admin) do |admin|
-    admin.resources :articles
-    admin.resources :article_categories
-    admin.resources :categories do |category|
-      category.resources :children, :controller => :categories
-    end
-    admin.resources :events, :has_one => :person, :has_many => :races,
-        :collection => { :upload_schedule => :post }, 
-        :member => { :upload => :post, 
-                     :set_parent => :get, 
-                     :add_children => :get, 
-                     :create_from_children => :get, 
-                     :destroy_races => :delete } do |events|
-      events.resources :races, :collection => { :propagate => :post }
-    end
-                     
-    admin.resources :first_aid_providers
-    admin.resources :multi_day_events, :as => :events, :has_one => :person
-    
-    admin.resources :pages
-    admin.namespace(:pages) do |pages|
-      pages.resources :versions, :member => { :revert => :get }
-    end
+RacingOnRails::Application.routes.draw do
+  namespace :admin do
+    resources :articles
+    resources :article_categories
+    resources :categories do
 
-    admin.resources :people, :collection => { :cards => :get, 
-                                              :duplicates => :get, 
-                                              :no_cards => :get, 
-                                              :preview_import => :get },
-                             :member => { :card => :get, :toggle_member => :post },
-                             :has_many => :results
-    admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
-    admin.resources :results
-    admin.resources :series, :as => :events, :has_one => :person
-    admin.resources :single_day_events, :as => :events, :has_one => :person
-    admin.resources(:tables) if RAILS_ENV == "test"
-    admin.resources :teams, :member => { :toggle_member => :post }
-    admin.resources :people, :has_many => :events, :has_many => :single_day_events
-    admin.resources :velodromes
-    admin.resources :weekly_series, :as => :events, :has_one => :person
+
+      resources :children
+    end
+    resources :events do
+
+
+      resources :races do
+        collection do
+          post :propagate
+        end
+
+
+      end
+    end
+    resources :first_aid_providers
+    resources :multi_day_events
+    resources :pages
+    namespace :pages do
+      resources :versions do
+
+        member do
+          get :revert
+        end
+
+      end
+    end
+    resources :people do
+      collection do
+        get :cards
+        get :duplicates
+        get :no_cards
+        get :preview_import
+      end
+      member do
+        get :card
+        post :toggle_member
+      end
+
+    end
+    resources :races do
+
+      member do
+        post :create_result
+        delete :destroy_result
+      end
+
+    end
+    resources :results
+    resources :series
+    resources :single_day_events
+    resources :teams do
+
+      member do
+        post :toggle_member
+      end
+
+    end
+    resources :people
+    resources :velodromes
+    resources :weekly_series
   end
 
-  map.resources :articles
-  map.resources :article_categories
-  map.resources :categories, :has_many => :races
+  resources :articles
+  resources :article_categories
+  resources :categories
+  match ':controller/:id/aliases/:alias_id/destroy' => '#destroy_alias', :constraints => { :id => /\d+/ }
+  match '/admin/results/:id/scores' => 'admin/results#scores'
+  match '/admin/racers' => 'admin/racers#index'
+  match '/admin/persons/:action/:id' => 'admin/people#index', :as => :admin_persons
+  match '/admin' => 'admin/home#index', :as => :admin_home
+  match '/bar/categories' => 'bar#categories'
+  match '/bar/:year/categories' => 'bar#categories', :constraints => { :year => /\d+/ }
+  match '/bar' => 'bar#index'
+  match '/bar/:year/:discipline/:category' => 'bar#show', :as => :bar, :defaults => { :discipline => 'overall', :category => 'senior_men' }, :constraints => { :year => /\d+/ }
+  match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d+/ }
+  match '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
+  match '/admin/cat4_womens_race_series/results/new' => 'admin/cat4_womens_race_series#new_result', :as => :new_admin_cat4_womens_race_series_result
+  match '/admin/cat4_womens_race_series/results' => 'admin/cat4_womens_race_series#create_result'
+  match '/events/:event_id/results' => 'results#event'
+  match '/events/:event_id/people/:person_id/results' => 'results#person_event'
+  match '/events/:event_id/teams/:team_id/results' => 'results#team_event'
+  match '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
+  match '/events/:event_id' => 'results#event'
+  resources :events do
 
-  map.connect ":controller/:id/aliases/:alias_id/destroy", :action => 'destroy_alias', :requirements => {:id => /\d+/}
 
-  map.connect "/admin/results/:id/scores", :controller => "admin/results", :action => "scores"
-  
-  # Redirect for legacy URLs
-  map.connect "/admin/racers", :controller => "admin/racers"
-  
-  # Inplace editor workaround
-  map.admin_persons "/admin/persons/:action/:id", :controller => "admin/people"
+    resources :results
+    resources :people do
 
-  map.admin_home "/admin", :controller => "admin/home", :action => "index"
 
-  map.connect "/bar/categories", :controller => "bar", :action => 'categories'
-  map.connect "/bar/:year/categories", :controller => "bar", :action => 'categories', :requirements => {:year => /\d+/}
-  map.connect "/bar", :controller => "bar", :action => "index"
-  map.bar "/bar/:year/:discipline/:category",
-              :controller => "bar", :action => "show",
-              :requirements => {:year => /\d+/},
-              :defaults => {:discipline => 'overall', :category => 'senior_men'}
-
-  map.cat4_womens_race_series "/cat4_womens_race_series/:year", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series', :requirements => {:year => /\d+/}
-  map.connect "/cat4_womens_race_series", :controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'
-
-  map.new_admin_cat4_womens_race_series_result "/admin/cat4_womens_race_series/results/new", :controller => "admin/cat4_womens_race_series", :action => "new_result"
-  map.connect "/admin/cat4_womens_race_series/results", :controller => "admin/cat4_womens_race_series", :action => "create_result"
-
-  map.connect "/events/:event_id/results", :controller => "results", :action => "event"
-  map.connect "/events/:event_id/people/:person_id/results", :controller => "results", :action => "person_event"
-  map.connect "/events/:event_id/teams/:team_id/results", :controller => "results", :action => "team_event"
-  map.connect "/events/:event_id/teams/:team_id/results/:race_id", :controller => "results", :action => "team_event"
-  map.connect "/events/:event_id", :controller => "results", :action => "event"
-  map.resources :events do |events|
-    events.resources :results
-
-    events.resources :people do |people|
-      people.resources :results
+      resources :results
     end
-    
-    events.resources :teams do |team|
-      team.resources :results
+
+    resources :teams do
+
+
+      resources :results
     end
   end
-  
-  map.rider_rankings "/rider_rankings/:year", :controller => "competitions", :action => "show", :type => 'rider_rankings', :requirements => {:year => /\d+/}
-  map.rider_rankings_root "/rider_rankings", :controller => "competitions", :action => "show", :type => 'rider_rankings'
 
-  map.ironman "/ironman/:year", :controller => "ironman"
+  match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d+/ }
+  match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
+  match '/ironman/:year' => 'ironman#index', :as => :ironman
+  match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists
+  resources :update_requests do
 
-  map.mailing_lists "/mailing_lists", :controller => "mailing_lists", :action => "index"
-  
-  map.resources :update_requests, :member => { :confirm => :get }
-  map.connect "/oregon_cup/rules", :controller => "oregon_cup", :action => "rules"
-  map.connect "/oregon_cup/races", :controller => "oregon_cup", :action => "races"
-  map.oregon_cup "/oregon_cup/:year", :controller => "oregon_cup", :action => "index"
-  map.oregon_cup_root "/oregon_cup", :controller => "oregon_cup", :action => "index"
-  
-  map.resources :password_resets
+    member do
+      get :confirm
+    end
 
-  map.connect "/posts/:mailing_list_name/new/:reply_to_id", :controller => "posts", :action => "new"
-  map.connect "/posts/:mailing_list_name/new",              :controller => "posts", :action => "new"
-  map.connect "/posts/new/:mailing_list_name",              :controller => "posts", :action => "new"
-  map.connect "/posts/:mailing_list_name/show/:id",         :controller => "posts", :action => "show"
-  map.connect "/posts/show/:mailing_list_name/:id",         :controller => "posts", :action => "show"
-  map.connect "/posts/:mailing_list_name/post",             :controller => "posts", :action => "post"
-  map.connect "/posts/:mailing_list_name/confirm",          :controller => "posts", :action => "confirm"
-  map.connect "/posts/:mailing_list_name/confirm_private_reply", :controller => "posts", :action => "confirm_private_reply"
-  map.connect "/posts/:mailing_list_name/:year/:month",     :controller => "posts", :action => "list"
-  map.connect "/posts/:mailing_list_name",                  :controller => "posts"
-  map.resources :posts
+  end
 
-  map.connect "/people/:person_id/results", :controller => "results", :action => "person", :requirements => { :person_id => /\d+/ }
-  map.connect "/people/:person_id/:year", :controller => "results", :action => "person", 
-              :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }, 
-              :conditions => { :method => :get }
-  map.connect "/people/:person_id", :controller => "results", :action => "person", 
-              :requirements => { :person_id => /\d+/ }, 
-              :conditions => { :method => :get }
-  map.connect "/people/list", :controller => "people", :action => "list"
-  map.resources :people, 
-                :member => { :card => :get, :account => :get, :membership => :get },
-                :collection => { :membership_information => :get, :account => :get, :new_login => :get, :create_login => :post } do |person|
-                  person.resources :editors, :member => { :create => :get, :destroy => :get }
-                  person.resources :editor_requests
-                  person.resources :events
-                  person.resource :membership
-                  person.resources :orders
-                  person.resources :results
-                  person.resources :versions
-                end
-  
-  map.resources :racing_associations
+  match '/oregon_cup/rules' => 'oregon_cup#rules'
+  match '/oregon_cup/races' => 'oregon_cup#races'
+  match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
+  match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
+  resources :password_resets
+  match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new'
+  match '/posts/:mailing_list_name/new' => 'posts#new'
+  match '/posts/new/:mailing_list_name' => 'posts#new'
+  match '/posts/:mailing_list_name/show/:id' => 'posts#show'
+  match '/posts/show/:mailing_list_name/:id' => 'posts#show'
+  match '/posts/:mailing_list_name/post' => 'posts#post'
+  match '/posts/:mailing_list_name/confirm' => 'posts#confirm'
+  match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply'
+  match '/posts/:mailing_list_name/:year/:month' => 'posts#list'
+  match '/posts/:mailing_list_name' => 'posts#index'
+  resources :posts
 
-  map.connect "/results/:year/:discipline", :controller => "results", :requirements => { :year => /(19|20)\d\d/ }
-  map.connect "/results/:year", :controller => "results", :action => "index", :requirements => { :year => /(19|20)\d\d/ }
-  map.connect "/results/:discipline", :controller => "results" 
-  
-  # Reserve /results/2008 for /results/:year
-  map.resources :results, :except => "show"
+  resources :people do
+    resources :editors do
+      member do
+        get :create
+        get :destroy
+      end
+    end
 
-  map.connect "/schedule/:year/calendar", :controller => "schedule", :action => "calendar", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/schedule/calendar", :controller => "schedule", :action => "calendar"
-  map.connect "/schedule/list/:discipline", :controller => "schedule", :action => "list"
-  map.connect "/schedule/:year/list/:discipline", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/schedule/:year/list", :controller => "schedule", :action => "list", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/schedule/:year/:discipline", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/schedule/:year", :controller => "schedule", :action => "index", :requirements => {:year => /\d\d\d\d/}
-  map.connect "/schedule/list", :controller => "schedule", :action => "list"
-  map.connect "/schedule/:discipline", :controller => "schedule", :action => "index"
-  map.schedule "/schedule", :controller => "schedule"
+    resources :editor_requests
+    resources :events
+    resource :membership
+    resources :orders
+    resources :results
+    resources :versions
+  end
 
-  map.resources :single_day_events, :as => :events
+  match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
+  match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
+  match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }
+  match '/people/list' => 'people#list'
 
-  map.connect "/teams/:team_id/results", :controller => "results", :action => "team"
-  map.connect "/teams/:team_id/:year", :controller => "results", :action => "team", :requirements => { :person_id => /\d+/, :year => /\d\d\d\d/ }
-  map.connect "/teams/:team_id", :controller => "results", :action => "team"
-  map.resources :teams, :has_many => :results
-
-  map.root :controller => "home"
-  map.track "/track", :controller => "track"
-  map.track_schedule "/track/schedule", :controller => "track", :action => "schedule"
-  
-
-  map.resource :person_session
-  map.unauthorized "/unauthorized", :controller => "person_sessions", :action => "unauthorized"
-  map.logout "/logout", :controller => "person_sessions", :action => "destroy"
-  map.login "/login", :controller => "person_sessions", :action => "new"
-  map.connect "/account/logout", :controller => "person_sessions", :action => "destroy"
-  map.connect "/account/login", :controller => "person_sessions", :action => "new"
-  map.account "/account", :controller => "people", :action => "account"
-
-  map.connect "/:controller", :action => "index"
-  map.connect "/:controller/:id", :action => "show", :requirements => {:id => /\d+/}
-
-  # Install the default route as the lowest priority.
-  map.connect ':controller/:action/:id'
-
-  map.connect "*path", :controller => "pages", :action => "show"
+  resources :racing_associations
+  match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
+  match '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
+  match '/results/:discipline' => 'results#index'
+  resources :results
+  match '/schedule/:year/calendar' => 'schedule#calendar', :constraints => { :year => /\d\d\d\d/ }
+  match '/schedule/calendar' => 'schedule#calendar'
+  match '/schedule/list/:discipline' => 'schedule#list'
+  match '/schedule/:year/list/:discipline' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
+  match '/schedule/:year/list' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
+  match '/schedule/:year/:discipline' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
+  match '/schedule/:year' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
+  match '/schedule/list' => 'schedule#list'
+  match '/schedule/:discipline' => 'schedule#index'
+  match '/schedule' => 'schedule#index', :as => :schedule
+  resources :single_day_events
+  match '/teams/:team_id/results' => 'results#team'
+  match '/teams/:team_id/:year' => 'results#team', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
+  match '/teams/:team_id' => 'results#team'
+  resources :teams
+  match '/' => 'home#index'
+  match '/track' => 'track#index', :as => :track
+  match '/track/schedule' => 'track#schedule', :as => :track_schedule
+  resource :person_session
+  match '/unauthorized' => 'person_sessions#unauthorized', :as => :unauthorized
+  match '/logout' => 'person_sessions#destroy', :as => :logout
+  match '/login' => 'person_sessions#new', :as => :login
+  match '/account/logout' => 'person_sessions#destroy'
+  match '/account/login' => 'person_sessions#new'
+  match '/account' => 'people#account', :as => :account
+  match '/:controller' => '#index'
+  match '/:controller/:id' => '#show', :constraints => { :id => /\d+/ }
+  match '/:controller(/:action(/:id))'
+  match '*path' => 'pages#show'
 end

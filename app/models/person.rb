@@ -54,13 +54,11 @@ class Person < ActiveRecord::Base
   # Does not consider Aliases
   def Person.find_all_by_name(name)
     if name.blank?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ? and last_name = ?', '', ''],
         :order => 'last_name, first_name')
     else
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name],
         :order => 'last_name, first_name')
     end
@@ -78,23 +76,19 @@ class Person < ActiveRecord::Base
     last_name = options[:last_name]
     
     if name.present?
-      return Person.find(
-        :all,
+      return Person.all(
         :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
       ) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ?', first_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     elsif first_name.blank? && last_name.present?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['last_name = ?', last_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     else
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     end
@@ -105,8 +99,7 @@ class Person < ActiveRecord::Base
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
-    Person.find(
-      :all, 
+    Person.all(
       :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
@@ -118,8 +111,7 @@ class Person < ActiveRecord::Base
     if name.present?
       Person.find_by_name(name)
     else
-      Person.find(
-        :first, 
+      Person.first(
         :conditions => ["(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)", 
                         email, home_phone]
       )
@@ -127,8 +119,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.find_by_name(name)
-    Person.find(
-      :first, 
+    Person.first(
       :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
     )
   end
@@ -138,7 +129,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.find_by_number(number)
-    Person.find(:all, 
+    Person.find.all( 
                :include => :race_numbers,
                :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
   end
@@ -578,8 +569,7 @@ class Person < ActiveRecord::Base
           :updated_by => self.updated_by
         ) unless existing_number
       else
-        race_number = RaceNumber.find(
-          :first,
+        race_number = RaceNumber.first(
           :conditions => ['value=? and person_id=? and discipline_id=? and year=? and number_issuer_id=?', 
                            value, self.id, discipline.id, _year, association.id])
         unless race_number
@@ -846,8 +836,7 @@ class Person < ActiveRecord::Base
   # reload does an optimized load with joins
   def event_results(reload = true)
     if reload
-      return Result.find(
-        :all,
+      return Result.all(
         :include => [:team, :person, :scores, :category, {:race => [:event, :category]}],
         :conditions => ['people.id = ?', id]
       ).reject {|r| r.competition_result?}

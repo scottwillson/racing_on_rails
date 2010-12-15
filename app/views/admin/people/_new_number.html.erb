@@ -4,7 +4,7 @@
     <table cellspacing="0">
       <td>
         <select name='number_issuer_id[]' id='number_issuer_id'>
-          <%= options_for_select NumberIssuer.find(:all).collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
+          <%= options_for_select NumberIssuer.find.all().collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
         </select>
       </td>
       <td>

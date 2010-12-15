@@ -1,7 +1,7 @@
 class SetBarParents < ActiveRecord::Migration
   def self.up
     OverallBar.all.each do |overall_bar|
-      overall_bar.children = Bar.find(:all, :conditions => { :date => overall_bar.date })
+      overall_bar.children = Bar.find.all( :conditions => { :date => overall_bar.date })
 
       age_graded_bar = AgeGradedBar.find_by_date(overall_bar.date)
       if age_graded_bar

@@ -575,14 +575,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     race_numbers = knowlsons.first.race_numbers
     assert_equal(2, race_numbers.size, 'Knowlson race numbers')
     
-    race_number = RaceNumber.find(:first, :conditions => ['discipline_id=? and year=? and person_id=?', Discipline[:road].id, 2007, knowlsons.first.id])
+    race_number = RaceNumber.first(:conditions => ['discipline_id=? and year=? and person_id=?', Discipline[:road].id, 2007, knowlsons.first.id])
     assert_not_nil(race_number, 'Road number')
     assert_equal(2007, race_number.year, 'Road number year')
     assert_equal('8977', race_number.value, 'Road number value')
     assert_equal(Discipline[:road], race_number.discipline, 'Road number discipline')
     assert_equal(number_issuers(:association), race_number.number_issuer, 'Road number issuer')
     
-    race_number = RaceNumber.find(:first, :conditions => ['discipline_id=? and year=? and person_id=?', Discipline[:mountain_bike].id, 2007, knowlsons.first.id])
+    race_number = RaceNumber.first(:conditions => ['discipline_id=? and year=? and person_id=?', Discipline[:mountain_bike].id, 2007, knowlsons.first.id])
     assert_not_nil(race_number, 'MTB number')
     assert_equal(2007, race_number.year, 'MTB number year')
     assert_equal('BBB9', race_number.value, 'MTB number value')
@@ -609,7 +609,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(assigns['person'], "Should assign person")
     assert(assigns['person'].errors.empty?, "Person should not have errors")
     
-    knowlsons = Person.find(:all, :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
+    knowlsons = Person.find.all( :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
     assert_equal(1, knowlsons.size, "Should have two Knowlsons")
     knowlsons.each do |knowlson|
       assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
@@ -767,7 +767,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     people_before_import = Person.count
   
     file = fixture_file_upload("membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
-    @request.session[:people_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     post(:import, :commit => 'Import', :update_membership => 'true')
   
     assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
@@ -788,7 +788,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     people_before_import = Person.count
   
     file = fixture_file_upload("membership/database.xls", "application/vnd.ms-excel", :binary)
-    @request.session[:people_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/database.xls")
+    @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/files/membership/database.xls")
     next_year = Date.today.year + 1
     post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
   
@@ -822,7 +822,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     people_before_import = Person.count
   
     file = fixture_file_upload("membership/duplicates.xls", "application/vnd.ms-excel", :binary)
-    @request.session[:people_file_path] = File.expand_path("#{RAILS_ROOT}/test/fixtures/membership/duplicates.xls")
+    @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/files/membership/duplicates.xls")
     post(:import, :commit => 'Import', :update_membership => 'true')
   
     assert(flash.has_key?(:warn), "flash[:warn] should not be empty")
@@ -855,16 +855,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     alice_2 = Person.create!(:name => 'Alice Pennington', :road_category => '3')
     people_before_import = Person.count
   
-    tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :people => Person.find(:all, :conditions => ['last_name = ?', 'Tonkin']))
-    ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.find(:all, :conditions => ['last_name = ?', 'Weaver']))
-    alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.find(:all, :conditions => ['last_name = ?', 'Pennington']))
+    tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Tonkin']))
+    ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Weaver']))
+    alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Pennington']))
     post(:resolve_duplicates, {tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param})
     assert_redirected_to admin_people_path
     assert_equal(0, Duplicate.count, 'Should have no duplicates')
     
-    assert_equal(3, Person.find(:all, :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
-    assert_equal(3, Person.find(:all, :conditions => ['last_name = ?', 'Weaver']).size, 'Weaver in database')
-    assert_equal(2, Person.find(:all, :conditions => ['last_name = ?', 'Pennington']).size, 'Pennington in database')
+    assert_equal(3, Person.find.all( :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
+    assert_equal(3, Person.find.all( :conditions => ['last_name = ?', 'Weaver']).size, 'Weaver in database')
+    assert_equal(2, Person.find.all( :conditions => ['last_name = ?', 'Pennington']).size, 'Pennington in database')
     
     weaver_3.reload
     assert_equal('Las Vegas', weaver_3.city, 'Weaver city')

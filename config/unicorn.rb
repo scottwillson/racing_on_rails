@@ -1,6 +1,6 @@
 # unicorn_rails -c /usr/local/etc/unicorn/wsba.rb -E production -D
 
-rails_env = ENV['RAILS_ENV'] || 'production'
+rails_env = ENV['::Rails.env'] || 'production'
 
 worker_processes 2
 preload_app true
@@ -8,7 +8,7 @@ timeout 90
 
 # Using this method we get 0 downtime deploys.
 before_fork do |server, worker|
-  old_pid = RAILS_ROOT + '/tmp/pids/unicorn.pid.oldbin'
+  old_pid = ::Rails.root.to_s + '/tmp/pids/unicorn.pid.oldbin'
   if File.exists?(old_pid) && server.pid != old_pid
     begin
       Process.kill("QUIT", File.read(old_pid).to_i)

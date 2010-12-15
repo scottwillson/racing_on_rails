@@ -2,7 +2,7 @@
 
 <%= error_messages_for :page %>
 
-<% form_for [:admin, @page] do |f| -%>
+<%= form_for [:admin, @page] do |f| -%>
   <div class="column_grid_container top_margin">
     <div class="span-2">
       <%= f.labelled_text_field :title, "Title", :label => { :class => "top no_top_margin" } %>

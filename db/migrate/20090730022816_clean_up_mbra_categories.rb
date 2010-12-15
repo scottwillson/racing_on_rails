@@ -3,9 +3,9 @@ class CleanUpMbraCategories < ActiveRecord::Migration
     #this is to clean up a bug that generated some duplicate categories by inserting multiple spaces in the generated category name
     return unless ASSOCIATION.short_name == "MBRA"
 
-    Category.find(:all).each do |category|
+    Category.find.all().each do |category|
       if category.name != category.name.squeeze(" ").strip
-        good_category = Category.find(:first, :conditions => {:name => category.name.squeeze(" ").strip} )
+        good_category = Category.first(:conditions => {:name => category.name.squeeze(" ").strip} )
         if good_category.blank?
           #fix the existing catg name
           say "fixing " + category.name

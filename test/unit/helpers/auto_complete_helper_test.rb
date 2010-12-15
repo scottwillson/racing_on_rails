@@ -1,6 +1,6 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
-ActionController::Base.prepend_view_path("#{RAILS_ROOT}/test/fixtures/views")
+ActionController::Base.prepend_view_path("#{::Rails.root.to_s}/test/files/views")
 
 # :stopdoc:
 class AutoCompleteHelperTest < ActionController::TestCase

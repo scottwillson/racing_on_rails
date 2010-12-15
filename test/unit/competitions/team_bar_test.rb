@@ -35,7 +35,7 @@ class TeamBarTest < ActiveSupport::TestCase
 
     Bar.calculate!(2004)
     TeamBar.calculate!(2004)
-    bar = TeamBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = TeamBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 TeamBar after calculate!")
     team_bar_race = bar.races.first
     
@@ -84,7 +84,7 @@ class TeamBarTest < ActiveSupport::TestCase
     
     Bar.calculate!(2001)
     TeamBar.calculate!(2001)
-    bar = TeamBar.find(:first, :conditions => ['date = ?', Date.new(2001, 1, 1)])
+    bar = TeamBar.first(:conditions => ['date = ?', Date.new(2001, 1, 1)])
     team_bar = bar.races.first
     
     team_bar.results.sort!
@@ -219,7 +219,7 @@ class TeamBarTest < ActiveSupport::TestCase
     Bar.calculate!(2004)
     TeamBar.calculate!(2004)
     assert_equal(1, TeamBar.count, "TeamBar events after calculate!")
-    bar = TeamBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = TeamBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 TeamBar after calculate!")
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 TeamBar date")
     assert_equal("2004 Team BAR", bar.name, "2004 Team Bar name")

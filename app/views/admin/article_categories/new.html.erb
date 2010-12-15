@@ -1,6 +1,6 @@
 <h1>New article_category</h1>
 
-<% form_for([:admin, @article_category]) do |f| %>
+<%= form_for([:admin, @article_category]) do |f| %>
   <%=render :partial => "form", :locals => { :f => f, :action_button => "Create" } %>
 <% end %>
 

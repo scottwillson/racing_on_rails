@@ -7,7 +7,7 @@ class AgeGradedBar < Competition
   end
 
   def source_results(race)
-    Result.find(:all,
+    Result.find.all(
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{
                   events.type = 'OverallBar' 

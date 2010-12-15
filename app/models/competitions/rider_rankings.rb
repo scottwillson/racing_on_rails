@@ -44,7 +44,7 @@ class RiderRankings < Competition
 
   # source_results must be in person-order
   def source_results(race)
-    Result.find(:all,
+    Result.find.all(
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{
                   members_only_place between 1 AND #{point_schedule.size - 1}

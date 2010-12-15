@@ -57,7 +57,7 @@ class Page < ActiveRecord::Base
   end
 
   def valid_parents
-    Page.find(:all).delete_if { |page|
+    Page.find.all().delete_if { |page|
       page == self || descendants.include?(page)
     }
   end

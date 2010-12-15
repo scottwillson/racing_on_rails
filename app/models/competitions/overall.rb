@@ -7,8 +7,7 @@ class Overall < Competition
   def Overall.calculate!(year = Date.today.year)
     benchmark("#{name} calculate!", Logger::INFO, false) {
       transaction do
-        parent = MultiDayEvent.find(
-                        :first, 
+        parent = MultiDayEvent.first(
                         :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
                         
         if parent && parent.has_results_including_children?(true)

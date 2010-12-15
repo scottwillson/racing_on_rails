@@ -82,10 +82,10 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   
-  named_scope :editable_by, lambda { |person| 
+  scope :editable_by, lambda { |person| 
     {:conditions => { :promoter_id => person.id } } unless person.administrator?
   }
-  named_scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
+  scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   
   attr_reader :new_promoter_name
   attr_reader :new_team_name
@@ -117,8 +117,7 @@ class Event < ActiveRecord::Base
       if discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
-      events = Set.new(Event.find(
-          :all,
+      events = Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
           :include => { :parent => :parent },
@@ -129,8 +128,7 @@ class Event < ActiveRecord::Base
       ))
       
     else
-      events = Set.new(Event.find(
-          :all,
+      events = Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
           :include => { :parent => :parent },
@@ -157,8 +155,7 @@ class Event < ActiveRecord::Base
     last_of_year = Date.new(year + 1, 1, 1) - 1
       discipline_names = [discipline]
       discipline_names << 'Circuit' if discipline.downcase == 'road'
-      Set.new(Event.find(
-          :all,
+      Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :conditions => [%Q{
               events.date between ? and ?
@@ -544,8 +541,7 @@ class Event < ActiveRecord::Base
   def multi_day_event_children_with_no_parent
     return [] unless name && date
     
-    @multi_day_event_children_with_no_parent ||= SingleDayEvent.find(
-      :all, 
+    @multi_day_event_children_with_no_parent ||= SingleDayEvent.all(
       :conditions => [
         "parent_id is null and name = ? and extract(year from date) = ? 
          and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",

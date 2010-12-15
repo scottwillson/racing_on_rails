@@ -27,7 +27,7 @@ class Category < ActiveRecord::Base
   
   # All categories with no parent (except root 'association' category)
   def Category.find_all_unknowns
-    Category.find(:all, :conditions => ['parent_id is null and name <> ?', RacingAssociation.current.short_name])
+    Category.find.all( :conditions => ['parent_id is null and name <> ?', RacingAssociation.current.short_name])
   end
   
   def Category.find_by_friendly_param(param)
@@ -36,7 +36,7 @@ class Category < ActiveRecord::Base
     when 0
       nil
     when 1
-      Category.find(:first, :conditions => ['friendly_param = ?', param])
+      Category.first(:conditions => ['friendly_param = ?', param])
     else
       raise AmbiguousParamException, "#{category_count} occurrences of #{param}"
     end

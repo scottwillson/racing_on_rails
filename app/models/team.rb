@@ -41,8 +41,7 @@ class Team < ActiveRecord::Base
   
   def Team.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
-    Team.find(
-      :all, 
+    Team.all(
       :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
       :include => :aliases,
       :limit => limit,

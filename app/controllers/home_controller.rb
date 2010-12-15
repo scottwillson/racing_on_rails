@@ -11,7 +11,7 @@ class HomeController < ApplicationController
 
     cutoff = Date.today - RacingAssociation.current.weeks_of_recent_results * 7
     
-    @recent_results = Event.find(:all,
+    @recent_results = Event.find.all(
       :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",
       :joins => [:races => :results],
       :conditions => [
@@ -22,8 +22,7 @@ class HomeController < ApplicationController
     )
 
     @news_category = ArticleCategory.find( :all, :conditions => ["name = 'news'"] )
-    @recent_news = Article.find(
-      :all,
+    @recent_news = Article.all(
       :conditions => ['(created_at > ? OR updated_at > ?) and article_category_id = ?', cutoff, cutoff, @news_category],
       :order => 'created_at desc'
     )

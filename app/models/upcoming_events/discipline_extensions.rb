@@ -4,14 +4,12 @@ module UpcomingEvents
     attr_accessor :upcoming_weekly_series
 
     def find_all_upcoming_events(dates)
-      single_day_events = SingleDayEvent.find(
-        :all, 
+      single_day_events = SingleDayEvent.all(
         :conditions => scope_by_sanctioned(['date between ? and ? and cancelled = false and parent_id is null and discipline in (?)', dates.begin, dates.end, self.names]),
         :order => 'date')
 
       # Find MultiDayEvents, not their children, nor MultiDayEvents subclasses
-      multi_day_events = MultiDayEvent.find(
-        :all,
+      multi_day_events = MultiDayEvent.all(
         :select => "distinct events.id, events.name, events.date, events.discipline, events.flyer, events.flyer_approved, events.beginner_friendly, events.bar_points, events.website, events.registration_link",
         :joins => "left outer join events as childrens_events on childrens_events.parent_id = events.id",
         :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
@@ -25,8 +23,7 @@ module UpcomingEvents
         :order => 'events.date')
 
       # Find Series events, but not their parents, nor WeeklySeries
-      series_events = SingleDayEvent.find(
-          :all, 
+      series_events = SingleDayEvent.all(
           :select => "distinct events.id, events.name, events.date, events.discipline, events.flyer, events.flyer_approved, events.beginner_friendly, events.bar_points, events.website, events.registration_link",
           :include => :parent,
           :conditions => scope_by_sanctioned(
@@ -44,8 +41,7 @@ module UpcomingEvents
     end
 
     def find_all_upcoming_weekly_series(dates)
-      WeeklySeries.find(
-        :all, 
+      WeeklySeries.all(
         :select => "distinct events.id, events.name, events.date, events.discipline, events.flyer, events.flyer_approved, events.beginner_friendly, events.bar_points, events.website, events.registration_link",
         :joins => "left outer join events as childrens_events on childrens_events.parent_id = events.id",
         :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
