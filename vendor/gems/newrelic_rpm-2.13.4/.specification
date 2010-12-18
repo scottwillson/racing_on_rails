@@ -1,6 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: newrelic_rpm
 version: !ruby/object:Gem::Version 
+  hash: 51
   prerelease: false
   segments: 
   - 2
@@ -26,6 +27,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         version: "0"
@@ -39,6 +41,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         version: "0"
@@ -52,6 +55,7 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
+        hash: 3
         segments: 
         - 0
         version: "0"
@@ -286,23 +290,32 @@ has_rdoc: true
 homepage: http://www.github.com/newrelic/rpm
 licenses: []
 
-post_install_message: "\n\
-  PLEASE NOTE:\n\n\
-  Developer Mode is now a Rack middleware.\n\n\
-  RPM Developer Mode is no longer available in Rails 2.1 and earlier.\n\
-  However, starting in version 2.12 you can use Developer Mode in any\n\
-  Rack based framework, in addition to Rails.  To install developer mode\n\
-  in a non-Rails application, just add NewRelic::Rack::DeveloperMode to\n\
-  your middleware stack.\n\n\
-  If you are using JRuby, we recommend using at least version 1.4 or \n\
-  later because of issues with the implementation of the timeout library.\n\n\
-  Refer to the README.md file for more information.\n\n\
-  Please see http://support.newrelic.com/faqs/docs/ruby-agent-release-notes\n\
-  for a complete description of the features and enhancements available\n\
-  in version 2.13 of the Ruby Agent.\n\n\
-  For details on this specific release, refer to the CHANGELOG file.\n\n\
-  Notice: Developer Mode now supports only Rails 2.3+ - refer to README\n\
-  for instructions for previous versions\n\n"
+post_install_message: |+
+  
+  PLEASE NOTE:
+  
+  Developer Mode is now a Rack middleware.
+  
+  RPM Developer Mode is no longer available in Rails 2.1 and earlier.
+  However, starting in version 2.12 you can use Developer Mode in any
+  Rack based framework, in addition to Rails.  To install developer mode
+  in a non-Rails application, just add NewRelic::Rack::DeveloperMode to
+  your middleware stack.
+  
+  If you are using JRuby, we recommend using at least version 1.4 or 
+  later because of issues with the implementation of the timeout library.
+  
+  Refer to the README.md file for more information.
+  
+  Please see http://support.newrelic.com/faqs/docs/ruby-agent-release-notes
+  for a complete description of the features and enhancements available
+  in version 2.13 of the Ruby Agent.
+  
+  For details on this specific release, refer to the CHANGELOG file.
+  
+  Notice: Developer Mode now supports only Rails 2.3+ - refer to README
+  for instructions for previous versions
+  
 rdoc_options: 
 - --charset=UTF-8
 - --line-numbers
@@ -325,6 +338,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
+      hash: 3
       segments: 
       - 0
       version: "0"
