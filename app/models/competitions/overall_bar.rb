@@ -37,7 +37,7 @@ class OverallBar < Competition
   end
 
   def source_results(race)
-    Result.find.all(
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
                 :conditions => [%Q{events.type = 'Bar' 
                   and place between 1 and 300

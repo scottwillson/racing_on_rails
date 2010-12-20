@@ -7,7 +7,7 @@
   in_place_edit_for :velodrome, :website
 
   def index
-    @velodromes = Velodrome.find.all( :order => "name")
+    @velodromes = Velodrome.all( :order => "name")
   end
   
   def new

@@ -609,7 +609,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(assigns['person'], "Should assign person")
     assert(assigns['person'].errors.empty?, "Person should not have errors")
     
-    knowlsons = Person.find.all( :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
+    knowlsons = Person.all( :conditions => { :first_name => "Jon", :last_name => "Knowlson" })
     assert_equal(1, knowlsons.size, "Should have two Knowlsons")
     knowlsons.each do |knowlson|
       assert_equal(2, knowlson.race_numbers.size, 'Knowlson race numbers')
@@ -855,16 +855,16 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     alice_2 = Person.create!(:name => 'Alice Pennington', :road_category => '3')
     people_before_import = Person.count
   
-    tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Tonkin']))
-    ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Weaver']))
-    alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.find.all( :conditions => ['last_name = ?', 'Pennington']))
+    tonkin_dupe = Duplicate.create!(:new_attributes => {:name => 'Erik Tonkin'}, :people => Person.all( :conditions => ['last_name = ?', 'Tonkin']))
+    ryan_dupe = Duplicate.create!(:new_attributes => {:name => 'Ryan Weaver', :city => 'Las Vegas'}, :people => Person.all( :conditions => ['last_name = ?', 'Weaver']))
+    alice_dupe = Duplicate.create!(:new_attributes => {:name => 'Alice Pennington', :road_category => '2'}, :people => Person.all( :conditions => ['last_name = ?', 'Pennington']))
     post(:resolve_duplicates, {tonkin_dupe.to_param => 'new', ryan_dupe.to_param => weaver_3.to_param, alice_dupe.to_param => alice_2.to_param})
     assert_redirected_to admin_people_path
     assert_equal(0, Duplicate.count, 'Should have no duplicates')
     
-    assert_equal(3, Person.find.all( :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
-    assert_equal(3, Person.find.all( :conditions => ['last_name = ?', 'Weaver']).size, 'Weaver in database')
-    assert_equal(2, Person.find.all( :conditions => ['last_name = ?', 'Pennington']).size, 'Pennington in database')
+    assert_equal(3, Person.all( :conditions => ['last_name = ?', 'Tonkin']).size, 'Tonkins in database')
+    assert_equal(3, Person.all( :conditions => ['last_name = ?', 'Weaver']).size, 'Weaver in database')
+    assert_equal(2, Person.all( :conditions => ['last_name = ?', 'Pennington']).size, 'Pennington in database')
     
     weaver_3.reload
     assert_equal('Las Vegas', weaver_3.city, 'Weaver city')

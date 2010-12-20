@@ -30,7 +30,7 @@ class SingleDayEvent < Event
       conditions << discipline.name
     end
 
-    SingleDayEvent.find.all( :conditions => conditions)
+    SingleDayEvent.all( :conditions => conditions)
   end
 
   def series_event?

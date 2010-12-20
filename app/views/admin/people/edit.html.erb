@@ -125,7 +125,7 @@
                              :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
                            }
     %>
-    <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.find.all( :conditions => [ 
+    <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.all( :conditions => [ 
        "parent_id is null and date between ? and ?", RacingAssociation.current.now.beginning_of_year, RacingAssociation.current.now.end_of_year 
      ]).sort_by(&:date).reverse }) unless @person.events.empty? %>
   </div>

@@ -147,7 +147,7 @@ class BarTest < ActiveSupport::TestCase
     # Should delete old BAR
     Bar.calculate!(2004)
     assert_equal(6, Bar.count(:conditions => ['date = ?', Date.new(2004)]), "Bar events after calculate!")
-    Bar.find.all( :conditions => ['date = ?', Date.new(2004)]).each do |bar|
+    Bar.all( :conditions => ['date = ?', Date.new(2004)]).each do |bar|
       assert(bar.name[/2004.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
     end
@@ -251,7 +251,7 @@ class BarTest < ActiveSupport::TestCase
   
   # Used to only award bonus points for races of five or less, but now all races get equal points
   def test_field_size
-    for person in Person.find.all()
+    for person in Person.all
       person.member_to = Date.new(2009, 12, 31)
       person.save!
     end

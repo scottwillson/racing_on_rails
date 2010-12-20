@@ -4,7 +4,7 @@
 class Person < ActiveRecord::Base
   include Comparable
   include Names::Nameable
-  include SentientUser
+  # FIXME include SentientUser
 
   versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
                          :perishable_token, :persistence_token, :single_access_token ]
@@ -129,7 +129,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.find_by_number(number)
-    Person.find.all( 
+    Person.all( 
                :include => :race_numbers,
                :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
   end

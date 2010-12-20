@@ -31,7 +31,7 @@ class Bar < Competition
           end
         end
 
-        Bar.find.all( :conditions => { :date => date }).each do |bar|
+        Bar.all( :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter
@@ -80,7 +80,7 @@ class Bar < Competition
       category_ids << ", #{category_4_5_men.id}"
     end
 
-    Result.find.all(
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                   place between 1 AND #{point_schedule.size - 1}

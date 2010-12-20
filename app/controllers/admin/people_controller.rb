@@ -100,7 +100,7 @@ class Admin::PeopleController < Admin::AdminController
   def edit
     @person = Person.find(params[:id])
     @year = current_date.year
-    @race_numbers = RaceNumber.find.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+    @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
   end
   
@@ -142,7 +142,7 @@ class Admin::PeopleController < Admin::AdminController
       end
     else
       @year = current_date.year
-      @race_numbers = RaceNumber.find.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
       render :edit
     end
@@ -210,7 +210,7 @@ class Admin::PeopleController < Admin::AdminController
     end
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     @year = params[:year] || RacingAssociation.current.effective_year
-    @race_numbers = RaceNumber.find.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+    @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     render :edit
   end
   
@@ -271,7 +271,7 @@ class Admin::PeopleController < Admin::AdminController
   
   # Unresolved duplicates after import
   def duplicates
-    @duplicates = Duplicate.find.all()
+    @duplicates = Duplicate.all
     @duplicates.sort! do |x, y|
       diff = (x.person.last_name || '') <=> y.person.last_name
       if diff == 0
@@ -283,7 +283,7 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   def resolve_duplicates
-    @duplicates = Duplicate.find.all()
+    @duplicates = Duplicate.all
     @duplicates.each do |duplicate|
       id = params[duplicate.to_param]
       if id == 'new'
@@ -367,7 +367,7 @@ class Admin::PeopleController < Admin::AdminController
     @year = params[:year] || current_date.year
     if params[:id]
       @person = Person.find(params[:id])
-      @race_numbers = RaceNumber.find.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     else
       @person = Person.new
       @race_numbers = []
@@ -404,7 +404,7 @@ class Admin::PeopleController < Admin::AdminController
   
   # Membership card stickers/labels
   def cards
-    @people = Person.find.all( :conditions => ['print_card=?', true], :order => 'last_name, first_name')
+    @people = Person.all( :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @people.empty?
       return redirect_to(no_cards_admin_people_path(:format => "html"))
     else

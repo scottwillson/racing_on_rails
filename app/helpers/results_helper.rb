@@ -1,3 +1,5 @@
+require "result_column"
+
 module ResultsHelper
   # Link to Person Result detail page
   def link_to_results(text, result)
@@ -26,11 +28,11 @@ module ResultsHelper
   end
   
   def result_header(column)
-    ResultColumn[column].description
+    ::ResultColumn[column].description
   end
 
   def result_cell_class(column)
-    if ResultColumn[column].alignment == :right
+    if ::ResultColumn[column].alignment == :right
       " class=\"right\""
     end
   end
@@ -46,7 +48,7 @@ module ResultsHelper
     when "team_name"
       link_to_team_results result.team_name, result
     else
-      result.send ResultColumn[column].display_method
+      result.send ::ResultColumn[column].display_method
     end
   end
 end

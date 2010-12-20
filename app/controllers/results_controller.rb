@@ -56,7 +56,7 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    ResultsController::benchmark "Load results", Logger::DEBUG, false do
+    ResultsController::benchmark "Load results", :level => :debug, :silence => false do
       @event = Event.find(
         params[:event_id],
         :include => [ :races => [ :category, :results ] ]

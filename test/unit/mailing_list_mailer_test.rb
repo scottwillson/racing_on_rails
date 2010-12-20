@@ -60,7 +60,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     
     MailingListMailer.receive(email.encoded)
     
-    posts = Post.find.all( :order => "date")
+    posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal(subject, post_from_db.subject, "Subject")
@@ -75,7 +75,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   
     MailingListMailer.receive(email_to_archive)
     
-    posts = Post.find.all( :order => "date")
+    posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("[Fwd:  For the Archives]", post_from_db.subject, "Subject")
@@ -90,7 +90,7 @@ class MailingListMailerTest < ActionMailer::TestCase
   
     MailingListMailer.receive(rich_email_text)
     
-    posts = Post.find.all( :order => "date")
+    posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Rich Text", post_from_db.subject, "Subject")
@@ -111,7 +111,7 @@ Check it out: http://www.google.com/
   
     MailingListMailer.receive(outlook_email)
     
-    posts = Post.find.all( :order => "date")
+    posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Stinky Outlook Email", post_from_db.subject, "Subject")
@@ -139,7 +139,7 @@ Still loyal:
   
     MailingListMailer.receive(html_email)
     
-    posts = Post.find.all( :order => "date")
+    posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
     assert_equal("Thunderbird HTML", post_from_db.subject, "Subject")

@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/binarylogic/authlogic.git
+  revision: 66ed79515919fe13016911b10ebe734cf8718dc7
+  specs:
+    authlogic (2.1.6)
+      activesupport
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -30,8 +37,6 @@ GEM
       activesupport (= 3.0.3)
     activesupport (3.0.3)
     arel (2.0.6)
-    authlogic (2.1.6)
-      activesupport
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -74,7 +79,6 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
-    sentient_user (0.3.0)
     tabular (0.0.7)
     thor (0.14.6)
     treetop (1.4.9)
@@ -88,7 +92,7 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  authlogic
+  authlogic!
   fastercsv
   mysql2
   newrelic_rpm
@@ -97,6 +101,5 @@ DEPENDENCIES
   prawn-core
   rack (~> 1.2.1)
   rails (= 3.0.3)
-  sentient_user
   tabular (> 0.0.5)
   vestal_versions

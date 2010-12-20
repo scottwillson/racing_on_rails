@@ -19,7 +19,7 @@ class MbraTeamBar < Competition
           end
         end
 
-        MbraTeamBar.find.all( :conditions => { :date => date }).each do |bar|
+        MbraTeamBar.all( :conditions => { :date => date }).each do |bar|
           logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.destroy_races
           bar.create_races
@@ -51,7 +51,7 @@ class MbraTeamBar < Competition
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
-    Result.find.all(
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                     (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)

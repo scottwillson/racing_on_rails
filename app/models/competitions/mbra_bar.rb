@@ -27,7 +27,7 @@ class MbraBar < Competition
           end
         end
 
-        MbraBar.find.all( :conditions => { :date => date }).each do |bar|
+        MbraBar.all( :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
           bar.calculate_threshold_number_of_races
@@ -79,7 +79,7 @@ class MbraBar < Competition
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
 
-    Result.find.all(
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                     (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)

@@ -19,7 +19,7 @@
     <p class="options">
       <strong>Don't Have a Login Yet?</strong>
       <%= link_to "Create a login", 
-            new_login_people_path(:return_to => session[:return_to]), 
+            people_new_login_path(:return_to => session[:return_to]), 
             { :class => "obvious", :id => "new_login" } %>
     </p>
 

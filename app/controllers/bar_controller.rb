@@ -44,7 +44,7 @@ class BarController < ApplicationController
     end
     
     # Optimization
-    @results = Result.find.all( 
+    @results = Result.all( 
                            :include => [ :person, :team ],
                            :conditions => [ 'race_id = ?', @race.id ]
     ) if @race
@@ -56,7 +56,7 @@ class BarController < ApplicationController
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
     @bar = Bar.first(:conditions => ['date = ?', date])
-    @excluded_categories = Category.find.all( :conditions => ['parent_id is null'])
+    @excluded_categories = Category.all( :conditions => ['parent_id is null'])
     expires_in 1.hour, :public => true
   end
 end

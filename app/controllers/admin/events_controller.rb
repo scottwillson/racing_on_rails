@@ -18,10 +18,10 @@ class Admin::EventsController < Admin::AdminController
   def index
     @year = params["year"].to_i
     @year = RacingAssociation.current.effective_year if @year == 0
-    @competitions = Event.find.all(
+    @competitions = Event.all(
                         :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
                       )
-    events = SingleDayEvent.find.all( :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
+    events = SingleDayEvent.all( :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
   end
 

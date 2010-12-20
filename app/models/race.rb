@@ -230,7 +230,7 @@ class Race < ActiveRecord::Base
      if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
        return non_members
      else
-       other_results_in_place = Result.find.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
+       other_results_in_place = Result.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
        other_results_in_place.each { |orip|
           unless orip.person.nil?
             if !orip.person.member?(result.date)

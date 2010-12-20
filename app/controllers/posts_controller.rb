@@ -50,7 +50,7 @@ class PostsController < ApplicationController
     
       @posts = Post.find_for_dates(@mailing_list, month_start, month_end)
     else
-      @mailing_lists = MailingList.find.all()
+      @mailing_lists = MailingList.all
       if mailing_list_name.blank?
         flash[:warn] = "Mailing list is required."
       else

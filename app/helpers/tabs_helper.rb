@@ -88,6 +88,19 @@ HTML
 HTML
       html << end_html
     end
+    
+    # FIXME
+    def controller
+      @controller
+    end
+    
+    def _routes
+      @controller._routes
+    end
+    
+    def request
+      @controller.request
+    end
   end
   
   class Tab

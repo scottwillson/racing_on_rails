@@ -105,7 +105,7 @@ class ScheduleTest < ActiveSupport::TestCase
     fast_twitch_fridays = []
     la_world_cup = nil
     road_nationals = nil
-    for event in Event.find.all( :conditions => 'date >= 2005-01-01')
+    for event in Event.all( :conditions => 'date >= 2005-01-01')
       assert_not_nil(event.date, "#{event.name} date")
       if event.name == "Cascade Cream Puff MTB"
         cream_puff = event

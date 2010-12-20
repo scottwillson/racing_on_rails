@@ -21,7 +21,7 @@ class Admin::FirstAidProvidersController < Admin::AdminController
       @sort_by = "date"
     end
     
-    @events = SingleDayEvent.find.all( :conditions => conditions)
+    @events = SingleDayEvent.all( :conditions => conditions)
     
     respond_to do |format|
       format.html

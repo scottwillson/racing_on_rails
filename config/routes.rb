@@ -153,6 +153,7 @@ RacingOnRails::Application.routes.draw do
   match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
   match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }
   match '/people/list' => 'people#list'
+  match '/people/new_login' => 'people#new_login'
 
   resources :racing_associations
   match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }

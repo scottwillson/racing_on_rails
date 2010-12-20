@@ -11,7 +11,7 @@ class HomeController < ApplicationController
 
     cutoff = Date.today - RacingAssociation.current.weeks_of_recent_results * 7
     
-    @recent_results = Event.find.all(
+    @recent_results = Event.all(
       :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",
       :joins => [:races => :results],
       :conditions => [

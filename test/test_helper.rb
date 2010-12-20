@@ -194,19 +194,19 @@ class ActiveSupport::TestCase
   end
 
   def print_all_events
-    Event.find.all( :order => :date).each {|event|
+    Event.all( :order => :date).each {|event|
       p "#{event.date} #{event.name} #{event.id} #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }
   end
   
   def print_all_results
-    Result.find.all( :order => :person_id).each {|result|
+    Result.all( :order => :person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end
   
   def print_all_categories
-    Category.find.all( :order => 'parent_id, name').each {|category|
+    Category.all( :order => 'parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
     }
   end

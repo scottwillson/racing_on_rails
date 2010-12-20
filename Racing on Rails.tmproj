@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>test/test_helper.rb</string>
+	<string>app/views/person_sessions/new.html.erb</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -23,8 +23,6 @@
 			<date>2010-09-11T16:03:32Z</date>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>config</string>
 			<key>regexFolderFilter</key>
@@ -36,7 +34,7 @@
 			<key>filename</key>
 			<string>cruise_config.rb</string>
 			<key>lastUsed</key>
-			<date>2010-11-27T16:32:19Z</date>
+			<date>2010-12-18T23:29:20Z</date>
 		</dict>
 		<dict>
 			<key>name</key>
@@ -113,6 +111,12 @@
 			<date>2010-11-28T21:28:09Z</date>
 			<key>saveAsAbsolutePath</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>Gemfile</string>
+			<key>lastUsed</key>
+			<date>2010-12-19T02:21:31Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -539,12 +543,54 @@
 				<integer>2</integer>
 			</dict>
 		</dict>
-		<key>app/controllers/application_controller.rb</key>
+		<key>Gemfile</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>68</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/helpers/page_helper.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>16</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/views/home/index.html.erb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>app/views/person_sessions/new.html.erb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>52</integer>
 				<key>line</key>
 				<integer>3</integer>
 			</dict>
@@ -553,55 +599,28 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>app/models/result.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>217</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>177</integer>
-		</dict>
 		<key>config/routes.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>30</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>150</integer>
+				<integer>155</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>147</integer>
-		</dict>
-		<key>test/test_helper.rb</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>2</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>146</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>app/models/result.rb</string>
+		<string>app/views/home/index.html.erb</string>
+		<string>app/views/person_sessions/new.html.erb</string>
 		<string>config/routes.rb</string>
-		<string>app/controllers/application_controller.rb</string>
-		<string>test/test_helper.rb</string>
+		<string>Gemfile</string>
+		<string>app/helpers/page_helper.rb</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

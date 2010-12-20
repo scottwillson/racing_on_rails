@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   # FIXME include ExceptionNotifiable
-  include SentientController
+  # FIXME include SentientController
   include SslRequirement
 
   # HP"s proxy, among others, gets this wrong

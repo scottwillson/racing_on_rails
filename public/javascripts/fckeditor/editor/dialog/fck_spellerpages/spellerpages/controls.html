@@ -16,7 +16,7 @@ function ignore_word() {
 	}
 }
 
-function ignore_all() {
+function ignore_all {
 	if( spellerObject ) {
 		spellerObject.ignoreAll();
 	}
@@ -28,7 +28,7 @@ function replace_word() {
 	}
 }
 
-function replace_all() {
+function replace_all {
 	if( spellerObject ) {
 		spellerObject.replaceAll();
 	}
@@ -114,7 +114,7 @@ function init_spell() {
 								</td>
 								<td>&nbsp;&nbsp;</td>
 								<td>
-									<input class="buttonDefault" type="button" fckLang="DlgSpellBtnIgnoreAll" value="Ignore All" onClick="ignore_all();">
+									<input class="buttonDefault" type="button" fckLang="DlgSpellBtnIgnoreAll" value="Ignore All" onClick="ignore_all;">
 								</td>
 							</tr>
 							<tr>
@@ -126,7 +126,7 @@ function init_spell() {
 								</td>
 								<td>&nbsp;&nbsp;</td>
 								<td>
-									<input class="buttonDefault" type="button" fckLang="DlgSpellBtnReplaceAll" value="Replace All" onClick="replace_all();">
+									<input class="buttonDefault" type="button" fckLang="DlgSpellBtnReplaceAll" value="Replace All" onClick="replace_all;">
 								</td>
 							</tr>
 							<tr>
