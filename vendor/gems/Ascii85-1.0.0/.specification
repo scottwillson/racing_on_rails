@@ -1,7 +1,6 @@
 --- !ruby/object:Gem::Specification 
 name: Ascii85
 version: !ruby/object:Gem::Version 
-  hash: 23
   prerelease: false
   segments: 
   - 1
@@ -46,7 +45,6 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
-        hash: 31
         segments: 
         - 2
         - 4
@@ -93,7 +91,6 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      hash: 3
       segments: 
       - 0
       version: "0"
@@ -102,7 +99,6 @@ required_rubygems_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      hash: 3
       segments: 
       - 0
       version: "0"

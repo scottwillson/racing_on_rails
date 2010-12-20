@@ -1,7 +1,6 @@
 --- !ruby/object:Gem::Specification 
 name: mocha
 version: !ruby/object:Gem::Version 
-  hash: 47
   prerelease: false
   segments: 
   - 0
@@ -26,7 +25,6 @@ dependencies:
     requirements: 
     - - ">="
       - !ruby/object:Gem::Version 
-        hash: 3
         segments: 
         - 0
         version: "0"
@@ -240,7 +238,6 @@ required_ruby_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      hash: 3
       segments: 
       - 0
       version: "0"
@@ -249,7 +246,6 @@ required_rubygems_version: !ruby/object:Gem::Requirement
   requirements: 
   - - ">="
     - !ruby/object:Gem::Version 
-      hash: 3
       segments: 
       - 0
       version: "0"

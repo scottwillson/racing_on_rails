@@ -7,9 +7,10 @@ config.action_controller.perform_caching             = true
 config.action_controller.allow_forgery_protection    = false
 config.action_mailer.delivery_method = :test
 
+# Selenium has specific requirements
 config.gem "rubyzip", :lib => "zip/zip"
 config.gem "ffi", :version => "0.6.3"
-config.gem "childprocess"
+config.gem "childprocess", :version => "0.1.4"
 config.gem "json_pure", :lib => "json"
 config.gem "selenium-webdriver"
 config.gem "mocha"
