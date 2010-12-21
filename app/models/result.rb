@@ -667,6 +667,8 @@ class Result < ActiveRecord::Base
   def method_missing(sym, *args, &block)
     if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
       custom_attributes[sym]
+    elsif race && race.custom_columns && race.custom_columns.include?(sym)
+      nil
     else
       super
     end
