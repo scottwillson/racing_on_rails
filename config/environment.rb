@@ -38,6 +38,8 @@ Rails::Initializer.run do |config|
   config.gem "vestal_versions"
   config.gem "sentient_user"
   config.gem "newrelic_rpm"
+  config.gem "hoe"
+  
 
   config.time_zone = "Pacific Time (US & Canada)"
   
