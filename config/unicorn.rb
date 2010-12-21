@@ -6,6 +6,11 @@ worker_processes 2
 preload_app true
 timeout 90
 
+rails_root = File.expand_path(File.dirname(__FILE__) + "/../")
+listen "#{rails_root}/tmp/sockets/unicorn.sock", :backlog => 64
+stderr_path "#{rails_root}/log/unicorn.stderr.log"
+stdout_path "#{rails_root}/log/unicorn.stdout.log"
+
 # Using this method we get 0 downtime deploys.
 before_fork do |server, worker|
   old_pid = RAILS_ROOT + '/tmp/pids/unicorn.pid.oldbin'
@@ -16,13 +21,13 @@ before_fork do |server, worker|
       # someone else did our job for us
     end
   end
+  
+  ActiveRecord::Base.connection.disconnect! if defined?(ActiveRecord::Base)
 end
 
 after_fork do |server, worker|
   ActiveRecord::Base.establish_connection
 
   # per-process listener ports for debugging/admin:
-  addr = "127.0.0.1:#{9035 + worker.nr}"
-  server.listen(addr, :tries => -1, :delay => 5, :backlog => 128)
-  worker.user('app', 'rail') if Process.euid == 0
+  worker.user('app', 'rails') if Process.euid == 0
 end
