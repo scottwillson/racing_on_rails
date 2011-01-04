@@ -26,8 +26,13 @@ Rails::Initializer.run do |config|
   if RUBY_VERSION["1.8"]
     config.gem "fastercsv"
   end
+
   # Rails 2.3.10 wants this Rack
   config.gem "rack", :version => "~>1.1.0"
+
+  # Odd mixed encoding on FreeBSD 7.2 without Erubis
+  config.gem "erubis"
+
   config.gem "authlogic"
   config.gem "tabular", :version => ">0.0.5"
   config.gem "mysql2"

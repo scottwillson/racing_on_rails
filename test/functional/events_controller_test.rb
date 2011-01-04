@@ -20,7 +20,7 @@ class EventsControllerTest < ActionController::TestCase
     get :index, :person_id => people(:promoter)
     assert_response :success
     assert_select ".tabs"
-    assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 0
+    assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 4
   end
 
   def test_index_as_xml

@@ -176,7 +176,7 @@ class OregonCupTest < ActiveSupport::TestCase
     
     OregonCup.calculate!(2010)
     
-    or_cup = OregonCup.find_for_year
+    or_cup = OregonCup.find_for_year(2010)
     womens_race = or_cup.races.detect { |r| r.category == categories(:senior_women) }
     assert_equal 1, womens_race.results.size, "OR Cup womens race"
     assert_equal people(:alice), womens_race.results.first.person, "Result person"

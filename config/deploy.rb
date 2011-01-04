@@ -1,4 +1,3 @@
-require 'mongrel_cluster/recipes'
 load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
@@ -15,7 +14,6 @@ set :deploy_to, "/usr/local/www/rails/#{application}"
 set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
-set :mongrel_conf, "/usr/local/etc/mongrel_cluster/#{application}.yml"
 
 namespace :deploy do
   desc "Deploy association-specific customizations"
@@ -34,11 +32,6 @@ namespace :deploy do
       run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
     end
   end
-  
-  task :wait_for_mongrels_to_stop do
-    # Give Mongrels a chance to really stop
-    sleep 10
-  end
 
   namespace :web do
     desc "Present a maintenance page to visitors"
@@ -51,4 +44,3 @@ namespace :deploy do
 end
 
 after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
-after "deploy:stop", "deploy:wait_for_mongrels_to_stop"
