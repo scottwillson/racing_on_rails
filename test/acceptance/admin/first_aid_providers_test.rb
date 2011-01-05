@@ -24,11 +24,13 @@ class FirstAidProvidersTest < WebDriverTestCase
       wait_for_element "events_table"
       assert_table "events_table", 1, 0, /^Megan Weaver/
 
-      click "past_events"
-      assert_table "events_table", 1, 3, /^Copperopolis/
+      if Date.today.month > 1
+        click "past_events"
+        assert_table "events_table", 1, 3, /^Copperopolis/
 
-      click "past_events"
-      assert_not_in_page_source "Copperopolis"
+        click "past_events"
+        assert_not_in_page_source "Copperopolis"
+      end
 
       assert_table "events_table", 1, 3, /^Lost Series/
       assert_table "events_table", 2, 3, /^National Federation Event/
