@@ -10,6 +10,10 @@ class ResultsTest < WebDriverTestCase
     else
       open "/admin/events"
     end
+    
+    if Date.today.month == 1 && Date.today.day < 6
+      open "/admin/events?year=#{Date.today.year - 1}"
+    end
 
     click :link_text => "Copperopolis Road Race"
     wait_for_current_url(/\/admin\/events\/\d+\/edit/)
