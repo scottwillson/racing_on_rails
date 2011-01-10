@@ -32,6 +32,18 @@ namespace :deploy do
       run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
     end
   end
+  
+  task :start do
+    run "/usr/local/etc/rc.d/unicorn start #{application}"
+  end
+  
+  task :stop do
+    run "/usr/local/etc/rc.d/unicorn stop #{application}"
+  end
+  
+  task :restart do
+    run "/usr/local/etc/rc.d/unicorn restart #{application}"
+  end
 
   namespace :web do
     desc "Present a maintenance page to visitors"
