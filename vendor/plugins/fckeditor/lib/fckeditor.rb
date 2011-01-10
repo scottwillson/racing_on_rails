@@ -35,7 +35,7 @@ module Fckeditor
         inputs = "<textarea id='#{id}' #{cols} #{rows} name='#{object}[#{field}]'>#{value}</textarea>\n"
       end
       
- s      js_path = "#{ActionController::Base.relative_url_root}/javascripts"
+      js_path = "#{ActionController::Base.relative_url_root}/javascripts"
       base_path = "#{js_path}/fckeditor/"
       return inputs <<
         javascript_tag("var oFCKeditor = new FCKeditor('#{id}', '#{width}', '#{height}', '#{toolbarSet}');\n" <<
