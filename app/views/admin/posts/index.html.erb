@@ -1,14 +1,5 @@
 <% @page_title = "Admin: Posts" %>
 
-<% form_tag({}, :method => "get", :id => "search_form") do %>
-  <div class="centered">
-    <%= label_tag "search" %>
-    <%= text_field_tag "search", @search %>
-  </div>
-<% end -%>
-
-<hr class="space clear"/>
-
 <% table :class => "posts top_margin clear", :id => :people do %>
   <tr>
     <th class="date">Date</th>
@@ -17,3 +8,9 @@
   </tr>
   <%= render @posts %>
 <% end -%>
+
+<div class="buttons container">
+  <div class="right">
+    <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>
+  </div>
+</div>

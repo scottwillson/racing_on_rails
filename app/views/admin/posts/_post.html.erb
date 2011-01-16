@@ -3,6 +3,5 @@
   <td class="subject">
     <%= link_to h(truncate(post.subject, :length => 50)), edit_admin_mailing_list_post_path(post.mailing_list, post) %>
   </td>
-  <td class="sender"><%= h post.sender %></td>
+  <td class="sender"><%= mail_to post.sender, h(post.sender) %></td>
 </tr>
-

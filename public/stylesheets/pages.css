@@ -572,6 +572,16 @@ table.numbers label.inline {
   width: 600px;
 }
 
+.posts th.subject, .posts td.subject {
+  padding-left: 36px;
+}
+
+.posts td.subject {
+  background-image: url(/images/icons/email.png);
+  background-repeat: no-repeat;
+  background-position: 12px center;
+}
+
 /* People */
 #preview_import_table tr th {
   border-bottom: 1px solid gray;
