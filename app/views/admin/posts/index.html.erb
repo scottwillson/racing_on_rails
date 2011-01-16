@@ -1,0 +1,19 @@
+<% @page_title = "Admin: Posts" %>
+
+<% form_tag({}, :method => "get", :id => "search_form") do %>
+  <div class="centered">
+    <%= label_tag "search" %>
+    <%= text_field_tag "search", @search %>
+  </div>
+<% end -%>
+
+<hr class="space clear"/>
+
+<% table :class => "posts top_margin clear", :id => :people do %>
+  <tr>
+    <th class="date">Date</th>
+    <th class="subject">Subject</th>
+    <th class="from">From</th>
+  </tr>
+  <%= render @posts %>
+<% end -%>

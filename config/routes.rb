@@ -18,6 +18,10 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :first_aid_providers
     admin.resources :multi_day_events, :as => :events, :has_one => :person
     
+    admin.resources :mailing_lists do |mailing_list|
+      mailing_list.resources :posts
+    end
+    
     admin.resources :pages
     admin.namespace(:pages) do |pages|
       pages.resources :versions, :member => { :revert => :get }
