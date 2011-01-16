@@ -30,7 +30,7 @@ namespace :db do
   # By default, delete downloaded SQL. To keep it, set SAVE=true. Example:
   # cap production_data_refresh SAVE=true
   task :production_data_load, :roles => :db, :only => { :primary => true } do
-    load File.expand_path("../../config/environment.rb", __FILE__)
+    load File.expand_path("../../config/environment.rb", __FILE__) unless defined?(Rails)
     abcs = ActiveRecord::Base.configurations
     dev_db = abcs[RAILS_ENV]["database"]
     `mysql -u #{abcs[RAILS_ENV]["username"]} -e 'drop database if exists #{dev_db}'`
