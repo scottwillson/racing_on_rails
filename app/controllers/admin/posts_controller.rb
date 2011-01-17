@@ -4,7 +4,10 @@ module Admin
     layout "admin/application"
     
     def index
-      @posts = @mailing_list.posts
+      @posts = Post.paginate :all, 
+                               :order => "date desc", 
+                               :page => params[:page],
+                               :conditions => [ "mailing_list_id = ?", @mailing_list.id ]
     end
     
     def new

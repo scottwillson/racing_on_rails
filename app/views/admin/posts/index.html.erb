@@ -10,6 +10,8 @@
   <%= render @posts %>
 <% end -%>
 
+<%= will_paginate(@posts) if @posts.any? %>
+
 <div class="buttons container">
   <div class="right">
     <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>
