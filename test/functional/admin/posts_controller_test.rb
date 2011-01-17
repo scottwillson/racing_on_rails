@@ -43,4 +43,27 @@ class Admin::PostsControllerTest < ActionController::TestCase
     assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
     assert_redirected_to edit_admin_mailing_list_post_path(mailing_lists(:obra_chat), assigns(:post))
   end
+  
+  def test_edit
+    login_as :administrator
+    get :edit, :mailing_list_id => mailing_lists(:obra_chat).to_param, :id => posts(:archived_post).to_param
+    assert_response :success
+  end
+  
+  def test_update
+    login_as :administrator
+    put :update, :mailing_list_id => mailing_lists(:obra_chat).to_param, :id => posts(:archived_post).to_param, :post => {
+      :from_name => "Mike Murray",
+      :from_email_address => "mmurray@obra.org",
+      :subject => "No More Masters Races",
+      :body => "That is all",
+      "date(1i)"=>"2009",
+      "date(2i)"=>"11",
+      "date(3i)"=>"22"
+    }
+    assert_not_nil assigns(:post), @post
+    assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
+    assert_equal "No More Masters Races", assigns(:post).subject, "subject"
+    assert_redirected_to edit_admin_mailing_list_post_path(mailing_lists(:obra_chat), assigns(:post))
+  end
 end
