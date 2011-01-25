@@ -10,7 +10,7 @@ module Export
     private
 
     def Person.export_head
-      Base.exportFieldsFromResult(Person.find_all_for_export(Date.new, nil), "people.txt")
+#      Base.exportFieldsFromResult(Person.find_all_for_export(Date.new, nil), "people.txt")
     end
   
     def Person.export_data
