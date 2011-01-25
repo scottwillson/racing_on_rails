@@ -1,9 +1,12 @@
 module Export
   def Export.export_all
+    Alias.export
     Category.export
     Event.export
+    People.export
     Race.export
     Result.export
+    Team.export
     Dir.chdir("#{Rails.root}/public/export") do
       `rm *.bz2`
       `tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`
@@ -16,6 +19,20 @@ module Export
     private
 
     def Base.export(sql, basename)
+      target = Base.prepare_files basename
+      
+      # dump to csv and move to /public/export
+      ActiveRecord::Base.connection.execute(sql % path)
+      path.rename target
+    end
+
+    def Base.exportDataFromResult(result, basename)
+      File.open(target, "w") { |file| result.each_hash { |r| file.write r["csv"] } }
+      send_file target, :type => 'text/csv; charset=iso-8859-1; header=present'
+      path.rename target
+    end
+    
+    def Base.prepare_files(basename)
       # remove any existing tmp file
       path = Base.tmp_path basename
       path.unlink if path.exist?
@@ -24,13 +41,9 @@ module Export
 
       # ensure the /public/export directory exists
       target = Base.public_path basename
-      target.dirname.mkdir unless target.dirname.exist?
-
-      # dump to csv and move to /public/export
-      ActiveRecord::Base.connection.execute(sql % path)
-      path.rename target
+      target.dirname.mkdir unless target.dirname.exist?      
     end
-
+    
     def Base.tmp_path(basename)
       Pathname.new File.join("#{Rails.root}/tmp/export", basename)
     end
