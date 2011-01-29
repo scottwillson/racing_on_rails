@@ -15,6 +15,13 @@ set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
 
+set :default_environment, { 
+  'PATH'         => "/usr/local/rvm/gems/ruby-1.9.2-p136/bin:/usr/local/rvm/gems/ruby-1.9.2-p136@global/bin:/usr/local/rvm/rubies/ruby-1.9.2-p136/bin:$PATH",
+  'RUBY_VERSION' => 'ruby-1.9.2-p136',
+  'GEM_HOME'     => '/usr/local/rvm/gems/ruby-1.9.2-p136',
+  'GEM_PATH'     => '/usr/local/rvm/gems/ruby-1.9.2-p136:/usr/local/rvm/gems/ruby-1.9.2-p136@global'
+}
+
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
@@ -27,9 +34,16 @@ namespace :deploy do
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
 
+  task :symlinks do
+    run "[ -e \"#{release_path}/pids\" ] || rm -rf #{release_path}/pids"
+    run "[ -e \"#{release_path}/sockets\" ] || rm -rf #{release_path}/sockets"
+    run "[ -e \"#{shared_path}/pids\" ] || ln -s #{shared_path}/pids #{current_path}/tmp"
+    run "[ -e \"#{shared_path}/sockets\" ] || ln -s #{shared_path}/sockets #{current_path}/tmp"
+  end
+
   task :copy_cache do
     %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
-      run("cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
+      run("[ ! -e \"#{previous_release}/public/#{cached_path}\" ] || cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
     end
   end
   
@@ -42,7 +56,7 @@ namespace :deploy do
   end
   
   task :restart do
-    run "/usr/local/etc/rc.d/unicorn restart #{application}"
+    run "/usr/local/etc/rc.d/unicorn reload #{application}"
   end
 
   namespace :web do
@@ -55,4 +69,4 @@ namespace :deploy do
   end
 end
 
-after "deploy:update_code", "deploy:local_code", "deploy:copy_cache"
+after "deploy:update_code", "deploy:local_code", "deploy:symlinks", "deploy:copy_cache"
