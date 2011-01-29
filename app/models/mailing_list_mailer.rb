@@ -96,5 +96,6 @@ class MailingListMailer < ActionMailer::Base
       end
       raise
     end
+    post
   end
 end

@@ -44,6 +44,14 @@ class Admin::PostsControllerTest < ActionController::TestCase
     assert_redirected_to edit_admin_mailing_list_post_path(mailing_lists(:obra_chat), assigns(:post))
   end
   
+  def test_create_from_file
+    login_as :administrator
+    post :create, :mailing_list_id => mailing_lists(:obra_chat).to_param, :raw => fixture_file_upload("email/for_sale.eml")
+    assert_not_nil assigns(:post), @post
+    assert assigns(:post).errors.empty?, assigns(:post).errors.full_messages.join(", ")
+    assert_redirected_to edit_admin_mailing_list_post_path(mailing_lists(:obra_chat), assigns(:post))
+  end
+  
   def test_edit
     login_as :administrator
     get :edit, :mailing_list_id => mailing_lists(:obra_chat).to_param, :id => posts(:archived_post).to_param

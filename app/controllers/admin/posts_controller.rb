@@ -16,7 +16,11 @@ module Admin
     end
     
     def create
-      @post = @mailing_list.posts.build(params[:post])
+      if params[:raw].present?
+        @post = MailingListMailer.receive(params[:raw].read.encode("UTF-8"))
+      else
+        @post = @mailing_list.posts.build(params[:post])
+      end
       if @post.save
         flash[:notice] = "Created #{@post.subject}"
         redirect_to edit_admin_mailing_list_post_path(@mailing_list, @post)
