@@ -16,14 +16,20 @@ module Admin
     end
     
     def create
-      if params[:raw].present?
-        @post = MailingListMailer.receive(params[:raw].read.encode("UTF-8"))
-      else
-        @post = @mailing_list.posts.build(params[:post])
-      end
+      @post = @mailing_list.posts.build(params[:post])
       if @post.save
         flash[:notice] = "Created #{@post.subject}"
         redirect_to edit_admin_mailing_list_post_path(@mailing_list, @post)
+      else
+        render :edit
+      end
+    end
+    
+    def receive
+      @post = MailingListMailer.receive(params[:raw].read.encode("UTF-8"))
+      if @post.save
+        flash[:notice] = "Created #{@post.subject}"
+        redirect_to admin_mailing_list_posts_path(@mailing_list)
       else
         render :edit
       end

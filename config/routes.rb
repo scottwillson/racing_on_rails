@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
     admin.resources :multi_day_events, :as => :events, :has_one => :person
     
     admin.resources :mailing_lists do |mailing_list|
-      mailing_list.resources :posts
+      mailing_list.resources :posts, :collection => { :receive => :post }
     end
     
     admin.resources :pages
