@@ -49,6 +49,14 @@ module Admin
       end
     end
     
+    def destroy
+      @post = Post.find(params[:id])
+      unless @post.destroy
+        flash[:notice] = "Could not delete #{@post.subject}"
+      end
+      redirect_to admin_mailing_list_posts_path(@mailing_list)
+    end
+    
     private
     
     def assign_mailing_list

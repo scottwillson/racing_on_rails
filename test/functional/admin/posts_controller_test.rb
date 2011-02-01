@@ -74,4 +74,11 @@ class Admin::PostsControllerTest < ActionController::TestCase
     assert_equal "No More Masters Races", assigns(:post).subject, "subject"
     assert_redirected_to edit_admin_mailing_list_post_path(mailing_lists(:obra_chat), assigns(:post))
   end
+
+  def test_destroy
+    login_as :administrator
+    delete :destroy, :mailing_list_id => mailing_lists(:obra_chat).to_param, :id => posts(:archived_post).to_param
+    assert_redirected_to admin_mailing_list_posts_path(mailing_lists(:obra_chat))
+    assert !Post.exists?(mailing_lists(:obra_chat).id), "Should delete Post"
+  end
 end
