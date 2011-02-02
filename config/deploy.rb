@@ -33,17 +33,17 @@ namespace :deploy do
     run "chmod -R g+w #{release_path}/local"
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
-
+  
   task :symlinks do
-    run "[ -e \"#{release_path}/pids\" ] || rm -rf #{release_path}/pids"
-    run "[ -e \"#{release_path}/sockets\" ] || rm -rf #{release_path}/sockets"
-    run "[ -e \"#{shared_path}/pids\" ] || ln -s #{shared_path}/pids #{current_path}/tmp"
-    run "[ -e \"#{shared_path}/sockets\" ] || ln -s #{shared_path}/sockets #{current_path}/tmp"
+    run <<-CMD
+      rm -rf #{latest_release}/tmp/sockets &&
+      ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets
+    CMD
   end
 
   task :copy_cache do
     %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
-      run("[ ! -e \"#{previous_release}/public/#{cached_path}\" ] || cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}") rescue nil
+      run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
     end
   end
   
@@ -64,7 +64,7 @@ namespace :deploy do
     task :disable, :roles => :web, :except => { :no_release => true } do
       on_rollback { run "rm #{shared_path}/system/maintenance.html" }
       run "if [ -f #{previous_release}/public/maintenance.html ]; then cp #{previous_release}/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
-      run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{release_path}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
+      run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{previous_release}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
     end
   end
 end
