@@ -36,6 +36,8 @@ namespace :deploy do
   
   task :symlinks do
     run <<-CMD
+      rm -rf #{latest_release}/tmp/pids &&
+      ln -s #{shared_path}/pids #{latest_release}/tmp/pids &&
       rm -rf #{latest_release}/tmp/sockets &&
       ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets
     CMD
