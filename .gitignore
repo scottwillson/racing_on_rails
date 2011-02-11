@@ -24,4 +24,4 @@ public/export
 public/export/*.csv
 public/export/*.txt
 *.swp
-
+.rvmrc
