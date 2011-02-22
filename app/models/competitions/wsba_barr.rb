@@ -5,16 +5,25 @@ class WsbaBarr < Competition
   end
   
   def point_schedule
-    [ 0, 100, 70, 50, 40, 36, 32, 28, 24, 20, 16 ]
+    [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
   end
 
   def create_races
-    for category_name in [
-      'Men Cat 1-2', 'Men Cat 3', 'Men Cat 4-5',
-      'Masters Men A', 'Masters Men B', 'Masters Men C', 'Masters Men D', 
-      'Masters Women A', 'Masters Women B',
-      'Women Cat 1-2', 'Women Cat 3', 'Women Cat 4']
-
+    [
+      "Men Cat 1-2",
+      "Men Cat 3",
+      "Men Cat 4-5",
+      "Master Men 30-39 Cat 1-3",
+      "Master Men 30-39 Cat 4-5",
+      "Master Men 40-49 Cat 1-3",
+      "Master Men 40-49 Cat 4-5",
+      "Master Men 50+ Cat 1-5",
+      "Women Cat 1-2",
+      "Women Cat 3",
+      "Women Cat 4",
+      "Master Women 35+ Cat 1-3",
+      "Master Women 35+ Cat 4"
+    ].each do |category_name|
       category = Category.find_or_create_by_name(category_name)
       races.create(:category => category)
     end
@@ -36,7 +45,7 @@ class WsbaBarr < Competition
           LEFT OUTER JOIN categories ON categories.id = races.category_id
           LEFT OUTER JOIN events ON races.event_id = events.id 
             WHERE races.category_id is not null 
-              and members_only_place between 1 and 10
+              and members_only_place between 1 and 15
               and categories.id in (#{category_ids_for(race)})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
               and (events.id in (#{event_ids}))
