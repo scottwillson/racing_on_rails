@@ -95,14 +95,17 @@ class Event < ActiveRecord::Base
 
   # Return list of every year that has at least one event
   def Event.find_all_years
-    years = []
-    results = connection.select_all(
-      "select distinct extract(year from date) as year from events"
-    )
-    results.each do |year|
-      years << year.values.first.to_i
+    years = [ RacingAssociation.current.effective_year ] +
+    connection.select_values(
+      "select distinct extract(year from date) from events"
+    ).map(&:to_i)
+    years = years.uniq.sort
+    
+    if years.size == 1
+      years
+    else
+      ((years.first)..(years.last)).to_a.reverse
     end
-    years.sort.reverse
   end
   
   # Return [weekly_series, events] that have results
