@@ -31,6 +31,7 @@ class Result < ActiveRecord::Base
   before_save :save_person
   before_save :cache_non_event_attributes
   before_create :cache_event_attributes
+  before_save :ensure_custom_attributes
   after_save :update_person_number
   after_destroy [ :destroy_people, :destroy_teams ]
 
@@ -204,6 +205,15 @@ class Result < ActiveRecord::Base
     cache_non_event_attributes if args.empty? || args.include?(:non_event)
     save!
     event.enable_notification!
+  end
+  
+  def ensure_custom_attributes
+    if race && race.custom_columns && !custom_attributes
+      self.custom_attributes = Hash.new
+      race.custom_columns.each do |key|
+        custom_attributes[key.to_sym] = nil
+      end
+    end
   end
   
   # Destroy People that only exist because they were created by importing results
@@ -657,6 +667,8 @@ class Result < ActiveRecord::Base
   def method_missing(sym, *args, &block)
     if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
       custom_attributes[sym]
+    elsif race && race.custom_columns && race.custom_columns.include?(sym)
+      nil
     else
       super
     end

@@ -395,7 +395,7 @@ class Event < ActiveRecord::Base
   
   def end_date
     if children.any?
-      children.last.date
+      children.sort.last.date
     else
       start_date
     end
@@ -512,6 +512,10 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def name_with_date
+    "#{name} (#{short_date})"
+  end
+
   # Try to intelligently combined parent name and child name for schedule pages
   def full_name
     if parent.nil?

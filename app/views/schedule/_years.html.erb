@@ -1,5 +1,13 @@
 <%= tabs do |tabs|
-  Event.find_all_years.each do |year|
+  years = Event.find_all_years
+  current_year = RacingAssociation.current.effective_year
+  
+  unless years.include?(current_year)
+    years << current_year
+    years.sort!.reverse!
+  end
+
+  years.each do |year|
     if year == @year
       tabs.add(year.to_s, :year => nil, :discipline => @discipline)
     else

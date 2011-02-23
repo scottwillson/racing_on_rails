@@ -1,0 +1,96 @@
+--- !ruby/object:Gem::Specification 
+name: rubyzip
+version: !ruby/object:Gem::Version 
+  prerelease: false
+  segments: 
+  - 0
+  - 9
+  - 4
+  version: 0.9.4
+platform: ruby
+authors: 
+- Thomas Sondergaard
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-12-31 00:00:00 -08:00
+default_executable: 
+dependencies: []
+
+description: 
+email: thomas(at)sondergaard.cc
+executables: []
+
+extensions: []
+
+extra_rdoc_files: []
+
+files: 
+- README
+- NEWS
+- TODO
+- ChangeLog
+- install.rb
+- Rakefile
+- samples/example.rb
+- samples/gtkRubyzip.rb
+- samples/write_simple.rb
+- samples/zipfind.rb
+- samples/example_filesystem.rb
+- samples/qtzip.rb
+- test/stdrubyexttest.rb
+- test/alltests.rb
+- test/ziptest.rb
+- test/ioextrastest.rb
+- test/ziprequiretest.rb
+- test/zipfilesystemtest.rb
+- test/gentestfiles.rb
+- test/data/rubycode2.zip
+- test/data/file1.txt
+- test/data/testDirectory.bin
+- test/data/zipWithDirs.zip
+- test/data/file2.txt
+- test/data/file1.txt.deflatedData
+- test/data/notzippedruby.rb
+- test/data/rubycode.zip
+- lib/zip/zipfilesystem.rb
+- lib/zip/stdrubyext.rb
+- lib/zip/tempfile_bugfixed.rb
+- lib/zip/ioextras.rb
+- lib/zip/zip.rb
+- lib/zip/ziprequire.rb
+has_rdoc: true
+homepage: http://rubyzip.sourceforge.net/
+licenses: []
+
+post_install_message: 
+rdoc_options: []
+
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.7
+signing_key: 
+specification_version: 2
+summary: rubyzip is a ruby module for reading and writing zip files
+test_files: []
+

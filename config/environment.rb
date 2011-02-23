@@ -1,4 +1,4 @@
-RAILS_GEM_VERSION = '2.3.10'  unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = "2.3.11"  unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
 
@@ -23,6 +23,16 @@ Rails::Initializer.run do |config|
     :secret => "9998d23d32c59a8161aba78b03630a93"
   }
   
+  if RUBY_VERSION["1.8"]
+    config.gem "fastercsv"
+  end
+
+  # Rails 2.3.10 wants this Rack
+  config.gem "rack", :version => "~>1.1.0"
+
+  # Odd mixed encoding on FreeBSD 7.2 without Erubis
+  config.gem "erubis"
+
   config.gem "authlogic"
   config.gem "tabular", :version => ">0.0.5"
   config.gem "mysql2"
@@ -32,17 +42,7 @@ Rails::Initializer.run do |config|
   config.gem "prawn-core", :lib => "prawn/core"
   config.gem "vestal_versions"
   config.gem "sentient_user"
-
-  if RAILS_ENV == "acceptance"
-    config.gem "selenium-webdriver"
-    config.gem "mocha"
-  end
-
-  if RAILS_ENV == "test"
-    config.gem "minitest", :lib => "minitest/unit"
-    config.gem "mocha"
-    config.gem "timecop"
-  end
+  config.gem "newrelic_rpm"  
 
   config.time_zone = "Pacific Time (US & Canada)"
   

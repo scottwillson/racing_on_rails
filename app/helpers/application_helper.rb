@@ -24,7 +24,7 @@ module ApplicationHelper
   
   # Add to_excel to strip out CSV-invalid characters
   def to_excel(value)
-    if value.present? && value.respond_to?(:gsub)
+    if value.try :respond_to?, :gsub
       value.gsub(/[\t\n\r]/, " ")
     else
       value

@@ -471,4 +471,44 @@ class ResultsControllerTest < ActionController::TestCase
     get :index, :person_id => person[:id], :format => "xml"
     assert_response :success
   end
+  
+  def test_show_unregistered_teams_in_results
+    team = teams(:gentle_lovers)
+    team.member = false
+    team.save!
+    
+    get :event, :event_id => events(:banana_belt_1).to_param
+    assert_response :success
+    assert @response.body["Kona"]
+    assert @response.body["Gentle Lovers"]
+  end
+  
+  def test_do_not_show_unregistered_teams_in_results
+    RacingAssociation.current.unregistered_teams_in_results = false
+    RacingAssociation.current.save!
+    
+    event = SingleDayEvent.create!
+    race = event.races.create!(:category => categories(:senior_men))
+    race.results.create! :person => people(:tonkin), :team => teams(:kona)
+    race.results.create! :person => Person.create!, :team => Team.create!(:name => "DFL")
+    
+    get :event, :event_id => events(:banana_belt_1).to_param
+    assert_response :success
+    assert @response.body["Kona"]
+    assert !@response.body["DFL"]
+  end
+  
+  def test_do_not_show_unregistered_teams_in_results_should_show_previous_years
+    RacingAssociation.current.unregistered_teams_in_results = false
+    RacingAssociation.current.save!
+    
+    team = teams(:gentle_lovers)
+    team.member = false
+    team.save!
+    
+    get :event, :event_id => events(:banana_belt_1).to_param
+    assert_response :success
+    assert @response.body["Kona"]
+    assert @response.body["Gentle Lovers"]
+  end
 end

@@ -1,0 +1,160 @@
+Delivered-To: scott.willson@gmail.com
+Received: by 10.223.119.74 with SMTP id y10cs199212faq;
+        Sat, 15 Jan 2011 18:20:34 -0800 (PST)
+Received: by 10.42.178.129 with SMTP id bm1mr2703985icb.121.1295144431971;
+        Sat, 15 Jan 2011 18:20:31 -0800 (PST)
+Return-Path: <obra-bounces@list.obra.org>
+Received: from list.obra.org (list.obra.org [69.30.43.19])
+        by mx.google.com with ESMTP id x3si6698977wfd.18.2011.01.15.18.20.31;
+        Sat, 15 Jan 2011 18:20:31 -0800 (PST)
+Received-SPF: pass (google.com: best guess record for domain of obra-bounces@list.obra.org designates 69.30.43.19 as permitted sender) client-ip=69.30.43.19;
+Authentication-Results: mx.google.com; spf=pass (google.com: best guess record for domain of obra-bounces@list.obra.org designates 69.30.43.19 as permitted sender) smtp.mail=obra-bounces@list.obra.org; dkim=neutral (body hash did not verify) header.i=@yahoo.com
+Received: from lizard.obra.org (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id 28B8545040;
+	Sat, 15 Jan 2011 18:20:31 -0800 (PST)
+X-Virus-Scanned: amavisd-new at obra.org
+Received: from list.obra.org ([127.0.0.1])
+	by lizard.obra.org (lizard.obra.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id P-V-giCKsmhK; Sat, 15 Jan 2011 18:20:30 -0800 (PST)
+Received: from list.obra.org (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id EB7824501C;
+	Sat, 15 Jan 2011 18:20:19 -0800 (PST)
+X-Original-To: obra@list.obra.org
+Delivered-To: obra@list.obra.org
+Received: from lizard.obra.org (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id B274345020
+	for <obra@list.obra.org>; Sat, 15 Jan 2011 18:20:17 -0800 (PST)
+X-Virus-Scanned: amavisd-new at obra.org
+Received: from list.obra.org ([127.0.0.1])
+	by lizard.obra.org (lizard.obra.org [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id aGgTXX3Lth7i for <obra@list.obra.org>;
+	Sat, 15 Jan 2011 18:20:13 -0800 (PST)
+Received: from web161601.mail.bf1.yahoo.com (web161601.mail.bf1.yahoo.com
+	[98.139.210.170]) by list.obra.org (Postfix) with SMTP id 9C8A34501C
+	for <obra@list.obra.org>; Sat, 15 Jan 2011 18:20:12 -0800 (PST)
+Received: (qmail 51985 invoked by uid 60001); 16 Jan 2011 02:20:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s1024;
+	t=1295144410; bh=Z41If4Novph0QMk4CmBlq74/BGxFexXRrQEBXM0DcqU=;
+	h=Message-ID:X-YMail-OSG:Received:X-Mailer:Date:From:Subject:To:MIME-Version:Content-Type;
+	b=znx33KV6El7lQHlzpJUdYpEb5NN0KKvxfuI5mCs9KEgIg82UWVqWHL8oWzgAzqKToGeNptq8TjXkD/Az2aC4aXEmPWm0U0H31oMoJTYyVOZiaLERFTfxlyLWTHnHNSn0Vfkz+oiqkWfuTiWAO1GfiHFDzsHcyPuD9agT3T0XxTQ=
+DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; s=s1024; d=yahoo.com;
+	h=Message-ID:X-YMail-OSG:Received:X-Mailer:Date:From:Subject:To:MIME-Version:Content-Type;
+	b=IizqPkdOnM5Iz5xJIPlc/KTcETiuBqg6vfcl6ujBMPAa/Q82DMljNiVUZ8+PdnEiPq6zdsV9Bt557DA2oAL05Ec3pqqjIDZbSmg4li1r1QA6UbWvasMPzy5d+mFriSvIs0PohkNP8Mr1L8PRv9eNUKLvZyr2krrsBLQgt3PDrOY=;
+Message-ID: <864998.51498.qm@web161601.mail.bf1.yahoo.com>
+X-YMail-OSG: wmSOlxEVM1lNBXSZOXr6CO9YbuTEzXB1c2HyvhcYspEAQ1Q
+	J_BLfvcJK0_18A0e4eucarkUHTvmIVEFg1IbKqkxCBBEA0UpdiXy5uuqmuLa
+	p2h5vET_IdPyL.e7SgoB6WuY4qlgBEE4okZLBQfvMCPBcu3x8EmLiMX81Euo
+	659iFybsIL39AYFv92AhzKswc7jcZkRi8UEerWi82Tl76x_KtZrZQy5VCZoc
+	PM20yTtz1.gUphj4KEJGptYSCxGb74KsQvR1nrhAAzzoM_OvvLzesIdBDlZJ
+	cYQNkcjn_v4Kc0po5Z4IyYjQPFwpgrER103k4bNtNdMXbbAK9
+Received: from [66.241.77.48] by web161601.mail.bf1.yahoo.com via HTTP;
+	Sat, 15 Jan 2011 18:20:10 PST
+X-Mailer: YahooMailRC/555 YahooMailWebService/0.8.107.285259
+Date: Sat, 15 Jan 2011 18:20:10 -0800 (PST)
+From: Scott Toll <tollscott@yahoo.com>
+To: obra@list.obra.org
+MIME-Version: 1.0
+Subject: [OBRA Chat] =?utf-8?q?FS=3A_DeSalvo_Custom_Cycles_Road_Bike_?=
+ =?utf-8?q?=E2=80=93_TT_/_Tri-Sport?=
+X-BeenThere: obra@list.obra.org
+X-Mailman-Version: 2.1.14
+Precedence: list
+List-Id: Oregon Bicycle Racing Association <obra.list.obra.org>
+List-Unsubscribe: <http://list.obra.org/mailman/options/obra>,
+	<mailto:obra-request@list.obra.org?subject=unsubscribe>
+List-Archive: <http://list.obra.org/pipermail/obra>
+List-Post: <mailto:obra@list.obra.org>
+List-Help: <mailto:obra-request@list.obra.org?subject=help>
+List-Subscribe: <http://list.obra.org/mailman/listinfo/obra>,
+	<mailto:obra-request@list.obra.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============3221417302844871375=="
+Errors-To: obra-bounces@list.obra.org
+Sender: obra-bounces@list.obra.org
+
+
+--===============3221417302844871375==
+Content-Type: multipart/alternative;
+	boundary="0-1055883070-1295144410=:51498"
+
+
+--0-1055883070-1295144410=:51498
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+ =0AFS: DeSalvo Custom Cycles Road Bike =E2=80=93 Tri/TT=0A=0A=0AAsking pri=
+ce $1850.=0A=0A =0AWill sale as frameset or complete bike (price shown for =
+complete bike w/ROL 58's =0Awheelset).=0A=0ACurrently built for road time t=
+rialing. Could be set up for general tri-sport, =0Aand/or road cycling. =0A=
+=0A =0A-       DeSalvo Racing Blue Frameset: Columbus Zona steel frame circ=
+a 2007, =0AReynolds Ouzo Pro carbon fork, Chris King headset.=0A =0A-      =
+ Complete bike: mix of Campagnolo Record, Chorus and Centaur parts circa =
+=0A2004 =E2=80=93 2007, Design Profile, FSA, Fizik etc.=0A =0A-       Wheel=
+set options: VueltaCorsa Lite clincher, ROL 58=E2=80=99s alu/carbon =0Aclin=
+cher =E2=80=93 12/25 cassette included. Either, or both price dependent.=0A=
+ =0ABike is clean, and well maintained by top-notch LBS. Fast, and very sta=
+ble ride =0A- matched up successfully against many top rated off-the-shelf =
+TT frames and =0AOregon masters racers.=0A =0AReasonable fit for riders 5=
+=E2=80=99 10=E2=80=9D to 6=E2=80=99 1=E2=80=9D.=0A =0ACan be test ridden at=
+: =0A =0AService Course Velo=0A930 King Street=0AMedford, OR=0A541-595-8356=
+=0A =0AAsk for Thom.=0A =0AOr, contact Scott off list if interested - tolls=
+cott@yahoo.com. Images available =0Aupon request.=0A=0A =0A*Packing and shi=
+pping additional - TBD=0A=0A=0A      
+--0-1055883070-1295144410=:51498
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><style type=3D"text/css"><!-- DIV {margin:0px;} --></style></he=
+ad><body><div style=3D"font-family:arial,helvetica,sans-serif;font-size:12p=
+t;color:#111111;"><div><style>p.MsoNormal, li.MsoNormal, div.MsoNormal { ma=
+rgin: 0in 0in 0.0001pt; font-size: 12pt; font-family: Times; }div.Section1 =
+{ page: Section1; }</style>    <p class=3D"MsoNormal">FS: DeSalvo Custom Cy=
+cles Road Bike =E2=80=93 Tri/TT<br></p><p class=3D"MsoNormal"><br></p><p cl=
+ass=3D"MsoNormal">Asking price $1850.<br></p>  <p class=3D"MsoNormal">&nbsp=
+;</p>  <p class=3D"MsoNormal">Will sale as frameset or complete bike (price=
+ shown for complete bike w/ROL 58's wheelset).</p><p class=3D"MsoNormal"><b=
+r></p><p class=3D"MsoNormal">  <span style=3D"font-weight: bold;">Currently=
+ built for road time trialing.</span> Could be set up for general tri-sport=
+, and/or road cycling. </p>  <p class=3D"MsoNormal">&nbsp;</p>  <p class=3D=
+"MsoNormal">-<span style=3D"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>D=
+eSalvo Racing Blue
+ Frameset: Columbus Zona steel frame circa 2007, Reynolds Ouzo Pro carbon f=
+ork, Chris King headset.</p>  <p class=3D"MsoNormal">&nbsp;</p>  <p class=
+=3D"MsoNormal">-<span style=3D"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </spa=
+n>Complete bike: mix of Campagnolo Record, Chorus and Centaur parts circa 2=
+004 =E2=80=93 2007, Design Profile, FSA, Fizik etc.</p>  <p class=3D"MsoNor=
+mal">&nbsp;</p>  <p class=3D"MsoNormal">-<span style=3D"">&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp; </span>Wheelset options: Vuelta Corsa Lite clincher, RO=
+L 58=E2=80=99s alu/carbon clincher =E2=80=93 12/25 cassette included. Eithe=
+r, or both price dependent.</p>  <p class=3D"MsoNormal">&nbsp;</p>  <p clas=
+s=3D"MsoNormal">Bike is clean, and well maintained by top-notch LBS. Fast, =
+and very stable ride - matched up successfully against many top rated off-t=
+he-shelf TT frames and Oregon masters racers.</p>  <p class=3D"MsoNormal">&=
+nbsp;</p>  <p class=3D"MsoNormal">Reasonable fit for riders 5=E2=80=99 10=
+=E2=80=9D to 6=E2=80=99 1=E2=80=9D.</p>  <p
+ class=3D"MsoNormal">&nbsp;</p>  <p class=3D"MsoNormal">Can be test ridden =
+at: </p>  <p class=3D"MsoNormal">&nbsp;</p>  <p class=3D"MsoNormal">Service=
+ Course Velo</p>  <p class=3D"MsoNormal">930 King Street</p>  <p class=3D"M=
+soNormal">Medford, OR</p>  <p class=3D"MsoNormal">541-595-8356</p>  <p clas=
+s=3D"MsoNormal">&nbsp;</p>  <p class=3D"MsoNormal">Ask for Thom.</p>  <p cl=
+ass=3D"MsoNormal">&nbsp;</p>  <p class=3D"MsoNormal">Or, contact Scott <spa=
+n style=3D"font-weight: bold;">off list</span> if interested - tollscott@ya=
+hoo.com. Images available upon request.<br></p>  <p class=3D"MsoNormal">&nb=
+sp;</p>  <p class=3D"MsoNormal">*Packing and shipping additional - TBD</p> =
+  </div> </div><br>=0A=0A      </body></html>
+--0-1055883070-1295144410=:51498--
+
+--===============3221417302844871375==
+Content-Disposition: inline
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+_______________________________________________
+OBRA mailing list
+obra@list.obra.org
+http://list.obra.org/mailman/listinfo/obra
+Unsubscribe: obra-unsubscribe@list.obra.org
+
+--===============3221417302844871375==--

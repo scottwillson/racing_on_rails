@@ -133,10 +133,6 @@ class MultiDayEvent < Event
     raise ArgumentError, "'event' cannot be nil" if event.nil?
     MultiDayEvent.find(:first, :conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
-
-  def default_date
-    Time.new.beginning_of_year
-  end
   
   # Create child events automatically, if we've got enough info to do so
   def create_children
@@ -158,10 +154,13 @@ class MultiDayEvent < Event
     
     minimum_date = Event.minimum(:date, :conditions => { :parent_id => id })
     unless minimum_date.blank?
-      # Don't trigger callbacks
-      MultiDayEvent.update_all(["date = ?", minimum_date], ["id = ?", id])
       self.date = minimum_date
+      if date_changed?
+        # Don't trigger callbacks
+        MultiDayEvent.update_all ["date = ?", date], ["id = ?", id]
+      end
     end
+    true
   end
   
   # end_date is calculated from child events, and not saved to the DB. If there are no child events, end_date is set to start date.
