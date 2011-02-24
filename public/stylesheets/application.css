@@ -254,7 +254,8 @@ a:hover
   background: #D0FA30;
 }
 
-a.image, a.image:hover, a.image:visited, a.image:active, table.base a.image, table.base a.image:hover, table.base a.image:visited, table.base a.image:active, div.table_container .caption a.image:hover
+a.image, a.image:hover, a.image:visited, a.image:active, table.base a.image, table.base a.image:hover, 
+table.base a.image:visited, table.base a.image:active, div.table_container .caption a.image:hover
 {
   text-decoration: none;
   background: inherit;

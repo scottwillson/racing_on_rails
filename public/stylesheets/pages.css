@@ -249,8 +249,10 @@ table.results td.result .event {
 }
 
 /* Pages */
-table.pages div.record {
+table.base .title div.in_place_editable {
+  background-repeat: no-repeat;
   background-image: url(/images/icons/page_white_world.png);
+  padding-left: 20px;
 }
 
 #page_body {
