@@ -37,7 +37,7 @@ class Admin::CategoriesController < Admin::AdminController
     render :update do |page|
       page.remove "category_#{@category.id}_row"
       if @parent
-        if @parent.name == RacingAssociation.short_name
+        if @parent.name == RacingAssociation.current.short_name
           page.replace_html "association_category_root", :partial => "category", :collection => @parent.children.sort
           page.call :bindCategoryEvents
         else

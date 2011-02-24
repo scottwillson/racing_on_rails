@@ -24,9 +24,6 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   end
 
   def test_index
-    opts = {:controller => "admin/teams", :action => "index"}
-    assert_routing("/admin/teams", opts)
-    
     get(:index)
     assert_response(:success)
     assert_template("admin/teams/index")
@@ -61,6 +58,13 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal([teams(:vanilla)], assigns['teams'], 'Search for van should find Vanilla')
     assert_not_nil(assigns["name"], "Should assign name")
     assert_equal('van', assigns['name'], "'name' assigns")
+  end
+  
+  def test_find_json
+    get :index, :name => 'van', :format => "json"
+    assert_response :success
+    assert_equal [teams(:vanilla)], assigns['teams'], "Search for 'van' should find Vanilla"
+    assert_equal "van", assigns["name"], "'name' assigns"
   end
   
   def test_find_nothing

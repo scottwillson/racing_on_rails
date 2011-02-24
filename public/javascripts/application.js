@@ -67,6 +67,33 @@ function autoComplete(model, attribute, path) {
   });  
 }    
 
+function autoCompleteTeam(model, attribute, path) {
+  $(document).ready(function() {
+    $('#' + attribute + '_auto_complete').autocomplete({
+      delay: 200,
+      minLength: 3,
+      source: path,
+      focus: function(event, ui) {
+        $('#team_auto_complete').val(ui.item.team.name);
+        return false;
+      },
+      select: function(event, ui) {
+        $('#team_auto_complete').val(ui.item.team.name);
+        $('#event_team_id').val(ui.item.team.id);
+        return false;
+      }
+    })
+    .data("autocomplete")
+    ._renderItem = function(ul, item) {
+        return $('<li id="team_' + item.team.id + '"></li>')
+          .data( "item.autocomplete", item )
+          .append('<a>' + item.team.name + '</a>')
+          .appendTo( ul );
+      };
+    ;
+  });  
+}    
+
 $(document).ready(function() {
   $('.wants_focus:visible').select();
 });

@@ -49,8 +49,8 @@ class EventsTest < WebDriverTestCase
     type "candi m", "promoter_auto_complete"
     wait_for_element "person_#{candi.id}"
     
-    click "person_#{candi.id}"
-    assert_value candi.id, "event_promoter_id"
+    click :css => "li#person_#{candi.id} a"
+    wait_for_value candi.id, "event_promoter_id"
     assert_value "Candi Murray", "promoter_auto_complete"
 
     click "save"
@@ -90,8 +90,8 @@ class EventsTest < WebDriverTestCase
     gl = Team.find_by_name('Gentle Lovers')
     wait_for_element "team_#{gl.id}"
     wait_for_displayed "team_#{gl.id}"
-    click "team_#{gl.id}"
-    assert_value gl.id, "event_team_id"
+    click :css => "li#team_#{gl.id} a"
+    wait_for_value gl.id, "event_team_id"
     assert_value "Gentle Lovers", "team_auto_complete"
 
     click "save"
@@ -106,75 +106,6 @@ class EventsTest < WebDriverTestCase
 
     assert_value "", "event_team_id"
     assert_value "", "team_auto_complete"
-
-    # FIXME jQuery and WebDriver do not play nice
-    # candi = Person.find_by_name('Candi Murray')
-    # if chrome?
-    #   type "Candi Murray", "promoter_auto_complete"
-    # else
-    #   type "candi m", "promoter_auto_complete"
-    #   wait_for_element "person_#{candi.id}"
-    # 
-    #   click "person_#{candi.id}"
-    #   wait_for_value candi.id, "event_promoter_id"
-    #   wait_for_value "Candi Murray", "promoter_auto_complete"
-    # end
-    # 
-    # click "save"
-    # 
-    # assert_value candi.id, "event_promoter_id"
-    # assert_value "Candi Murray", "promoter_auto_complete"
-    # 
-    # click "promoter_auto_complete"
-    # type "", "promoter_auto_complete"
-    # assert_value "", "promoter_auto_complete"
-    # click "save"
-    # 
-    # assert_value "", "event_promoter_id"
-    # assert_value "", "promoter_auto_complete"
-    # 
-    # assert_value "", "event_team_id"
-    # assert_value "", "team_auto_complete"
-    # 
-    # assert_value "", "event_phone"
-    # assert_value "", "event_email"
-    # 
-    # type "(541) 212-9000", "event_phone"
-    # type "event@google.com", "event_email"
-    # click "save"
-    # 
-    # assert_value "(541) 212-9000", "event_phone"
-    # assert_value "event@google.com", "event_email"
-    # 
-    # open "/admin/people/#{candi.id}/edit"
-    # assert_value "(503) 555-1212", "person_home_phone"
-    # assert_value "admin@example.com", "person_email"
-    # 
-    # open "/admin/events?year=#{Date.today.year}"
-    # click :link_text => "Sausalito Criterium"
-    # 
-    # type "Gentle Lovers", "team_auto_complete"
-    # gl = Team.find_by_name('Gentle Lovers')
-    # unless chrome?
-    #   wait_for_element "team_#{gl.id}"
-    #   wait_for_displayed "team_#{gl.id}"
-    #   click "team_#{gl.id}"
-    #   assert_value gl.id, "event_team_id"
-    #   assert_value "Gentle Lovers", "team_auto_complete"
-    # end
-    # 
-    # click "save"
-    # 
-    # assert_value gl.id, "event_team_id"
-    # assert_value "Gentle Lovers", "team_auto_complete"
-    # 
-    # assert_value gl.id, "event_team_id"
-    # click "team_auto_complete"
-    # type "", "team_auto_complete"
-    # click "save"
-    # 
-    # assert_value "", "event_team_id"
-    # assert_value "", "team_auto_complete"
 
     click :link_text => "Delete"
 
