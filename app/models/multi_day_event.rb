@@ -152,7 +152,7 @@ class MultiDayEvent < Event
   def update_date(child = nil)
     return true if new_record?
     
-    minimum_date = Event.minimum(:date, :conditions => { :parent_id => id })
+    minimum_date = Event.minimum(:date, :conditions => { :parent_id => id, :cancelled => false, :postponed => false })
     unless minimum_date.blank?
       self.date = minimum_date
       if date_changed?
