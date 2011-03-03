@@ -226,7 +226,7 @@ class Person < ActiveRecord::Base
   # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
-      (lic_date && (Date.parse(lic_date) > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
+      (lic_date && (Date.strptime(lic_date, "%m/%d/%Y") > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
     end
