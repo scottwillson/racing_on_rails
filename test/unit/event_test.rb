@@ -9,7 +9,7 @@ class EventTest < ActiveSupport::TestCase
 
   def test_find_years
     years = Event.find_all_years
-    assert_equal_enumerables([Date.today.year, 2005, 2004, 2003, 2002], years, "Should find all years with events")
+    assert_equal_enumerables (2002..(Date.today.year)).to_a.reverse, years, "Should find all years with events"
   end
   
   def test_defaults
