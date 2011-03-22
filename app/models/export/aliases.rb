@@ -28,12 +28,12 @@ module Export
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
-       FROM results"
+       FROM aliases"
     end
 
     def Alias.export_columns
       [
-        "id", "name"
+        "id", "alias", "name", "person_id", "team_id"
       ]
     end
 

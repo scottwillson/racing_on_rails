@@ -28,12 +28,12 @@ module Export
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
        LINES TERMINATED BY '\\n'
-       FROM results"
+       FROM teams"
     end
 
     def Team.export_columns
       [
-        "id", "name"
+        "id", "name", "city", "state", "website", "contact_name", "contact_email", "contact_phone"
       ]
     end
 
