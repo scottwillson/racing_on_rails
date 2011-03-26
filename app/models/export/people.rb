@@ -54,8 +54,5 @@ module Export
         "team_id", "gender", "ccx_category", "road_category", "track_category", "mtb_category", "dh_category"
       ]
     end
-#        csv << ['id', 'first_name', 'last_name', 'city', 'state', 'date_of_birth', 'license', 'team_id',
-#                'gender', 'ccx_category', 'road_category', 'track_category', 'mtb_category', 'dh_category']
-
   end
 end
