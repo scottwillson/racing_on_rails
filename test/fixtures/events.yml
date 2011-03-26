@@ -9,7 +9,6 @@ banana_belt_series:
   number_issuer: association
   bar_points: 0
   ironman: 0
-  price: 75
 banana_belt_1:
   parent: banana_belt_series
   name: Banana Belt I
