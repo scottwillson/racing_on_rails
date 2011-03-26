@@ -7,6 +7,7 @@
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
+  include Export::Categories
 
   include Comparable
 
