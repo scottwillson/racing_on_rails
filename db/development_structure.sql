@@ -144,7 +144,7 @@ CREATE TABLE `duplicates_racers` (
   KEY `index_duplicates_racers_on_duplicate_id` (`duplicate_id`),
   CONSTRAINT `duplicates_racers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `duplicates_racers_ibfk_2` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `editor_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -169,7 +169,7 @@ CREATE TABLE `editor_requests` (
 CREATE TABLE `engine_schema_info` (
   `engine_name` varchar(255) DEFAULT NULL,
   `version` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -243,7 +243,7 @@ CREATE TABLE `historical_names` (
   KEY `index_names_on_name` (`name`),
   KEY `index_names_on_year` (`year`),
   CONSTRAINT `historical_names_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -257,7 +257,7 @@ CREATE TABLE `images` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `images_name_index` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -309,7 +309,7 @@ CREATE TABLE `news_items` (
   PRIMARY KEY (`id`),
   KEY `news_items_date_index` (`date`),
   KEY `news_items_text_index` (`text`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -489,7 +489,7 @@ CREATE TABLE `promoters` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `promoter_info` (`name`,`email`,`phone`),
   KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -553,7 +553,7 @@ CREATE TABLE `racers` (
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `races` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -630,6 +630,7 @@ CREATE TABLE `racing_associations` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `cat4_womens_race_series_end_date` date DEFAULT NULL,
+  `unregistered_teams_in_results` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -754,7 +755,7 @@ CREATE TABLE `standings` (
   CONSTRAINT `standings_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -789,7 +790,7 @@ CREATE TABLE `users` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -809,7 +810,7 @@ CREATE TABLE `versions` (
   `user_id` int(11) DEFAULT NULL,
   `user_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `changes` text COLLATE utf8_unicode_ci,
+  `modifications` text COLLATE utf8_unicode_ci,
   `number` int(11) DEFAULT NULL,
   `tag` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -1014,6 +1015,10 @@ INSERT INTO schema_migrations (version) VALUES ('20100920160034');
 INSERT INTO schema_migrations (version) VALUES ('20100924041956');
 
 INSERT INTO schema_migrations (version) VALUES ('20100924161426');
+
+INSERT INTO schema_migrations (version) VALUES ('20110219031339');
+
+INSERT INTO schema_migrations (version) VALUES ('20110328232024');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
