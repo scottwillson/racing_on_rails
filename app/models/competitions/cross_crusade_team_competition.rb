@@ -5,7 +5,7 @@ class CrossCrusadeTeamCompetition < Competition
   before_create :set_notes, :set_name
 
   def CrossCrusadeTeamCompetition.calculate!(year = Date.today.year)
-    benchmark("#{name} calculate!", Logger::INFO, false) {
+    benchmark("#{name} calculate!", :level => :info) {
       transaction do
         series = Series.first(
                        :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
@@ -37,7 +37,7 @@ class CrossCrusadeTeamCompetition < Competition
 
   def source_results_with_benchmark(race)
     results = []
-    Overall.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    Overall.benchmark("#{self.class.name} source_results", :level => :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?

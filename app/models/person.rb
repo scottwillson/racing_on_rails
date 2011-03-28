@@ -4,7 +4,7 @@
 class Person < ActiveRecord::Base
   include Comparable
   include Names::Nameable
-  # FIXME include SentientUser
+  include SentientUser
 
   versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
                          :perishable_token, :persistence_token, :single_access_token ]

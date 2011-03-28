@@ -5,7 +5,7 @@ class Overall < Competition
  after_create :add_source_events
  
   def Overall.calculate!(year = Date.today.year)
-    benchmark("#{name} calculate!", Logger::INFO, false) {
+    benchmark("#{name} calculate!", :level => :info) {
       transaction do
         parent = MultiDayEvent.first(
                         :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])

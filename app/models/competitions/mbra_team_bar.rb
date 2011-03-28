@@ -1,7 +1,7 @@
 class MbraTeamBar < Competition
   
   def MbraTeamBar.calculate!(year = Date.today.year)
-    benchmark(name, Logger::INFO, false) {
+    benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
