@@ -33,7 +33,7 @@ class Overall < Competition
 
   def source_results_with_benchmark(race)
     results = []
-    Overall.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    Overall.benchmark("#{self.class.name} source_results", :level => :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
