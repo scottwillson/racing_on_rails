@@ -6,7 +6,7 @@ require "spreadsheet"
 class LifFileTest < ActiveSupport::TestCase
   def test_import
     event = SingleDayEvent.create!(:date => Date.today + 3)
-    results_file = Results::LifFile.new(File.expand_path("../../../fixtures/results/OutputFile.lif",  __FILE__), event)
+    results_file = Results::LifFile.new(File.expand_path("../../../files/results/OutputFile.lif",  __FILE__), event)
     results_file.import
     
     event.reload

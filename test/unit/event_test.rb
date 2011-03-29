@@ -269,10 +269,19 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_destroy
-    event = SingleDayEvent.create!
-    event.races.create!(:category => categories(:cat_3))
+    event = Event.create!
     event.destroy
-    assert(!Event.exists?(event.id), "event should be deleted")
+    assert !Event.exists?(event.id), "event should be deleted"
+
+    event = Event.create!
+    event.races.create! :category => categories(:cat_3)
+    event.destroy
+    assert !Event.exists?(event.id), "event should be deleted"
+
+    event = SingleDayEvent.create!
+    event.races.create! :category => categories(:cat_3)
+    event.destroy
+    assert !Event.exists?(event.id), "event should be deleted"
   end
   
   def test_destroy_races
