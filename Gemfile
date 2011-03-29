@@ -14,3 +14,7 @@ gem 'prawn-core', :require => 'prawn/core'
 gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
 gem 'sentient_user'
 gem 'newrelic_rpm'
+
+group :test do
+  gem "timecop"
+end
