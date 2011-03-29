@@ -1,5 +1,5 @@
-ENV["::Rails.env"] = "test"
-require File.expand_path('../../config/environment', __FILE__)
+ENV["RAILS_ENV"] = "test"
+require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require "rails/test_help"
 require "action_view/test_case"
 require "authlogic/test_case"
