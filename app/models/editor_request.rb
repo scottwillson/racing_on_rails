@@ -4,6 +4,8 @@ class EditorRequest < ActiveRecord::Base
   belongs_to :editor, :class_name => "Person"
   belongs_to :person
   
+  before_validation :set_email, :set_expires_at, :set_token
+  
   validates_presence_of :editor
   validates_presence_of :email
   validates_presence_of :expires_at
@@ -14,10 +16,15 @@ class EditorRequest < ActiveRecord::Base
   
   scope :expired, lambda { { :conditions => [ "expires_at <= ?", RacingAssociation.current.now ] } }
   
-  # Set to expire in 1 week. Auto-set token.
-  def before_validation
+  def set_email
     self.email = person.try(:email)
+  end
+  
+  def set_expires_at
     self.expires_at = 1.week.from_now
+  end
+  
+  def set_token
     self.token = Authlogic::Random.friendly_token
   end
   
