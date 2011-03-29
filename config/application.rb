@@ -5,7 +5,10 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module RacingOnRails
   class Application < Rails::Application
-    config.autoload_paths += %W( #{::Rails.root.to_s}/app/rack #{::Rails.root.to_s}/app/models/competitions #{::Rails.root.to_s}/app/models/observers #{::Rails.root.to_s}/app/pdfs )
+    config.autoload_paths += %W( 
+      #{config.root}/app/rack #{config.root}/app/models/competitions #{config.root}/app/models/observers #{config.root}/app/pdfs #{config.root}/lib/racing_on_rails 
+       #{config.root}/lib/results  #{config.root}/lib
+    )
     
     config.session_store :key, "_racing_on_rails_session"
     config.session_store :secret, "9998d23d32c59a8161aba78b03630a93"
@@ -19,18 +22,21 @@ module RacingOnRails
       config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :result_observer, :team_observer
     end
   
-    config.filter_parameters += [:password]
+    config.filter_parameters += [ :password, :password_confirmation ]
   
+    # HP"s proxy, among others, gets this wrong
+    config.action_dispatch.ip_spoofing_check = false
+
     # Ugh. Make config accessible to overrides
     @config = config
     
-    if File.exist?("#{::Rails.root.to_s}/local/config/environments/#{::Rails.env}.rb")
-      load("#{::Rails.root.to_s}/local/config/environments/#{::Rails.env}.rb")
+    if File.exist?("#{config.root}/local/config/environments/#{::Rails.env}.rb")
+      load("#{config.root}/local/config/environments/#{::Rails.env}.rb")
     end
     
     # See Rails::Configuration for more options
-    if File.exists?("#{::Rails.root.to_s}/local/config/database.yml")
-      paths.config.database = "#{::Rails.root.to_s}/local/config/database.yml"
+    if File.exists?("#{config.root}/local/config/database.yml")
+      paths.config.database = "#{config.root}/local/config/database.yml"
     end
   end
   
