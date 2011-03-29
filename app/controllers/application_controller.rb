@@ -6,10 +6,6 @@ class ApplicationController < ActionController::Base
   # FIXME include SentientController
   include SslRequirement
 
-  # HP"s proxy, among others, gets this wrong
-  ActionController::Base.ip_spoofing_check = false
-
-  filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
   before_filter :clear_racing_association, :toggle_tabs
