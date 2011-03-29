@@ -39,6 +39,7 @@ class Event < ActiveRecord::Base
 
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
+  after_initialize :set_defaults
 
   validates_presence_of :name, :date
   validate :parent_is_not_self
@@ -168,10 +169,6 @@ class Event < ActiveRecord::Base
 
   def Event.friendly_class_name
     name.underscore.humanize.titleize
-  end
-
-  def after_initialize
-    set_defaults
   end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
@@ -584,7 +581,7 @@ class Event < ActiveRecord::Base
       return true
     end
     
-    if other.nil? || new_record? || other.new_record?
+    if other.nil? || !other || new_record? || other.new_record?
       return false
     end
 
@@ -596,7 +593,7 @@ class Event < ActiveRecord::Base
       return true
     end
 
-    if other.nil? || new_record? || other.new_record?
+    if other.nil? || !other || new_record? || other.new_record?
       return false
     end
 
@@ -604,7 +601,7 @@ class Event < ActiveRecord::Base
   end
   
   def <=>(other)
-    return -1 if other.nil?
+    return -1 if other.nil? || !other
 
     if date 
       if other.date
