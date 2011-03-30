@@ -2,29 +2,30 @@
 class MailingListMailer < ActionMailer::Base
 
   # Reply just to sender of post, not the whole list
-  def private_reply(post, to)
+  def private_reply(reply_post, to)
     # Not thread-safe. Won't work for multiple associations.
     ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
     
     raise("'To' cannot be blank") if to.blank?
-    @subject    = post.subject
-    @body       = post.body
-    @recipients = to
-    @from       = post.sender
-    @sent_on    = post.date
-    @headers    = {}
+    mail(
+      :subject => reply_post.subject,
+      :to => to,
+      :from => reply_post.sender,
+      :sent_on => reply_post.date,
+      :body => reply_post.body.to_s
+    )
   end
 
-  def post(post)
+  def post(new_post)
     # Not thread-safe. Won't work for multiple associations.
     ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
-    
-    @subject    = post.subject
-    @body       = post.body
-    @recipients = post.mailing_list.name
-    @from       = post.sender
-    @sent_on    = post.date
-    @headers    = {}
+    mail(
+      :subject => new_post.subject,
+      :to => new_post.mailing_list.name,
+      :from => new_post.sender,
+      :sent_on => new_post.date,
+      :body => new_post.body.to_s
+    )
   end
 
   # Expects raw email from Mailman archiver
@@ -34,8 +35,8 @@ class MailingListMailer < ActionMailer::Base
     post = Post.new
 
     # Will fail if no matches. Rely on validation
-    list_post_header = email.header_string("List-Post")
-    matches = list_post_header.match(/<mailto:(\S+)@/) if list_post_header
+    list_post_header = email["List-Post"]
+    matches = list_post_header.to_s.match(/<mailto:(\S+)@/) if list_post_header
     if matches
       mailing_list_name = matches[1]
     else
@@ -84,8 +85,8 @@ class MailingListMailer < ActionMailer::Base
       post.body = email.body
     end
     
-    post.from_name = email.friendly_from
-    post.from_email_address = email.from.first
+    post.from_name = email.from.name
+    post.from_email_address = email.from.email
     post.date = email.date
     begin
       post.save!

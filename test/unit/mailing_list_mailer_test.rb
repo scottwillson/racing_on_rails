@@ -20,7 +20,9 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.subject = "For Sale"
     post.body = @expected.body
     post.date = RacingAssociation.current.now
-    post_email = MailingListMailer.create_post(post)
+    post_email = MailingListMailer.post(post)
+    p @expected.encoded
+    p post_email
     assert_equal(@expected.encoded, post_email.encoded)
   end
   
@@ -37,8 +39,8 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = Time.zone.now
-    post_email = MailingListMailer.create_private_reply(post, "Scout <scout@butlerpress.com>")
+    post.date = Time.zone.now.to_s
+    post_email = MailingListMailer.private_reply(post, "Scout <scout@butlerpress.com>")
     assert_equal(@expected.encoded, post_email.encoded)
   end
   
@@ -49,8 +51,8 @@ class MailingListMailerTest < ActionMailer::TestCase
     from = "scott@yahoo.com"
     date = Time.zone.now
     body = "Some message for the mailing list"
-    email = TMail::Mail.new
-    email.set_content_type "text", "plain", { "charset" => 'utf-8' }
+    email = Mail.new
+    email.content_type = "text/plain"
     email.subject = subject
     email.from = from
     email.date = date
