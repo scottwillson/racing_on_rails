@@ -1,3 +1,5 @@
+require 'csv'
+
 module Export
   def Export.export_all
     Alias.export
