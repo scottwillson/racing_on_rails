@@ -20,7 +20,7 @@ module Export
 
       people = Person.find_all_for_export(Date.new, nil)
       outfile = File.open(target, 'wb')
-      CSV::Writer.generate(outfile) do |csv|
+      CSV.open(outfile, "wb") do |csv|
         people.each do |person|
           person.each do |field|
             if field[1].blank?
