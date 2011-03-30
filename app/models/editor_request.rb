@@ -5,6 +5,7 @@ class EditorRequest < ActiveRecord::Base
   belongs_to :person
   
   before_validation :set_email, :set_expires_at, :set_token
+  after_create :send_email
   
   validates_presence_of :editor
   validates_presence_of :email
@@ -32,8 +33,7 @@ class EditorRequest < ActiveRecord::Base
     EditorRequest.destroy_all :person_id => person_id, :editor_id => editor_id
   end
   
-  # Send email
-  def after_create
+  def send_email
     EditorRequestMailer.deliver_request(self)
   end
   

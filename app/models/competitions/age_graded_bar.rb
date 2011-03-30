@@ -50,7 +50,7 @@ class AgeGradedBar < Competition
     template_categories << Category.new(:name => "Junior Women 15-16", :ages => 15..16, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
     template_categories << Category.new(:name => "Junior Women 17-18", :ages => 17..18, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
 
-    age_graded_categories = Discipline[:age_graded].bar_categories(true)
+    age_graded_categories = Discipline[:age_graded].bar_categories
     categories = []
     for template_category in template_categories
       if Category.exists?(:name => template_category.parent.name)
