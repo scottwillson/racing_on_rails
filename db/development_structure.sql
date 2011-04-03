@@ -249,9 +249,9 @@ CREATE TABLE `events` (
   `bar_points` int(11) NOT NULL,
   `ironman` tinyint(1) NOT NULL,
   `auto_combined_results` tinyint(1) NOT NULL DEFAULT '1',
-  `promoter_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `sanctioning_org_event_id` varchar(16) DEFAULT NULL,
+  `promoter_id` int(11) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `postponed` tinyint(1) NOT NULL DEFAULT '0',
@@ -586,6 +586,7 @@ CREATE TABLE `people` (
   `team_interest` tinyint(1) NOT NULL DEFAULT '0',
   `created_by_type` varchar(255) DEFAULT NULL,
   `member_usac_to` date DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
   `persistence_token` varchar(255) NOT NULL,
@@ -599,7 +600,6 @@ CREATE TABLE `people` (
   `last_login_ip` varchar(255) DEFAULT NULL,
   `login` varchar(100) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
   `license_expiration_date` date DEFAULT NULL,
   `club_name` varchar(255) DEFAULT NULL,
   `ncca_club_name` varchar(255) DEFAULT NULL,
@@ -1008,18 +1008,6 @@ CREATE TABLE `update_requests` (
   KEY `index_update_requests_on_token` (`token`),
   CONSTRAINT `update_requests_ibfk_1` FOREIGN KEY (`order_person_id`) REFERENCES `order_people` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `username` varchar(255) NOT NULL DEFAULT '',
-  `password` varchar(255) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
