@@ -3,6 +3,7 @@
 # Aliases cannot be the same ("shadow") as Person#name or Team#name.
 # This could probably be combined with Name.
 class Alias < ActiveRecord::Base
+  include Export::Aliases
   belongs_to :person
   belongs_to :team
   

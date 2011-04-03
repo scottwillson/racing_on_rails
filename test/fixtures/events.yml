@@ -74,7 +74,6 @@ tabor_cr:
   date: 2005-07-01
   discipline: Road
   sanctioned_by: CBRA
-  promoter: nate_hobson
   promoter_id: 4
   flyer: http://localhost/flyers/2006/tabor_cr.html
   flyer_approved: false
@@ -189,7 +188,7 @@ series_parent:
   discipline: Road
   sanctioned_by: CBRA
   promoter_id: 3
-  date: <%= Date.today %>
+  date: <%= Time.zone.today %>
   type: Series
   number_issuer: association
   bar_points: 0
@@ -199,7 +198,7 @@ lost_series_child:
   discipline: Road
   sanctioned_by: CBRA
   promoter_id: 3
-  date: <%= Date.today %>
+  date: <%= Time.zone.today %>
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
@@ -208,7 +207,7 @@ future_national_federation_event:
   name: National Federation Event
   discipline: Road
   sanctioned_by: National Federation
-  date: <%= Date.today + 3 %>
+  date: <%= 3.days.since Time.zone.today %>
   type: SingleDayEvent
   bar_points: 0
   ironman: 0
@@ -217,7 +216,7 @@ usa_cycling_event_with_results:
   name: Copperopolis Road Race
   discipline: Road
   sanctioned_by: NCNCA
-  date: <%= Date.today - 4 %>
+  date: <%= 4.days.ago(Time.zone.today) %>
   type: SingleDayEvent
   bar_points: 0
   ironman: 0
