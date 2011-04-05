@@ -266,11 +266,6 @@ table.base .title div.in_place_editable {
   width: 270px;
 }
 
-/* Velodromes */
-table.velodromes div.record {
-  background-image: url(/images/icons/flag_checked.png);
-}
-
 table.base img.icon {
   float: left;
   position: relative;
