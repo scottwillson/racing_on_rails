@@ -20,17 +20,15 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
   select: true,
   placeholder: '',
   cssclass: 'editor_field',
-  width: '100%',
-  height: '16px',
   indicator: '<div class="saving"/>',
   onedit: function() {
     $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').addClass('editing');
     return true;
   },
   onblur: function(value, settings) {
-    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
-    this.reset();
-    return true;
+    // $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
+    // this.reset();
+    return false;
   },
   onreset: function() {
     $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');

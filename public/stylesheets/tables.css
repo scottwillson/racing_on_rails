@@ -168,7 +168,7 @@ table.base td.last {
 
 table.base td.icon {
   max-width: 16px;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
   padding-left: 12px;
   padding-right: 0px;
   padding-top: 8px;
@@ -225,13 +225,16 @@ form.editor_field input,
 form.editor_field input[type=text] {
   font-family: Verdana, sans-serif;
   font-size: 1em;
+  height: 16px;
   margin-bottom: -1px;
   margin-left: 0px;
+  margin-right: -1px;
   margin-top: 5px;
   padding-bottom: 1px;
   padding-left: 1px;
   padding-right: 1px;
   padding-top: 1px;
+  width: 100%;
 }
 
 table.base td form {
