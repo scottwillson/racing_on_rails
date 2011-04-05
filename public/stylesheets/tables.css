@@ -84,7 +84,7 @@ table.base tr {
 
 table.base td {
   padding-top: 8px;
-  padding-bottom: 2px;
+  padding-bottom: 7px;
   padding-left: 8px;
   padding-right: 0px;
   text-align: left;
@@ -168,6 +168,7 @@ table.base td.last {
 
 table.base td.icon {
   max-width: 16px;
+  padding-bottom: 2px;
   padding-left: 12px;
   padding-right: 0px;
   padding-top: 8px;
@@ -177,8 +178,8 @@ table.base td.icon {
 table.base div.in_place_editable {
   border: 1px solid transparent;
   left: -4px;
-  margin-bottom: -3px;
-  min-height: 17px;
+  margin-bottom: -6px;
+  min-height: 16px;
   padding-bottom: 2px;
   padding-left: 3px;
   padding-right: 2px;
