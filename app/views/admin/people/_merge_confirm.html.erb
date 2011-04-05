@@ -1,5 +1,5 @@
+<td></td>
 <% if @existing_people.size == 1 %>
-
 <td>
   <%= form_remote_tag(:url => {:action => 'merge', :id => @person.id, :target_id => @existing_people.first.id }, :html => { :id => "merge_form" } ) %>
     <div style="padding-top: 4px; width: 300px; white-space: normal;">
