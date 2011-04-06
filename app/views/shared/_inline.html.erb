@@ -26,9 +26,9 @@ var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').
     return true;
   },
   onblur: function(value, settings) {
-    // $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
-    // this.reset();
-    return false;
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
+    this.reset();
+    return true;
   },
   onreset: function() {
     $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
