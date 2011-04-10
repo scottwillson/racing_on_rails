@@ -43,22 +43,26 @@ namespace :deploy do
     CMD
   end
 
-  task :copy_cache do
+  task :copy_cache, :roles => :app do
     %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
       run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
     end
   end
   
-  task :start do
+  task :start, :roles => :app do
     run "/usr/local/etc/rc.d/unicorn start #{application}"
   end
   
-  task :stop do
+  task :stop, :roles => :app do
     run "/usr/local/etc/rc.d/unicorn stop #{application}"
   end
   
-  task :restart do
+  task :restart, :roles => :app do
     run "/usr/local/etc/rc.d/unicorn reload #{application}"
+  end
+  
+  task :status, :roles => :app do
+    run "/usr/local/etc/rc.d/unicorn status #{application}"
   end
 
   namespace :web do
