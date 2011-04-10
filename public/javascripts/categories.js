@@ -2,7 +2,6 @@ $(document).ready(function() {
   bindCategoryEvents();
 });
 
-
 function bindCategoryEvents() {
   $('.category').unbind();
   jQuery('.category').droppable({
