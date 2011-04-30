@@ -59,7 +59,7 @@ class ResultsController < ApplicationController
     ResultsController::benchmark "Load results", Logger::DEBUG, false do
       @event = Event.find(
         params[:event_id],
-        :include => [ :races => [ :category, :results ] ]
+        :include => [ :races => [ :category, { :results => :team } ] ]
       )
     end
     
