@@ -35,7 +35,7 @@ Rails::Initializer.run do |config|
 
   config.gem "authlogic"
   config.gem "tabular", :version => ">0.0.5"
-  config.gem "mysql2"
+  config.gem "mysql2", :version => "<0.3.0"
   config.gem "pdf-reader", :lib => "pdf/reader"
   config.gem "Ascii85", :lib => "ascii85"
   config.gem "prawn"
