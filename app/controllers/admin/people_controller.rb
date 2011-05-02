@@ -54,7 +54,7 @@ class Admin::PeopleController < Admin::AdminController
   # == Params
   # * excel_layout: "scoring_sheet" for fewer columns -- intended for scoring race results. "endicia" for card stickers.
   # * include: "print_cards"
-  # * format: "ppl" for FInishLynx scoring
+  # * format: "ppl" for FinishLynx scoring
   def export
     date = current_date
     if params['excel_layout'] == 'scoring_sheet'
