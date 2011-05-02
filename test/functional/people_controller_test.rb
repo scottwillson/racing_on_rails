@@ -74,11 +74,10 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_ajax_ssl_find
     use_ssl
-    xhr :get, :index, :name => "weav"
+    xhr :get, :index, :term => "weav", :format => "json"
+    assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"
     assert_response :success
-    assert_not_nil assigns["people"], "Should assign people"
-    assert_equal [ people(:weaver) ], assigns['people'], "Search for weav should find Weaver"
-    assert_template "people/index"
+    assert_template nil
     assert_layout nil
   end
   
