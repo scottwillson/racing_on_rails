@@ -17,7 +17,6 @@ function bindCategoryEvents() {
   });
   $('.category_root .category').droppable('option', 'greedy', true);
 
-  $('.category_name').unbind();
   $('.category_name').draggable({
     revert: 'invalid',
     opacity: 0.7,
