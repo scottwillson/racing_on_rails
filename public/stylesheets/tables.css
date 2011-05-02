@@ -213,11 +213,10 @@ table.base td.editing div.in_place_editable {
 table.base td div.saving {
   background-image: url(/images/icons/spinner.gif);
   background-repeat: no-repeat;
-  background-position: center left;
-  height: 19px;
+  height: 16px;
   margin-left: 4px;
   padding-bottom: 0px;
-  padding-top: 7px;
+  margin-top: 8px;
   width: 16px;
 }
 
