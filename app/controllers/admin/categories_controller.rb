@@ -32,7 +32,6 @@ class Admin::CategoriesController < Admin::AdminController
     else
       @category.parent = nil
     end
-    p "Add #{@category.name} as a parent of #{@parent.try(:name)}"
     @category.save!
     render :update do |page|
       page.remove "category_#{@category.id}_row"
@@ -61,5 +60,4 @@ class Admin::CategoriesController < Admin::AdminController
     MbraTeamBar.calculate!
     redirect_to :action => :index
   end
-
 end
