@@ -105,7 +105,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: ascii85
-rubygems_version: 1.3.7
+rubygems_version: 1.6.2
 signing_key: 
 specification_version: 3
 summary: Ascii85 is a simple gem that provides methods for encoding/decoding Adobe's binary-to-text encoding of the same name

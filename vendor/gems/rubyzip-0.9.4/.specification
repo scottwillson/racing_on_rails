@@ -88,7 +88,7 @@ required_rubygems_version: !ruby/object:Gem::Requirement
 requirements: []
 
 rubyforge_project: 
-rubygems_version: 1.3.7
+rubygems_version: 1.6.2
 signing_key: 
 specification_version: 2
 summary: rubyzip is a ruby module for reading and writing zip files
