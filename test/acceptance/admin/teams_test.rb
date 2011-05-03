@@ -5,12 +5,12 @@ class TeamsTest < WebDriverTestCase
   def test_teams
     open '/teams'
 
-    @gl_id = Team.find_by_name("Gentle Lovers").id
-    click :css => "a[href='/teams/#{@gl_id}']"
+    gl_id = Team.find_by_name("Gentle Lovers").id
+    click :css => "a[href='/teams/#{gl_id}']"
 
     login_as :administrator
 
-    open '/admin/teams'
+    open "/admin/teams"
     assert_page_source "Enter part of a team's name"
     type "e", "name"
     submit "search_form"
@@ -28,23 +28,23 @@ class TeamsTest < WebDriverTestCase
     assert_table "teams_table", 3, 2, ""
     assert_table("teams_table", 4, 2, /^Vanilla Bicycles/)
 
-    @dfl_id = Team.find_by_name("Team dFL").id
-    @vanilla_id = Team.find_by_name("Vanilla").id
-    assert_checked "team_member_#{@dfl_id}"
-    assert_checked "team_member_#{@vanilla_id}"
-    assert_checked "team_member_#{@gl_id}"
+    dfl_id = Team.find_by_name("Team dFL").id
+    vanilla_id = Team.find_by_name("Vanilla").id
+    assert_checked "team_member_#{dfl_id}"
+    assert_checked "team_member_#{vanilla_id}"
+    assert_checked "team_member_#{gl_id}"
 
-    click "team_member_#{@gl_id}"
+    click "team_member_#{gl_id}"
     sleep 1
     refresh
     wait_for_element "teams_table"
-    assert_not_checked "team_member_#{@gl_id}"
+    assert_not_checked "team_member_#{gl_id}"
 
-    click :css => "a[href='/teams/#{@dfl_id}']"
+    click :css => "a[href='/teams/#{dfl_id}']"
     assert_page_source "Team dFL"
 
     open '/admin/teams'
-    click "edit_#{@vanilla_id}"
+    click "edit_#{vanilla_id}"
     wait_for_element "team_name"
     assert_page_source "Vanilla"
 
@@ -52,5 +52,30 @@ class TeamsTest < WebDriverTestCase
     click "save"
     sleep 1
     wait_for_value "SpeedVagen", "team_name"
+
+    open "/admin/teams"
+    wait_for_element "name"
+    type "vagen", "name"
+    submit "search_form"
+
+    assert_table("teams_table", 1, 1, /^SpeedVagen/)
+    click "team_#{vanilla_id}_name"
+    wait_for_element :css => "form.editor_field input"
+
+    type "SpeedVagen-Vanilla", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_no_element "form.editor_field input"
+    wait_for_no_element :css => ".editing"
+
+    click "team_#{vanilla_id}_name"
+    wait_for_element :css => "form.editor_field input"
+
+    type "Sacha's Team", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_no_element "form.editor_field input"
+    wait_for_no_element :css => ".editing"
+
+    vanilla = Team.find(vanilla_id)
+    assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"
   end
 end

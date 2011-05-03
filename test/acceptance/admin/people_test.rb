@@ -66,6 +66,7 @@ class PeopleTest < WebDriverTestCase
     type "A Penn", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element "form.editor_field input"
+    assert_no_element :css => ".editing"
 
     refresh
     wait_for_element "people_table"
@@ -73,10 +74,12 @@ class PeopleTest < WebDriverTestCase
 
     click "person_#{@weaver_id}_team_name"
     wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
+    assert_element :css => "td.editing"
 
     type "River City Bicycles", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
+    assert_no_element :css => "td.editing"
 
     refresh
     wait_for_element "people_table"
