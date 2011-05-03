@@ -167,6 +167,7 @@ div.disclosure {
 .category_root .category {
   clear: both;
   float: left;
+  width: 376px;
 }
 
 .category .category_name {
