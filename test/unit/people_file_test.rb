@@ -18,7 +18,7 @@ class PersonFileTest < ActiveSupport::TestCase
     tonkin.login = "sellwood"
     tonkin.save!
 
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([4, 1], people, 'Number of people created and updated')
@@ -142,7 +142,7 @@ Downhill/Cross Country: Downhill}
       :first_name => 'Scott'
     )
 
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/database.xls")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([2, 3], people, 'Number of people created and updated')
@@ -240,7 +240,7 @@ Downhill/Cross Country: Downhill}
   
   def test_import_duplicates
     Person.create(:name => 'Erik Tonkin')
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/duplicates.xls")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     
     # FIXME
