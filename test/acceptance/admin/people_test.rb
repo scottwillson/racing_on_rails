@@ -66,7 +66,7 @@ class PeopleTest < WebDriverTestCase
     type "A Penn", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element "form.editor_field input"
-    assert_no_element :css => ".editing"
+    wait_for_no_element :css => ".editing"
 
     refresh
     wait_for_element "people_table"
