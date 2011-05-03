@@ -16,5 +16,6 @@ gem 'sentient_user'
 gem 'newrelic_rpm'
 
 group :test do
+  gem "mocha"
   gem "timecop"
 end

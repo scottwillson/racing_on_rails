@@ -56,6 +56,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
+    mocha (0.9.12)
     mysql2 (0.2.7)
     newrelic_rpm (2.13.4)
     pdf-reader (0.9.1)
@@ -102,6 +103,7 @@ DEPENDENCIES
   Ascii85
   authlogic!
   fastercsv
+  mocha
   mysql2
   newrelic_rpm
   pdf-reader
