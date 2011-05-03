@@ -46,7 +46,9 @@ module ResultsHelper
     when "name"
       link_to_results result.name, result
     when "team_name"
-      link_to_team_results result.team_name, result
+      if RacingAssociation.current.unregistered_teams_in_results? || result.team.try(:member?) || result.year < RacingAssociation.current.year
+        link_to_team_results result.team_name, result
+      end
     else
       result.send ::ResultColumn[column].display_method
     end

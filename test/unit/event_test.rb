@@ -8,8 +8,10 @@ class EventTest < ActiveSupport::TestCase
   end
 
   def test_find_years
-    years = Event.find_all_years
-    assert_equal_enumerables([Date.today.year, 2005, 2004, 2003, 2002], years, "Should find all years with events")
+    Timecop.freeze Date.new(2012, 11) do
+      years = Event.find_all_years
+      assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003, 2002 ], years, "Should find all years with events"
+    end
   end
   
   def test_defaults

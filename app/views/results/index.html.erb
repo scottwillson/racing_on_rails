@@ -1,11 +1,6 @@
 <% @page_title = "Results: #{@year}" %>
 
-<%= tabs do |tabs|
-    tabs.add(Date.today.year, :controller => 'results', :year => nil)
-    (Date.today.year - 1).downto(2007) do |year|
-      tabs.add(year, :controller => 'results', :year => year)
-    end
-  end  %>
+<%= render_page "schedule/years" %>
 
 <%= render :partial => 'disciplines' %>
 

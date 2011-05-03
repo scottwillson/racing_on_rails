@@ -10,6 +10,8 @@ class ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   fixtures :all
 
+  @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
+
   # Activate Authlogic. Reset RacingAssociation.
   def setup
     activate_authlogic
@@ -22,6 +24,7 @@ class ActiveSupport::TestCase
     assert_no_angle_brackets
     # Discipline class may have loaded earlier with no aliases in database
     reset_disciplines
+    scrub_instance_variables
   end
 
   def reset_association
@@ -228,5 +231,11 @@ class ActiveSupport::TestCase
   
   def secure_redirect_options
     @controller.send :secure_redirect_options
+  end
+
+  def scrub_instance_variables
+    (instance_variables - @@reserved_ivars).each do |ivar|
+      instance_variable_set(ivar, nil)
+    end
   end
 end

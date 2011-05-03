@@ -5,6 +5,7 @@ class Person < ActiveRecord::Base
   include Comparable
   include Names::Nameable
   include SentientUser
+  include Export::People
 
   versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
                          :perishable_token, :persistence_token, :single_access_token ]
@@ -161,7 +162,7 @@ class Person < ActiveRecord::Base
     end
     
     people = Person.connection.select_all(%Q{
-      SELECT people.id, license, first_name, last_name, teams.name as team_name, people.notes,
+      SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
              DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to, DATE_FORMAT(member_usac_to, '%m/%d/%Y') as member_usac_to,
              print_card, card_printed_at, membership_card, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation,
              street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
@@ -217,7 +218,7 @@ class Person < ActiveRecord::Base
   # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
     if lic.to_i > 0
-      (lic_date && (Date.parse(lic_date) > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
+      (lic_date && (Date.strptime(lic_date, "%m/%d/%Y") > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
     else
       "NOT ON FILE"
     end

@@ -17,5 +17,6 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_equal("This has a tab", to_excel("This has\ta tab"), 'This has\ta tab')
     assert_equal("This has   tabs ", to_excel("This has\t\t\ttabs\t"), 'This has\t\t\ttabs\t')
     assert_equal("expected  ", to_excel("expected\r\n"), "expected\r\n")
+    assert_equal("  ", to_excel("\n\n"), "\\n\\n")
   end
 end

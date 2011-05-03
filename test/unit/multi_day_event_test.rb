@@ -19,37 +19,49 @@ class MultiDayEventTest < ActiveSupport::TestCase
     series.children.create!(:date => "2005-06-25")
     assert_equal_dates("2005-06-25", series.start_date, "PIR series start date")
     assert_equal_dates("2005-07-12", series.end_date, "PIR series end date")
+    assert_equal_dates("2005-06-25", series.reload.start_date, "PIR series start date")
+    assert_equal_dates("2005-07-12", series.reload.end_date, "PIR series end date")
     
     event = SingleDayEvent.create!(:date => "2005-07-19")
     event.parent = series
     event.save!
+    series.children(true)
     assert_equal_dates("2005-06-25", series.start_date, "PIR series start date")
     assert_equal_dates("2005-07-19", series.end_date, "PIR series end date")
+    
+    series.children.create!(:date => "2005-07-26")
+    series.children.create!(:date => "2005-08-04")
+
+    series.children.sort_by(&:date)[0].update_attributes! :postponed => true
+    series.children.sort_by(&:date)[1].update_attributes! :cancelled => true
+
+    series.reload.children(true)
+    assert_equal_dates("2005-07-12", series.start_date, "PIR series start date")
+    assert_equal_dates("2005-08-04", series.end_date, "PIR series end date")    
   end
   
   def test_new
     series = MultiDayEvent.create!
-    beginning_of_year = Time.new.beginning_of_year
-    assert_equal_dates(beginning_of_year, series.date, "PIR series date")
-    assert_equal_dates(beginning_of_year, series.start_date, "PIR series start date")
-    assert_equal_dates(beginning_of_year, series.end_date, "PIR series end date")
+    assert_equal_dates(Time.zone.today, series.date, "PIR series date")
+    assert_equal_dates(Time.zone.today, series.start_date, "PIR series start date")
+    assert_equal_dates(Time.zone.today, series.end_date, "PIR series end date")
     assert_equal true, series.notification?, "event notification?"
     
     series.save!
-    assert_equal_dates(beginning_of_year, series.date, "PIR series date")
-    assert_equal_dates(beginning_of_year, series.start_date, "PIR series start date")
-    assert_equal_dates(beginning_of_year, series.end_date, "PIR series end date")
+    assert_equal_dates(Time.zone.today, series.date, "PIR series date")
+    assert_equal_dates(Time.zone.today, series.start_date, "PIR series start date")
+    assert_equal_dates(Time.zone.today, series.end_date, "PIR series end date")
     sql_results = series.connection.select_one("select date from events where id=#{series.id}")
-    assert_equal_dates(beginning_of_year, sql_results["date"], "Series date column from DB")
-    
-    new_series_event = series.children.create(:date => Date.new(2001, 6, 19))
+    assert_equal_dates(Time.zone.today, sql_results["date"], "Series date column from DB")
+
+    new_series_event = series.children.create!(:date => Date.new(2001, 6, 19))
     assert_equal_dates("2001-06-19", series.date, "PIR series date")
     assert_equal_dates("2001-06-19", series.start_date, "PIR series start date")
     assert_equal_dates("2001-06-19", series.end_date, "PIR series end date")
     sql_results = series.connection.select_one("select date from events where id=#{series.id}")
     assert_equal_dates("2001-06-19", sql_results["date"], "Series date column from DB")
     
-    series.children.create(:date => Date.new(2001, 6, 23))
+    series.children.create!(:date => Date.new(2001, 6, 23))
     series.save!
     assert_equal_dates("2001-06-19", series.date, "PIR series date")
     assert_equal_dates("2001-06-19", series.start_date, "PIR series start date")

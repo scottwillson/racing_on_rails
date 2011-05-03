@@ -1,16 +1,13 @@
-<tr class="<%= cycle("even", "odd") %>" id="page<%= page.id %>_row">
-  <td class="title">
-    <div class="record" id="page_<%= page.id %>" style="margin-left: <%= page.depth * 16 %>px">
-      <%= in_place_editor_field(:page, :title, page) %>
-    </div>
+<% content_tag :tr, :class => cycle("even", "odd"), :id => "page_#{page.id}_row" do %>
+  <td class="title" style="padding-left: <%= 16 + page.depth * 16 %>px"><%= in_place_editor_field :page, :title, page, true %>
   </td>
   <td class="updated not_editable">
-    <%= updated(page) %>
+    <%= updated page %>
   </td>
   <td class="actions not_editable last">
     <%= link_to "Add Child", new_admin_page_path(:page => { :parent_id => page.id }) %> |
     <%= link_to "Edit", edit_admin_page_path(page) %>
   </td>
-</tr>
+<% end -%>
 
 <%= render page.children %>

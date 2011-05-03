@@ -39,14 +39,16 @@ module Api
       conditions = [""]
 
       # name
-      if params[:name]
-        name = "%#{params[:name].strip}%"
+      # jQuery autocomplete uses :term
+      name_param = params[:name] || params[:term]
+      if name_param.present?
+        name = "%#{name_param.strip}%"
         sql << "(CONCAT_WS(' ', first_name, last_name) LIKE ? OR aliases.name LIKE ?)"
         conditions << name << name
       end
 
       # license
-      if params[:license]
+      if params[:license].present?
         sql << "(license = ?)"
         conditions << params[:license]
       end
@@ -57,6 +59,7 @@ module Api
           :page       => params[:page],
           :per_page   => 10,
           :conditions => conditions,
+          :order      => "last_name, first_name",
           :include    => {
             :aliases      => [],
             :team         => [],

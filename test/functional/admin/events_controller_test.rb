@@ -721,7 +721,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_add_children
-    Timecop.freeze(Date.new(2010, 10, 3)) do
+    Timecop.freeze(Date.new(RacingAssociation.current.year, 10, 3)) do
       lost_series_child = events(:lost_series_child)
       start_date = RacingAssociation.current.today.next_month
       lost_series_child.date = start_date
@@ -771,7 +771,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     
     get(:index, :year => current_year)
     assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
-    assert_select("table.tabs span", { :text => "2009" }, "Should have tab for current year")
+    assert_select("table.tabs span", { :text => current_year.to_s }, "Should have tab for current year")
   end
 
   def test_upload_schedule

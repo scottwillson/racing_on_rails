@@ -2,9 +2,10 @@
 
 <% table :class => :velodromes, :id => :velodromes do %>
   <tr>
+    <th class="icon"/>
     <th class="name">Name</th>
     <th>Website</th>
-    <th>&nbsp;</th>
+    <th class="actions last"></th>
   </tr>
   <%= render :partial => "velodrome", :collection => @velodromes %>
 <% end -%>

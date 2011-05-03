@@ -49,8 +49,8 @@ class EventsTest < WebDriverTestCase
     type "candi m", "promoter_auto_complete"
     wait_for_element "person_#{candi.id}"
     
-    click "person_#{candi.id}"
-    assert_value candi.id, "event_promoter_id"
+    click :css => "li#person_#{candi.id} a"
+    wait_for_value candi.id, "event_promoter_id"
     assert_value "Candi Murray", "promoter_auto_complete"
 
     click "save"
@@ -90,8 +90,8 @@ class EventsTest < WebDriverTestCase
     gl = Team.find_by_name('Gentle Lovers')
     wait_for_element "team_#{gl.id}"
     wait_for_displayed "team_#{gl.id}"
-    click "team_#{gl.id}"
-    assert_value gl.id, "event_team_id"
+    click :css => "li#team_#{gl.id} a"
+    wait_for_value gl.id, "event_team_id"
     assert_value "Gentle Lovers", "team_auto_complete"
 
     click "save"

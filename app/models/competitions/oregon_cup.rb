@@ -40,12 +40,12 @@ class OregonCup < Competition
     results.delete_if do |result|
       results.any? do |other_result|
         result != other_result &&
-        result.race != other_result.race &&
+        result.race_id != other_result.race_id &&
         result.event.root == other_result.event.root &&
         (
           other_result.race.notes.include?("Oregon Cup") ||
-          ((result.event.root != other_result.event.root) &&
-            (other_result.event.notes.include?("Oregon Cup") || other_result.event.name.include?("Oregon Cup")))
+          other_result.event.notes.include?("Oregon Cup") || 
+          other_result.event.name.include?("Oregon Cup")
         )
       end
     end

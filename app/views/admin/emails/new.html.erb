@@ -4,26 +4,24 @@
   <table>
     <tr>
       <td>To:</td>
-      <td style="padding-top: 4px;">All <%= number_with_delimiter(@members_count) %> current members</td>
+      <td style="padding-top: 4px;">All <%= number_with_delimiter @members_count %> current members</td>
     </tr>
     <tr>
       <td>From:</td>
-      <td><%= f.text_field("from", :size => "40") %></td>
+      <td><%= f.text_field "from", :size => "40", :class => "wants_focus" %></td>
     </tr>
     <tr>
       <td>Subject:</td>
-      <td><%= f.text_field("subject", :size => "40") %></td>
+      <td><%= f.text_field "subject", :size => "40" %></td>
     </tr>
     <tr>
-      <td colspan="2"><%= f.text_area("body", :rows => "14", :cols => "65") %></td>
+      <td colspan="2"><%= f.text_area "body", :rows => "14", :cols => "65" %></td>
     </tr>
     <tr class="buttons">
       <td colspan="2" class="right">
         <%= link_to "Cancel", {:action => :new}, {:class => "obvious"} %>
-        <%= submit_tag("Send") %>
+        <%= submit_tag "Send" %>
       </td>
     </tr>
   </table>
 <%- end -%>
-
-<%= focus("email_from") %>

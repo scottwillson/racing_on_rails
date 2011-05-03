@@ -26,7 +26,7 @@ task :cruise do
       xvfb_pid = fork do
         exec("Xvfb :1 -screen 0 1024x768x24")
       end
-      Process.detach(xvfb_pid)
+      Process.detach xvfb_pid
     end
   end
   
@@ -42,7 +42,7 @@ task :cruise do
     if RUBY_PLATFORM[/freebsd/]
       # Rake task doesn't seem to quit Firefox correctly
       fork do
-        exec("killall firefox-bin")
+        exec "killall firefox-bin"
       end
     end
     # Wait for Firefox to exit

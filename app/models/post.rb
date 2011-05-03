@@ -4,7 +4,7 @@ class Post < ActiveRecord::Base
   attr_accessor :from_email_address, :from_name
 
   validates_presence_of :subject, :body, :date, :from_name, :mailing_list_id, :from_email_address
-  before_save :remove_list_prefix
+  before_save :remove_list_prefix, :update_sender
 
   belongs_to :mailing_list
   
@@ -20,6 +20,34 @@ class Post < ActiveRecord::Base
   def initialize(attributes = nil)
     super
     self.date = Time.zone.now if date.nil?
+  end
+  
+  def from_name
+    @from_name ||= (
+    if sender
+      if sender["<"]
+        sender[/^([^<]+)/].try(:strip)
+      elsif !sender["@"]
+        sender
+      end
+    end
+    )
+  end
+  
+  def from_email_address
+    @from_email_address ||= (
+    if sender
+      if sender["<"]
+        sender[/<(.*)>/, 1].try(:strip)
+      elsif !sender["<"]
+        sender
+      end
+    end
+    )
+  end
+  
+  def sender=(value)
+    self[:sender] = value
   end
   
   def remove_list_prefix
@@ -57,7 +85,7 @@ class Post < ActiveRecord::Base
       end
     end
     
-    return sender
+    sender
   end
   
   def update_sender

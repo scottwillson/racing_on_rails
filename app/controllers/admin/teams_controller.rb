@@ -8,7 +8,7 @@ class Admin::TeamsController < Admin::AdminController
   # Params
   # * team_name
   def index
-    @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
+    @name = params['name'] || params[:term] || session['team_name'] || cookies[:team_name] || ''
     if @name.blank?
       @teams = []
     else
@@ -20,10 +20,11 @@ class Admin::TeamsController < Admin::AdminController
         flash[:warn] = "First #{RacingAssociation.current.search_results_limit} teams"
       end
     end
-
-    respond_to do |wants|
-      wants.html
-      wants.js
+    
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render :json => @teams.to_json }
     end
   end
   

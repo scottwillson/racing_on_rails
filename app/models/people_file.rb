@@ -211,8 +211,10 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   private
   
   def combine_categories(row_hash)
-    for field in Person::CATEGORY_FIELDS
-      row_hash[field] = row_hash[field].gsub($INPUT_RECORD_SEPARATOR, ' ') if row_hash[field]
+    Person::CATEGORY_FIELDS.each do |field|
+      if row_hash[field].present?
+        row_hash[field] = row_hash[field].gsub("\n", " ")
+      end
     end
   end
   

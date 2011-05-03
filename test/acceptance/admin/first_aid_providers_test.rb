@@ -15,20 +15,22 @@ class FirstAidProvidersTest < WebDriverTestCase
 
       assert_element :xpath => "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
       click :xpath => "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='in_place_editable']"
-      wait_for_element :class => "editor_field"
-      type "Megan Weaver", :class => "editor_field"
-       type :return, { :class_name => "editor_field" }, false
-      wait_for_no_element :class => "editor_field"
+      wait_for_element :css => "form.editor_field input"
+      type "Megan Weaver", :css => "form.editor_field input"
+       type :return, { :css => "form.editor_field input" }, false
+      wait_for_no_element :css => "form.editor_field input"
 
       refresh
       wait_for_element "events_table"
       assert_table "events_table", 1, 0, /^Megan Weaver/
 
-      click "past_events"
-      assert_table "events_table", 1, 3, /^Copperopolis/
+      if Date.today.month > 1
+        click "past_events"
+        assert_table "events_table", 1, 3, /^Copperopolis/
 
-      click "past_events"
-      assert_not_in_page_source "Copperopolis"
+        click "past_events"
+        assert_not_in_page_source "Copperopolis"
+      end
 
       assert_table "events_table", 1, 3, /^Lost Series/
       assert_table "events_table", 2, 3, /^National Federation Event/

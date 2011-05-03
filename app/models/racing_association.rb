@@ -52,7 +52,7 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def self.current
-    @current ||= RacingAssociation.first
+    @current ||= RacingAssociation.first || RacingAssociation.create
   end
 
   def self.current=(value)

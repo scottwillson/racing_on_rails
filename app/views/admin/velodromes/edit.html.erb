@@ -12,7 +12,7 @@
 <div class="column_grid_container">
   <%= form_for([:admin, @velodrome]) do |f| -%>
   <div class="prepend-1 span-3 append-2 last">
-    <%= f.labelled_text_field :name %>
+    <%= f.labelled_text_field :name, nil, :class => "wants_focus" %>
     <%= f.labelled_text_field :website %>
   </div>
 
@@ -25,5 +25,3 @@
   </div>
   <% end -%>
 </div>
-
-<%= focus('velodrome_name') %>

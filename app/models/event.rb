@@ -96,14 +96,17 @@ class Event < ActiveRecord::Base
 
   # Return list of every year that has at least one event
   def Event.find_all_years
-    years = []
-    results = connection.select_all(
-      "select distinct extract(year from date) as year from events"
-    )
-    results.each do |year|
-      years << year.values.first.to_i
+    years = [ RacingAssociation.current.effective_year ] +
+    connection.select_values(
+      "select distinct extract(year from date) from events"
+    ).map(&:to_i)
+    years = years.uniq.sort
+    
+    if years.size == 1
+      years
+    else
+      ((years.first)..(years.last)).to_a.reverse
     end
-    years.sort.reverse
   end
   
   # Return [weekly_series, events] that have results
@@ -386,7 +389,7 @@ class Event < ActiveRecord::Base
   
   def end_date
     if children.any?
-      children.last.date
+      children.sort.last.date
     else
       start_date
     end
@@ -503,6 +506,10 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def name_with_date
+    "#{name} (#{short_date})"
+  end
+
   # Try to intelligently combined parent name and child name for schedule pages
   def full_name
     if parent.nil?

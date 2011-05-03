@@ -1,120 +1,99 @@
-function toggle_disclosure(e) {
-  var id = this;
-  var disclosureTriangle = $('disclosure_' + id);
-  if (disclosureTriangle.hasClassName("collapsed")) {
-    expandDisclosure(id);
-  }
-  else {
-    disclosureTriangle.removeClassName("expanded");
-    disclosureTriangle.addClassName("collapsed");
-    $('category_' + id + "_children").innerHTML = "";
-  }
-}
-
-function expandDisclosure(id) {
-  var disclosureTriangle = $('disclosure_' + id);
-  disclosureTriangle.removeClassName("collapsed");
-  disclosureTriangle.removeClassName("expanded");
-  disclosureTriangle.addClassName("loading");
-  new Ajax.Updater('category_' + id + "_children", "/admin/categories/" + id + "/children", {
-                    method:"get", 
-                    asynchronous:true, 
-                    evalScripts:true,
-                    onComplete: function(transport) {
-                      disclosureTriangle.removeClassName("loading");
-                      disclosureTriangle.addClassName("expanded");
-                    }
-                  });
-}
-
-function resizeRelativeToWindow() {
-  var id = "category_root";
-  var document_viewport_height = document.viewport.getHeight();
-  var table_container = $(id);
-  if (document_viewport_height < 100) {
-    table_container.setStyle({ height: 'auto' });
-  }
-  else {
-    var newHeight = table_container.getHeight() + (document_viewport_height - $('frame').getHeight()) - 56;
-    if (newHeight < 50) newHeight = 50;
-    table_container.setStyle({ height: newHeight + 'px' });
-  }  
-}
-
-function fixTableColumnWidths(table_id) {
-  Event.observe(window, 'load', function() {
-    var ths = $$('#' + table_id + ' th');
-
-    var thWidths = ths.collect(function(th){
-      return th.getWidth() - Number(th.getStyle('paddingLeft').gsub('px', ''));
-    });
-
-    ths.each(function(th, index) {
-      th.setStyle({width: (thWidths[index] - 2) + 'px'});
-    });
-  });
-}
-
-function resetTableColumnWidths(table_id) {
-  $$('#' + table_id + ' th').each(function(th, index){
-    th.setStyle({width: 'default'});
-  });
-  fixTableColumnWidths(table_id);
-}
-
 function restripeTable(id) {
-  var index = 0;
-  $A($(id).rows).each(function(row) {
-    if (row.className == 'even' || row.className == 'odd') {
-      if (index % 2 == 0) {
-        row.className = 'even';
+  var startIndex = 0;
+  if ($('#' + id + ' tr th').length > 0) {
+    startIndex = 1;
+  }
+  
+  $('#' + id + ' tr').each(function(index, tr) {
+    var row = $(tr);
+    row.removeClass('merging');
+    if (index >= startIndex && (row.hasClass('even') || row.hasClass('odd'))) {
+      row.removeClass('even');
+      row.removeClass('odd');
+      if ((index + startIndex) % 2 == 0) {
+        row.addClass('even');
       }
       else {
-        row.className = 'odd';
+        row.addClass('odd');
       }
-      index = index + 1;
     }
   });
 }
 
-// TODO Use this!
 function flash(key, message) {
-  if ($('info') != null) { $('info').hide() }
-  if ($('notice') != null) { $('notice').hide() }
-  if ($('warn') != null) { $('warn').hide() }
+  if ($('#info').length > 0) { $('#info').hide() }
+  if ($('#notice').length > 0) { $('#notice').hide() }
+  if ($('#warn').length > 0) { $('#warn').hide() }
   
-  $(key + '_span').update(message);
-  $(key).show();
-}
-
-function pinTo100PctVertical(id) {
-  Event.observe(window, 'load', function() {
-    sizeTo100PctVertical(id);
-  });
-
-  Event.observe(window, 'resize', function() {
-    sizeTo100PctVertical(id);
-  });
-}
-
-function sizeTo100PctVertical(id) {
-  newHeight = ($(id).getHeight() + (document.viewport.getHeight() - $('body').offsetHeight)) - 16;
-  $(id).setStyle( { height: newHeight + 'px' })
+  $('#' + key + '_span').html(message);
+  $('#' + key).show();
 }
 
 function autoComplete(model, attribute, path) {
-  Event.observe(window, 'load', function() {
-    new Ajax.Autocompleter(attribute + '_auto_complete', attribute + "_auto_complete_choices", path, {
-      method: 'GET',
-      paramName: 'name',
-      indicator: attribute + '_auto_complete_progress', 
-      minChars: 3, 
-      afterUpdateElement: afterUpdateElement,
-      frequency: 0.2
-     });
-
-    function afterUpdateElement(element, li) {
-      $('event_' + attribute + '_id').value = Number(/\d+/.exec(li.id));
-    }
+  $(document).ready(function() {
+    $('#' + attribute + '_auto_complete').autocomplete({
+      delay: 200,
+      minLength: 3,
+      source: path,
+      focus: function(event, ui) {
+        $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+        return false;
+      },
+      select: function(event, ui) {
+        $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+        $('#event_promoter_id').val(ui.item.person.id);
+        return false;
+      }
+    })
+    .data("autocomplete")
+    ._renderItem = function(ul, item) {
+        var description = [];
+        if (item.person.team !== undefined && item.person.team.name !== undefined) {
+          description.push(item.person.team.name);
+        }
+        if (item.person.city !== undefined) {
+          description.push(item.person.city);
+        }
+        if (item.person.state !== undefined) {
+          description.push(item.person.state);
+        }
+        
+        return $('<li id="person_' + item.person.id + '"></li>')
+          .data( "item.autocomplete", item )
+          .append('<a>' + item.person.first_name + ' ' + item.person.last_name + '<div class="informal">' + description + "</div></a>")
+          .appendTo( ul );
+      };
+    ;
   });  
-}
+}    
+
+function autoCompleteTeam(model, attribute, path) {
+  $(document).ready(function() {
+    $('#' + attribute + '_auto_complete').autocomplete({
+      delay: 200,
+      minLength: 3,
+      source: path,
+      focus: function(event, ui) {
+        $('#team_auto_complete').val(ui.item.team.name);
+        return false;
+      },
+      select: function(event, ui) {
+        $('#team_auto_complete').val(ui.item.team.name);
+        $('#event_team_id').val(ui.item.team.id);
+        return false;
+      }
+    })
+    .data("autocomplete")
+    ._renderItem = function(ul, item) {
+        return $('<li id="team_' + item.team.id + '"></li>')
+          .data( "item.autocomplete", item )
+          .append('<a>' + item.team.name + '</a>')
+          .appendTo( ul );
+      };
+    ;
+  });  
+}    
+
+$(document).ready(function() {
+  $('.wants_focus:visible').select();
+});

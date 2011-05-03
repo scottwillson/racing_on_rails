@@ -7,7 +7,7 @@ class WsbaBarrTest < ActiveSupport::TestCase
     WsbaBarr.calculate!(2006)
     wsba = WsbaBarr.find_for_year(2006)
     assert(wsba.errors.empty?, "New WSBA BARR should have no errors, but has: #{wsba.errors.full_messages}")
-    assert_equal(12, wsba.races.size, 'races')
+    assert_equal(13, wsba.races.size, 'races')
     wsba.races.sort_by {|s| s.name }
 
     men_1_2 = wsba.races.first
@@ -15,7 +15,7 @@ class WsbaBarrTest < ActiveSupport::TestCase
     assert(men_1_2.results.empty?, 'Senior men results.empty?')
 
     women_cat_4 = wsba.races.last
-    assert_equal('Women Cat 4', women_cat_4.category.name, 'Senior women category')
+    assert_equal("Master Women 35+ Cat 4", women_cat_4.category.name, "Master Women 35+ Cat 4")
     assert(women_cat_4.results.empty?, 'Senior women results.empty?')
   end
   
@@ -61,8 +61,8 @@ class WsbaBarrTest < ActiveSupport::TestCase
     assert_equal(3, men_1_2.results.count, "Senior men results")
     
     men_1_2.results.sort!
-    assert_equal(166, men_1_2.results[0].points, "Result 0 points")
-    assert_equal(105, men_1_2.results[1].points, "Result 1 points")
-    assert_equal(75, men_1_2.results[2].points, "Result 2 points")
+    assert_equal(37, men_1_2.results[0].points, "Result 0 points")
+    assert_equal(25.5, men_1_2.results[1].points, "Result 1 points")
+    assert_equal(22.5, men_1_2.results[2].points, "Result 2 points")
   end
 end

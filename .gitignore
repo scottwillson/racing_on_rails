@@ -5,4 +5,7 @@ log/acceptance
 tmp/**/*
 .rvmrc
 local
-public/export
+public/export/*.csv
+public/export/*.txt
+*.swp
+.rvmrc

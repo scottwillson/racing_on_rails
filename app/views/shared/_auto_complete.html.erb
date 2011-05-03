@@ -1,7 +1,11 @@
     <% if @auto_complete_fields -%>
     <script type="text/javascript" charset="utf-8">
       <% @auto_complete_fields.each do |auto_complete_field| -%>
+        <% if auto_complete_field[:attribute] == :team %>
+        <%= "autoCompleteTeam('#{auto_complete_field[:model]}', '#{auto_complete_field[:attribute]}', '#{auto_complete_field[:path]}')" %>
+        <% else %>
         <%= "autoComplete('#{auto_complete_field[:model]}', '#{auto_complete_field[:attribute]}', '#{auto_complete_field[:path]}')" %>
+        <% end -%>
       <% end -%>
     </script>
     <% end -%>

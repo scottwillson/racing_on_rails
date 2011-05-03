@@ -49,7 +49,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
         f.puts "<html>"
         f.puts "<body>"
       end
- 
+
       # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
       webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/files/webdriver-profile")
       MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)

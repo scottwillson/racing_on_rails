@@ -34,8 +34,8 @@ module MiniTest
           f.puts "</ol>"
         end
         File.open("#{MiniTest::Unit.results_path}/index.html", "a") do |f|
-          f.puts "<a href='./#{meth[/[^\(]+\(([^\)]+)/,1]}/#{meth[/[^\(]+/]}.png'>Screenshot</a><br/>"
-          f.puts "<a href='./#{meth[/[^\(]+\(([^\)]+)/,1]}/#{meth[/[^\(]+/]}.html'>HTML</a>"
+          f.puts "<a href='./#{meth[/[^\(]+\(([^\)]+)/,1]}#{meth[/[^\(]+/]}.png'>Screenshot</a><br/>"
+          f.puts "<a href='./#{meth[/[^\(]+\(([^\)]+)/,1]}#{meth[/[^\(]+/]}.html'>HTML</a>"
         end
       end
     

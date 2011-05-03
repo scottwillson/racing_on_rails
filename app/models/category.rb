@@ -7,6 +7,7 @@
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
+  include Export::Categories
 
   include Comparable
 
@@ -27,7 +28,11 @@ class Category < ActiveRecord::Base
   
   # All categories with no parent (except root 'association' category)
   def Category.find_all_unknowns
-    Category.all( :conditions => ['parent_id is null and name <> ?', RacingAssociation.current.short_name])
+    Category.all(
+      :all, 
+      :conditions => ['parent_id is null and name <> ?', RacingAssociation.current.short_name],
+      :include => :children
+     )
   end
   
   def Category.find_by_friendly_param(param)

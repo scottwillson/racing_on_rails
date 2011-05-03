@@ -4,6 +4,7 @@
 
 <% table :class => "teams top_margin clear", :id => :teams do %>
   <tr>
+    <th class="icon"/>
     <th class="name">Name</th>
     <th>Aliases</th>
     <th class="check_box">Member</th>
@@ -13,9 +14,9 @@
   <% if @teams.empty? %>
   <tr>
     <%- if @name.blank? -%>
-    <td colspan="4" class="not_found">Enter part of a team's name</td>
+    <td colspan="5" class="not_found">Enter part of a team's name</td>
     <%- else -%>
-    <td colspan="4" class="not_found">No teams found</td>
+    <td colspan="5" class="not_found">No teams found</td>
     <%- end -%>
   </tr>
   <% end %>
@@ -25,15 +26,31 @@
   <%= link_to(image_tag('/images/icons/group_add.png'), { :action => 'new' }, { :class => "image" }) %>
 </div>
 
-<%= focus('name') %>
-
-<%- for team in @teams -%>
-  <%= draggable_element("team_#{team.id}", :revert => true, :delay => 100, :revert => "'failure'",
-                        :onStart => "function() { Droppables.remove('team_#{team.id}_row') }", 
-                        :onEnd => "function() { Droppables.add('team_#{team.id}_row', {hoverclass:'hovering', onDrop:function(element){new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)})}})}")
-  %>
-  <%= drop_receiving_element("team_#{team.id}_row", 
-    :url => { :action => "merge", :target_id => team.id },
-    :onDrop => "function(element){$('team_#{team.id}').src='/images/icons/spinner.gif'; new Ajax.Request('/admin/teams/merge?target_id=#{team.id}', {asynchronous:true, evalScripts:true, parameters:'id=' + encodeURIComponent(element.id)});Droppables.remove('team_#{team.id}_row') }",
-    :hoverclass => 'hovering' ) %>
+<% javascript_tag do %>
+  $(document).ready(function() {
+  <%- @teams.each do |team| -%>
+    $(<%= "'#team_#{team.id}'" %>).draggable({ 
+      revert: 'invalid', 
+      opacity: 0.7,
+      zIndex: 10000,
+      helper: function(event) {
+        return $('<div class="team">' + $(this).attr('data-name') + '</div>');
+      }
+    });
+    $(<%= "'#team_#{team.id}_row'" %>).droppable({
+      hoverClass: 'hovering',
+      drop: function(event, ui) {
+        ui.helper.hide('scale');
+        ui.draggable.closest('tr').hide('fade');
+        $(this).addClass('merging');
+        $.ajax({
+          url: '/admin/teams/merge?target_id=<%= team.id %>',
+          type: 'POST',
+          data: ({id: ui.draggable.attr('id')}),
+          dataType: 'script'
+        });
+      }
+    });
+  <% end -%>
+  });
 <%- end -%>

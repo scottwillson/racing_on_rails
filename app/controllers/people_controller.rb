@@ -159,12 +159,11 @@ class PeopleController < ApplicationController
   private
 
   def find_people
-    @people = []
-    @name = params['name'] || ''
-    @name.strip!
-    if @name.present?
-      @people = Person.find_all_by_name_like(@name)
-      @people = @people.paginate(:page => params[:page])
+    @name = params[:name].try(:strip)
+    if @name
+      @people = Person.find_all_by_name_like(@name).paginate(:page => params[:page])
+    else
+      @people = []
     end
   end
 end

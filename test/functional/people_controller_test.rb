@@ -1,3 +1,5 @@
+# coding: utf-8
+
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
@@ -9,7 +11,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_layout("application")
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
-    assert_not_nil(assigns["name"], "Should assign name")
     assert_select ".tabs", :count => 0
     assert_select "a#export_link", :count => 0
   end
@@ -29,13 +30,12 @@ class PeopleControllerTest < ActionController::TestCase
     assert_layout("application")
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
-    assert_not_nil(assigns["name"], "Should assign name")
     assert_select ".tabs", :count => 1
     assert_select "a#export_link", :count => 1
   end
 
   def test_find
-    get(:index, :name => 'weav')
+    get(:index, :name => "weav")
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')
@@ -74,11 +74,10 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_ajax_ssl_find
     use_ssl
-    xhr :get, :index, :name => "weav"
+    xhr :get, :index, :term => "weav", :format => "json"
+    assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"
     assert_response :success
-    assert_not_nil assigns["people"], "Should assign people"
-    assert_equal [ people(:weaver) ], assigns['people'], "Search for weav should find Weaver"
-    assert_template "people/index"
+    assert_template nil
     assert_layout nil
   end
   

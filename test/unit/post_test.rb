@@ -74,4 +74,19 @@ class PostTest < ActiveSupport::TestCase
     post.topica_message_id = 125633
     assert_equal("scott_will-@foo.net", post.sender_obscured, "Sender obscured")
   end
+  
+  def test_from
+    post = Post.new
+    assert_equal "", post.from_name, "from_name"
+    assert_equal "", post.from_email_address, "from_email_address"
+
+    post = Post.new(:sender => "cmurray@obra.org")
+    assert_equal "cmurray@obra.org", post.sender, "sender"
+    assert_equal nil, post.from_name, "from_name"
+    assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
+
+    post = Post.new(:sender => "Candi Murray <cmurray@obra.org>")
+    assert_equal "Candi Murray", post.from_name, "from_name"
+    assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
+  end
 end

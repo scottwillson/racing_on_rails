@@ -1,11 +1,7 @@
 <%= f.label "#{attribute}_id", label_text %>
 <%= f.hidden_field "#{attribute}_id" -%>
 
-<img src="/images/icons/spinner.gif" alt="Working..." class="auto_complete_progress_spinner" 
-  id="<%= attribute %>_auto_complete_progress" style="display: none" />
-
 <input type="text" id="<%= attribute %>_auto_complete" name="<%= model %>[<%= attribute %>_name]" value="<%= value %>" autocomplete="off" />
-<div id="<%= attribute %>_auto_complete_choices" class="auto_complete"></div>
 
 <%
   @auto_complete_fields = @auto_complete_fields || []

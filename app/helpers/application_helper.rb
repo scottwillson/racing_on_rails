@@ -1,9 +1,4 @@
 module ApplicationHelper
-  # Trey to put browser focus (and cursor) on this field
-  def focus(form_field_name)
-    render "shared/focus", :object => form_field_name
-  end
-
   # Wrap +text+ in div tags, unless +text+ is blank
   def div(text)
     "<div>#{text}</div>" unless text.blank?
@@ -29,7 +24,7 @@ module ApplicationHelper
   
   # Add to_excel to strip out CSV-invalid characters
   def to_excel(value)
-    if value.present? && value.respond_to?(:gsub)
+    if value.try :respond_to?, :gsub
       value.gsub(/[\t\n\r]/, " ")
     else
       value

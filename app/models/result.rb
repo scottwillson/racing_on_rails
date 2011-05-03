@@ -208,7 +208,7 @@ class Result < ActiveRecord::Base
   end
   
   def ensure_custom_attributes
-    if race && race.custom_columns && !custom_attributes
+    if race_id && race.custom_columns && !custom_attributes
       self.custom_attributes = Hash.new
       race.custom_columns.each do |key|
         custom_attributes[key.to_sym] = nil
@@ -665,8 +665,16 @@ class Result < ActiveRecord::Base
   end
   
   def method_missing(sym, *args, &block)
+    # Performance fix for results page. :to_ary would be called and trigger a load of race to get custom_attrib
+    # May want to denormalize custom_attributes in Result.
+    if sym == :to_ary
+      return super
+    end
+
     if sym != :custom_attributes && custom_attributes && custom_attributes.has_key?(sym)
       custom_attributes[sym]
+    elsif race && race.custom_columns && race.custom_columns.include?(sym)
+      nil
     else
       super
     end

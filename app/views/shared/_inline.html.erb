@@ -11,18 +11,35 @@
 %></div>
 <script type="text/javascript">
 //<![CDATA[
+var td = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td');
+td.css('width', td.width() + 'px');
 
-var inPlaceEditor = new Ajax.InPlaceEditor(
-  '<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>',
-   '<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>',
-   { okControl: false, cancelControl: false, clickToEditText: '', hoverClassName: 'hovering', 
-     savingText: '&nbsp;', htmlResponse: <%= !script %>,
-     onComplete: function(ipe) {},
-     onEnterHover: function(ipe) {},
-     onLeaveHover: function(ipe) {}
+var editable = $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').editable('<%= "/admin/#{record_symbol}s/set_#{record_symbol}_#{attribute_symbol}/#{record.id}" %>', {
+  method: 'PUT',
+  name: 'value',
+  select: true,
+  placeholder: '',
+  cssclass: 'editor_field',
+  indicator: '<div class="saving"/>',
+  onedit: function() {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').addClass('editing');
+    return true;
+  },
+  onblur: function(value, settings) {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
+    this.reset();
+    return true;
+  },
+  onreset: function() {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
+    return true;
+  },
+  callback: function(value, settings) {
+    $('#<%= "#{record_symbol}_#{record.id}_#{attribute_symbol}" %>').closest('td').removeClass('editing');
+  }
 });
-<% if enter_edit_mode -%>
-inPlaceEditor.enterEditMode();
+<% if enter_edit_mode.present? && enter_edit_mode == true -%>
+editable.click();
 <% end -%>
 // ]]>
 </script>
