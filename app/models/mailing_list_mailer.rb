@@ -45,7 +45,19 @@ class MailingListMailer < ActionMailer::Base
     post.mailing_list = MailingList.find_by_name(mailing_list_name)
 
     post.subject = email.subject
-    post.body = email.body.decoded
+    
+    multipart_related = email.parts.detect { |part| part.mime_type == "multipart/related" }
+    multipart_alternative = email.parts.detect { |part| part.mime_type == "multipart/alternative" }
+    if multipart_related
+      # Outlook
+      post.body = multipart_related.text_part.decoded
+    elsif multipart_alternative
+      # OS X
+      post.body = multipart_alternative.text_part.decoded
+    else
+      post.body = (email.text_part || email.html_part || email.body).decoded
+    end
+
     post.from_name = email[:from].display_names.first || email[:from].addresses.first
     post.from_email_address = email[:from].addresses.first
     post.date = email.date
