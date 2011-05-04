@@ -10,7 +10,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = obra_chat.name
     RacingAssociation.current.now = Time.zone.now
-    @expected.date = RacingAssociation.current.now
+    @expected.date = RacingAssociation.current.now.to_s
     @expected.body = read_fixture("post")
 
     post = Post.new
@@ -21,8 +21,6 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.body = @expected.body
     post.date = RacingAssociation.current.now
     post_email = MailingListMailer.post(post)
-    p @expected.encoded
-    p post_email
     assert_equal(@expected.encoded, post_email.encoded)
   end
   
@@ -31,7 +29,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     @expected.subject = "For Sale"
     @expected.from = "Molly <molly@veloshop.com>"
     @expected.to = "Scout <scout@butlerpress.com>"
-    @expected.date = Time.zone.now
+    @expected.date = Time.zone.now.to_s
     @expected.body = read_fixture("reply")
 
     post = Post.new
@@ -39,7 +37,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     post.from_name = 'Molly'
     post.subject = "For Sale"
     post.body = @expected.body
-    post.date = Time.zone.now.to_s
+    post.date = @expected.date
     post_email = MailingListMailer.private_reply(post, "Scout <scout@butlerpress.com>")
     assert_equal(@expected.encoded, post_email.encoded)
   end

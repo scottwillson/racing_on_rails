@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/binarylogic/authlogic.git
-  revision: 66ed79515919fe13016911b10ebe734cf8718dc7
-  specs:
-    authlogic (2.1.6)
-      activesupport
-
-GIT
   remote: git://github.com/laserlemon/vestal_versions
   revision: 3574a0b4e98ef187931376d1e38a01e109474c71
   specs:
@@ -45,6 +38,8 @@ GEM
       activesupport (= 3.0.5)
     activesupport (3.0.5)
     arel (2.0.9)
+    authlogic (2.1.6)
+      activesupport
     builder (2.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -101,7 +96,7 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  authlogic!
+  authlogic
   fastercsv
   mocha
   mysql2

@@ -12,9 +12,10 @@ class RaceDayMailer < ActionMailer::Base
     sent_on    sent_on_time
     
     body "See attached file"
-    
+
+    @people = people    
     attachment "text/plain" do |a|
-      a.body = render(:file => "members_export", :body => { :people => people })
+      a.body = render(:template => "members_export")
     end
   end
 end

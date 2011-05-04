@@ -953,7 +953,7 @@ class PersonTest < ActiveSupport::TestCase
     another.password = "secret"
     another.password_confirmation = "secret"
     assert_equal false, another.save, "Should not allow dupe login"
-    assert another.errors.on(:login), "Should have error on login"
+    assert another.errors[:login], "Should have error on login"
   end
   
   def test_authlogic_should_not_set_updated_at_on_load

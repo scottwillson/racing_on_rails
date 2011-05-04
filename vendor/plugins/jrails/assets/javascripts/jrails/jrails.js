@@ -1,4 +1,4 @@
-/*
+﻿/*
 *
 * jRails ajax extras
 * version 0.1
@@ -7,9 +7,8 @@
 */
 
 (function($) {
-	$.ajaxSettings.accepts._default = "text/javascript, text/html, application/xml, text/xml, */*";
+  $.extend( $.ajaxSettings, { accepts: { _default: "text/javascript, text/html, application/xml, text/xml, */*" }} );
 })(jQuery);
-
 
 /*
 *

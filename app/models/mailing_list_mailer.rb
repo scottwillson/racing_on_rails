@@ -11,7 +11,7 @@ class MailingListMailer < ActionMailer::Base
       :subject => reply_post.subject,
       :to => to,
       :from => reply_post.sender,
-      :sent_on => reply_post.date,
+      :sent_on => reply_post.date.to_s,
       :body => reply_post.body.to_s
     )
   end
@@ -23,7 +23,7 @@ class MailingListMailer < ActionMailer::Base
       :subject => new_post.subject,
       :to => new_post.mailing_list.name,
       :from => new_post.sender,
-      :sent_on => new_post.date,
+      :sent_on => new_post.date.to_s,
       :body => new_post.body.to_s
     )
   end
@@ -85,8 +85,8 @@ class MailingListMailer < ActionMailer::Base
       post.body = email.body
     end
     
-    post.from_name = email.from.name
-    post.from_email_address = email.from.email
+    post.from_name = email.sender.name
+    post.from_email_address = email.sender.email
     post.date = email.date
     begin
       post.save!
