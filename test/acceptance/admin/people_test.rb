@@ -79,7 +79,7 @@ class PeopleTest < WebDriverTestCase
     type "River City Bicycles", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
     wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
-    assert_no_element :css => "td.editing"
+    wait_no_element :css => "td.editing"
 
     refresh
     wait_for_element "people_table"
