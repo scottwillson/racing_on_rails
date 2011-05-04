@@ -5,42 +5,31 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class MailingListMailerTest < ActionMailer::TestCase
   def test_post
-    obra_chat = mailing_lists(:obra_chat)
-    @expected.subject = "For Sale"
-    @expected.from = "Molly <molly@veloshop.com>"
-    @expected.to = obra_chat.name
-    RacingAssociation.current.now = Time.zone.now
-    @expected.date = RacingAssociation.current.now.to_s
-    @expected.body = read_fixture("post")
+    post = mailing_lists(:obra_chat).posts.create!(
+      :from_name => "Molly",
+      :from_email_address => "molly@veloshop.com",
+      :subject => "For Sale",
+      :body => "Lots of singlespeeds for sale."
+    )
 
-    post = Post.new
-    post.mailing_list = obra_chat
-    post.from_email_address = 'molly@veloshop.com'
-    post.from_name = 'Molly'
-    post.subject = "For Sale"
-    post.body = @expected.body
-    post.date = RacingAssociation.current.now
     post_email = MailingListMailer.post(post)
-    assert_equal(@expected.encoded, post_email.encoded)
+    assert_equal ["molly@veloshop.com"], post_email.from
+    assert_equal "For Sale", post_email.subject
   end
   
   def test_post_private_reply
-    obra_chat = mailing_lists(:obra_chat)
-    @expected.subject = "For Sale"
-    @expected.from = "Molly <molly@veloshop.com>"
-    @expected.to = "Scout <scout@butlerpress.com>"
-    @expected.date = Time.zone.now.to_s
-    @expected.body = read_fixture("reply")
-
-    post = Post.new
-    post.from_email_address = 'molly@veloshop.com'
-    post.from_name = 'Molly'
-    post.subject = "For Sale"
-    post.body = @expected.body
-    post.date = @expected.date
+    post = mailing_lists(:obra_chat).posts.create!(
+      :from_name => "Molly",
+      :from_email_address => "molly@veloshop.com",
+      :subject => "For Sale",
+      :body => "Lots of singlespeeds for sale."
+    )
+    
     post_email = MailingListMailer.private_reply(post, "Scout <scout@butlerpress.com>")
-    assert_equal(@expected.encoded, post_email.encoded)
-  end
+    assert_equal ["molly@veloshop.com"], post_email.from
+    assert_equal "For Sale", post_email.subject
+    assert_equal ["scout@butlerpress.com"], post_email.to
+end
   
   def test_receive_simple
     assert_equal(1, Post.count, "Posts in database")
@@ -75,10 +64,10 @@ class MailingListMailerTest < ActionMailer::TestCase
   
     MailingListMailer.receive(email_to_archive)
     
-    posts = Post.all( :order => "date")
+    posts = Post.all(:order => "date")
     assert_equal(2, posts.size, "New post in DB")
     post_from_db = posts.last
-    assert_equal("[Fwd:  For the Archives]", post_from_db.subject, "Subject")
+    assert_equal("[Fwd: For the Archives]", post_from_db.subject, "Subject")
     assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal_dates("Mon Jan 23 15:52:25 PST 2006", post_from_db.date, "Post date", "%a %b %d %H:%M:%S PST %Y")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")

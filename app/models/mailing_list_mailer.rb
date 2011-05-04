@@ -45,49 +45,11 @@ class MailingListMailer < ActionMailer::Base
     post.mailing_list = MailingList.find_by_name(mailing_list_name)
 
     post.subject = email.subject
-    
-    if email.multipart?
-      plain_text_part = nil
-
-      # Outlook
-      related_part = email.parts.find { |part| 
-        part.content_type == "multipart/related"
-      }
-      if related_part
-        alt_part = related_part.parts.find { |part| 
-          part.content_type == "multipart/alternative"
-        }
-      else
-        alt_part = email.parts.find { |part| 
-          part.content_type == "multipart/alternative"
-        }
-      end
-      
-      # OS X rich text email
-      if alt_part 
-        plain_text_part = alt_part.parts.find { |part| 
-          part.content_type == "text/plain"
-        }
-      end
-
-      plain_text_part = email.parts.find { |part| 
-        part.content_type == "text/plain"
-      } unless plain_text_part
-      
-      plain_text_part = email.parts.find { |part| 
-        part.content_type == "text/html"
-      } unless plain_text_part
-      
-      post.body = plain_text_part.body
-    end
-    
-    if post.body.blank?
-      post.body = email.body
-    end
-    
-    post.from_name = email.sender.name
-    post.from_email_address = email.sender.email
+    post.body = email.body.decoded
+    post.from_name = email[:from].display_names.first || email[:from].addresses.first
+    post.from_email_address = email[:from].addresses.first
     post.date = email.date
+    
     begin
       post.save!
     rescue => save_error
