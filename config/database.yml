@@ -1,27 +1,27 @@
 development:
   adapter: mysql2
-  database: racing_on_rails_development
+  database: racing_on_rails_development_3
   username: ror_development
   host: localhost
   encoding: utf8
 
 acceptance:
   adapter: mysql2
-  database: racing_on_rails_test
+  database: racing_on_rails_test_3
   username: ror_test
   host: localhost
   encoding: utf8
 
 test:
   adapter: mysql2
-  database: racing_on_rails_test
+  database: racing_on_rails_test_3
   username: ror_test
   host: localhost
   encoding: utf8
 
 production:
   adapter: mysql2
-  database: racing_on_rails_production
+  database: racing_on_rails_production_3
   username: root
   encoding: utf8
   host: localhost
