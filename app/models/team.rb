@@ -59,7 +59,7 @@ class Team < ActiveRecord::Base
   def ensure_no_results
     return true if results.empty?
 
-    errors.add_to_base "Cannot delete team with results. #{name} has #{results.count} results."
+    errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
   end
   
