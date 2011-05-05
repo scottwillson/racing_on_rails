@@ -1,4 +1,4 @@
-<% content_tag :tr, :class => cycle("even", "odd"), :id => "page_#{page.id}_row" do %>
+<%= content_tag :tr, :class => cycle("even", "odd"), :id => "page_#{page.id}_row" do %>
   <td class="title" style="padding-left: <%= 16 + page.depth * 16 %>px"><%= in_place_editor_field :page, :title, page, true %>
   </td>
   <td class="updated not_editable">

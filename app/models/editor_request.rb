@@ -34,7 +34,7 @@ class EditorRequest < ActiveRecord::Base
   end
   
   def send_email
-    EditorRequestMailer.deliver_request(self)
+    EditorRequestMailer.request(self).deliver
   end
   
   # Make +editor+ an editor of +person+

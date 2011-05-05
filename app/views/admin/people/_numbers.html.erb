@@ -1,4 +1,4 @@
-<% table :caption => "Numbers", 
+<%= table :caption => "Numbers", 
          :class => "numbers box-2 clear",
          :id => "numbers",
          :insert_header => true, 
@@ -28,9 +28,10 @@
               :class => "image") %>
           </td>
           <td class="right">
-            <%= link_to_remote(
+            <%= link_to(
                   image_tag('/images/icons/delete.png'),
                     :url => { :action => "destroy_number", :id => @number.id},
+                    :remote => true,
                     :html => { :id => "destroy_number_#{@number.id}", :class => "image" }
                   )
            %>
@@ -45,7 +46,8 @@
   <% end %>
   <tr id="new_number_button_row">
     <td class="right">
-      <%= link_to_remote(image_tag("/images/icons/add.png", :size => "16x16"), 
+      <%= link_to(image_tag("/images/icons/add.png", :size => "16x16"), 
+            :remote => true,
             :url => { :action => "new_number" }, :html => { :class => "image" }) %>
     </td>
   </tr>

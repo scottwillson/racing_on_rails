@@ -9,7 +9,7 @@
       <%= f.labelled_text_field :slug, "Slug", :label => { :class => "top" } %>
       <%= f.label :parent_id, "Parent", :class => "top" %>
       <%= f.select :parent_id, @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] }, { :include_blank => true } %>
-      <% table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
+      <%= table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
         <%= render :partial => "version", :collection => @page.versions.sort_by(&:lock_version).reverse, :locals => { :selected => @page.versions.latest } %>
       <% end -%>
     </div>

@@ -9,9 +9,10 @@
       Delete <%= @original_name %> and move results to <%= @existing_people.first.name %>?
     </div>
     <div style="padding-right: 2px; width: 300px; text-align: right;">
-      <%= link_to_remote( 
+      <%= link_to( 
             image_tag('/images/icons/cancel.png'), 
             :url => { :action => "cancel_in_place_edit", :id => @person.to_param },
+            :remote => true,
             :html => { :class => "image" }
           )
        %>
@@ -45,9 +46,10 @@
   <%= hidden_field_tag "target_id", @existing_people.first.id %>
 
   <div align="right" style="padding-right: 2px;">
-    <%= link_to_remote( 
+    <%= link_to( 
       image_tag('/images/icons/cancel.png'), 
       :url => { :action => "cancel_in_place_edit", :id => @person.to_param },
+      :remote => true,
       :html => { :class => "image" }
       )
      %>

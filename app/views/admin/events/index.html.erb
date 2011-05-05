@@ -9,7 +9,7 @@ end -%>
 
 <div class="page_buttons container">
   <div class="left">
-    <% form_tag upload_schedule_admin_events_path, :multipart => true, :id => "upload_form" do %>
+    <%= form_tag upload_schedule_admin_events_path, :multipart => true, :id => "upload_form" do %>
     <label class="left">Import Schedule</label><%= file_field_tag "schedule_file", :onchange => "$('upload_form').submit();" %>
     <% end -%>
   </div>
@@ -19,8 +19,8 @@ end -%>
 </div>
 
 <div class="container">
-  <%- for month in @schedule.months -%>
-    <% table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>" do %>
+  <%- @schedule.months.each do |month| -%>
+    <%= table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>" do %>
       <tr>
         <th>Sunday</th>
         <th>Monday</th>
@@ -30,15 +30,15 @@ end -%>
         <th>Friday</th>
         <th>Saturday</th>
       </tr>
-      <%- for week in month.weeks -%>
+      <%- month.weeks.each do |week| -%>
           <tr class="month">
-          <%- for day in week.days -%>
+          <%- week.days.each do |day| -%>
             <%- if day.other_month? -%>
             <td class="day_from_other_month"><div class="number"><%= day.day_of_month -%></div>
             <%- else -%>
             <td class="day">
               <div class="number"><%= day.day_of_month -%></div>
-              <%- for event in day.events -%>
+              <%- day.events.each do |event| -%>
             <div class="event"><%= link_to event.full_name, edit_admin_event_path(event) %></div>
               <%- end -%>
             <%- end -%>

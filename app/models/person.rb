@@ -237,7 +237,7 @@ class Person < ActiveRecord::Base
 
   def Person.deliver_password_reset_instructions!(people)
     people.each(&:reset_perishable_token!)
-    Notifier.deliver_password_reset_instructions(people)
+    Notifier.password_reset_instructions(people).deliver
   end
   
   def people_with_same_name

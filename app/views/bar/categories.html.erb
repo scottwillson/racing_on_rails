@@ -4,7 +4,7 @@
 <% @bar.children.each do |event| %>
 <% reset_cycle %>
 
-<% table :caption => event.name do %>
+<%= table :caption => event.name do %>
   <% event.races.each do |race| %>
   <tr class="<%= cycle("even", "odd") %>">
     <td>
@@ -20,7 +20,7 @@
 <% end %>
 
 <% reset_cycle %>
-<% table :caption => "Excluded From BAR"do  %>
+<%= table :caption => "Excluded From BAR"do  %>
   <% for category in @excluded_categories %>
   <tr class="<%= cycle("even", "odd") %>">
     <td>

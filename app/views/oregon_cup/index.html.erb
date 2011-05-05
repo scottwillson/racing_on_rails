@@ -30,7 +30,7 @@ end -%>
     <td valign="top" width="50%">
       <% unless @oregon_cup.new_record? %>
       <% for race in @oregon_cup.races %>
-      <% table :caption => race.name, :class => "event_results" do %>
+      <%= table :caption => race.name, :class => "event_results" do %>
         <% result_columns = %w{ place name team_name points } %>
         <tr>
           <%- result_columns.map.each do |column| -%>

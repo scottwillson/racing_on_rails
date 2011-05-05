@@ -1,7 +1,7 @@
 <% @page_title = "Admin: Posts" %>
 
 <h1><%= @mailing_list.name %></h1>
-<% table :class => "posts top_margin clear", :id => :people do %>
+<%= table :class => "posts top_margin clear", :id => :people do %>
   <tr>
     <th class="date">Date</th>
     <th class="subject">Subject</th>
@@ -16,7 +16,7 @@
 
 <div class="buttons container">
   <div class="span-3">
-    <% form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
+    <%= form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
        :method => :post,
        :multipart => true, 
        :id => "mailing_list_form"  do |f| -%>

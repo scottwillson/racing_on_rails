@@ -4,7 +4,7 @@
 
 <%= render :partial => 'disciplines' %>
 
-<% table :caption => "#{@year}&nbsp;Results" do %>
+<%= table :caption => "#{@year}&nbsp;Results" do %>
   <%- for event in @events.sort {|x, y| y.date <=> x.date} -%>
   <tr class="<%= cycle('even', 'odd') %>">
     <td class="right"><%= event.short_date %></td>

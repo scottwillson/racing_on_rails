@@ -3,7 +3,7 @@ module TabsHelper
   def tabs(select_current_page = true)
     tabs = Tabs.new(controller)
     yield tabs
-    tabs.to_html select_current_page
+    tabs.to_html(select_current_page).html_safe
   end
 
   class Tabs

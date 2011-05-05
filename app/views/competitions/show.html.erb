@@ -27,7 +27,7 @@
 
 <%- @event.races.each_with_index do |race, index| -%>
 <%- unless race.results.empty? -%>
-<% table :caption => race.name, :class => "event_results" do %>
+<%= table :caption => race.name, :class => "event_results" do %>
   <% 
     if race.discipline == "Team"
       result_columns = %w{ place team_name points }

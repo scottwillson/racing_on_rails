@@ -2,7 +2,7 @@
 
 <%= render :partial => "shared/search", :locals => { :name => @name } %>
 
-<% table :class => "teams top_margin clear", :id => :teams do %>
+<%= table :class => "teams top_margin clear", :id => :teams do %>
   <tr>
     <th class="icon"/>
     <th class="name">Name</th>
@@ -26,7 +26,7 @@
   <%= link_to(image_tag('/images/icons/group_add.png'), { :action => 'new' }, { :class => "image" }) %>
 </div>
 
-<% javascript_tag do %>
+<%= javascript_tag do %>
   $(document).ready(function() {
   <%- @teams.each do |team| -%>
     $(<%= "'#team_#{team.id}'" %>).draggable({ 

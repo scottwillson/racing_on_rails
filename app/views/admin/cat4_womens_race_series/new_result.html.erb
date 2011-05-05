@@ -16,7 +16,7 @@
     <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{RacingAssociation.current.short_name}?", :class => "check_box") %>
   </div>
 
-  <% table :class => "clear people", :id => :people do %>
+  <%= table :class => "clear people", :id => :people do %>
     <tr>
       <th class="span-1">Place</th>
       <th class="span-1">Number</th>

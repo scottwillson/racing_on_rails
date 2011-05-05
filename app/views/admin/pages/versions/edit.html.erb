@@ -6,7 +6,7 @@
     <%= labelled_text :version, :slug, "Slug", @version.slug, {:class => "left"} %>
     <%= labelled_text :version, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
 
-    <% table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
+    <%= table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
       <%= render :partial => "admin/pages/version", 
                  :collection => @version.page.versions.sort_by(&:lock_version).reverse, 
                  :locals => { :selected => @version } %>

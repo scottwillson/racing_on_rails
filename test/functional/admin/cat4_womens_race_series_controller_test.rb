@@ -215,6 +215,6 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     assert_equal(women_cat_4, race.category)
 
     assert_equal(0, race.results.count, "New event race should have no results")
-    assert(assigns["result"].errors.on(:first_name), "Should have errors on first name")
+    assert(assigns["result"].errors[:first_name], "Should have errors on first name")
   end
 end

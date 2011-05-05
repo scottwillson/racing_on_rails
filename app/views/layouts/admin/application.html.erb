@@ -20,7 +20,7 @@
       <div class="frame" id="frame">
         <div class="nav" id="top">
           <h1><%= link_to RacingAssociation.current.name, '/' %></h1>
-          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, :controller => '/' %></div>
+          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, '/' %></div>
         </div>
         <div class="content container">
         <%= render :partial => "shared/tabs" %>

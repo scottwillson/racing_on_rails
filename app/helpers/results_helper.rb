@@ -10,9 +10,9 @@ module ResultsHelper
     end
     
     if result.competition_result?
-      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>".html_safe
     else
-      "<a href=\"/people/#{result.person_id}/#{result.year}\"#{html_options}>#{text}</a>"
+      "<a href=\"/people/#{result.person_id}/#{result.year}\"#{html_options}>#{text}</a>".html_safe
     end
   end
 
@@ -21,9 +21,9 @@ module ResultsHelper
     return text unless result.team_id
 
     if result.team_competition_result?
-      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>".html_safe
     else
-      "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
+      "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>".html_safe
     end
   end
   

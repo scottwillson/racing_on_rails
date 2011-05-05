@@ -1,4 +1,4 @@
-<% table :caption => [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), 
+<%= table :caption => [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), 
          :class => "results",
          :id => "person_#{person.id}" do %>
   <tr>
@@ -39,7 +39,7 @@
   <%- end -%>
 <% end -%>
 
-<% javascript_tag do %>
+<%= javascript_tag do %>
   $(document).ready(function() {
     $('img.disclosure').click(function() {
       toggle_disclosure(this);

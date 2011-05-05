@@ -1,5 +1,5 @@
 <% style_class = nil unless style_class  %>
-<% table :caption => link_to('Results', results_path(:host => RacingAssociation.current.rails_host)), 
+<%= table :caption => link_to('Results', results_path(:host => RacingAssociation.current.rails_host)), 
          :class => style_class || "no_top_margin", 
          :insert_header => true,
          :id => "home_page_results" do %>

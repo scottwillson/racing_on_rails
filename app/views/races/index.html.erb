@@ -1,6 +1,6 @@
 <% @page_title = "Races: #{@category.name}" %>
 
-<% table :caption => @category.name do %>
+<%= table :caption => @category.name do %>
   <tr><th>&nbsp;</th></tr>
   <% for race in @category.races %>
   <tr class="<%= cycle("even", "odd") %>">

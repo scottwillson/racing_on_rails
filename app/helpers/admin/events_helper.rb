@@ -30,7 +30,7 @@ module Admin::EventsHelper
     if event.flyer.blank?
       event.full_name
     else
-      link_to event.full_name, event.flyer
+      link_to(event.full_name, event.flyer).html_safe
     end
   end
   
@@ -46,7 +46,7 @@ module Admin::EventsHelper
         html << " (#{e.friendly_class_name}): "
       end
     end
-    html
+    html.html_safe
   end
   
   # Choose POST or PUT. Not sure why we need this.

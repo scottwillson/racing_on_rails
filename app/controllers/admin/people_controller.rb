@@ -122,7 +122,7 @@ class Admin::PeopleController < Admin::AdminController
             :value => number_value
           )
           unless race_number.errors.empty?
-            @person.errors.add_to_base(race_number.errors.full_messages)
+            @person.errors.add(:base, race_number.errors.full_messages)
           end
         end
       end
@@ -183,7 +183,7 @@ class Admin::PeopleController < Admin::AdminController
               :updated_by => current_person.name
             )
             unless race_number.errors.empty?
-              @person.errors.add_to_base(race_number.errors.full_messages)
+              @person.errors.add(:base, race_number.errors.full_messages)
             end
           end
         end

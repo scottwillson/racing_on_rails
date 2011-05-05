@@ -27,7 +27,7 @@
     <hr class="space" />
 
     <div class="clear span-6 last">
-      <% table :caption => "People", :class => "box-2 clear", :insert_header => true do %>
+      <%= table :caption => "People", :class => "box-2 clear", :insert_header => true do %>
         <%- @team.people.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |person| -%>
         <tr>
           <td><%= link_to person.name, edit_admin_person_path(person) %></td>
@@ -35,27 +35,30 @@
         <%- end -%>
       <% end -%>
   
-      <% table :caption => "Aliases", :class => "box-2", :insert_header => true, :columns => 2 do %>
+      <%= table :caption => "Aliases", :class => "box-2", :insert_header => true, :columns => 2 do %>
         <%- @team.aliases.sort_by {|a| a.name}.each do |name_alias| -%>
         <tr id="alias_<%= name_alias.id %>">
           <td><%= name_alias.name %></td>
           <td>
-            <%= link_to_remote(image_tag("/images/icons/delete.png"), 
+            <%= link_to(image_tag("/images/icons/delete.png"), 
                  :url => { :action => "destroy_alias", :id => @team.id, :alias_id => name_alias.id},
+                 :remote => true,
                  :html => { :class => "image" }) %>
           </td>
         </tr>
         <%- end -%>
       <% end -%>
 
-      <% table :caption => "Historical Names", :class => "box-2 last", :insert_header => true, :columns => 3 do %>
+      <%= table :caption => "Historical Names", :class => "box-2 last", :insert_header => true, :columns => 3 do %>
         <%- @team.names.sort_by(&:year).reverse.each do |name| -%>
         <tr id="name_<%= name.id %>">
           <td><%= name.name %></td>
           <td><%= name.year %></td>
           <td>
-            <%= link_to_remote(image_tag("/images/icons/delete.png"), 
-                 :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id}) %>
+            <%= link_to(image_tag("/images/icons/delete.png"), 
+                 :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id},
+                 :remote => true
+                 ) %>
           </td>
         </tr>
         <%- end -%>

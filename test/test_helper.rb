@@ -9,7 +9,7 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
-
+  
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
 
   # Activate Authlogic. Reset RacingAssociation.
@@ -165,9 +165,9 @@ class ActiveSupport::TestCase
   # Example: test for default layout: assert_layout("application")
   def assert_layout(expected)
     if expected
-      assert_equal("layouts/#{expected}", @response.layout, "layout")
+      assert_equal("layouts/#{expected}", @template.layout, "layout")
     else
-      assert_nil(@response.layout, "no layout")
+      assert_nil(@template.layout, "no layout")
     end
   end
 

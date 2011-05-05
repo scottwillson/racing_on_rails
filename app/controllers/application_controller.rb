@@ -145,7 +145,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless current_person.administrator?
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       flash[:notice] = "You must be an administrator to access this page"
       store_location_and_redirect_to_login
       return false
@@ -174,7 +174,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless administrator? || official?
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       flash[:notice] = "You must be an official or administrator to access this page"
       store_location_and_redirect_to_login
       return false
@@ -235,7 +235,7 @@ class ApplicationController < ActionController::Base
       session[:return_to] = request.referrer
       render :update do |page| page.redirect_to(new_person_session_url(secure_redirect_options)) end
     else
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       redirect_to new_person_session_url(secure_redirect_options)
     end
   end

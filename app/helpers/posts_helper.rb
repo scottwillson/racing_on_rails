@@ -130,5 +130,4 @@ module PostsHelper
       }
     }
   end
-
 end

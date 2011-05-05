@@ -2,7 +2,7 @@
 
 <%= render :partial => "shared/search", :locals => { :name => @name } %>
 
-<% table :class => "people top_margin clear", :id => :people do %>
+<%= table :class => "people top_margin clear", :id => :people do %>
   <tr>
     <th class="icon"/>
     <th class="name">Name</th>
@@ -36,7 +36,7 @@
 
 <%= render :partial => 'import_export' %>
 
-<% javascript_tag do %>
+<%= javascript_tag do %>
   $(document).ready(function() {
   <%- @people.each do |person| -%>
     $(<%= "'#person_#{person.id}'" %>).draggable({ 

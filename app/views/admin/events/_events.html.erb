@@ -6,15 +6,15 @@
      { :class => "image" }) if @event.has_results_including_children? }  
   </div>
 } %>
-<% table :caption => nav_caption, :class => "box-3 last", :columns => 3, :insert_header => true do %>
+<%= table :caption => nav_caption, :class => "box-3 last", :columns => 3, :insert_header => true do %>
   <%- @event.children_and_child_competitions.each do |single_day_event| -%>
   <tr id="event_<%= single_day_event.id %>_row">
     <td class='nowrap'><%= link_to single_day_event.date.strftime('%A, %B %d'), edit_admin_event_path(single_day_event) %></td>
     <td class='link'><%= link_to single_day_event.name, edit_admin_event_path(single_day_event) %></td>
-    <td class="right"><%= link_to_remote(image_tag('/images/icons/delete.png'),
+    <td class="right"><%= link_to(image_tag('/images/icons/delete.png'),
+              :remote => true,
               :url => admin_event_path(single_day_event),
               :html => { :class => "image", :id => "destroy_event_#{single_day_event.id}", :title => "Delete event" },
-              :complete => evaluate_remote_response, 
               :method => :delete) if administrator?
     %></td>
   </tr>
@@ -26,7 +26,7 @@
       <% end -%>
     </td>
     <td class='link'></td>
-    <td class="right"><%= link_to_remote(image_tag("/images/icons/add.png"),
+    <td class="right"><%= link_to(image_tag("/images/icons/add.png"), :remote => true,
               :url => new_admin_event_path(:event => { :parent_id => @event.id, :type => @event.is_a?(MultiDayEvent) ? "SingleDayEvent" : "Event" }),
               :html => { :class => "image", :id => "new_event" }, 
               :method => "post") if administrator? && !@event.new_record?

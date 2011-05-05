@@ -1,10 +1,11 @@
-<% table :caption => "Aliases", :class => "box-2 last aliases", :insert_header => true, :columns => 2 do %>
+<%= table :caption => "Aliases", :class => "box-2 last aliases", :insert_header => true, :columns => 2 do %>
   <%- for name_alias in @person.aliases -%>
   <tr id="alias_<%= name_alias.id %>">
     <td><%= name_alias.name %></td>
     <td>
-      <%= link_to_remote(image_tag('/images/icons/delete.png'), 
+      <%= link_to(image_tag('/images/icons/delete.png'), 
            :url => { :action => "destroy_alias", :id => @person.id, :alias_id => name_alias.id },
+           :remote => true,
            :html => { :class => "image" }) %>
     </td>
   </tr>
@@ -17,15 +18,12 @@
 <% end -%>
 
 <% unless @person.names.empty? -%>
-<% table :caption => "Names", :class => "box-2 last names", :insert_header => true, :columns => 3 do %>
+<%= table :caption => "Names", :class => "box-2 last names", :insert_header => true, :columns => 3 do %>
   <%- @person.names.each do |name| -%>
   <tr id="name_<%= name.id %>">
     <td><%= name.name %></td>
     <td class="right"><%= name.year %></td>
     <td>
-      <%#= link_to_remote(image_tag('/images/icons/delete.png'), 
-           :url => { :action => "destroy_alias", :id => @person.id, :alias_id => name_alias.id },
-           :html => { :class => "image" }) %>
     </td>
   </tr>
   <%- end -%>

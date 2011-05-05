@@ -3,31 +3,32 @@ RacingOnRails::Application.routes.draw do
     resources :articles
     resources :article_categories
     resources :categories do
-
-
       resources :children
     end
     resources :events do
-
-
+      collection do
+        post :propagate
+        post :upload_schedule
+      end
+      member do
+        post :upload
+      end
       resources :races do
         collection do
           post :propagate
         end
-
-
+        member do
+          delete :destroy_races
+        end
       end
     end
     resources :first_aid_providers
     resources :multi_day_events
-    resources :pages
     namespace :pages do
       resources :versions do
-
         member do
           get :revert
         end
-
       end
     end
     resources :people do
@@ -41,34 +42,30 @@ RacingOnRails::Application.routes.draw do
         get :card
         post :toggle_member
       end
-
     end
     resources :races do
-
       member do
         post :create_result
         delete :destroy_result
       end
-
     end
     resources :results
     resources :series
     resources :single_day_events
     resources :teams do
-
       member do
         post :toggle_member
       end
-
     end
-    resources :people
     resources :velodromes
     resources :weekly_series
   end
 
   resources :articles
   resources :article_categories
-  resources :categories
+  resources :categories do
+    resources :races
+  end
   match ':controller/:id/aliases/:alias_id/destroy' => '#destroy_alias', :constraints => { :id => /\d+/ }
   match '/admin/results/:id/scores' => 'admin/results#scores'
   match '/admin/racers' => 'admin/racers#index'
@@ -87,19 +84,13 @@ RacingOnRails::Application.routes.draw do
   match '/events/:event_id/teams/:team_id/results' => 'results#team_event'
   match '/events/:event_id/teams/:team_id/results/:race_id' => 'results#team_event'
   match '/events/:event_id' => 'results#event'
+
   resources :events do
-
-
     resources :results
     resources :people do
-
-
       resources :results
     end
-
     resources :teams do
-
-
       resources :results
     end
   end
@@ -108,12 +99,11 @@ RacingOnRails::Application.routes.draw do
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman/:year' => 'ironman#index', :as => :ironman
   match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists
-  resources :update_requests do
 
+  resources :update_requests do
     member do
       get :confirm
     end
-
   end
 
   match '/oregon_cup/rules' => 'oregon_cup#rules'
