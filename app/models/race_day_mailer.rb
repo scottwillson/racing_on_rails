@@ -14,8 +14,5 @@ class RaceDayMailer < ActionMailer::Base
     body "See attached file"
 
     @people = people    
-    attachment "text/plain" do |a|
-      a.body = render(:template => "members_export")
-    end
   end
 end
