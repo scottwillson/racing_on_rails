@@ -4,6 +4,8 @@ development:
   username: ror_development
   host: localhost
   encoding: utf8
+  reconnect: false
+  pool: 5
 
 acceptance:
   adapter: mysql2
@@ -11,6 +13,8 @@ acceptance:
   username: ror_test
   host: localhost
   encoding: utf8
+  reconnect: false
+  pool: 5
 
 test:
   adapter: mysql2
@@ -18,6 +22,8 @@ test:
   username: ror_test
   host: localhost
   encoding: utf8
+  reconnect: false
+  pool: 5
 
 production:
   adapter: mysql2
@@ -25,3 +31,5 @@ production:
   username: root
   encoding: utf8
   host: localhost
+  reconnect: false
+  pool: 5
