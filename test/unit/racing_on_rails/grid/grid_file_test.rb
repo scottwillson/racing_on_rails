@@ -11,7 +11,7 @@ module RacingOnRails
       end
 
       def test_new_file
-        file = File.new("#{File.dirname(__FILE__)}/../../../test/files/results/tabor.txt")
+        file = File.new("#{File.dirname(__FILE__)}/../../../../test/files/results/tabor.txt")
         grid_file = GridFile.new(file)
         assert_equal(35, grid_file.rows.size, "grid_file.rows.size")
         assert_equal("Dills", grid_file[20][3], "grid_file[20][3]")
