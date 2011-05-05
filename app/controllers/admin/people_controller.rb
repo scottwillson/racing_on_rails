@@ -320,10 +320,7 @@ class Admin::PeopleController < Admin::AdminController
   def destroy
     @person = Person.find(params[:id])
     @person.destroy
-    respond_to do |format|
-      format.html {redirect_to admin_people_path}
-      format.js
-    end
+    redirect_to admin_people_path
     expire_cache
   end
 
@@ -358,7 +355,10 @@ class Admin::PeopleController < Admin::AdminController
     @year = params[:year] || current_date.year
     if params[:id]
       @person = Person.find(params[:id])
-      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @race_numbers = RaceNumber.all(
+        :conditions => [ 'person_id=? and year=?', @person.id, @year ], 
+        :order => 'number_issuer_id, discipline_id'
+      )
     else
       @person = Person.new
       @race_numbers = []
