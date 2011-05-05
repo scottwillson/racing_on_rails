@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   # FIXME include ExceptionNotifiable
-  # FIXME include SentientController
+  include SentientController
   include SslRequirement
 
   helper_method :current_person_session, :current_person, :secure_redirect_options
