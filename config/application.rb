@@ -6,8 +6,13 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 module RacingOnRails
   class Application < Rails::Application
     config.autoload_paths += %W( 
-      #{config.root}/app/rack #{config.root}/app/models/competitions #{config.root}/app/models/observers #{config.root}/app/pdfs #{config.root}/lib/racing_on_rails 
-       #{config.root}/lib/results  #{config.root}/lib
+      #{config.root}/app/rack 
+      #{config.root}/app/models/competitions 
+      #{config.root}/app/models/observers 
+      #{config.root}/app/pdfs #{config.root}/lib/racing_on_rails 
+      #{config.root}/lib/results
+      #{config.root}/lib
+      #{config.root}/lib/sentient_user
     )
     
     config.session_store :key, "_racing_on_rails_session"
