@@ -11,19 +11,18 @@ RacingOnRails::Application.routes.draw do
         post :upload_schedule
       end
       member do
+        delete :destroy_races
         post :upload
       end
       resources :races do
         collection do
           post :propagate
         end
-        member do
-          delete :destroy_races
-        end
       end
     end
     resources :first_aid_providers
     resources :multi_day_events
+    resources :pages
     namespace :pages do
       resources :versions do
         member do
@@ -40,8 +39,10 @@ RacingOnRails::Application.routes.draw do
       end
       member do
         get :card
+        post :number_year_changed
         post :toggle_member
       end
+      resources :results
     end
     resources :races do
       member do
@@ -50,6 +51,7 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :results
+    
     resources :series
     resources :single_day_events
     resources :teams do
