@@ -6,6 +6,13 @@ GIT
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
 
+GIT
+  remote: https://github.com/dhh/turn.git
+  revision: 7431ec611f28f68fd8fc06ad8cc2e9ed2de81cc1
+  specs:
+    turn (0.8.1)
+      ansi (>= 1.2.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -37,6 +44,7 @@ GEM
       activemodel (= 3.0.7)
       activesupport (= 3.0.7)
     activesupport (3.0.7)
+    ansi (1.2.4)
     arel (2.0.9)
     authlogic (3.0.2)
       activerecord (~> 3.0.7)
@@ -81,7 +89,6 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
-    sentient_user (0.3.2)
     tabular (0.0.7)
     thor (0.14.6)
     timecop (0.3.5)
@@ -89,12 +96,14 @@ GEM
       polyglot (>= 0.3.1)
     ttfunk (1.0.1)
     tzinfo (0.3.27)
+    will_paginate (2.3.15)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   Ascii85
+  ansi
   authlogic
   fastercsv
   mocha
@@ -105,7 +114,8 @@ DEPENDENCIES
   prawn-core
   rack (~> 1.2.1)
   rails
-  sentient_user
   tabular (> 0.0.5)
   timecop
+  turn!
   vestal_versions!
+  will_paginate

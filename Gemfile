@@ -12,10 +12,12 @@ gem 'Ascii85', :require => 'ascii85'
 gem 'prawn'
 gem 'prawn-core', :require => 'prawn/core'
 gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
-gem 'sentient_user'
 gem 'newrelic_rpm'
+gem "will_paginate"
 
 group :test do
+  gem "ansi"
   gem "mocha"
   gem "timecop"
+  gem "turn", :git => "https://github.com/dhh/turn.git"
 end
