@@ -1,7 +1,7 @@
 # Build navigational tabs as HTML table
 module TabsHelper
   def tabs(select_current_page = true)
-    tabs = Tabs.new(@controller)
+    tabs = Tabs.new(controller)
     yield tabs
     tabs.to_html select_current_page
   end
@@ -9,9 +9,11 @@ module TabsHelper
   class Tabs
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::UrlHelper
+    
+    attr_accessor :controller
 
     def initialize(controller)
-      @controller = controller
+      self.controller = controller
       @tabs = []
     end
 
@@ -90,16 +92,12 @@ HTML
     end
     
     # FIXME
-    def controller
-      @controller
-    end
-    
     def _routes
-      @controller._routes
+      self.controller._routes
     end
     
     def request
-      @controller.request
+      self.controller.request
     end
   end
   
