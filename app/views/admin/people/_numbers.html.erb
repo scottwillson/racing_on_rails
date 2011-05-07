@@ -4,7 +4,9 @@
          :insert_header => true, 
          :columns => 1 do %>
   <tr>
-    <td class="number_year"><select name='number_year' id='number_year'><%= options_for_select years, year %></select></td>
+    <td class="number_year">
+      <select name='number_year' data-person-id="<%= person.id %>" id='number_year'><%= options_for_select years, year %></select>
+    </td>
   </tr>
   <% if RacingAssociation.current.show_license %>
   <tr>
@@ -50,9 +52,3 @@
     </td>
   </tr>
 <% end -%>
-
-<%= observe_field(
-  'number_year', 
-  :url => {:action => 'number_year_changed', :id => @person.id}, :with => 'year',
-  :update => 'numbers_wrapper'
-) %>

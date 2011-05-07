@@ -163,19 +163,12 @@
   </div>
 </div>
 
-<%= if (!@event.promoter || @event.new_record?) && administrator?
-      update_page_tag { |page| page.hide(:edit_promoter_link) }
-    end -%>
+<%=
+  if (!@event.promoter || @event.new_record?) && administrator?
+    update_page_tag { |page| page.hide(:edit_promoter_link) }
+  end
+-%>
 
-<% if !@event.new_record? && administrator? -%>
-<% javascript_tag do %>
-  $('event_promoter_id').change(function () {
-    if ($('event_promoter_id').val() == '') {
-      $('edit_promoter_link').hide();
-    }
-    else {
-      $('edit_promoter_link').show();
-    }
-  });
-<% end -%>
+<% content_for :javascript_include_tag do %>
+  <%= javascript_include_tag "events" %>
 <% end -%>

@@ -50,9 +50,7 @@
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>
         <% form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form", :style => "clear" do %>
           <div>
-            <%= file_field_tag "results_file", 
-              :style => "width: 250px;", 
-              :onchange => "$('upload_form_label').hide(); $('upload_form').hide(); $('upload_progress').show(); $('upload_form').submit();" %>
+            <%= file_field_tag "results_file",:style => "width: 250px;" %>
           </div>
         <% end -%>
         <div id="upload_progress" style="display: none;"><em>Importing Results</em>&nbsp;<%= image_tag "icons/spinner.gif" %></div>

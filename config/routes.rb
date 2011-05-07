@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
                                               :duplicates => :get, 
                                               :no_cards => :get, 
                                               :preview_import => :get },
-                             :member => { :card => :get, :toggle_member => :post },
+                             :member => { :card => :get, :number_year_changed => :post, :toggle_member => :post },
                              :has_many => :results
     admin.resources :races, :has_many => :results, :member => { :create_result => :post, :destroy_result => :delete }
     admin.resources :results
