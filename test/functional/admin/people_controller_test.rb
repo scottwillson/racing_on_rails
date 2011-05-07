@@ -13,7 +13,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_not_logged_in_index
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_nil(@request.session["person"], "No person in session")
   end
   
@@ -27,7 +27,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_index
     get(:index)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_layout("admin/application")
     assert_not_nil(assigns["people"], "Should assign people")
@@ -37,7 +37,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_find
     get(:index, :name => 'weav')
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')
@@ -47,7 +47,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_find_by_number
     get(:index, :name => '102')
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal([people(:tonkin)], assigns['people'], 'Search for 102 should find Tonkin')
@@ -57,7 +57,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_find_nothing
     get(:index, :name => 's7dfnacs89danfx')
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(0, assigns['people'].size, "Should find no people")
@@ -65,7 +65,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_find_empty_name
     get(:index, :name => '')
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(0, assigns['people'].size, "Search for '' should find no people")
@@ -78,7 +78,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
       Person.create(:name => "Test Person #{i}")
     end
     get(:index, :name => 'Test')
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/index")
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal(RacingAssociation.current.search_results_limit, assigns['people'].size, "Search for '' should find all people")
@@ -89,26 +89,22 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_blank_name
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => "",
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
+        :value => ""
+    assert_response :success
     person = assigns["person"]
-    assert_not_nil(person, "Should assign person")
-    assert(person.errors.empty?, "Should have no errors, but had: #{person.errors.full_messages}")
-    assert_template(nil)
-    assert_equal(molly, assigns['person'], 'Person')
+    assert_equal molly, person, "@person"
+    assert person.errors.empty?, "Should have no errors, but had: #{person.errors.full_messages.join(', ')}"
     molly.reload
-    assert_equal('', molly.first_name, 'Person first_name after update')
-    assert_equal('', molly.last_name, 'Person last_name after update')
+    assert_equal "", molly.first_name, "Person first_name after update"
+    assert_equal "", molly.last_name, "Person last_name after update"
   end
 
   def test_index_with_cookie
     @request.cookies["person_name"] = "weaver"
     get(:index)
-    assert_response(:success)
+    assert_response :success
     assert_not_nil(assigns["people"], "Should assign people")
     assert_equal("weaver", assigns["name"], "Should assign name")
     assert_equal(1, assigns["people"].size, "Should have no people")
@@ -116,13 +112,11 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
   def test_update_name
     molly = people(:molly)
-    xhr :post, :set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => "Mollie Cameron",
-        :editorId => "person_#{molly.id}_name"
+        :value => "Mollie Cameron"
     assert_response :success
-    assert_template nil
-    assert_equal "Mollie Cameron", @response.body
+    assert @response.body["Mollie Cameron"]
     molly.reload
     assert_equal "Mollie", molly.first_name, "Person first_name after update"
     assert_equal "Cameron", molly.last_name, "Person last_name after update"
@@ -130,13 +124,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_update_same_name
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => "Molly Cameron",
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
+        :value => "Molly Cameron"
+    assert_response :success
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(molly, assigns['person'], 'Person')
     molly.reload
@@ -146,13 +137,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_update_same_name_different_case
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => "molly cameron",
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
+        :value => "molly cameron"
+    assert_response :success
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(molly, assigns['person'], 'Person')
     molly.reload
@@ -163,12 +151,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_update_to_existing_name
     # Should ask to merge
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => "Erik Tonkin",
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
+        :value => "Erik Tonkin"
+    assert_response :success
     assert_template("admin/people/_merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(molly, assigns['person'], 'Person')
@@ -183,13 +169,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(erik_alias, 'Alias')
 
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => 'Eric Tonkin',
-        :editorId => "person_#tonkin.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
+        :value => 'Eric Tonkin'
+    assert_response :success
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(tonkin, assigns['person'], 'Person')
     tonkin.reload
@@ -208,13 +191,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(mollie_alias, 'Alias')
 
     molly = people(:molly)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => 'mollie cameron',
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
-    assert_template(nil)
+        :value => 'mollie cameron'
+    assert_response :success
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(molly, assigns['person'], 'Person')
     molly.reload
@@ -228,12 +208,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_update_to_other_person_existing_alias
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => "Mollie Cameron",
-        :editorId => "person_#tonkin.id}_name"
-    )
-    assert_response(:success)
+        :value => "Mollie Cameron"
+    assert_response :success
     assert_template("admin/people/_merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(tonkin, assigns['person'], 'Person')
@@ -252,12 +230,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(1, Person.count(:conditions => ['first_name = ? and last_name = ?', 'Erik', 'Tonkin']), 'Eriks in database')
     assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
 
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => "Mollie Cameron",
-        :editorId => "person_#tonkin.id}_name"
-    )
-    assert_response(:success)
+        :value => "Mollie Cameron"
+    assert_response :success
     assert_template("admin/people/_merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(tonkin, assigns['person'], 'Person')
@@ -281,7 +257,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 
     post(:destroy_number, :id => race_number.to_param)
-    assert_response(:success)
+    assert_response :success
     
     assert_raise(ActiveRecord::RecordNotFound, "Should delete RaceNumber") {RaceNumber.find(race_number.id)}
   end
@@ -292,22 +268,20 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     eric_tonkin_alias = tonkin.aliases.first
     
     post(:destroy_alias, :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s)
-    assert_response(:success)
+    assert_response :success
     assert_equal(0, tonkin.aliases(true).count, 'Tonkin aliases after destruction')
   end
   
   def test_merge?
     molly = people(:molly)
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => molly.name,
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
+        :value => molly.name
+    assert_response :success
     assert_equal(tonkin, assigns['person'], 'Person')
     person = assigns['person']
-    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages}")
+    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
     assert_template("admin/people/_merge_confirm")
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
     assert_equal([molly], assigns['existing_people'], 'existing_people')
@@ -332,11 +306,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     post(:set_person_team_name, 
         :id => molly.to_param,
-        :value => 'Velo Slop',
-        :editorId => "person_#{molly.id}_team_name"
+        :value => "Velo Slop"
     )
-    assert_response(:success)
-    assert_template(nil)
+    assert_response :success
     molly.reload
     assert_equal('Velo Slop', molly.team_name, 'Person team name after update')
     assert_not_nil(Team.find_by_name('Velo Slop'), 'New team Velo Slop should be in database')
@@ -347,11 +319,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
     post(:set_person_team_name, 
         :id => molly.to_param,
-        :value => 'Gentle Lovers',
-        :editorId => "person_#{molly.id}_team_name"
+        :value => 'Gentle Lovers'
     )
-    assert_response(:success)
-    assert_template(nil)
+    assert_response :success
     molly.reload
     assert_equal('Gentle Lovers', molly.team_name, 'Person team name after update')
     assert_equal(Team.find_by_name('Gentle Lovers'), molly.team, 'Molly should be on Gentle Lovers')
@@ -362,11 +332,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(Team.find_by_name('Vanilla'), molly.team, 'Molly should be on Vanilla')
     post(:set_person_team_name, 
         :id => molly.to_param,
-        :value => '',
-        :editorId => "person_#{molly.id}_team_name"
+        :value => ''
     )
-    assert_response(:success)
-    assert_template(nil)
+    assert_response :success
     molly.reload
     assert_equal('', molly.team_name, 'Person team name after update')
     assert_nil(molly.team, 'Molly should have no team')
@@ -376,14 +344,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     assert_equal(true, molly.member, 'member before update')
     post(:toggle_member, :id => molly.to_param)
-    assert_response(:success)
+    assert_response :success
     assert_template("shared/_member")
     molly.reload
     assert_equal(false, molly.member, 'member after update')
 
     molly = people(:molly)
     post(:toggle_member, :id => molly.to_param)
-    assert_response(:success)
+    assert_response :success
     assert_template("shared/_member")
     molly.reload
     assert_equal(true, molly.member, 'member after second update')
@@ -391,7 +359,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_cancel_in_place_edit
     xhr :post, :cancel_in_place_edit, :id => people(:molly)
-    assert_response(:success)
+    assert_response :success
     assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
   end
   
@@ -399,16 +367,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     molly_with_different_road_number = Person.create(:name => 'Molly Cameron', :road_number => '987123')
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => molly.name,
-        :editorId => "person_#tonkin.id}_name"
-    )
-    assert_response(:success)
-    assert_equal(tonkin, assigns['person'], 'Person')
+        :value => molly.name
+    assert_response :success
+    assert_equal tonkin, assigns['person'], 'Person'
     person = assigns['person']
-    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages}")
-    assert_template("admin/people/_merge_confirm")
+    assert person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}"
+    assert_template "admin/people/_merge_confirm", "template"
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
     existing_people = assigns['existing_people'].sort {|x, y| x.id <=> y.id}
     assert_equal([molly, molly_with_different_road_number], existing_people, 'existing_people')
@@ -420,19 +386,17 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly.save!
     molly_with_different_cross_number = Person.create(:name => 'Molly Cameron', :ccx_number => '810', :road_number => '1009')
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => tonkin.to_param,
-        :value => molly.name,
-        :editorId => "person_#tonkin.id}_name"
-    )
-    assert_response(:success)
+        :value => molly.name
+    assert_response :success
     assert_equal(tonkin, assigns['person'], 'Person')
     person = assigns['person']
-    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages}")
+    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
     assert_template("admin/people/_merge_confirm")
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
-    existing_people = assigns['existing_people'].collect do |person|
-      "#{person.name} ##{person.id}"
+    existing_people = assigns['existing_people'].collect do |p|
+      "#{p.name} ##{p.id}"
     end
     existing_people = existing_people.join(', ')
     assert(assigns['existing_people'].include?(molly), "existing_people should include Molly ##{molly.id}, but has #{existing_people}")
@@ -443,16 +407,13 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_dupes_merge_alias?
     molly = people(:molly)
     tonkin = people(:tonkin)
-    post(:set_person_name, 
+    xhr :put, :set_person_name, 
         :id => molly.to_param,
-        :value => 'Eric Tonkin',
-        :editorId => "person_#{molly.id}_name"
-    )
-    assert_response(:success)
+        :value => 'Eric Tonkin'
+    assert_response :success, "success response"
     assert_equal(molly, assigns['person'], 'Person')
     person = assigns['person']
-    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages}")
-    assert_template("admin/people/_merge_confirm")
+    assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
     assert_equal('Eric Tonkin', assigns['person'].name, 'Unsaved Molly name should be Eric Tonkin alias')
     assert_equal([tonkin], assigns['existing_people'], 'existing_people')
   end
@@ -461,13 +422,13 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly = people(:molly)
     tonkin = people(:tonkin)
     tonkin_with_different_road_number = Person.create(:name => 'Erik Tonkin', :road_number => 'YYZ')
-    assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages}")
+    assert(tonkin_with_different_road_number.valid?, "tonkin_with_different_road_number not valid: #{tonkin_with_different_road_number.errors.full_messages.join(', ')}")
     assert_equal(tonkin_with_different_road_number.new_record?, false, 'tonkin_with_different_road_number should be saved')
     old_id = tonkin.id
     assert_equal(2, Person.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
     get(:merge, :id => tonkin.to_param, :target_id => molly.id)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/merge")
 
     assert(Person.find_all_by_name('Molly Cameron'), 'Molly should be in database')
@@ -477,7 +438,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_new
     get(:new)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/edit")
     assert_not_nil(assigns["person"], "Should assign person as 'person'")
     assert_not_nil(assigns["race_numbers"], "Should assign person's number for current year as 'race_numbers'")
@@ -487,7 +448,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     alice = people(:alice)
 
     get(:edit, :id => alice.to_param)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/edit")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(alice, assigns['person'], 'Should assign Alice to person')
@@ -500,7 +461,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     alice.save!
 
     get(:edit, :id => alice.to_param)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/edit")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(alice, assigns['person'], 'Should assign Alice to person')
@@ -599,7 +560,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     post :create,  :person => { :login => "", :password_confirmation => "", :password => "", :team_name => "", 
                                 :first_name => "Henry", :last_name => "David", :license => "" }, :number_issuer_id => [ { "1" => nil } ]
     assert_not_nil assigns(:person), "@person"
-    assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages}"
+    assert assigns(:person).errors.empty?, "Did no expect @person errors: #{assigns(:person).errors.full_messages.join(', ')}"
     assert_redirected_to edit_admin_person_path(assigns(:person))
   end
     
@@ -704,7 +665,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
          :id => person.to_param.to_s,
          :year => '2010'
     )
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/_numbers")
     assert_not_nil(assigns["race_numbers"], "Should assign 'race_numbers'")
     assert_not_nil(assigns["year"], "Should assign today's year as 'year'")
@@ -818,7 +779,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_duplicates
     @request.session[:duplicates] = []
     get(:duplicates)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/duplicates")
   end
   
@@ -858,7 +819,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
     get(:card, :format => "pdf", :id => tonkin.to_param)
 
-    assert_response(:success)
+    assert_response :success
     assert_equal(tonkin, assigns['person'], 'Should assign person')
     tonkin.reload
     assert(!tonkin.print_card?, 'Tonkin.print_card? after printing')
@@ -871,7 +832,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   
   def test_no_cards
     get(:no_cards)
-    assert_response(:success)
+    assert_response :success
     assert_template("admin/people/no_cards")
     assert_layout("admin/application")
   end
@@ -879,13 +840,15 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_print_cards
     tonkin = people(:tonkin)
     tonkin.print_card = true
+    tonkin.ccx_category = "Clydesdale"
+    tonkin.mtb_category = "Beginner"
     tonkin.save!
     assert !tonkin.membership_card?, "Tonkin.membership_card? before printing"
 
     get(:cards, :format => "pdf")
 
-    assert_response(:success)
-    assert_template(nil)
+    assert_response :success
+    assert_template("")
     assert_layout(nil)
     assert_equal(1, assigns['people'].size, 'Should assign people')
     tonkin.reload
@@ -901,8 +864,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 
     get(:cards, :format => "pdf")
 
-    assert_response(:success)
-    assert_template(nil)
+    assert_response :success
+    assert_template("")
     assert_layout(nil)
     assert_equal(4, assigns['people'].size, 'Should assign people')
     people.each do |person|
@@ -927,7 +890,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     get(:index, :format => 'xls', :include => 'all')
 
-    assert_response(:success)
+    assert_response :success
     today = RacingAssociation.current.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
@@ -947,13 +910,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
 7123811	Erik	Tonkin	Kona	01/01/1999	12/31/2010	0	0		0	01/01/1980		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	01/13/2010  	01/13/2010
 	Ryan	Weaver	Gentle Lovers	01/01/1999	12/31/2010	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	01/13/2010  	01/13/2010
 }
+    # FIXME
     # assert_equal expected_body, @response.body, "Excel contents"
   end
   
   def test_export_to_excel_with_date
     get(:index, :format => 'xls', :include => 'all', :date => "2008-12-31")
 
-    assert_response(:success)
+    assert_response :success
     today = Date.today
     assert_equal("filename=\"people_2008_12_31.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
@@ -965,7 +929,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_export_members_only_to_excel
     get(:index, :format => 'xls', :include => 'members_only')
 
-    assert_response(:success)
+    assert_response :success
     today = RacingAssociation.current.effective_today
     assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
@@ -979,7 +943,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     get :index, :format => 'xls', :include => 'members_only', :excel_layout => "scoring_sheet"
 
-    assert_response(:success)
+    assert_response :success
     today = RacingAssociation.current.effective_today
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
@@ -995,7 +959,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     }
     get(:index, :format => 'ppl', :include => 'all')
 
-    assert_response(:success)
+    assert_response :success
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     # FIXME use send_data
@@ -1005,7 +969,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_export_members_only_to_finish_lynx
     get(:index, :format => 'ppl', :include => 'members_only')
 
-    assert_response(:success)
+    assert_response :success
     assert_equal("filename=\"lynx.ppl\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     # FIXME use send_data
@@ -1015,7 +979,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_export_members_only_to_scoring_sheet
     get(:index, :format => 'xls', :include => 'members_only', :excel_layout => 'scoring_sheet')
 
-    assert_response(:success)
+    assert_response :success
     assert_equal("filename=\"scoring_sheet.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     # FIXME use send_data
@@ -1025,7 +989,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
   def test_export_print_cards_to_endicia
     get(:index, :format => "xls", :include => "print_cards", :excel_layout => "endicia")
 
-    assert_response(:success)
+    assert_response :success
     assert_equal("filename=\"print_cards.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
     assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers['Content-Type'], 'Should set content to Excel')
     # FIXME use send_data
@@ -1060,7 +1024,8 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     
     assert_nil(flash['warn'], "Should not have flash['warn'], but has: #{flash['warn']}")
     assert_not_nil(assigns["person"], "@person")
-    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join)
+    assert(assigns["person"].errors.empty?, assigns["person"].errors.full_messages.join
+)
 
     assert_redirected_to(edit_admin_person_path(candi_murray))
     

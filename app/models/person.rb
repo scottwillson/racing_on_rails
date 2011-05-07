@@ -315,6 +315,10 @@ class Person < ActiveRecord::Base
     end
   end
   
+  def name_was
+    @name_was ||= Person.full_name(first_name_was, last_name_was)
+  end
+
   # Cannot have promoters with duplicate contact information
   def unique_info
     person = Person.find_by_info(name, email, home_phone)

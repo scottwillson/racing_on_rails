@@ -125,6 +125,7 @@ p.flash_message, p.message, div.flash_message, div.message {
 
 #notice_span, .notice, .notice_span
 {
+  background-position: 0px 2px;
   background-image: url(/images/icons/information.png);
   background-repeat: no-repeat;
   padding-bottom: 2px;

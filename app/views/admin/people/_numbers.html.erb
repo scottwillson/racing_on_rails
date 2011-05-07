@@ -4,7 +4,9 @@
          :insert_header => true, 
          :columns => 1 do %>
   <tr>
-    <td class="number_year"><select name='number_year' id='number_year'><%= options_for_select years, year %></select></td>
+    <td class="number_year">
+      <select name='number_year' data-person-id="<%= person.id %>" id='number_year'><%= options_for_select years, year %></select>
+    </td>
   </tr>
   <% if RacingAssociation.current.show_license %>
   <tr>
@@ -52,13 +54,3 @@
     </td>
   </tr>
 <% end -%>
-
-<%= javascript_tag do %>
-  jQuery(function($) {
-    $("#number_year").change(function() {
-      $.post('<%= number_year_changed_admin_person_path(@person) %>', { year: $('#number_year').val() }, function(data) {
-        $("#numbers_wrapper").html(data);
-      });
-    });
-  })
-<% end unless @person.new_record? -%>

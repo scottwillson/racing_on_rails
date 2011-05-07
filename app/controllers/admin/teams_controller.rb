@@ -71,25 +71,22 @@ class Admin::TeamsController < Admin::AdminController
   def set_team_name
     @team = Team.find(params[:id])
     new_name = params[:value]
-    original_name = @team.name
     @team.name = new_name
 
     teams_with_same_name = @team.teams_with_same_name
     unless teams_with_same_name.empty?
-      return merge?(original_name, teams_with_same_name, @team)
+      return merge?(@team.name_was, teams_with_same_name, @team)
     end
     
     # Want validation
     @team.name = params[:value]
     if @team.save
       expire_cache
-      render :update do |page|
-        page.replace_html("team_#{@team.id}_name", @team.name)
-      end
+      render :text => @team.name
     else
       render :update do |page|
         page.alert(@team.errors.full_messages)
-        page.replace_html("team_#{@team.id}_name", original_name)
+        render :text => @team.name_was
       end
     end
   end
