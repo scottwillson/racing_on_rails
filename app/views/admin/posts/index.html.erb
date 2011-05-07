@@ -12,7 +12,7 @@
   <%= render @posts %>
 <% end -%>
 
-<%= will_paginate(@posts) if @posts.any? %>
+<%= will_paginate(@posts) if @posts.present? %>
 
 <div class="buttons container">
   <div class="span-3">

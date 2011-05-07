@@ -193,8 +193,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "New Category", assigns(:race).name, "@race name"
-    assert !assigns(:race).new_record?, "@race should created"
-    assert_template "admin/races/create.js.rjs"
+    assert !assigns(:race).new_record?, "@race should be created"
+    assert_template "admin/races/create", "template"
   end
 
   def test_create_xhr_promoter
@@ -204,8 +204,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "New Category", assigns(:race).name, "@race name"
-    assert !assigns(:race).new_record?, "@race should created"
-    assert_template "admin/races/create.js.rjs"
+    assert !assigns(:race).new_record?, "@race should be created"
+    assert_template "admin/races/create", "template"
   end
   
   def test_set_race_category_name
@@ -230,6 +230,6 @@ class Admin::RacesControllerTest < ActionController::TestCase
     event = events(:banana_belt_1)
     xhr :post, :propagate, :event_id => event.to_param
     assert_response :success
-    assert_template "admin/races/propagate.js.rjs"
+    assert_template "admin/races/propagate", "template"
   end
 end

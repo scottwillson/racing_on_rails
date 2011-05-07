@@ -16,9 +16,6 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   end
 
   def test_index
-    opts = {:controller => "admin/velodromes", :action => "index"}
-    assert_routing("/admin/velodromes", opts)
-    
     get(:index)
     assert_response(:success)
     assert_template("admin/velodromes/index")

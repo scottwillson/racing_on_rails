@@ -1,7 +1,7 @@
 <td></td>
 <% if @existing_people.size == 1 %>
 <td>
-  <%= form_remote_tag(:url => {:action => 'merge', :id => @person.id, :target_id => @existing_people.first.id }, :html => { :id => "merge_form" } ) %>
+  <%= form_tag(:url => {:action => 'merge', :id => @person.id, :target_id => @existing_people.first.id }, :html => { :id => "merge_form" }, :remote => true ) %>
     <div style="padding-top: 4px; width: 300px; white-space: normal;">
       <%= @existing_people.first.name %> <%= aka(@existing_people.first) %> already exists.
     </div>
@@ -25,7 +25,7 @@
 <% else %>
 
 <td>
-  <%= form_remote_tag(:url => {:action => 'merge'}, :html => { :id => "merge_form" } ) %>
+  <%= form_tag(:url => {:action => 'merge'}, :html => { :id => "merge_form" }, :remote => true ) %>
     <div style="padding-top: 4px; width: 300px; white-space: normal;">
       <%= @existing_people.first.name %> already exists.
     </div>

@@ -9,7 +9,7 @@ class EventsTest < ActionController::IntegrationTest
     get "/events.xml"
     assert_response :success
     xml = Hash.from_xml(@response.body)
-    assert_not_nil xml["records"], "Should have :records root element"
+    assert_not_nil xml["records"], "Should have :records root element in #{xml}"
 
     get "/events.json"
     assert_response :success

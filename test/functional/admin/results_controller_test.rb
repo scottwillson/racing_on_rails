@@ -341,7 +341,7 @@ class Admin::ResultsControllerTest < ActionController::TestCase
   def test_results
     weaver = people(:weaver)
 
-    post(:results, :id => weaver.id)
+    post(:results, :person_id => weaver.id)
     
     assert_response(:success)
     assert_template('admin/results/_person')

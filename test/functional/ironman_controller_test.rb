@@ -13,11 +13,6 @@ class IronmanControllerTest < ActionController::TestCase
     Ironman.calculate!(2004)
     Ironman.calculate!
 
-    opts = {:controller => "ironman", :action => "index", :year => "2004"}
-    assert_routing("/ironman/2004", opts)
-    opts = {:controller => "ironman", :action => "index"}
-    assert_routing("/ironman", opts)
-
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("ironman/index")
@@ -25,7 +20,7 @@ class IronmanControllerTest < ActionController::TestCase
     assert_not_nil(assigns["year"], "Should assign year")
     assert_not_nil(assigns["years"], "Should assign years")
 
-    get(:index)
+    get :index
     assert_response(:success)
     assert_template("ironman/index")
     assert_not_nil(assigns["ironman"], "Should assign ironman")

@@ -27,17 +27,18 @@ class EventsControllerTest < ActionController::TestCase
     get :index, :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
+    # FIXME Tell AthletesPath that the root element has changed from record to object
     [
-      "record > beginner-friendly",
-      "record > cancelled",
-      "record > city",
-      "record > discipline",
-      "record > id",
-      "record > name",
-      "record > parent-id",
-      "record > type",
-      "record > races",
-      "record > date",
+      "object > beginner-friendly",
+      "object > cancelled",
+      "object > city",
+      "object > discipline",
+      "object > id",
+      "object > name",
+      "object > parent-id",
+      "object > type",
+      "object > races",
+      "object > date",
       "races > race",
       "race > city",
       "race > distance",

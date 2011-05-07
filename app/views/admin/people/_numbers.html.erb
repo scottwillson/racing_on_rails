@@ -53,8 +53,12 @@
   </tr>
 <% end -%>
 
-<%= observe_field(
-  'number_year', 
-  :url => {:action => 'number_year_changed', :id => @person.id}, :with => 'year',
-  :update => 'numbers_wrapper'
-) %>
+<%= javascript_tag do %>
+  jQuery(function($) {
+    $("#number_year").change(function() {
+      $.post('<%= number_year_changed_admin_person_path(@person) %>', { year: $('#number_year').val() }, function(data) {
+        $("#numbers_wrapper").html(data);
+      });
+    });
+  })
+<% end unless @person.new_record? -%>

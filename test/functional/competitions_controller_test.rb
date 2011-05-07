@@ -3,9 +3,6 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   def test_rider_rankings_no_results
-    opts = {:controller => "competitions", :action => "show", :type => 'rider_rankings'}
-    assert_routing("/rider_rankings", opts)
-    
     get(:show, :type => 'rider_rankings')
     assert_response(:success)
     assert_template("competitions/show")
@@ -18,9 +15,6 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
     RiderRankings.calculate!
     rider_rankings = RiderRankings.find_for_year
     rider_rankings.races.first.results.create!(:place => "1")
-    opts = {:controller => "competitions", :action => "show", :type => 'rider_rankings'}
-    assert_routing("/rider_rankings", opts)
-    
     get(:show, :type => 'rider_rankings')
     assert_response(:success)
     assert_template("competitions/show")
@@ -29,9 +23,6 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_cat4_womens_race_series
-    opts = {:controller => "competitions", :action => "show", :type => 'cat4_womens_race_series'}
-    assert_routing("/cat4_womens_race_series", opts)
-    
     get(:show, :type => 'cat4_womens_race_series')
     assert_response(:success)
     assert_template("competitions/show")
@@ -40,7 +31,7 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_unknown_competition_type
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, :type => 'not_a_series') }
+    assert_raise(ActionController::RoutingError) { get(:show, :type => 'not_a_series') }
     assert_response(:success)
   end
 end

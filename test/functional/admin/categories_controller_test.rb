@@ -9,8 +9,6 @@ class Admin::CategoriesControllerTest < ActionController::TestCase
   end
 
   def test_index
-    opts = {:controller => "admin/categories", :action => "index"}
-    assert_routing("/admin/categories", opts)
     get(:index)
     assert_response(:success)
     assert_template("admin/categories/index")

@@ -107,7 +107,7 @@ class PeopleController < ApplicationController
       
       if @person.nil?
         @person = Person.new
-        @person.errors.add_to_base "Didn't match your name and license number. Please check your #{RacingAssociation.current.short_name} membership card."
+        @person.errors.add :base, "Didn't match your name and license number. Please check your #{RacingAssociation.current.short_name} membership card."
       end
     end
     @person = Person.new if @person.nil?
@@ -143,7 +143,7 @@ class PeopleController < ApplicationController
     
     if @person.update_attributes(params[:person])
       flash[:notice] = "Created your new login"
-      PersonMailer.deliver_new_login_confirmation(@person) rescue nil
+      PersonMailer.new_login_confirmation(@person).deliver rescue nil
       if @return_to.present?
         redirect_to @return_to
         session[:return_to] = nil

@@ -20,8 +20,6 @@ class BarControllerTest < ActionController::TestCase
   end
 
   def test_index
-    opts = {:controller => "bar", :action => "index"}
-    assert_routing "/bar", opts
     get :index
     assert_response :success
     assert_template "bar/index"
@@ -35,16 +33,12 @@ class BarControllerTest < ActionController::TestCase
   end
   
   def test_defaults
-    opts = {:controller => "bar", :action => "show", :year => "#{Date.today.year}", :discipline => "overall", :category => "senior_men"}
-    assert_routing "/bar/#{Date.today.year}", opts
     get :show, :year => "#{Date.today.year}", :discipline => "overall", :category => "senior_men"
     assert_response :success
     assert_template "bar/show"
   end
 
   def test_show_empty
-    opts = {:controller => "bar", :action => "show", :year => "#{Date.today.year}", :discipline => "road", :category => "senior_men"}
-    assert_routing "/bar/#{Date.today.year}/road", opts
     get :show, :year => "#{Date.today.year}", :discipline => "road", :category => "senior_men"
     assert_response :success
     assert_template "bar/show"
@@ -52,8 +46,6 @@ class BarControllerTest < ActionController::TestCase
 
   def test_show
     Bar.calculate! Date.today.year
-    opts = {:controller => "bar", :action => "show", :year => "#{Date.today.year}", :discipline => "road", :category => "senior_women"}
-    assert_routing "/bar/#{Date.today.year}/road/senior_women", opts
     get :show, :year => "#{Date.today.year}", :discipline => "road", :category => "senior_women"
     assert_response :success
     assert_template "bar/show"
@@ -76,9 +68,6 @@ class BarControllerTest < ActionController::TestCase
     AgeGradedBar.calculate! 2007
     assert_equal OverallBar.find_for_year(2007), AgeGradedBar.find_for_year(2007).parent(true), "AgeGradedBar parent"
 
-    opts = {:controller => "bar", :action => "show", :discipline => "age_graded", :year => "2007", :category => "masters_men_30_34"}
-    assert_routing "/bar/2007/age_graded/masters_men_30_34", opts
-
     get :show, :discipline => "age_graded", :year => "2007", :category => "masters_men_30_34"
     assert_response :success
     assert_template "bar/show"
@@ -86,22 +75,16 @@ class BarControllerTest < ActionController::TestCase
   end
   
   def test_show_age_graded_redirect_2006
-    opts = {:controller => "bar", :action => "show", :discipline => "age_graded", :year => "2006", :category => "masters_men_30_34"}
-    assert_routing "/bar/2006/age_graded/masters_men_30_34", opts
     get :show, :discipline => "age_graded", :year => "2006", :category => "masters_men_30_34"
     assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2006/overall_by_age.html"
   end
   
   def test_show_redirect_before_2006
-    opts = {:controller => "bar", :action => "show", :discipline => "overall", :year => "2003", :category => "masters_men_30_34"}
-    assert_routing "/bar/2003/overall/masters_men_30_34", opts
     get :show, :discipline => "overall", :year => "2003", :category => "masters_men_30_34"
     assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2003"
   end
   
   def test_categories
-    opts = {:controller => "bar", :action => "categories", :year => "2004"}
-    assert_routing "/bar/2004/categories", opts
     get :categories, :year => "2004"
     assert_response :success
     assert_template "bar/categories"

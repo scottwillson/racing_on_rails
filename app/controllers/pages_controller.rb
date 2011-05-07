@@ -7,7 +7,7 @@
 class PagesController < ApplicationController
   def show
     if params[:path]
-      path_params = params[:path].dup
+      path_params = Array.wrap(params[:path].dup)
       last_path = path_params.pop
       if last_path
         last_path.gsub!(/.html$/, "")

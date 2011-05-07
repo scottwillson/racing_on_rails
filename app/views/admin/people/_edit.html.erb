@@ -1,4 +1,4 @@
-<%= form_remote_tag(:url => {:action => 'update_name', :id => @person.to_param}) %>
+<%= form_tag(:url => {:action => 'update_name', :id => @person.to_param}, :remote => true) %>
   <%= text_field_tag 'name', @person.name, 
         :class => 'edit_in_place_text_field', 
         :id => "person_#{@person.id}_name_text_field" %><%= link_to image_tag('/images/icons/decline.png', :class => "cancel", :remote => true), 

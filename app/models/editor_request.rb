@@ -34,14 +34,14 @@ class EditorRequest < ActiveRecord::Base
   end
   
   def send_email
-    EditorRequestMailer.request(self).deliver
+    EditorRequestMailer.editor_request(self).deliver
   end
   
   # Make +editor+ an editor of +person+
   def grant!
     unless person.editors.include?(editor)
       person.editors << editor
-      EditorRequestMailer.deliver_notification(self)
+      EditorRequestMailer.notification(self).deliver
     end
     destroy
   end

@@ -54,7 +54,7 @@ class Admin::ResultsController < Admin::AdminController
   end
   
   def results
-    person = Person.find(params[:id])
+    person = Person.find(params[:person_id])
     results = Result.find_all_for(person)
     logger.debug("Found #{results.size} for #{person.name}")
     render(:partial => 'person', :locals => {:person => person, :results => results})

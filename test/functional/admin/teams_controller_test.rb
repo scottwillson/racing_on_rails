@@ -18,7 +18,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_not_logged_in_edit
     destroy_person_session
     vanilla = teams(:vanilla)
-    get(:edit_name, :id => vanilla.to_param)
+    get(:edit, :id => vanilla.to_param)
     assert_redirected_to(new_person_session_url(secure_redirect_options))
     assert_nil(@request.session["person"], "No person in session")
   end
@@ -339,9 +339,6 @@ class Admin::TeamsControllerTest < ActionController::TestCase
 
   def test_edit
     vanilla = teams(:vanilla)
-    opts = {:controller => "admin/teams", :action => "edit", :id => vanilla.to_param.to_s}
-    assert_routing("/admin/teams/#{vanilla.to_param}/edit", opts)
-    
     get(:edit, :id => vanilla.to_param)
     assert_response(:success)
     assert_template("admin/teams/edit")
@@ -354,9 +351,6 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal(1, vanilla.aliases.count, 'Vanilla aliases')
     vanilla_bicycles_alias = vanilla.aliases.first
 
-    opts = {:controller => "admin/teams", :action => "destroy_alias", :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s}
-    assert_routing("/admin/teams/#{vanilla.id}/aliases/#{vanilla_bicycles_alias.id}/destroy", opts)
-    
     post(:destroy_alias, :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
     assert_response(:success)
     assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')

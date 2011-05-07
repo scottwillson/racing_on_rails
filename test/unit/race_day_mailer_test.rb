@@ -13,7 +13,7 @@ class RaceDayMailerTest < ActionMailer::TestCase
     @expected.date    = now
 
     # Not asserting attachment, just checking that we don't get exception
-    RaceDayMailer.members_export(Person.find_all_for_export, Time.zone.now)
+    RaceDayMailer.members_export Person.find_all_for_export
   end
   
   def read_fixture(action)

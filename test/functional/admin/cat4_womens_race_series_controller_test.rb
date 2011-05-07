@@ -17,9 +17,6 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
   
   def test_new_result_with_prepopulated_fields
-    assert_routing('/admin/cat4_womens_race_series/results/new', 
-                   :controller => 'admin/cat4_womens_race_series', :action => 'new_result')
-    
     get :new_result, :result => { :first_name => "Kevin", :last_name => "Hulick", :team_name => "Vanilla" }
     assert_response :success
 
@@ -30,10 +27,6 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
   
   def test_create_result_for_new_event
-    assert_routing('/admin/cat4_womens_race_series/results', 
-                   {:controller => 'admin/cat4_womens_race_series', :action => 'create_result'},
-                   {:method => "post"})
-
     post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
                                         :first_name => "Cheryl", :last_name => "Willson" },
                            :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 
@@ -191,10 +184,6 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
 
   
   def test_create_result_no_person_name
-    assert_routing('/admin/cat4_womens_race_series/results', 
-                   {:controller => 'admin/cat4_womens_race_series', :action => 'create_result'},
-                   {:method => "post"})
-
     post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
                                         :first_name => "", :last_name => "" },
                            :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 

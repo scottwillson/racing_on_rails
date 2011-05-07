@@ -15,6 +15,7 @@ module InPlaceEditing
   #
   module ClassMethods
     def in_place_edit_for(object, attribute, options = {})
+      class_symbol = self.name.underscore
       define_method("set_#{object}_#{attribute}") do
         @item = object.to_s.camelize.constantize.find(params[:id])
         if @item.respond_to?(:author)

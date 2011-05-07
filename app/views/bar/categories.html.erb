@@ -20,11 +20,11 @@
 <% end %>
 
 <% reset_cycle %>
-<%= table :caption => "Excluded From BAR"do  %>
+<%= table :caption => "Excluded From BAR" do  %>
   <% for category in @excluded_categories %>
   <tr class="<%= cycle("even", "odd") %>">
     <td>
-      <%= link_to category.name, :controller => 'races', :action => 'category', :id => category.id %>
+      <%= link_to category.name, category_races_path(category) %>
     </td>
   </tr>
   <% end %>

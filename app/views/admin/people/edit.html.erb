@@ -132,7 +132,7 @@
 
   <div class="page_buttons span-6 last">
     <div class="updatedon span-2">
-      <%= render :partial => "people/created_updated" %>
+      <%= render(:partial => "people/created_updated") unless @person.new_record? %>
     </div>
     <div class="right span-4 last">
       <%= link_to("Move Results", admin_person_results_path(@person)) unless @person.new_record? %>  

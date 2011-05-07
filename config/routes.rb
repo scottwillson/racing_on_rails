@@ -5,14 +5,26 @@ RacingOnRails::Application.routes.draw do
     resources :categories do
       resources :children
     end
+    
+    resource :cat4_womens_race_series do
+      collection do
+        post :create_result
+      end
+    end
+    
     resources :events do
       collection do
+        get  :add_children
         post :propagate
+        get  :set_parent
         post :upload_schedule
       end
       member do
-        delete :destroy_races
-        post :upload
+        get     :create_from_children
+        delete  :destroy_races
+        post    :set_event_chief_referee
+        post    :set_event_first_aid_provider
+        post    :upload
       end
       resources :races do
         collection do
@@ -21,8 +33,17 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :first_aid_providers
+    resources :mailing_list do
+      resources :posts do
+        collection do
+          post :receive
+        end
+      end
+    end
     resources :multi_day_events
-    resources :pages
+    resources :pages do
+      post :set_page_title, :on => :member
+    end
     namespace :pages do
       resources :versions do
         member do
@@ -32,13 +53,15 @@ RacingOnRails::Application.routes.draw do
     end
     resources :people do
       collection do
-        get :cards
-        get :duplicates
-        get :no_cards
-        get :preview_import
+        get  :cards
+        get  :duplicates
+        post :import
+        get  :no_cards
+        get  :preview_import
+        post :resolve_duplicates
       end
       member do
-        get :card
+        get  :card
         post :number_year_changed
         post :toggle_member
       end
@@ -48,18 +71,61 @@ RacingOnRails::Application.routes.draw do
       member do
         post :create_result
         delete :destroy_result
+        post :set_race_category_name
       end
     end
-    resources :results
+    resources :results do
+      collection do
+        post :find_person
+        post :results
+      end
+      member do
+        post :move_result
+        post :set_result_age
+        post :set_result_bar
+        post :set_result_city
+        post :set_result_category_name
+        post :set_result_date_of_birth
+        post :set_result_distance
+        post :set_result_laps
+        post :set_result_license
+        post :set_result_name
+        post :set_result_notes
+        post :set_result_number
+        post :set_result_place
+        post :set_result_points
+        post :set_result_points_bonus
+        post :set_result_points_bonus_penalty
+        post :set_result_points_from_place
+        post :set_result_points_penalty
+        post :set_result_points_total
+        post :set_result_state
+        post :set_result_team_name
+        post :set_result_time_bonus_penalty_s
+        post :set_result_time_gap_to_leader_s
+        post :set_result_time_gap_to_winner_s
+        post :set_result_time_s
+        post :set_result_time_total_s
+      end
+    end
     
     resources :series
     resources :single_day_events
     resources :teams do
       member do
+        post :cancel_in_place_edit
+        post :destroy_name
+        get  :merge
+        post :set_team_name
         post :toggle_member
       end
     end
-    resources :velodromes
+    resources :velodromes do
+      member do
+        post :set_velodrome_name
+        post :set_velodrome_website
+      end
+    end
     resources :weekly_series
   end
 
@@ -80,7 +146,6 @@ RacingOnRails::Application.routes.draw do
   match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d+/ }
   match '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
   match '/admin/cat4_womens_race_series/results/new' => 'admin/cat4_womens_race_series#new_result', :as => :new_admin_cat4_womens_race_series_result
-  match '/admin/cat4_womens_race_series/results' => 'admin/cat4_womens_race_series#create_result'
   match '/events/:event_id/results' => 'results#event'
   match '/events/:event_id/people/:person_id/results' => 'results#person_event'
   match '/events/:event_id/teams/:team_id/results' => 'results#team_event'
@@ -99,7 +164,7 @@ RacingOnRails::Application.routes.draw do
 
   match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d+/ }
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
-  match '/ironman/:year' => 'ironman#index', :as => :ironman
+  match '/ironman(/:year)' => 'ironman#index', :as => :ironman
   match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists
 
   resources :update_requests do
@@ -118,12 +183,15 @@ RacingOnRails::Application.routes.draw do
   match '/posts/new/:mailing_list_name' => 'posts#new'
   match '/posts/:mailing_list_name/show/:id' => 'posts#show'
   match '/posts/show/:mailing_list_name/:id' => 'posts#show'
+  match '/posts/show' => 'posts#show'
   match '/posts/:mailing_list_name/post' => 'posts#post'
   match '/posts/:mailing_list_name/confirm' => 'posts#confirm'
   match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply'
   match '/posts/:mailing_list_name/:year/:month' => 'posts#list'
   match '/posts/:mailing_list_name' => 'posts#index'
-  resources :posts
+  resources :posts do
+    get :list, :on => :collection
+  end
 
   resources :people do
     resources :editors do
@@ -146,6 +214,7 @@ RacingOnRails::Application.routes.draw do
   match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }
   match '/people/list' => 'people#list'
   match '/people/new_login' => 'people#new_login'
+  match "/people/:id/account" => redirect("/people/edit/%{id}")
 
   resources :racing_associations
   match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
@@ -166,8 +235,10 @@ RacingOnRails::Application.routes.draw do
   match '/teams/:team_id/results' => 'results#team'
   match '/teams/:team_id/:year' => 'results#team', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
   match '/teams/:team_id' => 'results#team'
-  resources :teams
-  match '/' => 'home#index'
+  resources :teams do
+    resources :results
+  end
+  match '/' => 'home#index', :as => :root
   match '/track' => 'track#index', :as => :track
   match '/track/schedule' => 'track#schedule', :as => :track_schedule
   resource :person_session
@@ -177,8 +248,19 @@ RacingOnRails::Application.routes.draw do
   match '/account/logout' => 'person_sessions#destroy'
   match '/account/login' => 'person_sessions#new'
   match '/account' => 'people#account', :as => :account
-  match '/:controller' => '#index'
-  match '/:controller/:id' => '#show', :constraints => { :id => /\d+/ }
-  match '/:controller(/:action(/:id))'
-  match '*path' => 'pages#show'
+
+  match '*' => 'pages#show'
+  
+  if Rails.env.test?
+    resources :fake do
+      collection do
+        get :missing_partial
+        get :news
+        get :partial_using_action
+        get :partial_using_partials_action
+        get :recent_results
+        get :upcoming_events
+      end
+    end
+  end
 end

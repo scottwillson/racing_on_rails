@@ -4,7 +4,7 @@
   <tr class="<%= cycle("even", "odd") %>">
       <td><%= link_to(
         person.name, 
-        :url => { :action => "results", :id => person.id }, 
+        :url => { :action => "results", :person_id => person.id }, 
         :remote => true,
         :update => 'right_person',
         :before => visual_effect(:highlight, 'right_person', :to => 0.4),

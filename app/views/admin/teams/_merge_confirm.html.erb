@@ -1,5 +1,5 @@
 <td>
-  <%= form_remote_tag(:url => {:action => 'merge', :id => @team.id, :target_id => @existing_teams.first.id }, :html => { :id => "merge_form" } ) %>
+  <%= form_tag(:url => {:action => 'merge', :id => @team.id, :target_id => @existing_teams.first.id }, :html => { :id => "merge_form" }, :remote => true ) %>
     <div style="padding-top: 4px; width: 300px; white-space: normal;">
       <%= @existing_teams.first.name %> <%= aka(@existing_teams.first) %> already exists.
     </div>

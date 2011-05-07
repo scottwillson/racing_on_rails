@@ -723,6 +723,12 @@ class Person < ActiveRecord::Base
     if member_from && member_to && member_from.to_date > member_to.to_date
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
+    if member_from && member_from < Date.new(1900)
+      self.member_from = member_from_was
+    end
+    if member_to && member_to < Date.new(1900)
+      self.member_to = member_to_was
+    end
   end
 
   def renewed?
