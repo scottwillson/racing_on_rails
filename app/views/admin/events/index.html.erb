@@ -10,7 +10,7 @@ end -%>
 <div class="page_buttons container">
   <div class="left">
     <% form_tag upload_schedule_admin_events_path, :multipart => true, :id => "upload_form" do %>
-    <label class="left">Import Schedule</label><%= file_field_tag "schedule_file", :onchange => "$('upload_form').submit();" %>
+    <label class="left">Import Schedule</label><%= file_field_tag "schedule_file", :onchange => "$('#upload_form').submit();" %>
     <% end -%>
   </div>
   <div class="right">

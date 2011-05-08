@@ -1,6 +1,16 @@
 <% @page_title = "Admin: Posts" %>
 
-<h1><%= @mailing_list.name %></h1>
+<h2><%= @mailing_list.friendly_name %></h2>
+
+<div class="container">
+  <% form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
+     :method => :post,
+     :multipart => true, 
+     :id => "mailing_list_form"  do |f| -%>
+    <%= file_field_tag "raw", :onchange => "$('#mailing_list_form').submit();" %>
+  <% end -%>
+</div>
+
 <% table :class => "posts top_margin clear", :id => :people do %>
   <tr>
     <th class="date">Date</th>
@@ -15,15 +25,5 @@
 <%= will_paginate(@posts) if @posts.any? %>
 
 <div class="buttons container">
-  <div class="span-3">
-    <% form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
-       :method => :post,
-       :multipart => true, 
-       :id => "mailing_list_form"  do |f| -%>
-    <%= file_field_tag "raw", :onchange => "$('mailing_list_form').submit();" %>
-    <% end -%>
-  </div>
-  <div class="span-3 last right">
-    <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>
-  </div>
+  <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>
 </div>

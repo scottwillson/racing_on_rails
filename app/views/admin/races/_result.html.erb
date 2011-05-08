@@ -1,11 +1,11 @@
 <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row" style="position: relative;">
   <% result.race.result_columns_or_default_for_editing.each do |column| %>
   <td><%= 
+    # FIXME I doubt this works
     if result.respond_to?(column) && !result.new_record?
       if column == "bar"
         check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
-                :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}?value=#{result.bar? ? "0" : "1"}', 
-                              {asynchronous:true, evalScripts:true})"
+                :onchange => "newjQuery.get('/admin/results/set_result_bar/#{result.id}?value=#{result.bar? ? "0" : "1"}')"
       else
         in_place_editor_field(:result, ResultColumn[column].display_method, result) 
       end
