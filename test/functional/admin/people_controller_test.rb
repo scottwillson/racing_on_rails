@@ -848,7 +848,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:cards, :format => "pdf")
 
     assert_response :success
-    assert_template("")
+    assert_template nil
     assert_layout(nil)
     assert_equal(1, assigns['people'].size, 'Should assign people')
     tonkin.reload
@@ -865,7 +865,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     get(:cards, :format => "pdf")
 
     assert_response :success
-    assert_template("")
+    assert_template nil, "wrong template"
     assert_layout(nil)
     assert_equal(4, assigns['people'].size, 'Should assign people')
     people.each do |person|
