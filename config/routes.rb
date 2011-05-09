@@ -57,7 +57,7 @@ RacingOnRails::Application.routes.draw do
         get  :duplicates
         post :import
         get  :no_cards
-        get  :preview_import
+        post :preview_import
         post :resolve_duplicates
       end
       member do
@@ -193,6 +193,12 @@ RacingOnRails::Application.routes.draw do
     get :list, :on => :collection
   end
 
+  match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
+  match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
+  match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }, :via => :get
+  match '/people/list' => 'people#list'
+  match '/people/new_login' => 'people#new_login'
+  match "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }
   resources :people do
     resources :editors do
       member do
@@ -207,14 +213,10 @@ RacingOnRails::Application.routes.draw do
     resources :orders
     resources :results
     resources :versions
+    collection do
+      get :account
+    end
   end
-
-  match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
-  match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
-  match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }
-  match '/people/list' => 'people#list'
-  match '/people/new_login' => 'people#new_login'
-  match "/people/:id/account" => redirect("/people/edit/%{id}")
 
   resources :racing_associations
   match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
@@ -249,7 +251,7 @@ RacingOnRails::Application.routes.draw do
   match '/account/login' => 'person_sessions#new'
   match '/account' => 'people#account', :as => :account
 
-  match '*' => 'pages#show'
+  match '*path', :to => 'pages#show'
   
   if Rails.env.test?
     resources :fake do
