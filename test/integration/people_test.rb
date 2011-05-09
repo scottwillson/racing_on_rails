@@ -27,7 +27,8 @@ class PeopleTest < ActionController::IntegrationTest
          :people_file => fixture_file_upload("../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     assert_response :success
 
-    post "/admin/people/import"  
-    assert_response :success
+    assert_not_nil session[:people_file_path], "Should have :people_file_path in session"
+    post "/admin/people/import", :commit => "Import"
+    assert_redirected_to admin_people_path
   end
 end

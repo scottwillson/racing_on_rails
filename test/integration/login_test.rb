@@ -1,7 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
-class LoginStoriesTest < ActionController::IntegrationTest
+class LoginTest < ActionController::IntegrationTest
   if RacingAssociation.current.ssl?
     # logged-in?, person_id?, same person?, admin?
     def test_member_account
