@@ -225,10 +225,10 @@ class Admin::PeopleController < Admin::AdminController
       assign_years
       session[:people_file_path] = temp_file.path
     else
-      redirect_to(:action => :index)
+      redirect_to :index
     end
     
-    render("preview_import", :layout => "admin/people/preview_import")
+    render "preview_import", :layout => "admin/people/preview_import"
   end
   
   # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
@@ -250,10 +250,10 @@ class Admin::PeopleController < Admin::AdminController
       flash[:notice] = "Imported #{pluralize(people_file.created, 'new person')} and updated #{pluralize(people_file.updated, 'existing person')}"
       session[:people_file_path] = nil
       if people_file.duplicates.empty?
-        redirect_to(:action => 'index')
+        redirect_to admin_people_path
       else
         flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
-        redirect_to(:action => 'duplicates')
+        redirect_to duplicates_admin_people_path
       end
       expire_cache
 
