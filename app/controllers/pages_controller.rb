@@ -7,24 +7,17 @@
 class PagesController < ApplicationController
   def show
     if params[:path]
-      path_params = Array.wrap(params[:path].dup)
-      last_path = path_params.pop
-      if last_path
-        last_path.gsub!(/.html$/, "")
-        if last_path && last_path != "index"
-          path_params << last_path
-        end
+      path = params[:path].dup
+      if path
+        path.gsub!(/.html$/, "")
+        path.gsub!(/\/index$/, "")
       end
-      path = path_params.join("/")
     else
       path = ""
     end
     
-    @page = Page.find_by_path(path)
+    @page = Page.find_by_path!(path)
 
-    # Seems to be the best way to trigger a conventional Rails 404
-    raise ActiveRecord::RecordNotFound.new("No page for /#{path}") unless @page
-
-    render(:inline => @page.body, :layout => "application")
+    render :inline => @page.body, :layout => "application"
   end  
 end
