@@ -76,3 +76,6 @@ namespace :deploy do
 end
 
 after "deploy:update_code", "deploy:local_code", "deploy:symlinks", "deploy:copy_cache"
+
+        require './config/boot'
+        require 'hoptoad_notifier/capistrano'
