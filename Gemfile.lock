@@ -50,6 +50,9 @@ GEM
     fastercsv (1.5.4)
     ffi (1.0.7)
       rake (>= 0.8.7)
+    hoptoad_notifier (2.4.9)
+      activesupport
+      builder
     i18n (0.5.0)
     json_pure (1.5.1)
     kgio (2.4.0)
@@ -114,6 +117,7 @@ DEPENDENCIES
   ansi
   authlogic
   fastercsv
+  hoptoad_notifier
   mocha
   mysql2 (< 0.3.0)
   newrelic_rpm
