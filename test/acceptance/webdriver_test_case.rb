@@ -5,7 +5,7 @@ require File.expand_path("../../test_helper", __FILE__)
 require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
 require "selenium-webdriver"
 
-MiniTest::Unit.after_tests {
+at_exit {
   begin
     begin
       Timeout::timeout(5) do
@@ -275,9 +275,9 @@ class WebDriverTestCase < ActiveSupport::TestCase
     element = find_element(element_finder)
     case value
     when Regexp
-      assert_match value, element.value
+      assert_match value, element.attribute("value")
     else
-      assert_equal value.to_s, element.value
+      assert_equal value.to_s, element.attribute("value")
     end
   end
   
