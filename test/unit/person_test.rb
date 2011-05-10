@@ -1050,6 +1050,55 @@ class PersonTest < ActiveSupport::TestCase
     assert people(:alice).editable_people(true).empty?, "should remove editors"
   end
   
+  def test_can_edit
+    p1 = Person.create!
+    p2 = Person.create!
+    admin = people(:administrator)
+    
+    assert !p1.can_edit?(p2)
+    assert !p1.can_edit?(admin)
+    assert p1.can_edit?(p1)
+    assert !p2.can_edit?(p1)
+    assert !p2.can_edit?(admin)
+    assert p2.can_edit?(p2)
+    assert admin.can_edit?(p1)
+    assert admin.can_edit?(p2)
+    assert admin.can_edit?(admin)
+
+    p1.editors << p2
+    assert !p1.can_edit?(p2)
+    assert !p1.can_edit?(admin)
+    assert p1.can_edit?(p1)
+    assert p2.can_edit?(p1)
+    assert !p2.can_edit?(admin)
+    assert p2.can_edit?(p2)
+    assert admin.can_edit?(p1)
+    assert admin.can_edit?(p2)
+    assert admin.can_edit?(admin)
+
+    p2.editors << p1
+    assert p1.can_edit?(p2)
+    assert !p1.can_edit?(admin)
+    assert p1.can_edit?(p1)
+    assert p2.can_edit?(p1)
+    assert !p2.can_edit?(admin)
+    assert p2.can_edit?(p2)
+    assert admin.can_edit?(p1)
+    assert admin.can_edit?(p2)
+    assert admin.can_edit?(admin)
+
+    admin.editors << p1
+    assert p1.can_edit?(p2)
+    assert p1.can_edit?(admin)
+    assert p1.can_edit?(p1)
+    assert p2.can_edit?(p1)
+    assert !p2.can_edit?(admin)
+    assert p2.can_edit?(p2)
+    assert admin.can_edit?(p1)
+    assert admin.can_edit?(p2)
+    assert admin.can_edit?(admin)
+  end
+  
   # member_from: nil, past, future, > October, < October, end of year, next year, far in future
   # member_to: nil, past, future, > October, < October, end of year, next year, far in future
   # now: start of year, < October, > October, end of year

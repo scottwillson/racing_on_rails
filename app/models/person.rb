@@ -946,7 +946,7 @@ class Person < ActiveRecord::Base
   end
 
   def can_edit?(person)
-    person == self || person.editors.include?(self)
+    person == self || administrator? || person.editors.include?(self)
   end
   
   def set_last_updated_by
