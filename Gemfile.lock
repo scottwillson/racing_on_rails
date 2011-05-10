@@ -103,6 +103,8 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     ttfunk (1.0.1)
+    turn (0.8.2)
+      ansi (>= 1.2.2)
     tzinfo (0.3.27)
     unicorn (3.6.2)
       kgio (~> 2.3)
@@ -129,6 +131,7 @@ DEPENDENCIES
   selenium-webdriver
   tabular (> 0.0.5)
   timecop
+  turn
   unicorn
   vestal_versions!
   will_paginate (~> 3.0.beta)

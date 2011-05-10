@@ -21,6 +21,12 @@ group :test do
   gem "mocha"
   gem "selenium-webdriver"
   gem "timecop"
+  gem "turn"
+end
+
+group :acceptance do
+  gem "selenium-webdriver"
+  gem "mocha"
 end
 
 group :production do
