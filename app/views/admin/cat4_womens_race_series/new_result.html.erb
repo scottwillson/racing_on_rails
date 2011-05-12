@@ -13,7 +13,7 @@
   <div class="span-6 last">
     <%= label(:event, :name, "Event") %><%= text_field :event, :name, :autocomplete => "off" %><br/>
     <%= label(:event, :date, "Date") %><%= date_select "event", "date", :order => [:month, :day, :year]%>
-    <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{RacingAssociation.current.short_name}?", :class => "check_box") %>
+    <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{RacingAssociation.current.short_name}?".html_safe, :class => "check_box") %>
   </div>
 
   <%= table :class => "clear people", :id => :people do %>
