@@ -10,6 +10,7 @@ class ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   fixtures :all
   
+  # FIXME Still need in Rails 3?
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
 
   # Activate Authlogic. Reset RacingAssociation.
@@ -179,6 +180,11 @@ class ActiveSupport::TestCase
     #   assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
     #   assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
     # end
+    if @response && !@response.blank?
+      body_string = @response.body.to_s
+      assert !body_string["&lt;"], "Found escaped left angle bracket"
+      assert !body_string["&rt;"], "Found escaped right angle bracket"
+    end
   end
 
   def create_administrator_session

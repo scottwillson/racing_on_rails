@@ -97,8 +97,8 @@
 
     <%= f.labelled_check_box :membership_card, "Has Card?" %>
     <%= f.labelled_check_box :print_card, 
-                             "Print card? #{(link_to 'Print one card now', card_admin_person_path(@person, :format => "pdf"), 
-                             {:class => 'obvious'})}" unless @person.new_record? %>
+                             "Print card? #{(link_to('Print one card now', card_admin_person_path(@person, :format => "pdf"), 
+                             {:class => 'obvious'}))}".html_safe unless @person.new_record? %>
 
     <%= f.labelled_text :card_printed_at, @person.card_printed_at ? @person.card_printed_at.to_s(:long_ordinal) : "Never" %>
     <%= f.labelled_check_box :official %>
