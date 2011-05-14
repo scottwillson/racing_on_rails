@@ -20,7 +20,7 @@ end -%>
 
 <div class="container">
   <%- @schedule.months.each do |month| -%>
-    <%= table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>" do %>
+    <%= table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>".html_safe do %>
       <tr>
         <th>Sunday</th>
         <th>Monday</th>

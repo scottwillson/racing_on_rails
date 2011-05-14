@@ -3,7 +3,9 @@ RacingOnRails::Application.routes.draw do
     resources :articles
     resources :article_categories
     resources :categories do
-      resources :children
+      collection do
+        post :add_child
+      end
     end
     
     resource :cat4_womens_race_series do
