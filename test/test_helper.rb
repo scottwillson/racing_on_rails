@@ -13,6 +13,23 @@ class ActiveSupport::TestCase
   # FIXME Still need in Rails 3?
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
 
+  @@no_angle_brackets_exceptions = nil
+
+  class << self
+    def assert_no_angle_brackets(*options)
+      options = options.extract_options!
+      write_inheritable_attribute :no_angle_brackets_exceptions, Array.wrap(options[:except])
+    end
+
+    def no_angle_brackets_exceptions
+      if current_no_angle_brackets_exceptions = read_inheritable_attribute(:no_angle_brackets_exceptions)
+        current_no_angle_brackets_exceptions
+      else
+        write_inheritable_attribute :no_angle_brackets_exceptions, []
+      end
+    end
+  end
+
   # Activate Authlogic. Reset RacingAssociation.
   def setup
     activate_authlogic
@@ -173,17 +190,19 @@ class ActiveSupport::TestCase
   end
 
   # Detect HTML escaping screw-ups
-  # FIXME Eating RAM when there are many errors
+  # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
   def assert_no_angle_brackets
-    # if @response && !@response.blank?
-    #   body_string = @response.body.to_s
-    #   assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
-    #   assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
-    # end
-    if @response && !@response.blank?
-      body_string = @response.body.to_s
-      assert !body_string["&lt;"], "Found escaped left angle bracket"
-      assert !body_string["&rt;"], "Found escaped right angle bracket"
+    unless self.class.no_angle_brackets_exceptions.include?(method_name.to_sym)
+      if @response && !@response.blank?
+        body_string = @response.body.to_s
+        if ENV["VERBOSE_HTML_SOURCE"]
+          assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
+          assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
+        else
+          assert !body_string["&lt;"], "Found escaped left angle bracket"
+          assert !body_string["&rt;"], "Found escaped right angle bracket"
+        end
+      end
     end
   end
 
