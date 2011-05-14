@@ -7,6 +7,8 @@ class Admin::PagesControllerTest < ActionController::TestCase
     create_administrator_session
     use_ssl
   end
+  
+  assert_no_angle_brackets :except => [ :test_edit_page ]
 
   def test_only_admins_can_edit_pages
     destroy_person_session

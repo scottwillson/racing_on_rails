@@ -4,7 +4,7 @@
 
 <%= table :caption => %Q{#{@result.place.to_i.ordinalize} &mdash;
                         #{link_to(@result.race_full_name, event_results_path(:event_id => @result.event_id, :anchor => "race_#{@result.race_id}"))}
-} do %>
+}.html_safe do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>
