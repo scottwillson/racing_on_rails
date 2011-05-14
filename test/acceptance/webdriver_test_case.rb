@@ -288,9 +288,9 @@ class WebDriverTestCase < ActiveSupport::TestCase
       Timeout::timeout(10) do
         until find_elements(element_finder).any? && case value
           when Regexp
-            find_element(element_finder).value[value]
+            find_element(element_finder).attribute("value")[value]
           else
-            find_element(element_finder).value[value.to_s]
+            find_element(element_finder).attribute("value")[value.to_s]
           end
           sleep 0.25
         end

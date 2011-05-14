@@ -5,7 +5,7 @@
      event_results_path(@event),
      { :class => "image" }) if @event.has_results_including_children? }  
   </div>
-} %>
+}.html_safe %>
 <%= table :caption => nav_caption, :class => "box-3 last", :columns => 3, :insert_header => true do %>
   <%- @event.children_and_child_competitions.each do |single_day_event| -%>
   <tr id="event_<%= single_day_event.id %>_row">

@@ -3,9 +3,9 @@
   <div class="right">
   #{link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      event_results_path(@event), 
-     { :class => "image" }) if @event.has_results_including_children? }  
+     { :class => "image" }) if @event.has_results_including_children? }
   </div>
-} %>
+}.html_safe %>
 <%= table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
   <%= render @event.races %>
   <% unless @event.new_record? || @event.races.any? %>
