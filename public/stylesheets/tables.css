@@ -194,30 +194,17 @@ table.base div.in_place_editable:hover {
   border: 1px solid rgb(204, 204, 204);
 }
 
-table.base td.editing {
-  padding: 0px;
-}
-
-table.base td.editing div.in_place_editable:hover,
-table.base tr.hovering div.in_place_editable:hover {
+table.base tr.hovering div.in_place_editable:hover,
+table.base div.in_place_editable.saving:hover {
   background-color: transparent;
   border: 1px solid transparent;
 }
 
-table.base td.editing div.in_place_editable {
-  padding-bottom: 3px;
-  padding-left: 7px;
-  padding-top: 2px;
-}
-
-table.base td div.saving {
+table.base div.in_place_editable.saving input {
   background-image: url(/images/icons/spinner.gif);
+  background-position: center right;
   background-repeat: no-repeat;
-  height: 16px;
-  margin-left: 4px;
-  padding-bottom: 0px;
-  margin-top: 8px;
-  width: 16px;
+  color: gray;
 }
 
 form.editor_field input,
@@ -226,9 +213,9 @@ form.editor_field input[type=text] {
   font-size: 1em;
   height: 16px;
   margin-bottom: -1px;
-  margin-left: 0px;
+  margin-left: -4px;
   margin-right: -1px;
-  margin-top: 5px;
+  margin-top: -3px;
   padding-bottom: 1px;
   padding-left: 1px;
   padding-right: 1px;

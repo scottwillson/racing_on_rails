@@ -21,9 +21,9 @@ function restripeTable(id) {
 }
 
 function flash(key, message) {
-  if ($('#info').length > 0) { $('#info').hide() }
-  if ($('#notice').length > 0) { $('#notice').hide() }
-  if ($('#warn').length > 0) { $('#warn').hide() }
+  if ($('#info').length > 0) { $('#info').hide(); }
+  if ($('#notice').length > 0) { $('#notice').hide(); }
+  if ($('#warn').length > 0) { $('#warn').hide(); }
   
   $('#' + key + '_span').html(message);
   $('#' + key).show();
@@ -94,6 +94,50 @@ function autoCompleteTeam(model, attribute, path) {
   });  
 }    
 
+function makeEditable() {
+  $('.in_place_editable').editable(
+    function(value, settings) {
+      var element = $(this);
+      element.addClass('saving');
+      var submitdata = {
+        '_method': 'PUT'
+      };
+      submitdata[element.data('model') + '[' + element.data('attribute') + ']'] = value;
+      var ajaxoptions = {
+          type    : 'PUT',
+          data    : submitdata,
+          dataType: 'html',
+          url     : element.data('url'),
+          success : function(result, status, jqXHR) {
+            if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
+              element.html(result);
+              element.removeClass('saving');
+              if (!$.trim(element.html())) {
+                element.html(settings.placeholder);
+              }
+            }
+            else {
+              element.removeClass('saving');
+              $.globalEval(result);
+            }
+          },
+          error   : function(xhr, status, error) {
+              onerror.apply(form, [settings, this, xhr]);
+          }
+      };
+      $.ajax(ajaxoptions);
+    },
+    {
+      cssclass: 'editor_field',
+      method: 'PUT',
+      placeholder: '',
+      select: true,
+      onblur: 'ignore'
+    }
+  );
+}
+
 $(document).ready(function() {
   $('.wants_focus:visible').select();
+  makeEditable();
 });

@@ -1,6 +1,12 @@
 <tr id="race_<%= race.id %>_row">
   <td class="race">
-    <%= in_place_editor_field :race, :category_name, race, false, nil, nil, @enter_edit_mode %>
+    <%= content_tag( 
+      :div, 
+      :class => "in_place_editable", 
+      "data-id" => race.id, 
+      "data-url" => admin_race_path(race, :format => :js), 
+      "data-model" => "race", 
+      "data-attribute" => "category_name") do %><%= race.category_name %><% end %>
     <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>
   </td>
   <td class="right">

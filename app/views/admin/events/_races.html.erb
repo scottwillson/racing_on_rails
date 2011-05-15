@@ -18,10 +18,10 @@
     <td>
       <%= image_tag "icons/spinner.gif", :id => "propagate_races_progress", :style => "display: none" %>
       <%= link_to("Copy to child events", 
-                  :url => propagate_admin_event_races_path(@event),
+                  propagate_admin_event_races_path(@event),
                   :remote => true,
                   :before => "$('propagate_races').hide({queue: 'front'}); $('propagate_races_progress').show({queue: 'front'})",
-                  :html => { :class => "obvious", :id => "propagate_races", :title => "Add same races to all children events" }
+                  :class => "obvious", :id => "propagate_races", :title => "Add same races to all children events"
           ) if @event.races.any? && @event.children.any?
       %>
     </td>
@@ -29,7 +29,9 @@
       <%= link_to("Delete all races",
       :url => destroy_races_admin_event_path(@event),
       :remote => true,
-      :html => { :class => "obvious", :id => "destroy_races", :title => "Delete all" },
+      :class => "obvious", 
+      :id => "destroy_races", 
+      :title => "Delete all",
       :method => :delete,
       :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
       :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?") if @event.races.any? && administrator?
@@ -38,10 +40,14 @@
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
     </td>
     <td class="right">
-      <%= link_to image_tag("/images/icons/add.png"), 
-                  :url => admin_event_races_path(@event),
-                  :remote => true,
-                  :html => { :class => "image", :id => "create_race", :title => "Add race" }
+      <%= link_to(image_tag("/images/icons/add.png"), 
+            admin_event_races_path(@event),
+            :remote => true,
+            :method => :post,
+            :class => "image", 
+            :id => "create_race", 
+            :title => "Add race"
+          )
       %>
     </td>
   </tr>

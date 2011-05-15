@@ -1,11 +1,9 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create, :propagate ]
   before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result, :set_race_category_name ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update ]
   layout "admin/application"
-  
-  in_place_edit_for :race, :category_name
 
   def new
     render :edit
@@ -23,7 +21,6 @@ class Admin::RacesController < Admin::AdminController
       }
       format.js {
         @race.category = Category.find_or_create_by_name("New Category")
-        @enter_edit_mode = true
         @race.save!
       }
     end
@@ -44,13 +41,23 @@ class Admin::RacesController < Admin::AdminController
   # * event: Unsaved Race
   # === Flash
   # * warn
+  # FIXME Add test after spike
   def update
-    if @race.update_attributes(params[:race])
-      expire_cache
-      flash[:notice] = "Updated #{@race.name}"
-      return redirect_to(edit_admin_race_path(@race))
+    respond_to do |format|
+      format.html {
+        if @race.update_attributes(params[:race])
+          expire_cache
+          flash[:notice] = "Updated #{@race.name}"
+          return redirect_to(edit_admin_race_path(@race))
+        end
+        render :edit
+      }
+      format.js {
+        @race.update_attributes!(params[:race])
+        expire_cache
+        render :text => @race.send(params[:race].first.first), :content_type => "text/html"
+      }
     end
-    render :edit
   end
 
   # Permanently destroy race and redirect to Event
