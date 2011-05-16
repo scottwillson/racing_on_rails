@@ -99,13 +99,13 @@ function makeEditable() {
     function(value, settings) {
       var element = $(this);
       element.addClass('saving');
-      var submitdata = {
-        '_method': 'PUT'
-      };
-      submitdata[element.data('model') + '[' + element.data('attribute') + ']'] = value;
       var ajaxoptions = {
           type    : 'PUT',
-          data    : submitdata,
+          data    : {
+            '_method': 'PUT',
+            name: element.data('attribute'),
+            value: value            
+          },
           dataType: 'html',
           url     : element.data('url'),
           success : function(result, status, jqXHR) {

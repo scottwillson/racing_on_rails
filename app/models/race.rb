@@ -47,6 +47,7 @@ class Race < ActiveRecord::Base
     else
       self.category = Category.new(:name => name)
     end
+    category.try :name
   end
   
   def discipline

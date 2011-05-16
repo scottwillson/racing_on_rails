@@ -73,7 +73,7 @@ RacingOnRails::Application.routes.draw do
       member do
         post :create_result
         delete :destroy_result
-        post :set_race_category_name
+        put :update_attribute
       end
     end
     resources :results do

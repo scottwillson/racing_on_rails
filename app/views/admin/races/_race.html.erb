@@ -4,7 +4,7 @@
       :div, 
       :class => "in_place_editable", 
       "data-id" => race.id, 
-      "data-url" => admin_race_path(race, :format => :js), 
+      "data-url" => update_attribute_admin_race_path(race, :format => :js), 
       "data-model" => "race", 
       "data-attribute" => "category_name") do %><%= race.category_name %><% end %>
     <%= "&nbsp;&nbsp;(#{race[:field_size]})" if race[:field_size] %>

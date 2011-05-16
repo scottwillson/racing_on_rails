@@ -43,19 +43,24 @@ class Admin::RacesController < Admin::AdminController
   # * warn
   # FIXME Add test after spike
   def update
+    if @race.update_attributes(params[:race])
+      expire_cache
+      flash[:notice] = "Updated #{@race.name}"
+      return redirect_to(edit_admin_race_path(@race))
+    end
+    render :edit
+  end
+  
+  def update_attribute
+    @race = Race.find(params[:id])
     respond_to do |format|
-      format.html {
-        if @race.update_attributes(params[:race])
-          expire_cache
-          flash[:notice] = "Updated #{@race.name}"
-          return redirect_to(edit_admin_race_path(@race))
-        end
-        render :edit
-      }
       format.js {
-        @race.update_attributes!(params[:race])
-        expire_cache
-        render :text => @race.send(params[:race].first.first), :content_type => "text/html"
+        @race.send "#{params[:name]}=", params[:value]
+        # FIXME Signal error
+        if @race.save
+          expire_cache
+        end
+        render :text => @race.send(params[:name]), :content_type => "text/html"
       }
     end
   end
