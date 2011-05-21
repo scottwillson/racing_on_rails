@@ -12,7 +12,7 @@ class FakeController < ApplicationController
   end
 
   def present_attribute
-    @event = Event.new(:promoter => Person.create!(:name => "Tony Kic"))
+    @event = Event.new(:promoters => [Person.create!(:name => "Tony Kic")])
     render :template => "fake/event.html.erb"
   end
 end
@@ -21,17 +21,17 @@ end
     
   def test_auto_complete_nil_attribute
     get :nil_attribute
-    assert_select "input#promoter_auto_complete" do
+    assert_select "input#promoter_#{@event.promoter.id}_auto_complete" do
       assert_select "[value=?]", ""
     end
   end
     
   def test_auto_complete_attribute_present
     get :present_attribute
-    assert_select "input#promoter_auto_complete" do
+    assert_select "input#promoter_#{@event.promoter.id}_auto_complete" do
       assert_select "[value=?]", "Tony Kic"
     end
-    assert_select "input#event_promoter_id" do
+    assert_select "input#event_promoter_#{@event.promoter.id}_id" do
       assert_select "[value=?]", /\d+/
     end
   end

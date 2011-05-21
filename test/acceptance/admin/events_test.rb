@@ -149,6 +149,36 @@ class EventsTest < WebDriverTestCase
     assert_page_source "Fancy New Child Event"
   end
   
+  def test_multiple_promoters
+    login_as :administrator
+
+    click :link_text => "New Event"
+
+    type "Sausalito Criterium", "event_name"
+    click "save"
+    assert_page_source "Created Sausalito Criterium"
+
+    assert_value "", "event_promoter_0_id"
+    assert_value "", "promoter_0_auto_complete"
+    type "Bernard Hinault", "promoter_0_auto_complete"
+
+    click "save"
+    assert_value(/\d+/, "event_promoter_0_id")
+    assert_value "Bernard Hinault", "promoter_0_auto_complete"
+    
+    click "new_promoter"
+    type "Laurent Fignon", "promoter_1_auto_complete"
+
+    click "save"
+    assert_value "Bernard Hinault", "promoter_0_auto_complete"
+    assert_value(/\d+/, "event_promoter_1_id")
+    assert_value "Laurent Fignon", "promoter_1_auto_complete"
+    
+    click "remove_promoter_0"
+    assert_value "Laurent Fignon", "promoter_0_auto_complete"
+    assert_no_element "event_promoter_1_id"
+  end
+  
   def test_lost_children
     login_as :administrator
 

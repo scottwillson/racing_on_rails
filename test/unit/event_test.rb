@@ -146,59 +146,59 @@ class EventTest < ActiveSupport::TestCase
   end
   
   def test_set_promoter_by_name_no_id
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross")
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross")
     assert_equal people(:promoter), event.promoter, "Should set promoter from name, even without promoter_id"
   end
 
   def test_set_promoter_by_name_with_id
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => people(:promoter).id)
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross", :promoter_id => people(:promoter).id)
     assert_equal people(:promoter), event.promoter, "Should set promoter from name and/or promoter_id"
   end
 
   def test_set_promoter_by_name_and_ignore_bogus_id
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => "1281928")
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross", :promoter_id => "1281928")
     assert_equal people(:promoter), event.promoter, "Should set promoter from name and ignore bogus promoter_id"
   end
 
   def test_set_promoter_by_name_and_ignore_wrong_id
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => people(:administrator).id)
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross", :promoter_id => people(:administrator).id)
     assert_equal people(:promoter), event.promoter, "Should set promoter from name, even another person's promoter_id"
   end
 
   def test_choose_promoter_by_id_with_multiple_same_names
     brad_ross_2 = Person.create!(:name => "Brad Ross")
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => brad_ross_2.id)
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross", :promoter_id => brad_ross_2.id)
     assert_equal brad_ross_2, event.promoter, "Should use promoter_id to choose between duplicates"
   end
 
   def test_non_unique_promoter_wrong_id
     brad_ross_2 = Person.create!(:name => "Brad Ross")
-    event = SingleDayEvent.create!(:promoter_name => "Brad Ross", :promoter_id => "12378129")
+    event = SingleDayEvent.create!(:promoters_names => "Brad Ross", :promoter_id => "12378129")
     assert [people(:promoter), brad_ross_2].include?(event.promoter), "Should choose a Person from duplicates, even without a matching promoter_id"
   end
 
   def test_new_promoter_wrong_id
-    event = SingleDayEvent.create!(:promoter_name => "Marie Le Blanc", :promoter_id => people(:administrator).id)
+    event = SingleDayEvent.create!(:promoters_names => "Marie Le Blanc", :promoter_id => people(:administrator).id)
     new_promoter = Person.find_by_name("Marie Le Blanc")
     assert_not_nil new_promoter, "Should create new promoter"
     assert_equal new_promoter, event.promoter, "Should use create new promoter and ignore bad promoter_id"
   end
 
   def test_new_promoter_no_id
-    event = SingleDayEvent.create!(:promoter_name => "Marie Le Blanc")
+    event = SingleDayEvent.create!(:promoters_names => "Marie Le Blanc")
     new_promoter = Person.find_by_name("Marie Le Blanc")
     assert_not_nil new_promoter, "Should create new promoter"
     assert_equal new_promoter, event.promoter, "Should use create new promoter"
   end
   
   def test_set_promoter_by_alias
-    event = SingleDayEvent.create!(:promoter_name => "Mollie Cameron")
+    event = SingleDayEvent.create!(:promoters_names => "Mollie Cameron")
     assert_equal people(:molly), event.promoter, "Should set promoter from alias"
   end
   
   def test_remove_promoter
-    event = SingleDayEvent.create!(:promoter_name => "Mollie Cameron")
-    event.update_attributes(:promoter_name => "")
+    event = SingleDayEvent.create!(:promoters_names => "Mollie Cameron")
+    event.update_attributes(:promoters_names => "")
     assert_nil event.promoter, "Blank promoter name should remove promoter"
   end
 

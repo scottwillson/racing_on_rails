@@ -76,7 +76,7 @@ class MultiDayEvent < Event
   end
 
   # Create MultiDayEvent from several SingleDayEvents.
-  # Use first SingleDayEvent to populate date, name, promoter, etc.
+  # Use first SingleDayEvent to populate date, name, promoters, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
   def MultiDayEvent.create_from_children(children)
     raise ArgumentError.new("children cannot be empty") if children.empty?
@@ -89,7 +89,7 @@ class MultiDayEvent < Event
       :flyer => first_event.flyer,
       :name => first_event.name,
       :phone => first_event.phone,
-      :promoter => first_event.promoter,
+      :promoters => first_event.promoters,
       :prize_list => first_event.prize_list,
       :sanctioned_by => first_event.sanctioned_by,
       :state => first_event.state,

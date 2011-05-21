@@ -3,22 +3,31 @@ module EventsHelper
   # Displays promoter email in promoter's name is blank.
   # Displays just promoter's name if there are no email addresses.
   def link_to_event_email(event)
-    email = event.email if event.email.present?
-    email = event.promoter.email if !email && event.promoter && event.promoter.email.present?
-    
-    name = event.promoter.name if event.promoter && event.promoter.name.present?
-    name = email if name.nil?
+    if event.email.present?
+      return mail_to(email)
+    end
 
-    if email.present?
-      mail_to email, name
-    else
-      name
+    promoters.inject([]) do |html, promoter|
+      if promoter.email.present?
+        html << mail_to(promoter.email, promoter.name)
+      else
+        html << promoter.name
+      end
+      html.join(", ")
     end
   end
 
   def link_to_event_phone(event)
-    return event.phone if event.phone.present?
-    event.promoter.home_phone if event.promoter && event.promoter.home_phone.present?
+    if event.phone.present?
+      return phone
+    end
+
+    promoters.inject([]) do |html, promoter|
+      if promoter.home_phone.present?
+        html << promoter.home_phone
+      end
+      html.join(", ")
+    end
   end
 
   # Only show link if flyer approved

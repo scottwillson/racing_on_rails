@@ -33,12 +33,12 @@
 # All notification code just supports combined TT results, and should be moved to background processing
 class Event < ActiveRecord::Base
   PROPOGATED_ATTRIBUTES = %w{
-    city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
+    city discipline flyer name number_issuer_id prize_list sanctioned_by state time velodrome_id time
     postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
   } unless defined?(PROPOGATED_ATTRIBUTES)
 
   before_destroy :validate_no_results
-  before_save :set_promoter, :set_team
+  before_save :set_promoters, :set_team
 
   validates_presence_of :name, :date
   validate :parent_is_not_self
@@ -72,7 +72,7 @@ class Event < ActiveRecord::Base
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
-  belongs_to :promoter, :class_name => "Person"
+  has_and_belongs_to_many :promoters, :class_name => "Person"
   belongs_to :team
 
   has_many   :races,
@@ -83,11 +83,14 @@ class Event < ActiveRecord::Base
   belongs_to :velodrome
   
   named_scope :editable_by, lambda { |person| 
-    {:conditions => { :promoter_id => person.id } } unless person.administrator?
+    {
+      :include => :promoters,
+      :conditions => { "events_people.person_id" => person.id }
+    } unless person.administrator?
   }
   named_scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   
-  attr_reader :new_promoter_name
+  attr_reader :new_promoters_names
   attr_reader :new_team_name
 
   include Comparable
@@ -319,6 +322,12 @@ class Event < ActiveRecord::Base
       end
     end
     
+    children.each do |child|
+      if child.promoters != promoters
+        child.promoters = promoters
+      end
+    end
+    
     children.each { |child| child.update_children }
     true
   end
@@ -450,27 +459,25 @@ class Event < ActiveRecord::Base
     Discipline[discipline].id if Discipline[discipline]
   end
   
-  def promoter_name
-    promoter.name if promoter
+  def promoters_names
+    promoters.map(:names).join(", ")
   end
 
-  def promoter_name=(value)
-    @new_promoter_name = value
+  def promoters_names=(value)
+    @new_promoters_names = value
   end
   
-  def set_promoter
-    if new_promoter_name.present?
-      promoters = Person.find_all_by_name_or_alias(new_promoter_name)
-      case promoters.size
-      when 0
-        self.promoter = Person.create!(:name => new_promoter_name)
-      when 1
-        self.promoter = promoters.first
-      else
-        self.promoter = promoters.detect { |promoter| promoter.id == promoter_id } || promoters.first
+  def set_promoters
+    if new_promoters_names.present?
+      new_promoters_names.split(",").each do |name|
+        new_promoters = Person.find_all_by_name_or_alias(name)
+        case new_promoters.size
+        when 0
+          self.promoters << Person.create!(:name => name)
+        when 1
+          self.promoters << new_promoters.first
+        end
       end
-    elsif new_promoter_name == ""
-      self.promoter = nil
     end
   end
   

@@ -93,7 +93,7 @@ class PersonTest < ActiveSupport::TestCase
     race_numbers.last.save!
     assert_equal(elkhorn, race_numbers.last.number_issuer, "Merging person's race number issuer")
     
-    promoter_events = [ Event.create!(:promoter => person_to_keep), Event.create!(:promoter => person_to_merge) ]
+    promoter_events = [ Event.create!(:promoters => [person_to_keep]), Event.create!(:promoters => [person_to_merge]) ]
     
     person_to_keep.merge(person_to_merge)
     

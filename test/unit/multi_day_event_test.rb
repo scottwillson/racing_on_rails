@@ -177,7 +177,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_1.email = "info@elkhornclassic.com"
     single_event_1.flyer = "http://google.com"
     single_event_1.phone = "718 671-1999"
-    single_event_1.promoter = people(:promoter)
+    single_event_1.promoters = [people(:promoter)]
     single_event_1.sanctioned_by = "FIAC"
     single_event_1.state = "NY"
     single_event_1.prize_list = 3000
@@ -192,7 +192,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     single_event_2.discipline = "Track"
     single_event_2.email = "info@elkhornclassic.com"
     single_event_2.flyer = "http://google.com"
-    single_event_2.promoter = people(:promoter)
+    single_event_2.promoters = [people(:promoter)]
     single_event_2.phone = "718 671-1999"
     single_event_2.sanctioned_by = "FIAC"
     single_event_2.state = "NY"
@@ -215,7 +215,6 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("http://google.com", results["flyer"], "SingleDayEvent flyer")
     assert_equal(0, results["flyer_approved"], "SingleDayEvent flyer")
     assert_equal("718 671-1999", results["phone"], "SingleDayEvent phone")
-    assert_equal(people(:promoter).id, results["promoter_id"].to_i, "SingleDayEvent promoter_id")
     assert_equal("FIAC", results["sanctioned_by"], "SingleDayEvent sanctioned_by")
     assert_equal("NY", results["state"], "SingleDayEvent state")
     assert_equal("3000", results["prize_list"], "SingleDayEvent prize_list")
@@ -223,6 +222,8 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal(velodromes(:alpenrose).id, results["velodrome_id"], "SingleDayEvent velodrome")
     assert_equal(multi_day_event.id, results["parent_id"].to_i, "SingleDayEvent parent ID")
     assert_equal 0, results["beginner_friendly"], "parent beginner_friendly"
+    results = Event.connection.select_values("select * from events_people where event_id=#{single_event_1.id}")
+    assert_equal([people(:promoter).id], [results["promoter_id"].to_i], "SingleDayEvent promoter_ids")
 
     results = Event.connection.select_one("select * from events where id=#{single_event_2.id}")
     assert_equal("Elkhorn Stage Race", results["name"], "SingleDayEvent name")
@@ -650,6 +651,10 @@ class MultiDayEventTest < ActiveSupport::TestCase
     
     event = single_day_event.children.create!
     assert_equal(Date.new(2007, 9, 19), event.date, "New Event child date shold match parent")
+  end
+  
+  def test_propogate_promoters
+    fail "This needs new logic"
   end
   
   def test_propagate_races

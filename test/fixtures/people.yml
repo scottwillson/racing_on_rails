@@ -1,5 +1,4 @@
 administrator:
-  id: 1
   first_name: Candi
   last_name: Murray
   email: admin@example.com
@@ -13,7 +12,6 @@ administrator:
   roles: administrator
 
 member:
-  id: 2
   first_name: Bob
   last_name: Jones
   email: member@example.com
@@ -27,7 +25,6 @@ member:
   member_to: <%= Date.today.year %>-12-31
 
 promoter:
-  id: 3
   first_name: Brad
   last_name: Ross
   login: promoter@example.com
@@ -38,7 +35,6 @@ promoter:
   perishable_token: <%= Authlogic::Random.friendly_token %>
 
 nate_hobson:
-  id: 4
   email: sixhobsons@comcast.net
   home_phone: (503) 223-3343
 

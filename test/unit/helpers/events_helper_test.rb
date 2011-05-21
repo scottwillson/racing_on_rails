@@ -42,6 +42,8 @@ class EventsHelperTest < ActionView::TestCase
     promoter.name = ""
     assert_match(/href="mailto:copperopolis@velopromo.com"/, link_to_event_email(event), "Event email and promoter email and no promoter name")
     assert_match(/>copperopolis@velopromo.com<\/a>/, link_to_event_email(event), "Event email and promoter email and no promoter name")
+    
+    fail "Multiple promoters"
   end
 
   def test_link_to_event_phone

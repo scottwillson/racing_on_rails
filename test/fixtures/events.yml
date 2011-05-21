@@ -3,7 +3,7 @@ banana_belt_series:
   name: Banana Belt Series
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   date: 2004-01-04
   type: Series
   number_issuer: association
@@ -14,7 +14,7 @@ banana_belt_1:
   name: Banana Belt I
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   updated_at: 2004-01-05
   number_issuer: stage_race
   date: 2004-01-04
@@ -27,7 +27,7 @@ banana_belt_2:
   name: Banana Belt II
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   date: 2004-01-11
   type: SingleDayEvent
   number_issuer: association
@@ -38,7 +38,7 @@ banana_belt_3:
   name: Banana Belt III
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   date: 2004-01-18
   type: SingleDayEvent
   number_issuer: association
@@ -74,7 +74,7 @@ tabor_cr:
   date: 2005-07-01
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 4
+  promoters: nate_hobson (Person)
   flyer: http://localhost/flyers/2006/tabor_cr.html
   flyer_approved: false
   type: SingleDayEvent
@@ -90,7 +90,7 @@ pir_series:
   flyer: http://localhost/flyers/2005/pir.html
   flyer_approved: true
   sanctioned_by: CBRA
-  promoter_id: 1
+  promoters: administrator (Person)
   type: WeeklySeries
   number_issuer: association
   bar_points: 0
@@ -104,7 +104,7 @@ pir:
   discipline: Road
   flyer: http://localhost/flyers/2005/pir.html
   sanctioned_by: CBRA
-  promoter_id: 1
+  promoters: administrator (Person)
   type: SingleDayEvent
   number_issuer: association
   bar_points: 0
@@ -118,7 +118,7 @@ pir_2:
   discipline: Road
   flyer: http://localhost/flyers/2005/pir.html
   sanctioned_by: CBRA
-  promoter_id: 1
+  promoters: administrator (Person)
   sanctioned_by: CBRA
   type: SingleDayEvent
   number_issuer: association
@@ -141,7 +141,7 @@ mt_hood:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   number_issuer: association
   type: MultiDayEvent
   bar_points: 0
@@ -154,7 +154,7 @@ mt_hood_1:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   city: Hood River
   number_issuer: association
   type: SingleDayEvent
@@ -169,7 +169,7 @@ mt_hood_2:
   discipline: Road
   flyer: http://www.hoodriversr.net/
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   number_issuer: association
   type: SingleDayEvent
   bar_points: 1
@@ -187,7 +187,7 @@ series_parent:
   name: Lost Series
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   date: <%= Time.zone.today %>
   type: Series
   number_issuer: association
@@ -197,7 +197,7 @@ lost_series_child:
   name: Lost Series
   discipline: Road
   sanctioned_by: CBRA
-  promoter_id: 3
+  promoters: promoter (Person)
   date: <%= Time.zone.today %>
   type: SingleDayEvent
   number_issuer: association
