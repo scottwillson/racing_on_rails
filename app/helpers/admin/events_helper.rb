@@ -5,7 +5,7 @@ module Admin::EventsHelper
   def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
     caption ||= link_to("Schedule", :only_path  => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
     footer ||= link_to('More &hellip;', :only_path => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
-    render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption, :footer => footer }
+    render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption.html_safe, :footer => footer.html_safe }
   end
   
   # Road upcoming events, Track upcoming events, etc …
