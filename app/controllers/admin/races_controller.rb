@@ -1,8 +1,8 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create, :propagate ]
-  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result, :set_race_category_name ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update ]
+  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute, :create_result ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
   layout "admin/application"
 
   def new
@@ -52,7 +52,6 @@ class Admin::RacesController < Admin::AdminController
   end
   
   def update_attribute
-    @race = Race.find(params[:id])
     respond_to do |format|
       format.js {
         @race.send "#{params[:name]}=", params[:value]
@@ -103,7 +102,7 @@ class Admin::RacesController < Admin::AdminController
     @event.propagate_races
   end
 
-  
+
   private
   
   def assign_event

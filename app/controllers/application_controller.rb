@@ -157,7 +157,7 @@ class ApplicationController < ActionController::Base
     unless require_person
       return false
     end
-
+    
     unless administrator? || 
            (@event && current_person == @event.promoter) || 
            (@race && current_person == @race.event.promoter)
