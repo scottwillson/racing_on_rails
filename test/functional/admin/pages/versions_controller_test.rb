@@ -9,7 +9,9 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
   end
 
   test "Edit page version" do
-    version = pages(:plain).versions.latest
+    page = pages(:plain)
+    page.update_attribute :title, "New Title"
+    version = page.versions.last
     get(:edit, :id => version.to_param)
     assert_response(:success)
   end
@@ -18,7 +20,7 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
     page = Page.create!(:body => "<h1>Welcome</h1>")
     page.body = "<h1>TTYL!</h1>"
     page.save!
-    get(:show, :id => page.versions.earliest.to_param)
+    get(:show, :id => page.versions.first.to_param)
     assert_select("h1", :text => "Welcome")
   end
   
@@ -27,10 +29,10 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
     page.body = "<h1>TTYL!</h1>"
     page.save!
     
-    assert_equal(2, page.versions.size, "versions")
-    delete(:destroy, :id => page.versions.earliest.to_param)
-
     assert_equal(1, page.versions.size, "versions")
+    delete(:destroy, :id => page.versions.first.to_param)
+
+    assert_equal(0, page.versions.size, "versions")
   end
   
   test "Revert to version" do
@@ -38,10 +40,10 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
     page.body = "<h1>TTYL!</h1>"
     page.save!
     
-    get(:revert, :id => page.versions.earliest.to_param)
+    get(:revert, :id => page.versions.first.to_param)
     
     page.reload
-    assert_equal(1, page.version, "version")
+    assert_equal(2, page.version, "version")
     assert_equal("<h1>Welcome</h1>", page.body, "body")
   end
 end

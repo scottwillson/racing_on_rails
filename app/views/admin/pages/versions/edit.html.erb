@@ -2,23 +2,23 @@
 
 <div class="column_grid_container top_margin">
   <div class="span-2">
-    <%= labelled_text :version, :title, "Title", @version.title, {:class => "left no_top_margin"}, "no_top_margin" %>
-    <%= labelled_text :version, :slug, "Slug", @version.slug, {:class => "left"} %>
-    <%= labelled_text :version, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
+    <%= labelled_text :page, :title, "Title", @version.title, {:class => "left no_top_margin"}, "no_top_margin" %>
+    <%= labelled_text :page, :slug, "Slug", @version.slug, {:class => "left"} %>
+    <%= labelled_text :page, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
 
     <% table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
       <%= render :partial => "admin/pages/version", 
-                 :collection => @version.page.versions.sort_by(&:lock_version).reverse, 
+                 :collection => @page.versions.sort_by(&:lock_version).reverse, 
                  :locals => { :selected => @version } %>
     <% end -%>
   </div>
   
   <div class="span-4 last">
-    <textarea readonly="true" id="page_body"><%= @version.body %></textarea>
+    <textarea readonly="true" id="page_body"><%= @page.body %></textarea>
   </div>
 
   <div class="page_buttons clear full_width last">
-    <div class="updatedon span-3"><%= "Updated: #{updated(@version.page)}" if @version.page.updated_at %></div>
+    <div class="updatedon span-3"><%= "Updated: #{updated(@version.page)}" if @page.updated_at %></div>
     <div class="right full_width last">
       <%= link_to("Preview", admin_pages_version_path(@version), :target => "_new", :class => "obvious", :id => "preview") %>
       <%= link_to("Delete", 

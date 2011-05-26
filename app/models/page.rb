@@ -5,20 +5,25 @@
 #
 # Uses ActsAsVersions, and should be moved to VestalVersions
 class Page < ActiveRecord::Base
+  include SentientUser
+
   acts_as_tree
-  acts_as_versioned :version_column => "lock_version"
-  before_validation :set_slug, :set_path, :set_author, :set_body
-  validates_uniqueness_of :path
-  validates_presence_of :author
+  versioned
   
-  belongs_to :author, :class_name => "Person"
+  before_validation :set_slug, :set_path, :set_body
+  before_create :set_created_by
+  before_save :set_updated_by
+  validates_uniqueness_of :path
   
   after_create :update_parent
   after_destroy :update_parent
+  
+  belongs_to :created_by, :class_name => "Person"
 
   # Friendly param. Last segment in +path+
   def set_slug
-    self.slug = self.title.downcase.gsub(" ", "_") if slug.blank?
+    self.slug = title.downcase.gsub(" ", "_") if slug.blank?
+    slug
   end
   
   # Parent +slug+ paths + +slug+
@@ -31,39 +36,36 @@ class Page < ActiveRecord::Base
     self.path = (_ancestors << self).map(&:slug).join("/").gsub(/^\//, "")
   end
   
-  def set_author
-    # Yeah, yeah, a big side-effect.
-    unless self.author_id
-      system_person = Person.find_by_name("System")
-      password = rand.to_s
-      unless system_person
-        system_person = Person.create!(:name => "System")
-      end
-      self.author = system_person
-    end
+  def set_created_by
+    self.created_by = Person.current
+    true
+  end
+  
+  def set_updated_by
+    self.updated_by = Person.current
+    true
   end
   
   # Can't reliably set default value for MySQL text field
   def set_body
-    self.body = "" unless self.body
+    self.body = "" unless body
+    body
   end
   
   def update_parent
+    logger.debug("=== update_parent")
     if parent(true)
-      parent.without_revision do
-        parent.update_attribute(:updated_at, Time.zone.now)
+      parent.skip_version do
+        parent.touch
       end
     end
+    true
   end
 
   def valid_parents
     Page.find(:all).delete_if { |page|
       page == self || descendants.include?(page)
     }
-  end
-  
-  def version
-    self.lock_version
   end
 
   def to_s
