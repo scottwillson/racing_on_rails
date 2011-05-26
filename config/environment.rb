@@ -2,47 +2,15 @@ RAILS_GEM_VERSION = "2.3.11"  unless defined? RAILS_GEM_VERSION
 
 require File.join(File.dirname(__FILE__), 'boot')
 
-if Gem::VERSION >= "1.3.6"
-    module Rails
-        class GemDependency
-            def requirement
-                r = super
-                (r == Gem::Requirement.default) ? nil : r
-            end
-        end
-    end
-end
-
 Rails::Initializer.run do |config|
   config.frameworks -= [ :action_web_service ]
 
-  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs )
+  config.autoload_paths += %W( #{RAILS_ROOT}/app/rack #{RAILS_ROOT}/app/models/competitions #{RAILS_ROOT}/app/models/observers #{RAILS_ROOT}/app/pdfs  #{RAILS_ROOT}/lib/sentient_user )
   
   config.action_controller.session = {
     :key => "_racing_on_rails_session",
     :secret => "9998d23d32c59a8161aba78b03630a93"
   }
-  
-  if RUBY_VERSION["1.8"]
-    config.gem "fastercsv"
-  end
-
-  # Rails 2.3.10 wants this Rack
-  config.gem "rack", :version => "~>1.1.0"
-
-  # Odd mixed encoding on FreeBSD 7.2 without Erubis
-  config.gem "erubis"
-
-  config.gem "authlogic"
-  config.gem "tabular", :version => ">0.0.5"
-  config.gem "mysql2", :version => "<0.3.0"
-  config.gem "pdf-reader", :lib => "pdf/reader"
-  config.gem "Ascii85", :lib => "ascii85"
-  config.gem "prawn"
-  config.gem "prawn-core", :lib => "prawn/core"
-  config.gem "vestal_versions"
-  config.gem "sentient_user"
-  config.gem "newrelic_rpm"  
 
   config.time_zone = "Pacific Time (US & Canada)"
   

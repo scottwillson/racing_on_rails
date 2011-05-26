@@ -1,4 +1,4 @@
-# Don't change this file!
+#{config.root}/lib/sentient_user# Don't change this file!
 # Configure your app in config/environment.rb and config/environments/*.rb
 
 RAILS_ROOT = "#{File.dirname(__FILE__)}/.." unless defined?(RAILS_ROOT)
@@ -103,6 +103,20 @@ module Rails
           File.read("#{RAILS_ROOT}/config/environment.rb")
         end
     end
+  end
+end
+
+class Rails::Boot
+  def run
+    load_initializer
+
+    Rails::Initializer.class_eval do
+      def load_gems
+        @bundler_loaded ||= Bundler.require :default, Rails.env
+      end
+    end
+
+    Rails::Initializer.run(:set_load_path)
   end
 end
 
