@@ -1,4 +1,4 @@
-module ApplicationHelper
+module ApplicationHelper  
   # Wrap +text+ in div tags, unless +text+ is blank
   def div(text)
     "<div>#{text}</div>" unless text.blank?
@@ -28,6 +28,35 @@ module ApplicationHelper
       value.gsub(/[\t\n\r]/, " ")
     else
       value
+    end
+  end
+  
+  # FIXME Move to helper
+  # FIXME use parse args replacement
+  def editable(object, attribute, options = {})
+    object_name = ActiveModel::Naming.singular(object)
+    
+    if options.present? && options[:length].present?
+      value = truncate(object.send(attribute), :length => options[:length])
+    else
+      value = object.send(attribute)
+    end
+    
+    if options.present? && options[:as].present?
+      _object_name = options[:as].to_s
+    else
+      _object_name = object_name
+    end
+    
+    content_tag( 
+      :div, 
+      :class => "editable", 
+      "data-id" => object.id, 
+      "data-url" => url_for(:controller => _object_name.pluralize, :action => "update_attribute", :id => object.to_param), 
+      "data-model" => _object_name, 
+      "data-attribute" => attribute,
+      "data-original" => value) do
+        value
     end
   end
 

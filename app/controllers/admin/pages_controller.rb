@@ -1,7 +1,6 @@
 # Admin editing for Pages in built-in CMS. All editing actions expire the cache.
 class Admin::PagesController < Admin::AdminController
   before_filter :require_administrator, :except => [ :show ]
-  in_place_edit_for :page, :title
   layout "admin/application"
 
   def index
@@ -39,6 +38,18 @@ class Admin::PagesController < Admin::AdminController
       redirect_to(edit_admin_page_path(@page))
     else
       render :edit
+    end
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @page = Page.find(params[:id])
+        @page.send "#{params[:name]}=", params[:value]
+        @page.save!
+        expire_cache
+        render :text => @page.send(params[:name]), :content_type => "text/html"
+      }
     end
   end
   

@@ -55,10 +55,8 @@ class Admin::RacesController < Admin::AdminController
     respond_to do |format|
       format.js {
         @race.send "#{params[:name]}=", params[:value]
-        # FIXME Signal error
-        if @race.save
-          expire_cache
-        end
+        @race.save!
+        expire_cache
         render :text => @race.send(params[:name]), :content_type => "text/html"
       }
     end

@@ -23,14 +23,14 @@ class Admin::PagesControllerTest < ActionController::TestCase
   
   def test_update_title_inplace
     page = pages(:plain)
-    post(:set_page_title, 
+    xhr(:put, :update_attribute, 
         :id => page.to_param,
         :value => "OBRA Banquet",
-        :editorId => "page_#{page.id}_name"
+        :name => "title"
     )
     assert_response(:success)
     assert_template(nil)
-    assert_equal(page, assigns("item"), "@page")
+    assert_equal(page, assigns("page"), "@page")
     page.reload
     assert_equal("OBRA Banquet", page.title, "Page title")
     assert_equal(people(:administrator), page.author, "author")

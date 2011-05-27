@@ -2,9 +2,6 @@
  class Admin::VelodromesController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
-  
-  in_place_edit_for :velodrome, :name
-  in_place_edit_for :velodrome, :website
 
   def index
     @velodromes = Velodrome.all( :order => "name")
@@ -39,6 +36,18 @@
       return redirect_to(edit_admin_velodrome_path(@velodrome))
     end
     render(:template => 'admin/velodromes/edit')
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @velodrome = Velodrome.find(params[:id])
+        @velodrome.send "#{params[:name]}=", params[:value]
+        @velodrome.save!
+        expire_cache
+        render :text => @velodrome.send(params[:name]), :content_type => "text/html"
+      }
+    end
   end
 
   def destroy

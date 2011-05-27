@@ -10,8 +10,6 @@ class Admin::PeopleController < Admin::AdminController
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
   
-  in_place_edit_for :person, :team_name
-  
   # Search for People by name. This is a 'like' search on the concatenated 
   # first and last name, and aliases. E.g.,:
   # 'son' finds:
@@ -293,13 +291,11 @@ class Admin::PeopleController < Admin::AdminController
     redirect_to(:action => 'index')
   end
 
-  # Inline update. Merge with existing Person if names match
-  def set_person_name
-    @person = Person.find(params[:id])
+  def update_name
     new_name = params[:value]
     original_name = @person.name
     @person.name = new_name
-
+  
     people_with_same_name = @person.people_with_same_name
     unless people_with_same_name.empty?
       return merge?(original_name, people_with_same_name, @person)
@@ -308,6 +304,22 @@ class Admin::PeopleController < Admin::AdminController
     @person.update_attribute(:name, params[:value])
     expire_cache
     render :text => @person.name
+  end
+  
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @person = Person.find(params[:id])
+        if params[:name] == "name"
+          update_name
+        else
+          @person.send "#{params[:name]}=", params[:value]
+          @person.save!
+          expire_cache
+          render :text => @person.send(params[:name]), :content_type => "text/html"
+        end
+      }
+    end
   end
 
   # Toggle membership on or off

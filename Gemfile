@@ -1,9 +1,10 @@
-source "http://rubygems.org"
+source :gemcutter
 
-gem "rails"
+gem "rails", "3.0.7"
 
 gem "fastercsv", :platforms => :ruby_18
 gem "rack", "~>1.2.1"
+gem "rake", "~>0.8.0"
 gem "authlogic"
 gem "tabular", ">0.0.5"
 gem "hoptoad_notifier"
@@ -21,7 +22,6 @@ group :test do
   gem "mocha"
   gem "selenium-webdriver"
   gem "timecop"
-  gem "turn"
 end
 
 group :acceptance do

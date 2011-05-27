@@ -95,36 +95,41 @@ function autoCompleteTeam(model, attribute, path) {
 }    
 
 function makeEditable() {
-  $('.in_place_editable').editable(
+  $('.editable').editable(
     function(value, settings) {
       var element = $(this);
       element.addClass('saving');
       var ajaxoptions = {
-          type    : 'PUT',
-          data    : {
-            '_method': 'PUT',
-            name: element.data('attribute'),
-            value: value            
-          },
-          dataType: 'html',
-          url     : element.data('url'),
-          success : function(result, status, jqXHR) {
-            if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
-              element.html(result);
-              element.removeClass('saving');
-              if (!$.trim(element.html())) {
-                element.html(settings.placeholder);
-              }
+        type    : 'PUT',
+        data    : {
+          '_method': 'PUT',
+          name: element.data('attribute'),
+          value: value            
+        },
+        dataType: 'html',
+        url     : element.data('url'),
+        success : function(result, status, jqXHR) {
+          if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
+            element.html(result);
+            element.removeClass('saving');
+            if (!$.trim(element.html())) {
+              element.html(settings.placeholder);
             }
-            else {
-              element.removeClass('saving');
-              $.globalEval(result);
-            }
-          },
-          error   : function(xhr, status, error) {
-              onerror.apply(form, [settings, this, xhr]);
           }
+          else {
+            element.removeClass('saving');
+            $.globalEval(result);
+          }
+        },
+        error   : function(xhr, status, error) {
+          element.removeClass('saving');
+          var originalColor = element.css('background-color');
+          element.css({ 'background-color': 'rgb(255, 204, 204)' });
+          element.animate({ 'background-color': originalColor }, 2000);
+          element.html(element.data('original'));
+        }
       };
+      element.find("input").attr("disabled", "disabled");
       $.ajax(ajaxoptions);
     },
     {

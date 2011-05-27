@@ -6,8 +6,6 @@ class Admin::EventsController < Admin::AdminController
   before_filter :require_administrator, :except => [ :edit, :update ]
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
-  in_place_edit_for :event, :first_aid_provider
-  in_place_edit_for :event, :chief_referee
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -130,6 +128,18 @@ class Admin::EventsController < Admin::AdminController
       redirect_to(edit_admin_event_path(@event))
     else
       render(:action => :edit)
+    end
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @event = Event.find(params[:id])
+        @event.send "#{params[:name]}=", params[:value]
+        @event.save!
+        expire_cache
+        render :text => @event.send(params[:name]), :content_type => "text/html"
+      }
     end
   end
 

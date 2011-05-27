@@ -64,10 +64,11 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
 
   def test_update_name
     velodrome = velodromes(:alpenrose)
-    post(:set_velodrome_name, 
+    xhr(:put,
+        :update_attribute,
         :id => velodrome.to_param,
         :value => "Paul Allen Velodrome",
-        :editorId => "velodrome_#velodrome.id}_name"
+        :name => "name"
     )
     assert_response(:success)
     velodrome.reload
@@ -76,10 +77,11 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
 
   def test_update_website
     velodrome = velodromes(:alpenrose)
-    post(:set_velodrome_website, 
+    xhr(:put,
+        :update_attribute,
         :id => velodrome.to_param,
         :value => "www.raceatra.com",
-        :editorId => "velodrome_#velodrome.id}_website"
+        :name => "website"
     )
     assert_response(:success)
     velodrome.reload

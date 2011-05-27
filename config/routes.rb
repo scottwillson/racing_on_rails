@@ -24,8 +24,7 @@ RacingOnRails::Application.routes.draw do
       member do
         get     :create_from_children
         delete  :destroy_races
-        post    :set_event_chief_referee
-        post    :set_event_first_aid_provider
+        put     :update_attribute
         post    :upload
       end
       resources :races do

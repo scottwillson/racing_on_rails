@@ -175,7 +175,7 @@ table.base td.icon {
   width: 16px;
 }
 
-table.base div.in_place_editable {
+table.base div.editable {
   border: 1px solid transparent;
   left: -4px;
   margin-bottom: -6px;
@@ -189,22 +189,21 @@ table.base div.in_place_editable {
   vertical-align: top;
 }
 
-table.base div.in_place_editable:hover {
+table.base div.editable:hover {
   background-color: rgb(245, 245, 245);
   border: 1px solid rgb(204, 204, 204);
 }
 
-table.base tr.hovering div.in_place_editable:hover,
-table.base div.in_place_editable.saving:hover {
+table.base tr.hovering div.editable:hover,
+table.base div.editable.saving:hover {
   background-color: transparent;
   border: 1px solid transparent;
 }
 
-table.base div.in_place_editable.saving input {
+table.base div.editable.saving input {
   background-image: url(/images/icons/spinner.gif);
   background-position: center right;
   background-repeat: no-repeat;
-  color: gray;
 }
 
 form.editor_field input,

@@ -3,8 +3,6 @@ class Admin::TeamsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 
-  in_place_edit_for :team, :name
-
   # Params
   # * team_name
   def index
@@ -58,6 +56,18 @@ class Admin::TeamsController < Admin::AdminController
       redirect_to(edit_admin_team_path(@team))
     else
       render :edit
+    end
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @team = Team.find(params[:id])
+        @team.send "#{params[:name]}=", params[:value]
+        @team.save!
+        expire_cache
+        render :text => @team.send(params[:name]), :content_type => "text/html"
+      }
     end
   end
   

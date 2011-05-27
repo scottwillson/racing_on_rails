@@ -1,7 +1,7 @@
 <%= content_tag :tr, :class => cycle("even", "odd"), :id => "team_#{team.id}_row" do %>
   <td class="icon"><%= image_tag "icons/group.png", :id => "team_#{team.id}", "data-name" => team.name %></td>
   <td class="name">
-    <%= in_place_editor_field :team, :name, team, true %>
+    <%= editable team, :name %>
   </td>
   <td class="not_editable">
     <%= render :partial => "aliases", :locals => { :team => team } %>

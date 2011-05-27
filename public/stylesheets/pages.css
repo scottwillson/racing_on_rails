@@ -250,7 +250,7 @@ table.results td.result .event {
 }
 
 /* Pages */
-table.base .title div.in_place_editable {
+table.base .title div.editable {
   background-repeat: no-repeat;
   background-image: url(/images/icons/page_white_world.png);
   padding-left: 20px;
@@ -386,7 +386,7 @@ table.event_nav td.race {
   background-position: 8px 6px;
 }
 
-table.event_nav td.race .in_place_editable {
+table.event_nav td.race .editable {
   margin-left: 24px;
 }
 
