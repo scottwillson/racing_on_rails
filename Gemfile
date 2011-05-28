@@ -20,6 +20,7 @@ gem "erubis"
 group :test do
   gem "ansi"
   gem "mocha"
+  gem "minitest"
   gem "selenium-webdriver"
   gem "timecop"
 end

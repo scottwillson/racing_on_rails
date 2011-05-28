@@ -31,6 +31,7 @@ GEM
       builder
     json_pure (1.5.1)
     kgio (2.4.1)
+    minitest (2.1.0)
     mocha (0.9.12)
     mysql2 (0.2.7)
     newrelic_rpm (3.0.1)
@@ -79,6 +80,7 @@ DEPENDENCIES
   ffi (= 0.6.3)
   hoptoad_notifier
   json_pure
+  minitest
   mocha
   mysql2 (< 0.3.0)
   newrelic_rpm
