@@ -265,7 +265,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     race_number = race_numbers(:molly_road_number)
     assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 
-    post(:destroy_number, :id => race_number.to_param)
+    post(:destroy_number, :number_id => race_number.to_param, :id => race_number.person_id)
     assert_response :success
     
     assert_raise(ActiveRecord::RecordNotFound, "Should delete RaceNumber") {RaceNumber.find(race_number.id)}

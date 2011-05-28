@@ -3,6 +3,7 @@
   <td><%= 
     if result.respond_to?(column) && !result.new_record?
       if column == "bar"
+        # FIXME
         check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
                 :onchange => "new Ajax.Request('/admin/results/set_result_bar/#{result.id}?value=#{result.bar? ? "0" : "1"}', 
                               {asynchronous:true, evalScripts:true})"
@@ -14,14 +15,14 @@
   <% end %>
   <td class="actions last">
     <%= link_to image_tag("/images/icons/add.png"),
-          :url => create_result_admin_race_path(:before_result_id => result.id), 
+          create_result_admin_race_path(:before_result_id => result.id), 
           :remote => true,
-          :html => { :class => "image", :id => "result_#{result.id}_add" }, 
+          :class => "image", :id => "result_#{result.id}_add", 
           :method => "post"
     %><%= link_to(image_tag("/images/icons/delete.png"), 
-            :url => destroy_result_admin_race_path(result.race, :result_id => result.id), 
+            destroy_result_admin_race_path(result.race, :result_id => result.id), 
             :remote => true,
-            :html => { :class => "image", :id => "result_#{result.id}_destroy" }, 
+            :class => "image", :id => "result_#{result.id}_destroy", 
             :method => "delete") unless result.new_record? %>
   </td>
 </tr>

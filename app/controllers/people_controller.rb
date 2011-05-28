@@ -46,6 +46,7 @@ class PeopleController < ApplicationController
   end
 
   def account
+    flash.keep
     person = (params[:id] && Person.find(params[:id])) || current_person
     if person
       redirect_to edit_person_path(person)

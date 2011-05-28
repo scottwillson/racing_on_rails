@@ -64,6 +64,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert(password != updated_person.crypted_password, "Password should change")
     assert_equal "bob.jones", updated_person.login, "login"
     assert(password != Person.find(updated_person.id).crypted_password, "Password should change")
+    assert flash[:notice].present?, "Shoudl set flash :notice"
     assert_redirected_to "/account"
   end
   

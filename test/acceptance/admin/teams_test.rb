@@ -64,16 +64,14 @@ class TeamsTest < WebDriverTestCase
 
     type "SpeedVagen-Vanilla", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "form.editor_field input"
-    wait_for_no_element :css => ".editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     click "team_#{vanilla_id}_name"
     wait_for_element :css => "form.editor_field input"
 
     type "Sacha's Team", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "form.editor_field input"
-    wait_for_no_element :css => ".editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     vanilla = Team.find(vanilla_id)
     assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"

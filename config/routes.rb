@@ -17,7 +17,6 @@ RacingOnRails::Application.routes.draw do
     resources :events do
       collection do
         get  :add_children
-        post :propagate
         get  :set_parent
         post :upload_schedule
       end
@@ -42,9 +41,7 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :multi_day_events
-    resources :pages do
-      post :set_page_title, :on => :member
-    end
+    resources :pages
     namespace :pages do
       resources :versions do
         member do
@@ -63,6 +60,7 @@ RacingOnRails::Application.routes.draw do
       end
       member do
         get  :card
+        delete :destroy_number
         post :number_year_changed
         post :toggle_member
       end
@@ -75,6 +73,7 @@ RacingOnRails::Application.routes.draw do
         put :update_attribute
       end
     end
+    
     resources :results do
       collection do
         post :find_person
@@ -82,31 +81,7 @@ RacingOnRails::Application.routes.draw do
       end
       member do
         post :move_result
-        post :set_result_age
-        post :set_result_bar
-        post :set_result_city
-        post :set_result_category_name
-        post :set_result_date_of_birth
-        post :set_result_distance
-        post :set_result_laps
-        post :set_result_license
-        post :set_result_name
-        post :set_result_notes
-        post :set_result_number
-        post :set_result_place
-        post :set_result_points
-        post :set_result_points_bonus
-        post :set_result_points_bonus_penalty
-        post :set_result_points_from_place
-        post :set_result_points_penalty
-        post :set_result_points_total
-        post :set_result_state
-        post :set_result_team_name
-        post :set_result_time_bonus_penalty_s
-        post :set_result_time_gap_to_leader_s
-        post :set_result_time_gap_to_winner_s
-        post :set_result_time_s
-        post :set_result_time_total_s
+        put  :update_attribute
       end
     end
     
@@ -117,14 +92,13 @@ RacingOnRails::Application.routes.draw do
         post :cancel_in_place_edit
         post :destroy_name
         get  :merge
-        post :set_team_name
         post :toggle_member
+        put  :update_attribute
       end
     end
     resources :velodromes do
       member do
-        post :set_velodrome_name
-        post :set_velodrome_website
+        put  :update_attribute
       end
     end
     resources :weekly_series
@@ -140,11 +114,9 @@ RacingOnRails::Application.routes.draw do
   match '/admin/racers' => 'admin/racers#index'
   match '/admin/persons/:action/:id' => 'admin/people#index', :as => :admin_persons
   match '/admin' => 'admin/home#index', :as => :admin_home
-  match '/bar/categories' => 'bar#categories'
-  match '/bar/:year/categories' => 'bar#categories', :constraints => { :year => /\d+/ }
-  match '/bar' => 'bar#index'
-  match '/bar/:year/:discipline/:category' => 'bar#show', :as => :bar, :defaults => { :discipline => 'overall', :category => 'senior_men' }, :constraints => { :year => /\d+/ }
-  match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d+/ }
+  match '/bar' => 'bar#index', :as => "bar_root"
+  match '/bar(/:year(/:discipline(/:category)))' => 'bar#show', :as => "bar", :defaults => { :discipline => 'overall', :category => 'senior_men' }, :constraints => { :year => /\d{4}/ }
+  match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d{4}/ }
   match '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
   match '/admin/cat4_womens_race_series/results/new' => 'admin/cat4_womens_race_series#new_result', :as => :new_admin_cat4_womens_race_series_result
   match '/events/:event_id/results' => 'results#event'
@@ -163,7 +135,7 @@ RacingOnRails::Application.routes.draw do
     end
   end
 
-  match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d+/ }
+  match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman(/:year)' => 'ironman#index', :as => :ironman
   match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists

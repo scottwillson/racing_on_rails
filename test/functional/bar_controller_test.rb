@@ -84,14 +84,6 @@ class BarControllerTest < ActionController::TestCase
     assert_redirected_to "http://#{RacingAssociation.current.static_host}/bar/2003"
   end
   
-  def test_categories
-    get :categories, :year => "2004"
-    assert_response :success
-    assert_template "bar/categories"
-    assert_not_nil assigns["bar"], "Should assign bar"
-    assert_not_nil assigns["excluded_categories"], "Should assign excluded_categories"
-  end
-  
   def test_bad_discipline
     get :show, :discipline => "badbadbad", :year => "2004", :category => "masters_men_30_34"
     assert_response :success

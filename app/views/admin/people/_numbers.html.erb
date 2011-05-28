@@ -13,28 +13,31 @@
     <td><label class="inline"><%= RacingAssociation.current.short_name %> Membership</label> <%= text_field 'person', 'license' %></td>
   </tr>
   <% end %>
-  <% for @number in race_numbers %>
-  <tr id="<%= "number_#{@number.id}_row" %>">
+  <% race_numbers.each do |number| %>
+  <% @number = number %>
+  <tr id="<%= "number_#{number.id}_row" %>">
     <td>
       <table cellspacing="0">
         <tr>
           <td>
-            <label class="inline"><%= @number.number_issuer.name %> <%= @number.discipline.name %></label>
+            <label class="inline"><%= number.number_issuer.name %> <%= number.discipline.name %></label>
           </td>
           <td class="right">
             <%= text_field 'number[]', 'value', :class => "number" %>
           </td>
           <td>
             <%= link_to(image_tag("icons/information.png"), "#", 
-              :title => "Updated #{time_ago_in_words(@number.updated_at, true)} ago #{('by ' + @number.updated_by) if @number.updated_by}", 
+              :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{('by ' + number.updated_by) if number.updated_by}", 
               :class => "image") %>
           </td>
           <td class="right">
             <%= link_to(
                   image_tag('/images/icons/delete.png'),
-                    :url => { :action => "destroy_number", :id => @number.id},
+                    destroy_number_admin_person_path(person, :number_id => number.id),
                     :remote => true,
-                    :html => { :id => "destroy_number_#{@number.id}", :class => "image" }
+                    :method => :delete,
+                    :id => "destroy_number_#{number.id}", 
+                    :class => "image"
                   )
            %>
           </td>

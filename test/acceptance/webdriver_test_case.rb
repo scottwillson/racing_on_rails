@@ -5,7 +5,7 @@ require File.expand_path("../../test_helper", __FILE__)
 require File.expand_path(File.dirname(__FILE__) + "/webdriver_test_unit")
 require "selenium-webdriver"
 
-at_exit {
+MiniTest::Unit.after_tests {
   begin
     begin
       Timeout::timeout(5) do
@@ -218,7 +218,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "Element #{element_finder.inspect} did not appear within 10 seconds"
+      raise Timeout::Error, "Element #{element_finder.inspect} still present after 10 seconds"
     end
   end
   

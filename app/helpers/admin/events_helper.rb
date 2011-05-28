@@ -4,7 +4,7 @@ module Admin::EventsHelper
   # Build a caption and footer links and render events/upcoming partial
   def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
     caption ||= link_to("Schedule", :only_path  => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
-    footer ||= link_to('More &hellip;', :only_path => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
+    footer ||= link_to("More &hellip;".html_safe, :only_path => false, :host => RacingAssociation.current.rails_host, :controller => 'schedule')
     render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption.html_safe, :footer => footer.html_safe }
   end
   
@@ -13,7 +13,7 @@ module Admin::EventsHelper
     if upcoming_events.disciplines.size > 1
       caption = discipline.name.upcase
     else
-      caption = "&nbsp;"
+      caption = "&nbsp;".html_safe
     end
     render :partial => 'events/discipline_upcoming', :locals => { :discipline => discipline, :dates => upcoming_events.dates, :caption => caption }
   end

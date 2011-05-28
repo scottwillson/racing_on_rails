@@ -20,21 +20,23 @@
       <%= link_to("Copy to child events", 
                   propagate_admin_event_races_path(@event),
                   :remote => true,
-                  :before => "$('propagate_races').hide({queue: 'front'}); $('propagate_races_progress').show({queue: 'front'})",
-                  :class => "obvious", :id => "propagate_races", :title => "Add same races to all children events"
+                  :method => :post,
+                  :class => "obvious", 
+                  :id => "propagate_races", 
+                  :title => "Add same races to all children events"
           ) if @event.races.any? && @event.children.any?
       %>
     </td>
     <td class="right delete_all_races">
       <%= link_to("Delete all races",
-      :url => destroy_races_admin_event_path(@event),
-      :remote => true,
-      :class => "obvious", 
-      :id => "destroy_races", 
-      :title => "Delete all",
-      :method => :delete,
-      :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
-      :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?") if @event.races.any? && administrator?
+        destroy_races_admin_event_path(@event),
+        :class => "obvious", 
+        :id => "destroy_races", 
+        :title => "Delete all",
+        :remote => true,
+        :method => :delete,
+        :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?"
+      ) if @event.races.any? && administrator?
       # Lame workaround for Safari
       %>
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>

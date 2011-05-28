@@ -65,21 +65,18 @@ class PeopleTest < WebDriverTestCase
 
     type "A Penn", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "form.editor_field input"
-    wait_for_no_element :css => ".editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "people_table"
     assert_table("people_table", 4, 1, /^A Penn/)
 
     click "person_#{@weaver_id}_team_name"
-    wait_for_no_element "person_#{@weaver_id}_name-inplaceeditor"
-    assert_element :css => "td.editing"
+    wait_for_element :css => "form.editor_field input"
 
     type "River City Bicycles", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "person_#{@alice_id}_name-inplaceeditor"
-    wait_for_no_element :css => "td.editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     refresh
     wait_for_element "people_table"
@@ -157,6 +154,7 @@ class PeopleTest < WebDriverTestCase
     
     type "tonkin", "name"
     type :return, { :name => "name" }, false
+    sleep 1
     assert_not_in_page_source 'error'
     assert_page_source 'Erik Tonkin'
     assert_page_source 'Kona'

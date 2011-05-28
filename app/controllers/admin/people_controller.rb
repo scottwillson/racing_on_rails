@@ -290,21 +290,6 @@ class Admin::PeopleController < Admin::AdminController
     Duplicate.delete_all
     redirect_to(:action => 'index')
   end
-
-  def update_name
-    new_name = params[:value]
-    original_name = @person.name
-    @person.name = new_name
-  
-    people_with_same_name = @person.people_with_same_name
-    unless people_with_same_name.empty?
-      return merge?(original_name, people_with_same_name, @person)
-    end
-    
-    @person.update_attribute(:name, params[:value])
-    expire_cache
-    render :text => @person.name
-  end
   
   def update_attribute
     respond_to do |format|
@@ -320,6 +305,21 @@ class Admin::PeopleController < Admin::AdminController
         end
       }
     end
+  end
+
+  def update_name
+    new_name = params[:value]
+    original_name = @person.name
+    @person.name = new_name
+  
+    people_with_same_name = @person.people_with_same_name
+    unless people_with_same_name.empty?
+      return merge?(original_name, people_with_same_name, @person)
+    end
+    
+    @person.update_attribute(:name, params[:value])
+    expire_cache
+    render :text => @person.name, :content_type => "text/html"
   end
 
   # Toggle membership on or off
@@ -389,7 +389,7 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   def destroy_number
-    id = params[:id]
+    id = params[:number_id]
     RaceNumber.destroy(id)
     render :update do |page|
       page.visual_effect(:puff, "number_#{id}_row", :duration => 2)

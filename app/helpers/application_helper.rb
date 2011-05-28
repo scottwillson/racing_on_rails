@@ -51,6 +51,7 @@ module ApplicationHelper
     content_tag( 
       :div, 
       :class => "editable", 
+      :id => "#{_object_name}_#{object.to_param}_#{attribute}",
       "data-id" => object.id, 
       "data-url" => url_for(:controller => _object_name.pluralize, :action => "update_attribute", :id => object.to_param), 
       "data-model" => _object_name, 

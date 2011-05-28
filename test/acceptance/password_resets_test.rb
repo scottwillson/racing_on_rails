@@ -3,7 +3,7 @@ require "acceptance/webdriver_test_case"
 # :stopdoc:
 class PasswordResetsTest < WebDriverTestCase
   def test_reset_not_logged_in
-    open "/person_sessions/new"
+    open "/person_session/new"
     click :id => "forgot"
     type "member@example.com", :id => "email"
     click :name => "commit"

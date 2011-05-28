@@ -50,13 +50,4 @@ class BarController < ApplicationController
     ) if @race
     expires_in 1.hour, :public => true
   end
-  
-  # BAR category mappings
-  def categories
-    @year = params['year'] || Date.today.year.to_s
-    date = Date.new(@year.to_i, 1, 1)
-    @bar = Bar.first(:conditions => ['date = ?', date])
-    @excluded_categories = Category.all( :conditions => ['parent_id is null'])
-    expires_in 1.hour, :public => true
-  end
 end
