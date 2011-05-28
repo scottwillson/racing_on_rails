@@ -1,14 +1,14 @@
-<% @page_title = "Admin: Pages: #{@version.title}: #{@version.lock_version}" %>
+<% @page_title = "Admin: Pages: #{@page.title}: #{@version.number}" %>
 
 <div class="column_grid_container top_margin">
   <div class="span-2">
-    <%= labelled_text :page, :title, "Title", @version.title, {:class => "left no_top_margin"}, "no_top_margin" %>
-    <%= labelled_text :page, :slug, "Slug", @version.slug, {:class => "left"} %>
+    <%= labelled_text :page, :title, "Title", @page.title, {:class => "left no_top_margin"}, "no_top_margin" %>
+    <%= labelled_text :page, :slug, "Slug", @page.slug, {:class => "left"} %>
     <%= labelled_text :page, :parent_id, "Parent", ("#{@parent.title} (#{@parent.path})" if @parent), {:class => "left"} %>
 
     <% table :caption => "Versions", :class => "versions box-2 top_margin", :id => :versions, :insert_header => true, :columns => 2 do %>
       <%= render :partial => "admin/pages/version", 
-                 :collection => @page.versions.sort_by(&:lock_version).reverse, 
+                 :collection => @page.versions.sort_by(&:number).reverse, 
                  :locals => { :selected => @version } %>
     <% end -%>
   </div>
@@ -18,7 +18,7 @@
   </div>
 
   <div class="page_buttons clear full_width last">
-    <div class="updatedon span-3"><%= "Updated: #{updated(@version.page)}" if @page.updated_at %></div>
+    <div class="updatedon span-3"><%= "Updated: #{updated(@page)}" if @page.updated_at %></div>
     <div class="right full_width last">
       <%= link_to("Preview", admin_pages_version_path(@version), :target => "_new", :class => "obvious", :id => "preview") %>
       <%= link_to("Delete", 

@@ -18,10 +18,12 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
   
   test "Show old version" do
     page = Page.create!(:body => "<h1>Welcome</h1>")
+    page.body = "<h1>foo</h1>"
+    page.save!
     page.body = "<h1>TTYL!</h1>"
     page.save!
     get(:show, :id => page.versions.first.to_param)
-    assert_select("h1", :text => "Welcome")
+    assert_select("h1", :text => "TTYL!")
   end
   
   test "Delete old version" do
@@ -37,13 +39,15 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
   
   test "Revert to version" do
     page = Page.create!(:body => "<h1>Welcome</h1>")
+    page.title = "Title"
+    page.save!
     page.body = "<h1>TTYL!</h1>"
     page.save!
     
     get(:revert, :id => page.versions.first.to_param)
     
     page.reload
-    assert_equal(2, page.version, "version")
+    assert_equal(4, page.version, "version")
     assert_equal("<h1>Welcome</h1>", page.body, "body")
   end
 end

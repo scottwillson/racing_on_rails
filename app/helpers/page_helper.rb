@@ -10,7 +10,7 @@ module PageHelper
   end
   
   def updated(page)
-    "<span title=\"Created on #{page.created_at}\">#{time_ago_in_words(page.updated_at, true)} ago</span> by #{page.last_updated_by.try :name}"
+    "<span title=\"Created on #{page.created_at}\">#{time_ago_in_words(page.updated_at, true)} ago</span> by #{page.updated_by.try :name}"
   end
   
   def confirm_destroy_message(page)

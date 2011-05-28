@@ -28,7 +28,14 @@ class Admin::Pages::VersionsController < Admin::AdminController
   def revert
     version = Page::Version.find(params[:id])
     page = version.versioned
-    page.revert_to!(version.number)
+
+    begin
+      ActiveRecord::Base.lock_optimistically = false
+      page.revert_to! version.number
+    ensure
+      ActiveRecord::Base.lock_optimistically = true
+    end
+
     expire_cache
     flash[:notice] = "Reverted #{page.title} to version from #{version.updated_at.to_s(:long)}"
     redirect_to edit_admin_page_path(page)

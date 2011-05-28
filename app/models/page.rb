@@ -12,7 +12,6 @@ class Page < ActiveRecord::Base
   
   before_validation :set_slug, :set_path, :set_body
   before_create :set_created_by
-  before_save :set_updated_by
   validates_uniqueness_of :path
   
   after_create :update_parent
@@ -41,9 +40,8 @@ class Page < ActiveRecord::Base
     true
   end
   
-  def set_updated_by
-    self.updated_by = Person.current
-    true
+  def last_updated_by
+    versions.last.try(:user) || created_by
   end
   
   # Can't reliably set default value for MySQL text field
