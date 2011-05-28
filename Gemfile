@@ -20,6 +20,7 @@ gem "will_paginate", "~> 3.0.beta"
 group :test do
   gem "ansi"
   gem "mocha"
+  gem "minitest"
   gem "selenium-webdriver"
   gem "timecop"
 end

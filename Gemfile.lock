@@ -61,6 +61,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
+    minitest (2.1.0)
     mocha (0.9.12)
     mysql2 (0.2.7)
     newrelic_rpm (3.0.1)
@@ -117,6 +118,7 @@ DEPENDENCIES
   authlogic
   fastercsv
   hoptoad_notifier
+  minitest
   mocha
   mysql2 (< 0.3.0)
   newrelic_rpm
