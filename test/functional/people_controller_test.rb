@@ -142,7 +142,7 @@ class PeopleControllerTest < ActionController::TestCase
     version = person.versions.last
     assert_equal person.name, version.user, "version user"
     changes = version.changes
-    assert_equal 1, changes.size, "changes"
+    assert_equal 2, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
@@ -167,15 +167,14 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
     assert_equal 1, person.versions.size, "versions"
     version = person.versions.last
-    p version
-    assert_equal editor.name, version.user, "version user"
+    assert_equal "my_login", version.user_name, "version user"
     changes = version.changes
-    assert_equal 1, changes.size, "changes"
+    assert_equal 2, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
     assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal "my_login", person.updated_by, "updated_by"
+    assert_equal "my_login", person.last_updated_by, "updated_by"
     # VestalVersions convention
     assert_nil person.updated_by, "updated_by"
   end
