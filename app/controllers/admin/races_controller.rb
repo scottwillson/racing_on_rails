@@ -41,7 +41,6 @@ class Admin::RacesController < Admin::AdminController
   # * event: Unsaved Race
   # === Flash
   # * warn
-  # FIXME Add test after spike
   def update
     if @race.update_attributes(params[:race])
       expire_cache
