@@ -1,7 +1,6 @@
 # Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
 # fewer fields than administrators.
 
-# FIXME No route matches {:action=>"create_from_children", :id=>nil, :controller=>"admin/events"}
 class Admin::EventsController < Admin::AdminController
   before_filter :assign_event, :only => [ :edit, :update ]
   before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
