@@ -30,36 +30,6 @@ module ApplicationHelper
       value
     end
   end
-  
-  # FIXME Move to helper
-  # FIXME use parse args replacement
-  def editable(object, attribute, options = {})
-    object_name = ActiveModel::Naming.singular(object)
-    
-    if options.present? && options[:length].present?
-      value = truncate(object.send(attribute), :length => options[:length])
-    else
-      value = object.send(attribute)
-    end
-    
-    if options.present? && options[:as].present?
-      _object_name = options[:as].to_s
-    else
-      _object_name = object_name
-    end
-    
-    content_tag( 
-      :div, 
-      :class => "editable", 
-      :id => "#{_object_name}_#{object.to_param}_#{attribute}",
-      "data-id" => object.id, 
-      "data-url" => url_for(:controller => _object_name.pluralize, :action => "update_attribute", :id => object.to_param), 
-      "data-model" => _object_name, 
-      "data-attribute" => attribute,
-      "data-original" => value) do
-        value
-    end
-  end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.
   # 1. Capture is a Rails helper which will 'capture' the output of a block into a variable
