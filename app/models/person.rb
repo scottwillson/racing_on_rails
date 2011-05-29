@@ -7,7 +7,7 @@ class Person < ActiveRecord::Base
   include SentientUser
   include Export::People
 
-  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :last_updated_by, :login_count, :password_salt, 
+  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :updated_by, :login_count, :password_salt, 
                          :perishable_token, :persistence_token, :single_access_token ]
   
   acts_as_authentic do |config|
@@ -29,7 +29,7 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   before_create :set_created_by
-  before_save :set_last_updated_by
+  before_save :set_updated_by
   after_save :add_alias_for_old_name
 
   has_many :aliases
@@ -941,11 +941,13 @@ class Person < ActiveRecord::Base
   end
 
   def can_edit?(person)
-    person == self || person.editors.include?(self)
+    person == self || administrator? || person.editors.include?(self)
   end
   
-  def set_last_updated_by
+  def set_updated_by
     if Person.current
+      self.updated_by = Person.current.name_or_login
+      # FIXME consolidate
       self.last_updated_by = Person.current.name_or_login
     end
   end

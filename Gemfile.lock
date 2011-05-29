@@ -17,6 +17,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.1)
+    SyslogLogger (1.4.0)
+      hoe (>= 1.2.0)
     abstract (1.0.0)
     actionmailer (3.0.7)
       actionpack (= 3.0.7)
@@ -56,6 +58,8 @@ GEM
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
     ffi (1.0.9)
+    hoe (2.9.4)
+      rake (>= 0.8.7)
     hoptoad_notifier (2.4.10)
       activesupport
       builder
@@ -121,6 +125,7 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
+  SyslogLogger
   ansi
   authlogic
   fastercsv

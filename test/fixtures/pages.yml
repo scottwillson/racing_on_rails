@@ -4,7 +4,6 @@ plain:
   path: plain
   slug: plain
   title: Plain
-  author_id: 1
   lock_version: 1
   updated_at: <%= Date.new(2007) %>
   created_at: <%= Date.new(2007) %>

@@ -602,16 +602,14 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal 1, molly.versions.size, "versions"
     version = molly.versions.last
     admin = people(:administrator)
-    assert_equal admin, version.user, "version user"
+    assert_equal admin.name, version.user, "version user"
     changes = version.changes
-    assert_equal 25, changes.size, "changes"
+    assert_equal 26, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal teams(:vanilla).id, change.first, "Team ID before"
     assert_equal nil, change.last, "Team ID after"
-    assert_equal "Candi Murray", molly.last_updated_by, "last_updated_by"
-    # VestalVersions convention
-    assert_nil molly.updated_by, "updated_by"
+    assert_equal "Candi Murray", molly.last_updated_by, "updated_by"
   end
   
   def test_update_bad_member_from_date

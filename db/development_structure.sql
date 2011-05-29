@@ -508,22 +508,6 @@ CREATE TABLE `orders` (
   KEY `index_orders_on_updated_at` (`updated_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `page_versions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `page_id` int(11) NOT NULL,
-  `parent_id` int(11) DEFAULT NULL,
-  `body` text,
-  `path` varchar(255) DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `author_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_page_versions_on_page_id` (`page_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
@@ -534,13 +518,12 @@ CREATE TABLE `pages` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `lock_version` int(11) NOT NULL DEFAULT '0',
-  `author_id` int(11) NOT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_pages_on_path` (`path`),
   KEY `parent_id` (`parent_id`),
   KEY `index_pages_on_slug` (`slug`),
-  KEY `pages_author_id` (`author_id`),
-  CONSTRAINT `pages_author_id` FOREIGN KEY (`author_id`) REFERENCES `people` (`id`),
+  KEY `index_pages_on_created_by_id` (`created_by_id`),
   CONSTRAINT `pages_parent_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1250,6 +1233,8 @@ INSERT INTO schema_migrations (version) VALUES ('20110328232024');
 INSERT INTO schema_migrations (version) VALUES ('20110329233050');
 
 INSERT INTO schema_migrations (version) VALUES ('20110516045956');
+
+INSERT INTO schema_migrations (version) VALUES ('20110521233707');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

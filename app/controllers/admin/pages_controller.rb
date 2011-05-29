@@ -14,7 +14,6 @@ class Admin::PagesController < Admin::AdminController
   
   def create
     @page = Page.new(params["page"])
-    @page.author = current_person
     @page.save
     if @page.errors.empty?
       flash[:notice] = "Created #{@page.title}"
@@ -31,7 +30,6 @@ class Admin::PagesController < Admin::AdminController
   
   def update
     @page = Page.find(params[:id])
-    @page.author = current_person
     if @page.update_attributes(params[:page])
       flash[:notice] = "Updated #{@page.title}"
       expire_cache
