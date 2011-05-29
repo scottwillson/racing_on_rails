@@ -5,12 +5,14 @@
   <td>
     <% if account_permission.person_can_edit? -%>
     <%= link_to "Deny access", 
-                destroy_person_editor_path(person, account_permission.person, :return_to => return_to), 
+                person_editor_path(person, account_permission.person, :return_to => return_to), 
+                :method => "delete",
                 :class => "obvious", 
                 :id => "deny_#{account_permission.person.id}" %>
     <% else -%>
     <%= link_to "Allow access", 
-                create_person_editor_path(person, account_permission.person, :return_to => return_to), 
+                person_editor_path(person, account_permission.person, :return_to => return_to), 
+                :method => "post",
                 :class => "obvious", 
                 :id => "allow_#{account_permission.person.id}" %>
     <% end -%>
@@ -24,7 +26,8 @@
     <% else -%>
       <% if administrator? -%>
       <%= link_to "Allow access", 
-                  create_person_editor_path(account_permission.person, person, :return_to => return_to), 
+                  person_editor_path(account_permission.person, person, :return_to => return_to), 
+                  :method => "post",
                   :class => "obvious", 
                   :id => "admin_allow_#{account_permission.person.id}" %>
       <% elsif account_permission.person.email.present? -%>

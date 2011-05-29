@@ -173,13 +173,8 @@ RacingOnRails::Application.routes.draw do
   match '/people/new_login' => 'people#new_login'
   match "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }
   resources :people do
-    resources :editors do
-      member do
-        get :create
-        get :destroy
-      end
-    end
-
+    post :create_login, :on => :collection
+    resources :editors
     resources :editor_requests
     resources :events
     resource :membership

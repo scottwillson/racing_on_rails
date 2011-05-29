@@ -5,6 +5,8 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 # FIXME
 class PeopleControllerTest < ActionController::TestCase
+  assert_no_angle_brackets :except => :test_create_login_invalid_login
+  
   def test_index
     get(:index)
     assert_response(:success)
@@ -298,7 +300,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
  
     assert_response :success
-    assert assigns(:person).errors.on(:name), "Should have error on :name"
+    assert assigns(:person).errors[:name].present?, "Should have error on :name"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -352,7 +354,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
     assert_response :success
-    assert assigns(:person).errors.on(:email), "Should have error on :email"
+    assert assigns(:person).errors[:email].present?, "Should have error on :email"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -368,7 +370,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
     assert_response :success
-    assert assigns(:person).errors.on(:email), "Should have error on :login"
+    assert assigns(:person).errors[:email].present?, "Should have error on :email"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -424,7 +426,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -445,7 +447,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -468,7 +470,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -513,7 +515,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
    assert_response :success
-   assert assigns(:person).errors.on(:login), "Should have error on :login"
+   assert assigns(:person).errors[:login].present?, "Should have error on :email"
    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
