@@ -23,6 +23,7 @@ group :test do
   gem "minitest"
   gem "selenium-webdriver"
   gem "timecop"
+  gem "turn", :git => "https://github.com/yalab/turn.git"
 end
 
 group :acceptance do
