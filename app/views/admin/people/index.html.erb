@@ -36,31 +36,6 @@
 
 <%= render :partial => 'import_export' %>
 
-<%= javascript_tag do %>
-  $(document).ready(function() {
-  <%- @people.each do |person| -%>
-    $(<%= "'#person_#{person.id}'" %>).draggable({ 
-      revert: 'invalid', 
-      zIndex: 10000,
-      opacity: 0.7,
-      helper: function(event) {
-        return $('<div class="person">' + $(this).attr('data-name') + '</div>');
-	    }
-      });
-    $(<%= "'#person_#{person.id}_row'" %>).droppable({
-      hoverClass: 'hovering',
-      drop: function(event, ui) {
-        ui.helper.hide('scale');
-        ui.draggable.closest('tr').hide('fade');
-        $(this).addClass('merging');
-        $.ajax({
-          url: '/admin/people/merge?target_id=<%= person.id %>',
-          type: 'POST',
-          data: ({id: ui.draggable.attr('id')}),
-          dataType: 'script'
-        });
-      }
-    });
-  <% end -%>
-  });
-<%- end -%>
+<% content_for :javascript_include_tag do -%>
+  <%= javascript_include_tag "people" %>
+<% end -%>

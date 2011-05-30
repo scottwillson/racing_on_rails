@@ -347,11 +347,10 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   def merge
-    person_to_merge_id = params[:id].gsub('person_', '')
-    @person_to_merge = Person.find(person_to_merge_id)
-    @merged_person_name = @person_to_merge.name
-    @existing_person = Person.find(params[:target_id])
-    @existing_person.merge(@person_to_merge)
+    @person = Person.find(params[:id])
+    @other_person = Person.find(params[:other_person_id])
+    @person.merge(@other_person)
+    # raise "foo bar"
     expire_cache
   end
   

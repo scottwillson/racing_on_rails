@@ -373,6 +373,10 @@ class WebDriverTestCase < ActiveSupport::TestCase
     find_element(element_finder).drag_and_drop_by right_by, down_by
   end
   
+  def drag_and_drop_on(element_finder, on_element_finder)
+    find_element(element_finder).drag_and_drop_on find_element(on_element_finder)
+  end
+  
   def find_element(element_finder)
     case element_finder
     when Hash

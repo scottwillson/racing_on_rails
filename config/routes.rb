@@ -59,13 +59,15 @@ RacingOnRails::Application.routes.draw do
         post :resolve_duplicates
       end
       member do
-        get  :card
+        get    :card
         delete :destroy_number
-        post :number_year_changed
-        post :toggle_member
+        post   :number_year_changed
+        post   :toggle_member
       end
       resources :results
     end
+    match "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :via => :post
+
     resources :races do
       member do
         post :create_result
