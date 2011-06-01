@@ -49,7 +49,7 @@ GEM
       activeresource (= 2.3.11)
       activesupport (= 2.3.11)
       rake (>= 0.8.3)
-    rake (0.9.0)
+    rake (0.8.7)
     rubyzip (0.9.4)
     selenium-webdriver (0.1.1)
       childprocess (= 0.1.4)
@@ -89,6 +89,7 @@ DEPENDENCIES
   prawn-core
   rack (~> 1.1.0)
   rails (= 2.3.11)
+  rake (= 0.8.7)
   rubyzip
   selenium-webdriver
   tabular (> 0.0.5)
