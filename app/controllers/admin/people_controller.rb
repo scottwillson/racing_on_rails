@@ -350,7 +350,6 @@ class Admin::PeopleController < Admin::AdminController
     @person = Person.find(params[:id])
     @other_person = Person.find(params[:other_person_id])
     @person.merge(@other_person)
-    # raise "foo bar"
     expire_cache
   end
   

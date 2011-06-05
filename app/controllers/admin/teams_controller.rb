@@ -59,6 +59,7 @@ class Admin::TeamsController < Admin::AdminController
     end
   end
 
+  # FIXME handle merges
   def update_attribute
     respond_to do |format|
       format.js {
@@ -113,11 +114,9 @@ class Admin::TeamsController < Admin::AdminController
   
   # Inline
   def merge
-    team_to_merge_id = params[:id].gsub('team_', '')
-    @team_to_merge = Team.find(team_to_merge_id)
-    @merged_team_name = @team_to_merge.name
-    @existing_team = Team.find(params[:target_id])
-    @existing_team.merge(@team_to_merge)
+    @team = Team.find(params[:id])
+    @other_team = Team.find(params[:other_team_id])
+    @team.merge(@other_team)
     expire_cache
   end
   

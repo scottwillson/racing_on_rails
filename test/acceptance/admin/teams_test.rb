@@ -76,4 +76,29 @@ class TeamsTest < WebDriverTestCase
     vanilla = Team.find(vanilla_id)
     assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"
   end
+  
+  def test_merge
+    login_as :administrator
+
+    open "/admin/teams"
+    type "a", "name"
+    submit "search_form"
+    
+    kona_id = Team.find_by_name("Kona").id
+    vanilla_id = Team.find_by_name("Vanilla").id
+    drag_and_drop_on "team_#{kona_id}", "team_#{vanilla_id}_row"
+    wait_for_page_source "Merged Kona into Vanilla"
+    assert !Team.exists?(kona_id), "Kona should be merged"
+    assert Team.exists?(vanilla_id), "Vanilla still exists after merge"
+    
+    open "/admin/teams"
+    type "e", "name"
+    submit "search_form"
+
+    assert_table("teams_table", 1, 1, /^Chocolate/)
+    assert_table("teams_table", 2, 1, /^Gentle Lovers/)
+    assert_table("teams_table", 3, 1, /^Team dFL/)
+    assert_table("teams_table", 4, 1, /^Vanilla/)
+    
+  end
 end

@@ -89,6 +89,7 @@ RacingOnRails::Application.routes.draw do
     
     resources :series
     resources :single_day_events
+
     resources :teams do
       member do
         post :cancel_in_place_edit
@@ -98,6 +99,8 @@ RacingOnRails::Application.routes.draw do
         put  :update_attribute
       end
     end
+    match "/teams/:id/merge/:other_team_id" => "teams#merge", :constraints => { :id => /\d+/, :other_team_id => /\d+/ }, :via => :post
+
     resources :velodromes do
       member do
         put  :update_attribute
