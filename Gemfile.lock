@@ -26,12 +26,12 @@ GEM
       rake (>= 0.8.7)
     hoe (2.9.4)
       rake (>= 0.8.7)
-    hoptoad_notifier (2.4.10)
+    hoptoad_notifier (2.4.11)
       activesupport
       builder
     json_pure (1.5.1)
     kgio (2.4.1)
-    minitest (2.1.0)
+    minitest (2.2.2)
     mocha (0.9.12)
     mysql2 (0.2.7)
     newrelic_rpm (3.0.1)
