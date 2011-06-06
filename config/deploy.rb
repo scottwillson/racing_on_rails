@@ -15,13 +15,6 @@ set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
 
-set :default_environment, { 
-  'PATH'         => "/usr/local/rvm/gems/ruby-1.9.2-p136/bin:/usr/local/rvm/gems/ruby-1.9.2-p136@global/bin:/usr/local/rvm/rubies/ruby-1.9.2-p136/bin:$PATH",
-  'RUBY_VERSION' => 'ruby-1.9.2-p136',
-  'GEM_HOME'     => '/usr/local/rvm/gems/ruby-1.9.2-p136',
-  'GEM_PATH'     => '/usr/local/rvm/gems/ruby-1.9.2-p136:/usr/local/rvm/gems/ruby-1.9.2-p136@global'
-}
-
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
