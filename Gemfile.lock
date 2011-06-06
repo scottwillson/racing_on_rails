@@ -62,8 +62,7 @@ GEM
     unicorn (3.6.2)
       kgio (~> 2.3)
       rack
-    vestal_versions (1.0.2)
-      activerecord (>= 2.1.0)
+    vestal_versions (1.0.1)
     will_paginate (2.3.15)
 
 PLATFORMS
@@ -95,5 +94,5 @@ DEPENDENCIES
   tabular (> 0.0.5)
   timecop
   unicorn
-  vestal_versions
+  vestal_versions (= 1.0.1)
   will_paginate
