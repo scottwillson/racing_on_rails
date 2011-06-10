@@ -15,41 +15,6 @@ namespace :racing_on_rails do
   end
 end
 
-desc "Override default cc.rb task, mainly to NOT try and recreate the test DB from migrations"
-task :cruise do
-  ENV['CC_BUILD_ARTIFACTS'] = File.expand_path("#{::Rails.root.to_s}/log/acceptance")
-
-  # Use Xvfb to create an X session for browser-based acceptance tests
-  if RUBY_PLATFORM[/freebsd/] || RUBY_PLATFORM[/linux/]
-    ENV['DISPLAY'] = "localhost:1"
-    if `ps aux | grep "Xvfb :1" | grep -v grep`.blank?
-      xvfb_pid = fork do
-        exec("Xvfb :1 -screen 0 1024x768x24")
-      end
-      Process.detach xvfb_pid
-    end
-  end
-  
-  Rake::Task["db:migrate"].invoke
-  Rake::Task["db:test:prepare"].invoke
-  Rake::Task["test:units"].invoke
-  Rake::Task["test:functionals"].invoke
-  Rake::Task["test:integration"].invoke
-  
-  begin
-    Rake::Task["test:acceptance:browser"].invoke
-  ensure
-    if RUBY_PLATFORM[/freebsd/]
-      # Rake task doesn't seem to quit Firefox correctly
-      fork do
-        exec "killall firefox-bin"
-      end
-    end
-    # Wait for Firefox to exit
-    Process.wait
-  end
-end
-
 namespace :db do
   namespace :structure do
     desc "Monkey-patched by Racing on Rails. Standardize format to prevent source control churn."
