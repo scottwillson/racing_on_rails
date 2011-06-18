@@ -16,6 +16,7 @@ gem "vestal_versions", "1.0.1"
 gem "newrelic_rpm"
 gem "will_paginate"
 gem "erubis"
+gem "hoptoad_notifier"
 
 group :test do
   gem "ansi"
