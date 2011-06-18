@@ -1,10 +1,7 @@
 class ApplicationController < ActionController::Base
   helper :all
-  include ExceptionNotifiable
   include SentientController
   include SslRequirement
-  
-  local_addresses.clear
 
   # HP"s proxy, among others, gets this wrong
   ActionController::Base.ip_spoofing_check = false
@@ -71,22 +68,6 @@ class ApplicationController < ActionController::Base
     @page = Page.find_by_path(page_path)
     if @page
       return render(:inline => @page.body, :layout => true)
-    end
-  end
-
-  def rescue_action(exception)
-    respond_to do |format|
-      format.html {
-        rescue_with_handler(exception) || rescue_action_without_handler(exception)
-      }
-      format.js {
-        log_error(exception)
-        ExceptionNotifier.deliver_exception_notification(exception, self, request, {})
-        render "shared/exception", :locals => { :exception => exception }
-      }
-      format.all {
-        rescue_with_handler(exception) || rescue_action_without_handler(exception)
-      }
     end
   end
 

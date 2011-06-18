@@ -248,20 +248,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
   end
   
-  def test_destroy
-    person = people(:no_results)
-    delete :destroy, :id => person.id
-    assert_redirected_to(admin_people_path)
-    assert(!Person.exists?(person.id), 'Person should have been destroyed')
-  end
-  
-  def test_ajax_destroy
-    person = people(:no_results)
-    delete :destroy, :id => person.id, :format => 'js'
-    assert_response :success
-    assert_raise(ActiveRecord::RecordNotFound, 'Person should have been destroyed') { Person.find(person.id) }
-  end
-  
   def test_destroy_number
     race_number = race_numbers(:molly_road_number)
     assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
