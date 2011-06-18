@@ -2,7 +2,7 @@ require "acceptance/webdriver_test_case"
 
 # :stopdoc:
 class TeamsTest < WebDriverTestCase
-  def test_teams
+  def test_edit
     open '/teams'
 
     gl_id = Team.find_by_name("Gentle Lovers").id
@@ -77,7 +77,7 @@ class TeamsTest < WebDriverTestCase
     assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"
   end
   
-  def test_merge
+  def test_drag_and_drop
     login_as :administrator
 
     open "/admin/teams"
@@ -99,6 +99,35 @@ class TeamsTest < WebDriverTestCase
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
     assert_table("teams_table", 3, 1, /^Team dFL/)
     assert_table("teams_table", 4, 1, /^Vanilla/)
+  end
+  
+  def test_merge_confirm
+    login_as :administrator
+
+    open "/admin/teams"
+    type "e", "name"
+    submit "search_form"
     
+    assert_table("teams_table", 1, 1, /^Chocolate/)
+    assert_table("teams_table", 2, 1, /^Gentle Lovers/)
+    assert_table("teams_table", 3, 1, /^Team dFL/)
+    assert_table("teams_table", 4, 1, /^Vanilla/)
+    
+    gl_id = Team.find_by_name("Gentle Lovers").id
+    vanilla_id = Team.find_by_name("Vanilla").id
+
+    click "team_#{vanilla_id}_name"
+    wait_for_element :css => "form.editor_field input"
+
+    type "Gentle Lovers", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_element :css => "div.ui-dialog"
+    click :css => ".ui-dialog-buttonset button:first-child"
+    wait_for_no_element :css => "div.ui-dialog"
+    
+    assert !Team.exists?(gl_id), "Should have merged Gentle Lovers"
+    assert Team.exists?(vanilla), "Should not have have merged Vanilla"
+    vanilla = Team.find(vanilla_id)
+    assert vanilla.aliases.map(&:name).include?("Gentle Lovers"), "Should add Gentle Lovers alias"
   end
 end

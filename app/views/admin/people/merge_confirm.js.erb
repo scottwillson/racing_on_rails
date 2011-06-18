@@ -1,0 +1,40 @@
+<% if @other_people.many? %>
+var html = '<div>';
+<% @other_people.each do |other_person| %>
+  html = html + '<%= radio_button_tag "other_person_id", other_person.to_param, false -%>';
+  html = html + '<%= other_person.name -%> ';
+  html = html + '<%= other_person.team_name if other_person.team -%> ';
+  html = html + '<% unless other_person.road_number.blank? %>Road # <%= other_person.road_number %><% end %> ';
+  html = html + '<% unless other_person.xc_number.blank? %>MTB # <%= other_person.xc_number %><% end %> ';
+  html = html + '<% unless other_person.dh_number.blank? %>DH # <%= other_person.dh_number %><% end %> ';
+  html = html + '<% unless other_person.ccx_number.blank? %>CX # <%= other_person.ccx_number %><% end %> ';
+  html = html + '<br>';
+<% end %>
+html = html + '</div>';
+
+<% else %>
+var html = '<%= @other_people.first.name %> <%= aka(@other_people.first) %> already exists. Delete <%= @person.name_was %> and move results to <%= @other_people.first.name %>? <%= hidden_field_tag "other_person_id", @other_people.first.to_param -%>';
+<% end %>
+
+var $dialog = $('<div></div>')
+  .html(html)
+  .dialog({
+    autoOpen: false,
+    title: 'Merge People?',
+    modal: true,
+    buttons: {
+      "Merge": function() {
+        $(this).dialog('close');
+        $.ajax({
+          url: '/admin/people/' + $('input[name=other_person_id]:checked').val() + '/merge/<%= @person.id %>',
+          type: 'POST',
+          dataType: 'script'
+        });
+      },
+      Cancel: function() {
+        $(this).dialog('close');
+      }
+    }
+  });
+
+$dialog.dialog('open');

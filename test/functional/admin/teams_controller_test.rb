@@ -102,11 +102,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_blank_name
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => ""
     assert_response(:success)
     assert_template(nil)
     assert_not_nil(assigns["team"], "Should assign team")
@@ -118,11 +117,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
 
   def test_set_name
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "Vaniller",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "Vaniller"
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(vanilla, assigns['team'], 'Team')
@@ -134,11 +132,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_set_name_same_name
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "Vanilla",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "Vanilla"
     assert_response(:success)
     assert_template(nil)
     assert_not_nil(assigns["team"], "Should assign team")
@@ -149,11 +146,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_set_name_same_name_different_case
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "vanilla",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "vanilla"
     assert_response(:success)
     assert_template(nil)
     assert_not_nil(assigns["team"], "Should assign team")
@@ -163,16 +159,13 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   end
   
   def test_set_name_to_existing_name
-    # Should ask to merge
-    
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "Kona",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "Kona"
     assert_response(:success)
-    assert_template("admin/teams/_merge_confirm")
+    assert_template("admin/teams/merge_confirm")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(vanilla, assigns['team'], 'Team')
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla still in database')
@@ -186,11 +179,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_nil(vanilla_alias, 'Alias')
     
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "Vanilla Bicycles",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "Vanilla Bicycles"
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
     assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
@@ -210,11 +202,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_nil(vanilla_alias, 'Alias')
     
     vanilla = teams(:vanilla)
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => vanilla.to_param,
-        :value => "vanilla bicycles",
-        :editorId => "team_#vanilla.id}_name"
-    )
+        :name => "name",
+        :value => "vanilla bicycles"
     assert_response(:success)
     assert_template(nil)
     assert_not_nil(assigns["team"], "Should assign team")
@@ -230,13 +221,12 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_set_name_to_other_team_existing_alias
     kona = teams(:kona)
-    post(:set_team_name, 
-        :id => kona.to_param,
-        :value => "Vanilla Bicycles",
-        :editorId => "team_#kona.id}_name"
-    )
+    xhr :put, :update_attribute, 
+        :id => vanilla.to_param,
+        :name => "name",
+        :value => "Vanilla Bicycles"
     assert_response(:success)
-    assert_template("admin/teams/_merge_confirm")
+    assert_template("admin/teams/merge_confirm")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(kona, assigns['team'], 'Team')
     assert_equal([teams(:vanilla)], assigns['existing_teams'], 'existing_teams')
@@ -251,11 +241,10 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     land_shark_alias = landshark.aliases.create(:name => 'Land Shark')
     team_landshark_alias = landshark.aliases.create(:name => 'Team Landshark')
     
-    post(:set_team_name, 
+    xhr :put, :update_attribute, 
         :id => landshark.to_param,
-        :value => "Land Shark",
-        :editorId => "team_#landshark.id}_name"
-    )
+        :name => "name",
+        :value => "Land Shark"
     assert_response(:success)
     assert_not_nil(assigns["team"], "Should assign team")
     assert assigns["team"].errors.empty?, assigns["team"].errors.full_messages.join
@@ -268,12 +257,6 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert(!landshark.aliases.any? {|a| a.name == 'Land Shark'}, 'Aliases should not include Land Shark')
     assert(!landshark.aliases.any? {|a| a.name == 'LandTeam Landshark'}, 'Aliases should not include Team Landshark')
     # try with different cases
-  end
-  
-  def test_cancel_in_place_edit
-    xhr :post, :cancel_in_place_edit, :id => teams(:gentle_lovers)
-    assert_response(:success)
-    assert !@response.body["No action responded"], "Response should not include 'No action responded' error"
   end
 
   def test_destroy
@@ -294,13 +277,9 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_merge?
     vanilla = teams(:vanilla)
     kona = teams(:kona)
-    post(:set_team_name, 
-        :id => kona.to_param,
-        :value => vanilla.name,
-        :editorId => "team_#kona.id}_name"
-    )
+    xhr :post, :merge, :id => vanilla.id, :other_id => kona.to_param
     assert_response(:success)
-    assert_template("admin/teams/_merge_confirm")
+    assert_template("admin/teams/merge_confirm")
     assert_equal(kona, assigns['team'], 'Team')
     assert_equal(vanilla.name, assigns['team'].name, 'Unsaved Kona name should be Vanilla')
     assert_equal([vanilla], assigns['existing_teams'], 'Existing Team')
@@ -312,7 +291,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     old_id = kona.id
     assert(Team.find_by_name('Kona'), 'Kona should be in database')
     
-    get(:merge, :id => kona.to_param, :target_id => vanilla.id)
+    xhr :post, :merge, :id => vanilla.id, :other_id => kona.to_param
     assert_response(:success)
     assert_template("admin/teams/merge")
 

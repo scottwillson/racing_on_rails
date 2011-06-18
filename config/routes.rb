@@ -94,12 +94,11 @@ RacingOnRails::Application.routes.draw do
       member do
         post :cancel_in_place_edit
         post :destroy_name
-        get  :merge
         post :toggle_member
         put  :update_attribute
       end
     end
-    match "/teams/:id/merge/:other_team_id" => "teams#merge", :constraints => { :id => /\d+/, :other_team_id => /\d+/ }, :via => :post
+    match "/teams/:id/merge/:other_team_id" => "teams#merge", :constraints => { :id => /\d+/, :other_team_id => /\d+/ }, :via => :post, :as => :merge_team
 
     resources :velodromes do
       member do

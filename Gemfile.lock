@@ -65,7 +65,6 @@ GEM
       builder
     i18n (0.5.0)
     json_pure (1.5.1)
-    kgio (2.4.1)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
@@ -115,9 +114,6 @@ GEM
       polyglot (>= 0.3.1)
     ttfunk (1.0.1)
     tzinfo (0.3.27)
-    unicorn (3.6.2)
-      kgio (~> 2.3)
-      rack
     will_paginate (3.0.pre2)
 
 PLATFORMS
@@ -144,6 +140,5 @@ DEPENDENCIES
   tabular (> 0.0.5)
   timecop
   turn!
-  unicorn
   vestal_versions!
   will_paginate (~> 3.0.beta)

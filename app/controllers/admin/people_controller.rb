@@ -308,18 +308,17 @@ class Admin::PeopleController < Admin::AdminController
   end
 
   def update_name
-    new_name = params[:value]
-    original_name = @person.name
-    @person.name = new_name
-  
-    people_with_same_name = @person.people_with_same_name
-    unless people_with_same_name.empty?
-      return merge?(original_name, people_with_same_name, @person)
+    @person = Person.find(params[:id])
+    @person.send "#{params[:name]}=", params[:value]
+
+    @other_people = @person.people_with_same_name
+    if @other_people.empty?
+      @person.update_attribute(:name, params[:value])
+      expire_cache
+      render :text => @person.name, :content_type => "text/html"
+    else
+      render "merge_confirm"
     end
-    
-    @person.update_attribute(:name, params[:value])
-    expire_cache
-    render :text => @person.name, :content_type => "text/html"
   end
 
   # Toggle membership on or off
@@ -335,30 +334,12 @@ class Admin::PeopleController < Admin::AdminController
     redirect_to admin_people_path
     expire_cache
   end
-
-  # Show choices for Person merge
-  def merge?(original_name, existing_people, person)
-    @person = person
-    @existing_people = existing_people
-    @original_name = original_name
-    render :update do |page| 
-      page.replace_html("person_#{@person.id}_row", :partial => "merge_confirm", :locals => { :person => @person })
-    end
-  end
   
   def merge
     @person = Person.find(params[:id])
     @other_person = Person.find(params[:other_person_id])
     @person.merge(@other_person)
     expire_cache
-  end
-  
-  def cancel_in_place_edit
-    person_id = params[:id]
-    render :update do |page|
-      page.replace("person_#{person_id}_row", :partial => "person", :locals => { :person => Person.find(person_id) })
-      page.call :restripeTable, :people_table
-    end
   end
   
   def number_year_changed

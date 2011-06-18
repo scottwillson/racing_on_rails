@@ -160,7 +160,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         :name => "name",
         :value => "Erik Tonkin"
     assert_response :success
-    assert_template("admin/people/_merge_confirm")
+    assert_template("admin/people/merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(molly, assigns['person'], 'Person')
     assert_not_nil(Person.find_all_by_name('Molly Cameron'), 'Molly still in database')
@@ -220,10 +220,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         :name => "name",
         :value => "Mollie Cameron"
     assert_response :success
-    assert_template("admin/people/_merge_confirm")
+    assert_template("admin/people/merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(tonkin, assigns['person'], 'Person')
-    assert_equal([people(:molly)], assigns['existing_people'], 'existing_people')
+    assert_equal([people(:molly)], assigns['other_people'], 'other_people')
     assert(!Alias.find_all_people_by_name('Mollie Cameron').empty?, 'Mollie still in database')
     assert(!Person.find_all_by_name('Molly Cameron').empty?, 'Molly still in database')
     assert(!Person.find_all_by_name('Erik Tonkin').empty?, 'Erik Tonkin still in database')
@@ -243,10 +243,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
         :name => "name",
         :value => "Mollie Cameron"
     assert_response :success
-    assert_template("admin/people/_merge_confirm")
+    assert_template("admin/people/merge_confirm")
     assert_not_nil(assigns["person"], "Should assign person")
     assert_equal(tonkin, assigns['person'], 'Person')
-    assert_equal(1, assigns['existing_people'].size, "existing_people: #{assigns['existing_people']}")
+    assert_equal(1, assigns['other_people'].size, "other_people: #{assigns['other_people']}")
 
     assert_equal(0, Person.count(:conditions => ['first_name = ? and last_name = ?', 'Mollie', 'Cameron']), 'Mollies in database')
     assert_equal(2, Person.count(:conditions => ['first_name = ? and last_name = ?', 'Molly', 'Cameron']), 'Mollys in database')
@@ -292,9 +292,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(tonkin, assigns['person'], 'Person')
     person = assigns['person']
     assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
-    assert_template("admin/people/_merge_confirm")
+    assert_template("admin/people/merge_confirm")
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
-    assert_equal([molly], assigns['existing_people'], 'existing_people')
+    assert_equal([molly], assigns['other_people'], 'other_people')
   end
   
   def test_merge
@@ -303,9 +303,9 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     old_id = tonkin.id
     assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-    get :merge, :id => tonkin.to_param, :target_id => molly.id
+    post :merge, :other_id => molly.id, :id => tonkin.to_param, :format => :js
     assert_response :success
-    assert_template %Q{admin/people/merge}
+    assert_template "admin/people/merge"
 
     assert Person.find_all_by_name("Molly Cameron"), "Molly should be in database"
     assert_equal [], Person.find_all_by_name("Erik Tonkin"), "Tonkin should not be in database"
@@ -379,10 +379,10 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal tonkin, assigns['person'], 'Person'
     person = assigns['person']
     assert person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}"
-    assert_template "admin/people/_merge_confirm", "template"
+    assert_template "admin/people/merge_confirm", "template"
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
-    existing_people = assigns['existing_people'].sort {|x, y| x.id <=> y.id}
-    assert_equal([molly, molly_with_different_road_number], existing_people, 'existing_people')
+    other_people = assigns['other_people'].sort {|x, y| x.id <=> y.id}
+    assert_equal([molly, molly_with_different_road_number], other_people, 'other_people')
   end
   
   def test_dupes_merge_one_has_road_number_one_has_cross_number?
@@ -399,15 +399,15 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(tonkin, assigns['person'], 'Person')
     person = assigns['person']
     assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
-    assert_template("admin/people/_merge_confirm")
+    assert_template("admin/people/merge_confirm")
     assert_equal(molly.name, assigns['person'].name, 'Unsaved Tonkin name should be Molly')
-    existing_people = assigns['existing_people'].collect do |p|
+    other_people = assigns['other_people'].collect do |p|
       "#{p.name} ##{p.id}"
     end
-    existing_people = existing_people.join(', ')
-    assert(assigns['existing_people'].include?(molly), "existing_people should include Molly ##{molly.id}, but has #{existing_people}")
-    assert(assigns['existing_people'].include?(molly_with_different_cross_number), 'existing_people')
-    assert_equal(2, assigns['existing_people'].size, 'existing_people')
+    other_people = other_people.join(', ')
+    assert(assigns['other_people'].include?(molly), "other_people should include Molly ##{molly.id}, but has #{other_people}")
+    assert(assigns['other_people'].include?(molly_with_different_cross_number), 'other_people')
+    assert_equal(2, assigns['other_people'].size, 'other_people')
   end
   
   def test_dupes_merge_alias?
@@ -422,7 +422,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     person = assigns['person']
     assert(person.errors.empty?, "Person should have no errors, but had: #{person.errors.full_messages.join(', ')}")
     assert_equal('Eric Tonkin', assigns['person'].name, 'Unsaved Molly name should be Eric Tonkin alias')
-    assert_equal([tonkin], assigns['existing_people'], 'existing_people')
+    assert_equal([tonkin], assigns['other_people'], 'other_peoples')
   end
   
   def test_dupe_merge
@@ -434,7 +434,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     old_id = tonkin.id
     assert_equal(2, Person.find_all_by_name('Erik Tonkin').size, 'Tonkins in database')
 
-    get(:merge, :id => tonkin.to_param, :target_id => molly.id)
+    post :merge, :id => molly.id, :other_person_id => tonkin.to_param, :format => :js
     assert_response :success
     assert_template("admin/people/merge")
 

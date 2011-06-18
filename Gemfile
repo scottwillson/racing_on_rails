@@ -32,5 +32,4 @@ end
 
 group :production do
   gem "SyslogLogger", :require => "syslog_logger"
-  gem "unicorn"
 end

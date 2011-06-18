@@ -59,74 +59,29 @@ class Admin::TeamsController < Admin::AdminController
     end
   end
 
-  # FIXME handle merges
   def update_attribute
     respond_to do |format|
       format.js {
         @team = Team.find(params[:id])
         @team.send "#{params[:name]}=", params[:value]
-        @team.save!
-        expire_cache
-        render :text => @team.send(params[:name]), :content_type => "text/html"
+
+        @other_teams = @team.teams_with_same_name
+        if @other_teams.empty?
+          @team.save!
+          expire_cache
+          render :text => @team.send(params[:name]), :content_type => "text/html"
+        else
+          render "merge_confirm"
+        end
       }
     end
   end
   
-  def toggle_member
-    team = Team.find(params[:id])
-    team.toggle!(:member)
-    render(:partial => "shared/member", :locals => { :record => team })
-  end
-  
-  # Inline update. Merge with existing Team if names match
-  def set_team_name
-    @team = Team.find(params[:id])
-    new_name = params[:value]
-    @team.name = new_name
-
-    teams_with_same_name = @team.teams_with_same_name
-    unless teams_with_same_name.empty?
-      return merge?(@team.name_was, teams_with_same_name, @team)
-    end
-    
-    # Want validation
-    @team.name = params[:value]
-    if @team.save
-      expire_cache
-      render :text => @team.name
-    else
-      render :update do |page|
-        page.alert(@team.errors.full_messages)
-        render :text => @team.name_was
-      end
-    end
-  end
-  
-  # Inline
-  def merge?(original_name, existing_teams, team)
-    @team = team
-    @existing_teams = existing_teams
-    @original_name = original_name
-    render :update do |page| 
-      page.replace_html("team_#{@team.id}_row", :partial => 'merge_confirm', :locals => { :team => @team })
-    end
-  end
-  
-  # Inline
   def merge
     @team = Team.find(params[:id])
     @other_team = Team.find(params[:other_team_id])
     @team.merge(@other_team)
     expire_cache
-  end
-  
-  # Cancel inline editing
-  def cancel_in_place_edit
-    team_id = params[:id]
-    render :update do |page|
-      page.replace("team_#{team_id}_row", :partial => "team", :locals => { :team => Team.find(team_id) })
-      page.call :restripeTable, :teams_table
-    end
   end
   
   def destroy
@@ -154,5 +109,11 @@ class Admin::TeamsController < Admin::AdminController
     render :update do |page|
       page.visual_effect(:puff, "name_#{name_id}", :duration => 2)
     end
+  end
+  
+  def toggle_member
+    team = Team.find(params[:id])
+    team.toggle!(:member)
+    render(:partial => "shared/member", :locals => { :record => team })
   end
 end

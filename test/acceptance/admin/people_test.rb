@@ -2,7 +2,7 @@ require "acceptance/webdriver_test_case"
 
 # :stopdoc:
 class PeopleTest < WebDriverTestCase
-  def test_people
+  def test_edit
     login_as :administrator
     
     open '/admin/people'
@@ -137,6 +137,48 @@ class PeopleTest < WebDriverTestCase
     wait_for_page_source "Merged Alice Pennington into Molly Cameron"
     assert !Person.exists?(@alice_id), "Alice should be merged"
     assert Person.exists?(@molly_id), "Molly still exist after merge"
+  end
+
+  def test_merge_confirm
+    login_as :administrator
+
+    open "/admin/people"
+    type "a", "name"
+    submit "search_form"
+    
+    assert_table("people_table", 1, 1, /^Molly Cameron/)
+    assert_table("people_table", 2, 1, /^Mark Matson/)
+    
+    molly = Person.find_by_name("Molly Cameron")
+    matson = Person.find_by_name("Mark Matson")
+
+    click "person_#{matson.id}_name"
+    wait_for_element :css => "form.editor_field input"
+
+    type "Molly Cameron", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_element :css => "div.ui-dialog"
+    click :css => ".ui-dialog-buttonset button:last-child"
+    wait_for_no_element :css => "div.ui-dialog"
+    
+    assert Person.exists?(molly.id), "Should not have merged Molly"
+    assert !Person.exists?(matson.id), "Should not have merged Matson"
+    assert molly.aliases(true).map(&:name).include?("Mark Matson"), "Should not add Matson alias"
+
+    open "/admin/people"
+    submit "search_form"
+    assert_table("people_table", 1, 1, /^Molly Cameron/)
+    assert_table("people_table", 2, 1, /^Mark Matson/)
+
+    type "Molly Cameron", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_element :css => "div.ui-dialog"
+    click :css => ".ui-dialog-buttonset button:first-child"
+    wait_for_no_element :css => "div.ui-dialog"
+    
+    assert Person.exists?(molly.id), "Should not have merged Molly"
+    assert !Person.exists?(matson.id), "Should have merged Matson"
+    assert molly.aliases(true).map(&:name).include?("Mark Matson"), "Should add Matson alias"
   end
 
   def test_export

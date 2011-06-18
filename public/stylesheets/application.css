@@ -306,6 +306,7 @@ p.notes {
   width: 600px;
 }
 
+/* jQueryUI */
 .ui-draggable {
   cursor: move;
 }
@@ -331,4 +332,13 @@ p.notes {
   padding-right: 8px;
   padding-top: 2px;
   vertical-align: middle;
+}
+
+.ui-widget {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 1em;
+}
+
+a.ui-dialog-titlebar-close {
+  text-decoration: none;
 }
