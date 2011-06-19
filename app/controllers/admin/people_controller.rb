@@ -307,20 +307,6 @@ class Admin::PeopleController < Admin::AdminController
     end
   end
 
-  def update_name
-    @person = Person.find(params[:id])
-    @person.send "#{params[:name]}=", params[:value]
-
-    @other_people = @person.people_with_same_name
-    if @other_people.empty?
-      @person.update_attribute(:name, params[:value])
-      expire_cache
-      render :text => @person.name, :content_type => "text/html"
-    else
-      render "merge_confirm"
-    end
-  end
-
   # Toggle membership on or off
   def toggle_member
     person = Person.find(params[:id])
@@ -421,6 +407,20 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   private
+
+  def update_name
+    @person = Person.find(params[:id])
+    @person.send "#{params[:name]}=", params[:value]
+
+    @other_people = @person.people_with_same_name
+    if @other_people.empty?
+      @person.update_attribute(:name, params[:value])
+      expire_cache
+      render :text => @person.name, :content_type => "text/html"
+    else
+      render "merge_confirm"
+    end
+  end
   
   def assign_years
     date = current_date

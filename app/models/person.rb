@@ -241,6 +241,8 @@ class Person < ActiveRecord::Base
   end
   
   def people_with_same_name
+    logger.debug "people_with_same_name #{self.name}"
+    logger.debug "#{self[:first_name]} #{self[:last_name]}"
     people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
     people.reject! { |person| person == self }
     people
@@ -349,12 +351,16 @@ class Person < ActiveRecord::Base
       end
     else
       parts = value.split(' ')
-      if parts.size > 0
+      case parts.size
+      when 0
+        self.first_name = ""
+        self.last_name = ""
+      when 1
         self.first_name = parts[0].strip
-        if parts.size > 1
-          self.last_name = parts[1..(parts.size - 1)].join(" ")
-          self.last_name.strip!
-        end
+        self.last_name = ""
+      else
+        self.first_name = parts[0].strip
+        self.last_name = parts[1..(parts.size - 1)].join(" ").strip
       end
     end
   end

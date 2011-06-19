@@ -6,7 +6,7 @@ var $dialog = $('<div></div>')
     modal: true,
     buttons: {
       "Merge": function() {
-        $( this ).dialog( "close" );
+        $(this).dialog("close");
         $.ajax({
           url: '<%= admin_merge_team_path @other_teams.first, @team, :format => :js %>',
           type: 'POST',
@@ -14,7 +14,7 @@ var $dialog = $('<div></div>')
         });
       },
       Cancel: function() {
-        $( this ).dialog( "close" );
+        $(this).dialog("close");
       }
     }
   });

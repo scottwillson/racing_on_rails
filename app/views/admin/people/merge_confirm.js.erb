@@ -13,7 +13,7 @@ var html = '<div>';
 html = html + '</div>';
 
 <% else %>
-var html = '<%= @other_people.first.name %> <%= aka(@other_people.first) %> already exists. Delete <%= @person.name_was %> and move results to <%= @other_people.first.name %>? <%= hidden_field_tag "other_person_id", @other_people.first.to_param -%>';
+var html = '<%= @other_people.first.name %> <%= aka(@other_people.first) %> already exists. Delete <%= @person.name_was %> and move results to <%= @other_people.first.name %>?';
 <% end %>
 
 var $dialog = $('<div></div>')
@@ -26,7 +26,11 @@ var $dialog = $('<div></div>')
       "Merge": function() {
         $(this).dialog('close');
         $.ajax({
+          <% if @other_people.many? %>
           url: '/admin/people/' + $('input[name=other_person_id]:checked').val() + '/merge/<%= @person.id %>',
+          <% else %>
+          url: '<%= admin_merge_person_path @other_people.first, @person, :format => :js %>',
+          <% end %>
           type: 'POST',
           dataType: 'script'
         });

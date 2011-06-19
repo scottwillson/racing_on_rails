@@ -121,13 +121,14 @@ class TeamsTest < WebDriverTestCase
 
     type "Gentle Lovers", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_element :css => "div.ui-dialog"
+    wait_for_displayed :css => "div.ui-dialog"
     click :css => ".ui-dialog-buttonset button:first-child"
-    wait_for_no_element :css => "div.ui-dialog"
+    wait_for_not_displayed :css => "div.ui-dialog"
     
-    assert !Team.exists?(gl_id), "Should have merged Gentle Lovers"
-    assert Team.exists?(vanilla), "Should not have have merged Vanilla"
-    vanilla = Team.find(vanilla_id)
-    assert vanilla.aliases.map(&:name).include?("Gentle Lovers"), "Should add Gentle Lovers alias"
+    wait_for_page_source "Merged Vanilla into Gentle Lovers"
+    assert Team.exists?(gl_id), "Should not have merged Gentle Lovers"
+    assert !Team.exists?(vanilla_id), "Should have merged Vanilla"
+    gl = Team.find(gl_id)
+    assert gl.aliases.map(&:name).include?("Vanilla"), "Should add Vanilla alias"
   end
 end

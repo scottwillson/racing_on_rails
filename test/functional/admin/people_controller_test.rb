@@ -303,7 +303,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     old_id = tonkin.id
     assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
 
-    post :merge, :other_id => molly.id, :id => tonkin.to_param, :format => :js
+    xhr :post, :merge, :other_person_id => tonkin.to_param, :id => molly.to_param, :format => :js
     assert_response :success
     assert_template "admin/people/merge"
 

@@ -66,7 +66,7 @@ RacingOnRails::Application.routes.draw do
       end
       resources :results
     end
-    match "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :via => :post
+    match "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :via => :post, :as => :merge_person
 
     resources :races do
       member do

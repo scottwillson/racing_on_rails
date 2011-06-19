@@ -6,13 +6,6 @@ GIT
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
 
-GIT
-  remote: https://github.com/yalab/turn.git
-  revision: e7cc1b931c80325a058d434142aed90a99d461cc
-  specs:
-    turn (0.8.2.1)
-      ansi (>= 1.2.2)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -141,6 +134,5 @@ DEPENDENCIES
   selenium-webdriver
   tabular (> 0.0.5)
   timecop
-  turn!
   vestal_versions!
   will_paginate (~> 3.0.beta)

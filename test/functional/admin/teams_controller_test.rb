@@ -102,11 +102,12 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   
   def test_blank_name
     vanilla = teams(:vanilla)
-    xhr :put, :update_attribute, 
-        :id => vanilla.to_param,
-        :name => "name",
-        :value => ""
-    assert_response(:success)
+    assert_raise(ActiveRecord::RecordInvalid) do
+      xhr :put, :update_attribute, 
+          :id => vanilla.to_param,
+          :name => "name",
+          :value => ""
+    end
     assert_template(nil)
     assert_not_nil(assigns["team"], "Should assign team")
     assert(!assigns["team"].errors.empty?, 'Attempt to assign blank name should add error')
@@ -222,14 +223,14 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_set_name_to_other_team_existing_alias
     kona = teams(:kona)
     xhr :put, :update_attribute, 
-        :id => vanilla.to_param,
+        :id => kona.to_param,
         :name => "name",
         :value => "Vanilla Bicycles"
     assert_response(:success)
     assert_template("admin/teams/merge_confirm")
     assert_not_nil(assigns["team"], "Should assign team")
     assert_equal(kona, assigns['team'], 'Team')
-    assert_equal([teams(:vanilla)], assigns['existing_teams'], 'existing_teams')
+    assert_equal([teams(:vanilla)], assigns['other_teams'], 'existing_teams')
     assert_not_nil(Team.find_by_name('Kona'), 'Kona still in database')
     assert_not_nil(Team.find_by_name('Vanilla'), 'Vanilla still in database')
     assert_nil(Team.find_by_name('Vanilla Bicycles'), 'Vanilla Bicycles not in database')
@@ -277,12 +278,15 @@ class Admin::TeamsControllerTest < ActionController::TestCase
   def test_merge?
     vanilla = teams(:vanilla)
     kona = teams(:kona)
-    xhr :post, :merge, :id => vanilla.id, :other_id => kona.to_param
+    xhr :put, :update_attribute, 
+        :id => kona.to_param,
+        :name => "name",
+        :value => "Vanilla"
     assert_response(:success)
     assert_template("admin/teams/merge_confirm")
     assert_equal(kona, assigns['team'], 'Team')
     assert_equal(vanilla.name, assigns['team'].name, 'Unsaved Kona name should be Vanilla')
-    assert_equal([vanilla], assigns['existing_teams'], 'Existing Team')
+    assert_equal([vanilla], assigns['other_teams'], 'Existing Team')
   end
   
   def test_merge
@@ -291,7 +295,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     old_id = kona.id
     assert(Team.find_by_name('Kona'), 'Kona should be in database')
     
-    xhr :post, :merge, :id => vanilla.id, :other_id => kona.to_param
+    xhr :post, :merge, :id => vanilla.id, :other_team_id => kona.to_param
     assert_response(:success)
     assert_template("admin/teams/merge")
 

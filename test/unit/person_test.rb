@@ -137,19 +137,21 @@ class PersonTest < ActiveSupport::TestCase
     person_to_merge.password = "secret"
     person_to_merge.password_confirmation = "secret"
     person_to_merge.save!
-    sleep 1
-    person_to_merge_old_password = person_to_merge.crypted_password
 
-    assert_equal 1, person_to_merge.versions.size, "versions"
-    assert_equal 0, person_to_keep.versions.size, "no versions"
-    person_to_keep.merge person_to_merge
-    assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
-    
-    person_to_keep.reload
-    assert_equal "tonkin", person_to_keep.login, "Should merge login"
-    assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
-    changes = person_to_keep.versions.last.changes
-    assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
+    Timecop.freeze(Time.zone.now + 1.hour) do
+      person_to_merge_old_password = person_to_merge.crypted_password
+
+      assert_equal 1, person_to_merge.versions.size, "versions"
+      assert_equal 0, person_to_keep.versions.size, "no versions"
+      person_to_keep.merge person_to_merge
+      assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
+
+      person_to_keep.reload
+      assert_equal "tonkin", person_to_keep.login, "Should merge login"
+      assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
+      changes = person_to_keep.versions.last.changes
+      assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
+    end
   end
   
   def test_merge_two_logins
@@ -215,6 +217,12 @@ class PersonTest < ActiveSupport::TestCase
   def test_set_name
     person = Person.new(:first_name => "R. Jim", :last_name => "Smith")
     assert_equal "R. Jim", person.first_name, "first_name"
+  end
+  
+  def test_set_single_name
+    person = Person.new(:first_name => "Jim", :last_name => "Smith")
+    person.name = "Jim"
+    assert_equal "Jim", person.name, "name"
   end
   
   def test_name_or_login
