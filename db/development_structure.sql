@@ -1025,6 +1025,7 @@ CREATE TABLE `versions` (
   `tag` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `reverted_from` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_versions_on_versioned_id_and_versioned_type` (`versioned_id`,`versioned_type`),
   KEY `index_versions_on_user_id_and_user_type` (`user_id`,`user_type`),
@@ -1235,6 +1236,8 @@ INSERT INTO schema_migrations (version) VALUES ('20110329233050');
 INSERT INTO schema_migrations (version) VALUES ('20110516045956');
 
 INSERT INTO schema_migrations (version) VALUES ('20110521233707');
+
+INSERT INTO schema_migrations (version) VALUES ('20110618232719');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
