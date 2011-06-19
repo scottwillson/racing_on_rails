@@ -140,7 +140,7 @@ class Race < ActiveRecord::Base
         column
       end
     end
-    columns << "bar" if RacingAssociation.current.competitions.include?(:bar)
+    columns << "bar" #if RacingAssociation.current.competitions.include?(:bar)
     columns.uniq!
     columns
   end

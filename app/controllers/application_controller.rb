@@ -69,23 +69,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # FIXME Give indication to user when there is a JS error
-  # def rescue_action(exception)
-  #   respond_to do |format|
-  #     format.html {
-  #       rescue_with_handler(exception) || rescue_action_without_handler(exception)
-  #     }
-  #     format.js {
-  #       log_error(exception)
-  #       # FIXME ExceptionNotifier.deliver_exception_notification(exception, self, request, {})
-  #       render "shared/exception", :locals => { :exception => exception }
-  #     }
-  #     format.all {
-  #       rescue_with_handler(exception) || rescue_action_without_handler(exception)
-  #     }
-  #   end
-  # end
-
   def render_404
     respond_to do |type|
       type.html {
