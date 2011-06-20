@@ -903,17 +903,17 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     # assert_not_nil(@response.headers['Content-Length'], 'Should set content length')
     assert_equal(11, assigns['people'].size, "People export size")
     expected_body = %Q{license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card	card_printed_at	membership_card	date_of_birth	occupation	street	city	state	zip	wants_mail	email	wants_email	home_phone	work_phone	cell_fax	gender	road_category	track_category	ccx_category	mtb_category	dh_category	ccx_number	dh_number	road_number	singlespeed_number	track_number	xc_number	notes	volunteer_interest	official_interest	race_promotion_interest	team_interest	created_at	updated_at
-						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	01/13/2010  	01/13/2010
-	Molly	Cameron	Vanilla	01/01/1999	12/31/2010	0	0		0							0		0				F								202					0	0	0	0	01/13/2010  	01/13/2010
-576	Kevin	Condron	Gentle Lovers	01/01/2000	12/31/2009	0	0		0							0	kc@example.com	0																	0	0	0	0	01/13/2010  	01/13/2010
-	Bob	Jones		01/01/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	01/13/2010  	01/13/2010
-576	Mark	Matson	Kona	01/01/1999	12/31/2010	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	01/13/2010  	01/13/2010
-	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	01/13/2010  	01/13/2010
-	Alice	Pennington	Gentle Lovers	01/01/1999	12/31/2010	0	0		0							0		0				F								230					0	0	0	0	01/13/2010  	01/13/2010
-	Non	Results				0	0		0							0		0																	0	0	0	0	01/13/2010  	01/13/2010
-	Brad	Ross				0	0		0							0		0																	0	0	0	0	01/13/2010  	01/13/2010
-7123811	Erik	Tonkin	Kona	01/01/1999	12/31/2010	0	0		0	01/01/1980		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	01/13/2010  	01/13/2010
-	Ryan	Weaver	Gentle Lovers	01/01/1999	12/31/2010	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	01/13/2010  	01/13/2010
+						0	0		0							0	sixhobsons@comcast.net	0	(503) 223-3343																0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Molly	Cameron	Vanilla	01/01/1999	12/31/#{Date.today.year}	0	0		0							0		0				F								202					0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+576	Kevin	Condron	Gentle Lovers	01/01/2000	12/31/#{Date.today.year - 1}	0	0		0							0	kc@example.com	0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Bob	Jones		01/01/2009	12/31/2009	0	0		0							0	member@example.com	0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+576	Mark	Matson	Kona	01/01/1999	12/31/#{Date.today.year}	0	0		0							0	mcfatson@gentlelovers.com	0				M								340					0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Candi	Murray				0	0		0							0	admin@example.com	0	(503) 555-1212																0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Alice	Pennington	Gentle Lovers	01/01/1999	12/31/#{Date.today.year}	0	0		0							0		0				F								230					0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Non	Results				0	0		0							0		0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Brad	Ross				0	0		0							0		0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+7123811	Erik	Tonkin	Kona	01/01/1999	12/31/#{Date.today.year}	0	0		0	#{30.years.ago.to_date.to_s(:mdY)}		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
+	Ryan	Weaver	Gentle Lovers	01/01/1999	12/31/#{Date.today.year}	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}
 }
     # FIXME
     # assert_equal expected_body, @response.body, "Excel contents"

@@ -3,7 +3,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
-# FIXME
 class PeopleControllerTest < ActionController::TestCase
   assert_no_angle_brackets :except => :test_create_login_invalid_login
   

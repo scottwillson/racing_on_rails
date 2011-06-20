@@ -243,13 +243,13 @@ Downhill/Cross Country: Downhill}
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     
-    # FIXME
-    # people_file.import(true)
-    # 
-    # assert_equal(1, people_file.created, 'Number of people created')
-    # assert_equal(0, people_file.updated, 'Number of people updated')
-    # assert_equal(1, people_file.duplicates.size, 'Number of duplicates')
+    people_file.import(true)
     
+    assert_equal(1, people_file.created, 'Number of people created')
+    assert_equal(0, people_file.updated, 'Number of people updated')
+    assert_equal(1, people_file.duplicates.size, 'Number of duplicates')
+    
+    # FIXME
     # Assert data
     # Add dupe with number and assert matching
   end
