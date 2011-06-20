@@ -48,10 +48,6 @@ module RacingOnRails
   # Local config customization
   load("#{::Rails.root.to_s}/local/config/environment.rb") if File.exist?("#{::Rails.root.to_s}/local/config/environment.rb")
   
-  # Prefer local templates, partials etc. if they exist.  Otherwise, use the base
-  # application's generic files.
-  ActionController::Base.view_paths = ActionView::Base.process_view_paths(["#{::Rails.root.to_s}/local/app/views", "#{::Rails.root.to_s}/app/views"])
-  
   class ActionView::Base
     def self.default_form_builder
       RacingOnRails::FormBuilder
