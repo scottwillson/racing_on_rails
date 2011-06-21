@@ -33,9 +33,9 @@ class PeopleController < ApplicationController
   end
 
   def list
-    people_list = ''
-    Person.find_all_by_name_like(params['q']).each { |person| people_list += (person.name + '|' + person.id.to_s + "\n") }
-    render :text => people_list
+    people_list = Array.new
+    Person.find_all_by_name_like(params['term']).each { |person| people_list.push( { "label" => person.name, "id" => person.id.to_s} ) }
+    render :json => people_list
   end
 
   def show
