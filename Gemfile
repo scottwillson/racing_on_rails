@@ -17,6 +17,10 @@ gem "vestal_versions", :git => "git://github.com/laserlemon/vestal_versions"
 gem "newrelic_rpm"
 gem "will_paginate", "~> 3.0.beta"
 
+group :development do
+  gem "capistrano"
+end
+
 group :test do
   gem "ansi"
   gem "mocha"

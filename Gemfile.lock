@@ -45,12 +45,19 @@ GEM
       activerecord (>= 3.0.7)
       activerecord (>= 3.0.7)
     builder (2.1.2)
+    capistrano (2.6.0)
+      highline
+      net-scp (>= 1.0.0)
+      net-sftp (>= 2.0.0)
+      net-ssh (>= 2.0.14)
+      net-ssh-gateway (>= 1.1.0)
     childprocess (0.1.9)
       ffi (~> 1.0.6)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
     ffi (1.0.9)
+    highline (1.6.2)
     hoe (2.9.4)
       rake (>= 0.8.7)
     hoptoad_notifier (2.4.11)
@@ -67,6 +74,13 @@ GEM
     minitest (2.3.0)
     mocha (0.9.12)
     mysql2 (0.2.11)
+    net-scp (1.0.4)
+      net-ssh (>= 1.99.1)
+    net-sftp (2.0.5)
+      net-ssh (>= 2.0.9)
+    net-ssh (2.1.4)
+    net-ssh-gateway (1.1.0)
+      net-ssh (>= 1.99.1)
     newrelic_rpm (3.1.0)
     pdf-reader (0.9.2)
       Ascii85 (>= 0.9)
@@ -119,6 +133,7 @@ DEPENDENCIES
   SyslogLogger
   ansi
   authlogic
+  capistrano
   fastercsv
   hoptoad_notifier
   minitest
