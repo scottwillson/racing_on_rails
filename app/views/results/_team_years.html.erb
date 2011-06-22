@@ -1,0 +1,7 @@
+<table class="tabs centered">
+  <tr>
+<%= (RacingAssociation.current.effective_year).downto(2006) do |year| %>
+  <td><%= link_to(year, team_results_year_path(team, year)) %></td>
+<% end -%>
+  </tr>
+</table>
