@@ -65,6 +65,7 @@ GEM
       builder
     i18n (0.5.0)
     json_pure (1.5.3)
+    kgio (2.5.0)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
@@ -123,6 +124,9 @@ GEM
       polyglot (>= 0.3.1)
     ttfunk (1.0.1)
     tzinfo (0.3.28)
+    unicorn (3.7.0)
+      kgio (~> 2.3)
+      rack
     will_paginate (3.0.pre2)
 
 PLATFORMS
@@ -144,11 +148,12 @@ DEPENDENCIES
   pdf-reader
   prawn
   prawn-core
-  rack (~> 1.2.1)
+  rack (~> 1.2.3)
   rails (= 3.0.9)
   rake (~> 0.8.0)
   selenium-webdriver
   tabular (> 0.0.5)
   timecop
+  unicorn
   vestal_versions!
   will_paginate (~> 3.0.beta)

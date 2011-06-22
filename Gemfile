@@ -3,7 +3,7 @@ source :gemcutter
 gem "rails", "3.0.9"
 
 gem "fastercsv", :platforms => :ruby_18
-gem "rack", "~>1.2.1"
+gem "rack", "~>1.2.3"
 gem "rake", "~>0.8.0"
 gem "authlogic"
 gem "tabular", ">0.0.5"
@@ -36,4 +36,5 @@ end
 
 group :production do
   gem "SyslogLogger", :require => "syslog_logger"
+  gem "unicorn"
 end
