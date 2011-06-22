@@ -171,7 +171,7 @@ RacingOnRails::Application.routes.draw do
   end
 
   match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
-  match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }
+  match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :person_results_year
   match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }, :via => :get
   match '/people/list' => 'people#list'
   match '/people/new_login' => 'people#new_login'

@@ -1,5 +1,7 @@
-<%= tabs do |tabs|
-  (RacingAssociation.current.effective_year).downto(2006) do |year|
-    tabs.add(year, :year => year)
-  end
-end -%>
+<table class="tabs centered">
+  <tr>
+<%= (RacingAssociation.current.effective_year).downto(2006) do |year| %>
+  <td><%= link_to(year, person_results_year_path(person, year)) %></td>
+<% end -%>
+  </tr>
+</table>

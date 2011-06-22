@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@person.name}: #{@year}" %>
 
-<%= render_page "years" %>
+<%= render_page "years", :locals => { :person => @person } %>
 
 <%= table :caption => @person.name, :class => "person_results", :id => "person_results", :collection => @event_results do %>
   <tr>
