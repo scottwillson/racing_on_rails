@@ -16,7 +16,7 @@ class PeopleControllerTest < ActionController::TestCase
   end
 
   def test_list
-    get(:list, :q => 'jone')
+    get(:list, :term => 'jone')
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), 'Search for jone should find Jones #{@response.to_s}')
     assert_not_nil(@response.body.index("2"), 'Search for jone should return ID of 2')
