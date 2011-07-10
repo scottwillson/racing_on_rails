@@ -6,6 +6,14 @@ GIT
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
 
+GIT
+  remote: https://github.com/sandal/prawn.git
+  revision: 522da21b81221ad836676f66fe35ccc850d6abc3
+  specs:
+    prawn (0.11.1)
+      pdf-reader (>= 0.9.0)
+      ttfunk (~> 1.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -86,10 +94,6 @@ GEM
     pdf-reader (0.10.0)
       Ascii85 (~> 1.0.0)
     polyglot (0.3.1)
-    prawn (0.11.1)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.0)
-    prawn-core (0.8.4)
     rack (1.2.3)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
@@ -113,7 +117,7 @@ GEM
     rake (0.8.7)
     rdoc (3.8)
     rubyzip (0.9.4)
-    selenium-webdriver (0.2.2)
+    selenium-webdriver (2.0.0)
       childprocess (>= 0.1.9)
       ffi (>= 1.0.7)
       json_pure
@@ -148,8 +152,7 @@ DEPENDENCIES
   mysql2 (< 0.3.0)
   newrelic_rpm
   pdf-reader
-  prawn
-  prawn-core
+  prawn!
   rack (~> 1.2.3)
   rails (= 3.0.9)
   rake (~> 0.8.0)
