@@ -43,8 +43,8 @@ class ResultColumn
   
   def initialize(attribute, options = {})
     @alignment = options[:alignment] || :left
-    @attribute = attribute
-    @description = options[:description] || attribute.titleize
-    @display_method = options[:display_method] || attribute
+    @attribute = attribute.to_s
+    @description = options[:description] || @attribute.titleize
+    @display_method = options[:display_method] || @attribute
   end
 end

@@ -254,7 +254,7 @@ class Result < ActiveRecord::Base
     else
       self.category = Category.find_or_create_by_name(name)
     end
-    self[:category_name] = name
+    self[:category_name] = name.try(:to_s)
   end
 
   def competition_result?
