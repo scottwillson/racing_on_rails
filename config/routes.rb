@@ -223,6 +223,8 @@ RacingOnRails::Application.routes.draw do
   match '/account/login' => 'person_sessions#new'
   match '/account' => 'people#account', :as => :account
 
+  match '/wsba_barr' => 'competitions#show', :as => :wsba_barr_root, :type => 'wsba_barr'
+
   match '*path', :to => 'pages#show'
   
   if Rails.env.test?
