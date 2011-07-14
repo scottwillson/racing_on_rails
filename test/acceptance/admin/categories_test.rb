@@ -11,7 +11,7 @@ class CategoriesTest < WebDriverTestCase
     assert_element    :css => "#unknown_category_root #category_#{masters_35_plus_id}"
     assert_no_element :css => "#association_category_root #category_#{masters_35_plus_id}"
 
-    drag_and_drop_by -400, 116, "category_#{masters_35_plus_id}"
+    drag_and_drop_on "category_#{masters_35_plus_id}", "association_category_root"
     wait_for_element  :css => "#association_category_root #category_#{masters_35_plus_id}"
     assert_no_element :css => "#unknown_category_root #category_#{masters_35_plus_id}"
 

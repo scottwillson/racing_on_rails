@@ -51,8 +51,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
       end
 
       # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
-      webdriver_profile = Selenium::WebDriver::Firefox::Profile.new(Rails.root + "test/files/webdriver-profile")
-      MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
+      MiniTest::Unit.driver = Selenium::WebDriver.for(:chrome)
       FileUtils.rm_rf DOWNLOAD_DIRECTORY
       FileUtils.mkdir_p DOWNLOAD_DIRECTORY
     end
@@ -105,7 +104,8 @@ class WebDriverTestCase < ActiveSupport::TestCase
   def login_as(person_symbol)
     open "/person_session/new"
     type people(person_symbol).login, "person_session_login"
-    type "secret", "person_session_password"
+    type " ", "person_session_password", true
+    type "secret", "person_session_password", true
     click "login_button"
     assert_no_errors
   end
@@ -384,11 +384,11 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def drag_and_drop_by(right_by, down_by, element_finder)
-    find_element(element_finder).drag_and_drop_by right_by, down_by
+    driver.action.drag_and_drop_by find_element(element_finder), right_by, down_by
   end
   
   def drag_and_drop_on(element_finder, on_element_finder)
-    find_element(element_finder).drag_and_drop_on find_element(on_element_finder)
+    driver.action.drag_and_drop find_element(on_element_finder), find_element(element_finder)
   end
   
   def find_element(element_finder)

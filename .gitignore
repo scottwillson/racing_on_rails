@@ -10,3 +10,4 @@ public/export/*.txt
 *.swp
 .rvmrc
 db/production.sql
+chromedriver.log
