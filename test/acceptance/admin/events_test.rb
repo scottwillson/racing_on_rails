@@ -116,8 +116,9 @@ class EventsTest < WebDriverTestCase
 
     open "/admin/events?year=2003"
 
+    wait_for_page_source "Import Schedule"
     click :link_text => "Kings Valley Road Race"
-    assert_page_source "Senior Men Pro 1/2"
+    wait_for_page_source "Senior Men Pro 1/2"
     assert_page_source "Senior Men 3"
 
     kings_valley = Event.find_by_name_and_date('Kings Valley Road Race', '2003-12-31')
