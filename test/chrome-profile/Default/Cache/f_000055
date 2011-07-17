@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>
+      CBRA: Admin: People: Non Results    </title>
+    <link href="/stylesheets/reset.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/jquery-ui/jquery-ui-1.8.2.custom.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/application.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/grid.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/tabs.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/forms.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/tables.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/pages.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/admin.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+<link href="/stylesheets/ie.css?1305526677" media="screen" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 6]>
+<link href="/stylesheets/ie_6.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+    <link href="/stylesheets/wsba.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if IE]>
+    <link href="/stylesheets/ie.css?1305526677" media="screen" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <script src="/javascripts/jquery.js?1305430065" type="text/javascript"></script>
+<script src="/javascripts/rails.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/jquery-ui.js?1305127569" type="text/javascript"></script>
+<script src="/javascripts/jquery.jeditable.js?1305431170" type="text/javascript"></script>
+<script src="/javascripts/application.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/widgets/tooltip.js?1305127569" type="text/javascript"></script>
+<script src="/javascripts/tabs.js?1305127569" type="text/javascript"></script>
+  <script src="/javascripts/people.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/widgets/tooltip.js?1305127569" type="text/javascript"></script>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      });
+</script>
+
+    <script src="/javascripts/tabs.js?1305127569" type="text/javascript"></script>
+  </head>
+
+  <body>
+  <div class="shadow_2">
+    <div class="shadow_1">
+      <div class="frame" id="frame">
+        <div class="nav" id="top">
+          <h1><a href="/admin">Cascadia Bicycle Racing Association</a></h1>
+        </div>
+        <div class="content container">
+        
+      <table class="tabs_solo centered">
+      <tr>
+      <td class="first"><div class="first"><span><a href="/racing_associations/1032135119/edit" onmouseout="hoverOut(this)" onmouseover="hover(this)">Site</a></span></div></td>
+      <td class="last"><div class="last"><span>&nbsp;</span></div></td>
+      </tr>
+    </table>
+
+  
+
+        <p class="flash_message" id="notice" style='display: none;'><span id="notice_span"></span></p>
+<p class="flash_message" id="warn" style='display: none;'><span id="warn_span"></span></p>
+
+
+
+
+
+<h2>Non Results</h2>
+
+<div class="column_grid_container">
+<form accept-charset="UTF-8" action="/admin/people/565692608" class="edit_person" id="edit_person_565692608" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="_method" type="hidden" value="put" /></div>  
+  <div class="span-3">
+    <label for="person_first_name">First Name</label> <input class="" id="person_first_name" name="person[first_name]" size="30" type="text" value="Non" />
+    <label for="person_last_name">Last Name</label> <input id="person_last_name" name="person[last_name]" size="30" type="text" value="Results" />
+    <label for="person_team_name">Team Name</label> <input id="person_team_name" name="person[team_name]" size="30" type="text" value="" />
+    <label for="person_status">Status</label> <input id="person_status" name="person[status]" size="30" type="text" />
+  </div>
+  <div class="span-3 last">
+    <label for="person_date_of_birth">Date of Birth</label>
+    <select id="person_date_of_birth_2i" name="person[date_of_birth(2i)]">
+<option value=""></option>
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+<select id="person_date_of_birth_3i" name="person[date_of_birth(3i)]">
+<option value=""></option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+<select id="person_date_of_birth_1i" name="person[date_of_birth(1i)]">
+<option value=""></option>
+<option value="1900">1900</option>
+<option value="1901">1901</option>
+<option value="1902">1902</option>
+<option value="1903">1903</option>
+<option value="1904">1904</option>
+<option value="1905">1905</option>
+<option value="1906">1906</option>
+<option value="1907">1907</option>
+<option value="1908">1908</option>
+<option value="1909">1909</option>
+<option value="1910">1910</option>
+<option value="1911">1911</option>
+<option value="1912">1912</option>
+<option value="1913">1913</option>
+<option value="1914">1914</option>
+<option value="1915">1915</option>
+<option value="1916">1916</option>
+<option value="1917">1917</option>
+<option value="1918">1918</option>
+<option value="1919">1919</option>
+<option value="1920">1920</option>
+<option value="1921">1921</option>
+<option value="1922">1922</option>
+<option value="1923">1923</option>
+<option value="1924">1924</option>
+<option value="1925">1925</option>
+<option value="1926">1926</option>
+<option value="1927">1927</option>
+<option value="1928">1928</option>
+<option value="1929">1929</option>
+<option value="1930">1930</option>
+<option value="1931">1931</option>
+<option value="1932">1932</option>
+<option value="1933">1933</option>
+<option value="1934">1934</option>
+<option value="1935">1935</option>
+<option value="1936">1936</option>
+<option value="1937">1937</option>
+<option value="1938">1938</option>
+<option value="1939">1939</option>
+<option value="1940">1940</option>
+<option value="1941">1941</option>
+<option value="1942">1942</option>
+<option value="1943">1943</option>
+<option value="1944">1944</option>
+<option value="1945">1945</option>
+<option value="1946">1946</option>
+<option value="1947">1947</option>
+<option value="1948">1948</option>
+<option value="1949">1949</option>
+<option value="1950">1950</option>
+<option value="1951">1951</option>
+<option value="1952">1952</option>
+<option value="1953">1953</option>
+<option value="1954">1954</option>
+<option value="1955">1955</option>
+<option value="1956">1956</option>
+<option value="1957">1957</option>
+<option value="1958">1958</option>
+<option value="1959">1959</option>
+<option value="1960">1960</option>
+<option value="1961">1961</option>
+<option value="1962">1962</option>
+<option value="1963">1963</option>
+<option value="1964">1964</option>
+<option value="1965">1965</option>
+<option value="1966">1966</option>
+<option value="1967">1967</option>
+<option value="1968">1968</option>
+<option value="1969">1969</option>
+<option value="1970">1970</option>
+<option value="1971">1971</option>
+<option value="1972">1972</option>
+<option value="1973">1973</option>
+<option value="1974">1974</option>
+<option value="1975">1975</option>
+<option value="1976">1976</option>
+<option value="1977">1977</option>
+<option value="1978">1978</option>
+<option value="1979">1979</option>
+<option value="1980">1980</option>
+<option value="1981">1981</option>
+<option value="1982">1982</option>
+<option value="1983">1983</option>
+<option value="1984">1984</option>
+<option value="1985">1985</option>
+<option value="1986">1986</option>
+<option value="1987">1987</option>
+<option value="1988">1988</option>
+<option value="1989">1989</option>
+<option value="1990">1990</option>
+<option value="1991">1991</option>
+<option value="1992">1992</option>
+<option value="1993">1993</option>
+<option value="1994">1994</option>
+<option value="1995">1995</option>
+<option value="1996">1996</option>
+<option value="1997">1997</option>
+<option value="1998">1998</option>
+<option value="1999">1999</option>
+<option value="2000">2000</option>
+<option value="2001">2001</option>
+<option value="2002">2002</option>
+<option value="2003">2003</option>
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+</select>
+
+    <br/>
+
+    <label for="person_racing_age">Racing Age</label> <div class="labelled" id="person_racing_age">  </div>
+    <label for="person_cyclocross_racing_age">CX Racing Age</label> <div class="labelled" id="person_cyclocross_racing_age"></div>
+
+    <label for="person_gender">Gender</label>
+    <select id="person_gender" name="person[gender]"><option value="" selected="selected"></option>
+<option value="F">F</option>
+<option value="M">M</option></select><br/>
+  </div>
+
+  <div class="span-3">
+    <label for="person_email">Email</label> <input id="person_email" name="person[email]" size="30" type="text" />
+    <label for="person_home_phone">Home Phone</label> <input id="person_home_phone" name="person[home_phone]" size="30" type="text" />
+    <label for="person_work_phone">Work Phone</label> <input id="person_work_phone" name="person[work_phone]" size="30" type="text" />
+    <label for="person_cell_fax">Cell Fax</label> <input id="person_cell_fax" name="person[cell_fax]" size="30" type="text" />
+    <label for="person_emergency_contact">Emergency Contact</label> <input id="person_emergency_contact" name="person[emergency_contact]" size="30" type="text" />
+    <label for="person_emergency_contact_phone">Emerg Contact Phone</label> <input id="person_emergency_contact_phone" name="person[emergency_contact_phone]" size="30" type="text" />
+    <div class="check_box"><div class="input"><input name="person[wants_mail]" type="hidden" value="0" /><input id="person_wants_mail" name="person[wants_mail]" type="checkbox" value="1" /></div><div  class="label"><label for="person_wants_mail">Wants mail?</label></div></div>
+    <div class="check_box"><div class="input"><input name="person[wants_email]" type="hidden" value="0" /><input id="person_wants_email" name="person[wants_email]" type="checkbox" value="1" /></div><div  class="label"><label for="person_wants_email">Wants email?</label></div></div>
+  </div>
+  <div class="span-3 last">
+    <label for="person_street">Street</label> <input id="person_street" name="person[street]" size="30" type="text" />
+    <label for="person_city">City, State ZIP</label>
+    <input class="city" id="person_city" name="person[city]" size="30" type="text" /> <input class="state" id="person_state" name="person[state]" size="30" type="text" /> <input class="zip" id="person_zip" name="person[zip]" size="30" type="text" />
+    <label for="person_occupation">Occupation</label> <input id="person_occupation" name="person[occupation]" size="30" type="text" />
+
+    <div class="check_box"><div class="input"><input name="person[volunteer_interest]" type="hidden" value="0" /><input id="person_volunteer_interest" name="person[volunteer_interest]" type="checkbox" value="1" /></div><div  class="label"><label for="person_volunteer_interest">Volunteer Interest</label></div></div>
+    <div class="check_box"><div class="input"><input name="person[official_interest]" type="hidden" value="0" /><input id="person_official_interest" name="person[official_interest]" type="checkbox" value="1" /></div><div  class="label"><label for="person_official_interest">Official Interest</label></div></div>
+    <div class="check_box"><div class="input"><input name="person[race_promotion_interest]" type="hidden" value="0" /><input id="person_race_promotion_interest" name="person[race_promotion_interest]" type="checkbox" value="1" /></div><div  class="label"><label for="person_race_promotion_interest">Race Promotion Interest</label></div></div>
+    <div class="check_box"><div class="input"><input name="person[team_interest]" type="hidden" value="0" /><input id="person_team_interest" name="person[team_interest]" type="checkbox" value="1" /></div><div  class="label"><label for="person_team_interest">Team Interest</label></div></div>
+
+    <label for="person_login">Login</label> <input autocomplete="off" id="person_login" name="person[login]" size="30" type="text" />
+    <label for="person_password">Password</label> <input autocomplete="off" id="person_password" name="person[password]" size="30" type="password" />
+    <label for="person_password_confirmation">Confirm Password</label> <input autocomplete="off" id="person_password_confirmation" name="person[password_confirmation]" size="30" type="password" />
+    <label for="person_last_login_at">Last Login At</label> <div class="labelled" id="person_last_login_at">Never</div>  </div>
+
+  <hr class="space" />
+
+  <div class="span-3">
+    <label for="person_member_from">Member From</label>
+    <select id="person_member_from_2i" name="person[member_from(2i)]">
+<option value=""></option>
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+<select id="person_member_from_3i" name="person[member_from(3i)]">
+<option value=""></option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+<select id="person_member_from_1i" name="person[member_from(1i)]">
+<option value=""></option>
+<option value="1999">1999</option>
+<option value="2000">2000</option>
+<option value="2001">2001</option>
+<option value="2002">2002</option>
+<option value="2003">2003</option>
+<option value="2004">2004</option>
+<option value="2005">2005</option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+</select>
+
+    <label for="person_member_to">To</label>
+    <select id="person_member_to_2i" name="person[member_to(2i)]">
+<option value=""></option>
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+<select id="person_member_to_3i" name="person[member_to(3i)]">
+<option value=""></option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+<select id="person_member_to_1i" name="person[member_to(1i)]">
+<option value=""></option>
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+</select>
+<br/>
+  
+                <label class="not_current" for="person_member">Member</label> <div class="labelled" id="person_member">Not current</div>    
+
+    <div class="check_box"><div class="input"><input name="person[membership_card]" type="hidden" value="0" /><input id="person_membership_card" name="person[membership_card]" type="checkbox" value="1" /></div><div  class="label"><label for="person_membership_card">Has Card?</label></div></div>
+    <div class="check_box"><div class="input"><input name="person[print_card]" type="hidden" value="0" /><input id="person_print_card" name="person[print_card]" type="checkbox" value="1" /></div><div  class="label"><label for="person_print_card">Print card? <a href="/admin/people/565692608/card.pdf" class="obvious">Print one card now</a></label></div></div>
+
+    <label for="person_card_printed_at">Card Printed At</label> <div class="labelled" id="person_card_printed_at">Never</div>
+    <div class="check_box"><div class="input"><input name="person[official]" type="hidden" value="0" /><input id="person_official" name="person[official]" type="checkbox" value="1" /></div><div  class="label"><label for="person_official">Official</label></div></div>
+  </div>
+
+  <div class="span-3 last">
+    <label class="text_area" for="person_notes">Notes</label><textarea cols="40" id="person_notes" name="person[notes]" rows="20"></textarea>
+  </div>
+
+  <hr class="space" />
+
+  <div class="clear span-6 last">
+    <div id="numbers_wrapper"><div class="table_container numbers box-2 clear" id='numbers'>
+  <div class="caption">Numbers</div>
+  <table cellspacing="0" class="base numbers box-2 clear" id='numbers_table'>
+    <tr>
+      <th>&nbsp;</th>
+    </tr>
+
+  <tr>
+    <td class="number_year">
+      <select name='number_year' data-person-id="565692608" id='number_year'><option value="2012">2012</option>
+<option value="2011" selected="selected">2011</option>
+<option value="2010">2010</option>
+<option value="2009">2009</option>
+<option value="2008">2008</option>
+<option value="2007">2007</option>
+<option value="2006">2006</option>
+<option value="2005">2005</option></select>
+    </td>
+  </tr>
+  <tr>
+    <td><label class="inline">CBRA Membership</label> <input id="person_license" name="person[license]" size="30" type="text" /></td>
+  </tr>
+  <tr id="new_number_button_row">
+    <td class="right">
+      <a href="/admin/people/565692608/edit?html[class]=image&amp;remote=true&amp;url[action]=new_number"><img alt="Add" height="16" src="/images/icons/add.png?1305127569" width="16" /></a>
+    </td>
+  </tr>
+  </table>
+  </div>
+</div>
+    <div class="table_container box-2 person_categories">
+  <div class="caption">Categories</div>
+  <table cellspacing="0" class="base box-2 person_categories">
+    <tr>
+      <th>&nbsp;</th><th>&nbsp;</th>
+    </tr>
+
+  <tr>
+    <td>Cyclocross</td>
+    <td><input id="person_ccx_category" name="person[ccx_category]" size="30" type="text" /></td>
+  </tr>
+  <tr>
+    <td>Downhill</td>
+    <td><input id="person_dh_category" name="person[dh_category]" size="30" type="text" /></td>
+  </tr>
+  <tr>
+    <td>Mountain Bike</td>
+    <td><input id="person_mtb_category" name="person[mtb_category]" size="30" type="text" /></td>
+  </tr>
+  <tr>
+    <td>Road</td>
+    <td><input id="person_road_category" name="person[road_category]" size="30" type="text" /></td>
+  </tr>
+  <tr>
+    <td>Track</td>
+    <td><input id="person_track_category" name="person[track_category]" size="30" type="text" /></td>
+  </tr>
+  </table>
+  </div>
+
+    <div class="table_container box-2 last aliases">
+  <div class="caption">Aliases</div>
+  <table cellspacing="0" class="base box-2 last aliases">
+    <tr>
+      <th>&nbsp;</th><th>&nbsp;</th>
+    </tr>
+
+  <tr>
+    <td colspan="2">None</td>
+  </tr>
+  </table>
+  </div>
+
+
+  </div>
+
+  <hr class="space" />
+
+  <div class="clear span-6 last">
+    <div class="table_container box-3" id='accounts'>
+  <div class="caption">Account Permissions</div>
+  <table cellspacing="0" class="base box-3" id='accounts_table'>
+
+  <tr>
+    <th>Person</th>
+    <th>This Account</th>
+    <th>Their Account</th>
+  </tr>
+  
+    <tr>
+      <td class="empty">None</td>
+    </tr>
+  </table>
+  </div>
+
+    
+  </div>
+
+  <div class="page_buttons span-6 last">
+    <div class="updatedon span-2">
+      <span class="created_at">
+  <a href="/people/565692608/versions">
+    Created less than 20 seconds ago
+    
+</a></span>
+<a href="/people/565692608/versions">
+  Updated less than 20 seconds ago
+  
+</a>
+    </div>
+    <div class="right span-4 last">
+      <a href="/admin/people/565692608/results">Move Results</a>  
+      <a href="/admin/people/565692608" class="obvious" data-method="delete" id="delete" rel="nofollow">Delete</a>
+      <input id="save" name="commit" type="submit" value="Save" />
+    </div>
+  </div>
+</form></div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  </body>
+</html>

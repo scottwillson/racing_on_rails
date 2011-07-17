@@ -1,0 +1,95 @@
+{
+   "browser": {
+      "window_placement": {
+         "always_on_top": false,
+         "bottom": 833,
+         "left": 22,
+         "maximized": false,
+         "right": 1072,
+         "top": 22,
+         "work_area_bottom": 833,
+         "work_area_left": 0,
+         "work_area_right": 1440,
+         "work_area_top": 22
+      }
+   },
+   "cloud_print": {
+      "email": ""
+   },
+   "countryid_at_install": 21843,
+   "default_search_provider": {
+      "enabled": true,
+      "encodings": "UTF-8",
+      "icon_url": "http://www.google.com/favicon.ico",
+      "id": "2",
+      "instant_url": "{google:baseURL}webhp?{google:RLZ}sourceid=chrome-instant&ie={inputEncoding}&ion=1{searchTerms}&nord=1",
+      "keyword": "google.com",
+      "name": "Google",
+      "prepopulate_id": "1",
+      "search_url": "{google:baseURL}search?{google:RLZ}{google:acceptedSuggestion}{google:originalQueryForSuggestion}sourceid=chrome&ie={inputEncoding}&q={searchTerms}",
+      "suggest_url": "{google:baseSuggestURL}search?client=chrome&hl={language}&q={searchTerms}"
+   },
+   "dns_prefetching": {
+      "host_referral_list": [ 2, [ "http://localhost:3000/", [ "http://hoptoadapp.com/", 2.2733802, "http://localhost/", 2.5394767300920633, "http://localhost:3000/", 120.28057879755094, "http://www.obra.org/", 1.967674022654115 ] ], [ "http://tools.google.com/", [ "http://fls.doubleclick.net/", 1.950532394969525, "http://fonts.googleapis.com/", 1.703076792622645, "http://themes.googleusercontent.com/", 1.950532394969525, "http://tools.google.com/", 2.4454435996632853, "http://www.google-analytics.com/", 1.950532394969525, "http://www.google.com/", 3.435266009050805, "http://www.youtube.com/", 1.703076792622645 ] ], [ "http://www.youtube.com/", [ "http://gdata.youtube.com/", 1.950532394969525, "http://i.ytimg.com/", 3.435266009050805, "http://s.ytimg.com/", 1.703076792622645 ] ] ],
+      "startup_list": [ 1, "http://hoptoadapp.com/", "http://localhost:3000/" ]
+   },
+   "download": {
+      "default_directory": "/private/tmp/webdriver-downloads",
+      "directory_upgrade": true,
+      "extensions_to_open": ""
+   },
+   "extensions": {
+      "autoupdate": {
+         "last_check": "12955404338319352",
+         "next_check": "12955426231989706"
+      },
+      "blacklistupdate": {
+         "lastpingday": "12955359600814343",
+         "version": "0.0.0.5"
+      },
+      "chrome_url_overrides": {
+         "bookmarks": [ "chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" ]
+      },
+      "settings": {
+         "hpibmhghjndideebpackbdlpncgkcppp": {
+            "blacklist": true
+         },
+         "lncjcfkpannmofmpgdfoonkniofdnaba": {
+            "blacklist": true
+         }
+      }
+   },
+   "google": {
+      "services": {
+         "username": ""
+      }
+   },
+   "homepage": "http://www.google.com/",
+   "homepage_is_newtabpage": true,
+   "ntp": {
+      "pref_version": 3,
+      "promo_build": 2,
+      "promo_closed": false,
+      "promo_end": 1299830340.0,
+      "promo_group": 6,
+      "promo_group_timeslice": 0,
+      "promo_line": "Use Chrome on another computer? Take your bookmarks and more with you.",
+      "promo_resource_cache_update": "1310928708.936747",
+      "promo_start": 1299830280.0,
+      "shown_sections": 64,
+      "webstore_last_promo_id": "1335115"
+   },
+   "plugins": {
+      "enabled_internal_pdf3": true
+   },
+   "profile": {
+      "content_settings": {
+         "pref_version": 1
+      },
+      "exited_cleanly": true
+   },
+   "tabs": {
+      "use_compact_navigation_bar": false,
+      "use_vertical_tabs": false
+   }
+}

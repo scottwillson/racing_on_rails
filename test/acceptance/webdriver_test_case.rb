@@ -49,11 +49,15 @@ class WebDriverTestCase < ActiveSupport::TestCase
         f.puts "<html>"
         f.puts "<body>"
       end
+      
+      FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
+      FileUtils.mkdir_p "#{Rails.root}/tmp/chrome-profile"
+      FileUtils.cp_r "#{Rails.root}/test/chrome-profile", "#{Rails.root}/tmp"
 
-      # TODO use API for FF profile: http://seleniumhq.org/docs/09_webdriver.html
-      MiniTest::Unit.driver = Selenium::WebDriver.for(:chrome)
       FileUtils.rm_rf DOWNLOAD_DIRECTORY
       FileUtils.mkdir_p DOWNLOAD_DIRECTORY
+
+      MiniTest::Unit.driver = Selenium::WebDriver.for(:chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile"])
     end
     MiniTest::Unit.driver
   end
@@ -115,7 +119,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def select_option(value, select_element_id)
-    find_element(:css => "select##{select_element_id} option[value='#{value}']").select
+    click(:css => "select##{select_element_id} option[value='#{value}']")
   end
   
   # Workaround for WebDriver's less-than-stellar alert box handling.
@@ -388,7 +392,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def drag_and_drop_on(element_finder, on_element_finder)
-    driver.action.drag_and_drop(find_element(on_element_finder), find_element(element_finder)).perform
+    driver.action.drag_and_drop(find_element(element_finder), find_element(on_element_finder)).perform
   end
   
   def find_element(element_finder)

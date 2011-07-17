@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>
+      CBRA: Admin: Events: Sausalito Criterium    </title>
+    <link href="/stylesheets/reset.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/jquery-ui/jquery-ui-1.8.2.custom.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/application.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/grid.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/tabs.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/forms.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/tables.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/pages.css?1310311202" media="screen" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/admin.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+<link href="/stylesheets/ie.css?1305526677" media="screen" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 6]>
+<link href="/stylesheets/ie_6.css?1305127569" media="screen" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+    <link href="/stylesheets/wsba.css" media="screen" rel="stylesheet" type="text/css" />
+    <!--[if IE]>
+    <link href="/stylesheets/ie.css?1305526677" media="screen" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <script src="/javascripts/jquery.js?1305430065" type="text/javascript"></script>
+<script src="/javascripts/rails.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/jquery-ui.js?1305127569" type="text/javascript"></script>
+<script src="/javascripts/jquery.jeditable.js?1305431170" type="text/javascript"></script>
+<script src="/javascripts/application.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/widgets/tooltip.js?1305127569" type="text/javascript"></script>
+<script src="/javascripts/tabs.js?1305127569" type="text/javascript"></script>
+  <script src="/javascripts/events.js?1310311202" type="text/javascript"></script>
+<script src="/javascripts/widgets/tooltip.js?1305127569" type="text/javascript"></script>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      });
+</script>
+
+    <script src="/javascripts/tabs.js?1305127569" type="text/javascript"></script>
+  </head>
+
+  <body>
+  <div class="shadow_2">
+    <div class="shadow_1">
+      <div class="frame" id="frame">
+        <div class="nav" id="top">
+          <h1><a href="/admin">Cascadia Bicycle Racing Association</a></h1>
+        </div>
+        <div class="content container">
+        
+      <table class="tabs_solo centered">
+      <tr>
+      <td class="first"><div class="first"><span><a href="/racing_associations/1032135119/edit" onmouseout="hoverOut(this)" onmouseover="hover(this)">Site</a></span></div></td>
+      <td class="last"><div class="last"><span>&nbsp;</span></div></td>
+      </tr>
+    </table>
+
+  
+
+        <p class="flash_message" id="notice" ><span id="notice_span">Updated Sausalito Criterium</span></p>
+<p class="flash_message" id="warn" style='display: none;'><span id="warn_span"></span></p>
+
+
+
+
+<h2>Sausalito Criterium</h2>
+
+<div class="column_grid_container">
+  <div class="box-3">
+    
+
+    <div class="table_container box-3 last">
+  <div class="caption">
+  <div>Events</div>
+  <div class="right">
+    
+  </div>
+</div>
+  <table cellspacing="0" class="base box-3 last">
+    <tr>
+      <th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
+    </tr>
+
+  <tr>
+    <td class='nowrap'>
+      <span class="weak">No events. Click button to add a new child event.</span>
+    </td>
+    <td class='link'></td>
+    <td class="right"><a href="/admin/events/new?event[parent_id]=1053613241&amp;event[type]=Event" class="image" data-remote="true" id="new_event"><img alt="Add" src="/images/icons/add.png?1305127569" /></a></td>
+  </tr>
+  </table>
+  </div>
+
+    <div class="table_container event_nav clear span-3">
+  <div class="caption">
+  <div>Races</div>
+  <div class="right">
+  
+  </div>
+</div>
+  <table cellspacing="0" class="base event_nav clear span-3">
+    <tr>
+      <th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
+    </tr>
+
+  
+  <tr>
+    <td colspan="3" class="empty">No races. Click [+] to add a race.</td>
+  </tr>
+  <tr id="create_race_row">
+    <td>
+      <img alt="Spinner" id="propagate_races_progress" src="/images/icons/spinner.gif?1305127569" style="display: none" />
+      
+    </td>
+    <td class="right delete_all_races">
+      
+      <img alt="Spinner" id="destroy_races_progress" src="/images/icons/spinner.gif?1305127569" style="display: none" />
+    </td>
+    <td class="right">
+      <a href="/admin/events/1053613241/races" class="image" data-method="post" data-remote="true" id="create_race" rel="nofollow" title="Add race"><img alt="Add" src="/images/icons/add.png?1305127569" /></a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <div class="page_buttons">
+        <label class="left" for="results_file" id="upload_form_label">Import Results</label>
+        <form accept-charset="UTF-8" action="/admin/events/1053613241/upload" enctype="multipart/form-data" id="upload_form" method="post" style="clear"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>
+          <div>
+            <input id="results_file" name="results_file" style="width: 250px;" type="file" />
+          </div>
+</form>        <div id="upload_progress" style="display: none;"><em>Importing Results</em>&nbsp;<img alt="Spinner" src="/images/icons/spinner.gif?1305127569" /></div>
+      </div>
+    </td>
+  </tr>
+  </table>
+  </div>
+
+  </div>
+  <div class="span-3 last">
+     <form accept-charset="UTF-8" action="/admin/events/1053613241" class="event_edit" id="event_edit" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="_method" type="hidden" value="put" /></div>      <div class="span-3 last no_top_margin">
+        <input id="event_parent_id" name="event[parent_id]" type="hidden" />
+        <label for="event_name">Name</label> <input class="wants_focus" editable="true" id="event_name" name="event[name]" size="30" type="text" value="Sausalito Criterium" />
+
+        <div class="prepend-1 span-2 last">
+          <a href="/admin/events/new?event[atra_points_series]=false&amp;event[auto_combined_results]=true&amp;event[bar_points]=1&amp;event[beginner_friendly]=false&amp;event[cancelled]=false&amp;event[chief_referee]=&amp;event[city]=&amp;event[created_at]=2011-07-17+12%3A41%3A18+-0700&amp;event[date]=2011-07-17&amp;event[discipline]=Road&amp;event[email]=event%40google.com&amp;event[first_aid_provider]=&amp;event[flyer]=&amp;event[flyer_ad_fee]=&amp;event[flyer_approved]=false&amp;event[id]=1053613241&amp;event[instructional]=false&amp;event[ironman]=true&amp;event[lock_version]=6&amp;event[name]=Sausalito+Criterium&amp;event[notes]=&amp;event[notification]=true&amp;event[number_issuer_id]=1032135119&amp;event[parent_id]=&amp;event[phone]=%28541%29+212-9000&amp;event[post_event_fees]=&amp;event[postponed]=false&amp;event[practice]=false&amp;event[pre_event_fees]=&amp;event[prize_list]=&amp;event[promoter_id]=&amp;event[registration_link]=&amp;event[sanctioned_by]=CBRA&amp;event[sanctioning_org_event_id]=&amp;event[state]=OR&amp;event[team_id]=&amp;event[time]=&amp;event[type]=SingleDayEvent&amp;event[updated_at]=2011-07-17+12%3A41%3A30+-0700&amp;event[velodrome_id]=&amp;event[website]=" class="obvious" id="duplicate_event">Duplicate</a><br/>
+        </div>
+        <label for="event_type">Type</label>
+        <select id="event_type" name="event[type]" title="Event: placeholder hidden from schedule (combined TT results). 
+    
+Single day event: most events. 
+    
+Multi day event: event over consecutive days (stage races, AVC). 
+    
+Series: weekend events with full BAR points (Cross Crusade). 
+    
+Weekly series: weeknight, BAR points only for overall (PIR)"><option value="">Event</option>
+<option value="SingleDayEvent" selected="selected">Single Day Event</option>
+<option value="MultiDayEvent">Multi Day Event</option>
+<option value="Series">Series</option>
+<option value="WeeklySeries">Weekly Series</option></select><br/>
+        
+           <label for="event_date_1i">Date</label>
+           <select id="event_date_2i" name="event[date(2i)]">
+<option value="1">January</option>
+<option value="2">February</option>
+<option value="3">March</option>
+<option value="4">April</option>
+<option value="5">May</option>
+<option value="6">June</option>
+<option selected="selected" value="7">July</option>
+<option value="8">August</option>
+<option value="9">September</option>
+<option value="10">October</option>
+<option value="11">November</option>
+<option value="12">December</option>
+</select>
+<select id="event_date_3i" name="event[date(3i)]">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option selected="selected" value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
+<option value="24">24</option>
+<option value="25">25</option>
+<option value="26">26</option>
+<option value="27">27</option>
+<option value="28">28</option>
+<option value="29">29</option>
+<option value="30">30</option>
+<option value="31">31</option>
+</select>
+<select id="event_date_1i" name="event[date(1i)]">
+<option value="2006">2006</option>
+<option value="2007">2007</option>
+<option value="2008">2008</option>
+<option value="2009">2009</option>
+<option value="2010">2010</option>
+<option selected="selected" value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+</select>
+
+
+        <label for="event_time">Time</label> <input id="event_time" name="event[time]" size="30" type="text" value="" />
+        <label for="event_discipline">Discipline</label> <select id="event_discipline" name="event[discipline]"><option value=""></option>
+<option value="Age Graded">Age Graded</option>
+<option value="BMX">BMX</option>
+<option value="Circuit">Circuit</option>
+<option value="Criterium">Criterium</option>
+<option value="Cyclocross">Cyclocross</option>
+<option value="Downhill">Downhill</option>
+<option value="Mountain Bike">Mountain Bike</option>
+<option value="Overall">Overall</option>
+<option value="Road" selected="selected">Road</option>
+<option value="Singlespeed">Singlespeed</option>
+<option value="Team">Team</option>
+<option value="Time Trial">Time Trial</option>
+<option value="Tour">Tour</option>
+<option value="Track">Track</option></select><br/>
+
+        <label for="event_city">City, State</label>
+        <input class="city_no_zip" id="event_city" name="event[city]" size="30" type="text" value="" /> <input class="state_no_zip" id="event_state" name="event[state]" size="30" type="text" value="OR" />
+
+        <label for="event_velodrome_id">Velodrome</label> <select id="event_velodrome_id" name="event[velodrome_id]"><option value=""></option>
+<option value="57796795">Alpenrose Dairy</option>
+<option value="69114010">Valley Preferred Cycling Center</option></select>
+        
+        <div class="check_box"><div class="input"><input name="event[cancelled]" type="hidden" value="0" /><input id="event_cancelled" name="event[cancelled]" type="checkbox" value="1" /></div><div  class="label"><label for="event_cancelled">Cancelled</label></div></div>
+        <div class="check_box"><div class="input"><input name="event[postponed]" type="hidden" value="0" /><input id="event_postponed" name="event[postponed]" type="checkbox" value="1" /></div><div  class="label"><label for="event_postponed">Postponed</label></div></div>
+        <div class="check_box"><div class="input"><input name="event[instructional]" type="hidden" value="0" /><input id="event_instructional" name="event[instructional]" type="checkbox" value="1" /></div><div  class="label"><label for="event_instructional">Instructional</label></div></div>
+        <div class="check_box"><div class="input"><input name="event[practice]" type="hidden" value="0" /><input id="event_practice" name="event[practice]" type="checkbox" value="1" /></div><div  class="label"><label for="event_practice">Practice</label></div></div>
+        <div class="check_box"><div class="input"><input name="event[beginner_friendly]" type="hidden" value="0" /><input id="event_beginner_friendly" name="event[beginner_friendly]" type="checkbox" value="1" /></div><div  class="label"><label for="event_beginner_friendly">Beginner Friendly</label></div></div>
+      </div>
+
+      <div class="span-3 last">
+        <label for="event_promoter_id">Promoter</label>
+<input id="event_promoter_id" name="event[promoter_id]" type="hidden" />
+<input type="text" id="promoter_auto_complete" name="event[promoter_name]" value="" autocomplete="off" />
+
+
+      </div>
+       
+      <div class="prepend-1 span-2 last" id="promoter_links">
+        <a class="obvious" href="#" id="edit_promoter_link" onclick="window.location.href = 'http://localhost:3000/admin/people/' + $('#event_promoter_id').val() + '/edit?event_id=1053613241'; return false;; return false;">Edit</a>
+      </div>
+      
+      <div class="span-3 last top_margin">
+        <fieldset>
+          <legend>Contact Information</legend>
+          <p>If different than promoter's personal contact information</p>
+          <label for="event_phone">Phone</label> <input id="event_phone" name="event[phone]" size="30" type="text" value="(541) 212-9000" />
+          <label for="event_email">Email</label> <input id="event_email" name="event[email]" size="30" type="text" value="event@google.com" />
+        </fieldset>
+      </div>
+      
+      <div class="span-3 last top_margin">
+        <label for="event_team_id">Sponsoring Team</label>
+<input id="event_team_id" name="event[team_id]" type="hidden" />
+<input type="text" id="team_auto_complete" name="event[team_name]" value="" autocomplete="off" />
+
+
+        <label for="event_first_aid_provider">First Aid Provider</label> <input editable="true" id="event_first_aid_provider" name="event[first_aid_provider]" size="30" type="text" value="" />
+        <label for="event_chief_referee">Chief Referee</label> <input editable="true" id="event_chief_referee" name="event[chief_referee]" size="30" type="text" value="" />
+      </div>
+      
+      <div class="span-3 last top_margin">
+        <label for="event_sanctioned_by">Sanctioned By</label> <select id="event_sanctioned_by" name="event[sanctioned_by]"><option value="CBRA" selected="selected">CBRA</option>
+<option value="USA Cycling">USA Cycling</option></select>
+
+          <label for="event_sanctioning_org_event_id">Sanctioning Org Event ID</label> <input id="event_sanctioning_org_event_id" name="event[sanctioning_org_event_id]" size="30" type="text" value="" />
+
+        <label for="event_number_issuer_id">Number Issuer</label> <select id="event_number_issuer_id" name="event[number_issuer_id]"><option value="1032135119" selected="selected">CBRA</option>
+<option value="414889018">Elkhorn Stage Race</option></select>
+        <br/>
+        
+        
+
+        
+
+
+        
+        
+        <label for="event_flyer">Flyer</label> <input editable="true" id="event_flyer" name="event[flyer]" size="30" type="text" value="" />
+        <div class="check_box"><div class="input"><input name="event[flyer_approved]" type="hidden" value="0" /><input id="event_flyer_approved" name="event[flyer_approved]" type="checkbox" value="1" /></div><div  class="label"><label for="event_flyer_approved">Flyer Approved</label></div></div>
+        <label for="event_website">Website</label> <input editable="true" id="event_website" name="event[website]" size="30" type="text" value="" />
+        <label for="event_registration_link">Registration Link</label> <input editable="true" id="event_registration_link" name="event[registration_link]" size="30" type="text" value="" />
+
+        <label for="event_pre_event_fees">Pre Event Fees</label> <input id="event_pre_event_fees" name="event[pre_event_fees]" size="30" type="text" />
+        <label for="event_post_event_fees">Post Event Fees</label> <input id="event_post_event_fees" name="event[post_event_fees]" size="30" type="text" />
+        <label for="event_flyer_ad_fee">Flyer Ad Fee</label> <input id="event_flyer_ad_fee" name="event[flyer_ad_fee]" size="30" type="text" />
+
+        <label class="text_area" for="event_notes">Notes</label><textarea cols="40" id="event_notes" name="event[notes]" rows="20"></textarea>
+      </div>
+      
+       <div class="span-3 page_buttons last">
+        <div class="updatedon span-1">
+          Updated: less than 5 seconds ago
+          
+        </div>
+        <div class="right span-2 last">
+          <a href="/admin/events/1053613241" class="obvious" data-method="delete" id="delete" rel="nofollow">Delete</a>
+          <input id="save" name="commit" type="submit" value="Save" />
+        </div>
+      </div>
+</form>
+  </div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+jQuery("#edit_promoter_link").hide();
+//]]>
+</script>
+
+        </div>
+      </div>
+    </div>
+  </div>
+      <script type="text/javascript" charset="utf-8">
+        autoComplete('event', 'promoter', '/people.json')
+        autoCompleteTeam('event', 'team', '/admin/teams.json')
+    </script>
+
+  </body>
+</html>
