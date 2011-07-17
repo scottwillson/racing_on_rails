@@ -40,7 +40,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     super
   end
   
-  # Set up custom Firefox profile. Recreate empty downloads directory. Default webserver to localhost:3000.
+  # Set up custom browser profile. Recreate empty downloads directory. Default webserver to localhost:3000.
   def driver
     unless MiniTest::Unit.driver
       FileUtils.rm_rf MiniTest::Unit.results_path
@@ -415,5 +415,9 @@ class WebDriverTestCase < ActiveSupport::TestCase
   
   def remove_download(filename)
     FileUtils.rm_f "#{DOWNLOAD_DIRECTORY}/#{filename}"
+  end
+  
+  def chrome?
+    driver.try(:browser) == :chrome
   end
 end
