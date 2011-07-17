@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/sandal/prawn.git
-  revision: 522da21b81221ad836676f66fe35ccc850d6abc3
+  revision: 0b553d8ad4a509d91fc5d3680510129560cf2ca5
   specs:
     prawn (0.11.1)
       pdf-reader (>= 0.9.0)
