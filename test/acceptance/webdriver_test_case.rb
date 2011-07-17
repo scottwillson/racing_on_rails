@@ -384,11 +384,11 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def drag_and_drop_by(right_by, down_by, element_finder)
-    driver.action.drag_and_drop_by find_element(element_finder), right_by, down_by
+    driver.action.drag_and_drop_by(find_element(element_finder), right_by, down_by).perform
   end
   
   def drag_and_drop_on(element_finder, on_element_finder)
-    driver.action.drag_and_drop find_element(on_element_finder), find_element(element_finder)
+    driver.action.drag_and_drop(find_element(on_element_finder), find_element(element_finder)).perform
   end
   
   def find_element(element_finder)
