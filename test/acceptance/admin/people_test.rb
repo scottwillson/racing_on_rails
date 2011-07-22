@@ -184,65 +184,63 @@ class PeopleTest < WebDriverTestCase
   end
 
   def test_export
-    unless chrome?
-      login_as :administrator
+    login_as :administrator
 
-      open '/admin/people'
-      assert_element 'export_button'
-      assert_element 'include'
-      assert_value 'members_only', 'include'
-      assert_element 'format'
-      assert_value 'xls', 'format'
+    open '/admin/people'
+    assert_element 'export_button'
+    assert_element 'include'
+    assert_value 'members_only', 'include'
+    assert_element 'format'
+    assert_value 'xls', 'format'
 
-      remove_download "people_2011_1_1.xls"
-      click 'export_button'
-      wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
-      wait_for_download "people_2011_1_1.xls"
-      assert_no_errors
+    remove_download "people_2011_1_1.xls"
+    click 'export_button'
+    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
+    wait_for_download "people_2011_1_1.xls"
+    assert_no_errors
 
-      open '/admin/teams'
-      assert_current_url(/\/admin\/teams/)
+    open '/admin/teams'
+    assert_current_url(/\/admin\/teams/)
 
-      open '/admin/people'
-      assert_current_url(/\/admin\/people/)
+    open '/admin/people'
+    assert_current_url(/\/admin\/people/)
 
-      type "tonkin", "name"
-      type :return, { :name => "name" }, false
-      sleep 1
-      assert_not_in_page_source 'error'
-      assert_page_source 'Erik Tonkin'
-      assert_page_source 'Kona'
-      if Date.today.month < 12
-        assert_page_source '102'
-      end
-      assert_value 'tonkin', "name"
-
-      select_option "all", "include"
-      select_option "ppl", "format"
-      remove_download "lynx.ppl"
-      click 'export_button'
-      wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
-      wait_for_download "lynx.ppl"
-      assert_no_errors
-
-      select_option "members_only", "include"
-      select_option "scoring_sheet", "format"
-      remove_download "scoring_sheet.xls"
-      click 'export_button'
-      wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
-      wait_for_download "scoring_sheet.xls"
-      assert_no_errors
-
-      type 'tonkin', 'name'
-      type :return, { :name => "name" }, false
-      wait_for_element "people_table"
-      assert_page_source 'Erik Tonkin'
-      assert_page_source 'Kona'
-      if Date.today.month < 12
-        assert_page_source '102'
-      end
-      assert_value 'tonkin', "name"
+    type "tonkin", "name"
+    type :return, { :name => "name" }, false
+    sleep 1
+    assert_not_in_page_source 'error'
+    assert_page_source 'Erik Tonkin'
+    assert_page_source 'Kona'
+    if Date.today.month < 12
+      assert_page_source '102'
     end
+    assert_value 'tonkin', "name"
+
+    select_option "all", "include"
+    select_option "ppl", "format"
+    remove_download "lynx.ppl"
+    click 'export_button'
+    wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
+    wait_for_download "lynx.ppl"
+    assert_no_errors
+
+    select_option "members_only", "include"
+    select_option "scoring_sheet", "format"
+    remove_download "scoring_sheet.xls"
+    click 'export_button'
+    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
+    wait_for_download "scoring_sheet.xls"
+    assert_no_errors
+
+    type 'tonkin', 'name'
+    type :return, { :name => "name" }, false
+    wait_for_element "people_table"
+    assert_page_source 'Erik Tonkin'
+    assert_page_source 'Kona'
+    if Date.today.month < 12
+      assert_page_source '102'
+    end
+    assert_value 'tonkin', "name"
   end
   
   def test_import
