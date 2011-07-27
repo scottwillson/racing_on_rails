@@ -278,8 +278,9 @@ module Results
       attributes = row.to_hash.dup
       custom_attributes = {}
       attributes.delete_if do |key, value|
-        if race.custom_columns.include?(key.to_s)
-          custom_attributes[key] = case value
+        _key = key.to_s.to_sym
+        if race.custom_columns.include?(_key)
+          custom_attributes[_key] = case value
           when Time
             value.strftime "%H:%M:%S"
           else
@@ -290,7 +291,7 @@ module Results
           false
         end
       end
-      attributes.merge!(:custom_attributes => custom_attributes)
+      attributes.merge! :custom_attributes => custom_attributes
       attributes
     end
     

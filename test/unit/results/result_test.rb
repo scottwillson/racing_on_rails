@@ -1057,9 +1057,14 @@ class ResultTest < ActiveSupport::TestCase
   end
   
   def test_custom_attributes
-    race = Race.new(:result_columns => [ "place", "run" ])
-    result = race.results.build(:place => "1", :custom_attributes => { :run => "9:00" })
+    race = events(:banana_belt_1).races.create!(:category => categories(:senior_men), :result_columns => [ "place" ], :custom_columns => [ "run", 20100929 ])
+
+    result = race.reload.results.create!(:place => "1", :custom_attributes => { :run => "9:00" })
     assert_equal "9:00", result.run, "run custom_attribute"
+    assert_equal nil, result.send(:"20100929"), "numerical column"
     assert_raise(NoMethodError) { result.foo_bar }
+
+    result = race.results.create!(:place => "1", :custom_attributes => { "20100929" => "A" })
+    assert_equal "A", result.send(:"20100929"), "numerical column"
   end
 end

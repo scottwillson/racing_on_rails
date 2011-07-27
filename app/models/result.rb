@@ -215,6 +215,14 @@ class Result < ActiveRecord::Base
       end
     end
   end
+
+  def custom_attributes=(hash)
+    if hash
+      symbolized_hash = Hash.new
+      hash.each { |key, value| symbolized_hash[key.to_s.to_sym] = value}
+    end
+    self[:custom_attributes] = symbolized_hash
+  end
   
   # Destroy People that only exist because they were created by importing results
   def destroy_people
