@@ -11,3 +11,4 @@ public/export/*.txt
 .rvmrc
 db/production.sql
 chromedriver.log
+*.tmproj
