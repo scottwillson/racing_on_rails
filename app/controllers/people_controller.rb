@@ -1,7 +1,7 @@
 class PeopleController < ApplicationController
   include Api::People
   
-  before_filter :require_person, :only => [ :edit, :update, :card ]
+  before_filter :require_current_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
 
@@ -78,37 +78,69 @@ class PeopleController < ApplicationController
   
   # Page to create a new login
   def new_login
-    if current_person
-      flash[:notice] = "You already have a login. You can your login or password on this page."
+    if current_person && current_person.login.present?
+      flash[:notice] = "You already have a login. You can change your login or password here on your account page."
       return redirect_to(edit_person_path(current_person))
     end
-    flash[:notice] = nil
-    @person = Person.new
+    flash.discard(:notice)
+    if params[:id].present?
+      @person = Person.find_using_perishable_token(params[:id])
+      if @person.nil?
+        flash[:notice] = "Can't create new login from that link. Please email #{RacingAssociation.current.email}."
+        return redirect_to(login_path)
+      end
+    else
+      @person = Person.new
+    end
     @return_to = params[:return_to]
   end
 
   def create_login
     @return_to = params[:return_to]
+
+    if params[:id].present?
+      @person = Person.find_using_perishable_token(params[:id])
+      if @person.nil?
+        flash[:notice] = "Can't create new login from that link. Please email #{RacingAssociation.current.email}."
+        return redirect_to(login_path)
+      end
+      if @person.login.present?
+        flash[:notice] = "You already have a login of '#{@person.login}'. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
+        return redirect_to(login_path)
+      end
+      
+      if @person.update_attributes(params[:person])
+        @person.reset_perishable_token!
+        flash[:notice] = "Created your new login"
+        PersonMailer.new_login_confirmation(@person).deliver rescue nil
+        return redirect_to(edit_person_path(@person))
+      else
+        return render(:new_login)
+      end
+    end
     
-    if params[:person][:license].present? && params[:person][:name].blank?
+    license = params[:person][:license].try(:strip)
+    if license.present? && params[:person][:name].blank?
       @person = Person.new(params[:person])
       @person.errors.add :name, "can't be blank if license is present"
       return render(:new_login)
     end
     
-    if params[:person][:license].present?
-      @person = Person.find_all_by_name_like(params[:person][:name]).detect { |person|
-        person.license == params[:person][:license].strip
-      }
+    if license.present?
+      @person = Person.find_all_by_name_like(params[:person][:name]).detect do |person|
+        person.license == license ||
+        person.race_numbers.any? { |num| num.value == license && (num.year == RacingAssociation.current.effective_year || num.year == RacingAssociation.current.effective_year - 1) }
+      end
 
       if @person && @person.login.present?
-        flash.now[:warn] = "Sorry, there's already a login for license ##{params[:person][:license]}. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
+        flash.now[:warn] = "Sorry, there's already a login for number ##{license}. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
+        @person = Person.new(params[:person])
         return render(:new_login)
       end
       
       if @person.nil?
-        @person = Person.new
-        @person.errors.add :base, "Didn't match your name and license number. Please check your #{RacingAssociation.current.short_name} membership card."
+        @person = Person.new(params[:person])
+        @person.errors.add :base, "Didn't match your name and number. Please check your #{RacingAssociation.current.short_name} membership card."
       end
     end
     @person = Person.new if @person.nil?
