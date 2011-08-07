@@ -21,7 +21,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     destroy_person_session
     weaver = people(:weaver)
     get(:edit, :id => weaver.to_param)
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_nil(@request.session["person"], "No person in session")
   end
 

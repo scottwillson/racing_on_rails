@@ -34,7 +34,7 @@ class PeopleHelperTest < ActionView::TestCase
     @current_person = people(:promoter)
     assert promoter?, "promoter? with no one logged-in"
   end
-
+  
   def test_pronoun
     assert_equal "Ryan Weaver", pronoun(people(:weaver), people(:tonkin))
     assert_equal "me", pronoun(people(:weaver), people(:weaver))

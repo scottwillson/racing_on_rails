@@ -49,6 +49,13 @@ class WebDriverTestCase < ActiveSupport::TestCase
         f.puts "<html>"
         f.puts "<body>"
       end
+
+      # Firefox
+      # webdriver_profile = Selenium::WebDriver::Firefox::Profile.new
+      # webdriver_profile["browser.download.dir"] = DOWNLOAD_DIRECTORY
+      # webdriver_profile["browser.download.folderList"] = "2"
+      # webdriver_profile["browser.helperApps.neverAsk.saveToDisk"] = "application/vnd.ms-excel,application/pdf"
+      # MiniTest::Unit.driver = Selenium::WebDriver.for(:firefox, :profile => webdriver_profile)
       
       FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
       FileUtils.mkdir_p "#{Rails.root}/tmp/chrome-profile"
@@ -111,6 +118,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
     type " ", "person_session_password", true
     type "secret", "person_session_password", true
     click "login_button"
+    wait_for_no_element "login_button"
     assert_no_errors
   end
   
@@ -284,6 +292,14 @@ class WebDriverTestCase < ActiveSupport::TestCase
     raise ArgumentError if url_pattern.blank? || (url_pattern.respond_to?(:empty?) && url_pattern.empty?)
     Timeout::timeout(10) do
       while driver.current_url.match(url_pattern)
+        sleep 0.25
+      end
+    end
+  end
+
+  def wait_for_no_ajax
+    Timeout::timeout(10) do
+      while driver.execute_script('return jQuery.active;') != 0
         sleep 0.25
       end
     end

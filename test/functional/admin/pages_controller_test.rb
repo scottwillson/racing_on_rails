@@ -13,7 +13,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   def test_only_admins_can_edit_pages
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_view_pages_as_tree

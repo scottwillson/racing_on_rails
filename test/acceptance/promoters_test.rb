@@ -14,15 +14,11 @@ class PromotersTest < WebDriverTestCase
     click "save"
     
     click "create_race"
-    sleep 1
-    wait_for_element :css => "form.editor_field input"
-    sleep 2
+    wait_for_element :css => "td.race"
     type "Senior Women", :css => "form.editor_field input"
-    sleep 1
     type :return, { :css => "form.editor_field input" }, false
-    sleep 1
     wait_for_no_element :css => "form.editor_field input"
-    sleep 1
+    wait_for_page_source "Senior Women"
     race = series.races(true).first
     assert_equal "Senior Women", race.category_name, "Should update category name"
 
@@ -31,6 +27,18 @@ class PromotersTest < WebDriverTestCase
 
     click "events_tab"
     click :link_text => "Cross Crusade: Alpenrose"
+    
+    click "create_race"
+    wait_for_element :css => "td.race"
+    type "Masters Women 40+", :css => ".race form.editor_field input"
+    type :return, { :css => ".race form.editor_field input" }, false
+    wait_for_no_element :css => ".race form.editor_field input"
+    wait_for_page_source "Masters Women 40+"
+    race = event.races(true).first
+    assert_equal "Masters Women 40+", race.category_name, "Should update category name"
+
+    click "edit_race_#{race.id}"
+    click "save"
 
     click "people_tab"
     remove_download "scoring_sheet.xls"
@@ -38,6 +46,10 @@ class PromotersTest < WebDriverTestCase
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
     wait_for_download "scoring_sheet.xls"
     assert_no_errors
+    
+    click "discount_codes_tab"
+    select_option event.to_param, "discount_code_event_id"
+    click "add_discount_code"
 
     click "events_tab"
     click :link_text => "Cross Crusade"

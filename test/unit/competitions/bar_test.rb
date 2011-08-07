@@ -489,4 +489,49 @@ class BarTest < ActiveSupport::TestCase
     assert_equal("1", weaver_result.place, "Weaver Cat 4/5 Overall BAR place")
     assert_equal(1, weaver_result.scores.size, "Weaver Cat 4/5 Overall BAR 1st place scores")
   end
+  
+  def test_masters_4_5
+    masters_men = categories(:masters_men)
+    masters_men_4_5 = Category.create!(:name => "Masters Men 4/5", :parent => masters_men)
+    masters_men_4_5_40_plus = Category.create!(:name => "Masters Men 4/5 40+", :parent => masters_men_4_5)
+    masters_men_4_5_50_plus = Category.create!(:name => "Masters Men 4/5 50+", :parent => masters_men_4_5)
+    masters_men_40_plus = Category.create!(:name => "Masters Men 40+", :parent => masters_men)
+    
+    masters_women = categories(:masters_women)
+    masters_women_4 = Category.create!(:name => "Masters Women 4", :parent => masters_women)
+    masters_women_4_40_plus = Category.create!(:name => "Masters Women 4 40+", :parent => masters_women_4)
+    masters_women_40_plus = Category.create!(:name => "Masters Women 40+", :parent => masters_women)
+    
+    event = SingleDayEvent.create!
+    masters_men_4_5_40_plus_result = event.races.create!(:category => masters_men_4_5_40_plus).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_men_4_5_50_plus_result = event.races.create!(:category => masters_men_4_5_50_plus).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_men_40_plus_result = event.races.create!(:category => masters_men_40_plus).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_men_result = event.races.create!(:category => masters_men).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_men_4_5_result = event.races.create!(:category => masters_men_4_5).results.create!(:place => 1, :person => Person.create!(:member => true))
+
+    masters_women_4_40_plus_result = event.races.create!(:category => masters_women_4_40_plus).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_women_40_plus_result = event.races.create!(:category => masters_women_40_plus).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_women_result = event.races.create!(:category => masters_women).results.create!(:place => 1, :person => Person.create!(:member => true))
+    masters_women_4_result = event.races.create!(:category => masters_women_4).results.create!(:place => 1, :person => Person.create!(:member => true))
+
+    road = disciplines(:road)
+    road.bar_categories << masters_men_4_5
+    road.bar_categories << masters_women_4
+    road.bar_categories << masters_women
+    road.save!
+
+    Bar.calculate!
+
+    road_bar = Bar.find_by_year_and_discipline(RacingAssociation.current.effective_year, "Road")
+
+    masters_road_bar = road_bar.races.detect { |race| race.category == masters_men }
+    assert_equal 2, masters_road_bar.results.size, "Masters Men results"
+    masters_men_4_5_road_bar = road_bar.races.detect { |race| race.category == masters_men_4_5 }
+    assert_equal 3, masters_men_4_5_road_bar.results.size, "Masters Men 4/5 results"
+
+    masters_women_road_bar = road_bar.races.detect { |race| race.category == masters_women }
+    assert_equal 2, masters_women_road_bar.results.size, "Masters Women results"
+    masters_women_4_road_bar = road_bar.races.detect { |race| race.category == masters_women_4 }
+    assert_equal 2, masters_women_4_road_bar.results.size, "Masters Women 4 results"
+  end
 end

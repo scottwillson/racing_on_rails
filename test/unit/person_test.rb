@@ -1106,51 +1106,6 @@ class PersonTest < ActiveSupport::TestCase
     assert admin.can_edit?(p2)
     assert admin.can_edit?(admin)
   end
-  
-  # member_from: nil, past, future, > October, < October, end of year, next year, far in future
-  # member_to: nil, past, future, > October, < October, end of year, next year, far in future
-  # now: start of year, < October, > October, end of year
-  def test_renew
-    # assert_renew(Time.local(2008, 1), nil, nil, Time.local(2008, 1), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 8), nil, nil, Time.local(2008, 8), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 11), nil, nil, Time.local(2008, 11), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 12, 31), nil, nil, Time.local(2008, 12, 31), Time.local(2008, 12, 31))
-    # 
-    # person = Person.new(:member_from => Time.local(2004))
-    # now = Time.local(2008, 1).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2004, 1, 1), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2012))
-    # now = Time.local(2008, 1).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 1, 1), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 11))
-    # now = Time.local(2008, 11).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 11), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 11))
-    # now = Time.local(2008, 3).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 12, 31))
-    # now = Time.local(2008, 12, 31).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-  end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)
     now = now.to_date

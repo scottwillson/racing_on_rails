@@ -62,7 +62,7 @@ class ActiveSupport::TestCase
     when Person
       PersonSession.create person.reload
     else
-      raise "Don't recogonize #{person}"
+      raise "Don't recognize #{person}"
     end
   end
   
