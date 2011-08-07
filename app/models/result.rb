@@ -166,12 +166,10 @@ class Result < ActiveRecord::Base
 
   # Save associated Person
   def save_person
-    logger.debug "save_person race.date: #{race.date} #{person.try :new_record?} #{person.try :changed?} member_from: #{person.try :member_from} member_to: #{person.try :member_to}"
     if person && (person.new_record? || person.changed?)
       if person.new_record?
         person.created_by = event
       end
-      logger.debug "SAVE!"
       person.save!
     end
   end
@@ -673,7 +671,7 @@ class Result < ActiveRecord::Base
   end
   
   def method_missing(sym, *args, &block)
-    # Performance fix for results page. :to_ary would be called and trigger a load of race to get custom_attrib
+    # Performance fix for results page. :to_ary would be called and trigger a load of race to get custom_attributes
     # May want to denormalize custom_attributes in Result.
     if sym == :to_ary
       return super
