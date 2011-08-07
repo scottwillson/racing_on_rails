@@ -147,15 +147,26 @@ module Results
       self.columns = []
       spreadsheet_row.each_with_index do |cell, index|
         cell_string = cell.to_s
-        if index == 0 && cell_string.blank?
-          column_indexes[:place] = 0
-        elsif cell_string.present?
+        if cell_string.present?
           cell_string.strip!
           cell_string.gsub!(/^"/, '')
           cell_string.gsub!(/"$/, '')
+        end
+
+        Rails.logger.debug("CELLS: #{cell_string}, #{spreadsheet_row[index - 1].blank?}, #{spreadsheet_row[index + 1].blank?}") if debug?
+        if cell_string == "Name" && spreadsheet_row[index + 1].blank?
+          cell_string = "First Name"
+        elsif cell_string.blank? && "Name" == spreadsheet_row[index - 1]
+          cell_string = "Last Name"
+        end
+
+        if index == 0 && cell_string.blank?
+          column_indexes[:place] = 0
+        elsif cell_string.present?
           cell_string = cell_string.downcase.underscore
           cell_string.gsub!(" ", "_")
           cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
+          
           if cell_string.present?
             if usac_results_format?
               if Race::RESULT.respond_to?(cell_string.to_sym)
