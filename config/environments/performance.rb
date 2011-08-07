@@ -9,3 +9,5 @@ config.action_view.debug_rjs                         = true
 
 config.action_mailer.raise_delivery_errors = true
 config.action_mailer.delivery_method = :test
+
+RacingAssociation.current.rails_host = "localhost:3000" unless defined?(RacingAssociation.current.rails_host)
