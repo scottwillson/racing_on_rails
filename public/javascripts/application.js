@@ -21,12 +21,15 @@ function restripeTable(id) {
 }
 
 function flash(key, message) {
+  hideFlash();
+  $('#' + key + '_span').html(message);
+  $('#' + key).show();
+}
+
+function hideFlash() {
   if ($('#info').length > 0) { $('#info').hide(); }
   if ($('#notice').length > 0) { $('#notice').hide(); }
   if ($('#warn').length > 0) { $('#warn').hide(); }
-  
-  $('#' + key + '_span').html(message);
-  $('#' + key).show();
 }
 
 function autoComplete(model, attribute, path) {
@@ -42,6 +45,7 @@ function autoComplete(model, attribute, path) {
       select: function(event, ui) {
         $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
         $('#event_promoter_id').val(ui.item.person.id);
+        $('#event_promoter_id').change();
         return false;
       }
     })
