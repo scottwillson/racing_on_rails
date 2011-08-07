@@ -6,12 +6,13 @@ Bundler.require(:default, Rails.env) if defined?(Bundler)
 module RacingOnRails
   class Application < Rails::Application
     config.autoload_paths += %W( 
-      #{config.root}/app/rack 
       #{config.root}/app/models/competitions 
       #{config.root}/app/models/observers 
-      #{config.root}/app/pdfs #{config.root}/lib/racing_on_rails 
-      #{config.root}/lib/results
+      #{config.root}/app/pdfs 
+      #{config.root}/app/rack 
       #{config.root}/lib
+      #{config.root}/lib/racing_on_rails 
+      #{config.root}/lib/results
       #{config.root}/lib/sentient_user
     )
     
@@ -29,7 +30,7 @@ module RacingOnRails
   
     config.filter_parameters += [ :password, :password_confirmation ]
   
-    # HP"s proxy, among others, gets this wrong
+    # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
 
     # Ugh. Make config accessible to overrides
