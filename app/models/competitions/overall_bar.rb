@@ -31,6 +31,30 @@ class OverallBar < Competition
       category
     end
   end
+
+  # Really should remove all other top-level categories and their descendants?
+  def category_ids_for(race)
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
+    
+    if race.category.name == "Masters Men"
+      masters_men_4_5 = Category.find_by_name("Masters Men 4/5")
+      if masters_men_4_5
+        ids.delete masters_men_4_5.id
+        ids = ids - masters_men_4_5.descendants.map(&:id)
+      end
+    end
+    
+    if race.category.name == "Masters Women"
+      masters_women_4 = Category.find_by_name("Masters Women 4")
+      if masters_women_4
+        ids.delete masters_women_4.id
+        ids = ids - masters_women_4.descendants.map(&:id)
+      end
+    end
+    
+    ids.join(', ')
+  end
   
   def points_for(scoring_result)
     301 - scoring_result.place.to_i
@@ -138,6 +162,7 @@ class OverallBar < Competition
       'Senior Men', 'Category 3 Men', 'Category 4/5 Men',
       'Senior Women', 'Category 3 Women', 'Category 4 Women', 
       'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women', 
+      'Masters Men 4/5', 'Masters Women 4', 
       'Singlespeed/Fixed', 'Tandem', "Clydesdale"]
 
       category = Category.find_or_create_by_name(category_name)
