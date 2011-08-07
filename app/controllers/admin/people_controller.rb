@@ -1,6 +1,6 @@
 # Add, delete, and edit Person information. Also merge.
 class Admin::PeopleController < Admin::AdminController
-  before_filter :require_person
+  before_filter :require_current_person
   # Funky permissions filtering here to allow officials and promoters download Excel file
   skip_filter :require_administrator, :only => :index
   before_filter :require_administrator_or_promoter_or_official, :only => :index
