@@ -1,6 +1,6 @@
 source :gemcutter
 
-gem "rails", "3.0.9"
+gem "rails", "~>3.0.0"
 
 gem "fastercsv", :platforms => :ruby_18
 gem "rack", "~>1.2.3"
@@ -10,9 +10,9 @@ gem "tabular", ">0.0.5"
 gem "mysql2", "<0.3.0"
 gem "pdf-reader", :require => "pdf/reader"
 gem "Ascii85", :require => "ascii85"
-gem "prawn", :git => "https://github.com/sandal/prawn.git"
+gem "prawn", :git => "git://github.com/sandal/prawn.git"
 gem "vestal_versions", :git => "git://github.com/laserlemon/vestal_versions"
-gem "newrelic_rpm", "~> 3.1.1.beta3"
+gem "newrelic_rpm"
 gem "erubis"
 gem "will_paginate", "~> 3.0.beta"
 gem "hoptoad_notifier"
