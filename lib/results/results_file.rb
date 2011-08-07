@@ -169,14 +169,14 @@ module Results
           
           if cell_string.present?
             if usac_results_format?
-              if Race::RESULT.respond_to?(cell_string.to_sym)
+              if prototype_result.respond_to?(cell_string.to_sym)
                 column_indexes[cell_string.to_sym] = index
                 self.columns << cell_string 
               end
             else
               column_indexes[cell_string.to_sym] = index
               self.columns << cell_string 
-              if !Race::RESULT.respond_to?(cell_string.to_sym)
+              if !prototype_result.respond_to?(cell_string.to_sym)
                 self.custom_columns << cell_string
                 self.race_custom_columns << cell_string
               end
@@ -304,6 +304,10 @@ module Results
       end
       attributes.merge! :custom_attributes => custom_attributes
       attributes
+    end
+    
+    def prototype_result
+      @prototype_result ||= Result.new.freeze
     end
     
     def usac_results_format?
