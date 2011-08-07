@@ -113,7 +113,7 @@ class ApplicationController < ActionController::Base
     @current_person = current_person_session && current_person_session.person
   end
 
-  def require_person
+  def require_current_person
     unless current_person
       flash[:notice] = "Please login to your #{RacingAssociation.current.short_name} account"
       store_location_and_redirect_to_login
@@ -123,7 +123,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_promoter
-    unless require_person
+    unless require_current_person
       return false
     end
     
@@ -152,7 +152,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_official
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -166,7 +166,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_same_person_or_administrator
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -178,7 +178,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_same_person_or_administrator_or_editor
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -190,7 +190,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_promoter_or_official
-    unless require_person
+    unless require_current_person
       return false
     end
     
