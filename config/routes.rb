@@ -175,7 +175,14 @@ RacingOnRails::Application.routes.draw do
   match '/people/:person_id' => 'results#person', :constraints => { :person_id => /\d+/ }, :via => :get
   match '/people/list' => 'people#list'
   match '/people/new_login' => 'people#new_login'
-  match "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }
+  match '/people/:id/new_login' => 'people#new_login'
+  match "/people/:id/account" => redirect("/people/%{id}/edit"), :constraints => { :person_id => /\d+/ }, :as => :account_person
+
+  match "/people/:id/editors/:editor_id/create" => "editors#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :create_person_editor
+  match "/people/:id/editors/:editor_id/destroy" => "editors#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :destroy_person_editor
+  match "/people/:id/editor_requests/:editor_id/create" => "editor_requests#create", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :create_person_editor_request
+  match "/people/:id/editor_requests/:editor_id/destroy" => "editor_requests#destroy", :constraints => { :id => /\d+/, :editor_id => /\d+/ }, :via => :get, :as => :destroy_person_editor_request
+
   resources :people do
     post :create_login, :on => :collection
     resources :editors
