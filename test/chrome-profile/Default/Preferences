@@ -1,20 +1,21 @@
 {
+   "apps_promo_counter": 11,
+   "autofill": {
+      "enabled": false
+   },
    "browser": {
       "window_placement": {
          "always_on_top": false,
-         "bottom": 833,
+         "bottom": 811,
          "left": 22,
          "maximized": false,
          "right": 1072,
-         "top": 22,
+         "top": 44,
          "work_area_bottom": 833,
          "work_area_left": 0,
          "work_area_right": 1440,
          "work_area_top": 22
       }
-   },
-   "cloud_print": {
-      "email": ""
    },
    "countryid_at_install": 21843,
    "default_search_provider": {
@@ -30,8 +31,8 @@
       "suggest_url": "{google:baseSuggestURL}search?client=chrome&hl={language}&q={searchTerms}"
    },
    "dns_prefetching": {
-      "host_referral_list": [ 2, [ "http://localhost:3000/", [ "http://hoptoadapp.com/", 2.2733802, "http://localhost/", 2.5394767300920633, "http://localhost:3000/", 120.28057879755094, "http://www.obra.org/", 1.967674022654115 ] ], [ "http://tools.google.com/", [ "http://fls.doubleclick.net/", 1.950532394969525, "http://fonts.googleapis.com/", 1.703076792622645, "http://themes.googleusercontent.com/", 1.950532394969525, "http://tools.google.com/", 2.4454435996632853, "http://www.google-analytics.com/", 1.950532394969525, "http://www.google.com/", 3.435266009050805, "http://www.youtube.com/", 1.703076792622645 ] ], [ "http://www.youtube.com/", [ "http://gdata.youtube.com/", 1.950532394969525, "http://i.ytimg.com/", 3.435266009050805, "http://s.ytimg.com/", 1.703076792622645 ] ] ],
-      "startup_list": [ 1, "http://hoptoadapp.com/", "http://localhost:3000/" ]
+      "host_referral_list": [ 2, [ "http://tools.google.com/", [ "http://fls.doubleclick.net/", 3.2643407999999994, "http://fonts.googleapis.com/", 2.2733802, "http://ssl.gstatic.com/", 2.2733802, "http://themes.googleusercontent.com/", 2.6037003999999997, "http://tools.google.com/", 3.5946609999999994, "http://www.google-analytics.com/", 2.9340205999999998, "http://www.google.com/", 3.2643407999999994 ] ] ],
+      "startup_list": [ 1, "http://fls.doubleclick.net/", "http://fonts.googleapis.com/", "http://ssl.gstatic.com/", "http://themes.googleusercontent.com/", "http://tools.google.com/", "http://www.google-analytics.com/", "http://www.google.com/" ]
    },
    "download": {
       "default_directory": "/private/tmp/webdriver-downloads",
@@ -40,23 +41,10 @@
    },
    "extensions": {
       "autoupdate": {
-         "last_check": "12955404338319352",
-         "next_check": "12955426231989706"
-      },
-      "blacklistupdate": {
-         "lastpingday": "12955359600814343",
-         "version": "0.0.0.5"
+         "next_check": "12957000996817507"
       },
       "chrome_url_overrides": {
          "bookmarks": [ "chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" ]
-      },
-      "settings": {
-         "hpibmhghjndideebpackbdlpncgkcppp": {
-            "blacklist": true
-         },
-         "lncjcfkpannmofmpgdfoonkniofdnaba": {
-            "blacklist": true
-         }
       }
    },
    "google": {
@@ -71,22 +59,134 @@
       "promo_build": 2,
       "promo_closed": false,
       "promo_end": 1299830340.0,
-      "promo_group": 6,
+      "promo_group": 4,
       "promo_group_timeslice": 0,
       "promo_line": "Use Chrome on another computer? Take your bookmarks and more with you.",
-      "promo_resource_cache_update": "1310928708.936747",
+      "promo_resource_cache_update": "1312510556.791395",
       "promo_start": 1299830280.0,
-      "shown_sections": 64,
+      "shown_sections": 4194305,
       "webstore_last_promo_id": "1335115"
    },
    "plugins": {
-      "enabled_internal_pdf3": true
+      "enabled_internal_pdf3": true,
+      "last_internal_directory": "/Applications/Google Chrome.app/Contents/Versions/13.0.782.109/Google Chrome Framework.framework/Internet Plug-Ins",
+      "plugins_list": [ {
+         "enabled": true,
+         "name": "Shockwave Flash",
+         "path": "/Applications/Google Chrome.app/Contents/Versions/13.0.782.109/Google Chrome Framework.framework/Internet Plug-Ins/Flash Player Plugin for Chrome.plugin",
+         "version": "10.3.181.36"
+      }, {
+         "enabled": true,
+         "name": "Shockwave Flash",
+         "path": "/Library/Internet Plug-Ins/Flash Player.plugin",
+         "version": "10.3.181.26"
+      }, {
+         "enabled": true,
+         "name": "QuickTime Plug-in 7.7.1",
+         "path": "/Library/Internet Plug-Ins/QuickTime Plugin.plugin",
+         "version": "7.7.1"
+      }, {
+         "enabled": true,
+         "name": "Silverlight Plug-In",
+         "path": "/Library/Internet Plug-Ins/Silverlight.plugin",
+         "version": "4.0.51204.0"
+      }, {
+         "enabled": true,
+         "name": "Flip4Mac Windows Media Plugin 2.3.8 ",
+         "path": "/Library/Internet Plug-Ins/Flip4Mac WMV Plugin.plugin",
+         "version": "2.3.8.1"
+      }, {
+         "enabled": false,
+         "name": "Chrome NaCl",
+         "path": "/Applications/Google Chrome.app/Contents/Versions/13.0.782.109/Google Chrome Framework.framework/Internet Plug-Ins/ppGoogleNaClPluginChrome.plugin",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "Chrome PDF Viewer",
+         "path": "/Applications/Google Chrome.app/Contents/Versions/13.0.782.109/Google Chrome Framework.framework/Internet Plug-Ins/PDF.plugin",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "Garmin Communicator Plug-in Version 2.9.3.0",
+         "path": "/Library/Internet Plug-Ins/GarminGpsControl.plugin",
+         "version": "2.9.3.0 Release"
+      }, {
+         "enabled": true,
+         "name": "Google Earth Plug-in",
+         "path": "/Library/Internet Plug-Ins/Google Earth Web Plug-in.plugin",
+         "version": "6.0"
+      }, {
+         "enabled": true,
+         "name": "iPhotoPhotocast",
+         "path": "/Library/Internet Plug-Ins/iPhotoPhotocast.plugin",
+         "version": "7.0"
+      }, {
+         "enabled": true,
+         "name": "Java Applet Plug-in",
+         "path": "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin",
+         "version": "14.0.3"
+      }, {
+         "enabled": true,
+         "name": "20-20 3D Viewer for IKEA v5.0.7.0",
+         "path": "/Library/Internet Plug-Ins/NP_2020Player_IKEA.plugin",
+         "version": "5.0.7.0"
+      }, {
+         "enabled": true,
+         "name": "Microsoft Office Live Plug-in",
+         "path": "/Library/Internet Plug-Ins/OfficeLiveBrowserPlugin.plugin",
+         "version": "12.2.0"
+      }, {
+         "enabled": true,
+         "name": "Default Plug-in",
+         "path": "default_plugin",
+         "version": "1"
+      }, {
+         "enabled": true,
+         "name": "Flash"
+      }, {
+         "enabled": true,
+         "name": "QuickTime"
+      }, {
+         "enabled": true,
+         "name": "Silverlight"
+      }, {
+         "enabled": true,
+         "name": "Flip4Mac"
+      }, {
+         "enabled": false,
+         "name": "Chrome NaCl"
+      }, {
+         "enabled": true,
+         "name": "Chrome PDF Viewer"
+      }, {
+         "enabled": true,
+         "name": "Garmin Communicator Plug-in Version 2.9.3.0"
+      }, {
+         "enabled": true,
+         "name": "Google Earth Plug-in"
+      }, {
+         "enabled": true,
+         "name": "iPhotoPhotocast"
+      }, {
+         "enabled": true,
+         "name": "Java Applet Plug-in"
+      }, {
+         "enabled": true,
+         "name": "20-20 3D Viewer for IKEA v5.0.7.0"
+      }, {
+         "enabled": true,
+         "name": "Microsoft Office Live Plug-in"
+      }, {
+         "enabled": true,
+         "name": "Default Plug-in"
+      } ]
    },
    "profile": {
       "content_settings": {
          "pref_version": 1
       },
-      "exited_cleanly": true
+      "exited_cleanly": true,
+      "password_manager_enabled": false
    },
    "tabs": {
       "use_compact_navigation_bar": false,
