@@ -249,6 +249,14 @@ table.base td select {
   margin-top: 0px;
 }
 
+table.base td input[type="text"] {
+  font-weight: normal;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+}
+
 table.base tr.hovering, table.base tr.selected {
   background-color: #E9F79B;
 }
