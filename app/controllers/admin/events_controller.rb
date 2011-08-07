@@ -74,7 +74,7 @@ class Admin::EventsController < Admin::AdminController
       flash[:notice] = "Created #{@event.name}"
       redirect_to edit_admin_event_path(@event)
     else
-      flash[:warn] = @event.errors.full_messages
+      flash[:warn] = @event.errors.full_messages.join
       render :edit
     end
   end
@@ -232,7 +232,7 @@ class Admin::EventsController < Admin::AdminController
     else
       respond_to do |format|
         format.html {
-          flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages}"
+          flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages.join}"
           redirect_to(admin_events_path(:year => @event.date.year))
         }
         format.js { render "destroy_error" }
