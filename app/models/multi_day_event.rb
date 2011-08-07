@@ -47,7 +47,7 @@ class MultiDayEvent < Event
                attributes[:parent] = @owner
                Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
-               (event.date = @owner.date) unless  attributes[:date]
+               (event.date = @owner.date) unless attributes[:date]
                event.parent = @owner
                event.save
                @owner.children << event
