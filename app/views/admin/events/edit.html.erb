@@ -137,8 +137,10 @@
         <%= f.labelled_text_field :flyer, nil, :editable => administrator? %>
         <% if administrator? -%>
         <%= f.labelled_check_box :flyer_approved, nil %>
+        <% unless RacingAssociation.current.short_name == "OBRA" -%>
         <%= f.labelled_text_field :website, nil, :editable => administrator? %>
         <%= f.labelled_text_field :registration_link, nil, :editable => administrator? %>
+        <% end -%>
 
         <%= f.labelled_text_field :pre_event_fees %>
         <%= f.labelled_text_field :post_event_fees %>
