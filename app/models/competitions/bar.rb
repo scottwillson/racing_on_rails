@@ -101,6 +101,30 @@ class Bar < Competition
       )
   end
 
+  # Really should remove all other top-level categories and their descendants?
+  def category_ids_for(race)
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
+    
+    if race.category.name == "Masters Men"
+      masters_men_4_5 = Category.find_by_name("Masters Men 4/5")
+      if masters_men_4_5
+        ids.delete masters_men_4_5.id
+        ids = ids - masters_men_4_5.descendants.map(&:id)
+      end
+    end
+    
+    if race.category.name == "Masters Women"
+      masters_women_4 = Category.find_by_name("Masters Women 4")
+      if masters_women_4
+        ids.delete masters_women_4.id
+        ids = ids - masters_women_4.descendants.map(&:id)
+      end
+    end
+    
+    ids.join(', ')
+  end
+
   # Apply points from point_schedule, and adjust for field size
   def points_for(source_result, team_size = nil)
     points = 0
