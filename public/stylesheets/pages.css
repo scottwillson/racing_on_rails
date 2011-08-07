@@ -383,7 +383,8 @@ form.cat4_womens_race_series td input#result_team_name {
 table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
-  background-position: 8px 6px;
+  background-position: 8px 4px;
+  padding-top: 4px;
 }
 
 table.event_nav td.race .editable {
@@ -482,6 +483,10 @@ table.first_aid_providers td.name {
 
 div.event_results {
   margin-top: 24px;
+}
+
+table.event_results td {
+  padding-right: 8px;
 }
 
 div.table_container table.event_results th.place,
@@ -615,6 +620,15 @@ table#preview_import_table th {
 
 .pagination .current {
   padding-right: 0px;
+}
+
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
 }
 
 #merge_form {
