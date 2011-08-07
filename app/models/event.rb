@@ -88,6 +88,8 @@ class Event < ActiveRecord::Base
   }
   scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   
+  scope :not_child, { :conditions => "parent_id is null" }
+
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
@@ -523,7 +525,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-
   # Always return false
   def missing_parent?
     false
@@ -571,6 +572,15 @@ class Event < ActiveRecord::Base
     node, nodes = self, []
     nodes << node = node.parent while node.parent
     nodes
+  end
+
+  # All children and children childrens
+  def descendants
+    _descendants = children(true)
+    children.each do |child|
+      _descendants = _descendants + child.descendants
+    end
+    _descendants
   end
 
   def parent_is_not_self
