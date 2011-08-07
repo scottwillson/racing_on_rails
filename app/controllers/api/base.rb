@@ -6,7 +6,7 @@ module Api
 
     # Fields to use when rendering a Person object
     def person_fields
-      [ :id, :first_name, :last_name, :date_of_birth, :license, :gender ]
+      [ :id, :first_name, :last_name, :date_of_birth, :license, :gender, :city  ]
     end
 
     # Related objects to include when rendering a Person object
