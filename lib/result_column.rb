@@ -5,6 +5,9 @@ class ResultColumn
   attr_accessor :display_method
   
   def self.[](attribute)
+    unless attribute.is_a?(Symbol)
+      attribute = attribute.to_s
+    end
     @@columns ||= HashWithIndifferentAccess.new({
       :age => ResultColumn.new(:age, :description => "Age"),
       :ages => ResultColumn.new(:ages, :description => "Ages"),
