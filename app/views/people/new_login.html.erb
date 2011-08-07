@@ -9,20 +9,25 @@
       </div>
 
       <div><%= f.labelled_text_field :login, nil, :class => @person.new_record? ? "wants_focus" : "" %></div>
+      <% if @person.new_record? %>
       <div><%= f.labelled_text_field :email %></div>
       <div><%= f.labelled_text_field :name %></div>
+      <% end -%>
       <div><%= f.labelled_password_field :password %></div>
       <div><%= f.labelled_password_field :password_confirmation %></div>
-      <div><%= hidden_field_tag "return_to", @return_to %></div>
+      <div>
+        <%= hidden_field_tag "return_to", @return_to %>
+        <%= hidden_field_tag "id", @person.perishable_token %>
+      </div>
       <hr class="space" />
       
+      <% if @person.new_record? %>
       <div class="help">
-        Current or past <%= RacingAssociation.current.short_name %> member? Enter your license number and 
-        name&mdash;we can link to your account. Your license number is on your 
-        <%= RacingAssociation.current.short_name %> membership card, under the bar code.
+        Current or past <%= RacingAssociation.current.short_name %> member? Enter your license number or your bib number&mdash;we can link to your account. 
       </div>
 
-      <div><%= f.labelled_text_field :license, "#{RacingAssociation.current.short_name} License #", :autocomplete => "off" %></div>
+      <div><%= f.labelled_text_field :license, "#{RacingAssociation.current.short_name} License or Bib #", :autocomplete => "off" %></div>
+      <% end -%>
     </div>
 
     <div class="prepend-1 span-3 append-2 page_buttons right last">
@@ -32,10 +37,7 @@
     <div class="prepend-1 span-4 append-1 top_margin">
       <hr class="top_margin" />
       <%= RacingAssociation.current.short_name %> respects your privacy and security.
-      Your personal information is encrypted and backed-up.
-      We never store your credit card number.
       If it's OK with you, we will mail and email you about bike racing.
-      <%= link_to "Privacy Policy", "/privacy_policy", :class => "obvious" %>.
     </div>
   </div>
 <% end -%>
