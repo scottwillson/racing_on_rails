@@ -1,11 +1,15 @@
 module EditableHelper
   def editable(object, attribute, options = {})
     object_name = ActiveModel::Naming.singular(object)
-
-    if options[:length].present?
-      value = truncate(object.send(attribute), :length => options[:length])
+    
+    if options[:value].present?
+      value = options[:value]
     else
       value = object.send(attribute)
+    end
+
+    if options[:length].present?
+      value = truncate(value, :length => options[:length])
     end
 
     if options[:as].present?
