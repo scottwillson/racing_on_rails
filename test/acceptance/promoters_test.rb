@@ -46,10 +46,6 @@ class PromotersTest < WebDriverTestCase
     wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
     wait_for_download "scoring_sheet.xls"
     assert_no_errors
-    
-    click "discount_codes_tab"
-    select_option event.to_param, "discount_code_event_id"
-    click "add_discount_code"
 
     click "events_tab"
     click :link_text => "Cross Crusade"
