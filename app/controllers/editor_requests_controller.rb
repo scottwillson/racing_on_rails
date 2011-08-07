@@ -1,6 +1,6 @@
 class EditorRequestsController < ApplicationController
-  before_filter :assign_person
-  before_filter :require_person, :except => :show
+  before_filter :assign_person, :except => :show
+  before_filter :require_current_person, :except => :show
 
   ssl_required :create
 
@@ -21,7 +21,7 @@ class EditorRequestsController < ApplicationController
         @person.editor_requests.create!(:editor => @editor)
         flash[:notice] = "Emailed account access request to #{@person.name}'s account"
       else
-        flash[:warn] = "Can't send access request because #{@person.name} doesn't have an email address on their account. Please ask them to login into their account and grant you access directly."
+        flash[:warn] = "Can't send access request because #{@person.name} doesn't have an email address on their account. Please ask them to login to their account and grant you access directly."
       end
     end
     
@@ -40,6 +40,6 @@ class EditorRequestsController < ApplicationController
   private
 
   def assign_person
-    @person = Person.find(params[:person_id])
+    @person = Person.find(params[:id])
   end
 end
