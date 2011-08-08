@@ -33,7 +33,7 @@ module ResultsHelper
 
   def result_cell_class(column)
     if ::ResultColumn[column].alignment == :right
-      " class=\"right\""
+      " class=\"right\"".html_safe
     end
   end
   
