@@ -62,7 +62,7 @@ end
   def test_receive
     assert_equal(1, Post.count, "Posts in database")
 
-    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/to_archive.txt"))
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/to_archive.eml"))
     
     posts = Post.all(:order => "date")
     assert_equal(2, posts.size, "New post in DB")
@@ -77,7 +77,7 @@ end
   def test_receive_rich_text
     assert_equal(1, Post.count, "Posts in database")
   
-    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/rich.txt"))
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/rich.eml"))
     
     posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
@@ -92,7 +92,7 @@ end
   def test_receive_outlook
     assert_equal(1, Post.count, "Posts in database")
   
-    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/outlook.txt"))
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/outlook.eml"))
     
     posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
@@ -101,14 +101,14 @@ end
     assert_equal("Scott Willson <scott.willson@gmail.com>", post_from_db.sender, "from")
     assert_equal("Sat Jan 28 07:28:31 PST 2006", post_from_db.date.strftime("%a %b %d %I:%M:%S PST %Y"), "date")
     assert_equal(mailing_lists(:obra_chat), post_from_db.mailing_list, "mailing_list")
-    expected_body = File.read("#{File.dirname(__FILE__)}/../files/email/outlook_expected.txt")
+    expected_body = File.read("#{File.dirname(__FILE__)}/../files/email/outlook_expected.eml")
     assert_equal(expected_body, post_from_db.body, "body")
   end
   
   def test_receive_html
     assert_equal(1, Post.count, "Posts in database")
   
-    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/html.txt"))
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/html.eml"))
     
     posts = Post.all( :order => "date")
     assert_equal(2, posts.size, "New post in DB")
