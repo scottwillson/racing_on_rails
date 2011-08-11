@@ -102,11 +102,11 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def cyclocross_season_start
-    Time.zone.local(RacingAssociation.current.now.year, 9, 4).beginning_of_day
+    Time.zone.local(RacingAssociation.current.now.year, 9, 2).beginning_of_day
   end
   
   def cyclocross_season_end
-    Time.zone.local(RacingAssociation.current.now.year, 12, 5).end_of_day
+    Time.zone.local(RacingAssociation.current.now.year, 12, 12).end_of_day
   end
 
   def priority_country_options
