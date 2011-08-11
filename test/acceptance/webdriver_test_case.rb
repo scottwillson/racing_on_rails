@@ -70,7 +70,7 @@ class WebDriverTestCase < ActiveSupport::TestCase
   end
   
   def open(url, expect_error_page = false)
-    driver.get "http://localhost:3000" + url
+    driver.get "http://localhost:8080" + url
     if expect_error_page
       assert_errors
     else

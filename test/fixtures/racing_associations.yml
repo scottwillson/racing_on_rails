@@ -7,7 +7,7 @@ association:
     hash: {}
   competitions: !ruby/object:Set
     hash: {}
-  rails_host: localhost:3000
+  rails_host: localhost:8080
   static_host: localhost
   membership_email: [ "membership@example.com" ]
   award_cat4_participation_points: true

@@ -1,16 +1,3 @@
-CREATE TABLE `adjustments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `date` datetime DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `aliases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) DEFAULT NULL,
@@ -49,24 +36,6 @@ CREATE TABLE `articles` (
   `body` text COLLATE utf8_unicode_ci,
   `position` int(11) DEFAULT '0',
   `article_category_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `bank_statements` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `american_express_fees` decimal(10,2) DEFAULT NULL,
-  `american_express_gross` decimal(10,2) DEFAULT NULL,
-  `credit_card_transaction_fees` decimal(10,2) DEFAULT NULL,
-  `credit_card_percentage_fees` decimal(10,2) DEFAULT NULL,
-  `credit_card_gross` decimal(10,2) DEFAULT NULL,
-  `items` int(11) DEFAULT NULL,
-  `refunds` int(11) DEFAULT NULL,
-  `gross` decimal(10,2) DEFAULT NULL,
-  `refunds_gross` decimal(10,2) DEFAULT NULL,
-  `other_fees` decimal(10,2) DEFAULT NULL,
-  `date` date DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -148,21 +117,6 @@ CREATE TABLE `disciplines` (
   UNIQUE KEY `index_disciplines_on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `discount_codes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) NOT NULL,
-  `person_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'new',
-  `created_by_id` int(11) DEFAULT NULL,
-  `created_by_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `event_id` (`event_id`),
-  CONSTRAINT `discount_codes_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `duplicates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `new_attributes` text,
@@ -187,7 +141,7 @@ CREATE TABLE `duplicates_racers` (
   KEY `index_duplicates_racers_on_duplicate_id` (`duplicate_id`),
   CONSTRAINT `duplicates_racers_ibfk_1` FOREIGN KEY (`racer_id`) REFERENCES `racers` (`id`) ON DELETE CASCADE,
   CONSTRAINT `duplicates_racers_ibfk_2` FOREIGN KEY (`duplicate_id`) REFERENCES `duplicates` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `editor_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -212,7 +166,7 @@ CREATE TABLE `editor_requests` (
 CREATE TABLE `engine_schema_info` (
   `engine_name` varchar(255) DEFAULT NULL,
   `version` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -246,9 +200,9 @@ CREATE TABLE `events` (
   `bar_points` int(11) NOT NULL,
   `ironman` tinyint(1) NOT NULL,
   `auto_combined_results` tinyint(1) NOT NULL DEFAULT '1',
+  `promoter_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `sanctioning_org_event_id` varchar(16) DEFAULT NULL,
-  `promoter_id` int(11) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `postponed` tinyint(1) NOT NULL DEFAULT '0',
@@ -286,7 +240,7 @@ CREATE TABLE `historical_names` (
   KEY `index_names_on_name` (`name`),
   KEY `index_names_on_year` (`year`),
   CONSTRAINT `historical_names_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -300,7 +254,7 @@ CREATE TABLE `images` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `images_name_index` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -310,33 +264,6 @@ CREATE TABLE `import_files` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `line_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `event_id` int(11) DEFAULT NULL,
-  `race_id` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `string_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `boolean_value` tinyint(1) DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `promoter_pays_registration_fee` tinyint(1) NOT NULL DEFAULT '0',
-  `purchase_price` decimal(10,2) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `year` int(11) DEFAULT NULL,
-  `discount_code_id` int(11) DEFAULT NULL,
-  `line_item_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_line_items_on_order_id` (`order_id`),
-  KEY `index_line_items_on_person_id` (`person_id`),
-  KEY `index_line_items_on_event_id` (`event_id`),
-  KEY `index_line_items_on_race_id` (`race_id`),
-  KEY `index_line_items_on_discount_code_id` (`discount_code_id`),
-  KEY `index_line_items_on_line_item_id` (`line_item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `mailing_lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -379,23 +306,7 @@ CREATE TABLE `news_items` (
   PRIMARY KEY (`id`),
   KEY `news_items_date_index` (`date`),
   KEY `news_items_text_index` (`text`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE `non_member_results` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `visible` tinyint(1) DEFAULT '1',
-  `person_id` int(11) DEFAULT NULL,
-  `size` int(11) DEFAULT '0',
-  `recent_result_on` date DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `non_member_results_people` (
-  `non_member_result_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -406,107 +317,6 @@ CREATE TABLE `number_issuers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_issuers_name_index` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `offline_single_event_licenses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `order_people` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `person_id` int(11) DEFAULT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `owner` tinyint(1) NOT NULL DEFAULT '0',
-  `membership_card` tinyint(1) NOT NULL DEFAULT '0',
-  `date_of_birth` date DEFAULT NULL,
-  `street` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country_code` varchar(2) COLLATE utf8_unicode_ci DEFAULT 'US',
-  `membership_address_is_billing_address` tinyint(1) NOT NULL DEFAULT '1',
-  `billing_first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_street` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_zip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_country_code` varchar(2) COLLATE utf8_unicode_ci DEFAULT 'US',
-  `card_expires_on` date DEFAULT NULL,
-  `card_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `ccx_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `dh_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `home_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `gender` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `mtb_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `occupation` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `official_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `team_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `volunteer_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `wants_mail` tinyint(1) NOT NULL DEFAULT '0',
-  `wants_email` tinyint(1) NOT NULL DEFAULT '0',
-  `road_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `team_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `track_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `emergency_contact` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `emergency_contact_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `work_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `cell_fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_order_people_on_person_id` (`person_id`),
-  KEY `index_order_people_on_order_id` (`order_id`),
-  CONSTRAINT `order_people_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `order_people_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `order_transactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `action` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `amount` int(11) DEFAULT NULL,
-  `success` tinyint(1) DEFAULT NULL,
-  `authorization` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_order_transactions_on_order_id` (`order_id`),
-  KEY `index_order_transactions_on_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `orders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `purchase_price` decimal(10,2) DEFAULT NULL,
-  `notes` varchar(2000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'new',
-  `purchase_time` datetime DEFAULT NULL,
-  `ip_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `waiver_accepted` tinyint(1) DEFAULT NULL,
-  `error_message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `previous_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `suggest` tinyint(1) DEFAULT '1',
-  `purchase_fees` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_orders_on_status` (`status`),
-  KEY `index_orders_on_purchase_time` (`purchase_time`),
-  KEY `index_orders_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -566,7 +376,6 @@ CREATE TABLE `people` (
   `team_interest` tinyint(1) NOT NULL DEFAULT '0',
   `created_by_type` varchar(255) DEFAULT NULL,
   `member_usac_to` date DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
   `persistence_token` varchar(255) NOT NULL,
@@ -580,6 +389,7 @@ CREATE TABLE `people` (
   `last_login_ip` varchar(255) DEFAULT NULL,
   `login` varchar(100) DEFAULT NULL,
   `created_by_id` int(11) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `license_expiration_date` date DEFAULT NULL,
   `club_name` varchar(255) DEFAULT NULL,
   `ncca_club_name` varchar(255) DEFAULT NULL,
@@ -648,18 +458,6 @@ CREATE TABLE `posts` (
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `price` decimal(10,0) DEFAULT NULL,
-  `option_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `promoters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
@@ -671,7 +469,7 @@ CREATE TABLE `promoters` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `promoter_info` (`name`,`email`,`phone`),
   KEY `idx_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -735,7 +533,7 @@ CREATE TABLE `racers` (
   KEY `idx_first_name` (`first_name`),
   KEY `idx_team_id` (`team_id`),
   CONSTRAINT `racers_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `races` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -812,20 +610,7 @@ CREATE TABLE `racing_associations` (
   `updated_at` datetime DEFAULT NULL,
   `cat4_womens_race_series_end_date` date DEFAULT NULL,
   `unregistered_teams_in_results` tinyint(1) NOT NULL DEFAULT '1',
-  `domain` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `refunds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `created_by_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_by_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_refunds_on_order_id` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `results` (
@@ -949,7 +734,7 @@ CREATE TABLE `standings` (
   CONSTRAINT `standings_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_2` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE,
   CONSTRAINT `standings_ibfk_3` FOREIGN KEY (`source_id`) REFERENCES `standings` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -974,21 +759,6 @@ CREATE TABLE `teams` (
   KEY `index_teams_on_created_by_id` (`created_by_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `update_requests` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
-  `order_person_id` int(11) NOT NULL,
-  `expires_at` datetime NOT NULL,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `index_update_requests_on_order_person_id` (`order_person_id`),
-  KEY `index_update_requests_on_expires_at` (`expires_at`),
-  KEY `index_update_requests_on_token` (`token`),
-  CONSTRAINT `update_requests_ibfk_1` FOREIGN KEY (`order_person_id`) REFERENCES `order_people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -999,7 +769,7 @@ CREATE TABLE `users` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_alias` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1231,8 +1001,6 @@ INSERT INTO schema_migrations (version) VALUES ('20110219031339');
 INSERT INTO schema_migrations (version) VALUES ('20110328232024');
 
 INSERT INTO schema_migrations (version) VALUES ('20110329233050');
-
-INSERT INTO schema_migrations (version) VALUES ('20110516045956');
 
 INSERT INTO schema_migrations (version) VALUES ('20110521233707');
 

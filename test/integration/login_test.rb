@@ -77,7 +77,7 @@ class LoginTest < ActionController::IntegrationTest
     end
 
     def test_login_on_nonstandard_port
-      get "http://www.example.com:3000/login"
+      get "http://www.example.com:8080/login"
       assert_redirected_to "https://www.example.com/login"
 
       https!

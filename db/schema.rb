@@ -680,7 +680,7 @@ ActiveRecord::Schema.define(:version => 20110806162623) do
     t.string   "exempt_team_categories",                             :default => "0",                                   :null => false
     t.string   "membership_email",                                   :default => "scott.willson@gmail.com",             :null => false
     t.string   "name",                                               :default => "Cascadia Bicycle Racing Association", :null => false
-    t.string   "rails_host",                                         :default => "localhost:3000"
+    t.string   "rails_host",                                         :default => "localhost:8080"
     t.string   "sanctioning_organizations"
     t.string   "short_name",                                         :default => "CBRA",                                :null => false
     t.string   "show_events_sanctioning_org_event_id",               :default => "0",                                   :null => false
