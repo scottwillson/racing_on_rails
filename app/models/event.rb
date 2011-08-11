@@ -512,6 +512,10 @@ class Event < ActiveRecord::Base
     "#{name} (#{short_date})"
   end
 
+  def full_name_with_date
+    "#{full_name} (#{short_date.try :strip})"
+  end
+
   # Try to intelligently combined parent name and child name for schedule pages
   def full_name
     if parent.nil?
