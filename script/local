@@ -6,7 +6,7 @@ if [ -h local ]; then
   rm local
 fi
 if [ -h public/local ]; then
-  rm local
+  rm public/local
 fi
 ln -s ../racing_on_rails_local/$1 local
 ln -s local/public public/local
