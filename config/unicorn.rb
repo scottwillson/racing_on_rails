@@ -1,4 +1,4 @@
-# unicorn_rails -c /usr/local/etc/unicorn/wsba.rb -E production -D
+# unicorn -c /usr/local/etc/unicorn/wsba.rb -E production -D
 
 rails_env = ENV['::Rails.env'] || 'production'
 
