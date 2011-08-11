@@ -68,7 +68,7 @@ class MbraBarTest < ActiveSupport::TestCase
     # Should delete old BAR
     MbraBar.calculate!(2008)
     assert_equal(6, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
-    MbraBar.find(:all, :conditions => ['date = ?', Date.new(2008)]).each do |bar|
+    MbraBar.all( :conditions => ['date = ?', Date.new(2008)]).each do |bar|
       assert(bar.name[/2008.*BAR/], "Name #{bar.name} is wrong")
       assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
     end

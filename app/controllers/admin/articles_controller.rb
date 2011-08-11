@@ -5,9 +5,9 @@ class Admin::ArticlesController < Admin::AdminController
 
   def index
     if params[:article_category_id].nil?
-      @articles = Article.find(:all, :order => "title")
+      @articles = Article.all( :order => "title")
     else
-      @articles = Article.find(:all, :conditions => ["article_category_id = ?", params[:article_category_id]], :order => "title")
+      @articles = Article.all( :conditions => ["article_category_id = ?", params[:article_category_id]], :order => "title")
       params[:article_category_id] = nil
     end
   end
@@ -23,7 +23,7 @@ class Admin::ArticlesController < Admin::AdminController
 
   def new
     @article = Article.new
-    @article_category = ArticleCategory.find( :first )
+    @article_category = ArticleCategory.first
   end
 
   def edit

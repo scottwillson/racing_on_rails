@@ -283,7 +283,7 @@ class ResultsControllerTest < ActionController::TestCase
   def test_competition_team
     Bar.calculate!(2004)
     TeamBar.calculate!(2004)
-    bar = TeamBar.find(:all).first
+    bar = TeamBar.all.first
     result = bar.races.first.results.first
     assert_not_nil(result, 'result')
     assert_not_nil result.team, "result.team" 

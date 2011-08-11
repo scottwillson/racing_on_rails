@@ -17,7 +17,6 @@ class RacingAssociation < ActiveRecord::Base
   serialize :administrator_tabs
   serialize :cat4_womens_race_series_points
   serialize :competitions
-  serialize :exception_recipients
   serialize :sanctioning_organizations
   
   default_value_for :administrator_tabs do
@@ -26,21 +25,17 @@ class RacingAssociation < ActiveRecord::Base
     ])
   end
   
-  default_value_for :competitions do
-    Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
-  end
-  
   default_value_for :cat4_womens_race_series_category do
     Category.find_or_create_by_name "Category 4 Women"
+  end
+  
+  default_value_for :competitions do
+    Set.new([:age_graded_bar, :bar, :ironman, :overall_bar, :team_bar])
   end
   
   # String
   default_value_for :default_sanctioned_by do |r|
     r.short_name
-  end
-  
-  default_value_for :exception_recipients do
-    "scott.willson@gmail.com"
   end
   
   default_value_for :rental_numbers do |r|
@@ -102,6 +97,18 @@ class RacingAssociation < ActiveRecord::Base
     now.year + 1
   end
   
+  def cyclocross_season?
+    RacingAssociation.current.today >= cyclocross_season_start.to_date && RacingAssociation.current.today <= cyclocross_season_end.to_date
+  end
+  
+  def cyclocross_season_start
+    Time.zone.local(RacingAssociation.current.now.year, 9, 4).beginning_of_day
+  end
+  
+  def cyclocross_season_end
+    Time.zone.local(RacingAssociation.current.now.year, 12, 5).end_of_day
+  end
+
   def priority_country_options
     if country_code == "US"
       [ ['United States', 'US'], ['Canada', 'CA'] ]

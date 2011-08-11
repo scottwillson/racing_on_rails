@@ -12,12 +12,12 @@ class Race < ActiveRecord::Base
   include Export::Races
 
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
-  # Prototype Result used for checking valid column names
-  RESULT = Result.new
   
   validates_presence_of :event, :category
 
   before_validation :find_associated_records
+  
+  before_save :symbolize_custom_columns
   
   belongs_to :category
   serialize :result_columns, Array
@@ -47,6 +47,7 @@ class Race < ActiveRecord::Base
     else
       self.category = Category.new(:name => name)
     end
+    category.try :name
   end
   
   def discipline
@@ -139,13 +140,17 @@ class Race < ActiveRecord::Base
         column
       end
     end
-    columns << "bar" if RacingAssociation.current.competitions.include?(:bar)
+    columns << "bar" #if RacingAssociation.current.competitions.include?(:bar)
     columns.uniq!
     columns
   end
   
   def custom_columns
     self[:custom_columns] ||= []
+  end
+  
+  def symbolize_custom_columns
+    self.custom_columns.map! { |col| col.to_s.to_sym }
   end
   
   # Ensure child team and people are not duplicates of existing records
@@ -241,7 +246,7 @@ class Race < ActiveRecord::Base
      if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
        return non_members
      else
-       other_results_in_place = Result.find(:all, :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
+       other_results_in_place = Result.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
        other_results_in_place.each { |orip|
           unless orip.person.nil?
             if !orip.person.member?(result.date)

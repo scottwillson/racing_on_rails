@@ -1,4 +1,4 @@
-<% table :caption => "Numbers", 
+<%= table :caption => "Numbers", 
          :class => "numbers box-2 clear",
          :id => "numbers",
          :insert_header => true, 
@@ -13,27 +13,31 @@
     <td><label class="inline"><%= RacingAssociation.current.short_name %> Membership</label> <%= text_field 'person', 'license' %></td>
   </tr>
   <% end %>
-  <% for @number in race_numbers %>
-  <tr id="<%= "number_#{@number.id}_row" %>">
+  <% race_numbers.each do |number| %>
+  <% @number = number %>
+  <tr id="<%= "number_#{number.id}_row" %>">
     <td>
       <table cellspacing="0">
         <tr>
           <td>
-            <label class="inline"><%= @number.number_issuer.name %> <%= @number.discipline.name %></label>
+            <label class="inline"><%= number.number_issuer.name %> <%= number.discipline.name %></label>
           </td>
           <td class="right">
             <%= text_field 'number[]', 'value', :class => "number" %>
           </td>
           <td>
             <%= link_to(image_tag("icons/information.png"), "#", 
-              :title => "Updated #{time_ago_in_words(@number.updated_at, true)} ago #{('by ' + @number.updated_by) if @number.updated_by}", 
+              :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{('by ' + number.updated_by) if number.updated_by}", 
               :class => "image") %>
           </td>
           <td class="right">
-            <%= link_to_remote(
+            <%= link_to(
                   image_tag('/images/icons/delete.png'),
-                    :url => { :action => "destroy_number", :id => @number.id},
-                    :html => { :id => "destroy_number_#{@number.id}", :class => "image" }
+                    destroy_number_admin_person_path(person, :number_id => number.id),
+                    :remote => true,
+                    :method => :delete,
+                    :id => "destroy_number_#{number.id}", 
+                    :class => "image"
                   )
            %>
           </td>
@@ -47,7 +51,8 @@
   <% end %>
   <tr id="new_number_button_row">
     <td class="right">
-      <%= link_to_remote(image_tag("/images/icons/add.png", :size => "16x16"), 
+      <%= link_to(image_tag("/images/icons/add.png", :size => "16x16"), 
+            :remote => true,
             :url => { :action => "new_number" }, :html => { :class => "image" }) %>
     </td>
   </tr>

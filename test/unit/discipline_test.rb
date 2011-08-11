@@ -33,7 +33,7 @@ class DisciplineTest < ActiveSupport::TestCase
   def test_find_for_numbers
     disciplines_for_numbers = Discipline.find_for_numbers
     assert(disciplines_for_numbers.size > 2, 'Disciplines for numbers')
-    all_disciplines = Discipline.find(:all)
+    all_disciplines = Discipline.all
     assert(all_disciplines.size > disciplines_for_numbers.size, 'Should only use a sub-set of Disciplines for numbers')
   end
   

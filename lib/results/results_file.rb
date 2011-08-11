@@ -147,25 +147,36 @@ module Results
       self.columns = []
       spreadsheet_row.each_with_index do |cell, index|
         cell_string = cell.to_s
-        if index == 0 && cell_string.blank?
-          column_indexes[:place] = 0
-        elsif cell_string.present?
+        if cell_string.present?
           cell_string.strip!
           cell_string.gsub!(/^"/, '')
           cell_string.gsub!(/"$/, '')
+        end
+
+        Rails.logger.debug("CELLS: #{cell_string}, #{spreadsheet_row[index - 1].blank?}, #{spreadsheet_row[index + 1].blank?}") if debug?
+        if cell_string == "Name" && spreadsheet_row[index + 1].blank?
+          cell_string = "First Name"
+        elsif cell_string.blank? && "Name" == spreadsheet_row[index - 1]
+          cell_string = "Last Name"
+        end
+
+        if index == 0 && cell_string.blank?
+          column_indexes[:place] = 0
+        elsif cell_string.present?
           cell_string = cell_string.downcase.underscore
           cell_string.gsub!(" ", "_")
           cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
+          
           if cell_string.present?
             if usac_results_format?
-              if Race::RESULT.respond_to?(cell_string.to_sym)
+              if prototype_result.respond_to?(cell_string.to_sym)
                 column_indexes[cell_string.to_sym] = index
                 self.columns << cell_string 
               end
             else
               column_indexes[cell_string.to_sym] = index
               self.columns << cell_string 
-              if !Race::RESULT.respond_to?(cell_string.to_sym)
+              if !prototype_result.respond_to?(cell_string.to_sym)
                 self.custom_columns << cell_string
                 self.race_custom_columns << cell_string
               end
@@ -278,8 +289,9 @@ module Results
       attributes = row.to_hash.dup
       custom_attributes = {}
       attributes.delete_if do |key, value|
-        if race.custom_columns.include?(key.to_s)
-          custom_attributes[key] = case value
+        _key = key.to_s.to_sym
+        if race.custom_columns.include?(_key)
+          custom_attributes[_key] = case value
           when Time
             value.strftime "%H:%M:%S"
           else
@@ -290,8 +302,12 @@ module Results
           false
         end
       end
-      attributes.merge!(:custom_attributes => custom_attributes)
+      attributes.merge! :custom_attributes => custom_attributes
       attributes
+    end
+    
+    def prototype_result
+      @prototype_result ||= Result.new.freeze
     end
     
     def usac_results_format?

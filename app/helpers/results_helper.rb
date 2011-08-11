@@ -1,3 +1,5 @@
+require "result_column"
+
 module ResultsHelper
   # Link to Person Result detail page
   def link_to_results(text, result)
@@ -8,9 +10,9 @@ module ResultsHelper
     end
     
     if result.competition_result?
-      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/people/#{result.person_id}/results##{result.race_id}\"#{html_options}>#{text}</a>".html_safe
     else
-      "<a href=\"/people/#{result.person_id}/#{result.year}\"#{html_options}>#{text}</a>"
+      "<a href=\"/people/#{result.person_id}/#{result.year}\"#{html_options}>#{text}</a>".html_safe
     end
   end
 
@@ -19,19 +21,19 @@ module ResultsHelper
     return text unless result.team_id
 
     if result.team_competition_result?
-      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>"
+      "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>".html_safe
     else
-      "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
+      "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>".html_safe
     end
   end
   
   def result_header(column)
-    ResultColumn[column].description
+    ::ResultColumn[column].description
   end
 
   def result_cell_class(column)
-    if ResultColumn[column].alignment == :right
-      " class=\"right\""
+    if ::ResultColumn[column].alignment == :right
+      " class=\"right\"".html_safe
     end
   end
   
@@ -48,7 +50,7 @@ module ResultsHelper
         link_to_team_results result.team_name, result
       end
     else
-      result.send ResultColumn[column].display_method
+      result.send ::ResultColumn[column].display_method
     end
   end
 end

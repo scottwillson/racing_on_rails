@@ -29,6 +29,10 @@ class PublicPagesTest < WebDriverTestCase
     assert_page_source "December 31, 2004"
     assert_page_source "Senior Women 1/2/3"
 
+    unless find_elements(:link_text => "Pennington").any?
+      click :link_text => "Senior Women 1/2/3"
+      wait_for_element :link_text => "Pennington"
+    end
     click :link_text => "Pennington"
     wait_for_current_url(/people/)
     wait_for_element "person_results"

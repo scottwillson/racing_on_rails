@@ -11,7 +11,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     ActionMailer::Base.deliveries.clear
     post :create, :email => "admin@example.com"
     assert_response :redirect
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_equal 1, ActionMailer::Base.deliveries.count, "Should send one email"
   end
   
@@ -64,6 +64,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert(password != updated_person.crypted_password, "Password should change")
     assert_equal "bob.jones", updated_person.login, "login"
     assert(password != Person.find(updated_person.id).crypted_password, "Password should change")
+    assert flash[:notice].present?, "Shoudl set flash :notice"
     assert_redirected_to "/account"
   end
   

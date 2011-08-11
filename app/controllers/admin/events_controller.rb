@@ -1,13 +1,12 @@
 # Show Schedule, add and edit Events, edit Results for Events. Promoters can view and edit their own events. Promoters can edit
 # fewer fields than administrators.
+
 class Admin::EventsController < Admin::AdminController
   before_filter :assign_event, :only => [ :edit, :update ]
   before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
   before_filter :require_administrator, :except => [ :edit, :update ]
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
   layout 'admin/application'
-  in_place_edit_for :event, :first_aid_provider
-  in_place_edit_for :event, :chief_referee
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -18,11 +17,10 @@ class Admin::EventsController < Admin::AdminController
   def index
     @year = params["year"].to_i
     @year = RacingAssociation.current.effective_year if @year == 0
-    @competitions = Event.find(
-                        :all, 
+    @competitions = Event.all(
                         :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
                       )
-    events = SingleDayEvent.find(:all, :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
+    events = SingleDayEvent.all( :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
     @schedule = Schedule::Schedule.new(@year, events)
   end
 
@@ -76,7 +74,7 @@ class Admin::EventsController < Admin::AdminController
       flash[:notice] = "Created #{@event.name}"
       redirect_to edit_admin_event_path(@event)
     else
-      flash[:warn] = @event.errors.full_messages
+      flash[:warn] = @event.errors.full_messages.join
       render :edit
     end
   end
@@ -131,6 +129,18 @@ class Admin::EventsController < Admin::AdminController
       redirect_to(edit_admin_event_path(@event))
     else
       render(:action => :edit)
+    end
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @event = Event.find(params[:id])
+        @event.send "#{params[:name]}=", params[:value]
+        @event.save!
+        expire_cache
+        render :text => @event.send(params[:name]), :content_type => "text/html"
+      }
     end
   end
 
@@ -222,7 +232,7 @@ class Admin::EventsController < Admin::AdminController
     else
       respond_to do |format|
         format.html {
-          flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages}"
+          flash[:notice] = "Could not delete #{@event.name}: #{@event.errors.full_messages.join}"
           redirect_to(admin_events_path(:year => @event.date.year))
         }
         format.js { render "destroy_error" }
@@ -231,12 +241,16 @@ class Admin::EventsController < Admin::AdminController
   end
   
   def destroy_races
-    @event = Event.find(params[:id])
-    # Remember races for view
-    @races = @event.races.dup
-    @combined_results = @event.combined_results
-    @event.destroy_races
-    expire_cache
+    respond_to do |format|
+      format.js {
+        @event = Event.find(params[:id])
+        # Remember races for view
+        @races = @event.races.dup
+        @combined_results = @event.combined_results
+        @event.destroy_races
+        expire_cache
+      }
+    end
   end
 
   def set_parent

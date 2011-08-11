@@ -34,10 +34,12 @@ class AliasTest < ActiveSupport::TestCase
   end
   
   def test_no_dupe_people
-    assert_raise(ActiveRecord::StatementInvalid, 'Alias should be invalid') {Alias.create(:name => 'Gentile Lovers', :team => teams(:vanilla))}
+    assert_raise(ActiveRecord::RecordNotUnique, 'Alias should be invalid') {Alias.create(:name => 'Gentile Lovers', :team => teams(:vanilla))}
   end
   
   def test_no_dupe_teams
-    assert_raise(ActiveRecord::StatementInvalid, 'Alias should be invalid') {Alias.create(:name => 'Mollie Cameron', :person => people(:weaver))}
+    assert_raise(ActiveRecord::RecordNotUnique, "Alias should be invalid") do
+      Alias.create :name => "Mollie Cameron", :person => people(:weaver)
+    end
   end
 end

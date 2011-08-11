@@ -1,14 +1,14 @@
 class MbraTeamBar < Competition
   
   def MbraTeamBar.calculate!(year = Date.today.year)
-    benchmark(name, Logger::INFO, false) {
+    benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
 
         # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
-          bar = MbraTeamBar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          bar = MbraTeamBar.first(:conditions => { :date => date, :discipline => discipline.name })
           logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
             bar = MbraTeamBar.create!(
@@ -19,7 +19,7 @@ class MbraTeamBar < Competition
           end
         end
 
-        MbraTeamBar.find(:all, :conditions => { :date => date }).each do |bar|
+        MbraTeamBar.all( :conditions => { :date => date }).each do |bar|
           logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.destroy_races
           bar.create_races
@@ -51,7 +51,7 @@ class MbraTeamBar < Competition
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race)
-    Result.find(:all,
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                     (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)

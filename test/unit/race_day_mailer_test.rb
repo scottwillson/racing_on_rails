@@ -13,12 +13,12 @@ class RaceDayMailerTest < ActionMailer::TestCase
     @expected.date    = now
 
     # Not asserting attachment, just checking that we don't get exception
-    RaceDayMailer.create_members_export(Person.find_all_for_export, Time.zone.now)
+    RaceDayMailer.members_export Person.find_all_for_export
   end
   
   def read_fixture(action)
     template = ERB.new(
-        IO.readlines(File.join(RAILS_ROOT, 'test', 'fixtures', self.class.mailer_class.name.underscore, action)).join
+        IO.readlines(File.join(::Rails.root.to_s, 'test', 'fixtures', self.class.mailer_class.name.underscore, action)).join
     )
     template.result(binding)
   end

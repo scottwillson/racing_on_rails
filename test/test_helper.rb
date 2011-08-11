@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-require 'test_help'
+require "rails/test_help"
 require "action_view/test_case"
 require "authlogic/test_case"
 
@@ -9,8 +9,26 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
-
+  
+  # FIXME Still need in Rails 3?
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
+
+  @@no_angle_brackets_exceptions = nil
+
+  class << self
+    def assert_no_angle_brackets(*options)
+      options = options.extract_options!
+      write_inheritable_attribute :no_angle_brackets_exceptions, Array.wrap(options[:except])
+    end
+
+    def no_angle_brackets_exceptions
+      if current_no_angle_brackets_exceptions = read_inheritable_attribute(:no_angle_brackets_exceptions)
+        current_no_angle_brackets_exceptions
+      else
+        write_inheritable_attribute :no_angle_brackets_exceptions, []
+      end
+    end
+  end
 
   # Activate Authlogic. Reset RacingAssociation.
   def setup
@@ -44,7 +62,7 @@ class ActiveSupport::TestCase
     when Person
       PersonSession.create person.reload
     else
-      raise "Don't recogonize #{person}"
+      raise "Don't recognize #{person}"
     end
   end
   
@@ -165,18 +183,26 @@ class ActiveSupport::TestCase
   # Example: test for default layout: assert_layout("application")
   def assert_layout(expected)
     if expected
-      assert_equal("layouts/#{expected}", @response.layout, "layout")
+      assert @layouts.include?("layouts/#{expected}"), "Expected layout #{expected} in #{@layouts.keys.join(", ")}"
     else
-      assert_nil(@response.layout, "no layout")
+      assert @layouts.keys.all? { |k| k.nil? }, "Expected no layout, but had #{@layouts.inspect}"
     end
   end
 
   # Detect HTML escaping screw-ups
+  # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
   def assert_no_angle_brackets
-    if @response && @response.body.present?
-      body_string = @responsebody.to_s
-      assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
-      assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
+    unless self.class.no_angle_brackets_exceptions.include?(method_name.to_sym)
+      if @response && !@response.blank?
+        body_string = @response.body.to_s
+        if ENV["VERBOSE_HTML_SOURCE"]
+          assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
+          assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
+        else
+          assert !body_string["&lt;"], "Found escaped left angle bracket"
+          assert !body_string["&rt;"], "Found escaped right angle bracket"
+        end
+      end
     end
   end
 
@@ -197,19 +223,19 @@ class ActiveSupport::TestCase
   end
 
   def print_all_events
-    Event.find(:all, :order => :date).each {|event|
+    Event.all( :order => :date).each {|event|
       p "#{event.date} #{event.name} #{event.id} #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }
   end
   
   def print_all_results
-    Result.find(:all, :order => :person_id).each {|result|
+    Result.all( :order => :person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
     }
   end
   
   def print_all_categories
-    Category.find(:all, :order => 'parent_id, name').each {|category|
+    Category.all( :order => 'parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
     }
   end

@@ -3,7 +3,7 @@
 
 <%= render_page "people/disciplines", :locals => { :year => @year } %>
 
-<% form_tag({}, {:method => "get", :id => "search_form"}) do %>
+<%= form_tag({}, {:method => "get", :id => "search_form"}) do %>
   <div class="centered">
     <%= label_tag "name" %>
     <%= text_field_tag "name", @name, :class => "wants_focus" %>
@@ -12,7 +12,7 @@
 
 <em>Enter part of a person's name to search</em>
 
-<% table :class => "people", :id => :people do %>
+<%= table :class => "people", :id => :people do %>
   <tr>
     <th class="name">Name</th>
     <th class="aliases">Aliases</th>

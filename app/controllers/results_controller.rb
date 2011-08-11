@@ -56,7 +56,7 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    ResultsController::benchmark "Load results", Logger::DEBUG, false do
+    ResultsController::benchmark "Load results", :level => :debug do
       @event = Event.find(
         params[:event_id],
         :include => [ :races => [ :category, { :results => :team } ] ]
@@ -70,8 +70,7 @@ class ResultsController < ApplicationController
   def person_event
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
-    @results = Result.find(
-      :all,
+    @results = Result.all(
       :include => { :scores => [ :source_result, :competition_result ] },
       :conditions => ['results.event_id = ? and person_id = ?', params[:event_id], params[:person_id]]
     )
@@ -82,8 +81,7 @@ class ResultsController < ApplicationController
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
-    @result = Result.find(
-      :first,
+    @result = Result.first(
       :include => { :scores => [ :source_result, :competition_result ] },
       :conditions => ['results.event_id = ? and team_id = ? and race_id = ?', params[:event_id], params[:team_id], params[:race_id]]
     )
@@ -95,12 +93,10 @@ class ResultsController < ApplicationController
   def person
     @person = Person.find(params[:person_id])
     set_date_and_year
-    @event_results = Result.find(
-     :all,
+    @event_results = Result.all(
      :conditions => [ "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year ]
     )
-    @competition_results = Result.find(
-     :all,
+    @competition_results = Result.all(
      :include => { :scores => [ :source_result, :competition_result ] },
      :conditions => [ "person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year ]
     )
@@ -112,8 +108,7 @@ class ResultsController < ApplicationController
   def team
     @team = Team.find(params[:team_id])
     set_date_and_year
-    @results = Result.find(
-      :all,
+    @results = Result.all(
       :conditions => [ "team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year ]
     )
     expires_in 1.hour, :public => true

@@ -4,7 +4,7 @@ class Admin::ArticleCategoriesController < Admin::AdminController
   before_filter :require_administrator
 
   def index
-    @article_categories = ArticleCategory.find(:all, :order => "parent_id, position")
+    @article_categories = ArticleCategory.all( :order => "parent_id, position")
   end
 
   def show

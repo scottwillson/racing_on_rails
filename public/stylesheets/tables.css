@@ -175,7 +175,7 @@ table.base td.icon {
   width: 16px;
 }
 
-table.base div.in_place_editable {
+table.base div.editable {
   border: 1px solid transparent;
   left: -4px;
   margin-bottom: -6px;
@@ -189,35 +189,21 @@ table.base div.in_place_editable {
   vertical-align: top;
 }
 
-table.base div.in_place_editable:hover {
+table.base div.editable:hover {
   background-color: rgb(245, 245, 245);
   border: 1px solid rgb(204, 204, 204);
 }
 
-table.base td.editing {
-  padding: 0px;
-}
-
-table.base td.editing div.in_place_editable:hover,
-table.base tr.hovering div.in_place_editable:hover {
+table.base tr.hovering div.editable:hover,
+table.base div.editable.saving:hover {
   background-color: transparent;
   border: 1px solid transparent;
 }
 
-table.base td.editing div.in_place_editable {
-  padding-bottom: 3px;
-  padding-left: 7px;
-  padding-top: 2px;
-}
-
-table.base td div.saving {
+table.base div.editable.saving input {
   background-image: url(/images/icons/spinner.gif);
+  background-position: center right;
   background-repeat: no-repeat;
-  height: 16px;
-  margin-left: 4px;
-  padding-bottom: 0px;
-  margin-top: 8px;
-  width: 16px;
 }
 
 form.editor_field input,
@@ -226,9 +212,9 @@ form.editor_field input[type=text] {
   font-size: 1em;
   height: 16px;
   margin-bottom: -1px;
-  margin-left: 0px;
+  margin-left: -4px;
   margin-right: -1px;
-  margin-top: 5px;
+  margin-top: -3px;
   padding-bottom: 1px;
   padding-left: 1px;
   padding-right: 1px;
@@ -261,6 +247,14 @@ table.base td.check_box input {
 
 table.base td select {
   margin-top: 0px;
+}
+
+table.base td input[type="text"] {
+  font-weight: normal;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
 }
 
 table.base tr.hovering, table.base tr.selected {

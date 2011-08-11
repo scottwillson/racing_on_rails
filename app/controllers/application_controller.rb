@@ -1,35 +1,33 @@
 class ApplicationController < ActionController::Base
   helper :all
+  protect_from_forgery
+  
   include SentientController
   include SslRequirement
 
-  # HP"s proxy, among others, gets this wrong
-  ActionController::Base.ip_spoofing_check = false
-
-  filter_parameter_logging :password, :password_confirmation
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
   before_filter :clear_racing_association, :toggle_tabs
 
   def self.expire_cache
     begin
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "bar"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "cat4_womens_race_series"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "competitions"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "events"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "people"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "rider_rankings"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "results"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "schedule"))
-      FileUtils.rm_rf(File.join(RAILS_ROOT, "public", "teams"))
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "bar.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "cat4_womens_race_series.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "home.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "index.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "results.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "rider_rankings.html"), :force => true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "schedule.html"), :force =>true)
-      FileUtils.rm(File.join(RAILS_ROOT, "public", "teams.html"), :force =>true)
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "bar"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "competitions"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "events"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "people"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "rider_rankings"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "results"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "schedule"))
+      FileUtils.rm_rf(File.join(::Rails.root.to_s, "public", "teams"))
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "bar.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "cat4_womens_race_series.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "home.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "index.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "results.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "rider_rankings.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.html"), :force =>true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "teams.html"), :force =>true)
     rescue Exception => e
       logger.error e
     end
@@ -76,9 +74,9 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/404.html"
         if File.exists?(local_path)
-          render :file => "#{RAILS_ROOT}/local/public/404.html", :status => "404 Not Found"
+          render :file => "#{::Rails.root.to_s}/local/public/404.html", :status => "404 Not Found"
         else
-          render :file => "#{RAILS_ROOT}/public/404.html", :status => "404 Not Found"
+          render :file => "#{::Rails.root.to_s}/public/404.html", :status => "404 Not Found"
         end
       }
       type.all  { render :nothing => true, :status => "404 Not Found" }
@@ -90,9 +88,9 @@ class ApplicationController < ActionController::Base
       type.html {
         local_path = "#{Rails.root}/local/public/500.html"
         if File.exists?(local_path)
-          render :file => "#{RAILS_ROOT}/local/public/500.html", :status => "500 Error"
+          render :file => "#{::Rails.root.to_s}/local/public/500.html", :status => "500 Error"
         else
-          render :file => "#{RAILS_ROOT}/public/500.html", :status => "500 Error"
+          render :file => "#{::Rails.root.to_s}/public/500.html", :status => "500 Error"
         end
       }
       type.all  { render :nothing => true, :status => "500 Error" }
@@ -115,7 +113,7 @@ class ApplicationController < ActionController::Base
     @current_person = current_person_session && current_person_session.person
   end
 
-  def require_person
+  def require_current_person
     unless current_person
       flash[:notice] = "Please login to your #{RacingAssociation.current.short_name} account"
       store_location_and_redirect_to_login
@@ -125,12 +123,12 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator
-    unless require_person
+    unless require_current_person
       return false
     end
 
     unless current_person.administrator?
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       flash[:notice] = "You must be an administrator to access this page"
       store_location_and_redirect_to_login
       return false
@@ -139,10 +137,10 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_promoter
-    unless require_person
+    unless require_current_person
       return false
     end
-
+    
     unless administrator? || 
            (@event && current_person == @event.promoter) || 
            (@race && current_person == @race.event.promoter)
@@ -154,12 +152,12 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_official
-    unless require_person
+    unless require_current_person
       return false
     end
 
     unless administrator? || official?
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       flash[:notice] = "You must be an official or administrator to access this page"
       store_location_and_redirect_to_login
       return false
@@ -168,7 +166,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_same_person_or_administrator
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -180,7 +178,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_same_person_or_administrator_or_editor
-    unless require_person
+    unless require_current_person
       return false
     end
 
@@ -192,7 +190,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_administrator_or_promoter_or_official
-    unless require_person
+    unless require_current_person
       return false
     end
     
@@ -220,7 +218,7 @@ class ApplicationController < ActionController::Base
       session[:return_to] = request.referrer
       render :update do |page| page.redirect_to(new_person_session_url(secure_redirect_options)) end
     else
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.fullpath
       redirect_to new_person_session_url(secure_redirect_options)
     end
   end

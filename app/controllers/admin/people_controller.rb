@@ -1,17 +1,14 @@
 # Add, delete, and edit Person information. Also merge.
 class Admin::PeopleController < Admin::AdminController
-  before_filter :require_person
+  before_filter :require_current_person
   # Funky permissions filtering here to allow officials and promoters download Excel file
   skip_filter :require_administrator, :only => :index
   before_filter :require_administrator_or_promoter_or_official, :only => :index
   before_filter :remember_event
   layout 'admin/application', :except => [:card, :cards]
-  exempt_from_layout 'xls.erb', 'ppl.erb'
 
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
-  
-  in_place_edit_for :person, :team_name
   
   # Search for People by name. This is a 'like' search on the concatenated 
   # first and last name, and aliases. E.g.,:
@@ -94,7 +91,7 @@ class Admin::PeopleController < Admin::AdminController
   def edit
     @person = Person.find(params[:id])
     @year = current_date.year
-    @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+    @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
   end
   
@@ -123,7 +120,7 @@ class Admin::PeopleController < Admin::AdminController
             :value => number_value
           )
           unless race_number.errors.empty?
-            @person.errors.add_to_base(race_number.errors.full_messages)
+            @person.errors.add(:base, race_number.errors.full_messages)
           end
         end
       end
@@ -136,7 +133,7 @@ class Admin::PeopleController < Admin::AdminController
       end
     else
       @year = current_date.year
-      @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
       render :edit
     end
@@ -184,7 +181,7 @@ class Admin::PeopleController < Admin::AdminController
               :updated_by => current_person.name
             )
             unless race_number.errors.empty?
-              @person.errors.add_to_base(race_number.errors.full_messages)
+              @person.errors.add(:base, race_number.errors.full_messages)
             end
           end
         end
@@ -204,7 +201,7 @@ class Admin::PeopleController < Admin::AdminController
     end
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     @year = params[:year] || RacingAssociation.current.effective_year
-    @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+    @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
     render :edit
   end
   
@@ -226,10 +223,10 @@ class Admin::PeopleController < Admin::AdminController
       assign_years
       session[:people_file_path] = temp_file.path
     else
-      redirect_to(:action => :index)
+      redirect_to :index
     end
     
-    render("preview_import", :layout => "admin/people/preview_import")
+    render "preview_import", :layout => "admin/people/preview_import"
   end
   
   # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
@@ -251,10 +248,10 @@ class Admin::PeopleController < Admin::AdminController
       flash[:notice] = "Imported #{pluralize(people_file.created, 'new person')} and updated #{pluralize(people_file.updated, 'existing person')}"
       session[:people_file_path] = nil
       if people_file.duplicates.empty?
-        redirect_to(:action => 'index')
+        redirect_to admin_people_path
       else
         flash[:warn] = 'Some names in the import file already exist more than once. Match with an existing person or create a new person with the same name.'
-        redirect_to(:action => 'duplicates')
+        redirect_to duplicates_admin_people_path
       end
       expire_cache
 
@@ -265,7 +262,7 @@ class Admin::PeopleController < Admin::AdminController
   
   # Unresolved duplicates after import
   def duplicates
-    @duplicates = Duplicate.find(:all)
+    @duplicates = Duplicate.all
     @duplicates.sort! do |x, y|
       diff = (x.person.last_name || '') <=> y.person.last_name
       if diff == 0
@@ -277,7 +274,7 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   def resolve_duplicates
-    @duplicates = Duplicate.find(:all)
+    @duplicates = Duplicate.all
     @duplicates.each do |duplicate|
       id = params[duplicate.to_param]
       if id == 'new'
@@ -293,22 +290,21 @@ class Admin::PeopleController < Admin::AdminController
     Duplicate.delete_all
     redirect_to(:action => 'index')
   end
-
-  # Inline update. Merge with existing Person if names match
-  def set_person_name
-    @person = Person.find(params[:id])
-    new_name = params[:value]
-    original_name = @person.name
-    @person.name = new_name
-
-    people_with_same_name = @person.people_with_same_name
-    unless people_with_same_name.empty?
-      return merge?(original_name, people_with_same_name, @person)
+  
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @person = Person.find(params[:id])
+        if params[:name] == "name"
+          update_name
+        else
+          @person.send "#{params[:name]}=", params[:value]
+          @person.save!
+          expire_cache
+          render :text => @person.send(params[:name]), :content_type => "text/html"
+        end
+      }
     end
-    
-    @person.update_attribute(:name, params[:value])
-    expire_cache
-    render :text => @person.name
   end
 
   # Toggle membership on or off
@@ -321,45 +317,25 @@ class Admin::PeopleController < Admin::AdminController
   def destroy
     @person = Person.find(params[:id])
     @person.destroy
-    respond_to do |format|
-      format.html {redirect_to admin_people_path}
-      format.js
-    end
+    redirect_to admin_people_path
     expire_cache
-  end
-
-  # Show choices for Person merge
-  def merge?(original_name, existing_people, person)
-    @person = person
-    @existing_people = existing_people
-    @original_name = original_name
-    render :update do |page| 
-      page.replace_html("person_#{@person.id}_row", :partial => "merge_confirm", :locals => { :person => @person })
-    end
   end
   
   def merge
-    person_to_merge_id = params[:id].gsub('person_', '')
-    @person_to_merge = Person.find(person_to_merge_id)
-    @merged_person_name = @person_to_merge.name
-    @existing_person = Person.find(params[:target_id])
-    @existing_person.merge(@person_to_merge)
+    @person = Person.find(params[:id])
+    @other_person = Person.find(params[:other_person_id])
+    @person.merge(@other_person)
     expire_cache
-  end
-  
-  def cancel_in_place_edit
-    person_id = params[:id]
-    render :update do |page|
-      page.replace("person_#{person_id}_row", :partial => "person", :locals => { :person => Person.find(person_id) })
-      page.call :restripeTable, :people_table
-    end
   end
   
   def number_year_changed
     @year = params[:year] || current_date.year
     if params[:id]
       @person = Person.find(params[:id])
-      @race_numbers = RaceNumber.find(:all, :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @race_numbers = RaceNumber.all(
+        :conditions => [ 'person_id=? and year=?', @person.id, @year ], 
+        :order => 'number_issuer_id, discipline_id'
+      )
     else
       @person = Person.new
       @race_numbers = []
@@ -378,7 +354,7 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   def destroy_number
-    id = params[:id]
+    id = params[:number_id]
     RaceNumber.destroy(id)
     render :update do |page|
       page.visual_effect(:puff, "number_#{id}_row", :duration => 2)
@@ -396,7 +372,7 @@ class Admin::PeopleController < Admin::AdminController
   
   # Membership card stickers/labels
   def cards
-    @people = Person.find(:all, :conditions => ['print_card=?', true], :order => 'last_name, first_name')
+    @people = Person.all( :conditions => ['print_card=?', true], :order => 'last_name, first_name')
     if @people.empty?
       return redirect_to(no_cards_admin_people_path(:format => "html"))
     else
@@ -431,6 +407,20 @@ class Admin::PeopleController < Admin::AdminController
   end
   
   private
+
+  def update_name
+    @person = Person.find(params[:id])
+    @person.send "#{params[:name]}=", params[:value]
+
+    @other_people = @person.people_with_same_name
+    if @other_people.empty?
+      @person.update_attribute(:name, params[:value])
+      expire_cache
+      render :text => @person.name, :content_type => "text/html"
+    else
+      render "merge_confirm"
+    end
+  end
   
   def assign_years
     date = current_date

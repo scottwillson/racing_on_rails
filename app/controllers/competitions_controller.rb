@@ -17,7 +17,7 @@ class CompetitionsController < ApplicationController
     else
       raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
     end
-    @event = competition_class.find(:first, :conditions => ['date = ?', date])
+    @event = competition_class.first(:conditions => ['date = ?', date])
     
     if @event
       @event.races.reject! do |race|

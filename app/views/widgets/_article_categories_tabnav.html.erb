@@ -11,13 +11,13 @@
 #   :generate_css => true|false #=> generates a default inline css for the tabnav, defaults to false
 #   :html => aHash #=> sets html options for the tabnav's div (es :html => {:class=> 'myCssClass', :id=>'myCssId'}) 
 #     
-article_categories = ArticleCategory.find(:all, :conditions => ["parent_id = ?", @top_level_article_category_id ], :order => "position")
+article_categories = ArticleCategory.all( :conditions => ["parent_id = ?", @top_level_article_category_id ], :order => "position")
 
 if article_categories.any?
   render_tabnav :article_categories,
                 :generate_css => false do
 
-    if Article.find(:all, :conditions => ["article_category_id = ?", @top_level_article_category_id]).any?
+    if Article.all( :conditions => ["article_category_id = ?", @top_level_article_category_id]).any?
       add_tab do |t|
         t.named "General"
         t.titled "General Information"
@@ -26,7 +26,7 @@ if article_categories.any?
       end
     end
     for article_category in article_categories
-      if Article.find(:all, :conditions => ["article_category_id = ?", article_category]).any?
+      if Article.all( :conditions => ["article_category_id = ?", article_category]).any?
         add_tab do |t|
           t.named article_category.name
           t.titled article_category.description

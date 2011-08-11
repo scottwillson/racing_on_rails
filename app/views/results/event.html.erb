@@ -46,7 +46,7 @@
   <%- end -%>
 
   <%- if !@event.notes.blank? -%>
-  <p class="notes"><%= @event.notes -%></p>
+  <p class="notes"><%= @event.notes.html_safe -%></p>
   <%- end -%>
 
   <% unless @event.races_with_results.empty? -%>
@@ -57,7 +57,7 @@
   <% benchmark("Render results", :silence => false) do %>
   <% @event.races_with_results.sort.each do |race| %>
   <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
-  <% table :caption => race.name, :class => "event_results" do %>
+  <%= table :caption => race.name, :class => "event_results" do %>
     <tr>
       <%- race.result_columns_or_default.map.each do |column| -%>
       <th class="<%= column %>"><%= result_header column %></th>

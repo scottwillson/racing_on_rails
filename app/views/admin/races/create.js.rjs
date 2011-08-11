@@ -1,1 +1,3 @@
-page.insert_html :before, "create_race_row", :partial => "admin/races/race", :locals => { :race => @race, :enter_edit_mode => true }
+page.insert_html :before, "create_race_row", :partial => "admin/races/race", :locals => { :race => @race }
+page.call :makeEditable
+page << "$('#race_#{@race.id}_row .editable').click()"

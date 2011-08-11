@@ -9,13 +9,12 @@ class EditorRequestMailerTest < ActionMailer::TestCase
     person = people(:weaver)
     editor_request = person.editor_requests.new(:editor => editor)
     assert editor_request.valid?, "New request should be valid"
-    email = EditorRequestMailer.deliver_request(editor_request)
+    email = EditorRequestMailer.editor_request(editor_request).deliver
     assert ActionMailer::Base.deliveries.any?
 
-    assert_equal [ "Ryan Weaver" ], email.to_addrs.map(&:name)
-    assert_equal [ "hotwheels@yahoo.com" ], email.to_addrs.map(&:address)
+    assert_equal "Ryan Weaver <hotwheels@yahoo.com>", email[:to].to_s, "email to"
     assert_equal "#{editor.name} would like access to your #{RacingAssociation.current.short_name} account", email.subject
-    assert_match(editor_request.token, email.body)
+    assert email.body.include?(editor_request.token), "Should include EditorRequest token in #{email}"
   end
 
   def test_notification
@@ -27,11 +26,10 @@ class EditorRequestMailerTest < ActionMailer::TestCase
     person = people(:weaver)
     editor_request = person.editor_requests.new(:editor => editor)
     assert editor_request.valid?, "New request should be valid"
-    email = EditorRequestMailer.deliver_notification(editor_request)
+    email = EditorRequestMailer.notification(editor_request).deliver
     assert ActionMailer::Base.deliveries.any?
-
-    assert_equal [ "Molly Cameron" ], email.to_addrs.map(&:name)
-    assert_equal [ "molly@example.com" ], email.to_addrs.map(&:address)
+    
+    assert_equal "Molly Cameron <molly@example.com>", email[:to].to_s
     assert_equal "Ryan Weaver #{RacingAssociation.current.short_name} account access granted", email.subject
   end
 end

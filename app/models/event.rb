@@ -39,6 +39,7 @@ class Event < ActiveRecord::Base
 
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
+  after_initialize :set_defaults
 
   validates_presence_of :name, :date
   validate :parent_is_not_self
@@ -82,11 +83,13 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   
-  named_scope :editable_by, lambda { |person| 
+  scope :editable_by, lambda { |person| 
     {:conditions => { :promoter_id => person.id } } unless person.administrator?
   }
-  named_scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
+  scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   
+  scope :not_child, { :conditions => "parent_id is null" }
+
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
@@ -120,8 +123,7 @@ class Event < ActiveRecord::Base
       if discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
-      events = Set.new(Event.find(
-          :all,
+      events = Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
           :include => { :parent => :parent },
@@ -132,8 +134,7 @@ class Event < ActiveRecord::Base
       ))
       
     else
-      events = Set.new(Event.find(
-          :all,
+      events = Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :joins => { :races => :results },
           :include => { :parent => :parent },
@@ -160,8 +161,7 @@ class Event < ActiveRecord::Base
     last_of_year = Date.new(year + 1, 1, 1) - 1
       discipline_names = [discipline]
       discipline_names << 'Circuit' if discipline.downcase == 'road'
-      Set.new(Event.find(
-          :all,
+      Set.new(Event.all(
           :select => "distinct events.id, events.*",
           :conditions => [%Q{
               events.date between ? and ?
@@ -174,10 +174,6 @@ class Event < ActiveRecord::Base
 
   def Event.friendly_class_name
     name.underscore.humanize.titleize
-  end
-
-  def after_initialize
-    set_defaults
   end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
@@ -529,7 +525,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-
   # Always return false
   def missing_parent?
     false
@@ -551,8 +546,7 @@ class Event < ActiveRecord::Base
   def multi_day_event_children_with_no_parent
     return [] unless name && date
     
-    @multi_day_event_children_with_no_parent ||= SingleDayEvent.find(
-      :all, 
+    @multi_day_event_children_with_no_parent ||= SingleDayEvent.all(
       :conditions => [
         "parent_id is null and name = ? and extract(year from date) = ? 
          and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
@@ -580,6 +574,15 @@ class Event < ActiveRecord::Base
     nodes
   end
 
+  # All children and children childrens
+  def descendants
+    _descendants = children(true)
+    children.each do |child|
+      _descendants = _descendants + child.descendants
+    end
+    _descendants
+  end
+
   def parent_is_not_self
     if parent_id && parent_id == id
       errors.add("parent", "Event cannot be its own parent")
@@ -595,7 +598,7 @@ class Event < ActiveRecord::Base
       return true
     end
     
-    if other.nil? || new_record? || other.new_record?
+    if other.nil? || !other || new_record? || other.new_record?
       return false
     end
 
@@ -607,7 +610,7 @@ class Event < ActiveRecord::Base
       return true
     end
 
-    if other.nil? || new_record? || other.new_record?
+    if other.nil? || !other || new_record? || other.new_record?
       return false
     end
 
@@ -615,7 +618,7 @@ class Event < ActiveRecord::Base
   end
   
   def <=>(other)
-    return -1 if other.nil?
+    return -1 if other.nil? || !other
 
     if date 
       if other.date

@@ -4,8 +4,8 @@
 <%= error_messages_for "race" -%>
 <%= error_messages_for "result" -%>
 
-<% form_for(:result, 
-            :url => { :controller => "cat4_womens_race_series", :action => "results" },
+<%= form_for(:result, 
+            :url => { :controller => "cat4_womens_race_series", :action => "create_result" },
             :html => { :autocomplete => "off", :class => "cat4_womens_race_series" }) do |f| %>
 
 
@@ -13,10 +13,10 @@
   <div class="span-6 last">
     <%= label(:event, :name, "Event") %><%= text_field :event, :name, :autocomplete => "off" %><br/>
     <%= label(:event, :date, "Date") %><%= date_select "event", "date", :order => [:month, :day, :year]%>
-    <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{RacingAssociation.current.short_name}?", :class => "check_box") %>
+    <%= label(:event, :sanctioned_by, "#{check_box(:event, :sanctioned_by)} #{RacingAssociation.current.short_name}?".html_safe, :class => "check_box") %>
   </div>
 
-  <% table :class => "clear people", :id => :people do %>
+  <%= table :class => "clear people", :id => :people do %>
     <tr>
       <th class="span-1">Place</th>
       <th class="span-1">Number</th>

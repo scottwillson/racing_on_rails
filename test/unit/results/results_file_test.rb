@@ -11,8 +11,8 @@ module Results
   # Most Test fixtures are in OBRA (not USAC) format. Force USAC format in ResultsFile to test logic shared by both formats.
   class ResultsFileTest < ActiveSupport::TestCase
     def test_race?
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt.xls"), SingleDayEvent.new)
-      book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/tt.xls")
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), SingleDayEvent.new)
+      book = Spreadsheet.open(File.expand_path("../../../files/results/tt.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -29,8 +29,8 @@ module Results
     
     def test_race_usac
       RacingAssociation.current.usac_results_format = true
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), SingleDayEvent.new)
-      book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls")
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
+      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -51,18 +51,18 @@ module Results
     end
     
     def test_create_columns
-      book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/pir_2006_format.xls")
+      book = Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/pir_2006_format.xls"), SingleDayEvent.new)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)
       assert_equal({ :place => 0, :number => 1, :license => 2, :last_name => 3, :first_name => 4, :team_name => 5, :points => 6  }, column_indexes, "column_indexes")
     end
     
     def test_create_columns_usac
       RacingAssociation.current.usac_results_format = true
-      book = Spreadsheet.open("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls")
+      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), SingleDayEvent.new)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)
       assert_equal({
         :time           => 14,
@@ -80,9 +80,9 @@ module Results
     end
   
     def test_import_excel
-      current_members = Person.find(:all, :conditions => ["member_to >= ?", RacingAssociation.current.now])
+      current_members = Person.all( :conditions => ["member_to >= ?", RacingAssociation.current.now])
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
-      source_path = "#{File.dirname(__FILE__)}/../../fixtures/results/pir_2006_format.xls"
+      source_path = File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
@@ -138,7 +138,7 @@ module Results
     
       event = SingleDayEvent.create!(:discipline => 'Time Trial')
 
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), event)
       results_file.import
     
       assert_equal(2, event.races(true).size, "event races")
@@ -209,7 +209,7 @@ module Results
     # Expose bad regex defect
     def test_import_time_trial_with_hundreds
       event = SingleDayEvent.create!(:discipline => "Time Trial")
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_hundreds.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_hundreds.xls", __FILE__)), event)
       results_file.import
       result = event.races.first.results.first
       assert_equal 1086.23, result.time, "First result time of 18:06.23 formatted as 18:06.2 in Excel"
@@ -258,7 +258,7 @@ module Results
       expected_races << race
 
       event = SingleDayEvent.create!(:discipline => 'Circuit')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/2006_v2.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/2006_v2.xls", __FILE__)), event)
       results_file.import
 
       assert_equal(expected_races.size, event.races.size, "event races")
@@ -309,7 +309,7 @@ module Results
     
       pro_1_2_race.results.create! :place => 1, :person => people(:weaver)
     
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/small_event.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/small_event.xls", __FILE__)), event)
       results_file.import
     
       event.reload
@@ -327,7 +327,7 @@ module Results
   
     def test_stage_race
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/stage_race.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/stage_race.xls", __FILE__)), event)
       results_file.import
 
       assert_equal(2, event.races.size, "event races")
@@ -396,7 +396,7 @@ module Results
     # File causes error -- just import to recreate
     def test_dh
       event = SingleDayEvent.create(:discipline => 'Downhill')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/dh.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/dh.xls", __FILE__)), event)
       results_file.import
     end
   
@@ -408,7 +408,7 @@ module Results
       pro_expert_women.children.create(:name => 'Pro/Expert Women')
     
       event = SingleDayEvent.create!(:discipline => 'Mountain Bike')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/mtb.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/mtb.xls", __FILE__)), event)
       results_file.import
       assert_nil(event.combined_results, 'Should not have combined results')
       assert_equal(6, event.races(true).size, "Races after import")
@@ -416,14 +416,14 @@ module Results
   
     def test_custom_columns
       event = SingleDayEvent.create(:discipline => 'Downhill')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/custom_columns.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/custom_columns.xls", __FILE__)), event)
       results_file.import
       assert_equal ["bogus_column_name"], results_file.custom_columns.to_a, "Custom columns"
     end
 
     def test_times
       event = SingleDayEvent.create(:discipline => 'Track')
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/times.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/times.xls", __FILE__)), event)
       results_file.import
       assert_equal(1, event.races.size, 'Races')
       results = event.races.first.results
@@ -636,7 +636,7 @@ module Results
     def test_import_excel_usac_format
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2008, 5, 11))
-      source_path = "#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"
+      source_path = File.expand_path("../../../files/results/tt_usac.xls", __FILE__)
       results_file = ResultsFile.new(File.new(source_path), event)
       assert_equal(source_path, results_file.source.path, "file path")
       results_file.import
@@ -683,7 +683,7 @@ module Results
 
     def test_race_notes
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), event)
       results_file.import
       assert_equal('Field Size: 40 riders, 40 Laps, Sunny, cool, 40K', event.races(true).first.notes, 'Race notes')
     end
@@ -691,7 +691,7 @@ module Results
     def test_race_notes_usac
       RacingAssociation.current.usac_results_format = true
       event = SingleDayEvent.create!
-      results_file = ResultsFile.new(File.new("#{File.dirname(__FILE__)}/../../fixtures/results/tt_usac.xls"), event)
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), event)
       results_file.import
       assert_equal('USCF, 2008, 563, 2012-05-11, Stage Race', event.races(true).first.notes, 'Race notes')
     end

@@ -11,7 +11,7 @@ module MiniTest
     end
 
     def Unit.results_path
-      File.expand_path "#{RAILS_ROOT}/log/acceptance"
+      File.expand_path "#{::Rails.root.to_s}/log/acceptance"
     end
 
     # puke(PublicPagesTest, test_bar, Page source should include 'BAR')

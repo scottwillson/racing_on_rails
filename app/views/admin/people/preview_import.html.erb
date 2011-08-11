@@ -17,7 +17,7 @@
 <%= submit_tag 'Import' %>
 </form>
 
-<% table :class => "preview_import", :id => "preview_import", :columns =>  @people_file.columns.size do %>
+<%= table :class => "preview_import", :id => "preview_import", :columns =>  @people_file.columns.size do %>
     <tr id="original">
     <%- @people_file.columns.each do |column| -%>
       <th <%= "class=invalid" unless column.valid? %>><%= column.description %></th>

@@ -24,7 +24,7 @@
     </td>
     <% end %>
     
-    <% if !current_page?({:controller => "posts", :action => "list"}) %>
+    <% if mailing_list.present? %>
     <td class="link_spacer">|</td>
     <td>
         <%= link_to_unless_current "View Archives", {:controller => "posts", :action => "index", :mailing_list_name => mailing_list.name} %>

@@ -14,12 +14,12 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     weaver_jack_frost.save!
 
     team_name = ''
-        
-    post(:set_result_team_name, 
+
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -31,11 +31,12 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     weaver_jack_frost.team = nil
     weaver_jack_frost.save!
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => teams(:vanilla).name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => teams(:vanilla).name
+    assert_response(:success)
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -47,11 +48,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     weaver_jack_frost.team = nil
     weaver_jack_frost.save!
 
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "Team Vanilla",
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => "Team Vanilla"
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -66,11 +67,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     team_name = 'Gentile Lovers'
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -82,11 +83,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     team_name = ''
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -98,11 +99,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     team_name = 'Vanilla'
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -114,11 +115,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     team_name = 'Astana'
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -130,11 +131,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     team_name = 'Gentile Lovers'
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -146,11 +147,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     weaver_jack_frost = results(:weaver_jack_frost)
     assert_equal(0, weaver_jack_frost.points, 'points')
 
-    post(:set_result_points, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "12",
-        :editorId => "result_#{weaver_jack_frost.id}_points"
-    )
+        :name => "points",
+        :value => "12"
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -164,11 +165,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     original_team_name = weaver_jack_frost.team_name
     
-    post(:set_result_team_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => original_team_name,
-        :editorId => "result_#{weaver_jack_frost.id}_team_name"
-    )
+        :name => "team_name",
+        :value => original_team_name
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -185,11 +186,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     original_team_name = weaver_jack_frost.team_name
     
-    post(:set_result_name,
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "Erik Tonkin",
-        :editorId => "result_#{weaver_jack_frost.id}_name"
-    )
+        :name => "name",
+        :value => "Erik Tonkin"
     assert_response(:success)
     
     weaver_jack_frost.reload
@@ -206,11 +207,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     original_team_name = weaver_jack_frost.team_name
     
-    post(:set_result_name,
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "Eric Tonkin",
-        :editorId => "result_#{weaver_jack_frost.id}_person_name"
-    )
+        :name => "name",
+        :value => "Erik Tonkin"
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -225,11 +226,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     original_team_name = weaver_jack_frost.team_name
     
-    post(:set_result_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "",
-        :editorId => "result_#{weaver_jack_frost.id}_name"
-    )
+        :name => "name",
+        :value => ""
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -245,11 +246,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
 
     original_team_name = weaver_jack_frost.team_name
     
-    post(:set_result_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "Erik Tonkin",
-        :editorId => "result_#{weaver_jack_frost.id}_name"
-    )
+        :name => "name",
+        :value => "Erik Tonkin"
     assert_response(:success)
 
     weaver_jack_frost.reload
@@ -265,11 +266,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     original_team_name = weaver_jack_frost.team_name
     assert_equal(1, people(:tonkin).aliases.size)
     
-    post(:set_result_name, 
+    xhr :put,
+        :update_attribute,
         :id => weaver_jack_frost.to_param,
-        :value => "Eric Tonkin",
-        :editorId => "result_#{weaver_jack_frost.id}_name"
-    )
+        :name => "name",
+        :value => "Erik Tonkin"
     assert_response(:success)
     
     weaver_jack_frost.reload
@@ -287,10 +288,11 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_equal 4, weaver.results.size, "results"
     result = results(:weaver_jack_frost)
     
-    post :set_result_name, 
-         :id => result.to_param,
-         :value => "Stella Carey",
-         :editorId => "result_#{result.id}_name"
+    xhr :put,
+        :update_attribute,
+        :id => result.to_param,
+        :name => "name",
+        :value => "Stella Carey"
 
     assert_response :success
 
@@ -341,7 +343,7 @@ class Admin::ResultsControllerTest < ActionController::TestCase
   def test_results
     weaver = people(:weaver)
 
-    post(:results, :id => weaver.id)
+    post(:results, :person_id => weaver.id)
     
     assert_response(:success)
     assert_template('admin/results/_person')

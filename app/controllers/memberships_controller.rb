@@ -1,5 +1,5 @@
 class MembershipsController < ApplicationController
-  before_filter :require_person
+  before_filter :require_current_person
   
   def show
     @person = Person.find(params[:person_id])

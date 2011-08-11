@@ -3,10 +3,10 @@
   <div class="right">
   #{link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'), 
      event_results_path(@event), 
-     { :class => "image" }) if @event.has_results_including_children? }  
+     { :class => "image" }) if @event.has_results_including_children? }
   </div>
-} %>
-<% table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
+}.html_safe %>
+<%= table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
   <%= render @event.races %>
   <% unless @event.new_record? || @event.races.any? %>
   <tr>
@@ -17,29 +17,39 @@
   <tr id="create_race_row">
     <td>
       <%= image_tag "icons/spinner.gif", :id => "propagate_races_progress", :style => "display: none" %>
-      <%= link_to_remote("Copy to child events", 
-                  :url => propagate_admin_event_races_path(@event),
-                  :before => "$('propagate_races').hide({queue: 'front'}); $('propagate_races_progress').show({queue: 'front'})",
-                  :html => { :class => "obvious", :id => "propagate_races", :title => "Add same races to all children events" }
+      <%= link_to("Copy to child events", 
+                  propagate_admin_event_races_path(@event),
+                  :remote => true,
+                  :method => :post,
+                  :class => "obvious", 
+                  :id => "propagate_races", 
+                  :title => "Add same races to all children events"
           ) if @event.races.any? && @event.children.any?
       %>
     </td>
     <td class="right delete_all_races">
-      <%= link_to_remote("Delete all races",
-      :url => destroy_races_admin_event_path(@event),
-      :html => { :class => "obvious", :id => "destroy_races", :title => "Delete all" },
-      :method => :delete,
-      :before => "$('destroy_races').hide({queue: 'front'}); $('destroy_races_progress').show({queue: 'front'})",
-      :complete => evaluate_remote_response, 
-      :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?") if @event.races.any? && administrator?
+      <%= link_to("Delete all races",
+        destroy_races_admin_event_path(@event),
+        :class => "obvious", 
+        :id => "destroy_races", 
+        :title => "Delete all",
+        :remote => true,
+        :method => :delete,
+        :confirm => (Rails.env.acceptance?) ? nil : "Really delete all races from #{@event.name}?"
+      ) if @event.races.any? && administrator?
       # Lame workaround for Safari
       %>
       <%= image_tag "icons/spinner.gif", :id => "destroy_races_progress", :style => "display: none" %>
     </td>
     <td class="right">
-      <%= link_to_remote image_tag("/images/icons/add.png"), 
-                  :url => admin_event_races_path(@event),
-                  :html => { :class => "image", :id => "create_race", :title => "Add race" }
+      <%= link_to(image_tag("/images/icons/add.png"), 
+            admin_event_races_path(@event),
+            :remote => true,
+            :method => :post,
+            :class => "image", 
+            :id => "create_race", 
+            :title => "Add race"
+          )
       %>
     </td>
   </tr>
@@ -48,7 +58,7 @@
       <div class="page_buttons">
         <% if administrator? -%>
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>
-        <% form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form", :style => "clear" do %>
+        <%= form_tag upload_admin_event_path(@event), :multipart => true, :id => "upload_form", :style => "clear" do %>
           <div>
             <%= file_field_tag "results_file",:style => "width: 250px;" %>
           </div>

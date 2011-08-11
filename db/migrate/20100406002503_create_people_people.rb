@@ -12,8 +12,8 @@ class CreatePeoplePeople < ActiveRecord::Migration
     execute "alter table people_people add constraint foreign key (`editor_id`) references `people` (`id`) on delete cascade"
     execute "alter table people_people add constraint foreign key (`person_id`) references `people` (`id`) on delete cascade"
     
-    Person.find(:all, :conditions => "last_name is not null and last_name != '' and email is not null and email != ''").each do |person|
-      Person.find(:all, :conditions => ["last_name is not null and last_name != '' and email = ? and id != ?", person.email, person.id] ).each do |other_person|
+    Person.find.all( :conditions => "last_name is not null and last_name != '' and email is not null and email != ''").each do |person|
+      Person.find.all( :conditions => ["last_name is not null and last_name != '' and email = ? and id != ?", person.email, person.id] ).each do |other_person|
         if person.email.present? && person.email[Authlogic::Regex.email]
           say "#{person.name} and #{other_person.name} share #{person.email}"
           unless person.editors.include?(other_person)

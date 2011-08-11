@@ -33,7 +33,7 @@
     <td style="padding-left: 12px;">
       <%= upcoming_events_table(@upcoming_events,
                                 link_to("Velodrome Schedule", track_schedule_path), 
-                                "Please check the #{link_to("schedule page", track_schedule_path)} details and exceptions.")
+                                "Please check the #{link_to("schedule page", track_schedule_path)} details and exceptions.".html_safe)
       %>
     </td>
   </tr>

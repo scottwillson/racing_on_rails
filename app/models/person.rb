@@ -55,13 +55,11 @@ class Person < ActiveRecord::Base
   # Does not consider Aliases
   def Person.find_all_by_name(name)
     if name.blank?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ? and last_name = ?', '', ''],
         :order => 'last_name, first_name')
     else
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name],
         :order => 'last_name, first_name')
     end
@@ -79,23 +77,19 @@ class Person < ActiveRecord::Base
     last_name = options[:last_name]
     
     if name.present?
-      return Person.find(
-        :all,
+      return Person.all(
         :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
       ) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ?', first_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     elsif first_name.blank? && last_name.present?
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['last_name = ?', last_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     else
-      Person.find(
-        :all,
+      Person.all(
         :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
       ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     end
@@ -106,8 +100,7 @@ class Person < ActiveRecord::Base
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
-    Person.find(
-      :all, 
+    Person.all(
       :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
@@ -119,8 +112,7 @@ class Person < ActiveRecord::Base
     if name.present?
       Person.find_by_name(name)
     else
-      Person.find(
-        :first, 
+      Person.first(
         :conditions => ["(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)", 
                         email, home_phone]
       )
@@ -128,8 +120,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.find_by_name(name)
-    Person.find(
-      :first, 
+    Person.first(
       :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
     )
   end
@@ -139,7 +130,7 @@ class Person < ActiveRecord::Base
   end
 
   def Person.find_by_number(number)
-    Person.find(:all, 
+    Person.all( 
                :include => :race_numbers,
                :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
   end
@@ -226,8 +217,13 @@ class Person < ActiveRecord::Base
   
   # interprets dates returned in sql above for member export
   def Person.lic_check(lic, lic_date)
-    if lic.to_i > 0
-      (lic_date && (Date.strptime(lic_date, "%m/%d/%Y") > RacingAssociation.current.today)) ? "current" : "CHECK LIC!"
+    if lic_date && lic.to_i > 0
+      case lic_date
+      when Date, Time, DateTime
+        (lic_date > RacingAssociation.current.today) ? "current" : "CHECK LIC!"
+      else
+        (Date.strptime(lic_date, "%m/%d/%Y") > RacingAssociation.current.today) ? "current" : "CHECK LIC!"
+      end
     else
       "NOT ON FILE"
     end
@@ -246,15 +242,27 @@ class Person < ActiveRecord::Base
 
   def Person.deliver_password_reset_instructions!(people)
     people.each(&:reset_perishable_token!)
-    Notifier.deliver_password_reset_instructions(people)
+    Notifier.password_reset_instructions(people).deliver
   end
   
   def people_with_same_name
+    logger.debug "people_with_same_name #{self.name}"
+    logger.debug "#{self[:first_name]} #{self[:last_name]}"
     people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
     people.reject! { |person| person == self }
     people
   end
   
+  def people_name_sounds_like
+    return [] if name.blank?
+    
+    Person.find(
+      :all, 
+      :conditions => ["id != ? and soundex(trim(concat_ws(' ', first_name, last_name))) = soundex(?)", id, name.strip]
+    ) +
+    Person.all(:conditions => { :first_name => last_name, :last_name => first_name })
+  end
+
   # Workaround Rails date param-parsing. Also convert :team attribute to Team.
   # Not sure this is needed.
   def attributes=(attributes)
@@ -358,12 +366,16 @@ class Person < ActiveRecord::Base
       end
     else
       parts = value.split(' ')
-      if parts.size > 0
+      case parts.size
+      when 0
+        self.first_name = ""
+        self.last_name = ""
+      when 1
         self.first_name = parts[0].strip
-        if parts.size > 1
-          self.last_name = parts[1..(parts.size - 1)].join(" ")
-          self.last_name.strip!
-        end
+        self.last_name = ""
+      else
+        self.first_name = parts[0].strip
+        self.last_name = parts[1..(parts.size - 1)].join(" ").strip
       end
     end
   end
@@ -583,8 +595,7 @@ class Person < ActiveRecord::Base
           :updated_by => self.updated_by
         ) unless existing_number
       else
-        race_number = RaceNumber.find(
-          :first,
+        race_number = RaceNumber.first(
           :conditions => ['value=? and person_id=? and discipline_id=? and year=? and number_issuer_id=?', 
                            value, self.id, discipline.id, _year, association.id])
         unless race_number
@@ -663,14 +674,14 @@ class Person < ActiveRecord::Base
 
   # Is Person a current member of the bike racing association?
   def member?(date = RacingAssociation.current.today)
-    member_to.present? && member_from.present? && (member_from.to_date <= date.to_date && member_to.to_date >= date.to_date)
+    member_to.present? && member_from.present? && member_from.to_date <= date.to_date && member_to.to_date >= date.to_date
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
   def member_in_year?(date = RacingAssociation.current.today)
     year = date.year
-    member_to && member_from && (member_from.year <= year && member_to.year >= year)
-    member_to.present? && member_from.present? && (member_from.year <= year && member_to.year >= year)
+    member_to && member_from && member_from.year <= year && member_to.year >= year
+    member_to.present? && member_from.present? && member_from.year <= year && member_to.year >= year
   end
   
   def member
@@ -737,6 +748,12 @@ class Person < ActiveRecord::Base
     if member_from && member_to && member_from.to_date > member_to.to_date
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
+    if member_from && member_from < Date.new(1900)
+      self.member_from = member_from_was
+    end
+    if member_to && member_to < Date.new(1900)
+      self.member_to = member_to_was
+    end
   end
 
   def renewed?
@@ -748,10 +765,6 @@ class Person < ActiveRecord::Base
     self.print_card = true
     self.license_type = license_type
     save!
-  end
-
-  def print_card?
-    self.print_card
   end
   
   def created_from_result?
@@ -851,8 +864,7 @@ class Person < ActiveRecord::Base
   # reload does an optimized load with joins
   def event_results(reload = true)
     if reload
-      return Result.find(
-        :all,
+      return Result.all(
         :include => [:team, :person, :scores, :category, {:race => [:event, :category]}],
         :conditions => ['people.id = ?', id]
       ).reject {|r| r.competition_result?}

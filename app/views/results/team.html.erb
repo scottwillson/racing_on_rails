@@ -1,8 +1,8 @@
 <% @page_title = "Results: #{@team.name}" %>
 
-<%= render_page "results/years" %>
+<%= render_page "results/team_years", :locals => { :team => @team } %>
 
-<% table :caption => @team.name, :id => "team", :collection => @results do %>
+<%= table :caption => @team.name, :id => "team", :collection => @results do %>
   <tr>
     <th>&nbsp;</th>
     <th>Race</th>

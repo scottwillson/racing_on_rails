@@ -18,7 +18,7 @@ class PersonFileTest < ActiveSupport::TestCase
     tonkin.login = "sellwood"
     tonkin.save!
 
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([4, 1], people, 'Number of people created and updated')
@@ -132,7 +132,7 @@ Downhill/Cross Country: Downhill}
       :license => "1516"
     )
     number = scott.race_numbers.create!(:value => '422', :year => Date.today.year - 1)
-    number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
+    number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
     
@@ -142,7 +142,7 @@ Downhill/Cross Country: Downhill}
       :first_name => 'Scott'
     )
 
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/database.xls")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/database.xls")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([2, 3], people, 'Number of people created and updated')
@@ -177,7 +177,7 @@ Downhill/Cross Country: Downhill}
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
-    road_numbers = RaceNumber.find(:all, :conditions => [ 
+    road_numbers = RaceNumber.all( :conditions => [ 
         "person_id = ? and discipline_id = ? and year = ?", brian_abers.id, Discipline[:road].id, RacingAssociation.current.year
       ])
     assert_equal(2, road_numbers.size, 'Brian Abers road_numbers')
@@ -233,23 +233,23 @@ Downhill/Cross Country: Downhill}
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
     
     scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
-    number = RaceNumber.find(:first, :conditions => ['person_id=? and value=?', scott.id, '422'])
+    number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
   end
   
   def test_import_duplicates
     Person.create(:name => 'Erik Tonkin')
-    file = File.new("#{File.dirname(__FILE__)}/../fixtures/membership/duplicates.xls")
+    file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     
-    # FIXME
-    # people_file.import(true)
-    # 
-    # assert_equal(1, people_file.created, 'Number of people created')
-    # assert_equal(0, people_file.updated, 'Number of people updated')
-    # assert_equal(1, people_file.duplicates.size, 'Number of duplicates')
+    people_file.import(true)
     
+    assert_equal(1, people_file.created, 'Number of people created')
+    assert_equal(0, people_file.updated, 'Number of people updated')
+    assert_equal(1, people_file.duplicates.size, 'Number of duplicates')
+    
+    # FIXME
     # Assert data
     # Add dupe with number and assert matching
   end

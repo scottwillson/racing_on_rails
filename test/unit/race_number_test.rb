@@ -43,11 +43,11 @@ class RaceNumberTest < ActiveSupport::TestCase
     # No person ID valid when new, but can't save
     no_person = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     assert(no_person.valid?, "No person result should be valid, but: #{no_person.errors.full_messages}")
-    assert_raise(ActiveRecord::StatementInvalid) {no_person.save!}
+    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
     
     no_person = RaceNumber.new(:value => '1009', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:road))
     assert(no_person.valid?, 'No person')
-    assert_raise(ActiveRecord::StatementInvalid) {no_person.save!}
+    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
     
     # Defaults
     race_number = RaceNumber.new(:person => alice, :value => 'A1', :number_issuer => elkhorn, :discipline => disciplines(:road))
@@ -100,11 +100,11 @@ class RaceNumberTest < ActiveSupport::TestCase
     # No person ID valid when new, but can't save
     no_person = RaceNumber.new(:value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
     assert(no_person.valid?, 'No person')
-    assert_raise(ActiveRecord::StatementInvalid) {no_person.save!}
+    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
     
     no_person = RaceNumber.new(:value => '1009', :year => 2001, :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))
     assert(no_person.valid?, 'No person')
-    assert_raise(ActiveRecord::StatementInvalid) {no_person.save!}
+    assert_raise(ActiveRecord::InvalidForeignKey) {no_person.save!}
     
     # Defaults
     race_number = RaceNumber.new(:person => alice, :value => 'A1', :number_issuer => elkhorn, :discipline => disciplines(:cyclocross))

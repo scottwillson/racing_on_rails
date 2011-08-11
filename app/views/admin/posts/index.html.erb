@@ -3,7 +3,7 @@
 <h2><%= @mailing_list.friendly_name %></h2>
 
 <div class="container">
-  <% form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
+  <%= form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
      :method => :post,
      :multipart => true, 
      :id => "mailing_list_form"  do |f| -%>
@@ -11,7 +11,7 @@
   <% end -%>
 </div>
 
-<% table :class => "posts top_margin clear", :id => :people do %>
+<%= table :class => "posts top_margin clear", :id => :people do %>
   <tr>
     <th class="date">Date</th>
     <th class="subject">Subject</th>
@@ -22,7 +22,7 @@
   <%= render @posts %>
 <% end -%>
 
-<%= will_paginate(@posts) if @posts.any? %>
+<%= will_paginate(@posts) if @posts.present? %>
 
 <div class="buttons container">
   <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>

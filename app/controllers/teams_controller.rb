@@ -4,9 +4,9 @@ class TeamsController < ApplicationController
   
   def index
     if RacingAssociation.current.show_all_teams_on_public_page?
-      @teams = Team.find(:all)
+      @teams = Team.all
     else
-      @teams = Team.find(:all, :conditions => { :member => true, :show_on_public_page => true })
+      @teams = Team.all( :conditions => { :member => true, :show_on_public_page => true })
     end
     @discipline_names = Discipline.find_all_names
     expires_in 1.hour, :public => true

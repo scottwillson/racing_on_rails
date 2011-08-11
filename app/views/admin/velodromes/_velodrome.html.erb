@@ -1,10 +1,10 @@
-<% content_tag :tr, :class => cycle("even", "odd"), :id => "velodrome_#{velodrome.id}_row" do %>
+<%= content_tag :tr, :class => cycle("even", "odd"), :id => "velodrome_#{velodrome.id}_row" do %>
   <td class="icon"><%= image_tag "icons/flag_checked.png", :id => "velodrome_#{velodrome.id}" %></td>
   <td class="name">
-    <%= in_place_editor_field :velodrome, :name, velodrome %>
+    <%= editable velodrome, :name %>
   </td>
   <td class="website not_editable">
-    <%= in_place_editor_field(:velodrome, :website, velodrome) %>
+    <%= editable velodrome, :website %>
   </td>
   <td class="actions last">
     <%= link_to "Edit", edit_admin_velodrome_path(velodrome), :id => "edit_#{velodrome.id}" %>

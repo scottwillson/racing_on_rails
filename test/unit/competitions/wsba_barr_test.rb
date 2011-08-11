@@ -1,7 +1,7 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
-class Competitions::WsbaBarrTest < ActiveSupport::TestCase
+class WsbaBarrTest < ActiveSupport::TestCase
   def test_calculate
     assert_nil(WsbaBarr.find_for_year(2006), 'Should have no Wsba Barr for 2006')
     WsbaBarr.calculate!(2006)

@@ -7,11 +7,13 @@ class Admin::PagesControllerTest < ActionController::TestCase
     create_administrator_session
     use_ssl
   end
+  
+  assert_no_angle_brackets :except => [ :test_edit_page ]
 
   def test_only_admins_can_edit_pages
     destroy_person_session
     get(:index)
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_view_pages_as_tree
@@ -21,14 +23,14 @@ class Admin::PagesControllerTest < ActionController::TestCase
   
   def test_update_title_inplace
     page = pages(:plain)
-    post(:set_page_title, 
+    xhr(:put, :update_attribute, 
         :id => page.to_param,
         :value => "OBRA Banquet",
-        :editorId => "page_#{page.id}_name"
+        :name => "title"
     )
     assert_response(:success)
     assert_template(nil)
-    assert_equal(page, assigns("item"), "@page")
+    assert_equal(page, assigns("page"), "@page")
     page.reload
     assert_equal("OBRA Banquet", page.title, "Page title")
     assert_equal(people(:administrator), page.last_updated_by, "updated_by")

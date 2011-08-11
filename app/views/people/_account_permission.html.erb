@@ -29,9 +29,8 @@
                   :id => "admin_allow_#{account_permission.person.id}" %>
       <% elsif account_permission.person.email.present? -%>
         <%= link_to "Request access", 
-                    person_editor_requests_path(account_permission.person, :editor_id => person.id, :return_to => return_to), 
+                    create_person_editor_request_path(account_permission.person, :editor_id => person.id, :return_to => return_to), 
                     :class => "obvious", 
-                    :method => "post", 
                     :id => "ask_#{account_permission.person.id}" %>
       <% end -%>
     <% end -%>

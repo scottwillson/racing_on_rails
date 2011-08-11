@@ -1,4 +1,4 @@
-<% if administrator? -%>
+<% if administrator? && !@event.new_record? -%>
   <%- if @event.missing_parent? -%>
     <p>
     This event has no parent.

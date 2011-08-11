@@ -250,7 +250,7 @@ table.results td.result .event {
 }
 
 /* Pages */
-table.base .title div.in_place_editable {
+table.base .title div.editable {
   background-repeat: no-repeat;
   background-image: url(/images/icons/page_white_world.png);
   padding-left: 20px;
@@ -384,10 +384,10 @@ table.event_nav td.race {
   background-image: url(/images/icons/star.png);
   background-repeat: no-repeat;
   background-position: 8px 4px;
-/*  padding-top: 4px;*/
+  padding-top: 4px;
 }
 
-table.event_nav td.race .in_place_editable {
+table.event_nav td.race .editable {
   margin-left: 24px;
 }
 
@@ -483,6 +483,10 @@ table.first_aid_providers td.name {
 
 div.event_results {
   margin-top: 24px;
+}
+
+table.event_results td {
+  padding-right: 8px;
 }
 
 div.table_container table.event_results th.place,
@@ -616,6 +620,15 @@ table#preview_import_table th {
 
 .pagination .current {
   padding-right: 0px;
+}
+
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
 }
 
 #merge_form {

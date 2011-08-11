@@ -2,29 +2,30 @@
 class MailingListMailer < ActionMailer::Base
 
   # Reply just to sender of post, not the whole list
-  def private_reply(post, to)
+  def private_reply(reply_post, to)
     # Not thread-safe. Won't work for multiple associations.
     ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
     
     raise("'To' cannot be blank") if to.blank?
-    @subject    = post.subject
-    @body       = post.body
-    @recipients = to
-    @from       = post.sender
-    @sent_on    = post.date
-    @headers    = {}
+    mail(
+      :subject => reply_post.subject,
+      :to => to,
+      :from => reply_post.sender,
+      :sent_on => reply_post.date.to_s,
+      :body => reply_post.body.to_s
+    )
   end
 
-  def post(post)
+  def post(new_post)
     # Not thread-safe. Won't work for multiple associations.
     ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
-    
-    @subject    = post.subject
-    @body       = post.body
-    @recipients = post.mailing_list.name
-    @from       = post.sender
-    @sent_on    = post.date
-    @headers    = {}
+    mail(
+      :subject => new_post.subject,
+      :to => new_post.mailing_list.name,
+      :from => new_post.sender,
+      :sent_on => new_post.date.to_s,
+      :body => new_post.body.to_s
+    )
   end
 
   # Expects raw email from Mailman archiver
@@ -34,8 +35,8 @@ class MailingListMailer < ActionMailer::Base
     post = Post.new
 
     # Will fail if no matches. Rely on validation
-    list_post_header = email.header_string("List-Post")
-    matches = list_post_header.match(/<mailto:(\S+)@/) if list_post_header
+    list_post_header = email["List-Post"]
+    matches = list_post_header.to_s.match(/<mailto:(\S+)@/) if list_post_header
     if matches
       mailing_list_name = matches[1]
     else
@@ -45,48 +46,22 @@ class MailingListMailer < ActionMailer::Base
 
     post.subject = email.subject
     
-    if email.multipart?
-      plain_text_part = nil
-
+    multipart_related = email.parts.detect { |part| part.mime_type == "multipart/related" }
+    multipart_alternative = email.parts.detect { |part| part.mime_type == "multipart/alternative" }
+    if multipart_related
       # Outlook
-      related_part = email.parts.find { |part| 
-        part.content_type == "multipart/related"
-      }
-      if related_part
-        alt_part = related_part.parts.find { |part| 
-          part.content_type == "multipart/alternative"
-        }
-      else
-        alt_part = email.parts.find { |part| 
-          part.content_type == "multipart/alternative"
-        }
-      end
-      
-      # OS X rich text email
-      if alt_part 
-        plain_text_part = alt_part.parts.find { |part| 
-          part.content_type == "text/plain"
-        }
-      end
+      post.body = multipart_related.text_part.decoded
+    elsif multipart_alternative
+      # OS X
+      post.body = multipart_alternative.text_part.decoded
+    else
+      post.body = (email.text_part || email.html_part || email.body).decoded
+    end
 
-      plain_text_part = email.parts.find { |part| 
-        part.content_type == "text/plain"
-      } unless plain_text_part
-      
-      plain_text_part = email.parts.find { |part| 
-        part.content_type == "text/html"
-      } unless plain_text_part
-      
-      post.body = plain_text_part.body
-    end
-    
-    if post.body.blank?
-      post.body = email.body
-    end
-    
-    post.from_name = email.friendly_from
-    post.from_email_address = email.from.first
+    post.from_name = email[:from].display_names.first || email[:from].addresses.first
+    post.from_email_address = email[:from].addresses.first
     post.date = email.date
+    
     begin
       post.save!
     rescue => save_error

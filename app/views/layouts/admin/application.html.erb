@@ -10,6 +10,7 @@
       <%= RacingAssociation.current.name %>
       <%- end %>
     </title>
+    <%= hoptoad_javascript_notifier %>
     <%= render :partial => "layouts/stylesheets" %>
     <%= render :partial => "layouts/javascripts" %>
   </head>
@@ -20,11 +21,11 @@
       <div class="frame" id="frame">
         <div class="nav" id="top">
           <h1><%= link_to RacingAssociation.current.name, '/' %></h1>
-          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, :controller => '/' %></div>
+          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, '/' %></div>
         </div>
         <div class="content container">
         <%= render :partial => "shared/tabs" %>
-        <%= render :partial => "shared/flash_messages", :locals => { :flash => flash } %>
+        <%= render :partial => "shared/flash_messages" %>
 <%= yield %>
         </div>
         <div class="nav" id="bottom">
@@ -39,3 +40,8 @@
   <%= render :partial => "shared/auto_complete" %>
   </body>
 </html>
+
+<% content_for :javascript_include_tag do -%>
+  <%= javascript_include_tag "events" %>
+  <%= javascript_include_tag "people" %>
+<% end -%>

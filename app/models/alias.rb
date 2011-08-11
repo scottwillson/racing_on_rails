@@ -13,8 +13,7 @@ class Alias < ActiveRecord::Base
   validate :cannot_shadow_team
   
   def Alias.find_all_people_by_name(name)
-    aliases = Alias.find(
-      :all, 
+    aliases = Alias.all( 
       :conditions => ['name = ? and person_id is not null', name],
       :include => :person
     )
@@ -24,8 +23,7 @@ class Alias < ActiveRecord::Base
   end
   
   def Alias.find_all_teams_by_name(name)
-    aliases = Alias.find(
-      :all, 
+    aliases = Alias.all(
       :conditions => ['aliases.name = ? and team_id is not null', name],
       :include => :team
     )

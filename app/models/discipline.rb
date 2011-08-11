@@ -22,7 +22,7 @@ class Discipline < ActiveRecord::Base
   end
 
   def Discipline.find_all_bar
-    Discipline.find(:all, :conditions => ["bar = true"])
+    Discipline.all( :conditions => ["bar = true"])
   end
 
   def Discipline.find_via_alias(name)
@@ -31,7 +31,7 @@ class Discipline < ActiveRecord::Base
   
   # All Disciplines that are used for numbers. Configured in the database.
   def Discipline.find_for_numbers
-    Discipline.find(:all, :conditions => 'numbers=true')
+    Discipline.all( :conditions => 'numbers=true')
   end
 
   def Discipline.load_aliases
@@ -42,7 +42,7 @@ class Discipline < ActiveRecord::Base
     for result in results
       @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
-    for discipline in Discipline.find(:all)
+    Discipline.all.each do |discipline|
       @@all_aliases[discipline.name.gsub(' ', '_').underscore.to_sym] = discipline
     end
   end
@@ -53,7 +53,7 @@ class Discipline < ActiveRecord::Base
   end
   
   def Discipline.find_all_names
-    [''] + Discipline.find(:all).collect {|discipline| discipline.name}
+    [''] + Discipline.all.collect {|discipline| discipline.name}
   end
   
   def names

@@ -1,6 +1,6 @@
 <% @page_title = "Email: New" %>
 
-<% form_for :email, @email, :url => { :action => "create" } do |f| %>
+<%= form_for :email, @email, :url => { :action => "create" } do |f| %>
   <h2>Really send this email to all <%= number_with_delimiter(@members_count) %> current members?</h2>
   <table>
     <tr>

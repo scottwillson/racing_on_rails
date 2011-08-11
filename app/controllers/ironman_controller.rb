@@ -2,7 +2,7 @@ class IronmanController < ApplicationController
   def index
     @year = params['year'] || Date.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
-    @ironman = Ironman.find(:first, :conditions => ['date = ?', date])
+    @ironman = Ironman.first(:conditions => ['date = ?', date])
     if @ironman && !@ironman.races.empty?
       @results = Result.paginate( :conditions => ['race_id = ?', @ironman.races.first.id],
                                   :include => [:person],

@@ -3,6 +3,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class Admin::PostsControllerTest < ActionController::TestCase
   setup :use_ssl
+  assert_no_angle_brackets :except => [ :test_index ]
   
   def test_index
     login_as :administrator

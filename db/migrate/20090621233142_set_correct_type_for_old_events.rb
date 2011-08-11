@@ -1,6 +1,6 @@
 class SetCorrectTypeForOldEvents < ActiveRecord::Migration
   def self.up
-    Bar.find(:all, :conditions => ["date < ?", Date.new(2009)]).each do |discipline_bar_parent|
+    Bar.find.all( :conditions => ["date < ?", Date.new(2009)]).each do |discipline_bar_parent|
       discipline_bar_parent.children.each do |discipline_bar|
         discipline_bar.parent = nil
         discipline_bar.discipline = discipline_bar.name

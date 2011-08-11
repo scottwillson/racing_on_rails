@@ -1,10 +1,11 @@
-<% table :caption => "People" do %>
+<%= table :caption => "People" do %>
   <th>&nbsp;</th>
   <%- people.each do |person| -%>
   <tr class="<%= cycle("even", "odd") %>">
-      <td><%= link_to_remote(
+      <td><%= link_to(
         person.name, 
-        :url => { :action => "results", :id => person.id }, 
+        :url => { :action => "results", :person_id => person.id }, 
+        :remote => true,
         :update => 'right_person',
         :before => visual_effect(:highlight, 'right_person', :to => 0.4),
         :complete => visual_effect(:appear, 'right_person'))

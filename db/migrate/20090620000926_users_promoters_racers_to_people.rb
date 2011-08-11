@@ -95,7 +95,7 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
     execute "alter table results add constraint results_person_id foreign key (person_id) references people (id)"
 
     say "Migrate Users"
-    User.find(:all).each do |user|
+    User.find.all().each do |user|
       person = Person.find_by_name(user.name)
       if person
         person.login = user.email
@@ -126,7 +126,7 @@ class UsersPromotersRacersToPeople < ActiveRecord::Migration
     execute "alter table pages add constraint pages_author_id foreign key (author_id) references people (id) on delete restrict"
 
     say "Migrate promoters"
-    Promoter.find(:all).each do |promoter|
+    Promoter.find.all().each do |promoter|
       person = nil
       person = Person.find_by_name(promoter.name) unless promoter.name.blank?
       if person

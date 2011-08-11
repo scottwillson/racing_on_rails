@@ -60,11 +60,7 @@ module Api
           :per_page   => 10,
           :conditions => conditions,
           :order      => "last_name, first_name",
-          :include    => {
-            :aliases      => [],
-            :team         => [],
-            :race_numbers => [:discipline]
-          }
+          :include    => [ :aliases, :team, { :race_numbers =>  :discipline } ]
         )
       else
         []

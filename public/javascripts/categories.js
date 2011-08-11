@@ -6,12 +6,13 @@ function bindCategoryEvents() {
   $('.category').unbind();
   jQuery('.category').droppable({
     drop: function(ev, ui) {
-      jQuery.ajax({
-        data: 'id=' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')),
-        dataType: 'script',
-        type: 'post',
-        url: '/admin/categories/add_child?parent_id=' + $(this).attr('data-id')
-      });
+      jQuery.post(
+        '/admin/categories/add_child',
+        {
+          id: encodeURIComponent(jQuery(ui.draggable).attr('data-id')),
+          parent_id: $(this).attr('data-id')
+        }
+      );
     },
     hoverClass: 'hovering'
   });
@@ -39,16 +40,15 @@ function expandDisclosure(categoryId) {
     disclosure.removeClass('collapsed');
     disclosure.removeClass('expanded');
     disclosure.addClass('loading');
-    $.ajax({
-      url: '/admin/categories/' + categoryId + '/children',
-      type: 'GET',
-      success: function(data) {
+    $.get(
+      '/admin/categories.js',
+      { parent_id: categoryId },
+      function(data) {
         disclosure.removeClass('loading');
         disclosure.addClass('expanded');
         bindCategoryEvents();
-      },
-      dataType: 'script'
-    });
+      }
+    );
   }
   else {
     disclosure.removeClass('expanded');

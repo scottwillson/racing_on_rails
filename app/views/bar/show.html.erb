@@ -18,7 +18,7 @@
 No results for <%= params[:year] %>
 <% else %>
 
-<% table :caption => @race.name, :class => "event_results" do %>
+<%= table :caption => @race.name, :class => "event_results" do %>
   <% 
     if @race.discipline == "Team"
       result_columns = %w{ place team_name points }

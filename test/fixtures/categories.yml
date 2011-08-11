@@ -1,5 +1,6 @@
 association:
   name: CBRA
+  friendly_param: cbra
 senior_men:
   name: Senior Men
   friendly_param: senior_men

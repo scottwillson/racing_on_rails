@@ -3,32 +3,6 @@
 class Admin::ResultsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
-
-  in_place_edit_for :result, :age
-  in_place_edit_for :result, :bar
-  in_place_edit_for :result, :city
-  in_place_edit_for :result, :category_name
-  in_place_edit_for :result, :date_of_birth
-  in_place_edit_for :result, :distance
-  in_place_edit_for :result, :laps
-  in_place_edit_for :result, :license
-  in_place_edit_for :result, :name
-  in_place_edit_for :result, :notes
-  in_place_edit_for :result, :number
-  in_place_edit_for :result, :place
-  in_place_edit_for :result, :points
-  in_place_edit_for :result, :points_bonus
-  in_place_edit_for :result, :points_bonus_penalty
-  in_place_edit_for :result, :points_from_place
-  in_place_edit_for :result, :points_penalty
-  in_place_edit_for :result, :points_total
-  in_place_edit_for :result, :state
-  in_place_edit_for :result, :team_name
-  in_place_edit_for :result, :time_bonus_penalty_s
-  in_place_edit_for :result, :time_gap_to_leader_s
-  in_place_edit_for :result, :time_gap_to_winner_s
-  in_place_edit_for :result, :time_s
-  in_place_edit_for :result, :time_total_s
   
   # Move Results from one Person to another
   def index
@@ -54,7 +28,7 @@ class Admin::ResultsController < Admin::AdminController
   end
   
   def results
-    person = Person.find(params[:id])
+    person = Person.find(params[:person_id])
     results = Result.find_all_for(person)
     logger.debug("Found #{results.size} for #{person.name}")
     render(:partial => 'person', :locals => {:person => person, :results => results})
@@ -82,6 +56,18 @@ class Admin::ResultsController < Admin::AdminController
       page.replace "person_#{original_result_owner.id}", :partial => "person", :locals => { :person => original_result_owner, :results => original_result_owner.results }
       page[:people].css "opacity", 1
       page.hide 'find_progress_icon'
+    end
+  end
+
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @result = Result.find(params[:id])
+        @result.send "#{params[:name]}=", params[:value]
+        @result.save!
+        expire_cache
+        render :text => @result.send(params[:name]), :content_type => "text/html"
+      }
     end
   end
 end

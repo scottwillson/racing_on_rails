@@ -10,7 +10,7 @@
 <h2><%= @velodrome.name %></h2>
 
 <div class="column_grid_container">
-  <% form_for([:admin, @velodrome]) do |f| -%>
+  <%= form_for([:admin, @velodrome]) do |f| -%>
   <div class="prepend-1 span-3 append-2 last">
     <%= f.labelled_text_field :name, nil, :class => "wants_focus" %>
     <%= f.labelled_text_field :website %>

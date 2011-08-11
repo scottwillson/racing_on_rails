@@ -2,7 +2,7 @@
 
 <%= render :partial => "shared/search", :locals => { :name => @name } %>
 
-<% table :class => "teams top_margin clear", :id => :teams do %>
+<%= table :class => "teams top_margin clear", :id => :teams do %>
   <tr>
     <th class="icon"/>
     <th class="name">Name</th>
@@ -26,31 +26,6 @@
   <%= link_to(image_tag('/images/icons/group_add.png'), { :action => 'new' }, { :class => "image" }) %>
 </div>
 
-<% javascript_tag do %>
-  $(document).ready(function() {
-  <%- @teams.each do |team| -%>
-    $(<%= "'#team_#{team.id}'" %>).draggable({ 
-      revert: 'invalid', 
-      opacity: 0.7,
-      zIndex: 10000,
-      helper: function(event) {
-        return $('<div class="team">' + $(this).attr('data-name') + '</div>');
-      }
-    });
-    $(<%= "'#team_#{team.id}_row'" %>).droppable({
-      hoverClass: 'hovering',
-      drop: function(event, ui) {
-        ui.helper.hide('scale');
-        ui.draggable.closest('tr').hide('fade');
-        $(this).addClass('merging');
-        $.ajax({
-          url: '/admin/teams/merge?target_id=<%= team.id %>',
-          type: 'POST',
-          data: ({id: ui.draggable.attr('id')}),
-          dataType: 'script'
-        });
-      }
-    });
-  <% end -%>
-  });
-<%- end -%>
+<% content_for :javascript_include_tag do -%>
+  <%= javascript_include_tag "teams" %>
+<% end -%>

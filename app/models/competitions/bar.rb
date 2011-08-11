@@ -9,7 +9,7 @@ class Bar < Competition
   validate :valid_dates
 
   def Bar.calculate!(year = Date.today.year)
-    benchmark(name, Logger::INFO, false) {
+    benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
@@ -20,7 +20,7 @@ class Bar < Competition
         Discipline.find_all_bar.reject { |discipline|
           [ Discipline[:age_graded], Discipline[:overall], Discipline[:team] ].include?(discipline)
         }.each do |discipline|
-          bar = Bar.find(:first, :conditions => { :date => date, :discipline => discipline.name })
+          bar = Bar.first(:conditions => { :date => date, :discipline => discipline.name })
           unless bar
             bar = Bar.create!(
               :parent => overall_bar,
@@ -31,7 +31,7 @@ class Bar < Competition
           end
         end
 
-        Bar.find(:all, :conditions => { :date => date }).each do |bar|
+        Bar.all( :conditions => { :date => date }).each do |bar|
           bar.destroy_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter
@@ -44,7 +44,7 @@ class Bar < Competition
   end
   
   def Bar.find_by_year_and_discipline(year, discipline_name)
-    Bar.find(:first, :conditions => { :date => Date.new(year), :discipline => discipline_name })
+    Bar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
 
   def point_schedule
@@ -80,7 +80,7 @@ class Bar < Competition
       category_ids << ", #{category_4_5_men.id}"
     end
 
-    Result.find(:all,
+    Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{
                   place between 1 AND #{point_schedule.size - 1}
@@ -99,6 +99,30 @@ class Bar < Competition
                 }],
                 :order => 'person_id'
       )
+  end
+
+  # Really should remove all other top-level categories and their descendants?
+  def category_ids_for(race)
+    ids = [ race.category_id ]
+    ids = ids + race.category.descendants.map(&:id)
+    
+    if race.category.name == "Masters Men"
+      masters_men_4_5 = Category.find_by_name("Masters Men 4/5")
+      if masters_men_4_5
+        ids.delete masters_men_4_5.id
+        ids = ids - masters_men_4_5.descendants.map(&:id)
+      end
+    end
+    
+    if race.category.name == "Masters Women"
+      masters_women_4 = Category.find_by_name("Masters Women 4")
+      if masters_women_4
+        ids.delete masters_women_4.id
+        ids = ids - masters_women_4.descendants.map(&:id)
+      end
+    end
+    
+    ids.join(', ')
   end
 
   # Apply points from point_schedule, and adjust for field size

@@ -5,10 +5,9 @@ class Overall < Competition
  after_create :add_source_events
  
   def Overall.calculate!(year = Date.today.year)
-    benchmark("#{name} calculate!", Logger::INFO, false) {
+    benchmark("#{name} calculate!", :level => :info) {
       transaction do
-        parent = MultiDayEvent.find(
-                        :first, 
+        parent = MultiDayEvent.first(
                         :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
                         
         if parent && parent.has_results_including_children?(true)
@@ -34,7 +33,7 @@ class Overall < Competition
 
   def source_results_with_benchmark(race)
     results = []
-    Overall.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    Overall.benchmark("#{self.class.name} source_results", :level => :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?

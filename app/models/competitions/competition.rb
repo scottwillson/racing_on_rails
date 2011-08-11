@@ -50,7 +50,7 @@ class Competition < Event
   # (Calculate clashes with internal Rails method)
   # Destroys existing Competition for the year first.
   def Competition.calculate!(year = Date.today.year)
-    benchmark(name, Logger::INFO, false) {
+    benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
         date = Date.new(year, 1, 1)
@@ -305,7 +305,7 @@ class Competition < Event
   
   def source_results_with_benchmark(race)
     results = []
-    Competition.benchmark("#{self.class.name} source_results", Logger::DEBUG, false) {
+    Competition.benchmark("#{self.class.name} source_results", :level => :debug) {
       results = source_results(race)
     }
     logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?

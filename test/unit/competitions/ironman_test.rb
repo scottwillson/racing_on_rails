@@ -6,14 +6,14 @@ class IronmanTest < ActiveSupport::TestCase
     original_results_count = Result.count
     assert_equal(0, Ironman.count, "Ironman events before calculate!")
     Ironman.calculate!(2004)
-    ironman = Ironman.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    ironman = Ironman.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(ironman, "2004 Ironman after calculate!")
     assert_equal(1, Ironman.count, "Ironman events after calculate!")
     assert_equal(original_results_count + 5, Result.count, "Total count of results in DB")
     # Should delete old Ironman
     Ironman.calculate!(2004)
     assert_equal(1, Ironman.count, "Ironman events after successive calculate!")
-    ironman = Ironman.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    ironman = Ironman.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(ironman, "2004 Ironman after calculate!")
     assert_equal(Date.new(2004, 1, 1), ironman.date, "2004 Ironman date")
     assert_equal("2004 Ironman", ironman.name, "2004 Ironman name")

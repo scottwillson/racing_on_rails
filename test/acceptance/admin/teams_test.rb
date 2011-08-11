@@ -2,7 +2,7 @@ require "acceptance/webdriver_test_case"
 
 # :stopdoc:
 class TeamsTest < WebDriverTestCase
-  def test_teams
+  def test_edit
     open '/teams'
 
     gl_id = Team.find_by_name("Gentle Lovers").id
@@ -64,18 +64,71 @@ class TeamsTest < WebDriverTestCase
 
     type "SpeedVagen-Vanilla", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "form.editor_field input"
-    wait_for_no_element :css => ".editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     click "team_#{vanilla_id}_name"
     wait_for_element :css => "form.editor_field input"
 
     type "Sacha's Team", :css => "form.editor_field input"
     type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element "form.editor_field input"
-    wait_for_no_element :css => ".editing"
+    wait_for_no_element :css => "form.editor_field input"
 
     vanilla = Team.find(vanilla_id)
     assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"
+  end
+  
+  def test_drag_and_drop
+    login_as :administrator
+
+    open "/admin/teams"
+    type "a", "name"
+    submit "search_form"
+    
+    kona_id = Team.find_by_name("Kona").id
+    vanilla_id = Team.find_by_name("Vanilla").id
+    drag_and_drop_on "team_#{kona_id}", "team_#{vanilla_id}_row"
+    wait_for_page_source "Merged Kona into Vanilla"
+    assert !Team.exists?(kona_id), "Kona should be merged"
+    assert Team.exists?(vanilla_id), "Vanilla still exists after merge"
+    
+    open "/admin/teams"
+    type "e", "name"
+    submit "search_form"
+
+    assert_table("teams_table", 1, 1, /^Chocolate/)
+    assert_table("teams_table", 2, 1, /^Gentle Lovers/)
+    assert_table("teams_table", 3, 1, /^Team dFL/)
+    assert_table("teams_table", 4, 1, /^Vanilla/)
+  end
+  
+  def test_merge_confirm
+    login_as :administrator
+
+    open "/admin/teams"
+    type "e", "name"
+    submit "search_form"
+    
+    assert_table("teams_table", 1, 1, /^Chocolate/)
+    assert_table("teams_table", 2, 1, /^Gentle Lovers/)
+    assert_table("teams_table", 3, 1, /^Team dFL/)
+    assert_table("teams_table", 4, 1, /^Vanilla/)
+    
+    gl_id = Team.find_by_name("Gentle Lovers").id
+    vanilla_id = Team.find_by_name("Vanilla").id
+
+    click "team_#{vanilla_id}_name"
+    wait_for_element :css => "form.editor_field input"
+
+    type "Gentle Lovers", :css => "form.editor_field input"
+    type :return, { :css => "form.editor_field input" }, false
+    wait_for_displayed :css => "div.ui-dialog"
+    click :css => ".ui-dialog-buttonset button:first-child"
+    wait_for_not_displayed :css => "div.ui-dialog"
+    
+    wait_for_page_source "Merged Vanilla into Gentle Lovers"
+    assert Team.exists?(gl_id), "Should not have merged Gentle Lovers"
+    assert !Team.exists?(vanilla_id), "Should have merged Vanilla"
+    gl = Team.find(gl_id)
+    assert gl.aliases.map(&:name).include?("Vanilla"), "Should add Vanilla alias"
   end
 end

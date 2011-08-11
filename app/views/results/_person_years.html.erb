@@ -1,0 +1,5 @@
+<%= tabs do |tabs|
+  (RacingAssociation.current.effective_year).downto(2006) do |year|
+    tabs.add(year, person_results_year_path(person, year))
+  end
+end -%>

@@ -21,7 +21,7 @@ class CategoryTest < ActiveSupport::TestCase
   end
   
   def test_sort
-    categories = Category.find(:all)
+    categories = Category.all
     categories.sort
   end
   
@@ -92,7 +92,7 @@ class CategoryTest < ActiveSupport::TestCase
   end
   
   def test_find_by_friendly_param
-    for category in Category.find(:all)
+    for category in Category.all
       assert_equal(category, Category.find_by_friendly_param(category.friendly_param), "#{category.name} #{category.friendly_param} find_by_friendly_param")
     end
   end

@@ -50,7 +50,7 @@ class PostsController < ApplicationController
     
       @posts = Post.find_for_dates(@mailing_list, month_start, month_end)
     else
-      @mailing_lists = MailingList.find(:all)
+      @mailing_lists = MailingList.all
       if mailing_list_name.blank?
         flash[:warn] = "Mailing list is required."
       else
@@ -86,8 +86,7 @@ class PostsController < ApplicationController
     @post = Post.new(params[:post])
     @mailing_list = MailingList.find(@post.mailing_list_id)
     if @post.valid?
-      private_reply_email = MailingListMailer.create_private_reply(@post, @reply_to.sender)
-      MailingListMailer.deliver(private_reply_email)
+      private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
       flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
       redirect_to(:action => "confirm_private_reply", :mailing_list_name => @mailing_list.name)
     else
@@ -100,8 +99,7 @@ class PostsController < ApplicationController
     @mailing_list = MailingList.find(@post.mailing_list_id)
     @post.mailing_list = @mailing_list
     if @post.valid?
-      post_email = MailingListMailer.create_post(@post)
-      MailingListMailer.deliver(post_email)
+      post_email = MailingListMailer.post(@post).deliver
       flash[:notice] = "Submitted new post: #{@post.subject}"
       redirect_to(:action => "confirm", :mailing_list_name => @mailing_list.name)
     else

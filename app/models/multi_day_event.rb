@@ -11,8 +11,12 @@
 # New child event should populate child event with parent data, but they don't
 class MultiDayEvent < Event
   validates_presence_of :name, :date
-  validate_on_create { :parent.nil? }
-  validate_on_update { :parent.nil? }
+  validate :on => :create do |event|
+    event.parent.nil?
+  end
+  validate :on => :update do |event|
+    event.parent.nil?
+  end
 
   before_save :update_children
   after_create :create_children
@@ -43,7 +47,7 @@ class MultiDayEvent < Event
                attributes[:parent] = @owner
                Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
                event = SingleDayEvent.new(attributes)
-               (event.date = @owner.date) unless  attributes[:date]
+               (event.date = @owner.date) unless attributes[:date]
                event.parent = @owner
                event.save
                @owner.children << event
@@ -72,7 +76,7 @@ class MultiDayEvent < Event
       conditions << discipline.name
     end
 
-    MultiDayEvent.find(:all, :conditions => conditions, :order => "date")
+    MultiDayEvent.all( :conditions => conditions, :order => "date")
   end
 
   # Create MultiDayEvent from several SingleDayEvents.
@@ -110,7 +114,7 @@ class MultiDayEvent < Event
   end
   
   def MultiDayEvent.guess_type(name, date)
-    events = SingleDayEvent.find(:all, :conditions => ['name = ? and extract(year from date) = ?', name, date])
+    events = SingleDayEvent.all( :conditions => ['name = ? and extract(year from date) = ?', name, date])
     MultiDayEvent.guess_type(events)
   end
   
@@ -131,7 +135,7 @@ class MultiDayEvent < Event
   
   def MultiDayEvent.same_name_and_year(event)
     raise ArgumentError, "'event' cannot be nil" if event.nil?
-    MultiDayEvent.find(:first, :conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
+    MultiDayEvent.first(:conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
   
   # Create child events automatically, if we've got enough info to do so
@@ -221,7 +225,7 @@ class MultiDayEvent < Event
   def missing_children
     return [] unless name && date
     
-    @missing_children ||= SingleDayEvent.find(:all, 
+    @missing_children ||= SingleDayEvent.all( 
                           :conditions => ['parent_id is null and name = ? and extract(year from date) = ?', 
                                           name, date.year])
   end

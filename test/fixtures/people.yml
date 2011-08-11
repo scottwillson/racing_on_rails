@@ -18,6 +18,8 @@ member:
   last_name: Jones
   email: member@example.com
   login: bob.jones
+  emergency_contact: Morgan Montgomery
+  emergency_contact_phone: 911
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("secret" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>

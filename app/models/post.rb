@@ -10,8 +10,7 @@ class Post < ActiveRecord::Base
   
   def Post.find_for_dates(mailing_list, month_start, month_end)
     logger.debug("Post.find_for_dates(#{mailing_list}, #{month_start}, #{month_end})")
-    mailing_list.posts.find(
-      :all,
+    mailing_list.posts.all(
       :select => "id, date, sender, subject, topica_message_id" ,
       :conditions => [ "date between ? and ?", month_start, month_end ],
       :order => "date desc"

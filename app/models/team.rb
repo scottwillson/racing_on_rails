@@ -42,8 +42,7 @@ class Team < ActiveRecord::Base
   
   def Team.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
-    Team.find(
-      :all, 
+    Team.all(
       :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
       :include => :aliases,
       :limit => limit,
@@ -60,7 +59,7 @@ class Team < ActiveRecord::Base
   def ensure_no_results
     return true if results.empty?
 
-    errors.add_to_base "Cannot delete team with results. #{name} has #{results.count} results."
+    errors.add :base, "Cannot delete team with results. #{name} has #{results.count} results."
     false
   end
   

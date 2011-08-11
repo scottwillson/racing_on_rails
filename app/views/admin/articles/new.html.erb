@@ -1,7 +1,7 @@
 <h1>New article</h1>
 
 <% #form_for(@article, :url => new_admin_article_path) do |f| %>
-<% form_for([:admin, @article]) do |f| %>
+<%= form_for([:admin, @article]) do |f| %>
   <%=render :partial => "form", :locals => { :f => f, :action_button => "Create" } %>
 <% end %>
 

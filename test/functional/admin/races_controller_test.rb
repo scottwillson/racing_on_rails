@@ -193,8 +193,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "New Category", assigns(:race).name, "@race name"
-    assert !assigns(:race).new_record?, "@race should created"
-    assert_template "admin/races/create"
+    assert !assigns(:race).new_record?, "@race should be created"
+    assert_template "admin/races/create", "template"
   end
 
   def test_create_xhr_promoter
@@ -204,22 +204,23 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "New Category", assigns(:race).name, "@race name"
-    assert !assigns(:race).new_record?, "@race should created"
-    assert_template "admin/races/create"
+    assert !assigns(:race).new_record?, "@race should be created"
+    assert_template "admin/races/create", "template"
   end
   
-  def test_set_race_category_name
-    race = races(:kings_valley_3)
-    xhr :post, :set_race_category_name, :id => race.to_param, :value => "Fixed Gear", :editorId => "race_#{race.id}_category_name"
+  def test_admin_set_race_category_name
+    login_as :administrator
+    race = races(:banana_belt_pro_1_2)
+    xhr :put, :update_attribute, :id => race.to_param, :value => "Fixed Gear", :name => "category_name"
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
   end
   
-  def test_set_race_category_name
+  def test_promoter_set_race_category_name
     login_as :promoter
     race = races(:banana_belt_pro_1_2)
-    xhr :post, :set_race_category_name, :id => race.to_param, :value => "Fixed Gear", :editorId => "race_#{race.id}_category_name"
+    xhr :put, :update_attribute, :id => race.to_param, :value => "Fixed Gear", :name => "category_name"
     assert_response :success
     assert_not_nil assigns(:race), "@race"
     assert_equal "Fixed Gear", assigns(:race).reload.category_name, "Should update category"
@@ -230,6 +231,6 @@ class Admin::RacesControllerTest < ActionController::TestCase
     event = events(:banana_belt_1)
     xhr :post, :propagate, :event_id => event.to_param
     assert_response :success
-    assert_template "admin/races/propagate"
+    assert_template "admin/races/propagate", "template"
   end
 end

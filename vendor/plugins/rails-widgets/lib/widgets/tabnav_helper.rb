@@ -22,11 +22,11 @@ module Widgets
         options = {:id => @_tabnav.html[:id] + '_content', :class => @_tabnav.html[:class] + '_content'}
         html << tag('div', options, true)
         html << capture(&block)
-        html << '</div>'
-        concat html
+        html << '</div>'.html_safe
+        concat html.html_safe
         nil # avoid duplication if called with <%= %>
       else
-        return html
+        return html.html_safe
       end
     end
 
@@ -45,7 +45,7 @@ module Widgets
       concat tag('div',@_tabnav.html ,true)
       @_tabnav.sort! if opts[:sort] == true
       render_tabnav_tabs
-      concat "</div>\n"
+      concat "</div>\n".html_safe
       nil
     end
 
@@ -103,9 +103,9 @@ module Widgets
         else
           raise "WHAT THE HELL?"
         end
-        concat "</li>\n"
+        concat "</li>\n".html_safe
       end
-      concat '</ul>'
+      concat '</ul>'.html_safe
     end
 
     # generate javascript function to use

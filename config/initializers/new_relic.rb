@@ -1,1 +1,2 @@
-NewRelic::Agent.after_fork(:force_reconnect => true) if defined? Unicorn
+require 'newrelic_rpm'
+NewRelic::Agent.manual_start(:dispatcher => :unicorn)

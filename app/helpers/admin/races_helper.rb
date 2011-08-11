@@ -11,7 +11,7 @@ module Admin::RacesHelper
     html << link_to(truncate(race.event.name, :length => 40), edit_admin_event_path(race.event), :class => "obvious")
     html << ": "
 
-    html
+    html.html_safe
   end
   
   # BAR category or Rider Rankings category

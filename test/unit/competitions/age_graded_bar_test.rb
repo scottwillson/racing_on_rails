@@ -7,14 +7,14 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal(0, AgeGradedBar.count, "AgeGradedBar events before calculate!")
     original_results_count = Result.count
     AgeGradedBar.calculate!(2004)
-    bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = AgeGradedBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after calculate!")
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after calculate!")
     assert_equal(original_results_count, Result.count, "Total count of results in DB")
     # Should delete old AgeGradedBar
     AgeGradedBar.calculate!(2004)
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after calculate!")
-    bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = AgeGradedBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after calculate!")
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 AgeGradedBar date")
     assert_equal("2004 Age Graded BAR", bar.name, "2004 Bar name")
@@ -73,14 +73,14 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     assert_equal(0, AgeGradedBar.count, "AgeGradedBars before calculate!")
     original_results_count = Result.count
     AgeGradedBar.calculate!(2004)
-    bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = AgeGradedBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after calculate!")
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after calculate!")
     assert_equal(4, Result.count - original_results_count, "New results in DB")
     # Should delete old AgeGradedBar
     AgeGradedBar.calculate!(2004)
     assert_equal(1, AgeGradedBar.count, "AgeGradedBar events after calculate!")
-    bar = AgeGradedBar.find(:first, :conditions => ['date = ?', Date.new(2004, 1, 1)])
+    bar = AgeGradedBar.first(:conditions => ['date = ?', Date.new(2004, 1, 1)])
     assert_not_nil(bar, "2004 AgeGradedBar after calculate!")
     assert_equal(Date.new(2004, 1, 1), bar.date, "2004 AgeGradedBar date")
     assert_equal("2004 Age Graded BAR", bar.name, "2004 Bar name")

@@ -23,14 +23,8 @@ module PeopleHelper
       person.try :person
     end
       
-    if (attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || current_person.can_edit?(subject)
-      if block
-        concat capture(&block)
-      else
-        true
-      end
-    else
-      false
+    if ((attributes && (attributes.any? { |a| person[a].blank? || subject[a].blank? })) || current_person.can_edit?(subject)) && block
+      capture(&block)
     end
   end
 
@@ -40,6 +34,17 @@ module PeopleHelper
       "me"
     else
       person.name
+    end
+  end
+
+  def abbreviate_category(category)
+    case category
+    when /Begin/i
+      "Beg"
+    when /Clyde/i
+      "Clyd"
+    else
+      category
     end
   end
 end

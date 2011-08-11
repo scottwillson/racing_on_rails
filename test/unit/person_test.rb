@@ -137,19 +137,21 @@ class PersonTest < ActiveSupport::TestCase
     person_to_merge.password = "secret"
     person_to_merge.password_confirmation = "secret"
     person_to_merge.save!
-    sleep 1
-    person_to_merge_old_password = person_to_merge.crypted_password
 
-    assert_equal 1, person_to_merge.versions.size, "versions"
-    assert_equal 0, person_to_keep.versions.size, "no versions"
-    person_to_keep.merge person_to_merge
-    assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
-    
-    person_to_keep.reload
-    assert_equal "tonkin", person_to_keep.login, "Should merge login"
-    assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
-    changes = person_to_keep.versions.last.changes
-    assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
+    Timecop.freeze(Time.zone.now + 1.hour) do
+      person_to_merge_old_password = person_to_merge.crypted_password
+
+      assert_equal 1, person_to_merge.versions.size, "versions"
+      assert_equal 0, person_to_keep.versions.size, "no versions"
+      person_to_keep.merge person_to_merge
+      assert_equal 2, person_to_keep.versions.size, "Merge should create only one version"
+
+      person_to_keep.reload
+      assert_equal "tonkin", person_to_keep.login, "Should merge login"
+      assert_equal person_to_merge_old_password, person_to_keep.crypted_password, "Should merge password"
+      changes = person_to_keep.versions.last.changes
+      assert_equal [ nil, "tonkin" ], changes["login"], "login change should be recorded"
+    end
   end
   
   def test_merge_two_logins
@@ -215,6 +217,12 @@ class PersonTest < ActiveSupport::TestCase
   def test_set_name
     person = Person.new(:first_name => "R. Jim", :last_name => "Smith")
     assert_equal "R. Jim", person.first_name, "first_name"
+  end
+  
+  def test_set_single_name
+    person = Person.new(:first_name => "Jim", :last_name => "Smith")
+    person.name = "Jim"
+    assert_equal "Jim", person.name, "name"
   end
   
   def test_name_or_login
@@ -953,7 +961,7 @@ class PersonTest < ActiveSupport::TestCase
     another.password = "secret"
     another.password_confirmation = "secret"
     assert_equal false, another.save, "Should not allow dupe login"
-    assert another.errors.on(:login), "Should have error on login"
+    assert another.errors[:login], "Should have error on login"
   end
   
   def test_authlogic_should_not_set_updated_at_on_load
@@ -1097,51 +1105,6 @@ class PersonTest < ActiveSupport::TestCase
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)
     assert admin.can_edit?(admin)
-  end
-  
-  # member_from: nil, past, future, > October, < October, end of year, next year, far in future
-  # member_to: nil, past, future, > October, < October, end of year, next year, far in future
-  # now: start of year, < October, > October, end of year
-  def test_renew
-    # assert_renew(Time.local(2008, 1), nil, nil, Time.local(2008, 1), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 8), nil, nil, Time.local(2008, 8), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 11), nil, nil, Time.local(2008, 11), Time.local(2008, 12, 31))
-    # assert_renew(Time.local(2008, 12, 31), nil, nil, Time.local(2008, 12, 31), Time.local(2008, 12, 31))
-    # 
-    # person = Person.new(:member_from => Time.local(2004))
-    # now = Time.local(2008, 1).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2004, 1, 1), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2012))
-    # now = Time.local(2008, 1).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 1, 1), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 11))
-    # now = Time.local(2008, 11).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 11), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 11))
-    # now = Time.local(2008, 3).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
-    # 
-    # person = Person.new(:member_from => Time.local(2008, 12, 31))
-    # now = Time.local(2008, 12, 31).to_date
-    # person.renew(now)
-    # assert_equal true, person.member?(now), "member?"
-    # assert_equal_dates Time.local(2008, 3), person.member_from, "member_from"
-    # assert_equal_dates Time.local(2008, 12, 31), person.member_to, "member_to"
   end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)

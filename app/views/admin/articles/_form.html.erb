@@ -7,7 +7,7 @@
 
   <p>
     <%= f.label :category %><br />
-    <%= tree_select(ArticleCategory.find(:all, :conditions => "parent_id = 0"),
+    <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"),
                         'article', 'article_category_id', @article, false) %>
   </p>
 

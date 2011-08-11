@@ -1,11 +1,9 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create, :propagate ]
-  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :create_result, :set_race_category_name ]
-  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
-  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :set_race_category_name, :update ]
+  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute, :create_result ]
+  before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
+  before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
   layout "admin/application"
-  
-  in_place_edit_for :race, :category_name
 
   def new
     render :edit
@@ -23,14 +21,13 @@ class Admin::RacesController < Admin::AdminController
       }
       format.js {
         @race.category = Category.find_or_create_by_name("New Category")
-        @enter_edit_mode = true
         @race.save!
       }
     end
   end
 
   def edit
-    @disciplines = [''] + Discipline.find(:all).collect do |discipline|
+    @disciplines = [''] + Discipline.all.collect do |discipline|
       discipline.name
     end
     @disciplines.sort!
@@ -51,6 +48,17 @@ class Admin::RacesController < Admin::AdminController
       return redirect_to(edit_admin_race_path(@race))
     end
     render :edit
+  end
+  
+  def update_attribute
+    respond_to do |format|
+      format.js {
+        @race.send "#{params[:name]}=", params[:value]
+        @race.save!
+        expire_cache
+        render :text => @race.send(params[:name]), :content_type => "text/html"
+      }
+    end
   end
 
   # Permanently destroy race and redirect to Event
@@ -91,7 +99,7 @@ class Admin::RacesController < Admin::AdminController
     @event.propagate_races
   end
 
-  
+
   private
   
   def assign_event

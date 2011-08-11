@@ -11,7 +11,7 @@ class Admin::Cat4WomensRaceSeriesController < Admin::AdminController
   # Create Result and create SingleDayEvent and Race if there is no existing Event with same name and date
   def create_result
     event_for_find = SingleDayEvent.new(params[:event])
-    @event = Event.find(:first, :conditions => { :name => event_for_find.name, :date => event_for_find.date })
+    @event = Event.first(:conditions => { :name => event_for_find.name, :date => event_for_find.date })
     if @event.nil?
       @event = SingleDayEvent.new(params[:event])
       @event.save!

@@ -1,6 +1,7 @@
 module PostsHelper
 
   # Build links to archived posts
+  # FIXME this needs to rewritten
   def archive_navigation(mailing_list, month, year)
     if mailing_list.dates
       nav = Builder::XmlMarkup.new(:indent=>2)
@@ -67,13 +68,13 @@ module PostsHelper
             }
           end
         }
-      }
+      }.html_safe
     else
       nav = Builder::XmlMarkup.new(:indent=>2)
       nav.div({:class => "archive_navigation"}) {
         nav.text!("[Previous]")
         nav.text!("[Next]")
-      }
+      }.html_safe
     end
   end
   
@@ -88,14 +89,12 @@ module PostsHelper
   end
   
   def post_navigation(post)
-    previous_post = Post.find(
-      :first, 
+    previous_post = Post.first(
       :conditions => ["mailing_list_id = ? and date < ?", post.mailing_list.id, post.date], 
       :order => "date desc", 
       :limit => 1
     )
-    next_post = Post.find(
-      :first, 
+    next_post = Post.first(
       :conditions => ["mailing_list_id = ? and date > ?", post.mailing_list.id, post.date], 
       :order => "date asc", 
       :limit => 1
@@ -130,7 +129,6 @@ module PostsHelper
           }
         end
       }
-    }
+    }.html_safe
   end
-
 end

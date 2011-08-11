@@ -17,4 +17,8 @@ class AccountPermission
   def person_can_edit?
     @person_can_edit
   end
+
+  def to_s
+    "#<AccountPermission #{person.try(:id)} #{@can_edit_person} #{@person_can_edit}>"
+  end
 end

@@ -14,7 +14,7 @@ class Admin::CategoriesController < Admin::AdminController
       }
       format.js {
         render :update do |page|
-          @category = Category.find(params[:category_id], :include => :children)
+          @category = Category.find(params[:parent_id], :include => :children)
           page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
         end
       }

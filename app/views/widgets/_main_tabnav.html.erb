@@ -47,7 +47,7 @@ render_tabnav :main,
     t.links_to :controller => 'results', :year => year
   end
 
-  article_categories = ArticleCategory.find(:all, :conditions => ["parent_id = 0"], :order => "position")
+  article_categories = ArticleCategory.all( :conditions => ["parent_id = 0"], :order => "position")
 
   for article_category in article_categories
     add_tab do |t|

@@ -4,7 +4,7 @@
 
 <p align="left">A list of <%= link_to "clubs rides", "http://#{RacingAssociation.current.static_host}/teams/rides.html", :class => "obvious" %> is available if you're looking for a group ride.</p>
 
-<% table :caption => "Teams", :id => "teams" do %>
+<%= table :caption => "Teams", :id => "teams" do %>
   <tr>
     <th>Name</th>
     <th>Sponsors</th>

@@ -77,7 +77,7 @@ function InitializeAPI()
 						'if ( aQueue.length > 0 )' +
 						'{' +
 							'this.IsRunning = true;' +
-							'aQueue[0].call();' +
+							'aQueue[0].call;' +
 						'}' +
 						'else ' +
 							'this.IsRunning = false;' +

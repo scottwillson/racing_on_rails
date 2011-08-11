@@ -4,6 +4,8 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
+  assert_no_angle_brackets :except => :test_create_login_invalid_login
+  
   def test_index
     get(:index)
     assert_response(:success)
@@ -98,6 +100,16 @@ class PeopleControllerTest < ActionController::TestCase
     assert_equal people(:promoter), assigns(:person), "@person"
     assert_select ".tabs", :count => 1
   end
+  
+  def test_edit_as_editor
+    people(:molly).editors << people(:member)
+    use_ssl
+    login_as :member
+    get :edit, :id => people(:molly).to_param
+    assert_response :success
+    assert_equal people(:molly), assigns(:person), "@person"
+    assert_select ".tabs", :count => 0
+  end
 
   def test_edit_as_editor
     people(:molly).editors << people(:member)
@@ -112,7 +124,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_must_be_logged_in
     use_ssl
     get :edit, :id => people(:member).to_param
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   def test_cant_see_other_people_info
@@ -215,7 +227,7 @@ class PeopleControllerTest < ActionController::TestCase
   def test_account_not_logged_in
     use_ssl
     get :account
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_account_with_person_not_logged_in
@@ -231,6 +243,42 @@ class PeopleControllerTest < ActionController::TestCase
     post :create_login, 
          :person => { 
            :login => "racer@example.com", 
+           :password => "secret", 
+           :password_confirmation => "secret", 
+           :email => "racer@example.com"
+          },
+         :return_to => root_path
+    assert_redirected_to root_path
+    
+    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+
+  def test_create_login_with_token
+    ActionMailer::Base.deliveries.clear
+    
+    person = people(:past_member)
+    person.reset_perishable_token!
+    use_ssl
+    post :create_login, 
+         :person => { 
+           :login => "racer@example.com", 
+           :password => "secret", 
+           :password_confirmation => "secret",
+          },
+         :id => person.perishable_token
+    assert_redirected_to edit_person_path(person)
+    
+    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+  end
+
+  def test_create_login_with_name
+    ActionMailer::Base.deliveries.clear
+    
+    use_ssl
+    post :create_login, 
+         :person => { 
+           :login => "racer@example.com", 
+           :name => "Bike Racer",
            :password => "secret", 
            :password_confirmation => "secret", 
            :email => "racer@example.com"
@@ -283,7 +331,7 @@ class PeopleControllerTest < ActionController::TestCase
   
   def test_create_login_with_license_in_name_field
     ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
+     existing_person = Person.create!(:license => "123", :name => "Speed Racer")
     
     use_ssl
     post :create_login, 
@@ -297,7 +345,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
  
     assert_response :success
-    assert assigns(:person).errors.on(:name), "Should have error on :name"
+    assert assigns(:person).errors[:name].present?, "Should have error on :name"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -351,7 +399,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
     assert_response :success
-    assert assigns(:person).errors.on(:email), "Should have error on :email"
+    assert assigns(:person).errors[:email].present?, "Should have error on :email"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -367,7 +415,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
     assert_response :success
-    assert assigns(:person).errors.on(:email), "Should have error on :login"
+    assert assigns(:person).errors[:email].present?, "Should have error on :email"
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
   
@@ -395,12 +443,32 @@ class PeopleControllerTest < ActionController::TestCase
     use_ssl
     get :new_login
     assert_response :success
+    assert assigns(:person).new_record?, "@person should be a new record"
+  end
+  
+  def test_new_login_with_token
+    person = people(:past_member)
+    person.reset_perishable_token!
+    use_ssl
+    get :new_login, :id => person.perishable_token
+    assert_response :success
+    assert !assigns(:person).new_record?, "@person should not be a new record"
+  end
+  
+  def test_new_login_with_token_logged_in
+    person = people(:past_member)
+    person.reset_perishable_token!
+    login_as person
+    use_ssl
+    get :new_login, :id => person.perishable_token
+    assert_response :success
+    assert !assigns(:person).new_record?, "@person should not be a new record"
   end
   
   def test_new_login_http
     get :new_login
     if RacingAssociation.current.ssl?
-      assert_redirected_to new_login_people_url(:protocol => "https")
+      assert_redirected_to new_login_people_url(secure_redirect_options)
     else
       assert_response :success
     end
@@ -423,7 +491,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -444,7 +512,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -467,7 +535,7 @@ class PeopleControllerTest < ActionController::TestCase
           },
          :return_to => root_path
     assert_response :success
-    assert assigns(:person).errors.on(:login), "Should have error on :login"
+    assert assigns(:person).errors[:login].present?, "Should have error on :email"
     assert assigns(:person).new_record?, "Should be a new_record?"
     
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
@@ -512,7 +580,7 @@ class PeopleControllerTest < ActionController::TestCase
          :return_to => root_path
 
    assert_response :success
-   assert assigns(:person).errors.on(:login), "Should have error on :login"
+   assert assigns(:person).errors[:login].present?, "Should have error on :email"
    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
   end
 
@@ -560,6 +628,28 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
     assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
     assert_equal people_count, Person.count, "People count"
+  end
+
+  def test_create_login_with_current_race_number_and_name
+    ActionMailer::Base.deliveries.clear
+    existing_person = Person.create!(:license => "123", :name => "Speed Racer", :road_number => "9871")
+    
+    use_ssl
+    post :create_login, 
+         :person => { :login => "racer@example.com", 
+                      :password => "secret", 
+                      :password_confirmation => "secret", 
+                      :email => "racer@example.com", 
+                      :license => "9871",
+                      :name => "Speed Racer"
+                    },
+         :return_to => root_path
+ 
+    assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
+    assert_redirected_to root_path
+    
+    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
+    assert_equal existing_person, assigns(:person), "Should match existing Person"
   end
 
   def test_new_when_logged_in

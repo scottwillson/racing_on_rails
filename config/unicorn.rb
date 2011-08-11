@@ -1,4 +1,6 @@
-rails_env = ENV['RAILS_ENV'] || 'production'
+# unicorn -c /usr/local/etc/unicorn/wsba.rb -E production -D
+
+rails_env = ENV['::Rails.env'] || 'production'
 
 worker_processes 2
 timeout 90

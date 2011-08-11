@@ -9,7 +9,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   
   def test_create
     login_as :promoter
-    post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
+    post :create, :id => people(:member).to_param, :editor_id => people(:promoter).to_param
     assert_redirected_to edit_person_path(people(:promoter))
     
     editor_request = EditorRequest.first(:conditions => { :person_id => people(:member).id, :editor_id => people(:promoter).id })
@@ -21,7 +21,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
     existing_editor_request = people(:member).editor_requests.create!(:editor => people(:promoter))
 
     login_as :promoter
-    post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
+    post :create, :id => people(:member).to_param, :editor_id => people(:promoter).to_param
     assert_redirected_to edit_person_path(people(:promoter))
     
     editor_requests = EditorRequest.all(:conditions => { :person_id => people(:member).id, :editor_id => people(:promoter).id })
@@ -33,7 +33,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   def test_already_editor
     people(:member).editors << people(:promoter)
     login_as :promoter
-    post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
+    post :create, :id => people(:member).to_param, :editor_id => people(:promoter).to_param
     assert_redirected_to edit_person_path(people(:promoter))
     
     editor_request = EditorRequest.first(:conditions => { :person_id => people(:member).id, :editor_id => people(:promoter).id })
@@ -42,24 +42,24 @@ class EditorRequestsControllerTest < ActionController::TestCase
   
   def test_not_found
     login_as :promoter
-    assert_raise(ActiveRecord::RecordNotFound) { post(:create, :person_id => 1231232213133, :editor_id => people(:promoter).to_param) }
+    assert_raise(ActiveRecord::RecordNotFound) { post(:create, :id => 1231232213133, :editor_id => people(:promoter).to_param) }
   end
   
   def test_must_login
-    post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
-    assert_redirected_to(new_person_session_url(secure_redirect_options))
+    post :create, :id => people(:member).to_param, :editor_id => people(:promoter).to_param
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_security
     login_as :past_member
-    post :create, :person_id => people(:member).to_param, :editor_id => people(:promoter).to_param
+    post :create, :id => people(:member).to_param, :editor_id => people(:promoter).to_param
     assert_redirected_to unauthorized_path
   end
   
   def test_show
     use_http
     editor_request = people(:member).editor_requests.create!(:editor => people(:promoter))
-    get :show, :person_id => people(:member).to_param, :id => editor_request.token
+    get :show, :id => people(:member).to_param, :id => editor_request.token
     assert_response :success
     assert people(:member).editors(true).include?(people(:promoter)), "Should add editor"
   end
@@ -67,7 +67,7 @@ class EditorRequestsControllerTest < ActionController::TestCase
   def test_show_not_found
     use_http
     editor_request = people(:member).editor_requests.create!(:editor => people(:promoter))
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, :person_id => people(:member).to_param, :id => "12367127836shdgadasd") }
+    assert_raise(ActiveRecord::RecordNotFound) { get(:show, :id => people(:member).to_param, :id => "12367127836shdgadasd") }
     assert !people(:member).editors(true).include?(people(:promoter)), "Should add editor"
   end
 end
