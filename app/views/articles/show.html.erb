@@ -2,6 +2,6 @@
 
 <%= tabnav :article_categories %>
 <br/>
-<h3><%= @article.title %></h3>
-<p><%= @article.body %></p>
+<h3><%= @article.title.html_safe %></h3>
+<p><%= @article.body.html_safe %></p>
 <p><i>(last update: <%=h @article.updated_at.to_formatted_s(:short) %></i></p>
