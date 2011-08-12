@@ -7,9 +7,10 @@ class EventsTest < WebDriverTestCase
 
     click :link_text => "New Event"
 
+    wait_for_no_ajax
     type "Sausalito Criterium", "event_name"
     click "save"
-    assert_page_source "Created Sausalito Criterium"
+    wait_for_page_source "Created Sausalito Criterium"
     
     if Date.today.month == 12
       open "/admin/events?year=#{Date.today.year}"
