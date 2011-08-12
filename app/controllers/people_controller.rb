@@ -193,8 +193,8 @@ class PeopleController < ApplicationController
 
   def find_people
     @name = params[:name].try(:strip)
-    if @name
-      @people = Person.find_all_by_name_like(@name).paginate(:page => params[:page])
+    if @name.present?
+      @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit, params[:page])
     else
       @people = []
     end

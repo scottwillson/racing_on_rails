@@ -68,7 +68,7 @@ class PeopleControllerTest < ActionController::TestCase
     get(:index, :name => 'Test')
     assert_response(:success)
     assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(30, assigns['people'].size, "Search for '' should find all people and paginate")
+    assert_equal(100, assigns['people'].size, "Search results should be cut off at RacingAssociation.current.search_results_limit")
     assert_not_nil(assigns["name"], "Should assign name")
     assert(flash.empty?, 'flash not empty?')
     assert_equal('Test', assigns['name'], "'name' assigns")
