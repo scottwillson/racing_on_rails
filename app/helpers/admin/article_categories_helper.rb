@@ -10,6 +10,7 @@ module Admin::ArticleCategoriesHelper
         end
       end
     ret << "</ul>" 
+    ret.html_safe
   end
 
   def display_category(category)
@@ -18,6 +19,7 @@ module Admin::ArticleCategoriesHelper
     ret << " - " << h(category.description)
     ret << display_categories(category.children, category.id) if category.children.any?
     ret << "</li>" 
+    ret.html_safe
   end
 
   def tree_select(categories, model, name, selected=0, allow_root = true, level = 0, init = true)
@@ -50,6 +52,6 @@ module Admin::ArticleCategoriesHelper
       end
     end
     html << "</select>\n" if init
-    return html
+    html.html_safe
   end
 end
