@@ -159,7 +159,7 @@ class Team < ActiveRecord::Base
   end
   
   def updated_after_created?
-    created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
+    created_at && updated_at && ((updated_at - created_at) > 1.hour)
   end
 
   def to_s
