@@ -18,7 +18,7 @@ namespace :test do
 
   namespace :server do
     task :start do
-      @pid = spawn("unicorn -p 8080 --env acceptance", [ STDOUT, STDERR ] => [ "log/unicorn.log", "w" ])
+      @pid = spawn("unicorn --env acceptance", [ STDOUT, STDERR ] => [ "log/unicorn.log", "w" ])
     end
 
     task :stop do
