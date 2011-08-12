@@ -35,6 +35,7 @@ class Admin::ArticlesController < Admin::AdminController
     @article = Article.new(params[:article])
 
     if @article.save
+      expire_cache
       flash[:notice] = 'Article was successfully created.'
       redirect_to admin_articles_url
     else
@@ -46,6 +47,7 @@ class Admin::ArticlesController < Admin::AdminController
     @article = Article.find(params[:id])
 
     if @article.update_attributes(params[:article])
+      expire_cache
       flash[:notice] = 'Article was successfully updated.'
       redirect_to admin_articles_url
     else
@@ -54,6 +56,7 @@ class Admin::ArticlesController < Admin::AdminController
   end
 
   def destroy
+    expire_cache
     @article = Article.find(params[:id])
     @article.destroy
     redirect_to admin_articles_url
