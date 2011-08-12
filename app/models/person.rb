@@ -96,14 +96,15 @@ class Person < ActiveRecord::Base
   end
   
   # Considers aliases
-  def Person.find_all_by_name_like(name, limit = 100)
+  def Person.find_all_by_name_like(name, limit = RacingAssociation.current.search_results_limit, page = 1)
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
-    Person.all(
+    Person.paginate(
       :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
+      :page => page,
       :order => 'last_name, first_name'
     )
   end
