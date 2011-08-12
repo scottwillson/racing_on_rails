@@ -5,6 +5,8 @@ RacingOnRails::Application.routes.draw do
     resources :categories do
       collection do
         post :add_child
+        post :recompute_bar 
+        post :recompute_team_bar 
       end
     end
     
