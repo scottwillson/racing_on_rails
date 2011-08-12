@@ -31,9 +31,9 @@ class PublicPagesTest < WebDriverTestCase
 
     unless find_elements(:link_text => "Pennington").any?
       click :link_text => "Senior Women 1/2/3"
-      wait_for_element :link_text => "Pennington"
-      wait_for_displayed :link_text => "Pennington"
     end
+    wait_for_element :link_text => "Pennington"
+    wait_for_displayed :link_text => "Pennington"
     click :link_text => "Pennington"
     wait_for_current_url(/people/)
     wait_for_element "person_results"
