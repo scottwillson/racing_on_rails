@@ -39,7 +39,7 @@ render_tabnav :main,
   add_tab do |t|
     t.named 'Schedule'
     t.titled 'Racing Schedule'
-    t.links_to schedule_path(:year => year)
+    t.links_to schedule_path(:year => year, :discipline => nil)
   end
   add_tab do |t|
     t.named 'Results'
