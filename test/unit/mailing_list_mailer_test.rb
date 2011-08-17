@@ -29,7 +29,7 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert_equal ["molly@veloshop.com"], post_email.from
     assert_equal "For Sale", post_email.subject
     assert_equal ["scout@butlerpress.com"], post_email.to
-end
+  end
   
   def test_receive_simple
     assert_equal(1, Post.count, "Posts in database")
