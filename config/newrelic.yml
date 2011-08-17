@@ -1,5 +1,5 @@
 common: &default_settings
-  license_key: '7fdfa29f5930e9564146d1f640833eda267a7358'
+  license_key: '62cff396b11ba705b7e70de47ec3186c556e9af8'
   app_name: Racing on Rails
 
   monitor_mode: true
