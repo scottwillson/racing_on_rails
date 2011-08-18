@@ -3,7 +3,7 @@
     <%= link_to(team.name, team_path(team)) -%>
   </td>
   <td>
-    <%= team.sponsors %>
+    <%= raw team.sponsors %>
   </td>
   <td>
     <%= link_to(team.website, team.website) unless team.website.blank? %>
