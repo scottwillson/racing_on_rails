@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+./script/local aba
+cap deploy:migrations
+
+./script/local atra
+cap deploy:migrations
+
+./script/local mbra
+cap deploy:migrations
+
+./script/local wsba
+cap deploy:migrations
+
