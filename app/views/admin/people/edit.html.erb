@@ -34,7 +34,10 @@
     <br/>
 
     <%= f.labelled_text(:racing_age, "#{@person.racing_age} #{'(Master)' if @person.master? } #{'(Junior)' if @person.junior? }") %>
+
+    <% if RacingAssociation.current.default_sanctioned_by == "USA Cycling" -%>
     <%= f.labelled_text :cyclocross_racing_age,  @person.cyclocross_racing_age, "CX Racing Age" %>
+    <% end -%>
 
     <%= f.label :gender %>
     <%= f.select(:gender, ['', 'F', 'M']) %><br/>
