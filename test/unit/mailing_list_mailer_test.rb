@@ -74,6 +74,10 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert(post_from_db.body["Too bad it doesn't work"], "body")
   end
   
+  def test_receive_invalid_byte_sequence
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/invalid_byte_sequence.eml"))
+  end
+
   def test_receive_rich_text
     assert_equal(1, Post.count, "Posts in database")
   
