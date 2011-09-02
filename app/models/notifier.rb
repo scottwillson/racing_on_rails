@@ -9,7 +9,7 @@ class Notifier < ActionMailer::Base
     mail(
       :subject       => "Password Reset Instructions",
       :from          => "#{RacingAssociation.current.short_name} <#{RacingAssociation.current.email}>",
-      :recipients    => people.first.email_with_name
+      :to            => people.first.email_with_name
     )
   end
 end

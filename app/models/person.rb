@@ -301,7 +301,11 @@ class Person < ActiveRecord::Base
   end
   
   def email_with_name
-    "#{name} <#{email}>"
+    if name.present?
+      "#{name} <#{email}>"
+    else
+      email
+    end
   end
 
   def name_or_login
