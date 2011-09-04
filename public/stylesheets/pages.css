@@ -387,6 +387,10 @@ table.event_nav td.race {
   padding-top: 4px;
 }
 
+table.event_nav td.category {
+  padding-left: 30px;
+}
+
 table.event_nav td.race .editable {
   margin-left: 24px;
 }
@@ -398,7 +402,6 @@ table.event_nav td.delete {
 td.delete_all_races {
     white-space: nowrap;
 }
-
 
 /* Mailing lists */
 table.archive_navigation, div.archive_navigation, div.archive_navigation div {

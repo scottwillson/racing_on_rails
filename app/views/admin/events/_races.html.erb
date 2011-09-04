@@ -7,15 +7,19 @@
   </div>
 }.html_safe %>
 <%= table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
+  <tr>
+    <td class="category">Category</td>
+    <td colspan="3">Field Size</td>
+  </tr>
   <%= render @event.races %>
   <% unless @event.new_record? || @event.races.any? %>
   <tr>
-    <td colspan="3" class="empty">No races. Click [+] to add a race.</td>
+    <td colspan="4" class="empty">No races. Click [+] to add a race.</td>
   </tr>
   <% end %>
   <% unless @event.new_record? -%>
   <tr id="create_race_row">
-    <td>
+    <td colspan="2">
       <%= image_tag "icons/spinner.gif", :id => "propagate_races_progress", :style => "display: none" %>
       <%= link_to("Copy to child events", 
                   propagate_admin_event_races_path(@event),
@@ -54,7 +58,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan="3">
+    <td colspan="4">
       <div class="page_buttons">
         <% if administrator? -%>
         <%= label_tag :results_file, "Import Results", :class => "left", :id => "upload_form_label" %>
