@@ -9,7 +9,7 @@
 <%= table :caption => nav_caption, :class => "event_nav clear span-3", :insert_header => true, :columns => 4 do %>
   <tr>
     <td class="category">Category</td>
-    <td colspan="3">Field Size</td>
+    <td colspan="3" class="right">Field Size</td>
   </tr>
   <%= render @event.races %>
   <% unless @event.new_record? || @event.races.any? %>
