@@ -18,7 +18,6 @@ class CrossCrusadeCallups < Competition
     races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ A"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ B"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 45+"))
-    races.create!(:category => Category.find_or_create_by_name("Beginner Men"))
     races.create!(:category => Category.find_or_create_by_name("Singlespeed"))
     races.create!(:category => Category.find_or_create_by_name("Unicycle"))
     races.create!(:category => Category.find_or_create_by_name("Clydesdale"))
