@@ -49,7 +49,10 @@ class MailingListMailer < ActionMailer::Base
         mailing_list = MailingList.find_by_name(mailing_list_name.try(:strip))
         
         unless mailing_list
-          raise "No mailing list for '#{mailing_list_name}' header '#{list_post_header}' to '#{email.to.first.to_s}' from '#{email[:from]}' about '#{mail.subject}'"
+          email_to = email.to.first.to_s rescue nil
+          email_from = email[:from] rescue nil
+          mail_subject = mail.subject rescue nil
+          raise "No mailing list for '#{mailing_list_name}' header '#{list_post_header}' to '#{email_to}' from '#{email_from}' about '#{mail_subject}'"
         end
         
         post.mailing_list = mailing_list
