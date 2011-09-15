@@ -10,10 +10,10 @@ module Export
     Result.export
     Team.export
     Dir.chdir("#{Rails.root}/public/export") do
-      `rm *.bz2` rescue nil
+      `rm *.bz2` if Dir.glob("*.bz2").present?
       `tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`
-      `rm *.txt` rescue nil
-      `rm *.csv` rescue nil
+      `rm *.txt` if Dir.glob("*.txt").present?
+      `rm *.csv` if Dir.glob("*.csv").present?
     end
   end
   
