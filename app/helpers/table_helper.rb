@@ -36,7 +36,11 @@ module TableHelper
 
     locals = { :attribute => _attribute }
     options = options.extract_options!
-    locals[:sort_by] = [options[:sort_by] || _attribute].flatten
+    if options.has_key?(:sort_by)
+      locals[:sort_by] = [options[:sort_by]].flatten.compact
+    else
+      locals[:sort_by] = [_attribute].flatten
+    end
     locals[:style_class] = options[:class] || _attribute
     locals[:title] = options[:title] || (_attribute.titlecase  if _attribute)
     locals[:sort_params] = options[:sort_params] || {}
