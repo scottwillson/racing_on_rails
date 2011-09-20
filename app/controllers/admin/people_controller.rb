@@ -343,25 +343,7 @@ class Admin::PeopleController < Admin::AdminController
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
   end
-  
-  def new_number
-    render :update do |page|
-      page.insert_html(
-        :before, 'new_number_button_row', 
-        :partial => '/admin/people/new_number', 
-        :locals => {:discipline_id => Discipline[:road].id})
-    end
-  end
-  
-  def destroy_number
-    id = params[:number_id]
-    RaceNumber.destroy(id)
-    render :update do |page|
-      page.visual_effect(:puff, "number_#{id}_row", :duration => 2)
-      page.remove("number_#{id}_value")
-    end
-  end
-  
+    
   def destroy_alias
     alias_id = params[:alias_id]
     Alias.destroy(alias_id)

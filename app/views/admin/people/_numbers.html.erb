@@ -8,7 +8,7 @@
       <select name='number_year' data-person-id="<%= person.id %>" id='number_year'><%= options_for_select years, year %></select>
     </td>
   </tr>
-  <% if RacingAssociation.current.show_license %>
+  <% if RacingAssociation.current.show_license? %>
   <tr>
     <td><label class="inline"><%= RacingAssociation.current.short_name %> Membership</label> <%= text_field 'person', 'license' %></td>
   </tr>
@@ -27,17 +27,17 @@
           </td>
           <td>
             <%= link_to(image_tag("icons/information.png"), "#", 
-              :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{('by ' + number.updated_by) if number.updated_by}", 
-              :class => "image") %>
+                  :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{('by ' + number.updated_by) if number.updated_by}", 
+                   :class => "image") %>
           </td>
           <td class="right">
             <%= link_to(
                   image_tag('/images/icons/delete.png'),
-                    destroy_number_admin_person_path(person, :number_id => number.id),
-                    :remote => true,
-                    :method => :delete,
-                    :id => "destroy_number_#{number.id}", 
-                    :class => "image"
+                  admin_person_race_number_path(person, number),
+                  :remote => true,
+                  :method => :delete,
+                  :id => "destroy_number_#{number.id}", 
+                  :class => "image"
                   )
            %>
           </td>
@@ -47,13 +47,16 @@
   </tr>
   <% end %>
   <% if @person.new_record? %>
-    <%= render :partial => '/admin/people/new_number', :locals => {:discipline_id => Discipline[:road].id} %>
-  <% end %>
+    <%= render :partial => "/admin/race_numbers/new", :locals => { :discipline_id => Discipline[:road].id } %>
+  <% else %>
   <tr id="new_number_button_row">
     <td class="right">
-      <%= link_to(image_tag("/images/icons/add.png", :size => "16x16"), 
+      <%= link_to(
+            image_tag("/images/icons/add.png", :size => "16x16"), 
+            new_admin_person_race_number_path(person),
             :remote => true,
-            :url => { :action => "new_number" }, :html => { :class => "image" }) %>
+            :class => "image") %>
     </td>
   </tr>
+  <% end %>
 <% end -%>
