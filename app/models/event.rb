@@ -593,6 +593,10 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def type_modifiable?
+    type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
+  end
+  
   def friendly_class_name
     self.class.friendly_class_name
   end

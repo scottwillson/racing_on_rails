@@ -25,6 +25,7 @@
           <%= link_to "Duplicate", new_admin_event_path(:event => @event.attributes), :class => "obvious", :id => "duplicate_event" %><br/>
         </div>
         <% end -%>
+        <% if @event.type_modifiable? %>
         <%= f.label :type %>
         <%= f.select(:type, [['Event', nil],
                              ['Single Day Event', 'SingleDayEvent'],
@@ -36,6 +37,9 @@
     \nMulti day event: event over consecutive days (stage races, AVC). 
     \nSeries: weekend events with full BAR points (Cross Crusade). 
     \nWeekly series: weeknight, BAR points only for overall (PIR)" }) %><br/>
+        <% else -%>
+        <%= f.labelled_text :type, @event.friendly_class_name %>
+        <% end -%>
         <% end -%>
         
         <% case @event
