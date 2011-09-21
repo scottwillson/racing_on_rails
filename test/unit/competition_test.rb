@@ -51,4 +51,17 @@ class CompetitionTest < ActiveSupport::TestCase
     points = competition.points_for(result, team_size)
     assert_equal(2.5, points, 'Points for first place with team of one and no multiplier')
   end
+  
+  def test_find_for_year
+    assert_equal nil, Competition.find_for_year, "Should not find anything when no Competitions in DB"
+    assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB"
+
+    competition = Competition.create!
+    assert_equal competition, Competition.find_for_year, "Should find current Competition"
+    assert_equal nil, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
+
+    competition_in_2005 = Competition.create!(:date => Time.zone.local(2005))
+    assert_equal competition, Competition.find_for_year, "Should find current Competition"
+    assert_equal competition_in_2005, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
+  end
 end

@@ -18,6 +18,7 @@ class Competition < Event
     Bar
     CascadeCrossOverall
     Cat4WomensRaceSeries
+    CrossCrusadeCallups
     CrossCrusadeOverall
     CrossCrusadeTeamCompetition
     Ironman
@@ -39,22 +40,20 @@ class Competition < Event
   has_many :source_events, :through => :competition_event_memberships, :source => :event
   
   def self.find_for_year(year = RacingAssociation.current.year)
-    self.find_by_date(Date.new(year, 1, 1))
+    self.where("date between ? and ?", Date.new(year).beginning_of_year, Date.new(year).end_of_year).first
   end
   
   def self.find_or_create_for_year(year = RacingAssociation.current.year)
-    self.find_for_year(year) || self.create(:date => (Date.new(year, 1, 1)))
+    self.find_for_year(year) || self.create(:date => (Date.new(year).beginning_of_year))
   end
   
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
-  # Destroys existing Competition for the year first.
   def Competition.calculate!(year = Date.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
-        date = Date.new(year, 1, 1)
-        competition = self.find_or_create_by_date(date)
+        competition = self.find_or_create_for_year(year)
         raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
         competition.destroy_races
         competition.create_races

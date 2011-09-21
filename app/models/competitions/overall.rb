@@ -170,7 +170,7 @@ class Overall < Competition
     end
   end
 
-  # Same as +date+. Should always be January 1st
+  # Same as +date+
   def start_date
     date
   end
