@@ -1,18 +1,18 @@
 GIT
-  remote: git://github.com/laserlemon/vestal_versions
-  revision: 3574a0b4e98ef187931376d1e38a01e109474c71
-  specs:
-    vestal_versions (1.2.2)
-      activerecord (>= 3.0.0)
-      activesupport (>= 3.0.0)
-
-GIT
   remote: git://github.com/sandal/prawn.git
   revision: b9296ceff1b41b1a19b2ef6e07d2018f3bb40d18
   specs:
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
       ttfunk (~> 1.0.2)
+
+GIT
+  remote: git@github.com:scottwillson/vestal_versions.git
+  revision: 9db48e3842b433d326376ef7b0800ebef0b97559
+  specs:
+    vestal_versions (1.2.3)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
 
 GEM
   remote: http://rubygems.org/
