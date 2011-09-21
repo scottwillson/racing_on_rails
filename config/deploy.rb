@@ -37,7 +37,7 @@ namespace :deploy do
   end
 
   task :copy_cache, :roles => :app do
-    %w{ bar bar.html events people index.html results results.html teams teams.html }.each do |cached_path|
+    %w{ bar bar.html events export people index.html results results.html teams teams.html }.each do |cached_path|
       run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
     end
   end
