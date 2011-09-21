@@ -71,6 +71,18 @@ class IronmanTest < ActiveSupport::TestCase
     assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a child Event result")
   end
   
+  def test_skip_anything_other_than_single_day_event
+    person = people(:tonkin)
+    combined_results = CombinedTimeTrialResults.create!(:parent => events(:jack_frost_2002))
+    assert(!combined_results.ironman?, "CombinedTimeTrialResults event should not count towards Ironman")
+
+    Ironman.calculate!(2002)
+
+    ironman = Ironman.find_for_year(2002)
+    assert_equal(3, ironman.races.first.results.count, "Should have one Ironman result for a TT result")
+    assert_equal(1, ironman.races.first.results.first.scores.count, "Should have one Ironman score for a TT result")
+  end
+  
   def test_parent_event_results_do_not_count
     person = people(:tonkin)
     series = Series.create!
