@@ -763,7 +763,7 @@ CREATE TABLE `races` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL,
   `city` varchar(128) DEFAULT NULL,
-  `distance` int(11) DEFAULT NULL,
+  `distance` varchar(255) DEFAULT NULL,
   `state` varchar(64) DEFAULT NULL,
   `field_size` int(11) DEFAULT NULL,
   `laps` int(11) DEFAULT NULL,
@@ -1258,6 +1258,8 @@ INSERT INTO schema_migrations (version) VALUES ('20110521233707');
 INSERT INTO schema_migrations (version) VALUES ('20110618232719');
 
 INSERT INTO schema_migrations (version) VALUES ('20110806162623');
+
+INSERT INTO schema_migrations (version) VALUES ('20110922012402');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

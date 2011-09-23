@@ -279,6 +279,7 @@ class Event < ActiveRecord::Base
   end
 
   def destroy_races
+    ActiveRecord::Base.lock_optimistically = false
     disable_notification!
     if combined_results
       combined_results.destroy_races
@@ -289,6 +290,7 @@ class Event < ActiveRecord::Base
     end
     races.clear
     enable_notification!
+    ActiveRecord::Base.lock_optimistically = true
   end
 
   # All races' Categories and all children's races' Categories
