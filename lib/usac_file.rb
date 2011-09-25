@@ -32,7 +32,11 @@ class UsacFile
       response = http.request(req)
       
       #parses out the data into a 2D array with other properties (such as column referencing like hashes)
-      @members_list = FasterCSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
+      if RUBY_VERSION < "1.9"
+        @members_list = FasterCSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
+      else
+        @members_list = CSV.parse(response.body, {:col_sep => ",", :quote_char => "?", :headers => true})
+      end
       self.clean_headers
     end
   end
