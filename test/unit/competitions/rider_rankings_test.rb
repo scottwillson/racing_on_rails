@@ -7,7 +7,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     rider_rankings = RiderRankings.first(:conditions => ['date = ?', Date.new(Date.today.year, 1, 1)])
     assert_not_nil(rider_rankings, "RiderRankings after calculate!")
     assert_equal(1, RiderRankings.count, "RiderRankings events after calculate!")
-    assert_equal(18, rider_rankings.races.count, "RiderRankings races after calculate!")
+    assert_equal(19, rider_rankings.races.count, "RiderRankings races after calculate!")
   end
   
   def test_calculate
@@ -159,7 +159,7 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_equal(original_results_count + 6, Result.count, "Total count of results in DB")
 
     assert_equal("2004 Rider Rankings", rider_rankings.name, "2004 rider rankings name")
-    assert_equal(18, rider_rankings.races.size, "2004 rider rankings races")
+    assert_equal(19, rider_rankings.races.size, "2004 rider rankings races")
     assert_equal_dates(Date.today, rider_rankings.updated_at, "RiderRankings last updated")
     
     senior_men = rider_rankings.races.detect {|b| b.category == men_cat_1_2}
