@@ -156,9 +156,13 @@ class Competition < Event
       race.place_results_by_points(break_ties?, ascending_points?)
     end
     
-    # Explicity mark as updated to make it "dirty"
-    self.updated_at_will_change!
+    after_calculate
     save!
+  end
+  
+  # Callback
+  def after_calculate
+    self.updated_at = Time.zone.now
   end
   
   def point_schedule
