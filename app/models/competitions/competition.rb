@@ -138,9 +138,8 @@ class Competition < Event
     if place_members_only?
       # Uses batch_size, Rails 2.3 db cursor, to limit load on memory
       Race.find_each(:include => :event,
-                :conditions => [ "events.type != ? and events.date between ? and ?", 
-                                 self.class.name.demodulize, start_date, end_date ],
-                :batch_size => 50
+                :conditions => [ "events.type != ? and events.date between ? and ? and (events.updated_at > ? || races.updated_at > ?)", 
+                                 self.class.name.demodulize, start_date, end_date, 1.week.ago, 1.week.ago ]
                 ) do |r|
                   r.calculate_members_only_places!
                 end
@@ -208,10 +207,6 @@ class Competition < Event
           :points => points
         )
       end
-      
-      # Aggressive memory management. If competition has a race with many results, 
-      # the results array can become a large, uneeded, structure
-      GC.start if index > 0 && index % 1000 == 0
     end
   end
   
