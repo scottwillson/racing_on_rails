@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/sandal/prawn.git
-  revision: b9296ceff1b41b1a19b2ef6e07d2018f3bb40d18
+  revision: f1fb529a2d2304959c6e0c53e91c7a40de1ae02b
   specs:
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
@@ -53,7 +53,7 @@ GEM
       activerecord (>= 3.0.7)
       activerecord (>= 3.0.7)
     builder (2.1.2)
-    capistrano (2.8.0)
+    capistrano (2.9.0)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -66,23 +66,24 @@ GEM
     fastercsv (1.5.4)
     ffi (1.0.9)
     highline (1.6.2)
-    hoe (2.12.2)
+    hoe (2.12.3)
       rake (~> 0.8)
     hoptoad_notifier (2.4.11)
       activesupport
       builder
     i18n (0.5.0)
-    json_pure (1.5.4)
-      spruz (~> 0.2.8)
+    json_pure (1.6.1)
     kgio (2.6.0)
     mail (2.2.19)
       activesupport (>= 2.3.6)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    metaclass (0.0.1)
     mime-types (1.16)
-    minitest (2.5.1)
-    mocha (0.9.12)
+    minitest (2.6.1)
+    mocha (0.10.0)
+      metaclass (~> 0.0.1)
     mysql2 (0.2.13)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -91,11 +92,11 @@ GEM
     net-ssh (2.2.1)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.1.1)
+    newrelic_rpm (3.1.2)
     pdf-reader (0.10.0)
       Ascii85 (~> 1.0.0)
     polyglot (0.3.2)
-    rack (1.2.3)
+    rack (1.2.4)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
@@ -118,12 +119,11 @@ GEM
     rake (0.8.7)
     rdoc (3.9.4)
     rubyzip (0.9.4)
-    selenium-webdriver (2.5.0)
+    selenium-webdriver (2.7.0)
       childprocess (>= 0.2.1)
       ffi (>= 1.0.7)
       json_pure
       rubyzip
-    spruz (0.2.13)
     tabular (0.0.7)
     thor (0.14.6)
     timecop (0.3.5)
@@ -131,12 +131,12 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.0.2)
-    tzinfo (0.3.29)
+    tzinfo (0.3.30)
     unicorn (4.1.1)
       kgio (~> 2.4)
       rack
       raindrops (~> 0.6)
-    will_paginate (3.0.0)
+    will_paginate (3.0.2)
 
 PLATFORMS
   ruby
