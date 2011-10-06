@@ -185,20 +185,26 @@ class Competition < Event
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
     competition_result = nil
+    person = nil
+
     results.each_with_index do |source_result, index|
       logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race_name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
-      person = source_result.person
       points = points_for(source_result)
+
+      if person.nil? || source_result.try(:person_id) != person.id
+        person = Person.includes(:names, :team => :names).where(:id => source_result.person_id).first
+      end
+      
       if points > 0.0 && (!members_only? || member?(person, source_result.date))
- 
-        if first_result_for_person(source_result, competition_result)
+        if first_result_for_person?(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :person_id => person.id, 
-             :team_id => (person ? person.team_id : nil),
-             :race_id => race.id)
+             :person => person, 
+             :team => person.try(:team),
+             :event => self,
+             :race => race)
         end
  
         competition_result.scores.create_if_best_result_for_race(
@@ -239,11 +245,11 @@ class Competition < Event
     person_or_team && person_or_team.member_in_year?(date)
   end
   
-  def first_result_for_person(source_result, competition_result)
+  def first_result_for_person?(source_result, competition_result)
     competition_result.nil? || source_result.person_id != competition_result.person_id
   end
 
-  def first_result_for_team(source_result, competition_result)
+  def first_result_for_team?(source_result, competition_result)
     competition_result.nil? || source_result.team_id != competition_result.team_id
   end
   
