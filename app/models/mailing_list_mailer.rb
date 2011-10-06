@@ -1,3 +1,5 @@
+require "iconv"
+
 # Send email to mailing list. Also receives email from Mailman for archives. Old, but battle-tested, code.
 class MailingListMailer < ActionMailer::Base
 
@@ -70,7 +72,8 @@ class MailingListMailer < ActionMailer::Base
         else
           post.body = (email.text_part || email.html_part || email.body).decoded
         end
-
+        post.body = Iconv.iconv("ASCII//IGNORE", "UTF8", post.body)[0] rescue post.body
+        
         post.from_name = email[:from].display_names.first || email[:from].addresses.first
         post.from_email_address = email[:from].addresses.first
         post.date = email.date

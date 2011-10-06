@@ -93,6 +93,18 @@ class MailingListMailerTest < ActionMailer::TestCase
     assert post_from_db.body["Rich text message with some formatting and a small attachment"], "body"
   end
   
+  def test_receive_bad_part_encoding
+    assert_equal(1, Post.count, "Posts in database")
+
+    MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../files/email/bad_encoding.eml"))
+    
+    posts = Post.all(:order => "date")
+    assert_equal(2, posts.size, "New post in DB")
+    post_from_db = posts.last
+    assert_equal("Fwd: cyclist missing-- Mark Bosworth", post_from_db.subject, "Subject")
+    assert(post_from_db.body["Thanks in advance for your help Kenji"], "body")
+  end
+  
   def test_receive_outlook
     assert_equal(1, Post.count, "Posts in database")
   
