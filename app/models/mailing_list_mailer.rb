@@ -65,12 +65,12 @@ class MailingListMailer < ActionMailer::Base
         multipart_alternative = email.parts.detect { |part| part.mime_type == "multipart/alternative" }
         if multipart_related
           # Outlook
-          post.body = multipart_related.text_part.decoded
+          post.body = multipart_related.text_part.try(:decoded)
         elsif multipart_alternative
           # OS X
-          post.body = multipart_alternative.text_part.decoded
+          post.body = multipart_alternative.text_part.try(:decoded)
         else
-          post.body = (email.text_part || email.html_part || email.body).decoded
+          post.body = (email.text_part || email.html_part || email.body).try(:decoded)
         end
         post.body = Iconv.iconv("ASCII//IGNORE", "UTF8", post.body)[0] rescue post.body
         
