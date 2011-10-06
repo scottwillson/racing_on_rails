@@ -187,7 +187,7 @@ class Competition < Event
   def create_competition_results_for(results, race)
     competition_result = nil
     results.each_with_index do |source_result, index|
-      logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race.name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
+      logger.debug("#{self.class.name} scoring result: #{source_result.date} race: #{source_result.race_name} pl: #{source_result.place} mem pl: #{source_result.members_only_place if place_members_only?} #{source_result.last_name} #{source_result.team_name}") if logger.debug?
 
       person = source_result.person
       points = points_for(source_result)
@@ -197,21 +197,20 @@ class Competition < Event
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :person => person, 
-             :team => (person ? person.team : nil),
-             :race => race)
+             :person_id => person.id, 
+             :team_id => (person ? person.team_id : nil),
+             :race_id => race.id)
         end
  
         competition_result.scores.create_if_best_result_for_race(
           :source_result => source_result, 
-          :competition_result => competition_result, 
+          :competition_result_id => competition_result.id, 
           :points => points
         )
       end
       
       # Aggressive memory management. If competition has a race with many results, 
       # the results array can become a large, uneeded, structure
-      results[index] = nil
       GC.start if index > 0 && index % 1000 == 0
     end
   end
@@ -246,16 +245,16 @@ class Competition < Event
   end
   
   def first_result_for_person(source_result, competition_result)
-    competition_result.nil? || source_result.person != competition_result.person
+    competition_result.nil? || source_result.person_id != competition_result.person_id
   end
 
   def first_result_for_team(source_result, competition_result)
-    competition_result.nil? || source_result.team != competition_result.team
+    competition_result.nil? || source_result.team_id != competition_result.team_id
   end
   
   # Apply points from point_schedule, and split across team
   def points_for(source_result, team_size = nil)
-    team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+    team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race_id, source_result.place])
     if place_members_only?
       points = point_schedule[source_result.members_only_place.to_i].to_f
     else
