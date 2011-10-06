@@ -25,17 +25,13 @@ class Ironman < Competition
   end
   
   def source_results(race)
-    Result.find_by_sql(
-      %Q{SELECT results.* FROM results  
-         LEFT OUTER JOIN races ON races.id = results.race_id 
-         LEFT OUTER JOIN events ON races.event_id = events.id 
-         WHERE (place != 'DNS'
-           and races.category_id is not null 
-           and (events.type = 'SingleDayEvent' or events.type is null)
-           and events.ironman = true 
-           and events.date >= '#{year}-01-01' 
-           and events.date <= '#{year}-12-31')
-         ORDER BY person_id}
-    )
+    Result.
+      joins(:race, :event).
+      where("place != 'DNS'").
+      where("races.category_id is not null").
+      where("events.type = 'SingleDayEvent' or events.type is null").
+      where("events.ironman = true").
+      where("results.date between ? and ?", Time.zone.local(year).beginning_of_year, Time.zone.local(year).end_of_year).
+      order("person_id")
   end
 end
