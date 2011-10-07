@@ -27,7 +27,7 @@ module EditableHelper
       "data-model" => _object_name, 
       "data-attribute" => attribute,
       "data-original" => value) do
-        value
+        value.to_s
     end
   end
 end
