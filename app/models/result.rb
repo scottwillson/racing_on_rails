@@ -5,7 +5,7 @@ module CreateIfBestResultForRaceExtension
       same_race  = (score.source_result.race_id  == source_result.race_id)
       same_person = (score.source_result.person_id == source_result.person_id)
       if same_race && score.source_result.person && same_person
-        if attributes[:points] >= score.points
+        if attributes[:points] > score.points
           @owner.scores.delete score
         else
           return nil
