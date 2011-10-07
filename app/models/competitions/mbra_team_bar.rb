@@ -84,7 +84,7 @@ class MbraTeamBar < Competition
 
       if member?(source_result.team, source_result.date)
 
-        if first_result_for_team(source_result, competition_result)
+        if first_result_for_team?(source_result, competition_result)
           # Bit of a hack here, because we split tandem team results into two results,
           # we can't guarantee that results are in team-order.
           # So 'first result' really means 'not the same as last result'
@@ -113,7 +113,7 @@ class MbraTeamBar < Competition
     end
   end
 
-  def first_result_for_team(source_result, competition_result)
+  def first_result_for_team?(source_result, competition_result)
     competition_result.nil? || source_result.team != competition_result.team
   end
 

@@ -77,7 +77,7 @@ class Overall < Competition
          (!parent.completed? || (parent.completed? && raced_minimum_events?(person, race))) && 
            (!members_only? || member?(person, source_result.date))
 
-        if first_result_for_person(source_result, competition_result)
+        if first_result_for_person?(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
