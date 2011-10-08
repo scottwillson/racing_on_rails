@@ -16,6 +16,7 @@ module TableHelper
     options[:caption_visible] = true unless options[:caption_visible]
     options[:new_action] = nil unless options[:new_action]
     options[:id] = nil unless options[:id]
+    options[:dataid] = nil unless options[:dataid]
     options[:style_class] = options[:class]
     options.delete(:class)
     options[:collection] = options[:collection]

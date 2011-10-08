@@ -239,8 +239,6 @@ class ApplicationController < ActionController::Base
   # Returns true if the current action is supposed to run as SSL.
   # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
   def ssl_required?
-    RacingAssociation.current.ssl? &&
-    self.class.read_inheritable_attribute(:ssl_required_actions) &&
-    self.class.read_inheritable_attribute(:ssl_required_actions).include?(action_name.to_sym)
+    RacingAssociation.current.ssl? && (self.class.read_inheritable_attribute(:ssl_required_actions) || []).include?(action_name.to_sym)
   end
 end

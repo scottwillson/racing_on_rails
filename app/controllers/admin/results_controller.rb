@@ -20,7 +20,6 @@ class Admin::ResultsController < Admin::AdminController
     if people.size == 1
       person = people.first
       results = Result.find_all_for(person)
-      logger.debug("Found #{results.size} for #{person.name}")
       render(:partial => 'person', :locals => {:person => person, :results => results})
     else
       render :partial => 'people', :locals => {:people => people}
@@ -31,7 +30,10 @@ class Admin::ResultsController < Admin::AdminController
     person = Person.find(params[:person_id])
     results = Result.find_all_for(person)
     logger.debug("Found #{results.size} for #{person.name}")
-    render(:partial => 'person', :locals => {:person => person, :results => results})
+    respond_to do |format|
+      format.html { render(:partial => 'person', :locals => {:person => person, :results => results}) }
+      format.js
+    end
   end
   
   def scores
@@ -42,21 +44,13 @@ class Admin::ResultsController < Admin::AdminController
     end
   end
   
-  def move_result
-    result_id = params[:id].to_s
-    result_id = result_id[/result_(.*)/, 1]
-    result = Result.find(result_id)
-    original_result_owner = Person.find(result.person_id)
-    person = Person.find(params[:person_id].to_s[/person_(.*)/, 1])
-    result.person = person
-    result.save!
+  def move
+    @result = Result.find(params[:result_id])
+    @original_result_person = Person.find(@result.person_id)
+    @person = Person.find(params[:person_id])
+    @result.person = @person
+    @result.save!
     expire_cache
-    render :update do |page|
-      page.replace "person_#{person.id}", :partial => "person", :locals => { :person => person, :results => person.results }
-      page.replace "person_#{original_result_owner.id}", :partial => "person", :locals => { :person => original_result_owner, :results => original_result_owner.results }
-      page[:people].css "opacity", 1
-      page.hide 'find_progress_icon'
-    end
   end
 
   def update_attribute

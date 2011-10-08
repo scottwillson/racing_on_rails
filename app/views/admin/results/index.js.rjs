@@ -1,0 +1,5 @@
+page.replace_html("right_person", :partial => "person", :locals => { :person => @person, :results => @results })
+page['right_person'].stop
+page['right_person'].fadeTo("fast", 1)
+page << "$('#right_person tr:last-child td').height($('#left_person table').height() - $('#right_person table').height())"
+page['#find_progress_icon'].hide

@@ -203,25 +203,21 @@ div.disclosure {
 }
 
 /* Results admin */
-#find_progress_icon {
-  visibility: hidden;
-}
-
 table.base td.disclosure {
-  cursor: pointer;
   text-align: right;
   width: 16px;
 }
 
-table.results td.result {
-  cursor: move;
-  white-space: nowrap;
+table.base td.disclosure img {
+  cursor: pointer;
 }
 
-table.results td.result .place {
-  float: left;
+table.results .drag {
+  cursor: move;
+}
+
+table.results td.place {
   text-align: right;
-  width: 32px;
 }
 
 table.results td.result .event {
@@ -247,6 +243,11 @@ table.results td.result .event {
 #right_person td.page_links {
   min-width: 40px;
   width: 40px;
+}
+
+#find_progress_icon {
+  padding-left: 6px;
+  padding-top: 10px;
 }
 
 /* Pages */

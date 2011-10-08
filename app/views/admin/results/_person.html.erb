@@ -1,8 +1,10 @@
-<%= table :caption => [person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), 
+<%= table :caption => truncate([person.name, (person.team.blank? ? nil : person.team.name), person.city, person.racing_age].compact.join(', '), :length => 45), 
          :class => "results",
+         :dataid => person.id,
          :id => "person_#{person.id}" do %>
   <tr>
     <th>&nbsp;</th>
+    <th class="place">Place</th>
     <th>Race</th>
     <th>Category</th>
     <th class="right">Date</th>
@@ -10,31 +12,12 @@
     <th>&nbsp;</th>
   </tr>
   <%- results.sort { |x, y| y.date <=> x.date }.each do |result| -%>
-  <tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row">
-    <td class="disclosure"><%= image_tag(
-      "icons/play_blue.png", 
-      :class => "disclosure collapsed", 
-      :id => "disclosure_#{result.id}", 
-      :alt => "") if result.competition_result? %></td>
-    <td class="result">
-      <div id="result_<%= result.id %>">
-        <div class="place"><%= result.place %></div>
-        <div class="event"><%= result.event.full_name %></div>
-      </div>
-    </td>
-    <td><%= result.race.name %></td>
-    <td class="right"><%= result.race.event.date.strftime("%D") %></td>
-    <td class="right"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
-    <td class="page_links"><%= link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
-      event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('/images/icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
-      edit_admin_race_path(result.race), :class => "image") %>
-    </td>
-  </tr>
+    <%= render result %>
   <%- end -%>
 
   <%- if results.empty? -%>
   <tr>
-    <td colspan="7">No results</td>
+    <td colspan="8">No results</td>
   </tr>
   <%- end -%>
 <% end -%>
@@ -52,16 +35,12 @@
         $('#find_progress_icon').show();
         $('#people').fadeTo(1, 0.4);
         $.ajax({
-          url: '/admin/results/move_result?person_id=' + $(this).attr('id'),
-          type: 'POST',
-          data: ({id: ui.draggable.attr('id')}),
-          dataType: 'script',
+          url: '/admin/people/' + $(this).attr('data-id') + '/results/' + ui.draggable.attr('data-id') + '/move.js',
+          type: 'POST'
         });
       }
     });
 
-    <%- results.each do |result| -%>
-      $(<%= "'#result_#{result.id}'" %>).draggable({ revert: 'invalid', opacity: 0.7 });
-    <%- end -%>
+    $('.drag').draggable({ revert: 'invalid', opacity: 0.7 });
   });
 <% end -%>

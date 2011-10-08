@@ -65,7 +65,10 @@ RacingOnRails::Application.routes.draw do
         post   :toggle_member
       end
       resources :race_numbers
-      resources :results
+      resources :results do
+        post :move
+      end
+      resources :scores
     end
     match "/people/:id/merge/:other_person_id" => "people#merge", :constraints => { :id => /\d+/, :other_person_id => /\d+/ }, :via => :post, :as => :merge_person
 
@@ -83,7 +86,6 @@ RacingOnRails::Application.routes.draw do
         post :results
       end
       member do
-        post :move_result
         put  :update_attribute
       end
     end

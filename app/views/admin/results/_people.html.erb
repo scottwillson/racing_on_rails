@@ -4,15 +4,20 @@
   <tr class="<%= cycle("even", "odd") %>">
       <td><%= link_to(
         person.name, 
-        :url => { :action => "results", :person_id => person.id }, 
-        :remote => true,
-        :update => 'right_person',
-        :before => visual_effect(:highlight, 'right_person', :to => 0.4),
-        :complete => visual_effect(:appear, 'right_person'))
+        admin_person_results_path(person, :format => "js"),
+        :class => "find_person",
+        :remote => true)
       %>
       <br>
       <small><%= [ person.team.blank? ? nil : person.team.name, person.city, person.racing_age ].compact.join(', ') %></small>
     </td>
   </tr>
   <%- end -%>
+<% end -%>
+
+<%= javascript_tag do %>
+  $('.find_person').bind('ajax:beforeSend', function() {
+    $('#right_person').fadeTo(3000, 0.2);
+    $('#find_progress_icon').show();
+  })
 <% end -%>

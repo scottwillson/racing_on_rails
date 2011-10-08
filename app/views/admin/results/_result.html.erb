@@ -1,0 +1,20 @@
+<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row">
+  <td class="disclosure"><%= image_tag(
+    "icons/play_blue.png", 
+    :class => "disclosure collapsed", 
+    :id => "disclosure_#{result.id}", 
+    :alt => "") if result.competition_result? %></td>
+  <td class="place"><%= result.place %></td>
+  <td class="result">
+    <div class="drag" data-id="<%= result.id %>">
+      <div class="event"><%= result.event_full_name %></div>
+    </div>
+  </td>
+  <td><%= result.race.name %></td>
+  <td class="right"><%= result.event_date_range_s %></td>
+  <td class="right"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
+  <td class="page_links"><%= link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
+    event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('/images/icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
+    edit_admin_race_path(result.race), :class => "image") %>
+  </td>
+</tr>
