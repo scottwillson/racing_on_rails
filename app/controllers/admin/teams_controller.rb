@@ -93,15 +93,6 @@ class Admin::TeamsController < Admin::AdminController
       render :edit
     end
   end
-  
-  # Exact dupe of people controller
-  def destroy_alias
-    alias_id = params[:alias_id]
-    Alias.destroy(alias_id)
-    render :update do |page|
-      page.visual_effect(:puff, "alias_#{alias_id}", :duration => 2)
-    end
-  end
 
   def destroy_name
     name_id = params[:name_id]

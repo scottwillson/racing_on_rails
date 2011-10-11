@@ -254,16 +254,6 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert_equal(1, Alias.count(:conditions => ['name = ?', 'Mollie Cameron']), 'Mollie aliases in database')
   end
   
-  def test_destroy_alias
-    tonkin = people(:tonkin)
-    assert_equal(1, tonkin.aliases.count, 'Tonkin aliases')
-    eric_tonkin_alias = tonkin.aliases.first
-    
-    post(:destroy_alias, :id => tonkin.id.to_s, :alias_id => eric_tonkin_alias.id.to_s)
-    assert_response :success
-    assert_equal(0, tonkin.aliases(true).count, 'Tonkin aliases after destruction')
-  end
-  
   def test_merge?
     molly = people(:molly)
     tonkin = people(:tonkin)

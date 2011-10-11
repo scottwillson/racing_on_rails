@@ -40,10 +40,11 @@
         <tr id="alias_<%= name_alias.id %>">
           <td><%= name_alias.name %></td>
           <td>
-            <%= link_to(image_tag("/images/icons/delete.png"), 
-                 :url => { :action => "destroy_alias", :id => @team.id, :alias_id => name_alias.id},
+            <%= link_to(image_tag('/images/icons/delete.png'), 
+                 admin_team_alias_path(@team, name_alias),
+                 :method => "delete",
                  :remote => true,
-                 :html => { :class => "image" }) %>
+                 :class => "image") %>
           </td>
         </tr>
         <%- end -%>

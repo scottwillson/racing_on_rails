@@ -343,14 +343,6 @@ class Admin::PeopleController < Admin::AdminController
     @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
   end
-    
-  def destroy_alias
-    alias_id = params[:alias_id]
-    Alias.destroy(alias_id)
-    render :update do |page|
-      page.visual_effect(:puff, "alias_#{alias_id}", :duration => 2)
-    end
-  end
   
   # Membership card stickers/labels
   def cards

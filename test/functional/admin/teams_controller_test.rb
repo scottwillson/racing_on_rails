@@ -329,16 +329,6 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal(vanilla, assigns['team'], 'Should assign Vanilla to team')
   end
   
-  def test_destroy_alias
-    vanilla = teams(:vanilla)
-    assert_equal(1, vanilla.aliases.count, 'Vanilla aliases')
-    vanilla_bicycles_alias = vanilla.aliases.first
-
-    post(:destroy_alias, :id => vanilla.id.to_s, :alias_id => vanilla_bicycles_alias.id.to_s)
-    assert_response(:success)
-    assert_equal(0, vanilla.aliases(true).count, 'Vanilla aliases after destruction')
-  end
-  
   def test_destroy_name
     vanilla = teams(:vanilla)
     vanilla.names.create!(:name => "Generic Team", :year => 1990)

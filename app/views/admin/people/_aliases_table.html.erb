@@ -1,12 +1,13 @@
 <%= table :caption => "Aliases", :class => "box-2 last aliases", :insert_header => true, :columns => 2 do %>
-  <%- for name_alias in @person.aliases -%>
+  <%- @person.aliases.each do |name_alias| -%>
   <tr id="alias_<%= name_alias.id %>">
     <td><%= name_alias.name %></td>
     <td>
       <%= link_to(image_tag('/images/icons/delete.png'), 
-           :url => { :action => "destroy_alias", :id => @person.id, :alias_id => name_alias.id },
+           admin_person_alias_path(@person, name_alias),
+           :method => "delete",
            :remote => true,
-           :html => { :class => "image" }) %>
+           :class => "image") %>
     </td>
   </tr>
   <%- end -%>

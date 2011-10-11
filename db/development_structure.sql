@@ -88,7 +88,7 @@ CREATE TABLE `bids` (
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `position` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL DEFAULT '',
   `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -1260,6 +1260,8 @@ INSERT INTO schema_migrations (version) VALUES ('20110618232719');
 INSERT INTO schema_migrations (version) VALUES ('20110806162623');
 
 INSERT INTO schema_migrations (version) VALUES ('20110922012402');
+
+INSERT INTO schema_migrations (version) VALUES ('20111008220748');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

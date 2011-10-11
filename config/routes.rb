@@ -52,6 +52,7 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :people do
+      resources :aliases
       collection do
         get  :cards
         get  :duplicates
@@ -94,6 +95,7 @@ RacingOnRails::Application.routes.draw do
     resources :single_day_events
 
     resources :teams do
+      resources :aliases
       member do
         post :cancel_in_place_edit
         post :destroy_name
