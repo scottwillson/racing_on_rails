@@ -17,7 +17,7 @@ if article_categories.any?
   render_tabnav :article_categories,
                 :generate_css => false do
 
-    if Article.all( :conditions => ["article_category_id = ?", @top_level_article_category_id]).any?
+    if Article.all( :conditions => ["article_category_id = ? and display = ?", @top_level_article_category_id, 1]).any?
       add_tab do |t|
         t.named "General"
         t.titled "General Information"
