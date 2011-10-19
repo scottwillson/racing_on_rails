@@ -26,7 +26,7 @@ if article_categories.any?
       end
     end
     for article_category in article_categories
-      if Article.all( :conditions => ["article_category_id = ?", article_category]).any?
+      if Article.all( :conditions => ["article_category_id = ? and display = ?", article_category, 1] ).any?
         add_tab do |t|
           t.named article_category.name
           t.titled article_category.description
