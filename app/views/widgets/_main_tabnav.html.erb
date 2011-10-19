@@ -50,7 +50,8 @@ render_tabnav :main,
   article_categories = ArticleCategory.all( :conditions => ["parent_id = 0"], :order => "position")
 
   for article_category in article_categories
-    if Article.all( :conditions => ["article_category_id = ? and display = ?", article_category, 1] ).any?
+    #if we have any articles in this root level category or we have any sub-categories...(we should really make sure there are articles in at least one of the subs but it is very late)
+    if Article.all( :conditions => ["article_category_id = ? and display = ?", article_category, 1] ).any? || ArticleCategory.all( :conditions => ["parent_id = ?", article_category] ).any?
       add_tab do |t|
         t.named article_category.name
         t.titled article_category.description
