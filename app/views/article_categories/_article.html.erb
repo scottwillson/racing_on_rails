@@ -1,0 +1,10 @@
+<h2><%= link_to article.title, article, :class => "article_box" %></h2>
+<p><%= truncate(article.body, :length => 800, :separator => ' ').html_safe %>
+<%
+if article.body.length > 800
+%>
+  &nbsp;<%= link_to "more", article, :class => "article_box" %>
+<%
+end
+%>
+</p>

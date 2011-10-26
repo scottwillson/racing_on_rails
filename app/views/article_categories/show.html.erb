@@ -1,15 +1,31 @@
-<% @page_title = "#{@article_category.name.capitalize}" %>
+<% content_for :head do %>
+<script type="text/javascript">
+  $(function() {
+    $(".article_box").colorbox({
+      initialWidth: "800px",
+      innerWidth: "800px"
+    });
+  });
+</script>
+<% end %>
+<%
+  @page_title = "#{@article_category.name.capitalize}"
 
-<%= tabnav :article_categories %>
-<br/>
-<table>
-  <% for article in @article_category.articles %>
-    <tr>
-      <td><h3><%= link_to article.title, article %></h3>
-        <p><%= truncate(article.body, :length => 500).html_safe %></p>
-        <%- if article.body.length > 500 %>
-          <p><%= link_to "more", article %></p>
-        <%- end %></td>
-    </tr>
-  <% end %>
-</table>
+  if @article_categories.any? && @article_category.articles.any?
+%>
+    <h1>General</h1>
+<%
+  end
+%>
+  <%= render :partial => "article", :collection => @article_category.articles %>
+
+<%
+  for article_category in @article_categories
+    if article_category.articles.any?
+%>
+      <h1><%= article_category.name %></h1>
+      <%= render :partial => "article", :collection => article_category.articles %>
+<%
+    end
+  end
+%>
