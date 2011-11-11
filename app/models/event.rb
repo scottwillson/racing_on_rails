@@ -649,17 +649,17 @@ class Event < ActiveRecord::Base
   
   def inspect_debug
     puts("#{self.class.name.ljust(20)} #{self.date} #{self.name} #{self.discipline} #{self.id}")
-    self.races(true).each {|r| 
+    self.races(true).sort.each {|r| 
       puts("#{r.class.name.ljust(20)}   #{r.name}")
       r.results(true).sort.each {|result|
         puts("#{result.class.name.ljust(20)}      #{result.to_long_s}")
-        result.scores(true).each{|score|
+        result.scores(true).sort.each{|score|
           puts("#{score.class.name.ljust(20)}         #{score.source_result.place} #{score.source_result.race.event.name}  #{score.source_result.race.name} #{score.points}")
         }
       }
     }
     
-    self.children(true).each do |event|
+    self.children(true).sort.each do |event|
       event.inspect_debug
     end
     
