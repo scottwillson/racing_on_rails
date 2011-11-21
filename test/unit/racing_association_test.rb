@@ -50,10 +50,10 @@ class RacingAssociationTest < ActiveSupport::TestCase
     assert_equal 2020, RacingAssociation.current.effective_year, "effective year for November 2020"
 
     RacingAssociation.current.now = Time.local(2020, 12, 1)
-    assert_equal 2021, RacingAssociation.current.effective_year, "effective year for December 2020"
+    assert_equal 2020, RacingAssociation.current.effective_year, "effective year for December 2020"
 
     RacingAssociation.current.now = Time.local(2020, 12, 31)
-    assert_equal 2021, RacingAssociation.current.effective_year, "effective year for December 2020"
+    assert_equal 2020, RacingAssociation.current.effective_year, "effective year for December 2020"
   end
   
   def test_next_year

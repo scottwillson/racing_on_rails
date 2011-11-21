@@ -259,12 +259,12 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
     person.save!
     person.reload
     assert_equal(true, person.member?, 'member')
     assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
     
     RacingAssociation.current.now = Time.zone.local(2010)
     person.member_from = Time.zone.local(2010)
@@ -322,7 +322,7 @@ class PersonTest < ActiveSupport::TestCase
     person.member = true
     assert_equal(true, person.member?, 'member')
     assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(2010, 12, 31), person.member_to, 'Member to')
+    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
 
     RacingAssociation.current.now = nil
     person.member_from = Time.zone.local(2001, 1, 1)
@@ -1046,7 +1046,10 @@ class PersonTest < ActiveSupport::TestCase
 
     RacingAssociation.current.now = Date.new(2009, 12, 1)
     person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
-    assert !person.renewed?, "On Dec 1"
+    assert person.renewed?, "On Dec 1"
+
+    RacingAssociation.current.now = Date.new(2010, 1, 1)
+    assert !person.renewed?, "Next year"
   end
   
   def test_destroy_with_editors

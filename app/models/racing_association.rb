@@ -77,24 +77,27 @@ class RacingAssociation < ActiveRecord::Base
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
   # On and after December 1, returns the next year.
   def effective_year
-    if now.month < 12
+    case next_year_start_at
+    when nil
       now.year
-    else
+    when now < next_year_start_at
+      now.year
+    when now >= next_year_start_at
       now.year + 1
+    when 1.year.from_now(now) > next_year_start_at && now.month >= 12
+      now.year + 1
+    else
+      now.year
     end
   end
   
   def effective_today
-    if now.month < 12
-      Date.new(now.year)
-    else
-      Date.new(now.year + 1)
-    end
+    Date.new(effective_year)
   end
   
   # Date.today.year + 1 unless +now+ is set.
   def next_year
-    now.year + 1
+    effective_year + 1
   end
   
   def cyclocross_season?
