@@ -10,7 +10,6 @@ class RacingAssociation < ActiveRecord::Base
 
   belongs_to :cat4_womens_race_series_category, :class_name => "Category"
 
-  attr_accessor :now
   attr_accessor :person
   attr_accessor :rental_numbers
 
@@ -59,9 +58,8 @@ class RacingAssociation < ActiveRecord::Base
     @person ||= Person.find_or_create_by_name(short_name)
   end
 
-  # Defaults to Time.now, but can be explicitly set for tests or data cleanup
   def now
-    @now || Time.zone.now
+    Time.zone.now
   end
   
   # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
@@ -77,17 +75,21 @@ class RacingAssociation < ActiveRecord::Base
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
   # On and after December 1, returns the next year.
   def effective_year
-    if next_year_start_at.nil?
-      now.year
-    elsif now < next_year_start_at
-      now.year
-    elsif now >= next_year_start_at
-      now.year + 1
-    elsif 1.year.from_now(now) > next_year_start_at && now.month >= 12
-      now.year + 1
+    if next_year_start_at
+      if now < next_year_start_at
+        return now.year
+      elsif now >= next_year_start_at
+        return now.year + 1
+      elsif 1.year.from_now(now) > next_year_start_at && now.month >= 12
+        return now.year + 1
+      end
     else
-      now.year
+      if now.month == 12
+        return now.year + 1
+      end
     end
+    
+    now.year
   end
   
   def effective_today
@@ -96,7 +98,11 @@ class RacingAssociation < ActiveRecord::Base
   
   # Date.today.year + 1 unless +now+ is set.
   def next_year
-    effective_year + 1
+    if effective_year == now.year
+      effective_year + 1
+    else
+      effective_year
+    end
   end
   
   def cyclocross_season?
@@ -108,7 +114,7 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def cyclocross_season_end
-    Time.zone.local(RacingAssociation.current.now.year, 12, 12).end_of_day
+    Time.zone.local(RacingAssociation.current.now.year, 12, 5).end_of_day
   end
 
   def priority_country_options

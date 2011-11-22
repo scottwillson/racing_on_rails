@@ -244,87 +244,93 @@ class PersonTest < ActiveSupport::TestCase
     assert_nil(person.member_from, 'Member on')
     assert_nil(person.member_to, 'Member to')
 
-    RacingAssociation.current.now = Time.zone.local(2009, 6)
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
-    person.save!
-    person.reload
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+    Timecop.freeze(Time.zone.local(2009, 6)) do
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+      person.save!
+      person.reload
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
 
-    RacingAssociation.current.now = Time.zone.local(2009, 12)
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
-    person.save!
-    person.reload
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+      person.save!
+    end
+
+    Timecop.freeze(Time.zone.local(2009, 12)) do
+      person.reload
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009, 6), person.member_from, 'Member on')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+    end
     
-    RacingAssociation.current.now = Time.zone.local(2010)
-    person.member_from = Time.zone.local(2010)
-    person.member_to = Time.zone.local(2010, 12, 31)
-    person.member = false
-    assert_equal(false, person.member?, 'member')
-    assert_nil(person.member_from, 'Member on')
-    assert_nil(person.member_to, 'Member to')
-    person.save!
-    person.reload
-    assert_equal(false, person.member?, 'member')
-    assert_nil(person.member_from, 'Member on')
-    assert_nil(person.member_to, 'Member to')
+    Timecop.freeze(Time.zone.local(2010)) do
+      person.member_from = Time.zone.local(2010)
+      person.member_to = Time.zone.local(2010, 12, 31)
+      person.member = false
+      assert_equal(false, person.member?, 'member')
+      assert_nil(person.member_from, 'Member on')
+      assert_nil(person.member_to, 'Member to')
+      person.save!
+      person.reload
+      assert_equal(false, person.member?, 'member')
+      assert_nil(person.member_from, 'Member on')
+      assert_nil(person.member_to, 'Member to')
+    end
     
     # From nil, to nil
-    RacingAssociation.current.now = Time.zone.local(2009)
-    person.member_from = nil
-    person.member_to = nil
-    assert_equal(false, person.member?, 'member?')
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
-    
-    person.member_from = nil
-    person.member_to = nil
-    assert_equal(false, person.member?, 'member?')
-    person.member = false
-    person.member_from = nil
-    person.member_to = nil
-    assert_equal(false, person.member?, 'member?')
+    Timecop.freeze(Time.zone.local(2009)) do
+      person.member_from = nil
+      person.member_to = nil
+      assert_equal(false, person.member?, 'member?')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009), person.member_from, 'Member from')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+
+      person.member_from = nil
+      person.member_to = nil
+      assert_equal(false, person.member?, 'member?')
+      person.member = false
+      person.member_from = nil
+      person.member_to = nil
+      assert_equal(false, person.member?, 'member?')
+    end
     
     # From, to in past
-    RacingAssociation.current.now = Time.zone.local(2009, 11)
-    person.member_from = Time.zone.local(2001, 1, 1)
-    person.member_to = Time.zone.local(2001, 12, 31)
-    assert_equal(false, person.member?, 'member?')
-    assert_equal(false, person.member?(Time.zone.local(2000, 12, 31)), 'member')
-    assert_equal(true, person.member?(Time.zone.local(2001, 1, 1)), 'member')
-    assert_equal(true, person.member?(Time.zone.local(2001, 12, 31)), 'member')
-    assert_equal(false, person.member?(Time.zone.local(2002, 1, 1)), 'member')
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+    Timecop.freeze(Time.zone.local(2009, 11)) do
+      person.member_from = Time.zone.local(2001, 1, 1)
+      person.member_to = Time.zone.local(2001, 12, 31)
+      assert_equal(false, person.member?, 'member?')
+      assert_equal(false, person.member?(Time.zone.local(2000, 12, 31)), 'member')
+      assert_equal(true, person.member?(Time.zone.local(2001, 1, 1)), 'member')
+      assert_equal(true, person.member?(Time.zone.local(2001, 12, 31)), 'member')
+      assert_equal(false, person.member?(Time.zone.local(2002, 1, 1)), 'member')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
+      assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+    end
     
-    RacingAssociation.current.now = Time.zone.local(2009, 12)
-    person.member_from = Time.zone.local(2001, 1, 1)
-    person.member_to = Time.zone.local(2001, 12, 31)
-    assert_equal(false, person.member?, 'member?')
-    assert_equal(false, person.member?(Time.zone.local(2000, 12, 31)), 'member')
-    assert_equal(true, person.member?(Time.zone.local(2001, 1, 1)), 'member')
-    assert_equal(true, person.member?(Time.zone.local(2001, 12, 31)), 'member')
-    assert_equal(false, person.member?(Time.zone.local(2002, 1, 1)), 'member')
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(2009, 12, 31), person.member_to, 'Member to')
+    Timecop.freeze(Time.zone.local(2009, 12)) do
+      person.member_from = Time.zone.local(2001, 1, 1)
+      person.member_to = Time.zone.local(2001, 12, 31)
+      assert_equal(false, person.member?, 'member?')
+      assert_equal(false, person.member?(Time.zone.local(2000, 12, 31)), 'member')
+      assert_equal(true, person.member?(Time.zone.local(2001, 1, 1)), 'member')
+      assert_equal(true, person.member?(Time.zone.local(2001, 12, 31)), 'member')
+      assert_equal(false, person.member?(Time.zone.local(2002, 1, 1)), 'member')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
+      assert_equal_dates(Time.zone.local(2010, 12, 31), person.member_to, 'Member to')
+    end
 
-    RacingAssociation.current.now = nil
     person.member_from = Time.zone.local(2001, 1, 1)
     person.member_to = Time.zone.local(2001, 12, 31)
     assert_equal(false, person.member?, 'member?')
@@ -334,33 +340,34 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member?, 'member?')
     
     # From in past, to in future
-    RacingAssociation.current.now = Time.zone.local(2009, 1)
-    person.member_from = Time.zone.local(2001, 1, 1)
-    person.member_to = Time.zone.local(3000, 12, 31)
-    assert_equal(true, person.member?, 'member?')
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(3000, 12, 31), person.member_to, 'Member to')
-    
-    person.member = false
-    assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
-    assert_equal_dates(Time.zone.local(2008, 12, 31), person.member_to, 'Member to')
-    assert_equal(false, person.member?, 'member?')
+    Timecop.freeze(Time.zone.local(2009, 1)) do
+      person.member_from = Time.zone.local(2001, 1, 1)
+      person.member_to = Time.zone.local(3000, 12, 31)
+      assert_equal(true, person.member?, 'member?')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
+      assert_equal_dates(Time.zone.local(3000, 12, 31), person.member_to, 'Member to')
 
-    # From, to in future
-    person.member_from = Time.zone.local(2500, 1, 1)
-    person.member_to = Time.zone.local(3000, 12, 31)
-    assert_equal(false, person.member?, 'member?')
-    person.member = true
-    assert_equal(true, person.member?, 'member')
-    assert_equal_dates(Time.zone.local(2009), person.member_from, 'Member from')
-    assert_equal_dates('3000-12-31', person.member_to, 'Member to')
-    
-    person.member = false
-    assert_nil(person.member_from, 'Member on')
-    assert_nil(person.member_to, 'Member to')
-    assert_equal(false, person.member?, 'member?')
+      person.member = false
+      assert_equal_dates(Time.zone.local(2001, 1, 1), person.member_from, 'Member from')
+      assert_equal_dates(Time.zone.local(2008, 12, 31), person.member_to, 'Member to')
+      assert_equal(false, person.member?, 'member?')
+
+      # From, to in future
+      person.member_from = Time.zone.local(2500, 1, 1)
+      person.member_to = Time.zone.local(3000, 12, 31)
+      assert_equal(false, person.member?, 'member?')
+      person.member = true
+      assert_equal(true, person.member?, 'member')
+      assert_equal_dates(Time.zone.local(2009), person.member_from, 'Member from')
+      assert_equal_dates('3000-12-31', person.member_to, 'Member to')
+
+      person.member = false
+      assert_nil(person.member_from, 'Member on')
+      assert_nil(person.member_to, 'Member to')
+      assert_equal(false, person.member?, 'member?')
+    end
   end
   
   def test_member_in_year
@@ -1040,16 +1047,19 @@ class PersonTest < ActiveSupport::TestCase
     person = Person.create!
     assert !person.renewed?, "New person"
 
-    RacingAssociation.current.now = Date.new(2009, 11, 30)
-    person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
-    assert person.renewed?, "Before Dec 1"
+    Timecop.freeze(Date.new(2009, 11, 30)) do
+      person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
+      assert person.renewed?, "Before Dec 1"
+    end
 
-    RacingAssociation.current.now = Date.new(2009, 12, 1)
     person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
-    assert person.renewed?, "On Dec 1"
+    Timecop.freeze(Date.new(2009, 12, 1)) do
+      assert !person.renewed?, "On Dec 1"
+    end
 
-    RacingAssociation.current.now = Date.new(2010, 1, 1)
-    assert !person.renewed?, "Next year"
+    Timecop.freeze(Date.new(2010, 1, 1)) do
+      assert !person.renewed?, "Next year"
+    end
   end
   
   def test_destroy_with_editors
