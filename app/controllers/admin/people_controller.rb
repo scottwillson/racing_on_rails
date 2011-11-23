@@ -368,7 +368,7 @@ class Admin::PeopleController < Admin::AdminController
     @people = [@person]
     @person.print_card = false
     @person.membership_card = true
-    @person.card_printed_at = RacingAssociation.current.now
+    @person.card_printed_at = Time.zone.now
     @person.save!
     
     respond_to do |format|

@@ -80,7 +80,7 @@ module Results
     end
   
     def test_import_excel
-      current_members = Person.all( :conditions => ["member_to >= ?", RacingAssociation.current.now])
+      current_members = Person.all( :conditions => ["member_to >= ?", Time.zone.now])
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
       source_path = File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)
       results_file = ResultsFile.new(File.new(source_path), event)

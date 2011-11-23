@@ -57,39 +57,35 @@ class RacingAssociation < ActiveRecord::Base
   def person
     @person ||= Person.find_or_create_by_name(short_name)
   end
-
-  def now
-    Time.zone.now
-  end
   
-  # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.beginning_of_day, which is the same as Date.today
   def today
-    now.to_date
+    Time.zone.now.to_date
   end
   
-  # Returns now.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.year, which is the same as Date.today.
   def year
-    now.year
+    Time.zone.now.year
   end
   
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
   # On and after December 1, returns the next year.
   def effective_year
     if next_year_start_at
-      if now < next_year_start_at
-        return now.year
-      elsif now >= next_year_start_at
-        return now.year + 1
-      elsif 1.year.from_now(now) > next_year_start_at && now.month >= 12
-        return now.year + 1
+      if Time.zone.now < next_year_start_at
+        return Time.zone.now.year
+      elsif Time.zone.now >= next_year_start_at
+        return Time.zone.now.year + 1
+      elsif 1.year.from_now > next_year_start_at && Time.zone.now.month >= 12
+        return Time.zone.now.year + 1
       end
     else
-      if now.month == 12
-        return now.year + 1
+      if Time.zone.now.month == 12
+        return Time.zone.now.year + 1
       end
     end
     
-    now.year
+    Time.zone.now.year
   end
   
   def effective_today
@@ -98,7 +94,7 @@ class RacingAssociation < ActiveRecord::Base
   
   # Date.today.year + 1 unless +now+ is set.
   def next_year
-    if effective_year == now.year
+    if effective_year == Time.zone.now.year
       effective_year + 1
     else
       effective_year
@@ -110,11 +106,11 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def cyclocross_season_start
-    Time.zone.local(RacingAssociation.current.now.year, 9, 2).beginning_of_day
+    Time.zone.local(Time.zone.now.year, 9, 2).beginning_of_day
   end
   
   def cyclocross_season_end
-    Time.zone.local(RacingAssociation.current.now.year, 12, 5).end_of_day
+    Time.zone.local(Time.zone.now.year, 12, 5).end_of_day
   end
 
   def priority_country_options

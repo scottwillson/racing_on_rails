@@ -26,10 +26,10 @@ class RacingAssociationTest < ActiveSupport::TestCase
     assert_equal_dates Date.today, RacingAssociation.current.today, "Default RacingAssociation.current.today"
 
     Timecop.freeze(Time.local(2020, 4, 5, 23, 50, 55)) do
-      assert_equal_dates Date.new(2020, 4, 5), RacingAssociation.current.today, "Override RacingAssociation.current.now to change RacingAssociation.current.today"
+      assert_equal_dates Date.new(2020, 4, 5), RacingAssociation.current.today, "Override Time.zone.now to change RacingAssociation.current.today"
     end
 
-    assert_equal_dates Date.today, RacingAssociation.current.today, "Default RacingAssociation.current.today should be Date.today after RacingAssociation.current.now is set to nil"
+    assert_equal_dates Date.today, RacingAssociation.current.today, "Default RacingAssociation.current.today should be Date.today after Time.zone.now is set to nil"
   end
   
   def test_effective_year
