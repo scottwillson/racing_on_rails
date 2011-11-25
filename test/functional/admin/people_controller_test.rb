@@ -607,7 +607,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     admin = people(:administrator)
     assert_equal admin.name, version.user, "version user"
     changes = version.changes
-    assert_equal 26, changes.size, "changes"
+    assert_equal 27, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal teams(:vanilla).id, change.first, "Team ID before"

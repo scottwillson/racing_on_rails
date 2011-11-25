@@ -46,7 +46,7 @@ class Alias < ActiveRecord::Base
   private
   
   def cannot_shadow_person
-    if Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", name])
+    if Person.exists?(["name = ?", name])
       errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
     end
   end

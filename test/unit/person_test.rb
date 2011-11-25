@@ -1017,7 +1017,7 @@ class PersonTest < ActiveSupport::TestCase
   
   def test_create_new_name_if_there_are_results_from_previous_year
     person = people(:weaver)
-    event = SingleDayEvent.create!(:date => 1.years.ago)
+    event = SingleDayEvent.create!(:date => 1.year.ago)
     old_result = event.races.create!(:category => categories(:senior_men)).results.create!(:person => person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")

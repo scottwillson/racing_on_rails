@@ -28,8 +28,8 @@ module Names
     # This is a bit naive
     def add_name
       last_year = Date.today.year - 1
-      if @old_name.present? && results_before_this_year? && self.names.none? { |name| name.year == last_year }
-        name = names.build(:name => @old_name, :year => last_year)
+      if name_was.present? && results_before_this_year? && self.names.none? { |name| name.year == last_year }
+        name = names.build(:name => name_was, :year => last_year)
         if self.respond_to?(:first_name)
           name.first_name = first_name_was
         end
