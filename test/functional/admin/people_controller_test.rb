@@ -234,7 +234,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     version = molly.versions.last
     assert_equal @administrator.name, version.user, "version user"
     changes = version.changes
-    assert_equal 27, changes.size, "changes"
+    assert_equal 28, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal vanilla.id, change.first, "Team ID before"

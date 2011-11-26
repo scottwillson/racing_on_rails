@@ -26,6 +26,13 @@ end
 
 group :test do
   gem "ansi"
+  gem "factory_girl_rails"
+  gem "mocha", :require => false
+  gem "sqlite3"
+  gem "timecop"
+end
+
+group :acceptance do
   gem "capybara"
   gem "database_cleaner"
   gem "factory_girl_rails"

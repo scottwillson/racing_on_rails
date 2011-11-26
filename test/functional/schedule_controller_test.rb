@@ -34,9 +34,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     get(:index, {:year => year})
 
     html = @response.body
-    Event.all.each do |event|
-      assert(html[event.name], "'#{event.name}' should be in HTML")
-    end
+    assert(html["Banana Belt I"], "'Banana Belt I' should be in HTML")
+    assert(html["Mudslinger"], "'Mudslinger' should be in HTML")
     assert(html["banana_belt.html"], "Schedule should include Banana Belt flyer URL")
     assert(!html["mud_slinger.html"], "Schedule should not include Mudslinger flyer URL")
   end
