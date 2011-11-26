@@ -166,11 +166,7 @@ class Admin::EventsController < Admin::AdminController
     temp_file = File.new(path)
     event = Event.find(params[:id])
     
-    if File.extname(path) == ".lif"
-      results_file = Results::LifFile.new(temp_file, event)
-    else
-      results_file = Results::ResultsFile.new(temp_file, event)
-    end
+    results_file = Results::ResultsFile.new(temp_file, event)
     
     results_file.import
     expire_cache
@@ -274,7 +270,7 @@ class Admin::EventsController < Admin::AdminController
   protected
   
   def assign_disciplines
-    @disciplines = Discipline.find_all_names
+    @disciplines = Discipline.names
   end
   
   def assign_event
