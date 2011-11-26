@@ -13,34 +13,34 @@ class OverallBarTest < ActiveSupport::TestCase
 
     kona = FactoryGirl.create(:team)
     
-    association_category = Factory(:category, :name => "CBRA")
-    senior_men           = Factory(:category, :name => "Senior Men", :parent => association_category)
-    men_a                = Factory(:category, :name => "Men A", :parent => senior_men)
-    sr_p_1_2             = Factory(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
-    senior_women         = Factory(:category, :name => "Senior Women", :parent => association_category)
+    association_category = FactoryGirl.create(:category, :name => "CBRA")
+    senior_men           = FactoryGirl.create(:category, :name => "Senior Men", :parent => association_category)
+    men_a                = FactoryGirl.create(:category, :name => "Men A", :parent => senior_men)
+    sr_p_1_2             = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
+    senior_women         = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
     senior_women_1_2_3 = FactoryGirl.create(:category, :name => "Senior Women 1/2/3", :parent => senior_women)
     
-    discipline = Factory(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, :name => "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     
-    discipline = Factory(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
-    discipline = Factory(:discipline, :name => "Cyclocross")
+    discipline = FactoryGirl.create(:discipline, :name => "Cyclocross")
     discipline.bar_categories << men_a
 
-    discipline = Factory(:discipline, :name => "Track")
+    discipline = FactoryGirl.create(:discipline, :name => "Track")
     discipline.bar_categories << senior_men
 
-    discipline = Factory(:discipline, :name => "Criterium")
+    discipline = FactoryGirl.create(:discipline, :name => "Criterium")
     discipline.bar_categories << senior_men
 
-    discipline = Factory(:discipline, :name => "Mountain Bike")
+    discipline = FactoryGirl.create(:discipline, :name => "Mountain Bike")
     discipline.bar_categories << senior_men
 
-    discipline = Factory(:discipline, :name => "Overall")
+    discipline = FactoryGirl.create(:discipline, :name => "Overall")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
@@ -253,43 +253,43 @@ class OverallBarTest < ActiveSupport::TestCase
     category_4_men       = FactoryGirl.create(:category, :name => "Category 4 Men", :parent => category_4_5_men)
     category_5_men       = FactoryGirl.create(:category, :name => "Category 5 Men", :parent => category_4_5_men)
     
-    discipline = Factory(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, :name => "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
     
-    discipline = Factory(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = Factory(:discipline, :name => "Cyclocross")
+    discipline = FactoryGirl.create(:discipline, :name => "Cyclocross")
     discipline.bar_categories << men_a
 
-    discipline = Factory(:discipline, :name => "Track")
+    discipline = FactoryGirl.create(:discipline, :name => "Track")
     discipline.bar_categories << senior_men
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = Factory(:discipline, :name => "Criterium")
+    discipline = FactoryGirl.create(:discipline, :name => "Criterium")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = Factory(:discipline, :name => "Mountain Bike")
+    discipline = FactoryGirl.create(:discipline, :name => "Mountain Bike")
     discipline.bar_categories << senior_men
     discipline.bar_categories << category_3_men
     discipline.bar_categories << category_4_men
     discipline.bar_categories << category_5_men
 
-    discipline = Factory(:discipline, :name => "Overall")
+    discipline = FactoryGirl.create(:discipline, :name => "Overall")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     discipline.bar_categories << category_3_men

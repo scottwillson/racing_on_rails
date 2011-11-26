@@ -3,15 +3,15 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class DisciplineTest < ActiveSupport::TestCase
   def test_find_by_symbol
-    discipline = Factory(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, :name => "Road")
     assert_equal discipline, Discipline[:road], "Road"
   end
   
   def test_find_via_alias
-    cyclocross = Factory(:discipline, :name => "Cyclocross")
-    Factory(:discipline_alias, :discipline => cyclocross, :alias => "cx")
+    cyclocross = FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline_alias, :discipline => cyclocross, :alias => "cx")
     
-    road = Factory(:discipline, :name => "Road")
+    road = FactoryGirl.create(:discipline, :name => "Road")
     
     assert_equal road, Discipline.find_via_alias("Road"), "Road by alias"
     assert_equal road, Discipline.find_via_alias("road"), "road by alias"
@@ -27,8 +27,8 @@ class DisciplineTest < ActiveSupport::TestCase
   end
   
   def test_class_names
-    Factory(:discipline, :name => "Road")
-    Factory(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Track")
     assert_equal [ "Road", "Track" ], Discipline.names.sort, "name"
   end
 end

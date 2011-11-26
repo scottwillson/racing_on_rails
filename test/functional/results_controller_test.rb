@@ -5,19 +5,19 @@ class ResultsControllerTest < ActionController::TestCase
   def setup
     super
     
-    association_category = Factory(:category, :name => "CBRA")
-    @senior_men          = Factory(:category, :name => "Senior Men", :parent => association_category)
-    @senior_women        = Factory(:category, :name => "Senior Women", :parent => association_category)
+    association_category = FactoryGirl.create(:category, :name => "CBRA")
+    @senior_men          = FactoryGirl.create(:category, :name => "Senior Men", :parent => association_category)
+    @senior_women        = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
     
-    discipline = Factory(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, :name => "Road")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
     
-    discipline = Factory(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
 
-    discipline = Factory(:discipline, :name => "Overall")
+    discipline = FactoryGirl.create(:discipline, :name => "Overall")
     discipline.bar_categories << @senior_men
     discipline.bar_categories << @senior_women
   end

@@ -3,25 +3,25 @@ require File.expand_path("../../../test_helper", __FILE__)
 # :stopdoc:
 class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   def test_create
-    combined_results = CombinedTimeTrialResults.create!(:parent => Factory(:time_trial_event))
+    combined_results = CombinedTimeTrialResults.create!(:parent => FactoryGirl.create(:time_trial_event))
     assert_equal(false, combined_results.notification?, "CombinedTimeTrialResults should not send notification updates")
   end
 
   def test_combined_tt
-    event = Factory(:time_trial_event)
-    race_1 = Factory(:race, :event => event)
-    race_2 = Factory(:race, :event => event)
-    result_1 = Factory(:result, :race => race_1, :place => "1", :time => "1800")
-    result_2 = Factory(:result, :race => race_1, :place => "2", :time => "2112")
-    result_3 = Factory(:result, :race => race_2, :place => "9", :time => "1801")
+    event = FactoryGirl.create(:time_trial_event)
+    race_1 = FactoryGirl.create(:race, :event => event)
+    race_2 = FactoryGirl.create(:race, :event => event)
+    result_1 = FactoryGirl.create(:result, :race => race_1, :place => "1", :time => "1800")
+    result_2 = FactoryGirl.create(:result, :race => race_1, :place => "2", :time => "2112")
+    result_3 = FactoryGirl.create(:result, :race => race_2, :place => "9", :time => "1801")
 
     # Results with no time should not be included
-    Factory(:result, :race => race_2, :place => "10")
+    FactoryGirl.create(:result, :race => race_2, :place => "10")
     
     # Only include finishers
-    Factory(:result, :race => race_1, :place => "DNF")
-    Factory(:result, :race => race_1, :place => "DNF", :time => 0)
-    Factory(:result, :race => race_1, :place => "DQ", :time => 12)
+    FactoryGirl.create(:result, :race => race_1, :place => "DNF")
+    FactoryGirl.create(:result, :race => race_1, :place => "DNF", :time => 0)
+    FactoryGirl.create(:result, :race => race_1, :place => "DQ", :time => 12)
 
     event.save!    
     combined_results = event.combined_results(true)
@@ -53,9 +53,9 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
 
   def test_honor_auto_combined_results    
-    event = Factory(:time_trial_event)
-    race = Factory(:race, :event => event)
-    Factory(:result, :race => race, :place => "1", :time => 1800)
+    event = FactoryGirl.create(:time_trial_event)
+    race = FactoryGirl.create(:race, :event => event)
+    FactoryGirl.create(:result, :race => race, :place => "1", :time => 1800)
 
     assert(event.combined_results(true), "TT event should have combined results")
     event.reload
@@ -83,7 +83,7 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
 
   def test_requires_combined_results_for_children
-    event = Factory(:time_trial_event)
+    event = FactoryGirl.create(:time_trial_event)
 
     event.reload
     assert_equal(true, event.notification?, "event notification?")
@@ -97,8 +97,8 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     assert_equal("Time Trial", twenty_mile.discipline, "20 mile child event discipline")
     assert_equal(true, twenty_mile.notification?, "20 mile child event notification?")
 
-    Factory(:result, :race => Factory(:race, :event => ten_mile), :place => "1", :time => 1000)
-    Factory(:result, :race => Factory(:race, :event => twenty_mile), :place => "1", :time => 1000)
+    FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => ten_mile), :place => "1", :time => 1000)
+    FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => twenty_mile), :place => "1", :time => 1000)
 
     assert_equal("Time Trial", ten_mile.discipline, "10 mile child event discipline")
     assert(ten_mile.auto_combined_results?, "ten_mile auto_combined_results?")
@@ -118,10 +118,10 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
     series = Series.create!(:discipline => "Time Trial")
     assert_equal true, series.notification?, "event notification?"
     assert_equal true, series.notification_enabled?, "event notification_enabled?"
-    Factory(:result, :race => Factory(:race, :event => series), :place => "1", :time => 1000)
+    FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => series), :place => "1", :time => 1000)
     
     event = series.children.create!
-    Factory(:result, :race => Factory(:race, :event => event), :place => "1", :time => 500)
+    FactoryGirl.create(:result, :race => FactoryGirl.create(:race, :event => event), :place => "1", :time => 500)
     assert_equal true, event.notification?, "event notification?"
     
     assert_not_nil(series.combined_results(true), "Series parent should have combined results")
@@ -139,9 +139,9 @@ class CombinedTimeTrialResultsTest < ActiveSupport::TestCase
   end
   
   def test_should_not_calculate_combined_results_for_combined_results
-    event = Factory(:time_trial_event)
-    race = Factory(:race, :event => event)
-    Factory(:result, :race => race, :place => "1", :time => 1800)
+    event = FactoryGirl.create(:time_trial_event)
+    race = FactoryGirl.create(:race, :event => event)
+    FactoryGirl.create(:result, :race => race, :place => "1", :time => 1800)
     
     assert_not_nil(event.combined_results(true), "TT event should have combined results")
     result_id = event.combined_results.races.first.results.first.id

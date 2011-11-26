@@ -56,13 +56,13 @@ class CategoryTest < ActiveSupport::TestCase
   end
   
   def test_find_by_friendly_param
-    category = Factory(:category, :name => "Pro, Semi-Pro Men")
+    category = FactoryGirl.create(:category, :name => "Pro, Semi-Pro Men")
     assert_equal category, Category.find_by_friendly_param("pro_semi_pro_men")
   end
   
   def test_ambiguous_find_by_param
-    senior_men = Factory(:category, :name => "Senior Men")
-    senior_men_2 = Factory(:category, :name => "Senior/Men")
+    senior_men = FactoryGirl.create(:category, :name => "Senior Men")
+    senior_men_2 = FactoryGirl.create(:category, :name => "Senior/Men")
     assert_equal('senior_men', senior_men.friendly_param)
     assert_equal('senior_men', senior_men_2.friendly_param)
     assert_raises(Concerns::Category::AmbiguousParamException) { Category.find_by_friendly_param('senior_men') }

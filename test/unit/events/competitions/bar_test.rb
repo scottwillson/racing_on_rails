@@ -6,33 +6,33 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 class BarTest < ActiveSupport::TestCase
   def test_calculate
-    alice  = Factory(:person, :name => "Alice")
-    matson = Factory(:person, :name => "Matson")
-    molly  = Factory(:person, :name => "Molly")
-    tonkin = Factory(:person, :name => "Tonkin")
-    weaver = Factory(:person, :name => "Weaver")
+    alice  = FactoryGirl.create(:person, :name => "Alice")
+    matson = FactoryGirl.create(:person, :name => "Matson")
+    molly  = FactoryGirl.create(:person, :name => "Molly")
+    tonkin = FactoryGirl.create(:person, :name => "Tonkin")
+    weaver = FactoryGirl.create(:person, :name => "Weaver")
 
-    association_category = Factory(:category, :name => "CBRA")
-    senior_men           = Factory(:category, :name => "Senior Men", :parent => association_category)
-    men_a                = Factory(:category, :name => "Men A", :parent => senior_men)
-    sr_p_1_2             = Factory(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
-    senior_women         = Factory(:category, :name => "Senior Women", :parent => association_category)
+    association_category = FactoryGirl.create(:category, :name => "CBRA")
+    senior_men           = FactoryGirl.create(:category, :name => "Senior Men", :parent => association_category)
+    men_a                = FactoryGirl.create(:category, :name => "Men A", :parent => senior_men)
+    sr_p_1_2             = FactoryGirl.create(:category, :name => "Senior Men Pro 1/2", :parent => senior_men)
+    senior_women         = FactoryGirl.create(:category, :name => "Senior Women", :parent => association_category)
     
-    discipline = Factory(:discipline, :name => "Road")
+    discipline = FactoryGirl.create(:discipline, :name => "Road")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
     
-    discipline = Factory(:discipline, :name => "Time Trial")
+    discipline = FactoryGirl.create(:discipline, :name => "Time Trial")
     discipline.bar_categories << senior_men
     discipline.bar_categories << senior_women
 
-    discipline = Factory(:discipline, :name => "Cyclocross")
+    discipline = FactoryGirl.create(:discipline, :name => "Cyclocross")
     discipline.bar_categories << men_a
 
-    discipline = Factory(:discipline, :name => "Track")
+    discipline = FactoryGirl.create(:discipline, :name => "Track")
     discipline.bar_categories << senior_men
 
-    discipline = Factory(:discipline, :name => "Criterium")
+    discipline = FactoryGirl.create(:discipline, :name => "Criterium")
     discipline.bar_categories << senior_men
 
     cross_crusade = Series.create!(:name => "Cross Crusade", :discipline => "Cyclocross")

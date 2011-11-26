@@ -6,9 +6,9 @@ require "authlogic/test_case"
 
 # Use transactional fixtures except for acceptance environment
 class ActiveSupport::TestCase
-  self.use_transactional_fixtures = !Rails.env.acceptance?
+  self.use_transactional_fixtures = true
   self.use_instantiated_fixtures  = false
-  fixtures :all
+  self.pre_loaded_fixtures  = false
 
   include EnumerableAssertions
 

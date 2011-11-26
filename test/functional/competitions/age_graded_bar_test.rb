@@ -11,15 +11,15 @@ class AgeGradedBarTest < ActionController::TestCase
 
   def setup
     super
-    age_graded = Factory(:discipline, :name => "Age Graded")
-    @masters_men = Factory(:category, :name => "Masters Men")
-    masters_30_34 = Factory(:category, :name => "Masters Men 30-34", :ages => 30..34, :parent => @masters_men)
+    age_graded = FactoryGirl.create(:discipline, :name => "Age Graded")
+    @masters_men = FactoryGirl.create(:category, :name => "Masters Men")
+    masters_30_34 = FactoryGirl.create(:category, :name => "Masters Men 30-34", :ages => 30..34, :parent => @masters_men)
     age_graded.bar_categories << masters_30_34
 
-    road = Factory(:discipline, :name => "Road")
+    road = FactoryGirl.create(:discipline, :name => "Road")
     road.bar_categories << @masters_men
 
-    overall = Factory(:discipline, :name => "Overall")
+    overall = FactoryGirl.create(:discipline, :name => "Overall")
 
     weaver = FactoryGirl.create(:person, :date_of_birth => 32.years.ago(Time.zone.local(2007)))
     banana_belt = FactoryGirl.create(:event, :date => Date.new(2007, 3, 20))
