@@ -52,7 +52,7 @@ class CrossCrusadeTeamCompetition < Competition
       event.id
     end
     event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(', ')
 
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
@@ -152,6 +152,10 @@ class CrossCrusadeTeamCompetition < Competition
 
   def end_date
     parent && parent.end_date
+  end
+
+  def valid_dates
+    true
   end
 
   def set_notes

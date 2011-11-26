@@ -1,53 +1,56 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
-class MailingListsTest < WebDriverTestCase
+class MailingListsTest < AcceptanceTest
   def test_mailing_lists
-    open "/mailing_lists"
+    mailing_list = FactoryGirl.create(:mailing_list, :name => "obra")
+    mailing_list.posts.create!(:subject => "Schedule Changes", :date => "2004-12-31", :sender => "Scout <scout@obra.org>", :body => "This is a test message.")
+    
+    visit "/mailing_lists"
 
-    open "/posts/obra"
-    assert_not_in_page_source "Schedule Changes"
+    visit "/posts/obra"
+    assert_page_has_no_content "Schedule Changes"
 
-    open "/posts/obra/new"
+    visit "/posts/obra/new"
 
-    type "Scott", :id => "post_from_name"
-    type "scott.willson@gmail.com", :id => "post_from_email_address"
-    type "New Message", :id => "post_subject"
-    type "My post message body", :id => "post_body"
+    fill_in "post_from_name", :with => "Scott"
+    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
+    fill_in "post_subject", :with => "New Message"
+    fill_in "post_body", :with => "My post message body"
 
-    click :id => "post"
-    assert_page_source "Your new post is now in the mailing queue"
+    click_button "Post"
+    assert_page_has_content "Your new post is now in the mailing queue"
 
-    open "/posts/obra/2004/12"
-    assert_page_source "Schedule Changes"
+    visit "/posts/obra/2004/12"
+    assert_page_has_content "Schedule Changes"
 
-    click :link_text => "Schedule Changes"
-    assert_page_source "This is a test message."
+    click_link "Schedule Changes"
+    assert_page_has_content "This is a test message."
 
-    click :link_text => "Reply Privately"
+    click_link "Reply Privately"
 
-    type "Don", :id => "post_from_name"
-    type "This is a special private reply", :id => "post_body"
+    fill_in "post_from_name", :with => "Don"
+    fill_in "post_body", :with => "This is a special private reply"
 
-    click :name => "commit"
-    assert_page_source "From email address can't be blank"
+    click_button "Send"
+    assert_page_has_content "From email address can't be blank"
 
-    type "don@butlerpress.com", :id => "post_from_email_address"
+    fill_in "post_from_email_address", :with => "don@butlerpress.com"
 
-    click :name => "commit"
-    assert_page_source "Sent private reply"
+    click_button "Send"
+    assert_page_has_content "Sent private reply"
 
-    open "/posts/obra/new"
+    visit "/posts/obra/new"
 
-    type "scott.willson@gmail.com", :id => "post_from_email_address"
-    type "New Message 2", :id => "post_subject"
-    type "My post message body", :id => "post_body"
+    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
+    fill_in "post_subject", :with => "New Message 2"
+    fill_in "post_body", :with => "My post message body"
 
-    click :name => "commit"
-    assert_page_source "From name can't be blank"
+    click_button "Post"
+    assert_page_has_content "From name can't be blank"
 
-    type "Scott", :id => "post_from_name"
-    click :name => "commit"
-    assert_page_source "Your new post is now in the mailing queue"    
+    fill_in "post_from_name", :with => "Scott"
+    click_button "Post"
+    assert_page_has_content "Your new post is now in the mailing queue"    
   end
 end

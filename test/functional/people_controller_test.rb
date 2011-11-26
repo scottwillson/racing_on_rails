@@ -4,152 +4,85 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PeopleControllerTest < ActionController::TestCase
-  assert_no_angle_brackets :except => :test_create_login_invalid_login
-  
-  def test_index
-    get(:index)
-    assert_response(:success)
-    assert_template("people/index")
-    assert_layout("application")
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert(assigns["people"].empty?, "Should find no one")
-    assert_select ".tabs", :count => 0
-    assert_select "a#export_link", :count => 0
-  end
-
-  def test_list
-    get(:list, :term => 'jone')
-    assert_response(:success)
-    assert_not_nil(@response.body.index("Jones"), 'Search for jone should find Jones #{@response.to_s}')
-    assert_not_nil(@response.body.index("2"), 'Search for jone should return ID of 2')
-  end
-
-  def test_index_as_promoter
-    PersonSession.create(people(:promoter))
-    get(:index)
-    assert_response(:success)
-    assert_template("people/index")
-    assert_layout("application")
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert(assigns["people"].empty?, "Should find no one")
-    assert_select ".tabs", :count => 1
-    assert_select "a#export_link", :count => 1
-  end
-
-  def test_find
-    get(:index, :name => "weav")
-    assert_response(:success)
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal([people(:weaver)], assigns['people'], 'Search for weav should find Weaver')
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert_equal('weav', assigns['name'], "'name' assigns")
-  end
-
-  def test_find_nothing
-    get(:index, :name => 's7dfnacs89danfx')
-    assert_response(:success)
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(0, assigns['people'].size, "Should find no people")
-  end
-  
-  def test_find_empty_name
-    get(:index, :name => '')
-    assert_response(:success)
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert(assigns["people"].empty?, "Should find no one")
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert_equal('', assigns['name'], "'name' assigns")
-  end
-
-  def test_find_limit
-    for i in 0..RacingAssociation.current.search_results_limit
-      Person.create(:name => "Test Person #{i}")
-    end
-    get(:index, :name => 'Test')
-    assert_response(:success)
-    assert_not_nil(assigns["people"], "Should assign people")
-    assert_equal(100, assigns['people'].size, "Search results should be cut off at RacingAssociation.current.search_results_limit")
-    assert_not_nil(assigns["name"], "Should assign name")
-    assert(flash.empty?, 'flash not empty?')
-    assert_equal('Test', assigns['name'], "'name' assigns")
-  end
-
-  def test_ajax_ssl_find
-    use_ssl
-    xhr :get, :index, :term => "weav", :format => "json"
-    assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"
-    assert_response :success
-    assert_template nil
-    assert_layout nil
-  end
-  
   def test_edit
+    member = FactoryGirl.create(:person_with_login)
     use_ssl
-    login_as :member
-    get :edit, :id => people(:member).to_param
+    login_as member
+    get :edit, :id => member.to_param
     assert_response :success
-    assert_equal people(:member), assigns(:person), "@person"
+    assert_equal member, assigns(:person), "@person"
     assert_select ".tabs", :count => 0
   end
 
   def test_edit_promoter
+    promoter = FactoryGirl.create(:promoter)
     use_ssl
-    login_as :promoter
-    get :edit, :id => people(:promoter).to_param
+    login_as promoter
+    get :edit, :id => promoter.to_param
     assert_response :success
-    assert_equal people(:promoter), assigns(:person), "@person"
+    assert_equal promoter, assigns(:person), "@person"
     assert_select ".tabs", :count => 1
   end
   
   def test_edit_as_editor
-    people(:molly).editors << people(:member)
+    member = FactoryGirl.create(:person_with_login)
+    molly = FactoryGirl.create(:person)
+    molly.editors << member
     use_ssl
-    login_as :member
-    get :edit, :id => people(:molly).to_param
+    login_as member
+    get :edit, :id => molly.to_param
     assert_response :success
-    assert_equal people(:molly), assigns(:person), "@person"
+    assert_equal molly, assigns(:person), "@person"
     assert_select ".tabs", :count => 0
   end
 
   def test_edit_as_editor
-    people(:molly).editors << people(:member)
+    member = FactoryGirl.create(:person_with_login)
+    molly = FactoryGirl.create(:person)
+    molly.editors << member
     use_ssl
-    login_as :member
-    get :edit, :id => people(:molly).to_param
+    login_as member
+    get :edit, :id => molly.to_param
     assert_response :success
-    assert_equal people(:molly), assigns(:person), "@person"
+    assert_equal molly, assigns(:person), "@person"
     assert_select ".tabs", :count => 0
   end
 
   def test_must_be_logged_in
+    member = FactoryGirl.create(:person_with_login)
     use_ssl
-    get :edit, :id => people(:member).to_param
+    get :edit, :id => member.to_param
     assert_redirected_to new_person_session_url(secure_redirect_options)
   end
 
   def test_cant_see_other_people_info
+    member = FactoryGirl.create(:person_with_login)
+    weaver = FactoryGirl.create(:person)
     use_ssl
-    login_as :member
-    get :edit, :id => people(:weaver).to_param
+    login_as member
+    get :edit, :id => weaver.to_param
     assert_redirected_to unauthorized_path
   end
 
   def test_admins_can_see_people_info
+    member = FactoryGirl.create(:person_with_login)
+    administrator = FactoryGirl.create(:administrator)
     use_ssl
-    login_as :administrator
-    get :edit, :id => people(:member).to_param
+    login_as administrator
+    get :edit, :id => member.to_param
     assert_response :success
-    assert_equal people(:member), assigns(:person), "@person"
+    assert_equal member, assigns(:person), "@person"
   end
   
   def test_update
     use_ssl
-    person = people(:member)
-    login_as :member
+    person = FactoryGirl.create(:person_with_login, :first_name => "Bob", :last_name => "Jones")
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    login_as person
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
-    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal gentle_lovers, person.reload.team, "Team should be updated"
     assert_equal 1, person.versions.size, "versions"
     version = person.versions.last
     assert_equal person.name, version.user, "version user"
@@ -166,22 +99,21 @@ class PeopleControllerTest < ActionController::TestCase
   
   def test_update_no_name
     use_ssl
-    editor = Person.create!(:login => "my_login")
-    editor.roles << roles(:administrator)
-    editor.save!
+    editor = FactoryGirl.create(:administrator, :login => "my_login", :first_name => "", :last_name => "")
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
     
     login_as editor
     
-    person = people(:member)
+    person = FactoryGirl.create(:person)
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
-    assert_equal teams(:gentle_lovers), person.reload.team, "Team should be updated"
+    assert_equal gentle_lovers, person.reload.team, "Team should be updated"
     assert_equal 1, person.versions.size, "versions"
     version = person.versions.last
     assert_equal "my_login", version.user_name, "version user"
     changes = version.changes
-    assert_equal 2, changes.size, "changes"
+    assert_equal 4, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
@@ -192,33 +124,38 @@ class PeopleControllerTest < ActionController::TestCase
   end
   
   def test_update_by_editor
-    people(:member).editors << people(:molly)
+    person = FactoryGirl.create(:person)
+    molly = FactoryGirl.create(:person)
+    person.editors << molly
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
 
     use_ssl
-    person = people(:member)
-    login_as :molly
+    login_as molly
     put :update, :id => person.to_param, :person => { :team_name => "Gentle Lovers" }
     assert_redirected_to edit_person_path(person)
-    assert_equal teams(:gentle_lovers), person.reload.team(true), "Team should be updated"
+    assert_equal gentle_lovers, person.reload.team(true), "Team should be updated"
   end
   
   def test_account
     use_ssl
-    login_as :member
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
     get :account
-    assert_redirected_to edit_person_path(people(:member))
+    assert_redirected_to edit_person_path(member)
   end
   
   def test_account_with_person
     use_ssl
-    login_as :member
-    get :account, :id => people(:member).to_param
-    assert_redirected_to edit_person_path(people(:member))
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
+    get :account, :id => member.to_param
+    assert_redirected_to edit_person_path(member)
   end
   
   def test_account_with_another_person
     use_ssl
-    login_as :member
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
     another_person = Person.create!
     get :account, :id => another_person.to_param
     assert_redirected_to edit_person_path(another_person)
@@ -232,434 +169,25 @@ class PeopleControllerTest < ActionController::TestCase
   
   def test_account_with_person_not_logged_in
     use_ssl
-    get :account, :id => people(:member).to_param
-    assert_redirected_to edit_person_path(people(:member))
-  end
-
-  def test_create_login
-    ActionMailer::Base.deliveries.clear
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :email => "racer@example.com"
-          },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
-
-  def test_create_login_with_token
-    ActionMailer::Base.deliveries.clear
-    
-    person = people(:past_member)
-    person.reset_perishable_token!
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret",
-          },
-         :id => person.perishable_token
-    assert_redirected_to edit_person_path(person)
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
-
-  def test_create_login_with_name
-    ActionMailer::Base.deliveries.clear
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :name => "Bike Racer",
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :email => "racer@example.com"
-          },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
-  
-  def test_create_login_with_name
-    ActionMailer::Base.deliveries.clear
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :name => "Bike Racer",
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :email => "racer@example.com"
-          },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
-
-  def test_create_login_with_license_and_name
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "123   ",
-                      :name => "    Speed Racer"
-                    },
-         :return_to => root_path
- 
-    assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-    assert_equal existing_person, assigns(:person), "Should match existing Person"
-  end
-  
-  def test_create_login_with_license_in_name_field
-    ActionMailer::Base.deliveries.clear
-     existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "Speed Racer",
-                      :name => ""
-                    },
-         :return_to => root_path
- 
-    assert_response :success
-    assert assigns(:person).errors[:name].present?, "Should have error on :name"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-  
-  def test_create_login_with_reversed_fields
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "Speed Racer",
-                      :name => "123"
-                    },
-         :return_to => root_path
- 
-    assert_response :success
-    assert assigns(:person).errors.any?, "Should have errors"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-  
-  def test_create_login_blank_license
-    ActionMailer::Base.deliveries.clear
-    people_count = Person.count
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", :email => "racer@example.com", :password => "secret", 
-                      :password_confirmation => "secret", :license => "" },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-    assert_equal people_count + 1, Person.count, "People count. Should add one."
-  end
-  
-  def test_create_login_no_email
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111", :email => "racer@example.com"
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "" 
-                    },
-         :return_to => root_path
-
-    assert_response :success
-    assert assigns(:person).errors[:email].present?, "Should have error on :email"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-  
-  def test_create_dupe_login_no_email
-    ActionMailer::Base.deliveries.clear
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "bob.jones", 
-                      :password => "secret", 
-                      :password_confirmation => "secret"
-                    },
-         :return_to => root_path
-
-    assert_response :success
-    assert assigns(:person).errors[:email].present?, "Should have error on :email"
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-  
-  def test_create_login_bad_email
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111"
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :email => "http://example.com/", 
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :license => "111" 
-          },
-         :return_to => root_path
-    assert_response :success
-    
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-  
-  def test_new_login
-    use_ssl
-    get :new_login
-    assert_response :success
-    assert assigns(:person).new_record?, "@person should be a new record"
-  end
-  
-  def test_new_login_with_token
-    person = people(:past_member)
-    person.reset_perishable_token!
-    use_ssl
-    get :new_login, :id => person.perishable_token
-    assert_response :success
-    assert !assigns(:person).new_record?, "@person should not be a new record"
-  end
-  
-  def test_new_login_with_token_logged_in
-    person = people(:past_member)
-    person.reset_perishable_token!
-    use_ssl
-    get :new_login, :id => person.perishable_token
-    assert_response :success
-    assert !assigns(:person).new_record?, "@person should not be a new record"
-  end
-  
-  def test_new_login_http
-    get :new_login
-    if RacingAssociation.current.ssl?
-      assert_redirected_to new_login_people_url(secure_redirect_options)
-    else
-      assert_response :success
-    end
-  end
-  
-  def test_create_login_all_blank
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111"
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "", 
-           :email => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :license => "",
-           :name => ""
-          },
-         :return_to => root_path
-    assert_response :success
-    assert assigns(:person).errors[:login].present?, "Should have error on :email"
-    assert assigns(:person).new_record?, "Should be a new_record?"
-    
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-
-  def test_create_login_login_blank_name_blank
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111"
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "", 
-           :email => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret"
-          },
-         :return_to => root_path
-    assert_response :success
-    assert assigns(:person).errors[:login].present?, "Should have error on :email"
-    assert assigns(:person).new_record?, "Should be a new_record?"
-    
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-
-  def test_create_login_login_blank_license_blank
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111", :name => "Speed Racer"
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "", 
-           :email => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :license => "",
-           :name => ""
-          },
-         :return_to => root_path
-    assert_response :success
-    assert assigns(:person).errors[:login].present?, "Should have error on :email"
-    assert assigns(:person).new_record?, "Should be a new_record?"
-    
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-
-  def test_create_login_name_blank_license_blank
-    ActionMailer::Base.deliveries.clear
-    
-    Person.create! :license => "111", :name => "Speed Racer", :email => "racer@example.com"
-    person_count = Person.count
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :email => "racer@example.com", 
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :license => "",
-           :name => ""
-          },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-    assert_equal person_count + 1, Person.count, "Person.count"
-  end
-
-  def test_create_login_invalid_login
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "!@#$&*()_+?><", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "123",
-                      :name => "Speed Racer"
-                    },
-         :return_to => root_path
-
-   assert_response :success
-   assert assigns(:person).errors[:login].present?, "Should have error on :email"
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-  end
-
-  def test_create_login_unmatched_license
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    people_count = Person.count
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "speed_racer", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "1727",
-                      :name => "Speed Racer"
-                    },
-         :return_to => root_path
-
-   assert assigns(:person).errors.any?, "Should errors"
-   assert_equal 1, assigns(:person).errors.size, "errors"
-   assert_response :success
-   assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-   assert_equal people_count, Person.count, "People count"
-  end
-
-  def test_create_login_unmatched_name
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer")
-    people_count = Person.count
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "speed_racer", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "123",
-                      :name => "Vitesse"
-                    },
-         :return_to => root_path
-
-    assert assigns(:person).errors.any?, "Should errors"
-    assert_equal 1, assigns(:person).errors.size, "errors"
-    assert_response :success
-    assert_equal 0, ActionMailer::Base.deliveries.size, "Should not deliver confirmation email"
-    assert_equal people_count, Person.count, "People count"
-  end
-
-  def test_create_login_with_current_race_number_and_name
-    ActionMailer::Base.deliveries.clear
-    existing_person = Person.create!(:license => "123", :name => "Speed Racer", :road_number => "9871")
-    
-    use_ssl
-    post :create_login, 
-         :person => { :login => "racer@example.com", 
-                      :password => "secret", 
-                      :password_confirmation => "secret", 
-                      :email => "racer@example.com", 
-                      :license => "9871",
-                      :name => "Speed Racer"
-                    },
-         :return_to => root_path
- 
-    assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-    assert_equal existing_person, assigns(:person), "Should match existing Person"
+    member = FactoryGirl.create(:person_with_login)
+    get :account, :id => member.to_param
+    assert_redirected_to edit_person_path(member)
   end
 
   def test_new_when_logged_in
-    login_as :member
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
     use_ssl
     get :new_login
-    assert_redirected_to edit_person_path(people(:member))
+    assert_redirected_to edit_person_path(member)
     assert_not_nil flash[:notice], "flash[:notice]"
   end
 
   def test_index_as_xml
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:person, :license => 7123811, :team => FactoryGirl.create(:team), :road_number => "333").
+      aliases.create!(:name => "Erik")
     get :index, :license => 7123811, :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
@@ -695,6 +223,9 @@ class PeopleControllerTest < ActionController::TestCase
   end
   
   def test_find_by_name_as_xml
+    FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+    FactoryGirl.create(:person, :first_name => "Kevin", :last_name => "Condron")
+    
     get :index, :name => "ron", :format => "xml"
     assert_response :success
     assert_select "first-name", "Molly"
@@ -702,20 +233,23 @@ class PeopleControllerTest < ActionController::TestCase
   end
   
   def test_find_by_license_as_xml
+    FactoryGirl.create(:person, :first_name => "Mark", :last_name => "Matson", :license => "576")
     get :index, :name => "m", :license => 576, :format => "xml"
     assert_response :success
     assert_select "first-name", "Mark"
   end
 
   def test_show_as_xml
-    get :show, :id => people(:molly).id, :format => "xml"
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+    get :show, :id => molly.id, :format => "xml"
     assert_response :success
     assert_select "first-name", "Molly"
     assert_select "last-name", "Cameron"
   end
 
   def test_show_as_json
-    get :show, :id => people(:molly).id, :format => "json"
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
+    get :show, :id => molly.id, :format => "json"
     assert_response :success
   end
 end

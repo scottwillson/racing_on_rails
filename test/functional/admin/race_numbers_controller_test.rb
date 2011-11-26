@@ -9,13 +9,15 @@ class Admin::RaceNumbersControllerTest < ActionController::TestCase
   end
   
   def test_new
-    person = people(:molly)
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline)
+    person = FactoryGirl.create(:person)
     xhr :get, :new, :person_id => person.to_param
     assert_response :success
   end
 
   def test_destroy
-    race_number = race_numbers(:molly_road_number)
+    race_number = FactoryGirl.create(:race_number)
     assert_not_nil(RaceNumber.find(race_number.id), 'RaceNumber should exist')
 
     xhr :delete, :destroy, :id => race_number.to_param

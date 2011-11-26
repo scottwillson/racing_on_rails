@@ -1,6 +1,7 @@
 # Work assignments for Event. First aid provider and chief official.
 # Officials can view, but not edit, this page.
 class Admin::FirstAidProvidersController < Admin::AdminController
+  skip_filter :require_administrator
   before_filter :require_administrator_or_official
   helper :table
   layout "admin/application"

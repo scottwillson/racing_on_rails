@@ -33,7 +33,7 @@ class Alias < ActiveRecord::Base
   end
   
   def person_or_team
-    unless (person and !team) or (!person and team)
+    unless (person && !team) || (!person && team)
       errors.add "person or team", "Must have exactly one person or team"
     end
   end

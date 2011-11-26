@@ -3,20 +3,33 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase  
   def test_import
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:number_issuer)
+
     team = Team.create!(:name => "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(:date => 1.years.ago)
-    result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    senior_men = FactoryGirl.create(:category)
+    result = event.races.create!(:category => senior_men).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
-    tonkin = people(:tonkin)
-    tonkin.member=(false)
-    tonkin.ccx_category = 'A'
-    tonkin.notes = 'Spent Christmans in Belgium'
-    tonkin.login = "sellwood"
-    tonkin.save!
+    tonkin = FactoryGirl.create(
+      :person, 
+      :first_name => "Erik", 
+      :last_name => "Tonkin", 
+      :member_from => nil, 
+      :member_to => nil,
+      :ccx_category => "A",
+      :road_category => "1",
+      :track_category => "5",
+      :notes => 'Spent Christmans in Belgium',
+      :login => "sellwood"
+    )
 
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
@@ -92,6 +105,12 @@ Downhill/Cross Country: Downhill}
   end
   
   def test_excel_file_database
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:number_issuer)
+    
     # Pre-existing people
     brian = Person.create!(
       :last_name =>'Abers',
@@ -240,6 +259,8 @@ Downhill/Cross Country: Downhill}
   
   def test_import_duplicates
     Person.create(:name => 'Erik Tonkin')
+    Person.create(:name => 'Erik Tonkin')
+    
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     

@@ -23,6 +23,7 @@ class Person < ActiveRecord::Base
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validate_email_field false
     config.disable_perishable_token_maintenance true
+    config.maintain_sessions false
   end
 
   before_validation :find_associated_records
@@ -159,7 +160,7 @@ class Person < ActiveRecord::Base
       LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id 
                       and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
                       and ccx_numbers.year = #{date.year} 
-                      and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
+                      and ccx_numbers.discipline_id = #{Discipline[:cyclocross].id}
       LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id 
                       and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
                       and dh_numbers.year = #{date.year} 
@@ -538,18 +539,16 @@ class Person < ActiveRecord::Base
   def number(discipline_param, reload = false, year = nil)
     return nil if discipline_param.nil?
 
-    year = year || RacingAssociation.current.year
+    year ||= RacingAssociation.current.year
     if discipline_param.is_a?(Discipline)
       discipline_param = discipline_param.to_param
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == year && race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && race_number.number_issuer.name == RacingAssociation.current.short_name
+      race_number.year == year && 
+      race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && 
+      race_number.number_issuer.name == RacingAssociation.current.short_name
     end
-    if number
-      number.value
-    else
-      nil
-    end
+    number.try :value
   end
   
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
@@ -653,7 +652,7 @@ class Person < ActiveRecord::Base
   end
 
   def promoter?
-    Event.exists?([ "promoter_id = ?", self.id ])
+    Event.exists?([ "promoter_id = ?", id ]) unless new_record?
   end
 
   # Is Person a current member of the bike racing association?
@@ -974,7 +973,7 @@ class Person < ActiveRecord::Base
       
       new_alias = Alias.new(:name => name_was, :person => self)
       unless new_alias.save
-        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+        logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}"
       end
       new_alias
     end

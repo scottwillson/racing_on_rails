@@ -37,6 +37,8 @@ end
 class PagesActionControllerIntegrationTest < ActionController::TestCase
   tests FakeController
   
+  setup :create_page
+  
   def test_work_as_a_partial
     get(:partial_using_action)
     assert_select("p", :text => "This is a plain page")
@@ -82,5 +84,9 @@ class PagesActionControllerIntegrationTest < ActionController::TestCase
     get(:news)
     assert_select("h4", :text => "Masters want more BAR points")
     assert_layout("application")
+  end
+  
+  def create_page
+    FactoryGirl.create(:page)
   end
 end

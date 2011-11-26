@@ -22,7 +22,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   end
   
   def test_update_title_inplace
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     xhr(:put, :update_attribute, 
         :id => page.to_param,
         :value => "OBRA Banquet",
@@ -33,16 +33,16 @@ class Admin::PagesControllerTest < ActionController::TestCase
     assert_equal(page, assigns("page"), "@page")
     page.reload
     assert_equal("OBRA Banquet", page.title, "Page title")
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(@administrator, page.last_updated_by, "updated_by")
   end
   
   def test_edit_page
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     get(:edit, :id => page.id)
   end
   
   def test_update_page
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     put(:update, 
         :id => page.to_param,
         :page => {
@@ -55,12 +55,12 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(@administrator, page.last_updated_by, "updated_by")
   end
   
   def test_update_page_parent
     parent_page = Page.create!(:title => "Root")
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     put(:update,
         :id => page.to_param,
         :page => {
@@ -72,7 +72,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(@administrator, page.last_updated_by, "updated_by")
     assert_equal(parent_page, page.parent, "Page parent")
     assert_redirected_to(edit_admin_page_path(page))
   end
@@ -82,7 +82,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   end
   
   def test_new_page_parent
-    parent_page = pages(:plain)
+    parent_page = FactoryGirl.create(:page)
     get(:new, :page => { :parent_id => parent_page.to_param })
     page = assigns(:page)
     assert_not_nil(page, "@page")
@@ -101,11 +101,11 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(@administrator, page.last_updated_by, "updated_by")
   end
   
   def test_create_child_page
-    parent_page = pages(:plain)
+    parent_page = FactoryGirl.create(:page)
     post(:create, 
         :page => {
           :title => "My Awesome Bike Racing Page",
@@ -118,19 +118,19 @@ class Admin::PagesControllerTest < ActionController::TestCase
     page.reload
     assert_equal("My Awesome Bike Racing Page", page.title, "title")
     assert_equal("<blink>Race</blink>", page.body, "body")
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(@administrator, page.last_updated_by, "updated_by")
     assert_equal(parent_page, page.parent, "Page parent")
   end
   
   def test_delete_page
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     delete(:destroy, :id => page.to_param)
     assert_redirected_to(admin_pages_path)
     assert(!Page.exists?(page.id), "Page should be deleted")
   end
   
   def test_delete_parent_page
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     page.children.create!
     page.reload
     delete(:destroy, :id => page.to_param)
@@ -139,7 +139,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   end
   
   def test_delete_child_page
-    page = pages(:plain).children.create!
+    page = FactoryGirl.create(:page).children.create!
     delete(:destroy, :id => page.to_param)
     assert_redirected_to(admin_pages_path)
     assert(!Page.exists?(page.id), "Page should be deleted")

@@ -3,7 +3,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PasswordResetsTest < ActionController::IntegrationTest
   def test_shared_email_address
-    person = people(:member)
+    person = FactoryGirl.create(:person_with_login)
 
     same_email = Person.create!(:login => "jane.jones", :email => "member@example.com")
     same_email.password = "wolfie"

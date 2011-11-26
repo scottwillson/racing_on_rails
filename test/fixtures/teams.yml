@@ -1,20 +1,20 @@
-kona:
-  name: Kona
-  member: true
-  show_on_public_page: true
-gentle_lovers:
-  name: Gentle Lovers
-  member: true
-  show_on_public_page: true
-vanilla:
-  name: Vanilla
-  member: true
-  show_on_public_page: true
-dfl:
-  name: Team dFL
-  member: true
-  show_on_public_page: false
-chocolate:
-  name: Chocolate
-  member: false
-  show_on_public_page: false
+# kona:
+#   name: Kona
+#   member: true
+#   show_on_public_page: true
+# gentle_lovers:
+#   name: Gentle Lovers
+#   member: true
+#   show_on_public_page: true
+# vanilla:
+#   name: Vanilla
+#   member: true
+#   show_on_public_page: true
+# dfl:
+#   name: Team dFL
+#   member: true
+#   show_on_public_page: false
+# chocolate:
+#   name: Chocolate
+#   member: false
+#   show_on_public_page: false

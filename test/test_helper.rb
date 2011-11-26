@@ -9,7 +9,9 @@ class ActiveSupport::TestCase
   self.use_transactional_fixtures = !Rails.env.acceptance?
   self.use_instantiated_fixtures  = false
   fixtures :all
-  
+
+  include EnumerableAssertions
+
   # FIXME Still need in Rails 3?
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
 
@@ -90,61 +92,6 @@ class ActiveSupport::TestCase
     post person_session_path, :person_session => { :login => person.login, :password => password }
     assert_response :redirect
   end
-
-  # Assert two Enumerable objects contain exactly same object in any order
-  def assert_same_elements(expected, actual, message = '')
-    if expected.nil? && actual.nil?
-      return
-    end
-    if !expected.nil? && actual.nil?
-      flunk "#{message}\n Expected #{expected} but was nil"
-    elseif expected.nil? && !actual.nil?
-      flunk "#{message}\n Expected nil but was #{actual}"
-    end
-    _expected = expected
-    if !_expected.is_a?(Set)
-      _expected = Set.new(_expected)
-    end
-    _actual = actual
-    if !_actual.is_a?(Set)
-      _actual = Set.new(_actual)
-    end
-    difference = _expected.difference(_actual)
-    if difference.empty?
-      difference = _actual.difference(_expected)
-    end
-    if !difference.empty?
-      if expected.empty?
-        expected_message = "[]"
-      else
-        expected_message = expected.to_a.join(', ')
-      end
-      if actual.empty?
-        actual_message = "[]"
-      else
-        actual_message = actual.to_a.join(', ')
-      end
-      flunk "#{message}\nExpected\n#{expected_message} but was \n#{actual_message}.\nDifference: #{difference.to_a.join(', ')}"
-    end
-  end
-  
-  # Assert two Enumerable objects contain exactly same object in the same order
-  def assert_equal_enumerables(expected, actual, message)
-    diff = expected - actual
-    unless diff.empty?
-      fail("#{message}. Expected to find #{diff.join(', ')} in #{actual.join(', ')}")
-    end
-  
-    diff = actual - expected
-    unless diff.empty?
-      fail("#{message}. Did not expect #{diff.join(', ')} in #{actual.join(', ')}")
-    end
-    
-    expected.each_with_index do |expected_member, index|
-      actual_member = actual[index]
-      assert_equal(expected_member, actual_member, "Expected #{expected_member} at index #{index}, but was #{actual_member}")
-    end
-  end
   
   # Assert Arrays of Results are the same. Only considers place, Person, and time
   def assert_results(expected, actual, message = nil)
@@ -207,7 +154,8 @@ class ActiveSupport::TestCase
   end
 
   def create_administrator_session
-    PersonSession.create(people(:administrator))
+    @administrator = FactoryGirl.create(:administrator)
+    PersonSession.create(@administrator)
   end
   
   def use_ssl
@@ -224,7 +172,7 @@ class ActiveSupport::TestCase
 
   def print_all_events
     Event.all( :order => :date).each {|event|
-      p "#{event.date} #{event.name} #{event.id} #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
+      p "#{event.date} #{event.name} id: #{event.id} parent: #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
     }
   end
   
@@ -243,12 +191,13 @@ class ActiveSupport::TestCase
   # helps with place_members_only calculation, so there are no gaps
   def fill_in_missing_results
     Result.all.group_by(&:race).each do |race, results|
-       all_results=results.collect(&:place) #get an array of just places for this race       
-       results.sort!{|a,b| a.place.to_i <=> b.place.to_i} #important to get last place in last
-       need_results=[]
-       (1..results.last.place.to_i).reverse_each {|res|
+       all_results = results.collect(&:place)
+       # important to get last place in last
+       results.sort! { |a,b| a.place.to_i <=> b.place.to_i }
+       need_results = []
+       (1..results.last.place.to_i).reverse_each { |res|
          unless all_results.include?(res.to_s)
-          #we need a result, there is a gap here
+           # we need a result, there is a gap here
            race.results.create!(:place => res)
          end         
        }

@@ -13,6 +13,7 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_admin_login
+    FactoryGirl.create(:administrator)
     post :create, :person_session => { :login => "admin@example.com", :password => "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
@@ -22,15 +23,17 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_member_login
-    post :create, :person_session => { :login => "bob.jones", :password => "secret" }
+    member = FactoryGirl.create(:person_with_login)
+    post :create, :person_session => { :login => member.login, :password => "secret" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert assigns["person_session"].errors.empty?, assigns["person_session"].errors.full_messages.join
-    assert_redirected_to edit_person_path(people(:member))
+    assert_redirected_to edit_person_path(member)
     assert_not_nil session[:person_credentials], "Should have :person_credentials in session"
     assert_not_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
   def test_login_failure
+    FactoryGirl.create(:administrator)
     post :create, :person_session => { :login => "admin@example.com", :password => "bad password" }
     assert_not_nil(assigns["person_session"], "@person_session")
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
@@ -40,11 +43,12 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
 
   def test_blank_login_should_fail
+    FactoryGirl.create(:administrator)
     post :create, :person_session => { :login => "", :password => "" }
     assert_not_nil(assigns["person_session"], "@person_session")
-    assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
+    assert(assigns["person_session"].errors.present?, "@person_session should have errors")
     assert_response :success
-    assert_nil session[:person_credentials], "Should not have :person_credentials in session"
+    assert_nil session[:person_credentials], "Should not have :person_credentials in session. @current_person: #{assigns[:current_person]}"
     assert_nil cookies["person_credentials"], "person_credentials cookie"
   end
 
@@ -55,11 +59,12 @@ class PersonSessionsControllerTest < ActionController::TestCase
     assert(!assigns["person_session"].errors.empty?, "@person_session should have errors")
     assert_response :success
     assert_nil cookies["person_credentials"], "person_credentials cookie"
-    assert_not_nil session[:person_credentials], "Authlogic puts :person_credentials in session, even though it won't allow person to access protected pages"
+    assert_nil session[:person_credentials], "Authlogic should not put :person_credentials in session"
   end
   
   def test_logout
-    login_as :member
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
 
     delete :destroy
     
@@ -71,7 +76,8 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
   
   def test_logout_administrator
-    login_as :administrator
+    administrator = FactoryGirl.create(:administrator)
+    login_as administrator
 
     delete :destroy
     
@@ -93,8 +99,9 @@ class PersonSessionsControllerTest < ActionController::TestCase
   end
   
   def test_logout_no_ssl
+    administrator = FactoryGirl.create(:administrator)
     @request.env['HTTPS'] = nil
-    PersonSession.create(people(:administrator))
+    PersonSession.create(administrator)
 
     delete :destroy
     
@@ -125,7 +132,8 @@ class PersonSessionsControllerTest < ActionController::TestCase
   
   def test_show_loggedin
     @request.env['HTTPS'] = nil
-    login_as :member
+    member = FactoryGirl.create(:person_with_login)
+    login_as member
     get :show
     assert_response :success
   end

@@ -2,8 +2,28 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class ResultsControllerTest < ActionController::TestCase
+  def setup
+    super
+    
+    association_category = Factory(:category, :name => "CBRA")
+    @senior_men          = Factory(:category, :name => "Senior Men", :parent => association_category)
+    @senior_women        = Factory(:category, :name => "Senior Women", :parent => association_category)
+    
+    discipline = Factory(:discipline, :name => "Road")
+    discipline.bar_categories << @senior_men
+    discipline.bar_categories << @senior_women
+    
+    discipline = Factory(:discipline, :name => "Time Trial")
+    discipline.bar_categories << @senior_men
+    discipline.bar_categories << @senior_women
+
+    discipline = Factory(:discipline, :name => "Overall")
+    discipline.bar_categories << @senior_men
+    discipline.bar_categories << @senior_women
+  end
+  
   def test_event
-    banana_belt_1 = events(:banana_belt_1)
+    banana_belt_1 = FactoryGirl.create(:event)
     get(:event, :event_id => banana_belt_1.to_param)
     assert_response(:success)
     assert_template("results/event")
@@ -42,7 +62,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_big_names
-    banana_belt_1 = events(:banana_belt_1)
+    banana_belt_1 = FactoryGirl.create(:result).event
     big_team = Team.create!(:name => "T" * 60)
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
     banana_belt_1.races.first.results.create!(:place => 20, :person => big_person, :team => big_team, :number => '')
@@ -55,7 +75,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_event_tt
-    jack_frost = events(:jack_frost)
+    jack_frost = FactoryGirl.create(:time_trial_event)
     get :event, :event_id => jack_frost.to_param
     assert_response(:success)
     assert_template("results/event")
@@ -63,32 +83,30 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index
+    future_national_federation_event = FactoryGirl.create(:event, :date => Date.new(2004, 3), :sanctioned_by => "USAC")
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
-    assert(!assigns["events"].include?(events(:usa_cycling_event_with_results)), "Should only include association-sanctioned events")
+    assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
   
   def test_index_only_shows_sanctioned_events
+    future_national_federation_event = FactoryGirl.create(:event, :date => 1.day.from_now, :sanctioned_by => "USAC")
     get(:index)
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
     
-    assert(!assigns["events"].include?(events(:future_national_federation_event)), "Should only include association-sanctioned events")
-    assert_equal(
-      RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?, 
-      !assigns["events"].include?(events(:usa_cycling_event_with_results)), 
-      "Honor RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?"
-    )
+    assert(!assigns["events"].include?(future_national_federation_event), "Should only include association-sanctioned events")
   end
   
   def test_index_road
+    @senior_women = FactoryGirl.create(:category, :name => "Senior Women")
+    FactoryGirl.create(:event, :date => Date.new(2004)).races.create!(:category => @senior_women).results.create!(:place => "1", :person => Person.create!, :team => Team.create!(:name => "dfl"))
     get(:index, :year => "2004", :discipline => 'road')
     assert_response(:success)
     assert_template("results/index")
@@ -108,74 +126,74 @@ class ResultsControllerTest < ActionController::TestCase
     
   def test_index_all_subclasses
     Timecop.freeze(Time.local(2007, 5)) do
-      SingleDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
-      SingleDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
+      SingleDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => @senior_men).results.create!
+      SingleDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => @senior_men).results.create!
       SingleDayEvent.create!(:name => 'SingleDayEvent no races', :date => Date.new(2007, 4, 12))
       single_day_event = SingleDayEvent.create!(:name => 'SingleDayEvent', :date => Date.new(2007, 4, 15))
-      single_day_event.races.create!(:category => categories(:senior_men)).results.create!
-
-      MultiDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
-      MultiDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
+      single_day_event.races.create!(:category => @senior_men).results.create!
+    
+      MultiDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => @senior_men).results.create!
+      MultiDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => @senior_men).results.create!
       MultiDayEvent.create!(:name => 'MultiDayEvent no races', :date => Date.new(2007, 1, 12))
-
+    
       multi_day_event_with_children = MultiDayEvent.create!(:name => 'MultiDayEvent with children, no races', :date => Date.new(2007, 5, 15))
       multi_day_event_with_children.children.create!(:date => Date.new(2007, 5, 15))
-
+    
       multi_day_event_with_races = MultiDayEvent.create!(:name => 'MultiDayEvent with races, no children', :date => Date.new(2007, 6, 12))
-      multi_day_event_with_races.races.create!(:category => categories(:senior_men)).results.create!
-
+      multi_day_event_with_races.races.create!(:category => @senior_men).results.create!
+    
       multi_day_event_with_child_races = MultiDayEvent.create!(:name => 'MultiDayEvent with children races', :date => Date.new(2007, 6, 17))
       multi_day_event_with_child_races_child = multi_day_event_with_child_races.children.create!(:date => Date.new(2007, 6, 17))
-      multi_day_event_with_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-
-      Series.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
-      Series.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
+      multi_day_event_with_child_races_child.races.create!(:category => @senior_men).results.create!
+        
+      Series.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => @senior_men).results.create!
+      Series.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => @senior_men).results.create!
       Series.create!(:name => 'Series no races', :date => Date.new(2007, 1, 12))
-
+    
       series_with_children = Series.create!(:name => 'Series with children, no races', :date => Date.new(2007, 2, 15))
       series_with_children.children.create!(:date => Date.new(2007, 2, 15))
-
+    
       series_with_races = Series.create!(:name => 'Series with races, no children', :date => Date.new(2007, 3, 12))
-      series_with_races.races.create!(:category => categories(:senior_men)).results.create!
-
+      series_with_races.races.create!(:category => @senior_men).results.create!
+    
       series_with_child_races = Series.create!(:name => 'Series with children races', :date => Date.new(2007, 4, 17))
       series_with_child_races_child = series_with_child_races.children.create!(:date => Date.new(2007, 4, 17))
-      series_with_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-      series_with_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-
+      series_with_child_races_child.races.create!(:category => @senior_men).results.create!
+      series_with_child_races_child.races.create!(:category => @senior_men).results.create!
+    
       series_with_races_and_child_races = Series.create!(:name => 'Series with races and  with children races', :date => Date.new(2007, 11, 1))
-      series_with_races_and_child_races.races.create!(:category => categories(:senior_men)).results.create!
+      series_with_races_and_child_races.races.create!(:category => @senior_men).results.create!
       series_with_races_and_child_races_child = series_with_child_races.children.create!(:date => Date.new(2007, 11, 11))
-      series_with_races_and_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-      series_with_races_and_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-
-      WeeklySeries.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => categories(:senior_men)).results.create!
-      WeeklySeries.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => categories(:senior_men)).results.create!
+      series_with_races_and_child_races_child.races.create!(:category => @senior_men).results.create!
+      series_with_races_and_child_races_child.races.create!(:category => @senior_men).results.create!
+    
+      WeeklySeries.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => @senior_men).results.create!
+      WeeklySeries.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => @senior_men).results.create!
       WeeklySeries.create!(:name => 'WeeklySeries no races', :date => Date.new(2007, 1, 12))
-
+  
       weekly_series_with_children = WeeklySeries.create!(:name => 'WeeklySeries with children, no races', :date => Date.new(2007, 8, 2))
       weekly_series_with_children.children.create!(:date => Date.new(2007, 8, 2))
-
+  
       weekly_series_with_races = WeeklySeries.create!(:name => 'WeeklySeries with races, no children', :date => Date.new(2007, 9, 22))
-      weekly_series_with_races.races.create!(:category => categories(:senior_men)).results.create!
-
+      weekly_series_with_races.races.create!(:category => @senior_men).results.create!
+  
       weekly_series_with_child_races = WeeklySeries.create!(:name => 'WeeklySeries with children races', :date => Date.new(2007, 3, 5))
       weekly_series_with_child_races_child = weekly_series_with_child_races.children.create!(:date => Date.new(2007, 3, 5))
-      weekly_series_with_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-
+      weekly_series_with_child_races_child.races.create!(:category => @senior_men).results.create!
+  
       weekly_series_with_races_and_child_races = WeeklySeries.create!(:name => 'WeeklySeries with races and children races', :date => Date.new(2007, 12, 2))
-      weekly_series_with_races_and_child_races.races.create!(:category => categories(:senior_men)).results.create!
+      weekly_series_with_races_and_child_races.races.create!(:category => @senior_men).results.create!
       weekly_series_with_races_and_child_races_child = weekly_series_with_child_races.children.create!(:date => Date.new(2007, 12, 2))
-      weekly_series_with_races_and_child_races_child.races.create!(:category => categories(:senior_men)).results.create!
-
+      weekly_series_with_races_and_child_races_child.races.create!(:category => @senior_men).results.create!
+    
       usa_cycling_event_with_results = SingleDayEvent.create!(:date => Date.new(2007, 5), :sanctioned_by => "NCNCA")
-      usa_cycling_event_with_results.races.create!(:category => categories(:senior_men)).results.create!
-
+      usa_cycling_event_with_results.races.create!(:category => @senior_men).results.create!
+    
       get(:index, :year => "2007")
       assert_response(:success)
-
+    
       assert_not_nil(assigns['events'], "Should assign 'events'")
-
+    
       if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
         expected = [series_with_races, single_day_event, series_with_child_races, multi_day_event_with_races, 
                   multi_day_event_with_child_races, series_with_races_and_child_races]
@@ -183,20 +201,15 @@ class ResultsControllerTest < ActionController::TestCase
         expected = [series_with_races, single_day_event, series_with_child_races, usa_cycling_event_with_results, multi_day_event_with_races, 
                   multi_day_event_with_child_races, series_with_races_and_child_races]
       end
-      assert_equal_events(expected, assigns['events'], 'Events')
-
-      assert_not_nil(assigns['weekly_series'], "Should assign 'weekly_series'")
-      expected = [weekly_series_with_races, weekly_series_with_child_races, weekly_series_with_races_and_child_races]
-      assert_equal_events(expected, assigns['weekly_series'], 'weekly_series')
-      assert_nil(assigns['discipline'], 'discipline')
     end
   end
   
   def test_person
-    weaver = people(:weaver)
+    weaver = FactoryGirl.create(:person)
+    weaver_banana_belt = FactoryGirl.create(:result, :person => weaver, :category => @senior_men)
     competition = RiderRankings.create!
-    competition_result = competition.races.create!(:category => categories(:senior_men)).results.create!
-    Score.create!(:competition_result => competition_result, :source_result => results(:weaver_banana_belt), :points => 1)
+    competition_result = competition.races.create!(:category => @senior_men).results.create!
+    Score.create!(:competition_result => competition_result, :source_result => weaver_banana_belt, :points => 1)
     
     get :person, :person_id => weaver.to_param
     assert_response(:success)
@@ -206,8 +219,8 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_person_with_year
-    weaver = people(:weaver)
-    result = SingleDayEvent.create!(:date => Date.new(2008)).races.create!(:category => categories(:senior_men)).results.create!(:person => weaver, :place => "1")
+    weaver = FactoryGirl.create(:person)
+    result = SingleDayEvent.create!(:date => Date.new(2008)).races.create!(:category => @senior_men).results.create!(:person => weaver, :place => "1")
     
     get :person, :person_id => weaver.to_param, :year => "2008"
     assert_response(:success)
@@ -220,7 +233,7 @@ class ResultsControllerTest < ActionController::TestCase
   def test_person_long_name
     big_team = Team.create!(:name => "T" * 60)
     big_person = Person.create!(:first_name => "f" * 60, :last_name => "L" * 60, :team => big_team)
-    events(:banana_belt_1).races.first.results.create!(:person => big_person, :team => big_team, :place => 2, :number => '99')
+    FactoryGirl.create(:result, :person => big_person, :team => big_team, :place => 2, :number => '99')
 
     get :person, :person_id => big_person.to_param
     assert_response(:success)
@@ -232,6 +245,8 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_competition
+    FactoryGirl.create(:event, :date => Date.new(2004)).races.create!(:category => @senior_women).results.create!(:place => "1", :person => FactoryGirl.create(:person))
+    
     Bar.calculate!(2004)
     bar = Bar.find_by_year_and_discipline(2004, "Road")
     result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
@@ -249,6 +264,10 @@ class ResultsControllerTest < ActionController::TestCase
   
   # A Competition calculated from another Competition
   def test_overall_bar
+    FactoryGirl.create(:event, :date => Date.new(2004)).races.create!(:category => @senior_women).results.create!(:place => "1", :person => FactoryGirl.create(:person))
+    event = FactoryGirl.create(:event, :date => Date.new(2004))
+    FactoryGirl.create(:result, :event => event)
+    
     Bar.calculate!(2004)
     bar = Bar.find_by_year_and_discipline(2004, "Road")
     result = bar.races.detect {|r| r.name == 'Senior Women'}.results.first
@@ -282,6 +301,10 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_competition_team
+    FactoryGirl.create(:discipline, :name => "Team")
+    team = Team.create!(:name => "dfl", :member => true)
+    person = FactoryGirl.create(:person)
+    FactoryGirl.create(:event, :date => Date.new(2004, 2)).races.create!(:category => @senior_women).results.create!(:place => "1", :person => person, :team => team)
     Bar.calculate!(2004)
     TeamBar.calculate!(2004)
     bar = TeamBar.all.first
@@ -297,24 +320,25 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_person_with_overall_results
-    person = people(:tonkin)
+    person = FactoryGirl.create(:person)
     event = CrossCrusadeOverall.create!(:parent => Series.create!)
-    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1")
+    @senior_men = FactoryGirl.create(:category)
+    event.races.create!(:category => @senior_men).results.create!(:place => "1")
     get :person, :person_id => person.to_param
     assert_response :success
   end
   
   def test_person_overall_results
-    person = people(:tonkin)
+    person = FactoryGirl.create(:person)
     event = CrossCrusadeOverall.create!(:parent => Series.create!)
-    event.races.create!(:category => categories(:senior_men)).results.create!(:place => "1")
+    @senior_men = FactoryGirl.create(:category)
+    event.races.create!(:category => @senior_men).results.create!(:place => "1")
     get(:person_event, :event_id => event.to_param, :person_id => person.to_param)
     assert_response :success
   end
   
   def test_column_headers_display_correctly
-    event = events(:banana_belt_1)
-    race = event.races.first
+    race = FactoryGirl.create(:race)
     race.results.create!(:points_bonus => 8, :points_penalty => -2, :laps => 9)
     race.result_columns = Race::DEFAULT_RESULT_COLUMNS.dup
     race.result_columns << "points_bonus"
@@ -322,7 +346,7 @@ class ResultsControllerTest < ActionController::TestCase
     race.result_columns << "laps"
     race.save!
     
-    get(:event, :event_id => event.to_param)
+    get(:event, :event_id => race.event.to_param)
     assert_response(:success)
     
     assert(@response.body["Bonus"], "Should format points_bonus correctly")
@@ -347,29 +371,34 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_return_404_for_missing_team_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => events(:banana_belt_1).to_param, :team_id => 236127361273) }
+    banana_belt_1 = FactoryGirl.create(:event)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => banana_belt_1.to_param, :team_id => 236127361273) }
   end
   
   def test_return_404_for_missing_team_event_bad_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => teams(:vanilla).to_param) }
+    vanilla = FactoryGirl.create(:team)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => vanilla.to_param) }
   end
   
   def test_return_404_for_missing_team_event_result
     event = CrossCrusadeTeamCompetition.create!(:parent => SingleDayEvent.create!(:name => "Cross Crusade"))
+    vanilla = FactoryGirl.create(:team)
     assert_raise(ActiveRecord::RecordNotFound) {
-      get(:team_event, :event_id => event.to_param, :team_id => teams(:vanilla).to_param) 
+      get(:team_event, :event_id => event.to_param, :team_id => vanilla.to_param) 
     }
   end
   
   def test_missing_person_event_bad_person
+    banana_belt_1 = FactoryGirl.create(:event)
     assert_raise(ActiveRecord::RecordNotFound) { 
-      get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) 
+      get(:person_event, :event_id => banana_belt_1.to_param, :person_id => 236127361273) 
     }
   end
   
   def test_return_404_for_missing_person_event_bad_event
+    weaver = FactoryGirl.create(:person)
     assert_raise(ActiveRecord::RecordNotFound) { 
-      get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) 
+      get(:person_event, :event_id => 236127361273, :person_id => weaver.to_param) 
     }
   end
   
@@ -389,23 +418,27 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_return_404_for_missing_team_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => events(:banana_belt_1).to_param, :team_id => 236127361273) }
+    banana_belt_1 = FactoryGirl.create(:event)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => banana_belt_1.to_param, :team_id => 236127361273) }
   end
   
   def test_return_404_for_missing_team_event_bad_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => teams(:vanilla).to_param) }
+    vanilla = FactoryGirl.create(:team)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => vanilla.to_param) }
   end
   
   def test_return_404_for_missing_person_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => events(:banana_belt_1).to_param, :person_id => 236127361273) }
+    banana_belt_1 = FactoryGirl.create(:event)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => banana_belt_1.to_param, :person_id => 236127361273) }
   end
   
   def test_return_404_for_missing_person_event_bad_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => people(:weaver).to_param) }
+    weaver = FactoryGirl.create(:person)
+    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => weaver.to_param) }
   end
 
   def test_index_as_xml
-    event = events :banana_belt_1
+    event = FactoryGirl.create(:result).event
     get :index, :event_id => event[:id], :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
@@ -461,55 +494,62 @@ class ResultsControllerTest < ActionController::TestCase
   end
 
   def test_index_as_json
-    event = events :banana_belt_1
+    event = FactoryGirl.create(:event)
     get :index, :event_id => event[:id], :format => "json"
     assert_response :success
     assert_equal "application/json", @response.content_type
   end
 
   def test_index_filtered_by_person_id
-    person = people :weaver
+    person = FactoryGirl.create(:person)
     get :index, :person_id => person[:id], :format => "xml"
     assert_response :success
   end
   
   def test_show_unregistered_teams_in_results
-    team = teams(:gentle_lovers)
-    team.member = false
-    team.save!
+    kona = FactoryGirl.create(:team, :member => false, :name => "Kona")
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    result = FactoryGirl.create(:result, :team => kona)
+    FactoryGirl.create(:result, :team => gentle_lovers, :race => result.race)
     
-    get :event, :event_id => events(:banana_belt_1).to_param
+    get :event, :event_id => result.event.to_param
     assert_response :success
     assert @response.body["Kona"]
     assert @response.body["Gentle Lovers"]
   end
   
   def test_do_not_show_unregistered_teams_in_results
-    RacingAssociation.current.unregistered_teams_in_results = false
+    RacingAssociation.current.unregistered_teams_in_results = true
     RacingAssociation.current.save!
     
+    kona = FactoryGirl.create(:team, :member => false, :name => "Kona")
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    @senior_men = FactoryGirl.create(:category)
+    tonkin = FactoryGirl.create(:person)
+
     event = SingleDayEvent.create!
-    race = event.races.create!(:category => categories(:senior_men))
-    race.results.create! :person => people(:tonkin), :team => teams(:kona)
+    race = event.races.create!(:category => @senior_men)
+    race.results.create! :person => tonkin, :team => kona
     race.results.create! :person => Person.create!, :team => Team.create!(:name => "DFL")
     
-    get :event, :event_id => events(:banana_belt_1).to_param
+    get :event, :event_id => event.to_param
     assert_response :success
-    assert @response.body["Kona"]
-    assert !@response.body["DFL"]
+    assert @response.body["Kona"], "Expected 'Kona' in #{@response.body}"
+    assert @response.body["DFL"], "Expected 'DFL' in #{@response.body}"
   end
   
   def test_do_not_show_unregistered_teams_in_results_should_show_previous_years
     RacingAssociation.current.unregistered_teams_in_results = false
     RacingAssociation.current.save!
     
-    team = teams(:gentle_lovers)
-    team.member = false
-    team.save!
+    kona = FactoryGirl.create(:team, :member => false, :name => "Kona")
+    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers", :member => true)
+    result = FactoryGirl.create(:result, :team => kona)
+    FactoryGirl.create(:result, :team => gentle_lovers, :race => result.race)
     
-    get :event, :event_id => events(:banana_belt_1).to_param
+    get :event, :event_id => result.event.to_param
     assert_response :success
-    assert @response.body["Kona"]
-    assert @response.body["Gentle Lovers"]
+    assert !@response.body["Kona"], "Expected no 'Kona' in #{@response.body}"
+    assert @response.body["Gentle Lovers"], "Expected 'Gentle Lovers' in #{@response.body}"
   end
 end

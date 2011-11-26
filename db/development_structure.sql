@@ -88,7 +88,7 @@ CREATE TABLE `bids` (
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `position` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL DEFAULT '',
   `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -255,6 +255,7 @@ CREATE TABLE `events` (
   `beginner_friendly` tinyint(1) NOT NULL DEFAULT '0',
   `website` varchar(255) DEFAULT NULL,
   `registration_link` varchar(255) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_disciplined` (`discipline`),
   KEY `parent_id` (`parent_id`),
@@ -1222,10 +1223,17 @@ INSERT INTO schema_migrations (version) VALUES ('20110806162623');
 
 INSERT INTO schema_migrations (version) VALUES ('20110922012402');
 
+INSERT INTO schema_migrations (version) VALUES ('20111008220748');
+
 INSERT INTO schema_migrations (version) VALUES ('20111121165105');
 
 INSERT INTO schema_migrations (version) VALUES ('20111124233132');
 
+<<<<<<< HEAD
+=======
+INSERT INTO schema_migrations (version) VALUES ('20111125031448');
+
+>>>>>>> no-rails-tests
 INSERT INTO schema_migrations (version) VALUES ('21');
 
 INSERT INTO schema_migrations (version) VALUES ('22');

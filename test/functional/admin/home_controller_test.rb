@@ -9,7 +9,7 @@ class Admin::HomeControllerTest < ActionController::TestCase
   end
 
   def test_index
-    opts = {:controller => "admin/home", :action => "index"}
-    assert_recognizes(opts, "/admin")
+    get :index
+    assert_redirected_to admin_events_path
   end
 end

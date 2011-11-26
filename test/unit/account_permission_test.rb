@@ -3,7 +3,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class AccountPermissionTest < ActiveSupport::TestCase
   def test_editors
-    person = people(:member)
+    person = Person.create!
     assert person.editors.empty?, "editors should be empty"
     assert person.editable_people.empty?, "editable_people should be empty"
     

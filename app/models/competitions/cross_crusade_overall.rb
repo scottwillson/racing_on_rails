@@ -39,6 +39,10 @@ class CrossCrusadeOverall < Overall
     point_schedule[source_result.place.to_i].to_f
   end
 
+  def default_bar_points
+    0
+  end
+
   def minimum_events
     3
   end

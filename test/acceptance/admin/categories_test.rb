@@ -1,26 +1,27 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class CategoriesTest < WebDriverTestCase
+class CategoriesTest < AcceptanceTest
   def test_edit
-    login_as :administrator
+    association = FactoryGirl.create(:category, :name => "CBRA")
+    masters_35_plus = FactoryGirl.create(:category, :name => "Masters 35+")
+    women_4 = FactoryGirl.create(:category, :name => "Women 4", :parent => association)
+    login_as FactoryGirl.create(:administrator)
 
-    open "/admin/categories"
+    visit "/admin/categories"
 
-    masters_35_plus_id = Category.find_by_name("Masters 35+").id
-    assert_element    :css => "#unknown_category_root #category_#{masters_35_plus_id}"
-    assert_no_element :css => "#association_category_root #category_#{masters_35_plus_id}"
+    assert page.has_selector? "#unknown_category_root #category_#{masters_35_plus.id}"
+    assert page.has_no_selector? "#association_category_root #category_#{masters_35_plus.id}"
 
-    drag_and_drop_by -400, 116, "category_#{masters_35_plus_id}"
-    wait_for_element  :css => "#association_category_root #category_#{masters_35_plus_id}"
-    assert_no_element :css => "#unknown_category_root #category_#{masters_35_plus_id}"
+    find("#category_#{masters_35_plus.id}").drag_to(find("#association_category_root"))
+    assert page.has_selector? "#association_category_root #category_#{masters_35_plus.id}"
+    assert page.has_no_selector? "#unknown_category_root #category_#{masters_35_plus.id}"
 
-    women_4_id = Category.find_by_name("Women 4").id
-    assert_element    :css => "#association_category_root #category_#{women_4_id}"
-    assert_no_element :css => "#unknown_category_root #category_#{women_4_id}"
+    assert page.has_selector? "#association_category_root #category_#{women_4.id}"
+    assert page.has_no_selector? "#unknown_category_root #category_#{women_4.id}"
 
-    drag_and_drop_by 400, 0, "category_#{women_4_id}"
-    wait_for_element  :css => "#unknown_category_root #category_#{women_4_id}"
-    assert_no_element :css => "#association_category_root #category_#{women_4_id}"
+    find("#category_#{women_4.id}").drag_to(find("#unknown_category_root"))
+    assert page.has_selector? "#unknown_category_root #category_#{women_4.id}"
+    assert page.has_no_selector? "#association_category_root #category_#{women_4.id}"
   end
 end

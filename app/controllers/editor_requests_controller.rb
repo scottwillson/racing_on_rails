@@ -36,10 +36,4 @@ class EditorRequestsController < ApplicationController
     @editor_request = EditorRequest.find_by_token!(params[:id])
     @editor_request.grant!
   end
-
-  private
-
-  def assign_person
-    @person = Person.find(params[:id])
-  end
 end

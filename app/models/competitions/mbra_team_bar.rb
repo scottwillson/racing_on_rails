@@ -50,7 +50,7 @@ class MbraTeamBar < Competition
   # this does not work for mbra due to the 70%-of-events rule for bar that does not apply to bat
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(", ")
     Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
                 :conditions => [%Q{

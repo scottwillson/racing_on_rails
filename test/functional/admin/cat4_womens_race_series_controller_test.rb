@@ -27,6 +27,9 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
   
   def test_create_result_for_new_event
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline)
+
     post :create_result, { :result => { :place => "3", :number => "123", :team_name => "Gentle Lovers", 
                                         :first_name => "Cheryl", :last_name => "Willson" },
                            :event => { :name => "Mount Hamilton Road Race", "date(1i)" => "2009" , "date(2i)" => "4" , "date(3i)" => "1", 
@@ -59,18 +62,23 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
   
   def test_create_result_for_existing_race_and_people
-    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
-    existing_race = events(:banana_belt_1).races.create!(:category => women_cat_4)
-    existing_race.results.create!(:place => "1", :person => people(:alice))
-    molly = people(:molly)
-    event = events(:banana_belt_1)
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:number_issuer)
 
-    post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
-                                        :first_name => molly.first_name, :last_name => molly.last_name },
-                           :event => { :name => events(:banana_belt_1).name, 
-                             "date(1i)" => event.date.year.to_s,
-                             "date(2i)" => event.date.month.to_s,
-                             "date(3i)" => event.date.day.to_s
+    # Existing result for someone else
+    FactoryGirl.create(:result)
+
+    women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
+    event = FactoryGirl.create(:event, :name => "Banana Belt", :date => Date.new(2009, 4, 9))
+    existing_race = event.races.create!(:category => women_cat_4)
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "302", :team_name => "Vanilla")
+
+    post :create_result, { :result => { :place => "3", :number => "302", :team_name => "Vanilla", 
+                                        :first_name => "Molly", :last_name => "Cameron" },
+                           :event => { :name => "Banana Belt", 
+                             "date(1i)" => "2009",
+                             "date(2i)" => "4",
+                             "date(3i)" => "9"
                             },
                            :commit => "Save" 
                          }
@@ -80,15 +88,14 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
-    new_event = SingleDayEvent.find_by_name(event.name)
-    assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(RacingAssociation.current.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
+    event.reload
+    assert_equal_dates("2009-04-09", event.date, "New event date")
 
-    assert_equal(2, new_event.races.count, "New event races: #{event.races}")
-    race = new_event.races.detect {|race| race.category == women_cat_4 }
+    assert_equal(1, event.races(true).size, "Event races: #{event.races}")
+    race = event.races.detect {|race| race.category == women_cat_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
-    assert_equal(2, race.results.count, "race results")
+    assert_equal(1, race.results.count, "race results")
     result = race.results.sort.last    
     assert_equal("3", result.place, "New result place")
     assert_equal(molly.number(:road), result.number, "New result number")
@@ -102,16 +109,18 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
   
   def test_create_result_for_existing_person
-    molly = people(:molly)
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline)
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "302", :team_name => "Vanilla")
 
-    post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
-                                        :first_name => molly.first_name, :last_name => molly.last_name },
+    post :create_result, { :result => { :place => "3", :number => "302", :team_name => "Vanilla", 
+                                        :first_name => "Molly", :last_name => "Cameron" },
                            :event => { :name => "San Ardo Road Race", "date(1i)" => "1999" , "date(2i)" => "1" , "date(3i)" => "24" },
                            :commit => "Save" 
                          }
 
     assert_redirected_to new_admin_cat4_womens_race_series_result_path(:result => { 
-      :team_name => molly.team_name, :first_name => "Molly", :last_name => "Cameron"
+      :team_name => "Vanilla", :first_name => "Molly", :last_name => "Cameron"
     })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => "San Ardo Road Race"}))
@@ -138,16 +147,19 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
   end
 
   def test_create_result_for_existing_race_with_different_category
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline)
+
     sr_women_4 = Category.create!(:name => "Sr. Wom 4")
     women_cat_4 = Category.find_or_create_by_name("Women Cat 4")
     women_cat_4.children << sr_women_4
-    existing_race = events(:banana_belt_1).races.create!(:category => sr_women_4)
-    existing_race.results.create!(:place => "1", :person => people(:alice))
-    molly = people(:molly)
-    event = events(:banana_belt_1)
+    event = FactoryGirl.create(:event)
+    existing_race = event.races.create!(:category => sr_women_4)
+    existing_race.results.create!(:place => "1")
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :road_number => "302", :team_name => "Vanilla")
 
-    post :create_result, { :result => { :place => "3", :number => molly.number(:road), :team_name => molly.team.name, 
-                                        :first_name => molly.first_name, :last_name => molly.last_name },
+    post :create_result, { :result => { :place => "3", :number => "302", :team_name => "Vanilla", 
+                                        :first_name => "Molly", :last_name => "Cameron" },
                            :event => { :name => event.name, 
                              "date(1i)" => event.date.year.to_s,
                              "date(2i)" => event.date.month.to_s,
@@ -161,12 +173,8 @@ class Admin::Cat4WomensRaceSeriesControllerTest < ActionController::TestCase
     })
     
     assert_equal(1, SingleDayEvent.count(:all, :conditions => {:name => event.name}))
-    new_event = SingleDayEvent.find_by_name(event.name)
-    assert_equal_dates(event.date, new_event.date, "New event date")
-    assert_equal(RacingAssociation.current.default_sanctioned_by, new_event.sanctioned_by, "Sanctioned by")
-
-    assert_equal(2, new_event.races.count, "New event should have one race: #{new_event.races}")
-    race = new_event.races.detect {|race| race.category == sr_women_4 }
+    assert_equal(1, event.races(true).size, "New event should have one race: #{event.races}")
+    race = event.races.detect {|race| race.category == sr_women_4 }
     assert_not_nil(race, "Cat 4 women's race")
 
     assert_equal(2, race.results.count, "race results")

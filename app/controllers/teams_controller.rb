@@ -8,7 +8,7 @@ class TeamsController < ApplicationController
     else
       @teams = Team.all( :conditions => { :member => true, :show_on_public_page => true })
     end
-    @discipline_names = Discipline.find_all_names
+    @discipline_names = Discipline.names
     expires_in 1.hour, :public => true
   end
 end

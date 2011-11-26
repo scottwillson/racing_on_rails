@@ -2,6 +2,8 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PagesControllerTest < ActionController::TestCase
+  setup :create_page
+
   test "show page" do
     get :show, :path => "plain"
   end
@@ -77,5 +79,9 @@ class PagesControllerTest < ActionController::TestCase
     Page.create!(:body => "<h1>Mailing Lists</h1>\n<%= render 'shared/flash_messages' %>", :title => "lists")
     get :show, :path => "lists"
     assert_select("p.flash_message")
+  end
+
+  def create_page
+    FactoryGirl.create(:page)
   end
 end

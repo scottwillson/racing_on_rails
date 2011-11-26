@@ -33,10 +33,7 @@ class WsbaBarr < Competition
   def source_results(race)
     return [] if source_events(true).empty?
     
-    event_ids = source_events.collect do |event|
-      event.id
-    end
-    event_ids = event_ids.join(', ')
+    event_ids = source_events.map(&:id).join(', ')
     
     results = Result.find_by_sql(
       %Q{ SELECT results.*
@@ -46,8 +43,8 @@ class WsbaBarr < Competition
           LEFT OUTER JOIN events ON races.event_id = events.id 
             WHERE races.category_id is not null 
               and members_only_place between 1 and 15
-              and categories.id in (#{category_ids_for(race)})
-              and (results.category_id is null or results.category_id in (#{category_ids_for(race)}))
+              and categories.id in (#{category_ids_for(race).join(', ')})
+              and (results.category_id is null or results.category_id in (#{category_ids_for(race).join(', ')}))
               and (events.id in (#{event_ids}))
               and results.bar
          order by person_id
@@ -59,7 +56,7 @@ class WsbaBarr < Competition
   # Override of base BAR rules, mainly due to TTT rules on dividing points always by 4. Also, no points multiplier
   def points_for(source_result, team_size = nil)
     points = 0
-    Bar.benchmark('points_for') {
+    WsbaBarr.benchmark('points_for') {
       results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       if team_size.nil?
         # assume this is a TTT, score divided by 4 regardless of # of riders

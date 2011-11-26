@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
     unless require_current_person
       return false
     end
-
+    
     unless administrator? || official?
       session[:return_to] = request.fullpath
       flash[:notice] = "You must be an official or administrator to access this page"

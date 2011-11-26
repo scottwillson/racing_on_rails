@@ -50,7 +50,7 @@ class ScheduleController < ApplicationController
     start_date = params["start"]
     end_date = params["end"]
     @discipline = Discipline[params["discipline"]]
-    @discipline_names = Discipline.find_all_names
+    @discipline_names = Discipline.names
     
     if !start_date.blank? and !end_date.blank?
       @events = SingleDayEvent.find_all_by_unix_dates(start_date, end_date, @discipline)

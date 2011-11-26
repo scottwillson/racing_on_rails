@@ -1,164 +1,157 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class EventsTest < WebDriverTestCase
+class EventsTest < AcceptanceTest
   def test_events
-    login_as :administrator
+    candi = FactoryGirl.create(:person, :name => "Candi Murray", :home_phone => "(503) 555-1212", :email => "admin@example.com")
+    gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    kings_valley = FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => "2003-12-31")
+    race_1 = kings_valley.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men Pro 1/2"))
+    kings_valley.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men 3"))
 
-    click :link_text => "New Event"
+    login_as FactoryGirl.create(:administrator)
 
-    wait_for_no_ajax
-    type "Sausalito Criterium", "event_name"
-    click "save"
-    wait_for_page_source "Created Sausalito Criterium"
+    click_link "New Event"
+
+    fill_in "event_name", :with => "Sausalito Criterium"
+    click_button "Save"
+    assert_page_has_content "Created Sausalito Criterium"
     
     if Date.today.month == 12
-      open "/admin/events?year=#{Date.today.year}"
+      visit "/admin/events?year=#{Date.today.year}"
     else
-      open "/admin/events"
+      visit "/admin/events"
     end
-    assert_page_source "Sausalito Criterium"
-    click :link_text => "Sausalito Criterium"
+    assert_page_has_content "Sausalito Criterium"
+    click_link "Sausalito Criterium"
 
-    assert_value "", "event_promoter_id"
-    assert_value "", "promoter_auto_complete"
-    type "Tom Brown", "promoter_auto_complete"
+    assert_equal "", find("#event_promoter_id").value
+    assert_equal "", find("#promoter_auto_complete").value
+    find("#promoter_auto_complete").native.send_keys("Tom Brown")
 
-    click "save"
-    assert_value(/\d+/, "event_promoter_id")
-    assert_value "Tom Brown", "promoter_auto_complete"
+    click_button "Save"
+    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert page.has_field?("promoter_auto_complete", :with => "Tom Brown")
 
-    open "/admin/events?year=#{Date.today.year}"
-    assert_page_source "Sausalito Criterium"
-    click :link_text => "Sausalito Criterium"
-    assert_value(/\d+/, "event_promoter_id")
-    assert_value "Tom Brown", "promoter_auto_complete"
+    visit "/admin/events?year=#{Date.today.year}"
+    assert_page_has_content "Sausalito Criterium"
+    click_link "Sausalito Criterium"
+    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert page.has_field?("promoter_auto_complete", :with => "Tom Brown")
 
-    click "edit_promoter_link"
-    assert_title(/Tom Brown$/)
+    click_link "edit_promoter_link"
+    assert page.has_field?("First Name", :with => "Tom")
+    assert page.has_field?("Last Name", :with => "Brown")
 
-    type "Tim", "person_first_name"
-    click "save"
+    fill_in "First Name", :with => "Tim"
+    click_button "Save"
 
-    click "back_to_event"
+    click_link "back_to_event"
 
-    assert_title(/Sausalito Criterium/)
-    assert_value(/\d+/, "event_promoter_id")
-    assert_value "Tim Brown", "promoter_auto_complete"
+    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert page.has_field?("promoter_auto_complete", :with => "Tim Brown")
 
-    candi = Person.find_by_name('Candi Murray')
-    type "candi m", "promoter_auto_complete"
-    wait_for_element "person_#{candi.id}"
-    
-    click :css => "li#person_#{candi.id} a"
-    wait_for_value candi.id, "event_promoter_id"
-    assert_value "Candi Murray", "promoter_auto_complete"
+    fill_in "promoter_auto_complete", :with => "candi m"
+    find("li#person_#{candi.id} a").click
+    assert page.has_field?("promoter_auto_complete", :with => "Candi Murray")
 
-    click "save"
+    click_button "Save"
 
-    assert_value candi.id, "event_promoter_id"
-    assert_value "Candi Murray", "promoter_auto_complete"
+    assert_equal candi.id.to_s, find("#event_promoter_id").value
+    assert page.has_field?("promoter_auto_complete", :with => "Candi Murray")
 
-    click "promoter_auto_complete"
-    type "", "promoter_auto_complete"
-    assert_value "", "promoter_auto_complete"
-    click "save"
+    fill_in "promoter_auto_complete", :with => ""
+    click_button "Save"
 
-    assert_value "", "event_promoter_id"
-    assert_value "", "promoter_auto_complete"
+    assert_equal "", find("#event_promoter_id").value
+    assert page.has_field?("promoter_auto_complete", :with => "")
 
-    assert_value "", "event_team_id"
-    assert_value "", "team_auto_complete"
+    assert_equal "", find("#event_team_id").value
+    assert_equal "", find("#team_auto_complete").value
 
-    assert_value "", "event_phone"
-    assert_value "", "event_email"
+    assert_equal "", find("#event_phone").value
+    assert_equal "", find("#event_email").value
 
-    type "(541) 212-9000", "event_phone"
-    type "event@google.com", "event_email"
-    click "save"
+    fill_in "event_phone", :with => "(541) 212-9000"
+    fill_in "event_email", :with => "event@google.com"
+    click_button "Save"
 
-    assert_value "(541) 212-9000", "event_phone"
-    assert_value "event@google.com", "event_email"
+    assert page.has_field?("event_phone", :with => "(541) 212-9000")
+    assert page.has_field?("event_email", :with => "event@google.com")
 
-    open "/admin/people/#{candi.id}/edit"
-    assert_value "(503) 555-1212", "person_home_phone"
-    assert_value "admin@example.com", "person_email"
+    visit "/admin/people/#{candi.id}/edit"
+    assert page.has_field?("person_home_phone", :with => "(503) 555-1212")
+    assert page.has_field?("person_email", :with => "admin@example.com")
 
-    open "/admin/events?year=#{Date.today.year}"
-    click :link_text => "Sausalito Criterium"
+    visit "/admin/events?year=#{Date.today.year}"
+    click_link "Sausalito Criterium"
 
-    type "Gentle Lovers", "team_auto_complete"
-    gl = Team.find_by_name('Gentle Lovers')
-    wait_for_element "team_#{gl.id}"
-    wait_for_displayed "team_#{gl.id}"
-    click :css => "li#team_#{gl.id} a"
-    wait_for_value gl.id, "event_team_id"
-    assert_value "Gentle Lovers", "team_auto_complete"
+    fill_in "team_auto_complete", :with => "Gentle Lovers"
+    find("li#team_#{gl.id} a").click
+    assert page.has_field?("team_auto_complete", :with => "Gentle Lovers")
 
-    click "save"
+    click_button "Save"
 
-    assert_value gl.id, "event_team_id"
-    assert_value "Gentle Lovers", "team_auto_complete"
+    assert_equal gl.id.to_s, find("#event_team_id").value
+    assert_equal "Gentle Lovers", find("#team_auto_complete").value
 
-    assert_value gl.id, "event_team_id"
-    click "team_auto_complete"
-    type "", "team_auto_complete"
-    click "save"
+    fill_in "team_auto_complete", :with => ""
+    click_button "Save"
 
-    assert_value "", "event_team_id"
-    assert_value "", "team_auto_complete"
+    assert_equal "", find("#event_team_id").value
+    assert_equal "", find("#team_auto_complete").value
 
-    click :link_text => "Delete"
+    click_link "Delete"
 
-    assert_page_source "Deleted Sausalito Criterium"
+    assert_page_has_content "Deleted Sausalito Criterium"
 
-    open "/admin/events?year=2004"
-    assert_not_in_page_source "Sausalito Criterium"
+    visit "/admin/events?year=2004"
+    assert_page_has_no_content "Sausalito Criterium"
 
-    open "/admin/events?year=2003"
+    visit "/admin/events?year=2003"
 
-    wait_for_page_source "Import Schedule"
-    click :link_text => "Kings Valley Road Race"
-    wait_for_page_source "Senior Men Pro 1/2"
-    assert_page_source "Senior Men 3"
+    assert_page_has_content "Import Schedule"
+    click_link "Kings Valley Road Race"
+    assert_page_has_content "Senior Men Pro 1/2"
+    assert_page_has_content "Senior Men 3"
 
-    kings_valley = Event.find_by_name_and_date('Kings Valley Road Race', '2003-12-31')
-    click "destroy_race_#{kings_valley.races.first.id}"
+    kings_valley = Event.find_by_name_and_date("Kings Valley Road Race", "2003-12-31")
+    click_link "destroy_race_#{race_1.id}"
 
-    open "/admin/events?year=2003"
-    click :link_text => "Kings Valley Road Race"
+    visit "/admin/events?year=2003"
+    click_link "Kings Valley Road Race"
 
     click_ok_on_confirm_dialog
-    click "destroy_races"
+    click_link "destroy_races"
 
-    open "/admin/events?year=2003"
+    visit "/admin/events?year=2003"
 
-    click :link_text => "Kings Valley Road Race"
-    wait_for_current_url %r{/admin/events/\d+/edit}
-    assert_not_in_page_source "Senior Men Pro 1/2"
-    assert_not_in_page_source "Senior Men 3"
+    click_link "Kings Valley Road Race"
+    assert_page_has_no_content "Senior Men Pro 1/2"
+    assert_page_has_no_content "Senior Men 3"
 
-    click "new_event"
-    wait_for_current_url(/\/events\/new/)
-    assert_page_source "Kings Valley Road Race"
-    assert_value kings_valley.id, "event_parent_id"
+    click_link "new_event"
+    assert_page_has_content "Kings Valley Road Race"
+    assert_equal kings_valley.to_param, find("#event_parent_id").value
 
-    type "Fancy New Child Event", "event_name"
-    click "save"
-    assert_value kings_valley.id, "event_parent_id"
+    fill_in "event_name", :with => "Fancy New Child Event"
+    click_button "Save"
+    assert_equal kings_valley.to_param, find("#event_parent_id").value
 
-    open "/admin/events/#{kings_valley.id}/edit"
-    assert_page_source "Fancy New Child Event"
+    visit "/admin/events/#{kings_valley.id}/edit"
+    assert_page_has_content "Fancy New Child Event"
   end
   
   def test_lost_children
-    login_as :administrator
-
-    open "/admin/events/#{SingleDayEvent.find_by_name('Lost Series').id}/edit"
-    assert_page_source 'has no parent'
-    click "set_parent"
-    assert_not_in_page_source 'error'
-    assert_not_in_page_source 'Unknown action'
-    assert_not_in_page_source 'has no parent'
+    login_as FactoryGirl.create(:administrator)
+    FactoryGirl.create(:series, :name => "PIR")
+    event = FactoryGirl.create(:event, :name => "PIR")
+    
+    visit "/admin/events/#{event.id}/edit"
+    assert_page_has_content "has no parent"
+    click_link "set_parent"
+    assert_page_has_no_content "error"
+    assert_page_has_no_content "Unknown action"
+    assert_page_has_no_content "has no parent"
   end
 end

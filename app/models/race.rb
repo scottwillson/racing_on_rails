@@ -23,6 +23,7 @@ class Race < ActiveRecord::Base
   serialize :result_columns, Array
   serialize :custom_columns, Array
   belongs_to :event
+  has_one :promoter, :through => :event
   has_many :results, :dependent => :destroy
   
   # Defaults to Event's BAR points
@@ -184,9 +185,7 @@ class Race < ActiveRecord::Base
   # Sort results by points, assign places
   # Save! each result after place is set
   def place_results_by_points(break_ties = true, ascending = true)
-    for result in results
-      result.calculate_points
-    end
+    results.each(&:calculate_points)
 
     results.sort! do |x, y| 
       x.compare_by_points(y)

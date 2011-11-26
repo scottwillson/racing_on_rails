@@ -1,8 +1,8 @@
-administrator:
-  name: Administrator
-
-member:
-  name: Member
-
-promoter:
-  name: Promoter
+# administrator:
+#   name: Administrator
+# 
+# member:
+#   name: Member
+# 
+# promoter:
+#   name: Promoter

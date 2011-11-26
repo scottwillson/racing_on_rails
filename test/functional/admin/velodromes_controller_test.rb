@@ -16,6 +16,7 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   end
 
   def test_index
+    FactoryGirl.create(:velodrome)
     get(:index)
     assert_response(:success)
     assert_template("admin/velodromes/index")
@@ -40,14 +41,14 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   end
   
   def test_edit
-    velodrome = velodromes(:trexlertown)
+    velodrome = FactoryGirl.create(:velodrome)
     get(:edit, :id => velodrome.id)
     assert_response(:success)
     assert_equal(velodrome, assigns["velodrome"], "Should assign velodrome")
   end
   
   def test_update
-    velodrome = velodromes(:trexlertown)
+    velodrome = FactoryGirl.create(:velodrome)
     put(:update, :id => velodrome.id, :velodrome => { :name => "T Town", :website => "www" })
     assert_redirected_to(edit_admin_velodrome_path(velodrome))
     velodrome.reload
@@ -56,14 +57,14 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   end
   
   def test_destroy
-    velodrome = velodromes(:trexlertown)
+    velodrome = FactoryGirl.create(:velodrome)
     delete :destroy, :id => velodrome.id
     assert(!Velodrome.exists?(velodrome.id), "Should delete velodrome")
     assert_not_nil(flash[:notice], "Should have flash :notice")
   end
 
   def test_update_name
-    velodrome = velodromes(:alpenrose)
+    velodrome = FactoryGirl.create(:velodrome)
     xhr(:put,
         :update_attribute,
         :id => velodrome.to_param,
@@ -76,7 +77,7 @@ class Admin::VelodromesControllerTest < ActionController::TestCase
   end
 
   def test_update_website
-    velodrome = velodromes(:alpenrose)
+    velodrome = FactoryGirl.create(:velodrome)
     xhr(:put,
         :update_attribute,
         :id => velodrome.to_param,

@@ -3,9 +3,13 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class ResultsTest < ActionController::IntegrationTest
   def test_custom_columns
-    goto_login_page_and_login_as :administrator
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:number_issuer)
+    
+    goto_login_page_and_login_as FactoryGirl.create(:administrator)
 
-    event = events(:banana_belt_1)
+    event = FactoryGirl.create(:result).event
     get edit_admin_event_path(event)
     assert_response :success
 

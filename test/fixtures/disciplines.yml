@@ -1,58 +1,58 @@
-cyclocross:
-  name: Cyclocross
-  bar: true
-  numbers: true
-  bar_categories: cx_a
-criterium:
-  name: Criterium
-  bar: true
-  bar_categories: senior_men, category_4_men, category_5_men
-mountain_bike:
-  name: Mountain Bike
-  bar: true
-  numbers: true
-  bar_categories: pro_semi_pro_men, junior_men, junior_men, beginner_men
-road:
-  name: Road
-  bar: true
-  numbers: true
-  bar_categories: senior_men, senior_women, cat_4_women, masters_men, category_4_men, category_5_men, cat_1_2_3_women
-time_trial:
-  name: Time Trial
-  bar: true
-  bar_categories: senior_men, senior_women, category_4_men, category_5_men
-track:
-  name: Track
-  bar: true
-  bar_categories: senior_men, category_4_men, category_5_men
-overall:
-  name: Overall
-  bar: true
-  bar_categories: senior_men, men_4_5
-tour:
-  name: Tour
-  bar: false
-circuit_race:
-  name: Circuit
-  bar: false
-team:
-  name: Team
-  bar: false
-  bar_categories: team
-downhill:
-  name: Downhill
-  bar: false
-  numbers: true
-singlespeed:
-  name: Singlespeed
-  bar: false
-  numbers: true
-age_graded:
-  name: Age Graded
-  bar: true
-  numbers: false
-  bar_categories: masters_men_30_34
-bmx:
-  name: BMX
-  bar: false
-  numbers: false
+# cyclocross:
+#   name: Cyclocross
+#   bar: true
+#   numbers: true
+#   bar_categories: cx_a
+# criterium:
+#   name: Criterium
+#   bar: true
+#   bar_categories: senior_men, category_4_men, category_5_men
+# mountain_bike:
+#   name: Mountain Bike
+#   bar: true
+#   numbers: true
+#   bar_categories: pro_semi_pro_men, junior_men, junior_men, beginner_men
+# road:
+#   name: Road
+#   bar: true
+#   numbers: true
+#   bar_categories: senior_men, senior_women, cat_4_women, masters_men, category_4_men, category_5_men, cat_1_2_3_women
+# time_trial:
+#   name: Time Trial
+#   bar: true
+#   bar_categories: senior_men, senior_women, category_4_men, category_5_men
+# track:
+#   name: Track
+#   bar: true
+#   bar_categories: senior_men, category_4_men, category_5_men
+# overall:
+#   name: Overall
+#   bar: true
+#   bar_categories: senior_men, men_4_5
+# tour:
+#   name: Tour
+#   bar: false
+# circuit_race:
+#   name: Circuit
+#   bar: false
+# team:
+#   name: Team
+#   bar: false
+#   bar_categories: team
+# downhill:
+#   name: Downhill
+#   bar: false
+#   numbers: true
+# singlespeed:
+#   name: Singlespeed
+#   bar: false
+#   numbers: true
+# age_graded:
+#   name: Age Graded
+#   bar: true
+#   numbers: false
+#   bar_categories: masters_men_30_34
+# bmx:
+#   name: BMX
+#   bar: false
+#   numbers: false

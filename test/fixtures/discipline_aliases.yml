@@ -1,11 +1,11 @@
-mtb:
-  discipline: mountain_bike
-  alias: mtb
-
-cx:
-  discipline: cyclocross
-  alias: cx
-
-ccx:
-  discipline: cyclocross
-  alias: ccx
+# mtb:
+#   discipline: mountain_bike
+#   alias: mtb
+# 
+# cx:
+#   discipline: cyclocross
+#   alias: cx
+# 
+# ccx:
+#   discipline: cyclocross
+#   alias: ccx

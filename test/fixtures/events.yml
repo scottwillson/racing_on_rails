@@ -1,223 +1,223 @@
-# Some promoter FKs values hard-coded because of acts_as_versioned magic classes
-banana_belt_series:
-  name: Banana Belt Series
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  date: 2004-01-04
-  type: Series
-  number_issuer: association
-  bar_points: 0
-  ironman: 0
-banana_belt_1:
-  parent: banana_belt_series
-  name: Banana Belt I
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  updated_at: 2004-01-05
-  number_issuer: stage_race
-  date: 2004-01-04
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 1
-  ironman: 1
-banana_belt_2:
-  parent: banana_belt_series
-  name: Banana Belt II
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  date: 2004-01-11
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 1
-  ironman: 1
-banana_belt_3:
-  parent: banana_belt_series
-  name: Banana Belt III
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  date: 2004-01-18
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 1
-  ironman: 1
-jack_frost:
-  name: Jack Frost
-  date: 2004-01-15
-  discipline: Time Trial
-  number_issuer: association
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-jack_frost_2002:
-  name: Jack Frost
-  date: 2002-01-17
-  discipline: Time Trial
-  number_issuer: stage_race
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-kings_valley:
-  name: Kings Valley Road Race
-  date: 2003-12-31
-  discipline: Road
-  sanctioned_by: CBRA
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 1
-  ironman: 1
-tabor_cr:
-  name: Mt. Tabor Circuit Race
-  date: 2005-07-01
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 4
-  flyer: http://localhost/flyers/2006/tabor_cr.html
-  flyer_approved: false
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 1
-  ironman: 1
-pir_series:
-  date: 2005-07-05
-  name: Tuesday Night PIR
-  city: Portland
-  state: OR
-  discipline: Road
-  flyer: http://localhost/flyers/2005/pir.html
-  flyer_approved: true
-  sanctioned_by: CBRA
-  promoter_id: 1
-  type: WeeklySeries
-  number_issuer: association
-  bar_points: 0
-  ironman: 0
-pir:
-  parent: pir_series
-  date: 2005-07-05
-  name: Tuesday Night PIR
-  city: Portland
-  state: OR
-  discipline: Road
-  flyer: http://localhost/flyers/2005/pir.html
-  sanctioned_by: CBRA
-  promoter_id: 1
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 0
-  ironman: 1
-pir_2:
-  parent: pir_series
-  date: 2005-07-12
-  name: Tuesday Night PIR
-  city: Portland
-  state: OR
-  discipline: Road
-  flyer: http://localhost/flyers/2005/pir.html
-  sanctioned_by: CBRA
-  promoter_id: 1
-  sanctioned_by: CBRA
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 0
-  ironman: 1
-kings_valley_2004:
-  name: Kings Valley Road Race
-  date: 2004-12-31
-  discipline: Road
-  sanctioned_by: CBRA
-  number_issuer: association
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-mt_hood:
-  date: 2005-07-11
-  name: Mt. Hood Classic
-  city: Hood River
-  state: OR
-  discipline: Road
-  flyer: http://www.hoodriversr.net/
-  sanctioned_by: CBRA
-  promoter_id: 3
-  number_issuer: association
-  type: MultiDayEvent
-  bar_points: 0
-  ironman: 0
-mt_hood_1:
-  parent: mt_hood
-  date: 2005-07-11
-  name: Mount Hood Day 1
-  state: OR
-  discipline: Road
-  flyer: http://www.hoodriversr.net/
-  sanctioned_by: CBRA
-  promoter_id: 3
-  city: Hood River
-  number_issuer: association
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-mt_hood_2:
-  parent: mt_hood
-  date: 2005-07-12
-  name: Mount Hood Day 2
-  city: Cloud Cap
-  state: OR
-  discipline: Road
-  flyer: http://www.hoodriversr.net/
-  sanctioned_by: CBRA
-  promoter_id: 3
-  number_issuer: association
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-kings_valley_2004:
-  name: Kings Valley Road Race
-  date: 2004-12-31
-  discipline: Road
-  sanctioned_by: CBRA
-  number_issuer: association
-  type: SingleDayEvent
-  bar_points: 1
-  ironman: 1
-series_parent:
-  name: Lost Series
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  date: <%= Time.zone.today %>
-  type: Series
-  number_issuer: association
-  bar_points: 0
-  ironman: 0
-lost_series_child:
-  name: Lost Series
-  discipline: Road
-  sanctioned_by: CBRA
-  promoter_id: 3
-  date: <%= Time.zone.today %>
-  type: SingleDayEvent
-  number_issuer: association
-  bar_points: 0
-  ironman: 0
-future_national_federation_event:
-  name: National Federation Event
-  discipline: Road
-  sanctioned_by: National Federation
-  date: <%= 3.days.since Time.zone.today %>
-  type: SingleDayEvent
-  bar_points: 0
-  ironman: 0
-  number_issuer: association
-usa_cycling_event_with_results:
-  name: Copperopolis Road Race
-  discipline: Road
-  sanctioned_by: NCNCA
-  date: <%= 4.days.ago(Time.zone.today) %>
-  type: SingleDayEvent
-  bar_points: 0
-  ironman: 0
-  number_issuer: association
+# # Some promoter FKs values hard-coded because of acts_as_versioned magic classes
+# banana_belt_series:
+#   name: Banana Belt Series
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   date: 2004-01-04
+#   type: Series
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 0
+# banana_belt_1:
+#   parent: banana_belt_series
+#   name: Banana Belt I
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   updated_at: 2004-01-05
+#   number_issuer: stage_race
+#   date: 2004-01-04
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 1
+#   ironman: 1
+# banana_belt_2:
+#   parent: banana_belt_series
+#   name: Banana Belt II
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   date: 2004-01-11
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 1
+#   ironman: 1
+# banana_belt_3:
+#   parent: banana_belt_series
+#   name: Banana Belt III
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   date: 2004-01-18
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 1
+#   ironman: 1
+# jack_frost:
+#   name: Jack Frost
+#   date: 2004-01-15
+#   discipline: Time Trial
+#   number_issuer: association
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# jack_frost_2002:
+#   name: Jack Frost
+#   date: 2002-01-17
+#   discipline: Time Trial
+#   number_issuer: stage_race
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# kings_valley:
+#   name: Kings Valley Road Race
+#   date: 2003-12-31
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 1
+#   ironman: 1
+# tabor_cr:
+#   name: Mt. Tabor Circuit Race
+#   date: 2005-07-01
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 4
+#   flyer: http://localhost/flyers/2006/tabor_cr.html
+#   flyer_approved: false
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 1
+#   ironman: 1
+# pir_series:
+#   date: 2005-07-05
+#   name: Tuesday Night PIR
+#   city: Portland
+#   state: OR
+#   discipline: Road
+#   flyer: http://localhost/flyers/2005/pir.html
+#   flyer_approved: true
+#   sanctioned_by: CBRA
+#   promoter_id: 1
+#   type: WeeklySeries
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 0
+# pir:
+#   parent: pir_series
+#   date: 2005-07-05
+#   name: Tuesday Night PIR
+#   city: Portland
+#   state: OR
+#   discipline: Road
+#   flyer: http://localhost/flyers/2005/pir.html
+#   sanctioned_by: CBRA
+#   promoter_id: 1
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 1
+# pir_2:
+#   parent: pir_series
+#   date: 2005-07-12
+#   name: Tuesday Night PIR
+#   city: Portland
+#   state: OR
+#   discipline: Road
+#   flyer: http://localhost/flyers/2005/pir.html
+#   sanctioned_by: CBRA
+#   promoter_id: 1
+#   sanctioned_by: CBRA
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 1
+# kings_valley_2004:
+#   name: Kings Valley Road Race
+#   date: 2004-12-31
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   number_issuer: association
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# mt_hood:
+#   date: 2005-07-11
+#   name: Mt. Hood Classic
+#   city: Hood River
+#   state: OR
+#   discipline: Road
+#   flyer: http://www.hoodriversr.net/
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   number_issuer: association
+#   type: MultiDayEvent
+#   bar_points: 0
+#   ironman: 0
+# mt_hood_1:
+#   parent: mt_hood
+#   date: 2005-07-11
+#   name: Mount Hood Day 1
+#   state: OR
+#   discipline: Road
+#   flyer: http://www.hoodriversr.net/
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   city: Hood River
+#   number_issuer: association
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# mt_hood_2:
+#   parent: mt_hood
+#   date: 2005-07-12
+#   name: Mount Hood Day 2
+#   city: Cloud Cap
+#   state: OR
+#   discipline: Road
+#   flyer: http://www.hoodriversr.net/
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   number_issuer: association
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# kings_valley_2004:
+#   name: Kings Valley Road Race
+#   date: 2004-12-31
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   number_issuer: association
+#   type: SingleDayEvent
+#   bar_points: 1
+#   ironman: 1
+# series_parent:
+#   name: Lost Series
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   date: <%= Time.zone.today %>
+#   type: Series
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 0
+# lost_series_child:
+#   name: Lost Series
+#   discipline: Road
+#   sanctioned_by: CBRA
+#   promoter_id: 3
+#   date: <%= Time.zone.today %>
+#   type: SingleDayEvent
+#   number_issuer: association
+#   bar_points: 0
+#   ironman: 0
+# future_national_federation_event:
+#   name: National Federation Event
+#   discipline: Road
+#   sanctioned_by: National Federation
+#   date: <%= 3.days.since Time.zone.today %>
+#   type: SingleDayEvent
+#   bar_points: 0
+#   ironman: 0
+#   number_issuer: association
+# usa_cycling_event_with_results:
+#   name: Copperopolis Road Race
+#   discipline: Road
+#   sanctioned_by: NCNCA
+#   date: <%= 4.days.ago(Time.zone.today) %>
+#   type: SingleDayEvent
+#   bar_points: 0
+#   ironman: 0
+#   number_issuer: association

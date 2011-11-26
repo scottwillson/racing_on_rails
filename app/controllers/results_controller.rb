@@ -29,7 +29,7 @@ class ResultsController < ApplicationController
         @year = params['year'].to_i
         @year = Date.today.year if @year == 0
         @discipline = Discipline[params['discipline']]
-        @discipline_names = Discipline.find_all_names
+        @discipline_names = Discipline.names
         @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
       }
       format.xml { render :xml => results_as_xml }

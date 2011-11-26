@@ -5,11 +5,8 @@ class IronmanControllerTest < ActionController::TestCase
   def setup
     super
     big_team = Team.create(:name => "T" * 60)
-    weaver = people(:weaver)
-    weaver.team = big_team
-    events(:banana_belt_1).races.first.results.create(:person => weaver, :team => big_team)
-    weaver.first_name = "f" * 60
-    weaver.last_name = "T" * 60
+    weaver = FactoryGirl.create(:person, :first_name => "f" * 60, :last_name => "T" * 60, :team => big_team)
+    FactoryGirl.create(:race).results.create! :person => weaver, :team => big_team
 
     Ironman.calculate! 2004
     Ironman.calculate!
