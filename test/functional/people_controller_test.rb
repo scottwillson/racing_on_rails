@@ -458,7 +458,6 @@ class PeopleControllerTest < ActionController::TestCase
   def test_new_login_with_token_logged_in
     person = people(:past_member)
     person.reset_perishable_token!
-    login_as person
     use_ssl
     get :new_login, :id => person.perishable_token
     assert_response :success
