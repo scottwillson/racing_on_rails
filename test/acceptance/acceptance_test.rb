@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] = "test"
+ENV["RAILS_ENV"] = "acceptance"
 
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
