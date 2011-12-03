@@ -14,7 +14,7 @@ class Alias < ActiveRecord::Base
   
   def Alias.find_all_people_by_name(name)
     aliases = Alias.all( 
-      :conditions => ['name = ? and person_id is not null', name],
+      :conditions => ['aliases.name = ? and person_id is not null', name],
       :include => :person
     )
     aliases.collect do |person_alias|
