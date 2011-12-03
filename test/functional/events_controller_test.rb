@@ -16,13 +16,16 @@ class EventsControllerTest < ActionController::TestCase
   end
   
   def test_index_with_person_id_promoter
-    promoter = FactoryGirl.create(:promoter)
-    PersonSession.create(promoter)
-    
-    get :index, :person_id => promoter
-    assert_response :success
-    assert_select ".tabs"
-    assert_select "a[href=?]", /.*\/admin\/events.*/
+    Timecop.freeze(Time.zone.local(2012, 1)) do
+      promoter = FactoryGirl.create(:promoter)
+      PersonSession.create(promoter)
+
+      use_ssl
+      get :index, :person_id => promoter
+      assert_response :success
+      assert_select ".tabs"
+      assert_select "a[href=?]", /.*\/admin\/events.*/
+    end
   end
 
   def test_index_as_xml

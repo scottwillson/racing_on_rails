@@ -51,7 +51,6 @@ class Page < ActiveRecord::Base
   end
   
   def update_parent
-    logger.debug("=== update_parent")
     if parent(true)
       parent.skip_version do
         parent.touch

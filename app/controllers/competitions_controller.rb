@@ -1,5 +1,5 @@
 class CompetitionsController < ApplicationController
-  caches_page :show
+  caches_page :show, :if => Proc.new { |c| !mobile_request? }
   
   def show
     @year = params['year'] || Date.today.year.to_s

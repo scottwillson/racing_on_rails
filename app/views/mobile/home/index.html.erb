@@ -1,0 +1,21 @@
+<h2><%= link_to "Results", results_url %></h2>
+<ul data-role="listview" data-inset="true">
+  <%- @recent_results.each do |event| -%>
+  <li><%= link_to event.full_name, event_races_url(event) %></li>
+  <% end %>
+  
+  <%- if @recent_results.empty? -%>
+  <li>No results in the last two weeks</li>
+  <% end %>
+</ul>
+
+<h2><%= link_to "Schedule", schedule_url %></h2>
+<ul data-role="listview" data-inset="true">
+  <%- @upcoming_events.disciplines.map(&:upcoming_events).flatten.sort_by(&:date).reverse.each do |event| -%>
+    <li><%= public_link_to_flyer event %></li>
+  <% end -%>
+
+  <%- if @upcoming_events.empty? -%>
+  <li>No upcoming events in the next <%= pluralize(@upcoming_events.weeks, "week") %> </li>
+  <% end %>
+</ul>

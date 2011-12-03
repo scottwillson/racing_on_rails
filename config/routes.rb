@@ -150,11 +150,13 @@ RacingOnRails::Application.routes.draw do
     resources :people do
       resources :results
     end
+    resources :races
     resources :teams do
       resources :results
     end
   end
 
+  resources :races
   match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman(/:year)' => 'ironman#index', :as => :ironman

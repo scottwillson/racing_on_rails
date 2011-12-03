@@ -19,7 +19,7 @@ module Results
     
     def test_race?
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), SingleDayEvent.new)
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -37,7 +37,7 @@ module Results
     def test_race_usac
       RacingAssociation.current.usac_results_format = true
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -58,7 +58,7 @@ module Results
     end
     
     def test_create_columns
-      book = Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)
@@ -67,7 +67,7 @@ module Results
     
     def test_create_columns_usac
       RacingAssociation.current.usac_results_format = true
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)

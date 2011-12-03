@@ -14,7 +14,7 @@ class EventTest < ActiveSupport::TestCase
     FactoryGirl.create(:event, :date => Date.new(2008))
     FactoryGirl.create(:event, :date => Date.new(2009))
     years = Event.find_all_years
-    assert_equal_enumerables [ 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
+    assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
   end
   
   def test_defaults

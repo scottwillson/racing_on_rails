@@ -1,0 +1,17 @@
+<% @page_title = "Schedule" %>
+<h2><%= @year %></h2>
+<ul data-role="listview" class="ui-listview">
+  <%- @events.each do |event| -%>
+  <li>
+    <%- if event.flyer.present? && event.flyer_approved? -%>
+    <%= link_to(event.flyer) do %>
+      <h3><%= event.full_name %></h3>
+      <p><%= event.short_date %> <%= event.city_state %> (<%= event.discipline %>)</p>
+    <% end %>
+    <% else %>
+    <h3><%= event.full_name %></h3>
+    <p><%= event.short_date %> <%= event.city_state %> (<%= event.discipline %>)</p>
+    <% end %>
+  </li>
+  <% end %>
+</ul>

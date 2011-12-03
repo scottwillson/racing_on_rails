@@ -84,7 +84,7 @@ module Results
 
       Event.transaction do
         event.disable_notification!
-        book = Spreadsheet.open(source.path)
+        book = ::Spreadsheet.open(source.path)
         book.worksheets.each do |worksheet|
           race = nil
           create_rows(worksheet)

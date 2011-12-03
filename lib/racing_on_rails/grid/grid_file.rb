@@ -11,8 +11,8 @@ module RacingOnRails
         end
 
         excel_rows = []
-        Spreadsheet.open(file.path)
-        Spreadsheet.open(file.path).worksheets.each do |worksheet|
+        ::Spreadsheet.open(file.path)
+        ::Spreadsheet.open(file.path).worksheets.each do |worksheet|
           worksheet.each do |row|
             if Rails.logger.debug? && debug?
               Rails.logger.debug("---------------------------------") 

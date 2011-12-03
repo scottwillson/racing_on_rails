@@ -1,6 +1,6 @@
 # Public page of all Teams
 class TeamsController < ApplicationController
-  caches_page :index
+  caches_page :index, :if => Proc.new { |c| !mobile_request? }
   
   def index
     if RacingAssociation.current.show_all_teams_on_public_page?

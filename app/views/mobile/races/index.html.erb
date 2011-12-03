@@ -1,0 +1,41 @@
+<% @page_title = @event.full_name %>
+<%
+  if @event.parent
+    @back_path = event_races_path(@event.parent)
+  else
+    @back_path = results_path(:year => @event.year)
+  end
+%>
+<h4>
+  <%- if @event.multiple_days? -%>
+    <%= @event.date_range_long_s %>
+  <%- else -%>
+    <%= @event.date.to_formatted_s(:long) %>
+  <%- end -%>  
+</h4>
+
+<%- if @event.parent -%>
+<p>Part of the <%= link_to @event.parent.name, event_races_path(@event.parent) %></p>
+<%- end -%>
+
+<% unless @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.empty? -%>
+<ul data-role="listview" data-inset="true">
+  <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
+  <li><%= link_to "#{child.short_date} #{child.name}", event_races_path(child) %></li>
+  <% end -%>
+</ul>
+<% end -%>
+
+<%- unless @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.empty? -%>
+  <ul data-role="listview" data-inset="true">
+<%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
+  <li><%= link_to child.name, event_races_path(child) %></li>
+<%- end -%>
+</ul>
+<%- end -%>
+
+<ul data-role="listview" class="races">
+  <%- @event.races_with_results.sort_by(&:name).each do |race| -%>
+  <li><%= link_to race.name, race %></li>
+  <% end %>
+</ul>
