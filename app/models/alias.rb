@@ -46,13 +46,13 @@ class Alias < ActiveRecord::Base
   private
   
   def cannot_shadow_person
-    if Person.exists?(["name = ?", name])
+    if person_id && Person.exists?(["name = ?", name])
       errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
     end
   end
   
   def cannot_shadow_team
-    if Team.exists?(['name = ?', name])
+    if team_id && Team.exists?(['name = ?', name])
       errors.add('name', "Team named '#{name}' already exists. Cannot create alias that shadows a team's real name.")
     end
   end

@@ -1,5 +1,3 @@
-require "spreadsheet"
-
 module Results
   # Import Excel results file
   #
