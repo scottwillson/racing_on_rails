@@ -8,7 +8,6 @@ namespace :racing_on_rails do
     puts `mysql -u root #{db_password_arg(db_password)} < #{File.expand_path(::Rails.root.to_s + "/db/create_databases.sql")}`
     puts "Populate development database"
     puts `mysql -u root #{db_password_arg(db_password)} racing_on_rails_development -e "SET FOREIGN_KEY_CHECKS=0; source #{File.expand_path(::Rails.root.to_s + "/db/development_structure.sql")}; SET FOREIGN_KEY_CHECKS=1;"`
-    Rake::Task["db:fixtures:load"].invoke
     puts "Start server"
     puts "Please open http://localhost:8080/ in your web browser"
     puts `unicorn`
