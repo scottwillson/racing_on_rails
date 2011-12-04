@@ -16,5 +16,8 @@ class RacesController < ApplicationController
   
   def show
     @race = Race.find(params[:id])
+    unless mobile_request?
+      redirect_to event_results_path(@race.event)
+    end
   end
 end
