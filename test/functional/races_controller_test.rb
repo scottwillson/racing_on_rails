@@ -10,6 +10,12 @@ class RacesControllerTest < ActionController::TestCase
     assert_not_nil(assigns["category"], "Should assign category")
   end
 
+  def test_event_index
+    race = FactoryGirl.create(:race)
+    get(:index, :event_id => "#{race.event.to_param}")
+    assert_redirected_to event_results_path(race.event)
+  end
+
   def test_show
     race = FactoryGirl.create(:race)
     get(:show, :id => "#{race.to_param}")
