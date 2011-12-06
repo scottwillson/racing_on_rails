@@ -2,6 +2,8 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PublicPagesTest < ActionController::IntegrationTest
+  assert_no_angle_brackets :except => [ :test_mailing_lists ]
+  
   def test_popular_pages
     get "/events/"
     assert_redirected_to schedule_url
@@ -68,6 +70,29 @@ class PublicPagesTest < ActionController::IntegrationTest
     go_to_login
     login :person_session => { :login => person.login, :password => "secret" }
     get "/admin/first_aid_providers"
+    assert_response :success
+  end
+  
+  def test_mailing_lists
+    mailing_list = FactoryGirl.create(:mailing_list)
+    mailing_list_post = FactoryGirl.create(:post, :mailing_list => mailing_list)
+    
+    get "/"
+    assert_response :success
+    
+    get "/mailing_lists"
+    assert_response :success
+    
+    get "/posts/#{mailing_list.name}/#{Time.zone.now.year}/#{Time.zone.now.month}"
+    assert_response :success
+    
+    get "/posts/#{mailing_list.name}/show/#{mailing_list_post.id}"
+    assert_response :success
+    
+    get "/posts/#{mailing_list.name}/new"
+    assert_response :success
+    
+    get "/posts/#{mailing_list.name}/new/#{mailing_list_post.id}"
     assert_response :success
   end
 
