@@ -67,11 +67,12 @@ class PostsControllerTest < ActionController::TestCase
   end
   
   def test_index
-    get(:index, :mailing_list_name => "obrarace")
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get(:index, :mailing_list_name => mailing_list.name)
     assert_redirected_to(
       :controller => "posts",
       :action => "list", 
-      :mailing_list_name => "obrarace", 
+      :mailing_list_name => mailing_list.name, 
       :month => Date.today.month, 
       :year => Date.today.year
     )

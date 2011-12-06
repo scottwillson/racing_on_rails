@@ -6,6 +6,49 @@ h1, h2, h3, h4, h5, h6, p {
   text-align: center;
 }
 
-.ui-footer {
+.ui-footer, .ui-footer .ui-controlgroup {
   text-align: center;
 }
+
+.post h3 {
+  margin-top: 0px;
+}
+
+.post p, .post h3 {
+  text-align: left;
+}
+
+.post .ui-li-aside {
+  text-align: right;  
+}
+
+.post .body {
+  text-align: left;
+  overflow: auto; 
+  white-space: normal;  
+}
+
+.posts_pagination {
+  margin-top: 2em;
+}
+
+div.pagination {
+  text-align: center;
+}
+
+article.post p, article.post h3, article.post h5 {
+  text-align: left;
+}
+
+article.post h3 {
+  border-top: 1px solid gray;
+  margin-bottom: 0.3em;
+  margin-top: 0.3em;
+  padding-top: 0.3em;
+}
+
+article.post details {
+  border-top: 1px solid gray;
+  margin-top: 0.3em;
+}
+

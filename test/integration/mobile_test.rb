@@ -16,5 +16,16 @@ class MobileTest < ActionController::IntegrationTest
 
     get "http://m.cbra.org/results"
     assert_response :success
+
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get "http://m.cbra.org/mailing_lists"
+    assert_response :success
+    
+    get "http://m.cbra.org/mailing_lists/#{mailing_list.id}/posts"
+    assert_response :success
+
+    mailing_list_post = FactoryGirl.create(:post)
+    get "http://m.cbra.org/posts/#{mailing_list_post.id}"
+    assert_response :success
   end
 end

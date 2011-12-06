@@ -35,7 +35,7 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :first_aid_providers
-    resources :mailing_list do
+    resources :mailing_lists do
       resources :posts do
         collection do
           post :receive
@@ -160,7 +160,10 @@ RacingOnRails::Application.routes.draw do
   match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman(/:year)' => 'ironman#index', :as => :ironman
-  match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists
+
+  resources :mailing_lists do
+    resources :posts
+  end
 
   resources :update_requests do
     member do
@@ -173,6 +176,8 @@ RacingOnRails::Application.routes.draw do
   match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
   match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
   resources :password_resets
+
+  match '/posts/:id' => 'posts#show', :constraints => { :id => /\d+/ }
   match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new'
   match '/posts/:mailing_list_name/new' => 'posts#new'
   match '/posts/new/:mailing_list_name' => 'posts#new'

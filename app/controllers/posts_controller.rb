@@ -1,14 +1,19 @@
 class PostsController < ApplicationController
   def index
-    mailing_list_name = params["mailing_list_name"]
-    month_start = Time.zone.now.beginning_of_month
-    redirect_to(
-      :action => "list", 
-      :controller => "posts",
-      :month => month_start.month, 
-      :year => month_start.year, 
-      :mailing_list_name => mailing_list_name
-    )
+    if params["mailing_list_name"].present?
+      mailing_list_name = params["mailing_list_name"]
+      month_start = Time.zone.now.beginning_of_month
+      redirect_to(
+        :action => "list", 
+        :controller => "posts",
+        :month => month_start.month, 
+        :year => month_start.year, 
+        :mailing_list_name => mailing_list_name
+      )
+    else
+      @mailing_list = MailingList.find(params[:mailing_list_id])
+      @posts = @mailing_list.posts.paginate(:page => params[:page])
+    end
   end
 
   def list
