@@ -161,10 +161,6 @@ RacingOnRails::Application.routes.draw do
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman(/:year)' => 'ironman#index', :as => :ironman
 
-  resources :mailing_lists do
-    resources :posts
-  end
-
   resources :update_requests do
     member do
       get :confirm
@@ -177,20 +173,24 @@ RacingOnRails::Application.routes.draw do
   match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
   resources :password_resets
 
-  match '/posts/:id' => 'posts#show', :constraints => { :id => /\d+/ }
-  match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new'
-  match '/posts/:mailing_list_name/new' => 'posts#new'
-  match '/posts/new/:mailing_list_name' => 'posts#new'
-  match '/posts/:mailing_list_name/show/:id' => 'posts#show'
-  match '/posts/show/:mailing_list_name/:id' => 'posts#show'
+  match '/posts/new/:mailing_list_name' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/show/:mailing_list_name/:id' => 'posts#show', :constraints => { :mailing_list_name => /[^\d]+/ }
   match '/posts/show' => 'posts#show'
-  match '/posts/:mailing_list_name/post' => 'posts#post'
-  match '/posts/:mailing_list_name/confirm' => 'posts#confirm'
-  match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply'
-  match '/posts/:mailing_list_name/:year/:month' => 'posts#list'
-  match '/posts/:mailing_list_name' => 'posts#index'
+  match '/posts/:id' => 'posts#show', :constraints => { :id => /\d+/ }
+  match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/new' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/show/:id' => 'posts#show', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/post' => 'posts#post', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/confirm' => 'posts#confirm', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name/:year/:month' => 'posts#list', :constraints => { :mailing_list_name => /[a-z_]+/ }
+  match '/posts/:mailing_list_name' => 'posts#index', :constraints => { :mailing_list_name => /[a-z_]+/ }
   resources :posts do
     get :list, :on => :collection
+  end
+
+  resources :mailing_lists do
+    resources :posts
   end
 
   match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }

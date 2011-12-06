@@ -341,10 +341,10 @@ class PostsControllerTest < ActionController::TestCase
   
   def test_confirm
     obra_race = FactoryGirl.create(:mailing_list)
-    get(:confirm, :mailing_list_name => obra_race.name)
-    assert_response(:success)
-    assert_template("posts/confirm")
-    assert_equal(obra_race, assigns["mailing_list"], 'Should assign mailing list')
+    get :confirm, :mailing_list_name => obra_race.name
+    assert_response :success
+    assert_template "posts/confirm"
+    assert_equal obra_race, assigns["mailing_list"], "Should assign mailing list"
   end
   
   def test_confirm_private_reply

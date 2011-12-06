@@ -1,8 +1,8 @@
 class PostsController < ApplicationController
   def index
+    month_start = Time.zone.now.beginning_of_month
     if params["mailing_list_name"].present?
       mailing_list_name = params["mailing_list_name"]
-      month_start = Time.zone.now.beginning_of_month
       redirect_to(
         :action => "list", 
         :controller => "posts",
@@ -13,6 +13,15 @@ class PostsController < ApplicationController
     else
       @mailing_list = MailingList.find(params[:mailing_list_id])
       @posts = @mailing_list.posts.paginate(:page => params[:page])
+      unless mobile_request?
+        redirect_to(
+          :action => "list", 
+          :controller => "posts",
+          :month => month_start.month, 
+          :year => month_start.year, 
+          :mailing_list_name => @mailing_list.name
+        )
+      end
     end
   end
 

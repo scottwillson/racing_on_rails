@@ -70,9 +70,9 @@ FactoryGirl.define do
   end
   
   factory :mailing_list do
-    sequence(:name) { |n| "obra_#{n}" }    
-    sequence(:friendly_name) { |n| "OBRA Chat #{n}" }
-    sequence(:subject_line_prefix) { |n| "OBRA Chat #{n}" }
+    sequence(:name, "a") { |n| "obra_#{n}" }    
+    sequence(:friendly_name, "a") { |n| "OBRA Chat #{n}" }
+    sequence(:subject_line_prefix, "a") { |n| "OBRA Chat #{n}" }
   end
   
   factory :number_issuer do
