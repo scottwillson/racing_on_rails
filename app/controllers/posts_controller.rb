@@ -12,7 +12,7 @@ class PostsController < ApplicationController
       )
     else
       @mailing_list = MailingList.find(params[:mailing_list_id])
-      @posts = @mailing_list.posts.paginate(:page => params[:page])
+      @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
       unless mobile_request?
         redirect_to(
           :action => "list", 
