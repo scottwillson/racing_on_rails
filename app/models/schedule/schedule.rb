@@ -174,7 +174,9 @@ module Schedule
     def Schedule.save(events, multi_day_events)
       events.each do |event|
         logger.debug "Save #{event.name}"
-        event.save!
+        unless Event.where(:name => event.name, :date => event.date).exists?
+          event.save!
+        end
       end
       multi_day_events.each do |event|
         logger.debug "Save #{event.name}"
