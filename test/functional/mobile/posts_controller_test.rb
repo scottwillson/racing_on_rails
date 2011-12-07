@@ -9,7 +9,7 @@ class PostsControllerTest < ActionController::TestCase
     mailing_list = FactoryGirl.create(:mailing_list)
     get :index, :mailing_list_id => mailing_list.id
     assert_response :success
-    assrt_not_nil assigns(:posts)
+    assert_not_nil assigns(:posts)
   end
   
   def test_show
@@ -17,6 +17,6 @@ class PostsControllerTest < ActionController::TestCase
     new_post = FactoryGirl.create(:post)  
     get :show, :id => new_post.id
     assert_response :success
-    assrt_not_nil assigns(:post)
+    assert_not_nil assigns(:post)
   end
 end
