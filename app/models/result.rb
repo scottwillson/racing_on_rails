@@ -50,6 +50,8 @@ class Result < ActiveRecord::Base
 
   validates_presence_of :race
 
+  scope :competition, where(:competition_result => true)
+
   def self.find_all_for(person)
     if person.is_a? Person
       person_id = person.id
