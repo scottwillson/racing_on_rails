@@ -14,6 +14,7 @@ module Schedule
       :team            => :team_id,
       :club            => :team_id,
       :website         => :flyer,
+      :where           => :city,
       :flyer_approved  => { :column_type => :boolean }
     }
 
@@ -36,9 +37,8 @@ module Schedule
       start_date = nil
       Event.transaction do
         table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
-        start_date = table[0][:date]
-        delete_all_future_events start_date
         events = parse_events(table)
+        delete_all_future_events events
         multi_day_events = find_multi_day_events(events)
         save events, multi_day_events
       end
@@ -47,7 +47,8 @@ module Schedule
     end
     
     # Events with results _will not_ be destroyed
-    def Schedule.delete_all_future_events(date)
+    def Schedule.delete_all_future_events(events)
+      date = events.map(&:date).min
       logger.debug "Delete all events after #{date}"
       # Avoid lock version errors by destroying child events first
       SingleDayEvent.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
