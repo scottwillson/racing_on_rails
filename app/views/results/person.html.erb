@@ -29,6 +29,7 @@
     <th>Date</th>
     <th class="right">Points</th>
   </tr>
+  <%# FIXME Add test for rendering this page with lots of results %>
   <% result.scores.sort_by(&:source_event_date).each do |score| %>
   <tr class="<%= cycle("even", "odd") %>">
     <td class="place right" width="24"><%= score.source_result.place %></td>
