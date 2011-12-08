@@ -15,7 +15,7 @@ gem "vestal_versions", :git => "git://github.com/scottwillson/vestal_versions.gi
 gem "newrelic_rpm"
 gem "erubis"
 gem "will_paginate", "~> 3.0.beta"
-gem "hoptoad_notifier"
+gem "airbrake"
 gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "fckeditor", :git => "git://github.com/scottwillson/fckeditor.git"

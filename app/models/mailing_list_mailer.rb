@@ -88,7 +88,7 @@ class MailingListMailer < ActionMailer::Base
         if post && post.errors.any?
           Rails.logger.error post.errors.full_messages
         end
-        HoptoadNotifier.notify save_error
+        Airbrake.notify save_error
         raise
       end
       post
