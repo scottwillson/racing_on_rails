@@ -111,7 +111,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_add_children
-    Timecop.freeze(Date.new(RacingAssociation.current.year, 10, 3)) do
+    Timecop.freeze(Time.zone.local(RacingAssociation.current.year, 10, 3)) do
       lost_series_child = FactoryGirl.create(:event, :name => "Event", :date => 1.month.from_now)
   
       event = FactoryGirl.create(:series, :name => "Event")
