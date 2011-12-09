@@ -20,8 +20,8 @@ class EventTest < ActiveSupport::TestCase
   def test_defaults
     number_issuer = NumberIssuer.create!(:name => RacingAssociation.current.short_name)
     event = SingleDayEvent.new
-    assert_equal(Date.today, event.date, "New event should have today's date")
-    formatted_date = Date.today.strftime("%m-%d-%Y")
+    assert_equal(Time.zone.today, event.date, "New event should have today's date")
+    formatted_date = Time.zone.today.strftime("%m-%d-%Y")
     assert_equal("New Event #{formatted_date}", event.name, "event name")
     assert_equal(RacingAssociation.current.state, event.state, "event.state")
     assert_equal("Road", event.discipline, "event.discipline")
@@ -112,7 +112,7 @@ class EventTest < ActiveSupport::TestCase
     assert_equal(expected, events, "events")
     assert_equal([], weekly_series, "weekly_series")
     
-    weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Track"])
+    weekly_series, events = Event.find_all_with_results(Time.zone.today.year, Discipline["Track"])
     assert_equal([track_event], events, "events")
     assert_equal([track_series], weekly_series, "weekly_series")
   end

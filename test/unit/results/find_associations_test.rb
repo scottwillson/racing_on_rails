@@ -218,7 +218,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
 
     person_clone.reload
-    assert_equal_dates Date.today, person_clone.updated_at, "updated_at"
+    assert_equal_dates Time.zone.today, person_clone.updated_at, "updated_at"
   end
 
   def test_differentiate_people_by_number_ignore_different_names_eager_match
@@ -415,7 +415,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
   def test_find_people_among_duplicates
     FactoryGirl.create(:cyclocross_discipline)
     
-    Timecop.freeze(Date.new(Date.today.year, 6)) do
+    Timecop.freeze(Date.new(Time.zone.today.year, 6)) do
       Person.create!(:name => "Mary Yax").race_numbers.create!(:value => "157")
 
       jt_1 = Person.create!(:name => "John Thompson")
