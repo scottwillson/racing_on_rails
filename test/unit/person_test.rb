@@ -1118,7 +1118,7 @@ class PersonTest < ActiveSupport::TestCase
     end
 
     person = Person.create!(:member_from => Date.new(2009, 1, 1), :member_to => Date.new(2009, 12, 31))
-    Timecop.freeze(Date.new(2009, 12, 1)) do
+    Timecop.freeze(Time.zone.local(2009, 12, 1)) do
       assert !person.renewed?, "On Dec 1"
     end
 
