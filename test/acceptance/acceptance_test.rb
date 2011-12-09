@@ -75,6 +75,20 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
 
+  def wait_for(locator)
+    raise ArgumentError if locator.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until page.find(locator)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "'#{locator}' did not appear in page source within 10 seconds"
+    end
+  end
+
   def fill_in_inline(locator, options)
     find(locator).click
     within "form.editor_field" do
