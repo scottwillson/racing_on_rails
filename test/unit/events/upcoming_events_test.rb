@@ -12,7 +12,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
   
   def test_new
     FactoryGirl.create(:discipline, :name => "Track")
-    upcoming_events = UpcomingEvents::Base.new(Date.today, 2, nil)
+    upcoming_events = UpcomingEvents::Base.new(Time.zone.today, 2, nil)
     assert_equal(nil, upcoming_events.discipline, "default discipline")
     assert_equal(2, upcoming_events.weeks, "default weeks")
     
@@ -412,11 +412,11 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     upcoming_events = UpcomingEvents.find_all
     assert_equal([Discipline[:road]], upcoming_events.disciplines, "Disciplines")    
     
-    SingleDayEvent.create!(:discipline => "Downhill", :date => Date.today.advance(:days => 1))
+    SingleDayEvent.create!(:discipline => "Downhill", :date => Time.zone.today.advance(:days => 1))
     upcoming_events = UpcomingEvents.find_all
     assert_equal([Discipline[:road], Discipline[:mountain_bike]], upcoming_events.disciplines, "Disciplines")    
     
-    SingleDayEvent.create!(:discipline => "Track", :date => Date.today.advance(:days => 4))
+    SingleDayEvent.create!(:discipline => "Track", :date => Time.zone.today.advance(:days => 4))
     upcoming_events = UpcomingEvents.find_all(:discipline => "track")
     assert_equal([Discipline[:track]], upcoming_events.disciplines, "Disciplines")    
   end

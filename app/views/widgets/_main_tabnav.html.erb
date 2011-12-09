@@ -26,7 +26,7 @@ render_tabnav :main,
 #  end
 
   if @year.blank?
-    year = Date.today.year
+    year = Time.zone.today.year
   else
     year = @year
   end

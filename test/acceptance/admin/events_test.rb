@@ -17,8 +17,8 @@ class EventsTest < AcceptanceTest
     click_button "Save"
     assert_page_has_content "Created Sausalito Criterium"
     
-    if Date.today.month == 12
-      visit "/admin/events?year=#{Date.today.year}"
+    if Time.zone.today.month == 12
+      visit "/admin/events?year=#{Time.zone.today.year}"
     else
       visit "/admin/events"
     end
@@ -33,7 +33,7 @@ class EventsTest < AcceptanceTest
     assert_match %r{\d+}, find("#event_promoter_id").value
     assert page.has_field?("promoter_auto_complete", :with => "Tom Brown")
 
-    visit "/admin/events?year=#{Date.today.year}"
+    visit "/admin/events?year=#{Time.zone.today.year}"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
     assert_match %r{\d+}, find("#event_promoter_id").value
@@ -83,7 +83,7 @@ class EventsTest < AcceptanceTest
     assert page.has_field?("person_home_phone", :with => "(503) 555-1212")
     assert page.has_field?("person_email", :with => "admin@example.com")
 
-    visit "/admin/events?year=#{Date.today.year}"
+    visit "/admin/events?year=#{Time.zone.today.year}"
     click_link "Sausalito Criterium"
 
     fill_in "team_auto_complete", :with => "Gentle Lovers"

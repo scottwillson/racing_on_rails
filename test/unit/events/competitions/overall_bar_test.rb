@@ -185,7 +185,7 @@ class OverallBarTest < ActiveSupport::TestCase
     overall_bar = OverallBar.find_for_year!(2004)
     assert_equal(Date.new(2004, 1, 1), overall_bar.date, "2004 Bar date")
     assert_equal("2004 Overall BAR", overall_bar.name, "2004 Bar name")
-    assert_equal_dates(Time.zone, overall_bar.updated_at, "BAR last updated")
+    assert_equal_dates(Time.zone.today, overall_bar.updated_at, "BAR last updated")
     assert_equal(15, overall_bar.races.size, "2004 Overall Bar races")
     assert_equal 6, overall_bar.children.size, "Overall BAR children"
     
@@ -195,7 +195,7 @@ class OverallBarTest < ActiveSupport::TestCase
     
     assert_equal(senior_men, senior_men_overall_bar.category, "Senior Men BAR race BAR cat")
     assert_equal(5, senior_men_overall_bar.results.size, "Senior Men Overall BAR results")
-    assert_equal_dates(Date.today, senior_men_overall_bar.updated_at, "BAR last updated")
+    assert_equal_dates(Time.zone.today, senior_men_overall_bar.updated_at, "BAR last updated")
     senior_men_overall_bar.results.sort!
     
     assert_equal(tonkin, senior_men_overall_bar.results[0].person, "Senior Men Overall BAR results person")
@@ -333,7 +333,7 @@ class OverallBarTest < ActiveSupport::TestCase
     Bar.calculate!
     OverallBar.calculate!
     
-    current_year = Date.today.year
+    current_year = Time.zone.today.year
     road_bar = Bar.find_by_year_and_discipline(current_year, "Road")
     cat_4_road_bar = road_bar.races.detect { |race| race.category == category_4_men }
     assert_equal(2, cat_4_road_bar.results.size, "Cat 4 Overall BAR results")

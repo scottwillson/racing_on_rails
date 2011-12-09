@@ -15,10 +15,10 @@ class NameTest < ActiveSupport::TestCase
     assert_equal(2, team.names(true).size, "names")
     
     assert_equal("Tecate-Una Mas", team.name)
-    assert_equal("Tecate-Una Mas", team.name(Date.today))
+    assert_equal("Tecate-Una Mas", team.name(Time.zone.today))
     assert_equal("Team Tecate", team.name(1.years.ago))
     assert_equal("Twin Peaks", team.name(2.years.ago))
-    assert_equal("Tecate-Una Mas", team.name(Date.today.next_year))
+    assert_equal("Tecate-Una Mas", team.name(Time.zone.today.next_year))
   end
   
   def test_create_new_name_if_there_are_results_from_previous_year
@@ -28,7 +28,7 @@ class NameTest < ActiveSupport::TestCase
     old_result = event.races.create!(:category => senior_men).results.create!(:team => team)
     assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
     
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     result = event.races.create!(:category => senior_men).results.create!(:team => team)
     assert_equal("Twin Peaks", result.team_name, "Team name on new result")
     assert_equal("Twin Peaks", old_result.team_name, "Team name on old result")
@@ -46,7 +46,7 @@ class NameTest < ActiveSupport::TestCase
     team = Team.create!(:name => "Twin Peaks")
     assert(!team.results_before_this_year?, "results_before_this_year? with no results")
     
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     senior_men = FactoryGirl.create(:category)
     result = event.races.create!(:category => senior_men).results.create!(:team => team)
     assert(!team.results_before_this_year?, "results_before_this_year? with results in this year")
@@ -63,7 +63,7 @@ class NameTest < ActiveSupport::TestCase
     team.results_before_this_year?
     assert(team.results_before_this_year?, "results_before_this_year? with several old results")
 
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     event.races.create!(:category => senior_men).results.create!(:team => team)
     team.results_before_this_year?
     assert(team.results_before_this_year?, "results_before_this_year? with results in many years")
@@ -93,7 +93,7 @@ class NameTest < ActiveSupport::TestCase
     
     assert_equal("Tecate-¡Una Mas!", team.name, "New team name")
     assert_equal("Twin Peaks", team.names.first.name, "Old team name")
-    assert_equal(Date.today.year - 1, team.names.first.year, "Old team name year")
+    assert_equal(Time.zone.today.year - 1, team.names.first.year, "Old team name year")
   end
 
   def test_name_date_or_year
@@ -115,9 +115,9 @@ class NameTest < ActiveSupport::TestCase
     assert_equal("Mapei-Clas", team.name(2002), "Historical name 2002")
     assert_equal("Quick Step", team.name(2003), "Historical name 2003")
     assert_equal("Quick Step", team.name(2003), "Historical name 2004")
-    assert_equal("Quick Step", team.name(Date.today.year - 1), "Historical name last year")
-    assert_equal("Vanilla", team.name(Date.today.year), "Name this year")
-    assert_equal("Vanilla", team.name(Date.today.year + 1), "Name next year")
+    assert_equal("Quick Step", team.name(Time.zone.today.year - 1), "Historical name last year")
+    assert_equal("Vanilla", team.name(Time.zone.today.year), "Name this year")
+    assert_equal("Vanilla", team.name(Time.zone.today.year + 1), "Name next year")
   end
  
   def test_rename_to_old_name

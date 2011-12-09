@@ -151,7 +151,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   end
   
   def test_links_to_years_only_past_year_has_events
-    current_year = Date.today.year
+    current_year = Time.zone.today.year
     last_year = current_year - 1
     SingleDayEvent.create!(:date => Date.new(last_year))
     

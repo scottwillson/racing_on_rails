@@ -10,7 +10,7 @@ module UpcomingEvents
     
     # Date = start date. Defaults to today
     def initialize(date, weeks, discipline)
-      @date = date || Date.today
+      @date = date || Time.zone.today
       @discipline = discipline
       @disciplines = disciplines_for(discipline)
       @weeks = weeks || 2

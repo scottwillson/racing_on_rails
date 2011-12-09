@@ -17,7 +17,7 @@
     <%= f.label :date_of_birth, "Date of Birth" %>
     <%= date_select 'person', 'date_of_birth', 
         :order => [:month, :day, :year], 
-        :start_year => 1900, :end_year => Date.today.year, 
+        :start_year => 1900, :end_year => Time.zone.today.year, 
         :include_blank => true %>
     <br/>
 
@@ -61,7 +61,7 @@
     <%= f.labelled_text :member_to, @person.member_to %><br/>
   
     <%= f.labelled_text(:member, "Current", nil, :class => "current") if @person.member? -%>
-    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Date.today -%>
+    <%= f.labelled_text(:usa_cycling, "Current (#{@person.license})", nil, :class => "current") if @person.member_usac_to && @person.member_usac_to >= Time.zone.today -%>
     <%= f.labelled_text(:member, "Renewed", nil, :class => "renewed") if @person.renewed? -%>
     <%= f.labelled_text(:member, "Not current", nil, :class => "not_current") if !@person.member? && !@person.renewed? -%>  
     <%= f.labelled_text :official, @person.official? %>

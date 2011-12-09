@@ -45,7 +45,7 @@ class PublicPagesTest < AcceptanceTest
 
     visit "/results"
     assert_page_has_content("Schedule")
-    assert_page_has_content Date.today.year.to_s
+    assert_page_has_content Time.zone.today.year.to_s
 
     visit "/results/2004/road"
     assert_page_has_content "Kings Valley"
@@ -80,10 +80,10 @@ class PublicPagesTest < AcceptanceTest
     fill_in "name", :with => "Penn"
 
     visit "/rider_rankings"
-    assert_page_has_content "No results for #{Date.today.year}"
+    assert_page_has_content "No results for #{Time.zone.today.year}"
 
     visit "/cat4_womens_race_series"
-    assert_page_has_content "No results for #{Date.today.year}"
+    assert_page_has_content "No results for #{Time.zone.today.year}"
 
     visit "/oregon_cup"
     assert_page_has_content "Oregon Cup"
@@ -129,7 +129,7 @@ class PublicPagesTest < AcceptanceTest
     click_link "Age Graded"
     assert_page_has_content "Masters Men 30-34"
   
-    visit "/bar/#{Date.today.year}"
+    visit "/bar/#{Time.zone.today.year}"
     assert_page_has_content "Overall"
   
     click_link "Age Graded"

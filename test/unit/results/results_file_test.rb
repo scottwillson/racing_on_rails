@@ -118,7 +118,7 @@ module Results
               if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
                 assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
-                  Date.today, 
+                  Time.zone.today, 
                   result.person.member_from, 
                   "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})")
               else
@@ -138,10 +138,10 @@ module Results
     def test_import_time_trial_people_with_same_name
       FactoryGirl.create(:discipline, :name => "Time Trial")
       bruce_109 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
-      bruce_109.race_numbers.create(:year => Date.today.year, :value => '109')
+      bruce_109.race_numbers.create(:year => Time.zone.today.year, :value => '109')
     
       bruce_1300 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
-      bruce_1300.race_numbers.create!(:year => Date.today.year, :value => '1300')
+      bruce_1300.race_numbers.create!(:year => Time.zone.today.year, :value => '1300')
     
       existing_weaver = FactoryGirl.create(:person, :name => "Ryan Weaver", :road_number => "341")
       existing_matson = FactoryGirl.create(:person, :name => "Mark Matson", :road_number => "340")
@@ -311,7 +311,7 @@ module Results
       # w_1_2                 Y                           Y + results
       # Other combinations are invalid
 
-      event = SingleDayEvent.create!(:date => Date.today + 3)
+      event = SingleDayEvent.create!(:date => Time.zone.today + 3)
       pro_1_2_race = event.races.create! :category => Category.find_or_create_by_name("Pro 1/2")
       event.races.create! :category => Category.find_or_create_by_name("Cat 3")
       cat_4_race = event.races.create! :category => Category.find_or_create_by_name("Cat 4")

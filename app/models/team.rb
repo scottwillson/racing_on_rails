@@ -139,7 +139,7 @@ class Team < ActiveRecord::Base
     end
   end
   
-  def member_in_year?(date = Date.today)
+  def member_in_year?(date = Time.zone.today)
     member
   end
   

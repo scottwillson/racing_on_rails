@@ -8,7 +8,7 @@ class Overall < Competition
    self.name
  end
 
-  def self.calculate!(year = Date.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
         parent = MultiDayEvent.first(

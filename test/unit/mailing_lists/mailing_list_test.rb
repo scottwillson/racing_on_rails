@@ -16,7 +16,7 @@ class MailingListTest < ActiveSupport::TestCase
     obra = FactoryGirl.create(:mailing_list)
     assert_nil(obra.dates, "Dates")
   
-    today = Date.today
+    today = Time.zone.today
     Post.create!(
       :mailing_list => obra,
       :subject => "TEST",
@@ -30,7 +30,7 @@ class MailingListTest < ActiveSupport::TestCase
     assert_equal_dates(today, obra.dates.first, "First date")
     assert_equal_dates(today, obra.dates.last, "Last date")
 
-    yesterday = Date.today - 1
+    yesterday = Time.zone.today - 1
     Post.create!(
       :mailing_list => obra,
       :subject => "TEST",
@@ -40,7 +40,7 @@ class MailingListTest < ActiveSupport::TestCase
       :body => "This is a test message"
     )
 
-    tomorrow = Date.today + 1
+    tomorrow = Time.zone.today + 1
     Post.create!(
       :mailing_list => obra,
       :subject => "TEST",

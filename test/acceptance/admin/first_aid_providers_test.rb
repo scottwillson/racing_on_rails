@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 class FirstAidProvidersTest < AcceptanceTest
   def test_first_aid_providers
     # FIXME Punt!
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       login_as FactoryGirl.create(:administrator)
       promoter = FactoryGirl.create(:person, :name => "Brad Ross")
       event_1 = FactoryGirl.create(:event, :promoter => promoter, :date => 2.days.from_now, :first_aid_provider => "Megan Weaver", :name => "Copperopolis")
@@ -28,7 +28,7 @@ class FirstAidProvidersTest < AcceptanceTest
       visit "/admin/first_aid_providers"
       assert_table "events_table", 1, 0, /^Megan Weaver/
 
-      if Date.today.month > 1
+      if Time.zone.today.month > 1
         find("#past_events").click
         assert_table "events_table", 1, 3, /^San Ardo/
 

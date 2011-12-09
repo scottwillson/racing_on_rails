@@ -58,12 +58,12 @@ class RacingAssociation < ActiveRecord::Base
     @person ||= Person.find_or_create_by_name(short_name)
   end
   
-  # Returns now.beginning_of_day, which is the same as Date.today
+  # Returns now.beginning_of_day, which is the same as Time.zone.today
   def today
     Time.zone.now.to_date
   end
   
-  # Returns now.year, which is the same as Date.today.
+  # Returns now.year, which is the same as Time.zone.today.
   def year
     Time.zone.now.year
   end
@@ -92,7 +92,7 @@ class RacingAssociation < ActiveRecord::Base
     Date.new(effective_year)
   end
   
-  # Date.today.year + 1 unless +now+ is set.
+  # Time.zone.today.year + 1 unless +now+ is set.
   def next_year
     if effective_year == Time.zone.now.year
       effective_year + 1

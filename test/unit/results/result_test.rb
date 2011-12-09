@@ -280,7 +280,7 @@ class ResultTest < ActiveSupport::TestCase
     race = event.races.create!(:category => senior_women)
     result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
@@ -289,7 +289,7 @@ class ResultTest < ActiveSupport::TestCase
     # Rental
     result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number')
     assert(!result.person.member?, "Person with rental number should not be member")
   end
@@ -310,7 +310,7 @@ class ResultTest < ActiveSupport::TestCase
     race = event.races.create!(:category => senior_women)
     result = race.results.create!(:place => 2, :first_name => 'Eddy', :last_name => 'Merckx', :number => '200')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number should not be set from result')
     assert(result.person.ccx_number.blank?, 'Cyclocross number')
     assert(result.person.xc_number.blank?, 'MTB number')
@@ -319,7 +319,7 @@ class ResultTest < ActiveSupport::TestCase
     RacingAssociation.current.rental_numbers = 0..99
     result = race.results.create!(:place => 2, :first_name => 'Benji', :last_name => 'Whalen', :number => '51')
     assert(result.person.errors.empty?, "People should have no errors, but had: #{result.person.errors.full_messages}")
-    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Date.today.year}
+    road_number = result.person(true).race_numbers(true).detect{|number| number.year == Time.zone.today.year}
     assert_nil(road_number, 'Current road number')
     assert(!result.person.member?, "Person with rental number should not be member")
   end
@@ -461,7 +461,7 @@ class ResultTest < ActiveSupport::TestCase
     old_result = event.races.create!(:category => senior_men).results.create!(:team => team)
     team.names.create!(:name => "Twin Peaks", :year => 1.years.ago.year)
 
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     result = event.races.create!(:category => senior_men).results.create!(:team => team)
 
     assert_equal("Tecate-Una Mas", result.reload.team_name, "Team name on this year's result")

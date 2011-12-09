@@ -8,7 +8,7 @@
 end -%>
 <%= render_page "schedule/disciplines", :locals => { :year => @year } %>
 
-<% if Date.today < Date.new(@year, 2) %>
+<% if Time.zone.today < Date.new(@year, 2) %>
 <div>Tentative. Dates are subject to change.</div>
 <% end %>
 

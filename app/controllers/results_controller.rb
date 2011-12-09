@@ -29,7 +29,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.html {
         @year = params['year'].to_i
-        @year = Date.today.year if @year == 0
+        @year = Time.zone.today.year if @year == 0
         @discipline = Discipline[params['discipline']]
         @discipline_names = Discipline.names
         @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
@@ -123,7 +123,7 @@ class ResultsController < ApplicationController
     if params[:year] && params[:year][/\d\d\d\d/].present?
       @year = params[:year].to_i
     else
-      @year = Date.today.year
+      @year = Time.zone.today.year
     end
     @date = Date.new(@year)
   end

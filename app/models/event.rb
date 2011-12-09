@@ -103,7 +103,7 @@ class Event < ActiveRecord::Base
   
   # Return [weekly_series, events] that have results
   # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-  def Event.find_all_with_results(year = Date.today.year, discipline = nil)
+  def Event.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
@@ -146,7 +146,7 @@ class Event < ActiveRecord::Base
     [ weekly_series, events, competitions ]
   end
 
-  def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
+  def Event.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
       discipline_names = [discipline]

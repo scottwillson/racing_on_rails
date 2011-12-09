@@ -10,14 +10,14 @@ class ResultsTest < AcceptanceTest
     
     login_as FactoryGirl.create(:administrator)
 
-    if Date.today.month == 12
-      visit "/admin/events?year=#{Date.today.year}"
+    if Time.zone.today.month == 12
+      visit "/admin/events?year=#{Time.zone.today.year}"
     else
       visit "/admin/events"
     end
     
-    if Date.today.month == 1 && Date.today.day < 6
-      visit "/admin/events?year=#{Date.today.year - 1}"
+    if Time.zone.today.month == 1 && Time.zone.today.day < 6
+      visit "/admin/events?year=#{Time.zone.today.year - 1}"
     end
 
     click_link "Copperopolis Road Race"

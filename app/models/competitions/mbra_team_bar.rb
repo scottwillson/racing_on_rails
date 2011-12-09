@@ -1,6 +1,6 @@
 class MbraTeamBar < Competition
   
-  def MbraTeamBar.calculate!(year = Date.today.year)
+  def MbraTeamBar.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)

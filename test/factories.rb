@@ -125,7 +125,7 @@ FactoryGirl.define do
     from_email_address "foo@bar.net"
     from_name "Foo"
     body "Test message"
-    date Date.today
+    date Time.zone.today
   end
 
   factory :race do

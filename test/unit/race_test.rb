@@ -400,11 +400,11 @@ class RaceTest < ActiveSupport::TestCase
   end
   
   def test_dates_of_birth
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     senior_men = FactoryGirl.create(:category)
     race = event.races.create!(:category => senior_men)
-    assert_equal_dates(Date.new(Date.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
+    assert_equal_dates(Date.new(Time.zone.today.year - 999, 1, 1), race.dates_of_birth.begin, 'race.dates_of_birth.begin')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), race.dates_of_birth.end, 'race.dates_of_birth.end')
     
     event = SingleDayEvent.create!(:date => Date.new(2000, 9, 8))
     race = event.races.create!(:category => Category.new(:name =>'Espoirs', :ages => 18..23))

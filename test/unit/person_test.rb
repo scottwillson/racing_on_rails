@@ -905,7 +905,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Kona", people[2]["team_name"], "Row 2 team: #{people[2]}")
     assert_equal(30, people[4]["racing_age"], "Row 4 racing_age #{people[4]}")
     assert_equal("01/01/1996", people[4]["member_from"], "Row 4 member_from")
-    assert_equal("12/31/#{Date.today.year}", people[4]["member_to"], "Row 4 member_to")
+    assert_equal("12/31/#{Time.zone.today.year}", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
   end
 
@@ -1073,9 +1073,9 @@ class PersonTest < ActiveSupport::TestCase
 
     assert_equal("Ryan Farris", person.name(2003), "Historical name 2003")
     assert_equal("Ryan Farris", person.name(2004), "Historical name 2004")
-    assert_equal("Ryan Farris", person.name(Date.today.year - 1), "Historical name last year")
-    assert_equal("Ryan Weaver", person.name(Date.today.year), "Name this year")
-    assert_equal("Ryan Weaver", person.name(Date.today.year + 1), "Name next year")
+    assert_equal("Ryan Farris", person.name(Time.zone.today.year - 1), "Historical name last year")
+    assert_equal("Ryan Weaver", person.name(Time.zone.today.year), "Name this year")
+    assert_equal("Ryan Weaver", person.name(Time.zone.today.year + 1), "Name next year")
   end
   
   def test_create_new_name_if_there_are_results_from_previous_year
@@ -1088,7 +1088,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Ryan", old_result.first_name, "first_name on old result")
     assert_equal("Weaver", old_result.last_name, "last_name on old result")
     
-    event = SingleDayEvent.create!(:date => Date.today)
+    event = SingleDayEvent.create!(:date => Time.zone.today)
     result = event.races.create!(:category => senior_men).results.create!(:person => person)
     assert_equal("Ryan Weaver", old_result.name, "Name on old result")
     assert_equal("Ryan", old_result.first_name, "first_name on old result")

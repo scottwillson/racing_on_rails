@@ -73,7 +73,7 @@ module Admin
 
         file = fixture_file_upload("../files/membership/database.xls", "application/vnd.ms-excel", :binary)
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/files/membership/database.xls")
-        next_year = Date.today.year + 1
+        next_year = Time.zone.today.year + 1
         post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
 
         assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
@@ -90,13 +90,13 @@ module Admin
         road_number = rene.race_numbers.detect {|n| n.year == next_year && n.discipline == Discipline['road']}
         assert_not_nil(road_number, "Rene should have road number for #{next_year}")
 
-        assert(rene.member?(Date.today), 'Should be a member for this year')
+        assert(rene.member?(Time.zone.today), 'Should be a member for this year')
         assert(rene.member?(Date.new(next_year - 1, 12, 31)), 'Should be a member for this year')
         assert(rene.member?(Date.new(next_year, 1, 1)), 'Should be a member for next year')
 
         heidi = Person.find_by_name('Heidi Babi')
         assert_not_nil(heidi, 'Heidi Babi should have been imported and created')
-        assert(heidi.member?(Date.today), 'Should be a member for this year')
+        assert(heidi.member?(Time.zone.today), 'Should be a member for this year')
         assert(heidi.member?(Date.new(next_year - 1, 12, 31)), 'Should be a member for this year')
         assert(heidi.member?(Date.new(next_year, 1, 1)), 'Should be a member for next year')
       end

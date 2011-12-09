@@ -97,7 +97,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
       molly_road_number = RaceNumber.last
 
       put(:update, {"commit"=>"Save", 
-                     "number_year" => Date.today.year.to_s,
+                     "number_year" => Time.zone.today.year.to_s,
                      "number_issuer_id"=>[@association.to_param], "number_value"=>["AZY"], 
                      "discipline_id" => [@mountain_bike.id.to_s],
                      "number"=>{molly_road_number.to_param =>{"value"=>"202"}},
@@ -205,7 +205,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     molly_road_number = RaceNumber.first
     
     put(:update, {"commit"=>"Save", 
-                   "number_year" => Date.today.year.to_s,
+                   "number_year" => Time.zone.today.year.to_s,
                    "number_issuer_id"=>@association.to_param, "number_value"=>[""], "discipline_id"=>@cyclocross.to_param,
                    "number"=>{molly_road_number.to_param=>{"value"=>"222"}},
                    "person"=>{
@@ -224,7 +224,7 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     assert(flash.empty?, "Expected flash.empty? but was: #{flash[:warn]}")
     assert_redirected_to edit_admin_person_path(molly)
     molly.reload
-    assert_equal('222', molly.road_number(true, Date.today.year), 'Road number should be updated')
+    assert_equal('222', molly.road_number(true, Time.zone.today.year), 'Road number should be updated')
     assert_equal(true, molly.print_card?, 'print_card?')
     assert_equal_dates('2004-02-16', molly.member_from, 'member_from after update')
     assert_equal_dates('2004-12-31', molly.member_to, 'member_to after update')

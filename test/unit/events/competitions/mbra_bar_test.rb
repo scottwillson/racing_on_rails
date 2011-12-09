@@ -70,7 +70,7 @@ class MbraBarTest < ActiveSupport::TestCase
     assert_equal(3, MbraBar.count(:conditions => ['date = ?', Date.new(2008)]), "Bar events after calculate!")
     MbraBar.all( :conditions => ['date = ?', Date.new(2008)]).each do |bar|
       assert(bar.name[/2008.*BAR/], "Name #{bar.name} is wrong")
-      assert_equal_dates(Date.today, bar.updated_at, "BAR last updated")
+      assert_equal_dates(Time.zone.today, bar.updated_at, "BAR last updated")
     end
 
     road_bar = MbraBar.find_by_name("2008 Road BAR")

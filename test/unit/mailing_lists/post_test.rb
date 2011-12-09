@@ -9,7 +9,7 @@ class PostTest < ActiveSupport::TestCase
     post.from_name = "Foo"
     post.body = "Test message"
     post.mailing_list = FactoryGirl.create(:mailing_list)
-    post.date = Date.today
+    post.date = Time.zone.today
     post.save!
   end
   
@@ -21,7 +21,7 @@ class PostTest < ActiveSupport::TestCase
     post.mailing_list = obra
     post.from_email_address = "scout@foo.net"
     post.from_name = "Scout"
-    post.date = Date.today
+    post.date = Time.zone.today
     post.save!
     
     post_from_db = Post.find(post.id)
@@ -33,7 +33,7 @@ class PostTest < ActiveSupport::TestCase
     post.mailing_list = obra
     post.from_email_address = "scout@foo.net"
     post.from_name = "Scout"
-    post.date = Date.today
+    post.date = Time.zone.today
     post.save!
     
     post_from_db = Post.find(post.id)

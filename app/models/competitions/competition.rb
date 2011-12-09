@@ -56,7 +56,7 @@ class Competition < Event
   
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
-  def self.calculate!(year = Date.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)

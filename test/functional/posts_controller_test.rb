@@ -43,7 +43,7 @@ class PostsControllerTest < ActionController::TestCase
     original_post = Post.create({
       :mailing_list => obra_race,
       :subject => "Only OBRA Race Message",
-      :date => Date.today,
+      :date => Time.zone.today,
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -73,8 +73,8 @@ class PostsControllerTest < ActionController::TestCase
       :controller => "posts",
       :action => "list", 
       :mailing_list_name => mailing_list.name, 
-      :month => Date.today.month, 
-      :year => Date.today.year
+      :month => Time.zone.today.month, 
+      :year => Time.zone.today.year
     )
   end
   
@@ -109,8 +109,8 @@ class PostsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["month"], "Should assign year")
     assert_not_nil(assigns["posts"], "Should assign posts")
     assert_equal(22, assigns["posts"].size, "Should show recent posts")
-    assert_equal(Date.today.month, assigns["month"], "Assign month")
-    assert_equal(Date.today.year, assigns["year"], "Assign year")
+    assert_equal(Time.zone.today.month, assigns["month"], "Assign month")
+    assert_equal(Time.zone.today.year, assigns["year"], "Assign year")
     assert_template("posts/list")
   
     get(:list, :mailing_list_name => obra_race.name, :month => Time.zone.now.month, :year => Time.zone.now.year)
@@ -120,8 +120,8 @@ class PostsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["month"], "Should assign year")
     assert_not_nil(assigns["posts"], "Should assign posts")
     assert_equal(1, assigns["posts"].size, "Should show recent posts")
-    assert_equal(Date.today.month, assigns["month"], "Assign month")
-    assert_equal(Date.today.year, assigns["year"], "Assign year")
+    assert_equal(Time.zone.today.month, assigns["month"], "Assign month")
+    assert_equal(Time.zone.today.year, assigns["year"], "Assign year")
     assert_template("posts/list")
   end
   
@@ -257,7 +257,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
-    assert_equal_dates(Date.today, delivered_mail.date, "Date")
+    assert_equal_dates(Time.zone.today, delivered_mail.date, "Date")
     assert_equal([obra_chat.name], delivered_mail.to, "Recipient")
   end
   
@@ -299,7 +299,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
-    assert_equal_dates(Date.today, delivered_mail.date, "Date")
+    assert_equal_dates(Time.zone.today, delivered_mail.date, "Date")
     assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
   end
   
@@ -509,14 +509,14 @@ class PostsControllerTest < ActionController::TestCase
   def test_list_with_no_lists
     Post.delete_all
     MailingList.delete_all
-    get(:list, :month => Date.today.month, :year => Date.today.year)
+    get(:list, :month => Time.zone.today.month, :year => Time.zone.today.year)
     assert_response(:success)
     assert_template('404')
     assert(!flash.empty?, "Should have flash")
   end
   
   def test_list_with_bad_name
-    get(:list, :month => Date.today.month, :year => Date.today.year, :mailing_list_name => "Masters Racing")
+    get(:list, :month => Time.zone.today.month, :year => Time.zone.today.year, :mailing_list_name => "Masters Racing")
     assert_response(:success)
     assert_template('404')
     assert(!flash.empty?, "Should have flash")
@@ -524,12 +524,12 @@ class PostsControllerTest < ActionController::TestCase
   
   def test_list_with_bad_month
     mailing_list = FactoryGirl.create(:mailing_list)
-    get(:list, :month => 14, :year => Date.today.year, :mailing_list_name => mailing_list.name)
+    get(:list, :month => 14, :year => Time.zone.today.year, :mailing_list_name => mailing_list.name)
     assert_redirected_to(
       :action => "list", 
       :mailing_list_name => mailing_list.name, 
-      :month => Date.today.month, 
-      :year => Date.today.year
+      :month => Time.zone.today.month, 
+      :year => Time.zone.today.year
     )
   end
   
@@ -539,8 +539,8 @@ class PostsControllerTest < ActionController::TestCase
     assert_redirected_to(
       :action => "list", 
       :mailing_list_name => mailing_list.name, 
-      :month => Date.today.month, 
-      :year => Date.today.year
+      :month => Time.zone.today.month, 
+      :year => Time.zone.today.year
     )
   end
   

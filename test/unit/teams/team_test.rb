@@ -59,7 +59,7 @@ class TeamTest < ActiveSupport::TestCase
   end
   
   def test_merge_with_names
-    current_year = Date.today.year
+    current_year = Time.zone.today.year
     last_year = current_year - 1
 
     team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")
@@ -100,7 +100,7 @@ class TeamTest < ActiveSupport::TestCase
   end
     
   def test_merge_with_names_that_match_existing_team
-    current_year = Date.today.year
+    current_year = Time.zone.today.year
     last_year = current_year - 1
 
     team_to_keep = Team.create!(:name => "Team Oregon/River City Bicycles")

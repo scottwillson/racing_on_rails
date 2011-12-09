@@ -4,7 +4,7 @@ class CrossCrusadeTeamCompetition < Competition
   after_create :add_source_events
   before_create :set_notes, :set_name
 
-  def CrossCrusadeTeamCompetition.calculate!(year = Date.today.year)
+  def CrossCrusadeTeamCompetition.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
         series = Series.first(
@@ -147,7 +147,7 @@ class CrossCrusadeTeamCompetition < Competition
   end
 
   def date
-    (parent && parent.start_date) || Date.today
+    (parent && parent.start_date) || Time.zone.today
   end
 
   def end_date

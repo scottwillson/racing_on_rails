@@ -172,7 +172,7 @@ class MtbBarTest < ActiveSupport::TestCase
 
     original_results_count = Result.count
     Bar.calculate!
-    year = Date.today.year
+    year = Time.zone.today.year
     Bar.find_by_date(Date.new(year))
     
     OverallBar.calculate!

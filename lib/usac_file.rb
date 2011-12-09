@@ -52,7 +52,7 @@ class UsacFile
     
     #assumes USAC database contains current year's members only, all licenses good until end of this year
   def update_people
-    expir_date = Date.new(Date.today.year, 12, 31) 
+    expir_date = Date.new(Time.zone.today.year, 12, 31) 
     people_updated = []
     @members_list.each {|memusac|
       #get the parameters in a nice format

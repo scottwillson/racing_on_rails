@@ -10,7 +10,7 @@ class Bar < Competition
   include Concerns::Bar::Discipline
   include Concerns::Bar::Points
   
-  def Bar.calculate!(year = Date.today.year)
+  def Bar.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)

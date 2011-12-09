@@ -146,14 +146,14 @@ class RiderRankingsTest < ActiveSupport::TestCase
     assert_not_nil(rider_rankings, "2004 RiderRankings after calculate!")
     assert_equal(Date.new(2004, 1, 1), rider_rankings.date, "2004 RiderRankings date")
     assert_equal("2004 Rider Rankings", rider_rankings.name, "2004 RiderRankings name")
-    assert_equal_dates(Date.today, rider_rankings.updated_at, "RiderRankings last updated")
+    assert_equal_dates(Time.zone.today, rider_rankings.updated_at, "RiderRankings last updated")
     assert_equal(19, rider_rankings.races.size, "2004 rider rankings races")
-    assert_equal_dates(Date.today, rider_rankings.updated_at, "RiderRankings last updated")
+    assert_equal_dates(Time.zone.today, rider_rankings.updated_at, "RiderRankings last updated")
     assert_equal(original_results_count + 6, Result.count, "Total count of results in DB")
     
     senior_men = rider_rankings.races.detect { |b| b.category == men_cat_1_2 }
     assert_equal(5, senior_men.results.size, "Senior Men rider rankings results")
-    assert_equal_dates(Date.today, senior_men.updated_at, "RiderRankings last updated")
+    assert_equal_dates(Time.zone.today, senior_men.updated_at, "RiderRankings last updated")
 
     senior_men.results.sort!
     assert_equal(tonkin, senior_men.results[0].person, "Senior Men rider rankings results person")

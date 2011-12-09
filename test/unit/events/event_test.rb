@@ -104,7 +104,7 @@ class EventTest < ActiveSupport::TestCase
     track_series_event = track_series.children.create!
     track_series_event.races.create!(:category => category).results.create!
     
-    weekly_series, events = Event.find_all_with_results(Date.today.year, Discipline["Road"])
+    weekly_series, events = Event.find_all_with_results(Time.zone.today.year, Discipline["Road"])
     expected = []
     expected << circuit_race
     expected.sort!
@@ -334,7 +334,7 @@ class EventTest < ActiveSupport::TestCase
     event = SingleDayEvent.create!(:name => 'PIR')
     assert_no_orphans(event)
     
-    SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Date.today.year, 9, 12))
+    SingleDayEvent.create!(:name => 'PIR', :date => Date.new(Time.zone.today.year, 9, 12))
     event = MultiDayEvent.create!(:name => 'PIR')
     assert_orphans(2, event)
  

@@ -39,7 +39,7 @@ class PeopleTest < AcceptanceTest
     assert_table "people_table", 5, 3, ""
     assert_table "people_table", 6, 3, ""
     
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_table "people_table", 1, 4, "202"
       assert_table "people_table", 2, 4, "340"
       assert_table "people_table", 3, 4, ""
@@ -53,7 +53,7 @@ class PeopleTest < AcceptanceTest
     assert_table "people_table", 3, 5, ""
     assert_table "people_table", 4, 5, ""
     assert_table "people_table", 5, 5, ""
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_table "people_table", 6, 5, "437"
     end
     
@@ -91,7 +91,7 @@ class PeopleTest < AcceptanceTest
     
     visit "/admin/people/#{matson.id}/edit"
     assert_page_has_content "Mark Matson"
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       click_link "destroy_number_#{matson.race_numbers.first.id}"
       assert_page_has_no_content "input.number[value='340']"
       
@@ -190,7 +190,7 @@ class PeopleTest < AcceptanceTest
     find_field("name").native.send_keys(:enter)
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_page_has_content '102'
     end
     assert page.has_field? 'name', :with => 'tonkin'
@@ -210,7 +210,7 @@ class PeopleTest < AcceptanceTest
     find_field("name").native.send_keys(:enter)
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_page_has_content '102'
     end
     assert page.has_field? 'name', :with => 'tonkin'

@@ -29,20 +29,20 @@ class BarControllerTest < ActionController::TestCase
   end
   
   def test_defaults
-    get :show, :year => "#{Date.today.year}", :discipline => "overall", :category => "senior_men"
+    get :show, :year => "#{Time.zone.today.year}", :discipline => "overall", :category => "senior_men"
     assert_response :success
     assert_template "bar/show"
   end
 
   def test_show_empty
-    get :show, :year => "#{Date.today.year}", :discipline => "road", :category => "senior_men"
+    get :show, :year => "#{Time.zone.today.year}", :discipline => "road", :category => "senior_men"
     assert_response :success
     assert_template "bar/show"
   end
 
   def test_show
-    Bar.calculate! Date.today.year
-    get :show, :year => "#{Date.today.year}", :discipline => "road", :category => "senior_women"
+    Bar.calculate! Time.zone.today.year
+    get :show, :year => "#{Time.zone.today.year}", :discipline => "road", :category => "senior_women"
     assert_response :success
     assert_template "bar/show"
   end
