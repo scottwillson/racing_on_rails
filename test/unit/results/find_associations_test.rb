@@ -225,7 +225,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     RacingAssociation.current.expects(:eager_match_on_license?).at_least_once.returns(true)
     
     person = Person.create!(:name => "Joe Racer")
-    Person.connection.execute "update people set updated_at = '#{Time.local(2008).utc.to_s(:db)}' where id = #{person.id}"
+    Person.connection.execute "update people set updated_at = '#{Time.zone.local(2008).utc.to_s(:db)}' where id = #{person.id}"
     person.reload
     
     person_clone = Person.create!(:name => "Joe Racer")

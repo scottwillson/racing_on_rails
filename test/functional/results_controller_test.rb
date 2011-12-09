@@ -125,7 +125,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
     
   def test_index_all_subclasses
-    Timecop.freeze(Time.local(2007, 5)) do
+    Timecop.freeze(Time.zone.local(2007, 5)) do
       SingleDayEvent.create!(:name => 'In past', :date => Date.new(2006, 12, 31)).races.create!(:category => @senior_men).results.create!
       SingleDayEvent.create!(:name => 'In future', :date => Date.new(2008, 1, 1)).races.create!(:category => @senior_men).results.create!
       SingleDayEvent.create!(:name => 'SingleDayEvent no races', :date => Date.new(2007, 4, 12))

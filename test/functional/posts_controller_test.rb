@@ -212,7 +212,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Schedule Changes",
-      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -272,7 +272,7 @@ class PostsControllerTest < ActionController::TestCase
     reply_to_post = Post.create({
       :mailing_list => obra_chat,
       :subject => "Schedule Changes",
-      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -312,7 +312,7 @@ class PostsControllerTest < ActionController::TestCase
     reply_to_post = Post.create!(
       :mailing_list => obra_chat,
       :subject => "Schedule Changes",
-      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -383,7 +383,7 @@ class PostsControllerTest < ActionController::TestCase
     new_post = Post.create!(
       :mailing_list => mailing_list,
       :subject => "Only OBRA Race Message",
-      :date => Time.local(2004, 12, 31, 12, 30),
+      :date => Time.zone.local(2004, 12, 31, 12, 30),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -395,7 +395,7 @@ class PostsControllerTest < ActionController::TestCase
     new_post = Post.create!(
       :mailing_list => mailing_list,
       :subject => "Before OBRA Race Message",
-      :date => Time.local(2004, 11, 7),
+      :date => Time.zone.local(2004, 11, 7),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -410,7 +410,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Only OBRA Race Message",
-      :date => Time.local(2004, 12, 31, 12, 30),
+      :date => Time.zone.local(2004, 12, 31, 12, 30),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -421,7 +421,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_11_07 = Post.create({
       :mailing_list => obra_race,
       :subject => "Before OBRA Race Message",
-      :date => Time.local(2004, 11, 7),
+      :date => Time.zone.local(2004, 11, 7),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -432,7 +432,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_11_03 = Post.create({
       :mailing_list => obra_race,
       :subject => "Before OBRA Race Message",
-      :date => Time.local(2004, 11, 3, 8, 00, 00),
+      :date => Time.zone.local(2004, 11, 3, 8, 00, 00),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -444,7 +444,7 @@ class PostsControllerTest < ActionController::TestCase
     post_other_list = Post.create({
       :mailing_list => obra_chat,
       :subject => "OBRA Chat",
-      :date => Time.local(2004, 11, 3, 21, 00, 00),
+      :date => Time.zone.local(2004, 11, 3, 21, 00, 00),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -459,7 +459,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_01 = Post.create({
       :mailing_list => obra_race,
       :subject => "BB 1 Race Results",
-      :date => Time.local(2004, 12, 1),
+      :date => Time.zone.local(2004, 12, 1),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -468,7 +468,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_11_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Cherry Pie Race Results",
-      :date => Time.local(2004, 11, 30),
+      :date => Time.zone.local(2004, 11, 30),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -476,7 +476,7 @@ class PostsControllerTest < ActionController::TestCase
     post_2004_12_31 = Post.create({
       :mailing_list => obra_race,
       :subject => "Schedule Changes",
-      :date => Time.local(2004, 12, 31, 23, 59, 59, 999999),
+      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."
@@ -495,7 +495,7 @@ class PostsControllerTest < ActionController::TestCase
     post_other_list = Post.create({
       :mailing_list => obra_chat,
       :subject => "OBRA Chat",
-      :date => Time.local(2004, 12, 31, 12, 00, 00),
+      :date => Time.zone.local(2004, 12, 31, 12, 00, 00),
       :from_name => "Scout",
       :from_email_address => "scout@obra.org",
       :body => "This is a test message."

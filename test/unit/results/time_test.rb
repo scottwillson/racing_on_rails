@@ -116,7 +116,7 @@ class ResultTest < ActiveSupport::TestCase
   
   def test_set_time_value
     result = Result.new
-    time = Time.local(2007, 11, 20, 19, 45, 50, 678)
+    time = Time.zone.local(2007, 11, 20, 19, 45, 50, 678)
     result.set_time_value(:time, time)
     assert_equal(71156.78, result.time)
 

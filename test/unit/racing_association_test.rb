@@ -25,7 +25,7 @@ class RacingAssociationTest < ActiveSupport::TestCase
   def test_today
     assert_equal_dates Time.zone.today, RacingAssociation.current.today, "Default RacingAssociation.current.today"
 
-    Timecop.freeze(Time.local(2020, 4, 5, 23, 50, 55)) do
+    Timecop.freeze(Time.zone.local(2020, 4, 5, 23, 50, 55)) do
       assert_equal_dates Date.new(2020, 4, 5), RacingAssociation.current.today, "Override Time.zone.now to change RacingAssociation.current.today"
     end
 
@@ -33,37 +33,37 @@ class RacingAssociationTest < ActiveSupport::TestCase
   end
   
   def test_effective_year
-    Timecop.freeze(Time.local(2020, 1, 1)) do
+    Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal 2020, RacingAssociation.current.effective_year, "effective year for January 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 11, 30)) do
+    Timecop.freeze(Time.zone.local(2020, 11, 30)) do
       assert_equal 2020, RacingAssociation.current.effective_year, "effective year for November 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 12, 1)) do
+    Timecop.freeze(Time.zone.local(2020, 12, 1)) do
       assert_equal 2021, RacingAssociation.current.effective_year, "effective year for December 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 12, 31)) do
+    Timecop.freeze(Time.zone.local(2020, 12, 31)) do
       assert_equal 2021, RacingAssociation.current.effective_year, "effective year for December 2020"
     end
   end
   
   def test_next_year
-    Timecop.freeze(Time.local(2020, 1, 1)) do
+    Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for January 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 11, 30)) do
+    Timecop.freeze(Time.zone.local(2020, 11, 30)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for November 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 12, 1)) do
+    Timecop.freeze(Time.zone.local(2020, 12, 1)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for December 2020"
     end
 
-    Timecop.freeze(Time.local(2020, 12, 31)) do
+    Timecop.freeze(Time.zone.local(2020, 12, 31)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for December 2020"
     end
   end
