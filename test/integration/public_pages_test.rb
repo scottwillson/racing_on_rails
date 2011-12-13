@@ -83,16 +83,13 @@ class PublicPagesTest < ActionController::IntegrationTest
     get "/mailing_lists"
     assert_response :success
     
-    get "/posts/#{mailing_list.name}/#{Time.zone.now.year}/#{Time.zone.now.month}"
+    get "/mailing_lists/#{mailing_list.id}/posts"
     assert_response :success
     
-    get "/posts/#{mailing_list.name}/show/#{mailing_list_post.id}"
+    get "/posts/#{mailing_list_post.id}"
     assert_response :success
     
-    get "/posts/#{mailing_list.name}/new"
-    assert_response :success
-    
-    get "/posts/#{mailing_list.name}/new/#{mailing_list_post.id}"
+    get "/mailing_lists/#{mailing_list.id}/posts/new"
     assert_response :success
 
     get "http://m.obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"

@@ -1,7 +1,5 @@
 <% @page_title = "Mailing Lists: #{@post.mailing_list.friendly_name}" %>
 
-<%= post_navigation(@post) %>
-
 <%= labelled_text :post, :subject, nil, h(@post.subject) %><br/>
 <%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %><br/>
 <%= labelled_text :post, :from, nil, h(@post.sender_obscured) %><br/>

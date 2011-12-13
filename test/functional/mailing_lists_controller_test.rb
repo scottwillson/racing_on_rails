@@ -13,7 +13,7 @@ class MailingListsControllerTest < ActionController::TestCase
     obra_race = FactoryGirl.create(:mailing_list)
     get :confirm, :mailing_list_id => obra_race.id
     assert_response :success
-    assert_template "posts/confirm"
+    assert_template "mailing_lists/confirm"
     assert_equal obra_race, assigns["mailing_list"], "Should assign mailing list"
   end
   
@@ -21,7 +21,7 @@ class MailingListsControllerTest < ActionController::TestCase
     obra_race = FactoryGirl.create(:mailing_list)
     get(:confirm_private_reply, :mailing_list_id => obra_race.id)
     assert_response(:success)
-    assert_template("posts/confirm_private_reply")
+    assert_template("mailing_lists/confirm_private_reply")
     assert_equal(obra_race, assigns["mailing_list"], 'Should assign mailing list')
   end
 end
