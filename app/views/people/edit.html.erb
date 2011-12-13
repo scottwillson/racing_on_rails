@@ -88,7 +88,7 @@
   <%= render :partial => "people/account_permissions", 
               :locals => { :person => @person, 
                            :account_permissions => @person.account_permissions, 
-                           :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
+                           :return_to => @person.new_record? ? nil : edit_person_path(@person)
                          }
   %>
   <%= render(:partial => "people/events", :locals => { :person => @person, :events => @person.events.all( :conditions => [ 
