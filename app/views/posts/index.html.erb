@@ -1,6 +1,6 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<%= archive_navigation(@mailing_list, @month, @year) %>
+<%= will_paginate @posts, :page_links => false %>
 
 <%= table do %>
   <tr>
@@ -20,13 +20,13 @@
   <% if @posts.empty? %>
   <tr>
     <td colspan = "3" class="centered" height="40">
-      No posts for <%= Date::MONTHNAMES[@month] %> <%= @year %>
+      No posts
     </td>
   </tr>
   <% end %>
 <% end -%>
 
-<%= archive_navigation(@mailing_list, @month, @year) %>
+<%= will_paginate @posts, :page_links => false %>
 
 <table class="top_margin centered">
   <tr>
