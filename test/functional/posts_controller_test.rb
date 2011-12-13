@@ -31,7 +31,6 @@ class PostsControllerTest < ActionController::TestCase
     assert_not_nil(assigns["post"], "Should assign post")
     post = assigns["post"]
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "post[mailing_list_id]", :value => obra_chat.id})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
@@ -59,7 +58,6 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(original_post, assigns["reply_to"], "Should assign reply_to")
     assert_equal("Re: Only OBRA Race Message", post.subject, 'Prepopulated subject')
     assert_equal(obra_race, post.mailing_list, "Post's mailing list")
-    assert_tag(:tag => "input", :attributes => {:type => "hidden", :name => "post[mailing_list_id]", :value => obra_race.id})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
@@ -97,130 +95,16 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     )
   
-    get(:index, :mailing_list_id => obra_chat.id, :month => Time.zone.now.month, :year => Time.zone.now.year)
+    get(:index, :mailing_list_id => obra_chat.id)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["year"], "Should assign month")
-    assert_not_nil(assigns["month"], "Should assign year")
-    assert_not_nil(assigns["posts"], "Should assign posts")
     assert_equal(22, assigns["posts"].size, "Should show recent posts")
-    assert_equal(Time.zone.today.month, assigns["month"], "Assign month")
-    assert_equal(Time.zone.today.year, assigns["year"], "Assign year")
-    assert_template("posts/list")
   
-    get(:index, :mailing_list_id => obra_race.id, :month => Time.zone.now.month, :year => Time.zone.now.year)
+    get(:index, :mailing_list_id => obra_race.id)
     assert_response(:success)
     assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["year"], "Should assign month")
-    assert_not_nil(assigns["month"], "Should assign year")
     assert_not_nil(assigns["posts"], "Should assign posts")
     assert_equal(1, assigns["posts"].size, "Should show recent posts")
-    assert_equal(Time.zone.today.month, assigns["month"], "Assign month")
-    assert_equal(Time.zone.today.year, assigns["year"], "Assign year")
-    assert_template("posts/list")
-  end
-  
-  def test_list_with_date
-    obra_race = FactoryGirl.create(:mailing_list)
-    post_2004_12_01 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "BB 1 Race Results",
-      :date => Time.zone.local(2004, 12, 1),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-  
-    post_2004_11_31 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Cherry Pie Race Results",
-      :date => Time.zone.local(2004, 11, 30),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-    post_2004_12_31 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Schedule Changes",
-      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "11")
-    assert_response(:success)
-    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["year"], "Should assign month")
-    assert_not_nil(assigns["month"], "Should assign year")
-    assert_not_nil(assigns["posts"], "Should assign posts")
-    assert_equal(1, assigns["posts"].size, "Should show recent posts")
-    assert_equal(11, assigns["month"], "Assign month")
-    assert_equal(2004, assigns["year"], "Assign year")
-    assert_equal(post_2004_11_31, assigns["posts"].first, "Post")
-    assert_template("posts/list")
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "12")
-    assert_response(:success)
-    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["year"], "Should assign month")
-    assert_not_nil(assigns["month"], "Should assign year")
-    assert_not_nil(assigns["posts"], "Should assign posts")
-    assert_equal(2, assigns["posts"].size, "Should show recent posts")
-    assert_equal(12, assigns["month"], "Assign month")
-    assert_equal(2004, assigns["year"], "Assign year")
-    assert_equal(post_2004_12_31, assigns["posts"].first, "Post")
-    assert_equal(post_2004_12_01, assigns["posts"].last, "Post")
-    assert_template("posts/list")
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "10")
-    assert_response(:success)
-    assert_not_nil(assigns["mailing_list"], "Should assign mailing_list")
-    assert_not_nil(assigns["year"], "Should assign month")
-    assert_not_nil(assigns["month"], "Should assign year")
-    assert_not_nil(assigns["posts"], "Should assign posts")
-    assert_equal(10, assigns["month"], "Assign month")
-    assert_equal(2004, assigns["year"], "Assign year")
-    assert(assigns["posts"].empty?, "No posts")
-    assert_template("posts/list")
-  end
-  
-  def test_list_previous_next
-    obra_race = FactoryGirl.create(:mailing_list)
-    post_2004_12_01 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "BB 1 Race Results",
-      :date => Date.new(2004, 12, 1),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-  
-    post_2004_11_31 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Cherry Pie Race Results",
-      :date => Date.new(2004, 11, 30),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-    post_2004_12_31 = Post.create!(
-      :mailing_list => obra_race,
-      :subject => "Schedule Changes",
-      :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
-      :from_name => "Scout",
-      :from_email_address => "scout@obra.org",
-      :body => "This is a test message."
-    )
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "11", :next => "&gt;")
-    assert_redirected_to(:controller => "posts", :action => :index, :month => 12, :year => 2004)
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "12", :next => "&gt;")
-    assert_redirected_to(:controller => "posts", :action => :index, :month => 1, :year => 2005)
-    
-    get(:index, :mailing_list_id => obra_race.id, :year => "2004", :month => "12", :previous => "&lt;")
-    assert_redirected_to(:controller => "posts", :action => :index, :month => 11, :year => 2004)
   end
   
   def test_post
@@ -245,7 +129,7 @@ class PostsControllerTest < ActionController::TestCase
     )
     
     assert(flash.has_key?(:notice))
-    assert_redirected_to(:controller => "posts", :action => "confirm", :mailing_list_id => obra_chat.name)
+    assert_redirected_to mailing_list_confirm_path(obra_chat)
     
     assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
     delivered_mail = MailingListMailer.deliveries.first
@@ -287,7 +171,7 @@ class PostsControllerTest < ActionController::TestCase
     
     assert(flash.has_key?(:notice))
     assert_response(:redirect)
-    assert_redirected_to(:action => "confirm_private_reply", :mailing_list_id => obra_chat.name)
+    assert_redirected_to mailing_list_confirm_private_reply_path(obra_chat)
     
     assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
     delivered_mail = MailingListMailer.deliveries.first
@@ -353,43 +237,17 @@ class PostsControllerTest < ActionController::TestCase
   end
   
   def test_list_with_no_lists
-    Post.delete_all
-    MailingList.delete_all
-    get(:index, :month => Time.zone.today.month, :year => Time.zone.today.year)
-    assert_response(:success)
-    assert_template('404')
-    assert(!flash.empty?, "Should have flash")
+    assert_raise(ActiveRecord::RecordNotFound) do
+      get(:index)
+    end
   end
   
   def test_list_with_bad_name
-    get(:index, :month => Time.zone.today.month, :year => Time.zone.today.year, :mailing_list_id => "Masters Racing")
-    assert_response(:success)
-    assert_template('404')
-    assert(!flash.empty?, "Should have flash")
+    assert_raise(ActiveRecord::RecordNotFound) do
+      get(:index, :mailing_list_id => "Masters Racing")
+    end
   end
-  
-  def test_list_with_bad_month
-    mailing_list = FactoryGirl.create(:mailing_list)
-    get(:index, :month => 14, :year => Time.zone.today.year, :mailing_list_id => mailing_list.id)
-    assert_redirected_to(
-      :action => "index", 
-      :mailing_list_id => mailing_list.id, 
-      :month => Time.zone.today.month, 
-      :year => Time.zone.today.year
-    )
-  end
-  
-  def test_list_with_bad_year
-    mailing_list = FactoryGirl.create(:mailing_list)
-    get(:index, :month => 12, :year => 9_116_560, :mailing_list_id => mailing_list.id)
-    assert_redirected_to(
-      :action => "index", 
-      :mailing_list_id => mailing_list.id, 
-      :month => Time.zone.today.month, 
-      :year => Time.zone.today.year
-    )
-  end
-  
+
   def test_spam_post_should_not_cause_error
     obra_chat = FactoryGirl.create(:mailing_list)
     post(:create, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
