@@ -173,25 +173,13 @@ RacingOnRails::Application.routes.draw do
   match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
   resources :password_resets
 
-  match '/posts/new/:mailing_list_name' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/show/:mailing_list_name/:id' => 'posts#show', :constraints => { :mailing_list_name => /[^\d]+/ }
-  match '/posts/show' => 'posts#show'
-  match '/posts/:id' => 'posts#show', :constraints => { :id => /\d+/ }
-  match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/new' => 'posts#new', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/show/:id' => 'posts#show', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/post' => 'posts#post', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/confirm' => 'posts#confirm', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name/:year/:month' => 'posts#list', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  match '/posts/:mailing_list_name' => 'posts#index', :constraints => { :mailing_list_name => /[a-z_]+/ }
-  resources :posts do
-    get :list, :on => :collection
-  end
-
   resources :mailing_lists do
+    get :confirm
+    get :confirm_private_reply
     resources :posts
   end
+
+  resources :posts
 
   match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
   match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :person_results_year

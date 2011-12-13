@@ -1,6 +1,6 @@
     <% if !current_page?({:controller => "mailing_lists", :action => "index"}) %>
     <td>
-        <%= link_to "View Mailing Lists", {:controller => "mailing_lists", :action => "index"} %>
+        <%= link_to "View Mailing Lists", mailing_lists_path %>
     </td>
     <% end %>
     
@@ -13,20 +13,20 @@
     <% unless current_page?({:controller => "posts", :action => "new"}) %>
     <td class="link_spacer">|</td>
     <td>
-        <%= link_to "New Post", {:controller => "posts", :action => "new", :mailing_list_name => mailing_list.name} %>
+        <%= link_to "New Post", new_mailing_list_post_path(mailing_list) %>
     </td>
     <% end %>
     
     <% if !(current_page?({:controller => "posts", :action => "new"})) and @post and @post.topica_message_id.nil? %>
     <td class="link_spacer">|</td>
     <td>
-        <%= link_to "Reply Privately", {:controller => "posts", :action => "new", :mailing_list_name => mailing_list.name, :reply_to_id => @post.id} %>
+        <%= link_to "Reply Privately", new_mailing_list_post_path(mailing_list, :reply_to_id => @post.id) %>
     </td>
     <% end %>
     
     <% if mailing_list.present? %>
     <td class="link_spacer">|</td>
     <td>
-        <%= link_to_unless_current "View Archives", {:controller => "posts", :action => "index", :mailing_list_name => mailing_list.name} %>
+        <%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %>
     </td>
     <% end %>
