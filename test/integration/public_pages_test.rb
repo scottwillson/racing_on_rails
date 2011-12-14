@@ -95,14 +95,8 @@ class PublicPagesTest < ActionController::IntegrationTest
     get "/posts/#{mailing_list.name}/new/#{mailing_list_post.id}"
     assert_response :success
 
-    get "http://obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
-    assert_redirected_to(
-      :action => "list", 
-      :controller => "posts",
-      :month => Time.zone.now.beginning_of_month.month, 
-      :year => Time.zone.now.beginning_of_month.year, 
-      :mailing_list_name => mailing_list.name
-    )
+    get "http://m.obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
+    assert_redirected_to "http://obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
   end
 
   private
