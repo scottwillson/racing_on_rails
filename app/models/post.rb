@@ -3,10 +3,14 @@ class Post < ActiveRecord::Base
 
   attr_accessor :from_email_address, :from_name
 
-  validates_presence_of :subject, :body, :date, :from_name, :mailing_list_id, :from_email_address
-  before_save :remove_list_prefix, :update_sender
+  validates_presence_of :subject, :body, :date, :mailing_list_id
+  validates_presence_of :from_name, :from_email_address, :on => :create
+  
+  before_create :remove_list_prefix, :update_sender
 
   belongs_to :mailing_list
+  
+  acts_as_list
   
   def Post.find_for_dates(mailing_list, month_start, month_end)
     logger.debug("Post.find_for_dates(#{mailing_list}, #{month_start}, #{month_end})")
