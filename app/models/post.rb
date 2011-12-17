@@ -3,7 +3,7 @@ class Post < ActiveRecord::Base
 
   attr_accessor :from_email_address, :from_name
 
-  validates_presence_of :subject, :body, :date, :mailing_list_id
+  validates_presence_of :subject, :date, :mailing_list_id
   validates_presence_of :from_name, :from_email_address, :on => :create
   
   before_create :remove_list_prefix, :update_sender
