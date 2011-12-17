@@ -139,7 +139,7 @@ class ActiveSupport::TestCase
   # Detect HTML escaping screw-ups
   # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
   def assert_no_angle_brackets
-    unless self.class.no_angle_brackets_exceptions.include?(method_name.to_sym)
+    unless self.class.no_angle_brackets_exceptions.include?(method_name.to_sym) || self.class.no_angle_brackets_exceptions.include?(:all)
       if @response && !@response.blank?
         body_string = @response.body.to_s
         if ENV["VERBOSE_HTML_SOURCE"]
