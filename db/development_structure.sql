@@ -634,6 +634,7 @@ CREATE TABLE `posts` (
   KEY `idx_mailing_list_id` (`mailing_list_id`),
   KEY `idx_date_list` (`date`,`mailing_list_id`),
   KEY `index_posts_on_position` (`position`),
+  KEY `index_posts_on_subject` (`subject`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1234,6 +1235,8 @@ INSERT INTO schema_migrations (version) VALUES ('20111124233132');
 INSERT INTO schema_migrations (version) VALUES ('20111125031448');
 
 INSERT INTO schema_migrations (version) VALUES ('20111214201508');
+
+INSERT INTO schema_migrations (version) VALUES ('20111217224310');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
