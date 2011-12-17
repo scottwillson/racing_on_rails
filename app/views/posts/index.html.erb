@@ -1,7 +1,24 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<%= will_paginate @posts, :page_links => false %>
+<div class="post_search_header">
+  <div class="post_search">
+    <%= form_tag({}, {:method => "get", :id => "post_search_form"}) do %>
+      <%= label_tag :subject, "Subject" %>
+      <%= text_field_tag "subject", @subject, :id => "search_text" %>
+      <%= submit_tag "Search", :id => "search" %>
+    <% end -%>  
+  </div>
+  <div class="post_search_pagination">
+    <%= will_paginate @posts, :page_links => false %>
+  </div>
+</div>
+<div class="clear"></div>
 
+<% if @posts.empty? %>
+  <strong>No posts found</strong>
+<% end %>
+
+<% if @posts.present? %>
 <%= table do %>
   <tr>
     <th>Date</th>
@@ -17,13 +34,7 @@
     <td><%= h(post.sender_obscured) %></td>
   </tr>
   <% end %>
-  <% if @posts.empty? %>
-  <tr>
-    <td colspan = "3" class="centered" height="40">
-      No posts
-    </td>
-  </tr>
-  <% end %>
+<% end -%>
 <% end -%>
 
 <%= will_paginate @posts, :page_links => false %>

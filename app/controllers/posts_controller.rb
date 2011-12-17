@@ -1,7 +1,15 @@
 class PostsController < ApplicationController
   def index
+    @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
+    if @subject.present?
+      if @subject.size >= 3
+        @posts = @posts.where("subject like ?", "%#{@subject}%")
+      else
+        flash[:notice] = "Search text must be at least three letters"
+      end
+    end
   end
   
   def show

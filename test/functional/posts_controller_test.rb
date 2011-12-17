@@ -2,24 +2,11 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class PostsControllerTest < ActionController::TestCase
-  assert_no_angle_brackets :except => [ :test_list, :test_new_reply, :test_post_invalid_reply, :test_post_navigation, :test_show, :test_archive_navigation ]
+  assert_no_angle_brackets :except => [ :all ]
   
   def setup
     super
     ActionMailer::Base.deliveries = []
-  end
-  
-  def test_nginx
-    fail "Update nginx config to handle all old URLs"
-    assert_recognizes(
-      {:controller => "posts", :action => "show", :mailing_list_id => "obrarace", :id => "25621"}, 
-      "posts/show/obrarace/25621"
-    )
-  
-    assert_recognizes(
-      {:controller => "posts", :action => "new", :mailing_list_id => "obra"}, 
-      "posts/new/obra"
-    )
   end
   
   def test_new
@@ -63,6 +50,32 @@ class PostsControllerTest < ActionController::TestCase
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
     assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
     assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Send"})
+  end
+  
+  def test_blank_search
+    mailing_list = FactoryGirl.create(:mailing_list)
+    FactoryGirl.create_list(:post, 3, :mailing_list => mailing_list)
+    get :index, :mailing_list_id => mailing_list.id, :subject => ""
+    assert_response :success
+    assert_equal 3, assigns[:posts].size, "Should return all posts"
+  end
+  
+  def test_matching_search
+    mailing_list = FactoryGirl.create(:mailing_list)
+    FactoryGirl.create_list(:post, 3, :mailing_list => mailing_list)
+    post = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "Cervelo for sale")
+    get :index, :mailing_list_id => mailing_list.id, :subject => "Cervelo"
+    assert_response :success
+    assert_equal [ post ], assigns[:posts], "Should search by subject posts"
+  end
+  
+  def test_no_matching_search
+    mailing_list = FactoryGirl.create(:mailing_list)
+    FactoryGirl.create_list(:post, 3, :mailing_list => mailing_list)
+    post = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "Paging Todd Littlehales")
+    get :index, :mailing_list_id => mailing_list.id, :subject => "Cervelo"
+    assert_response :success
+    assert assigns[:posts].empty?, "Should search by subject posts"
   end
   
   def test_index

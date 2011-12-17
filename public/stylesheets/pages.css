@@ -541,6 +541,7 @@ div.table_container table.event_results th.last_name {
 
 div.table_container table.event_results th.name {
   width: 220px;
+}
 
 table.event_results td {
   padding-right: 8px;
@@ -601,6 +602,37 @@ table.numbers label.inline {
   background-image: url(/images/icons/email.png);
   background-repeat: no-repeat;
   background-position: 12px center;
+}
+
+#post_search_form label, #post_search_form input[type=text], #post_search_form input[type=submit] {
+  margin-top: 0px;
+}
+
+#post_search_form label {
+  height: 21px;
+  margin-left: 0px;
+  margin-top: 2px;
+  width: auto;
+}
+
+form#post_search_form input#search_text {
+  margin-top: 0px;
+  width: 120px;
+}
+
+form#post_search_form input#search {
+  margin-left: 8px;
+}
+
+.post_search {
+  float: left;
+  width: 30%;
+}
+
+.post_search_pagination {
+  float: left;
+  padding-right: 30%;
+  width: 30%;
 }
 
 /* People */
