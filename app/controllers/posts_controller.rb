@@ -5,7 +5,11 @@ class PostsController < ApplicationController
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
     if @subject.present?
       if @subject.size >= 3
-        @posts = @posts.joins(:post_text).where(Arel::Table.new(:post_texts)[:text].matches("%#{@subject}%"))
+        # Use select_values to find IDs without instantiating PostTexts. Arel for SQL injection protection.
+        # Join instead?
+        sql = PostText.select("id").where("match(text) against (?)", @subject).to_sql
+        ids = PostText.connection.select_values(sql)
+        @posts = @posts.where("id in (?)", ids)
       else
         flash[:notice] = "Search text must be at least three letters"
       end
