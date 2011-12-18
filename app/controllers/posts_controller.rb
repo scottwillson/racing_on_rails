@@ -5,7 +5,7 @@ class PostsController < ApplicationController
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
     if @subject.present?
       if @subject.size >= 3
-        @posts = @posts.where("subject like ?", "%#{@subject}%")
+        @posts = @posts.joins(:post_text).where(Arel::Table.new(:post_texts)[:text].matches("%#{@subject}%"))
       else
         flash[:notice] = "Search text must be at least three letters"
       end
