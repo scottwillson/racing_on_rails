@@ -614,6 +614,17 @@ CREATE TABLE `people_roles` (
   CONSTRAINT `roles_users_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `post_texts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `post_id` int(11) DEFAULT NULL,
+  `text` text,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_post_texts_on_post_id` (`post_id`),
+  FULLTEXT KEY `post_text` (`text`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `body` text NOT NULL,
@@ -1237,6 +1248,8 @@ INSERT INTO schema_migrations (version) VALUES ('20111125031448');
 INSERT INTO schema_migrations (version) VALUES ('20111214201508');
 
 INSERT INTO schema_migrations (version) VALUES ('20111217224310');
+
+INSERT INTO schema_migrations (version) VALUES ('20111218163759');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

@@ -3,12 +3,14 @@ class Post < ActiveRecord::Base
 
   attr_accessor :from_email_address, :from_name
 
-  validates_presence_of :subject, :date, :mailing_list_id
+  validates_presence_of :subject, :date, :mailing_list
   validates_presence_of :from_name, :from_email_address, :on => :create
   
   before_create :remove_list_prefix, :update_sender
+  after_save :add_post_text
 
   belongs_to :mailing_list
+  has_one :post_text
   
   acts_as_list
   
@@ -98,5 +100,11 @@ class Post < ActiveRecord::Base
     else
       self.sender = @from_email_address.to_s
     end
+  end
+  
+  def add_post_text
+    updated_post_text = post_text(true) || build_post_text
+    updated_post_text.text = subject
+    updated_post_text.save
   end
 end

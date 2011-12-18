@@ -89,4 +89,10 @@ class PostTest < ActiveSupport::TestCase
     assert_equal "Candi Murray", post.from_name, "from_name"
     assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
   end
+  
+  def test_full_text_search
+    post = FactoryGirl.create(:post, :subject => "Vintage Vanilla cap")
+    assert PostText.exists?(:text => "Vintage Vanilla cap"), "Should create matching PostText"
+    assert_not_nil post.post_text, "Should create matching PostText"
+  end
 end

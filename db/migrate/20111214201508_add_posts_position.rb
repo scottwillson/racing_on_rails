@@ -3,7 +3,6 @@ class AddPostsPosition < ActiveRecord::Migration
     change_table :posts do |t|
       t.integer :position, :default => 0, :null => false
     end
-    add_index :posts, :position
     
     Post.order("date, id").all.each_with_index do |post, index|
       if index % 1000 == 0
@@ -11,6 +10,8 @@ class AddPostsPosition < ActiveRecord::Migration
       end
       post.update_attributes!(:position => index)
     end
+
+    add_index :posts, :position
   end
 
   def self.down
