@@ -1,16 +1,14 @@
 class PostsController < ApplicationController
   def index
+    flash.clear
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
     if @subject.present?
-      if @subject.size >= 3
-        # Use select_values to find IDs without instantiating PostTexts. Arel for SQL injection protection.
-        # Join instead?
-        sql = PostText.select("id").where("match(text) against (?)", @subject).to_sql
-        ids = PostText.connection.select_values(sql)
-        @posts = @posts.where("id in (?)", ids)
+      if @subject.size >= 4
+        @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
       else
+        @posts = []
         flash[:notice] = "Search text must be at least three letters"
       end
     end
