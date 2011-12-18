@@ -1,29 +1,47 @@
-<% @page_title = "Admin: Posts" %>
+<% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<h2><%= @mailing_list.friendly_name %></h2>
-
-<div class="container">
-  <%= form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
-     :method => :post,
-     :multipart => true, 
-     :id => "mailing_list_form"  do |f| -%>
-    <%= file_field_tag "raw", :onchange => "$('#mailing_list_form').submit();" %>
-  <% end -%>
+<div class="post_search_header">
+  <div class="post_search">
+    <%= form_tag({}, {:method => "get", :id => "post_search_form"}) do %>
+      <%= label_tag :subject, "Subject" %>
+      <%= text_field_tag "subject", @subject, :id => "search_text" %>
+      <%= submit_tag "Search", :id => "search" %>
+      <%= link_to("Clear", mailing_list_posts_path(@mailing_list), :class => "obvious") if @subject.present? %>
+    <% end -%>
+  </div>
+  <div class="post_search_pagination">
+    <%= will_paginate(@posts, :page_links => false) if @posts.present? %>
+  </div>
 </div>
+<div class="clear"></div>
 
-<%= table :class => "posts top_margin clear", :id => :people do %>
+<% if @posts.empty? %>
+  <strong>No posts found.</strong>
+<% end %>
+
+<% if @posts.present? %>
+<%= table do %>
   <tr>
-    <th class="date">Date</th>
-    <th class="subject">Subject</th>
-    <th class="from">From</th>
-    <th class="delete right"></th>
-    <th class="edit right"></th>
+    <th>Date</th>
+    <th>Subject</th>
+    <th>From</th>
   </tr>
-  <%= render @posts %>
+  <% for post in @posts %>
+  <tr class="<%= cycle('even', 'odd') %>">
+    <td><%= link_to post.date.strftime("%m/%d/%Y"), post_path(post, :page => @posts.current_page) %></td>
+    <td>
+      <%= link_to h(truncate(post.subject, :length => 50)), post_path(post, :page => @posts.current_page) %>
+    </td>
+    <td><%= h(post.sender_obscured) %></td>
+  </tr>
+  <% end %>
+<% end -%>
 <% end -%>
 
-<%= will_paginate(@posts) if @posts.present? %>
+<%= will_paginate(@posts, :page_links => false) if @posts.present? %>
 
-<div class="buttons container">
-  <%= link_to image_tag("/images/icons/email_add.png"),  new_admin_mailing_list_post_path(@mailing_list) %>
-</div>
+<table class="top_margin centered">
+  <tr>
+    <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
+  </tr>
+</table>
