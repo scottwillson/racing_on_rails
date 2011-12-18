@@ -9,7 +9,7 @@ class PostsController < ApplicationController
         @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
       else
         @posts = []
-        flash[:notice] = "Search text must be at least three letters"
+        flash[:notice] = "Search text must be at least four letters"
       end
     end
   end
