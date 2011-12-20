@@ -130,10 +130,9 @@ class PostsControllerTest < ActionController::TestCase
     body = "Barely used"
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.to_param,
         :reply_to_id => '',
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
           :from_email_address => from_email_address,
@@ -171,9 +170,8 @@ class PostsControllerTest < ActionController::TestCase
     )
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.id,
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
           :from_email_address => from_email_address,
@@ -211,9 +209,8 @@ class PostsControllerTest < ActionController::TestCase
     )
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.to_param,
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => "Re: #{subject}", 
           :from_name => "",
           :from_email_address => "",
@@ -263,12 +260,11 @@ class PostsControllerTest < ActionController::TestCase
 
   def test_spam_post_should_not_cause_error
     obra_chat = FactoryGirl.create(:mailing_list)
-    post(:create, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
+    post(:create, { "commit"=>"Post", "mailing_list_id"=> obra_chat.to_param, 
                   "post" => { "from_name"=>"strap", 
                                "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
                                "subject"=>"onstrapdildo@mail.com", 
-                               "from_email_address"=>"onstrapdildo@mail.com", 
-                                           "mailing_list_id" => obra_chat.to_param }
+                               "from_email_address"=>"onstrapdildo@mail.com"}
     })
     assert_response(:redirect)
   end
