@@ -169,16 +169,18 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     )
   
-    post(:create, 
-        :mailing_list_id => obra_chat.id,
-        :post => {
-          :subject => subject, 
-          :from_name => from_name,
-          :from_email_address => from_email_address,
-          :body => body},
-        :reply_to_id => reply_to_post.id,
-        :commit => "Post"
-    )
+    assert_no_difference "Post.count" do
+      post(:create, 
+          :mailing_list_id => obra_chat.id,
+          :post => {
+            :subject => subject, 
+            :from_name => from_name,
+            :from_email_address => from_email_address,
+            :body => body},
+          :reply_to_id => reply_to_post.id,
+          :commit => "Post"
+      )
+    end
     
     assert(flash.has_key?(:notice))
     assert_response(:redirect)
