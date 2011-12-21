@@ -4,6 +4,18 @@ class PostsController < ApplicationController
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
+    
+    if params[:month] && params[:year]
+      begin
+        date = Time.zone.local(params[:year].to_i, params[:month].to_i)
+        @start_date = date.beginning_of_month
+        @end_date = date.end_of_month
+        @posts = @posts.where("date between ? and ?", @start_date, @end_date)
+      rescue
+        logger.debug "Could not parse date year: #{params[:year]} month: #{params[:month]}"
+      end
+    end
+    
     if @subject.present?
       if @subject.size >= 4
         @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
@@ -12,6 +24,8 @@ class PostsController < ApplicationController
         flash[:notice] = "Search text must be at least four letters"
       end
     end
+    
+    @first_post_at = Post.minimum(:date)
   end
   
   def show

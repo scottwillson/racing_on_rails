@@ -624,15 +624,24 @@ form#post_search_form input#search {
   margin-left: 8px;
 }
 
-.post_search {
+.post_search, .post_dates {
   float: left;
-  width: 30%;
+  width: 33%;
+}
+
+.post_dates {
+  text-align: right;
 }
 
 .post_search_pagination {
   float: left;
-  padding-right: 30%;
-  width: 30%;
+  width: 34%;
+}
+
+ul.posts_navigation li {
+  display: inline;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 /* People */

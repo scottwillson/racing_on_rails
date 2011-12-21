@@ -84,6 +84,18 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  def test_index_with_date
+    post = FactoryGirl.create(:post)
+    get :index, :mailing_list_id => post.mailing_list.id, :month => 12, :year => 2007
+    assert_response :success
+  end
+  
+  def test_index_with_bogust_date
+    post = FactoryGirl.create(:post)
+    get :index, :mailing_list_id => post.mailing_list.id, :month => 25, :year => 7
+    assert_response :success
+  end
+  
   def test_list
     obra_chat = FactoryGirl.create(:mailing_list)
     for index in 1..22
