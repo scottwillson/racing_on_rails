@@ -5,10 +5,6 @@
 # but could use a template handler with a comple method that queries DB?
 # Template-finding seems to assume a file, though
 class PagesController < ApplicationController
-  def ssl_allowed?
-    true
-  end
-  
   def show
     if params[:path]
       path = params[:path].dup

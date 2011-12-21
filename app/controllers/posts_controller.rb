@@ -32,8 +32,8 @@ class PostsController < ApplicationController
   
   def post_private_reply
     @reply_to = Post.find(params[:reply_to_id])
-    @post = Post.new(params[:post])
-    @mailing_list = MailingList.find(@post.mailing_list_id)
+    @mailing_list = MailingList.find(params[:mailing_list_id])
+    @post = @mailing_list.posts.create(params[:post])
     if @post.valid?
       private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
       flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
@@ -45,7 +45,7 @@ class PostsController < ApplicationController
   
   def post_to_list
     @post = Post.new(params[:post])
-    @mailing_list = MailingList.find(@post.mailing_list_id)
+    @mailing_list = MailingList.find(params[:mailing_list_id])
     @post.mailing_list = @mailing_list
     if @post.valid?
       post_email = MailingListMailer.post(@post).deliver

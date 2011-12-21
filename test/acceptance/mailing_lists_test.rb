@@ -8,21 +8,20 @@ class MailingListsTest < AcceptanceTest
     
     visit "/mailing_lists"
 
-    visit "/posts/obra"
-    assert_page_has_no_content "Schedule Changes"
+    visit "/mailing_lists/#{mailing_list.id}/posts"
+    assert_page_has_no_content "Cervelo for sale"
 
-    visit "/posts/obra/new"
+    visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
     fill_in "post_from_name", :with => "Scott"
     fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
-    fill_in "post_subject", :with => "New Message"
+    fill_in "post_subject", :with => "Cervelo for sale"
     fill_in "post_body", :with => "My post message body"
 
     click_button "Post"
     assert_page_has_content "Your new post is now in the mailing queue"
 
-    visit "/posts/obra/2004/12"
-    assert_page_has_content "Schedule Changes"
+    visit "/mailing_lists/#{mailing_list.id}/posts"
 
     click_link "Schedule Changes"
     assert_page_has_content "This is a test message."
@@ -40,7 +39,7 @@ class MailingListsTest < AcceptanceTest
     click_button "Send"
     assert_page_has_content "Sent private reply"
 
-    visit "/posts/obra/new"
+    visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
     fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
     fill_in "post_subject", :with => "New Message 2"
@@ -52,5 +51,9 @@ class MailingListsTest < AcceptanceTest
     fill_in "post_from_name", :with => "Scott"
     click_button "Post"
     assert_page_has_content "Your new post is now in the mailing queue"    
+
+    visit "/mailing_lists/#{mailing_list.id}/posts?subject=Schedule"
+    visit "/mailing_lists/#{mailing_list.id}/posts?subject=xy"
+    visit "/mailing_lists/#{mailing_list.id}/posts?subject=foobar"
   end
 end

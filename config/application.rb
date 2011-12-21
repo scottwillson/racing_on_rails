@@ -33,6 +33,8 @@ module RacingOnRails
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
 
+    config.force_ssl = true
+    
     # Ugh. Make config accessible to overrides
     @config = config
     

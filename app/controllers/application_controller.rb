@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   include SentientController
-  include SslRequirement
 
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
@@ -239,12 +238,6 @@ class ApplicationController < ActionController::Base
   def redirect_back_or_default(default)
     redirect_to(session[:return_to] || default)
     session[:return_to] = nil
-  end
-
-  # Returns true if the current action is supposed to run as SSL.
-  # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
-  def ssl_required?
-    RacingAssociation.current.ssl? && (self.class.read_inheritable_attribute(:ssl_required_actions) || []).include?(action_name.to_sym)
   end
 
   private

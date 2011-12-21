@@ -21,15 +21,13 @@ module Concerns
         end
       end
 
-      module InstanceMethods
-        def set_friendly_param
-          self.friendly_param = to_friendly_param
-        end
+      def set_friendly_param
+        self.friendly_param = to_friendly_param
+      end
 
-        # Lowercase underscore
-        def to_friendly_param
-          name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
-        end
+      # Lowercase underscore
+      def to_friendly_param
+        name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
       end
     end
 

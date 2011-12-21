@@ -130,10 +130,9 @@ class PostsControllerTest < ActionController::TestCase
     body = "Barely used"
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.to_param,
         :reply_to_id => '',
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
           :from_email_address => from_email_address,
@@ -171,9 +170,8 @@ class PostsControllerTest < ActionController::TestCase
     )
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.id,
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => subject, 
           :from_name => from_name,
           :from_email_address => from_email_address,
@@ -211,9 +209,8 @@ class PostsControllerTest < ActionController::TestCase
     )
   
     post(:create, 
-        :mailing_list_id => obra_chat.name,
+        :mailing_list_id => obra_chat.to_param,
         :post => {
-          :mailing_list_id => obra_chat.id,
           :subject => "Re: #{subject}", 
           :from_name => "",
           :from_email_address => "",

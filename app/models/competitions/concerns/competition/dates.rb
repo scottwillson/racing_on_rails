@@ -7,74 +7,72 @@ module Concerns
         validate :valid_dates
       end
 
-      module InstanceMethods
-        def default_date
-          Time.zone.now.beginning_of_year
+      def default_date
+        Time.zone.now.beginning_of_year
+      end
+
+      def date
+        if all_year?
+          return self[:date]
         end
 
-        def date
-          if all_year?
-            return self[:date]
-          end
-
-          if source_events.any?
-            source_events.sort.first.date
-          elsif parent
-            parent.start_date
-          else
-            self[:date]
-          end
+        if source_events.any?
+          source_events.sort.first.date
+        elsif parent
+          parent.start_date
+        else
+          self[:date]
         end
+      end
 
-        # Same as +date+. Should always be January 1st
-        def start_date
-          date
+      # Same as +date+. Should always be January 1st
+      def start_date
+        date
+      end
+
+      # Last day of year for +date+
+      def end_date
+        if all_year?
+          return Time.zone.local(year).end_of_year
         end
-
-        # Last day of year for +date+
-        def end_date
-          if all_year?
-            return Time.zone.local(year).end_of_year
-          end
           
-          if source_events.present?
-            source_events.sort.last.date
-          elsif parent
-            parent.end_date
-          else
-            Time.zone.local(year).end_of_year
-          end
+        if source_events.present?
+          source_events.sort.last.date
+        elsif parent
+          parent.end_date
+        else
+          Time.zone.local(year).end_of_year
         end
+      end
 
-        def date_range_long_s
-          if multiple_days?
-            "#{start_date.strftime('%a, %B %d')} to #{end_date.strftime('%a, %B %d, %Y')}"
-          else
-            start_date.strftime('%a, %B %d')
-          end
+      def date_range_long_s
+        if multiple_days?
+          "#{start_date.strftime('%a, %B %d')} to #{end_date.strftime('%a, %B %d, %Y')}"
+        else
+          start_date.strftime('%a, %B %d')
         end
+      end
 
-        def multiple_days?
-          source_events.count > 1
-        end
+      def multiple_days?
+        source_events.count > 1
+      end
         
-        def all_year?
-          true
-        end
+      def all_year?
+        true
+      end
 
-        # Assert start and end dates are first and last days of the year
-        def valid_dates
-          if all_year?
-            if start_date.nil? || start_date != start_date.beginning_of_year
-              errors.add "start_date", "must be January 1st, but was: '#{start_date}'"
-            end
-            if end_date.nil? || end_date != end_date.end_of_year
-              errors.add "end_date", "must be December 31st, but was: '#{end_date}'"
-            end
+      # Assert start and end dates are first and last days of the year
+      def valid_dates
+        if all_year?
+          if start_date.nil? || start_date != start_date.beginning_of_year
+            errors.add "start_date", "must be January 1st, but was: '#{start_date}'"
           end
-          if start_date && end_date && start_date.to_date.year != end_date.to_date.year
-            errors.add :date, "and end date must be in same year"
+          if end_date.nil? || end_date != end_date.end_of_year
+            errors.add "end_date", "must be December 31st, but was: '#{end_date}'"
           end
+        end
+        if start_date && end_date && start_date.to_date.year != end_date.to_date.year
+          errors.add :date, "and end date must be in same year"
         end
       end
     end

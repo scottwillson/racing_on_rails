@@ -4,9 +4,6 @@ class PeopleController < ApplicationController
   before_filter :require_current_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
-
-  ssl_required :edit, :update, :card, :new_login, :create_login, :account
-  ssl_allowed :index
   
   # Search for People
   # == Params

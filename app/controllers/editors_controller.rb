@@ -3,8 +3,6 @@ class EditorsController < ApplicationController
   before_filter :assign_person
   before_filter :require_same_person_or_administrator
 
-  ssl_required :create, :destroy
-
   def create
     @editor = Person.find(params[:editor_id])
     

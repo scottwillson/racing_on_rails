@@ -1,8 +1,6 @@
 # Longer-term, this controller should handle the schedule
 class EventsController < ApplicationController
   include Api::Events
-
-  ssl_allowed :index
   
   # HTML: Event dashboard for promoter (Person)
   # XML, JSON: Remote API
