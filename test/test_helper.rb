@@ -10,7 +10,7 @@ class ActiveSupport::TestCase
   self.use_instantiated_fixtures  = false
   self.pre_loaded_fixtures  = false
 
-  include EnumerableAssertions
+  include Test::EnumerableAssertions
 
   # FIXME Still need in Rails 3?
   @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
