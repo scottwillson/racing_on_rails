@@ -33,12 +33,6 @@ GIT
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
 
-GIT
-  remote: https://github.com/analog-analytics/mysql_big_table_migration
-  revision: 6f93f48b834e8539e12f1a47bfdaa08df95f58c2
-  specs:
-    mysql_big_table_migration (0.0.3)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -204,7 +198,6 @@ DEPENDENCIES
   launchy
   mocha
   mysql2 (< 0.3.0)
-  mysql_big_table_migration!
   newrelic_rpm
   pdf-reader
   prawn!

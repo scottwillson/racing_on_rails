@@ -19,7 +19,6 @@ gem "airbrake"
 gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "fckeditor", :git => "git://github.com/scottwillson/fckeditor.git"
-gem "mysql_big_table_migration", :git => "https://github.com/analog-analytics/mysql_big_table_migration"
 
 group :development do
   gem "capistrano"
