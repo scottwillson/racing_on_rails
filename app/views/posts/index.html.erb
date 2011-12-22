@@ -68,3 +68,7 @@
     <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
   </tr>
 </table>
+
+<% content_for :head do -%>
+<%= auto_discovery_link_tag :atom, :format => :atom %>
+<% end %>

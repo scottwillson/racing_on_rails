@@ -26,6 +26,14 @@ class PostsController < ApplicationController
     end
     
     @first_post_at = Post.minimum(:date)
+
+    respond_to do |format|
+      format.html
+      format.rss do
+        redirect_to mailing_list_posts_path(@mailing_list, :format => :atom), :status => :moved_permanently
+      end
+      format.atom
+    end
   end
   
   def show
@@ -62,7 +70,7 @@ class PostsController < ApplicationController
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post.mailing_list = @mailing_list
     if @post.valid?
-      post_email = MailingListMailer.post(@post).deliver
+      MailingListMailer.post(@post).deliver
       flash[:notice] = "Submitted new post: #{@post.subject}"
       redirect_to mailing_list_confirm_path(@mailing_list)
     else

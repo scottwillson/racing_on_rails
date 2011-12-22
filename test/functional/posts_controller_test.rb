@@ -79,13 +79,25 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  def test_index_atom
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get :index, :mailing_list_id => mailing_list.id, :format => :atom
+    assert_response :success
+  end
+  
+  def test_index_rss
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get :index, :mailing_list_id => mailing_list.id, :format => :rss
+    assert_redirected_to :format => :atom
+  end
+  
   def test_index_with_date
     post = FactoryGirl.create(:post)
     get :index, :mailing_list_id => post.mailing_list.id, :month => 12, :year => 2007
     assert_response :success
   end
   
-  def test_index_with_bogust_date
+  def test_index_with_bogus_date
     post = FactoryGirl.create(:post)
     get :index, :mailing_list_id => post.mailing_list.id, :month => 25, :year => 7
     assert_response :success
