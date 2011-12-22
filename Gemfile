@@ -19,6 +19,7 @@ gem "airbrake"
 gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "fckeditor", :git => "git://github.com/scottwillson/fckeditor.git"
+gem "ri_cal"
 
 group :development do
   gem "capistrano"

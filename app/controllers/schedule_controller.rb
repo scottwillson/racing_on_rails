@@ -24,6 +24,21 @@ class ScheduleController < ApplicationController
           redirect_to schedule_path(:format => :atom), :status => :moved_permanently
         end
         format.atom
+        format.ics do
+          send_data(
+            RiCal.Calendar do |cal|
+              @events.each do |e|
+                cal.event do |event|
+                  event.summary = e.full_name
+                  event.dtstart =  e.start_date
+                  event.dtend = e.end_date
+                  event.location = e.city_state
+                  event.description = [ e.flyer, e.discipline ].compact.join("\n")
+                end
+              end
+            end
+          )
+        end
         format.xls do
           send_data(CSV.generate(:col_sep => "\t") do |csv|
             csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
