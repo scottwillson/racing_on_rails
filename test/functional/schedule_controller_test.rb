@@ -53,6 +53,18 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     )
   end
   
+  def test_index_rss
+    FactoryGirl.create(:event)
+    get :index, :format => :rss
+    assert_redirected_to :format => :atom
+  end
+  
+  def test_index_atom
+    FactoryGirl.create(:event)
+    get :index, :format => :atom
+    assert_response :success
+  end
+  
   def tets_road_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)

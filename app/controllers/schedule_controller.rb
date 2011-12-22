@@ -18,7 +18,13 @@ class ScheduleController < ApplicationController
       render :show
     else
       expires_in 1.hour, :public => true
-      render_page
+      respond_to do |format|
+        format.html { render_page }
+        format.rss do
+          redirect_to schedule_path(:format => :atom), :status => :moved_permanently
+        end
+        format.atom
+      end
     end
   end
 

@@ -62,3 +62,7 @@ end -%>
   <% end -%>
 <% end %>
 </div>
+
+<% content_for :head do -%>
+<%= auto_discovery_link_tag :atom, :format => :atom %>
+<% end %>
