@@ -24,6 +24,14 @@ class ScheduleController < ApplicationController
           redirect_to schedule_path(:format => :atom), :status => :moved_permanently
         end
         format.atom
+        format.xls do
+          send_data(CSV.generate(:col_sep => "\t") do |csv|
+            csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
+            @events.each do |event|
+              csv << [ event.id, event.parent_id, event.date.to_s(:db), event.full_name, event.discipline, event.flyer, event.city, event.state, event.promoter_name ]
+            end
+          end, :type => "application/vnd.ms-excel")
+        end
       end
     end
   end

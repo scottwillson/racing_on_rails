@@ -65,6 +65,12 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
   
+  def test_index_excel
+    FactoryGirl.create(:event)
+    get :index, :format => :xls
+    assert_response :success
+  end
+  
   def tets_road_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
