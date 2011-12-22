@@ -5,7 +5,7 @@ atom_feed do |feed|
   @posts.each do |post|
     feed.entry(post, :published => post.date) do |entry|
       entry.title post.subject
-      entry.content post.body, :type => 'html'
+      entry.content post.body
 
       entry.author do |author|
         author.name post.sender_obscured
