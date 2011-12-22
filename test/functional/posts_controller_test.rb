@@ -4,11 +4,6 @@ require File.expand_path("../../test_helper", __FILE__)
 class PostsControllerTest < ActionController::TestCase
   assert_no_angle_brackets :except => [ :all ]
   
-  def setup
-    super
-    ActionMailer::Base.deliveries = []
-  end
-  
   def test_new
     obra_chat = FactoryGirl.create(:mailing_list)
     get(:new, :mailing_list_id => obra_chat.id)
@@ -165,8 +160,6 @@ class PostsControllerTest < ActionController::TestCase
   end
   
   def test_post_reply
-    assert(MailingListMailer.deliveries.empty?, "Should have no email deliveries")
-  
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
@@ -198,8 +191,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_response(:redirect)
     assert_redirected_to mailing_list_confirm_private_reply_path(obra_chat)
     
-    assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
-    delivered_mail = MailingListMailer.deliveries.first
+    delivered_mail = MailingListMailer.deliveries.last
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
