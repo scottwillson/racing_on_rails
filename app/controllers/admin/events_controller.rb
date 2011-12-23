@@ -42,12 +42,6 @@ class Admin::EventsController < Admin::AdminController
   # === Assigns
   # * event: Unsaved SingleDayEvent
   def new
-    if params[:year].blank?
-      date = RacingAssociation.current.effective_year
-    else
-      year = params[:year]
-      date = Date.new(year.to_i)
-    end
     assign_new_event
     association_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if association_number_issuer
@@ -286,6 +280,16 @@ class Admin::EventsController < Admin::AdminController
       event_type = "SingleDayEvent"
     end
     raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
+
+    if params[:year].blank?
+      date = RacingAssociation.current.effective_today
+    else
+      year = params[:year]
+      date = Time.zone.local(year.to_i).to_date
+    end
+    params[:event] = params[:event] || {}
+    params[:event][:date] = date
+
     @event = eval(event_type).new(params[:event])
   end
 end
