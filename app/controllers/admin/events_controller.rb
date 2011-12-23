@@ -288,7 +288,9 @@ class Admin::EventsController < Admin::AdminController
       date = Time.zone.local(year.to_i).to_date
     end
     params[:event] = params[:event] || {}
-    params[:event][:date] = date
+    if params[:event][:date].blank?
+      params[:event][:date] = date
+    end
 
     @event = eval(event_type).new(params[:event])
   end
