@@ -64,9 +64,9 @@ end -%>
 </div>
 
 <%= link_to "Excel", :format => :xls %> |
-<%= link_to "iCal", :format => :ics %>
+<%= link_to "iCal", schedule_url(:format => :ics, :protocol => "webcal") %>
 
 <% content_for :head do -%>
 <%= auto_discovery_link_tag :atom, :format => :atom %>
-<%= auto_discovery_link_tag :ics, :format => :ics %>
+<%= auto_discovery_link_tag :ics, :format => :ics, :protocol => "webcal" %>
 <% end %>
