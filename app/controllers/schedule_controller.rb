@@ -33,7 +33,10 @@ class ScheduleController < ApplicationController
                   event.dtstart =  e.start_date
                   event.dtend = e.end_date
                   event.location = e.city_state
-                  event.description = [ e.flyer, e.discipline ].compact.join("\n")
+                  event.description = e.discipline
+                  if e.flyer_approved?
+                    event.url = e.flyer
+                  end
                 end
               end
             end
