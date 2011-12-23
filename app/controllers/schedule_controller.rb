@@ -27,7 +27,10 @@ class ScheduleController < ApplicationController
         format.ics do
           send_data(
             RiCal.Calendar do |cal|
-              @events.each do |e|
+              parent_ids = @events.map(&:parent_id).compact.uniq
+              multiday_events = MultiDayEvent.where("id in (?) and type = ?", parent_ids, "MultiDayEvent")
+              events = @events.reject { |e| multiday_events.include?(e.parent) } + multiday_events
+              events.each do |e|
                 cal.event do |event|
                   event.summary = e.full_name
                   event.dtstart =  e.start_date
@@ -39,7 +42,8 @@ class ScheduleController < ApplicationController
                   end
                 end
               end
-            end
+            end,
+            :filename => "#{RacingAssociation.current.name} #{@year} Schedule.ics"
           )
         end
         format.xls do
@@ -48,7 +52,7 @@ class ScheduleController < ApplicationController
             @events.each do |event|
               csv << [ event.id, event.parent_id, event.date.to_s(:db), event.full_name, event.discipline, event.flyer, event.city, event.state, event.promoter_name ]
             end
-          end, :type => "application/vnd.ms-excel")
+          end, :type => :xls)
         end
       end
     end
