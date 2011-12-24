@@ -1,12 +1,13 @@
 module CreateIfBestResultForRaceExtension
   def create_if_best_result_for_race(attributes)
     source_result = attributes[:source_result]
-    @owner.scores.each do |score|
+    scores = proxy_association.owner.scores
+    scores.each do |score|
       same_race  = (score.source_result.race_id  == source_result.race_id)
       same_person = (score.source_result.person_id == source_result.person_id)
       if same_race && score.source_result.person && same_person
         if attributes[:points] > score.points
-          @owner.scores.delete score
+          scores.delete score
         else
           return nil
         end

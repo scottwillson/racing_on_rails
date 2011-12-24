@@ -64,6 +64,10 @@ class Page < ActiveRecord::Base
       page == self || descendants.include?(page)
     }
   end
+  
+  def depth
+    ancestors.size
+  end  
 
   def to_s
     "#<Page #{id} #{title} #{slug} #{path}>"

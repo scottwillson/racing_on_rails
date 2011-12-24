@@ -12,40 +12,19 @@ class ActiveSupport::TestCase
 
   include Test::EnumerableAssertions
 
-  # FIXME Still need in Rails 3?
-  @@reserved_ivars = %w(@loaded_fixtures @test_passed @fixture_cache @method_name @_assertion_wrapped @_result)
-
-  @@no_angle_brackets_exceptions = nil
+  @@no_angle_brackets_exceptions = []
 
   class << self
     def assert_no_angle_brackets(*options)
       options = options.extract_options!
-      write_inheritable_attribute :no_angle_brackets_exceptions, Array.wrap(options[:except])
+      @@no_angle_brackets_exceptions = Array.wrap(options[:except])
     end
-
-    def no_angle_brackets_exceptions
-      if current_no_angle_brackets_exceptions = read_inheritable_attribute(:no_angle_brackets_exceptions)
-        current_no_angle_brackets_exceptions
-      else
-        write_inheritable_attribute :no_angle_brackets_exceptions, []
-      end
-    end
-  end
-
-  # Activate Authlogic. Reset RacingAssociation.
-  def setup
-    activate_authlogic
-    reset_association
-    super
   end
   
-  def teardown
-    super
-    assert_no_angle_brackets
-    # Discipline class may have loaded earlier with no aliases in database
-    reset_disciplines
-    scrub_instance_variables
-  end
+  setup :activate_authlogic, :reset_association, :reset_no_angle_brackets_exceptions
+  
+  # Discipline class may have loaded earlier with no aliases in database
+  teardown :assert_no_angle_brackets, :reset_disciplines
 
   def reset_association
     RacingAssociation.current = nil
@@ -54,6 +33,10 @@ class ActiveSupport::TestCase
   def reset_disciplines
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
+  end
+  
+  def reset_no_angle_brackets_exceptions
+    @@reset_no_angle_brackets_exceptions = []
   end
 
   # person = fixture symbol or Person
@@ -139,7 +122,7 @@ class ActiveSupport::TestCase
   # Detect HTML escaping screw-ups
   # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
   def assert_no_angle_brackets
-    unless self.class.no_angle_brackets_exceptions.include?(method_name.to_sym) || self.class.no_angle_brackets_exceptions.include?(:all)
+    unless @@no_angle_brackets_exceptions.include?(__method__) || @@no_angle_brackets_exceptions.include?(:all)
       if @response && !@response.blank?
         body_string = @response.body.to_s
         if ENV["VERBOSE_HTML_SOURCE"]
@@ -206,11 +189,5 @@ class ActiveSupport::TestCase
   
   def secure_redirect_options
     @controller.send :secure_redirect_options
-  end
-
-  def scrub_instance_variables
-    (instance_variables - @@reserved_ivars).each do |ivar|
-      instance_variable_set(ivar, nil)
-    end
   end
 end

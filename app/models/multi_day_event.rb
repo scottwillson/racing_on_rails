@@ -31,26 +31,26 @@ class MultiDayEvent < Event
            :after_remove => [ :children_changed, :update_date ],
            :order => "date" do
              def create!(attributes = {})
-               attributes[:parent_id] = @owner.id
-               attributes[:parent] = @owner
-               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
+               attributes[:parent_id] = proxy_association.owner.id
+               attributes[:parent] = proxy_association.owner
+               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = proxy_association.owner[attr] }               
                event = SingleDayEvent.new(attributes)
-               (event.date = @owner.date) unless attributes[:date]
-               event.parent = @owner
+               (event.date = proxy_association.owner.date) unless attributes[:date]
+               event.parent = proxy_association.owner
                event.save!
-               @owner.children << event
+               proxy_association.owner.children << event
                event
              end
 
              def create(attributes = {})
-               attributes[:parent_id] = @owner.id
-               attributes[:parent] = @owner
-               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = @owner[attr] }               
+               attributes[:parent_id] = proxy_association.owner.id
+               attributes[:parent] = proxy_association.owner
+               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = proxy_association.owner[attr] }               
                event = SingleDayEvent.new(attributes)
-               (event.date = @owner.date) unless attributes[:date]
-               event.parent = @owner
+               (event.date = proxy_association.owner.date) unless attributes[:date]
+               event.parent = proxy_association.owner
                event.save
-               @owner.children << event
+               proxy_association.owner.children << event
                event
              end
            end
