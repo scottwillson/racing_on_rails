@@ -4,9 +4,20 @@ require File.expand_path("../../test_helper", __FILE__)
 class PublicPagesTest < ActionController::IntegrationTest
   assert_no_angle_brackets :except => [ :test_mailing_lists ]
   
-  def test_popular_pages
+  def test_redirect_event
     get "/events/"
     assert_redirected_to schedule_url
+  end
+  
+  def test_schedule
+    get "/schedule"
+    assert_response :success
+
+    get "/schedule.xls"
+    assert_response :success
+
+    get "/schedule.ics"
+    assert_response :success
   end
   
   def test_results_pages
