@@ -5,7 +5,7 @@ Ruby on Rails
 http://rubyonrails.org/
 
 Documentation, quick start, and issue tracker
-http://trac.butlerpress.com/racing_on_rails
+http://racingonrails.rocketsurgeryllc.com/
 
 Google Group
 http://groups.google.com/group/racing-on-rails
@@ -15,7 +15,7 @@ http://github.com/scottwillson/racing_on_rails/tree/master
 
 
 Requirements
-Ruby 1.8.7 (1.9.2 preferred)
+Ruby 1.8.7 (1.9.3 preferred)
 MySQL
 
 Gems
