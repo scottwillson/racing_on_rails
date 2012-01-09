@@ -66,10 +66,14 @@ class RaceNumber < ActiveRecord::Base
       return true
     end
 
-    if RacingAssociation.current.rental_numbers.nil? || discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill] || number.strip[/^\d+$/].nil?
+    if discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill]
       return false
     end
-    
+
+    if number.strip[/^\d+$/].nil?
+      return false
+    end
+
     numeric_value = number.to_i    
     if RacingAssociation.current.rental_numbers.include?(numeric_value)
       return true
