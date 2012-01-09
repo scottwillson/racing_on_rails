@@ -11,7 +11,6 @@ class RacingAssociation < ActiveRecord::Base
   belongs_to :cat4_womens_race_series_category, :class_name => "Category"
 
   attr_accessor :person
-  attr_accessor :rental_numbers
 
   serialize :administrator_tabs
   serialize :cat4_womens_race_series_points
@@ -35,10 +34,6 @@ class RacingAssociation < ActiveRecord::Base
   # String
   default_value_for :default_sanctioned_by do |r|
     r.short_name
-  end
-  
-  default_value_for :rental_numbers do |r|
-    (r.rental_numbers_start)..(r.rental_numbers_end)
   end
   
   default_value_for :sanctioning_organizations do
@@ -111,6 +106,24 @@ class RacingAssociation < ActiveRecord::Base
   
   def cyclocross_season_end
     Time.zone.local(Time.zone.now.year, 12, 5).end_of_day
+  end
+
+  def rental_numbers
+    if rental_numbers_start && rental_numbers_end
+      rental_numbers_start..rental_numbers_end
+    else
+      nil
+    end
+  end
+
+  def rental_numbers=(value)
+    if value.nil?
+      self.rental_numbers_start = nil
+      self.rental_numbers_end = nil
+    else
+      self.rental_numbers_start = rental_numbers.first
+      self.rental_numbers_end = rental_numbers.last
+    end
   end
 
   def priority_country_options
