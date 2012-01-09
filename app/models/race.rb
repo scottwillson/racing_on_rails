@@ -206,7 +206,6 @@ class Race < ActiveRecord::Base
       results.reverse!
     end
 
-    previous_result = nil
     results.each_with_index do |result, index|
       if index == 0
         result.place = 1
