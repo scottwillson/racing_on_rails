@@ -88,7 +88,7 @@ class Result < ActiveRecord::Base
        person.first_name.present? &&
        person.last_name.present? &&
        person[:member_from].blank? &&
-       event.number_issuer.name == RacingAssociation.current.short_name &&
+       event.number_issuer.association? &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
       person.member_from = race.date
