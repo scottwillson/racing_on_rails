@@ -301,7 +301,6 @@ class Race < ActiveRecord::Base
   end
   
   def destroy_result(result)
-    place = result.place
     results.sort!
     start_index = results.index(result) + 1
     for index in start_index...(results.size)
