@@ -83,7 +83,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index
-    future_national_federation_event = FactoryGirl.create(:event, :date => Date.new(2004, 3), :sanctioned_by => "USAC")
+    future_national_federation_event = FactoryGirl.create(:event, :date => Date.new(2004, 3), :sanctioned_by => "USA Cycling")
     get(:index, :year => "2004")
     assert_response(:success)
     assert_template("results/index")
@@ -94,7 +94,7 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_only_shows_sanctioned_events
-    future_national_federation_event = FactoryGirl.create(:event, :date => 1.day.from_now, :sanctioned_by => "USAC")
+    future_national_federation_event = FactoryGirl.create(:event, :date => 1.day.from_now, :sanctioned_by => "USA Cycling")
     get(:index)
     assert_response(:success)
     assert_template("results/index")
@@ -186,7 +186,7 @@ class ResultsControllerTest < ActionController::TestCase
       weekly_series_with_races_and_child_races_child = weekly_series_with_child_races.children.create!(:date => Date.new(2007, 12, 2))
       weekly_series_with_races_and_child_races_child.races.create!(:category => @senior_men).results.create!
     
-      usa_cycling_event_with_results = SingleDayEvent.create!(:date => Date.new(2007, 5), :sanctioned_by => "NCNCA")
+      usa_cycling_event_with_results = SingleDayEvent.create!(:date => Date.new(2007, 5), :sanctioned_by => "CBRA")
       usa_cycling_event_with_results.races.create!(:category => @senior_men).results.create!
     
       get(:index, :year => "2007")

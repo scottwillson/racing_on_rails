@@ -41,7 +41,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
   
   def test_index_only_shows_visible_events
-    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USAC")
+    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
     
     get :index
     html = @response.body
