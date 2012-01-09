@@ -14,6 +14,7 @@ class Race < ActiveRecord::Base
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
   
   validates_presence_of :event, :category
+  validate :inclusion_of_sanctioned_by
 
   before_validation :find_associated_records
   
@@ -101,6 +102,16 @@ class Race < ActiveRecord::Base
     end
   end
   
+  def sanctioned_by
+    self[:sanctioned_by] || event.try(:sanctioned_by) || RacingAssociation.current.default_sanctioned_by
+  end
+
+  def inclusion_of_sanctioned_by
+    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+      errors.add :sanctioned_by, "Sanctioned by '#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
+    end
+  end
+
   def calculate_result_columns!
     self.result_columns = result_columns_or_default
     result_columns.delete_if do |result_column|

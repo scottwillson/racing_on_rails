@@ -46,6 +46,7 @@ class Event < ActiveRecord::Base
   validate :parent_is_not_self
   
   validate :inclusion_of_discipline
+  validate :inclusion_of_sanctioned_by
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
   has_many :children,
@@ -390,6 +391,12 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def inclusion_of_sanctioned_by
+    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+      errors.add :sanctioned_by, "Sanctioned by '#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
+    end
+  end
+
   def promoter_name
     promoter.name if promoter
   end
