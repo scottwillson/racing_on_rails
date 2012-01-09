@@ -6,6 +6,10 @@ class NumberIssuer < ActiveRecord::Base
   
   has_many :race_numbers
   
+  def association?
+    name == RacingAssociation.current.short_name
+  end
+
   def to_s
     "#<NumberIssuer #{name}>"
   end
