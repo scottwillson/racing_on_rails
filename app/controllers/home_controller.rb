@@ -26,8 +26,6 @@ class HomeController < ApplicationController
       :conditions => ['(created_at > ? OR updated_at > ?) and article_category_id = ?', cutoff, cutoff, @news_category],
       :order => 'created_at desc'
     )
-    #@discipline_names = Discipline.find_all_names
-    #@article_categories = ArticleCategory.all( :conditions => ["parent_id = 0"], :order => "position")
 
     expires_in 1.hour, :public => true
 
