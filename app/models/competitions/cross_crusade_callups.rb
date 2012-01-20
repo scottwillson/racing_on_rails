@@ -25,7 +25,7 @@ class CrossCrusadeCallups < Competition
 
   def source_results(race)
     event_ids = source_events.map(&:id).join(", ")
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(", ")
     
     Result.find_by_sql(
       %Q{ SELECT results.* FROM results  

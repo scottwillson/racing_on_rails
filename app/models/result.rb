@@ -24,6 +24,11 @@ end
 # a +team+ atribute and many RaceNumbers. Result's number is just a String, not
 # a RaceNumber
 class Result < ActiveRecord::Base
+  include Concerns::Result::Cleanup
+  include Concerns::Result::Comparison
+  include Concerns::Result::Time
+  include Export::Results
+  
   attr_accessor :updated_by
   serialize :custom_attributes, Hash
 
@@ -45,9 +50,9 @@ class Result < ActiveRecord::Base
 
   validates_presence_of :race
 
-  include Export::Results
+  scope :competition, where(:competition_result => true)
 
-  def Result.find_all_for(person)
+  def self.find_all_for(person)
     if person.is_a? Person
       person_id = person.id
     else
@@ -83,7 +88,7 @@ class Result < ActiveRecord::Base
        person.first_name.present? &&
        person.last_name.present? &&
        person[:member_from].blank? &&
-       event.number_issuer.name == RacingAssociation.current.short_name &&
+       event.number_issuer.association? &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
       person.member_from = race.date
@@ -247,7 +252,7 @@ class Result < ActiveRecord::Base
   def calculate_points
     if !scores.empty? and competition_result?
       pts = 0
-      for score in scores
+      scores.each do |score|
         pts = pts + score.points
       end
       self.points = pts
@@ -276,6 +281,15 @@ class Result < ActiveRecord::Base
       @team_competition_result = event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
     else
       team_competition_result
+    end
+  end
+  
+  # TODO Cache this, too
+  def team_size
+    if race_id
+      @team_size ||= Result.count(:conditions => ["race_id =? and place = ?", race_id, place])
+    else
+      @team_size ||= 1
     end
   end
 
@@ -411,265 +425,6 @@ class Result < ActiveRecord::Base
     self[:team_name] = value
   end
   
-  def time=(value)
-    set_time_value(:time, value)
-  end
-
-  def time_bonus_penalty=(value)
-    set_time_value(:time_bonus_penalty, value)
-  end
-
-  def time_gap_to_leader=(value)
-    set_time_value(:time_gap_to_leader, value)
-  end
-
-  def time_total=(value)
-    set_time_value(:time_total, value)
-  end
-
-  def time_gap_to_previous=(value)
-    set_time_value(:time_gap_to_previous, value)
-  end
-
-  def time_gap_to_winner=(value)
-    set_time_value(:time_gap_to_winner, value)
-  end
-
-  def time_total=(value)
-    set_time_value(:time_total, value)
-  end
-
-  def set_time_value(attribute, value)
-    case value
-    when DateTime
-      self[attribute] = value.hour * 3600 + value.min * 60 + value.sec
-    when Time
-      self[attribute] = value.hour * 3600 + value.min * 60 + value.sec + (value.usec / 100.0)
-    when Numeric, NilClass
-      self[attribute] = value      
-    else
-      self[attribute] = s_to_time(value)
-    end
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_s
-    time_to_s(self.time)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_s=(time)
-    self.time = s_to_time(time)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_total_s
-    time_to_s(self.time_total)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_total_s=(time_total)
-    self.time_total = s_to_time(time_total)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_bonus_penalty_s
-    time_to_s(self.time_bonus_penalty)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_bonus_penalty_s=(time_bonus_penalty)
-    self.time_bonus_penalty = s_to_time(time_bonus_penalty)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_gap_to_leader_s
-    time_to_s(self.time_gap_to_leader)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_gap_to_leader_s=(time_gap_to_leader_s)
-    self.time_gap_to_leader = s_to_time(time_gap_to_leader_s)
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  def time_gap_to_winner_s
-    time_to_s time_gap_to_winner
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  # This method doesn't handle some typical edge cases very well
-  def time_to_s(time)
-    return '' if time == 0.0 or time.blank?
-    positive = time >= 0
-    
-    if !positive
-      time = -time
-    end
-    
-    hours = (time / 3600).to_i
-    minutes = ((time - (hours * 3600)) / 60).floor
-    seconds = (time - (hours * 3600).floor - (minutes * 60).floor)
-    seconds = sprintf('%0.2f', seconds)
-    if hours > 0
-      hour_prefix = "#{hours.to_s.rjust(2, '0')}:"
-    end
-    "#{"-" unless positive}#{hour_prefix}#{minutes.to_s.rjust(2, '0')}:#{seconds.rjust(5, '0')}"
-  end
-
-  # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
-  # This method doesn't handle some typical edge cases very well
-  def s_to_time(string)
-    if string.to_s.blank?
-      0.0
-    else
-      string.gsub!(',', '.')
-      parts = string.to_s.split(':')
-      parts.reverse!
-      t = 0.0
-      parts.each_with_index do |part, index|
-        t = t + (part.to_f) * (60.0 ** index)
-      end
-      if parts.last && parts.last.starts_with?("-")
-        -t
-      else
-        t
-      end
-    end
-  end
-
-  # Fix common formatting mistakes and inconsistencies
-  def cleanup
-    cleanup_place
-    cleanup_number
-    cleanup_license
-    self.first_name = cleanup_name(first_name)
-    self.last_name = cleanup_name(last_name)
-    self.team_name = cleanup_name(team_name)
-  end
-
-  # Drops the 'st' from 1st, among other things
-  def cleanup_place
-    if place
-      normalized_place = place.to_s.dup
-      normalized_place.upcase!
-      normalized_place.gsub!("ST", "")
-      normalized_place.gsub!("ND", "")
-      normalized_place.gsub!("RD", "")
-      normalized_place.gsub!("TH", "")
-      normalized_place.gsub!(")", "")
-      normalized_place = normalized_place.to_i.to_s if normalized_place[/^\d+\.0$/]
-      normalized_place.strip!
-      normalized_place.gsub!(".", "")
-      self.place = normalized_place
-    else
-      self.place = ""
-    end
-  end
-
-  def cleanup_number
-    self.number = number.to_s
-    self.number = number.to_i.to_s if number[/^\d+\.0$/]
-  end
-
-  def cleanup_license
-    self.license = license.to_s
-    # USAC license numbers are being imported with a one decimal zero, e.g., 12345.0
-    self.license = license.to_i.to_s if license[/^\d+\.0$/]
-  end
-
-  # Mostly removes unfortunate punctuation typos
-  def cleanup_name(name)
-    return name if name.nil?
-    name = name.to_s
-    return '' if name == '0.0'
-    return '' if name == '0'
-    return '' if name == '.'
-    return '' if name.include?('N/A')
-    name = name.gsub(';', '\'')
-    name = name.gsub(/ *\/ */, '/')
-  end
-
-  # Highest points first. Break ties by highest placing
-  # OBRA rules:
-  # * The most first place finishes or, if still tied, the most second place finishes, etc., or if still tied;
-  # * The highest placing in the last race, or the race nearest the last race in which at least one of the tied riders placed.
-  #
-  # Fairly complicated and procedural, but in nearly all cases, it short-circuits after comparing points
- def compare_by_points(other, break_ties = true)
-    diff = other.points <=> points
-    return diff if diff != 0 || !break_ties
-
-    diff = compare_by_highest_place(other)
-    return diff if diff != 0
-
-    diff = compare_by_most_recent_place(other)
-    return diff if diff != 0
-
-    0
-  end
-
-  def compare_by_highest_place(other)
-    scores_by_place = scores.sort do |x, y|
-      x.source_result <=> y.source_result
-    end
-    other_scores_by_place = other.scores.sort do |x, y|
-      x.source_result <=> y.source_result
-    end
-    max_results = [ scores_by_place.size, other_scores_by_place.size ].max
-    return 0 if max_results == 0
-    for index in 0..(max_results - 1)
-      if scores_by_place.size == index
-        return 1
-      elsif other_scores_by_place.size == index
-        return -1
-      else
-        diff = scores_by_place[index].source_result.place <=> other_scores_by_place[index].source_result.place
-        return diff if diff != 0
-      end
-    end
-    0
-  end
-
-  def compare_by_most_recent_place(other)
-    dates = Set.new(scores + other.scores) { |score| score.source_result.date }.to_a
-    dates.sort!.reverse!
-    dates.each do |date|
-      score = scores.detect { |s| s.source_result.event.date == date }
-      other_score = other.scores.detect { |s| s.source_result.event.date == date }
-      if score && !other_score
-        return -1
-      elsif !score && other_score
-        return 1
-      else
-        diff = score.source_result.place <=> other_score.source_result.place
-        return diff if diff != 0
-      end
-    end
-    0
-  end
-
-  # Poor name. For comparison, we sort by placed, finished, DNF, etc
-  def major_place
-    if place.to_i > 0
-      0
-    elsif place.blank? || place == 0
-      1
-    elsif place.upcase == 'DNF'
-      2
-    elsif place.upcase == 'DQ'
-      3
-    elsif place.upcase == 'DNS'
-      4
-    else
-      5
-    end
-  end
-
-  def place_as_integer
-    place.to_i
-  end
-  
   def method_missing(sym, *args, &block)
     # Performance fix for results page. :to_ary would be called and trigger a load of race to get custom_attributes
     # May want to denormalize custom_attributes in Result.
@@ -683,26 +438,6 @@ class Result < ActiveRecord::Base
       nil
     else
       super
-    end
-  end
-
-  # All numbered places first, then blanks, followed by DNF, DQ, and DNS
-  def <=>(other)
-    # Figure out the major position by place first, then break it down further if
-    begin
-      major_difference = (major_place <=> other.major_place)
-      return major_difference if major_difference != 0
-
-      if place.to_i > 0
-        place.to_i <=> other.place.to_i
-      elsif self.id
-        self.id <=> other.id
-      else
-        0
-      end
-    rescue ArgumentError => error
-      logger.error("Error in Result.<=> #{error} comparing #{self} with #{other}")
-      throw error
     end
   end
 

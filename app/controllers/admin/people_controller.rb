@@ -368,7 +368,7 @@ class Admin::PeopleController < Admin::AdminController
     @people = [@person]
     @person.print_card = false
     @person.membership_card = true
-    @person.card_printed_at = RacingAssociation.current.now
+    @person.card_printed_at = Time.zone.now
     @person.save!
     
     respond_to do |format|
@@ -384,11 +384,11 @@ class Admin::PeopleController < Admin::AdminController
 
   def update_name
     @person = Person.find(params[:id])
-    @person.send "#{params[:name]}=", params[:value]
+    @person.name = params[:value]
 
     @other_people = @person.people_with_same_name
     if @other_people.empty?
-      @person.update_attribute(:name, params[:value])
+      @person.save
       expire_cache
       render :text => @person.name, :content_type => "text/html"
     else

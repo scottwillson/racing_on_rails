@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+exec "rake -f lib/tasks/test.rake test:ruby"

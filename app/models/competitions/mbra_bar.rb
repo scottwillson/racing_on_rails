@@ -7,7 +7,7 @@
 class MbraBar < Competition
   validate :valid_dates
 
-  def MbraBar.calculate!(year = Date.today.year)
+  def MbraBar.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
@@ -76,8 +76,7 @@ class MbraBar < Competition
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
   def source_results(race)
-    race_disciplines = "'#{race.discipline}'"
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(", ")
 
     Result.all(
                 :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
@@ -85,9 +84,9 @@ class MbraBar < Competition
                     (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
                     and bar = true
                     and categories.id in (#{category_ids})
-                    and (events.discipline in (#{race_disciplines})
-                      or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
-                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
+                    and (events.discipline = '#{race.discipline}'
+                      or (events.discipline is null and parents_events.discipline = '#{race.discipline}')
+                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline = '#{race.discipline}'))
                     and (races.bar_points > 0
                       or (races.bar_points is null and events.bar_points > 0)
                       or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
@@ -107,8 +106,7 @@ class MbraBar < Competition
         points = 0.5
       else
         # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
-        #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
-        #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
+        # this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
         points = point_schedule[source_result.place.to_i] * source_result.race.bar_points #/ team_size.to_f
       end
     }

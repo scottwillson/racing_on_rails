@@ -1,9 +1,10 @@
+require "active_support/core_ext/string/filters"
+require "active_support/core_ext/string/inflections"
+
 module RacingOnRails
   module Grid
     # Parse and render Array of Arrays of Strings. To be replaced by Tabular.
     class Grid
-      include ActionView::Helpers::TextHelper
-
       attr_accessor :columns, :rows, :custom_columns
       attr_reader :column_count, :padding, :delimiter, :quoted, :column_map
 
@@ -251,7 +252,7 @@ module RacingOnRails
               cell = cell.rjust(column_size(index))
             end
           else
-            cell = truncate(cell, :length => column_size(index))
+            cell = cell.truncate(column_size(index))
           end
           if index + 1 == row.size
             text = "#{text}#{cell}"
@@ -286,7 +287,7 @@ module RacingOnRails
           for index in 0..(column_count - 1)
             cell = row[index]
             if cell && cell.size > column_size(index)
-              row[index] = truncate(cell, :length => column_size(index))
+              row[index] = cell.truncate(column_size(index))
             end
           end
         end

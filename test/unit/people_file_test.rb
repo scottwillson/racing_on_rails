@@ -3,20 +3,33 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PersonFileTest < ActiveSupport::TestCase  
   def test_import
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:number_issuer)
+
     team = Team.create!(:name => "Sorella Forte Elite Team")
     event = SingleDayEvent.create!(:date => 1.years.ago)
-    result = event.races.create!(:category => categories(:senior_men)).results.create!(:team => team)
+    senior_men = FactoryGirl.create(:category)
+    result = event.races.create!(:category => senior_men).results.create!(:team => team)
     team.aliases.create!(:name => "Sorella Forte")
     assert_equal(0, team.names(true).size, "names")
     assert_equal(1, team.aliases(true).size, "Aliases")
     assert_equal(["Sorella Forte"], team.aliases.map(&:name).sort, "Team aliases")
 
-    tonkin = people(:tonkin)
-    tonkin.member=(false)
-    tonkin.ccx_category = 'A'
-    tonkin.notes = 'Spent Christmans in Belgium'
-    tonkin.login = "sellwood"
-    tonkin.save!
+    tonkin = FactoryGirl.create(
+      :person, 
+      :first_name => "Erik", 
+      :last_name => "Tonkin", 
+      :member_from => nil, 
+      :member_to => nil,
+      :ccx_category => "A",
+      :road_category => "1",
+      :track_category => "5",
+      :notes => 'Spent Christmans in Belgium',
+      :login => "sellwood"
+    )
 
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
@@ -92,6 +105,12 @@ Downhill/Cross Country: Downhill}
   end
   
   def test_excel_file_database
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:number_issuer)
+    
     # Pre-existing people
     brian = Person.create!(
       :last_name =>'Abers',
@@ -99,7 +118,7 @@ Downhill/Cross Country: Downhill}
       :gender => 'M',
       :email =>'brian@sportslabtraining.com',
       :member_from => '2004-02-23',
-      :member_to => Date.new(Date.today.year + 1, 12, 31),
+      :member_to => Date.new(Time.zone.today.year + 1, 12, 31),
       :date_of_birth => '1965-10-02',
       :notes => 'Existing notes',
       :road_number => '824',
@@ -131,7 +150,7 @@ Downhill/Cross Country: Downhill}
       :date_of_birth => '1959-12-09',
       :license => "1516"
     )
-    number = scott.race_numbers.create!(:value => '422', :year => Date.today.year - 1)
+    number = scott.race_numbers.create!(:value => '422', :year => Time.zone.today.year - 1)
     number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
@@ -153,7 +172,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('M', quinn_jackson.gender, 'Quinn Jackson gender')
     assert_equal('quinn3769@yahoo.com', quinn_jackson.email, 'Quinn Jackson email')
     assert_equal_dates('2006-04-19', quinn_jackson.member_from, 'Quinn Jackson member from')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), quinn_jackson.member_to, 'Quinn Jackson member to')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), quinn_jackson.member_to, 'Quinn Jackson member to')
     assert_equal_dates('1969-01-01', quinn_jackson.date_of_birth, 'Birth date')
     assert_equal('interests: 14', quinn_jackson.notes, 'Quinn Jackson notes')
     assert_equal('1416 SW Hume Street', quinn_jackson.street, 'Quinn Jackson street')
@@ -173,7 +192,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('M', brian_abers.gender, 'Brian Abers gender')
     assert_equal('thekilomonster@verizon.net', brian_abers.email, 'Brian Abers email')
     assert_equal_dates('2004-02-23', brian_abers.member_from, 'Brian Abers member from')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), brian_abers.member_to, 'Brian Abers member to')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), brian_abers.member_to, 'Brian Abers member to')
     assert_equal_dates('1965-10-02', brian_abers.date_of_birth, 'Birth date')
     assert_equal("Existing notes\ninterests: 1247", brian_abers.notes, 'Brian Abers notes')
     assert_equal('5735 SW 198th Ave', brian_abers.street, 'Brian Abers street')
@@ -191,8 +210,8 @@ Downhill/Cross Country: Downhill}
     heidi_babi = all_heidi_babi.first
     assert_equal('F', heidi_babi.gender, 'Heidi Babi gender')
     assert_equal('hbabi77@hotmail.com', heidi_babi.email, 'Heidi Babi email')
-    assert_equal_dates(Date.today, heidi_babi.member_from, 'Heidi Babi member from')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), heidi_babi.member_to, 'Heidi Babi member to')
+    assert_equal_dates(Time.zone.today, heidi_babi.member_from, 'Heidi Babi member from')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), heidi_babi.member_to, 'Heidi Babi member to')
     assert_equal_dates('1977-01-01', heidi_babi.date_of_birth, 'Birth date')
     assert_equal("interests: 134", heidi_babi.notes, 'Heidi Babi notes')
     assert_equal('11408 NE 102ND ST', heidi_babi.street, 'Heidi Babi street')
@@ -207,7 +226,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('M', rene_babi.gender, 'Rene Babi gender')
     assert_equal('rbabi@rbaintl.com', rene_babi.email, 'Rene Babi email')
     assert_equal_dates('2000-01-01', rene_babi.member_from, 'Rene Babi member from')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), rene_babi.member_to, 'Rene Babi member to')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), rene_babi.member_to, 'Rene Babi member to')
     assert_equal_dates('1899-07-14', rene_babi.date_of_birth, 'Birth date')
     assert_equal(nil, rene_babi.notes, 'Rene Babi notes')
     assert_equal('1431 SE Columbia Way', rene_babi.street, 'Rene Babi street')
@@ -220,7 +239,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('M', scott_seaton.gender, 'Scott Seaton gender')
     assert_equal('sseaton@bendcable.com', scott_seaton.email, 'Scott Seaton email')
     assert_equal_dates('2000-01-01', scott_seaton.member_from, 'Scott Seaton member from')
-    assert_equal_dates(Date.new(Date.today.year, 12, 31), scott_seaton.member_to, 'Scott Seaton member to')
+    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), scott_seaton.member_to, 'Scott Seaton member to')
     assert_equal_dates('1959-12-09', scott_seaton.date_of_birth, 'Birth date')
     assert_equal('interests: 3146', scott_seaton.notes, 'Scott Seaton notes')
     assert_equal('1654 NW 2nd', scott_seaton.street, 'Scott Seaton street')
@@ -232,7 +251,7 @@ Downhill/Cross Country: Downhill}
     assert_equal("Hutch's Bend", scott_seaton.team_name, 'Scott Seaton team should be updated')
     assert(!scott_seaton.print_card?, 'sautter.print_card? after import')
     
-    scott.race_numbers.create(:value => '422', :year => Date.today.year - 1)
+    scott.race_numbers.create(:value => '422', :year => Time.zone.today.year - 1)
     number = RaceNumber.first(:conditions => ['person_id=? and value=?', scott.id, '422'])
     assert_not_nil(number, "Scott\'s previous road number")
     assert_equal(Discipline[:road], number.discipline, 'Discipline')
@@ -240,6 +259,8 @@ Downhill/Cross Country: Downhill}
   
   def test_import_duplicates
     Person.create(:name => 'Erik Tonkin')
+    Person.create(:name => 'Erik Tonkin')
+    
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     

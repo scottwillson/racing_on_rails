@@ -3,6 +3,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class PeopleTest < ActionController::IntegrationTest
   def test_index
+    FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     get "/people"
     assert_response :success
     assert_select "input[type=text]"
@@ -22,7 +23,7 @@ class PeopleTest < ActionController::IntegrationTest
   end
   
   def test_import
-    goto_login_page_and_login_as :administrator
+    goto_login_page_and_login_as FactoryGirl.create(:administrator)
     post "/admin/people/preview_import",  
          :people_file => fixture_file_upload("../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
     assert_response :success

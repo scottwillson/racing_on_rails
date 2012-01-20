@@ -12,7 +12,7 @@ module Names
     
     # Returns Name record, not String
     def name_record_for_year(year)
-      return nil if year.blank? || year >= Date.today.year || names.none?
+      return nil if year.blank? || year >= Time.zone.today.year || names.none?
       
       # Assume names always sorted
       if year <= names.first.year
@@ -27,9 +27,9 @@ module Names
     # Remember names from previous years. Keeps the correct name on old results without creating additional teams.
     # This is a bit naive
     def add_name
-      last_year = Date.today.year - 1
-      if @old_name.present? && results_before_this_year? && self.names.none? { |name| name.year == last_year }
-        name = names.build(:name => @old_name, :year => last_year)
+      last_year = Time.zone.today.year - 1
+      if name_was.present? && results_before_this_year? && self.names.none? { |name| name.year == last_year }
+        name = names.build(:name => name_was, :year => last_year)
         if self.respond_to?(:first_name)
           name.first_name = first_name_was
         end
@@ -47,7 +47,7 @@ module Names
         where #{self.class.table_name}.id = ? and #{self.class.table_name}.id = results.#{self.class.name.downcase}_id 
           and results.race_id = races.id
           and races.event_id = events.id and events.date < ? limit 1
-      }, id, Date.today.beginning_of_year])
+      }, id, Time.zone.today.beginning_of_year])
       count > 0
     end
     

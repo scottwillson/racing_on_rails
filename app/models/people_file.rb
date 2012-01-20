@@ -132,12 +132,12 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     created = 0
     updated = 0
     if @update_membership
-      if year && year > Date.today.year
+      if year && year > Time.zone.today.year
         @member_from_imported_people = Date.new(year, 1, 1)
       else
-        @member_from_imported_people = Date.today
+        @member_from_imported_people = Time.zone.today
       end
-      @member_to_for_imported_people = Date.new(year || Date.today.year, 12, 31)
+      @member_to_for_imported_people = Date.new(year || Time.zone.today.year, 12, 31)
     end
     
     Person.transaction do

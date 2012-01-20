@@ -1,6 +1,6 @@
 # Homepage
 class HomeController < ApplicationController
-  caches_page :index
+  caches_page :index, :if => Proc.new { |c| !mobile_request? }
 
   # Show homepage
   # === Assigns
@@ -9,7 +9,7 @@ class HomeController < ApplicationController
   def index
     @upcoming_events = UpcomingEvents.find_all(:weeks => RacingAssociation.current.weeks_of_upcoming_events)
 
-    cutoff = Date.today - RacingAssociation.current.weeks_of_recent_results * 7
+    cutoff = Time.zone.today - RacingAssociation.current.weeks_of_recent_results * 7
     
     @recent_results = Event.all(
       :select => "DISTINCT(events.id), events.name, events.parent_id, events.date, events.sanctioned_by",

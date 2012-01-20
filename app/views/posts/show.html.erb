@@ -1,6 +1,18 @@
-<% @page_title = "Mailing Lists: #{@post.mailing_list.friendly_name}" %>
+<% @page_title = "#{@post.mailing_list.friendly_name}: #{truncate(@post.subject)}" %>
 
-<%= post_navigation(@post) %>
+<div class="pagination">
+  <% if @post.lower_item %>
+  <%= link_to "&#8592; Previous".html_safe, post_path(@post.lower_item), :class => "previous_page", :rel => "previous" %>
+  <% else %>
+  <span class="previous_page disabled">&#8592; Previous</span>
+  <% end %>
+  | <%= link_to @post.mailing_list.friendly_name, mailing_list_posts_path(@post.mailing_list, :page => params[:page] ) %> |
+  <% if @post.higher_item %>
+  <%= link_to "Next &#8594;".html_safe, post_path(@post.higher_item), :class => "next_page", :rel => "next" %>
+  <% else %>
+  <span class="next_page">Next &#8594;</span>
+  <% end %>
+</div>
 
 <%= labelled_text :post, :subject, nil, h(@post.subject) %><br/>
 <%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %><br/>

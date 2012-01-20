@@ -1,0 +1,38 @@
+<!DOCTYPE html> 
+<html> 
+  <head> 
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title><%= @page_title || RacingAssociation.current.short_name %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+    <%= stylesheet_link_tag "mobile/application" %>
+  </head> 
+
+  <body> 
+    <div data-role="page">
+      <div data-role="header" data-position="inline">
+        <% unless current_page?(root_path) %>
+        <%= link_to "Back", @back_path || root_path, "data-icon" => "arrow-l", "data-iconpos" => "notext", "data-direction" => "reverse", "data-shadow" => "false" %>
+        <% end %>
+        <h1><%= @page_title || RacingAssociation.current.short_name %></h1>
+        <% unless current_page?(root_path) %>
+        <%= link_to "Home", root_path, "data-icon" => "home", "data-iconpos" => "notext", "data-direction" => "reverse", "data-shadow" => "false" %>
+        <% end %>
+      </div>
+
+      <div data-role="content"> 
+        <%= yield %>    
+      </div>
+      
+      <div data-role="footer">
+        <div data-role="controlgroup" data-type="horizontal">
+        <%= link_to "Full", url_for(:full_site => 1), "data-role" => "button", "rel" => "external" %><%= link_to "Mobile", url_for(:mobile_site => 1), "data-role" => "button" %>
+        </div>
+      </div>
+    </div>
+
+    <%= render :partial => "shared/google" %>
+  </body>
+</html>

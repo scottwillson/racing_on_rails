@@ -1,106 +1,138 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
-class PublicPagesTest < WebDriverTestCase
+class PublicPagesTest < AcceptanceTest
   def test_popular_pages
-    open "/"
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, :name => "Time Trial")
 
-    open "/schedule"
-    assert_page_source(/Schedule|Calendar/)
+    promoter = FactoryGirl.create(:person, :name => "Brad Ross", :home_phone => "(503) 555-1212")
+    event = FactoryGirl.create(:event, :promoter => promoter)
+    FactoryGirl.create(:result, :event => event)
 
-    open "/schedule/list"
-    assert_page_source(/Schedule|Calendar/)
+    alice = FactoryGirl.create(:person, :name => "Alice Pennington")
+    FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => Time.zone.local(2004).end_of_year.to_date).
+      races.create!(:category => FactoryGirl.create(:category, :name => "Senior Women 1/2/3")).
+      results.create!(:place => "2", :person => alice)
+    
+    event = FactoryGirl.create(:event, :name => "Jack Frost", :date => Time.zone.local(2002, 1, 17), :discipline => "Time Trial")
+    event.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Women")).results.create!(:place => "1", :person => alice)
+    weaver = FactoryGirl.create(:person, :name => "Ryan Weaver")
+    event.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men")).results.create!(:place => "2", :person => weaver)
+    
+    FactoryGirl.create(:team, :name => "Gentle Lovers")
+    FactoryGirl.create(:team, :name => "Vanilla")
 
-    open "/schedule/cyclocross"
-    assert_page_source(/Schedule|Calendar/)
+    visit "/"
+    assert_page_has_content("Schedule")
+    assert_page_has_content("Results")
 
-    open "/schedule/list/cyclocross"
-    assert_page_source(/Schedule|Calendar/)
+    visit "/schedule"
+    page.driver.browser.navigate.refresh
+    assert_page_has_content("January")
+    assert_page_has_content("December")
 
-    open "/results"
-    assert_page_source(/Events|Results/)
-    assert_page_source Date.today.year
+    visit "/schedule/list"
+    assert_page_has_content("Brad Ross")
+    assert_page_has_content("(503) 555-1212")
 
-    open "/results/2004/road"
-    assert_page_source "Kings Valley"
+    visit "/schedule/cyclocross"
+    assert_page_has_content("Schedule")
 
-    click :link_text => "Kings Valley Road Race"
-    assert_page_source "Kings Valley Road Race"
-    assert_page_source "December 31, 2004"
-    assert_page_source "Senior Women 1/2/3"
+    visit "/schedule/list/cyclocross"
+    assert_page_has_content("Schedule")
 
-    unless find_elements(:link_text => "Pennington").any?
-      click :link_text => "Senior Women 1/2/3"
+    visit "/results"
+    assert_page_has_content("Schedule")
+    assert_page_has_content Time.zone.today.year.to_s
+
+    visit "/results/2004/road"
+    assert_page_has_content "Kings Valley"
+
+    click_link "Kings Valley Road Race"
+    assert_page_has_content "Kings Valley Road Race"
+    assert_page_has_content "December 31, 2004"
+    assert_page_has_content "Senior Women 1/2/3"
+
+    unless page.has_content?("Pennington")
+      click_link "Senior Women 1/2/3"
     end
-    wait_for_element :link_text => "Pennington"
-    wait_for_displayed :link_text => "Pennington"
-    click :link_text => "Pennington"
-    wait_for_current_url(/people/)
-    wait_for_element "person_results"
+    click_link "Pennington"
     assert_table "person_results_table", 1, 0, "2"
     assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
     assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
- 
-    open "/people/#{people(:alice).to_param}/2002"
-    find_element(:link_text => "Jack Frost").click
-    assert_page_source "Jack Frost"
-    assert_page_source "January 17, 2002"
-    assert_page_source "Weaver"
-    assert_page_source "Pennington"
 
-    open "/ironman"
-    assert_page_source "Ironman"
+    visit "/people/#{alice.to_param}/2002"
+    click_link "Jack Frost"
+    assert_page_has_content "Jack Frost"
+    assert_page_has_content "January 17, 2002"
+    assert_page_has_content "Weaver"
+    assert_page_has_content "Pennington"
 
-    open "/people"
-    assert_not_in_page_source "Molly"
+    visit "/ironman"
+    assert_page_has_content "Ironman"
+
+    visit "/people"
+    assert_page_has_no_content "Pennington"
+    assert_page_has_no_content "Weaver"
     
-    type "Molly", :name => "name"
-    type :enter, :name => "name"
+    fill_in "name", :with => "Penn"
 
-    open "/rider_rankings"
-    assert_page_source "No results for #{Date.today.year}"
+    visit "/rider_rankings"
+    assert_page_has_content "No results for #{Time.zone.today.year}"
 
-    open "/cat4_womens_race_series"
-    assert_page_source "No results for #{Date.today.year}"
+    visit "/cat4_womens_race_series"
+    assert_page_has_content "No results for #{Time.zone.today.year}"
 
-    open "/oregon_cup"
-    assert_page_source "Oregon Cup"
+    visit "/oregon_cup"
+    assert_page_has_content "Oregon Cup"
 
-    open "/teams"
-    assert_page_source "Teams"
-    assert_page_source "Vanilla"
+    visit "/teams"
+    assert_page_has_content "Teams"
+    assert_page_has_content "Vanilla"
 
-    open "/teams/#{Team.find_by_name('Vanilla').id}"
-    assert_page_source "Vanilla"
+    visit "/teams/#{Team.find_by_name('Vanilla').id}"
+    assert_page_has_content "Vanilla"
 
-    open "/teams/#{Team.find_by_name('Vanilla').id}/2004"
+    visit "/teams/#{Team.find_by_name('Vanilla').id}/2004"
 
-    open "/track"
+    visit "/track"
 
-    open "/track/schedule"
+    visit "/track/schedule"
+  end
+  
+  def test_people
+    FactoryGirl.create(:person, :name => "Alice Pennington")
+    visit "/people"
+    assert_page_has_no_content "Pennington"
+    assert_page_has_no_content "Weaver"
+
+    fill_in "name", :with => "Penn"
+    find_field("name").native.send_keys(:enter)
+    assert_page_has_content "Pennington"      
   end
   
   def test_bar
+    FactoryGirl.create(:discipline, :name => "Overall")
+    FactoryGirl.create(:discipline, :name => "Age Graded")
     AgeGradedBar.calculate!
     AgeGradedBar.calculate!(2009)
     
-    open "/bar"
-    assert_page_source "BAR"
-    assert_page_source "Oregon Best All-Around Rider"
+    visit "/bar"
+    assert_page_has_content "BAR"
+    assert_page_has_content "Oregon Best All-Around Rider"
   
-    open "/bar/2009"
-    assert_title(/BAR/)
+    visit "/bar/2009"
+    page.has_css?("title", :text => /BAR/)
   
-    click :link_text => "Age Graded"
-    wait_for_current_url(/\/bar\/2009\/age_graded/)
-    assert_page_source "Masters Men 30-34"
+    click_link "Age Graded"
+    assert_page_has_content "Masters Men 30-34"
   
-    open "/bar/#{Date.today.year}"
-    assert_page_source "Overall"
+    visit "/bar/#{Time.zone.today.year}"
+    assert_page_has_content "Overall"
   
-    click :link_text => "Age Graded"
-    wait_for_current_url(/age_graded/)
-    assert_title(/Age Graded/)
-    assert_title(/#{Date.today.year}/)
+    click_link "Age Graded"
+    page.has_css?("title", :text => /Age Graded/)
   end
 end

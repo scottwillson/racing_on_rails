@@ -2,6 +2,12 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class LoginTest < ActionController::IntegrationTest
+  def setup
+    super
+    @administrator = FactoryGirl.create(:administrator)
+    @member = FactoryGirl.create(:person_with_login, :login => "bob.jones")
+  end
+  
   if RacingAssociation.current.ssl?
     # logged-in?, person_id?, same person?, admin?
     def test_member_account
@@ -13,16 +19,16 @@ class LoginTest < ActionController::IntegrationTest
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
       assert_redirected_to "https://www.example.com/account"
       follow_redirect!
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       get "/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
-      get "/people/#{people(:member).id}/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      get "/people/#{@member.id}/account"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       get "/people/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       another_member = Person.create!.id
       get "/people/#{another_member}/account"
@@ -35,22 +41,22 @@ class LoginTest < ActionController::IntegrationTest
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to "https://www.example.com/account"
       follow_redirect!
-      assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
 
-      get "/people/#{people(:member).id}/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      get "/people/#{@member.id}/account"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       get "/people/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
 
       get "/people/#{another_member}/account"
       assert_redirected_to "https://www.example.com/people/#{another_member}/edit"
 
-      get "/people/#{people(:administrator).id}/account"
-      assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"
+      get "/people/#{@administrator.id}/account"
+      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"
       
-      put "/people/#{people(:administrator).id}"
-      assert_redirected_to "https://www.example.com/people/#{people(:administrator).id}/edit"      
+      put "/people/#{@administrator.id}"
+      assert_redirected_to "https://www.example.com/people/#{@administrator.id}/edit"      
     end
 
     def test_redirect_from_old_paths
@@ -71,7 +77,7 @@ class LoginTest < ActionController::IntegrationTest
       get "/login"
 
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       get "/login"
     end
@@ -84,7 +90,7 @@ class LoginTest < ActionController::IntegrationTest
       get "/login"
 
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
-      assert_redirected_to "https://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "https://www.example.com/people/#{@member.id}/edit"
 
       get "/login"
     end
@@ -111,12 +117,12 @@ class LoginTest < ActionController::IntegrationTest
     def test_valid_member_login
       go_to_login
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
-      assert_redirected_to edit_person_path(people(:member))
+      assert_redirected_to edit_person_path(@member)
     end
 
     def test_should_fail_cookie_login
       https!
-      PersonSession.create(people(:administrator))
+      PersonSession.create(@administrator)
       cookies["person_credentials"] = "invalid_auth_token"
       get '/admin/events'
       assert_redirected_to "/person_session/new"
@@ -148,16 +154,16 @@ class LoginTest < ActionController::IntegrationTest
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
       assert_redirected_to "http://www.example.com/account"
       follow_redirect!
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
       get "/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
-      get "/people/#{people(:member).id}/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      get "/people/#{@member.id}/account"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
       get "/people/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
       another_member = Person.create!.id
       get "/people/#{another_member}/account"
@@ -170,22 +176,22 @@ class LoginTest < ActionController::IntegrationTest
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to "http://www.example.com/account"
       follow_redirect!
-      assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"
 
-      get "/people/#{people(:member).id}/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      get "/people/#{@member.id}/account"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
       get "/people/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"
 
       get "/people/#{another_member}/account"
       assert_redirected_to "http://www.example.com/people/#{another_member}/edit"
 
-      get "/people/#{people(:administrator).id}/account"
-      assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"
+      get "/people/#{@administrator.id}/account"
+      assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"
       
-      put "/people/#{people(:administrator).id}"
-      assert_redirected_to "http://www.example.com/people/#{people(:administrator).id}/edit"      
+      put "/people/#{@administrator.id}"
+      assert_redirected_to "http://www.example.com/people/#{@administrator.id}/edit"      
     end
 
     def test_redirect_from_old_paths
@@ -201,7 +207,7 @@ class LoginTest < ActionController::IntegrationTest
       get "/login"
 
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
-      assert_redirected_to "http://www.example.com/people/#{people(:member).id}/edit"
+      assert_redirected_to "http://www.example.com/people/#{@member.id}/edit"
 
       get "/login"
     end
@@ -227,11 +233,11 @@ class LoginTest < ActionController::IntegrationTest
     def test_valid_member_login
       go_to_login
       login :person_session => { :login => 'bob.jones', :password => 'secret' }
-      assert_redirected_to edit_person_path(people(:member))
+      assert_redirected_to edit_person_path(@member)
     end
 
     def test_should_fail_cookie_login
-      PersonSession.create(people(:administrator))
+      PersonSession.create(@administrator)
       cookies["person_credentials"] = "invalid_auth_token"
       get '/admin/events'
       assert_redirected_to "/person_session/new"

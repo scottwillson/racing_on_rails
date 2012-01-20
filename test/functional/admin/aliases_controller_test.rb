@@ -11,14 +11,16 @@ class Admin::AliasesControllerTest < ActionController::TestCase
   end
 
   test "destroy person alias" do
-    person_alias = aliases(:erik_tonkin)
+    person = FactoryGirl.create(:person)
+    person_alias = person.aliases.create!(:name => "Alias")
     delete :destroy, :id => person_alias.to_param, :person_id => person_alias.person.to_param, :format => "js"
     assert_response :success
     assert !Alias.exists?(person_alias.id), "alias"
   end
 
   test "destroy team alias" do
-    team_alias = aliases(:vanilla_bicycles)
+    team = FactoryGirl.create(:team)
+    team_alias = team.aliases.create!(:name => "Alias")
     delete :destroy, :id => team_alias.to_param, :persoteam_id => team_alias.team.to_param, :format => "js"
     assert_response :success
     assert !Alias.exists?(team_alias.id), "alias"

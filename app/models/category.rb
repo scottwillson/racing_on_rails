@@ -7,9 +7,10 @@
 #
 # +friendly_param+ is used for friendly links on BAR pages. Example: senior_men
 class Category < ActiveRecord::Base
-  include Export::Categories
-
+  include Ages
   include Comparable
+  include Concerns::Category::FriendlyParam
+  include Export::Categories
 
   acts_as_list
   acts_as_tree
@@ -17,8 +18,7 @@ class Category < ActiveRecord::Base
   has_many :results
   has_many :races
   
-  before_validation { |record| record.friendly_param = record.to_friendly_param }
-  before_save { |record| (record.friendly_param = record.to_friendly_param) unless record.friendly_param }
+  before_validation :set_friendly_param
 
   validates_presence_of :name
   validates_presence_of :friendly_param
@@ -34,18 +34,6 @@ class Category < ActiveRecord::Base
      )
   end
   
-  def Category.find_by_friendly_param(param)
-    category_count = Category.count(:conditions => ['friendly_param = ?', param])
-    case category_count
-    when 0
-      nil
-    when 1
-      Category.first(:conditions => ['friendly_param = ?', param])
-    else
-      raise AmbiguousParamException, "#{category_count} occurrences of #{param}"
-    end
-  end
-  
   # Sr, Mst, Jr, Cat, Beg, Exp
   def Category.short_name(name)
     return name if name.blank?
@@ -58,32 +46,9 @@ class Category < ActiveRecord::Base
     end
   end
   
-  # Default to blank
-  def name
-    self[:name] || ''
-  end
-  
   # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
     Category.short_name name
-  end
-  
-  # Return Range
-  def ages
-    self.ages_begin..ages_end
-  end
-  
-  # Accepts an age Range like 10..18, or a String like 10-18
-  def ages=(value)
-    case value
-    when Range
-      self.ages_begin = value.begin
-      self.ages_end = value.end
-    else
-      age_split = value.strip.split('-')
-      self.ages_begin = age_split[0].to_i unless age_split[0].nil?
-      self.ages_end = age_split[1].to_i unless age_split[1].nil?
-    end
   end
   
   # All children and children childrens
@@ -97,7 +62,7 @@ class Category < ActiveRecord::Base
 
   # Compare by position, then by name
   def <=>(other)
-    return 0 if self[:id] and self[:id] == other[:id]
+    return 0 if self[:id] && self[:id] == other[:id]
     diff = (position <=> other.position)
     if diff == 0
       name <=> other.name
@@ -105,16 +70,8 @@ class Category < ActiveRecord::Base
       diff
     end
   end
-  
-  # Lowercase underscore
-  def to_friendly_param
-    name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
-  end
 
   def to_s
     "#<Category #{id} #{parent_id} #{position} #{name}>"
   end
-end
-
-class AmbiguousParamException < Exception
 end

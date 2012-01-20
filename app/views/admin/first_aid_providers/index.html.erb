@@ -8,7 +8,7 @@
   </div>
 <% end -%>
 
-<%= table :caption => "#{Date.today.year} First Aid", :class => "first_aid_providers", :id => :events, :collection => @events do %>
+<%= table :caption => "#{Time.zone.today.year} First Aid", :class => "first_aid_providers", :id => :events, :collection => @events do %>
   <tr>
     <%= th(:first_aid_provider, :title => "Provider", :class => "name", :sort_params => { :past_events => @past_events }) %>
     <%= th(:chief_referee, :title => "Chief Referee", :class => "name", :sort_params => { :past_events => @past_events }) %>

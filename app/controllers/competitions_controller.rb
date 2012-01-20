@@ -1,8 +1,8 @@
 class CompetitionsController < ApplicationController
-  caches_page :show
+  caches_page :show, :if => Proc.new { |c| !mobile_request? }
   
   def show
-    @year = params['year'] || Date.today.year.to_s
+    @year = params['year'] || Time.zone.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
 
     # Very explicit because we don't want to call something like 'eval' on a request parameter!

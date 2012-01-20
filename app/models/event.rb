@@ -41,8 +41,12 @@ class Event < ActiveRecord::Base
   before_save :set_promoter, :set_team
   after_initialize :set_defaults
 
-  validates_presence_of :name, :date
+  validates_presence_of :date, :name
+  
   validate :parent_is_not_self
+  
+  validate :inclusion_of_discipline
+  validate :inclusion_of_sanctioned_by
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
   has_many :children,
@@ -86,34 +90,21 @@ class Event < ActiveRecord::Base
   scope :editable_by, lambda { |person| 
     {:conditions => { :promoter_id => person.id } } unless person.administrator?
   }
-  scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   
+  scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
   scope :not_child, { :conditions => "parent_id is null" }
 
   attr_reader :new_promoter_name
   attr_reader :new_team_name
 
-  include Comparable
+  include Concerns::Event::Comparison
+  include Concerns::Event::Dates
+  include Concerns::Event::Names
   include Export::Events
-
-  # Return list of every year that has at least one event
-  def Event.find_all_years
-    years = [ RacingAssociation.current.effective_year ] +
-    connection.select_values(
-      "select distinct extract(year from date) from events"
-    ).map(&:to_i)
-    years = years.uniq.sort
-    
-    if years.size == 1
-      years
-    else
-      ((years.first)..(years.last)).to_a.reverse
-    end
-  end
   
   # Return [weekly_series, events] that have results
   # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-  def Event.find_all_with_results(year = Date.today.year, discipline = nil)
+  def Event.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
@@ -156,7 +147,7 @@ class Event < ActiveRecord::Base
     [ weekly_series, events, competitions ]
   end
 
-  def Event.find_all_bar_for_discipline(discipline, year = Date.today.year)
+  def Event.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
       discipline_names = [discipline]
@@ -171,14 +162,10 @@ class Event < ActiveRecord::Base
       ))
 
   end
-
-  def Event.friendly_class_name
-    name.underscore.humanize.titleize
-  end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
   # NumberIssuer: RacingAssociation.current.short_name
-  # Child events use their parent's values unless explicity override. And you cannot override
+  # Child events use their parent's values unless explicity overriden. And you cannot override
   # parent values by passing in blank or nil attributes to initialize, as there is
   # no way to differentiate missing values from nils or blanks.
   def set_defaults
@@ -203,24 +190,12 @@ class Event < ActiveRecord::Base
     1
   end
   
-  def default_date
-    if parent.present?
-      parent.date
-    else
-      Date.today
-    end
-  end
-  
   def default_discipline
     "Road"
   end
   
   def default_ironman
     1
-  end
-  
-  def default_name
-    "New Event #{self.date.strftime("%m-%d-%Y")}"
   end
   
   def default_state
@@ -373,44 +348,6 @@ class Event < ActiveRecord::Base
     competition_event_membership.points_factor = points
     competition_event_membership.save!
   end
-
-  # Format for schedule page primarily
-  def short_date
-    return '' unless date
-    prefix = ' ' if date.month < 10
-    suffix = ' ' if date.day < 10
-    "#{prefix}#{date.month}/#{date.day}#{suffix}"
-  end
-
-  # +date+
-  def start_date
-    date
-  end
-  
-  def start_date=(date)
-    self.date = date
-  end
-  
-  def end_date
-    if children.any?
-      children.sort.last.date
-    else
-      start_date
-    end
-  end
-  
-  def year
-    return nil unless date
-    date.year
-  end
-
-  def multiple_days?
-    end_date > start_date
-  end
-  
-  # Does nothing. Allows us to treat Events and MultiDayEvents the same.
-  def update_date
-  end
   
   def city_state
     if city.present?
@@ -445,9 +382,21 @@ class Event < ActiveRecord::Base
   end
 
   def discipline_id
-    Discipline[discipline].id if Discipline[discipline]
+    Discipline[discipline].try :id
   end
   
+  def inclusion_of_discipline
+    if discipline.present? && Discipline.names.present? && !Discipline.names.include?(discipline)
+      errors.add :discipline, "'#{discipline}' is not in #{Discipline.names.join(", ")}"
+    end
+  end
+  
+  def inclusion_of_sanctioned_by
+    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
+    end
+  end
+
   def promoter_name
     promoter.name if promoter
   end
@@ -486,48 +435,6 @@ class Event < ActiveRecord::Base
       self.team = Team.find_by_name_or_alias_or_create(new_team_name)
     elsif new_team_name == ""
       self.team = nil
-    end
-  end
-
-  def date_range_s(format = :short)
-    if format == :long
-      date.strftime('%m/%d/%Y')
-    else
-      "#{date.month}/#{date.day}"
-    end
-  end
-
-  def date_range_long_s
-    date.to_s :long_with_week_day
-  end
-  
-  # Parent's name. Own name if no parent
-  def parent_name
-    if parent.nil?
-      name
-    else
-      parent.name
-    end
-  end
-  
-  def name_with_date
-    "#{name} (#{short_date})"
-  end
-
-  def full_name_with_date
-    "#{full_name} (#{short_date.try :strip})"
-  end
-
-  # Try to intelligently combined parent name and child name for schedule pages
-  def full_name
-    if parent.nil?
-      name
-    elsif parent.full_name == name
-      name
-    elsif name[ parent.full_name ]
-      name
-    else
-      "#{parent.full_name}: #{name}"
     end
   end
 
@@ -599,67 +506,19 @@ class Event < ActiveRecord::Base
     type.nil? || %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries }.include?(type)
   end
   
-  def friendly_class_name
-    self.class.friendly_class_name
-  end
-  
-  def ==(other)
-    if self.equal?(other)
-      return true
-    end
-    
-    if other.nil? || !other || new_record? || other.new_record?
-      return false
-    end
-
-    id == other.id
-  end
-  
-  def eql?(other)
-    if self.equal?(other)
-      return true
-    end
-
-    if other.nil? || !other || new_record? || other.new_record?
-      return false
-    end
-
-    id == other.id
-  end
-  
-  def <=>(other)
-    return -1 if other.nil? || !other
-
-    if date 
-      if other.date
-        return date <=> other.date
-      else
-        return -1
-      end
-    elsif other.date
-      return 1
-    end 
-    
-    unless new_record? || other.new_record?
-      return id <=> other.id
-    end
-    
-    0
-  end
-  
   def inspect_debug
     puts("#{self.class.name.ljust(20)} #{self.date} #{self.name} #{self.discipline} #{self.id}")
-    self.races(true).each {|r| 
+    self.races(true).sort.each {|r| 
       puts("#{r.class.name.ljust(20)}   #{r.name}")
       r.results(true).sort.each {|result|
         puts("#{result.class.name.ljust(20)}      #{result.to_long_s}")
-        result.scores(true).each{|score|
+        result.scores(true).sort.each{|score|
           puts("#{score.class.name.ljust(20)}         #{score.source_result.place} #{score.source_result.race.event.name}  #{score.source_result.race.name} #{score.points}")
         }
       }
     }
     
-    self.children(true).each do |event|
+    self.children(true).sort.each do |event|
       event.inspect_debug
     end
     

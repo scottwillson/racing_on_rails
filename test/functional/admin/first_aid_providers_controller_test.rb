@@ -9,6 +9,7 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
   end
 
   def test_index
+    FactoryGirl.create(:event, :date => 3.days.from_now)
     get(:index)
     assert_response(:success)
     assert_template("admin/first_aid_providers/index")
@@ -39,16 +40,15 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
   end
   
   def test_non_official
-    login_as :member
+    login_as FactoryGirl.create(:person)
     get :index
     assert_redirected_to new_person_session_url(secure_redirect_options)
     assert_select ".in_place_editable", 0, "Should be read-only for officials"
   end
   
   def test_official
-    person = people(:member)
-    person.update_attribute :official, true
-    login_as :member
+    person = FactoryGirl.create(:person_with_login, :official => true)
+    login_as person
     get :index
     assert_response :success
   end

@@ -9,10 +9,17 @@ module Results
   # FIXME DNF's not handled correctly.
 
   # Most Test fixtures are in OBRA (not USAC) format. Force USAC format in ResultsFile to test logic shared by both formats.
-  class ResultsFileTest < ActiveSupport::TestCase
+  class ResultsFileTest < ActiveSupport::TestCase    
+    setup :setup_number_issuer
+
+    def setup_number_issuer
+      FactoryGirl.create(:discipline)
+      FactoryGirl.create(:number_issuer)      
+    end
+    
     def test_race?
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), SingleDayEvent.new)
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -30,7 +37,7 @@ module Results
     def test_race_usac
       RacingAssociation.current.usac_results_format = true
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       results_file.create_rows(book.worksheet(0))
 
       assert(results_file.race?(results_file.rows[0]), 'New race')
@@ -51,7 +58,7 @@ module Results
     end
     
     def test_create_columns
-      book = Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)
@@ -60,7 +67,7 @@ module Results
     
     def test_create_columns_usac
       RacingAssociation.current.usac_results_format = true
-      book = Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../files/results/tt_usac.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_usac.xls", __FILE__)), SingleDayEvent.new)
       column_indexes = results_file.create_columns(spreadsheet_row)
@@ -80,7 +87,7 @@ module Results
     end
   
     def test_import_excel
-      current_members = Person.all( :conditions => ["member_to >= ?", RacingAssociation.current.now])
+      current_members = Person.all( :conditions => ["member_to >= ?", Time.zone.now])
       event = SingleDayEvent.create!(:discipline => 'Road', :date => Date.new(2006, 1, 16))
       source_path = File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__)
       results_file = ResultsFile.new(File.new(source_path), event)
@@ -111,7 +118,7 @@ module Results
               if RacingAssociation.current.add_members_from_results? || current_members.include?(result.person)
                 assert(result.person.member?(race_date), "member? for race #{index} result #{result_index} #{result.name} #{result.person.member_from} #{result.person.member_to}")
                 assert_not_equal(
-                  Date.today, 
+                  Time.zone.today, 
                   result.person.member_from, 
                   "#{result.name} membership date should existing date or race date, but never today (#{result.person.member_from})")
               else
@@ -129,13 +136,16 @@ module Results
     end
 
     def test_import_time_trial_people_with_same_name
+      FactoryGirl.create(:discipline, :name => "Time Trial")
       bruce_109 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
-      association = number_issuers(:association)
-      bruce_109.race_numbers.create(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '109')
+      bruce_109.race_numbers.create(:year => Time.zone.today.year, :value => '109')
     
       bruce_1300 = Person.create!(:first_name => 'Bruce', :last_name => 'Carter')
-      bruce_1300.race_numbers.create!(:number_issuer => association, :discipline => Discipline[:road], :year => Date.today.year, :value => '1300')
+      bruce_1300.race_numbers.create!(:year => Time.zone.today.year, :value => '1300')
     
+      existing_weaver = FactoryGirl.create(:person, :name => "Ryan Weaver", :road_number => "341")
+      existing_matson = FactoryGirl.create(:person, :name => "Mark Matson", :road_number => "340")
+
       event = SingleDayEvent.create!(:discipline => 'Time Trial')
 
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt.xls", __FILE__)), event)
@@ -189,7 +199,6 @@ module Results
       assert_equal(scott_90.id, scott_400.id, "New people with different numbers should have same IDs")
 
       # Existing person, same name, different number
-      existing_weaver = people(:weaver)
       new_weaver = event.races.last.results.first.person
       assert_equal(existing_weaver.name, new_weaver.name, "Weavers with different numbers should have same name")
       assert_equal(existing_weaver, new_weaver, "Weavers with different numbers should be same people")
@@ -201,13 +210,13 @@ module Results
       assert_not_equal(kurt, alan, "Person with different names, same numbers should be different people")
 
       # Existing person, different name, same number
-      existing_matson = people(:matson)
       new_matson = event.races.first.results.first.person
       assert_not_equal(existing_matson, new_matson, "Person with different numbers should be different people")
     end
   
     # Expose bad regex defect
     def test_import_time_trial_with_hundreds
+      FactoryGirl.create(:discipline, :name => "Time Trial")
       event = SingleDayEvent.create!(:discipline => "Time Trial")
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/tt_hundreds.xls", __FILE__)), event)
       results_file.import
@@ -216,6 +225,7 @@ module Results
     end
   
     def test_import_2006_v2
+      FactoryGirl.create(:discipline, :name => "Circuit")
       expected_races = []
     
       paul_bourcier = Person.create!(:first_name => "Paul", :last_name => "Bourcier", :member => true)
@@ -301,13 +311,14 @@ module Results
       # w_1_2                 Y                           Y + results
       # Other combinations are invalid
 
-      event = SingleDayEvent.create!(:date => Date.today + 3)
+      event = SingleDayEvent.create!(:date => Time.zone.today + 3)
       pro_1_2_race = event.races.create! :category => Category.find_or_create_by_name("Pro 1/2")
       event.races.create! :category => Category.find_or_create_by_name("Cat 3")
       cat_4_race = event.races.create! :category => Category.find_or_create_by_name("Cat 4")
       event.races.create! :category => Category.find_or_create_by_name("Cat 5")
-    
-      pro_1_2_race.results.create! :place => 1, :person => people(:weaver)
+
+      weaver = FactoryGirl.create(:person)
+      pro_1_2_race.results.create! :place => 1, :person => weaver
     
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/small_event.xls", __FILE__)), event)
       results_file.import
@@ -395,16 +406,18 @@ module Results
   
     # File causes error -- just import to recreate
     def test_dh
+      FactoryGirl.create(:discipline, :name => "Downhill")
       event = SingleDayEvent.create(:discipline => 'Downhill')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/dh.xls", __FILE__)), event)
       results_file.import
     end
   
     def test_mtb
-      pro_semi_pro_men = categories(:pro_semi_pro_men)
+      FactoryGirl.create(:mtb_discipline)
+      pro_semi_pro_men = FactoryGirl.create(:category, :name => "Pro, Semi-Pro Men")
       pro_semi_pro_men.children.create(:name => 'Pro Men')
       pro_semi_pro_men.children.create(:name => 'Expert Men')
-      pro_expert_women = categories(:pro_expert_women)
+      pro_expert_women = FactoryGirl.create(:category, :name => "Pro, Expert Women")
       pro_expert_women.children.create(:name => 'Pro/Expert Women')
     
       event = SingleDayEvent.create!(:discipline => 'Mountain Bike')
@@ -415,6 +428,7 @@ module Results
     end
   
     def test_custom_columns
+      FactoryGirl.create(:discipline, :name => "Downhill")
       event = SingleDayEvent.create(:discipline => 'Downhill')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/custom_columns.xls", __FILE__)), event)
       results_file.import
@@ -422,6 +436,7 @@ module Results
     end
 
     def test_times
+      FactoryGirl.create(:discipline, :name => "Track")
       event = SingleDayEvent.create(:discipline => 'Track')
       results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/times.xls", __FILE__)), event)
       results_file.import

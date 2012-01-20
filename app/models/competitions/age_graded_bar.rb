@@ -50,9 +50,9 @@ class AgeGradedBar < Competition
     template_categories << Category.new(:name => "Junior Women 15-16", :ages => 15..16, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
     template_categories << Category.new(:name => "Junior Women 17-18", :ages => 17..18, :position => position = position.next, :parent => Category.new(:name => 'Junior Women'))
 
-    age_graded_categories = Discipline[:age_graded].bar_categories
+    age_graded_categories = Discipline.find_or_create_by_name("Age Graded").bar_categories
     categories = []
-    for template_category in template_categories
+    template_categories.each do |template_category|
       if Category.exists?(:name => template_category.parent.name)
         template_category.parent = Category.find_by_name(template_category.parent.name)
       else
@@ -88,7 +88,7 @@ class AgeGradedBar < Competition
   end
 
   def default_discipline
-    "AgeGraded"
+    "Age Graded"
   end
 
   def friendly_name

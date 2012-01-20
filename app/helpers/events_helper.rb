@@ -16,11 +16,13 @@ module EventsHelper
     end
   end
 
+  # FIXME Move to Event?
   def link_to_event_phone(event)
     return event.phone if event.phone.present?
     event.promoter.home_phone if event.promoter && event.promoter.home_phone.present?
   end
 
+  # FIXME move to event?
   # Only show link if flyer approved
   def public_link_to_flyer(event)
     return unless event && event.respond_to?(:flyer)

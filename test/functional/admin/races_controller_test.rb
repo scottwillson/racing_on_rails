@@ -9,7 +9,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
 
   def test_edit
-    kings_valley_3 = races(:kings_valley_3)
+    kings_valley_3 = FactoryGirl.create(:race)
     get(:edit, :id => kings_valley_3.to_param)
     assert_response(:success)
     assert_template("admin/races/edit")
@@ -18,8 +18,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_edit_own_race
-    login_as :promoter
-    race = races(:banana_belt_pro_1_2)
+    race = FactoryGirl.create(:race)
+    login_as race.promoter
     get :edit, :id => race.to_param
     assert_response :success
     assert_template "admin/races/edit"
@@ -27,29 +27,24 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_cannot_edit_someone_elses_race
-    login_as :member
-    race = races(:kings_valley_3)
+    race = FactoryGirl.create(:race)
+    login_as FactoryGirl.create(:person)
     get :edit, :id => race.to_param
     assert_redirected_to unauthorized_path
   end
   
   def test_update
-    race = races(:kings_valley_3)
+    race = FactoryGirl.create(:race)
     put :update, :id => race.to_param, :race => { :category_name => "Open", :event_id => race.event.to_param }
     assert_redirected_to edit_admin_race_path(race)
   end
 
   def test_create_result
-    race = races(:banana_belt_pro_1_2)
-    assert_equal(4, race.results.size, 'Results before insert')
-    tonkin_result = results(:tonkin_banana_belt)
-    weaver_result = results(:weaver_banana_belt)
-    matson_result = results(:matson_banana_belt)
-    molly_result = results(:molly_banana_belt)
-    assert_equal('1', tonkin_result.place, 'Tonkin place before insert')
-    assert_equal('2', weaver_result.place, 'Weaver place before insert')
-    assert_equal('3', matson_result.place, 'Matson place before insert')
-    assert_equal('16', molly_result.place, 'Molly place before insert')
+    race = FactoryGirl.create(:race)
+    tonkin_result = FactoryGirl.create(:result, :race => race, :place => "1")
+    weaver_result = FactoryGirl.create(:result, :race => race, :place => "2")
+    matson_result = FactoryGirl.create(:result, :race => race, :place => "3")
+    molly_result = FactoryGirl.create(:result, :race => race, :place => "16")
 
     post(:create_result, :id => race.id, :before_result_id => weaver_result.id)
     assert_response(:success)
@@ -136,7 +131,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_destroy_result
-    result_2 = results(:weaver_banana_belt)
+    result_2 = FactoryGirl.create(:result)
     race = result_2.race
     assert_not_nil(result_2, 'Result should exist in DB')
     
@@ -146,14 +141,14 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_destroy
-    kings_valley_women_2003 = races(:kings_valley_women_2003)
+    kings_valley_women_2003 = FactoryGirl.create(:race)
     delete(:destroy, :id => kings_valley_women_2003.id, :commit => 'Delete')
     assert_response(:success)
     assert_raise(ActiveRecord::RecordNotFound, 'kings_valley_women_2003 should have been destroyed') { Race.find(kings_valley_women_2003.id) }
   end
   
   def test_new
-    event = events(:kings_valley)
+    event = FactoryGirl.create(:event)
     get :new, :event_id => event.to_param
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -161,8 +156,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_new_as_promoter
-    login_as :promoter
-    event = events(:banana_belt_1)
+    event = FactoryGirl.create(:event)
+    login_as event.promoter
     get :new, :event_id => event.to_param
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -170,7 +165,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_create
-    event = events(:kings_valley)
+    event = FactoryGirl.create(:event)
     assert event.races.none? { |race| race.category_name == "Senior Women" }
     post :create, :race => { :category_name => "Senior Women", :event_id => event.to_param }
     assert_not_nil assigns(:race), "@race"
@@ -179,7 +174,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_invalid_create
-    event = events(:kings_valley)
+    event = FactoryGirl.create(:event)
     assert event.races.none? { |race| race.category_name == "Senior Women" }
     post :create, :race => { :category_name => "", :event_id => event.to_param }
     assert_not_nil assigns(:race), "@race"
@@ -188,7 +183,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
 
   def test_create_xhr
-    event = events(:kings_valley)
+    event = FactoryGirl.create(:event)
     xhr :post, :create, :event_id => event.to_param
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -198,8 +193,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
 
   def test_create_xhr_promoter
-    login_as :promoter
-    event = events(:banana_belt_1)
+    event = FactoryGirl.create(:event)
+    login_as event.promoter
     xhr :post, :create, :event_id => event.to_param
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -209,8 +204,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_admin_set_race_category_name
-    login_as :administrator
-    race = races(:banana_belt_pro_1_2)
+    race = FactoryGirl.create(:race)
     xhr :put, :update_attribute, :id => race.to_param, :value => "Fixed Gear", :name => "category_name"
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -218,8 +212,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_promoter_set_race_category_name
-    login_as :promoter
-    race = races(:banana_belt_pro_1_2)
+    race = FactoryGirl.create(:race)
+    login_as race.promoter
     xhr :put, :update_attribute, :id => race.to_param, :value => "Fixed Gear", :name => "category_name"
     assert_response :success
     assert_not_nil assigns(:race), "@race"
@@ -227,8 +221,8 @@ class Admin::RacesControllerTest < ActionController::TestCase
   end
   
   def test_propagate
-    login_as :promoter
-    event = events(:banana_belt_1)
+    event = FactoryGirl.create(:event)
+    login_as event.promoter
     xhr :post, :propagate, :event_id => event.to_param
     assert_response :success
     assert_template "admin/races/propagate", "template"

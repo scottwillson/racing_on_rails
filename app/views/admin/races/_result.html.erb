@@ -3,7 +3,7 @@
   <td><%= 
     if result.respond_to?(column) && !result.new_record?
       if column == "bar"
-        check_box_tag "result_#{result.id}_bar", "1", result.bar?, :class => "bar_check_box", "data-url" => url_for(:controller => "results", :action => "update_attribute", :id => result.to_param), 
+        check_box_tag "result_#{result.id}_bar", "1", result.bar?, :class => "bar_check_box", "data-url" => url_for(:controller => "results", :action => "update_attribute", :id => result.to_param) 
       else
         editable result, ResultColumn[column].display_method
       end

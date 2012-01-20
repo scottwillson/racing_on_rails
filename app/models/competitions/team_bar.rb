@@ -1,12 +1,10 @@
 # Sum all of Team's discipline BAR's results
 # team = source_result.team
 class TeamBar < Competition
+  include Concerns::Bar::Points
+
   after_create :set_parent
   
-  def point_schedule
-    [ 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
-  end
-
   # Find the source results from discipline BAR's competition results.
   # Could approach this a couple of other ways. This way trades SQL complexity for 
   # less duplicate code
@@ -26,8 +24,7 @@ class TeamBar < Competition
                 LEFT OUTER JOIN events as competition_events
                   ON competition_races.event_id = competition_events.id
                 where competition_events.type = 'Bar'
-                  and competition_events.date >= '#{date.year}-01-01'
-                  and competition_events.date <= '#{date.year}-12-31')
+                  and competition_events.date between'#{date.beginning_of_year}' and '#{date.end_of_year}')
               order by results.team_id}
     )
   end
@@ -41,20 +38,22 @@ class TeamBar < Competition
 
       teams = extract_teams_from(source_result)
       logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
-      for team in teams
+      teams.each do |team|
         if member?(team, source_result.date)
 
           if first_result_for_team?(source_result, competition_result)
             # Bit of a hack here, because we split tandem team results into two results,
             # we can't guarantee that results are in team-order.
             # So 'first result' really means 'not the same as last result'
-            competition_result = race.results.detect {|result| result.team == team}
-            competition_result = race.results.create(:team => team) if competition_result.nil?
+            competition_result = race.results.detect { |result| result.team == team }
+            competition_result = race.results.create!(:team => team) if competition_result.nil?
           end
 
-          score = competition_result.scores.create(
+          score = competition_result.scores.create!(
             :source_result => source_result, 
-            :competition_result => competition_result, 
+            :competition_result => competition_result,
+            # Points are divided twice. Once by the size of the team in the result,
+            # and then by the number of results with the same place 
             :points => points_for(source_result).to_f / teams.size
           )
         end
@@ -68,7 +67,7 @@ class TeamBar < Competition
   def extract_teams_from(source_result)
     return [] unless source_result.team
   
-    if source_result.race.category.name.include?('Tandem')
+    if source_result.race.category.name.include?("Tandem")
       teams = []
       team_names = source_result.team.name.split("/")
       teams << Team.find_by_name_or_alias_or_create(team_names.first)
@@ -77,30 +76,15 @@ class TeamBar < Competition
         teams << Team.find_by_name_or_alias_or_create(name)
       end
       teams
-    elsif source_result.team.name == 'Forza Jet Velo'
-      [ Team.find_or_create_by_name('Half Fast Velo') ]
+    elsif source_result.team.name == "Forza Jet Velo"
+      [ Team.find_or_create_by_name("Half Fast Velo") ]
     else
       [ source_result.team ]
     end
   end
 
-  def first_result_for_team?(source_result, competition_result)
-    competition_result.nil? || source_result.team != competition_result.team
-  end
-
-  # Apply points from point_schedule, and adjust for field size
-  def points_for(source_result, team_size = nil)
-    points = 0
-    Bar.benchmark('points_for') {
-      field_size = source_result.race.field_size
-
-      team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-      points = point_schedule[source_result.place.to_i] * source_result.race.bar_points / team_size.to_f
-      if source_result.race.bar_points == 1 and field_size >= 75
-        points = points * 1.5
-      end
-    }
-    points
+  def consider_team_size?
+    true
   end
   
   def set_parent

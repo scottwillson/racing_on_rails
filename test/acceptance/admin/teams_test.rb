@@ -1,22 +1,25 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class TeamsTest < WebDriverTestCase
+class TeamsTest < AcceptanceTest
   def test_edit
-    open '/teams'
+    kona = FactoryGirl.create(:team, :name => "Kona")
+    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
+    vanilla.aliases.create!(:name => "Vanilla Bicycles")
+    gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    gl.aliases.create!(:name => "Gentile Lovers")
+    FactoryGirl.create(:team, :name => "Chocolate")
+    dfl = FactoryGirl.create(:team, :name => "Team dFL")
+    visit '/teams'
 
-    gl_id = Team.find_by_name("Gentle Lovers").id
-    click :css => "a[href='/teams/#{gl_id}']"
+    find("a[href='/teams/#{gl.id}']").click
 
-    login_as :administrator
+    login_as FactoryGirl.create(:administrator)
 
-    open "/admin/teams"
-    assert_page_source "Enter part of a team's name"
-    type "e", "name"
-    submit "search_form"
-
-    assert_text "", "warn"
-    assert_text "", "notice"
+    visit "/admin/teams"
+    assert_page_has_content "Enter part of a team's name"
+    fill_in "name", :with => "e"
+    find_field("name").native.send_keys(:enter)
 
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
@@ -28,107 +31,104 @@ class TeamsTest < WebDriverTestCase
     assert_table "teams_table", 3, 2, ""
     assert_table("teams_table", 4, 2, /^Vanilla Bicycles/)
 
-    dfl_id = Team.find_by_name("Team dFL").id
-    vanilla_id = Team.find_by_name("Vanilla").id
-    assert_checked "team_member_#{dfl_id}"
-    assert_checked "team_member_#{vanilla_id}"
-    assert_checked "team_member_#{gl_id}"
+    assert has_checked_field?("team_member_#{dfl.id}")
+    assert has_checked_field?("team_member_#{vanilla.id}")
+    assert has_checked_field?("team_member_#{gl.id}")
+    uncheck "team_member_#{gl.id}"
+    visit "/admin/teams"
+    assert !has_checked_field?("team_member_#{gl.id}")
 
-    click "team_member_#{gl_id}"
-    sleep 1
-    refresh
-    wait_for_element "teams_table"
-    assert_not_checked "team_member_#{gl_id}"
+    click_link "show_#{dfl.id}"
+    assert_page_has_content "Team dFL"
 
-    click :css => "a[href='/teams/#{dfl_id}']"
-    assert_page_source "Team dFL"
+    visit '/admin/teams'
+    click_link "edit_#{vanilla.id}"
+    assert_page_has_content "Vanilla"
 
-    open '/admin/teams'
-    click "edit_#{vanilla_id}"
-    wait_for_element "team_name"
-    assert_page_source "Vanilla"
+    fill_in "team_name", :with => "SpeedVagen"
+    click_button "Save"
 
-    type "SpeedVagen", "team_name"
-    click "save"
-    sleep 1
-    wait_for_value "SpeedVagen", "team_name"
-
-    open "/admin/teams"
-    wait_for_element "name"
-    type "vagen", "name"
-    submit "search_form"
+    visit "/admin/teams"
+    fill_in "name", :with => "vagen"
+    find_field("name").native.send_keys(:enter)
 
     assert_table("teams_table", 1, 1, /^SpeedVagen/)
-    click "team_#{vanilla_id}_name"
-    wait_for_element :css => "form.editor_field input"
 
-    type "SpeedVagen-Vanilla", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
+    fill_in_inline "#team_#{vanilla.id}_name", :with => "Sacha's Team"
 
-    click "team_#{vanilla_id}_name"
-    wait_for_element :css => "form.editor_field input"
-
-    type "Sacha's Team", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
-
-    vanilla = Team.find(vanilla_id)
-    assert_equal "Sacha's Team", vanilla.name, "Should update team name after second inline edit"
+    begin
+      Timeout::timeout(10) do
+        until Team.find(vanilla.id).name == "Sacha's Team"
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Should update team name after second inline edit"
+    end
   end
   
   def test_drag_and_drop
-    login_as :administrator
+    kona = FactoryGirl.create(:team, :name => "Kona")
+    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
+    FactoryGirl.create(:team, :name => "Chocolate")
+    FactoryGirl.create(:team, :name => "Team dFL")
+    FactoryGirl.create(:team, :name => "Gentle Lovers")
 
-    open "/admin/teams"
-    type "a", "name"
-    submit "search_form"
+    login_as FactoryGirl.create(:administrator)
+
+    visit "/admin/teams"
+    fill_in "name", :with => "a"
+    find_field("name").native.send_keys(:enter)
     
-    kona_id = Team.find_by_name("Kona").id
-    vanilla_id = Team.find_by_name("Vanilla").id
-    drag_and_drop_on "team_#{kona_id}", "team_#{vanilla_id}_row"
-    wait_for_page_source "Merged Kona into Vanilla"
-    assert !Team.exists?(kona_id), "Kona should be merged"
-    assert Team.exists?(vanilla_id), "Vanilla still exists after merge"
+    find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
+    assert_page_has_content "Merged Kona into Vanilla"
+    assert !Team.exists?(kona.id), "Kona should be merged"
+    assert Team.exists?(vanilla.id), "Vanilla still exists after merge"
     
-    open "/admin/teams"
-    type "e", "name"
-    submit "search_form"
+    visit "/admin/teams"
+    fill_in "name", :with => "e"
+    find_field("name").native.send_keys(:enter)
 
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
     assert_table("teams_table", 3, 1, /^Team dFL/)
-    assert_table("teams_table", 4, 1, /^Vanilla/)
   end
   
   def test_merge_confirm
-    login_as :administrator
+    kona = FactoryGirl.create(:team, :name => "Kona")
+    vanilla = FactoryGirl.create(:team, :name => "Vanilla")
+    vanilla.aliases.create!(:name => "Vanilla Bicycles")
+    FactoryGirl.create(:team, :name => "Chocolate")
+    FactoryGirl.create(:team, :name => "Team dFL")
+    gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
 
-    open "/admin/teams"
-    type "e", "name"
-    submit "search_form"
+    login_as FactoryGirl.create(:administrator)
+
+    visit "/admin/teams"
+    fill_in "name", :with => "e"
+    find_field("name").native.send_keys(:enter)
     
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
     assert_table("teams_table", 3, 1, /^Team dFL/)
     assert_table("teams_table", 4, 1, /^Vanilla/)
-    
-    gl_id = Team.find_by_name("Gentle Lovers").id
-    vanilla_id = Team.find_by_name("Vanilla").id
+    assert_table("teams_table", 4, 2, /^Vanilla Bicycles/)
 
-    click "team_#{vanilla_id}_name"
-    wait_for_element :css => "form.editor_field input"
-
-    type "Gentle Lovers", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_displayed :css => "div.ui-dialog"
-    click :css => ".ui-dialog-buttonset button:first-child"
-    wait_for_not_displayed :css => "div.ui-dialog"
+    fill_in_inline "#team_#{vanilla.id}_name", :with => "Gentle Lovers"
+    click_button "Merge"
     
-    wait_for_page_source "Merged Vanilla into Gentle Lovers"
-    assert Team.exists?(gl_id), "Should not have merged Gentle Lovers"
-    assert !Team.exists?(vanilla_id), "Should have merged Vanilla"
-    gl = Team.find(gl_id)
-    assert gl.aliases.map(&:name).include?("Vanilla"), "Should add Vanilla alias"
+    assert Team.exists?(gl.id), "Should not have merged Gentle Lovers"
+
+    begin
+      Timeout::timeout(10) do
+        while Team.exists?(vanilla.id)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "Should have merged Vanilla"
+    end
+
+    assert gl.aliases(true).map(&:name).include?("Vanilla"), "Should add Vanilla alias"
   end
 end

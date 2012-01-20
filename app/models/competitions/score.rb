@@ -20,7 +20,11 @@ class Score < ActiveRecord::Base
   validates_numericality_of :points
   
   def discipline
-    self.competition_result.race.discipline
+    competition_result.race.discipline
+  end
+  
+  def source_discipline
+    source_result.try(:race).try(:discipline)
   end
   
   def source_event_date

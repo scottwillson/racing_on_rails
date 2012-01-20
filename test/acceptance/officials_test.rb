@@ -1,30 +1,34 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
-class OfficialsTest < WebDriverTestCase
+class OfficialsTest < AcceptanceTest
   def test_view_assignments
-    open "/admin/first_aid_providers"
-    assert_current_url %r{/person_session/new}
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Singlespeed")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:number_issuer)
 
-    open "/people"
-    assert_no_element "export_link"
+    visit "/admin/first_aid_providers"
+
+    visit "/people"
+    assert page.has_no_selector? "export_link"
     
-    login_as :administrator
-    member = people(:member)
-    open "/admin/people/#{member.id}/edit"
+    login_as FactoryGirl.create(:administrator)
+    member = FactoryGirl.create(:person_with_login)
+    visit "/admin/people/#{member.id}/edit"
     check "person_official"
-    click "save"
+    click_button "Save"
     
     logout
-    login_as :member
-    open "/admin/first_aid_providers"
-    assert_current_url %r{/admin/first_aid_providers}
+    login_as member
+    visit "/admin/first_aid_providers"
 
-    open "/people"
+    visit "/people"
     remove_download "scoring_sheet.xls"
-    click "export_link"
-    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
+    click_link "export_link"
     wait_for_download "scoring_sheet.xls"
-    assert_no_errors
   end
 end

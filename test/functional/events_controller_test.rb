@@ -8,37 +8,42 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   def test_index_with_person_id
-    get :index, :person_id => people(:promoter)
+    promoter = FactoryGirl.create(:promoter)
+    get :index, :person_id => promoter
     assert_response :success
     assert_select ".tabs", :count => 0
     assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 0
   end
   
   def test_index_with_person_id_promoter
-    PersonSession.create(people(:promoter))
-    
-    get :index, :person_id => people(:promoter)
-    assert_response :success
-    assert_select ".tabs"
-    assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 4
+    Timecop.freeze(Time.zone.local(2012, 1)) do
+      promoter = FactoryGirl.create(:promoter)
+      PersonSession.create(promoter)
+
+      use_ssl
+      get :index, :person_id => promoter
+      assert_response :success
+      assert_select ".tabs"
+      assert_select "a[href=?]", /.*\/admin\/events.*/
+    end
   end
 
   def test_index_as_xml
+    FactoryGirl.create(:race)
     get :index, :format => "xml"
     assert_response :success
     assert_equal "application/xml", @response.content_type
-    # FIXME Tell AthletesPath that the root element has changed from record to object
     [
-      "object > beginner-friendly",
-      "object > cancelled",
-      "object > city",
-      "object > discipline",
-      "object > id",
-      "object > name",
-      "object > parent-id",
-      "object > type",
-      "object > races",
-      "object > date",
+      "single-day-event > beginner-friendly",
+      "single-day-event > cancelled",
+      "single-day-event > city",
+      "single-day-event > discipline",
+      "single-day-event > id",
+      "single-day-event > name",
+      "single-day-event > parent-id",
+      "single-day-event > type",
+      "single-day-event > races",
+      "single-day-event > date",
       "races > race",
       "race > city",
       "race > distance",
@@ -59,12 +64,14 @@ class EventsControllerTest < ActionController::TestCase
   end
 
   def test_show_as_xml
-    get :show, :id => events(:banana_belt_series).id, :format => "xml"
+    banana_belt_series = FactoryGirl.create(:event)
+    get :show, :id => banana_belt_series.id, :format => "xml"
     assert_response :success
   end
 
   def test_show_as_json
-    get :show, :id => events(:banana_belt_series).id, :format => "json"
+    banana_belt_series = FactoryGirl.create(:event)
+    get :show, :id => banana_belt_series.id, :format => "json"
     assert_response :success
   end
 end

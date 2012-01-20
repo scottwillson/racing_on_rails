@@ -3,8 +3,7 @@
 <div class="column_grid_container top_margin">
 <%= error_messages_for :post %>
 
-  <%= form_for @post do |f| %>
-    <%= f.hidden_field(:mailing_list_id) %>
+  <%= form_for [ @mailing_list, @post ] do |f| %>
     <%= hidden_field_tag("reply_to_id", @reply_to.id) if @reply_to %>
 
     <div class="span-3">

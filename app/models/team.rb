@@ -9,7 +9,6 @@ class Team < ActiveRecord::Base
 
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
-  after_save :reset_old_name
   before_destroy :ensure_no_results
   
   validates_presence_of :name
@@ -70,23 +69,18 @@ class Team < ActiveRecord::Base
   
   def add_alias_for_old_name
     if !new_record? && 
-      @old_name.present? && 
+      name_was.present? && 
       name.present? && 
-      @old_name.casecmp(name) != 0 && 
-      !Alias.exists?(['name = ? and team_id = ?', @old_name, id]) &&
-      !Team.exists?(["name = ?", @old_name])
+      name_was.casecmp(name) != 0 && 
+      !Alias.exists?(['name = ? and team_id = ?', name_was, id]) &&
+      !Team.exists?(["name = ?", name_was])
 
-      new_alias = Alias.create!(:name => @old_name, :team => self)
+      new_alias = Alias.create!(:name => name_was, :team => self)
       unless new_alias.save
         logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
       end
       new_alias
     end
-  end
-  
-  # Otherwise, if we change name in memory more than once, @old_name will be out of date
-  def reset_old_name
-    @old_name = name
   end
   
   def has_alias?(alias_name)
@@ -145,12 +139,12 @@ class Team < ActiveRecord::Base
     end
   end
   
-  def member_in_year?(date = Date.today)
+  def member_in_year?(date = Time.zone.today)
     member
   end
   
   def name=(value)
-    @old_name = name unless @old_name
+    name_was = name unless name_was
     self[:name] = value
   end
   

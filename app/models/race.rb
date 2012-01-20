@@ -14,6 +14,7 @@ class Race < ActiveRecord::Base
   DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
   
   validates_presence_of :event, :category
+  validate :inclusion_of_sanctioned_by
 
   before_validation :find_associated_records
   
@@ -23,6 +24,7 @@ class Race < ActiveRecord::Base
   serialize :result_columns, Array
   serialize :custom_columns, Array
   belongs_to :event
+  has_one :promoter, :through => :event
   has_many :results, :dependent => :destroy
   
   # Defaults to Event's BAR points
@@ -100,6 +102,17 @@ class Race < ActiveRecord::Base
     end
   end
   
+  def sanctioned_by
+    self[:sanctioned_by] || event.try(:sanctioned_by) || RacingAssociation.current.default_sanctioned_by
+  end
+
+  # FIXME Extract to module. Shared by Event.
+  def inclusion_of_sanctioned_by
+    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
+    end
+  end
+
   def calculate_result_columns!
     self.result_columns = result_columns_or_default
     result_columns.delete_if do |result_column|
@@ -184,9 +197,7 @@ class Race < ActiveRecord::Base
   # Sort results by points, assign places
   # Save! each result after place is set
   def place_results_by_points(break_ties = true, ascending = true)
-    for result in results
-      result.calculate_points
-    end
+    results.each(&:calculate_points)
 
     results.sort! do |x, y| 
       x.compare_by_points(y)
@@ -196,7 +207,6 @@ class Race < ActiveRecord::Base
       results.reverse!
     end
 
-    previous_result = nil
     results.each_with_index do |result, index|
       if index == 0
         result.place = 1
@@ -243,25 +253,25 @@ class Race < ActiveRecord::Base
     non_members = false
     # if this is undeclared in environment.rb, assume this rule does not apply
     exempt_cats = RacingAssociation.current.exempt_team_categories
-     if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
-       return non_members
-     else
-       other_results_in_place = Result.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
-       other_results_in_place.each { |orip|
-          unless orip.person.nil?
-            if !orip.person.member?(result.date)
-             # might as well blank out this result while we're here, saves some future work
-             result.members_only_place = ''
-             result.update_attribute 'members_only_place', result.members_only_place
-             # could also use other_results_in_place.size if needed for calculations
-             non_members = true
-            end
+    if (exempt_cats.nil? || exempt_cats.include?(result.race.category.name))
+      return non_members
+    else
+      other_results_in_place = Result.all( :conditions => ["race_id = ? and place = ?", result.race.id, result.place])
+      other_results_in_place.each { |orip|
+        unless orip.person.nil?
+          if !orip.person.member?(result.date)
+            # might as well blank out this result while we're here, saves some future work
+            result.members_only_place = ''
+            result.update_attribute 'members_only_place', result.members_only_place
+            # could also use other_results_in_place.size if needed for calculations
+            non_members = true
           end
-       }
-       # still false if no others found, or all are members, or could not be determined (non-person)
-       non_members
-     end
-   end
+        end
+      }
+      # still false if no others found, or all are members, or could not be determined (non-person)
+      non_members
+    end
+  end
   
   def create_result_before(result_id)
     results.sort!
@@ -292,7 +302,6 @@ class Race < ActiveRecord::Base
   end
   
   def destroy_result(result)
-    place = result.place
     results.sort!
     start_index = results.index(result) + 1
     for index in start_index...(results.size)

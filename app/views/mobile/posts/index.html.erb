@@ -1,0 +1,17 @@
+<% @page_title = @mailing_list.friendly_name %>
+<% @back_path = mailing_lists_path %>
+
+<ul data-role="listview">
+<% @posts.each do |post| %>
+  <li class="post"><%= link_to post_path(post) do -%>
+    <h3><%= post.from_name.present? ? post.from_name : post.sender_obscured %></h3>
+    <p><strong><%= post.subject %></strong></p>
+    <p class="body"><%= truncate(post.body, :length => 100) %></p>
+    <p class="ui-li-aside"><strong><%= post.date.to_s :short %></strong></p>
+  <% end %></li>
+<% end %>
+</ul>
+
+<div data-role="controlgroup" data-type="horizontal" class="posts_pagination">
+<%= will_paginate @posts, :page_links => false %>
+</div>

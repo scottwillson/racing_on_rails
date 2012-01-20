@@ -20,15 +20,18 @@ class CascadeCrossOverall < Overall
   end
 
   def point_schedule
-    [0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-  end
-
-  # Apply points from point_schedule, and split across team
-  def points_for(source_result, team_size = nil)
-    point_schedule[source_result.place.to_i].to_f
+    [ 0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
   
   def minimum_events
     2
+  end
+  
+  def consider_team_size?
+    false
+  end
+
+  def consider_points_factor?
+    false
   end
 end

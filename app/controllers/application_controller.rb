@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_person_session, :current_person, :secure_redirect_options
 
   before_filter :clear_racing_association, :toggle_tabs
+  before_filter :set_mobile_preferences, :redirect_to_mobile_if_applicable, :prepend_view_path_if_mobile
 
   def self.expire_cache
     begin
@@ -62,10 +63,14 @@ class ApplicationController < ActionController::Base
     page_path.gsub!(/.html$/, "")
     page_path.gsub!(/index$/, "")
     page_path.gsub!(/\/$/, "")
+    
+    if mobile_request?
+      page_path = "mobile#{page_path}"
+    end
 
     @page = Page.find_by_path(page_path)
     if @page
-      return render(:inline => @page.body, :layout => true)
+      render(:inline => @page.body, :layout => true)
     end
   end
 
@@ -155,7 +160,7 @@ class ApplicationController < ActionController::Base
     unless require_current_person
       return false
     end
-
+    
     unless administrator? || official?
       session[:return_to] = request.fullpath
       flash[:notice] = "You must be an official or administrator to access this page"
@@ -240,5 +245,44 @@ class ApplicationController < ActionController::Base
   # Intent here is to redirect to non-SSL by default. Individual controllers may override with ssl_required_actions filter.
   def ssl_required?
     RacingAssociation.current.ssl? && (self.class.read_inheritable_attribute(:ssl_required_actions) || []).include?(action_name.to_sym)
+  end
+
+  private
+ 
+  def prepend_view_path_if_mobile
+    if mobile_request?
+      prepend_view_path "app/views/mobile"
+    end
+  end
+
+  def mobile_browser?
+    request.env["HTTP_USER_AGENT"] && request.env["HTTP_USER_AGENT"][/(iPhone|iPod|Android)/]
+  end
+  helper_method :mobile_browser?
+
+  def mobile_request?
+    request.subdomains.first == 'm'
+  end
+  helper_method :mobile_request?
+
+  def set_mobile_preferences
+    if params[:mobile_site]
+      cookies.delete(:prefer_full_site)
+    elsif params[:full_site]
+      cookies.permanent[:prefer_full_site] = 1
+      redirect_to_full_site if mobile_request?
+    end
+  end
+
+  def redirect_to_full_site
+    redirect_to request.protocol + request.host_with_port.gsub(/^m\./, '') +
+                request.fullpath and return
+  end
+
+  def redirect_to_mobile_if_applicable
+    unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser?
+      redirect_to request.protocol + "m." + request.host_with_port.gsub(/^www\./, '') +
+                  request.fullpath and return
+    end
   end
 end

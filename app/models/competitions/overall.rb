@@ -4,7 +4,11 @@ class Overall < Competition
  validates_presence_of :parent
  after_create :add_source_events
  
-  def Overall.calculate!(year = Date.today.year)
+ def self.parent_name
+   self.name
+ end
+
+  def self.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
         parent = MultiDayEvent.first(
@@ -48,7 +52,7 @@ class Overall < Competition
       event.id
     end
     event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(', ')
     
     Result.find_by_sql(
       %Q{ SELECT results.* FROM results  
@@ -103,36 +107,22 @@ class Overall < Competition
 
     end
   end
-
-  # By default, does nothing. Useful to apply rule like:
-  # * Any results after the first four only get 50-point bonus
-  # * Drop lowest-scoring result
-  def after_create_competition_results_for(race)
-    race.results.each do |result|
-      # Don't bother sorting scores unless we need to drop some
-      if result.scores.size > 6
-        result.scores.sort! { |x, y| y.points <=> x.points }
-        lowest_scores = result.scores[6, 2]
-        lowest_scores.each do |lowest_score|
-          result.scores.destroy(lowest_score)
-        end
-        # Rails destroys Score in database, but doesn't update the current association
-        result.scores(true)
-      end
-    
-      if preliminary?(result)
-        result.preliminary = true       
-      end    
-    end
-  end
   
   # Only members can score points?
   def members_only?
     false 
   end
+
+  def default_bar_points
+    0
+  end
   
   def minimum_events
     nil
+  end
+  
+  def maximum_events
+    6
   end
   
   def raced_minimum_events?(person, race)
@@ -140,7 +130,7 @@ class Overall < Competition
     return false if parent.children.empty? || person.nil?
 
     event_ids = parent.children.collect(&:id).join(", ")
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(", ")
 
     count = Result.count_by_sql(
       %Q{ SELECT count(*) FROM results  
@@ -161,26 +151,8 @@ class Overall < Competition
     !parent.completed? && 
     !raced_minimum_events?(result.person, result.race)
   end
-  
-  def date
-    if source_events.any?
-      source_events.sort.first.date
-    else
-      parent.start_date
-    end
-  end
 
-  # Same as +date+
-  def start_date
-    date
-  end
-  
-  # Last day of year for +date+
-  def end_date
-    if source_events.any?
-      source_events.sort.last.date
-    else
-      parent.end_date
-    end
+  def all_year?
+    false
   end
 end

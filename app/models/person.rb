@@ -23,6 +23,7 @@ class Person < ActiveRecord::Base
     config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
     config.validate_email_field false
     config.disable_perishable_token_maintenance true
+    config.maintain_sessions false
   end
 
   before_validation :find_associated_records
@@ -54,15 +55,9 @@ class Person < ActiveRecord::Base
 
   # Does not consider Aliases
   def Person.find_all_by_name(name)
-    if name.blank?
-      Person.all(
-        :conditions => ['first_name = ? and last_name = ?', '', ''],
-        :order => 'last_name, first_name')
-    else
-      Person.all(
-        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name],
-        :order => 'last_name, first_name')
-    end
+    Person.all(
+      :conditions => ["name = ?", name],
+      :order => 'last_name, first_name')
   end
   
   # "Jane Doe" or "Jane", "Doe" or :name => "Jane Doe" or :first_name => "Jane", :last_name => "Doe"
@@ -78,7 +73,7 @@ class Person < ActiveRecord::Base
     
     if name.present?
       return Person.all(
-        :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
+        :conditions => ["name = ?", name]
       ) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
       Person.all(
@@ -101,7 +96,7 @@ class Person < ActiveRecord::Base
     
     name_like = "%#{name.strip}%"
     Person.paginate(
-      :conditions => ["trim(concat_ws(' ', first_name, last_name)) like ? or aliases.name like ?", name_like, name_like],
+      :conditions => ["people.name like ? or aliases.name like ?", name_like, name_like],
       :include => :aliases,
       :limit => limit,
       :page => page,
@@ -122,7 +117,7 @@ class Person < ActiveRecord::Base
 
   def Person.find_by_name(name)
     Person.first(
-      :conditions => ["trim(concat_ws(' ', first_name, last_name)) = ?", name]
+      :conditions => ["name = ?", name]
     )
   end
   
@@ -136,21 +131,8 @@ class Person < ActiveRecord::Base
                :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
   end
 
-  # if/else to avoid strip
   def Person.full_name(first_name, last_name)
-    if first_name.present?
-      if last_name.present?
-        "#{first_name} #{last_name}"
-      else
-        first_name
-      end
-    else
-      if last_name.present?
-        last_name
-      else
-        ""
-      end
-    end
+    "#{first_name} #{last_name}".strip
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
@@ -178,7 +160,7 @@ class Person < ActiveRecord::Base
       LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id 
                       and ccx_numbers.number_issuer_id = #{association_number_issuer_id} 
                       and ccx_numbers.year = #{date.year} 
-                      and ccx_numbers.discipline_id = #{Discipline[:ccx].id}
+                      and ccx_numbers.discipline_id = #{Discipline[:cyclocross].id}
       LEFT OUTER JOIN race_numbers as dh_numbers ON dh_numbers.person_id = people.id 
                       and dh_numbers.number_issuer_id = #{association_number_issuer_id} 
                       and dh_numbers.year = #{date.year} 
@@ -247,11 +229,13 @@ class Person < ActiveRecord::Base
   end
   
   def people_with_same_name
-    logger.debug "people_with_same_name #{self.name}"
-    logger.debug "#{self[:first_name]} #{self[:last_name]}"
-    people = Person.find_all_by_name(self.name) | Alias.find_all_people_by_name(self.name)
-    people.reject! { |person| person == self }
-    people
+    if name.present?
+      people = Person.find_all_by_name(name) | Alias.find_all_people_by_name(name)
+      people.reject! { |person| person == self }
+      people
+    else
+      []
+    end
   end
   
   def people_name_sounds_like
@@ -259,7 +243,7 @@ class Person < ActiveRecord::Base
     
     Person.find(
       :all, 
-      :conditions => ["id != ? and soundex(trim(concat_ws(' ', first_name, last_name))) = soundex(?)", id, name.strip]
+      :conditions => ["id != ? and soundex(name) = soundex(?)", id, name.strip]
     ) +
     Person.all(:conditions => { :first_name => last_name, :last_name => first_name })
   end
@@ -336,10 +320,6 @@ class Person < ActiveRecord::Base
       name
     end
   end
-  
-  def name_was
-    @name_was ||= Person.full_name(first_name_was, last_name_was)
-  end
 
   # Cannot have promoters with duplicate contact information
   def unique_info
@@ -353,45 +333,45 @@ class Person < ActiveRecord::Base
   # TODO Handle name, Jr.
   # This looks too complicated …
   def name=(value)
-    @old_name = name unless @old_name
+    self[:name] = value
     if value.blank?
-      self.first_name = ''
-      self.last_name = ''
+      self[:first_name] = ''
+      self[:last_name] = ''
       return
     end
 
     if value.include?(',')
       parts = value.split(',')
       if parts.size > 0
-        self.last_name = parts[0].strip
+        self[:last_name] = parts[0].strip
         if parts.size > 1
-          self.first_name = parts[1..(parts.size - 1)].join
-          self.first_name.strip!
+          self[:first_name] = parts[1..(parts.size - 1)].join.strip
+          self[:last_name]
         end
       end
     else
       parts = value.split(' ')
       case parts.size
       when 0
-        self.first_name = ""
-        self.last_name = ""
+        self[:first_name] = ""
+        self[:last_name] = ""
       when 1
-        self.first_name = parts[0].strip
-        self.last_name = ""
+        self[:first_name] = parts[0].strip
+        self[:last_name] = ""
       else
-        self.first_name = parts[0].strip
-        self.last_name = parts[1..(parts.size - 1)].join(" ").strip
+        self[:first_name] = parts[0].strip
+        self[:last_name] = parts[1..(parts.size - 1)].join(" ").strip
       end
     end
   end
   
   def first_name=(value)
-    @old_name = name unless @old_name
+    self[:name] = Person.full_name(value, last_name)
     self[:first_name] = value
   end
   
   def last_name=(value)
-    @old_name = name unless @old_name
+    self[:name] = Person.full_name(first_name, value)
     self[:last_name] = value
   end
 
@@ -559,18 +539,16 @@ class Person < ActiveRecord::Base
   def number(discipline_param, reload = false, year = nil)
     return nil if discipline_param.nil?
 
-    year = year || RacingAssociation.current.year
+    year ||= RacingAssociation.current.year
     if discipline_param.is_a?(Discipline)
       discipline_param = discipline_param.to_param
     end
     number = race_numbers(reload).detect do |race_number|
-      race_number.year == year && race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && race_number.number_issuer.name == RacingAssociation.current.short_name
+      race_number.year == year && 
+      race_number.discipline_id == RaceNumber.discipline_id(discipline_param) && 
+      race_number.number_issuer.name == RacingAssociation.current.short_name
     end
-    if number
-      number.value
-    else
-      nil
-    end
+    number.try :value
   end
   
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
@@ -674,7 +652,7 @@ class Person < ActiveRecord::Base
   end
 
   def promoter?
-    Event.exists?([ "promoter_id = ?", self.id ])
+    Event.exists?([ "promoter_id = ?", id ]) unless new_record?
   end
 
   # Is Person a current member of the bike racing association?
@@ -987,15 +965,15 @@ class Person < ActiveRecord::Base
   
   def add_alias_for_old_name
     if !new_record? &&
-       !@old_name.blank? && 
-       !name.blank? && 
-       @old_name.casecmp(name) != 0 && 
-       !Alias.exists?(['name = ? and person_id = ?', @old_name, id]) && 
-       !Person.exists?(["trim(concat_ws(' ', first_name, last_name)) = ?", @old_name])
+       name_was.present? && 
+       name.present? && 
+       name_was.casecmp(name) != 0 && 
+       !Alias.exists?(['name = ? and person_id = ?', name_was, id]) && 
+       !Person.exists?(["name = ?", name_was])
       
-      new_alias = Alias.new(:name => @old_name, :person => self)
+      new_alias = Alias.new(:name => name_was, :person => self)
       unless new_alias.save
-        logger.error("Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}")
+        logger.error "Could not save alias #{new_alias}: #{new_alias.errors.full_messages.join(", ")}"
       end
       new_alias
     end

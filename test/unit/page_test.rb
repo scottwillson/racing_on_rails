@@ -4,8 +4,6 @@ require File.expand_path("../../test_helper", __FILE__)
 class PageTest < ActiveSupport::TestCase
   test "create" do
     page = Page.create!(:title => "Simple", :body => "This is a simple page")
-    assert_equal("Simple", page.title, "title")
-    assert_equal("This is a simple page", page.body, "body")
     assert_equal("simple", page.path, "path")
     assert_equal("simple", page.slug, "slug")
   end
@@ -31,9 +29,10 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "depth" do
-    assert_equal(0, pages(:plain).depth, "depth")
+    page = FactoryGirl.create(:page)
+    assert_equal(0, page.depth, "depth")
   
-    child = pages(:plain).children.create!(:body => "<h2>Child</h2>", :title => "Child")
+    child = page.children.create!(:body => "<h2>Child</h2>", :title => "Child")
     assert_equal(1, child.depth, "depth")
   
     child_child = child.children.create!(:body => "<h2>Child</h2>", :title => "Child")
@@ -41,25 +40,27 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "updated_by" do
-    Person.current = people(:administrator)
+    administrator = FactoryGirl.create(:administrator)
+    Person.current = administrator
     page = Page.create!(:body => "<h1>Welcome</h1>", :title => "")
     page.versions(true)
-    assert_equal(people(:administrator), page.last_updated_by, "updated_by")
+    assert_equal(administrator, page.last_updated_by, "updated_by")
   end
   
   test "Root page valid_parents" do
-    assert_equal([], pages(:plain).valid_parents, "valid_parents")
+    page = FactoryGirl.create(:page)
+    assert_equal([], page.valid_parents, "valid_parents")
   end
   
   test "Parent-child pages valid_parents" do
-    parent = pages(:plain)
+    parent = FactoryGirl.create(:page)
     child = parent.children.create!(:title => "child")
     assert_equal([], parent.valid_parents, "parent valid_parents")
     assert_equal([parent], child.valid_parents, "child valid_parents")
   end
   
   test "Many roots valid_parents" do
-    parent = pages(:plain)
+    parent = FactoryGirl.create(:page)
     child = parent.children.create!(:title => "child")
     another_root = Page.create!(:title => "Another root")
     
@@ -69,7 +70,7 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "Do not update path or slug when title changes" do
-    page = pages(:plain)
+    page = FactoryGirl.create(:page)
     page.title = "Super Fun"
     page.save!
     assert_equal("plain", page.path, "title")
@@ -83,8 +84,8 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "Versions updated on create and save" do
-    parent = pages(:plain)
-    admin = people(:administrator)
+    parent = FactoryGirl.create(:page)
+    admin = FactoryGirl.create(:administrator)
     Person.current = admin
     page = parent.children.create!(:title => "New Page", :body => "Original content")
     
@@ -117,8 +118,8 @@ class PageTest < ActiveSupport::TestCase
   end
   
   test "Versions updated on update_attributes" do
-    parent = pages(:plain)
-    admin = people(:administrator)
+    parent = FactoryGirl.create(:page)
+    admin = FactoryGirl.create(:administrator)
     Person.current = admin
     page = parent.children.create!(:title => "New Page", :body => "Original content")
   
@@ -145,12 +146,13 @@ class PageTest < ActiveSupport::TestCase
   end
   
   def test_update_updated_at_if_child_changes
-    parent = pages(:plain)
+    parent = FactoryGirl.create(:page)
     updated_at = parent.updated_at
     
     child = nil
     Timecop.freeze(Time.zone.now.tomorrow) do
-      Person.current = people(:administrator)
+      admin = FactoryGirl.create(:administrator)
+      Person.current = admin
       child = parent.children.create!(:title => "New Page", :body => "Original content")
       assert_equal(0, parent.versions.size, "versions")
       assert parent.reload.updated_at > updated_at, "New child should updated updated_at"

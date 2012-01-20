@@ -8,40 +8,6 @@ class CombinedTimeTrialResults < Event
   validates_uniqueness_of :parent_id, :message => "Event can only have one CombinedTimeTrialResults"
   validate { |combined_results| combined_results.combined_results.nil? }
 
-  def default_bar_points
-    0
-  end
-
-  def default_discipline
-    "Time Trial"
-  end
-
-  def default_ironman
-    false
-  end
-
-  def default_name
-    "Combined"
-  end
-
-  def enable_notification!
-    false
-  end
-
-  def disable_notification!
-    false
-  end
-
-  def set_mandatory_defaults
-    self.bar_points = default_bar_points
-    self.discipline = default_discipline
-    self.ironman = default_ironman
-    self.name = default_name
-    self.auto_combined_results = false
-    self.notification = false
-    true
-  end
-
   def self.create_or_destroy_for!(event)
     return event.combined_results unless event.notification_enabled?
     event.disable_notification!
@@ -79,6 +45,40 @@ class CombinedTimeTrialResults < Event
 
   def self.create_combined_results(event)
     event.create_combined_results unless event.combined_results
+  end
+
+  def default_bar_points
+    0
+  end
+
+  def default_discipline
+    "Time Trial"
+  end
+
+  def default_ironman
+    false
+  end
+
+  def default_name
+    "Combined"
+  end
+
+  def enable_notification!
+    false
+  end
+
+  def disable_notification!
+    false
+  end
+
+  def set_mandatory_defaults
+    self.bar_points = default_bar_points
+    self.discipline = default_discipline
+    self.ironman = default_ironman
+    self.name = default_name
+    self.auto_combined_results = false
+    self.notification = false
+    true
   end
 
   def calculate!

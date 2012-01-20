@@ -3,7 +3,7 @@
 <%= table :insert_header => true, :columns => 11 do %>
   <% @mailing_lists.each do |mailing_list| %>
   <tr valign="top">
-    <td style="padding-right: 12px;"><b><a href="/mailman/listinfo/<%= mailing_list.name %>"><%= mailing_list.friendly_name %></a><b></td>
+    <td style="padding-right: 12px;"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %><b></td>
     <td width="300" style="padding-right: 16px;"><%= mailing_list.description %></td>
     <%= render("links", :mailing_list => mailing_list) %>
   </tr>

@@ -35,7 +35,7 @@ RacingOnRails::Application.routes.draw do
       end
     end
     resources :first_aid_providers
-    resources :mailing_list do
+    resources :mailing_lists do
       resources :posts do
         collection do
           post :receive
@@ -150,15 +150,16 @@ RacingOnRails::Application.routes.draw do
     resources :people do
       resources :results
     end
+    resources :races
     resources :teams do
       resources :results
     end
   end
 
+  resources :races
   match '/rider_rankings/:year' => 'competitions#show', :as => :rider_rankings, :type => 'rider_rankings', :constraints => { :year => /\d{4}/ }
   match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
   match '/ironman(/:year)' => 'ironman#index', :as => :ironman
-  match '/mailing_lists' => 'mailing_lists#index', :as => :mailing_lists
 
   resources :update_requests do
     member do
@@ -171,20 +172,14 @@ RacingOnRails::Application.routes.draw do
   match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
   match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
   resources :password_resets
-  match '/posts/:mailing_list_name/new/:reply_to_id' => 'posts#new'
-  match '/posts/:mailing_list_name/new' => 'posts#new'
-  match '/posts/new/:mailing_list_name' => 'posts#new'
-  match '/posts/:mailing_list_name/show/:id' => 'posts#show'
-  match '/posts/show/:mailing_list_name/:id' => 'posts#show'
-  match '/posts/show' => 'posts#show'
-  match '/posts/:mailing_list_name/post' => 'posts#post'
-  match '/posts/:mailing_list_name/confirm' => 'posts#confirm'
-  match '/posts/:mailing_list_name/confirm_private_reply' => 'posts#confirm_private_reply'
-  match '/posts/:mailing_list_name/:year/:month' => 'posts#list'
-  match '/posts/:mailing_list_name' => 'posts#index'
-  resources :posts do
-    get :list, :on => :collection
+
+  resources :mailing_lists do
+    get :confirm
+    get :confirm_private_reply
+    resources :posts
   end
+
+  resources :posts
 
   match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }
   match '/people/:person_id/:year' => 'results#person', :constraints => { :person_id => /\d+/, :year => /\d\d\d\d/ }, :as => :person_results_year

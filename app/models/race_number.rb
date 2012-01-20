@@ -66,10 +66,14 @@ class RaceNumber < ActiveRecord::Base
       return true
     end
 
-    if RacingAssociation.current.rental_numbers.nil? || discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill] || number.strip[/^\d+$/].nil?
+    if discipline == Discipline[:mountain_bike] || discipline == Discipline[:downhill]
       return false
     end
-    
+
+    if number.strip[/^\d+$/].nil?
+      return false
+    end
+
     numeric_value = number.to_i    
     if RacingAssociation.current.rental_numbers.include?(numeric_value)
       return true
@@ -105,7 +109,7 @@ class RaceNumber < ActiveRecord::Base
   # OBRA rental numbers (11-99) are not valid
   def unique_number 
     _discipline = Discipline.find(self[:discipline_id])
-    if RaceNumber.rental?(self[:value], _discipline)
+    if number_issuer.association? && RaceNumber.rental?(self[:value], _discipline)
       errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       person.errors.add('value', "#{value} is a rental number. #{RacingAssociation.current.short_name} rental numbers: #{RacingAssociation.current.rental_numbers}")
       return false 

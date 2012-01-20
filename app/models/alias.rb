@@ -14,7 +14,7 @@ class Alias < ActiveRecord::Base
   
   def Alias.find_all_people_by_name(name)
     aliases = Alias.all( 
-      :conditions => ['name = ? and person_id is not null', name],
+      :conditions => ['aliases.name = ? and person_id is not null', name],
       :include => :person
     )
     aliases.collect do |person_alias|
@@ -33,7 +33,7 @@ class Alias < ActiveRecord::Base
   end
   
   def person_or_team
-    unless (person and !team) or (!person and team)
+    unless (person && !team) || (!person && team)
       errors.add "person or team", "Must have exactly one person or team"
     end
   end
@@ -46,13 +46,13 @@ class Alias < ActiveRecord::Base
   private
   
   def cannot_shadow_person
-    if Person.exists?(["trim(concat(first_name, ' ', last_name)) = ?", name])
+    if person_id && Person.exists?(["name = ?", name])
       errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
     end
   end
   
   def cannot_shadow_team
-    if Team.exists?(['name = ?', name])
+    if team_id && Team.exists?(['name = ?', name])
       errors.add('name', "Team named '#{name}' already exists. Cannot create alias that shadows a team's real name.")
     end
   end

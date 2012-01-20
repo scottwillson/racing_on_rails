@@ -3,7 +3,7 @@
   <td class="subject">
     <%= link_to h(truncate(post.subject, :length => 50)), edit_admin_mailing_list_post_path(post.mailing_list, post) %>
   </td>
-  <td class="sender"><%= mail_to post.sender, h(post.sender) %></td>
+  <td class="sender"><%= mail_to post.sender, post.sender %></td>
   <td class="right"><%= link_to "Delete", admin_mailing_list_post_path(post.mailing_list, post), :method => :delete, :class => "obvious", :id => "delete" %></td>
   <td class="last right"><%= link_to "Edit", edit_admin_mailing_list_post_path(post.mailing_list, post)%></td>
 </tr>

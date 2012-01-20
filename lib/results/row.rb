@@ -18,9 +18,9 @@ module Results
       index = column_indexes[column_symbol]
       if index
         case spreadsheet_row[index]
-        when Spreadsheet::Formula
+        when ::Spreadsheet::Formula
           value = spreadsheet_row[index].value
-        when Spreadsheet::Excel::Error
+        when ::Spreadsheet::Excel::Error
           value = nil
         else
           value = spreadsheet_row[index]
@@ -61,7 +61,7 @@ module Results
         value = self[:place]
       else
         value = spreadsheet_row[0]
-        value = spreadsheet_row[0].value if spreadsheet_row[0].is_a?(Spreadsheet::Formula)
+        value = spreadsheet_row[0].value if spreadsheet_row[0].is_a?(::Spreadsheet::Formula)
         value.strip! if value.respond_to?(:strip!)
       end
 

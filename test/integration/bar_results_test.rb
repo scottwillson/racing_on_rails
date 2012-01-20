@@ -5,7 +5,7 @@ class BarResultsTest < ActionController::IntegrationTest
 
   # make sure all discipline pages come up with defaults
   def test_all_disciplines_empty_results
-    year = Date.today.year
+    year = Time.zone.today.year
     for discipline in Discipline.find_all_bar
       get '/bar'
       assert_response(:success, '/bar')

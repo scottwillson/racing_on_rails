@@ -1,4 +1,8 @@
 RacingOnRails::Application.configure do
+  config.autoload_paths += %W( 
+    #{config.root}/lib/test
+  )
+  
   # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
@@ -32,4 +36,7 @@ RacingOnRails::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # For fastness. Change locally if you need debug logging to catch a problem.
+  config.log_level = :warn
 end

@@ -10,9 +10,7 @@ class RacingAssociation < ActiveRecord::Base
 
   belongs_to :cat4_womens_race_series_category, :class_name => "Category"
 
-  attr_accessor :now
   attr_accessor :person
-  attr_accessor :rental_numbers
 
   serialize :administrator_tabs
   serialize :cat4_womens_race_series_points
@@ -38,10 +36,6 @@ class RacingAssociation < ActiveRecord::Base
     r.short_name
   end
   
-  default_value_for :rental_numbers do |r|
-    (r.rental_numbers_start)..(r.rental_numbers_end)
-  end
-  
   default_value_for :sanctioning_organizations do
     [ "FIAC", "CBRA", "UCI", "USA Cycling" ]
   end
@@ -58,43 +52,48 @@ class RacingAssociation < ActiveRecord::Base
   def person
     @person ||= Person.find_or_create_by_name(short_name)
   end
-
-  # Defaults to Time.now, but can be explicitly set for tests or data cleanup
-  def now
-    @now || Time.zone.now
-  end
   
-  # Returns now.beginning_of_day, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.beginning_of_day, which is the same as Time.zone.today
   def today
-    now.to_date
+    Time.zone.now.to_date
   end
   
-  # Returns now.year, which is the same as Date.today. But can be explicitly set for tests or data cleanup.
+  # Returns now.year, which is the same as Time.zone.today.
   def year
-    now.year
+    Time.zone.now.year
   end
   
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
   # On and after December 1, returns the next year.
   def effective_year
-    if now.month < 12
-      now.year
+    if next_year_start_at
+      if Time.zone.now < next_year_start_at
+        return Time.zone.now.year
+      elsif Time.zone.now >= next_year_start_at
+        return Time.zone.now.year + 1
+      elsif 1.year.from_now > next_year_start_at && Time.zone.now.month >= 12
+        return Time.zone.now.year + 1
+      end
     else
-      now.year + 1
+      if Time.zone.now.month == 12
+        return Time.zone.now.year + 1
+      end
     end
+    
+    Time.zone.now.year
   end
   
   def effective_today
-    if now.month < 12
-      Date.new(now.year)
-    else
-      Date.new(now.year + 1)
-    end
+    Date.new(effective_year)
   end
   
-  # Date.today.year + 1 unless +now+ is set.
+  # Time.zone.today.year + 1 unless +now+ is set.
   def next_year
-    now.year + 1
+    if effective_year == Time.zone.now.year
+      effective_year + 1
+    else
+      effective_year
+    end
   end
   
   def cyclocross_season?
@@ -102,11 +101,29 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def cyclocross_season_start
-    Time.zone.local(RacingAssociation.current.now.year, 9, 2).beginning_of_day
+    Time.zone.local(Time.zone.now.year, 9, 2).beginning_of_day
   end
   
   def cyclocross_season_end
-    Time.zone.local(RacingAssociation.current.now.year, 12, 12).end_of_day
+    Time.zone.local(Time.zone.now.year, 12, 5).end_of_day
+  end
+
+  def rental_numbers
+    if rental_numbers_start && rental_numbers_end
+      rental_numbers_start..rental_numbers_end
+    else
+      nil
+    end
+  end
+
+  def rental_numbers=(value)
+    if value.nil?
+      self.rental_numbers_start = nil
+      self.rental_numbers_end = nil
+    else
+      self.rental_numbers_start = rental_numbers.first
+      self.rental_numbers_end = rental_numbers.last
+    end
   end
 
   def priority_country_options

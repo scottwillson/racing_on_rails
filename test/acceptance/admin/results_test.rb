@@ -1,100 +1,96 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class ResultsTest < WebDriverTestCase
+class ResultsTest < AcceptanceTest
   def test_results_editing
-    login_as :administrator
+    FactoryGirl.create(:number_issuer)
+    event = FactoryGirl.create(:event, :name => "Copperopolis Road Race")
+    race = FactoryGirl.create(:race, :event => event)
+    result = FactoryGirl.create(:result, :race => race, :name => "Ryan Weaver")
+    
+    login_as FactoryGirl.create(:administrator)
 
-    if Date.today.month == 12
-      open "/admin/events?year=#{Date.today.year}"
+    if Time.zone.today.month == 12
+      visit "/admin/events?year=#{Time.zone.today.year}"
     else
-      open "/admin/events"
+      visit "/admin/events"
     end
     
-    if Date.today.month == 1 && Date.today.day < 6
-      open "/admin/events?year=#{Date.today.year - 1}"
+    if Time.zone.today.month == 1 && Time.zone.today.day < 6
+      visit "/admin/events?year=#{Time.zone.today.year - 1}"
     end
 
-    click :link_text => "Copperopolis Road Race"
-    wait_for_current_url(/\/admin\/events\/\d+\/edit/)
+    click_link "Copperopolis Road Race"
 
-    race = Event.find_by_name('Copperopolis Road Race').races.first
-    click "edit_race_#{race.id}"
-    wait_for_current_url(/\/admin\/races\/\d+\/edit/)
+    click_link "edit_race_#{race.id}"
 
-    result_id = race.results.first.id
-    click "result_#{result_id}_place"
-    wait_for_element :css => "form.editor_field input"
-    type "DNF", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
+    fill_in_inline "#result_#{result.id}_place", :with => "DNF"
 
-    refresh
-    wait_for_element "results_table"
-    assert_text "DNF", "result_#{result_id}_place"
+    visit "/admin/races/#{race.id}/edit"
+    find "#result_#{result.id}_place", :text => "DNF"
+    fill_in_inline "#result_#{result.id}_name", :with => "Megan Weaver"
 
-    click "result_#{result_id}_name"
-    wait_for_element :css => "form.editor_field input"
-    type "Megan Weaver", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
-
-    refresh
-    wait_for_element "results_table"
-    assert_not_in_page_source "Ryan Weaver"
-    assert_page_source "Megan Weaver"
+    visit "/admin/races/#{race.id}/edit"
+    assert_page_has_no_content "Ryan Weaver"
+    assert_page_has_content "Megan Weaver"
     
     weaver = Person.find_by_name("Ryan Weaver")
     megan = Person.find_by_name("Megan Weaver")
     assert weaver != megan, "Should create new person, not rename existing one"
 
-    click "result_#{result_id}_team_name"
-    wait_for_element :css => "form.editor_field input"
-    type "River City", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
+    fill_in_inline "#result_#{result.id}_team_name", :with => "River City"
 
-    refresh
-    wait_for_element "results_table"
-    assert_page_source "River City"
+    visit "/admin/races/#{race.id}/edit"
+    assert_page_has_content "River City"
     
     if RacingAssociation.current.competitions.include? :bar
-      assert_checked "result_#{result_id}_bar"
-      click "result_#{result_id}_bar"
-      refresh
-      wait_for_element "results_table"
+      assert_equal true, result.reload.bar?, "bar?"
+      assert has_checked_field?("result_#{result.id}_bar")
+      uncheck("result_#{result.id}_bar")
 
-      assert_not_checked "result_#{result_id}_bar"
+      begin
+        Timeout::timeout(10) do
+          until !result.reload.bar?
+            sleep 0.25
+          end
+        end
+      rescue Timeout::Error => e
+        raise Timeout::Error, "result.bar? did not change to 'false'"
+      end
+
+      visit "/admin/races/#{race.id}/edit"
+      assert !has_checked_field?("result_#{result.id}_bar")
     
-      click "result_#{result_id}_bar"
-      refresh
-      wait_for_element "results_table"
+      check("result_#{result.id}_bar")
+      begin
+        Timeout::timeout(10) do
+          until result.reload.bar?
+            sleep 0.25
+          end
+        end
+      rescue Timeout::Error => e
+        raise Timeout::Error, "result.bar? did not change to 'true'"
+      end
 
-      assert_checked "result_#{result_id}_bar"
+      visit "/admin/races/#{race.id}/edit"
+      assert has_checked_field?("result_#{result.id}_bar")
     end
     
-    assert_no_element :xpath => "//table[@id='results_table']//tr[4]"
-    click "result_#{result_id}_add"
-    wait_for_element :xpath => "//table[@id='results_table']//tr[4]"
-    click "result_#{result_id}_destroy"
-    wait_for_no_element :xpath => "//table[@id='results_table']//tr[4]"
-    refresh
-    wait_for_element "results_table"
-    assert_not_in_page_source "Megan Weaver"
-    assert_page_source "DNF"
+    assert page.has_no_selector? :xpath, "//table[@id='results_table']//tr[4]"
+    click_link "result_#{result.id}_add"
+    sleep 0.3
+    find("#result_#{result.id}_destroy").click
+    visit "/admin/races/#{race.id}/edit"
+    assert_page_has_no_content "Megan Weaver"
+    assert_page_has_content "DNF"
 
-    click "result__add"
-    wait_for_element :xpath => "//table[@id='results_table']//tr[4]"
-    refresh
-    wait_for_element "results_table"
-    assert_page_source "Field Size (2)"
+    click_link "result__add"
+    visit "/admin/races/#{race.id}/edit"
+    assert_page_has_content "Field Size (2)"
 
-    assert_value "", "race_laps"
-    type "12", "race_laps"
-
-    click "save"
-
-    wait_for_element "race_laps"
-    assert_value "12", "race_laps"
+    assert_equal "", find_field("race_laps").value
+    fill_in "race_laps", :with => "12"
+    click_button "Save"
+    assert_equal "12", find_field("race_laps").value
   end
 end

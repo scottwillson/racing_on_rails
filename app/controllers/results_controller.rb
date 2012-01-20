@@ -3,7 +3,7 @@
 class ResultsController < ApplicationController
   include Api::Results
 
-  caches_page :index, :event, :person, :person_event, :team
+  caches_page :index, :event, :person, :person_event, :team, :if => Proc.new { |c| !mobile_request? }
   
   # HTML: Formatted links to Events with Results
   # == Params
@@ -23,13 +23,15 @@ class ResultsController < ApplicationController
   #
   # See source code of Api::Results and Api::Base
   def index
-    expires_in 1.hour, :public => true
+    unless mobile_request?
+      expires_in 1.hour, :public => true
+    end
     respond_to do |format|
       format.html {
         @year = params['year'].to_i
-        @year = Date.today.year if @year == 0
+        @year = Time.zone.today.year if @year == 0
         @discipline = Discipline[params['discipline']]
-        @discipline_names = Discipline.find_all_names
+        @discipline_names = Discipline.names
         @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
       }
       format.xml { render :xml => results_as_xml }
@@ -121,7 +123,7 @@ class ResultsController < ApplicationController
     if params[:year] && params[:year][/\d\d\d\d/].present?
       @year = params[:year].to_i
     else
-      @year = Date.today.year
+      @year = Time.zone.today.year
     end
     @date = Date.new(@year)
   end

@@ -4,7 +4,7 @@ class CrossCrusadeTeamCompetition < Competition
   after_create :add_source_events
   before_create :set_notes, :set_name
 
-  def CrossCrusadeTeamCompetition.calculate!(year = Date.today.year)
+  def CrossCrusadeTeamCompetition.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
         series = Series.first(
@@ -52,7 +52,7 @@ class CrossCrusadeTeamCompetition < Competition
       event.id
     end
     event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race)
+    category_ids = category_ids_for(race).join(', ')
 
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
@@ -147,11 +147,15 @@ class CrossCrusadeTeamCompetition < Competition
   end
 
   def date
-    (parent && parent.start_date) || Date.today
+    (parent && parent.start_date) || Time.zone.today
   end
 
   def end_date
     parent && parent.end_date
+  end
+
+  def valid_dates
+    true
   end
 
   def set_notes

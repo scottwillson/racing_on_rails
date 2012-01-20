@@ -1,54 +1,50 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class PagesTest < WebDriverTestCase
+class PagesTest < AcceptanceTest
   def test_pages
     # Check public page render OK with default static templates
-    open "/schedule"
-    assert_page_source(/Schedule|Calendar/)
+    visit "/schedule"
+    assert_page_has_content("Schedule")
     
-    assert_not_in_page_source "This year is cancelled"
-    assert_title(/Schedule|Calendar/)
+    assert_page_has_no_content "This year is cancelled"
+    assert_page_has_content("Schedule")
 
     # Now change the page
-    login_as :administrator
+    login_as FactoryGirl.create(:administrator)
 
-    open "/admin/pages"
+    visit "/admin/pages"
 
-    click :xpath => "//a[@href='/admin/pages/new']"
+    find(:xpath, "//a[@href='/admin/pages/new']").click
 
-    type "Schedule", "page_title"
-    type "This year is cancelled", "page_body"
+    fill_in "page_title", :with => "Schedule"
+    fill_in "page_body", :with => "This year is cancelled"
 
-    click "save"
+    click_button "Save"
 
-    open "/schedule"
-    # Firefox honors the expires time, so the old page is still shown
-    assert_not_in_page_source "This year is cancelled"
+    visit "/schedule"
+    assert_page_has_content "This year is cancelled"
 
-    refresh
-    assert_page_source "This year is cancelled"
+    visit "/admin/pages"
 
-    open "/admin/pages"
-
-    assert_table("pages_table", 2, 0, /^Schedule/)
+    assert_table("pages_table", 1, 0, /^Schedule/)
 
     # Create new page
     # 404 first
-    open "/officials", true
-    assert_page_source "ActiveRecord::RecordNotFound"
+    visit "/officials"
+    assert_page_has_content "Couldn't find Page"
 
-    open "/admin/pages"
+    visit "/admin/pages"
 
-    click :xpath => "//a[@href='/admin/pages/new']"
+    find(:xpath, "//a[@href='/admin/pages/new']").click
 
-    type "Officials Home Phone Numbers", "page_title"
-    type "officials", "page_slug"
-    type "411 911", "page_body"
+    fill_in "page_title", :with => "Officials Home Phone Numbers"
+    fill_in "page_slug", :with => "officials"
+    fill_in "page_body", :with => "411 911"
 
-    click "save"
+    click_button "Save"
 
-    open "/officials"
-    assert_page_source "411 911"
+    visit "/officials"
+    assert_page_has_content "411 911"
   end
 end

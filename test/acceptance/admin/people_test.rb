@@ -1,17 +1,24 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
-class PeopleTest < WebDriverTestCase
+class PeopleTest < AcceptanceTest
   def test_edit
-    login_as :administrator
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:mtb_discipline)
+    FactoryGirl.create(:number_issuer)
+    login_as FactoryGirl.create(:administrator, :name => "Candi Murray")
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :team_name => "Vanilla", :road_number => "202")
+    molly.aliases.create!(:name => "Mollie Cameron")
+    FactoryGirl.create(:result, :person => molly)
+    matson = FactoryGirl.create(:person, :first_name => "Mark", :last_name => "Matson", :team_name => "Kona", :road_number => "340")
+    alice = FactoryGirl.create(:person, :first_name => "Alice", :last_name => "Pennington", :team_name => "Gentle Lovers", :road_number => "230")
+    brad = FactoryGirl.create(:person, :first_name => "Brad", :last_name => "Ross")
+    weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver", :team_name => "Gentle Lovers", :road_number => "341", :xc_number => "437")
     
-    open '/admin/people'
-    assert_page_source "Enter part of a person's name"
-    type "a", "name"
-    submit "search_form"
-    
-    assert_text "", "warn"
-    assert_text "", "notice"
+    visit '/admin/people'
+    assert_page_has_content "Enter part of a person's name"
+    fill_in "name", :with => "a"
+    find_field("name").native.send_keys(:enter)
     
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
@@ -32,7 +39,7 @@ class PeopleTest < WebDriverTestCase
     assert_table "people_table", 5, 3, ""
     assert_table "people_table", 6, 3, ""
     
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_table "people_table", 1, 4, "202"
       assert_table "people_table", 2, 4, "340"
       assert_table "people_table", 3, 4, ""
@@ -46,105 +53,84 @@ class PeopleTest < WebDriverTestCase
     assert_table "people_table", 3, 5, ""
     assert_table "people_table", 4, 5, ""
     assert_table "people_table", 5, 5, ""
-    if Date.today.month < 12
+    if Time.zone.today.month < 12
       assert_table "people_table", 6, 5, "437"
     end
     
-    @molly_id = Person.find_by_name("Molly Cameron").id
-    @weaver_id = Person.find_by_name("Ryan Weaver").id
-    @matson_id = Person.find_by_name("Mark Matson").id
-    @matson = Person.find_by_name("Mark Matson")
-    @alice_id = Person.find_by_name("Alice Pennington").id
-    assert_checked "person_member_#{@molly_id}"
-    assert_checked "person_member_#{@weaver_id}"
-    assert_checked "person_member_#{@matson_id}"
-    assert_checked "person_member_#{@alice_id}"
+    assert has_checked_field?("person_member_#{molly.id}")
+    assert has_checked_field?("person_member_#{weaver.id}")
+    assert has_checked_field?("person_member_#{matson.id}")
+    assert has_checked_field?("person_member_#{alice.id}")
     
-    click "person_#{@alice_id}_name"
-    wait_for_element :css => "form.editor_field input"
-    
-    type "A Penn", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
-    
-    refresh
-    wait_for_element "people_table"
+    fill_in_inline "#person_#{alice.id}_name", :with => "A Penn"
+    visit "/admin/people"
     assert_table("people_table", 4, 1, /^A Penn/)
     
-    click "person_#{@weaver_id}_team_name"
-    wait_for_element :css => "form.editor_field input"
-    
-    type "River City Bicycles", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
-    
-    refresh
-    wait_for_element "people_table"
+    fill_in_inline "#person_#{weaver.id}_team_name", :with => "River City Bicycles"
+    visit "/admin/people"
     assert_table("people_table", 6, 2, /^River City Bicycles/)
     
-    click "#{@molly_id}_results"
-    wait_for_element "person_#{@molly_id}_table"
-    assert_title(/Admin: Results: Molly Cameron$/)
+    click_link "#{molly.id}_results"
+    assert_match(/Admin: Results: Molly Cameron/, find("title").text)
     
-    open "/admin/people"
-    click "#{@weaver_id}_results"
-    assert_title(/Admin: Results: Ryan Weaver$/)
+    visit "/admin/people"
+    click_link "#{weaver.id}_results"
+    assert_match(/Admin: Results: Ryan Weaver$/, find("title").text)
     
-    open "/admin/people"
-    click "edit_#{@matson_id}"
-    assert_title(/Admin: People: Mark Matson$/)
-    type "411 911 1212", "person_home_phone"
-    click "save"
+    visit "/admin/people"
+    click_link "edit_#{matson.id}"
+    assert_match(/Admin: People: Mark Matson$/, find("title").text)
+    fill_in "person_home_phone", :with => "411 911 1212"
+    click_button "Save"
     
-    click :css => "a[href='/people/#{@matson_id}/versions']"
+    find("a[href='/people/#{matson.id}/versions']").click
     
-    open '/admin/people'
-    click "new_person"
-    assert_title(/Admin: People: New Person/)
+    visit '/admin/people'
+    click_link "new_person"
+    assert_match(/Admin: People: New Person/, find("title").text)
     
-    open "/admin/people/#{@matson.id}/edit"
-    assert_page_source "Mark Matson"
-    if Date.today.month < 12
-      click "destroy_number_#{@matson.race_numbers.first.id}"
-      wait_for_no_element :css => "input.number[value='340']"
+    visit "/admin/people/#{matson.id}/edit"
+    assert_page_has_content "Mark Matson"
+    if Time.zone.today.month < 12
+      click_link "destroy_number_#{matson.race_numbers.first.id}"
+      assert_page_has_no_content "input.number[value='340']"
       
-      click "save"
+      click_button "Save"
     
-      assert_not_in_page_source "error"
-      assert_not_in_page_source "Unknown action"
-      assert_not_in_page_source "Couldn't find RaceNumber"
+      assert_page_has_no_content "error"
+      assert_page_has_no_content "Unknown action"
+      assert_page_has_no_content "Couldn't find RaceNumber"
     end
     
-    assert_current_url(/admin\/people\/#{@matson.id}\/edit/)
+    visit "/admin/people/#{brad.id}/edit"
+    assert_page_has_content 'Ross'
+    click_link "delete"
+    assert_page_has_no_content 'error'
+    assert_page_has_no_content 'Unknown action'
+    assert_page_has_no_content 'has no parent'
     
-    open "/admin/people/#{Person.find_by_name("Non Results").id}/edit"
-    assert_page_source 'Non Results'
-    click "delete"
-    assert_not_in_page_source 'error'
-    assert_not_in_page_source 'Unknown action'
-    assert_not_in_page_source 'has no parent'
-    
-    assert_current_url(/\/admin\/people/)
-    type "no results", "name"
-    submit "search_form"
-    assert_not_in_page_source "Non Results"
+    fill_in "name", :with => "Brad"
+    find_field("name").native.send_keys(:enter)
+    assert_page_has_no_content "Ross"
 
-    open "/admin/people"
-    type "a", "name"
-    submit "search_form"
+    visit "/admin/people"
+    fill_in "name", :with => "a"
+    find_field("name").native.send_keys(:enter)
     
-    drag_and_drop_on "person_#{@alice_id}", "person_#{@molly_id}"
-    wait_for_page_source "Merged A Penn into Molly Cameron"
-    assert !Person.exists?(@alice_id), "Alice should be merged"
-    assert Person.exists?(@molly_id), "Molly still exist after merge"
+    find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}"))
+    wait_for_page_content "Merged A Penn into Molly Cameron"
+    assert !Person.exists?(alice.id), "Alice should be merged"
+    assert Person.exists?(molly.id), "Molly still exist after merge"
   end
 
   def test_merge_confirm
-    login_as :administrator
+    login_as FactoryGirl.create(:administrator, :name => "Candi Murray")
+    FactoryGirl.create(:person, :name => "Molly Cameron")
+    FactoryGirl.create(:person, :name => "Mark Matson")
 
-    open "/admin/people"
-    type "a", "name"
-    submit "search_form"
+    visit "/admin/people"
+    fill_in "name", :with => "a"
+    find_field("name").native.send_keys(:enter)
     
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
@@ -152,100 +138,87 @@ class PeopleTest < WebDriverTestCase
     molly = Person.find_by_name("Molly Cameron")
     matson = Person.find_by_name("Mark Matson")
 
-    click "person_#{matson.id}_name"
-    wait_for_element :css => "form.editor_field input"
+    fill_in_inline "#person_#{matson.id}_name", :with => "Molly Cameron"
 
-    type "Molly Cameron", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_displayed :css => "div.ui-dialog"
-    click :css => ".ui-dialog-buttonset button:last-child"
-    wait_for_not_displayed :css => "div.ui-dialog"
+    find(".ui-dialog-buttonset button:last-child").click
     
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert Person.exists?(matson.id), "Should not have merged Matson"
     assert !molly.aliases(true).map(&:name).include?("Mark Matson"), "Should not add Matson alias"
 
-    open "/admin/people"
-    submit "search_form"
+    visit "/admin/people"
+    find_field("name").native.send_keys(:enter)
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
 
-    click "person_#{matson.id}_name"
-    type "Molly Cameron", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_displayed :css => "div.ui-dialog"
-    click :css => ".ui-dialog-buttonset button:first-child"
-    wait_for_not_displayed :css => "div.ui-dialog"
+    fill_in_inline "#person_#{matson.id}_name", :with => "Molly Cameron"
+    find(".ui-dialog-buttonset button:first-child").click
     
-    wait_for_page_source "Merged Mark Matson into Molly Cameron"
+    assert_page_has_content "Merged Mark Matson into Molly Cameron"
     assert Person.exists?(molly.id), "Should not have merged Molly"
     assert !Person.exists?(matson.id), "Should have merged Matson"
     assert molly.aliases(true).map(&:name).include?("Mark Matson"), "Should add Matson alias"
   end
 
   def test_export
-    login_as :administrator
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Singlespeed")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:number_issuer)
+    
+    FactoryGirl.create(:person, :name => "Erik Tonkin", :team_name => "Kona", :road_number => "102")
 
-    open '/admin/people'
-    assert_element 'export_button'
-    assert_element 'include'
-    assert_value 'members_only', 'include'
-    assert_element 'format'
-    assert_value 'xls', 'format'
+    login_as FactoryGirl.create(:administrator)
 
-    remove_download "people_2011_1_1.xls"
-    click 'export_button'
-    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=xls&include=members_only/)
+    visit '/admin/people'
+    assert page.has_selector? '#export_button'
+    assert page.has_selector? '#include'
+    assert page.has_field? 'include', :with => 'members_only'
+    assert page.has_field? 'format', :with => 'xls'
+
+    click_button "Export"
     wait_for_download "people_2011_1_1.xls"
-    assert_no_errors
 
-    open '/admin/teams'
-    assert_current_url(/\/admin\/teams/)
+    visit '/admin/teams'
 
-    open '/admin/people'
-    assert_current_url(/\/admin\/people/)
+    visit '/admin/people'
 
-    type "tonkin", "name"
-    type :return, { :name => "name" }, false
-    sleep 1
-    assert_not_in_page_source 'error'
-    assert_page_source 'Erik Tonkin'
-    assert_page_source 'Kona'
-    if Date.today.month < 12
-      assert_page_source '102'
+    fill_in "name", :with => "tonkin"
+    find_field("name").native.send_keys(:enter)
+    assert_page_has_content 'Erik Tonkin'
+    assert_page_has_content 'Kona'
+    if Time.zone.today.month < 12
+      assert_page_has_content '102'
     end
-    assert_value 'tonkin', "name"
+    assert page.has_field? 'name', :with => 'tonkin'
 
-    select_option "all", "include"
-    select_option "ppl", "format"
-    remove_download "lynx.ppl"
-    click 'export_button'
-    wait_for_not_current_url(/\/admin\/people.ppl\?excel_layout=ppl&include=all/)
+    select "All", :from => "include"
+    select "FinishLynx", :from => "format"
+    click_button "Export"
     wait_for_download "lynx.ppl"
-    assert_no_errors
 
-    select_option "members_only", "include"
-    select_option "scoring_sheet", "format"
+    select "Current members only", :with => "include"
+    select "Scoring sheet", :with => "format"
     remove_download "scoring_sheet.xls"
-    click 'export_button'
-    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
+    click_button "Export"
     wait_for_download "scoring_sheet.xls"
-    assert_no_errors
 
-    type 'tonkin', 'name'
-    type :return, { :name => "name" }, false
-    wait_for_element "people_table"
-    assert_page_source 'Erik Tonkin'
-    assert_page_source 'Kona'
-    if Date.today.month < 12
-      assert_page_source '102'
+    fill_in 'name', :with => 'tonkin'
+    find_field("name").native.send_keys(:enter)
+    assert_page_has_content 'Erik Tonkin'
+    assert_page_has_content 'Kona'
+    if Time.zone.today.month < 12
+      assert_page_has_content '102'
     end
-    assert_value 'tonkin', "name"
+    assert page.has_field? 'name', :with => 'tonkin'
   end
   
   def test_import
-    login_as :administrator
-    open '/admin/people'
-    assert_element 'people_file'
+    login_as FactoryGirl.create(:administrator)
+    visit '/admin/people'
+    attach_file 'people_file', "#{Rails.root}/test/files/membership/database.xls"
   end
 end

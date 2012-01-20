@@ -1,55 +1,64 @@
-require "acceptance/webdriver_test_case"
+require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 
 # :stopdoc:
-class PromotersTest < WebDriverTestCase
+class PromotersTest < AcceptanceTest
   def test_browse
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    FactoryGirl.create(:discipline, :name => "Downhill")
+    FactoryGirl.create(:discipline, :name => "Mountain Bike")
+    FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Singlespeed")
+    FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:number_issuer)
+
     year = RacingAssociation.current.effective_year
-    series = Series.create!(:name => "Cross Crusade", :promoter => Person.find_by_name("Brad Ross"), :date => Date.new(year, 10))
-    event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => Person.find_by_name("Brad Ross"), :date => Date.new(year, 10))
+    promoter = FactoryGirl.create(:promoter)
+    series = Series.create!(:name => "Cross Crusade", :promoter => promoter, :date => Date.new(year, 10))
+    event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => promoter, :date => Date.new(year, 10))
     series.children << event
-    login_as :promoter
+    login_as promoter
     
-    click "events_tab"
-    click :link_text => "Cross Crusade"
-    click "save"
+    click_link "events_tab"
+    click_link "Cross Crusade"
+    click_button "Save"
     
-    click "create_race"
-    wait_for_element :css => "td.race"
-    type "Senior Women", :css => "form.editor_field input"
-    type :return, { :css => "form.editor_field input" }, false
-    wait_for_no_element :css => "form.editor_field input"
-    wait_for_page_source "Senior Women"
+    click_link "create_race"
+    within "form.editor_field" do
+      fill_in "value", :with => "Senior Women"
+      find_field("value").native.send_keys(:enter)
+    end
+    assert_page_has_no_content "form.editor_field input"
+    assert_page_has_content "Senior Women"
     race = series.races(true).first
     assert_equal "Senior Women", race.category_name, "Should update category name"
 
-    click "edit_race_#{race.id}"
-    click "save"
+    click_link "edit_race_#{race.id}"
+    click_button "Save"
 
-    click "events_tab"
-    click :link_text => "Cross Crusade: Alpenrose"
+    click_link "events_tab"
+    click_link "Cross Crusade: Alpenrose"
     
-    click "create_race"
-    wait_for_element :css => "td.race"
-    type "Masters Women 40+", :css => ".race form.editor_field input"
-    type :return, { :css => ".race form.editor_field input" }, false
-    wait_for_no_element :css => ".race form.editor_field input"
-    wait_for_page_source "Masters Women 40+"
+    click_link "create_race"
+    within "form.editor_field" do
+      fill_in "value", :with => "Masters Women 40+"
+      find_field("value").native.send_keys(:enter)
+    end
+    assert_page_has_no_content "form.editor_field input"
+    assert_page_has_content "Masters Women 40+"
     race = event.races(true).first
     assert_equal "Masters Women 40+", race.category_name, "Should update category name"
 
-    click "edit_race_#{race.id}"
-    click "save"
+    click_link "edit_race_#{race.id}"
+    click_button "Save"
 
-    click "people_tab"
+    click_link "people_tab"
     remove_download "scoring_sheet.xls"
-    click "export_link"
-    wait_for_not_current_url(/\/admin\/people.xls\?excel_layout=scoring_sheet&include=members_only/)
+    click_link "export_link"
     wait_for_download "scoring_sheet.xls"
-    assert_no_errors
 
-    click "events_tab"
-    click :link_text => "Cross Crusade"
+    click_link "events_tab"
+    click_link "Cross Crusade"
     click_ok_on_alert_dialog
-    click "propagate_races"
+    click_link "propagate_races"
   end
 end

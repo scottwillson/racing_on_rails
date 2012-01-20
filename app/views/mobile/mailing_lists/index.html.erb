@@ -1,0 +1,7 @@
+<% @page_title = "Mailing Lists" %>
+
+<ul data-role="listview">
+<% @mailing_lists.each do |mailing_list| %>
+  <li><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></li>
+<% end %>
+</ul>
