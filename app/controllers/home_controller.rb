@@ -26,7 +26,7 @@ class HomeController < ApplicationController
       :conditions => ['(created_at > ? OR updated_at > ?) and article_category_id = ?', cutoff, cutoff, @news_category],
       :order => 'created_at desc'
     )
-    
+
     expires_in 1.hour, :public => true
 
     render_page
