@@ -226,7 +226,7 @@ class Admin::PeopleController < Admin::AdminController
       redirect_to :index
     end
     
-    render "preview_import", :layout => "admin/people/preview_import"
+    render "preview_import"
   end
   
   # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
