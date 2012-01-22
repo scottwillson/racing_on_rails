@@ -8,6 +8,7 @@
 .gitmodules
 .project
 .rvmrc
+*.sublime-*
 ._*
 /local
 chromedriver.log
