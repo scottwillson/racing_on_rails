@@ -21,7 +21,9 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => promoter.to_param
     assert_response :success
     assert_equal promoter, assigns(:person), "@person"
-    assert_select ".tabs", :count => 1
+    unless RacingAssociation.current.short_name == "MBRA"
+      assert_select ".tabs"
+    end
   end
   
   def test_edit_as_editor
