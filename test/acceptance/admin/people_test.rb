@@ -180,7 +180,7 @@ class PeopleTest < AcceptanceTest
     assert page.has_field? 'format', :with => 'xls'
 
     click_button "Export"
-    wait_for_download "people_#{Time.zone.now.year}_1_1.xls"
+    wait_for_download "people_#{RacingAssociation.current.effective_year}_1_1.xls"
 
     visit '/admin/teams'
 
