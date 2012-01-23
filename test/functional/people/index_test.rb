@@ -33,9 +33,6 @@ class IndexTest < ActionController::TestCase
     assert_layout("application")
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
-    unless RacingAssociation.current.short_name == "MBRA"
-      assert_select ".tabs"
-    end
     assert_select "a#export_link", :count => 1
   end
 

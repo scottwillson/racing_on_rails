@@ -23,8 +23,7 @@ class EventsControllerTest < ActionController::TestCase
       use_ssl
       get :index, :person_id => promoter
       assert_response :success
-      unless RacingAssociation.current.short_name == "MBRA"
-        assert_select ".tabs"
+      if css_select(".tabs").present?
         assert_select "a[href=?]", /.*\/admin\/events.*/
       end
     end
