@@ -9,6 +9,7 @@
 .project
 .rvmrc
 *.sublime-*
+.tm_properties
 ._*
 /local
 chromedriver.log
