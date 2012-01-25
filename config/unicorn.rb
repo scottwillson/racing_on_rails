@@ -5,6 +5,7 @@ rails_env = ENV['::Rails.env'] || 'production'
 worker_processes 2
 timeout 90
 
+# This may not be working correctly in production
 rails_root = File.expand_path(File.dirname(__FILE__) + "/../")
 working_directory rails_root
 listen "#{rails_root}/tmp/sockets/unicorn.sock", :backlog => 64
