@@ -35,7 +35,7 @@ class Admin::ArticleCategoriesController < Admin::AdminController
 
     if @article_category.update_attributes(params[:article_category])
       flash[:notice] = 'ArticleCategory was successfully updated.'
-      format.html redirect_to(admin_article_categories_url)
+      redirect_to(admin_article_categories_url)
     else
       render :edit
     end
