@@ -169,6 +169,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
+    truncate_html (0.5.1)
     ttfunk (1.0.3)
     tzinfo (0.3.31)
     unicorn (4.1.1)
@@ -212,6 +213,7 @@ DEPENDENCIES
   sqlite3
   tabular (> 0.0.5)
   timecop
+  truncate_html
   unicorn
   vestal_versions!
   will_paginate (~> 3.0.beta)
