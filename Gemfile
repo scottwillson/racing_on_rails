@@ -1,6 +1,6 @@
 source :gemcutter
 
-gem "rails", "~>3.2.pre"
+gem "rails", "~>3.2"
 
 gem "fastercsv", :platforms => :ruby_18
 gem "rake"

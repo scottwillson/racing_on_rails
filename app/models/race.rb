@@ -33,7 +33,7 @@ class Race < ActiveRecord::Base
   
   # 0..3
   def bar_points=(value)
-    if value == self.event.bar_points or value.nil?
+    if (value == event.try(:bar_points)) || value.nil?
       self[:bar_points] = nil
     elsif value.to_i == value.to_f
       self[:bar_points] = value
