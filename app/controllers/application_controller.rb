@@ -280,7 +280,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_to_mobile_if_applicable
-    unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser?
+    unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser? || !RacingAssociation.current.mobile_site?
       redirect_to request.protocol + "m." + request.host_with_port.gsub(/^www\./, '') +
                   request.fullpath and return
     end
