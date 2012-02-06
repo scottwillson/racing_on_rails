@@ -1,5 +1,8 @@
-load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
+
+set :deploy_to, "/var/www/rails/#{application}"
+
+load "config/db"
 require 'bundler/capistrano'
 require "capistrano-unicorn"
 
@@ -11,7 +14,6 @@ set :branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
-set :deploy_to, "/var/www/rails/#{application}"
 
 set :user, "app"
 set :use_sudo, false
