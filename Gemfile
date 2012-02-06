@@ -23,6 +23,7 @@ gem "truncate_html"
 
 group :development do
   gem "capistrano"
+  gem "capistrano-unicorn"
 end
 
 group :test do

@@ -1,5 +1,7 @@
 load "config/db"
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
+require 'bundler/capistrano'
+require "capistrano-unicorn"
 
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
@@ -9,7 +11,7 @@ set :branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
-set :deploy_to, "/usr/local/www/rails/#{application}"
+set :deploy_to, "/var/www/rails/#{application}"
 
 set :user, "app"
 set :use_sudo, false
@@ -40,22 +42,6 @@ namespace :deploy do
     %w{ bar bar.html events export people index.html results results.html teams teams.html }.each do |cached_path|
       run("if [ -e \"#{previous_release}/public/#{cached_path}\" ]; then cp -pr #{previous_release}/public/#{cached_path} #{release_path}/public/#{cached_path}; fi") rescue nil
     end
-  end
-  
-  task :start, :roles => :app do
-    run "/usr/local/etc/rc.d/unicorn start #{application}"
-  end
-  
-  task :stop, :roles => :app do
-    run "/usr/local/etc/rc.d/unicorn stop #{application}"
-  end
-  
-  task :restart, :roles => :app do
-    run "/usr/local/etc/rc.d/unicorn reload #{application}"
-  end
-  
-  task :status, :roles => :app do
-    run "/usr/local/etc/rc.d/unicorn status #{application}"
   end
 
   namespace :web do
