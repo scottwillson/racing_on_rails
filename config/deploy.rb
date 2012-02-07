@@ -1,3 +1,5 @@
+set :site_local_repository_branch, nil
+
 load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
 set :deploy_to, "/var/www/rails/#{application}"
@@ -9,9 +11,6 @@ require "capistrano-unicorn"
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repository, "gitosis@butlerpress.com:#{application}.git"
-unless site_local_repository_branch
-  set :site_local_repository_branch, nil
-end
 set :branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
