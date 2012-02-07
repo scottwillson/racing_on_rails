@@ -4,7 +4,7 @@ worker_processes 2
 preload_app true
 timeout 180
 
-user 'app', 'app'
+user 'app', 'rails'
 
 app_path = File.expand_path(File.dirname(__FILE__) + "/../../../current")
 working_directory app_path
