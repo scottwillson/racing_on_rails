@@ -9,7 +9,9 @@ require "capistrano-unicorn"
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repository, "gitosis@butlerpress.com:#{application}.git"
-set :site_local_repository_branch, nil
+unless site_local_repository_branch
+  set :site_local_repository_branch, nil
+end
 set :branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
