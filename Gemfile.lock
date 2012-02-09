@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/DanaDanger/syslog_logger.git
+  revision: 8ad1c4d3167edcafb1059669916f7661a531e7c5
+  specs:
+    syslog_logger (1.5)
+
+GIT
   remote: git://github.com/sandal/prawn.git
   revision: 0968057c9beddbce4419207fa93f17395b5879a1
   specs:
@@ -31,8 +37,6 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.1)
-    SyslogLogger (1.4.0)
-      hoe (>= 1.2.0)
     abstract (1.0.0)
     actionmailer (3.0.11)
       actionpack (= 3.0.11)
@@ -98,8 +102,6 @@ GEM
     fastercsv (1.5.4)
     ffi (1.0.11)
     highline (1.6.8)
-    hoe (2.12.3)
-      rake (~> 0.8)
     i18n (0.5.0)
     json (1.6.4)
     json_pure (1.6.1)
@@ -181,7 +183,6 @@ PLATFORMS
 
 DEPENDENCIES
   Ascii85
-  SyslogLogger
   airbrake
   ansi
   authlogic
@@ -207,6 +208,7 @@ DEPENDENCIES
   selenium-webdriver
   spreadsheet!
   sqlite3
+  syslog_logger!
   tabular (> 0.0.5)
   timecop
   truncate_html

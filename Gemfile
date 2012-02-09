@@ -47,6 +47,6 @@ group :acceptance do
 end
 
 group :production do
-  gem "SyslogLogger", :require => "syslog_logger"
+  gem "syslog_logger", :git => "git://github.com/DanaDanger/syslog_logger.git"
   gem "unicorn"
 end
