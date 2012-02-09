@@ -55,6 +55,14 @@ namespace :deploy do
       run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{previous_release}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
     end
   end
+
+  task :start, :roles => :app do
+    top.unicorn.start
+  end
+
+  task :stop, :roles => :app do
+    top.unicorn.graceful_stop
+  end
 end
 
 after "deploy:update_code", "deploy:local_code", "deploy:symlinks", "deploy:copy_cache"
