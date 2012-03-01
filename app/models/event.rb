@@ -77,6 +77,7 @@ class Event < ActiveRecord::Base
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
+  has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :join_table => "editors_events"
   belongs_to :promoter, :class_name => "Person"
   belongs_to :team
 

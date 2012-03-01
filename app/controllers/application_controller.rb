@@ -147,8 +147,8 @@ class ApplicationController < ActionController::Base
     end
     
     unless administrator? || 
-           (@event && current_person == @event.promoter) || 
-           (@race && current_person == @race.event.promoter)
+           (@event && (current_person == @event.promoter || @event.editors.include?(current_person))) || 
+           (@race && (current_person == @race.event.promoter || @race.event.editors.include?(current_person)))
            
       redirect_to unauthorized_path
       return false
