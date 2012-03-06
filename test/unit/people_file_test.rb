@@ -183,7 +183,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('nurse', quinn_jackson.occupation, 'Quinn Jackson occupation')
     assert_equal('120', quinn_jackson.xc_number(true), 'quinn_jackson xc number')
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
-    assert(number.updated_by["membership/database.xls"], "updated_by")
+    assert(number.updated_by.name["membership/database.xls"], "updated_by expected to include file name but was #{number.updated_by}")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     
     all_abers = Person.find_all_by_name('Brian Abers')

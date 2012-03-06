@@ -10,16 +10,34 @@ class PersonTest < ActiveSupport::TestCase
     team = Team.new(:name => "7-11")
     
     person.team = team
+    admin = FactoryGirl.create(:administrator)
+    Person.current = admin
     person.save!
     
     person_from_db = Person.find_by_last_name("Hampsten")
     assert_not_nil(person_from_db, "Hampsten should  be  DB")
     assert_not_nil(Team.find_by_name("7-11"), "7-11 should be in DB")
     assert_equal(person.team, person_from_db.team, "person.team")
-    person.reload
+    person = Person.find(person.id)
     assert_equal(person.team, person_from_db.team, "person.team")
     assert(!person.team.new_record?, "team.new_record")
     assert(!person_from_db.new_record?, "person_from_db.new_record")
+    assert_equal admin, person.created_by, "created_by"
+    assert_equal admin, person.updated_by, "updated_by"
+    assert_equal 1, person.versions.size, "Should create initial version"
+
+    another_admin = FactoryGirl.create(:person)
+    Person.current = another_admin
+    person.city = "Boulder"
+    person.save!
+    assert_equal 2, person.versions.size, "Should create second version after update"
+    assert_equal admin, person.created_by, "created_by"
+    assert_equal another_admin, person.updated_by, "updated_by"
+
+    file = ImportFile.new(:name => "/tmp/import.xls")
+    assert person.update_attributes(:name => "Andrew Hampsten", :updater => file), "update_attributes"
+    assert_equal admin, person.created_by, "created_by"
+    assert_equal file, person.updated_by, "updated_by"
   end
 
   def test_save_existing_team
@@ -134,8 +152,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates Time.zone.now.end_of_year.to_date, person_to_keep.member_to, "member_to"
     
     assert_equal "7123811", person_to_keep.license, "license"
-    assert_equal 1, person_to_keep.versions.size, "versions"
-    assert_equal [ 2 ], person_to_keep.versions.map(&:number).sort, "version numbers"
+    assert_equal 3, person_to_keep.versions.size, "versions in #{person_to_keep.versions}"
+    assert_equal [ 2, 3, 4 ], person_to_keep.versions.map(&:number).sort, "version numbers"
   end
   
   def test_merge_login
@@ -145,10 +163,10 @@ class PersonTest < ActiveSupport::TestCase
     Timecop.freeze(1.hour.from_now) do
       person_to_merge_old_password = person_to_merge.crypted_password
 
-      assert_equal 0, person_to_merge.versions.size, "versions"
-      assert_equal 0, person_to_keep.versions.size, "no versions"
+      assert_equal 1, person_to_merge.versions.size, "versions"
+      assert_equal 1, person_to_keep.versions.size, "versions"
       person_to_keep.merge person_to_merge
-      assert_equal 1, person_to_keep.versions.size, "Merge should create only one version"
+      assert_equal 3, person_to_keep.versions.size, "Merge should create only one version and keep initial versions from both, but: #{person_to_keep.versions}"
 
       person_to_keep.reload
       assert_equal "tonkin", person_to_keep.login, "Should merge login"

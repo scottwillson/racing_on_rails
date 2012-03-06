@@ -253,7 +253,7 @@ module Results
     def create_result(row, race)
       if race
         result = race.results.build(result_attributes(row, race))
-        result.updated_by = @event.name
+        result.updater = @event.name
 
         if row.same_time?
           result.time = row.previous.result.time

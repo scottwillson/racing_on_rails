@@ -4,8 +4,9 @@
 #
 # Team names must be unique
 class Team < ActiveRecord::Base
-  include Names::Nameable
+  include Concerns::Versioned
   include Export::Teams
+  include Names::Nameable
 
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
@@ -15,7 +16,6 @@ class Team < ActiveRecord::Base
   validates_uniqueness_of :name
   
   has_many :aliases
-  belongs_to :created_by, :polymorphic => true
   has_many :events
   has_many :people
   has_many :results
@@ -148,14 +148,6 @@ class Team < ActiveRecord::Base
     self[:name] = value
   end
   
-  def created_from_result?
-    !created_by.nil? && created_by.kind_of?(Event)
-  end
-  
-  def updated_after_created?
-    created_at && updated_at && ((updated_at - created_at) > 1.hour)
-  end
-
   def to_s
     "#<Team #{id} '#{name}'>"
   end
