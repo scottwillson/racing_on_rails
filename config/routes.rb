@@ -209,8 +209,8 @@ RacingOnRails::Application.routes.draw do
   end
 
   resources :racing_associations
-  match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
-  match '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }
+  match '/results/:year/:discipline' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year_discipline
+  match '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year
   match '/results/:discipline' => 'results#index'
   resources :results
   match '/schedule/:year/calendar' => 'schedule#calendar', :constraints => { :year => /\d\d\d\d/ }

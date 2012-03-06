@@ -35,7 +35,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     # One field different
     RaceNumber.create!(:person => alice, :value => 'A104', :year => 2001, :number_issuer => elkhorn, :discipline => road)
     RaceNumber.create!(:person => alice, :value => 'A103', :year => 2002, :number_issuer => elkhorn, :discipline => road)
-    obra = NumberIssuer.find_or_create_by_name('OBRA')
+    obra = NumberIssuer.find_or_create_by_name('CBRA')
     RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => obra, :discipline => road)
     RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => track)
     
@@ -72,7 +72,7 @@ class RaceNumberTest < ActiveSupport::TestCase
 
   def test_cannot_create_exact_same_number_for_person
     alice = FactoryGirl.create(:person)
-    obra = NumberIssuer.find_or_create_by_name('OBRA')
+    obra = NumberIssuer.find_or_create_by_name('CBRA')
     cyclocross = FactoryGirl.create(:discipline, :name => "Cyclocross")
     road = FactoryGirl.create(:discipline, :name => "Road")
 
@@ -89,8 +89,8 @@ class RaceNumberTest < ActiveSupport::TestCase
     
     assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(!RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(!RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    assert(RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    assert(RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
   
     assert(RaceNumber.rental?(nil), 'Nil number is rental')
@@ -105,42 +105,44 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.rental?('A50'), 'A50 not rental')
     assert(!RaceNumber.rental?('50Z'), '50Z not rental')
 
-    RacingAssociation.current.rental_numbers = nil
     assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    race_number = RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road)
+    assert race_number.valid?, race_number.errors.full_messages.join(", ")
     assert(RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
   
-    assert(!RaceNumber.rental?(nil), 'Nil number not rental')
-    assert(!RaceNumber.rental?(''), 'Blank number not rental')
+    assert(RaceNumber.rental?(nil), 'Nil number rental')
+    assert(RaceNumber.rental?(''), 'Blank number rental')
     assert(!RaceNumber.rental?(' 9 '), '9 not rental')
     assert(!RaceNumber.rental?('11'), '11 is rental')
-    assert(!RaceNumber.rental?('99'), '99 is rental')
+    assert(RaceNumber.rental?('99'), '99 is rental')
     assert(!RaceNumber.rental?('100'), '100 not rental')
     assert(!RaceNumber.rental?('A100'), 'A100 not rental')
     assert(!RaceNumber.rental?('A50'), 'A50 not rental')
     assert(!RaceNumber.rental?('50Z'), '50Z not rental')
   end
 
-  def test_rental_alt
+  def test_rental_no_rental_numbers
     alice = FactoryGirl.create(:person)
+    racing_association = RacingAssociation.current
+    racing_association.rental_numbers = nil
+    racing_association.save!
     number_issuer = FactoryGirl.create(:number_issuer)
     road = FactoryGirl.create(:discipline, :name => "Road")
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     
-    RacingAssociation.current.rental_numbers = 11..99
     assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(!RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(!RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(!RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    assert(RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    assert(RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    assert(RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
   
-    assert(RaceNumber.rental?(nil), 'Nil number is rental')
-    assert(RaceNumber.rental?(''), 'Blank number is rental')
+    assert(!RaceNumber.rental?(nil), 'Nil number is rental')
+    assert(!RaceNumber.rental?(''), 'Blank number is rental')
     assert(!RaceNumber.rental?(' 9 '), '9 not rental')
-    assert(RaceNumber.rental?('11'), '11 is rental')
-    assert(RaceNumber.rental?('99'), '99 is rental')
+    assert(!RaceNumber.rental?('11'), '11 is not a rental')
+    assert(!RaceNumber.rental?('99'), '99 is rental')
     assert(!RaceNumber.rental?('11', Discipline[:downhill]), '11 is rental')
     assert(!RaceNumber.rental?('99', Discipline[:mountain_bike]), '99 is rental')
     assert(!RaceNumber.rental?('100'), '100 not rental')
@@ -148,18 +150,18 @@ class RaceNumberTest < ActiveSupport::TestCase
     assert(!RaceNumber.rental?('A50'), 'A50 not rental')
     assert(!RaceNumber.rental?('50Z'), '50Z not rental')
 
-    RacingAssociation.current.rental_numbers = nil
     assert(RaceNumber.new(:person => alice, :value => '10', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '11', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
-    assert(RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
+    race_number = RaceNumber.new(:person => alice, :value => ' 78', :year => 2001, :number_issuer => elkhorn, :discipline => road)
+    assert race_number.valid?, race_number.errors.full_messages.join(", ")
     assert(RaceNumber.new(:person => alice, :value => '99', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
     assert(RaceNumber.new(:person => alice, :value => '100', :year => 2001, :number_issuer => elkhorn, :discipline => road).valid?)
   
     assert(!RaceNumber.rental?(nil), 'Nil number not rental')
     assert(!RaceNumber.rental?(''), 'Blank number not rental')
     assert(!RaceNumber.rental?(' 9 '), '9 not rental')
-    assert(!RaceNumber.rental?('11'), '11 is rental')
-    assert(!RaceNumber.rental?('99'), '99 is rental')
+    assert(!RaceNumber.rental?('11'), '11 is not a rental')
+    assert(!RaceNumber.rental?('99'), '99 is not a rental')
     assert(!RaceNumber.rental?('100'), '100 not rental')
     assert(!RaceNumber.rental?('A100'), 'A100 not rental')
     assert(!RaceNumber.rental?('A50'), 'A50 not rental')

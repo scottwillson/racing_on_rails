@@ -31,10 +31,10 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
     page.body = "<h1>TTYL!</h1>"
     page.save!
     
-    assert_equal(1, page.versions.size, "versions")
+    assert_equal(2, page.versions.size, "versions")
     delete(:destroy, :id => page.versions.first.to_param)
 
-    assert_equal(0, page.versions.size, "versions")
+    assert_equal(2, page.versions.size, "versions")
   end
   
   test "Revert to version" do

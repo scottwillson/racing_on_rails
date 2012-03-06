@@ -20,6 +20,20 @@ module Admin
         assert_not_nil(assigns["disciplines"], "Should assign disciplines")
         assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
         assert(assigns["event"].is_a?(SingleDayEvent), "Should default to SingleDayEvent")
+        assert_equal 2008, assigns[:event].date.year, "Should set year"
+      end
+
+      def test_new_single_day_event_new_year
+        Timecop.freeze Time.zone.local(2009, 12, 28) do
+          get(:new)
+          assert_response(:success)
+          assert_template('admin/events/edit')
+          assert_not_nil(assigns["event"], "Should assign event")
+          assert_not_nil(assigns["disciplines"], "Should assign disciplines")
+          assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
+          assert(assigns["event"].is_a?(SingleDayEvent), "Should default to SingleDayEvent")
+          assert_equal 2010, assigns[:event].date.year, "Should set year"
+        end
       end
   
       def test_new_child_event

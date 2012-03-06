@@ -21,7 +21,6 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => promoter.to_param
     assert_response :success
     assert_equal promoter, assigns(:person), "@person"
-    assert_select ".tabs", :count => 1
   end
   
   def test_edit_as_editor
@@ -83,18 +82,16 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
     assert_equal gentle_lovers, person.reload.team, "Team should be updated"
-    assert_equal 1, person.versions.size, "versions"
+    assert_equal 2, person.versions.size, "versions"
     version = person.versions.last
-    assert_equal person.name, version.user, "version user"
+    assert_equal person, version.user, "version user"
     changes = version.changes
-    assert_equal 2, changes.size, "changes"
+    assert_equal 1, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
     assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal "Bob Jones", person.last_updated_by, "updated_by"
-    # VestalVersions convention
-    assert_nil person.updated_by, "updated_by"
+    assert_equal person, person.updated_by, "updated_by"
   end
   
   def test_update_no_name
@@ -109,18 +106,16 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to edit_person_path(person)
     person = Person.find(person.id)
     assert_equal gentle_lovers, person.reload.team, "Team should be updated"
-    assert_equal 1, person.versions.size, "versions"
+    assert_equal 2, person.versions.size, "versions"
     version = person.versions.last
-    assert_equal "my_login", version.user_name, "version user"
+    assert_equal "my_login", version.user.name_or_login, "version user"
     changes = version.changes
-    assert_equal 4, changes.size, "changes"
+    assert_equal 1, changes.size, "changes"
     change = changes["team_id"]
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
     assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal "my_login", person.last_updated_by, "updated_by"
-    # VestalVersions convention
-    assert_nil person.updated_by, "updated_by"
+    assert_equal editor, person.updated_by, "updated_by"
   end
   
   def test_update_by_editor

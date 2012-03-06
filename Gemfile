@@ -25,9 +25,12 @@ gem "dynamic_form"
 gem "in_place_editing"
 # FIXME Some updating need for Rails 3.1+ assets
 #gem "rails-widgets", :git => "git://github.com/scottwillson/rails-widgets.git"
+gem "ri_cal"
+gem "truncate_html"
 
 group :development do
   gem "capistrano"
+  gem "capistrano-unicorn"
 end
 
 group :test do
@@ -51,6 +54,6 @@ group :acceptance do
 end
 
 group :production do
-  gem "SyslogLogger", :require => "syslog_logger"
+  gem "syslog_logger", :git => "git://github.com/DanaDanger/syslog_logger.git"
   gem "unicorn"
 end

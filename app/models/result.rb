@@ -30,7 +30,6 @@ class Result < ActiveRecord::Base
   include Concerns::Result::Time
   include Export::Results
   
-  attr_accessor :updated_by
   serialize :custom_attributes, Hash
 
   before_save :find_associated_records
@@ -52,6 +51,8 @@ class Result < ActiveRecord::Base
   validates_presence_of :race
 
   scope :competition, where(:competition_result => true)
+
+  attr_accessor :updater
 
   def self.find_all_for(person)
     if person.is_a? Person
@@ -89,7 +90,7 @@ class Result < ActiveRecord::Base
        person.first_name.present? &&
        person.last_name.present? &&
        person[:member_from].blank? &&
-       event.number_issuer.name == RacingAssociation.current.short_name &&
+       event.number_issuer.association? &&
        !RaceNumber.rental?(number, Discipline[event.discipline])
 
       person.member_from = race.date
@@ -102,7 +103,9 @@ class Result < ActiveRecord::Base
         existing_team = Team.find_by_name_or_alias(team.name)
         self.team = existing_team if existing_team
       end
-      team.created_by = event if team && team.new_record?
+      if team && team.new_record?
+        team.updater = event
+      end
     end
     true
   end
@@ -165,7 +168,7 @@ class Result < ActiveRecord::Base
     discipline = Discipline[event.discipline]
     default_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
-      person.updated_by = self.updated_by
+      person.updater = updater
       person.add_number(number, discipline, event.number_issuer, event.date.year)
     end
   end
@@ -174,7 +177,7 @@ class Result < ActiveRecord::Base
   def save_person
     if person && (person.new_record? || person.changed?)
       if person.new_record?
-        person.created_by = event
+        person.updater = event
       end
       person.save!
     end

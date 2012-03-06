@@ -41,7 +41,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
   
   def test_index_only_shows_visible_events
-    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USAC")
+    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
     
     get :index
     html = @response.body
@@ -51,6 +51,24 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       !html[future_national_federation_event.name], 
       "Schedule should only show events sanctioned by Association"
     )
+  end
+  
+  def test_index_rss
+    FactoryGirl.create(:event)
+    get :index, :format => :rss
+    assert_redirected_to :format => :atom
+  end
+  
+  def test_index_atom
+    FactoryGirl.create(:event)
+    get :index, :format => :atom
+    assert_response :success
+  end
+  
+  def test_index_excel
+    FactoryGirl.create(:event)
+    get :index, :format => :xls
+    assert_response :success
   end
   
   def tets_road_index

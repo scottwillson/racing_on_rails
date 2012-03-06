@@ -81,6 +81,17 @@ module Admin
         assert_redirected_to unauthorized_path
       end
   
+      def test_edit_as_editor
+        event = FactoryGirl.create(:event)
+        person = FactoryGirl.create(:person)
+        event.editors << person
+        login_as person
+        get :edit, :id => event.to_param
+        assert_response :success
+        assert_template "admin/events/edit"
+        assert_select "#event_date_1i", :count => 0
+      end
+  
       def test_edit_child_event
         event = FactoryGirl.create(:series_event)
         get(:edit, :id => event.id)

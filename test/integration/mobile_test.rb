@@ -28,4 +28,14 @@ class MobileTest < ActionController::IntegrationTest
     get "http://m.cbra.org/posts/#{mailing_list_post.id}"
     assert_response :success
   end
+
+  def test_categories_page_redirect
+    category = FactoryGirl.create(:category)
+
+    get "http://m.cbra.org/categories/#{category.id}/races", { :mobile_site => 1 }, { "HTTP_USER_AGENT" => "Android" }
+    assert_redirected_to "http://cbra.org/categories/#{category.id}/races?"
+
+    get "http://cbra.org/categories/#{category.id}/races?", {}, { "HTTP_USER_AGENT" => "Android" }
+    assert_response :success
+  end
 end

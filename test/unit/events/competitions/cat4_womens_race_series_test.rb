@@ -226,7 +226,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     race.results.create!(:person => @alice, :place => "")
     
     # Non-WSBA results count for participation points
-    non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "FCF")
+    non_wsba_event = SingleDayEvent.create!(:name => "Classique des Alpes", :date => "2004-09-16", :sanctioned_by => "UCI")
     race = non_wsba_event.races.create!(:category => @category_4_women)
     race.results.create!(:person => @alice, :place => "56")
     

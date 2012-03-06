@@ -13,6 +13,9 @@ class RacesController < ApplicationController
         redirect_to event_results_path(@event)
       end
     else
+      if mobile_request?
+        return redirect_to_full_site
+      end
       @category = Category.find(params[:category_id])
     end
   end

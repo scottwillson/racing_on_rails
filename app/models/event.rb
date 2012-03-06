@@ -46,6 +46,7 @@ class Event < ActiveRecord::Base
   validate :parent_is_not_self
   
   validate :inclusion_of_discipline
+  validate :inclusion_of_sanctioned_by
 
   belongs_to :parent, :foreign_key => "parent_id", :class_name => "Event"
   has_many :children,
@@ -76,6 +77,7 @@ class Event < ActiveRecord::Base
   has_many :competition_event_memberships
 
   belongs_to :number_issuer
+  has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :join_table => "editors_events"
   belongs_to :promoter, :class_name => "Person"
   belongs_to :team
 
@@ -99,6 +101,7 @@ class Event < ActiveRecord::Base
   include Concerns::Event::Comparison
   include Concerns::Event::Dates
   include Concerns::Event::Names
+  include Concerns::Versioned
   include Export::Events
   
   # Return [weekly_series, events] that have results
@@ -390,6 +393,12 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def inclusion_of_sanctioned_by
+    if sanctioned_by && !RacingAssociation.current.sanctioning_organizations.include?(sanctioned_by)
+      errors.add :sanctioned_by, "'#{sanctioned_by}' must be in #{RacingAssociation.current.sanctioning_organizations.join(", ")}"
+    end
+  end
+
   def promoter_name
     promoter.name if promoter
   end

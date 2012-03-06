@@ -6,7 +6,9 @@
   <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
   <hr/>
 
-  <%= fckeditor_textarea(:article, :body, :toolbarSet => 'Simple', :width => '90%', :height => '400px') %>
+  <%#= fckeditor_textarea(:article, :body, :toolbarSet => 'Simple', :width => '90%', :height => '400px') %>
+  <%= f.label :article %>
+  <%= text_area(:article, :body, :cols => 80, :rows => 60, :class => "article-body")%>
 
   <%= f.labelled_text_field :position %>
   <%= f.labelled_check_box :display %>

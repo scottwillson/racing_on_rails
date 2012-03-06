@@ -4,6 +4,18 @@ class PostsController < ApplicationController
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
+    
+    if params[:month] && params[:year]
+      begin
+        date = Time.zone.local(params[:year].to_i, params[:month].to_i)
+        @start_date = date.beginning_of_month
+        @end_date = date.end_of_month
+        @posts = @posts.where("date between ? and ?", @start_date, @end_date)
+      rescue
+        logger.debug "Could not parse date year: #{params[:year]} month: #{params[:month]}"
+      end
+    end
+    
     if @subject.present?
       if @subject.size >= 4
         @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
@@ -11,6 +23,16 @@ class PostsController < ApplicationController
         @posts = []
         flash[:notice] = "Search text must be at least four letters"
       end
+    end
+    
+    @first_post_at = Post.minimum(:date)
+
+    respond_to do |format|
+      format.html
+      format.rss do
+        redirect_to mailing_list_posts_path(@mailing_list, :format => :atom), :status => :moved_permanently
+      end
+      format.atom
     end
   end
   
@@ -33,7 +55,7 @@ class PostsController < ApplicationController
   def post_private_reply
     @reply_to = Post.find(params[:reply_to_id])
     @mailing_list = MailingList.find(params[:mailing_list_id])
-    @post = @mailing_list.posts.create(params[:post])
+    @post = @mailing_list.posts.build(params[:post])
     if @post.valid?
       private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
       flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
@@ -48,7 +70,7 @@ class PostsController < ApplicationController
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post.mailing_list = @mailing_list
     if @post.valid?
-      post_email = MailingListMailer.post(@post).deliver
+      MailingListMailer.post(@post).deliver
       flash[:notice] = "Submitted new post: #{@post.subject}"
       redirect_to mailing_list_confirm_path(@mailing_list)
     else

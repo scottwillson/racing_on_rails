@@ -86,6 +86,7 @@ FactoryGirl.define do
     title "Plain"
     updated_at Time.zone.local(2007)
     created_at Time.zone.local(2007)
+    updater :factory => :person
   end
   
   factory :person do

@@ -4,11 +4,6 @@ require File.expand_path("../../test_helper", __FILE__)
 class PostsControllerTest < ActionController::TestCase
   assert_no_angle_brackets :except => [ :all ]
   
-  def setup
-    super
-    ActionMailer::Base.deliveries = []
-  end
-  
   def test_new
     obra_chat = FactoryGirl.create(:mailing_list)
     get(:new, :mailing_list_id => obra_chat.id)
@@ -84,6 +79,30 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  def test_index_atom
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get :index, :mailing_list_id => mailing_list.id, :format => :atom
+    assert_response :success
+  end
+  
+  def test_index_rss
+    mailing_list = FactoryGirl.create(:mailing_list)
+    get :index, :mailing_list_id => mailing_list.id, :format => :rss
+    assert_redirected_to :format => :atom
+  end
+  
+  def test_index_with_date
+    post = FactoryGirl.create(:post)
+    get :index, :mailing_list_id => post.mailing_list.id, :month => 12, :year => 2007
+    assert_response :success
+  end
+  
+  def test_index_with_bogus_date
+    post = FactoryGirl.create(:post)
+    get :index, :mailing_list_id => post.mailing_list.id, :month => 25, :year => 7
+    assert_response :success
+  end
+  
   def test_list
     obra_chat = FactoryGirl.create(:mailing_list)
     for index in 1..22
@@ -153,8 +172,6 @@ class PostsControllerTest < ActionController::TestCase
   end
   
   def test_post_reply
-    assert(MailingListMailer.deliveries.empty?, "Should have no email deliveries")
-  
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
@@ -169,23 +186,24 @@ class PostsControllerTest < ActionController::TestCase
       :body => "This is a test message."
     )
   
-    post(:create, 
-        :mailing_list_id => obra_chat.id,
-        :post => {
-          :subject => subject, 
-          :from_name => from_name,
-          :from_email_address => from_email_address,
-          :body => body},
-        :reply_to_id => reply_to_post.id,
-        :commit => "Post"
-    )
+    assert_no_difference "Post.count" do
+      post(:create, 
+          :mailing_list_id => obra_chat.id,
+          :post => {
+            :subject => subject, 
+            :from_name => from_name,
+            :from_email_address => from_email_address,
+            :body => body},
+          :reply_to_id => reply_to_post.id,
+          :commit => "Post"
+      )
+    end
     
     assert(flash.has_key?(:notice))
     assert_response(:redirect)
     assert_redirected_to mailing_list_confirm_private_reply_path(obra_chat)
     
-    assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
-    delivered_mail = MailingListMailer.deliveries.first
+    delivered_mail = MailingListMailer.deliveries.last
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
@@ -260,12 +278,11 @@ class PostsControllerTest < ActionController::TestCase
 
   def test_spam_post_should_not_cause_error
     obra_chat = FactoryGirl.create(:mailing_list)
-    post(:create, { "commit"=>"Post", "mailing_list_name"=> obra_chat.name, 
+    post(:create, { "commit"=>"Post", "mailing_list_id"=> obra_chat.to_param, 
                   "post" => { "from_name"=>"strap", 
                                "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
                                "subject"=>"onstrapdildo@mail.com", 
-                               "from_email_address"=>"onstrapdildo@mail.com", 
-                                           "mailing_list_id" => obra_chat.to_param }
+                               "from_email_address"=>"onstrapdildo@mail.com"}
     })
     assert_response(:redirect)
   end

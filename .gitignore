@@ -8,6 +8,8 @@
 .gitmodules
 .project
 .rvmrc
+*.sublime-*
+.tm_properties
 ._*
 /local
 chromedriver.log
@@ -26,3 +28,4 @@ public/local
 tmp/*
 tmp/**/*
 vendor/plugins/selenium-on-rails/log/
+/.idea/

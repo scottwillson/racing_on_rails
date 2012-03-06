@@ -379,7 +379,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     multi_day_event.state = "CT"
     multi_day_event.discipline = "Road"
     multi_day_event.flyer = "http://www.myseasons.com/"
-    multi_day_event.sanctioned_by = "FFL"
+    multi_day_event.sanctioned_by = "UCI"
     brad_ross = FactoryGirl.create(:person)
     multi_day_event.promoter = brad_ross
     multi_day_event.save!
@@ -403,7 +403,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal("Road", results["discipline"], "MultiDayEvent discipline")
     assert_equal("http://www.myseasons.com/", results["flyer"], "MultiDayEvent flyer")
     assert_equal(brad_ross.id, results["promoter_id"].to_i, "MultiDayEvent promoter_id")
-    assert_equal("FFL", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
+    assert_equal("UCI", results["sanctioned_by"], "MultiDayEvent sanctioned_by")
     assert_equal("CT", results["state"], "MultiDayEvent state")
   end
   

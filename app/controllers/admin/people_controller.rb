@@ -161,7 +161,7 @@ class Admin::PeopleController < Admin::AdminController
             number = RaceNumber.find(number_id)
             number_params = params[:number][number_id]
             if number.value != params[:number][number_id][:value]
-              number_params[:updated_by] = current_person.name
+              number_params[:updater] = current_person
               RaceNumber.update(number_id, number_params)
             end
           rescue Exception => e
@@ -178,7 +178,7 @@ class Admin::PeopleController < Admin::AdminController
               :number_issuer_id => params[:number_issuer_id][index], 
               :year => params[:number_year],
               :value => number_value,
-              :updated_by => current_person.name
+              :updater => current_person
             )
             unless race_number.errors.empty?
               @person.errors.add(:base, race_number.errors.full_messages)
@@ -226,7 +226,7 @@ class Admin::PeopleController < Admin::AdminController
       redirect_to :index
     end
     
-    render "preview_import", :layout => "admin/people/preview_import"
+    render "preview_import"
   end
   
   # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.

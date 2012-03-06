@@ -7,9 +7,13 @@ class Person < ActiveRecord::Base
   include SentientUser
   include Export::People
 
-  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :updated_by, :login_count, :password_salt, 
-                         :perishable_token, :persistence_token, :single_access_token ]
+  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :login_count, :password_salt, 
+                         :perishable_token, :persistence_token, :single_access_token ],
+            :initial_version => true
   
+  include Concerns::Versioned
+  belongs_to :old_created_by, :polymorphic => true
+
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
     config.validates_format_of_login_field_options :with => Authlogic::Regex.login, 
@@ -29,12 +33,9 @@ class Person < ActiveRecord::Base
   before_validation :find_associated_records
   validate :membership_dates
   before_save :destroy_shadowed_aliases
-  before_create :set_created_by
-  # before_save :set_updated_by
   after_save :add_alias_for_old_name
 
   has_many :aliases
-  belongs_to :created_by, :polymorphic => true
   has_and_belongs_to_many :editable_people, :class_name => "Person", :foreign_key => "editor_id", :before_add => :validate_unique_editors
   has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :before_add => :validate_unique_editors
   has_many :editor_requests, :dependent => :destroy
@@ -250,23 +251,22 @@ class Person < ActiveRecord::Base
 
   # Workaround Rails date param-parsing. Also convert :team attribute to Team.
   # Not sure this is needed.
-  # def attributes=(attributes)
-  #   unless attributes.nil?
-  #     if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
-  #       attributes["member_to(2i)"] = '12'
-  #       attributes["member_to(3i)"] = '31'
-  #     end
-  #     if attributes[:team] && attributes[:team].is_a?(Hash)
-  #       team = Team.new(attributes[:team])
-  #       team.created_by = attributes[:created_by]
-  #       attributes[:team] = team
-  #     end
-  #     self.created_by = attributes[:created_by]
-  #     self.updated_by = attributes[:updated_by]
-  #     self.year = attributes[:year]
-  #   end
-  #   super(attributes)
-  # end
+  def attributes=(attributes)
+    unless attributes.nil?
+      if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
+        attributes["member_to(2i)"] = '12'
+        attributes["member_to(3i)"] = '31'
+      end
+      if attributes[:team] && attributes[:team].is_a?(Hash)
+        team = Team.new(attributes[:team])
+        team.updater = attributes[:updater]
+        attributes[:team] = team
+      end
+      self.updater = attributes[:updater]
+      self.year = attributes[:year]
+    end
+    super(attributes)
+  end
   
   # Name on year. Could be rolled into Nameable?
   def name(date_or_year = nil)
@@ -388,7 +388,7 @@ class Person < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value, :created_by => new_record? ? self.created_by : nil) unless self.team
+      self.team = Team.new(:name => value, :updater => new_record? ? self.updater : nil) unless self.team
     end
   end
 
@@ -575,7 +575,7 @@ class Person < ActiveRecord::Base
         end
         race_numbers.build(
           :person => self, :value => value, :discipline => discipline, :year => _year, :number_issuer => association, 
-          :updated_by => updated_by
+          :updater => self.updater
         ) unless existing_number
       else
         race_number = RaceNumber.first(
@@ -584,7 +584,7 @@ class Person < ActiveRecord::Base
         unless race_number
           race_numbers.create(
             :person => self, :value => value, :discipline => discipline, :year => _year, 
-            :number_issuer => association, :updated_by => updated_by
+            :number_issuer => association, :updater => self.updater
           )
         end
       end
@@ -748,14 +748,6 @@ class Person < ActiveRecord::Base
     self.print_card = true
     self.license_type = license_type
     save!
-  end
-  
-  def created_from_result?
-    !created_by.nil? && created_by.kind_of?(Event)
-  end
-  
-  def updated_after_created?
-    created_at && updated_at && ((updated_at - created_at) > 1.hour) && updated_by
   end
 
   def state=(value)
@@ -942,20 +934,6 @@ class Person < ActiveRecord::Base
 
   def can_edit?(person)
     person == self || administrator? || person.editors.include?(self)
-  end
-  
-  # def set_updated_by
-  #   if updated_by.nil? && Person.current
-  #     self.updated_by = Person.current.name_or_login
-  #     # FIXME consolidate
-  #     self.last_updated_by = Person.current.name_or_login
-  #   end
-  # end
-  
-  def set_created_by
-    if created_by.nil?
-      self.created_by = updated_by
-    end
   end
   
   # If name changes to match existing alias, destroy the alias

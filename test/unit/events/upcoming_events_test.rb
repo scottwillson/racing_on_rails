@@ -38,7 +38,7 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     )
     # Wednesday
     lucky_lab_tt =    SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'Lucky Lab Road Race', :discipline => 'Time Trial', :flyer_approved => true)
-    not_obra =        SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'USA RR', :discipline => 'Road', :sanctioned_by => 'National Federation', :flyer_approved => true)
+    not_obra =        SingleDayEvent.create!(:date => Date.new(2007, 5, 23), :name => 'USA RR', :discipline => 'Road', :sanctioned_by => 'USA Cycling', :flyer_approved => true)
     track_class = WeeklySeries.create!(
       :start_date => Date.new(2007, 4), :end_date => Date.new(2007, 7), :name => 'Track Class', :discipline => 'Track', 
       :instructional => true, :flyer_approved => true, :every => "Wednesday"

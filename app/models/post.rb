@@ -14,7 +14,7 @@ class Post < ActiveRecord::Base
   
   acts_as_list
   
-  default_value_for :date, lambda { Time.zone.now }
+  default_value_for :date, { Time.zone.now }
   
   def Post.find_for_dates(mailing_list, month_start, month_end)
     logger.debug("Post.find_for_dates(#{mailing_list}, #{month_start}, #{month_end})")

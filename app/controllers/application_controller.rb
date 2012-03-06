@@ -146,8 +146,8 @@ class ApplicationController < ActionController::Base
     end
     
     unless administrator? || 
-           (@event && current_person == @event.promoter) || 
-           (@race && current_person == @race.event.promoter)
+           (@event && (current_person == @event.promoter || @event.editors.include?(current_person))) || 
+           (@race && (current_person == @race.event.promoter || @race.event.editors.include?(current_person)))
            
       redirect_to unauthorized_path
       return false
@@ -269,11 +269,11 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_full_site
     redirect_to request.protocol + request.host_with_port.gsub(/^m\./, '') +
-                request.fullpath and return
+                request.fullpath.gsub("mobile_site=1", "") and return
   end
 
   def redirect_to_mobile_if_applicable
-    unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser?
+    unless mobile_request? || cookies[:prefer_full_site] || !mobile_browser? || !RacingAssociation.current.mobile_site?
       redirect_to request.protocol + "m." + request.host_with_port.gsub(/^www\./, '') +
                   request.fullpath and return
     end

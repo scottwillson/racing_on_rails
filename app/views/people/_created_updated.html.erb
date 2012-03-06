@@ -6,5 +6,5 @@
 </span>
 <%= link_to(person_versions_path(@person)) do %>
   <% if @person.updated_at %>Updated <%= time_ago_in_words(@person.updated_at, true) + " ago" %><% end %>
-  <% if @person.last_updated_by.present? %>by <%= truncate_from_end(@person.last_updated_by) %><% end %>
+  <% if @person.updated_by.present? %>by <%= truncate_from_end(@person.updated_by.name) %><% end %>
 <% end -%>

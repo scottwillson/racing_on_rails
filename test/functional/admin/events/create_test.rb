@@ -19,7 +19,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                       'promoter_id' => person.to_param, 'type' => 'SingleDayEvent'}
         )
@@ -35,7 +35,7 @@ module Admin
         assert_equal('Smith Rock', skull_hollow.city, 'city')
         assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
         assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('WSBA', skull_hollow.sanctioned_by, 'sanctioned_by')
+        assert_equal('USA Cycling', skull_hollow.sanctioned_by, 'sanctioned_by')
         assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
         assert_equal('Downhill', skull_hollow.discipline, 'discipline')
         assert_equal(true, skull_hollow.cancelled, 'cancelled')
@@ -50,7 +50,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                        "parent_id" => parent.to_param,
                       'promoter_id' => nate_hobson.to_param, 'type' => 'Event'}
@@ -84,7 +84,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                        "parent_id" => parent.to_param,
                       'promoter_id' => person.to_param, 'type' => 'SingleDayEvent'}
@@ -101,7 +101,7 @@ module Admin
         assert_equal('Smith Rock', skull_hollow.city, 'city')
         assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
         assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('WSBA', skull_hollow.sanctioned_by, 'sanctioned_by')
+        assert_equal('USA Cycling', skull_hollow.sanctioned_by, 'sanctioned_by')
         assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
         assert_equal('Downhill', skull_hollow.discipline, 'discipline')
         assert_equal(true, skull_hollow.cancelled, 'cancelled')
@@ -117,7 +117,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                        "parent_id" => parent.to_param,
                       'promoter_id' => person.to_param, 'type' => ''}
@@ -135,7 +135,7 @@ module Admin
         assert_equal('Smith Rock', skull_hollow.city, 'city')
         assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
         assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('WSBA', skull_hollow.sanctioned_by, 'sanctioned_by')
+        assert_equal('USA Cycling', skull_hollow.sanctioned_by, 'sanctioned_by')
         assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
         assert_equal('Downhill', skull_hollow.discipline, 'discipline')
         assert_equal(true, skull_hollow.cancelled, 'cancelled')
@@ -150,7 +150,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                       "promoter_id"  => person.to_param, 'type' => 'Series'}
         )
@@ -169,7 +169,7 @@ module Admin
         post(:create, 
              "commit"=>"Save", 
              "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"WSBA", "flyer_approved"=>"1", 
+                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                       "promoter_id"  => person.to_param, 'type' => 'SingleDayEvent'}
         )
@@ -192,7 +192,7 @@ module Admin
       end
 
       def test_create_without_promoter_id
-        post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"ABA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
+        post :create, "event"=>{"promoter_name"=>"Tour de Nuit", "city"=>"Calgary ", "name"=>"Ride the Road Tour", "date(1i)"=>"2010", "flyer_approved"=>"0", "number_issuer_id"=>"1", "sanctioned_by"=>"CBRA", "date(2i)"=>"6", "notes"=>"", "pre_event_fees"=>"", "first_aid_provider"=>"", "date(3i)"=>"6", "post_event_fees"=>"", "flyer"=>"", "beginner_friendly"=>"0", "time"=>"", "instructional"=>"0", "postponed"=>"0", "team_name"=>"", "type"=>"SingleDayEvent", "phone"=>"", "practice"=>"0", "discipline"=>"", "parent_id"=>"", "cancelled"=>"0", "flyer_ad_fee"=>"", "team_id"=>"", "chief_referee"=>"", "email"=>"gary@morepeoplecycling.ca", "promoter_id"=>"", "state"=>"AB"}
   
         assert_not_nil assigns(:event), "@event"
         assert assigns(:event).errors.empty?, assigns(:event).errors.full_messages.join

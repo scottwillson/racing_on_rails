@@ -33,7 +33,6 @@ class IndexTest < ActionController::TestCase
     assert_layout("application")
     assert_not_nil(assigns["people"], "Should assign people")
     assert(assigns["people"].empty?, "Should find no one")
-    assert_select ".tabs", :count => 1
     assert_select "a#export_link", :count => 1
   end
 
