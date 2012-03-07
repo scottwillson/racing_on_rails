@@ -55,6 +55,10 @@
 <%- end -%>
 
 <%- else -%>
+<% if @event.is_a?(RiderRankings) && @year.to_i > 2011 %>
+<p class="centered">The WSBA is using the default USA Cycling ranking system from 2012 onward. Please see <%= link_to "http://www.usacycling.org/events/rr.php" %>.</p>
+<%- else -%>
 No results for <%= @year %>.
+<%- end -%>
 <br/>
 <%- end -%>
