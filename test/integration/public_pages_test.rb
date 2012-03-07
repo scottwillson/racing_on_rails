@@ -107,6 +107,17 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_redirected_to "http://obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
   end
 
+  def test_competitions
+    category_men_1_2 = FactoryGirl.create(:category, :name => "Men Cat 1-2")
+    sr_women = FactoryGirl.create(:category, :name => "Women Cat 1-2")
+    wsba = WsbaBarr.create!(:date => Date.new(2004))
+
+    get "/wsba_barr/2004"
+    assert_response :success
+
+    assert_equal wsba, assigns(:event), "@event"
+  end
+
   private
   
   def go_to_login

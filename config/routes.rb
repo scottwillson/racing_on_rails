@@ -242,6 +242,7 @@ RacingOnRails::Application.routes.draw do
   match '/account' => 'people#account', :as => :account
 
   match '/wsba_barr' => 'competitions#show', :as => :wsba_barr_root, :type => 'wsba_barr'
+  match '/wsba_barr/:year' => 'competitions#show', :as => :wsba_barr, :type => 'wsba_barr', :constraints => { :year => /\d{4}/ }
 
   match '*path', :to => 'pages#show'
   
