@@ -3,16 +3,10 @@
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ActiveRecord::Base
   include Comparable
+  include Concerns::Versioned
   include Names::Nameable
   include SentientUser
   include Export::People
-
-  versioned :except => [ :current_login_at, :current_login_ip, :last_login_at, :last_login_ip, :login_count, :password_salt, 
-                         :perishable_token, :persistence_token, :single_access_token ],
-            :initial_version => true
-  
-  include Concerns::Versioned
-  belongs_to :old_created_by, :polymorphic => true
 
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
