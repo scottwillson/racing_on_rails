@@ -114,8 +114,13 @@ class PublicPagesTest < ActionController::IntegrationTest
 
     get "/wsba_barr/2004"
     assert_response :success
-
     assert_equal wsba, assigns(:event), "@event"
+
+    rider_rankings = RiderRankings.create!(:date => Date.new(2004))
+
+    get "/rider_rankings/2004"
+    assert_response :success
+    assert_equal rider_rankings, assigns(:event), "@event"
   end
 
   private
