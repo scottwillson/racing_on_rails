@@ -20,6 +20,7 @@ gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "ri_cal"
 gem "truncate_html"
+gem "jquery-rails"
 
 group :development do
   gem "capistrano"
