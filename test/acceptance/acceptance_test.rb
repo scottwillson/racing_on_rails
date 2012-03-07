@@ -80,12 +80,12 @@ class AcceptanceTest < ActiveSupport::TestCase
 
     begin
       Timeout::timeout(10) do
-        until page.find(locator)
+        until page.has_selector?(locator)
           sleep 0.25
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "'#{locator}' did not appear in page source within 10 seconds"
+      fail "'#{locator}' did not appear in page source within 10 seconds"
     end
   end
 
