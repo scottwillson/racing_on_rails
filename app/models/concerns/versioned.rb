@@ -24,7 +24,7 @@ module Concerns
       end
 
       def created_from_result?
-        !created_by.nil? && created_by.kind_of?(::Event)
+        created_by.present? && created_by.kind_of?(::Event)
       end
       
       def updated_after_created?
