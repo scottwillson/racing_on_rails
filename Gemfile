@@ -27,6 +27,7 @@ gem "in_place_editing"
 #gem "rails-widgets", :git => "git://github.com/scottwillson/rails-widgets.git"
 gem "ri_cal"
 gem "truncate_html"
+gem "jquery-rails"
 
 group :development do
   gem "capistrano"
