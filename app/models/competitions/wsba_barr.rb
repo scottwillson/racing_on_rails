@@ -5,6 +5,10 @@ class WsbaBarr < Competition
   end
   
   def point_schedule
+    [ 0, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+  end
+
+  def state_championship_point_schedule
     [ 0, 20, 17, 15, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ]
   end
 
@@ -13,16 +17,9 @@ class WsbaBarr < Competition
       "Men Cat 1-2",
       "Men Cat 3",
       "Men Cat 4-5",
-      "Master Men 35-39 Cat 1-3",
-      "Master Men 35-39 Cat 4-5",
-      "Master Men 40-49 Cat 1-3",
-      "Master Men 40-49 Cat 4-5",
-      "Master Men 50+ Cat 1-5",
       "Women Cat 1-2",
       "Women Cat 3",
-      "Women Cat 4",
-      "Master Women 35+ Cat 1-3",
-      "Master Women 35+ Cat 4"
+      "Women Cat 4"
     ].each do |category_name|
       category = Category.find_or_create_by_name(category_name)
       races.create(:category => category)
@@ -64,7 +61,12 @@ class WsbaBarr < Competition
       end
       points_index = place_members_only? ? source_result.members_only_place.to_i : source_result.place.to_i
       points = point_schedule[points_index].to_f
-      points *= points_factor(source_result)
+
+      cem = source_result.event.competition_event_memberships.detect{|comp| comp.competition_id == self.id}
+      if cem && cem.points_factor == 2
+        points = state_championship_point_schedule[points_index].to_f
+      end
+
       points /= team_size.to_f 
     }
     points
