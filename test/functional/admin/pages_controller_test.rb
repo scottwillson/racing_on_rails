@@ -2,11 +2,8 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class Admin::PagesControllerTest < ActionController::TestCase
-  def setup
-    super
-    create_administrator_session
-    use_ssl
-  end
+  setup :create_administrator_session
+  setup :use_ssl
   
   assert_no_angle_brackets :except => [ :test_edit_page ]
 
@@ -82,6 +79,7 @@ class Admin::PagesControllerTest < ActionController::TestCase
   end
   
   def test_new_page_parent
+    assert_equal 0, Page.count
     parent_page = FactoryGirl.create(:page)
     get(:new, :page => { :parent_id => parent_page.to_param })
     page = assigns(:page)
