@@ -26,7 +26,9 @@ class RaceNumberTest < ActiveSupport::TestCase
     alice = FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
-    race_number = RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => road)
+    race_number = RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => road, :updater => molly)
+    assert_equal molly, race_number.created_by, "created_by"
+    assert_equal molly, race_number.updated_by, "update_by"
     assert_equal(alice, race_number.person, 'New number person')
     assert_equal(2001, race_number.year, 'New number year')
     assert_equal(elkhorn, race_number.number_issuer, 'New number_issuer person')

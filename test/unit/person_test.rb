@@ -644,7 +644,11 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline, :name => "Road")    
     FactoryGirl.create(:discipline, :name => "Time Trial")
     
-    tonkin = FactoryGirl.create(:person, :road_number => "102")
+    person = FactoryGirl.create(:person)
+    tonkin = Person.create!(:updater => person)
+    tonkin.road_number = "102"
+    road_number = tonkin.race_numbers.first
+    assert_equal person, road_number.created_by, "created_by"
     tonkin.ccx_number = "U89"
     assert_equal("U89", tonkin.ccx_number)
     assert_equal("U89", tonkin.number(:ccx))

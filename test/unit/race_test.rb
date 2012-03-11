@@ -455,12 +455,13 @@ class RaceTest < ActiveSupport::TestCase
     race = event.races.create!(:category => FactoryGirl.create(:category))
     weaver = FactoryGirl.create(:person)
     race.results.create!(:place => "1", :person => weaver)
-    race.results.create!(:place => "2", :person => Person.new(:name => "Jonah Braun"))
+    result = race.results.create!(:place => "2", :person => Person.new(:name => "Jonah Braun"))
     race.results.create!(:place => "3", :person => mathew_braun)
     assert(Person.exists?(:first_name => "Jonah", :last_name => "Braun"), "New person Jonah Braun should have been created")
 
     race.reload
     race.destroy
+    assert !Result.exists?(result.id), "Should destroy result"
     assert(!Race.exists?(race.id), "Should be destroyed. #{race.errors.full_messages}")
     assert(!Person.exists?(:first_name => "Jonah", :last_name => "Braun"), "New person Jonah Braun should have been deleted")
     assert(Person.exists?(weaver.id), "Existing person Ryan Weaver should not be deleted")

@@ -38,7 +38,8 @@ class Result < ActiveRecord::Base
   before_create :cache_event_attributes
   before_save :ensure_custom_attributes
   after_save :update_person_number
-  after_destroy [ :destroy_people, :destroy_teams ]
+  after_destroy :destroy_people
+  after_destroy :destroy_teams
 
   has_many :scores, :foreign_key => 'competition_result_id', :dependent => :destroy, :extend => CreateIfBestResultForRaceExtension
   has_many :dependent_scores, :class_name => 'Score', :foreign_key => 'source_result_id', :dependent => :destroy

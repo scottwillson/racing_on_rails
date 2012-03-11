@@ -38,5 +38,5 @@ RacingOnRails::Application.configure do
   config.active_support.deprecation = :stderr
 
   # For fastness. Change locally if you need debug logging to catch a problem.
-  config.log_level = :warn
+  config.log_level = :debug
 end

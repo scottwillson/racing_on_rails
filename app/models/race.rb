@@ -11,7 +11,7 @@ class Race < ActiveRecord::Base
   include Comparable
   include Export::Races
 
-  DEFAULT_RESULT_COLUMNS = %W{place number last_name first_name team_name points time}.freeze
+  DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
   
   validates_presence_of :event, :category
   validate :inclusion_of_sanctioned_by
@@ -26,6 +26,9 @@ class Race < ActiveRecord::Base
   belongs_to :event
   has_one :promoter, :through => :event
   has_many :results, :dependent => :destroy
+
+  default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
+  default_value_for :custom_columns, []
   
   # Defaults to Event's BAR points
   def bar_points
@@ -140,7 +143,7 @@ class Race < ActiveRecord::Base
   
   # Default columns if empty
   def result_columns_or_default
-    self.result_columns || DEFAULT_RESULT_COLUMNS.dup
+    self.result_columns ||= DEFAULT_RESULT_COLUMNS.dup
   end
   
   # Ugh. Better here than a controller or helper, I guess.

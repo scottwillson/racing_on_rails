@@ -4,9 +4,9 @@
 class Person < ActiveRecord::Base
   include Comparable
   include Concerns::Versioned
+  include Export::People
   include Names::Nameable
   include SentientUser
-  include Export::People
 
   acts_as_authentic do |config|
     config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
@@ -243,25 +243,6 @@ class Person < ActiveRecord::Base
     Person.all(:conditions => { :first_name => last_name, :last_name => first_name })
   end
 
-  # Workaround Rails date param-parsing. Also convert :team attribute to Team.
-  # Not sure this is needed.
-  def attributes=(attributes)
-    unless attributes.nil?
-      if attributes["member_to(1i)"] && !attributes["member_to(2i)"]
-        attributes["member_to(2i)"] = '12'
-        attributes["member_to(3i)"] = '31'
-      end
-      if attributes[:team] && attributes[:team].is_a?(Hash)
-        team = Team.new(attributes[:team])
-        team.updater = attributes[:updater]
-        attributes[:team] = team
-      end
-      self.updater = attributes[:updater]
-      self.year = attributes[:year]
-    end
-    super(attributes)
-  end
-  
   # Name on year. Could be rolled into Nameable?
   def name(date_or_year = nil)
     year = parse_year(date_or_year)
@@ -382,7 +363,7 @@ class Person < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value, :updater => new_record? ? self.updater : nil) unless self.team
+      self.team = Team.new(:name => value, :updater => new_record? ? updater : nil) unless self.team
     end
   end
 
@@ -546,6 +527,8 @@ class Person < ActiveRecord::Base
   end
   
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
+  # Need to set +updater+ before setting numbers to ensure updater is passed to number. Setting all via a
+  # parameter hash may add number before updater is set.
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if association.nil?
     _year ||= RacingAssociation.current.year
@@ -568,8 +551,8 @@ class Person < ActiveRecord::Base
           number.value == value && number.discipline == discipline && number.association == association && number.year == _year
         end
         race_numbers.build(
-          :person => self, :value => value, :discipline => discipline, :year => _year, :number_issuer => association, 
-          :updater => self.updater
+          :value => value, :discipline => discipline, :year => _year, :number_issuer => association, 
+          :updater => updater
         ) unless existing_number
       else
         race_number = RaceNumber.first(
@@ -577,8 +560,8 @@ class Person < ActiveRecord::Base
                            value, self.id, discipline.id, _year, association.id])
         unless race_number
           race_numbers.create(
-            :person => self, :value => value, :discipline => discipline, :year => _year, 
-            :number_issuer => association, :updater => self.updater
+            :value => value, :discipline => discipline, :year => _year, 
+            :number_issuer => association, :updater => updater
           )
         end
       end
@@ -820,7 +803,6 @@ class Person < ActiveRecord::Base
   
   # Hack around in-place editing
   def toggle!(attribute)
-    logger.debug("toggle! #{attribute} #{attribute == 'member'}")
     if attribute == 'member'
       self.member = !member?
       save!

@@ -19,7 +19,6 @@ class RaceNumber < ActiveRecord::Base
   validates_presence_of :value
   validate :unique_number
   
-  before_save :get_person_id
   before_save :validate_year
   
   belongs_to :discipline
@@ -89,12 +88,6 @@ class RaceNumber < ActiveRecord::Base
     self.discipline = Discipline[:road] unless self.discipline
     self.number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) unless self.number_issuer
     self.year = RacingAssociation.current.effective_year unless (self.year and self.year > 1800)
-  end
-  
-  def get_person_id
-    if person && (person.new_record? || person.changed?)
-      person.reload
-    end
   end
   
   def validate_year

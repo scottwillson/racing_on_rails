@@ -121,14 +121,12 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   # +year+ for RaceNumbers
   # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
   def import(update_membership, year = nil)
-    logger.debug("PeopleFile import update_membership: #{update_membership}")
     @update_membership = update_membership
     @has_print_column = columns.any? do |column|
       column.field == :print_card
     end
     year = year.to_i if year
     
-    logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
     if @update_membership
@@ -168,8 +166,8 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           if people.empty?
             delete_unwanted_member_from(row_hash, person)
             add_print_card_and_label(row_hash)
-            row_hash[:updater] = import_file
-            person = Person.new(row_hash)
+            person = Person.new(:updater => import_file)
+            person.attributes = row_hash
             person.save!
             @created = @created + 1
           elsif people.size == 1
@@ -182,7 +180,9 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             end
             add_print_card_and_label(row_hash, person)
             
-            person = Person.update(people.last.id, row_hash)
+            person.updater = import_file
+            person.attributes = row_hash
+            person.save!
             unless person.valid?
               raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
             end
