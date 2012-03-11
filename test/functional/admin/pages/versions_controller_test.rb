@@ -34,7 +34,7 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
     assert_equal(2, page.versions.size, "versions")
     delete(:destroy, :id => page.versions.first.to_param)
 
-    assert_equal(2, page.versions.size, "versions")
+    assert_equal(1, page.versions.size, "versions")
   end
   
   test "Revert to version" do
