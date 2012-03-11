@@ -12,6 +12,8 @@ class CompetitionsController < ApplicationController
       competition_class = Cat4WomensRaceSeries
     elsif params[:type] == "wsba_barr"
       competition_class = WsbaBarr
+    elsif params[:type] == "wsba_masters_barr"
+      competition_class = WsbaMastersBarr
     elsif params[:type] == "mbra_bar"
       competition_class = MbraBar
     else
