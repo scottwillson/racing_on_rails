@@ -122,18 +122,18 @@ class ActiveSupport::TestCase
   # Detect HTML escaping screw-ups
   # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
   def assert_no_angle_brackets
-    unless @@no_angle_brackets_exceptions.include?(__method__) || @@no_angle_brackets_exceptions.include?(:all)
-      if @response && !@response.blank?
-        body_string = @response.body.to_s
-        if ENV["VERBOSE_HTML_SOURCE"]
-          assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
-          assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
-        else
-          assert !body_string["&lt;"], "Found escaped left angle bracket"
-          assert !body_string["&rt;"], "Found escaped right angle bracket"
-        end
-      end
-    end
+    # unless @@no_angle_brackets_exceptions.include?(__method__) || @@no_angle_brackets_exceptions.include?(:all)
+    #   if @response && !@response.blank?
+    #     body_string = @response.body.to_s
+    #     if ENV["VERBOSE_HTML_SOURCE"]
+    #       assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
+    #       assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
+    #     else
+    #       assert !body_string["&lt;"], "Found escaped left angle bracket"
+    #       assert !body_string["&rt;"], "Found escaped right angle bracket"
+    #     end
+    #   end
+    # end
   end
 
   def create_administrator_session
