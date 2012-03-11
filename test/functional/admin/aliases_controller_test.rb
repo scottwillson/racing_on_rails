@@ -21,7 +21,7 @@ class Admin::AliasesControllerTest < ActionController::TestCase
   test "destroy team alias" do
     team = FactoryGirl.create(:team)
     team_alias = team.aliases.create!(:name => "Alias")
-    delete :destroy, :id => team_alias.to_param, :persoteam_id => team_alias.team.to_param, :format => "js"
+    delete :destroy, :id => team_alias.to_param, :team_id => team_alias.team.to_param, :format => "js"
     assert_response :success
     assert !Alias.exists?(team_alias.id), "alias"
   end
