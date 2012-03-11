@@ -137,7 +137,7 @@ class ActiveSupport::TestCase
   end
 
   def create_administrator_session
-    @administrator = FactoryGirl.create(:administrator)
+    @administrator = Person.find_by_login("admin@example.com") || FactoryGirl.create(:administrator)
     PersonSession.create(@administrator)
   end
   

@@ -27,9 +27,9 @@ module Admin
         post :upload, :id => mt_hood_1.to_param, 
                       :results_file => fixture_file_upload("../files/results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
 
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
@@ -41,9 +41,9 @@ module Admin
         post :upload, :id => mt_hood_1.to_param, 
                       :results_file => fixture_file_upload("../files/results/tt_usac.xls", "application/vnd.ms-excel", :binary)
 
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_redirected_to edit_admin_event_path(mt_hood_1)
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
@@ -56,8 +56,8 @@ module Admin
         assert_redirected_to edit_admin_event_path(mt_hood_1)
 
         assert_response :redirect
-        assert(flash.has_key?(:notice))
-        assert(!flash.has_key?(:warn))
+        assert_not_nil flash[:notice]
+        assert(!flash[:warn].present?)
         assert(!mt_hood_1.races(true).empty?, 'Should have races after upload attempt')
       end
 
@@ -77,16 +77,16 @@ module Admin
     
         # Dupe people used to be allowed, and this would have been an error
         assert(!mt_hood_1.races(true).empty?, 'Should have races after importing dupe people')
-        assert(!flash.has_key?(:warn))
+        assert(!flash[:warn].present?)
       end
 
       def test_upload_schedule
         post(:upload_schedule, :schedule_file => fixture_file_upload("../files/schedule/excel.xls", "application/vnd.ms-excel", :binary))
   
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :redirect
         assert_redirected_to(admin_events_path)
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
   
         after_import_after_schedule_start_date = Event.count(:conditions => "date > '2005-01-01'")
         assert_equal(76, after_import_after_schedule_start_date, "2005 events count after import")

@@ -29,7 +29,7 @@ module Admin
         assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
   
         assert_redirected_to edit_admin_event_path(assigns(:event))
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
 
         assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
         assert_equal('Smith Rock', skull_hollow.city, 'city')
@@ -62,7 +62,7 @@ module Admin
         assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
   
         assert_redirected_to edit_admin_event_path(assigns(:event))
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
 
         assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
         assert_equal('Smith Rock', skull_hollow.city, 'city')
@@ -95,7 +95,7 @@ module Admin
         assert(skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should be a SingleDayEvent')
   
         assert_redirected_to edit_admin_event_path(assigns(:event))
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
 
         assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
         assert_equal('Smith Rock', skull_hollow.city, 'city')
@@ -129,7 +129,7 @@ module Admin
         assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
   
         assert_redirected_to edit_admin_event_path(assigns(:event))
-        assert(flash.has_key?(:notice))
+        assert_not_nil flash[:notice]
 
         assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
         assert_equal('Smith Rock', skull_hollow.city, 'city')

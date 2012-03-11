@@ -26,7 +26,7 @@ module Admin
         file = fixture_file_upload("../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
         post :preview_import, :people_file => file
 
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty,  but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty,  but was: #{flash[:warn]}")
         assert_response :success
         assert_template("admin/people/preview_import")
         assert_not_nil(assigns["people_file"], "Should assign 'people_file'")
@@ -39,7 +39,7 @@ module Admin
       def test_preview_import_with_no_file
         post(:preview_import, :commit => 'Import', :people_file => "")
 
-        assert(flash.has_key?(:warn), "should have flash[:warn]")
+        assert(flash[:warn].present?, "should have flash[:warn]")
         assert_redirected_to admin_people_path
       end
 
@@ -54,7 +54,7 @@ module Admin
         @request.session[:people_file_path] = File.expand_path("#{::Rails.root.to_s}/test/files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
         post(:import, :commit => 'Import', :update_membership => 'true')
 
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
         assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
@@ -76,7 +76,7 @@ module Admin
         next_year = Time.zone.today.year + 1
         post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
 
-        assert(!flash.has_key?(:warn), "flash[:warn] should be empty, but was: #{flash[:warn]}")
+        assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
         assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
@@ -110,7 +110,7 @@ module Admin
         @request.session[:people_file_path] = "#{::Rails.root.to_s}/test/files/membership/duplicates.xls"
         post(:import, :commit => 'Import', :update_membership => 'true')
 
-        assert(flash.has_key?(:warn), "flash[:warn] should not be empty")
+        assert(flash[:warn].present?, "flash[:warn] should not be empty")
         assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
         assert_equal(1, Duplicate.count, 'Should have duplicates')
         assert_redirected_to duplicates_admin_people_path
@@ -121,7 +121,7 @@ module Admin
 
       def test_import_with_no_file
         post :import, :commit => 'Import', :update_membership => 'true'
-        assert flash.has_key?(:warn), "should have flash[:warn]"
+        assert flash[:warn].present?, "should have flash[:warn]"
         assert_redirected_to admin_people_path
       end
 

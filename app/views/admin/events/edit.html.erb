@@ -169,11 +169,15 @@
   </div>
 </div>
 
-<%=
-  if (!@event.promoter || @event.new_record?) && administrator?
-    update_page_tag { |page| page.hide(:edit_promoter_link) }
-  end
--%>
+<% if (!@event.promoter || @event.new_record?) && administrator? %>
+  <% content_for :head do %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#edit_promoter_link').hide();
+      });
+    </script>
+  <% end -%>
+<% end -%>
 
 <% content_for :javascript_include_tag do %>
   <%= javascript_include_tag "events" %>

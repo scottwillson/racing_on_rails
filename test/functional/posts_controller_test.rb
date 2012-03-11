@@ -159,7 +159,7 @@ class PostsControllerTest < ActionController::TestCase
         :commit => "Post"
     )
     
-    assert(flash.has_key?(:notice))
+    assert_not_nil flash[:notice]
     assert_redirected_to mailing_list_confirm_path(obra_chat)
     
     assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
@@ -199,7 +199,7 @@ class PostsControllerTest < ActionController::TestCase
       )
     end
     
-    assert(flash.has_key?(:notice))
+    assert_not_nil flash[:notice]
     assert_response(:redirect)
     assert_redirected_to mailing_list_confirm_private_reply_path(obra_chat)
     
