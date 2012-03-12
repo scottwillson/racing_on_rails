@@ -1,0 +1,210 @@
+Return-Path: <obra-bounces@list.obra.org>
+X-Original-To: scott.willson@gmail.com
+Delivered-To: scott.willson@gmail.com
+Received: from list.obra.org (list.obra.org [69.30.32.118])
+	by mail.cheryljwillson.com (Postfix) with ESMTP id 63D0E42058
+	for <scott.willson@gmail.com>; Sat, 28 Jan 2006 07:01:58 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id EC68310663;
+	Sat, 28 Jan 2006 07:02:31 -0800 (PST)
+Received: from list.obra.org ([127.0.0.1])
+ by localhost (lizard.obra.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id 19838-06; Sat, 28 Jan 2006 07:02:30 -0800 (PST)
+Received: from lizard.obra.org (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id D3F25145A5;
+	Sat, 28 Jan 2006 07:02:30 -0800 (PST)
+X-Original-To: obra@list.obra.org
+Delivered-To: obra@list.obra.org
+Received: from localhost (localhost [127.0.0.1])
+	by list.obra.org (Postfix) with ESMTP id 56EAA1599E
+	for <obra@list.obra.org>; Sat, 28 Jan 2006 07:02:29 -0800 (PST)
+Received: from list.obra.org ([127.0.0.1])
+	by localhost (lizard.obra.org [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 19831-06 for <obra@list.obra.org>;
+	Sat, 28 Jan 2006 07:02:27 -0800 (PST)
+Received: from mail.cheryljwillson.com (cheryljwillson.com [71.36.251.213])
+	by list.obra.org (Postfix) with ESMTP id 5BC7010663
+	for <obra@list.obra.org>; Sat, 28 Jan 2006 07:02:27 -0800 (PST)
+Received: from [192.168.1.100] (cheryljwillson.com [71.36.251.213])
+	by mail.cheryljwillson.com (Postfix) with ESMTP id 15BC94215C
+	for <obra@list.obra.org>; Sat, 28 Jan 2006 07:01:52 -0800 (PST)
+Mime-Version: 1.0 (Apple Message framework v746.2)
+To: obra@list.obra.org
+Message-Id: <CB0870E9-7054-4576-86A4-BE6A577F6DFE@butlerpress.com>
+From: Scott Willson <scott.willson@gmail.com>
+Date: Sat, 28 Jan 2006 07:02:18 -0800
+X-Mailer: Apple Mail (2.746.2)
+X-Virus-Scanned: amavisd-new at obra.org
+Subject: [OBRA Chat] Rich Text
+X-BeenThere: obra@list.obra.org
+X-Mailman-Version: 2.1.6
+Precedence: list
+List-Id: Oregon Bicycle Racing Association <obra.list.obra.org>
+List-Unsubscribe: <http://list.obra.org/mailman/listinfo/obra>,
+	<mailto:obra-request@list.obra.org?subject=unsubscribe>
+List-Archive: <http://list.obra.org/mailing_lists/obra/posts>
+List-Post: <mailto:obra@list.obra.org>
+List-Help: <mailto:obra-request@list.obra.org?subject=help>
+List-Subscribe: <http://list.obra.org/mailman/listinfo/obra>,
+	<mailto:obra-request@list.obra.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============3071752892523701611=="
+Sender: obra-bounces@list.obra.org
+Errors-To: obra-bounces@list.obra.org
+X-Virus-Scanned: amavisd-new at obra.org
+X-Spam-Checker-Version: SpamAssassin 3.0.4 (2005-06-05) on 
+	pavilion.cheryljwillson.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.6 required=5.0 tests=AWL,BAYES_00,HTML_80_90,
+	HTML_IMAGE_ONLY_08,HTML_MESSAGE autolearn=no version=3.0.4
+
+
+--===============3071752892523701611==
+Content-Type: multipart/alternative; boundary=Apple-Mail-1--907934883
+
+
+--Apple-Mail-1--907934883
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=UTF-8;
+	format=flowed
+
+Rich text message with some formatting and a small attachment.
+
+Check it out: http://www.google.com/
+
+=EF=BF=BC=
+
+--Apple-Mail-1--907934883
+Content-Type: multipart/related;
+	type="text/html";
+	boundary=Apple-Mail-2--907934882
+
+
+--Apple-Mail-2--907934882
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=ISO-8859-1
+
+<HTML><BODY style=3D"word-wrap: break-word; -khtml-nbsp-mode: space; =
+-khtml-line-break: after-white-space; "><SPAN =
+class=3D"Apple-style-span">Rich text message with <I>some</I> formatting =
+and a <FONT class=3D"Apple-style-span" face=3D"Geneva" size=3D"1"><SPAN =
+class=3D"Apple-style-span" style=3D"font-size: 9px;">small</SPAN></FONT> =
+attachment.<DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV><SPAN =
+class=3D"Apple-style-span"><FONT class=3D"Apple-style-span" =
+color=3D"#17FF75"><B>Check it out</B></FONT>:=A0<A =
+href=3D"http://www.google.com">http://www.google.com</A>/</SPAN></DIV><DIV=
+><BR class=3D"khtml-block-placeholder"></DIV><DIV><IMG =
+src=3D"cid:D95970D3-6194-410C-88D0-C87FE55B1657@local"></DIV></SPAN></BODY=
+></HTML>=
+
+--Apple-Mail-2--907934882
+Content-Transfer-Encoding: base64
+Content-Id: <D95970D3-6194-410C-88D0-C87FE55B1657@local>
+Content-Type: image/gif;
+	x-unix-mode=0666;
+	name="mozart_res.gif"
+Content-Disposition: inline;
+	filename=mozart_res.gif
+
+R0lGODlhlgBBAPcAAPz8/Pb29vLy8vr6+u/v8Jybm6sVAdra2s7Ozq2traSko7q6uu3t7QE2q93d
+3gA9wr29vra2tujo6AI7uQFkBvv7+wFAyvj4+LOzs9TU1OHh4dHR0ZISAcLCwdfX1+zs7JaWluTk
+5AFF28vLy8YaAubm5gEtjrCwsBFRFMXFxampqcjIyHMTBQEmeNEnEFSH8+rq6pCQkXzWgAiUD0d/
+9ICBgHR2d+a2AderAYqLirUoFIiFgwExnA1M1eJKNcifAvT09I1xAxs4d/KThbyVAGSX+AVN6xNG
+tvJpVkTJTBY+k7fM9G6f+NI2IeI9JvH1/RdMxDJq5U1YbvLAAm5ZCMnY9vGFdS9XrnOn+LSOAPzK
+A/no5S9EcfT3/vV4Zg09pypp8qiGAdrl+CVb0mN5q05tsRCeGGp2kBla6XslGUvMUhhW3O5ZRXmJ
+rTJv8zp19a83J2JrfTdRiUZbiIGJm4tTTOvy/IV1NHZOSFXRXJUlFW83L2SK3RQsYPOlmqmUjGld
+S/r10JGkzZ+mtdSXj93h65mgsPricoZua0tjlzpgsrBmXCVi51UPBcKkn8lURPnui6etuvPAuObX
+1Y82Kv/dDI7YkuXr+JCWo2yU7erRaj9rzJ9/AsO8u5a6+RamHru4qbhGN7vE14Oq96S+9KJMPztz
+6dWyLKqJEP308qVxapmHdlV4xae6p7KYMI209q9/eF1BNWFrX+CCdfz78ryrqbC4yLGel4R9Y53S
+oH2c4/j6/rehT7BVSLmsd/nSzIm6i57D9/z2VrS2usmvT/z8/nuTxZuKSWjabvPQLNzPnd7U0+bK
+x/TJHvreKBmBHsu9heLcx8a0sf7++WXKa//qEeb05ym4MdfSzffusaKJhsO9pM7JufbdWszkzdPM
+zE6FUffLxMXO4SRKm4ip7PHu4t9zZI6o4YqZvNi8uMfDv6eVTZuy4fi4rTPAO/36+fP389FsX9jB
+bJqBHTq9Qa6mpb/awM3JyfvW0d2spoeZh5XmmduxrLevkf7+/v///yH5BAAAAAAALAAAAACWAEEA
+AAj/AP8JHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mixo8ePIEOKHEmypMmTKFOqXMmypcuX
+MFN2EVNlic0qYp748xdzpLV9yJDluWbmGTAGFXiaLFZllKkeFh5MmPDAggg0pjKRugRAaU+N/rxR
+oyZDRp5PFMAdkBAAQMkuS16ssfDlShkybciUuTLBqhEjaF4sudD1K0Z/8Ag4aKXm2gwKNRZ4IFBh
+pL8qRRgdudImEoYTCUInUIGJzJEHIlKL2CSqrVfDEv1d+OABmDszFFDYSOBBgNuQXTzRgKKEzmgV
+CTBEWMAcgwoFIBL1FWGhgQl0Aga8hv3Q3wABIXKp/0Gr+8SBANs52sHy5ggXTAUUJFiwYoOHA/gz
+IOhwosCZ0zy0IEQkGgDxG3cQ+QPAAATkclZukYUwQEjr0XCEEDGAoEAEIzggAQECBCCiAAyUcEAK
+CdDxRQt91JDABgwciGBEFzhI3g4dSCAjR7tg8QIULdQQgwIQHPCBawV5F4AEGQzyhRA27JBABgTs
+OKNDNeaBGwo5pACDlRn5E0wRY7QgxQ4FdOCAAEkl5B0BgpARw5AphIDelRIFYImWucWQwgfpHSYG
+E2800IcNICzggIEMeSfBCBhgsIKdYOK5kJ58ohDDCoB6BMArRaxhppS9VWoQAAJokIEHbJlqaUJ6
+qv+xJQgjMBCoRf6IgQUNDbQQBwgpSDChQ7KRKABhC6UiyRBWWDGEH+GkUphDtAQCySHYQpINLdM+
+tEsX4Ib7xBN2XJJUrLPWGmgq4fgxxLOSbNGtBimc+E8HBAgEQDBYMGJCiwmcd+tBClYwQLcG+YOP
+F02QoIMOLjThhBM+zLJFmwoFcsgUOPzwAw43TKFFM5qUo51Cl43yAg0vFMFEES+4gUYPmwlCwHeW
+yJobrQRst8UQTrgAcRM+TDwLAyf7g8E/JzhwQgkCdTFKEUBykQMEJQzLUSpA67CII510UgsscLjg
+AglN8IOkQdNAogURvGyjTgeg+HJKyDecoszaBF3/9kIPY7CyyRhR0PAGGlAockUitjgAQwACyKDG
+YyiAgEC+A/nTjg869AL22GWfHcokrkUwgAcb1PtPrkzQMEELXBSgbkdbWOGEHrcsEMHuGCRQABwk
+BG8AIdltR4swU6DSDwS7R9C7Aq6A3DE0N7/mjydgQCHICB0sMIgiPVD3xRnyLTCCBgIQIDnlBVye
+uR+c/8F8pL4DT4IBcGjQFsFLEPq6FArIgABoZwUf6OEPyFlACkYwghRE4HfCM4AjqjeQaQhDC2H4
+Q2gUyEAHQg8HHcsCNJCmlOtZyBC6Y84JFHAFC1THBGdQAQQywJbITS437cOc5pCgA1WEJgIdWEEH
+/yLwh7MZgAOqKMGdClIBUhQBDL2SggrOwxEADIGHeIgPBDagAQlIIAQegIA2IqiHb/hGIP6ARCWI
+cIf4LICLXjRRB24BQhwQARXcoMzqlkAmOSAHAgjQzwIwEb7qKCEBCChBdmzIPvf9Ywte8EEa3IgA
+B4RAA2F8BAk4wAIWqOMDlSnIAMjxAjRYRwoJcEAANuIPSRSQBYgoQAQ8wADCLChVHQiF8DiwCFXu
+JBDVmEIQcAECDGTgSAAAQAUCEIIUEOMGHQvDOtYEgAp9YQ6ypCEBPuCAFLAiNRMwQRsO4Bt/RC4J
+jcyXFXm4BxC86HEGE8AyfGAAFjRiD/XwZUECkP8JMBjBOnJo2io18g4reEEHLKiBAhCAFK8AIAAO
+uIUROZCGTsDgYMKoxA+ooNARfOBkaAyABrZxgxv8IAxBAIUELrAELETBBFIowApgkJSHaiASRhBB
+OOfAULecM52PjCQHstiBrPHkZ00wQBpiAQhSCWA7AeBDTsPJhYAN9DC/8AIb6rmDCGjgAtsBAAE2
+ELRNsmAVBwACMLWQBY4KNKwCyMApOJaFIKxiMq9gwhhgqoLeKAVVGYiCER5gAi4sQEL/+CkOL9dK
+LzhhqArYwFOzKrRSwAIEO0CTopY4kADo4i8P4IEQFOCBq14EAH4oICdzkCMryUYD8XDC/VhQB4//
+ZqMSUwgDFXaAtVCKsgTymMIN6nqHOvmoB4W1KkEGUAI+gMECJhCCchWLghyilmFDVQE2/MAGhy2i
+FhBIgALk04EDkHCf7PjLC+kg2YFBZABDwC4LNtWpUzGAED5wQT33sAANHKISN9AtjnREMAIoQws3
+IEIQ7jDLTLyhB6Kdomn9wYBzvMECsAvgAKmbQ/giwQUc2IMqQqGDUPyhE/OLAARGcABFHswgFxCH
+ehvAg0RwylUE2cW4djyucj0hAFZAQhM4uYMV2IpgQEgHG5yw3xN4oBsIRukOvFSpAERDC1NQMBVU
+gAA+oEEE1qGDAF8jAHa84X8aTqwM0LlYAgD5/8MU1YY0voEACOgOAivIgAY+AIQXH2QAIRCsCB7Q
+ACUMA7ELeQIpaAAGN7yACUx4ASOgcIUqMCDIIIbln251AWYggZ4s2AOXNYHguuKitQgZgAaakeUg
+UEEBKxAEOHkwh1rJKADk8NehJKxmNlf3ckBmA4gniecUdCAFCGixmxF2KhgYIzXV4QEZPACEgRVj
+CTQYwxgUsYmWMeG5PGicBmYh7HrWAdUHqcAkPl3PWChgBKRO8IIhgOhTSSAZb6MCIGA9gjFEpQEN
+MMRXvRKAFxzBTDno7wV6nU4gDKHcsNwifjQAg+wwm2ACEEUhCa0ECNA0IcUQQyE8sIIIJMAQbv9w
+A4Slu4IDECJoR+SvBrRWEABo4NMcaAQguKwM4f6AE0HAgAMWTrAPJCO3+l6oBwYxlQk04Ai2qBIa
+X7EGmNZAdh/w6ZrTGYB8wJwDlFAUA0J0cYVA9JvUcXoZ0nqrhzJpiCdAORoIK4Q0OSAdE2XBLahI
+sHU3wZ42OEEGsFFSHNT1D9QOlD/K4YwbuNoGfQ0BAtrwBR7w4Om6qMIlqoCFNSihBjkAAQT0xxMO
+A3sZDTPAEf+gT4kAAAYQgIILpdIAYxj1IAC4AAM0cIAMbMAWLwAD3YEVAgdo8n4cqANjcS8JNuig
+EbFIuAMc8Ew7cuIYtiZYIDRKhVh0FX0h6ED/DOSgBBM0oAc0iDQjlACfAiyAnL8x/c1CcPwjUuIe
+Uo+NAA7QhqpEZSqCcF5JskzpQwAEIA5F4AZ01z4fIAGOsEt6EAFZg3tD4AM5ZwOyAwMwwA0g9ANZ
+wAmgUG8EAQBuwwlUIAvAclEC4AAQUAA7EAdn0AZ8wARR0ADYRCQHQEEM12YA8AHSEEEGUAqtFxED
+IAErUAYPkIRJOAE2A1J9sxM8AQCFUARvsIAbACIZsAiqd0Sl4FcGsQXOp3M1YB4CsH++4DEe6AoC
+ZCW04AwbBQg10FdPVQGpsgL9UQAFEAVgAGFy4H456ITy5w9A4AFauIUG0AukAyZEhxD+AFEL/6AI
+U6GEFsAHheCEuDeFbvA6fVAAksVcHVAKhqgKIQBWBPEODMMCeHB1MzUARZgC60AEsAg3pNc3h4AD
+QQCHIFBUE6IgAQADB4AAKTAMUYAG1fEFdDBTGCMQAoAM7vAYFJBD/1CEHQAHhmgATUAIF+MVW0AI
+zFABZfcPYpUBJ5AIAEcVLjQG50AZbVcINABhLMKJvrF/GFAHHMABqrcIk0CK/vALPJQGiLADieJL
+gugAEXAMYRAGWUAExBAN+/MPgdANtogLORADEQB/mTMAAcAAEnAAzjVoU2EMwvIaBEAPuEEBadEK
+3mANqHIACUAJ9biFaIMEzjILj6ADhEAAff92K97xARuQAGegBJfXAFUhAmOQCUvAFa9hB0uQCe4o
+IPDoHQzQk4iQBi9pAI9gDuaQXwZQByAAArI0Gb9RAQQgjqtwB5yAkD9wCpqgCclgeMdQAF5pTEiR
+MArCAKIwF0r4AKzwUSUkA86IAiZJAUYRIh+AACpAj/Voj4YIdo7gARpQSwMjGzCwAScQA3NQfkE5
+lGtQOC+wMlGwBj0wAUrABVwgBZAnQKtzAZNZmYiAB5SgB7AJB70AC7WwQgogGQK4kxmAASCAC3dw
+B/OACqjgCrzgC6CAAeO1AMdkif/QBVXgCa0TBYTWAH0RFZswilFoD62QA7LQnTagD61wAI//syQj
+oAI1gAdp0EmdlAZ1sAoYgGdGQopuMhsesAAuGAdcIAQmsJ9BCXBfcASKgBeGUAA5UANXt1loRJ8Q
+AB0ZogAnwBzOcwIRsAIOoINoNAAMcAAQoAIgEAPx8aDNIaH1IoCrIwajoHIPsBmKkAjkR53/VwZK
+5A8VUJgJAAITCQIqsAAIgD4YKQEbgAEuaANCCnoaMh8IEALltBDekSqQQqA1IKQweAZ0QAeGkAC8
+8zwKoAInUF5Ic5GpsgEQ0DvJsRwQ0AEsJgFAkIxeGgIZ0AFiqhwLUKYj4AEu5hV28Ao0sAZfQAaR
+AAFhqgAxYANyIJS01wYrRYcasB9+emyV/4RMspGhK4CccOmVCoABHbABSMqcjPhQ3FRn4tWVXRkf
+8nECGBCnjJoBDlACBIAsmZN7BFACDuB7G7ABGXAAXWRxbpJ7AiABsTqrtHoAHnIs3TIowyEHgxAa
+cBoBKxQD0pGEhVYrA3ABAgADJVCt1SoBDBAAbSKjQAADsYoAI7ACI2Afj8k3DcGLDBACB7AB3OOn
+iyquv6oBJTB2AXAwircgkEMADGCAIaKmuYqRBciv2rodT+AjUFB3BaACEYBsq4I6HaAAZ+BC1oEJ
+qpRMylQBGGux2yGj+coAHhsi9koRCgKwGlkCIXCyJSABHwAiAXABSeFeLCEmNGgCcTAkM/+0ZyCS
+PpJ3AmWgUy1wBj01EVC4ExyxE8lkMN7YFTAbExeABVTTAhgIAWsSsqn5ARkQCWvwAL6Cbq/StWJQ
+BK4DtbxxRkmCoRsgnVB7WDTXtVfiD+zICIQVB/21thcZAqZgKAkngmw7I/4gAf5UHeOgtm5SBWgA
+UzHAtXvLtx/AB2nXAGvHWTX3Al9gNQvVM4mLJ/5AACsABU33AKxhrv8gBi/wAHLglZu1tJfbEo3o
+AIMwDuWIGqagC6SwBDXhCX/TAGTwHBgAIziWui8xAB8wAgpwmZc3HapBHUdQBoPQOxGAACuFur4b
+s8y0AgqQA3EwB1dwBVBAaXeBDsOgrCdhsEVsAb3RyxIPVQII8EAxkAM3Gh/IQar0EZ+9W74v8VAM
+4AB15hzjhRzviWwtVjz0+yroCqse4HsIYB+W9AEWR74B/BIjOyJlKABAUK/f2MAWfMEYnMEavMEc
+3MEeXBEBAQA7
+
+--Apple-Mail-2--907934882--
+
+--Apple-Mail-1--907934883--
+
+--===============3071752892523701611==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+obra mailing list
+obra@list.obra.org
+http://list.obra.org/mailman/listinfo/obra
+
+--===============3071752892523701611==--

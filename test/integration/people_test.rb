@@ -25,7 +25,7 @@ class PeopleTest < ActionController::IntegrationTest
   def test_import
     goto_login_page_and_login_as FactoryGirl.create(:administrator)
     post "/admin/people/preview_import",  
-         :people_file => fixture_file_upload("../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", "text/csv")
+         :people_file => fixture_file_upload(File.expand_path("../../fixtures/files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv", __FILE__), "text/csv")
     assert_response :success
 
     assert_not_nil session[:people_file_path], "Should have :people_file_path in session"
