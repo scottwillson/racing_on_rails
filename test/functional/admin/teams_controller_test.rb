@@ -349,7 +349,7 @@ class Admin::TeamsControllerTest < ActionController::TestCase
     assert_equal(1, vanilla.names.count, "Vanilla names")
     name = vanilla.names.first
 
-    post(:destroy_name, :id => vanilla.to_param, :name_id => name.to_param)
+    xhr :post, :destroy_name, :id => vanilla.to_param, :name_id => name.to_param
     assert_response(:success)
     assert_equal(0, vanilla.names(true).count, 'Vanilla names after destruction')
   end

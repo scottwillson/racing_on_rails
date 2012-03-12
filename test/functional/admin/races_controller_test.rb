@@ -46,7 +46,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     matson_result = FactoryGirl.create(:result, :race => race, :place => "3")
     molly_result = FactoryGirl.create(:result, :race => race, :place => "16")
 
-    post(:create_result, :id => race.id, :before_result_id => weaver_result.id)
+    xhr(:post, :create_result, :id => race.id, :before_result_id => weaver_result.id)
     assert_response(:success)
     assert_equal(5, race.results.size, 'Results after insert')
     tonkin_result.reload
@@ -58,7 +58,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('4', matson_result.place, 'Matson place after insert')
     assert_equal('17', molly_result.place, 'Molly place after insert')
 
-    post(:create_result, :id => race.id, :before_result_id => tonkin_result.id)
+    xhr(:post, :create_result, :id => race.id, :before_result_id => tonkin_result.id)
     assert_response(:success)
     assert_equal(6, race.results.size, 'Results after insert')
     tonkin_result.reload
@@ -70,7 +70,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('5', matson_result.place, 'Matson place after insert')
     assert_equal('18', molly_result.place, 'Molly place after insert')
 
-    post(:create_result, :id => race.id, :before_result_id => molly_result.id)
+    xhr(:post, :create_result, :id => race.id, :before_result_id => molly_result.id)
     assert_response(:success)
     assert_equal(7, race.results.size, 'Results after insert')
     tonkin_result.reload
@@ -83,7 +83,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('19', molly_result.place, 'Molly place after insert')
     
     dnf = race.results.create(:place => 'DNF')
-    post(:create_result, :id => race.id, :before_result_id => weaver_result.id)
+    xhr(:post, :create_result, :id => race.id, :before_result_id => weaver_result.id)
     assert_response(:success)
     assert_equal(9, race.results(true).size, 'Results after insert')
     tonkin_result.reload
@@ -97,7 +97,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     assert_equal('20', molly_result.place, 'Molly place after insert')
     assert_equal('DNF', dnf.place, 'DNF place after insert')
     
-    post(:create_result, :id => race.id, :before_result_id => dnf.id)
+    xhr(:post, :create_result, :id => race.id, :before_result_id => dnf.id)
     assert_response(:success)
     assert_equal(10, race.results(true).size, 'Results after insert')
     tonkin_result.reload
@@ -113,7 +113,7 @@ class Admin::RacesControllerTest < ActionController::TestCase
     race.results(true).sort!
     assert_equal('DNF', race.results.last.place, 'DNF place after insert')
     
-    post :create_result, :id => race.id
+    xhr :post, :create_result, :id => race.id
     assert_response(:success)
     assert_equal(11, race.results(true).size, 'Results after insert')
     tonkin_result.reload
@@ -135,14 +135,14 @@ class Admin::RacesControllerTest < ActionController::TestCase
     race = result_2.race
     assert_not_nil(result_2, 'Result should exist in DB')
     
-    post(:destroy_result, :id => race.to_param, :result_id => result_2.to_param)
+    xhr(:post, :destroy_result, :id => race.to_param, :result_id => result_2.to_param)
     assert_response(:success)
     assert_raise(ActiveRecord::RecordNotFound, 'Result should not exist in DB') {Result.find(result_2.id)}
   end
   
   def test_destroy
     kings_valley_women_2003 = FactoryGirl.create(:race)
-    delete(:destroy, :id => kings_valley_women_2003.id, :commit => 'Delete')
+    xhr :delete, :destroy, :id => kings_valley_women_2003.id, :commit => 'Delete'
     assert_response(:success)
     assert_raise(ActiveRecord::RecordNotFound, 'kings_valley_women_2003 should have been destroyed') { Race.find(kings_valley_women_2003.id) }
   end

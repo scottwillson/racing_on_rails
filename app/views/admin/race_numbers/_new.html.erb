@@ -16,7 +16,7 @@
         <%= text_field_tag 'number_value[]', '', :class => "number" %>
       </td>
       <td>
-        <%= link_to_function(image_tag('/images/icons/decline.png'), update_page {|page| page.remove("new_number_#{row_id}")}, :class => "image") %></td>
+        <%= link_to_function(image_tag('/images/icons/decline.png'), "$('new_number_#{row_id}').remove()", :class => "image") %></td>
       </td>
     </table>
 </tr>

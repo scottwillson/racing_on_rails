@@ -3,7 +3,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 module Admin
   module People
-    class ImortTest < ActionController::TestCase
+    class ImportTest < ActionController::TestCase
       tests Admin::PeopleController
       
       def setup
@@ -55,7 +55,7 @@ module Admin
         post(:import, :commit => 'Import', :update_membership => 'true')
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
-        assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+        assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
   
@@ -77,7 +77,7 @@ module Admin
         post(:import, :commit => 'Import', :update_membership => 'true', :year => next_year)
 
         assert(!flash[:warn].present?, "flash[:warn] should be empty, but was: #{flash[:warn]}")
-        assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+        assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_nil(session[:duplicates], 'session[:duplicates]')
         assert_redirected_to admin_people_path
   
@@ -111,7 +111,7 @@ module Admin
         post(:import, :commit => 'Import', :update_membership => 'true')
 
         assert(flash[:warn].present?, "flash[:warn] should not be empty")
-        assert(flash.has_key?(:notice), "flash[:notice] should not be empty")
+        assert(flash.notice.present?, "flash[:notice] should not be empty")
         assert_equal(1, Duplicate.count, 'Should have duplicates')
         assert_redirected_to duplicates_admin_people_path
   

@@ -97,9 +97,6 @@ class Admin::TeamsController < Admin::AdminController
   def destroy_name
     name_id = params[:name_id]
     Name.destroy(params[:name_id])
-    render :update do |page|
-      page.visual_effect(:puff, "name_#{name_id}", :duration => 2)
-    end
   end
   
   def toggle_member
