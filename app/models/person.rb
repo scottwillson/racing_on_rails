@@ -803,7 +803,7 @@ class Person < ActiveRecord::Base
   
   # Hack around in-place editing
   def toggle!(attribute)
-    if attribute == 'member'
+    if attribute.try(:to_s) == 'member'
       self.member = !member?
       save!
     else
