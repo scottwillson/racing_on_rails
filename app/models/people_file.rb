@@ -131,18 +131,17 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     updated = 0
     if @update_membership
       if year && year > Time.zone.today.year
-        @member_from_imported_people = Date.new(year, 1, 1)
+        @member_from_imported_people = Time.zone.local(year, 1, 1).to_date
       else
-        @member_from_imported_people = Time.zone.today
+        @member_from_imported_people = Time.zone.today.to_date
       end
-      @member_to_for_imported_people = Date.new(year || Time.zone.today.year, 12, 31)
+      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year, 12, 31).to_date
     end
     
     Person.transaction do
       begin
         rows.each do |row|
           row_hash = row.to_hash
-          row_hash[:year] = year if year
           row_hash[:updater] = import_file
           logger.debug(row_hash.inspect) if logger.debug?
           next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
@@ -167,6 +166,9 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             delete_unwanted_member_from(row_hash, person)
             add_print_card_and_label(row_hash)
             person = Person.new(:updater => import_file)
+            if year
+              person.year = year
+            end
             person.attributes = row_hash
             person.save!
             @created = @created + 1
@@ -180,6 +182,9 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             end
             add_print_card_and_label(row_hash, person)
             
+            if year
+              person.year = year
+            end
             person.updater = import_file
             person.attributes = row_hash
             person.save!
@@ -191,6 +196,9 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             logger.warn("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
             delete_blank_categories(row_hash)
             person = Person.new(row_hash)
+            if year
+              person.year = year
+            end
             delete_unwanted_member_from(row_hash, person)
             unless person.notes.blank?
               row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
@@ -248,8 +256,8 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   end
   
   def add_print_card_and_label(row_hash, person = nil)
-    if @update_membership and !@has_print_column
-      if person.nil? or (!person.member? or person.member_to < @member_to_for_imported_people)
+    if @update_membership && !@has_print_column
+      if person.nil? || (!person.member? || person.member_to < @member_to_for_imported_people)
         row_hash[:print_card] = true
       end
     end

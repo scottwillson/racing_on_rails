@@ -85,13 +85,13 @@ class RaceNumber < ActiveRecord::Base
   
   # Default to Road, RacingAssociation.current, and current year
   def defaults
-    self.discipline = Discipline[:road] unless self.discipline
-    self.number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) unless self.number_issuer
-    self.year = RacingAssociation.current.effective_year unless (self.year and self.year > 1800)
+    self.discipline = Discipline[:road] unless discipline
+    self.number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) unless number_issuer
+    self.year = RacingAssociation.current.effective_year unless (year && year > 1800)
   end
   
   def validate_year
-    self.year > 1800
+    year > 1800
   end
   
   # Checks that Person doesn't already have this number.
