@@ -72,9 +72,9 @@ class Admin::PeopleController < Admin::AdminController
       format.ppl
       format.xls {
         if params['excel_layout'] == 'scoring_sheet'
-          render :template => 'admin/people/scoring_sheet.xls.erb' 
+          render :template => 'admin/people/scoring_sheet' 
         elsif params['excel_layout'] == 'endicia'
-          render :template => 'admin/people/endicia.xls.erb' 
+          render :template => 'admin/people/endicia' 
         end
       }
     end

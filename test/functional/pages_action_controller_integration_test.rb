@@ -22,15 +22,15 @@ class FakeController < ApplicationController
   end
   
   def partial_using_action
-    render :template => "fake/partial_using_action.html.erb"
+    render :template => "fake/partial_using_action"
   end
 
   def partial_using_partials_action
-    render :template => "fake/partial_using_partials_action.html.erb"
+    render :template => "fake/partial_using_partials_action"
   end
 
   def missing_partial
-    render :template => "fake/missing_partial.html.erb"
+    render :template => "fake/missing_partial"
   end
 end
 
