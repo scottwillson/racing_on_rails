@@ -26,15 +26,15 @@ GIT
 
 GIT
   remote: git://github.com/scottwillson/ruby-ole.git
-  revision: 13e20ce064fb1fe8c703832796811a85583c6f5c
+  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
   specs:
-    ruby-ole (1.2.10)
+    ruby-ole (1.2.11.3)
 
 GIT
   remote: git://github.com/scottwillson/spreadsheet.git
-  revision: db1988571f236d4f426e8dec86200683aa35f479
+  revision: e5d97bc43f3db66600a70ace5de638f41a4a700b
   specs:
-    spreadsheet (0.6.5)
+    spreadsheet (0.6.6)
       ruby-ole
 
 GIT
