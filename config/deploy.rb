@@ -4,6 +4,7 @@ load "local/config/deploy.rb" if File.exists?("local/config/deploy.rb")
 
 set :deploy_to, "/var/www/rails/#{application}"
 
+load 'deploy/assets'
 load "config/db"
 require 'bundler/capistrano'
 require "capistrano-unicorn"

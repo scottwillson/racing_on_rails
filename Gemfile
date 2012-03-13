@@ -28,6 +28,13 @@ gem "in_place_editing"
 gem "ri_cal"
 gem "truncate_html"
 gem "jquery-rails"
+gem "yui-compressor"
+
+group :assets do
+  gem 'sass-rails', "~> 3.2.0"
+  gem 'coffee-rails', "~> 3.2.0"
+  gem 'uglifier'
+end
 
 group :development do
   gem "capistrano"

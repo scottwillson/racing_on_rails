@@ -62,6 +62,10 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.1)
+    POpen4 (0.1.4)
+      Platform (>= 0.4.0)
+      open4
+    Platform (0.4.0)
     actionmailer (3.2.2)
       actionpack (= 3.2.2)
       mail (~> 2.4.0)
@@ -116,9 +120,18 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.3.1)
       ffi (~> 1.0.6)
+    coffee-rails (3.2.2)
+      coffee-script (>= 2.2.0)
+      railties (~> 3.2.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.2.0)
     database_cleaner (0.7.1)
     dynamic_form (1.1.4)
     erubis (2.7.0)
+    execjs (1.3.0)
+      multi_json (~> 1.0)
     factory_girl (2.3.1)
       activesupport
     factory_girl_rails (1.4.0)
@@ -157,6 +170,7 @@ GEM
       net-ssh (>= 1.99.1)
     newrelic_rpm (3.3.2)
     nokogiri (1.5.2)
+    open4 (1.3.0)
     pdf-reader (1.0.0)
       Ascii85 (~> 1.0.0)
       ruby-rc4
@@ -190,6 +204,11 @@ GEM
     ri_cal (0.8.8)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.6.1)
+    sass (3.1.15)
+    sass-rails (3.2.4)
+      railties (~> 3.2.0)
+      sass (>= 3.1.10)
+      tilt (~> 1.3)
     selenium-webdriver (2.20.0)
       childprocess (>= 0.2.5)
       ffi (~> 1.0)
@@ -210,6 +229,9 @@ GEM
     truncate_html (0.5.4)
     ttfunk (1.0.3)
     tzinfo (0.3.32)
+    uglifier (1.2.3)
+      execjs (>= 0.3.0)
+      multi_json (>= 1.0.2)
     unicorn (4.2.0)
       kgio (~> 2.6)
       rack
@@ -217,6 +239,8 @@ GEM
     will_paginate (3.0.3)
     xpath (0.1.4)
       nokogiri (~> 1.3)
+    yui-compressor (0.9.6)
+      POpen4 (>= 0.1.4)
 
 PLATFORMS
   ruby
@@ -231,6 +255,7 @@ DEPENDENCIES
   capistrano
   capistrano-unicorn
   capybara
+  coffee-rails (~> 3.2.0)
   database_cleaner
   default_value_for!
   dynamic_form
@@ -251,6 +276,7 @@ DEPENDENCIES
   rake
   ri_cal
   ruby-ole!
+  sass-rails (~> 3.2.0)
   selenium-webdriver
   spreadsheet!
   sqlite3
@@ -258,6 +284,8 @@ DEPENDENCIES
   tabular (> 0.0.5)
   timecop
   truncate_html
+  uglifier
   unicorn
   vestal_versions!
   will_paginate (~> 3.0.beta)
+  yui-compressor
