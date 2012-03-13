@@ -39,9 +39,6 @@ class Admin::ResultsController < Admin::AdminController
   def scores
     @result = Result.find(params[:id])
     @scores = @result.scores
-    render :update do |page|
-      page.insert_html :after, "result_#{params[:id]}_row", :partial => 'score', :collection => @scores
-    end
   end
   
   def move

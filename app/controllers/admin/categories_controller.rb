@@ -13,10 +13,7 @@ class Admin::CategoriesController < Admin::AdminController
         @unknowns = Category.find_all_unknowns
       }
       format.js {
-        render :update do |page|
-          @category = Category.find(params[:parent_id], :include => :children)
-          page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
-        end
+        page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
       }
     end
   end
@@ -33,20 +30,6 @@ class Admin::CategoriesController < Admin::AdminController
       @category.parent = nil
     end
     @category.save!
-    render :update do |page|
-      page.remove "category_#{@category.id}_row"
-      if @parent
-        if @parent.name == RacingAssociation.current.short_name
-          page.replace_html "association_category_root", :partial => "category", :collection => @parent.children.sort
-          page.call :bindCategoryEvents
-        else
-          page.call :expandDisclosure, parent_id
-        end
-      else
-        page.replace_html "unknown_category_root", :partial => "category", :collection => Category.find_all_unknowns.sort
-        page.call :bindCategoryEvents
-      end
-    end
   end
 
   # Calculate MbraBar only

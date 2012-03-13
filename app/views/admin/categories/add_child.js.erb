@@ -1,0 +1,12 @@
+page.remove "category_#{@category.id}_row"
+if @parent
+  if @parent.name == RacingAssociation.current.short_name
+    page.replace_html "association_category_root", :partial => "category", :collection => @parent.children.sort
+    page.call :bindCategoryEvents
+  else
+    page.call :expandDisclosure, parent_id
+  end
+else
+  page.replace_html "unknown_category_root", :partial => "category", :collection => Category.find_all_unknowns.sort
+  page.call :bindCategoryEvents
+end

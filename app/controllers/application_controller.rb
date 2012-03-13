@@ -220,7 +220,8 @@ class ApplicationController < ActionController::Base
   def store_location_and_redirect_to_login
     if request.format == "js"
       session[:return_to] = request.referrer
-      render :update do |page| page.redirect_to(new_person_session_url(secure_redirect_options)) end
+      @redirect_to = new_person_session_url(secure_redirect_options)
+      render :template => "redirect"
     else
       session[:return_to] = request.fullpath
       redirect_to new_person_session_url(secure_redirect_options)
