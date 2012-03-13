@@ -1,3 +1,15 @@
+/*
+ *= require reset
+ *= require jquery-ui/jquery-ui-1.8.2.custom
+ *= require_self
+ *= require grid
+ *= require tabs
+ *= require forms
+ *= require tables
+ *= require pages
+ *= require admin
+*/
+
 body {
   text-align: center;
   min-width: 600px;

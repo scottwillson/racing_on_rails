@@ -1,3 +1,12 @@
+/*
+ *= require jquery
+ *= require jquery_ujs
+ *= require jquery-ui
+ *= require jquery.jeditable
+ *= require_self
+ *= require tabs
+*/
+
 function restripeTable(id) {
   var startIndex = 0;
   if ($('#' + id + ' tr th').length > 0) {

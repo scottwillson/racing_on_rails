@@ -15,9 +15,14 @@ module RacingOnRails
       #{config.root}/lib/results
       #{config.root}/lib/sentient_user
     )
-    
+
+    config.encoding = "utf-8"
+
     config.session_store :key, "_racing_on_rails_session"
     config.session_store :secret, "9998d23d32c59a8161aba78b03630a93"
+    
+    config.assets.enabled = true
+    config.assets.version = '1.0'
   
     config.time_zone = "Pacific Time (US & Canada)"
     
