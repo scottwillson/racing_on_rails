@@ -15,14 +15,14 @@
 <div class="column_grid_container">
   <div class="table_container box-3">
     <div class="caption"><%= RacingAssociation.current.short_name %></div>
-    <div class="category category_root" id="association_category_root" data-id="<%= @category.id %>">
+    <div class="category category_root association_category_root" id="category_<%= @category.id %>_row" data-id="<%= @category.id %>">
       <%= render :partial => "category", :collection => @category.children.sort %>
     </div>
   </div>
 
   <div class="table_container box-3 last">
     <div class="caption">Unknown</div>
-    <div class="category category_root" id="unknown_category_root" data-id="">
+    <div class="category category_root unknown_category_root" id="category__row" data-id="">
       <%= render :partial => "category", :collection => @unknowns.sort %>
     </div>
   </div>

@@ -10,18 +10,18 @@ class CategoriesTest < AcceptanceTest
 
     visit "/admin/categories"
 
-    assert page.has_selector? "#unknown_category_root #category_#{masters_35_plus.id}"
-    assert page.has_no_selector? "#association_category_root #category_#{masters_35_plus.id}"
+    assert page.has_selector? ".unknown_category_root #category_#{masters_35_plus.id}"
+    assert page.has_no_selector? ".association_category_root #category_#{masters_35_plus.id}"
 
-    find("#category_#{masters_35_plus.id}").drag_to(find("#association_category_root"))
-    assert page.has_selector? "#association_category_root #category_#{masters_35_plus.id}"
-    assert page.has_no_selector? "#unknown_category_root #category_#{masters_35_plus.id}"
+    find("#category_#{masters_35_plus.id}").drag_to(find(".association_category_root"))
+    assert page.has_selector? ".association_category_root #category_#{masters_35_plus.id}"
+    assert page.has_no_selector? ".unknown_category_root #category_#{masters_35_plus.id}"
 
-    assert page.has_selector? "#association_category_root #category_#{women_4.id}"
-    assert page.has_no_selector? "#unknown_category_root #category_#{women_4.id}"
+    assert page.has_selector? ".association_category_root #category_#{women_4.id}"
+    assert page.has_no_selector? ".unknown_category_root #category_#{women_4.id}"
 
-    find("#category_#{women_4.id}").drag_to(find("#unknown_category_root"))
-    assert page.has_selector? "#unknown_category_root #category_#{women_4.id}"
-    assert page.has_no_selector? "#association_category_root #category_#{women_4.id}"
+    find("#category_#{women_4.id}").drag_to(find(".unknown_category_root"))
+    assert page.has_selector? ".unknown_category_root #category_#{women_4.id}"
+    assert page.has_no_selector? ".association_category_root #category_#{women_4.id}"
   end
 end

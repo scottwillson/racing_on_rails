@@ -1,1 +1,1 @@
-page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
+jQuery('#category_<%= @category.id %>_children').html("<%= escape_javascript(render(@category.children.sort)) %>");

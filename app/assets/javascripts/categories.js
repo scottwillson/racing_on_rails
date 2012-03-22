@@ -6,13 +6,12 @@ function bindCategoryEvents() {
   $('.category').unbind();
   jQuery('.category').droppable({
     drop: function(ev, ui) {
-      jQuery.post(
-        '/admin/categories/add_child',
-        {
-          id: encodeURIComponent(jQuery(ui.draggable).attr('data-id')),
-          parent_id: $(this).attr('data-id')
-        }
-      );
+      var droppedOn = jQuery(this);
+      jQuery.ajax({
+        type: 'PUT',
+        url: '/admin/categories/' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')) + '.js',
+        data: { category: { parent_id: $(this).attr('data-id') } }
+      });
     },
     hoverClass: 'hovering'
   });

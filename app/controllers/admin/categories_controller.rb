@@ -7,29 +7,23 @@ class Admin::CategoriesController < Admin::AdminController
   # === Assigns
   # * categories
   def index
-    respond_to do |format|
-      format.html {
-        @category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
-        @unknowns = Category.find_all_unknowns
-      }
-      format.js {
-        page.replace_html "category_#{@category.id}_children", :partial => "category", :collection => @category.children.sort
-      }
+    if params[:parent_id].present?
+      @category = Category.find(params[:parent_id], :include => :children)
+    else
+      @category = Category.find_or_create_by_name(RacingAssociation.current.short_name)
+      @unknowns = Category.find_all_unknowns
     end
   end
     
-  # Add category as child
-  def add_child
-    category_id = params[:id]
-    @category = Category.find(category_id)
-    parent_id = params[:parent_id]
-    if parent_id.present?
-      @parent = Category.find(parent_id)
-      @category.parent = @parent    
+  def update
+    @category = Category.find(params[:id])
+    @category.update_attributes(params[:category])
+    # parent_id could be nil, so can't use @category.children
+    if @category.parent_id
+      @children = @category.parent.children
     else
-      @category.parent = nil
+      @children = Category.find_all_unknowns
     end
-    @category.save!
   end
 
   # Calculate MbraBar only
