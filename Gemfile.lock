@@ -14,15 +14,15 @@ GIT
 
 GIT
   remote: git://github.com/scottwillson/ruby-ole.git
-  revision: 13e20ce064fb1fe8c703832796811a85583c6f5c
+  revision: 6b9d2530b12259ca21af75ed2dcb26ba745a6115
   specs:
-    ruby-ole (1.2.10)
+    ruby-ole (1.2.11.3)
 
 GIT
   remote: git://github.com/scottwillson/spreadsheet.git
-  revision: db1988571f236d4f426e8dec86200683aa35f479
+  revision: e5d97bc43f3db66600a70ace5de638f41a4a700b
   specs:
-    spreadsheet (0.6.5)
+    spreadsheet (0.6.6)
       ruby-ole
 
 GIT
@@ -92,13 +92,13 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.3.1)
       ffi (~> 1.0.6)
-    database_cleaner (0.7.1)
+    database_cleaner (0.7.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
-    factory_girl (2.3.1)
-      activesupport
-    factory_girl_rails (1.4.0)
-      factory_girl (~> 2.3.0)
+    factory_girl (3.0.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (3.0.0)
+      factory_girl (~> 3.0.0)
       railties (>= 3.0.0)
     fastercsv (1.5.4)
     ffi (1.0.11)
@@ -107,9 +107,9 @@ GEM
     jquery-rails (1.0.19)
       railties (~> 3.0)
       thor (~> 0.14)
-    json (1.6.5)
-    kgio (2.7.2)
-    launchy (2.0.5)
+    json (1.6.6)
+    kgio (2.7.4)
+    launchy (2.1.0)
       addressable (~> 2.2.6)
     mail (2.2.19)
       activesupport (>= 2.3.6)
@@ -117,10 +117,10 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     metaclass (0.0.1)
-    mime-types (1.17.2)
+    mime-types (1.18)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    multi_json (1.1.0)
+    multi_json (1.2.0)
     mysql2 (0.2.18)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -129,9 +129,9 @@ GEM
     net-ssh (2.3.0)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.3.2)
-    nokogiri (1.5.0)
-    pdf-reader (1.0.0)
+    newrelic_rpm (3.3.2.1)
+    nokogiri (1.5.2)
+    pdf-reader (1.1.0)
       Ascii85 (~> 1.0.0)
       ruby-rc4
     polyglot (0.3.3)
@@ -176,7 +176,7 @@ GEM
     truncate_html (0.5.4)
     ttfunk (1.0.3)
     tzinfo (0.3.32)
-    unicorn (4.2.0)
+    unicorn (4.2.1)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -197,7 +197,7 @@ DEPENDENCIES
   capybara
   database_cleaner
   erubis
-  factory_girl (= 2.3.1)
+  factory_girl
   factory_girl_rails
   fastercsv
   jquery-rails
