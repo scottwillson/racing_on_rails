@@ -2,7 +2,7 @@
 
 <%= form_tag({}, { :method => :get }) do %>
   <div class="container">
-      <label for="past_events" class="check_box left"><%= check_box_tag "past_events", "true", @past_events, :onclick => "form.submit();" %>Show past events</label>
+      <label for="past_events" class="check_box left"><%= check_box_tag "past_events", "true", @past_events, :class => "show_past_events" %>Show past events</label>
       <%= hidden_field_tag "sort_by", @sort_by %>
       <%= hidden_field_tag "sort_direction", params[:sort_direction] %>
   </div>

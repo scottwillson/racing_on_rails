@@ -5,6 +5,7 @@
  *= require jquery.jeditable
  *= require_self
  *= require tabs
+ *= require first_aid_providers
 */
 
 function restripeTable(id) {
