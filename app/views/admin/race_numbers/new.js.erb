@@ -1,6 +1,2 @@
-page.insert_html(
-  :before, 'new_number_button_row', 
-  :partial => '/admin/race_numbers/new', 
-  :locals => { :discipline_id => Discipline[:road].id }
-)
-page['input.number'].select
+jQuery('<%= escape_javascript(render(:partial => "admin/race_numbers/new")) %>').insertBefore('#new_number_button_row');
+jQuery('input.number').focus();

@@ -47,7 +47,7 @@
   </tr>
   <% end %>
   <% if @person.new_record? %>
-    <%= render :partial => "/admin/race_numbers/new", :locals => { :discipline_id => Discipline[:road].id } %>
+    <%= render :partial => "/admin/race_numbers/new" %>
   <% else %>
   <tr id="new_number_button_row">
     <td class="right">

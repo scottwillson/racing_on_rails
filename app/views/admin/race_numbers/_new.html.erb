@@ -9,7 +9,7 @@
       </td>
       <td>
         <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
-          <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, discipline_id %>
+          <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].id %>
         </select>
       </td>
       <td>
@@ -19,4 +19,5 @@
         <%= link_to_function(image_tag('/images/icons/decline.png'), "$('new_number_#{row_id}').remove()", :class => "image") %></td>
       </td>
     </table>
+  </td>
 </tr>
