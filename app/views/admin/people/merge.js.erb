@@ -1,4 +1,5 @@
-page.remove "person_#{@other_person.id}_row"
-page.replace_html "person_#{@person.id}_aliases", render(:partial => 'aliases', :locals => { :person => @person })
-page.call :flash, "notice", "Merged #{@other_person.name} into #{@person.name}"
-page.call :restripeTable, :people_table
+jQuery('#person_<%= @other_person.id %>_row').remove();
+jQuery('#person_<%= @person.id %>_aliases').html("<%= escape_javascript(render(:partial => 'aliases', :locals => { :person => @person })) %>");
+
+flash("notice", "Merged <%= @other_person.name %> into <%= @person.name %>");
+restripeTable('#people_table');

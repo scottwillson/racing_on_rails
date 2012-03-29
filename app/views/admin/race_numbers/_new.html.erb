@@ -9,14 +9,14 @@
       </td>
       <td>
         <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
-          <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].id %>
+          <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].try(:id) %>
         </select>
       </td>
       <td>
         <%= text_field_tag 'number_value[]', '', :class => "number" %>
       </td>
       <td>
-        <%= link_to_function(image_tag('icons/decline.png'), "$('new_number_#{row_id}').remove()", :class => "image") %></td>
+        <%= link_to_function(image_tag('icons/decline.png'), "jQuery('#new_number_#{row_id}').remove()", :class => "image") %></td>
       </td>
     </table>
   </td>
