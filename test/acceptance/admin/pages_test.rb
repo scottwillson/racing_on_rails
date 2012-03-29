@@ -3,14 +3,6 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 # :stopdoc:
 class PagesTest < AcceptanceTest
   def test_pages
-    # Check public page render OK with default static templates
-    visit "/schedule"
-    assert_page_has_content("Schedule")
-    
-    assert_page_has_no_content "This year is cancelled"
-    assert_page_has_content("Schedule")
-
-    # Now change the page
     login_as FactoryGirl.create(:administrator)
 
     visit "/admin/pages"
@@ -21,6 +13,10 @@ class PagesTest < AcceptanceTest
     fill_in "page_body", :with => "This year is cancelled"
 
     click_button "Save"
+    page = Page.last
+    assert_equal "Schedule", page.title, "New page title"
+    assert_equal "schedule", page.path, "New page path"
+    assert_equal "schedule", page.slug, "New page slug"
 
     visit "/schedule"
     assert_page_has_content "This year is cancelled"
