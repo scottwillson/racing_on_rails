@@ -35,7 +35,7 @@ div.table_container div.caption {
   border-bottom-style: solid;
   border-width: 1px;
   border-color: rgb(204, 204, 204);
-  background-image: url(/images/backgrounds/table_head.jpg);
+  background-image: url(<%= asset_path("backgrounds/table_head.jpg") %>);
   font-weight: bold;
   font-size: 0.8em;
   line-height: 21px;
@@ -201,7 +201,7 @@ table.base div.editable.saving:hover {
 }
 
 table.base div.editable.saving input {
-  background-image: url(/images/icons/spinner.gif);
+  background-image: url(<%= asset_path("icons/spinner.gif") %>);
   background-position: center right;
   background-repeat: no-repeat;
 }
@@ -267,7 +267,7 @@ table.base tr.merging td {
 
 table.show_grid {
   background-position: 8px 0px;
-  background-image: url(/images/backgrounds/table_grid.png);
+  background-image: url(<%= asset_path("backgrounds/table_grid.png") %>);
 }
 
 .table_container + div.buttons {

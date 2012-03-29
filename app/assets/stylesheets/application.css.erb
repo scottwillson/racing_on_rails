@@ -138,7 +138,7 @@ p.flash_message, p.message, div.flash_message, div.message {
 #notice_span, .notice, .notice_span
 {
   background-position: 0px 2px;
-  background-image: url(/images/icons/information.png);
+  background-image: url(<%= asset_path("icons/information.png") %>);
   background-repeat: no-repeat;
   padding-bottom: 2px;
   padding-left: 20px;
@@ -148,7 +148,7 @@ p.flash_message, p.message, div.flash_message, div.message {
 
 #warn_span, .warn, .warn_span
 {
-  background-image: url(/images/icons/exclamation.png);
+  background-image: url(<%= asset_path("icons/exclamation.png") %>);
   background-repeat: no-repeat;
   padding-bottom: 2px;
   padding-left: 20px;
@@ -189,7 +189,7 @@ div.nav {
 
 div.nav#top {
   height: 51px;
-  background-image: url(/images/backgrounds/bar.gif);
+  background-image: url(<%= asset_path("backgrounds/bar.gif") %>);
   text-align: left;
   border-bottom: 1px solid rgb(190, 190, 190);
 }
@@ -198,7 +198,7 @@ div.nav#bottom {
   text-align: left;
   height: 23px;
   line-height: 23px;
-  background-image: url(/images/backgrounds/bar_low.gif);
+  background-image: url(<%= asset_path("backgrounds/bar_low.gif") %>);
   border-top: 1px solid rgb(190, 190, 190);
 }
 

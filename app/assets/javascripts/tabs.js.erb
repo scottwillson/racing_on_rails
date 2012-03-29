@@ -1,5 +1,5 @@
 hoverImage = new Image(200, 24);
-hoverImage.src = '/images/buttons/hover.jpg';
+hoverImage.src = '<%= asset_path("buttons/hover.jpg") %>';
 
 function hover(anchor) {
 	if (anchor.parentNode.parentNode.className == 'first') {

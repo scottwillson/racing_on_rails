@@ -44,7 +44,7 @@
     var id = /\d+/.exec($(element).attr('id'))[0];
     if ($(element).is('.collapsed')) {
       $(element).removeClass('collapsed');
-      element.src='/images/icons/spinner.gif';
+      element.src='icons/spinner.gif';
       $.ajax({
         url: '/admin/results/' + id + '/scores',
         type: 'post',
@@ -55,7 +55,7 @@
       });
     }
     else {
-      element.src = '/images/icons/play_blue.png';
+      element.src = 'icons/play_blue.png';
       $(element).addClass('collapsed');
       $(element).removeClass('expanded');
       $('tr.scores_' + id).each(function(index, e) {
@@ -65,7 +65,7 @@
   }
 
   function expand(element) {
-    element.src = '/images/icons/down_blue.png';
+    element.src = 'icons/down_blue.png';
     $(element).removeClass('collapsed');
     $(element).addClass('expanded');
   }

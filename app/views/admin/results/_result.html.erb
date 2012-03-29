@@ -13,8 +13,8 @@
   <td><%= result.race.name %></td>
   <td class="right"><%= result.event_date_range_s %></td>
   <td class="right"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
-  <td class="page_links"><%= link_to(image_tag('/images/icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
-    event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('/images/icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
+  <td class="page_links"><%= link_to(image_tag('icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
+    event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
     edit_admin_race_path(result.race), :class => "image") %>
   </td>
 </tr>

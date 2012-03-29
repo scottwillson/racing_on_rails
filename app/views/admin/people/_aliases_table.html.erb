@@ -3,7 +3,7 @@
   <tr id="alias_<%= name_alias.id %>">
     <td><%= name_alias.name %></td>
     <td>
-      <%= link_to(image_tag('/images/icons/delete.png'), 
+      <%= link_to(image_tag('icons/delete.png'), 
            admin_person_alias_path(@person, name_alias),
            :method => "delete",
            :remote => true,

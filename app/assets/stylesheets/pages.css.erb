@@ -62,7 +62,7 @@ td.day div.event {
 }
 
 td.day div.beginner_friendly {
-  background-image: url(/images/icons/star_green.png);
+  background-image: url(<%= asset_path("icons/star_green.png") %>);
   background-repeat: no-repeat;
   padding-left: 20px;
 }
@@ -153,15 +153,15 @@ div.disclosure {
 }
 
 .collapsed {
-  background-image: url(/images/icons/play_blue.png);  
+  background-image: url(<%= asset_path("icons/play_blue.png") %>);  
 }
 
 .loading {
-  background-image: url(/images/icons/spinner.gif);
+  background-image: url(<%= asset_path("icons/spinner.gif") %>);
 }
 
 .expanded {
-  background-image: url(/images/icons/down_blue.png);
+  background-image: url(<%= asset_path("icons/down_blue.png") %>);
 }
 
 .category_root .category {
@@ -175,7 +175,7 @@ div.disclosure {
   float: left;
   padding-left: 24px;
   cursor: move;
-  background-image: url(/images/icons/star.png);
+  background-image: url(<%= asset_path("icons/star.png") %>);
   background-repeat: no-repeat;
   background-position: 0px 2px;
   line-height: 24px;
@@ -199,7 +199,7 @@ div.disclosure {
 }
 
 .ui-draggable-dragging.category {
-  background-image: url(/images/icons/star.png);
+  background-image: url(<%= asset_path("icons/star.png") %>);
 }
 
 /* Results admin */
@@ -253,7 +253,7 @@ table.results td.result .event {
 /* Pages */
 table.base .title div.editable {
   background-repeat: no-repeat;
-  background-image: url(/images/icons/page_white_world.png);
+  background-image: url(<%= asset_path("icons/page_white_world.png") %>);
   padding-left: 20px;
 }
 
@@ -358,7 +358,7 @@ input.zip {
 
 .current, .renewed {
   padding-right: 20px;
-  background-image: url(/images/icons/accept.png);
+  background-image: url(<%= asset_path("icons/accept.png") %>);
   background-repeat: no-repeat;
   background-position: center right;
 }
@@ -382,7 +382,7 @@ form.cat4_womens_race_series td input#result_team_name {
 
 /* Event */
 table.event_nav td.race {
-  background-image: url(/images/icons/star.png);
+  background-image: url(<%= asset_path("icons/star.png") %>);
   background-repeat: no-repeat;
   background-position: 8px 4px;
   padding-top: 4px;
@@ -599,7 +599,7 @@ table.numbers label.inline {
 }
 
 .posts td.subject {
-  background-image: url(/images/icons/email.png);
+  background-image: url(<%= asset_path("icons/email.png") %>);
   background-repeat: no-repeat;
   background-position: 12px center;
 }
@@ -677,7 +677,7 @@ table#preview_import_table th {
 }
 
 #merge_form {
-  background-image: url(/images/icons/error.png); 
+  background-image: url(<%= asset_path("icons/error.png") %>); 
   background-position: 0px 2px; 
   background-repeat: no-repeat;
   padding-left: 24px;
@@ -685,7 +685,7 @@ table#preview_import_table th {
 }
 
 .ui-draggable-dragging.person {
-  background-image: url(/images/icons/user.png);
+  background-image: url(<%= asset_path("icons/user.png") %>);
 }
 
 /* Login */
@@ -701,5 +701,5 @@ table#preview_import_table th {
 }
 
 .ui-draggable-dragging.team {
-  background-image: url(/images/icons/group.png);
+  background-image: url(<%= asset_path("icons/group.png") %>);
 }

@@ -32,7 +32,7 @@
           </td>
           <td class="right">
             <%= link_to(
-                  image_tag('/images/icons/delete.png'),
+                  image_tag('icons/delete.png'),
                   admin_person_race_number_path(person, number),
                   :remote => true,
                   :method => :delete,
@@ -52,7 +52,7 @@
   <tr id="new_number_button_row">
     <td class="right">
       <%= link_to(
-            image_tag("/images/icons/add.png", :size => "16x16"), 
+            image_tag("icons/add.png", :size => "16x16"), 
             new_admin_person_race_number_path(person),
             :remote => true,
             :class => "image") %>
