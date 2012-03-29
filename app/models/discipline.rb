@@ -6,7 +6,7 @@ class Discipline < ActiveRecord::Base
   has_many :discipline_aliases
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
   
-  NONE = Discipline.new(:name => "", :id => nil).freeze unless defined?(NONE)
+  NONE = Discipline.new(:name => "").freeze unless defined?(NONE)
   @@all_aliases = nil
   @@names = nil
   
@@ -25,7 +25,7 @@ class Discipline < ActiveRecord::Base
   end
 
   def self.find_all_bar
-    Discipline.all( :conditions => ["bar = true"])
+    Discipline.where(:bar => true)
   end
 
   def self.find_via_alias(name)
@@ -34,10 +34,7 @@ class Discipline < ActiveRecord::Base
 
   def self.load_aliases
     @@all_aliases = {}
-    results = connection.select_all(
-      "SELECT discipline_id, alias FROM discipline_aliases"
-    )
-    for result in results
+    connection.select_all("SELECT discipline_id, alias FROM discipline_aliases").each do |result|
       @@all_aliases[result["alias"].underscore.gsub(' ', '_').to_sym] = Discipline.find(result["discipline_id"].to_i)
     end
     Discipline.all.each do |discipline|
