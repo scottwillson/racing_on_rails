@@ -80,7 +80,7 @@ class PublicPagesTest < AcceptanceTest
     fill_in "name", :with => "Penn"
 
     visit "/rider_rankings"
-    assert_page_has_content "No results for #{Time.zone.today.year}"
+    assert_page_has_content "WSBA is using the default USA Cycling ranking system from 2012 onward"
 
     visit "/cat4_womens_race_series"
     assert_page_has_content "No results for #{Time.zone.today.year}"
