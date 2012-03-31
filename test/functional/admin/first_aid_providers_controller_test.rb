@@ -21,7 +21,7 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
   end
 
   def test_first_aid_update_options
-    get(:index, :past_events => true)
+    get(:index, :past_events => "true")
     assert_response(:success)
     assert_template("admin/first_aid_providers/index")
     assert_not_nil(assigns["events"], "Should assign events")

@@ -1,4 +1,4 @@
 jQuery('#event_<%= @event.id %>_row').effect('puff', {}, 2000);
 jQuery.hide('#warn');
 jQuery.show('#notice');
-jQuery('notice_span').html('Deleted <%= event.name %>');
+jQuery('notice_span').html('Deleted <%= @event.name %>');
