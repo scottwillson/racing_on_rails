@@ -1,12 +1,13 @@
-@races.each do |race|
-  page.visual_effect :puff, "race_#{race.id}_row", :duration => 0.2
-end
+<% @races.each do |race| %>
+  jQuery('#race_<%= race.id %>_row').effect('puff', {}, 200);
+<% end %>
 
-if @combined_results
-  page.visual_effect :puff, "event_#{@combined_results.id}_row", :duration => 0.2
-end
+<% if @combined_results %>
+  jQuery('#event_<%= @combined_results.id %>_row').effect('puff', {}, 200);
+<% end %>
 
-page.visual_effect :fade, "destroy_races_progress", :duration => 0.1
-page.hide "warn"
-page.show "notice"
-page["notice_span"].replace_html "Deleted races"
+jQuery('#destroy_races_progress').fadeOut(100));
+jQuery("#warn").hide();
+jQuery('#notice').show();
+
+jQuery('#notice_span').html('Deleted races');

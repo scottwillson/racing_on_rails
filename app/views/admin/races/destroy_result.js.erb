@@ -1,2 +1,2 @@
-page.replace_html "results", :partial => "results", :locals => { :race => @result.race }
-page.call :restripeTable, :results
+jQuery('#results').html'<%= escape_javascript(render(:partial => "results", :locals => { :race => @result.race })) %>')
+restripeTable('results');

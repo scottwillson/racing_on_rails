@@ -1,6 +1,6 @@
-page["result_#{@result.id}_row"].remove
-page.insert_html :after, "#person_#{@person.id}_table tr:first-child", :partial => "result", :locals => { :result => @result }
-page.call :restripeTable, "person_#{@original_result_person.id}_table"
-page.call :restripeTable, "person_#{@person.id}_table"
-page[:people].css "opacity", 1
-page.hide '#find_progress_icon'
+jQuery('#result_<%= @result.id %>_row').remove();
+page.insert_html :after, "#person_<%= person.id %>_table tr:first-child", :partial => "result", :locals => { :result => @result }
+restripeTable("person_<%= original_result_person.i %>}_table");
+restripeTable("person_<%= person.id %>_table");
+jQuery('#people').fadeIn();
+jQuery('#find_progress_icon').hide();

@@ -1,5 +1,5 @@
-page.replace_html("right_person", :partial => "person", :locals => { :person => @person, :results => @results })
-page['right_person'].stop
-page['right_person'].fadeTo("fast", 1)
-page << "$('#right_person tr:last-child td').height($('#left_person table').height() - $('#right_person table').height())"
-page['#find_progress_icon'].hide
+jQuery('#right_person').html('<%= escape_javascript(render(:partial => "person", :locals => { :person => @person, :results => @results })) %>');
+jQuery('#right_person').stop();
+jQuery('#right_person').fadeIn("fast", 1);
+$('#right_person tr:last-child td').height($('#left_person table').height() - $('#right_person table').height());
+jQuery('#find_progress_icon').hide();

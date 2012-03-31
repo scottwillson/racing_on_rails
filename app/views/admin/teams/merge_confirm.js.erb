@@ -1,4 +1,4 @@
-var $dialog = $('<div></div>')
+var $dialog = jQuery('<div></div>')
   .html('<%= @other_teams.first.name %> <%= aka(@other_teams.first) %> already exists. Delete <%= @team.name_was %> and move results to <%= @other_teams.first.name %>?')
   .dialog({
     autoOpen: false,
@@ -6,15 +6,15 @@ var $dialog = $('<div></div>')
     modal: true,
     buttons: {
       "Merge": function() {
-        $(this).dialog("close");
-        $.ajax({
+        jQuery(this).dialog("close");
+        jQuery.ajax({
           url: '<%= admin_merge_team_path @other_teams.first, @team, :format => :js %>',
           type: 'POST',
           dataType: 'script'
         });
       },
       Cancel: function() {
-        $(this).dialog("close");
+        jQuery(this).dialog("close");
       }
     }
   });

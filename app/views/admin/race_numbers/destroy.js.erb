@@ -1,2 +1,2 @@
-page.visual_effect(:puff, "number_#{@race_number.id}_row", :duration => 2)
-page.remove("number_#{@race_number.id}_value")
+jQuery('#number_<%= @race_number.id %>').effect('puff', {}, 2000);
+jQuery("#number_<%= race_number.id %>_value").remove();

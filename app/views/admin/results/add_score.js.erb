@@ -1,1 +1,1 @@
-page.insert_html :after, "result_#{params[:id]}_row", :partial => 'score', :collection => @scores
+jQuery('<%= escape_javascript(render(@scores)) %>').insertAfter('result_<%= params[:id] %>_row');

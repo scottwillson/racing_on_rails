@@ -9,12 +9,13 @@
     <%= link_to "Edit", edit_admin_race_path(race), :id => "edit_race_#{race.id}" %>
   </td>
   <td class="right delete">
-    <%= link_to(image_tag('icons/delete.png'),
-    admin_race_url(race),
-    :remote => true,
-    :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race",
-    :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?",
-    :method => :delete)
+    <%= link_to(image_tag("icons/delete.png"),
+          admin_race_path(race),
+          :remote => true,
+          :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race",
+          :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?",
+          :method => :delete
+        )
     %>
   </td>
 </tr>
