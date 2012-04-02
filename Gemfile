@@ -23,8 +23,6 @@ gem "acts_as_list", :git => "git://github.com/swanandp/acts_as_list.git"
 gem "acts_as_tree", :git => "git://github.com/parasew/acts_as_tree.git"
 gem "dynamic_form"
 gem "in_place_editing"
-# FIXME Some updating need for Rails 3.1+ assets
-#gem "rails-widgets", :git => "git://github.com/scottwillson/rails-widgets.git"
 gem "ri_cal"
 gem "truncate_html"
 gem "jquery-rails"

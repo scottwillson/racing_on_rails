@@ -50,7 +50,7 @@ module RacingOnRails
     
     # See Rails::Configuration for more options
     if File.exists?("#{config.root}/local/config/database.yml")
-      paths.config.database = "#{config.root}/local/config/database.yml"
+      config.database = "#{config.root}/local/config/database.yml"
     end
   end
   
