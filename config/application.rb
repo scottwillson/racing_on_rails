@@ -44,7 +44,9 @@ module RacingOnRails
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
 
-    Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]    
+    if File.exists?("#{config.root}/local/config/database.yml")
+      Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
+    end
   end
   
   class ActionView::Base
