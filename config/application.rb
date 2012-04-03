@@ -1,5 +1,5 @@
-require File.expand_path('../boot', __FILE__)
-require 'rails/all'
+require File.expand_path("../boot", __FILE__)
+require "rails/all"
 
 if defined?(Bundler)
   Bundler.require(:default, Rails.env)
@@ -25,7 +25,10 @@ module RacingOnRails
     config.session_store :secret, "9998d23d32c59a8161aba78b03630a93"
     
     config.assets.enabled = true
-    config.assets.version = '1.0'
+    config.assets.version = "1.0"
+    config.assets.paths << Rails.root.join("local", "app", "assets", "images")
+    config.assets.paths << Rails.root.join("local", "app", "assets", "javascripts")
+    config.assets.paths << Rails.root.join("local", "app", "assets", "stylesheets")
   
     config.time_zone = "Pacific Time (US & Canada)"
     
@@ -40,22 +43,9 @@ module RacingOnRails
   
     # HP's proxy, among others, gets this wrong
     config.action_dispatch.ip_spoofing_check = false
-    
-    # Ugh. Make config accessible to overrides
-    @config = config
-    
-    if File.exist?("#{config.root}/local/config/environments/#{::Rails.env}.rb")
-      load("#{config.root}/local/config/environments/#{::Rails.env}.rb")
-    end
-    
-    # See Rails::Configuration for more options
-    if File.exists?("#{config.root}/local/config/database.yml")
-      config.database = "#{config.root}/local/config/database.yml"
-    end
+
+    Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]    
   end
-  
-  # Local config customization
-  load("#{::Rails.root.to_s}/local/config/environment.rb") if File.exist?("#{::Rails.root.to_s}/local/config/environment.rb")
   
   class ActionView::Base
     def self.default_form_builder
