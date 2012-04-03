@@ -2,7 +2,7 @@
 
 <div class="column_grid_container">
   <%= form_for([:admin, @article]) do |f| %>
-    <%=render :partial => "form", :locals => { :f => f, :action_button => "Update" } %>
+    <%= render :partial => "form", :locals => { :f => f, :action_button => "Update" } %>
   <% end %>
 
   <%= form_tag({:action => 'update', :id => @article}) %>
