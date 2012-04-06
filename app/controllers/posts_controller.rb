@@ -3,17 +3,21 @@ class PostsController < ApplicationController
     flash.clear
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
-    @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
     
     if params[:month] && params[:year]
       begin
         date = Time.zone.local(params[:year].to_i, params[:month].to_i)
         @start_date = date.beginning_of_month
         @end_date = date.end_of_month
-        @posts = @posts.where("date between ? and ?", @start_date, @end_date)
       rescue
         logger.debug "Could not parse date year: #{params[:year]} month: #{params[:month]}"
       end
+    end
+
+    if @start_date && @end_date
+      @posts = @mailing_list.posts.where("date between ? and ?", @start_date, @end_date).paginate(:page => params[:page]).order("date desc")
+    else
+      @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
     end
     
     if @subject.present?
