@@ -53,12 +53,12 @@
 <% if @first_post_at %>
 <ul class="top_margin centered posts_navigation links">
   <% Time.zone.now.year.downto(@first_post_at.year).each do |year| %>
-  <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => 1) %></li>
+  <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => params[:month]) %></li>
   <% end %>
 </ul>
 <ul class="centered posts_navigation links">
   <% (1..12).each do |month| %>
-  <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => Time.zone.now.year, :month => month) %></li>
+  <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => params[:year], :month => month) %></li>
   <% end %>
 </ul>
 <% end %>
