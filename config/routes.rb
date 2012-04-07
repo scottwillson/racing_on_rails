@@ -60,6 +60,7 @@ RacingOnRails::Application.routes.draw do
         get  :duplicates
         post :import
         get  :no_cards
+        post :number_year_changed
         post :preview_import
         post :resolve_duplicates
       end

@@ -26,9 +26,12 @@
             <%= text_field 'number[]', 'value', :class => "number" %>
           </td>
           <td>
-            <%= link_to(image_tag("icons/information.png"), "#", 
+            <%= link_to(
+                  image_tag("icons/information.png"), 
+                  "#", 
                   :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{"by #{number.updated_by.name}" if number.updated_by}", 
-                   :class => "image") %>
+                  :class => "image"
+                ) %>
           </td>
           <td class="right">
             <%= link_to(
@@ -38,12 +41,11 @@
                   :method => :delete,
                   :id => "destroy_number_#{number.id}", 
                   :class => "image"
-                  )
-           %>
+            ) %>
           </td>
         </tr>
       </table>
-</td>
+    </td>
   </tr>
   <% end %>
   <% if @person.new_record? %>
