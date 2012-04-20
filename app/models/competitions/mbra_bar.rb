@@ -101,7 +101,7 @@ class MbraBar < Competition
   def points_for(source_result, team_size = nil)
     calculate_point_schedule(source_result.race.field_size)
     points = 0
-    MbraBar.benchmark('points_for', :level => "debug) {
+    MbraBar.benchmark('points_for', :level => "debug") {
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else

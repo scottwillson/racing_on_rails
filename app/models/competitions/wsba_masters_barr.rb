@@ -24,7 +24,7 @@ class WsbaMastersBarr < WsbaBarr
 
   def points_for(source_result, team_size = nil)
     points = 0
-    WsbaBarr.benchmark('points_for', :level => "debug) {
+    WsbaBarr.benchmark('points_for', :level => "debug") {
       results_in_place = Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
       if team_size.nil?
         # assume this is a TTT, score divided by 4 regardless of # of riders
