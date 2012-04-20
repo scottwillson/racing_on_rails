@@ -45,6 +45,7 @@ class ActiveSupport::TestCase
     # Discipline class may have loaded earlier with no aliases in database
     reset_disciplines
     scrub_instance_variables
+    reset_person_current
   end
 
   def reset_association
@@ -54,6 +55,10 @@ class ActiveSupport::TestCase
   def reset_disciplines
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
+  end
+
+  def reset_person_current
+    Person.current = nil
   end
 
   # person = fixture symbol or Person
