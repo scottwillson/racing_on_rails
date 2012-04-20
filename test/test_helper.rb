@@ -24,7 +24,7 @@ class ActiveSupport::TestCase
   setup :activate_authlogic, :reset_association, :reset_no_angle_brackets_exceptions
   
   # Discipline class may have loaded earlier with no aliases in database
-  teardown :assert_no_angle_brackets, :reset_disciplines
+  teardown :assert_no_angle_brackets, :reset_disciplines, :reset_person_current
 
   def reset_association
     RacingAssociation.current = nil
@@ -34,6 +34,11 @@ class ActiveSupport::TestCase
     # Discipline class may have loaded earlier with no aliases in database
     Discipline.reset
   end
+
+  def reset_person_current
+    Person.current = nil
+  end
+
   
   def reset_no_angle_brackets_exceptions
     @@reset_no_angle_brackets_exceptions = []
