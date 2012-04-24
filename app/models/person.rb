@@ -34,6 +34,7 @@ class Person < ActiveRecord::Base
   has_and_belongs_to_many :editors, :class_name => "Person", :association_foreign_key => "editor_id", :before_add => :validate_unique_editors
   has_many :editor_requests, :dependent => :destroy
   has_many :events, :foreign_key => "promoter_id"
+  has_and_belongs_to_many :editable_events, :class_name => "Event", :foreign_key => "editor_id", :join_table => "editors_events"
   has_many :race_numbers, :include => [ :discipline, :number_issuer ]
   has_many :results
   has_and_belongs_to_many :roles
