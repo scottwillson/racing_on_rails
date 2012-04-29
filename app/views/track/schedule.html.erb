@@ -1,12 +1,12 @@
 <% @page_title = "Alpenrose Velodrome Schedule" %>
 
-<div class="tabs">
-  <%= link_to "Track Home", track_path %> |
-  <%= link_to "History", "http://#{RacingAssociation.current.static_host}/track/history/index.html" %> |
-  <%= link_to "Information", "http://#{RacingAssociation.current.static_host}/track/information/index.html" %> |
-  <%= link_to "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html" %> |
-  <%= link_to "Schedule", track_schedule_path %> |
-</div>
+<ul class="tabs">
+  <li><%= link_to "Track Home", track_path %></li>
+  <li><%= link_to "History", "http://#{RacingAssociation.current.static_host}/track/history/index.html" %></li>
+  <li><%= link_to "Information", "http://#{RacingAssociation.current.static_host}/track/information/index.html" %></li>
+  <li><%= link_to "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html" %></li>
+  <li><%= link_to "Schedule", track_schedule_path %></li>
+</ul>
 
 <div class="column_grid_container">
   <div class="span-2 top_margin">

@@ -1,4 +1,4 @@
-table.tabs, div.tabs {
+ul.tabs {
   margin-top: 12px;
   margin-bottom: 0px;
   margin-left: auto;
@@ -9,17 +9,23 @@ table.tabs, div.tabs {
   width: auto
 }
 
-table.tabs + table.tabs {
+ul.tabs + ul.tabs {
   margin-top: 4px;
 }
 
-table.tabs td {
+ul.tabs li {
+  display: inline;
   padding-left: 8px;
   padding-right: 8px;
   border-left: 1px solid rgb(190, 190, 190);
 }
 
-table.tabs td.first,
-table.tabs td.first_selected {
+ul.tabs li.first,
+ul.tabs li.first_selected {
   border-left: none;
 }
+
+ul.tabs.solo li {
+  border-left: none;
+}
+
