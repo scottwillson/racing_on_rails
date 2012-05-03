@@ -817,8 +817,11 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:number_issuer)
     
     person = Person.create!
+    event = FactoryGirl.create(:event)
+    person.updater = event
     person.add_number("7890", nil)
     assert_equal("7890", person.road_number, "Road number after add with nil discipline")    
+    assert_equal event, person.race_numbers.first.created_by, "Number created_by"
   end
   
   def test_add_number_from_non_number_discipline
