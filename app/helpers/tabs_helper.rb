@@ -38,9 +38,9 @@ HTML
       @tabs.each_with_index do |tab, index|
         if index == 0
           if select_current_page && current_page?(tab.options)
-            html << "      <li class=\"first_selected\">"
+            html << "<li class=\"first_selected\">"
           else
-            html << "      <li class=\"first\">"
+            html << "<li class=\"first\">"
           end
           if select_current_page
             html << link_to_unless_current(tab.name, tab.options, tab.html_options).to_s
@@ -49,17 +49,17 @@ HTML
           end
           if @tabs.size < 2
             if select_current_page && current_page?(tab.options)
-              html << "\n      <li class=\"last_selected\">"
+              html << "<li class=\"last_selected\">"
               html << "&nbsp;"
             else
-              html << "\n      <li class=\"last\">&nbsp;"
+              html << "<li class=\"last\">&nbsp;"
             end
           end
         elsif index == @tabs.size - 1
           if select_current_page && current_page?(tab.options)
-            html << "      <li class=\"last_selected\">"
+            html << "<li class=\"last_selected\">"
           else
-            html << "      <li class=\"last\">"
+            html << "<li class=\"last\">"
           end
           if select_current_page
             html << link_to_unless_current(tab.name, tab.options, tab.html_options).to_s
@@ -68,9 +68,9 @@ HTML
           end
         else
           if select_current_page && current_page?(tab.options)
-            html << "      <li class=\"selected\">"
+            html << "<li class=\"selected\">"
           else
-            html << "      <li>"
+            html << "<li>"
           end
           if select_current_page
             html << link_to_unless_current(tab.name, tab.options, tab.html_options).to_s
@@ -78,7 +78,7 @@ HTML
             html << link_to(tab.name, tab.options, tab.html_options).to_s
           end
         end
-        html << "</li>\n"
+        html << "</li>"
       end
       end_html = <<HTML
     </ul>
