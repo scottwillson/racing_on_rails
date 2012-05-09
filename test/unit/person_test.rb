@@ -821,8 +821,11 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:number_issuer)
     
     person = Person.create!
+    event = FactoryGirl.create(:event)
+    person.updater = event
     person.add_number("7890", nil)
     assert_equal("7890", person.road_number, "Road number after add with nil discipline")    
+    assert_equal event, person.race_numbers.first.created_by, "Number created_by"
   end
   
   def test_add_number_from_non_number_discipline
@@ -1196,6 +1199,25 @@ class PersonTest < ActiveSupport::TestCase
     assert admin.can_edit?(p1)
     assert admin.can_edit?(p2)
     assert admin.can_edit?(admin)
+  end
+  
+  def test_event_editor
+    event = FactoryGirl.create(:event)
+    person = FactoryGirl.create(:person)
+    
+    assert event.editors.empty?, "Event should have no editors"
+    assert_not_nil event.promoter, "Event should have promoter"
+    assert_equal [ event ], event.promoter.events, "Promoter should have event in events"
+    assert person.events, "Person should not have event in events"
+    assert event.promoter.editable_events.empty?, "Promoter should have no editable_events"
+    assert person.editable_events.empty?, "Person should have no editable_events"
+    
+    event.editors << person
+    assert_equal [ person ], event.editors, "Event should have editor"
+    assert_equal [ event ], event.promoter.events, "Promoter should have event in events"
+    assert_equal [], person.events, "Person should not have event in events"
+    assert event.promoter.editable_events.empty?, "Promoter should have no editable_events"
+    assert_equal [ event ], person.editable_events(true), "Person should editable_events"
   end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)

@@ -157,7 +157,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
     
     get(:index, :year => current_year)
     assert_match("href=\"/admin/events?year=#{last_year}", @response.body, "Should link to #{last_year} in:\n#{@response.body}")
-    assert_select("table.tabs span", { :text => current_year.to_s }, "Should have tab for current year")
+    assert_select("ul.tabs li", { :text => current_year.to_s }, "Should have tab for current year")
   end
 
   # Really only happens to developers switching environments, and more of a test of LoginSystem
