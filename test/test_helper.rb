@@ -22,9 +22,13 @@ class ActiveSupport::TestCase
   end
   
   setup :activate_authlogic, :reset_association, :reset_no_angle_brackets_exceptions
-  
+
   # Discipline class may have loaded earlier with no aliases in database
-  teardown :assert_no_angle_brackets, :reset_disciplines, :reset_person_current
+  teardown :reset_disciplines, :reset_person_current, :assert_no_angle_brackets
+
+  # Ensure that test database transaction rollsback before we assert_no_angle_brackets.
+  # Otherwise, if assert_no_angle_brackets fails, test data is left in the database.
+  set_callback(:teardown, :before, :teardown_fixtures)
 
   def reset_association
     RacingAssociation.current = nil
@@ -125,16 +129,24 @@ class ActiveSupport::TestCase
 
   # Detect HTML escaping screw-ups
   # Eats RAM if there are many errors. Set VERBOSE_HTML_SOURCE to see page source.
-  def assert_no_angle_brackets
+  def assert_no_angle_brackets    
     unless @@no_angle_brackets_exceptions.include?(__method__) || @@no_angle_brackets_exceptions.include?(:all)
-      if @response && !@response.blank?
+      if @response && @response.present?
         body_string = @response.body.to_s
         if ENV["VERBOSE_HTML_SOURCE"]
-          assert !body_string["&lt;"], "Found escaped left angle bracket in #{body_string}"
-          assert !body_string["&rt;"], "Found escaped right angle bracket in #{body_string}"
+          if body_string["&lt;"]
+            flunk "Found escaped left angle bracket in #{body_string}"
+          end
+          if body_string["&rt;"]
+            flunk "Found escaped right angle bracket in #{body_string}"
+          end
         else
-          assert !body_string["&lt;"], "Found escaped left angle bracket"
-          assert !body_string["&rt;"], "Found escaped right angle bracket"
+          if body_string["&lt;"]
+            flunk "Found escaped left angle bracket"
+          end
+          if body_string["&rt;"]
+            flunk "Found escaped right angle bracket"
+          end
         end
       end
     end
@@ -181,7 +193,6 @@ class ActiveSupport::TestCase
        all_results = results.collect(&:place)
        # important to get last place in last
        results.sort! { |a,b| a.place.to_i <=> b.place.to_i }
-       need_results = []
        (1..results.last.place.to_i).reverse_each { |res|
          unless all_results.include?(res.to_s)
            # we need a result, there is a gap here
