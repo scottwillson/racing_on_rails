@@ -22,6 +22,17 @@ module Concerns
         @updater ||= Person.current
         true
       end
+      
+      def updated_by_name
+        case updated_by
+        when nil
+          ""
+        when String
+          updated_by
+        else
+          updated_by.name
+        end
+      end
 
       def created_from_result?
         created_by.present? && created_by.kind_of?(::Event)

@@ -27,7 +27,7 @@
           </td>
           <td>
             <%= link_to(image_tag("icons/information.png"), "#", 
-                  :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{"by #{number.updated_by.name}" if number.updated_by}", 
+                  :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{"by #{number.updated_by_name}"}", 
                    :class => "image") %>
           </td>
           <td class="right">
