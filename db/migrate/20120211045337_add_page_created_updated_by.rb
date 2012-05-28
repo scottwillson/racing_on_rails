@@ -28,7 +28,7 @@ class AddPageCreatedUpdatedBy < ActiveRecord::Migration
     rename_column :people, :created_by_id, :old_created_by_id
     rename_column :people, :created_by_type, :old_created_by_type
     Person.where("old_created_by_id is not null").each do |person|
-      person.versions.create!(:user => person.old_created_by, :modifications => {})      
+      person.versions.create!(:user => person.old_created_by_id, :modifications => {})
     end
 
     Team.where("created_by_id is not null").each do |team|
