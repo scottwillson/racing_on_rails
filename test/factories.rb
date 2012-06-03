@@ -24,7 +24,7 @@ FactoryGirl.define do
 
     factory :cyclocross_discipline do
       name "Cyclocross"
-      after_create { |d| 
+      after(:create) { |d| 
         d.discipline_aliases.create!(:alias => "ccx")
         d.discipline_aliases.create!(:alias => "cx")
       }
@@ -32,7 +32,7 @@ FactoryGirl.define do
 
     factory :mtb_discipline do
       name "Mountain Bike"
-      after_create { |d| d.discipline_aliases.create!(:alias => "mtb") }
+      after(:create) { |d| d.discipline_aliases.create!(:alias => "mtb") }
     end
   end
   

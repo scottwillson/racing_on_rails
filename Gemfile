@@ -56,7 +56,7 @@ group :acceptance do
   gem "factory_girl_rails"
   gem "launchy"
   gem "mocha", :require => false
-  gem "selenium-webdriver"
+  gem "selenium-webdriver", "2.20.0"
   gem "timecop"
 end
 
