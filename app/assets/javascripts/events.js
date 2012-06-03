@@ -15,4 +15,9 @@ $(document).ready(function() {
     $('#destroy_races').hide();
     $('#destroy_races_progress').show();
   });
+  
+  $('#edit_promoter_link').click(function() {
+    window.location.href = '/admin/people/' + $('#event_promoter_id').val() + '/edit?event_id=' + $('#edit_promoter_link').attr('data-event-id'); 
+    return false;
+  });
 });

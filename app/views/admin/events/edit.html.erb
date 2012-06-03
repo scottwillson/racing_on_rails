@@ -85,11 +85,7 @@
       </div>
        
       <div class="prepend-1 span-2 last" id="promoter_links">
-        <%= link_to_function(
-              "Edit", 
-              "window.location.href = '/admin/people/' + $('#event_promoter_id').val() + '/edit?event_id=#{@event.id}'; return false;", 
-              :class => "obvious", :id => "edit_promoter_link"
-        ) %>
+        <%= link_to "Edit", "#", :class => "obvious", :id => "edit_promoter_link", "data-event-id" => @event.id %>
       </div>
       <% end -%>
       
