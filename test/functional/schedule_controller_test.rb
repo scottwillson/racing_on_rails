@@ -9,6 +9,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
+    FactoryGirl.create(:number_issuer)
 
     year = 2006
     
@@ -104,6 +105,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_mtb_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
+    FactoryGirl.create(:number_issuer)
     year = 2006
     
     SingleDayEvent.create!(
@@ -134,7 +136,8 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_index_with_alias
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
-    
+    FactoryGirl.create(:number_issuer)
+
     year = 2006
     
     SingleDayEvent.create!(

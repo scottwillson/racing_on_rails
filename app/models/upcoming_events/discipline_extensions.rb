@@ -10,7 +10,7 @@ module UpcomingEvents
 
       # Find MultiDayEvents, not their children, nor MultiDayEvents subclasses
       multi_day_events = MultiDayEvent.all(
-        :select => "distinct events.id, events.name, events.date, events.discipline, events.flyer, events.flyer_approved, events.beginner_friendly, events.bar_points, events.website, events.registration_link",
+        :select => "distinct events.id, events.name, events.date, events.discipline, events.flyer, events.flyer_approved, events.beginner_friendly, events.bar_points, events.website, events.registration_link, events.number_issuer_id",
         :joins => "left outer join events as childrens_events on childrens_events.parent_id = events.id",
         :conditions => scope_by_sanctioned([%Q{ childrens_events.date between ? and ? and 
                                                 (childrens_events.type is null or childrens_events.type = 'SingleDayEvent') and
