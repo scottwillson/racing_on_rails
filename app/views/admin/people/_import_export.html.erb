@@ -18,19 +18,6 @@
       <option value="scoring_sheet">Scoring sheet</option>
       <option value="endicia">Endicia</option>
     </select>
-    <%= button_to_function "Export", "submit_export(this)", :id => "export_button" %>
+    <%= button_tag "Export", :id => "export_button" %>
   </div>
 </form>
-
-<script type="text/javascript" charset="utf-8">
-//<![CDATA[
-  function submit_export() {
-    if ($('#format').val() == 'scoring_sheet') {
-      this.location = '/admin/people.xls?excel_layout=scoring_sheet&include=' + $('#include').val();
-    }
-    else {
-      this.location = '/admin/people.' + $('#format').val() + '?excel_layout=' + $('#format').val() + '&include=' + $('#include').val();
-    }
-  }
-// ]]>
-</script>
