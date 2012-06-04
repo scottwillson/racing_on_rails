@@ -1,6 +1,6 @@
 # Excel or text file of People. Assumes that the first row is a header row. 
 # Updates membership to current year. If there are no more events in the current year, updates membership to next year.
-# See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
+# See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
 class PeopleFile < RacingOnRails::Grid::GridFile
   # 'club' ...this is often team in USAC download. How handle? Use club for team if no team? and if both, ignore club?
   #  'NCCA club' ...can have this in addition to club and team. should team be many to many?

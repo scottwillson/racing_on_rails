@@ -78,7 +78,7 @@ module Results
       self.source = source
     end
 
-    # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
+    # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
     def import
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} import")
 
