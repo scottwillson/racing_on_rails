@@ -229,7 +229,7 @@ class Admin::PeopleController < Admin::AdminController
     render "preview_import"
   end
   
-  # See http://trac.butlerpress.com/racing_on_rails/wiki/SampleImportFiles for format details and examples.
+  # See http://racingonrails.rocketsurgeryllc.com/sample_import_files/ for format details and examples.
   def import
     if params[:commit] == 'Cancel'
       session[:people_file_path] = nil

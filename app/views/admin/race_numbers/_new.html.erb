@@ -2,22 +2,24 @@
 <tr class="new_number" id="new_number_<%= row_id %>">
   <td>
     <table cellspacing="0">
-      <td>
-        <select name='number_issuer_id[]' id='number_issuer_id'>
-          <%= options_for_select NumberIssuer.all.collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
-        </select>
-      </td>
-      <td>
-        <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
-          <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].try(:id) %>
-        </select>
-      </td>
-      <td>
-        <%= text_field_tag 'number_value[]', '', :class => "number" %>
-      </td>
-      <td>
-        <%= link_to_function(image_tag('icons/decline.png'), "jQuery('#new_number_#{row_id}').remove()", :class => "image") %></td>
-      </td>
+      <tr>
+        <td>
+          <select name='number_issuer_id[]' id='number_issuer_id'>
+            <%= options_for_select NumberIssuer.all.collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
+          </select>
+        </td>
+        <td>
+          <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
+            <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].try(:id) %>
+          </select>
+        </td>
+        <td>
+          <%= text_field_tag 'number_value[]', '', :class => "number" %>
+        </td>
+        <td>
+          <%= link_to(image_tag('icons/decline.png'), "#", :class => "image destroy_number", "data-row-id" => row_id) %>
+        </td>
+      </tr>
     </table>
   </td>
 </tr>

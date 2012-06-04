@@ -1,6 +1,7 @@
 $(document).ready(function() {
   bindNumberYearChange();
   bindDragAndDrop();
+  bindDestroyNumber();
 });
 
 function bindNumberYearChange() {
@@ -39,5 +40,12 @@ function bindDragAndDrop() {
         dataType: 'script'
       });
     }
+  });
+}
+
+function bindDestroyNumber() {
+  $('a.destroy_number').click(function() {
+    jQuery('#new_number_' + jQuery(this).attr('data-row-id')).remove();
+    return false;
   });
 }
