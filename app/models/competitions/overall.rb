@@ -121,7 +121,7 @@ class Overall < Competition
     nil
   end
   
-  def maximum_events
+  def maximum_events(race)
     6
   end
   

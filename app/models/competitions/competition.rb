@@ -163,12 +163,13 @@ class Competition < Event
   # * Any results after the first four only get 50-point bonus
   # * Drop lowest-scoring result
   def after_create_competition_results_for(race)
-    if maximum_events
+    _maximum_events = maximum_events(race)
+    if _maximum_events
       race.results.each do |result|
         # Don't bother sorting scores unless we need to drop some
-        if result.scores.size > maximum_events
+        if result.scores.size > _maximum_events
           result.scores.sort! { |x, y| y.points <=> x.points }
-          lowest_scores = result.scores[maximum_events, 2]
+          lowest_scores = result.scores[_maximum_events, 2]
           lowest_scores.each do |lowest_score|
             result.scores.destroy(lowest_score)
           end
@@ -183,7 +184,7 @@ class Competition < Event
     end
   end
   
-  def maximum_events
+  def maximum_events(race)
     nil
   end
   
