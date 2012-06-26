@@ -17,7 +17,7 @@ class TaborOverall < Overall
   end
 
   def maximum_events(race)
-    if race.name == "Category 4 Men" || "Masters Women"
+    if race.name == "Category 4 Men" || race.name == "Masters Women"
       4
     else
       5
