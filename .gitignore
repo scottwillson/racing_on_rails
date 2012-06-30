@@ -8,6 +8,7 @@
 .gitmodules
 .project
 .rvmrc
+.sass-cache
 *.sublime-*
 .tm_properties
 ._*
