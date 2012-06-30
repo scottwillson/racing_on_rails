@@ -23,7 +23,7 @@
           <%= link_to("Preview", "/#{@page.path}", :target => "_new", :class => "obvious", :id => "preview") %>
           <%= link_to("Delete", 
                       admin_page_path(@page), 
-                      :confirm => confirm_destroy_message(@page), 
+                      :data => { :confirm => confirm_destroy_message(@page) }, 
                       :method => :delete, 
                       :class => "obvious", 
                       :id => "delete") unless @page.new_record? %>

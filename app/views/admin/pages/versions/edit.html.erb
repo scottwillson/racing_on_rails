@@ -23,7 +23,7 @@
       <%= link_to("Preview", admin_pages_version_path(@version), :target => "_new", :class => "obvious", :id => "preview") %>
       <%= link_to("Delete", 
                   admin_pages_version_path(@version),
-                  :confirm => "Really delete this version?", 
+                  :date => { :confirm => "Really delete this version?" }, 
                   :method => :delete, 
                   :class => "obvious", 
                   :id => "delete") %>
