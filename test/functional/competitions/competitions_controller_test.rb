@@ -31,7 +31,7 @@ class CompetitionsControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_unknown_competition_type
-    assert_raise(ActiveRecord::RecordNotFound) { get(:show, :type => 'not_a_series') }
+    assert_raise(ActionController::RoutingError) { get(:show, :type => 'not_a_series') }
     assert_response(:success)
   end
 end
