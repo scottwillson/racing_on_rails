@@ -11,7 +11,7 @@ class Overall < Competition
   def self.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
-        parent = MultiDayEvent.first(
+        parent = ::MultiDayEvent.first(
                         :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
                         
         if parent && parent.has_results_including_children?(true)
@@ -121,7 +121,7 @@ class Overall < Competition
     nil
   end
   
-  def maximum_events
+  def maximum_events(race)
     6
   end
   

@@ -121,21 +121,23 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   # +year+ for RaceNumbers
   # New memberships start on today, but really should start on January 1st of next year, if +year+ is next year
   def import(update_membership, year = nil)
+    logger.debug("PeopleFile import update_membership: #{update_membership}")
     @update_membership = update_membership
     @has_print_column = columns.any? do |column|
       column.field == :print_card
     end
     year = year.to_i if year
     
+    logger.debug("#{rows.size} rows")
     created = 0
     updated = 0
     if @update_membership
       if year && year > Time.zone.today.year
-        @member_from_imported_people = Time.zone.local(year, 1, 1).to_date
+        @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
       else
         @member_from_imported_people = Time.zone.today.to_date
       end
-      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year, 12, 31).to_date
+      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
     end
     
     Person.transaction do

@@ -16,8 +16,12 @@ class TaborOverall < Overall
     races.create! :category => Category.find_or_create_by_name("Senior Men")
   end
 
-  def maximum_events
-    5
+  def maximum_events(race)
+    if race.name == "Category 4 Men" || race.name == "Masters Women"
+      4
+    else
+      5
+    end
   end
   
   def double_points_for_last_event?

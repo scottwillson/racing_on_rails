@@ -3,15 +3,11 @@ class RaceDayMailer < ActionMailer::Base
   helper :application
 
   def members_export(people)
-    # Not thread-safe. Won't work for multiple associations.
-    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
+    subject    "#{RacingAssociation.current.name} Members Export"
+    recipients 'dcowley@sportsbaseonline.com'
+    from       "scott.willson@gmail.com"
 
-    mail(
-      subject: "#{RacingAssociation.current.name} Members Export",
-      recipients: 'dcowley@sportsbaseonline.com',
-      from: "scott.willson@gmail.com",
-      body: "See attached file"
-    )
+    body "See attached file"
 
     @people = people
   end

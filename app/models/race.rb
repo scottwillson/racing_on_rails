@@ -32,7 +32,7 @@ class Race < ActiveRecord::Base
   
   # Defaults to Event's BAR points
   def bar_points
-    self[:bar_points] || self.event.bar_points
+    self[:bar_points] || event.bar_points
   end
   
   # 0..3

@@ -173,6 +173,7 @@ class PeopleController < ApplicationController
     
     if @person.update_attributes(params[:person])
       flash[:notice] = "Created your new login"
+      PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
       if @return_to.present?
         redirect_to @return_to
