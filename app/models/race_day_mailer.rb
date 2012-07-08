@@ -3,11 +3,12 @@ class RaceDayMailer < ActionMailer::Base
   helper :application
 
   def members_export(people)
-    subject    "#{RacingAssociation.current.name} Members Export"
-    recipients 'dcowley@sportsbaseonline.com'
-    from       "scott.willson@gmail.com"
-
-    body "See attached file"
+    mail(
+      subject: "#{RacingAssociation.current.name} Members Export",
+      recipients: 'dcowley@sportsbaseonline.com',
+      from: "scott.willson@gmail.com",
+      body: "See attached file"
+    )
 
     @people = people
   end
