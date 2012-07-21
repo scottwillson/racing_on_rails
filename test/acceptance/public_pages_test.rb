@@ -122,8 +122,6 @@ class PublicPagesTest < AcceptanceTest
 
     road = FactoryGirl.create(:discipline, :name => "Road")
     road.bar_categories << masters_men
-
-    overall = FactoryGirl.create(:discipline, :name => "Overall")
     
     # Masters 30-34 result. (32)
     weaver = FactoryGirl.create(:person, :date_of_birth => Date.new(1977))
