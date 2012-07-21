@@ -25,7 +25,7 @@ class PageTest < ActiveSupport::TestCase
     parent = Page.create!(:body => "<h1>Welcome</h1>", :title => "")
     child = parent.children.create!(:body => "<h2>Child</h2>", :title => "Child")
     child.children << parent
-    # assert !parent.valid?
+    assert !parent.valid?
     assert(!child.children(true).include?(parent), "Should not be able to add parent as child")
   end
   

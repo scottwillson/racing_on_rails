@@ -16,7 +16,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   
   def test_destroy_event
     jack_frost = FactoryGirl.create(:event)
-    delete(:destroy, :id => jack_frost.id, :commit => 'Delete')
+    delete(:destroy, :id => jack_frost.to_param, :commit => 'Delete')
     assert_redirected_to(admin_events_path(:year => jack_frost.date.year))
     assert(!Event.exists?(jack_frost.id), "Jack Frost should have been destroyed")
   end

@@ -9,7 +9,7 @@ class PromotersTest < AcceptanceTest
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:discipline, :name => "Singlespeed")
     FactoryGirl.create(:discipline, :name => "Track")
-    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
 
     year = RacingAssociation.current.effective_year
     promoter = FactoryGirl.create(:promoter)

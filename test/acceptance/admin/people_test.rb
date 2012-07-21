@@ -5,7 +5,7 @@ class PeopleTest < AcceptanceTest
   def test_edit
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
-    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
     login_as FactoryGirl.create(:administrator, :name => "Candi Murray")
     molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :team_name => "Vanilla", :road_number => "202")
     molly.aliases.create!(:name => "Mollie Cameron")
@@ -175,7 +175,7 @@ class PeopleTest < AcceptanceTest
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:discipline, :name => "Singlespeed")
     FactoryGirl.create(:discipline, :name => "Track")
-    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
     
     FactoryGirl.create(:person, :name => "Erik Tonkin", :team_name => "Kona", :road_number => "102")
 

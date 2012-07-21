@@ -36,58 +36,58 @@ class BarTest < ActiveSupport::TestCase
     discipline.bar_categories << senior_men
 
     cross_crusade = Series.create!(:name => "Cross Crusade", :discipline => "Cyclocross")
-    barton = SingleDayEvent.create!({
+    barton = SingleDayEvent.create!(
       :name => "Cross Crusade: Barton Park",
       :discipline => "Cyclocross",
       :date => Date.new(2004, 11, 7),
       :parent => cross_crusade
-    })
+    )
     barton_a = barton.races.create(:category => men_a, :field_size => 5)
-    barton_a.results.create({
+    barton_a.results.create(
       :place => 3,
       :person => tonkin
-    })
-    barton_a.results.create({
+    )
+    barton_a.results.create(
       :place => 15,
       :person => weaver
-    })
-    barton_a.results.create({
+    )
+    barton_a.results.create(
       :place => 2,
       :person => alice,
       :bar => false
-    })
+    )
     
     # Parent with different discipline
     stage_race = MultiDayEvent.create!(:discipline => "Road")
-    swan_island = SingleDayEvent.create!({
+    swan_island = SingleDayEvent.create!(
       :name => "Swan Island",
       :discipline => "Criterium",
       :date => Date.new(2004, 5, 17),
       :parent => stage_race
-    })
+    )
     swan_island_senior_men = swan_island.races.create(:category => sr_p_1_2, :field_size => 4)
-    swan_island_senior_men.results.create({
+    swan_island_senior_men.results.create(
       :place => 12,
       :person => tonkin
-    })
-    swan_island_senior_men.results.create({
+    )
+    swan_island_senior_men.results.create(
       :place => 2,
       :person => molly
-    })
+    )
     # No BAR points
     senior_women_swan_island = swan_island.races.create(:category => senior_women, :field_size => 3, :bar_points => 0)
-    senior_women_swan_island.results.create({
+    senior_women_swan_island.results.create(
       :place => 1,
       :person => molly
-    })
+    )
     
     thursday_track_series = Series.create!(:name => "Thursday Track", :discipline => "Track")
-    thursday_track = SingleDayEvent.create!({
+    thursday_track = SingleDayEvent.create!(
       :name => "Thursday Track",
       :discipline => "Track",
       :date => Date.new(2004, 5, 12),
       :parent => thursday_track_series
-    })
+    )
     thursday_track_senior_men = thursday_track.races.create(:category => senior_men, :field_size => 6)
     thursday_track_senior_men.results.create(
       :place => 5,
@@ -98,53 +98,53 @@ class BarTest < ActiveSupport::TestCase
       :person => tonkin
     )
     
-    team_track = SingleDayEvent.create!({
+    team_track = SingleDayEvent.create!(
       :name => "Team Track State Championships",
       :discipline => "Track",
       :date => Date.new(2004, 9, 1),
       :bar_points => 2
-    })
+    )
     team_track_senior_men = team_track.races.create(:category => senior_men, :field_size => 6)
-    team_track_senior_men.results.create({
+    team_track_senior_men.results.create(
       :place => 1,
       :person => weaver
-    })
-    team_track_senior_men.results.create({
+    )
+    team_track_senior_men.results.create(
       :place => 1,
       :person => tonkin
-    })
-    team_track_senior_men.results.create({
+    )
+    team_track_senior_men.results.create(
       :place => 1,
       :person => molly
-    })
-    team_track_senior_men.results.create({
+    )
+    team_track_senior_men.results.create(
       :place => 5,
       :person => alice
-    })
-    team_track_senior_men.results.create({
+    )
+    team_track_senior_men.results.create(
       :place => 5,
       :person => matson
-    })
+    )
     # Weaver and Erik's second ride should not count
-    team_track_senior_men.results.create({
+    team_track_senior_men.results.create(
       :place => 15,
       :person => weaver
-    })
-    team_track_senior_men.results.create({
+    )
+    team_track_senior_men.results.create(
       :place => 15,
       :person => tonkin
-    })
+    )
     
-    larch_mt_hillclimb = SingleDayEvent.create!({
+    larch_mt_hillclimb = SingleDayEvent.create!(
       :name => "Larch Mountain Hillclimb",
       :discipline => "Time Trial",
       :date => Date.new(2004, 2, 1)
-    })
+    )
     larch_mt_hillclimb_senior_men = larch_mt_hillclimb.races.create(:category => senior_men, :field_size => 6)
-    larch_mt_hillclimb_senior_men.results.create({
+    larch_mt_hillclimb_senior_men.results.create(
       :place => 13,
       :person => tonkin
-    })
+    )
     
     # Weekly series overall should count, not individual race
     blind_date = WeeklySeries.create!(:name => "Blind Date", :discipline => "Cyclocross", :date => Date.new(2004, 9, 1))

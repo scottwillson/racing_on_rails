@@ -40,7 +40,7 @@ class ActiveSupport::TestCase
   def login_as(person)
     case person
     when Symbol
-      PersonSession.create people(person).reload
+      PersonSession.create FactoryGirl.create(person).reload
     when Person
       PersonSession.create person.reload
     else

@@ -437,7 +437,7 @@ class RaceTest < ActiveSupport::TestCase
     race = SingleDayEvent.create!.races.create!(:category_name => "Masters Women")
     first_result = race.results.create!(:place => "1")
     existing_result = race.results.create!(:place => "DNF")
-    new_result = race.create_result_before(existing_result.id)
+    race.create_result_before(existing_result.id)
     assert_equal(3, race.results.size, "Results")
     race.results.sort!
     assert_equal(first_result, race.results[0], "First result should still be first result")
@@ -455,7 +455,7 @@ class RaceTest < ActiveSupport::TestCase
     race = event.races.create!(:category => FactoryGirl.create(:category))
     weaver = FactoryGirl.create(:person)
     race.results.create!(:place => "1", :person => weaver)
-    result = race.results.create!(:place => "2", :person => Person.new(:name => "Jonah Braun"))
+    race.results.create!(:place => "2", :person => Person.new(:name => "Jonah Braun"))
     race.results.create!(:place => "3", :person => mathew_braun)
     assert(Person.exists?(:first_name => "Jonah", :last_name => "Braun"), "New person Jonah Braun should have been created")
 

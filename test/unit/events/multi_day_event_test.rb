@@ -114,10 +114,11 @@ class MultiDayEventTest < ActiveSupport::TestCase
   
   def test_create_children
     event = MultiDayEvent.create!(:start_date => Date.new(2009, 4), :end_date => Date.new(2009, 9), :every => "Monday", :time => "5:30 PM till dusk")
-    assert_equal(22, event.children.size, "Should create child events")
     Date.new(2009, 4, 6).step(Date.new(2009, 8, 31), 7) do |date|
-      assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
+      assert(event.children(true).any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
     end
+    assert_equal(22, event.children.count, "Should create child events")
+    assert_equal(22, event.children.size, "Should create child events")
 
     event = MultiDayEvent.create!(:start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10), :every => "Sunday")
     assert_equal(22, event.children.size, "Should create child events")

@@ -68,7 +68,7 @@ module Admin
         assert_equal('Smith Rock', skull_hollow.city, 'city')
         assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
         assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('WSBA', skull_hollow.sanctioned_by, 'sanctioned_by')
+        assert_equal('CBRA', skull_hollow.sanctioned_by, 'sanctioned_by')
         assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
         assert_equal('Downhill', skull_hollow.discipline, 'discipline')
         assert_equal(true, skull_hollow.cancelled, 'cancelled')

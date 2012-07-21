@@ -10,7 +10,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
   
   Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile"])
+    Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors"])
   end
   Capybara.current_driver = :selenium
 
@@ -22,7 +22,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   
   def report_error_count
     unless @passed
-      save_and_open_page
+      save_page
     end
   end
   
@@ -71,7 +71,35 @@ class AcceptanceTest < ActiveSupport::TestCase
         end
       end
     rescue Timeout::Error => e
-      raise Timeout::Error, "'#{text}' did not appear in page source within 10 seconds"
+      fail "'#{text}' did not appear in page source within 10 seconds"
+    end
+  end
+
+  def wait_for_page_no_content(text)
+    raise ArgumentError if text.blank?
+
+    begin
+      Timeout::timeout(10) do
+        while page.has_content?(text)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      fail "'#{text}' in page source after 10 seconds"
+    end
+  end
+  
+  def wait_for_select(id, options)
+    raise ArgumentError if id.blank?
+
+    begin
+      Timeout::timeout(10) do
+        until page.has_select?(id, :selected => options[:selected])
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error => e
+      raise Timeout::Error, "'#{options[:selected]}' not selected on #{id} within 10 seconds"
     end
   end
 

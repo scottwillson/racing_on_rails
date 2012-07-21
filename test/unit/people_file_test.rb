@@ -185,7 +185,6 @@ Downhill/Cross Country: Downhill}
     assert_not_nil quinn_jackson.created_by, "Person#created_by should be set"
     assert_not_nil quinn_jackson.updated_by, "Person#updated_by should be set"
     number = quinn_jackson.race_numbers.detect { |n| n.value == "120" }
-    assert(number.created_by.name["membership/database.xls"], "created_by expected to include file name but was #{number.updated_by}")
     assert(number.updated_by.name["membership/database.xls"], "updated_by expected to include file name but was #{number.updated_by}")
     assert(!quinn_jackson.print_card?, 'quinn_jackson.print_card? after import')
     
