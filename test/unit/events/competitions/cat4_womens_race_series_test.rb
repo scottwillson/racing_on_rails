@@ -185,6 +185,24 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     assert_equal(90, race.results[1].points, 'Points')
   end
   
+  def test_honor_start_date
+    event = FactoryGirl.create(:event, :date => Time.zone.local(2012, 2, 15))
+    category_4_women = Category.find_or_create_by_name("Category 4 Women")
+    race = FactoryGirl.create(:race, :category => category_4_women, :event => event)
+    too_early_result = FactoryGirl.create(:result, :race => race)
+
+    event = FactoryGirl.create(:event, :date => Time.zone.local(2012, 2, 16))
+    race = FactoryGirl.create(:race, :category => category_4_women, :event => event)
+    result = FactoryGirl.create(:result, :race => race)
+
+    racing_association = RacingAssociation.current
+    racing_association.cat4_womens_race_series_start_date = Time.zone.local(2012, 2, 16).to_date
+    racing_association.save!
+    series = Cat4WomensRaceSeries.create(:date => Time.zone.local(2012))
+    results = series.source_results(series.races.first)
+    assert_equal [ result ], results, "results"
+  end
+  
   def setup_scenario
     @category_4_women = Category.find_or_create_by_name("Category 4 Women")
     series = Cat4WomensRaceSeries.create(:date => Date.new(2004))
