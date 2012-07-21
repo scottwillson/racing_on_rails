@@ -10,6 +10,7 @@ class Category < ActiveRecord::Base
   include Ages
   include Comparable
   include Concerns::Category::FriendlyParam
+  include Concerns::TreeValidation
   include Export::Categories
 
   acts_as_list
@@ -22,7 +23,6 @@ class Category < ActiveRecord::Base
 
   validates_presence_of :name
   validates_presence_of :friendly_param
-  validate :parent_is_not_self
    
   NONE = Category.new(:name => "", :id => nil)
   
@@ -38,12 +38,6 @@ class Category < ActiveRecord::Base
   def Category.short_name(name)
     return name if name.blank?
     name.gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp').gsub("Clydesdale", "Clyd")
-  end
-  
-  def parent_is_not_self
-    if parent_id && parent_id == id
-      errors.add 'parent', 'Category cannot be its own parent'
-    end
   end
   
   # Sr, Mst, Jr, Cat, Beg, Exp

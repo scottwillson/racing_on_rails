@@ -2,9 +2,8 @@
 # User render_page helper to look for Page before falling back on Rails templates.
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
 # do things like <% Person.destroy_all %>!
-#
-# Uses ActsAsVersions, and should be moved to VestalVersions
 class Page < ActiveRecord::Base
+  include Concerns::TreeValidation
   include Concerns::Versioned
   include SentientUser
 

@@ -24,8 +24,8 @@ class PageTest < ActiveSupport::TestCase
   test "not allow circular relationships" do
     parent = Page.create!(:body => "<h1>Welcome</h1>", :title => "")
     child = parent.children.create!(:body => "<h2>Child</h2>", :title => "Child")
-    child.children << parent
-    assert !parent.valid?
+    assert !(parent.children << parent)
+    assert parent.errors.present?
     assert(!child.children(true).include?(parent), "Should not be able to add parent as child")
   end
   
