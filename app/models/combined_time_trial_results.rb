@@ -109,7 +109,7 @@ class CombinedTimeTrialResults < Event
     end
     place = 1
     combined_race.results.each do |result|
-      result.update_attribute(:place, place.to_s)
+      result.update_attributes(:place => place.to_s)
       place = place + 1
     end
     true

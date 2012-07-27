@@ -193,7 +193,7 @@ class FindAssociationsTest < ActiveSupport::TestCase
     
     person = Person.create!(:name => "Joe Racer", :updated_at => '2008-10-01')
     person.reload
-    person.update_attribute(:updated_at, "2008-10-01")
+    person.update_attributes(:updated_at => "2008-10-01")
     person.reload
     assert_equal_dates "2008-10-01", person.updated_at, "updated_at"
     person = Person.find(person.id)

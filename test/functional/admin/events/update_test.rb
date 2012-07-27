@@ -39,7 +39,7 @@ module Admin
   
       def test_update_nil_disciplines
         event = FactoryGirl.create(:series_event)
-        event.update_attribute(:discipline, nil)
+        event.update_attributes(:discipline => nil)
         assert_nil(event[:discipline], 'discipline')
         assert_equal('Road', event.parent.discipline, 'Parent event discipline')
   

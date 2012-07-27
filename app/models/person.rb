@@ -855,7 +855,7 @@ class Person < ActiveRecord::Base
           self.login = other_person.login
           self.crypted_password = other_person.crypted_password
           other_person.skip_version do
-            other_person.update_attribute :login, nil
+            other_person.update_attributes :login => nil
           end
         end
         if member_from.nil? || (other_person.member_from && other_person.member_from < member_from)

@@ -10,7 +10,7 @@ class Admin::Pages::VersionsControllerTest < ActionController::TestCase
 
   test "Edit page version" do
     page = FactoryGirl.create(:page)
-    page.update_attribute :title, "New Title"
+    page.update_attributes :title => "New Title"
     version = page.versions.last
     get(:edit, :id => version.to_param)
     assert_response(:success)

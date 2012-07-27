@@ -242,7 +242,7 @@ class Race < ActiveRecord::Base
             result.members_only_place = last_members_only_place.to_s
           end
           # Slight optimization. Most of the time, no point in saving a result that hasn't changed
-          result.update_attribute('members_only_place', result.members_only_place) if place_before != result.members_only_place 
+          result.update_attributes(:members_only_place => result.members_only_place) if place_before != result.members_only_place 
           # store to know when switching to new placement (team result feature)
           last_result_place = result.place.to_i
         end
@@ -265,7 +265,7 @@ class Race < ActiveRecord::Base
           if !orip.person.member?(result.date)
             # might as well blank out this result while we're here, saves some future work
             result.members_only_place = ''
-            result.update_attribute 'members_only_place', result.members_only_place
+            result.update_attribute :members_only_place => result.members_only_place
             # could also use other_results_in_place.size if needed for calculations
             non_members = true
           end
