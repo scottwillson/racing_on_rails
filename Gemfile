@@ -1,4 +1,4 @@
-source :gemcutter
+source 'https://rubygems.org'
 
 gem "rails", "~>3.2"
 
@@ -56,7 +56,7 @@ group :acceptance do
   gem "factory_girl_rails"
   gem "launchy"
   gem "mocha", :require => false
-  gem "selenium-webdriver", "2.20.0"
+  gem "selenium-webdriver"
   gem "timecop"
 end
 

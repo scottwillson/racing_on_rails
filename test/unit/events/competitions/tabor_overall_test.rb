@@ -90,7 +90,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     result = cat_3_overall_race.results.first
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
-    assert_equal(100 + 12 + 50 + 36 + (15 * 2), result.points, "points")
+    assert_equal(100 + 50 + 36 + (15 * 2) + 12, result.points, "points")
     assert_equal(weaver, result.person, "person")
   end
   
@@ -168,7 +168,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     result = masters_overall_race.results.first
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
-    assert_equal(100 + 100 + 70 + 100 + 0 + (100 * 2), result.points, "points")
+    assert_equal(100 + 100 + 100 + 70 + 0 + (100 * 2), result.points, "points")
     assert_equal(person, result.person, "person")
 
     senior_men_overall_race = series.overall.races.detect { |race| race.category == senior_men }
@@ -177,7 +177,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     result = senior_men_overall_race.results.first
     assert_equal("1", result.place, "place")
     assert_equal(5, result.scores.size, "Scores")
-    assert_equal(70 + 70 + 36 + 70 + 100 + (0 * 2), result.points, "points")
+    assert_equal(70 + 70 + 70 + 100 + 36 + (0 * 2), result.points, "points")
     assert_equal(person, result.person, "person")
   end
 end
