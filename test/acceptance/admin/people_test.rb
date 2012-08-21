@@ -200,6 +200,7 @@ class PeopleTest < AcceptanceTest
     click_button "Export"
     wait_for_download "lynx.ppl"
 
+    visit '/admin/people'
     select "Current members only", :with => "include"
     select "Scoring sheet", :with => "format"
     remove_download "scoring_sheet.xls"
