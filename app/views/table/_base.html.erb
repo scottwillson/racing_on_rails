@@ -1,6 +1,6 @@
-<div class="table_container<%= " #{style_class}" if style_class %>"<%= " id='#{id}'" if id %><%= " data-id='#{dataid}'" if dataid %>>
+<div class="table_container<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
   <%- if caption_visible %><div class="caption"><%= caption %></div><% end -%>
-  <table cellspacing="0" class="base<%= " #{style_class}" if style_class %>"<%= " id='#{id}_table'" if id %><%= " data-id='#{dataid}'" if dataid %>>
+  <table cellspacing="0" class="base<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}_table'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
     <%- if insert_header -%>
     <tr>
       <% columns.times do -%><th>&nbsp;</th><%- end -%>

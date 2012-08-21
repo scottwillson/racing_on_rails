@@ -1,2 +1,2 @@
-<p class="flash_message" id="notice" <%= "style='display: none;'" unless flash[:notice] %>><span id="notice_span"><%= flash[:notice] %></span></p>
-<p class="flash_message" id="warn" <%= "style='display: none;'" unless flash[:warn] %>><span id="warn_span"><%= flash[:warn] %></span></p>
+<p class="flash_message" id="notice" <%= "style='display: none;'".html_safe unless flash[:notice] %>><span id="notice_span"><%= flash[:notice] %></span></p>
+<p class="flash_message" id="warn" <%= "style='display: none;'".html_safe unless flash[:warn] %>><span id="warn_span"><%= flash[:warn] %></span></p>
