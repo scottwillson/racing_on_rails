@@ -41,7 +41,6 @@ group :development do
 end
 
 group :test do
-  gem "ansi"
   gem "factory_girl"
   gem "factory_girl_rails"
   gem "mocha", :require => false
