@@ -90,7 +90,7 @@ GEM
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
     builder (3.0.0)
-    capistrano (2.13.0)
+    capistrano (2.13.3)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -204,6 +204,8 @@ GEM
     ri_cal (0.8.8)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
+    rvm-capistrano (1.2.5)
+      capistrano (>= 2.0.0)
     sass (3.2.1)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -277,6 +279,7 @@ DEPENDENCIES
   rake
   ri_cal
   ruby-ole!
+  rvm-capistrano
   sass-rails (~> 3.2.0)
   selenium-webdriver
   spreadsheet!
