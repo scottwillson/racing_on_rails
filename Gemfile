@@ -67,5 +67,4 @@ group :production do
   gem "syslog-logger"
   gem "unicorn"
   gem "execjs"
-  gem "therubyracer"
 end

@@ -263,6 +263,7 @@ DEPENDENCIES
   default_value_for!
   dynamic_form
   erubis
+  execjs
   factory_girl
   factory_girl_rails
   fastercsv
