@@ -45,8 +45,4 @@
 <div class="container">
   <%= render :partial => "results", :locals => { :race => @race } %>
 </div>
-
-<% content_for :javascript_include_tag do -%>
-  <%= javascript_include_tag "results" %>
-<% end -%>
-<% end -%>
+<% end %>

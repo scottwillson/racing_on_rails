@@ -5,13 +5,6 @@
  *= require jquery.jeditable
  *= require_self
  *= require tabs
- *= require categories
- *= require events
- *= require fckcustom
- *= require first_aid_providers
- *= require people
- *= require results
- *= require teams
  *= require racing_association
 */
 

@@ -13,6 +13,7 @@
     <%= airbrake_javascript_notifier unless Rails.env.acceptance? %>
     <%= render :partial => "layouts/stylesheets" %>
     <%= render :partial => "layouts/javascripts" %>
+    <%= javascript_include_tag "admin" %>
 	<%= yield :head %>
   </head>
 
