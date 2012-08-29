@@ -16,7 +16,6 @@ set :branch, "rails_3_2"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
-
 set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
