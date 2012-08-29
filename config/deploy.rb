@@ -9,6 +9,9 @@ load "config/db"
 require 'bundler/capistrano'
 require "capistrano-unicorn"
 
+require "rvm/capistrano"
+set :rvm_ruby_string, '1.9.3'
+
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
