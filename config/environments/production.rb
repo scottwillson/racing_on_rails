@@ -2,8 +2,10 @@ RacingOnRails::Application.configure do
   config.action_controller.perform_caching = true
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect'
   config.active_support.deprecation        = :notify
-  config.assets.compress                   = false
+  config.assets.compile                    = false
+  config.assets.compress                   = true
   config.assets.css_compressor             = :yui
+  config.assets.digest                     = true
   config.assets.js_compressor              = :uglifier
   config.cache_classes                     = true
   config.consider_all_requests_local       = false
