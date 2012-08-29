@@ -6,6 +6,7 @@
  *= require_self
  *= require tabs
  *= require first_aid_providers
+ *= require racing_association
 */
 
 function restripeTable(id) {
