@@ -1,8 +1,8 @@
 $(document).ready(function() {
-  bindDragAndDrop();
+  bindTeamDragAndDrop();
 });
 
-function bindDragAndDrop() {
+function bindTeamDragAndDrop() {
   $('.team_icon').draggable({ 
     revert: 'invalid', 
     zIndex: 10000,

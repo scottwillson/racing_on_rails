@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
   bindDestroyNumber();
-  bindDragAndDrop();
+  bindPeopleDragAndDrop();
   bindNumberYearChange();
   bindExport();
 });
@@ -20,7 +20,7 @@ function bindNumberYearChange() {
   });  
 }
 
-function bindDragAndDrop() {
+function bindPeopleDragAndDrop() {
   jQuery('.person_icon').draggable({ 
     revert: 'invalid', 
     zIndex: 10000,
