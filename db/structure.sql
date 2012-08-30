@@ -168,7 +168,7 @@ CREATE TABLE `editors_events` (
   `editor_id` int(11) NOT NULL,
   KEY `index_editors_events_on_event_id` (`event_id`),
   KEY `index_editors_events_on_editor_id` (`editor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `engine_schema_info` (
   `engine_name` varchar(255) DEFAULT NULL,
@@ -207,9 +207,9 @@ CREATE TABLE `events` (
   `bar_points` int(11) NOT NULL,
   `ironman` tinyint(1) NOT NULL,
   `auto_combined_results` tinyint(1) NOT NULL DEFAULT '1',
-  `promoter_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
   `sanctioning_org_event_id` varchar(16) DEFAULT NULL,
+  `promoter_id` int(11) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `postponed` tinyint(1) NOT NULL DEFAULT '0',
@@ -379,6 +379,7 @@ CREATE TABLE `people` (
   `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
   `team_interest` tinyint(1) NOT NULL DEFAULT '0',
   `member_usac_to` date DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
   `persistence_token` varchar(255) NOT NULL,
@@ -391,7 +392,6 @@ CREATE TABLE `people` (
   `current_login_ip` varchar(255) DEFAULT NULL,
   `last_login_ip` varchar(255) DEFAULT NULL,
   `login` varchar(100) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
   `license_expiration_date` date DEFAULT NULL,
   `club_name` varchar(255) DEFAULT NULL,
   `ncca_club_name` varchar(255) DEFAULT NULL,
