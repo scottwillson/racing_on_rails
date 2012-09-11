@@ -22,12 +22,19 @@ module ApplicationHelper
     "...#{text[-20, 20]}"
   end
   
-  # Add to_excel to strip out CSV-invalid characters
+  # Add to_excel to strip out CSV-invalid characters.
+  # Mark all content as "safe." It won't be parsed in a browser, but Erb will escape apostrophes.
   def to_excel(value)
-    if value.try :respond_to?, :gsub
-      value.gsub(/[\t\n\r]/, " ")
+    _value = value
+    
+    if _value.try(:respond_to?, :gsub)
+      _value.gsub!(/[\t\n\r]/, " ")
+    end
+    
+    if _value.try(:respond_to?, :html_safe)
+      _value.html_safe
     else
-      value
+      _value
     end
   end
 
