@@ -4,13 +4,13 @@ license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card
 	<%= to_excel person["first_name"] -%>
 	<%= to_excel person["last_name"] -%>
 	<%= to_excel person["team_name"] -%>
-	<%= person["member_from"] -%>
-	<%= person["member_to"] -%>
+	<%= Time.zone.utc_to_local(person["member_from"].to_time).to_s(:mdY) if person["member_from"] -%>
+	<%= Time.zone.utc_to_local(person["member_to"].to_time).to_s(:mdY) if person["member_to"] -%>
 	<%= person["ccx_only"] -%>
 	<%= person["print_card"] -%>
 	<%= person["card_printed_at"] -%>
 	<%= to_excel person["membership_card"] -%>
-	<%= person["date_of_birth"] -%>
+	<%= Time.zone.utc_to_local(person["date_of_birth"].to_time).to_s(:mdY) if person["date_of_birth"] -%>
 	<%= to_excel person["occupation"] -%>
 	<%= to_excel person["street"] -%>
 	<%= to_excel person["city"] -%>
@@ -39,7 +39,7 @@ license	first_name	last_name	team_name	member_from	member_to	ccx_only	print_card
 	<%= person["official_interest"] -%>
 	<%= person["race_promotion_interest"] -%>
 	<%= person["team_interest"] -%>
-	<%= person["created_at"] -%>
+	<%= Time.zone.utc_to_local(person["created_at"]).to_s(:mdY) if person["created_at"] -%>
   <%# Last column is slightly different to ensure a line break -%>
-	<%= person["updated_at"] %>
+	<%= Time.zone.utc_to_local(person["updated_at"]).to_s(:mdY) if person["updated_at"] %>
 <%- end -%>

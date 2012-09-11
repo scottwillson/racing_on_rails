@@ -161,19 +161,19 @@ class ActiveSupport::TestCase
   def print_all_events
     Event.all( :order => :date).each {|event|
       p "#{event.date} #{event.name} id: #{event.id} parent: #{event.parent_id} #{event.class} #{event.sanctioned_by} #{event.discipline}"
-    }
+    }.size
   end
   
   def print_all_results
     Result.all( :order => :person_id).each {|result|
       p "#{result.place} (#{result.members_only_place}) #{result.name} #{result.team} #{result.event.name} #{result.race.name} #{result.date} BAR: #{result.bar}"
-    }
+    }.size
   end
   
   def print_all_categories
     Category.all( :order => 'parent_id, name').each {|category|
       p "#{category.id} #{category.parent_id} #{category.name}"
-    }
+      }.size
   end
   
   # helps with place_members_only calculation, so there are no gaps
