@@ -2,6 +2,9 @@
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.
 class Person < ActiveRecord::Base
+  
+  YEAR_1900 = Time.zone.local(1900).to_date
+  
   include Comparable
   include Concerns::Versioned
   include Names::Nameable
@@ -132,7 +135,7 @@ class Person < ActiveRecord::Base
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = RacingAssociation.current.today, include_people = "members_only")
+  def Person.find_all_for_export(date = Time.zone.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
     if include_people == "members_only"
       where_clause = "WHERE (member_to >= '#{date.to_s}')" 
@@ -142,15 +145,15 @@ class Person < ActiveRecord::Base
     
     people = Person.connection.select_all(%Q{
       SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
-             DATE_FORMAT(member_from, '%m/%d/%Y') as member_from, DATE_FORMAT(member_to, '%m/%d/%Y') as member_to, DATE_FORMAT(member_usac_to, '%m/%d/%Y') as member_usac_to,
-             print_card, card_printed_at, membership_card, ccx_only, DATE_FORMAT(date_of_birth, '%m/01/%Y') as date_of_birth, occupation,
+             member_from, member_to, member_usac_to,
+             print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,
              street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
              volunteer_interest, official_interest, race_promotion_interest, team_interest,
              CEILING(#{date.year} - YEAR(date_of_birth)) as racing_age,
              ccx_numbers.value as ccx_number, dh_numbers.value as dh_number, road_numbers.value as road_number, 
              singlespeed_numbers.value as singlespeed_number, xc_numbers.value as xc_number,
-             DATE_FORMAT(people.created_at, '%m/%d/%Y') as created_at, DATE_FORMAT(people.updated_at, '%m/%d/%Y') as updated_at
+             people.created_at, people.updated_at
       FROM people
       LEFT OUTER JOIN teams ON teams.id = people.team_id 
       LEFT OUTER JOIN race_numbers as ccx_numbers ON ccx_numbers.person_id = people.id 
@@ -199,9 +202,9 @@ class Person < ActiveRecord::Base
     if lic_date && lic.to_i > 0
       case lic_date
       when Date, Time, DateTime
-        (lic_date > RacingAssociation.current.today) ? "current" : "CHECK LIC!"
+        (lic_date > Time.zone.today) ? "current" : "CHECK LIC!"
       else
-        (Date.strptime(lic_date, "%m/%d/%Y") > RacingAssociation.current.today) ? "current" : "CHECK LIC!"
+        (Date.strptime(lic_date, "%m/%d/%Y") > Time.zone.today) ? "current" : "CHECK LIC!"
       end
     else
       "NOT ON FILE"
@@ -651,12 +654,12 @@ class Person < ActiveRecord::Base
   end
 
   # Is Person a current member of the bike racing association?
-  def member?(date = RacingAssociation.current.today)
+  def member?(date = Time.zone.today)
     member_to.present? && member_from.present? && member_from.to_date <= date.to_date && member_to.to_date >= date.to_date
   end
 
   # Is/was Person a current member of the bike racing association at any point during +date+'s year?
-  def member_in_year?(date = RacingAssociation.current.today)
+  def member_in_year?(date = Time.zone.today)
     year = date.year
     member_to && member_from && member_from.year <= year && member_to.year >= year
     member_to.present? && member_from.present? && member_from.year <= year && member_to.year >= year
@@ -669,16 +672,16 @@ class Person < ActiveRecord::Base
   # Is Person a current member of the bike racing association?
   def member=(value)
     if value
-      self.member_from = RacingAssociation.current.today if member_from.nil? || member_from.to_date >= RacingAssociation.current.today.to_date
-      unless member_to && (member_to.to_date >= Time.zone.local(RacingAssociation.current.effective_year, 12, 31).to_date)
-        self.member_to = Time.zone.local(RacingAssociation.current.effective_year, 12, 31) 
+      self.member_from = Time.zone.today if member_from.nil? || member_from.to_date >= Time.zone.today.to_date
+      unless member_to && (member_to.to_date >= Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date)
+        self.member_to = Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
       end
     elsif !value && member?
       if self.member_from.year == RacingAssociation.current.year
         self.member_from = nil
         self.member_to = nil
       else
-        self.member_to = Time.zone.local(RacingAssociation.current.year - 1, 12, 31)
+        self.member_to = Time.zone.local(RacingAssociation.current.year - 1).end_of_year.to_date
       end
     end
   end
@@ -695,13 +698,13 @@ class Person < ActiveRecord::Base
     when Date
       date
     when DateTime, Time
-      Date.new(date.year, date.month, date.day)
+      Time.zone.local(date.year, date.month, date.day).to_date
     else
-      Date.parse(date)
+      Time.zone.parse(date)
     end
 
     if member_to.nil?
-      self[:member_to] = Date.new(date_as_date.year, 12, 31)
+      self[:member_to] = Time.zone.local(date_as_date.year).end_of_year.to_date
     end
     self[:member_from] = date_as_date
   end
@@ -709,7 +712,7 @@ class Person < ActiveRecord::Base
   # Also sets member_from if it is blank
   def member_to=(date)
     unless date.nil?
-      self[:member_from] = RacingAssociation.current.today if member_from.nil?
+      self[:member_from] = Time.zone.today if member_from.nil?
       self[:member_from] = date if member_from.to_date > date.to_date
     end
     self[:member_to] = date
@@ -726,10 +729,10 @@ class Person < ActiveRecord::Base
     if member_from && member_to && member_from.to_date > member_to.to_date
       errors.add('member_to', "cannot be greater than member_from: #{member_from}")
     end
-    if member_from && member_from < Date.new(1900)
+    if member_from && member_from < YEAR_1900
       self.member_from = member_from_was
     end
-    if member_to && member_to < Date.new(1900)
+    if member_to && member_to < YEAR_1900
       self.member_to = member_to_was
     end
   end
