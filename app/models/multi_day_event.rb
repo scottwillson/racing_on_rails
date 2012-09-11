@@ -31,15 +31,9 @@ class MultiDayEvent < Event
            :after_remove => [ :children_changed, :update_date ],
            :order => "date" do
              def create!(attributes = {})
-<<<<<<< HEAD
                owner = proxy_association.owner
                attributes[:parent_id] = owner.id
                attributes[:parent] = owner
-               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = owner[attr] }               
-=======
-               attributes[:parent_id] = @owner.id
-               attributes[:parent] = @owner
->>>>>>> ebfaa674ecfb023e1b1f26dc8ed2c2db28c5b4df
                event = SingleDayEvent.new(attributes)
                (event.date = owner.date) unless attributes[:date]
                event.parent = owner
@@ -49,15 +43,9 @@ class MultiDayEvent < Event
              end
 
              def create(attributes = {})
-<<<<<<< HEAD
                owner = proxy_association.owner
                attributes[:parent_id] = owner.id
                attributes[:parent] = owner
-               Event::PROPOGATED_ATTRIBUTES.each { |attr| attributes[attr] = owner[attr] }               
-=======
-               attributes[:parent_id] = @owner.id
-               attributes[:parent] = @owner
->>>>>>> ebfaa674ecfb023e1b1f26dc8ed2c2db28c5b4df
                event = SingleDayEvent.new(attributes)
                (event.date = owner.date) unless attributes[:date]
                event.parent = owner
