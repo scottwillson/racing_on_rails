@@ -54,6 +54,7 @@ class MailingListMailer < ActionMailer::Base
           email_to = email.to.first.to_s rescue nil
           email_from = email[:from] rescue nil
           mail_subject = mail.subject rescue nil
+          # FIXME Don't raise, just log
           raise "No mailing list for '#{mailing_list_name}' header '#{list_post_header}' to '#{email_to}' from '#{email_from}' about '#{mail_subject}'"
         end
         

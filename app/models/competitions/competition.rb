@@ -91,7 +91,6 @@ class Competition < Event
   # Some competitions are only open to RacingAssociation members, and non-members are dropped from the results.
   def calculate_members_only_places
     if place_members_only?
-      # Uses batch_size, Rails 2.3 db cursor, to limit load on memory
       Race.find_each(:include => :event,
                 :conditions => [ "events.type != ? and events.date between ? and ? and (events.updated_at > ? || races.updated_at > ?)", 
                                  self.class.name.demodulize, start_date, end_date, 1.week.ago, 1.week.ago ]
