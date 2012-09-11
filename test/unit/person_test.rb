@@ -434,46 +434,59 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal(false, person.member_in_year?(Date.new(2002, 1, 1)), 'member')
   end
   
-  def test_member_to
-    # from = nil, to = nil
+  def test_member_to_from_nil_to_nil
     person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
     person.member_from = nil
     person.member_to = nil
     assert_equal(false, person.member?, 'member?')
     assert_nil(person.member_from, 'member_from')
     assert_nil(person.member_to, 'member_to')
-    
-    person.member_to = Date.new(3000, 12, 31)
-    assert_equal_dates(Time.zone.today, person.member_from, 'Member from')
-    assert_equal_dates('3000-12-31', person.member_to, 'Member to')
-    assert_equal(true, person.member?, 'member?')
+    person.save!
+    assert_equal(false, person.member?, 'member?')
+    assert_nil(person.member_from, 'member_from')
+    assert_nil(person.member_to, 'member_to')
+  end
 
-    # before, before
+  def test_member_to_from_before_to_before
     person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
     person.member_from = Date.new(1970, 1, 1)
     person.member_to = Date.new(1970, 12, 31)
-
     person.member_to = Date.new(1971, 7, 31)
+    
     assert_equal_dates(Date.new(1970, 1, 1), person.member_from, 'Member from')
     assert_equal_dates('1971-07-31', person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')
+    person.save!
+    assert_equal_dates(Date.new(1970, 1, 1), person.member_from, 'Member from')
+    assert_equal_dates('1971-07-31', person.member_to, 'Member to')
+    assert_equal(false, person.member?, 'member?')
+  end
 
-    # before, after
+  def test_member_to_from_before_to_after
     person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
     person.member_from = Date.new(1970, 1, 1)
     person.member_to = Date.new(1985, 12, 31)
-
     person.member_to = Date.new(1971, 7, 31)
+
     assert_equal_dates(Date.new(1970, 1, 1), person.member_from, 'Member from')
     assert_equal_dates('1971-07-31', person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')
+    person.save!
+    assert_equal_dates(Date.new(1970, 1, 1), person.member_from, 'Member from')
+    assert_equal_dates('1971-07-31', person.member_to, 'Member to')
+    assert_equal(false, person.member?, 'member?')
+  end
 
-    # after, after
+  def test_member_to_from_after_to_after
     person = Person.new(:first_name => 'Dario', :last_name => 'Frederick')
     person.member_from = Date.new(2006, 1, 1)
     person.member_to = Date.new(2006, 12, 31)
-
     person.member_to = Date.new(2000, 1, 31)
+
+    assert_equal_dates(Date.new(2006, 1, 1), person.member_from, 'Member from')
+    assert_equal_dates('2000-01-31', person.member_to, 'Member to')
+    assert_equal(false, person.member?, 'member?')
+    person.save!
     assert_equal_dates(Date.new(2000, 1, 31), person.member_from, 'Member from')
     assert_equal_dates('2000-01-31', person.member_to, 'Member to')
     assert_equal(false, person.member?, 'member?')

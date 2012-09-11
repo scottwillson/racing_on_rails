@@ -28,6 +28,7 @@ class Person < ActiveRecord::Base
   end
 
   before_validation :find_associated_records
+  before_validation :set_membership_dates
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
@@ -669,7 +670,6 @@ class Person < ActiveRecord::Base
     member?
   end
   
-  # Is Person a current member of the bike racing association?
   def member=(value)
     if value
       self.member_from = Time.zone.today if member_from.nil? || member_from.to_date >= Time.zone.today.to_date
@@ -695,27 +695,26 @@ class Person < ActiveRecord::Base
     end
 
     date_as_date = case date
-    when Date
-      date
-    when DateTime, Time
-      Time.zone.local(date.year, date.month, date.day).to_date
+    when Date, DateTime, Time
+      Time.zone.local(date.year, date.month, date.day)
     else
       Time.zone.parse(date)
     end
 
-    if member_to.nil?
-      self[:member_to] = Time.zone.local(date_as_date.year).end_of_year.to_date
-    end
     self[:member_from] = date_as_date
   end
   
   # Also sets member_from if it is blank
-  def member_to=(date)
-    unless date.nil?
-      self[:member_from] = Time.zone.today if member_from.nil?
-      self[:member_from] = date if member_from.to_date > date.to_date
+  def set_membership_dates
+    if member_from && member_to.nil?
+      self.member_to = Time.zone.local(member_from.year).end_of_year
+    elsif member_from.nil? && member_to
+      self.member_from = Time.zone.today if member_from.nil?
+      self.member_from = member_to if member_from.to_date > member_to.to_date
+    elsif member_from && member_to && member_from.to_date > member_to.to_date
+      self.member_from = member_to
     end
-    self[:member_to] = date
+    true
   end
   
   # Validates member_from and member_to
