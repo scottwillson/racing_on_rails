@@ -64,7 +64,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
 
     assert_equal('2', race.results[1].place, 'Place')
     assert_equal(@molly, race.results[1].person, 'Person')
-    assert_equal(65, race.results[1].points, 'Points')
+    assert_equal(80, race.results[1].points, 'Points')
   end
   
   def test_do_not_award_cat4_participation_points
