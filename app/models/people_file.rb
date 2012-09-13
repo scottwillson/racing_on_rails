@@ -133,11 +133,11 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     updated = 0
     if @update_membership
       if year && year > Time.zone.today.year
-        @member_from_imported_people = Date.new(year, 1, 1)
+        @member_from_imported_people = Time.zone.local(year).beginning_of_year
       else
         @member_from_imported_people = Time.zone.today
       end
-      @member_to_for_imported_people = Date.new(year || Time.zone.today.year, 12, 31)
+      @member_to_for_imported_people = Time.zone.local(year || Time.zone.today.year).end_of_year.to_date
     end
     
     Person.transaction do
@@ -196,7 +196,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
               row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
             add_print_card_and_label(row_hash, person)
-            duplicates << Duplicate.create!(:new_attributes => row_hash, :people => people)
+            duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
           end
         end
       rescue Exception => e
@@ -236,8 +236,8 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     unless person.nil?
       if person.member_from
         begin
-          date = Date.parse(row_hash[:member_from])
-          if date > person.member_from
+          date = Time.zone.parse(row_hash[:member_from]).to_date
+          if date > person.member_from.to_date
             row_hash[:member_from] = person.member_from
           end
         rescue ArgumentError => e
@@ -248,8 +248,8 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   end
   
   def add_print_card_and_label(row_hash, person = nil)
-    if @update_membership and !@has_print_column
-      if person.nil? or (!person.member? or person.member_to < @member_to_for_imported_people)
+    if @update_membership && !@has_print_column
+      if person.nil? || (!person.member? || person.member_to.to_date < @member_to_for_imported_people.to_date)
         row_hash[:print_card] = true
       end
     end
