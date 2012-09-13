@@ -14,7 +14,6 @@ gem "vestal_versions", :git => "git://github.com/scottwillson/vestal_versions.gi
 gem "newrelic_rpm"
 gem "erubis"
 gem "will_paginate", "~> 3.0.beta"
-gem "airbrake"
 gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "ckeditor", "3.7.2"
@@ -64,6 +63,7 @@ group :staging do
 end
 
 group :production do
+  gem "airbrake"
   gem "syslog-logger"
   gem "unicorn"
   gem "execjs"

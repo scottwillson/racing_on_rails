@@ -7,6 +7,6 @@ class Duplicate < ActiveRecord::Base
   has_and_belongs_to_many :people
   
   def person
-    @person ||= Person.new(self.new_attributes)
+    @person ||= Person.new(new_attributes)
   end
 end

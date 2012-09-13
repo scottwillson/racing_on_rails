@@ -206,7 +206,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
               row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
             add_print_card_and_label(row_hash, person)
-            duplicates << Duplicate.create!(:new_attributes => row_hash, :people => people)
+            duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
           end
         end
       rescue Exception => e
@@ -246,8 +246,8 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     unless person.nil?
       if person.member_from
         begin
-          date = Date.parse(row_hash[:member_from])
-          if date > person.member_from
+          date = Time.zone.parse(row_hash[:member_from]).to_date
+          if date > person.member_from.to_date
             row_hash[:member_from] = person.member_from
           end
         rescue ArgumentError => e
@@ -259,7 +259,11 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   
   def add_print_card_and_label(row_hash, person = nil)
     if @update_membership && !@has_print_column
+<<<<<<< HEAD
       if person.nil? || (!person.member? || person.member_to < @member_to_for_imported_people)
+=======
+      if person.nil? || (!person.member? || person.member_to.to_date < @member_to_for_imported_people.to_date)
+>>>>>>> 64479dcfee22c02b05389c5ea60cb0c70dc8f8b3
         row_hash[:print_card] = true
       end
     end
