@@ -172,7 +172,7 @@ Downhill/Cross Country: Downhill}
     assert_equal('M', quinn_jackson.gender, 'Quinn Jackson gender')
     assert_equal('quinn3769@yahoo.com', quinn_jackson.email, 'Quinn Jackson email')
     assert_equal_dates('2006-04-19', quinn_jackson.member_from, 'Quinn Jackson member from')
-    assert_equal_dates(Date.new(Time.zone.today.year, 12, 31), quinn_jackson.member_to, 'Quinn Jackson member to')
+    assert_equal_dates(Time.zone.now.end_of_year, quinn_jackson.member_to, 'Quinn Jackson member to')
     assert_equal_dates('1969-01-01', quinn_jackson.date_of_birth, 'Birth date')
     assert_equal('interests: 14', quinn_jackson.notes, 'Quinn Jackson notes')
     assert_equal('1416 SW Hume Street', quinn_jackson.street, 'Quinn Jackson street')
