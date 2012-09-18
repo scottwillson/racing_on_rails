@@ -3,7 +3,6 @@ require "rails/all"
 
 if defined?(Bundler)
   Bundler.require(*Rails.groups(:assets => %w(development test)))
-  # Bundler.require(:default, :assets, Rails.env)
 end
 
 module RacingOnRails
