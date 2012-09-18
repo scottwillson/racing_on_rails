@@ -259,11 +259,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
   
   def add_print_card_and_label(row_hash, person = nil)
     if @update_membership && !@has_print_column
-<<<<<<< HEAD
-      if person.nil? || (!person.member? || person.member_to < @member_to_for_imported_people)
-=======
       if person.nil? || (!person.member? || person.member_to.to_date < @member_to_for_imported_people.to_date)
->>>>>>> 64479dcfee22c02b05389c5ea60cb0c70dc8f8b3
         row_hash[:print_card] = true
       end
     end
