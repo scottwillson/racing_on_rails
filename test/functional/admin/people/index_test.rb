@@ -51,14 +51,14 @@ module Admin
       def test_find_by_number
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)
-        person = FactoryGirl.create(:person, :road_number => "102")
-        get(:index, :name => '102')
+        person = FactoryGirl.create(:person, :road_number => "777")
+        get(:index, :name => '777')
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
         assert_equal([person], assigns['people'], 'Search for 102 should find person')
         assert_not_nil(assigns["name"], "Should assign name")
-        assert_equal('102', assigns['name'], "'name' assigns")
+        assert_equal('777', assigns['name'], "'name' assigns")
       end
 
       def test_find_nothing
