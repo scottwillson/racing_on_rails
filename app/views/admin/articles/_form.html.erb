@@ -6,7 +6,7 @@
   <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
   <hr/>
 
-  <%= f.cktext_area(:body, :toolbarSet => 'Simple', :width => '90%', :height => '400px') %>
+  <%= f.text_area :body, :toolbarSet => 'Simple', :width => '90%', :height => '400px', :class => 'ckeditor' %>
   <%= f.label :article %>
 
   <%= f.labelled_text_field :position %>

@@ -1,6 +1,4 @@
 RacingOnRails::Application.routes.draw do
-  mount Ckeditor::Engine => '/ckeditor'
-
   namespace :admin do
     resources :articles
     resources :article_categories
