@@ -58,6 +58,7 @@ group :acceptance do
 end
 
 group :staging do
+  gem "execjs"
   gem "rvm-capistrano"
 end
 
