@@ -45,6 +45,11 @@ group :acceptance do
   gem "timecop"
 end
 
+group "staging" do
+  gem "rvm-capistrano"
+  gem "capistrano-unicorn"
+end
+
 group :production do
   gem "airbrake"
   gem "syslog-logger"
