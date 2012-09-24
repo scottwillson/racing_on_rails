@@ -440,6 +440,10 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def association?
+    number_issuer.try(:association?)
+  end
+
   # Always return false
   def missing_parent?
     false
