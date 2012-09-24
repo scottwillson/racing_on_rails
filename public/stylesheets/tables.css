@@ -222,6 +222,11 @@ form.editor_field input[type=text] {
   width: 100%;
 }
 
+table.base td.right div.editable,
+table.base td.right form.editor_field input {
+  text-align: right;
+}
+
 table.base td form {
   margin: 0px;
   padding: 0px;
