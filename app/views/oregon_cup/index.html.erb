@@ -6,22 +6,21 @@
 
 <br><br>
 <%= tabs do |tabs|
-  for year in Event.find_all_years
+  Event.find_all_years.each do |year|
   if year == @year
-    tabs.add(year.to_s, :year => nil)
+    tabs.add year.to_s, :year => nil
   else
-    tabs.add(year.to_s, :year => year)
+    tabs.add year.to_s, :year => year
   end
   end
 end -%>
 
 <div>
   <p>The Oregon Cup is a year-long points series for individuals and teams.</p>
-  <p>Only the High Desert Road Race and Table Rock Road Race count for the Oregon Cup, not the omniums.</p>
+  <p>Only the High Desert Road Race counts for the Oregon Cup not the omnium.</p>
 </div>
 
-
-<%  unless @oregon_cup.new_record? %>
+<% unless @oregon_cup.new_record? %>
 <div class="updatedon">Updated <%= @oregon_cup.updated_at.to_formatted_s(:long) %></div>
 <% end %>  
 
