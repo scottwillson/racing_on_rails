@@ -30,13 +30,18 @@ class OregonCup < Competition
          order by person_id
        }
     )
-    remove_duplicate_results(results)
+    remove_duplicate_results results
     results
   end
   
   # Women are often raced together and then scored separately. Combined Women 1/2/3 results count for Oregon Cup.
   # Mark Oregon Cup race by adding "Oregon Cup" to event name, race name, event notes, or race notes.
   def remove_duplicate_results(results)
+    # Workaround for 2012 OR Cup
+    results.delete_if do |result|
+      result.race_id == 371498
+    end
+    
     results.delete_if do |result|
       results.any? do |other_result|
         result != other_result &&
