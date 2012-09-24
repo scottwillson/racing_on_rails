@@ -437,7 +437,7 @@ class RaceTest < ActiveSupport::TestCase
     race = SingleDayEvent.create!.races.create!(:category_name => "Masters Women")
     first_result = race.results.create!(:place => "1")
     existing_result = race.results.create!(:place => "DNF")
-    new_result = race.create_result_before(existing_result.id)
+    race.create_result_before(existing_result.id)
     assert_equal(3, race.results.size, "Results")
     race.results.sort!
     assert_equal(first_result, race.results[0], "First result should still be first result")

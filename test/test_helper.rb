@@ -32,19 +32,21 @@ class ActiveSupport::TestCase
     end
   end
 
-  # Activate Authlogic. Reset RacingAssociation.
+  # Activate Authlogic
   def setup
     activate_authlogic
-    reset_association
     super
   end
   
+  # Reset RacingAssociation, current person, disciplines
   def teardown
     super
     assert_no_angle_brackets
     # Discipline class may have loaded earlier with no aliases in database
     reset_disciplines
+    Person.current == nil
     scrub_instance_variables
+    reset_association
     reset_person_current
   end
 
@@ -65,7 +67,7 @@ class ActiveSupport::TestCase
   def login_as(person)
     case person
     when Symbol
-      PersonSession.create people(person).reload
+      PersonSession.create FactoryGirl.create(person).reload
     when Person
       PersonSession.create person.reload
     else

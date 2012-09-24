@@ -115,19 +115,19 @@ class PersonSessionsControllerTest < ActionController::TestCase
   def test_show
     @request.env['HTTPS'] = nil
     get :show
-    assert_redirected_to new_person_session_url
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_show_and_return_to
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/admin"
-    assert_redirected_to new_person_session_url
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_show_and_return_to_registration
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/events/123/register"
-    assert_redirected_to new_person_session_url
+    assert_redirected_to new_person_session_url(secure_redirect_options)
   end
   
   def test_show_loggedin

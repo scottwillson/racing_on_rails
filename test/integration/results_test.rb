@@ -18,6 +18,7 @@ class ResultsTest < ActionController::IntegrationTest
     follow_redirect!
     assert_response :success
     
+    https! false
     get event_path(event)
     assert_response :success
     
