@@ -162,6 +162,8 @@ GEM
     ri_cal (0.8.8)
     ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
+    rvm-capistrano (1.2.7)
+      capistrano (>= 2.0.0)
     selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -213,6 +215,7 @@ DEPENDENCIES
   rake
   ri_cal
   ruby-ole!
+  rvm-capistrano
   selenium-webdriver
   spreadsheet!
   sqlite3
