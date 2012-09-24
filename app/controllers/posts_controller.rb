@@ -38,6 +38,8 @@ class PostsController < ApplicationController
       end
       format.atom
     end
+
+    @first_post_at = Post.minimum(:date)
   end
   
   def show
