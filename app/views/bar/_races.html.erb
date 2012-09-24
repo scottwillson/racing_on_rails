@@ -3,12 +3,12 @@
   <%- race.event.races.map(&:category).sort.each_row_with_index do |row, row_index| -%>
   <tr>
     <td style="margin-right: 18px;">
-    <%= link_to row.first.name, bar_path(:category => row.first.friendly_param, :year => race.year, :discipline => Discipline[race.discipline]) %>
+      <%= link_to row.first.name, bar_path(race.year, Discipline[race.discipline].to_param, row.first.friendly_param) %>
     </td>
     <td style="margin-left: 18px;">
     &nbsp;
     <%- if row.size == 2 -%>
-      <%= link_to row.last.name, bar_path(:category => row.last.friendly_param, :year => race.year, :discipline => Discipline[race.discipline]) %></a>
+      <%= link_to row.last.name, bar_path(:year => race.year, :discipline => Discipline[race.discipline].to_param, :category => row.last.friendly_param) %>
     <%- end -%>
     </td>
   </tr>
