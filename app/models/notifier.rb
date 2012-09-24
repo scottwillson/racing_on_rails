@@ -1,9 +1,7 @@
 # Password reset instructions email
 class Notifier < ActionMailer::Base
   def password_reset_instructions(people)
-    Notifier.default_url_options[:host] = RacingAssociation.current.rails_host
-    
-    @edit_password_reset_urls = people.map { |person| edit_password_reset_url(person.perishable_token) }    
+    @edit_password_reset_urls = people.map { |person| edit_password_reset_url(person.perishable_token, :host => RacingAssociation.current.rails_host) }
     @people = people
     
     mail(

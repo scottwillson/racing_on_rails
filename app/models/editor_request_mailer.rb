@@ -1,10 +1,7 @@
 class EditorRequestMailer < ActionMailer::Base
   def notification(editor_request)
-    # Not thread-safe. Won't work for multiple associations.
-    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
-    
     @editor_request = editor_request
-    @edit_url = edit_person_url(editor_request.person)
+    @edit_url = edit_person_url(editor_request.person, :host => RacingAssociation.current.rails_host)
 
     mail(
       :to => "#{editor_request.editor.name} <#{editor_request.editor.email}>",
@@ -14,11 +11,8 @@ class EditorRequestMailer < ActionMailer::Base
   end
   
   def editor_request(editor_request)
-    # Not thread-safe. Won't work for multiple associations.
-    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
-    
     @editor_request = editor_request
-    @edit_url = edit_person_editor_request_url(editor_request.person, editor_request.token)
+    @edit_url = edit_person_editor_request_url(editor_request.person, editor_request.token, :host => RacingAssociation.current.rails_host)
 
     mail(
       :to => "#{editor_request.person.name} <#{editor_request.person.email}>",
