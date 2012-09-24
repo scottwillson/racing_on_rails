@@ -56,7 +56,7 @@ module Admin
         assert_response :success
         assert_template("admin/people/index")
         assert_not_nil(assigns["people"], "Should assign people")
-        assert_equal([person], assigns['people'], 'Search for 102 should find person')
+        assert_equal([person], assigns['people'], 'Search for race number should find person')
         assert_not_nil(assigns["name"], "Should assign name")
         assert_equal('777', assigns['name'], "'name' assigns")
       end

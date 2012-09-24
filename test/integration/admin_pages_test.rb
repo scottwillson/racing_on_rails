@@ -2,15 +2,16 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class AdminPagesTest < ActionController::IntegrationTest
-  if RacingAssociation.current.ssl?
-    def test_events
+  def test_events
+    if RacingAssociation.current.ssl?
+      FactoryGirl.create(:administrator)
       get admin_events_path
       assert_redirected_to "https://www.example.com/admin/events"
       https!
       follow_redirect!
       assert_redirected_to "https://www.example.com/person_session/new"
       follow_redirect!
-      assert_equal "You must be an administrator to access this page", flash[:notice]
+      assert_equal "Please login to your #{RacingAssociation.current.short_name} account", flash[:notice]
 
       login :person_session => { :login => 'admin@example.com', :password => 'secret' }
       assert_redirected_to "https://www.example.com/admin/events"

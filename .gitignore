@@ -1,5 +1,6 @@
 *.bbprojectd
 *.rbc
+*sublime*
 *.swp
 *.tmproj
 *~
@@ -15,6 +16,7 @@
 /local
 chromedriver.log
 db/*.sqlite3
+db/acceptance_structure.sql
 db/production.sql
 doc/app
 doc/README_FOR_APP

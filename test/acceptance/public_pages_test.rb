@@ -114,7 +114,7 @@ class PublicPagesTest < AcceptanceTest
   end
   
   def test_bar
-    FactoryGirl.create(:discipline, :name => "Overall")
+    overall = FactoryGirl.create(:discipline, :name => "Overall")
     age_graded = FactoryGirl.create(:discipline, :name => "Age Graded")
     masters_men = FactoryGirl.create(:category, :name => "Masters Men")
     masters_30_34 = FactoryGirl.create(:category, :name => "Masters Men 30-34", :ages => 30..34, :parent => masters_men)
@@ -122,7 +122,7 @@ class PublicPagesTest < AcceptanceTest
 
     road = FactoryGirl.create(:discipline, :name => "Road")
     road.bar_categories << masters_men
-    
+
     # Masters 30-34 result. (32)
     weaver = FactoryGirl.create(:person, :date_of_birth => Date.new(1977))
     banana_belt_1 = FactoryGirl.create(:event, :date => Date.new(2009, 3))

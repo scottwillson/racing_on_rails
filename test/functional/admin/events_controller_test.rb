@@ -24,7 +24,7 @@ class Admin::EventsControllerTest < ActionController::TestCase
   def test_destroy_event_ajax
     event = FactoryGirl.create(:event)
     event.destroy_races
-    xhr(:delete, :destroy, :id => event.id, :commit => 'Delete')
+    xhr(:delete, :destroy, :id => event.to_param, :commit => 'Delete')
     assert_response(:success)
     assert(!Event.exists?(event.id), "Event should have been destroyed")
   end

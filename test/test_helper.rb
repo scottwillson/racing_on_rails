@@ -16,7 +16,7 @@ class ActiveSupport::TestCase
   setup :activate_authlogic, :reset_association
 
   # Discipline class may have loaded earlier with no aliases in database
-  teardown :reset_disciplines, :reset_person_current
+  teardown :reset_disciplines, :reset_person_current, :reset_association
   teardown lambda { |t| no_angle_brackets(t) }
 
   # Ensure that test database transaction rollsback before we assert_no_angle_brackets.

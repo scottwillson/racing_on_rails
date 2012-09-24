@@ -1,11 +1,7 @@
 # Send email to mailing list. Also receives email from Mailman for archives. Old, but battle-tested, code.
 class MailingListMailer < ActionMailer::Base
-
   # Reply just to sender of post, not the whole list
   def private_reply(reply_post, to)
-    # Not thread-safe. Won't work for multiple associations.
-    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
-    
     raise("'To' cannot be blank") if to.blank?
     mail(
       :subject => reply_post.subject,
@@ -17,8 +13,6 @@ class MailingListMailer < ActionMailer::Base
   end
 
   def post(new_post)
-    # Not thread-safe. Won't work for multiple associations.
-    ActionMailer::Base.default_url_options[:host] = RacingAssociation.current.rails_host
     mail(
       :subject => new_post.subject,
       :to => new_post.mailing_list.name,
@@ -87,7 +81,7 @@ class MailingListMailer < ActionMailer::Base
         if post && post.errors.any?
           Rails.logger.error post.errors.full_messages
         end
-        Airbrake.notify save_error
+        Airbrake.notify(save_error) if Rails.env.production?
         raise
       end
       post
