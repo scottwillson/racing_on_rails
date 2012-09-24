@@ -15,7 +15,7 @@ class Discipline < ActiveRecord::Base
   # Look up Discipline by name or alias. Caches Disciplines in memory
   def self.[](name)
     return nil unless name
-    load_aliases unless @@all_aliases
+    load_aliases if Rails.env.acceptance? || @@all_aliases.nil?
     if name.is_a?(Symbol)
       @@all_aliases[name]
     else
