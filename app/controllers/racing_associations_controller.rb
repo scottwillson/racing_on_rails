@@ -1,4 +1,4 @@
-class RacingAssociationsController < ApplicationController
+class RacingAssociationsController < Admin::AdminController
   before_filter :require_administrator
   layout "admin/application"
 
