@@ -26,6 +26,7 @@ gem "ri_cal"
 gem "truncate_html"
 gem "jquery-rails"
 gem "yui-compressor"
+gem "therubyracer"
 
 group :assets do
   gem "sass-rails",   "~> 3.2.3"
