@@ -2,7 +2,7 @@
 
 <p>
   Login: <%= @person.login %></br>
-  <%= link_to "Your account", account_url %>
+  <%= link_to "Your account", account_url(:host => RacingAssociation.current.rails_host) %>
 </p>
 
 <p><%= RacingAssociation.current.short_name %> respects your privacy. Information regarding your personal information can be viewed at http://obra.org/privacy</p>
