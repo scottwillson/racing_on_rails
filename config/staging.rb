@@ -21,10 +21,10 @@ set :rvm_ruby_string, "ruby-1.9.3-p194@#{application}-staging"
 
 set :scm, "git"
 set :repository, "git@github.com:scottwillson/#{application}.git"
-set :branch, "rails_3_2"
+set :branch, "master"
 
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
-set :site_local_repository_branch, "rails_3_2"
+set :site_local_repository_branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
