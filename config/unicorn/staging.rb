@@ -4,11 +4,11 @@ worker_processes 1
 preload_app true
 timeout 180
 
-user 'app', 'rails'
+user 'app', 'app'
 
 app_path = File.expand_path(File.dirname(__FILE__) + "/../../../current")
 working_directory app_path
-listen 8081, :tcp_nopush => true
+listen "#{app_path}/tmp/sockets/unicorn.sock", :backlog => 64
 
 stderr_path "log/unicorn.stderr.log"
 stdout_path "log/unicorn.stdout.log"

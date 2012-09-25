@@ -2,9 +2,9 @@ load "deploy"
 
 set :application, "racing_on_rails"
 
-role :app, "10.0.1.53"
-role :web, "10.0.1.53"
-role :db, "10.0.1.53", :primary => true
+role :app, "192.168.0.12"
+role :web, "192.168.0.12"
+role :db, "192.168.0.12", :primary => true
 
 load "local/config/staging.rb" if File.exists?("local/config/staging.rb")
 
