@@ -7,6 +7,6 @@ require "mocha"
 
 module Ruby
   class TestCase < MiniTest::Unit::TestCase
-    include EnumerableAssertions
+    include Test::EnumerableAssertions
   end
 end
