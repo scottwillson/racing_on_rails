@@ -25,7 +25,7 @@ class PagesControllerTest < ActionController::TestCase
     assert_select("h3", :text => "Nested")
   end
   
-  def test_index
+  test "index" do
     root = Page.create!(:body => "<h1>Welcome</h1>")
     child = root.children.create!(:body => "<h2>Child</h2>", :title => "Child")
     child_child = child.children.create!(:body => "<h3>Nested</h3>", :title => "Nested")
