@@ -1,4 +1,5 @@
 class PersonSessionsController < ApplicationController
+  force_https
   before_filter :require_current_person, :only => :show
   
   def new

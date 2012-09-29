@@ -2,6 +2,8 @@ class EditorRequestsController < ApplicationController
   before_filter :assign_person, :except => :show
   before_filter :require_current_person, :except => :show
 
+  force_https
+
   def create
     @editor = Person.find(params[:editor_id])
     unless @editor.administrator? || (@editor && current_person == @editor)

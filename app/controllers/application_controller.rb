@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery
   
+  include ActionController::ForceHTTPS
   include SentientController
 
   helper_method :current_person_session, :current_person, :secure_redirect_options

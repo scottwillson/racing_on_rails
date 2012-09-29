@@ -1,4 +1,5 @@
 class PasswordResetsController < ApplicationController
+  force_https
   before_filter :load_person_using_perishable_token, :only => [:edit, :update]
 
   def create

@@ -1,5 +1,7 @@
 class PeopleController < ApplicationController
   include Api::People
+
+  force_https :except => [ :index, :list, :show ]
   
   before_filter :require_current_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
