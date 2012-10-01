@@ -20,7 +20,7 @@ require "rvm/capistrano"
 set :rvm_ruby_string, "ruby-1.9.3-p194@#{application}-staging"
 
 set :scm, "git"
-set :repository, "git@github.com:scottwillson/#{application}.git"
+set :repository, "git@github.com:scottwillson/racing_on_rails.git"
 set :branch, "master"
 
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
