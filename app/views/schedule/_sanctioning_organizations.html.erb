@@ -1,0 +1,8 @@
+<% if sanctioning_organizations.any? %>
+  <%= tabs do |tabs|
+    tabs.add('All', schedule_path)
+    sanctioning_organizations.each do |org|
+      tabs.add(org, schedule_sanctioning_organization_path(org))
+    end
+  end%>
+<% end %>

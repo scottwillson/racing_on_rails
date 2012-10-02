@@ -3,6 +3,7 @@
 # Caches all of its pages
 class ScheduleController < ApplicationController
   before_filter :assign_schedule_data, :except => :show
+  before_filter :assign_sanctioning_organizations, :except => :show
   
   caches_page :index, :calendar, :list, :if => Proc.new { |c| !mobile_request? }
   
@@ -108,6 +109,18 @@ class ScheduleController < ApplicationController
       @events.delete_if {|x| !x.parent_id.nil? } #remove child events
     end
 
+    if RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
+      @events = @events.select { |event| event.sanctioned_by == params[:sanctioning_organization] }
+    end
+
     @schedule = Schedule::Schedule.new(@year, @events)
+  end
+  
+  def assign_sanctioning_organizations
+    if RacingAssociation.current.filter_schedule_by_sanctioning_organization?
+      @sanctioning_organizations = RacingAssociation.current.sanctioning_organizations
+    else
+      @sanctioning_organizations = []
+    end
   end
 end

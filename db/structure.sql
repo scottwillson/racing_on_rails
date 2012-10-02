@@ -628,6 +628,7 @@ CREATE TABLE `racing_associations` (
   `next_year_start_at` date DEFAULT NULL,
   `mobile_site` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_start_date` date DEFAULT NULL,
+  `filter_schedule_by_sanctioning_organization` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1044,6 +1045,8 @@ INSERT INTO schema_migrations (version) VALUES ('20120301051824');
 INSERT INTO schema_migrations (version) VALUES ('20120528182244');
 
 INSERT INTO schema_migrations (version) VALUES ('20120720235539');
+
+INSERT INTO schema_migrations (version) VALUES ('20121002174208');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

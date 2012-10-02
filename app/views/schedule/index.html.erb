@@ -6,6 +6,7 @@
     tabs.add(month.name, :anchor => month.name)
   end
 end -%>
+<%= render_page "sanctioning_organizations", :locals => { :year => @year, :sanctioning_organizations => @sanctioning_organizations } %>
 <%= render_page "schedule/disciplines", :locals => { :year => @year } %>
 
 <% if Time.zone.today < Date.new(@year, 2) %>
