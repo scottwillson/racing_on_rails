@@ -32,7 +32,7 @@ There is no prize just identification of riders who need to get a life.</p>
   <%- @results.sort.each do |result| -%>
   <tr class="<%= cycle "even", "odd" %>">
     <%- result_columns.each do |column| -%>
-    <td<%= result_cell_class column %>> %>><%= result_cell result, column %></td>
+    <td<%= result_cell_class column %>><%= result_cell result, column %></td>
     <%- end -%>
   </tr>
   <%- end -%>
