@@ -188,6 +188,10 @@ class Competition < Event
     nil
   end
   
+  def preliminary?(result)
+    false
+  end
+
   def break_ties?
     true
   end

@@ -12,6 +12,7 @@ class Race < ActiveRecord::Base
   include Export::Races
 
   DEFAULT_RESULT_COLUMNS = %W{ place number last_name first_name team_name points time }.freeze
+  RESULT_COLUMNS = %W{age age_group category_class category_name city date_of_birth first_name gender laps last_name license notes number place points points_bonus points_bonus_penalty points_from_place points_penalty points_total state team_name time time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner time_total }.freeze
   
   validates_presence_of :event, :category
   validate :inclusion_of_sanctioned_by
@@ -116,14 +117,21 @@ class Race < ActiveRecord::Base
     end
   end
 
-  def calculate_result_columns!
-    self.result_columns = result_columns_or_default
-    result_columns.delete_if do |result_column|
-      results.all? do |result|
+  def present_columns
+    columns = []
+    results.each do |result|
+      (RESULT_COLUMNS + result.custom_attributes.keys).each do |result_column|
         value = result.send(result_column)
-        value.blank? || value == 0 || value == 0.0
+        if value.present? && value != 0 && value != 0.0 && value != "0" && value != "0.0"
+          columns << result_column
+        end
       end
     end
+    columns.compact.map(&:to_s).uniq.sort
+  end
+
+  def set_result_columns!
+    self.result_columns = present_columns
     save!
   end
 
