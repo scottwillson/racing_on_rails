@@ -34,7 +34,7 @@ No results for <%= params[:year] %>
   <%- @race.results.sort.each do |result| -%>
   <tr class="<%= cycle "even", "odd" %>">
     <%- result_columns.each do |column| -%>
-    <td class="<%= result_cell_class column %>"> %>><%= result_cell result, column %></td>
+    <td<%= result_cell_class column %>> %>><%= result_cell result, column %></td>
     <%- end -%>
   </tr>
   <%- end -%>
