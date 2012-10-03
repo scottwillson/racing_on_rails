@@ -46,7 +46,8 @@ class OregonCupTest < ActiveSupport::TestCase
     separate_child_event.races.create!(:category => separate_category).results.create!(:place => "1", :person => molly)
 
     or_cup = OregonCup.create(:date => Date.new(2004))
-    banana_belt_1 = FactoryGirl.create(:series_event)
+    series = FactoryGirl.create(:series, :date => Date.new(2004, 3))
+    banana_belt_1 = FactoryGirl.create(:event, :date => Date.new(2004, 3), :parent => series)
     race = banana_belt_1.races.create!(:category => senior_men_p_1_2)
     race.results.create!(:place => "1", :person => tonkin)
     race.results.create!(:place => "2", :person => weaver)
