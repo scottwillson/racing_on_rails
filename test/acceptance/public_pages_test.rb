@@ -6,6 +6,7 @@ class PublicPagesTest < AcceptanceTest
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:discipline, :name => "Track")
     FactoryGirl.create(:discipline, :name => "Time Trial")
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
 
     promoter = FactoryGirl.create(:person, :name => "Brad Ross", :home_phone => "(503) 555-1212")
     event = FactoryGirl.create(:event, :promoter => promoter, :date => Date.new(RacingAssociation.current.effective_year, 5))
