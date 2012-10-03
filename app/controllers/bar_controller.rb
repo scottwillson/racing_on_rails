@@ -5,7 +5,6 @@ class BarController < ApplicationController
   
   def index
     @overall_bar = OverallBar.find_for_year
-    expires_in 1.hour, :public => true
   end
 
   # Default to Overall BAR with links to disciplines
@@ -48,6 +47,5 @@ class BarController < ApplicationController
                            :include => [ :person, :team ],
                            :conditions => [ 'race_id = ?', @race.id ]
     ) if @race
-    expires_in 1.hour, :public => true
   end
 end

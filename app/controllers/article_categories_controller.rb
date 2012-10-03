@@ -1,6 +1,5 @@
 class ArticleCategoriesController < ApplicationController
   def show
-    expires_in 1.hour, :public => true
     @article_category = ArticleCategory.find(params[:id])
     @article_category.articles.delete_if { |article| !article.display? }
 
