@@ -66,7 +66,7 @@
     <%- race.results.sort.each do |result| -%>
     <tr class="<%= cycle "even", "odd" %>">
       <%- race.result_columns_or_default.each do |column| -%>
-      <td<%= result_cell_class column %>><%= result_cell result, column %></td>
+      <td class="<%= result_cell_class column %>"> %>><%= result_cell result, column %></td>
       <%- end -%>
     </tr>
     <%- end -%>
