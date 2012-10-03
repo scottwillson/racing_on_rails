@@ -20,6 +20,7 @@ class Overall < Competition
             parent.overall = self.new(:parent_id => parent.id)
             parent.overall.save!
           end
+          parent.overall.set_date
           parent.overall.destroy_races
           parent.overall.create_races
           parent.overall.calculate!

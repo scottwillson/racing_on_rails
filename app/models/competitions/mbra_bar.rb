@@ -28,6 +28,7 @@ class MbraBar < Competition
         end
 
         MbraBar.all( :conditions => { :date => date }).each do |bar|
+          bar.set_date
           bar.destroy_races
           bar.create_races
           bar.calculate_threshold_number_of_races

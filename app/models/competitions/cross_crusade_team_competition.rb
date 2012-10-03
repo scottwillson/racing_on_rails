@@ -16,6 +16,7 @@ class CrossCrusadeTeamCompetition < Competition
             team_competition = self.new(:parent_id => series.id)
             team_competition.save!
           end
+          team_competition.set_date
           team_competition.destroy_races
           team_competition.create_races
           team_competition.calculate!

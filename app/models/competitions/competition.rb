@@ -61,6 +61,7 @@ class Competition < Event
       transaction do
         year = year.to_i if year.is_a?(String)
         competition = self.find_or_create_for_year(year)
+        competition.set_date
         raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
         competition.destroy_races
         competition.create_races

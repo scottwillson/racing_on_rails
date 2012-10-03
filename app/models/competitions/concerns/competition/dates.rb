@@ -4,6 +4,7 @@ module Concerns
       extend ActiveSupport::Concern
 
       included do
+        before_validation :set_date
         validate :valid_dates
       end
 
@@ -11,18 +12,16 @@ module Concerns
         Time.zone.now.beginning_of_year
       end
 
-      def date
-        if all_year?
-          return self[:date]
+      def set_date
+        if !all_year?
+          if source_events.any?
+            self.date = source_events.minimum(:date)
+          elsif parent
+            self.date = parent.start_date
+          end
         end
-
-        if source_events.any?
-          source_events.sort.first.date
-        elsif parent
-          parent.start_date
-        else
-          self[:date]
-        end
+        
+        date
       end
 
       # Same as +date+. Should always be January 1st

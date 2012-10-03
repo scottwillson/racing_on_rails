@@ -21,6 +21,7 @@ class MbraTeamBar < Competition
 
         MbraTeamBar.all( :conditions => { :date => date }).each do |bar|
           logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
+          bar.set_date
           bar.destroy_races
           bar.create_races
           bar.calculate!

@@ -17,6 +17,7 @@ class Bar < Competition
         date = Date.new(year, 1, 1)
         
         overall_bar = OverallBar.find_or_create_for_year(year)
+        overall_bar.set_date
 
         # Age Graded BAR, Team BAR and Overall BAR do their own calculations
         ::Discipline.find_all_bar.reject { |discipline|
@@ -34,6 +35,7 @@ class Bar < Competition
         end
 
         Bar.all( :conditions => { :date => date }).each do |bar|
+          bar.set_date
           bar.destroy_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter

@@ -81,8 +81,11 @@ class OregonJuniorCyclocrossSeries < Competition
     count >= minimum_events
   end
 
-  
   def preliminary?(result)
     minimum_events && parent.children_with_results.size > minimum_events && !parent.completed? && !raced_minimum_events?(result.person, result.race)
+  end
+  
+  def all_year
+    false
   end
 end

@@ -74,4 +74,8 @@ class OregonCup < Competition
     category = Category.find_or_create_by_name('Senior Women')
     races.create :category => category
   end
+  
+  def all_year?
+    false
+  end
 end
