@@ -28,7 +28,7 @@
       toggle_disclosure(this);
     });
 
-    $(<%= "'#person_#{person.id}'" %>).droppable({
+    $('#person_<%= person.id %>').droppable({
       hoverClass: 'hovering',
       drop: function(event, ui) {
         ui.draggable.hide('scale');

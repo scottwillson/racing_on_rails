@@ -1,6 +1,6 @@
 jQuery('#result_<%= @result.id %>_row').remove();
-page.insert_html :after, "#person_<%= @person.id %>_table tr:first-child", :partial => "result", :locals => { :result => @result }
+jQuery('<%= escape_javascript(render(:partial => 'admin/results/result', :locals => { :result => @result })) %>').insertAfter('#person_<%= @person.id %>_table tr:first-child');
 restripeTable("person_<%= @original_result_person.id %>}_table");
 restripeTable("person_<%= @person.id %>_table");
-jQuery('#people').fadeIn();
+jQuery('#people').fadeTo("fast", 1);
 jQuery('#find_progress_icon').hide();
