@@ -386,4 +386,21 @@ class Admin::PeopleControllerTest < ActionController::TestCase
     promoter = Person.find_by_name('Fred Whatley')
     assert_redirected_to(edit_admin_person_path(promoter, :event_id => jack_frost))
   end
+  
+  def test_destroy
+    person = FactoryGirl.create(:person)
+    delete :destroy, :id => person.id
+    assert !Person.exists?(person)
+    assert_redirected_to admin_people_path
+    assert flash.notice.present?
+  end
+  
+  def test_cannot_destroy
+    result = FactoryGirl.create(:result)
+    person = result.person
+    delete :destroy, :id => person.id
+    assert Person.exists?(person)
+    assert_response :success
+    assert flash[:warn].present?
+  end
 end

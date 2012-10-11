@@ -316,9 +316,17 @@ class Admin::PeopleController < Admin::AdminController
   
   def destroy
     @person = Person.find(params[:id])
-    @person.destroy
-    redirect_to admin_people_path
-    expire_cache
+    if @person.destroy
+      flash.notice = "Deleted #{@person.name}"
+      redirect_to admin_people_path
+      expire_cache
+    else
+      flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
+      @year = current_date.year
+      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
+      render :edit
+    end
   end
   
   def merge

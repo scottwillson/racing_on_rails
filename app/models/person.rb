@@ -32,6 +32,7 @@ class Person < ActiveRecord::Base
   validate :membership_dates
   before_save :destroy_shadowed_aliases
   after_save :add_alias_for_old_name
+  before_destroy :ensure_no_results
 
   has_many :aliases
   has_and_belongs_to_many :editable_people, :class_name => "Person", :foreign_key => "editor_id", :before_add => :validate_unique_editors
@@ -934,6 +935,13 @@ class Person < ActiveRecord::Base
       end
       new_alias
     end
+  end
+  
+  def ensure_no_results
+    if results.present?
+      errors.add :base, "Can't delete person with results"
+    end
+    errors.empty?
   end
 
   def validate_unique_editors(editor)
