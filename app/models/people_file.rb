@@ -206,6 +206,11 @@ class PeopleFile < RacingOnRails::Grid::GridFile
               row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
             end
             add_print_card_and_label(row_hash, person)
+
+            row_hash.delete(:persistence_token)
+            row_hash.delete(:single_access_token)
+            row_hash.delete(:perishable_token)
+
             duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
           end
         end
