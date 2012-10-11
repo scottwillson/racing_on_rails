@@ -238,6 +238,7 @@ class Admin::EventsController < Admin::AdminController
         @races = @event.races.dup
         @combined_results = @event.combined_results
         @event.destroy_races
+        @races.reject! { |race| Race.exists?(race.id) }
         expire_cache
       }
     end

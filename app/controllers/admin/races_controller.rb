@@ -68,7 +68,7 @@ class Admin::RacesController < Admin::AdminController
   # * notice
   def destroy
     @race = Race.find(params[:id])
-    @race.destroy
+    @destroyed = @race.destroy
   end
 
   # Insert new Result

@@ -1,4 +1,10 @@
-jQuery('#race_<%= @race.id %>_row').effect('puff', {}, 2000);
-jQuery('#warn').hide();
-jQuery('#notice').show();
-jQuery('#notice_span').html('Deleted <%= @race.name %>');
+<% if @destroyed %>
+  jQuery('#race_<%= @race.id %>_row').effect('puff', {}, 2000);
+  jQuery('#warn').hide();
+  jQuery('#notice').show();
+  jQuery('#notice_span').html('Deleted <%= @race.name %>');
+<% else %>
+  jQuery('#warn').hide();
+  jQuery('#notice').show();
+  jQuery('#notice_span').html('Could not delete <%= @race.name %>. It may have results.');
+<% end %>
