@@ -125,6 +125,8 @@ RacingOnRails::Application.routes.draw do
   match '/admin/persons/:action/:id' => 'admin/people#index', :as => :admin_persons
   match '/admin' => 'admin/home#index', :as => :admin_home
   match '/bar' => 'bar#index', :as => "bar_root"
+  match "/bar/:year/:discipline/:category" => "bar#show", 
+        :as => "bar_full"
   match "/bar(/:year(/:discipline(/:category)))" => "bar#show", 
         :as => "bar",
         :defaults => { :discipline => "overall", :category => "senior_men" }
