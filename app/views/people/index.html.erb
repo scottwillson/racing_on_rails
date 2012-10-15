@@ -15,7 +15,10 @@
 <%= table :class => "people", :id => :people do %>
   <tr>
     <th class="name">Name</th>
-    <th class="aliases">Aliases</th>
+    <th class="aliases">AKA</th>
+    <th>Member</th>
+    <th>Team</th>
+    <th>City</th>
     <th class="right">Road Cat</th>
     <th class="right">MTB Cat</th>
     <th class="right">Cross Cat</th>
@@ -23,7 +26,7 @@
   <%= render :partial => "person", :collection => @people %>
   <% if @people.empty? %>
   <tr valign="top">
-    <td colspan="10" width="200" class="not_found">No matching people found</td>
+    <td colspan="8" width="200" class="not_found">No matching people found</td>
   </tr>
   <% else %>
     <%= will_paginate @people %>

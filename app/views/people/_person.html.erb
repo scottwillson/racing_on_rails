@@ -6,6 +6,15 @@
   <td class="aliases">
     <%= truncate(person.aliases.collect{ |a| a.name }.join(', '), :limit => 200) %>
   </td>
+  <td class="member">
+    <%= "Yes" if person.member? %>
+  </td>
+  <td class="team">
+    <%= person.team_name %>
+  </td>
+  <td class="city">
+    <%= person.city_state %>
+  </td>
   <td class="right">
     <%= person.road_category %>
   </td>
