@@ -8,8 +8,7 @@
     <th class="name">Name</th>
     <th class="team">Team</th>
     <th class="aliases">Aliases</th>
-    <th class="number">Road</th>
-    <th class="number">MTB</th>
+    <th class="license">License</th>
     <th class="check_box">Member</th>
     <th class="actions last"></th>
   </tr>
@@ -17,9 +16,9 @@
   <% if @people.empty? %>
   <tr valign="top">
     <%- if @name.blank? -%>
-    <td colspan="8" width="200" class="not_found">Enter part of a person's name</td>
+    <td colspan="7" width="200" class="not_found">Enter part of a person's name</td>
     <%- else -%>
-    <td colspan="8" width="200" class="not_found">No people found</td>
+    <td colspan="7" width="200" class="not_found">No people found</td>
     <%- end -%>
   </tr>
   <% end %>

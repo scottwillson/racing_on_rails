@@ -7,13 +7,13 @@ class PeopleTest < AcceptanceTest
     FactoryGirl.create(:mtb_discipline)
     FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
     login_as FactoryGirl.create(:administrator, :name => "Candi Murray")
-    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :team_name => "Vanilla", :road_number => "202")
+    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron", :team_name => "Vanilla", :license => "202")
     molly.aliases.create!(:name => "Mollie Cameron")
     FactoryGirl.create(:result, :person => molly)
-    matson = FactoryGirl.create(:person, :first_name => "Mark", :last_name => "Matson", :team_name => "Kona", :road_number => "340")
-    alice = FactoryGirl.create(:person, :first_name => "Alice", :last_name => "Pennington", :team_name => "Gentle Lovers", :road_number => "230")
+    matson = FactoryGirl.create(:person, :first_name => "Mark", :last_name => "Matson", :team_name => "Kona", :license => "340", :road_number => "765")
+    alice = FactoryGirl.create(:person, :first_name => "Alice", :last_name => "Pennington", :team_name => "Gentle Lovers", :license => "230")
     brad = FactoryGirl.create(:person, :first_name => "Brad", :last_name => "Ross")
-    weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver", :team_name => "Gentle Lovers", :road_number => "341", :xc_number => "437")
+    weaver = FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver", :team_name => "Gentle Lovers", :license => "341")
     
     visit '/admin/people'
     assert_page_has_content "Enter part of a person's name"
@@ -39,23 +39,12 @@ class PeopleTest < AcceptanceTest
     assert_table "people_table", 5, 3, ""
     assert_table "people_table", 6, 3, ""
     
-    if Time.zone.today.month < 12
-      assert_table "people_table", 1, 4, "202"
-      assert_table "people_table", 2, 4, "340"
-      assert_table "people_table", 3, 4, ""
-      assert_table "people_table", 4, 4, "230"
-      assert_table "people_table", 5, 4, ""
-      assert_table "people_table", 6, 4, "341"
-    end
-    
-    assert_table "people_table", 1, 5, ""
-    assert_table "people_table", 2, 5, ""
-    assert_table "people_table", 3, 5, ""
-    assert_table "people_table", 4, 5, ""
-    assert_table "people_table", 5, 5, ""
-    if Time.zone.today.month < 12
-      assert_table "people_table", 6, 5, "437"
-    end
+    assert_table "people_table", 1, 4, "202"
+    assert_table "people_table", 2, 4, "340"
+    assert_table "people_table", 3, 4, ""
+    assert_table "people_table", 4, 4, "230"
+    assert_table "people_table", 5, 4, ""
+    assert_table "people_table", 6, 4, "341"
     
     assert has_checked_field?("person_member_#{molly.id}")
     assert has_checked_field?("person_member_#{weaver.id}")
@@ -94,7 +83,7 @@ class PeopleTest < AcceptanceTest
     assert_page_has_content "Mark Matson"
     if Time.zone.today.month < 12
       click_link "destroy_number_#{matson.race_numbers.first.id}"
-      assert_page_has_no_content "input.number[value='340']"
+      assert_page_has_no_content "input.number[value='765']"
       
       click_button "Save"
     
@@ -177,7 +166,7 @@ class PeopleTest < AcceptanceTest
     FactoryGirl.create(:discipline, :name => "Track")
     FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
     
-    FactoryGirl.create(:person, :name => "Erik Tonkin", :team_name => "Kona", :road_number => "102")
+    FactoryGirl.create(:person, :name => "Erik Tonkin", :team_name => "Kona", :license => "102")
 
     login_as FactoryGirl.create(:administrator)
 
