@@ -27,15 +27,21 @@ module ApplicationHelper
   def to_excel(value)
     _value = value
     
-    if _value.try(:respond_to?, :gsub)
-      _value.gsub!(/[\t\n\r]/, " ")
-    end
-    
-    if _value.try(:respond_to?, :html_safe)
-      _value.html_safe
+    if _value.is_a?(TrueClass)
+      _value = "1"
+    elsif _value.is_a?(FalseClass)
+      _value = "0"
     else
-      _value
+      if _value.try(:respond_to?, :gsub)
+        _value.gsub!(/[\t\n\r]/, " ")
+      end
+    
+      if _value.try(:respond_to?, :html_safe)
+        _value = _value.html_safe
+      end
     end
+
+    _value
   end
 
   # Only need this helper once, it will provide an interface to convert a block into a partial.
