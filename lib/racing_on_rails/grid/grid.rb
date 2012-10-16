@@ -101,7 +101,7 @@ module RacingOnRails
               end
 
               column = columns[index]
-              if !column.fixed_size && (cell.size > column.size)
+              if column && !column.fixed_size && (cell.size > column.size)
                 column.size = cell.size
               end
             end

@@ -52,4 +52,10 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
     get :index
     assert_response :success
   end
+
+  def test_email
+    FactoryGirl.create(:event, :date => 3.days.from_now)
+    get :index, :format => "text"
+    assert_response :success
+  end
 end
