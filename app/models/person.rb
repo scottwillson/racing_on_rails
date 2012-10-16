@@ -148,6 +148,7 @@ class Person < ActiveRecord::Base
     people = Person.connection.select_all(%Q{
       SELECT people.id, license, first_name, last_name, teams.name as team_name, team_id, people.notes,
              member_from, member_to, member_usac_to,
+             (member_from IS NOT NULL AND member_to IS NOT NULL AND member_from <= NOW() AND member_to >= NOW()) as member,
              print_card, card_printed_at, membership_card, ccx_only, date_of_birth, occupation,
              street, people.city, people.state, zip, wants_mail, email, wants_email, home_phone, work_phone, cell_fax, gender, 
              ccx_category, road_category, track_category, mtb_category, dh_category, 
@@ -215,7 +216,7 @@ class Person < ActiveRecord::Base
   
   # Find Person with most recent. If no results, select the most recently updated Person.
   def Person.select_by_recent_activity(people)
-    results = people.to_a.inject([]) { |results, person| results + person.results }
+    results = people.to_a.inject([]) { |r, person| r + person.results }
     if results.empty?
       people.to_a.sort_by(&:updated_at).last
     else
