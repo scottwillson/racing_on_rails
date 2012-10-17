@@ -52,6 +52,7 @@ module Results
       "membership_#"      => "license",
       "membership"        => "license",
       "license_#"         => "license",
+      "team/club"         => "team_name",
       "club/team"         => "team_name",
       "hometown"          => 'city',
       "stage_time"        => "time",
