@@ -208,6 +208,7 @@ class RaceTest < ActiveSupport::TestCase
     race.results[9].place = 25
     race.results[9].save!
     
+    ironman_race.results.each(&:update_points!)
     ironman_race.results(true)
     ironman_race.place_results_by_points(false)
     ironman_race.results(true).sort!
