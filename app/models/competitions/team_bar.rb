@@ -49,7 +49,7 @@ class TeamBar < Competition
             competition_result = race.results.create!(:team => team) if competition_result.nil?
           end
 
-          score = competition_result.scores.create!(
+          Score.create!(
             :source_result => source_result, 
             :competition_result => competition_result,
             # Points are divided twice. Once by the size of the team in the result,
