@@ -34,4 +34,13 @@ class Ironman < Competition
       where("results.date between ? and ?", Time.zone.local(year).beginning_of_year, Time.zone.local(year).end_of_year).
       order("person_id")
   end
+
+  # This is always the 'best' result
+  def create_score(competition_result, source_result, points)
+    Score.create!(
+      :source_result => source_result, 
+      :competition_result_id => competition_result.id, 
+      :points => points
+    )
+  end
 end

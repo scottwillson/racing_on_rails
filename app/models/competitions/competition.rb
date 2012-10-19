@@ -63,7 +63,7 @@ class Competition < Event
         competition = self.find_or_create_for_year(year)
         competition.set_date
         raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
-        competition.destroy_races
+        competition.delete_races
         competition.create_races
         competition.create_children
         # Could bulk load all Event and Races at this point, but hardly seems to matter
@@ -77,6 +77,19 @@ class Competition < Event
   
   def default_ironman
     false
+  end
+
+  def delete_races
+    ActiveRecord::Base.lock_optimistically = false
+    disable_notification!
+    
+    races.each do |race|
+      Score.delete_all("competition_result_id in (select id from results where race_id = #{race.id})")
+      Result.where(race_id: race.id).delete_all
+    end
+    races.clear
+    enable_notification!
+    ActiveRecord::Base.lock_optimistically = true
   end
   
   def create_races
@@ -150,13 +163,17 @@ class Competition < Event
              :race => race)
         end
  
-        competition_result.scores.create_if_best_result_for_race(
-          :source_result => source_result, 
-          :competition_result_id => competition_result.id, 
-          :points => points
-        )
+        create_score competition_result, source_result, points
       end
     end
+  end
+  
+  def create_score(competition_result, source_result, points)
+    competition_result.scores.create_if_best_result_for_race(
+      :source_result => source_result, 
+      :competition_result_id => competition_result.id, 
+      :points => points
+    )
   end
   
   # By default, does nothing. Useful to apply rule like:
