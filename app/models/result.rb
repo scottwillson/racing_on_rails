@@ -70,6 +70,8 @@ class Result < ActiveRecord::Base
 
   # Replace any new +person+, or +team+ with one that already exists if name matches
   def find_associated_records
+    return true if competition_result?
+    
     _person = person
     if _person && _person.new_record?
       if _person.name.blank?
@@ -166,6 +168,8 @@ class Result < ActiveRecord::Base
   # Set +person#number+ to +number+ if this isn't a rental number
   # FIXME optimize default number issuer business
   def update_person_number
+    return true if competition_result?
+    
     discipline = Discipline[event.discipline]
     default_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
     if person && event.number_issuer && event.number_issuer != default_number_issuer && number.present? && !RaceNumber.rental?(number, discipline)
@@ -182,6 +186,7 @@ class Result < ActiveRecord::Base
       end
       person.save!
     end
+    true
   end
   
   # Cache expensive cross-table lookups
@@ -222,6 +227,7 @@ class Result < ActiveRecord::Base
         custom_attributes[key.to_sym] = nil
       end
     end
+    true
   end
 
   def custom_attributes=(hash)
@@ -252,16 +258,21 @@ class Result < ActiveRecord::Base
       errors.add(:first_name, "and last name cannot both be blank")
     end
   end
+  
+  def update_points!
+    calculate_points
+    if points_changed?
+      update_column :points, points
+    end
+  end
 
   # Set points from +scores+
   def calculate_points
-    if !scores.empty? and competition_result?
-      pts = 0
-      scores.each do |score|
-        pts = pts + score.points
-      end
-      self.points = pts
+    # Drop to SQL for effeciency
+    if competition_result?
+      self.points = Score.where(:competition_result_id => id).sum(:points)
     end
+    points
   end
 
   def category_name=(name)
@@ -274,18 +285,18 @@ class Result < ActiveRecord::Base
   end
 
   def competition_result?
-    if competition_result.nil?
-      @competition_result = event.is_a?(Competition)
+    if frozen?
+      self[:competition_result] || event.is_a?(Competition)
     else
-      competition_result
+      self[:competition_result] ||= event.is_a?(Competition)
     end
   end
 
   def team_competition_result?
-    if team_competition_result.nil?
-      @team_competition_result = event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
+    if frozen?
+      self[:team_competition_result] || event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
     else
-      team_competition_result
+      self[:team_competition_result] ||= (event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar))
     end
   end
   
@@ -315,9 +326,7 @@ class Result < ActiveRecord::Base
   end
 
   def date
-    if race || race(true)
-      race.date
-    end
+    self[:date] || race.try(:date)
   end
 
   def distance
