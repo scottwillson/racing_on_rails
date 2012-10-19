@@ -120,6 +120,7 @@ class Competition < Event
       results = source_results_with_benchmark(race)
       create_competition_results_for(results, race)
       after_create_competition_results_for(race)
+      race.results.each(&:update_points!)
       race.place_results_by_points(break_ties?, ascending_points?)
     end
     
@@ -148,21 +149,24 @@ class Competition < Event
 
       points = points_for(source_result)
 
-      if person.nil? || source_result.try(:person_id) != person.id
-        person = Person.includes(:names, :team => :names).where(:id => source_result.person_id).first
+      if person.nil? || source_result.person_id != person.id
+        person = source_result.person
       end
       
-      if points > 0.0 && (!members_only? || member?(person, source_result.date))
+      # Competitions that use competition results (e.g., Overall BAR uses discipline BAR)
+      # assume that first competition checked membership requirements
+      if person && points > 0.0 && (!members_only? || source_result.competition_result? || person.member?(source_result.date))
         if first_result_for_person?(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
              :person => person, 
-             :team => person.try(:team),
+             :team => person.team,
              :event => self,
-             :race => race)
+             :race => race,
+             :competition_result => true)
         end
- 
+       
         create_score competition_result, source_result, points
       end
     end
