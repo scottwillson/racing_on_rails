@@ -208,10 +208,8 @@ class Race < ActiveRecord::Base
   # Sort results by points, assign places
   # Save! each result after place is set
   def place_results_by_points(break_ties = true, ascending = true)
-    results.each(&:calculate_points)
-
     results.sort! do |x, y| 
-      x.compare_by_points(y)
+      x.compare_by_points(y, break_ties)
     end
 
     if !ascending
@@ -228,7 +226,8 @@ class Race < ActiveRecord::Base
           result.place = index + 1
         end
       end
-      result.save!
+
+      result.update_column(:place, result.place)
     end
   end
   
