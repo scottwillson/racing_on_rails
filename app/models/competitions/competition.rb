@@ -155,7 +155,7 @@ class Competition < Event
       
       # Competitions that use competition results (e.g., Overall BAR uses discipline BAR)
       # assume that first competition checked membership requirements
-      if person && points > 0.0 && (!members_only? || source_result.competition_result? || person.person.member_in_year?(source_result.date))
+      if person && points > 0.0 && (!members_only? || source_result.competition_result? || person.member_in_year?(source_result.date))
         if first_result_for_person?(source_result, competition_result)
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
