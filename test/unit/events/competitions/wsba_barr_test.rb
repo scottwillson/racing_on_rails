@@ -32,6 +32,7 @@ module Events
         race.results.create!(:place => "15")
 
         fill_in_missing_results
+        WsbaBarr.any_instance.expects(:expire_cache)
         WsbaBarr.calculate!(2004)
 
         wsba = WsbaBarr.find_for_year(2004)

@@ -49,6 +49,7 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     Bar.calculate! 2004
     OverallBar.calculate! 2004
     
+    AgeGradedBar.any_instance.expects(:expire_cache).at_least_once
     assert_difference "Result.count", 4 do
       AgeGradedBar.calculate! 2004
     end

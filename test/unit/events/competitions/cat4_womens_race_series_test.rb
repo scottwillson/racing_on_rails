@@ -13,6 +13,7 @@ class Cat4WomensRaceSeriesTest < ActiveSupport::TestCase
     omnium.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
     road_race.races.create!(:category => women_cat_4).results.create!(:place => 1, :person => person)
     
+    Cat4WomensRaceSeries.any_instance.expects(:expire_cache).at_least_once
     Cat4WomensRaceSeries.calculate!(2005)
     result = series.races.first.results.first
     assert_equal 115, result.points, "Should have points for omnium only"

@@ -188,6 +188,7 @@ class TeamBarTest < ActiveSupport::TestCase
 
     assert_equal(0, TeamBar.count, "TeamBar before calculate!")
     Bar.calculate!(2004)
+    TeamBar.any_instance.expects(:expire_cache).at_least_once
     assert_difference "Result.count", 3 do
       TeamBar.calculate!(2004)
     end

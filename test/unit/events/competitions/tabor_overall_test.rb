@@ -31,6 +31,7 @@ class TaborOverallTest < ActiveSupport::TestCase
     following_event = WeeklySeries.create!(:name => "Mt. Tabor Series").children.create!(:date => Date.new(2008))
     following_event.races.create!(:category => cat_3).results.create!(:place => 10, :person => weaver)
     
+    TaborOverall.any_instance.expects(:expire_cache).at_least_once
     TaborOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new overall to parent Series after deleting old overall")
     assert_equal(9, series.overall.races.size, "Overall races")

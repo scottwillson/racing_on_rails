@@ -98,6 +98,7 @@ class CascadeCrossOverallTest < ActiveSupport::TestCase
     event.races.create!(:category => masters).results.create!(:place => 3, :person => person)
     event.races.create!(:category => men_a).results.create!(:place => 20, :person => person)
 
+    CascadeCrossOverall.any_instance.expects(:expire_cache).at_least_once
     CascadeCrossOverall.calculate!(2008)
     
     masters_overall_race = series.overall(true).races.detect { |race| race.category == masters }
