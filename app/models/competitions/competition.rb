@@ -60,15 +60,18 @@ class Competition < Event
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
-        competition = self.find_or_create_for_year(year)
-        competition.set_date
-        raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
-        competition.delete_races
-        competition.create_races
-        competition.create_children
-        # Could bulk load all Event and Races at this point, but hardly seems to matter
-        competition.calculate_members_only_places
-        competition.calculate!
+        competition = self.find_for_year(year)
+        if competition.nil? || competition.updated_at.nil? || Result.where("updated_at >= ?", competition.updated_at).exists?
+          competition = self.find_or_create_for_year(year)
+          competition.set_date
+          raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
+          competition.delete_races
+          competition.create_races
+          competition.create_children
+          # Could bulk load all Event and Races at this point, but hardly seems to matter
+          competition.calculate_members_only_places
+          competition.calculate!
+        end
       end
     }
     # Don't return the entire populated instance!

@@ -12,14 +12,17 @@ class CrossCrusadeTeamCompetition < Competition
 
         if series && series.has_results_including_children?(true)
           team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
-          unless team_competition
-            team_competition = self.new(:parent_id => series.id)
-            team_competition.save!
+          if team_competition.nil? || team_competition.updated_at.nil? || Result.where("updated_at > ?", team_competition.updated_at).exists?
+            unless team_competition
+              team_competition = self.new(:parent_id => series.id)
+              team_competition.save!
+            end
+            team_competition.set_date
+            team_competition.destroy_races
+            team_competition.create_races
+            team_competition.calculate!
+            team_competition.expire_cache
           end
-          team_competition.set_date
-          team_competition.destroy_races
-          team_competition.create_races
-          team_competition.calculate!
         end
       end
     }
@@ -53,7 +56,6 @@ class CrossCrusadeTeamCompetition < Competition
       event.id
     end
     event_ids = event_ids.join(', ')
-    category_ids = category_ids_for(race).join(', ')
 
     Result.find_by_sql(
       %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
@@ -147,23 +149,15 @@ class CrossCrusadeTeamCompetition < Competition
     end
   end
 
-  def date
-    (parent && parent.start_date) || Time.zone.today
-  end
-
-  def end_date
-    parent && parent.end_date
-  end
-
-  def valid_dates
-    true
-  end
-
   def set_notes
     self.notes = %Q{ In accordance with the Geneva Conventions, the official teams of the Cross Crusade have entered into a State of War for domination of the realm. <a href="http://crosscrusade.com/series.html" class="obvious">rules of engagement</a>. }
   end
 
   def set_name
     self.name = "Team Competition"
+  end
+
+  def all_year?
+    false
   end
 end

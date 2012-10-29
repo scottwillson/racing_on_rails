@@ -15,15 +15,17 @@ class Overall < Competition
                         :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
                         
         if parent && parent.has_results_including_children?(true)
-          unless parent.overall
-            # parent.create_overall will create an instance of Overall, which is probably not what we want
-            parent.overall = self.new(:parent_id => parent.id)
-            parent.overall.save!
+          if parent.overall.nil? || parent.overall.updated_at.nil? || Result.where("updated_at > ?", parent.overall.updated_at).exists?
+            unless parent.overall
+              # parent.create_overall will create an instance of Overall, which is probably not what we want
+              parent.overall = self.new(:parent_id => parent.id)
+              parent.overall.save!
+            end
+            parent.overall.set_date
+            parent.overall.destroy_races
+            parent.overall.create_races
+            parent.overall.calculate!
           end
-          parent.overall.set_date
-          parent.overall.destroy_races
-          parent.overall.create_races
-          parent.overall.calculate!
         end
       end
     }
