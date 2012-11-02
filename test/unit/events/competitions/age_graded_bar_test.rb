@@ -16,38 +16,44 @@ class AgeGradedBarTest < ActiveSupport::TestCase
     
     # Masters 30-34 result. (32)
     weaver = FactoryGirl.create(:person, :date_of_birth => Date.new(1972))
-    banana_belt_1 = FactoryGirl.create(:event, :date => Date.new(2004))
+    banana_belt_1 = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Banana Belt")
     banana_belt_masters_30_34 = banana_belt_1.races.create!(:category => masters_30_34)
     banana_belt_masters_30_34.results.create!(:person => weaver, :place => '10')
     
     # Masters 35-39 results (36)
-    tonkin = FactoryGirl.create(:person, :date_of_birth => Date.new(1968))
+    tonkin = FactoryGirl.create(:person, :date_of_birth => Date.new(1968), :name => "Tonkin")
     masters_35_39 = FactoryGirl.create(:category, :name => "Masters Men 35-39", :ages => 35..39, :parent => masters_men)
     banana_belt_masters = banana_belt_1.races.create!(:category => masters_35_39)
     banana_belt_masters.results.create!(:person => tonkin, :place => '5')
     
     # Masters 35-39 result, but now is 40+ racing age (39 in 2004)
-    molly = FactoryGirl.create(:person, :date_of_birth => Date.new(1965))
+    molly = FactoryGirl.create(:person, :date_of_birth => Date.new(1965), :name => "Molly")
     banana_belt_masters.results.create!(:person => molly, :place => '15')
     
     # Racing age is 35, but was 34 on race day
-    carl_roberts = FactoryGirl.create(:person, :date_of_birth => Date.new(1969, 11, 2), :member_from => Date.new(2004), :member_to => Date.new(2004, 12, 31))
+    carl_roberts = FactoryGirl.create(:person, :date_of_birth => Date.new(1969, 11, 2), 
+      :member_from => Date.new(2004), :member_to => Date.new(2004, 12, 31), :name => "Carl"
+    )
     banana_belt_masters.results.create!(:person => carl_roberts, :place => '11')
     
     # No age, but Masters result
-    david_auker = FactoryGirl.create(:person, :member_from => Date.new(2004), :member_to => Date.new(2004, 12, 31))
+    david_auker = FactoryGirl.create(:person, :member_from => Date.new(2004), :member_to => Date.new(2004, 12, 31), :name => "Auker")
     banana_belt_masters.results.create!(:person => david_auker, :place => '9')
     
     # Result by a 32-year-old and a 36 year-old in a 30-39 race
-    banana_belt_2 = FactoryGirl.create(:event, :date => Date.new(2004))
+    banana_belt_2 = FactoryGirl.create(:event, :date => Date.new(2004), :name => "Banana Belt 2")
     masters_30_39 = FactoryGirl.create(:category, :name => "Masters Men 30-39", :ages => 30..39, :parent => masters_men)
     banana_belt_2_masters_30_39 = banana_belt_2.races.create!(:category => masters_30_39)
     banana_belt_2_masters_30_39.results.create!(:person => tonkin, :place => '1')
     banana_belt_2_masters_30_39.results.create!(:person => weaver, :place => '2')
     
     # Age Graded BAR is based on Overall BAR, which is based on discipline BAR
-    Bar.calculate! 2004
-    OverallBar.calculate! 2004
+    assert_difference "Result.count", 5 do
+      Bar.calculate! 2004
+    end
+    assert_difference "Result.count", 5 do
+      OverallBar.calculate! 2004
+    end
     
     AgeGradedBar.any_instance.expects(:expire_cache).at_least_once
     assert_difference "Result.count", 4 do

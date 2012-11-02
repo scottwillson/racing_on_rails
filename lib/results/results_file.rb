@@ -23,6 +23,7 @@ module Results
     COLUMN_MAP = {
       "placing"           => "place",
       ";place"            => "place",
+      "pl"                => "place",
       "#"                 => "number",
       "wsba#"             => "number",
       "rider_#"           => "number",
