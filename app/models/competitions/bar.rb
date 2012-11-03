@@ -8,7 +8,7 @@
 class Bar < Competition
   include Concerns::Bar::Categories
   include Concerns::Bar::Discipline
-  include Concerns::Bar::Points
+  include Concerns::Competition::CalculatorAdapter
   
   def Bar.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
@@ -36,7 +36,7 @@ class Bar < Competition
 
         Bar.all( :conditions => { :date => date }).each do |bar|
           bar.set_date
-          bar.destroy_races
+          bar.delete_races
           bar.create_races
           # Could bulk load all Event and Races at this point, but hardly seems to matter
           bar.calculate!
@@ -51,6 +51,14 @@ class Bar < Competition
     Bar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
   end
 
+  def point_schedule
+    [ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+  end
+
+  def field_size_bonus?
+    true
+  end
+
   # Source result = counts towards the BAR "race" and BAR results
   # Example: Piece of Cake RR, 6th, Jon Knowlson
   #
@@ -62,29 +70,33 @@ class Bar < Competition
   # Senior Men BAR, 130th, Jon Knowlson, 18 points
   #  - Piece of Cake RR, 6th, Jon Knowlson 10 points
   #  - Silverton RR, 8th, Jon Knowlson 8 points
-  def source_results(race)
-    race_disciplines = disciplines_for(race).map { |d| "'#{d}'" }.join(", ")
-    category_ids = category_ids_for(race).join(", ")
 
-    Result.all(
-      :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
-      :conditions => [%Q{
-        place between 1 AND #{point_schedule.size - 1}
-          and (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries', 'TaborOverall') or events.type is NULL)
-          and bar = true
-          and events.sanctioned_by = "#{RacingAssociation.current.default_sanctioned_by}"
-          and categories.id in (#{category_ids})
-          and (events.discipline in (#{race_disciplines})
-            or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
-            or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
-          and (races.bar_points > 0
-            or (races.bar_points is null and events.bar_points > 0)
-            or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
-            or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
-          and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
-      }],
-      :order => 'person_id'
-      )
+  # Results as array of hashes. Select fewest fields needed to calculate results.
+  # Some competition rules applied here in the query and results excluded. It's a judgement call to apply them here
+  # rather than in #calculate.
+  def source_results(race)
+    query = Result.
+      select([
+        "results.id as id", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "results.year", 
+        "coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier"
+      ]).
+      joins(:race => :event).
+      joins("left outer join people on people.id = results.person_id").
+      joins("left outer join events parents_events on parents_events.id = events.parent_id").
+      joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
+      where("place between 1 and ?", point_schedule.size).
+      where("(events.type in (?) or events.type is NULL)", %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries TaborOverall }).
+      where(:bar => true).
+      where("races.category_id in (?)", category_ids_for(race)).
+      where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
+      where("events.discipline in (:disciplines)
+            or (events.discipline is null and parents_events.discipline in (:disciplines))
+            or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (:disciplines))", 
+            :disciplines => disciplines_for(race)).
+      where("coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) > 0").
+      where("results.year = ?", year)
+
+    Result.connection.select_all query
   end
 
   def create_races

@@ -1,25 +1,24 @@
 # OBRA OverallBar organized by Masters and Juniors age categories
 class AgeGradedBar < Competition
+  include Concerns::Competition::CalculatorAdapter
+  
+  # FIXME DRY new competition methods
   after_create :set_parent
 
-  def points_for(scoring_result)
-    scoring_result.points
+  def source_results(race)
+    query = Result.
+      select(["results.id as id", "year", "person_id as participant_id", "people.member_from", "people.member_to", "place", "results.event_id", "race_id", "events.date", "points" ]).
+      joins(:race => :event).
+      joins("left outer join people on people.id = results.person_id").
+      where("events.type" => "OverallBar").
+      where(:bar => true).
+      where("races.category_id" => race.category.parent(true).id).
+      where("people.date_of_birth between ? and ?", race.dates_of_birth.begin, race.dates_of_birth.end).
+      where("year = ?", year)
+
+    Result.connection.select_all query
   end
 
-  def source_results(race)
-    Result.all(
-                :include => [:race, {:person => :team}, :team, {:race => [:event, :category]}],
-                :conditions => [%Q{
-                  events.type = 'OverallBar' 
-                  and bar = true
-                  and events.sanctioned_by = "#{RacingAssociation.current.default_sanctioned_by}"
-                  and categories.id = #{race.category.parent(true).id}
-                  and people.date_of_birth between '#{race.dates_of_birth.begin}' and '#{race.dates_of_birth.end}'
-                  and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'}],
-                :order => 'person_id'
-    )
-  end
-  
   def create_races
     self.categories.each do |category|
       self.races.create!(:category => category)
@@ -92,6 +91,10 @@ class AgeGradedBar < Competition
   end
 
   def friendly_name
-    'Age Graded BAR'
+    "Age Graded BAR"
+  end
+    
+  def use_source_result_points?
+    true
   end
 end
