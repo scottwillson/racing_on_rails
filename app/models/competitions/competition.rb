@@ -86,11 +86,13 @@ class Competition < Event
     ActiveRecord::Base.lock_optimistically = false
     disable_notification!
     
-    races.each do |race|
-      Score.delete_all("competition_result_id in (select id from results where race_id = #{race.id})")
-      Result.where(race_id: race.id).delete_all
+    if races.present?
+      race_ids = races.map(&:id)
+      Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
+      Result.where("race_id in (?)", race_ids).delete_all
     end
     races.clear
+    
     enable_notification!
     ActiveRecord::Base.lock_optimistically = true
   end
@@ -218,6 +220,10 @@ class Competition < Event
 
   def break_ties?
     true
+  end
+  
+  def dnf?
+    false
   end
   
   def first_result_for_person?(source_result, competition_result)

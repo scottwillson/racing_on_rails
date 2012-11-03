@@ -9,6 +9,7 @@ class IronmanTest < ActiveSupport::TestCase
     senior_men = FactoryGirl.create(:category)
     series.races.create!(:category => senior_men).results.create(:place => "1", :person => person)
 
+    Ironman.any_instance.expects(:expire_cache).at_least_once
     Ironman.calculate!
     
     ironman = Ironman.find_for_year
@@ -99,13 +100,14 @@ class IronmanTest < ActiveSupport::TestCase
     ironman = Ironman.create!
     expected = {
       "id" => source_result.id,
-      "person_id" => source_result.person.id,
+      "participant_id" => source_result.person.id,
       "member_from" => Date.new(2005, 8, 1),
       "member_to" => Date.new(2010, 12, 31),
       "place" => "12",
       "event_id" => source_result.event.id,
       "race_id" => source_result.race_id,
-      "date" => source_result.event.date
+      "date" => source_result.event.date,
+      "year" => 2012
     }
     assert_equal [ expected ], ironman.source_results(ironman.races.first), "source_results"
   end
@@ -115,7 +117,7 @@ class IronmanTest < ActiveSupport::TestCase
     result1 = FactoryGirl.create(:result, person: person)
     result2 = FactoryGirl.create(:result, person: person)
 
-    Struct.new("TestResult", :place, :person_id, :points, :scores)
+    Struct.new("TestResult", :place, :participant_id, :points, :scores)
     Struct.new("TestScore", :points, :source_result_id)
     scores = [ Struct::TestScore.new(1, result1.id), Struct::TestScore.new(1, result2.id) ]
     calculated_results = [ Struct::TestResult.new(1, person.id, 2, scores) ]
@@ -151,7 +153,8 @@ class IronmanTest < ActiveSupport::TestCase
     team = FactoryGirl.create(:team)
     person = FactoryGirl.create(:person, team: team)
     ironman = Ironman.create!
-    assert_equal({ person.id => team.id}, ironman.team_ids_by_person_id_hash([ Result.new(person_id: person.id)]))
+    Struct.new("TestResult2", :participant_id)
+    assert_equal({ person.id => team.id }, ironman.team_ids_by_person_id_hash([ Struct::TestResult2.new(person.id) ]))
   end
   
   def test_create_score

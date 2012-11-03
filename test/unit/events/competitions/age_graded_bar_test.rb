@@ -2,7 +2,7 @@ require File.expand_path("../../../../test_helper", __FILE__)
 
 # :stopdoc:
 class AgeGradedBarTest < ActiveSupport::TestCase  
-  def test_calculate
+  test "calculate" do
     # Discipline and categories. Age-graded BAR is a third-order competition
     age_graded = FactoryGirl.create(:discipline, :name => "Age Graded")
     masters_men = FactoryGirl.create(:category, :name => "Masters Men")

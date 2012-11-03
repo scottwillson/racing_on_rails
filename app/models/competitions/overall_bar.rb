@@ -1,5 +1,6 @@
-# See Bar class
+# See Bar class.
 class OverallBar < Competition
+  # TODO When migrated to Competition::Calculator, need to ensure tied discipline BAR results are not counted as "team" results
   include Concerns::OverallBar::Categories
   include Concerns::OverallBar::Points
   include Concerns::OverallBar::Races
