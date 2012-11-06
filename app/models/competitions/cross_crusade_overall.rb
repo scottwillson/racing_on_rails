@@ -3,7 +3,7 @@
 class CrossCrusadeOverall < Overall
   before_create :set_notes, :set_name
   
-  def CrossCrusadeOverall.parent_name
+  def self.parent_event_name
     "Cross Crusade"
   end
   

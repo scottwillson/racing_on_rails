@@ -1,6 +1,6 @@
 # Mount Tabor Overall Series results
 class TaborOverall < Overall
-  def TaborOverall.parent_name
+  def self.parent_event_name
     "Mt. Tabor Series"
   end
 

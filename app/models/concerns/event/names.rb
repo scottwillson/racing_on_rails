@@ -14,7 +14,7 @@ module Concerns
       end
   
       # Parent's name. Own name if no parent
-      def parent_name
+      def parent_event_name
         if parent.nil?
           name
         else

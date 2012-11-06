@@ -1,7 +1,7 @@
 # Minimum two-race requirement
 # but ... should show not apply until there are at least two races
 class CascadeCrossOverall < Overall  
-  def CascadeCrossOverall.parent_name
+  def self.parent_event_name
     "Cascade Cross Series"
   end
 

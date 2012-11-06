@@ -4,7 +4,7 @@ class Overall < Competition
  validates_presence_of :parent
  after_create :add_source_events
  
- def self.parent_name
+ def self.parent_event_name
    self.name
  end
 
@@ -12,7 +12,7 @@ class Overall < Competition
     benchmark(name, :level => :info) {
       transaction do
         parent = ::MultiDayEvent.first(
-                        :conditions => ["name = ? and date between ? and ?", parent_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
+                        :conditions => ["name = ? and date between ? and ?", parent_event_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
                         
         if parent && parent.has_results_including_children?(true)
           if parent.overall.nil? || parent.overall.updated_at.nil? || Result.where("updated_at > ?", parent.overall.updated_at).exists?
