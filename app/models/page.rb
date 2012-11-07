@@ -3,6 +3,7 @@
 # Pages uses ERb and can execute Ruby code just like a template, so admin users can
 # do things like <% Person.destroy_all %>!
 class Page < ActiveRecord::Base
+  include Concerns::Page::Paths
   include Concerns::TreeValidation
   include Concerns::Versioned
   include SentientUser
@@ -19,16 +20,6 @@ class Page < ActiveRecord::Base
   def set_slug
     self.slug = title.downcase.gsub(" ", "_") if slug.blank?
     slug
-  end
-  
-  # Parent +slug+ paths + +slug+
-  def set_path
-    # Ouch
-    _ancestors = ancestors.reverse
-    _ancestors.delete(self.parent)
-    _ancestors << Page.find(self.parent_id) if self.parent_id
-    
-    self.path = (_ancestors << self).map(&:slug).join("/").gsub(/^\//, "")
   end
   
   # Can't reliably set default value for MySQL text field

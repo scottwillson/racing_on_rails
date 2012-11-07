@@ -79,7 +79,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("plain", page.slug, "slug")
   end
   
-  def test_do_not_override_slug
+  test "do not override slug" do
     page = Page.create!(:title => "Title", :slug => "slug")
     assert_equal("Title", page.title, "title")
     assert_equal("slug", page.slug, "slug")
@@ -149,7 +149,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal(new_person, page.updated_by, "updated_by")
   end
   
-  def test_update_updated_at_if_child_changes
+  test "update updated at if child changes" do
     parent = FactoryGirl.create(:page)
     updated_at = parent.updated_at
     

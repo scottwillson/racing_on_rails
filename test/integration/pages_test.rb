@@ -18,6 +18,6 @@ class PagesTest < ActionController::IntegrationTest
 
   def test_render_404_correctly_for_missing_pages
     FactoryGirl.create(:page)
-    assert_raise(ActiveRecord::RecordNotFound) { get "/some_missing_page" }
+    assert_raise(ActionController::RoutingError) { get "/some_missing_page" }
   end
 end

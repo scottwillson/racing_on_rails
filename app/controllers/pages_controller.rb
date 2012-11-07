@@ -6,18 +6,7 @@
 # Template-finding seems to assume a file, though
 class PagesController < ApplicationController
   def show
-    if params[:path]
-      path = params[:path].dup
-      if path
-        path.gsub!(/.html$/, "")
-        path.gsub!(/\/index$/, "")
-      end
-    else
-      path = ""
-    end
-    
-    @page = Page.find_by_path!(path)
-
+    @page = Page.find_by_normalized_path!(params[:path])
     render :inline => @page.body, :layout => "application"
   end  
 end

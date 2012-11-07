@@ -28,7 +28,7 @@ class PagesTest < AcceptanceTest
     # Create new page
     # 404 first
     visit "/officials"
-    assert_page_has_content "Couldn't find Page"
+    assert_page_has_content "No route matches"
 
     visit "/admin/pages"
 
