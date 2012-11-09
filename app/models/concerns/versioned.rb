@@ -18,7 +18,7 @@ module Concerns
     end
 
     def set_updater
-      self.updater ||= Person.current
+      self.updater ||= ::Person.current
       true
     end
       
