@@ -26,17 +26,12 @@
 #   Table Rock RR, etc. CompetitionEventMembership is a meaningul class in its own right.
 #
 # Changes to parent Event's attributes are propogated to children, unless the children's attributes are already different.
-# See PROPOGATED_ATTRIBUTES
+# See propogated_attributes
 # 
 # It's debatable whether we need STI subclasses or not.
 #
 # All notification code just supports combined TT results, and should be moved to background processing
 class Event < ActiveRecord::Base
-  PROPOGATED_ATTRIBUTES = %w{
-    city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
-    postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
-  } unless defined?(PROPOGATED_ATTRIBUTES)
-
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
   after_initialize :set_defaults
@@ -173,7 +168,7 @@ class Event < ActiveRecord::Base
   def set_defaults
     if new_record?
       if parent
-        PROPOGATED_ATTRIBUTES.each { |attr| 
+        propogated_attributes.each { |attr| 
           (self[attr] = parent[attr]) if self[attr].blank? 
         }
       end
@@ -186,6 +181,13 @@ class Event < ActiveRecord::Base
       self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
       self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
     end
+  end
+
+  def propogated_attributes
+    @propogated_attributes ||= %w{
+      city discipline flyer name number_issuer_id promoter_id prize_list sanctioned_by state time velodrome_id time
+      postponed cancelled flyer_approved instructional practice sanctioned_by email phone team_id beginner_friendly
+    }
   end
   
   def default_bar_points
@@ -280,7 +282,7 @@ class Event < ActiveRecord::Base
   # same value as the parent before update
   def update_children
     return true if new_record? || children.count == 0
-    changes.select { |key, value| PROPOGATED_ATTRIBUTES.include?(key) }.each do |change|
+    changes.select { |key, value| propogated_attributes.include?(key) }.each do |change|
       attribute = change.first
       was = change.last.first
       if was.blank?
