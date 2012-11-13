@@ -204,7 +204,7 @@ class Competition < Event
         end
 
         if preliminary?(result)
-          result.preliminary = true       
+          result.update_column :preliminary, true
         end    
       end
     end
