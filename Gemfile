@@ -18,7 +18,7 @@ gem "ruby-ole", :git => "git://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "git://github.com/scottwillson/spreadsheet.git"
 gem "ckeditor_rails", :require => "ckeditor-rails"
 gem "default_value_for", :git => "https://github.com/FooBarWidget/default_value_for.git"
-gem "acts_as_list", :git => "git://github.com/swanandp/acts_as_list.git"
+gem "acts_as_list", :git => "git://github.com/swanandp/acts_as_list.git", :ref => "f62c43265f0e47fe7666a93849abad5aa7c5c6d3"
 gem "acts_as_tree", :git => "git://github.com/parasew/acts_as_tree.git"
 gem "dynamic_form"
 gem "in_place_editing"
@@ -42,7 +42,7 @@ end
 group :test do
   gem "factory_girl"
   gem "factory_girl_rails"
-  gem "mocha", :require => false
+  gem "mocha", "~> 0.12.0", :require => false
   gem "sqlite3"
   gem "timecop"
 end
@@ -53,7 +53,7 @@ group :acceptance do
   gem "factory_girl"
   gem "factory_girl_rails"
   gem "launchy"
-  gem "mocha", :require => false
+  gem "mocha", "~> 0.12.0", :require => false
   gem "selenium-webdriver"
   gem "timecop"
 end
