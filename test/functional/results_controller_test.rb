@@ -355,11 +355,9 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_ssl
-    if RacingAssociation.current.ssl?
-      use_ssl
-      get :index
-      assert_redirected_to "http://test.host/results"
-    end
+    use_ssl
+    get :index
+    assert_response :success
   end
   
   def test_return_404_for_missing_event
