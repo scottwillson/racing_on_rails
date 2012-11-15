@@ -45,7 +45,7 @@
   </table>
   <%- end -%>
 
-  <%- if !@event.notes.blank? -%>
+  <%- if @event.notes.present? -%>
   <p class="notes"><%= @event.notes.html_safe -%></p>
   <%- end -%>
 
