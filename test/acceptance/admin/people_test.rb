@@ -72,7 +72,7 @@ class PeopleTest < AcceptanceTest
     fill_in "person_home_phone", :with => "411 911 1212"
     click_button "Save"
     
-    find("a[href='/people/#{matson.id}/versions']").click
+    first("a[href='/people/#{matson.id}/versions']").click
     
     visit '/admin/people'
     click_link "new_person"

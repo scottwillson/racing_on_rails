@@ -240,7 +240,7 @@ class LoginTest < ActionController::TestCase
   def test_new_login_http
     get :new_login
     if RacingAssociation.current.ssl?
-      assert_redirected_to new_login_people_url(secure_redirect_options)
+      assert_redirected_to people_new_login_url(secure_redirect_options)
     else
       assert_response :success
     end

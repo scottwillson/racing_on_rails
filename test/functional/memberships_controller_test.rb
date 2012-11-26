@@ -3,6 +3,7 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class MembershipsControllerTest < ActionController::TestCase
   def test_show
+    use_ssl
     person = FactoryGirl.create(:person)
     login_as person
     get :show, :person_id => person

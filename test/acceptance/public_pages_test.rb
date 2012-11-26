@@ -9,8 +9,8 @@ class PublicPagesTest < AcceptanceTest
     FactoryGirl.create(:discipline, :name => "Cyclocross")
 
     promoter = FactoryGirl.create(:person, :name => "Brad Ross", :home_phone => "(503) 555-1212")
-    event = FactoryGirl.create(:event, :promoter => promoter, :date => Date.new(RacingAssociation.current.effective_year, 5))
-    FactoryGirl.create(:result, :event => event)
+    new_event = FactoryGirl.create(:event, :promoter => promoter, :date => Date.new(RacingAssociation.current.effective_year, 5))
+    FactoryGirl.create(:result, :event => new_event)
 
     alice = FactoryGirl.create(:person, :name => "Alice Pennington")
     FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => Time.zone.local(2004).end_of_year.to_date).
@@ -26,27 +26,32 @@ class PublicPagesTest < AcceptanceTest
     FactoryGirl.create(:team, :name => "Vanilla")
 
     visit "/"
-    assert_page_has_content("Schedule")
+    unless page.has_content?("ATRA") || page.has_content?("WSBA")
+      assert_page_has_content("Schedule")
+    end
     assert_page_has_content("Results")
 
     visit "/schedule"
     page.driver.browser.navigate.refresh
-    assert_page_has_content("January")
-    assert_page_has_content("December")
+    assert_page_has_content(Time.zone.now.strftime("%B"))
 
     visit "/schedule/list"
     assert_page_has_content("Brad Ross")
     assert_page_has_content("(503) 555-1212")
 
     visit "/schedule/cyclocross"
-    assert_page_has_content("Schedule")
+    unless page.has_content?("Event Calendar")
+      assert_page_has_content("Schedule")
+    end
 
     visit "/schedule/list/cyclocross"
-    assert_page_has_content("Schedule")
+    unless page.has_content?("Event Calendar")
+      assert_page_has_content("Schedule")
+    end
 
     visit "/results"
-    assert_page_has_content("Schedule")
     assert_page_has_content Time.zone.today.year.to_s
+    click_link new_event.name
 
     visit "/results/2004/road"
     assert_page_has_content "Kings Valley"
@@ -56,8 +61,10 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "December 31, 2004"
     assert_page_has_content "Senior Women 1/2/3"
 
-    unless page.has_content?("Pennington")
+    if page.has_content?("Montana")
+      wait_for ".accordion"
       click_link "Senior Women 1/2/3"
+      wait_for "table.event_results a"
     end
     click_link "Pennington"
     assert_table "person_results_table", 1, 0, "2"
@@ -69,16 +76,14 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "Jack Frost"
     assert_page_has_content "January 17, 2002"
     assert_page_has_content "Weaver"
-    assert_page_has_content "Pennington"
+    unless page.has_content?("Montana")
+      assert_page_has_content "Pennington"
+    end
 
     visit "/ironman"
     assert_page_has_content "Ironman"
 
     visit "/people"
-    assert_page_has_no_content "Pennington"
-    assert_page_has_no_content "Weaver"
-    
-    fill_in "name", :with => "Penn"
 
     visit "/rider_rankings"
     assert_page_has_content "WSBA is using the default USA Cycling ranking system from 2012 onward"
@@ -109,9 +114,11 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_no_content "Pennington"
     assert_page_has_no_content "Weaver"
 
-    fill_in "name", :with => "Penn"
-    find_field("name").native.send_keys(:enter)
-    assert_page_has_content "Pennington"      
+    unless page.has_content?("Montana")
+      fill_in "name", :with => "Penn"
+      find_field("name").native.send_keys(:enter)
+      assert_page_has_content "Pennington"      
+    end
   end
   
   def test_bar
@@ -143,14 +150,18 @@ class PublicPagesTest < AcceptanceTest
   
     visit "/bar/2009"
     page.has_css?("title", :text => /BAR/)
-  
-    click_link "Age Graded"
+
+    within "ul.tabs:last-child" do
+      click_link "Age Graded"
+    end
     assert_page_has_content "Masters Men 30-34"
   
     visit "/bar/#{Time.zone.today.year}"
     assert_page_has_content "Overall"
   
-    click_link "Age Graded"
+    within "ul.tabs:last-child" do
+      click_link "Age Graded"
+    end
     page.has_css?("title", :text => /Age Graded/)
   end
 end

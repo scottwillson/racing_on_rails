@@ -18,8 +18,12 @@ class PromotersTest < AcceptanceTest
     series.children << event
     login_as promoter
     
-    click_link "events_tab"
-    click_link "Cross Crusade"
+    if page.has_content?("Montana")
+      visit "/admin/events/#{series.id}/edit"
+    else
+      click_link "events_tab"
+      first("a[href='/admin/events/#{series.id}/edit']").click
+    end
     click_button "Save"
     
     click_link "create_race"
@@ -56,8 +60,7 @@ class PromotersTest < AcceptanceTest
     click_link "export_link"
     wait_for_download "scoring_sheet.xls"
 
-    click_link "events_tab"
-    click_link "Cross Crusade"
+    visit "/admin/events/#{series.id}/edit"
     click_ok_on_alert_dialog
     click_link "propagate_races"
   end

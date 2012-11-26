@@ -115,19 +115,31 @@ class PersonSessionsControllerTest < ActionController::TestCase
   def test_show
     @request.env['HTTPS'] = nil
     get :show
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    if RacingAssociation.current.ssl?
+      assert_redirected_to person_session_url(secure_redirect_options)
+    else
+      assert_redirected_to new_person_session_url(secure_redirect_options)
+    end
   end
   
   def test_show_and_return_to
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/admin"
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    if RacingAssociation.current.ssl?
+      assert_redirected_to person_session_url(secure_redirect_options.merge(:return_to => "/admin"))
+    else
+      assert_redirected_to new_person_session_url(secure_redirect_options)
+    end
   end
   
   def test_show_and_return_to_registration
     @request.env['HTTPS'] = nil
     get :show, :return_to => "/events/123/register"
-    assert_redirected_to new_person_session_url(secure_redirect_options)
+    if RacingAssociation.current.ssl?
+      assert_redirected_to person_session_url(secure_redirect_options.merge(:return_to => "/events/123/register"))
+    else
+      assert_redirected_to new_person_session_url(secure_redirect_options)
+    end
   end
   
   def test_show_loggedin
@@ -135,6 +147,10 @@ class PersonSessionsControllerTest < ActionController::TestCase
     member = FactoryGirl.create(:person_with_login)
     login_as member
     get :show
-    assert_response :success
+    if RacingAssociation.current.ssl?
+      assert_redirected_to person_session_url(secure_redirect_options)
+    else
+      assert_response :success
+    end
   end
 end

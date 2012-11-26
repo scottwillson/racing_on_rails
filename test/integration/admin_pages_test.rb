@@ -5,6 +5,7 @@ class AdminPagesTest < ActionController::IntegrationTest
   def test_events
     if RacingAssociation.current.ssl?
       FactoryGirl.create(:administrator)
+      https! false
       get admin_events_path
       assert_redirected_to "https://www.example.com/admin/events"
       https!

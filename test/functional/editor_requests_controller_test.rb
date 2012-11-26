@@ -75,7 +75,6 @@ class EditorRequestsControllerTest < ActionController::TestCase
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person, :email => "person@example.com")
 
-    use_http
     editor_request = member.editor_requests.create!(:editor => promoter)
     get :show, :id => member.to_param, :id => editor_request.token
     assert_response :success
@@ -86,7 +85,6 @@ class EditorRequestsControllerTest < ActionController::TestCase
     promoter = FactoryGirl.create(:promoter)
     member = FactoryGirl.create(:person, :email => "person@example.com")
 
-    use_http
     editor_request = member.editor_requests.create!(:editor => promoter)
     assert_raise(ActiveRecord::RecordNotFound) { get(:show, :id => member.to_param, :id => "12367127836shdgadasd") }
     assert !member.editors(true).include?(promoter), "Should add editor"
