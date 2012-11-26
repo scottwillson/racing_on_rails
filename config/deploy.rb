@@ -35,6 +35,10 @@ namespace :deploy do
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
   end
   
+  task :registration_engine do
+    run "git clone git@github.com:scottwillson/registration-engine.git #{release_path}/lib/registration_engine"
+  end
+  
   task :symlinks do
     run <<-CMD
       rm -rf #{latest_release}/tmp/pids &&
@@ -68,7 +72,7 @@ namespace :deploy do
   end
 end
 
-before "deploy:assets:precompile", "deploy:local_code"
+before "deploy:assets:precompile", "deploy:local_code", "deploy:registration_engine"
 after "deploy:update_code", "deploy:symlinks", "deploy:copy_cache"
 
 require 'airbrake/capistrano'
