@@ -36,7 +36,11 @@ namespace :deploy do
   end
   
   task :registration_engine do
-    run "git clone git@github.com:scottwillson/registration-engine.git #{release_path}/lib/registration_engine"
+    run "rm -rf #{release_path}/lib/registration_engine"
+    run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+    if File.exists?("local/config/unicorn/production.rb")
+      run "cp local/config/unicorn/production.rb config/unicorn/production.rb"
+    end
   end
   
   task :symlinks do
@@ -72,7 +76,11 @@ namespace :deploy do
   end
 end
 
-before "deploy:assets:precompile", "deploy:local_code", "deploy:registration_engine"
+if application == "obra" || application == "nabra"
+  before "deploy:assets:precompile", "deploy:local_code", "deploy:registration_engine"
+elsif application != "racing_on_rails"
+  before "deploy:assets:precompile", "deploy:local_code"
+end
 after "deploy:update_code", "deploy:symlinks", "deploy:copy_cache"
 
 require 'airbrake/capistrano'
