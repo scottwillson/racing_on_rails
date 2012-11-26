@@ -27,6 +27,8 @@ gem "truncate_html"
 gem "jquery-rails"
 gem "yui-compressor"
 gem "therubyracer"
+gem "activemerchant"
+gem "registration_engine", :path => "lib/registration_engine"
 
 group :assets do
   gem "sass-rails",   "~> 3.2.3"
@@ -49,6 +51,8 @@ end
 
 group :acceptance do
   gem "capybara"
+  gem "nokogiri"
+  gem "xpath"
   gem "database_cleaner"
   gem "factory_girl"
   gem "factory_girl_rails"
