@@ -1,4 +1,5 @@
 class Admin::AdminController < ApplicationController
+  force_https
   before_filter :require_administrator
   
   # Always show tabs
