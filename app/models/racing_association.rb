@@ -58,6 +58,10 @@ class RacingAssociation < ActiveRecord::Base
     @person ||= Person.find_or_create_by_name(short_name)
   end
   
+  def person_id
+    @person_id ||= person.id
+  end
+  
   # Returns now.beginning_of_day, which is the same as Time.zone.today
   def today
     Time.zone.now.to_date
