@@ -13,18 +13,20 @@ class Overall < Competition
       transaction do
         parent = ::MultiDayEvent.first(
                         :conditions => ["name = ? and date between ? and ?", parent_event_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
-                        
+
+        overall = parent.try(:overall)
         if parent && parent.has_results_including_children?(true)
-          if parent.overall.nil? || parent.overall.updated_at.nil? || Result.where("updated_at > ?", parent.overall.updated_at).exists?
+          if overall.nil? || overall.updated_at.nil? || Result.where("updated_at > ?", overall.updated_at).exists?
             unless parent.overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want
-              parent.overall = self.new(:parent_id => parent.id)
-              parent.overall.save!
+              overall = self.new(:parent_id => parent.id)
+              overall.save!
+              parent.overall = overall
             end
-            parent.overall.set_date
-            parent.overall.destroy_races
-            parent.overall.create_races
-            parent.overall.calculate!
+            overall.set_date
+            overall.destroy_races
+            overall.create_races
+            overall.calculate!
           end
         end
       end
