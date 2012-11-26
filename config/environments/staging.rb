@@ -10,7 +10,7 @@ RacingOnRails::Application.configure do
   config.assets.css_compressor               = :yui
   config.assets.digest                       = true
   config.assets.js_compressor                = :uglifier
-  config.assets.precompile                += %w( ie.css racing_association.js racing_association.css admin.js )
+  config.assets.precompile                  += %w( racing_association.js ie.css racing_association.css racing_association_ie.css admin.js )
   config.cache_classes                       = true
   config.consider_all_requests_local         = true
   config.i18n.fallbacks                      = true
