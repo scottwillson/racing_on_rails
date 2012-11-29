@@ -33,14 +33,13 @@ namespace :deploy do
     end
     run "chmod -R g+w #{release_path}/local"
     run "ln -s #{release_path}/local/public #{release_path}/public/local"
+
+    run "if [ -e #{release_path}/local/config/unicorn/production.rb ]; then cp #{release_path}/local/config/unicorn/production.rb #{release_path}/config/unicorn/production.rb; fi"
   end
   
   task :registration_engine do
     run "rm -rf #{release_path}/lib/registration_engine"
     run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
-    if File.exists?("local/config/unicorn/production.rb")
-      run "cp local/config/unicorn/production.rb config/unicorn/production.rb"
-    end
   end
   
   task :symlinks do
