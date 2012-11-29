@@ -96,8 +96,8 @@ class ActiveSupport::TestCase
   end
 
   def assert_equal_events(expected, actual, message = 'Events not equal')
-    expected_sorted = expected.sort
-    actual_sorted = actual ? actual.sort : []
+    expected_sorted = expected.sort_by(&:name)
+    actual_sorted = actual ? actual.sort_by(&:name) : []
     unless expected_sorted == actual_sorted
       expected_formatted = expected_sorted.join("\n")
       actual_formatted = actual_sorted.join("\n")

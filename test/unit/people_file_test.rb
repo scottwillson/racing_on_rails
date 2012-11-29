@@ -260,8 +260,8 @@ Downhill/Cross Country: Downhill}
   end
   
   def test_import_duplicates
-    Person.create(:name => 'Erik Tonkin')
-    Person.create(:name => 'Erik Tonkin')
+    existing_person_with_login = FactoryGirl.create(:person_with_login, :name => "Erik Tonkin")
+    existing_person = FactoryGirl.create(:person, :name => "Erik Tonkin")
     
     file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
@@ -271,9 +271,11 @@ Downhill/Cross Country: Downhill}
     assert_equal(1, people_file.created, 'Number of people created')
     assert_equal(0, people_file.updated, 'Number of people updated')
     assert_equal(1, people_file.duplicates.size, 'Number of duplicates')
-    
-    # FIXME
-    # Assert data
-    # Add dupe with number and assert matching
+
+    duplicate = people_file.duplicates.first
+    assert existing_person.in?(duplicate.people), "Should include person with same name"
+    assert existing_person_with_login.in?(duplicate.people), "Should include person with same name"
+    assert_equal "Portland", duplicate.new_attributes["city"], "city"
+    assert duplicate.new_attributes.values.none?(&:nil?), "Should be no nil values in #{duplicate.new_attributes}"
   end
 end

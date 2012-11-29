@@ -45,7 +45,7 @@ module Admin
 
       def test_import
         tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin'))
+        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
         people_before_import = Person.count
@@ -66,7 +66,7 @@ module Admin
 
       def test_import_next_year
         tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
-        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin'))
+        existing_duplicate = Duplicate.new(:new_attributes => Person.new(:name => 'Erik Tonkin').attributes)
         existing_duplicate.people << tonkin
         existing_duplicate.save!
         people_before_import = Person.count
