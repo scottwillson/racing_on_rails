@@ -21,7 +21,6 @@ class Competition < Event
   TYPES = %w{
     AgeGradedBar
     Bar
-    CascadeCrossOverall
     Cat4WomensRaceSeries
     CrossCrusadeCallups
     CrossCrusadeOverall

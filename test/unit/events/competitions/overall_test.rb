@@ -3,6 +3,21 @@ require File.expand_path("../../../../test_helper", __FILE__)
 # :stopdoc:
 class OverallTest < ActiveSupport::TestCase
   class TestOverall < Overall
+    def self.parent_event_name
+      "Test Series"
+    end
+
+    def create_races
+      races.create!(:category => Category.find_or_create_by_name("Men A"))
+    end
+
+    def point_schedule
+      [ 0, 26, 20, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+    end
+
+    def minimum_events
+      2
+    end
   end
   
   test "calculate with no series" do
@@ -13,7 +28,7 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "preliminary results after event minimum" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
 
     series.children.create!(:date => Date.new(2007, 10, 7))
     series.children.create!(:date => Date.new(2007, 10, 14))
@@ -37,7 +52,7 @@ class OverallTest < ActiveSupport::TestCase
     men_a_race = series.children[3].races.create!(:category => men_a)
     men_a_race.results.create!(:place => 8, :person => tonkin)
 
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
@@ -52,7 +67,7 @@ class OverallTest < ActiveSupport::TestCase
   end
   
   test "raced minimum events boundaries" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     molly = FactoryGirl.create(:person)
     event = series.children.create!(:date => Date.new(2007, 10, 7))
@@ -69,7 +84,7 @@ class OverallTest < ActiveSupport::TestCase
     alice = FactoryGirl.create(:person)
     men_a_race.results.create!(:place => 17, :person => alice)
 
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(!series.overall.raced_minimum_events?(molly, men_a_overall_race), "One event. No people have raced minimum")
     assert(!series.overall.raced_minimum_events?(alice, men_a_overall_race), "One event. No people have raced minimum")
@@ -79,7 +94,7 @@ class OverallTest < ActiveSupport::TestCase
     men_a_race.results.create!(:place => 14, :person => molly)
     men_a_race.results.create!(:place => 6, :person => alice)
 
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Two events. Molly has raced minimum")
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Two events. Alice hasraced minimum")
@@ -90,7 +105,7 @@ class OverallTest < ActiveSupport::TestCase
     single_speed_race = event.races.create!(:category => single_speed)
     single_speed_race.results.create!(:place => 8, :person => alice)
     
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Three events. Molly has raced minimum")
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Three events. Alice has raced minimum")
@@ -98,27 +113,27 @@ class OverallTest < ActiveSupport::TestCase
     event = series.children.create!(:date => Date.new(2007, 10, 28))
     men_a_race = event.races.create!(:category => men_a)
     
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(series.overall.raced_minimum_events?(molly, men_a_overall_race), "Four events. Molly has raced minimum")
     assert(series.overall.raced_minimum_events?(alice, men_a_overall_race), "Four events. Alice has raced minimum")
   end
   
   test "minimum events should handle results without person" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     event = series.children.create!(:date => Date.new(2007, 10, 7))
 
     men_a_race = event.races.create!(:category => men_a)
     men_a_race.results.create!(:place => 17)
 
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert(!series.overall.raced_minimum_events?(nil, men_a_overall_race), "Nil person should never have minimum events")
   end
   
   test "count six best results" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     person = Person.create!(:name => "Kevin Hulick")
 
@@ -131,7 +146,7 @@ class OverallTest < ActiveSupport::TestCase
     # Simulate 7 of 8 events. Last, double-point event still in future
     series.children.create!(:date => date).races.create!(:category => men_a)
     
-    CascadeCrossOverall.calculate!(2008)
+    TestOverall.calculate!(2008)
     
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
@@ -142,7 +157,7 @@ class OverallTest < ActiveSupport::TestCase
   end
   
   test "choose best results by place" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     person = Person.create!(:name => "Kevin Hulick")
 
@@ -152,7 +167,7 @@ class OverallTest < ActiveSupport::TestCase
       date = date + 7
     end
 
-    CascadeCrossOverall.calculate!(2008)
+    TestOverall.calculate!(2008)
     
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
@@ -163,7 +178,7 @@ class OverallTest < ActiveSupport::TestCase
   end
   
   test "ensure dnf sorted correctly" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     person = Person.create!(:name => "Kevin Hulick")
 
@@ -176,7 +191,7 @@ class OverallTest < ActiveSupport::TestCase
     # Simulate 7 of 8 events. Last, double-point, event, still in future
     series.children.create!(:date => date).races.create!(:category => men_a)
     
-    CascadeCrossOverall.calculate!(2008)
+    TestOverall.calculate!(2008)
     
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_not_nil(men_a_overall_race, "Should have Men A overall race")
@@ -187,7 +202,7 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "ignore age graded bar" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     series.children.create!(:date => Date.new(2007, 10, 7))
     event = series.children.create!(:date => Date.new(2007, 10, 14))
@@ -199,7 +214,7 @@ class OverallTest < ActiveSupport::TestCase
     age_graded_race = AgeGradedBar.create!(:name => "Age Graded Results for BAR/Championships").races.create!(:category => men_a)
     age_graded_race.results.create!(:place => 1, :person => alice)
 
-    CascadeCrossOverall.calculate!(2007)
+    TestOverall.calculate!(2007)
     
     men_a_overall_race = series.overall(true).races.detect { |race| race.category == men_a }
     assert_equal(1, men_a_overall_race.results.size, "Cat A results")
@@ -207,11 +222,11 @@ class OverallTest < ActiveSupport::TestCase
   end
 
   test "should count for bar, nor ironman" do
-    series = Series.create!(:name => "Cascade Cross Series")
+    series = Series.create!(:name => "Test Series")
     men_a = Category.find_or_create_by_name("Men A")
     series.children.create!(:date => Date.new(2008)).races.create!(:category => men_a).results.create!(:place => "4", :person => FactoryGirl.create(:person))
 
-    CascadeCrossOverall.calculate!(2008)
+    TestOverall.calculate!(2008)
     series.reload
     
     overall_results = series.overall(true)
