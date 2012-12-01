@@ -73,6 +73,12 @@ class MailingListMailerTest < ActionMailer::TestCase
     end
   end
   
+  def test_receive_no_list_matches
+    assert_difference "Post.count", 0 do
+      MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../../files/email/to_archive.eml"))
+    end
+  end
+  
   def test_receive_invalid_byte_sequence
     mailing_list = FactoryGirl.create(:mailing_list, :name => "obra", :friendly_name => "OBRA Chat", :subject_line_prefix => "OBRA Chat")
     MailingListMailer.receive(File.read("#{File.dirname(__FILE__)}/../../files/email/invalid_byte_sequence.eml"))
