@@ -134,35 +134,39 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
   
   def test_filter_by_sanctioning_organization
-    FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
-    FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
-    FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
-    racing_association = RacingAssociation.current
-    racing_association.filter_schedule_by_sanctioning_organization = true
-    racing_association.show_only_association_sanctioned_races_on_calendar = false
-    racing_association.save!
+    Timecop.freeze(2010, 2) do
+      FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
+      FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
+      FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
+      racing_association = RacingAssociation.current
+      racing_association.filter_schedule_by_sanctioning_organization = true
+      racing_association.show_only_association_sanctioned_races_on_calendar = false
+      racing_association.save!
     
-    get :index
-    html = @response.body
-    assert html["FIAC Event"], "Should include FIAC event"
-    assert html["UCI Event"], "Should include UCI event"
-    assert html["CBRA Event"], "Should include CBRA event"
+      get :index
+      html = @response.body
+      assert html["FIAC Event"], "Should include FIAC event"
+      assert html["UCI Event"], "Should include UCI event"
+      assert html["CBRA Event"], "Should include CBRA event"
+    end
   end
   
   def test_filter_by_sanctioning_organization_with_filter
-    FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
-    FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
-    FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
-    racing_association = RacingAssociation.current
-    racing_association.filter_schedule_by_sanctioning_organization = true
-    racing_association.show_only_association_sanctioned_races_on_calendar = false
-    racing_association.save!
+    Timecop.freeze(2010, 2) do
+      FactoryGirl.create(:event, :sanctioned_by => "FIAC", :name => "FIAC Event")
+      FactoryGirl.create(:event, :sanctioned_by => "UCI", :name => "UCI Event")
+      FactoryGirl.create(:event, :sanctioned_by => "CBRA", :name => "CBRA Event")
+      racing_association = RacingAssociation.current
+      racing_association.filter_schedule_by_sanctioning_organization = true
+      racing_association.show_only_association_sanctioned_races_on_calendar = false
+      racing_association.save!
     
-    get :index, :sanctioning_organization => "FIAC"
-    html = @response.body
-    assert html["FIAC Event"], "Should include FIAC event"
-    assert !html["UCI Event"], "Should not include UCI event"
-    assert !html["CBRA Event"], "Should not include CBRA event"
+      get :index, :sanctioning_organization => "FIAC"
+      html = @response.body
+      assert html["FIAC Event"], "Should include FIAC event"
+      assert !html["UCI Event"], "Should not include UCI event"
+      assert !html["CBRA Event"], "Should not include CBRA event"
+    end
   end
   
   def test_index_with_alias

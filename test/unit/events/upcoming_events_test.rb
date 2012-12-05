@@ -121,7 +121,8 @@ class UpcomingEventsTest < ActiveSupport::TestCase
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29))
     assert_equal_events([woodland_rr, tst_rr, not_upcoming_rr], upcoming_events['Road'].upcoming_events, 'UpcomingEvents.events[Road]')
     assert_equal_events([chain_breaker], upcoming_events['Mountain Bike'].upcoming_events, 'UpcomingEvents.events[Mountain Bike]')
-    assert_equal("http://obra.org/woodland", upcoming_events['Road'].upcoming_events.first.flyer, "Woodland RR flyer")
+    event = upcoming_events['Road'].upcoming_events.detect { |e| e.name == "Woodland Road Race" }
+    assert_equal("http://obra.org/woodland", event.flyer, "Woodland RR flyer")
 
     # Next Sunday -- Mountain Bike only
     upcoming_events = UpcomingEvents.find_all(:date => Date.new(2007, 5, 29), :weeks => 2, :discipline => "Mountain Bike")
