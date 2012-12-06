@@ -27,6 +27,7 @@ gem "truncate_html"
 gem "jquery-rails"
 gem "yui-compressor"
 gem "therubyracer"
+gem "libv8", "~> 3.11.8"
 gem "activemerchant"
 gem "registration_engine", :path => "lib/registration_engine"
 
