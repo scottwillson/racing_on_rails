@@ -33,7 +33,7 @@ class PublicPagesTest < AcceptanceTest
 
     visit "/schedule"
     page.driver.browser.navigate.refresh
-    assert_page_has_content(Time.zone.now.strftime("%B"))
+    assert_page_has_content("May")
 
     visit "/schedule/list"
     assert_page_has_content("Brad Ross")
