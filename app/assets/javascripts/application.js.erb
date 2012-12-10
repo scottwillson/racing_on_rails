@@ -47,6 +47,10 @@ function autoComplete(model, attribute, path) {
       delay: 200,
       minLength: 3,
       source: path,
+      messages: {
+        noResults: null,
+        results: function() {}
+      },
       focus: function(event, ui) {
         $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
         return false;
@@ -86,6 +90,10 @@ function autoCompleteTeam(model, attribute, path) {
       delay: 200,
       minLength: 3,
       source: path,
+      messages: {
+        noResults: null,
+        results: function() {}
+      },
       focus: function(event, ui) {
         $('#team_auto_complete').val(ui.item.team.name);
         return false;
