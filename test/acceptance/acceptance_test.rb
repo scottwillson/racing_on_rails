@@ -18,7 +18,6 @@ class AcceptanceTest < ActiveSupport::TestCase
     config.app_host       = "http://localhost"
     config.server_port    = 8080
   end
-  Capybara.current_driver = :selenium
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
@@ -62,7 +61,7 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       raise Timeout::Error, "Did not find '#{glob_pattern}' in #{DOWNLOAD_DIRECTORY} within seconds 10 seconds. Found: #{Dir.entries(DOWNLOAD_DIRECTORY).join(", ")}"
     end
   end
@@ -76,7 +75,7 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       fail "'#{text}' did not appear in page source within 10 seconds"
     end
   end
@@ -90,7 +89,7 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       fail "'#{text}' in page source after 10 seconds"
     end
   end
@@ -104,7 +103,7 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       raise Timeout::Error, "'#{options[:selected]}' not selected on #{id} within 10 seconds"
     end
   end
@@ -118,8 +117,24 @@ class AcceptanceTest < ActiveSupport::TestCase
           sleep 0.25
         end
       end
-    rescue Timeout::Error => e
+    rescue Timeout::Error
       fail "'#{locator}' did not appear in page source within 10 seconds"
+    end
+  end
+
+  # Helpful for clicking links that are bound to JS handlers. Need to click after handler is bound.
+  def click_until(link_css, &block)
+    raise ArgumentError if link_css.blank? || block.nil?
+
+    begin
+      Timeout::timeout(10) do
+        until block.call
+          find(link_css).click
+          sleep 0.1
+        end
+      end
+    rescue Timeout::Error
+      fail "'#{text}' did not appear in page source within 10 seconds"
     end
   end
 
@@ -175,7 +190,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def reset_session
-    page.driver.browser.manage.delete_all_cookies
+    Capybara.reset_sessions!
   end
   
   def say_if_verbose(text)
