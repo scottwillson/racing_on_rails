@@ -6,6 +6,9 @@ cap deploy:migrations
 ./script/local atra
 cap deploy:migrations
 
+./script/local obra
+cap deploy:migrations
+
 ./script/local mbra
 cap deploy:migrations
 
