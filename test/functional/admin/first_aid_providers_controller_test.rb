@@ -20,6 +20,12 @@ class Admin::FirstAidProvidersControllerTest < ActionController::TestCase
     assert_select ".editable", { :minimum => 1 }, "Should be editable for admins"
   end
 
+  def test_index_as_txt
+    FactoryGirl.create :event, :date => 3.days.from_now
+    get :index, :format => "text"
+    assert_response :success
+  end
+
   def test_first_aid_update_options
     get(:index, :past_events => "true")
     assert_response(:success)
