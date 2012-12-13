@@ -48,6 +48,7 @@ group :test do
   gem "mocha", "~> 0.12.0", :require => false
   gem "sqlite3"
   gem "timecop"
+  gem "minitest", "3.5.0"
 end
 
 group :acceptance do
