@@ -335,6 +335,12 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert_template('admin/results/_person')
   end
   
+  def test_scores
+    result = FactoryGirl.create(:result)
+    post(:scores, :id => result.id, :format => "js")
+    assert_response(:success)
+  end
+  
   def test_move
     weaver = FactoryGirl.create(:result).person
     tonkin = FactoryGirl.create(:person)

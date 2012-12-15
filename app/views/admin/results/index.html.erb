@@ -4,7 +4,7 @@
   <div class="buttons centered">
     <%= label_tag :name, "Move Results to Person" %>
     <%= text_field_tag :name %>
-    <%= image_tag 'icons/spinner.gif', :id => 'find_progress_icon', :style => "display: none" %>
+    <%= image_tag '/assets/icons/spinner.gif', :id => 'find_progress_icon', :style => "display: none" %>
   </div>
 </form>
 
@@ -44,7 +44,7 @@
     var id = /\d+/.exec($(element).attr('id'))[0];
     if ($(element).is('.collapsed')) {
       $(element).removeClass('collapsed');
-      element.src='icons/spinner.gif';
+      element.src='/assets/icons/spinner.gif';
       $.ajax({
         url: '/admin/results/' + id + '/scores',
         type: 'post',
@@ -55,7 +55,7 @@
       });
     }
     else {
-      element.src = 'icons/play_blue.png';
+      element.src = '/assets/icons/play_blue.png';
       $(element).addClass('collapsed');
       $(element).removeClass('expanded');
       $('tr.scores_' + id).each(function(index, e) {
@@ -65,7 +65,7 @@
   }
 
   function expand(element) {
-    element.src = 'icons/down_blue.png';
+    element.src = '/assets/icons/down_blue.png';
     $(element).removeClass('collapsed');
     $(element).addClass('expanded');
   }
