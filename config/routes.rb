@@ -10,12 +10,6 @@ RacingOnRails::Application.routes.draw do
       end
     end
     
-    resource :cat4_womens_race_series do
-      collection do
-        post :create_result
-      end
-    end
-    
     resources :events do
       collection do
         get  :add_children
@@ -133,7 +127,6 @@ RacingOnRails::Application.routes.draw do
 
   match '/cat4_womens_race_series/:year' => 'competitions#show', :as => :cat4_womens_race_series, :type => 'cat4_womens_race_series', :constraints => { :year => /\d{4}/ }
   match '/cat4_womens_race_series' => 'competitions#show', :type => 'cat4_womens_race_series'
-  match '/admin/cat4_womens_race_series/results/new' => 'admin/cat4_womens_race_series#new_result', :as => :new_admin_cat4_womens_race_series_result
   match '/events/:event_id/results' => 'results#event'
   match '/events/:event_id/people/:person_id/results' => 'results#person_event'
   match '/events/:event_id/teams/:team_id/results' => 'results#team_event'
