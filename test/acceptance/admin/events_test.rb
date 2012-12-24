@@ -3,6 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 # :stopdoc:
 class EventsTest < AcceptanceTest
   def test_events
+    javascript!
+
     candi = FactoryGirl.create(:person, :name => "Candi Murray", :home_phone => "(503) 555-1212", :email => "admin@example.com")
     gl = FactoryGirl.create(:team, :name => "Gentle Lovers")
     kings_valley = FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => "2003-12-31")

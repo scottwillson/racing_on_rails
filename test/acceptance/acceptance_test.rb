@@ -6,6 +6,7 @@ require "minitest/autorun"
 
 class AcceptanceTest < ActiveSupport::TestCase
   DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
+  @@profile_is_setup = false
 
   include Capybara::DSL
   
@@ -18,7 +19,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     # custom location
     profile['browser.download.folderList'] = 2
     profile['browser.download.dir'] = DOWNLOAD_DIRECTORY
-    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel"
+    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
   end
@@ -26,9 +27,12 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara.configure do |config|
     # Slow. Firefox.
     # config.current_driver = :firefox
+    
+    config.current_driver = :rack_test
+    config.javascript_driver = :firefox
 
     # Fast, but some tests fail
-    config.current_driver = :chrome
+    # config.current_driver = :chrome
 
     # Faster, but requires Qt
     # config.current_driver = :webkit
@@ -40,7 +44,8 @@ class AcceptanceTest < ActiveSupport::TestCase
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
   DatabaseCleaner.strategy = :truncation
-  setup :clean_database, :setup_profile
+  
+  setup :clean_database, :setup_profile, :set_capybara_driver
   teardown :report_error_count, :reset_session
   
   def report_error_count
@@ -204,9 +209,17 @@ class AcceptanceTest < ActiveSupport::TestCase
   def remove_download(filename)
     FileUtils.rm_f "#{DOWNLOAD_DIRECTORY}/#{filename}"
   end
+  
+  def javascript!
+    Capybara.current_driver = Capybara.javascript_driver
+  end
+  
+  def set_capybara_driver
+    Capybara.current_driver = Capybara.default_driver
+  end
 
   def setup_profile
-    unless @profile_is_setup
+    unless @@profile_is_setup
       FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
       FileUtils.mkdir_p "#{Rails.root}/tmp/chrome-profile"
       FileUtils.cp_r "#{Rails.root}/test/chrome-profile", "#{Rails.root}/tmp"
@@ -214,7 +227,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       FileUtils.rm_rf DOWNLOAD_DIRECTORY
       FileUtils.mkdir_p DOWNLOAD_DIRECTORY
       
-      @profile_is_setup = true
+      @@profile_is_setup = true
     end
   end
   

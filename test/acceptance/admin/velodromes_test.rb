@@ -3,6 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 # :stopdoc:
 class VelodromesTest < AcceptanceTest
   def test_velodromes
+    javascript!
+
     login_as FactoryGirl.create(:administrator)
     alpenrose = FactoryGirl.create(:velodrome, :name => "Alpenrose Dairy", :website => "http://www.obra.org/track/")
     t_town = FactoryGirl.create(:velodrome, :name => "Valley Preferred Cycling Center", :website => "http://www.lvvelo.org/")

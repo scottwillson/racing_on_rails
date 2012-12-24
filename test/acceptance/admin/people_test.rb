@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class PeopleTest < AcceptanceTest
+  setup :javascript!
+
   def test_edit
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)

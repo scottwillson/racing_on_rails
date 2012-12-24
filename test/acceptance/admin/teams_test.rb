@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class TeamsTest < AcceptanceTest
+  setup :javascript!
+
   def test_edit
     kona = FactoryGirl.create(:team, :name => "Kona")
     vanilla = FactoryGirl.create(:team, :name => "Vanilla")

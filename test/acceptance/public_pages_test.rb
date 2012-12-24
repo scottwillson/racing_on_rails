@@ -32,7 +32,6 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content("Results")
 
     visit "/schedule"
-    page.driver.browser.navigate.refresh
     assert_page_has_content("May")
 
     visit "/schedule/list"
@@ -109,6 +108,8 @@ class PublicPagesTest < AcceptanceTest
   end
   
   def test_people
+    javascript!
+
     FactoryGirl.create(:person, :name => "Alice Pennington")
     visit "/people"
     assert_page_has_no_content "Pennington"

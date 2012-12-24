@@ -3,6 +3,8 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 # :stopdoc:
 class OfficialsTest < AcceptanceTest
   def test_view_assignments
+    javascript!
+
     FactoryGirl.create(:discipline, :name => "Cyclocross")
     FactoryGirl.create(:discipline, :name => "Downhill")
     FactoryGirl.create(:discipline, :name => "Mountain Bike")
