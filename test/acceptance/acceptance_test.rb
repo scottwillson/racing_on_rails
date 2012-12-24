@@ -9,12 +9,32 @@ class AcceptanceTest < ActiveSupport::TestCase
 
   include Capybara::DSL
   
-  Capybara.register_driver :selenium do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors"])
+  Capybara.register_driver :chrome do |app|
+    driver = Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors"])
+    driver.disable_logging
+    driver
+  end
+  
+  Capybara.register_driver :firefox do |app|
+    profile = Selenium::WebDriver::Firefox::Profile.new
+    # custom location
+    profile['browser.download.folderList'] = 2
+    profile['browser.download.dir'] = DOWNLOAD_DIRECTORY
+    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel"
+
+    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
   end
 
   Capybara.configure do |config|
-    config.current_driver = :selenium
+    # Slow. Firefox.
+    # config.current_driver = :firefox
+
+    # Fast, but some tests fail
+    config.current_driver = :chrome
+
+    # Faster, but requires Qt
+    # config.current_driver = :webkit
+
     config.app_host       = "http://localhost"
     config.server_port    = 8080
   end
