@@ -21,16 +21,18 @@ class Score < ActiveRecord::Base
   validates_presence_of :source_result_id, :competition_result_id, :points
   validates_numericality_of :points
   
+  before_save :cache_date
+  
+  def cache_date
+    self[:date] = date || source_result.date
+  end
+  
   def discipline
     competition_result.race.discipline
   end
   
   def source_discipline
     source_result.try(:race).try(:discipline)
-  end
-  
-  def source_event_date
-    date || source_result.event.date
   end
 
   # Compare by points
