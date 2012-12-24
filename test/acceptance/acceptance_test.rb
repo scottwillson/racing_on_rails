@@ -4,42 +4,23 @@ require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
 
+# Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
+# and Firefox for JS test. Note that most tests require JS.
+#
+# Use DEFAULT_DRIVER and JAVASCRIPT_DRIVER to set Capybara drivers:
+# :rack_test, :firefox, :chrome, :webkit
+#
+# RackTest is fastest *about 20% faster than Chrome) and has no dependencies, but does not execute JS.
+# Firefox is slowest option. Executes JS, has no dependencies and tests pass.
+# Chrome is faster (about 40%) than Firefox but requires Chromedriver binary from https://code.google.com/p/chromedriver/downloads/list
+# Capybara-Webkit is very fast. Executes JS, requires Qt library, capybara-webkit gem. Several tests fail.
+#
+# Chrome and Firefox drivers use custom profiles to ensure downloads can be tested.
 class AcceptanceTest < ActiveSupport::TestCase
   DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
   @@profile_is_setup = false
 
   include Capybara::DSL
-  
-  Capybara.register_driver :chrome do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"])
-  end
-  
-  Capybara.register_driver :firefox do |app|
-    profile = Selenium::WebDriver::Firefox::Profile.new
-    # custom location
-    profile['browser.download.folderList'] = 2
-    profile['browser.download.dir'] = DOWNLOAD_DIRECTORY
-    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
-
-    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
-  end
-
-  Capybara.configure do |config|
-    # Slow. Firefox.
-    # config.current_driver = :firefox
-    
-    config.current_driver = :rack_test
-    config.javascript_driver = :firefox
-
-    # Fast, but some tests fail
-    # config.current_driver = :chrome
-
-    # Faster, but requires Qt
-    # config.current_driver = :webkit
-
-    config.app_host       = "http://localhost"
-    config.server_port    = 8080
-  end
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
   # transaction, the server won't see it.
@@ -47,6 +28,22 @@ class AcceptanceTest < ActiveSupport::TestCase
   
   setup :clean_database, :setup_profile, :set_capybara_driver
   teardown :report_error_count, :reset_session
+  
+  def self.javascript_driver
+    if ENV["JAVASCRIPT_DRIVER"]
+      ENV["JAVASCRIPT_DRIVER"].to_sym
+    else
+      :firefox
+    end
+  end
+  
+  def self.default_driver
+    if ENV["DEFAULT_DRIVER"]
+      ENV["DEFAULT_DRIVER"].to_sym
+    else
+      :rack_test
+    end
+  end
   
   def report_error_count
     unless @passed
@@ -211,11 +208,11 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def javascript!
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = AcceptanceTest.javascript_driver
   end
   
   def set_capybara_driver
-    Capybara.current_driver = Capybara.default_driver
+    Capybara.current_driver = AcceptanceTest.default_driver
   end
 
   def setup_profile
@@ -239,5 +236,30 @@ class AcceptanceTest < ActiveSupport::TestCase
     if ENV["VERBOSE"].present?
       puts text
     end
+  end
+  
+  Capybara.register_driver :chrome do |app|
+    Capybara::Selenium::Driver.new(
+      app, 
+      :browser => :chrome, 
+      :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
+    )
+  end
+  
+  Capybara.register_driver :firefox do |app|
+    profile = Selenium::WebDriver::Firefox::Profile.new
+    profile['browser.download.folderList']            = 2
+    profile['browser.download.dir']                   = DOWNLOAD_DIRECTORY
+    profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
+
+    Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
+  end
+
+  Capybara.configure do |config|
+    config.current_driver = default_driver
+    config.javascript_driver = javascript_driver
+
+    config.app_host       = "http://localhost"
+    config.server_port    = 8080
   end
 end
