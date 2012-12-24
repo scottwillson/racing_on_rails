@@ -10,9 +10,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   include Capybara::DSL
   
   Capybara.register_driver :chrome do |app|
-    driver = Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors"])
-    driver.disable_logging
-    driver
+    Capybara::Selenium::Driver.new(app, :browser => :chrome, :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"])
   end
   
   Capybara.register_driver :firefox do |app|
@@ -162,7 +160,18 @@ class AcceptanceTest < ActiveSupport::TestCase
     find(locator).click
     within "form.editor_field" do
       fill_in "value", options
-      find_field("value").native.send_keys(:enter)
+      press_enter "value"
+    end
+  end
+
+  def press_enter(field)
+    case Capybara.current_driver
+    when :firefox, :chrome
+      find_field(field).native.send_keys(:enter)
+    when :webkit
+      find_field(field).base.invoke('keypress', false, false, false, false, 13, 0);
+    else
+      find_field(field).native.send_keys(:enter)
     end
   end
   
