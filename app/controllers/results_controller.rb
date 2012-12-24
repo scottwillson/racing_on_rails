@@ -88,13 +88,13 @@ class ResultsController < ApplicationController
   def person
     @person = Person.find(params[:person_id])
     set_date_and_year
-    @event_results = Result.all(
-     :conditions => [ "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year ]
+    @event_results = Result.where(
+    "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year
     )
-    @competition_results = Result.all(
-     :include => { :scores => [ :source_result, :competition_result ] },
-     :conditions => [ "person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year ]
-    )
+    @competition_results = Result.
+      includes(:scores => [ :source_result, :competition_result ]).
+      where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year)
+
     render :layout => !request.xhr?
   end
   
