@@ -53,11 +53,11 @@
       }
    },
    "homepage": "http://www.google.com/",
-   "homepage_is_newtabpage": true,
+   "homepage_is_newtabpage": false,
    "ntp": {
       "pref_version": 3,
       "promo_build": 2,
-      "promo_closed": false,
+      "promo_closed": true,
       "promo_end": 1299830340.0,
       "promo_group": 4,
       "promo_group_timeslice": 0,
