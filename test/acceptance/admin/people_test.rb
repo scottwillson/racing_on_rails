@@ -18,7 +18,7 @@ class PeopleTest < AcceptanceTest
     visit '/admin/people'
     assert_page_has_content "Enter part of a person's name"
     fill_in "name", :with => "a"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
@@ -104,12 +104,12 @@ class PeopleTest < AcceptanceTest
     assert_page_has_no_content 'has no parent'
     
     fill_in "name", :with => "Brad"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     assert_page_has_no_content "Ross"
 
     visit "/admin/people"
     fill_in "name", :with => "a"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     
     find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}"))
     wait_for_page_content "Merged A Penn into Molly Cameron"
@@ -127,7 +127,7 @@ class PeopleTest < AcceptanceTest
 
     visit "/admin/people"
     fill_in "name", :with => "a"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
@@ -144,7 +144,7 @@ class PeopleTest < AcceptanceTest
     assert !molly.aliases(true).map(&:name).include?("Mark Matson"), "Should not add Matson alias"
 
     visit "/admin/people"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     assert_table("people_table", 1, 1, /^Molly Cameron/)
     assert_table("people_table", 2, 1, /^Mark Matson/)
 
@@ -184,7 +184,7 @@ class PeopleTest < AcceptanceTest
     visit '/admin/people'
 
     fill_in "name", :with => "tonkin"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12
@@ -205,7 +205,7 @@ class PeopleTest < AcceptanceTest
     wait_for_download "scoring_sheet.xls"
 
     fill_in 'name', :with => 'tonkin'
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12

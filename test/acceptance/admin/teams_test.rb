@@ -19,7 +19,7 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     assert_page_has_content "Enter part of a team's name"
     fill_in "name", :with => "e"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
 
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
@@ -50,7 +50,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "vagen"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
 
     assert_table("teams_table", 1, 1, /^SpeedVagen/)
 
@@ -78,7 +78,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "a"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
     assert_page_has_content "Merged Kona into Vanilla"
@@ -87,7 +87,7 @@ class TeamsTest < AcceptanceTest
     
     visit "/admin/teams"
     fill_in "name", :with => "e"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
 
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)
@@ -106,7 +106,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "e"
-    find_field("name").native.send_keys(:enter)
+    press_enter "name"
     
     assert_table("teams_table", 1, 1, /^Chocolate/)
     assert_table("teams_table", 2, 1, /^Gentle Lovers/)

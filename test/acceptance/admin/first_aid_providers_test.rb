@@ -23,7 +23,7 @@ class FirstAidProvidersTest < AcceptanceTest
       find(:xpath, "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='editable']").click
       within "form.editor_field" do
         fill_in "value", :with => "Megan Weaver"
-        find_field("value").native.send_keys(:enter)
+        press_enter "value"
       end
 
       visit "/admin/first_aid_providers"

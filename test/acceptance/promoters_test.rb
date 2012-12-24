@@ -29,7 +29,7 @@ class PromotersTest < AcceptanceTest
     click_link "create_race"
     within "form.editor_field" do
       fill_in "value", :with => "Senior Women"
-      find_field("value").native.send_keys(:enter)
+      press_enter "value"
     end
     assert_page_has_no_content "form.editor_field input"
     assert_page_has_content "Senior Women"
@@ -45,7 +45,7 @@ class PromotersTest < AcceptanceTest
     click_link "create_race"
     within "form.editor_field" do
       fill_in "value", :with => "Masters Women 40+"
-      find_field("value").native.send_keys(:enter)
+      press_enter "value"
     end
     assert_page_has_no_content "form.editor_field input"
     assert_page_has_content "Masters Women 40+"

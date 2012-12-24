@@ -116,7 +116,7 @@ class PublicPagesTest < AcceptanceTest
 
     unless page.has_content?("Montana")
       fill_in "name", :with => "Penn"
-      find_field("name").native.send_keys(:enter)
+      press_enter "name"
       assert_page_has_content "Pennington"      
     end
   end
