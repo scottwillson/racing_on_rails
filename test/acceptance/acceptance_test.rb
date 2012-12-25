@@ -259,7 +259,9 @@ class AcceptanceTest < ActiveSupport::TestCase
     config.current_driver = default_driver
     config.javascript_driver = javascript_driver
 
-    config.app_host       = "http://localhost"
-    config.server_port    = 8080
+    if RacingAssociation.current.ssl?
+      config.app_host       = "http://localhost"
+      config.server_port    = 8080
+    end
   end
 end
