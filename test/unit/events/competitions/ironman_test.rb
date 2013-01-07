@@ -107,7 +107,7 @@ class IronmanTest < ActiveSupport::TestCase
       "event_id" => source_result.event.id,
       "race_id" => source_result.race_id,
       "date" => source_result.event.date,
-      "year" => 2012
+      "year" => Time.zone.now.year
     }
     assert_equal [ expected ], ironman.source_results(ironman.races.first), "source_results"
   end
