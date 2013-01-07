@@ -30,7 +30,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   teardown :report_error_count, :reset_session
   
   def self.javascript_driver
-    if ENV["JAVASCRIPT_DRIVER"]
+    if ENV["JAVASCRIPT_DRIVER"].present?
       ENV["JAVASCRIPT_DRIVER"].to_sym
     else
       :firefox
@@ -38,7 +38,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def self.default_driver
-    if ENV["DEFAULT_DRIVER"]
+    if ENV["DEFAULT_DRIVER"].present?
       ENV["DEFAULT_DRIVER"].to_sym
     else
       :rack_test
