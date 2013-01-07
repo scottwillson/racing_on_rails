@@ -2,6 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + "/../acceptance_test")
 
 # :stopdoc:
 class FirstAidProvidersTest < AcceptanceTest
+  setup :javascript!
+  
   def test_first_aid_providers
     # FIXME Punt!
     if Time.zone.today.month < 12
