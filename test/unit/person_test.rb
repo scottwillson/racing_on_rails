@@ -943,7 +943,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal("Kona", people[2]["team_name"], "Row 2 team: #{people[2]}")
     assert_equal(30, people[4]["racing_age"], "Row 4 racing_age #{people[4]}")
     assert_equal_dates("1996-01-01", people[4]["member_from"], "Row 4 member_from")
-    assert_equal_dates("2012-12-31", people[4]["member_to"], "Row 4 member_to")
+    assert_equal_dates("#{Time.zone.now.year}-12-31", people[4]["member_to"], "Row 4 member_to")
     assert_equal("5", people[4]["track_category"], "Row 4 track_category")
   end
 
