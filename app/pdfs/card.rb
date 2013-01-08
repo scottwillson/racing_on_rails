@@ -34,7 +34,7 @@ class Card < Prawn::Document
 
       draw_text "OBRA License # #{person.license}", :at => [ card_left_side, card_top - 72 ]
 
-      fill_color "ffcc33"
+      fill_color "296fa4"
       rectangle [ card_left_side + 164, card_top + 10 ], 20, 84
       fill
 
@@ -43,7 +43,7 @@ class Card < Prawn::Document
       draw_text "2", :at => [ card_left_side + 171, card_top - 10 ]
       draw_text "0", :at => [ card_left_side + 171, card_top - 27 ]
       draw_text "1", :at => [ card_left_side + 171, card_top - 44 ]
-      draw_text "2", :at => [ card_left_side + 171, card_top - 61 ]
+      draw_text "3", :at => [ card_left_side + 171, card_top - 61 ]
       
       index = index + 1
     end
