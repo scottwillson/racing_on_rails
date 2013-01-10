@@ -21,6 +21,17 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal competition_in_2005, Competition.find_for_year(2005), "Should not find anything when no Competitions in DB for this year"
   end
   
+  def test_team_competition_find_for_year
+    assert_equal nil, TestCompetition.find_for_year, "find with nothing in DB"
+    
+    competition = TestCompetition.create!
+    assert_equal competition, TestCompetition.find_for_year, "find in DB"
+    assert_equal nil, TestCompetition.find_for_year(2005), "find in DB, different year"
+    
+    competition = TestCompetition.create!(:date => Date.new(2005))
+    assert_equal competition, TestCompetition.find_for_year(2005), "find in DB with multiple events"
+  end
+  
   def test_dont_dupe_old_events_on_calc
     assert_difference "Event.count", 1 do
       TestCompetition.calculate!
@@ -69,16 +80,5 @@ class CompetitionTest < ActiveSupport::TestCase
     assert_equal(1, competition.source_events.count, 'Events')
     competition.source_events << FactoryGirl.create(:event)
     assert_equal(2, competition.source_events.count, 'Events')
-  end
-  
-  def test_find_for_year
-    assert_equal nil, TestCompetition.find_for_year, "find with nothing in DB"
-    
-    competition = TestCompetition.create!
-    assert_equal competition, TestCompetition.find_for_year, "find in DB"
-    assert_equal nil, TestCompetition.find_for_year(2005), "find in DB, different year"
-    
-    competition = TestCompetition.create!(:date => Date.new(2005))
-    assert_equal competition, TestCompetition.find_for_year(2005), "find in DB with multiple events"
   end
 end

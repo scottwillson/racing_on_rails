@@ -44,6 +44,7 @@ module Admin
       end
 
       def test_create_child_event
+        person = FactoryGirl.create(:person)
         parent = SingleDayEvent.create!
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
 
@@ -53,7 +54,7 @@ module Admin
                        "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
                        "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
                        "parent_id" => parent.to_param,
-                      'promoter_id' => nate_hobson.to_param, 'type' => 'Event'}
+                      'promoter_id' => person.to_param, 'type' => 'Event'}
         )
   
         skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
@@ -68,12 +69,12 @@ module Admin
         assert_equal('Smith Rock', skull_hollow.city, 'city')
         assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
         assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('CBRA', skull_hollow.sanctioned_by, 'sanctioned_by')
+        assert_equal('USA Cycling', skull_hollow.sanctioned_by, 'sanctioned_by')
         assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
         assert_equal('Downhill', skull_hollow.discipline, 'discipline')
         assert_equal(true, skull_hollow.cancelled, 'cancelled')
         assert_equal('KY', skull_hollow.state, 'state')
-        assert_equal(nate_hobson, skull_hollow.promoter, 'promoter')
+        assert_equal(person, skull_hollow.promoter, 'promoter')
       end
 
       def test_create_child_for_multi_day_event
@@ -109,40 +110,6 @@ module Admin
         assert_equal(person, skull_hollow.promoter, 'promoter')
       end
   
-      def test_create_child_event
-        parent = SingleDayEvent.create!
-        assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
-        person = FactoryGirl.create(:person)
-
-        post(:create, 
-             "commit"=>"Save", 
-             "event"=>{"city"=>"Smith Rock", "name"=>"Skull Hollow Roubaix","date"=>"2010-01-02",
-                       "flyer"=>"http://timplummer.org/roubaix.html", "sanctioned_by"=>"USA Cycling", "flyer_approved"=>"1", 
-                       "discipline"=>"Downhill", "cancelled"=>"1", "state"=>"KY",
-                       "parent_id" => parent.to_param,
-                      'promoter_id' => person.to_param, 'type' => ''}
-        )
-  
-        skull_hollow = Event.find_by_name('Skull Hollow Roubaix')
-        assert_not_nil(skull_hollow, 'Skull Hollow Roubaix should be in DB')
-        assert(!skull_hollow.is_a?(SingleDayEvent), 'Skull Hollow should not be a SingleDayEvent')
-        assert(skull_hollow.is_a?(Event), 'Skull Hollow should be an Event')
-  
-        assert_redirected_to edit_admin_event_path(assigns(:event))
-        assert_not_nil flash[:notice]
-
-        assert_equal('Skull Hollow Roubaix', skull_hollow.name, 'name')
-        assert_equal('Smith Rock', skull_hollow.city, 'city')
-        assert_equal(Date.new(2010, 1, 2), skull_hollow.date, 'date')
-        assert_equal('http://timplummer.org/roubaix.html', skull_hollow.flyer, 'flyer')
-        assert_equal('USA Cycling', skull_hollow.sanctioned_by, 'sanctioned_by')
-        assert_equal(true, skull_hollow.flyer_approved, 'flyer_approved')
-        assert_equal('Downhill', skull_hollow.discipline, 'discipline')
-        assert_equal(true, skull_hollow.cancelled, 'cancelled')
-        assert_equal('KY', skull_hollow.state, 'state')
-        assert_equal(person, skull_hollow.promoter, 'promoter')
-      end
-
       def test_create_series
         assert_nil(Event.find_by_name('Skull Hollow Roubaix'), 'Skull Hollow Roubaix should not be in DB')
         person = FactoryGirl.create(:person)

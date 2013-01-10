@@ -105,17 +105,16 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_index_road
-    @senior_women = FactoryGirl.create(:category, :name => "Senior Women")
     FactoryGirl.create(:event, :date => Date.new(2004)).races.create!(:category => @senior_women).results.create!(:place => "1", :person => Person.create!, :team => Team.create!(:name => "dfl"))
     get(:index, :year => "2004", :discipline => 'road')
     assert_response(:success)
     assert_template("results/index")
     assert_not_nil(assigns["events"], "Should assign events")
     assert_not_nil(assigns["year"], "Should assign year")
-    assert_equal(assigns["discipline"], Discipline::ROAD, "discipline")
+    assert_equal(assigns["discipline"], Discipline[:road], "discipline")
   end
   
-  def test_index_road
+  def test_index_road_with_discipline
     get(:index, :year => "2004", :discipline => 'time_trial')
     assert_response(:success)
     assert_template("results/index")
@@ -373,11 +372,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => banana_belt_1.to_param, :team_id => 236127361273) }
   end
   
-  def test_return_404_for_missing_team_event_bad_event
-    vanilla = FactoryGirl.create(:team)
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => vanilla.to_param) }
-  end
-  
   def test_return_404_for_missing_team_event_result
     event = CrossCrusadeTeamCompetition.create!(:parent => SingleDayEvent.create!(:name => "Cross Crusade"))
     vanilla = FactoryGirl.create(:team)
@@ -407,19 +401,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
-  def test_return_404_for_missing_event
-    assert_raise(ActiveRecord::RecordNotFound) { get(:event, :event_id => 236127361273) }
-  end
-  
-  def test_return_404_for_missing_person
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person, :person_id => 236127361273) }
-  end
-  
-  def test_return_404_for_missing_team_event
-    banana_belt_1 = FactoryGirl.create(:event)
-    assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => banana_belt_1.to_param, :team_id => 236127361273) }
-  end
-  
   def test_return_404_for_missing_team_event_bad_event
     vanilla = FactoryGirl.create(:team)
     assert_raise(ActiveRecord::RecordNotFound) { get(:team_event, :event_id => 236127361273, :team_id => vanilla.to_param) }
@@ -430,11 +411,6 @@ class ResultsControllerTest < ActionController::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => banana_belt_1.to_param, :person_id => 236127361273) }
   end
   
-  def test_return_404_for_missing_person_event_bad_event
-    weaver = FactoryGirl.create(:person)
-    assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => 236127361273, :person_id => weaver.to_param) }
-  end
-
   def test_index_as_xml
     event = FactoryGirl.create(:result).event
     get :index, :event_id => event[:id], :format => "xml"

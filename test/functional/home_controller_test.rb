@@ -4,7 +4,7 @@ require File.expand_path("../../test_helper", __FILE__)
 class HomeControllerTest < ActionController::TestCase
   def test_index
     FactoryGirl.create(:event, :date => 1.day.from_now)
-    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USAC")
+    future_national_federation_event = FactoryGirl.create(:event, :sanctioned_by => "USA Cycling")
     get(:index)
     assert_response :success
     assert_not_nil(assigns['upcoming_events'], 'Should assign upcoming_events')

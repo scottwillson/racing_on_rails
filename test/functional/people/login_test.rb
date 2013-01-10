@@ -60,24 +60,6 @@ class LoginTest < ActionController::TestCase
     
     assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
   end
-  
-  def test_create_login_with_name
-    ActionMailer::Base.deliveries.clear
-    
-    use_ssl
-    post :create_login, 
-         :person => { 
-           :login => "racer@example.com", 
-           :name => "Bike Racer",
-           :password => "secret", 
-           :password_confirmation => "secret", 
-           :email => "racer@example.com"
-          },
-         :return_to => root_path
-    assert_redirected_to root_path
-    
-    assert_equal 1, ActionMailer::Base.deliveries.size, "Should deliver confirmation email"
-  end
 
   def test_create_login_with_license_and_name
     ActionMailer::Base.deliveries.clear

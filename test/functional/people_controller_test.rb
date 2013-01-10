@@ -35,18 +35,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_select ".tabs", :count => 0
   end
 
-  def test_edit_as_editor
-    member = FactoryGirl.create(:person_with_login)
-    molly = FactoryGirl.create(:person)
-    molly.editors << member
-    use_ssl
-    login_as member
-    get :edit, :id => molly.to_param
-    assert_response :success
-    assert_equal molly, assigns(:person), "@person"
-    assert_select ".tabs", :count => 0
-  end
-
   def test_must_be_logged_in
     member = FactoryGirl.create(:person_with_login)
     use_ssl

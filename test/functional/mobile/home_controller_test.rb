@@ -2,7 +2,7 @@ require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
 class HomeControllerTest < ActionController::TestCase
-  def test_index
+  def test_mobile_index
     @request.host = "m.cbra.org"
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:event, :date => 1.day.from_now)
