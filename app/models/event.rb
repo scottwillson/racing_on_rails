@@ -384,6 +384,12 @@ class Event < ActiveRecord::Base
       self.state = nil
     end
   end
+  
+  def velodrome_name=(value)
+    if value.present?
+      self.velodrome = Velodrome.find_or_create_by_name(value.strip)
+    end
+  end
 
   def discipline_id
     Discipline[discipline].try :id

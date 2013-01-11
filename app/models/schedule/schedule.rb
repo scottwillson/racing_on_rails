@@ -15,7 +15,8 @@ module Schedule
       :club            => :team_id,
       :website         => :flyer,
       :where           => :city,
-      :flyer_approved  => { :column_type => :boolean }
+      :flyer_approved  => { :column_type => :boolean },
+      :velodrome       => :velodrome_name
     }
 
     # FIXME Remove dependency. Is it here because we need a helper?
@@ -130,11 +131,10 @@ module Schedule
 
       event_hash.delete :series
 
-      
       event = SingleDayEvent.new(event_hash)
       event.notification = false
-      
-       logger.debug("Add #{event.name} to schedule") if logger.debug?
+
+      logger.debug("Add #{event.name} to schedule") if logger.debug?
       event
     end
 
