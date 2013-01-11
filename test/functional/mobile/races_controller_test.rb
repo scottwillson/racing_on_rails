@@ -11,7 +11,7 @@ class RacesControllerTest < ActionController::TestCase
     assert_not_nil(assigns["event"], "Should assign @event")
   end
 
-  def test_show
+  def test_show_mobile
     @request.host = "m.cbra.org"
     race = FactoryGirl.create(:race)
     get(:show, :id => "#{race.to_param}")
