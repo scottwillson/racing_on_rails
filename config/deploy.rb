@@ -19,6 +19,8 @@ set :site_local_repository, "git@github.com:scottwillson/#{application}-local.gi
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
+set :bundle_without,  [:development, :test, :acceptance]
+
 set :user, "app"
 set :use_sudo, false
 set :scm_auth_cache, true
