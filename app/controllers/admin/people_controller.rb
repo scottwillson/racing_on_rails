@@ -30,7 +30,7 @@ class Admin::PeopleController < Admin::AdminController
     end
     
     @people = []
-    @name = params[:term] || params[:name] || session[:person_name] || cookies[:person_name] || ''
+    @name = params[:name] || session[:person_name] || cookies[:person_name] || ''
     @name.strip!
     session['person_name'] = @name
     cookies[:person_name] = { :value => @name, :expires => Time.zone.now + 36000 }

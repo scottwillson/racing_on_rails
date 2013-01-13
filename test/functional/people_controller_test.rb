@@ -166,39 +166,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil flash[:notice], "flash[:notice]"
   end
 
-  def test_index_as_xml
-    FactoryGirl.create(:discipline)
-    FactoryGirl.create(:number_issuer)
-    FactoryGirl.create(:person, :license => 7123811, :team => FactoryGirl.create(:team), :road_number => "333").
-      aliases.create!(:name => "Erik")
-    get :index, :license => 7123811, :format => "xml"
-    assert_response :success
-    assert_equal "application/xml", @response.content_type
-    [
-      "person > first-name",
-      "person > last-name",
-      "person > date-of-birth",
-      "person > license",
-      "person > gender",
-      "person > team",
-      "person > race-numbers",
-      "person > aliases",
-      "team > city",
-      "team > state",
-      "team > website",
-      "race-numbers > race-number",
-      "race-number > value",
-      "race-number > year",
-      "race-number > discipline",
-      "discipline > name",
-      "aliases > alias",
-      "alias > name",
-      "alias > alias"
-    ].each do |key|
-      assert_select key
-    end
-  end
-
   def test_index_as_json
     get :index, :format => "json", :name => "ron"
     assert_response :success
@@ -220,19 +187,5 @@ class PeopleControllerTest < ActionController::TestCase
     get :index, :name => "m", :license => 576, :format => "xml"
     assert_response :success
     assert_select "first-name", "Mark"
-  end
-
-  def test_show_as_xml
-    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-    get :show, :id => molly.id, :format => "xml"
-    assert_response :success
-    assert_select "first-name", "Molly"
-    assert_select "last-name", "Cameron"
-  end
-
-  def test_show_as_json
-    molly = FactoryGirl.create(:person, :first_name => "Molly", :last_name => "Cameron")
-    get :show, :id => molly.id, :format => "json"
-    assert_response :success
   end
 end

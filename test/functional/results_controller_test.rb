@@ -411,22 +411,21 @@ class ResultsControllerTest < ActionController::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { get(:person_event, :event_id => banana_belt_1.to_param, :person_id => 236127361273) }
   end
   
-  def test_index_as_xml
-    event = FactoryGirl.create(:result).event
-    get :index, :event_id => event[:id], :format => "xml"
-    assert_response :success
+  def test_person_json
+    person = FactoryGirl.create(:result).person
+    get :person, :person_id => person.id, :format => :json
+  end
+  
+  def test_person_json_with_year
+    result = FactoryGirl.create(:result)
+    get :person, :person_id => result.person_id, :format => :json, :year => result.year
+  end
+  
+  def test_person_xml
+    person = FactoryGirl.create(:result).person
+    get :person, :person_id => person.id, :format => :xml
     assert_equal "application/xml", @response.content_type
     [
-      "race > city",
-      "race > distance",
-      "race > field-size",
-      "race > finishers",
-      "race > id",
-      "race > laps",
-      "race > notes",
-      "race > state",
-      "race > time",
-      "race > results",
       "results > result",
       "result > age",
       "result > age-group",
@@ -453,31 +452,21 @@ class ResultsControllerTest < ActionController::TestCase
       "result > time-gap-to-leader",
       "result > time-gap-to-previous",
       "result > time-gap-to-winner",
-      "result > person",
-      "person > first-name",
-      "person > last-name",
-      "person > license",
-      "person > id",
-      "race > category",
-      "category > ages-begin",
-      "category > ages-end",
-      "category > friendly-param",
-      "category > id",
-      "category > name"
+      "result > first-name",
+      "result > last-name",
+      "result > license",
+      "result > id"
     ].each { |key| assert_select key }
   end
-
-  def test_index_as_json
-    event = FactoryGirl.create(:event)
-    get :index, :event_id => event[:id], :format => "json"
-    assert_response :success
-    assert_equal "application/json", @response.content_type
+  
+  def test_team_json
+    team = FactoryGirl.create(:result).team
+    get :team, :team_id => team.id, :format => :json
   end
-
-  def test_index_filtered_by_person_id
-    person = FactoryGirl.create(:person)
-    get :index, :person_id => person[:id], :format => "xml"
-    assert_response :success
+  
+  def test_team_xml
+    team = FactoryGirl.create(:result).team
+    get :team, :team_id => team.id, :format => :xml
   end
   
   def test_show_unregistered_teams_in_results
@@ -497,7 +486,7 @@ class ResultsControllerTest < ActionController::TestCase
     RacingAssociation.current.save!
     
     kona = FactoryGirl.create(:team, :member => false, :name => "Kona")
-    gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
+    FactoryGirl.create(:team, :name => "Gentle Lovers")
     @senior_men = FactoryGirl.create(:category)
     tonkin = FactoryGirl.create(:person)
 

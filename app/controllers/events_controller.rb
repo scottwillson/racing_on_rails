@@ -1,19 +1,5 @@
 # Longer-term, this controller should handle the schedule
 class EventsController < ApplicationController
-  include Api::Events
-  
-  # HTML: Event dashboard for promoter (Person)
-  # XML, JSON: Remote API
-  # == Params
-  # * person_id
-  #
-  # == Returns
-  # JSON and XML results are paginated with a page size of 10
-  # * event: [ :id, :parent_id, :name, :type, :discipline, :city, :cancelled, :beginner_friendly ]
-  # * race: [ :id, :distance, :city, :state, :laps, :field_size, :time, :finishers, :notes ]
-  # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
-  #
-  # See source code of Api::Events and Api::Base
   def index
     respond_to do |format|
       format.html {
@@ -29,15 +15,17 @@ class EventsController < ApplicationController
           redirect_to schedule_path
         end
       }
-      format.xml { render :xml => events_as_xml }
-      format.json { render :json => events_as_json }
+      format.json { render :json => events_for_api(params[:year]) }
+      format.xml { render :xml => events_for_api(params[:year]).to_xml }
     end
   end
-
-  def show
-    respond_to do |format|
-      format.xml { render :xml => event_as_xml }
-      format.json { render :json => event_as_json }
+  
+  private
+  
+  def events_for_api(year)
+    if year.blank?
+      year = RacingAssociation.current.effective_year
     end
+    Event.year(year.to_i)
   end
 end

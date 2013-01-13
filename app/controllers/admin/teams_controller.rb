@@ -6,7 +6,7 @@ class Admin::TeamsController < Admin::AdminController
   # Params
   # * team_name
   def index
-    @name = params['name'] || params[:term] || session['team_name'] || cookies[:team_name] || ''
+    @name = params['name'] || session['team_name'] || cookies[:team_name] || ''
     if @name.blank?
       @teams = []
     else

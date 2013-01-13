@@ -1,39 +1,17 @@
 # What appear to be duplicate finds are actually existence tests.
 # Many methods to handle old URLs that search engines still hit. Will be removed.
 class ResultsController < ApplicationController
-  include Api::Results
-
   caches_page :index, :event, :person, :person_event, :team, :if => Proc.new { |c| !mobile_request? }
   
   # HTML: Formatted links to Events with Results
   # == Params
   # * year (optional)
-  # JSON, XML: Remote API
-  # == Returns
-  # JSON and XML results are paginated with a page size of 10
-  # * results: [ :id, :age, :city, :date_of_birth, :license, :number, :place,
-  # :place_in_category, :points, :points_from_place,
-  # :points_bonus_penalty, :points_total, :state, :time,
-  # :time_gap_to_leader, :time_gap_to_previous, :time_gap_to_winner,
-  # :laps, :points_bonus, :points_penalty, :preliminary, :gender,
-  # :category_class, :age_group, :custom_attributes ]
-  #
-  # * person: [ :id, :first_name, :last_name, :license ]
-  # * category: [ :id, :name, :ages_begin, :ages_end, :friendly_param ]
-  #
-  # See source code of Api::Results and Api::Base
   def index
-    respond_to do |format|
-      format.html {
-        @year = params['year'].to_i
-        @year = Time.zone.today.year if @year == 0
-        @discipline = Discipline[params['discipline']]
-        @discipline_names = Discipline.names
-        @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
-      }
-      format.xml { render :xml => results_as_xml }
-      format.json { render :json => results_as_json }
-    end
+    @year = params['year'].to_i
+    @year = Time.zone.today.year if @year == 0
+    @discipline = Discipline[params['discipline']]
+    @discipline_names = Discipline.names
+    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
   end
   
   # All Results for Event
@@ -55,11 +33,17 @@ class ResultsController < ApplicationController
       return redirect_to(rider_rankings_path(:year => @event.year))
     end
 
-    benchmark "Load results", :level => :debug do
-      @event = Event.find(
-        params[:event_id],
-        :include => [ :races => [ :category, { :results => :team } ] ]
-      )
+    respond_to do |format|
+      format.html {
+        benchmark "Load results", :level => :debug do
+          @event = Event.find(
+            params[:event_id],
+            :include => [ :races => [ :category, { :results => :team } ] ]
+          )
+        end
+      }
+      format.json { render :json => results_for_api(@event.id) }
+      format.xml { render :xml => results_for_api(@event.id) }
     end
   end
   
@@ -89,13 +73,17 @@ class ResultsController < ApplicationController
     @person = Person.find(params[:person_id])
     set_date_and_year
     @event_results = Result.where(
-    "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year
+      "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year
     )
     @competition_results = Result.
       includes(:scores => [ :source_result, :competition_result ]).
       where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year)
-
-    render :layout => !request.xhr?
+      
+    respond_to do |format|
+      format.html
+      format.json { render :json => (@event_results + @competition_results).to_json }
+      format.xml { render :xml => (@event_results + @competition_results).to_xml }
+    end
   end
   
   # Teams's Results for an entire year
@@ -105,6 +93,11 @@ class ResultsController < ApplicationController
     @results = Result.all(
       :conditions => [ "team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year ]
     )
+    respond_to do |format|
+      format.html
+      format.json { render :json => @results.to_json }
+      format.xml { render :xml => @results.to_xml }
+    end
   end
   
   
@@ -117,5 +110,9 @@ class ResultsController < ApplicationController
       @year = Time.zone.today.year
     end
     @date = Date.new(@year)
+  end
+  
+  def results_for_api(event_id)
+    Result.where(:event_id => event_id)
   end
 end

@@ -19,7 +19,7 @@ class IndexTest < ActionController::TestCase
 
   def test_list
     FactoryGirl.create(:person, :first_name => "Bob", :last_name => "Jones")
-    get(:list, :term => 'jone')
+    get(:list, :name => 'jone')
     assert_response(:success)
     assert_not_nil(@response.body.index("Jones"), "Search for jone should find Jones #{@response.to_s}")
   end
@@ -79,7 +79,7 @@ class IndexTest < ActionController::TestCase
   def test_ajax_ssl_find
     FactoryGirl.create(:person)
     use_ssl
-    xhr :get, :index, :term => "weav", :format => "json"
+    xhr :get, :index, :name => "weav", :format => "json"
     assert @response.body["Weaver"], "Response should include Weaver in #{@response.body}"
     assert_response :success
     assert_template nil

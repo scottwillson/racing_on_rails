@@ -1,47 +1,23 @@
 class PeopleController < ApplicationController
-  include Api::People
-
   force_https :except => [ :index, :list, :show ]
   
   before_filter :require_current_person, :only => [ :edit, :update, :card ]
   before_filter :assign_person, :only => [ :edit, :update, :card ]
   before_filter :require_same_person_or_administrator_or_editor, :only => [ :edit, :update, :card ]
-  
-  # Search for People
-  # == Params
-  # * name: case-insensitive SQL 'like' query
-  # * license: JSON and XML only
-  # * page: JSON and XML only
-  #
-  # == Returns
-  # JSON and XML results are paginated with a page size of 10
-  # :id, :first_name, :last_name, :date_of_birth, :license, :gender
-  # :aliases      => :alias, :name
-  # :team         => :name, :city, :state, :website
-  # :race_numbers => :value, :year
-  # :discipline   => :only => :name
-  #
-  # See source code of Api::People and Api::Base
+
   def index
     respond_to do |format|
       format.html { find_people }
       format.js { find_people }
-      format.xml { render :xml => people_as_xml }
-      format.json { render :json => people_as_json }
+      format.xml { render :xml => find_people.to_xml(:only => [ :id, :first_name, :last_name ]) }
+      format.json { render :json => find_people.to_json(:only => [ :id, :first_name, :last_name ]) }
     end
   end
 
   def list
     people_list = Array.new
-    Person.find_all_by_name_like(params['term']).each { |person| people_list.push( { "label" => person.name, "id" => person.id.to_s} ) }
+    Person.find_all_by_name_like(params['name']).each { |person| people_list.push( { "label" => person.name, "id" => person.id.to_s} ) }
     render :json => people_list
-  end
-
-  def show
-    respond_to do |format|
-      format.xml { render :xml => person_as_xml }
-      format.json { render :json => person_as_json }
-    end
   end
 
   def account
