@@ -3,6 +3,8 @@ source "https://rubygems.org"
 gem "rails", "~>3.2"
 
 gem "fastercsv", :platforms => :ruby_18
+gem "oj"
+gem "libxml-ruby"
 gem "rake"
 gem "authlogic"
 gem "tabular", ">0.0.5"

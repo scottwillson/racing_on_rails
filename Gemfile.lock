@@ -169,6 +169,7 @@ GEM
     libwebsocket (0.1.7.1)
       addressable
       websocket
+    libxml-ruby (2.4.0)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -191,6 +192,7 @@ GEM
       net-ssh (>= 1.99.1)
     newrelic_rpm (3.5.5.38)
     nokogiri (1.5.6)
+    oj (2.0.0)
     open4 (1.3.0)
     pdf-reader (1.3.0)
       Ascii85 (~> 1.0.0)
@@ -303,11 +305,13 @@ DEPENDENCIES
   jquery-rails
   launchy
   libv8
+  libxml-ruby
   minitest (= 3.5.0)
   mocha (~> 0.12.0)
   mysql2
   newrelic_rpm
   nokogiri
+  oj
   pdf-reader
   prawn!
   rails (~> 3.2)
