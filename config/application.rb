@@ -50,5 +50,7 @@ module RacingOnRails
     if File.exists?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
+    
+    ActiveSupport::XmlMini.backend = "LibXML"
   end  
 end
