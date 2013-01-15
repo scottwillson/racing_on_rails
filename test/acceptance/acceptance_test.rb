@@ -27,7 +27,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   DatabaseCleaner.strategy = :truncation
   
   setup :clean_database, :setup_profile, :set_capybara_driver
-  teardown :report_error_count, :reset_session
+  teardown :reset_session
   
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
@@ -42,12 +42,6 @@ class AcceptanceTest < ActiveSupport::TestCase
       ENV["DEFAULT_DRIVER"].to_sym
     else
       :rack_test
-    end
-  end
-  
-  def report_error_count
-    unless @passed
-      save_page
     end
   end
   
@@ -230,6 +224,12 @@ class AcceptanceTest < ActiveSupport::TestCase
   
   def reset_session
     Capybara.reset_sessions!
+  end
+
+  def before_teardown
+    unless @passed
+      save_page
+    end
   end
   
   def say_if_verbose(text)
