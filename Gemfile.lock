@@ -169,7 +169,6 @@ GEM
     libwebsocket (0.1.7.1)
       addressable
       websocket
-    libxml-ruby (2.4.0)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -305,7 +304,6 @@ DEPENDENCIES
   jquery-rails
   launchy
   libv8
-  libxml-ruby
   minitest (= 3.5.0)
   mocha (~> 0.12.0)
   mysql2
