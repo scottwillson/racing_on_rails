@@ -1,7 +1,11 @@
 class OregonCupController < ApplicationController
   def index
-    @year = params['year'] || Time.zone.today.year.to_s
-    date = Date.new(@year.to_i, 1, 1)
-    @oregon_cup = OregonCup.first(:conditions => ['date = ?', date]) || OregonCup.new(:date => date)
+    if params[:year] && params[:year].to_i > 0
+      @year = params[:year].to_i
+    else
+      @year = Time.zone.today.year.to_s
+    end
+    
+    @oregon_cup = OregonCup.find_for_year(@year) || OregonCup.new
   end
 end
