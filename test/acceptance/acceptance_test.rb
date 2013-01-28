@@ -13,7 +13,7 @@ require "minitest/autorun"
 # RackTest is fastest *about 20% faster than Chrome) and has no dependencies, but does not execute JS.
 # Firefox is slowest option. Executes JS, has no dependencies and tests pass.
 # Chrome is faster (about 40%) than Firefox but requires Chromedriver binary from https://code.google.com/p/chromedriver/downloads/list
-# Capybara-Webkit is very fast. Executes JS, requires Qt library, capybara-webkit gem. Several tests fail.
+# Capybara-Webkit is very fast. Executes JS, requires Qt library, capybara-webkit gem. Several tests fail and gem is large. Not included in Gemfile.
 #
 # Chrome and Firefox drivers use custom profiles to ensure downloads can be tested.
 class AcceptanceTest < ActiveSupport::TestCase
