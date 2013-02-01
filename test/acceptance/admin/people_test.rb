@@ -22,31 +22,31 @@ class PeopleTest < AcceptanceTest
     fill_in "name", :with => "a"
     press_enter "name"
     
-    assert_table("people_table", 1, 1, /^Molly Cameron/)
-    assert_table("people_table", 2, 1, /^Mark Matson/)
-    assert_table("people_table", 3, 1, /^Candi Murray/)
-    assert_table("people_table", 4, 1, /^Alice Pennington/)
-    assert_table("people_table", 5, 1, /^Brad Ross/)
-    assert_table("people_table", 6, 1, /^Ryan Weaver/)
-    
-    assert_table("people_table", 1, 2, /^Vanilla/)
-    assert_table("people_table", 2, 2, /^Kona/)
-    assert_table("people_table", 4, 2, /^Gentle Lovers/)
-    assert_table("people_table", 6, 2, /^Gentle Lovers/)
-                
-    assert_table("people_table", 1, 3, /^Mollie Cameron/)
-    assert_table "people_table", 2, 3, ""
-    assert_table "people_table", 3, 3, ""
-    assert_table "people_table", 4, 3, ""
-    assert_table "people_table", 5, 3, ""
-    assert_table "people_table", 6, 3, ""
-    
-    assert_table "people_table", 1, 4, "202"
-    assert_table "people_table", 2, 4, "340"
+    assert_table("people_table", 2, 2, "Molly Cameron")
+    assert_table("people_table", 3, 2, "Mark Matson")
+    assert_table("people_table", 4, 2, "Candi Murray")
+    assert_table("people_table", 5, 2, "Alice Pennington")
+    assert_table("people_table", 6, 2, "Brad Ross")
+    assert_table("people_table", 7, 2, "Ryan Weaver")
+  
+    assert_table("people_table", 2, 3, "Vanilla")
+    assert_table("people_table", 3, 3, "Kona")
+    assert_table("people_table", 5, 3, "Gentle Lovers")
+    assert_table("people_table", 7, 3, "Gentle Lovers")
+              
+    assert_table("people_table", 2, 4, "Mollie Cameron")
     assert_table "people_table", 3, 4, ""
-    assert_table "people_table", 4, 4, "230"
+    assert_table "people_table", 4, 4, ""
     assert_table "people_table", 5, 4, ""
-    assert_table "people_table", 6, 4, "341"
+    assert_table "people_table", 6, 4, ""
+    assert_table "people_table", 7, 4, ""
+    
+    assert_table "people_table", 2, 5, "202"
+    assert_table "people_table", 3, 5, "340"
+    assert_table "people_table", 4, 5, ""
+    assert_table "people_table", 5, 5, "230"
+    assert_table "people_table", 6, 5, ""
+    assert_table "people_table", 7, 5, "341"
     
     assert has_checked_field?("person_member_#{molly.id}")
     assert has_checked_field?("person_member_#{weaver.id}")
@@ -55,11 +55,11 @@ class PeopleTest < AcceptanceTest
     
     fill_in_inline "#person_#{alice.id}_name", :with => "A Penn"
     visit "/admin/people"
-    assert_table("people_table", 4, 1, /^A Penn/)
+    assert_table("people_table", 5, 2, "A Penn")
     
     fill_in_inline "#person_#{weaver.id}_team_name", :with => "River City Bicycles"
     visit "/admin/people"
-    assert_table("people_table", 6, 2, /^River City Bicycles/)
+    assert_table("people_table", 7, 3, "River City Bicycles")
     
     click_link "#{molly.id}_results"
     assert_match(/Admin: Results: Molly Cameron/, find("title").text)
@@ -131,8 +131,8 @@ class PeopleTest < AcceptanceTest
     fill_in "name", :with => "a"
     press_enter "name"
     
-    assert_table("people_table", 1, 1, /^Molly Cameron/)
-    assert_table("people_table", 2, 1, /^Mark Matson/)
+    assert_table("people_table", 2, 2, "Molly Cameron")
+    assert_table("people_table", 3, 2, "Mark Matson")
     
     molly = Person.find_by_name("Molly Cameron")
     matson = Person.find_by_name("Mark Matson")
@@ -147,8 +147,8 @@ class PeopleTest < AcceptanceTest
 
     visit "/admin/people"
     press_enter "name"
-    assert_table("people_table", 1, 1, /^Molly Cameron/)
-    assert_table("people_table", 2, 1, /^Mark Matson/)
+    assert_table("people_table", 2, 2, "Molly Cameron")
+    assert_table("people_table", 3, 2, "Mark Matson")
 
     fill_in_inline "#person_#{matson.id}_name", :with => "Molly Cameron"
     find(".ui-dialog-buttonset button:first-child").click

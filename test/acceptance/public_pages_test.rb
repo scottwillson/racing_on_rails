@@ -66,9 +66,9 @@ class PublicPagesTest < AcceptanceTest
       wait_for "table.event_results a"
     end
     click_link "Pennington"
-    assert_table "person_results_table", 1, 0, "2"
-    assert_table "person_results_table", 1, 1, "Kings Valley Road Race"
-    assert_table "person_results_table", 1, 2, "Senior Women 1/2/3"
+    assert_table "person_results_table", 2, 1, "2"
+    assert_table "person_results_table", 2, 2, "Kings Valley Road Race"
+    assert_table "person_results_table", 2, 3, "Senior Women 1/2/3"
 
     visit "/people/#{alice.to_param}/2002"
     click_link "Jack Frost"

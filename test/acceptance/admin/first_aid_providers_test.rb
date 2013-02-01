@@ -17,9 +17,9 @@ class FirstAidProvidersTest < AcceptanceTest
 
       visit "/admin/first_aid_providers"
 
-      assert_table "events_table", 1, 3, /^Copperopolis/
-      assert_table "events_table", 1, 4, /^Brad Ross/
-      assert_table "events_table", 2, 3, /^Giro di SF/
+      assert_table "events_table", 2, 4, "Copperopolis"
+      assert_table "events_table", 2, 5, "Brad Ross"
+      assert_table "events_table", 3, 4, "Giro di SF"
       assert !has_checked_field?("past_events")
 
       find(:xpath, "//table[@id='events_table']//tr[2]//td[@class='name']//div[@class='record']//div[@class='editable']").click
@@ -29,11 +29,11 @@ class FirstAidProvidersTest < AcceptanceTest
       end
 
       visit "/admin/first_aid_providers"
-      assert_table "events_table", 1, 0, /^Megan Weaver/
+      assert_table "events_table", 2, 1, "Megan Weaver"
 
       if Time.zone.today.month > 1
         find("#past_events").click
-        assert_table "events_table", 1, 3, /^San Ardo/
+        assert_table "events_table", 2, 4, "San Ardo"
         assert has_checked_field?("past_events")
 
         find("#past_events").click
@@ -42,21 +42,21 @@ class FirstAidProvidersTest < AcceptanceTest
       end
 
       assert !has_checked_field?("past_events")
-      assert_table "events_table", 1, 3, /^Copperopolis/
-      assert_table "events_table", 2, 3, /^Giro di SF/
+      assert_table "events_table", 2, 4, "Copperopolis"
+      assert_table "events_table", 3, 4, "Giro di SF"
 
       # Table already sorted by date ascending, so click doesn't change order
       find(:xpath, "//th[@class='date']//a").click
-      assert_table "events_table", 1, 3, /^Copperopolis/
-      assert_table "events_table", 2, 3, /^Giro di SF/
+      assert_table "events_table", 2, 4, "Copperopolis"
+      assert_table "events_table", 3, 4, "Giro di SF"
 
       find(:xpath, "//th[@class='date']//a").click
-      assert_table "events_table", 1, 3, /^Berkeley Hills/
-      assert_table "events_table", 2, 3, /^Snelling/
+      assert_table "events_table", 2, 4, "Berkeley Hills"
+      assert_table "events_table", 3, 4, "Snelling"
 
       find(:xpath, "//th[@class='date']//a").click
-      assert_table "events_table", 1, 3, /^Copperopolis/
-      assert_table "events_table", 2, 3, /^Giro di SF/
+      assert_table "events_table", 2, 4, "Copperopolis"
+      assert_table "events_table", 3, 4, "Giro di SF"
     end  
   end
 end
