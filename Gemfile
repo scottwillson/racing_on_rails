@@ -49,12 +49,12 @@ group :test do
   gem "mocha", :require => false
   gem "sqlite3"
   gem "timecop"
-  gem "minitest", "3.5.0"
+  gem "minitest"
+  gem "turn"
 end
 
 group :acceptance do
   gem "capybara"
-  gem "xpath"
   gem "database_cleaner"
   gem "factory_girl"
   gem "factory_girl_rails"
