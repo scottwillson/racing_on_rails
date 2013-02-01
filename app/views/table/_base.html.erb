@@ -1,17 +1,21 @@
 <div class="table_container<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
   <%- if caption_visible %><div class="caption"><%= caption %></div><% end -%>
-  <table cellspacing="0" class="base<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}_table'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
+  <table class="base<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}_table'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
     <%- if insert_header -%>
-    <tr>
-      <% columns.times do -%><th>&nbsp;</th><%- end -%>
-    </tr>
+    <thead>
+      <tr>
+        <% columns.times do -%><th>&nbsp;</th><%- end -%>
+      </tr>
+    </thead>
     <%- end -%>
+    <tbody>
 <%= body -%>
     <%- if body.blank? || collection.try(:empty?) -%>
-    <tr>
-      <td class="empty">None</td>
-    </tr>
+      <tr>
+        <td class="empty">None</td>
+      </tr>
     <%- end -%>
+    </tbody>
   </table>
   <%= link_to(image_tag("icons/add.png"), :url => { :action => new_action }, :html => { :class => "image" }, :remote => true) if new_action -%>
 </div>
