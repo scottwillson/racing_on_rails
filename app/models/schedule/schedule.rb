@@ -52,7 +52,7 @@ module Schedule
       date = events.map(&:date).min
       logger.debug "Delete all events after #{date}"
       # Avoid lock version errors by destroying child events first
-      SingleDayEvent.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
+      Event.destroy_all ["parent_id is null and date >= ? and events.id not in (select event_id from races)", date]
       Event.destroy_all ["date >= ? and events.id not in (select event_id from races)", date]
     end
 
