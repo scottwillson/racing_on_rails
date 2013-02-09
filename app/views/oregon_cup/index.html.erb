@@ -15,11 +15,6 @@
   end
 end -%>
 
-<div>
-  <p>The Oregon Cup is a year-long points series for senior men.</p>
-  <p>Only the High Desert Road Race counts for the Oregon Cup not the omnium.</p>
-</div>
-
 <% unless @oregon_cup.new_record? %>
 <div class="updatedon">Updated <%= @oregon_cup.updated_at.to_formatted_s(:long) %></div>
 <% end %>  
@@ -49,6 +44,7 @@ end -%>
     </td>
     <td width="24">&nbsp;</td>
     <td valign="top" width="50%">
+      <p>The Oregon Cup is a year-long points series for senior men.</p>
       <%= render "races" %>
       <table class="base">
         <tr>
