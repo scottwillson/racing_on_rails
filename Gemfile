@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "~>3.2"
+gem "rails", ">=3.2.12"
 
 gem "fastercsv", :platforms => :ruby_18
 gem "oj"
@@ -31,6 +31,8 @@ gem 'therubyracer', "~> 0.10.2"
 gem "libv8"
 gem "activemerchant"
 gem "registration_engine", :path => "lib/registration_engine"
+# Security fix
+gem "json", ">= 1.7.7"
 
 group :assets do
   gem "sass-rails",   "~> 3.2"
