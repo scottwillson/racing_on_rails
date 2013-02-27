@@ -50,6 +50,16 @@ class RacingAssociationTest < ActiveSupport::TestCase
     end
   end
   
+  def test_effective_year_range
+    Timecop.freeze(Time.zone.local(2020, 1, 1)) do
+      assert_equal(
+        Time.zone.local(2020, 1, 1).beginning_of_year.to_date..Time.zone.local(2020, 1, 1).end_of_year.to_date, 
+        RacingAssociation.current.effective_year_range, 
+        "effective_year_range for January 2020"
+      )
+    end
+  end
+  
   def test_next_year
     Timecop.freeze(Time.zone.local(2020, 1, 1)) do
       assert_equal 2021, RacingAssociation.current.next_year, "next_year for January 2020"
