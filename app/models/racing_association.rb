@@ -99,7 +99,6 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def effective_year_range
-    puts RacingAssociation.current.effective_today.beginning_of_year.class
     RacingAssociation.current.effective_today.beginning_of_year..RacingAssociation.current.effective_today.end_of_year
   end
   
