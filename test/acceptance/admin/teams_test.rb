@@ -21,7 +21,7 @@ class TeamsTest < AcceptanceTest
     visit "/admin/teams"
     assert_page_has_content "Enter part of a team's name"
     fill_in "name", :with => "e"
-    press_enter "name"
+    press_return "name"
 
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")
@@ -52,7 +52,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "vagen"
-    press_enter "name"
+    press_return "name"
 
     assert_table("teams_table", 2, 2, "SpeedVagen")
 
@@ -80,7 +80,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "a"
-    press_enter "name"
+    press_return "name"
     
     find("#team_#{kona.id}").drag_to(find("#team_#{vanilla.id}_row"))
     assert_page_has_content "Merged Kona into Vanilla"
@@ -89,7 +89,7 @@ class TeamsTest < AcceptanceTest
     
     visit "/admin/teams"
     fill_in "name", :with => "e"
-    press_enter "name"
+    press_return "name"
 
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")
@@ -108,7 +108,7 @@ class TeamsTest < AcceptanceTest
 
     visit "/admin/teams"
     fill_in "name", :with => "e"
-    press_enter "name"
+    press_return "name"
     
     assert_table("teams_table", 2, 2, "Chocolate")
     assert_table("teams_table", 3, 2, "Gentle Lovers")

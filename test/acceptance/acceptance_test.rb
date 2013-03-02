@@ -157,18 +157,35 @@ class AcceptanceTest < ActiveSupport::TestCase
     find(locator).click
     within "form.editor_field" do
       fill_in "value", options
-      press_enter "value"
+      press_return "value"
     end
   end
 
-  def press_enter(field)
+  def press_return(field)
+    press :return, field
+  end
+
+  def press(key, field)
     case Capybara.current_driver
     when :firefox, :chrome
-      find_field(field).native.send_keys(:enter)
+      find_field(field).native.send_keys(key)
     when :webkit
-      find_field(field).base.invoke('keypress', false, false, false, false, 13, 0);
+      find_field(field).base.invoke('keypress', false, false, false, false, key_code(key), 0);
     else
-      find_field(field).native.send_keys(:enter)
+      find_field(field).native.send_keys(key)
+    end
+  end
+  
+  def key_code(key)
+    case key
+    when :enter
+      13
+    when :return
+      10
+    when :tab
+      9
+    else
+      raise "No code for #{key}"
     end
   end
   

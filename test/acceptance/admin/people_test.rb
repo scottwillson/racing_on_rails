@@ -20,7 +20,7 @@ class PeopleTest < AcceptanceTest
     visit '/admin/people'
     assert_page_has_content "Enter part of a person's name"
     fill_in "name", :with => "a"
-    press_enter "name"
+    press_return "name"
     
     assert_table("people_table", 2, 2, "Molly Cameron")
     assert_table("people_table", 3, 2, "Mark Matson")
@@ -106,12 +106,12 @@ class PeopleTest < AcceptanceTest
     assert_page_has_no_content 'has no parent'
     
     fill_in "name", :with => "Brad"
-    press_enter "name"
+    press_return "name"
     assert_page_has_no_content "Ross"
 
     visit "/admin/people"
     fill_in "name", :with => "a"
-    press_enter "name"
+    press_return "name"
     
     find("#person_#{alice.id}").drag_to(find("#person_#{molly.id}"))
     wait_for_page_content "Merged A Penn into Molly Cameron"
@@ -129,7 +129,7 @@ class PeopleTest < AcceptanceTest
 
     visit "/admin/people"
     fill_in "name", :with => "a"
-    press_enter "name"
+    press_return "name"
     
     assert_table("people_table", 2, 2, "Molly Cameron")
     assert_table("people_table", 3, 2, "Mark Matson")
@@ -146,7 +146,7 @@ class PeopleTest < AcceptanceTest
     assert !molly.aliases(true).map(&:name).include?("Mark Matson"), "Should not add Matson alias"
 
     visit "/admin/people"
-    press_enter "name"
+    press_return "name"
     assert_table("people_table", 2, 2, "Molly Cameron")
     assert_table("people_table", 3, 2, "Mark Matson")
 
@@ -186,7 +186,7 @@ class PeopleTest < AcceptanceTest
     visit '/admin/people'
 
     fill_in "name", :with => "tonkin"
-    press_enter "name"
+    press_return "name"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12
@@ -207,7 +207,7 @@ class PeopleTest < AcceptanceTest
     wait_for_download "scoring_sheet.xls"
 
     fill_in 'name', :with => 'tonkin'
-    press_enter "name"
+    press_return "name"
     assert_page_has_content 'Erik Tonkin'
     assert_page_has_content 'Kona'
     if Time.zone.today.month < 12
