@@ -80,7 +80,7 @@ class ResultsController < ApplicationController
       where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year)
       
     respond_to do |format|
-      format.html
+      format.html {render :layout => !request.xhr?}
       format.json { render :json => (@event_results + @competition_results).to_json }
       format.xml { render :xml => (@event_results + @competition_results).to_xml }
     end
