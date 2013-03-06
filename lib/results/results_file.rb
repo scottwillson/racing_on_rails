@@ -266,13 +266,11 @@ module Results
 
         if result.place.to_i > 0
           result.place = result.place.to_i
-          if RacingAssociation.current.short_name == "MBRA"
             if race?(row) && result.place != 1
               self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
             # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
             elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
               self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
-            end
           end
         elsif result.place.present?
           result.place = result.place.upcase rescue result.place
