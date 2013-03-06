@@ -172,6 +172,12 @@ class Admin::EventsController < Admin::AdminController
       flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
     end
     
+    unless results_file.import_warnings.empty?
+      flash[:notice] = flash[:notice] + "Import warnings: "
+      results_file.import_warnings.each do |warning|
+        flash[:notice] = flash[:notice] + warning.to_s + " "
+      end
+    end
     redirect_to(edit_admin_event_path(event))
   end
   
