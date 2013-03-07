@@ -435,6 +435,22 @@ module Results
       assert_equal ["bogus_column_name"], results_file.custom_columns.to_a, "Custom columns"
     end
 
+    def test_non_sequential_results
+      event = SingleDayEvent.create!
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/non_sequential_results.xls", __FILE__)), event)
+      results_file.import
+      assert results_file.import_warnings.present?, "Should have import warnings for non-sequential results"
+
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/no_first_place_finisher.xls", __FILE__)), event)
+      results_file.import
+      assert results_file.import_warnings.present?, "Should have import warnings for no first place finisher"
+
+      RacingAssociation.current.usac_results_format = true
+      results_file = ResultsFile.new(File.new(File.expand_path("../../../files/results/non_sequential_usac_results.xls", __FILE__)), event)
+      results_file.import
+      assert results_file.import_warnings.present?, "Should have import warnings for non-sequential usac results"
+    end
+
     def test_times
       FactoryGirl.create(:discipline, :name => "Track")
       event = SingleDayEvent.create(:discipline => 'Track')
