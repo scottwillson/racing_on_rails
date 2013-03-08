@@ -172,7 +172,7 @@ class Admin::EventsController < Admin::AdminController
       flash[:notice] = flash[:notice] + "(If import file is USAC format, you should expect errors on Organization, Event Year, Event #, Race Date and Discipline.)" if RacingAssociation.current.usac_results_format?
     end
     
-    unless results_file.import_warnings.empty?
+    if results_file.import_warnings.present?
       flash[:notice] = flash[:notice] + "Import warnings: "
       results_file.import_warnings.each do |warning|
         flash[:notice] = flash[:notice] + warning.to_s + " "
@@ -183,7 +183,7 @@ class Admin::EventsController < Admin::AdminController
   
   # Upload new Excel Schedule
   # See Schedule::Schedule.import for details
-  # Redirects to schedule index if succesful
+  # Redirects to schedule index if successful
   # === Params
   # * schedule_file
   # === Flash
