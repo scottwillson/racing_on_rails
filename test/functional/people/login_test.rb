@@ -36,6 +36,7 @@ class LoginTest < ActionController::TestCase
            :login => "racer@example.com", 
            :password => "secret", 
            :password_confirmation => "secret",
+           :email => "racer@example.com"
           },
          :id => person.perishable_token
     assert_redirected_to edit_person_path(person)
