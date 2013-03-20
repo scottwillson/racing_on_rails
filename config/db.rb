@@ -15,7 +15,7 @@ namespace :db do
     abcs = ActiveRecord::Base.configurations
     run("mkdir -p db")
     run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} -h #{abcs["production"]["host"]} --compress --ignore-table=#{abcs["production"]["database"]}.posts #{abcs["production"]["database"]} > db/production.sql")
-     run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} -h #{abcs["production"]["host"]} --compress --no-data #{abcs["production"]["database"]} posts >> db/production.sql")
+    run("mysqldump -u #{abcs["production"]["username"]} -p#{abcs["production"]["password"]} -h #{abcs["production"]["host"]} --compress --no-data #{abcs["production"]["database"]} posts >> db/production.sql")
     run("rm -f db/production.sql.bz2")
     run("bzip2 db/production.sql")
   end
