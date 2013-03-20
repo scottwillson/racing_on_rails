@@ -59,12 +59,11 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def assert_table(table_id, row, column, expected)
-    within_table(table_id) do
-      within find(:xpath, "//tr[#{row}]/td[#{column}]") do
-        assert page.has_content?(expected), -> { 
-          "Expected '#{expected}' in row #{row} column #{column} of table #{table_id} in table ID #{table_id}, but was #{text}" 
-        }
-      end
+    assert page.has_table?(table_id), "Expected table with id '#{table_id}'"
+    within find(:xpath, "//table[@id='#{table_id}']//tr[#{row}]/td[#{column}]") do
+      assert page.has_content?(expected), -> { 
+        "Expected '#{expected}' in row #{row} column #{column} of table #{table_id} in table ID #{table_id}, but was #{text}" 
+      }
     end
   end
 
