@@ -50,5 +50,13 @@ module RacingOnRails
     if File.exists?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
-  end  
+    
+    def exception_notifier
+      if Rails.env.production?
+        Airbrake
+      else
+        RacingOnRails::ExceptionNotifier
+      end
+    end
+  end
 end

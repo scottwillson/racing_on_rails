@@ -21,10 +21,10 @@ set :rvm_ruby_string, "1.9.3"
 
 set :scm, "git"
 set :repository, "git@github.com:scottwillson/racing_on_rails.git"
-set :branch, "master"
+set :branch, "pir-team-pass"
 
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
-set :site_local_repository_branch, "registration_engine"
+set :site_local_repository_branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
@@ -46,7 +46,7 @@ namespace :deploy do
 
   task :registration_engine do
     run "rm -rf #{release_path}/lib/registration_engine"
-    run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+    run "git clone git@github.com:scottwillson/registration_engine.git -b pir-team-pass #{release_path}/lib/registration_engine"
   end
   
   task :symlinks do

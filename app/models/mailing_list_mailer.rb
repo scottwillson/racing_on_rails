@@ -81,7 +81,7 @@ class MailingListMailer < ActionMailer::Base
         if post && post.errors.any?
           Rails.logger.error post.errors.full_messages
         end
-        Airbrake.notify(save_error) if Rails.env.production?
+        RacingOnRails::Application.exception_notifier.notify(save_error)
         raise
       end
       post
