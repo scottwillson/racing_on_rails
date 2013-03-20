@@ -578,6 +578,23 @@ class EventTest < ActiveSupport::TestCase
   def test_propagate_races
     FactoryGirl.create(:event).propagate_races
   end
+  
+  def test_email_bang
+    event = Event.new
+    assert_raise(Event::BlankEmail) { event.email! }
+    
+    event = Event.new(:promoter => Person.new)
+    assert_raise(Event::BlankEmail) { event.email! }
+    
+    event = Event.new(:email => "contact@example.com")
+    assert_equal "contact@example.com", event.email!
+    
+    event = Event.new(:promoter => Person.new(:email => "promoter@example.com"))
+    assert_equal "promoter@example.com", event.email!
+    
+    event = Event.new(:email => "contact@example.com", :promoter => Person.new(:email => "promoter@example.com"))
+    assert_equal "promoter@example.com", event.email!
+  end
 
   private
   

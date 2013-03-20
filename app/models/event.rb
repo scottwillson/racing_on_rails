@@ -448,6 +448,17 @@ class Event < ActiveRecord::Base
       self.team = nil
     end
   end
+  
+  # Find valid email—either promoter's email or event email. If all are blank, raise exception.
+  def email!
+    if promoter.try(:email).present?
+      promoter.email
+    elsif email.present?
+      email
+    else
+      raise BlankEmail, "Event #{name} has no email"
+    end
+  end
 
   def association?
     number_issuer.try(:association?)
@@ -543,4 +554,6 @@ class Event < ActiveRecord::Base
   def to_s
     "<#{self.class} #{id} #{discipline} #{name} #{date}>"
   end
+  
+  class BlankEmail < StandardError; end
 end
