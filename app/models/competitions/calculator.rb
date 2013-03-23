@@ -26,7 +26,8 @@ module Competitions
     # +team_size+ is calculated here, too, though it could be passed in.
     Struct.new(
       "CalculatorResult", 
-      :date, :event_id, :field_size, :participant_id, :id, :member_from, :member_to, :multiplier, :place, :points, :race_id, :scores, :team_size, :tied, :year
+      :bar, :multiplier, :category_id, :date, :date_of_birth, :event_id, :field_size, :id, :ironman,
+      :member_from, :member_to, :participant_id, :place, :points, :race_id, :sanctioned_by, :scores, :team_size, :tied, :type, :year
     )
     
     # Ties a source result to a competition result.
