@@ -97,8 +97,14 @@ class Competition < Event
   end
   
   def create_races
-    category = Category.find_or_create_by_name(friendly_name)
-    self.races.create(:category => category)
+    category_names.each do |name|
+      category = Category.find_or_create_by_name(name)
+      self.races.create(:category => category)
+    end
+  end
+  
+  def category_names
+    [ friendly_name ]
   end
   
   # Override in superclass for Competitions like OBRA OverallBAR
