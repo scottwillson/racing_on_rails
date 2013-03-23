@@ -103,10 +103,6 @@ class Competition < Event
     end
   end
   
-  def category_names
-    [ friendly_name ]
-  end
-  
   # Override in superclass for Competitions like OBRA OverallBAR
   def create_children
     true
@@ -215,9 +211,15 @@ class Competition < Event
     end
   end
   
+  # Only consider results from source_events. Default to false: use all events in year.
+  def source_events?
+    false
+  end
+  
   def maximum_events(race)
     nil
   end
+  
   
   def preliminary?(result)
     false
