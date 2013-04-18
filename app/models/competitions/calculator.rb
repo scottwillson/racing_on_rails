@@ -12,6 +12,8 @@ module Competitions
     # TODO Team size should be calculated before any filtering
     # FIXME Only calc team sizes if we care about team size
 
+    UNLIMITED = Float::INFINITY
+
     # Use simple datatypes with no behavior. Hash doesn't have method-like accessors, which means we
     # can't use symbol to proc. E.g., results.sort_by(&:points). OpenStruct is slow. Full-blown classes 
     # are overkill. Could add methods to Struct using do…end, ActiveModels or maybe subclass Hash but Struct 
@@ -40,8 +42,8 @@ module Competitions
     # * dnf: true/false. Count DNFs? Default to true.
     # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
     # * members_only: true/false. Default to true. Only members are counted.
-    # * multiple_results_per_race: true/false. Default to false. Is it OK for a participant to have multiple results for 
-    #   the same event? Used by the Team BAR, as a team could have several results in the same race.
+    # * results_per_event: integer. Default to 1. How many results in the same event are counted for a participant?
+    #   Used for team competitions. Team is the participant.
     # * point_schedule: 0-based Array of points for result place. Defaults to nil (all results receive one point). 
     #                    First place gets points at point_schedule[0].
     # * use_source_result_points: true/false. Default to false. Don't calculate points. Use points from scoring result.
@@ -58,13 +60,13 @@ module Competitions
       dnf                       = options[:dnf] || false
       field_size_bonus          = options[:field_size_bonus] || false
       members_only              = options.has_key?(:members_only) ? options[:members_only] : true
-      multiple_results_per_race = options[:multiple_results_per_race] || false
+      results_per_event         = options.has_key?(:results_per_event) ? options[:results_per_event] : 1
       point_schedule            = options[:point_schedule]
       use_source_result_points  = options[:use_source_result_points] || false
 
       struct_results = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, use_source_result_points)
-      eligible_results = select_eligible(results_with_team_sizes, multiple_results_per_race, members_only)
+      eligible_results = select_eligible(results_with_team_sizes, results_per_event, members_only)
 
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
@@ -105,22 +107,28 @@ module Competitions
     # Apply rules. Example: DNS or numeric place? Person is a member for this year?
     # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
     # the calling Competition when it selected results from the database.
-    # +multiple_results_per_race+ if false, only keep best result for participant.
-    def self.select_eligible(results, multiple_results_per_race = false, members_only = true)
+    # Only keep best +results_per_event+ results for participant (person or team).
+    def self.select_eligible(results, results_per_event = 1, members_only = true)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
 
       if members_only
         results = results.select { |r| member_in_year?(r) }
       end
 
-      # Only keep the best result for each race
-      if !multiple_results_per_race
+      case results_per_event
+      when 1
         results.group_by { |r| [ r.participant_id, r.race_id ] }.
         map do |key, r|
           r.min_by { |r2| numeric_place(r2) }
         end
-      else
+      when UNLIMITED
         results
+      else
+        results.group_by { |r| [ r.participant_id, r.event_id ] }.
+        map do |key, r|
+          r.sort_by { |r2| numeric_place(r2) }[0, results_per_event]
+        end.
+        flatten
       end
     end
 
@@ -280,7 +288,7 @@ module Competitions
     end
     
     def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :members_only, :multiple_results_per_race, :point_schedule, :use_source_result_points ]
+      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :point_schedule, :use_source_result_points ]
     end
     
     def self.assert_valid_options(options)

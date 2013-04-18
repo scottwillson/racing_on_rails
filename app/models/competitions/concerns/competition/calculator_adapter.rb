@@ -14,6 +14,7 @@ module Concerns
             dnf: dnf?,
             field_size_bonus: field_size_bonus?,
             point_schedule: point_schedule, 
+            results_per_event: results_per_event,
             use_source_result_points: use_source_result_points?
           )
 

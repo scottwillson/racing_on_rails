@@ -6,19 +6,6 @@ class TeamBar < Competition
 
   after_create :set_parent
 
-  # Rebuild results
-  # Override superclass for now. Superclass method duplicates calculations aldready done by Calculator.
-  def calculate!
-    races.each do |race|
-      results = source_results_with_benchmark(race)
-      calculated_results = Competitions::Calculator.calculate(results, use_source_result_points: true, multiple_results_per_race: true)
-      create_competition_results_for(calculated_results, race)
-    end
-    
-    after_calculate
-    save!
-  end
-
   def source_results(race)
     # Join team with outer join to calculate team size correctly
     results = Result.connection.select_all(
@@ -96,6 +83,10 @@ class TeamBar < Competition
       self.parent = OverallBar.find_or_create_for_year(year)
       save!
     end
+  end
+
+  def results_per_event
+    Competitions::Calculator::UNLIMITED
   end
 
   def default_discipline
