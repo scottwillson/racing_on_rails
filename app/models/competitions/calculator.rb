@@ -39,6 +39,7 @@ module Competitions
     # * break_ties: true/false. Default to false. Apply tie-breaking rules to results with same points.
     # * dnf: true/false. Count DNFs? Default to true.
     # * field_size_bonus: true/false. Default to false. Give 1.5 X points for fields of 75 or more
+    # * members_only: true/false. Default to true. Only members are counted.
     # * multiple_results_per_race: true/false. Default to false. Is it OK for a participant to have multiple results for 
     #   the same event? Used by the Team BAR, as a team could have several results in the same race.
     # * point_schedule: 0-based Array of points for result place. Defaults to nil (all results receive one point). 
@@ -56,13 +57,14 @@ module Competitions
       break_ties                = options[:break_ties] || false
       dnf                       = options[:dnf] || false
       field_size_bonus          = options[:field_size_bonus] || false
+      members_only              = options.has_key?(:members_only) ? options[:members_only] : true
       multiple_results_per_race = options[:multiple_results_per_race] || false
       point_schedule            = options[:point_schedule]
       use_source_result_points  = options[:use_source_result_points] || false
 
       struct_results = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, use_source_result_points)
-      eligible_results = select_eligible(results_with_team_sizes, multiple_results_per_race)
+      eligible_results = select_eligible(results_with_team_sizes, multiple_results_per_race, members_only)
 
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
@@ -104,9 +106,12 @@ module Competitions
     # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
     # the calling Competition when it selected results from the database.
     # +multiple_results_per_race+ if false, only keep best result for participant.
-    def self.select_eligible(results, multiple_results_per_race = false)
+    def self.select_eligible(results, multiple_results_per_race = false, members_only = true)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
-      results = results.select { |r| member_in_year?(r) }
+
+      if members_only
+        results = results.select { |r| member_in_year?(r) }
+      end
 
       # Only keep the best result for each race
       if !multiple_results_per_race
@@ -275,7 +280,7 @@ module Competitions
     end
     
     def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :multiple_results_per_race, :point_schedule, :use_source_result_points ]
+      [ :break_ties, :dnf, :field_size_bonus, :members_only, :multiple_results_per_race, :point_schedule, :use_source_result_points ]
     end
     
     def self.assert_valid_options(options)
