@@ -70,12 +70,10 @@ module Competitions
 
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
-      competition_results = map_to_results(scores)
+      scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
+      competition_results = map_to_results(scores_with_points)
       
-      # Only keep results that earned points and belong to someone
-      results_with_points = competition_results.reject { |r| r.points.nil? || r.points <= 0.0 || r.participant_id.nil? }
-      
-      place results_with_points, break_ties
+      place competition_results, break_ties
     end
     
     # Create Struct::CalculatorResults from Hashes
