@@ -245,6 +245,14 @@ class Competition < Event
     false
   end
 
+  def results_per_event
+    1
+  end
+
+  def use_source_result_points?
+    false
+  end
+
   # This method does nothing, and always returns true. Competitions don't participate in event notification.
   def disable_notification!
     true

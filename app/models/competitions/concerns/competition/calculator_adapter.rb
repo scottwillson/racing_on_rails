@@ -89,10 +89,6 @@ module Concerns
           :points => points
         )
       end
-    
-      def use_source_result_points?
-        false
-      end
     end
   end
 end

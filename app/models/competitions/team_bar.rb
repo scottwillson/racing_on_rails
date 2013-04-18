@@ -89,6 +89,10 @@ class TeamBar < Competition
     Competitions::Calculator::UNLIMITED
   end
 
+  def use_source_result_points?
+    true
+  end
+
   def default_discipline
     "Team"
   end
