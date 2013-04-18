@@ -53,12 +53,13 @@ class TeamBar < Competition
   def create_competition_results_for(results, race)
     results.each do |result|
       competition_result = Result.create!(
-        :place              => result.place,
-        :team_id            => result.participant_id,
-        :event              => self,
-        :race               => race,
-        :competition_result => true,
-        :points             => result.points
+        :place                   => result.place,
+        :team_id                 => result.participant_id,
+        :event                   => self,
+        :race                    => race,
+        :competition_result      => true,
+        :team_competition_result => true,
+        :points                  => result.points
       )
        
       result.scores.each do |score|
