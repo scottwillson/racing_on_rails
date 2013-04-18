@@ -28,6 +28,8 @@ class Competition < Event
     Ironman
     OregonCup
     OregonJuniorCyclocrossSeries
+    OregonWomensPrestigeSeries
+    OregonWomensPrestigeTeamSeries
     OverallBar
     TaborOverall
     TeamBar
