@@ -26,12 +26,16 @@ class OregonWomensPrestigeTeamSeries < Competition
     true
   end
 
-  def results_per_event
+  def results_per_race
     3
   end
 
   def use_source_result_points?
     false
+  end
+  
+  def team?
+    true
   end
 
   # source_results must be in person, place ascending order
@@ -80,25 +84,5 @@ class OregonWomensPrestigeTeamSeries < Competition
   def category_ids_for(race)
     categories = Category.where("name in (?)", OregonWomensPrestigeSeries.find_for_year.category_names).all
     categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
-  end
-
-  def create_competition_results_for(results, race)
-    results.each do |result|
-      competition_result = Result.create!(
-        :place              => result.place,
-        :team_id            => result.participant_id,
-        :event              => self,
-        :race               => race,
-        :competition_result => true,
-        :team_competition_result => true,
-        :points             => result.points
-      )
-       
-      result.scores.each do |score|
-        create_score competition_result, score.source_result_id, score.points
-      end
-    end
-
-    true
   end
 end

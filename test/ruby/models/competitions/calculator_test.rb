@@ -2,6 +2,7 @@ require_relative "../../test_case"
 require_relative "../../../../app/models/competitions/calculator"
 
 # :stopdoc:
+# TODO remove noisy member setup
 class Competitions::CalculatorTest < Ruby::TestCase
   def test_calculate_with_no_source_results
     assert_equal [], Competitions::Calculator.calculate([])
@@ -70,7 +71,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       ])
     ]
     actual = Competitions::Calculator.calculate(
-      source_results, point_schedule: [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], results_per_event: 3, members_only: false
+      source_results, point_schedule: [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], results_per_event: 3, results_per_race: Competitions::Calculator::UNLIMITED, members_only: false
     )
     assert_equal_results expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
@@ -135,30 +136,69 @@ class Competitions::CalculatorTest < Ruby::TestCase
     ]
     expected = [ result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year)]
     actual = Competitions::Calculator.select_eligible(source_results)
-    assert_equal expected, actual
+    assert_equal_results expected, actual
   end
   
   def test_select_eligible_with_results_per_event
     source_results = [ 
-      result(id: 1, event_id: 1, race_id: 1, place: 1, member_from: Date.new(2012), "year" => Date.today.year),
-      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil, member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: "", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 4, event_id: 1, race_id: 1, participant_id: 1, place: "DQ", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "DNF", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 8, event_id: 1, race_id: 1, participant_id: 1, place: "13", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 9, event_id: 1, race_id: 1, participant_id: 1, place: "1", member_from: Date.new(2010), member_to: Date.new(2011), "year" => Date.today.year),
-      result(id: 10, event_id: 1, race_id: 1, participant_id: 1, place: "1", member_from: Date.new(Date.today.year + 1), member_to: Date.new(Date.today.year + 2), "year" => Date.today.year),
-      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
+      result(id: 1, event_id: 1, race_id: 1, place: 1),
+      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
+      result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: ""),
+      result(id: 4, event_id: 1, race_id: 1, participant_id: 1, place: "DQ"),
+      result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "DNF"),
+      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 8, event_id: 1, race_id: 1, participant_id: 1, place: "13"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
     ]
     expected = [
-      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6", member_from: Date.new(2012), member_to: end_of_year, year: Date.today.year),
-      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
-      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3", member_from: Date.new(2012), member_to: end_of_year, "year" => Date.today.year),
+      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
     ]
-    actual = Competitions::Calculator.select_eligible(source_results, 2)
-    assert_equal expected.sort_by(&:id), actual.sort_by(&:id)
+    actual = Competitions::Calculator.select_eligible(source_results, 2, Competitions::Calculator::UNLIMITED, false)
+    assert_equal_results expected, actual
+  end
+  
+  def test_select_eligible_with_results_per_race_1
+    source_results = [ 
+      result(id: 1, event_id: 1, race_id: 1, place: 1),
+      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
+      result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: ""),
+      result(id: 4, event_id: 1, race_id: 1, participant_id: 1, place: "DQ"),
+      result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "DNF"),
+      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 8, event_id: 1, race_id: 1, participant_id: 1, place: "13"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
+    ]
+    expected = [
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
+    ]
+    actual = Competitions::Calculator.select_eligible(source_results, 1, 1, false)
+    assert_equal_results expected, actual
+  end
+  
+  def test_select_eligible_with_results_per_race_2
+    source_results = [ 
+      result(id: 1, event_id: 1, race_id: 1, place: 1),
+      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: nil),
+      result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: ""),
+      result(id: 4, event_id: 1, race_id: 1, participant_id: 1, place: "DQ"),
+      result(id: 5, event_id: 1, race_id: 1, participant_id: 1, place: "DNF"),
+      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 8, event_id: 1, race_id: 1, participant_id: 1, place: "13"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
+    ]
+    expected = [
+      result(id: 7, event_id: 1, race_id: 1, participant_id: 1, place: "2"),
+      result(id: 6, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
+      result(id: 11, event_id: 1, race_id: 1, participant_id: 2, place: "3")
+    ]
+    actual = Competitions::Calculator.select_eligible(source_results, Competitions::Calculator::UNLIMITED, 2, false)
+    assert_equal_results expected, actual
   end
   
   def test_select_eligible_should_sort_choose_best_results
@@ -173,7 +213,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
       result(id: 3, event_id: 1, race_id: 1, participant_id: 1, place: "2")
     ]
-    actual = Competitions::Calculator.select_eligible(source_results, 2, false)
+    actual = Competitions::Calculator.select_eligible(source_results, 2, Competitions::Calculator::UNLIMITED, false)
     assert_equal expected.sort_by(&:id), actual.sort_by(&:id)
   end
 
@@ -473,24 +513,26 @@ class Competitions::CalculatorTest < Ruby::TestCase
     [ expected, actual ].each do |results|
       results.each { |result| result.scores.sort_by!(&:numeric_place) }
       results.sort_by!(&:participant_id)
+      results.sort_by!(&:place)
     end
+    
     unless expected == actual
       expected_message = pretty_to_string(expected)
       actual_message = pretty_to_string(actual)
-      flunk("Results not equal" + "\n" + expected_message + "\n" + actual_message)
+      flunk("Results not equal." + "\nExpected:\n" + expected_message + "Actual:\n" + actual_message)
     end
   end
   
   def pretty_to_string(results)
     message = ""
     results.each do |r|
-      message << r.points.to_s
+      message << "  Result place #{r.place} participant_id: #{r.participant_id} points: #{r.points}"
       message << "\n"
       r.scores.each do |s|
-        message << "#{s.numeric_place} => #{s.points}"
+        message << "    Score place: #{s.numeric_place} points: #{s.points}"
         message << "\n"
       end
-      message << "\n"
+      message << "\n" if r.scores.size > 0
     end
     message
   end

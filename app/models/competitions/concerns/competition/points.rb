@@ -4,7 +4,7 @@ module Concerns
       extend ActiveSupport::Concern
 
       def point_schedule
-        @point_schedule ||= []
+        @point_schedule || nil
       end
         
       def point_schedule=(value)
@@ -67,6 +67,10 @@ module Concerns
       end
         
       def double_points_for_last_event?
+        false
+      end
+      
+      def field_size_bonus?
         false
       end
 

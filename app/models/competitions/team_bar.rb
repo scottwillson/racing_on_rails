@@ -3,6 +3,7 @@
 class TeamBar < Competition
   include Concerns::Bar::Categories
   include Concerns::Bar::Discipline
+  include Concerns::Competition::CalculatorAdapter
 
   after_create :set_parent
 
@@ -47,38 +48,6 @@ class TeamBar < Competition
     results_with_tandem_teams_split
   end
 
-  # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules 
-  # and scoring, but . It also decorates the results with any display data (often denormalized)
-  # like people's names, teams, and points.
-  def create_competition_results_for(results, race)
-    results.each do |result|
-      competition_result = Result.create!(
-        :place                   => result.place,
-        :team_id                 => result.participant_id,
-        :event                   => self,
-        :race                    => race,
-        :competition_result      => true,
-        :team_competition_result => true,
-        :points                  => result.points
-      )
-       
-      result.scores.each do |score|
-        create_score competition_result, score.source_result_id, score.points
-      end
-    end
-
-    true
-  end
-
-  # This is always the 'best' result
-  def create_score(competition_result, source_result_id, points)
-    Score.create!(
-      :source_result_id => source_result_id, 
-      :competition_result_id => competition_result.id, 
-      :points => points
-    )
-  end
-
   def set_parent
     if parent.nil?
       self.parent = OverallBar.find_or_create_for_year(year)
@@ -86,11 +55,19 @@ class TeamBar < Competition
     end
   end
 
+  def results_per_race
+    Competition::UNLIMITED
+  end
+
   def results_per_event
-    Competitions::Calculator::UNLIMITED
+    Competition::UNLIMITED
   end
 
   def use_source_result_points?
+    true
+  end
+
+  def team?
     true
   end
 

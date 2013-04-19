@@ -34,6 +34,8 @@ class Competition < Event
     TaborOverall
     TeamBar
   }
+  
+  UNLIMITED = Float::INFINITY
 
   after_create  :create_races
   # return true from before_save callback or Competition won't save
@@ -226,6 +228,14 @@ class Competition < Event
   def preliminary?(result)
     false
   end
+  
+  def first_result_for_person?(source_result, competition_result)
+    competition_result.nil? || source_result.person_id != competition_result.person_id
+  end
+
+  def first_result_for_team?(source_result, competition_result)
+    competition_result.nil? || source_result.team_id != competition_result.team_id
+  end
 
   def break_ties?
     true
@@ -235,23 +245,24 @@ class Competition < Event
     false
   end
   
-  def first_result_for_person?(source_result, competition_result)
-    competition_result.nil? || source_result.person_id != competition_result.person_id
-  end
-
-  def first_result_for_team?(source_result, competition_result)
-    competition_result.nil? || source_result.team_id != competition_result.team_id
-  end
-  
   def requires_combined_results?
     false
   end
 
   def results_per_event
+    Competition::UNLIMITED
+  end
+
+  def results_per_race
     1
   end
 
   def use_source_result_points?
+    false
+  end
+  
+  # Team-based competition? False (default) implies it is person-based?
+  def team?
     false
   end
 

@@ -15,6 +15,7 @@ module Concerns
             field_size_bonus: field_size_bonus?,
             point_schedule: point_schedule, 
             results_per_event: results_per_event,
+            results_per_race: results_per_race,
             use_source_result_points: use_source_result_points?
           )
 
@@ -37,30 +38,21 @@ module Concerns
           results
         end
       end
-      
-      def point_schedule
-        nil
-      end
-      
-      def field_size_bonus?
-        false
-      end
 
       # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules 
       # and scoring. It also decorates the results with any display data (often denormalized)
       # like people's names, teams, and points.
       def create_competition_results_for(results, race)
-        team_ids = team_ids_by_person_id_hash(results)
-    
         results.each do |result|
           competition_result = ::Result.create!(
-            :place              => result.place,
-            :person_id          => result.participant_id, 
-            :team_id            => team_ids[result.participant_id],
-            :event              => self,
-            :race               => race,
-            :competition_result => true,
-            :points             => result.points
+            :place                   => result.place,
+            :person_id               => person_id_for_competition_result(result),
+            :team_id                 => team_id_for_competition_result(result, team_ids_by_person_id_hash(results)),
+            :event                   => self,
+            :race                    => race,
+            :competition_result      => true,
+            :team_competition_result => team?,
+            :points                  => result.points
           )
        
           result.scores.each do |score|
@@ -88,6 +80,22 @@ module Concerns
           :competition_result_id => competition_result.id, 
           :points => points
         )
+      end
+      
+      def person_id_for_competition_result(result)
+        if team?
+          nil
+        else
+          result.participant_id
+        end
+      end
+      
+      def team_id_for_competition_result(result, team_ids)
+        if team?
+          result.participant_id
+        else
+          team_ids[result.participant_id]
+        end
       end
     end
   end
