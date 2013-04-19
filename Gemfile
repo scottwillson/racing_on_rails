@@ -42,7 +42,7 @@ end
 
 group :development do
   gem "capistrano"
-  gem "capistrano-unicorn"
+  gem "capistrano-unicorn", :require => false
   gem "quiet_assets"
 end
 
@@ -70,7 +70,7 @@ end
 group :staging do
   gem "execjs"
   gem "rvm-capistrano"
-  gem "capistrano-unicorn"
+  gem "capistrano-unicorn", :require => false
 end
 
 group :production do

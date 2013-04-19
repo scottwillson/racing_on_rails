@@ -6,7 +6,6 @@ set :deploy_to, "/var/www/rails/#{application}"
 
 load 'deploy/assets'
 load "config/db"
-require 'bundler/capistrano'
 require "capistrano-unicorn"
 
 require "rvm/capistrano"
@@ -28,24 +27,30 @@ set :scm_auth_cache, true
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
-    if site_local_repository_branch
-      run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
-    else
-      run "git clone #{site_local_repository} #{release_path}/local"
-    end
-    run "chmod -R g+w #{release_path}/local"
-    run "ln -s #{release_path}/local/public #{release_path}/public/local"
+    puts ":local_code"
+    if application != "racing_on_rails"
+      if site_local_repository_branch
+        run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
+      else
+        run "git clone #{site_local_repository} #{release_path}/local"
+      end
+      run "chmod -R g+w #{release_path}/local"
+      run "ln -s #{release_path}/local/public #{release_path}/public/local"
 
-    run "if [ -e #{release_path}/local/config/unicorn/production.rb ]; then cp #{release_path}/local/config/unicorn/production.rb #{release_path}/config/unicorn/production.rb; fi"
+      run "if [ -e #{release_path}/local/config/unicorn/production.rb ]; then cp #{release_path}/local/config/unicorn/production.rb #{release_path}/config/unicorn/production.rb; fi"
+    end
   end
   
   task :registration_engine do
-    run "rm -rf #{release_path}/lib/registration_engine"
-    run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+    puts ":registration_engine"
+    if application == "obra" || application == "nabra"
+      run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+    end
   end
   
   task :symlinks do
     run <<-CMD
+      mkdir #{latest_release}/tmp &&
       rm -rf #{latest_release}/tmp/pids &&
       ln -s #{shared_path}/pids #{latest_release}/tmp/pids &&
       rm -rf #{latest_release}/tmp/sockets &&
@@ -67,21 +72,13 @@ namespace :deploy do
       run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{previous_release}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
     end
   end
-
-  task :start, :roles => :app do
-    top.unicorn.start
-  end
-
-  task :stop, :roles => :app do
-    top.unicorn.graceful_stop
-  end
 end
 
-if application == "obra" || application == "nabra"
-  before "deploy:assets:precompile", "deploy:local_code", "deploy:registration_engine"
-elsif application != "racing_on_rails"
-  before "deploy:assets:precompile", "deploy:local_code"
-end
-after "deploy:update_code", "deploy:symlinks", "deploy:copy_cache"
+before "deploy:finalize_update", "deploy:symlinks", "deploy:copy_cache", "deploy:local_code", "deploy:registration_engine"
+
+after "deploy:restart", "unicorn:restart"
+
+# Require last to ensure app callbacks are first
+require 'bundler/capistrano'
 
 require 'airbrake/capistrano'
