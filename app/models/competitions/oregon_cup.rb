@@ -1,4 +1,4 @@
-# Year-long best rider competition for senior men and women. http://obra.org/oregon_cup
+# Year-long best rider competition for senior men. http://obra.org/oregon_cup
 class OregonCup < Competition
   def friendly_name
     'Oregon Cup'
@@ -55,23 +55,9 @@ class OregonCup < Competition
       end
     end
   end
-
-  def category_ids_for(race)
-    ids = [race.category_id]
-    ids = ids + race.category.descendants.map(&:id)
-    if race.category == Category.find_or_create_by_name('Senior Women')
-      cat_3_women = Category.find_or_create_by_name('Category 3 Women')
-      ids << cat_3_women.id
-      ids = ids + cat_3_women.descendants.map(&:id)
-    end
-    ids
-  end
   
   def create_races
     category = Category.find_or_create_by_name('Senior Men')
-    races.create :category => category
-
-    category = Category.find_or_create_by_name('Senior Women')
     races.create :category => category
   end
   

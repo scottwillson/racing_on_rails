@@ -59,7 +59,7 @@ class OregonCupTest < ActiveSupport::TestCase
     assert(or_cup.errors.empty?, "Oregon Cup errors #{or_cup.errors.full_messages}")
     assert(banana_belt_1.errors.empty?, "banana_belt_1 errors #{or_cup.errors.full_messages}")
 
-    assert_difference "Result.count", 6 do
+    assert_difference "Result.count", 4 do
       OregonCup.calculate!(2004)
     end
     or_cup = OregonCup.first(:conditions => ['date = ?', Date.new(2004)])
@@ -88,47 +88,5 @@ class OregonCupTest < ActiveSupport::TestCase
     assert_equal("4", races[0].results[3].place, "Molly Oregon Cup results place")
     assert_equal(24, races[0].results[3].points, "Molly Oregon Cup results points")
     assert_equal(2, races[0].results[3].scores.size, "Molly Oregon Cup results scores")
-
-    races[1].results.sort!
-    assert_equal(alice, races[1].results[0].person, "Senior Women Oregon Cup results person")
-    assert_equal("1", races[1].results[0].place, "Alice Oregon Cup results place")
-    assert_equal(75, races[1].results[0].points, "Alice Oregon Cup results points")
-    assert_equal(1, races[1].results[0].scores.size, "Alice Oregon Cup results scores")
-
-    assert_equal(molly, races[1].results[1].person, "Senior Women Oregon Cup results person")
-    assert_equal("2", races[1].results[1].place, "Molly Oregon Cup results place")
-    assert_equal(15, races[1].results[1].points, "Molly Oregon Cup results points")
-    assert_equal(1, races[1].results[1].scores.size, "Molly Oregon Cup results scores")
-  end
-  
-  def test_calculate_should_use_child_event
-    series = Series.create!(:name => "Banana Belt")
-    event = series.children.create!(:name => "Banana Belt 1", :date => Date.new(2010, 3, 1))
-    oregon_cup_women = Event.new(:name => "Oregon Cup Women", :notes => "Oregon Cup")
-    event.children << oregon_cup_women
-    senior_women = FactoryGirl.create(:category, :name => "Senior Women")
-    or_cup = OregonCup.create!(:date => Date.new(2010))
-    or_cup.source_events << event
-    
-    alice = FactoryGirl.create(:person)
-    molly = FactoryGirl.create(:person)
-
-    women_1_2_race = event.races.create!(:category => Category.find_or_create_by_name("Women 1/2"))
-    women_1_2_race.results.create!(:place => 1, :person => alice)
-    women_1_2_race.results.create!(:place => 2, :person => molly)
-    
-    cat_3_women = Category.find_or_create_by_name('Category 3 Women')
-    women_3_race = event.races.create!(:category => cat_3_women)
-    women_3_race.results.create!(:place => 1, :person => molly)
-    
-    oregon_cup_women_race = event.races.create!(:category => senior_women, :notes => "Oregon Cup")
-    oregon_cup_women_race.results.create!(:place => 1, :person => alice)
-    
-    OregonCup.calculate!(2010)
-    
-    or_cup = OregonCup.find_for_year(2010)
-    womens_race = or_cup.races.detect { |r| r.category == senior_women }
-    assert_equal 1, womens_race.results.size, "OR Cup womens race"
-    assert_equal alice, womens_race.results.first.person, "Result person"
   end
 end
