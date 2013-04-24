@@ -46,7 +46,7 @@ module ResultsHelper
     when "name"
       link_to_results result.name, result
     when "team_name"
-      if RacingAssociation.current.unregistered_teams_in_results? || result.team.try(:member?) || result.year < RacingAssociation.current.year
+      if RacingAssociation.current.unregistered_teams_in_results? || result.team_member? || result.year < RacingAssociation.current.year
         link_to_team_results result.team_name, result
       end
     else
