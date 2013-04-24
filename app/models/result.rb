@@ -196,6 +196,8 @@ class Result < ActiveRecord::Base
     self[:last_name]     = person.try(:last_name, date)
     self[:name]          = person.try(:name, date)
     self[:team_name]     = team.try(:name, date)
+    self[:team_member]   = team ? team.member_in_year?(date) : false
+    true
   end
   
   def cache_event_attributes
@@ -209,6 +211,7 @@ class Result < ActiveRecord::Base
     self[:race_name]               = race.try(:name)
     self[:team_competition_result] = calculate_team_competition_result?
     self.year                      = event.year
+    true
   end
 
   def cache_attributes!(*args)

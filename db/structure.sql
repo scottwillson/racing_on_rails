@@ -866,6 +866,7 @@ CREATE TABLE `results` (
   `year` int(11) NOT NULL,
   `non_member_result_id` int(11) DEFAULT NULL,
   `single_event_license` tinyint(1) DEFAULT '0',
+  `team_member` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_category_id` (`category_id`),
   KEY `idx_race_id` (`race_id`),
@@ -1393,6 +1394,8 @@ INSERT INTO schema_migrations (version) VALUES ('20130320232206');
 INSERT INTO schema_migrations (version) VALUES ('20130320232207');
 
 INSERT INTO schema_migrations (version) VALUES ('20130418150015');
+
+INSERT INTO schema_migrations (version) VALUES ('20130424203721');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
