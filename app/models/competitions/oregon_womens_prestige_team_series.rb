@@ -68,10 +68,10 @@ class OregonWomensPrestigeTeamSeries < Competition
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year)
 
-    # Only consider results from a set of source events
-    if source_events? && source_events.present?
-      query = query.where("results.event_id in (?)", source_events.map(&:id))
-    end
+      # Only consider results from a set of source events
+      if source_event_ids(race)
+        query = query.where("results.event_id in (?)", source_event_ids(race))
+      end
     
     # Only consider results with categories that match +race+'s category
     if categories?
@@ -84,5 +84,20 @@ class OregonWomensPrestigeTeamSeries < Competition
   def category_ids_for(race)
     categories = Category.where("name in (?)", OregonWomensPrestigeSeries.find_for_year.category_names).all
     categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
+  end
+  
+  def source_event_ids(race)
+    ids = nil
+    if source_events? && source_events.present?
+      ids = source_events.map(&:id)
+      if race.category.name == "Women 4"
+        ids.delete(21334)
+        ids.delete(21148)
+        ids.delete(21393)
+        ids.delete(21146)
+        ids.delete(21186)
+      end
+    end
+    ids
   end
 end
