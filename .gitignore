@@ -33,3 +33,5 @@ tmp/**/*
 vendor/plugins/selenium-on-rails/log/
 /.idea/
 results.csv
+.ruby-gemset
+.ruby-version
