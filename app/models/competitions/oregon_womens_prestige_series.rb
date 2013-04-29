@@ -21,6 +21,21 @@ class OregonWomensPrestigeSeries < Competition
   def categories?
     true
   end
+  
+  def source_event_ids(race)
+    ids = nil
+    if source_events? && source_events.present?
+      ids = source_events.map(&:id)
+      if race.category.name == "Women 4"
+        ids.delete(21334)
+        ids.delete(21148)
+        ids.delete(21393)
+        ids.delete(21146)
+        ids.delete(21186)
+      end
+    end
+    ids
+  end
 
   # source_results must be in person, place ascending order
   # "Universal" results usable by all competitions once they use Calculator
@@ -52,8 +67,8 @@ class OregonWomensPrestigeSeries < Competition
       where("year = ?", year)
 
     # Only consider results from a set of source events
-    if source_events? && source_events.present?
-      query = query.where("results.event_id in (?)", source_events.map(&:id))
+    if source_event_ids(race)
+      query = query.where("results.event_id in (?)", source_event_ids(race))
     end
     
     # Only consider results with categories that match +race+'s category
