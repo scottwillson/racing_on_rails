@@ -26,8 +26,12 @@ class OregonWomensPrestigeTeamSeries < Competition
     true
   end
 
-  def results_per_race
+  def results_per_event
     3
+  end
+
+  def results_per_race
+    Competition::UNLIMITED
   end
 
   def use_source_result_points?
@@ -67,7 +71,7 @@ class OregonWomensPrestigeTeamSeries < Competition
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year).
-      where("!(results.event_id in (?) and results.category_id = ?)", cat_123_only_event_ids, cat_4_category_id)
+      where("results.team_id in (select id from teams where member is true)")
 
     # Only consider results from a set of source events
     if source_events? && source_events.present?
@@ -79,7 +83,10 @@ class OregonWomensPrestigeTeamSeries < Competition
       query = query.where("races.category_id in (?)", category_ids_for(race))
     end
     
-    Result.connection.select_all query
+    results = Result.connection.select_all query
+    results.reject do |result|
+      result["category_id"].in?(cat_4_category_ids) && result["event_id"].in?(cat_123_only_event_ids)
+    end
   end
 
   def category_ids_for(race)
@@ -91,7 +98,11 @@ class OregonWomensPrestigeTeamSeries < Competition
     [ 21334, 21148, 21393, 21146, 21186 ]
   end
   
-  def cat_4_category_id
-    Category.where(:name => "Women 4").first_or_create.id
+  def cat_4_category_ids
+    if @cat_4_category_ids.nil?
+      categories = Category.where(:name => "Category 4 Women").all
+      @cat_4_category_ids = categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
+    end
+    @cat_4_category_ids
   end
 end
