@@ -53,6 +53,6 @@ class OregonWomensPrestigeTeamSeriesTest < ActiveSupport::TestCase
     OregonWomensPrestigeTeamSeries.calculate!
 
     race = competition.races.find { |r| r.category.name == "Team" }
-    assert_equal [ 305, 6, 2 ], race.results.sort.map(&:points), "points for Team race"
+    assert_equal [ 355, 6, 2 ], race.results.sort.map(&:points), "points for Team race"
   end
 end

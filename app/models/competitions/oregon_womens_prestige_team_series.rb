@@ -26,12 +26,8 @@ class OregonWomensPrestigeTeamSeries < Competition
     true
   end
 
-  def results_per_event
-    3
-  end
-
   def results_per_race
-    Competition::UNLIMITED
+    3
   end
 
   def use_source_result_points?
