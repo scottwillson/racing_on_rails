@@ -64,7 +64,7 @@ class Competition < Event
       transaction do
         year = year.to_i if year.is_a?(String)
         competition = self.find_for_year(year)
-        # if competition.nil? || competition.updated_at.nil? || Result.where("updated_at >= ?", competition.updated_at).exists?
+        if competition.nil? || competition.updated_at.nil? || Result.where("updated_at >= ?", competition.updated_at).exists?
           competition = self.find_or_create_for_year(year)
           competition.set_date
           raise(ActiveRecord::ActiveRecordError, competition.errors.full_messages) unless competition.errors.empty?
@@ -74,7 +74,7 @@ class Competition < Event
           # Could bulk load all Event and Races at this point, but hardly seems to matter
           competition.calculate_members_only_places
           competition.calculate!
-        # end
+        end
       end
     }
     # Don't return the entire populated instance!
@@ -220,10 +220,17 @@ class Competition < Event
     false
   end
   
+  def source_event_ids(race)
+    if source_events? && source_events.present?
+      source_events.map(&:id)
+    else
+      nil
+    end
+  end
+  
   def maximum_events(race)
     nil
   end
-  
   
   def preliminary?(result)
     false

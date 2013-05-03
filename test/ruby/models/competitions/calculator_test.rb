@@ -71,7 +71,11 @@ class Competitions::CalculatorTest < Ruby::TestCase
       ])
     ]
     actual = Competitions::Calculator.calculate(
-      source_results, point_schedule: [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], results_per_event: 3, results_per_race: Competitions::Calculator::UNLIMITED, members_only: false
+      source_results, 
+      point_schedule: [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], 
+      results_per_event: 3, 
+      results_per_race: Competitions::Calculator::UNLIMITED, 
+      members_only: false
     )
     assert_equal_results expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
@@ -531,6 +535,18 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert !Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(2006), member_to: Date.new(2007)))
     assert !Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2004)))
     assert  Competitions::Calculator.member_in_year?(result(year: 2005, member_from: Date.new(1999), member_to: Date.new(2014)))
+  end
+  
+  def test_source_events
+    source_results = [ 
+      { event_id: 1, participant_id: 1, place: 1 },
+      { event_id: 2, participant_id: 2, place: 2 }
+    ]
+    expected = [
+      result(place: 1, participant_id: 2, points: 1, scores: [ { numeric_place: 2, participant_id: 2, points: 1 } ])
+    ]
+    actual = Competitions::Calculator.calculate(source_results, source_event_ids: [ 2 ], members_only: false)
+    assert_equal expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
   
   def assert_equal_results(expected, actual)

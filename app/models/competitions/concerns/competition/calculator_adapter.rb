@@ -17,6 +17,7 @@ module Concerns
             point_schedule: point_schedule, 
             results_per_event: results_per_event,
             results_per_race: results_per_race,
+            source_event_ids: source_event_ids(race),
             team: team?,
             use_source_result_points: use_source_result_points?
           )

@@ -37,7 +37,6 @@ class OregonWomensPrestigeSeries < Competition
     ids
   end
 
-  # source_results must be in person, place ascending order
   # "Universal" results usable by all competitions once they use Calculator
   def source_results(race = nil)
     query = Result.
@@ -65,11 +64,6 @@ class OregonWomensPrestigeSeries < Competition
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year)
-
-    # Only consider results from a set of source events
-    if source_event_ids(race)
-      query = query.where("results.event_id in (?)", source_event_ids(race))
-    end
     
     # Only consider results with categories that match +race+'s category
     if categories?
