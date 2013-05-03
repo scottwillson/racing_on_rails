@@ -9,9 +9,6 @@ module Competitions
   #
   # Non-scoring results from the same race need to be passed in for team size calculations.
   module Calculator
-    # TODO Team size should be calculated before any filtering
-    # FIXME Only calc team sizes if we care about team size
-
     UNLIMITED = Float::INFINITY
 
     # Use simple datatypes with no behavior. Hash doesn't have method-like accessors, which means we
@@ -278,7 +275,10 @@ module Competitions
             field_size_multiplier = 1.0
           end
 
-          ((point_schedule[numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) * (result.multiplier || 1 ).to_f * field_size_multiplier
+          ((point_schedule[numeric_place(result) - 1] || 0) / 
+          (result.team_size || 1.0).to_f) * 
+          (result.multiplier || 1 ).to_f * 
+          field_size_multiplier
         else
           1
         end
