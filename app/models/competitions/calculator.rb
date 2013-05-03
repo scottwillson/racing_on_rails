@@ -277,8 +277,7 @@ module Competitions
           else
             field_size_multiplier = 1.0
           end
-          if result.race_id == 383112
-          end
+
           ((point_schedule[numeric_place(result) - 1] || 0) / (result.team_size || 1.0).to_f) * (result.multiplier || 1 ).to_f * field_size_multiplier
         else
           1
