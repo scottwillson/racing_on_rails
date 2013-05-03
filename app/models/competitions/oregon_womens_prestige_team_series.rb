@@ -60,14 +60,14 @@ class OregonWomensPrestigeTeamSeries < Competition
         "results.event_id",
         "results.id as id", 
         "results.team_id as participant_id",
+        "team_member",
         "year"
       ]).
       joins(:race => :event).
       joins("left outer join people on people.id = results.person_id").
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
-      where("year = ?", year).
-      where("results.team_id in (select id from teams where member is true)")
+      where("year = ?", year)
 
     # Only consider results from a set of source events
     if source_events? && source_events.present?
@@ -78,7 +78,7 @@ class OregonWomensPrestigeTeamSeries < Competition
     if categories?
       query = query.where("races.category_id in (?)", category_ids_for(race))
     end
-    
+
     results = Result.connection.select_all query
     results.reject do |result|
       result["category_id"].in?(cat_4_category_ids) && result["event_id"].in?(cat_123_only_event_ids)

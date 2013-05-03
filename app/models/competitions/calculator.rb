@@ -26,7 +26,8 @@ module Competitions
     Struct.new(
       "CalculatorResult", 
       :bar, :multiplier, :category_id, :date, :date_of_birth, :event_id, :field_size, :id, :ironman,
-      :member_from, :member_to, :participant_id, :place, :points, :race_id, :sanctioned_by, :scores, :team_size, :tied, :type, :year
+      :member_from, :member_to, :participant_id, :place, :points, :race_id, :sanctioned_by, :scores, 
+      :team_member, :team_size, :tied, :type, :year
     )
     
     # Ties a source result to a competition result.
@@ -44,6 +45,7 @@ module Competitions
     #   Used for team competitions. Team is the participant.
     # * point_schedule: 0-based Array of points for result place. Defaults to nil (all results receive one point). 
     #                    First place gets points at point_schedule[0].
+    # * team: true/false. Default to false. Team-based competition?
     # * use_source_result_points: true/false. Default to false. Don't calculate points. Use points from scoring result.
     #   Used by OBRA Overall and Age-Graded BARs.
     #
@@ -61,11 +63,12 @@ module Competitions
       point_schedule           = options[:point_schedule]
       results_per_event        = options.has_key?(:results_per_event) ? options[:results_per_event] : UNLIMITED
       results_per_race         = options.has_key?(:results_per_race) ? options[:results_per_race] : 1
+      team                     = options.has_key?(:team) ? options[:team] : false
       use_source_result_points = options.has_key?(:use_source_result_points) ? options[:use_source_result_points] : false
 
       struct_results = map_hashes_to_results(source_results)
       results_with_team_sizes = add_team_sizes(struct_results, use_source_result_points)
-      eligible_results = select_eligible(results_with_team_sizes, results_per_event, results_per_race, members_only)
+      eligible_results = select_eligible(results_with_team_sizes, results_per_event, results_per_race, members_only, team)
 
       # The whole point: generate scores from sources results and competition results from scores
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
@@ -106,8 +109,12 @@ module Competitions
     # It's somewhat arbritrary which elgilibilty rules are applied here, and which were applied by
     # the calling Competition when it selected results from the database.
     # Only keep best +results_per_event+ results for participant (person or team).
-    def self.select_eligible(results, results_per_event = UNLIMITED, results_per_race = 1, members_only = true)
+    def self.select_eligible(results, results_per_event = UNLIMITED, results_per_race = 1, members_only = true, team = false)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
+      
+      if members_only && team
+        results = results.select(&:team_member)
+      end
 
       if members_only
         results = results.select { |r| member_in_year?(r) }
@@ -299,7 +306,7 @@ module Competitions
     end
     
     def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :results_per_race, :point_schedule, :use_source_result_points ]
+      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :results_per_race, :point_schedule, :team, :use_source_result_points ]
     end
     
     def self.assert_valid_options(options)

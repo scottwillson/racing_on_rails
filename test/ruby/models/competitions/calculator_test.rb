@@ -217,6 +217,30 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal expected.sort_by(&:id), actual.sort_by(&:id)
   end
 
+  def test_team_membership
+    source_results = [ 
+      result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200", 
+        member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+
+      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6", 
+        member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+    ]
+    actual = Competitions::Calculator.select_eligible(source_results, Competitions::Calculator::UNLIMITED, Competitions::Calculator::UNLIMITED, true, true)
+    assert_equal [ 2 ], actual.map(&:id)
+  end
+
+  def test_no_team_membership
+    source_results = [ 
+      result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200", 
+        member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: false),
+
+      result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6", 
+        member_from: Date.new(2012), member_to: end_of_year, year: 2013, team_member: true)
+    ]
+    actual = Competitions::Calculator.select_eligible(source_results, Competitions::Calculator::UNLIMITED, Competitions::Calculator::UNLIMITED, true, false)
+    assert_equal [ 1, 2 ], actual.map(&:id).sort
+  end
+
   def test_map_to_scores
     expected = [ Struct::CalculatorScore.new(nil, 1, 1, 1, 1) ]
     source_results = [ result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: 1, member_from: Date.new(2012)) ]

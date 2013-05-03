@@ -11,26 +11,20 @@ class TeamBar < Competition
     # Join team with outer join to calculate team size correctly
     results = Result.connection.select_all(
     %Q{
-      select distinct results.id, scores.points as points, results.team_id as participant_id, results.race_name as category_name, member, results.team_name,
-        results.place, results.event_id, results.race_id, results.date, results.year
+      select distinct results.id, scores.points as points, results.team_id as participant_id, results.race_name as category_name, results.team_member, results.team_name,
+        results.place, results.event_id, results.race_id, results.date, results.year,
+        people.member_from, people.member_to
       from results
       join scores on scores.source_result_id = results.id
       join results as competition_results on competition_results.id = scores.competition_result_id
       join events as competition_events on competition_events.id = competition_results.event_id 
+      left outer join people on people.id = results.person_id
       join teams on results.team_id = teams.id 
       where results.id = scores.source_result_id 
         and competition_events.type = 'Bar'
         and competition_results.year = #{year}
     }
     )
-    
-    results.each do |result|
-      member = result.delete("member")
-      if member == 1
-        result["member_from"] = Date.new(year)
-        result["member_to"] = Date.new(year, 12, 31)
-      end
-    end
     
     results_with_tandem_teams_split = []
     results.each do |result|

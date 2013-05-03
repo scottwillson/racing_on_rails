@@ -7,6 +7,7 @@ module Concerns
         races.each do |race|
           results = source_results_with_benchmark(race)
           results = add_field_size(results)
+          results = map_team_member_to_boolean(results)
 
           calculated_results = Competitions::Calculator.calculate(
             results, 
@@ -16,6 +17,7 @@ module Concerns
             point_schedule: point_schedule, 
             results_per_event: results_per_event,
             results_per_race: results_per_race,
+            team: team?,
             use_source_result_points: use_source_result_points?
           )
 
@@ -33,6 +35,20 @@ module Concerns
           field_sizes = ::Result.group(:race_id).count
           results.each do |result|
             result["field_size"] = field_sizes[result["race_id"]]
+          end
+        else
+          results
+        end
+      end
+      
+      def map_team_member_to_boolean(results)
+        if team?
+          results.each do |result|
+            if result["team_member"] == 1
+              result["team_member"] = true
+            else
+              result["team_member"] = false
+            end
           end
         else
           results
