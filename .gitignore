@@ -33,7 +33,7 @@ tmp/**/*
 vendor/plugins/selenium-on-rails/log/
 /.idea/
 results.csv
-.ruby-gemset
 .ruby-version
 lib/registration_engine.disabled
 public/uploads
+.ruby-gemset
