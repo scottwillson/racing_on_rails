@@ -52,7 +52,7 @@ group :test do
   gem "mocha", :require => false
   gem "sqlite3"
   gem "timecop"
-  gem "minitest"
+  gem "minitest", "< 5.0.0"
   gem "turn"
 end
 
