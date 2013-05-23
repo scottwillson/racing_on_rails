@@ -23,18 +23,18 @@ class EventsTest < AcceptanceTest
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
 
-    assert_equal "", find("#event_promoter_id").value
+    assert_equal "", find("#event_promoter_id", :visible => false).value
     assert_equal "", find("#promoter_auto_complete").value
     find("#promoter_auto_complete").native.send_keys("Tom Brown")
 
     click_button "Save"
-    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert_match %r{\d+}, find("#event_promoter_id", :visible => false).value
     assert page.has_field?("promoter_auto_complete", :with => "Tom Brown")
 
     visit "/admin/events"
     assert_page_has_content "Sausalito Criterium"
     click_link "Sausalito Criterium"
-    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert_match %r{\d+}, find("#event_promoter_id", :visible => false).value
     assert page.has_field?("promoter_auto_complete", :with => "Tom Brown")
 
     click_link "edit_promoter_link"
@@ -46,7 +46,7 @@ class EventsTest < AcceptanceTest
 
     click_link "back_to_event"
 
-    assert_match %r{\d+}, find("#event_promoter_id").value
+    assert_match %r{\d+}, find("#event_promoter_id", :visible => false).value
     assert page.has_field?("promoter_auto_complete", :with => "Tim Brown")
 
     fill_in "promoter_auto_complete", :with => "candi m"
@@ -55,16 +55,16 @@ class EventsTest < AcceptanceTest
 
     click_button "Save"
 
-    assert_equal candi.id.to_s, find("#event_promoter_id").value
+    assert_equal candi.id.to_s, find("#event_promoter_id", :visible => false).value
     assert page.has_field?("promoter_auto_complete", :with => "Candi Murray")
 
     fill_in "promoter_auto_complete", :with => ""
     click_button "Save"
 
-    assert_equal "", find("#event_promoter_id").value
+    assert_equal "", find("#event_promoter_id", :visible => false).value
     assert page.has_field?("promoter_auto_complete", :with => "")
 
-    assert_equal "", find("#event_team_id").value
+    assert_equal "", find("#event_team_id", :visible => false).value
     assert_equal "", find("#team_auto_complete").value
 
     assert_equal "", find("#event_phone").value
@@ -90,13 +90,13 @@ class EventsTest < AcceptanceTest
 
     click_button "Save"
 
-    assert_equal gl.id.to_s, find("#event_team_id").value
+    assert_equal gl.id.to_s, find("#event_team_id", :visible => false).value
     assert_equal "Gentle Lovers", find("#team_auto_complete").value
 
     fill_in "team_auto_complete", :with => ""
     click_button "Save"
 
-    assert_equal "", find("#event_team_id").value
+    assert_equal "", find("#event_team_id", :visible => false).value
     assert_equal "", find("#team_auto_complete").value
 
     click_link "Delete"
@@ -130,11 +130,11 @@ class EventsTest < AcceptanceTest
 
     click_link "new_event"
     assert_page_has_content "Kings Valley Road Race"
-    assert_equal kings_valley.to_param, find("#event_parent_id").value
+    assert_equal kings_valley.to_param, find("#event_parent_id", :visible => false).value
 
     fill_in "event_name", :with => "Fancy New Child Event"
     click_button "Save"
-    assert_equal kings_valley.to_param, find("#event_parent_id").value
+    assert_equal kings_valley.to_param, find("#event_parent_id", :visible => false).value
 
     visit "/admin/events/#{kings_valley.id}/edit"
     assert_page_has_content "Fancy New Child Event"

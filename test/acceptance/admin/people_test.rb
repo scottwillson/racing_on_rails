@@ -62,15 +62,12 @@ class PeopleTest < AcceptanceTest
     assert_table("people_table", 7, 3, "River City Bicycles")
     
     click_link "#{molly.id}_results"
-    assert_match(/Admin: Results: Molly Cameron/, find("title").text)
     
     visit "/admin/people"
     click_link "#{weaver.id}_results"
-    assert_match(/Admin: Results: Ryan Weaver$/, find("title").text)
     
     visit "/admin/people"
     click_link "edit_#{matson.id}"
-    assert_match(/Admin: People: Mark Matson$/, find("title").text)
     fill_in "person_home_phone", :with => "411 911 1212"
     click_button "Save"
     
@@ -78,7 +75,6 @@ class PeopleTest < AcceptanceTest
     
     visit '/admin/people'
     click_link "new_person"
-    assert_match(/Admin: People: New Person/, find("title").text)
     
     matson.race_numbers.create!(:value => "878", :year => 2009)
     visit "/admin/people/#{matson.id}/edit"
@@ -200,8 +196,8 @@ class PeopleTest < AcceptanceTest
     wait_for_download "lynx.ppl"
 
     visit '/admin/people'
-    select "Current members only", :with => "include"
-    select "Scoring sheet", :with => "format"
+    select "Current members only", :from => "include"
+    select "Scoring sheet", :from => "format"
     remove_download "scoring_sheet.xls"
     click_button "Export"
     wait_for_download "scoring_sheet.xls"
