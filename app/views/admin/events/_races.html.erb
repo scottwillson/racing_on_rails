@@ -11,7 +11,7 @@
     <td class="category">Category</td>
     <td colspan="3" class="right">Field Size</td>
   </tr>
-  <%= render @event.races %>
+  <%= render @event.races.sort %>
   <% unless @event.new_record? || @event.races.any? %>
   <tr>
     <td colspan="4" class="empty">No races. Click [+] to add a race.</td>
