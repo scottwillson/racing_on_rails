@@ -75,9 +75,13 @@ class OregonWomensPrestigeTeamSeries < Competition
     end
 
     results = Result.connection.select_all query
-    results.reject do |result|
+    results = results.reject do |result|
       result["category_id"].in?(cat_4_category_ids) && result["event_id"].in?(cat_123_only_event_ids)
     end
+
+    # Ignore BAR points multiplier. Leave query "universal".
+    set_multiplier results
+    results
   end
 
   def category_ids_for(race)
@@ -99,5 +103,11 @@ class OregonWomensPrestigeTeamSeries < Competition
       @cat_4_category_ids = categories.map(&:id) + categories.map(&:descendants).to_a.flatten.map(&:id)
     end
     @cat_4_category_ids
+  end
+
+  def set_multiplier(results)
+    results.each do |result|
+      result["multiplier"] = 1
+    end
   end
 end

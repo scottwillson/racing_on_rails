@@ -16,7 +16,7 @@ class OregonWomensPrestigeTeamSeriesTest < ActiveSupport::TestCase
     event_1 = FactoryGirl.create(:event)
     competition.source_events << event_1
     women_123 = Category.where(:name => "Women 1/2/3").first_or_create
-    race_event_1_women_123 = event_1.races.create!(:category => women_123)
+    race_event_1_women_123 = event_1.races.create!(:category => women_123, :bar_points => 0)
     women_4 = Category.where(:name => "Women 4").first_or_create
     race_event_1_women_4 = event_1.races.create!(:category => women_4)
     race_event_1_senior_men = FactoryGirl.create(:race, :event => event_1)
