@@ -55,4 +55,31 @@ class OregonWomensPrestigeTeamSeriesTest < ActiveSupport::TestCase
     race = competition.races.find { |r| r.category.name == "Team" }
     assert_equal [ 355, 6, 2 ], race.results.sort.map(&:points), "points for Team race"
   end
+
+  test "only count best team TTT result" do
+    competition = OregonWomensPrestigeTeamSeries.create!
+
+    event_1 = FactoryGirl.create(:event)
+    competition.source_events << event_1
+    women_123 = Category.where(:name => "Women 1/2/3").first_or_create
+    race_event_1_women_123 = event_1.races.create!(:category => women_123)
+
+    team_1 = FactoryGirl.create(:team)
+    team_2 = FactoryGirl.create(:team)
+    team_3 = FactoryGirl.create(:team)
+
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 2, :team => team_2)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 2, :team => team_2)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 3, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 3, :team => team_1)
+    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 3, :team => team_1)
+    OregonWomensPrestigeTeamSeries.calculate!
+
+    race = competition.races.find { |r| r.category.name == "Team" }
+    assert_equal [ 80, 75 ], race.results.sort.map(&:points), "points for Team race"
+  end
 end
