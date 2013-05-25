@@ -26,11 +26,19 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     race_event_2_women_123 = event_2.races.create!(:category => women_123)
     race_event_2_women_4 = event_2.races.create!(:category => women_4)
 
+    event_3 = FactoryGirl.create(:event)
+    competition.source_events << event_3
+    race_event_3_women_123 = event_3.races.create!(:category => women_123)
+
     # scoring results
-    FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1)
+    result_1 = FactoryGirl.create(:result, :race => race_event_1_women_123, :place => 1)
     FactoryGirl.create(:result, :race => race_event_1_women_4, :place => 5)
-    FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 20)
+    result_2 = FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 20)
     FactoryGirl.create(:result, :race => race_event_2_women_123, :place => 100)
+    
+    # team event scoring result
+    FactoryGirl.create(:result, :race => race_event_3_women_123, :place => 7, :person_id => result_1.person_id)
+    FactoryGirl.create(:result, :race => race_event_3_women_123, :place => 7, :person_id => result_2.person_id)
     
     # Too low a place to score
     FactoryGirl.create(:result, :race => race_event_2_women_4, :place => 101)
@@ -44,7 +52,7 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     OregonWomensPrestigeSeries.calculate!
 
     race = competition.races.find { |r| r.category == women_123 }
-    assert_equal [ 100.0, 6.0, 3.0 ], race.results.sort.map(&:points), "points for Women 1/2/3"
+    assert_equal [ 122.5, 28.5, 3.0 ], race.results.sort.map(&:points), "points for Women 1/2/3"
 
     race = competition.races.find { |r| r.category == women_4 }
     assert_equal [ 55.0 ], race.results.sort.map(&:points), "points for Women 4"
