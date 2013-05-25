@@ -70,6 +70,15 @@ class OregonWomensPrestigeSeries < Competition
       query = query.where("races.category_id in (?)", category_ids_for(race))
     end
     
-    Result.connection.select_all query
+    results = Result.connection.select_all(query)
+    # Ignore BAR points multiplier. Leave query "universal".
+    set_multiplier results
+    results
+  end
+  
+  def set_multiplier(results)
+    results.each do |result|
+      result["multiplier"] = 1
+    end
   end
 end

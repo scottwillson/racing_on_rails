@@ -54,6 +54,7 @@ module Competitions
     # results setting multipler. Could pass in a map of event_id: multiplier instead?
     #
     # Competitions that have a field_size_bonus need to set CalculatorResult::field_size
+    
     def self.calculate(source_results, options = {})
       assert_valid_options options
 
