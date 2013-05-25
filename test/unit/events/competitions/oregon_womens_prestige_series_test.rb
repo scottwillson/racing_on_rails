@@ -21,7 +21,7 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     race_event_1_women_4 = event_1.races.create!(:category => women_4)
     race_event_1_senior_men = FactoryGirl.create(:race, :event => event_1)
 
-    event_2 = FactoryGirl.create(:event)
+    event_2 = FactoryGirl.create(:multi_day_event)
     competition.source_events << event_2
     race_event_2_women_123 = event_2.races.create!(:category => women_123)
     race_event_2_women_4 = event_2.races.create!(:category => women_4)
@@ -44,7 +44,7 @@ class OregonWomensPrestigeSeriesTest < ActiveSupport::TestCase
     OregonWomensPrestigeSeries.calculate!
 
     race = competition.races.find { |r| r.category == women_123 }
-    assert_equal [ 100.0, 4.0, 2.0 ], race.results.sort.map(&:points), "points for Women 1/2/3"
+    assert_equal [ 100.0, 6.0, 3.0 ], race.results.sort.map(&:points), "points for Women 1/2/3"
 
     race = competition.races.find { |r| r.category == women_4 }
     assert_equal [ 55.0 ], race.results.sort.map(&:points), "points for Women 4"

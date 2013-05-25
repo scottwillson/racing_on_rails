@@ -78,7 +78,11 @@ class OregonWomensPrestigeSeries < Competition
   
   def set_multiplier(results)
     results.each do |result|
-      result["multiplier"] = 1
+      if result["type"] == "MultiDayEvent"
+        result["multiplier"] = 1.5
+      else
+        result["multiplier"] = 1
+      end
     end
   end
 end
