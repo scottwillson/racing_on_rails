@@ -558,11 +558,17 @@ class EventTest < ActiveSupport::TestCase
     racer = FactoryGirl.create(:person)
     assert_equal [], Event.editable_by(racer), "Random person can't edit any events"
 
+    editor = FactoryGirl.create(:person)
+    event_1.editors << editor
+
     assert_equal [ event_1 ], Event.editable_by(event_1.promoter), "Promoter can edit own events"
     assert_equal [ event_2 ], Event.editable_by(event_2.promoter), "Promoter can edit own events"
+    assert_equal [ event_1 ], Event.editable_by(editor), "Editor can edit own events"
 
     administrator = FactoryGirl.create(:administrator)
     assert_equal_enumerables Event.all, Event.editable_by(administrator), "Administrator can edit all events"
+
+    assert_equal [], Event.editable_by(nil), "nil can't edit any events"
   end
   
   def test_today_and_future

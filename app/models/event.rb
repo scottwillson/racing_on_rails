@@ -83,12 +83,30 @@ class Event < ActiveRecord::Base
 
   belongs_to :velodrome
   
-  scope :editable_by, lambda { |person| 
-    {:conditions => { :promoter_id => person.id } } unless person.administrator?
+  scope :editable_by, lambda { |person|
+    if person.nil?
+      where("true = false")
+    elsif person.administrator?
+      # No scope
+    else
+      joins("left outer join editors_events on event_id = events.id").
+      where("promoter_id = :person_id or editors_events.editor_id = :person_id", :person_id => person)
+    end
   }
   
   scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
-  scope :year, lambda { |year| where("date between ? and ?", Time.zone.local(year).beginning_of_year, Time.zone.local(year).end_of_year) }
+  
+  scope :year, lambda { |year| 
+    where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date)
+  }
+  
+  scope :current_year, lambda { where(
+    "date between ? and ?", 
+    Time.zone.local(RacingAssociation.current.effective_year).beginning_of_year.to_date, 
+    Time.zone.local(RacingAssociation.current.effective_year).end_of_year.to_date
+    )
+  }
+  
   scope :not_child, { :conditions => "parent_id is null" }
 
   attr_reader :new_promoter_name

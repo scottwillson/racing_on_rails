@@ -5,12 +5,7 @@ class EventsController < ApplicationController
       format.html {
         if params[:person_id]
           @person = Person.find(params[:person_id])
-          @events = @person.events.all(
-            :conditions => [ 
-              "date between ? and ?", 
-              RacingAssociation.current.effective_today.beginning_of_year, 
-              RacingAssociation.current.effective_today.end_of_year
-             ])
+          @events = Event.editable_by(@person).current_year
         else
           redirect_to schedule_path
         end

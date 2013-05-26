@@ -1230,7 +1230,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal [ event ], event.promoter.events, "Promoter should have event in events"
     assert_equal [], person.events, "Person should not have event in events"
     assert event.promoter.editable_events.empty?, "Promoter should have no editable_events"
-    assert_equal [ event ], person.editable_events(true), "Person should editable_events"
+    assert_equal [ event ], person.editable_events(true), "Person should have editable_events"
+    assert person.promoter?, "Editors should be considered promoters"
   end
 
   def assert_renew(now, member_from, member_to, expected_member_from, expected_member_to)
