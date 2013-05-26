@@ -640,7 +640,11 @@ class Person < ActiveRecord::Base
   end
 
   def promoter?
-    Event.exists?([ "promoter_id = ?", id ]) unless new_record?
+    if new_record?
+      false
+    else
+      Event.where(:promoter_id => id).exists? || editable_events.present?
+    end
   end
 
   # Is Person a current member of the bike racing association?
