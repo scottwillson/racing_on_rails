@@ -211,6 +211,12 @@ class ApplicationController < ActionController::Base
     end
     true
   end
+  
+  def require_administrator_or_same_person
+    unless current_person.administrator? || (current_person == @person)
+      redirect_to unauthorized_path
+    end
+  end
 
   def administrator?
     current_person.try :administrator?
