@@ -16,7 +16,7 @@ class EventsControllerTest < ActionController::TestCase
   end
   
   def test_index_with_person_id_promoter
-    Timecop.freeze(Time.zone.local(2012, 1)) do
+    Timecop.freeze(Time.zone.local(2012)) do
       promoter = FactoryGirl.create(:promoter)
       PersonSession.create(promoter)
 
