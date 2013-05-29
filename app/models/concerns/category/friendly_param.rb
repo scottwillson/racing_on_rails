@@ -27,7 +27,11 @@ module Concerns
 
       # Lowercase underscore
       def to_friendly_param
-        name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
+        if name
+          name.underscore.gsub('+', '_plus').gsub(/[^\w]+/, '_').gsub(/^_/, '').gsub(/_$/, '').gsub(/_+/, '_')
+        else
+          ""
+        end
       end
     end
 

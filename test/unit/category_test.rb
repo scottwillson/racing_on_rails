@@ -42,6 +42,7 @@ class CategoryTest < ActiveSupport::TestCase
   end
   
   def test_to_friendly_param
+    assert_equal('', Category.new.to_friendly_param, 'nil friendly_param')
     assert_equal('senior_men', FactoryGirl.build(:category, :name => "Senior Men").to_friendly_param, 'senior_men friendly_param')
     assert_equal('pro_expert_women', FactoryGirl.build(:category, :name => "Pro, Expert Women").to_friendly_param, 'pro_expert_women friendly_param')
     assert_equal('category_4_5_men', FactoryGirl.build(:category, :name => "Category 4/5 Men").to_friendly_param, 'men_4 param')
