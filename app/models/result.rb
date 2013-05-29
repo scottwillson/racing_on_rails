@@ -201,7 +201,7 @@ class Result < ActiveRecord::Base
   end
   
   def cache_event_attributes
-    self[:competition_result]      = calculate_competition_result?
+    self[:competition_result]      = calculate_competition_result
     self[:date]                    = event.date
     self[:event_date_range_s]      = event.date_range_s
     self[:event_end_date]          = event.end_date
@@ -209,7 +209,7 @@ class Result < ActiveRecord::Base
     self[:event_id]                = event.id
     self[:race_full_name]          = race.try(:full_name)
     self[:race_name]               = race.try(:name)
-    self[:team_competition_result] = calculate_team_competition_result?
+    self[:team_competition_result] = calculate_team_competition_result
     self.year                      = event.year
     true
   end
@@ -287,7 +287,7 @@ class Result < ActiveRecord::Base
     self[:category_name] = name.try(:to_s)
   end
 
-  def calculate_competition_result?
+  def calculate_competition_result
     if frozen?
       self[:competition_result] || event.is_a?(Competition)
     else
@@ -295,7 +295,7 @@ class Result < ActiveRecord::Base
     end
   end
 
-  def calculate_team_competition_result?
+  def calculate_team_competition_result
     if frozen?
       self[:team_competition_result] || event.is_a?(TeamBar) || event.is_a?(CrossCrusadeTeamCompetition) || event.is_a?(MbraTeamBar)
     else
