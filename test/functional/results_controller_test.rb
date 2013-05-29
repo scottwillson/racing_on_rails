@@ -468,7 +468,13 @@ class ResultsControllerTest < ActionController::TestCase
     team = FactoryGirl.create(:result).team
     get :team, :team_id => team.id, :format => :xml
   end
-  
+
+  def test_index_xml
+    result = FactoryGirl.create(:result)
+    get :index, :format => :xml
+    assert_response :success
+  end
+
   def test_show_unregistered_teams_in_results
     kona = FactoryGirl.create(:team, :member => false, :name => "Kona")
     gentle_lovers = FactoryGirl.create(:team, :name => "Gentle Lovers")
