@@ -3,7 +3,6 @@ ENV["RAILS_ENV"] = "acceptance"
 require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require "capybara/rails"
 require "minitest/autorun"
-require "turn/autorun"
  
 # Capybara supports a number of drivers/browsers. AcceptanceTest default is RackTest for non-JavaScript tests
 # and Firefox for JS test. Note that most tests require JS.
