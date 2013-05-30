@@ -53,7 +53,6 @@ group :test do
   gem "sqlite3"
   gem "timecop"
   gem "minitest", "< 5.0.0"
-  gem "turn"
 end
 
 group :acceptance do
