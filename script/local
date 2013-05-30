@@ -22,6 +22,8 @@ end
 if association == "obra" || association == "nabra"
   if !File.symlink?("lib/registration_engine") && !File.directory?("lib/registration_engine.disabled")
     FileUtils.mv "lib/registration_engine", "lib/registration_engine.disabled"
+  end
+  if !File.exist?("lib/registration_engine")
     `ln -s ../../registration_engine lib/registration_engine`
   end
 else
