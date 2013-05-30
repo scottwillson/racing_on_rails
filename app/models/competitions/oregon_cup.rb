@@ -23,6 +23,7 @@ class OregonCup < Competition
           LEFT OUTER JOIN categories ON categories.id = races.category_id
           LEFT OUTER JOIN events ON races.event_id = events.id 
             WHERE races.category_id is not null 
+              and events.type = 'SingleDayEvent'
               and place between 1 and 20
               and categories.id in (#{category_ids_for(race).join(", ")})
               and (results.category_id is null or results.category_id in (#{category_ids_for(race).join(", ")}))
