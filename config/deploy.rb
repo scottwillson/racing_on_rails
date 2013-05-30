@@ -27,7 +27,6 @@ set :scm_auth_cache, true
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
-    puts ":local_code"
     if application != "racing_on_rails"
       if site_local_repository_branch
         run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
@@ -42,7 +41,6 @@ namespace :deploy do
   end
   
   task :registration_engine do
-    puts ":registration_engine"
     if application == "obra" || application == "nabra"
       run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
     end
