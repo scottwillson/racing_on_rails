@@ -128,7 +128,7 @@
                              :return_to => @person.new_record? ? nil : edit_admin_person_path(@person)
                            }
     %>
-    <%= render "people/events", Event.editable_by(@person).current_year %>
+    <%= render :partial => "people/events", :locals => { :events => Event.editable_by(@person).current_year } %>
   </div>
 
   <div class="page_buttons span-6 last">
