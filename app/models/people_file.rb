@@ -195,7 +195,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
             end
             @updated = @updated + 1
           else
-            logger.warn("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
+            logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
             delete_blank_categories(row_hash)
             person = Person.new(row_hash)
             if year
