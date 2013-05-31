@@ -20,9 +20,9 @@ class Admin::ResultsController < Admin::AdminController
     if people.size == 1
       person = people.first
       results = Result.find_all_for(person)
-      render(:partial => 'person', :locals => {:person => person, :results => results})
+      render :partial => "person", :locals => { :person => person, :results => results }
     else
-      render :partial => 'people', :locals => {:people => people}
+      render :partial => "people", :locals => { :people => people }
     end
   end
   
