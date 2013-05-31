@@ -141,82 +141,77 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     end
     
     Person.transaction do
-      begin
-        rows.each do |row|
-          row_hash = row.to_hash
-          row_hash[:updater] = import_file
-          logger.debug(row_hash.inspect) if logger.debug?
-          next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
-          
-          combine_categories(row_hash)
-          row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
+      rows.each do |row|
+        row_hash = row.to_hash
+        row_hash[:updater] = import_file
+        logger.debug(row_hash.inspect) if logger.debug?
+        next if row_hash[:first_name].blank? && row_hash[:first_name].blank? && row_hash[:name].blank?
+        
+        combine_categories(row_hash)
+        row_hash.delete(:date_of_birth) if row_hash[:date_of_birth] == 'xx'
 
-          # TODO or by USAC license number
-          people = []
+        # TODO or by USAC license number
+        people = []
 
-          if row_hash[:license].present?
-            people = Person.find_all_by_license(row_hash[:license])
-          end
-
-          if people.empty?
-            people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
-          end
-          
-          person = nil
-          row_hash[:member_to] = @member_to_for_imported_people if @update_membership
-          if people.empty?
-            delete_unwanted_member_from(row_hash, person)
-            add_print_card_and_label(row_hash)
-            person = Person.new(:updater => import_file)
-            if year
-              person.year = year
-            end
-            person.attributes = row_hash
-            person.save!
-            @created = @created + 1
-          elsif people.size == 1
-            # Don't want to overwrite existing categories
-            delete_blank_categories(row_hash)
-            person = people.first
-            delete_unwanted_member_from(row_hash, person)
-            unless person.notes.blank?
-              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-            end
-            add_print_card_and_label(row_hash, person)
-            
-            if year
-              person.year = year
-            end
-            person.updater = import_file
-            person.attributes = row_hash
-            person.save!
-            unless person.valid?
-              raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
-            end
-            @updated = @updated + 1
-          else
-            logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
-            delete_blank_categories(row_hash)
-            person = Person.new(row_hash)
-            if year
-              person.year = year
-            end
-            delete_unwanted_member_from(row_hash, person)
-            unless person.notes.blank?
-              row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
-            end
-            add_print_card_and_label(row_hash, person)
-
-            row_hash.delete(:persistence_token)
-            row_hash.delete(:single_access_token)
-            row_hash.delete(:perishable_token)
-
-            duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
-          end
+        if row_hash[:license].present?
+          people = Person.find_all_by_license(row_hash[:license])
         end
-      rescue Exception => e
-        logger.error("PeopleFile #{e}")
-        raise
+
+        if people.empty?
+          people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
+        end
+        
+        person = nil
+        row_hash[:member_to] = @member_to_for_imported_people if @update_membership
+        if people.empty?
+          delete_unwanted_member_from(row_hash, person)
+          add_print_card_and_label(row_hash)
+          person = Person.new(:updater => import_file)
+          if year
+            person.year = year
+          end
+          person.attributes = row_hash
+          person.save!
+          @created = @created + 1
+        elsif people.size == 1
+          # Don't want to overwrite existing categories
+          delete_blank_categories(row_hash)
+          person = people.first
+          delete_unwanted_member_from(row_hash, person)
+          unless person.notes.blank?
+            row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+          end
+          add_print_card_and_label(row_hash, person)
+          
+          if year
+            person.year = year
+          end
+          person.updater = import_file
+          person.attributes = row_hash
+          person.save!
+          unless person.valid?
+            raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))
+          end
+          @updated = @updated + 1
+        else
+          logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
+          delete_blank_categories(row_hash)
+          person = Person.new(row_hash)
+          if year
+            person.year = year
+          end
+          delete_unwanted_member_from(row_hash, person)
+          unless person.notes.blank?
+            row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
+          end
+          add_print_card_and_label(row_hash, person)
+
+          row_hash.delete(:persistence_token)
+          row_hash.delete(:single_access_token)
+          row_hash.delete(:perishable_token)
+
+          duplicates << Duplicate.create!(:new_attributes => Person.new(row_hash).serializable_hash, :people => people)
+        end
       end
     end
     return @created, @updated
