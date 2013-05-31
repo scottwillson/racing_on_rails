@@ -129,8 +129,6 @@ class PeopleFile < RacingOnRails::Grid::GridFile
     year = year.to_i if year
     
     logger.debug("#{rows.size} rows")
-    created = 0
-    updated = 0
     if @update_membership
       if year && year > Time.zone.today.year
         @member_from_imported_people = Time.zone.local(year).beginning_of_year.to_date
