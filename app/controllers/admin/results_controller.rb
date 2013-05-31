@@ -31,7 +31,7 @@ class Admin::ResultsController < Admin::AdminController
     results = Result.find_all_for(person)
     logger.debug("Found #{results.size} for #{person.name}")
     respond_to do |format|
-      format.html { render(:partial => 'person', :locals => {:person => person, :results => results}) }
+      format.html { render(:partial => "person", :locals => { :person => person, :results => results }) }
       format.js
     end
   end
