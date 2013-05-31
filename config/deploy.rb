@@ -42,6 +42,7 @@ namespace :deploy do
   
   task :registration_engine do
     if application == "obra" || application == "nabra"
+      run "if [ -e \"#{release_path}/lib/registration_engine\" ]; then rm -rf \"#{release_path}/lib/registration_engine\"; fi"
       run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
     end
   end
