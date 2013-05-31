@@ -10,6 +10,8 @@ module RacingOnRails
         helper_method :mobile_request?
       end
 
+      private
+      
       def prepend_view_path_if_mobile
         if mobile_request?
           prepend_view_path "app/views/mobile"
