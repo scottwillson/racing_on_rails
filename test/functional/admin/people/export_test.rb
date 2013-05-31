@@ -63,7 +63,7 @@ module Admin
             "	Alice	Pennington	Gentle Lovers	12/31/1998	12/31/#{Time.zone.today.year}	0	0		0							0		0				F								230					0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n",
             "	Non	Results				0	0		0							0		0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n",
             "	Brad	Ross				0	0		0							0		0																	0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n",
-            "7123811	Erik	Tonkin	Kona	12/31/1998	12/31/#{Time.zone.today.year}	0	0		0	09/09/1982		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n",
+            "7123811	Erik	Tonkin	Kona	12/31/1998	12/31/#{Time.zone.today.year}	0	0		0	9/9/1982		127 SE Lambert	Portland	OR	19990	0		0	415 221-3773			M	1	5						102	409				0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n",
             "	Ryan	Weaver	Gentle Lovers	12/31/1999	12/30/#{Time.zone.today.year}	0	0		0							0	hotwheels@yahoo.com	0				M								341			437		0	0	0	0	#{Time.zone.now.to_s(:mdY)}	#{Time.zone.now.to_s(:mdY)}\n"
             ].reverse
 

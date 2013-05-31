@@ -35,7 +35,7 @@
   </tr>
   <% @posts.each do |post| %>
   <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= link_to post.date.strftime("%m/%d/%Y"), post_path(post, :page => @posts.current_page) %></td>
+    <td><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => @posts.current_page) %></td>
     <td>
       <%= link_to h(truncate(post.subject, :length => 50)), post_path(post, :page => @posts.current_page) %>
     </td>

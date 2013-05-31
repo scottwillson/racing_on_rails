@@ -46,9 +46,9 @@ module Concerns
 
       def date_range_long_s
         if multiple_days?
-          "#{start_date.strftime('%a, %B %d')} to #{end_date.strftime('%a, %B %d, %Y')}"
+          "#{start_date.strftime('%a, %B %-d')} to #{end_date.strftime('%a, %B %-d, %Y')}"
         else
-          start_date.strftime('%a, %B %d')
+          start_date.strftime('%a, %B %-d')
         end
       end
 

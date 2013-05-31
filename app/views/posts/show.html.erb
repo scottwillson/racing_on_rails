@@ -15,7 +15,7 @@
 </div>
 
 <%= labelled_text :post, :subject, nil, h(@post.subject) %><br/>
-<%= labelled_text :post, :date, nil, @post.date.strftime("%m/%d/%Y %I:%M %p") %><br/>
+<%= labelled_text :post, :date, nil, @post.date.strftime("%-m/%-d/%Y %I:%M %p") %><br/>
 <%= labelled_text :post, :from, nil, h(@post.sender_obscured) %><br/>
 
 <div class="clear last" id="archived_post_body">

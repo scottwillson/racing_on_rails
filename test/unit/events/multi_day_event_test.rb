@@ -167,12 +167,12 @@ class MultiDayEventTest < ActiveSupport::TestCase
 
   def test_date_range_s_long
     mt_hood = FactoryGirl.create(:stage_race)
-    assert_equal("07/11/2005-07/13/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
+    assert_equal("7/11/2005-7/13/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
     last_day = mt_hood.children.last
     last_day.date = Date.new(2005, 8, 1)
     last_day.save!
     mt_hood = Event.find(mt_hood.id)
-    assert_equal("07/11/2005-08/01/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
+    assert_equal("7/11/2005-8/1/2005", mt_hood.date_range_s(:long), "date_range_s(long)")
 
     kings_valley = FactoryGirl.create(:event, :date => Date.new(2003, 12, 31))
     assert_equal("12/31/2003", kings_valley.date_range_s(:long), "date_range_s(long)")

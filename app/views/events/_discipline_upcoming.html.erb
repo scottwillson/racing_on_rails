@@ -22,10 +22,10 @@
   <td class="date"><%= event.days_of_week_as_string(dates) -%></td>
   <td class="info">
     <%- if event.flyer.blank? -%>
-      <%= event.full_name %> <small>(<%= event.start_date.strftime("%m/%d") %> - <%= event.end_date.strftime("%m/%d") -%>)</small>
+      <%= event.full_name %> <small>(<%= event.start_date.strftime("%-m/%-d") %> - <%= event.end_date.strftime("%-m/%-d") -%>)</small>
     <%- else -%>
-      <%= link_to(event.full_name, event.flyer)  -%> <small>(<%= link_to(event.start_date.strftime("%m/%d"), event.flyer) %> - 
-    <%= link_to(event.end_date.strftime("%m/%d"), event.flyer) %>)</small>
+      <%= link_to(event.full_name, event.flyer)  -%> <small>(<%= link_to(event.start_date.strftime("%-m/%-d"), event.flyer) %> - 
+    <%= link_to(event.end_date.strftime("%-m/%-d"), event.flyer) %>)</small>
     <%- end -%>
     <%= image_tag("icons/star_green.png") if event.beginner_friendly? %>
   </td>

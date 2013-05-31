@@ -23,7 +23,7 @@ class EventTest < ActiveSupport::TestCase
     number_issuer = NumberIssuer.create!(:name => RacingAssociation.current.short_name)
     event = SingleDayEvent.new
     assert_equal(Time.zone.today, event.date, "New event should have today's date")
-    formatted_date = Time.zone.today.strftime("%m-%d-%Y")
+    formatted_date = Time.zone.today.strftime("%-m-%-d-%Y")
     assert_equal("New Event #{formatted_date}", event.name, "event name")
     assert_equal(RacingAssociation.current.state, event.state, "event.state")
     assert_equal("Road", event.discipline, "event.discipline")

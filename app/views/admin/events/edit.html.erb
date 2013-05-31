@@ -48,16 +48,16 @@
            <%= f.label :date_1i, "Date" %>
            <%= f.date_select :date, :order => [:month, :day, :year] %>
            <% else %>
-            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
+            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %-d, %Y') : "") %>
            <% end -%>
         <% when MultiDayEvent -%>
           <%- if @event.start_date == @event.end_date -%>
-            <%= f.labelled_text(:date, @event.start_date ? @event.start_date.strftime('%A, %B %d, %Y') : "") %>
+            <%= f.labelled_text(:date, @event.start_date ? @event.start_date.strftime('%A, %B %-d, %Y') : "") %>
           <%- else -%>
-            <%= f.labelled_text(:date, (@event.start_date && @event.end_date) ? "#{@event.start_date.strftime('%a %m/%d/%Y')} to #{@event.end_date.strftime('%a %m/%d/%Y')}" : "") %>
+            <%= f.labelled_text(:date, (@event.start_date && @event.end_date) ? "#{@event.start_date.strftime('%a %-m/%-d/%Y')} to #{@event.end_date.strftime('%a %-m/%-d/%Y')}" : "") %>
           <%- end -%>
         <% else -%>
-            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %d, %Y') : "") %>
+            <%= f.labelled_text(:date, @event.date ? @event.date.strftime('%A, %B %-d, %Y') : "") %>
         <% end -%>
 
         <%= f.labelled_text_field(:time) if administrator? %>

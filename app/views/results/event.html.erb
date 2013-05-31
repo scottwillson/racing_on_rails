@@ -19,7 +19,7 @@
   <table class="top_margin child_single_day_events">
     <% @event.children_and_child_competitions_with_results.select { |child| child.is_a?(SingleDayEvent) }.each do |child| -%>
     <tr>
-      <td class="right"><%= link_to child.date.strftime('%A, %B %d'), event_results_path(child) %></td>
+      <td class="right"><%= link_to child.date.strftime('%A, %B %-d'), event_results_path(child) %></td>
       <td><%= link_to child.name, event_results_path(child), { :class => "obvious" } %></td>
     </tr>
     <% child.children_and_child_competitions_with_results.each do |child_child| -%>

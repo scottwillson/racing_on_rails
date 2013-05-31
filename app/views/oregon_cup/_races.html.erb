@@ -5,7 +5,7 @@
   <%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
   <%- for event in @oregon_cup.source_events.sort -%>
   <tr>
-    <td><%= event.date.strftime("%B %d") %></td>
+    <td><%= event.date.strftime("%B %-d") %></td>
     <td>
 <%- unless event.has_results_including_children? -%>
 <%= public_link_to_flyer event -%>

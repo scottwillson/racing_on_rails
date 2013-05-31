@@ -10,7 +10,7 @@ module Concerns
       end
       
       def default_name
-        "New Event #{self.date.strftime("%m-%d-%Y")}"
+        "New Event #{self.date.strftime("%-m-%-d-%Y")}"
       end
   
       # Parent's name. Own name if no parent

@@ -38,7 +38,7 @@ module Concerns
 
       def date_range_s(format = :short)
         if format == :long
-          date.strftime('%m/%d/%Y')
+          date.strftime('%-m/%-d/%Y')
         else
           "#{date.month}/#{date.day}"
         end

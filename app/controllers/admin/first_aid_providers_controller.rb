@@ -11,9 +11,9 @@ class Admin::FirstAidProvidersController < Admin::AdminController
     
     @past_events = (params[:past_events] == "true") || false
     if @past_events
-      conditions = ['date >= ?', RacingAssociation.current.effective_today ]
+      conditions = [ 'date >= ?', RacingAssociation.current.effective_today ]
     else
-      conditions = ['date >= CURDATE()']
+      conditions = [ 'date >= CURDATE()' ]
     end
     
     if params[:sort_by].present?
@@ -33,7 +33,7 @@ class Admin::FirstAidProvidersController < Admin::AdminController
   # Formatted for "who would like to work this race email"
   def email
     rows = @events.collect do |event|
-      [event.first_aid_provider, event.date.strftime("%a %m/%d") , event.name, event.city_state]
+      [event.first_aid_provider, event.date.strftime("%a %-m/%-d") , event.name, event.city_state]
     end
     grid = RacingOnRails::Grid::Grid.new(rows)
     grid.truncate_rows

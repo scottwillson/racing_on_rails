@@ -28,7 +28,7 @@
       <%- day.events.each do |event| -%>
   <tr class="<%= cycle("even", "odd") %>">
     <td class="date">
-      <%= event.date.strftime("%a %m/%d") if event.date -%>
+      <%= event.date.strftime("%a %-m/%-d") if event.date -%>
     </td>
     <td class="beginner_friendly"><%= image_tag("icons/star_green.png") if event.beginner_friendly? %></td>
     <%- if event.cancelled %>

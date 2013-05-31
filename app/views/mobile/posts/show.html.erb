@@ -5,7 +5,7 @@
   <summary>
     From: <%= @post.from_name.present? ? @post.from_name : @post.sender_obscured %>
     <h3><%= @post.subject %></h3>
-    <time><%= @post.date.strftime("%m/%d/%Y %I:%M %p") %></time>
+    <time><%= @post.date.strftime("%-m/%-d/%Y %I:%M %p") %></time>
   </summary>
 
   <details>

@@ -196,9 +196,9 @@ class MultiDayEvent < Event
   def date_range_s(format = :short)
     if format == :long
       if start_date == end_date
-        date.strftime('%m/%d/%Y')
+        date.strftime('%-m/%-d/%Y')
       else
-        "#{start_date.strftime('%m/%d/%Y')}-#{end_date.strftime('%m/%d/%Y')}"
+        "#{start_date.strftime('%-m/%-d/%Y')}-#{end_date.strftime('%-m/%-d/%Y')}"
       end
     else
       start_date_s = "#{start_date.month}/#{start_date.day}"
@@ -213,11 +213,11 @@ class MultiDayEvent < Event
   end
   
   def date_range_long_s
-    start_date_s = start_date.strftime('%a, %B %d')
+    start_date_s = start_date.strftime('%a, %B %-d')
     if start_date == end_date
       start_date_s
     else
-      "#{start_date_s} to #{end_date.strftime('%a, %B %d, %Y')}"
+      "#{start_date_s} to #{end_date.strftime('%a, %B %-d, %Y')}"
     end
   end
   
