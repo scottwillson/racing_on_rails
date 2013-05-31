@@ -35,3 +35,4 @@ vendor/plugins/selenium-on-rails/log/
 results.csv
 .ruby-gemset
 .ruby-version
+lib/registration_engine.disabled
