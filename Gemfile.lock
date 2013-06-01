@@ -42,7 +42,7 @@ GIT
     acts_as_list (0.1.8)
 
 GIT
-  remote: https://github.com/FooBarWidget/default_value_for.git
+  remote: https://github.com/FooBarWidget/default_value_for
   revision: 93b649cb0a5f2c9246779c42875a37930261773b
   specs:
     default_value_for (2.0.2)
