@@ -1,5 +1,6 @@
 require File.expand_path("../../test_case", __FILE__)
-require File.expand_path("../../../../lib/array", __FILE__)
+require File.expand_path("../../../../lib/array/each_with_index", __FILE__)
+require File.expand_path("../../../../lib/array/stable_sort", __FILE__)
 
 # :stopdoc:
 class ArrayTest < Ruby::TestCase
