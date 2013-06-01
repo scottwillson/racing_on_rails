@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <%= form_for @photo, :html => { :multipart => true, :class => "form-horizontal" } do |f| %>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.error_messages %>
+        <%= f.labelled_text_area :caption, :class => "span12", 
+          :help => "Use Markdown for formatting and links. See https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet." %>
+
+        <hr />
+        <%= f.labelled_text_field :title, "Title", :class => "span12", :help => "Shown in place of missing image and when hovered over" %>
+      </div>
+      <div class="span6">
+        <label for="image">Upload File</label>
+        <%= image_tag(@photo.image_url) if @photo.image? %>
+        <%= f.file_field :image %>
+        <%= f.hidden_field :image_cache %>
+        
+        <hr/>
+        <%= f.labelled_text :height %>
+        <%= f.labelled_text :width %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+      </div>
+    </div>
+  <% end %>
+</div>

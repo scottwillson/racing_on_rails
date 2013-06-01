@@ -170,6 +170,8 @@ RacingOnRails::Application.routes.draw do
     resources :posts
   end
 
+  resources :photos
+
   resources :posts
 
   match '/people/:person_id/results' => 'results#person', :constraints => { :person_id => /\d+/ }

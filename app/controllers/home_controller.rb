@@ -27,6 +27,8 @@ class HomeController < ApplicationController
       :order => 'created_at desc'
     )
 
+    @photo = Photo.last
+
     render_page
   end
 end

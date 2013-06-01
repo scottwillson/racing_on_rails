@@ -36,3 +36,4 @@ results.csv
 .ruby-gemset
 .ruby-version
 lib/registration_engine.disabled
+public/uploads

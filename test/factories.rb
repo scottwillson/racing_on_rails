@@ -137,6 +137,14 @@ FactoryGirl.define do
     date Time.zone.today
   end
 
+  factory :photo do
+    caption "Photo Caption"
+    image { File.new("#{Rails.root}/test/files/photo.jpg") }
+    title "Photo title"
+    height 100
+    width 137
+  end
+
   factory :race do
     category
     event
