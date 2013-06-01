@@ -31,7 +31,9 @@ gem 'therubyracer', "~> 0.10.2"
 gem "libv8"
 gem "activemerchant"
 gem "registration_engine", :path => "lib/registration_engine"
-# Security fix
+gem "carrierwave"
+gem "rmagick"
+gem "formatize"
 gem "json", ">= 1.7.7"
 
 group :assets do
