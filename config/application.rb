@@ -47,7 +47,8 @@ module RacingOnRails
     require "#{config.root}/app/helpers/racing_on_rails/form_builder"
     config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
 
-    require "ruby/stable_sort"
+    require "array/each_with_index"
+    require "array/stable_sort"
 
     if File.exists?("#{config.root}/local/config/database.yml")
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
