@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class PhotosControllerTest < ActionController::TestCase
+  setup :use_ssl
+
   test "index" do
     FactoryGirl.create(:photo)
     login_as :administrator

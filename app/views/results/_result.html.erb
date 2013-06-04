@@ -1,0 +1,5 @@
+  <tr>
+  <%- result.columns.each do |column| -%>
+    <td class="<%= column.renderer.css_class(column, result) %>"><%= result.render(column).to_s.html_safe %></td>
+  <%- end -%>
+  </tr>

@@ -2,32 +2,47 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class ResultsHelperTest < ActionView::TestCase
-  def test_link_to_team_results
-    senior_men = FactoryGirl.create(:category)
-    result = Event.new.races.build(:category => senior_men).results.new
-    assert_nil link_to_team_results(nil, result), "Result with no text, no team"
-    assert_equal "", link_to_team_results("", result), "Result with no text, no team"
-
-    team = FactoryGirl.create(:team)
-    result = Event.new.races.build(:category => senior_men).results.new(:team => team)
-
-    # Unrealistic
-    assert_match(/\/teams\/#{team.id}/, link_to_team_results("", result), "Result with no text, team")
-
-    assert_match(/\/teams\/#{team.id}/, link_to_team_results("GL", result), "Result with no text, team")
+  setup do
+    self.stubs(:mobile_request? => false)
   end
   
-  def test_link_to_team_competition_result
-    senior_men = FactoryGirl.create(:category)
-    result = MbraBar.new.races.build(:category => senior_men).results.new
-    assert_nil link_to_team_results(nil, result), "Result with no text, no team"
-    assert_equal "", link_to_team_results("", result), "Result with no text, no team"
+  def test_results_table
+    race = Race.new(:results => [ Result.new(:place => "1")])
+    table = Nokogiri::HTML(results_table(race))
+    assert table.css("table.results").present?
+  end
 
-    team = FactoryGirl.create(:team)
-    result = Event.new.races.build(:category => senior_men).results.new(:team => team)
+  def test_participant_event_results_table_person
+    table = Nokogiri::HTML(participant_event_results_table(Person.new, [ Result.new(:place => "1") ]))
+    assert table.css("table.results").present?
+  end
 
-    # Unrealistic
-    assert_match(/\/teams\/#{team.id}/, link_to_team_results("", result), "Result with no text, team")
-    assert_match(/\/teams\/#{team.id}/, link_to_team_results("GL", result), "Result with no text, team")
-  end  
+  def test_participant_event_results_table_team
+    table = Nokogiri::HTML(participant_event_results_table(Team.new, [ Result.new(:place => "1") ]))
+    assert table.css("table.results").present?
+  end
+
+  def test_edit_results_table
+    race = FactoryGirl.create(:result).race
+    table = Nokogiri::HTML(edit_results_table(race))
+    assert table.css("table.results").present?
+  end
+
+  def test_scores_table
+    table = Nokogiri::HTML(scores_table(Result.new(:place => "1")))
+    assert table.css("table.results.scores").present?
+  end
+
+  def test_results_table_for_mobile
+    self.stubs(:mobile_request? => true)
+
+    race = Race.new(:results => [ Result.new(:place => "1", :name => "Molly Cameron", :team_name => "Veloshop", :time => 1000, :laps => 4)])
+
+    table = Nokogiri::HTML(results_table(race))
+    assert table.css("table th.place").present?
+    assert table.css("table th.name").present?
+    assert table.css("table th.team_name").empty?, "only show mobile columns"
+    assert table.css("table th.points").empty?, "only show mobile columns"
+    assert table.css("table th.laps").empty?, "only show mobile columns"
+  end
 end

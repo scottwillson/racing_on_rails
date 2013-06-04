@@ -355,4 +355,105 @@ class Admin::ResultsControllerTest < ActionController::TestCase
     assert weaver.results(true).include?(result)
     assert_response :success
   end
+
+  def test_create
+    race = FactoryGirl.create(:race)
+    tonkin_result = FactoryGirl.create(:result, :race => race, :place => "1")
+    weaver_result = FactoryGirl.create(:result, :race => race, :place => "2")
+    matson_result = FactoryGirl.create(:result, :race => race, :place => "3")
+    molly_result = FactoryGirl.create(:result, :race => race, :place => "16")
+
+    xhr(:post, :create, :race_id => race.id, :before_result_id => weaver_result.id)
+    assert_response(:success)
+    assert_equal(5, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    assert_equal('1', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('3', weaver_result.place, 'Weaver place after insert')
+    assert_equal('4', matson_result.place, 'Matson place after insert')
+    assert_equal('17', molly_result.place, 'Molly place after insert')
+
+    xhr(:post, :create, :race_id => race.id, :before_result_id => tonkin_result.id)
+    assert_response(:success)
+    assert_equal(6, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('4', weaver_result.place, 'Weaver place after insert')
+    assert_equal('5', matson_result.place, 'Matson place after insert')
+    assert_equal('18', molly_result.place, 'Molly place after insert')
+
+    xhr(:post, :create, :race_id => race.id, :before_result_id => molly_result.id)
+    assert_response(:success)
+    assert_equal(7, race.results.size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('4', weaver_result.place, 'Weaver place after insert')
+    assert_equal('5', matson_result.place, 'Matson place after insert')
+    assert_equal('19', molly_result.place, 'Molly place after insert')
+    
+    dnf = race.results.create(:place => 'DNF')
+    xhr(:post, :create, :race_id => race.id, :before_result_id => weaver_result.id)
+    assert_response(:success)
+    assert_equal(9, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    
+    xhr(:post, :create, :race_id => race.id, :before_result_id => dnf.id)
+    assert_response(:success)
+    assert_equal(10, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    race.results(true).sort!
+    assert_equal('DNF', race.results.last.place, 'DNF place after insert')
+    
+    xhr :post, :create, :race_id => race.id
+    assert_response(:success)
+    assert_equal(11, race.results(true).size, 'Results after insert')
+    tonkin_result.reload
+    weaver_result.reload
+    matson_result.reload
+    molly_result.reload
+    dnf.reload
+    assert_equal('2', tonkin_result.place, 'Tonkin place after insert')
+    assert_equal('5', weaver_result.place, 'Weaver place after insert')
+    assert_equal('6', matson_result.place, 'Matson place after insert')
+    assert_equal('20', molly_result.place, 'Molly place after insert')
+    assert_equal('DNF', dnf.place, 'DNF place after insert')
+    race.results(true).sort!
+    assert_equal('DNF', race.results.last.place, 'DNF place after insert')
+  end
+  
+  def test_destroy
+    result_2 = FactoryGirl.create(:result)
+    race = result_2.race
+    assert_not_nil(result_2, 'Result should exist in DB')
+    
+    xhr(:post, :destroy, :id => result_2.to_param)
+    assert_response(:success)
+    assert_raise(ActiveRecord::RecordNotFound, 'Result should not exist in DB') {Result.find(result_2.id)}
+  end
 end

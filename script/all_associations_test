@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
 # Skip NABRA
-[ "", "aba", "atra", "cycling-victoria", "mbra", "obra", "wsba" ].shuffle.each do |association|
+[ "", "aba", "atra", "mbra", "obra", "wsba" ].shuffle.each do |association|
   if association.nil?
     puts "Run racing_on_rails tests"
   else

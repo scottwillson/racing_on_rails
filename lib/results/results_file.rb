@@ -49,6 +49,7 @@ module Results
       "person.last_name"  => "last_name",
       "team"              => "team_name",
       "team.name"         => "team_name",
+      "bib"               => "number",
       "bib_#"             => "number",
       "obra_number"       => "number",
       "oregoncup"         => "oregon_cup",

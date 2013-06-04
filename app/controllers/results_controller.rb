@@ -90,13 +90,11 @@ class ResultsController < ApplicationController
   def team
     @team = Team.find(params[:team_id])
     set_date_and_year
-    @results = Result.all(
-      :conditions => [ "team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year ]
-    )
+    @event_results = Result.where("team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year)
     respond_to do |format|
       format.html
-      format.json { render :json => @results.to_json }
-      format.xml { render :xml => @results.to_xml }
+      format.json { render :json => @event_results.to_json }
+      format.xml { render :xml => @event_results.to_xml }
     end
   end
   

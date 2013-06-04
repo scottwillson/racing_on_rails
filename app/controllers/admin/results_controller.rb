@@ -61,4 +61,28 @@ class Admin::ResultsController < Admin::AdminController
       }
     end
   end
+
+  # Insert new Result
+  # === Params
+  # * race_id
+  # * before_result_id
+  # === Flash
+  # * notice
+  def create
+    @race = Race.find(params[:race_id])
+    @result = @race.create_result_before(params[:before_result_id])
+    expire_cache
+  end
+
+  # Permanently destroy Result
+  # === Params
+  # * id
+  # === Flash
+  # * notice
+  def destroy
+    @result = Result.includes(:race).find(params[:id])
+    @race = @result.race
+    @race.destroy_result @result
+    @race.results true
+  end
 end

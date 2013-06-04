@@ -1,10 +1,12 @@
-<%= table :caption => "Results", :class => "results top_margin last", :id => :results do %>
+<%= table :class => "results", :id => :results do %>
   <tr>
-    <% race.result_columns_or_default_for_editing.each do |column| -%>
-    <th><%= result_header column %></th>
-    <% end -%>
-    <th class="actions span-2 last"></th>
+    <% results_table_for_race.columns.each do |column| %>
+    <th class="<%= column.key %>"><%= column.render %></th>
+    <% end %>
+    <th class="actions span2"></th>
   </tr>
-  <%= render :partial => "result", :collection => race.results.sort %>
-  <%= render :partial => "result", :collection => [race.results.build] %>
+  <% results_table_for_race.rows.each do |row| %>
+  <%= render "admin/races/result", :row => row, :result => row.source %>
+  <% end %>
+  <%= render "admin/races/result", :row => Tabular::Row.new(results_table_for_race), :result => race.results.build %>
 <% end unless race.new_record? -%>

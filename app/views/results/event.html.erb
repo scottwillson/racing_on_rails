@@ -56,21 +56,8 @@
 
   <% benchmark("Render results", :silence => false) do %>
   <% @event.races_with_results.sort.each do |race| %>
-  <a name="race_<%= race.id %>" id="race_<%= race.id %>" class="anchor" />
-  <%= table :caption => race.name, :class => "event_results" do %>
-    <tr>
-      <%- race.result_columns_or_default.map.each do |column| -%>
-      <th class="<%= column %>"><%= result_header column %></th>
-      <%- end -%>
-    </tr>
-    <%- race.results.sort.each do |result| -%>
-    <tr class="<%= cycle "even", "odd" %>">
-      <%- race.result_columns_or_default.each do |column| -%>
-      <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-      <%- end -%>
-    </tr>
-    <%- end -%>
+  <h3 class="race" id="race_<%= race.id %>"><%= race.name %></h3>
+  <%= results_table race %>
   <%- end -%>
-<%- end -%>
-<%- end -%>
+  <%- end -%>
 </div>

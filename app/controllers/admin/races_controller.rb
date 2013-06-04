@@ -1,6 +1,6 @@
 class Admin::RacesController < Admin::AdminController
   before_filter :assign_event, :only => [ :new, :create, :propagate ]
-  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute, :create_result, :destroy_result ]
+  before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute ]
   before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
   before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
   layout "admin/application"
@@ -69,27 +69,6 @@ class Admin::RacesController < Admin::AdminController
   def destroy
     @race = Race.find(params[:id])
     @destroyed = @race.destroy
-  end
-
-  # Insert new Result
-  # === Params
-  # * before_result_id
-  # === Flash
-  # * notice
-  def create_result
-    @result = @race.create_result_before(params[:before_result_id])
-    expire_cache
-  end
-
-  # Permanently destroy Result
-  # === Params
-  # * id
-  # === Flash
-  # * notice
-  def destroy_result
-    @result = Result.find(params[:result_id])
-    @race.destroy_result @result
-    @race.results true
   end
   
   # Create Races for all +children+ to match parent Event

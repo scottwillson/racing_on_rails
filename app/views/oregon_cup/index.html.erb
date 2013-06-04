@@ -22,23 +22,10 @@ end -%>
 <table style="margin-top: 24px;">
   <tr>
     <td valign="top" width="50%">
+      <%# TODO remove team %>
       <% unless @oregon_cup.new_record? %>
-      <% for race in @oregon_cup.races %>
-      <%= table :caption => race.name, :class => "event_results" do %>
-        <% result_columns = %w{ place name team_name points } %>
-        <tr>
-          <%- result_columns.map.each do |column| -%>
-          <th class="<%= column %>"><%= result_header column %></th>
-          <%- end -%>
-        </tr>
-        <%- race.results.sort.each do |result| -%>
-        <tr class="<%= cycle "even", "odd" %>">
-          <%- result_columns.each do |column| -%>
-          <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-          <%- end -%>
-        </tr>
-        <%- end -%>
-      <%- end -%>
+      <% @oregon_cup.races.each do |race| %>
+      <%= results_table race %>
       <% end %>
       <% end %>  
     </td>

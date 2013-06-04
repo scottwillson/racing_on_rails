@@ -15,7 +15,7 @@ class DeprecatedURLsTest < ActionController::IntegrationTest
     assert_template "results/event"
   end
   
-  def test_redirect_team_results
+  def test_team_results
     team = FactoryGirl.create(:team)
     
     get "/teams/#{team.id}/results"

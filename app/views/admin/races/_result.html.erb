@@ -1,23 +1,28 @@
-<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row" style="position: relative;">
-  <% result.race.result_columns_or_default_for_editing.each do |column| %>
-  <td><%= 
-    if result.respond_to?(column) && !result.new_record?
-      if column == "bar"
-        check_box_tag "result_#{result.id}_bar", "1", result.bar?, :class => "bar_check_box", "data-url" => url_for(:controller => "results", :action => "update_attribute", :id => result.to_param) 
-      else
-        editable result, ResultColumn[column].display_method
-      end
-    end
-    -%></td>
+<tr id="result_<%= result.new_record? ? "new" : result.id %>_row">
+  <% row.columns.each do |column| %>
+  <td class="<%= column %>">
+    <% if result.respond_to?(column.key) && !result.new_record? %>
+      <% if column.key == :bar %>
+        <%= check_box_tag "result_#{result.id}_bar", "1", result.bar?, 
+              :class => "bar_check_box", 
+              "data-url" => url_for(:controller => "results", 
+              :action => "update_attribute", 
+              :id => result.to_param)
+        %>
+      <% else %>
+        <%= editable result, column.key, :value => row.render(column) %>
+      <% end %>
+    <% end %>
+  </td>
   <% end %>
   <td class="actions last">
     <%= link_to image_tag("icons/add.png"),
-          create_result_admin_race_path(:before_result_id => result.id), 
+          admin_race_results_path(result.race, :before_result_id => result.id), 
           :remote => true,
           :class => "image", :id => "result_#{result.id}_add", 
           :method => "post"
     %><%= link_to(image_tag("icons/delete.png"), 
-            destroy_result_admin_race_path(result.race, :result_id => result.id), 
+            admin_result_path(result), 
             :remote => true,
             :class => "image", :id => "result_#{result.id}_destroy", 
             :method => "delete") unless result.new_record? %>

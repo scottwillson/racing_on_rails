@@ -22,21 +22,7 @@ There is no prize just identification of riders who need to get a life.</p>
 
 <div class="updatedon centered">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
 
-<%= table :caption => "#{@ironman.date.year} Ironman", :columns => 4, :class => "event_results" do %>
-  <% result_columns = %w{ place name team_name points } %>
-  <tr>
-    <%- result_columns.map.each do |column| -%>
-    <th class="<%= column %>"><%= result_header column %></th>
-    <%- end -%>
-  </tr>
-  <%- @results.sort.each do |result| -%>
-  <tr class="<%= cycle "even", "odd" %>">
-    <%- result_columns.each do |column| -%>
-    <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-    <%- end -%>
-  </tr>
-  <%- end -%>
-<%- end -%>
+<%= results_table @ironman.races.first, @results %>
 
 <p><%= will_paginate @results %></p>
 <% end %>  

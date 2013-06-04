@@ -320,6 +320,7 @@ DEPENDENCIES
   mocha
   mysql2
   newrelic_rpm
+  nokogiri
   oj
   pdf-reader
   prawn!
@@ -336,7 +337,7 @@ DEPENDENCIES
   spreadsheet!
   sqlite3
   syslog-logger
-  tabular (> 0.0.5)
+  tabular (> 0.2.0)
   therubyracer (~> 0.10.2)
   timecop
   truncate_html

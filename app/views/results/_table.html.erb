@@ -1,0 +1,18 @@
+<table class="base table table-striped <%= css_class %>">
+  <thead>
+    <tr>
+      <% table.columns.each do |column| %>
+      <th class="<%= column.renderer.css_class(column) %>"><%= column.render %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render :partial => "results/result", :collection => table.rows, :as => "result" %>
+
+    <%- if table.rows.empty? -%>
+    <tr>
+      <td colspan="<%= table.columns.size %>" class="empty">No results</td>
+    </tr>
+    <%- end -%>
+  </tbody>
+</table>

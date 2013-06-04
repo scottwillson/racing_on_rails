@@ -6,7 +6,7 @@ gem "fastercsv", :platforms => :ruby_18
 gem "oj"
 gem "rake"
 gem "authlogic"
-gem "tabular", ">0.0.5"
+gem "tabular", ">0.2.0"
 gem "mysql2"
 gem "pdf-reader", :require => "pdf/reader"
 gem "Ascii85", :require => "ascii85"
@@ -35,6 +35,7 @@ gem "carrierwave"
 gem "rmagick"
 gem "formatize"
 gem "json", ">= 1.7.7"
+gem "nokogiri"
 
 group :assets do
   gem "sass-rails",   "~> 3.2"

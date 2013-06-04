@@ -212,15 +212,15 @@ table.base td.disclosure img {
   cursor: pointer;
 }
 
-table.results .drag {
+table.base.results .drag {
   cursor: move;
 }
 
-table.results td.place {
+table.base.results td.place {
   text-align: right;
 }
 
-table.results td.result .event {
+table.base.results td.result .event {
   float: left;
   margin-left: 8px;
 }
@@ -419,6 +419,15 @@ div.archive_navigation input
 }
 
 /* Results */
+h3.race {
+  font-size: 22px;
+  height: 30px;
+  line-height: 30px;
+  min-height: 30px;
+  padding-left: 8px;
+  text-align: left;
+}
+
 table.base td.total_points span.total
 {
   font-size: 8pt;
@@ -467,82 +476,187 @@ table.first_aid_providers td.name {
   padding-right: 8px;
 }
 
-div.event_results {
+div.results {
   margin-top: 24px;
 }
 
-table.event_results td {
+table.base.results td {
   padding-right: 8px;
 }
 
-div.table_container table.event_results th.place,
-div.table_container table.event_results th.laps {
+table.base.results th.place,
+table.base.results th.laps {
   padding-left: 0px;
   padding-right: 8px;
   text-align: right;
   width: 24px;  
 }
 
-div.table_container table.event_results th.state,
-div.table_container table.event_results th.age {
+table.base.results th.state,
+table.base.results th.age {
   width: 24px;  
 }
 
-div.table_container table.event_results th.time_bonus_penalty,
-div.table_container table.event_results th.points,
-div.table_container table.event_results th.points_bonus,
-div.table_container table.event_results th.points_penalty,
-div.table_container table.event_results th.points_from_place,
-div.table_container table.event_results th.points_total,
-div.table_container table.event_results th.number {
+table.base.results th.time_bonus_penalty,
+table.base.results th.points,
+table.base.results th.points_bonus,
+table.base.results th.points_penalty,
+table.base.results th.points_from_place,
+table.base.results th.points_total,
+table.base.results th.number {
   padding-left: 0px;
   padding-right: 8px;
   text-align: right;
   width: 55px;  
 }
 
-div.table_container table.event_results th.time_total,
-div.table_container table.event_results th.time_gap_to_winner,
-div.table_container table.event_results th.time_gap_to_leader,
-div.table_container table.event_results th.time {
+table.base.results th.time_total,
+table.base.results th.time_gap_to_winner,
+table.base.results th.time_gap_to_leader,
+table.base.results th.time {
   padding-left: 0px;
   padding-right: 8px;
   text-align: right;
   width: 80px;
 }
 
-div.table_container table.event_results th.first_name,
-div.table_container table.event_results th.city {
+table.base.results th.first_name,
+table.base.results th.city {
   width: 100px;
 }
 
-div.table_container table.event_results th.category_name,
-div.table_container table.event_results th.last_name {
+table.base.results th.category_name,
+table.base.results th.last_name {
   width: 120px;
 }
 
-div.table_container table.event_results th.name {
+table.base.results th.name {
   width: 220px;
 }
 
-table.event_results td {
+table.base.results td {
   padding-right: 8px;
 }
 
-table.person_results td.place {
-  width: 24px;
+table.results td.date,
+table.results td.laps,
+table.results td.number,
+table.results td.place,
+table.results td.points,
+table.results td.points_bonus,
+table.results td.points_from_place,
+table.results td.points_penalty,
+table.results td.points_total,
+table.results td.time,
+table.results td.time_bonus_penalty,
+table.results td.time_gap_to_leader,
+table.results td.time_gap_to_winner,
+table.results td.time_total,
+table.results th.date,
+table.results th.laps,
+table.results th.number,
+table.results th.place,
+table.results th.points,
+table.results th.points_bonus,
+table.results th.points_from_place,
+table.results th.points_penalty,
+table.results th.points_total,
+table.results th.time,
+table.results th.time_bonus_penalty,
+table.results th.time_gap_to_leader,
+table.results th.time_gap_to_winner,
+table.results th.time_total
+{
+  padding-right: 8px;
+  text-align: right;
 }
 
-table.person_results td.standings {
+table.results td.date div.editable,
+table.results td.laps div.editable,
+table.results td.number div.editable,
+table.results td.place div.editable,
+table.results td.points div.editable,
+table.results td.points_bonus div.editable,
+table.results td.points_from_place div.editable,
+table.results td.points_penalty div.editable,
+table.results td.points_total div.editable,
+table.results td.time div.editable,
+table.results td.time_bonus_penalty div.editable,
+table.results td.time_gap_to_leader div.editable,
+table.results td.time_gap_to_winner div.editable,
+table.results td.time_total div.editable,
+table.results th.date div.editable,
+table.results th.laps div.editable,
+table.results th.number div.editable,
+table.results th.place div.editable,
+table.results th.points div.editable,
+table.results th.points_bonus div.editable,
+table.results th.points_from_place div.editable,
+table.results th.points_penalty div.editable,
+table.results th.points_total div.editable,
+table.results th.time div.editable,
+table.results th.time_bonus_penalty div.editable,
+table.results th.time_gap_to_leader div.editable,
+table.results th.time_gap_to_winner div.editable,
+table.results th.time_total div.editable
+{
+  text-align: right;
+}
+
+table.results th.place,
+table.results th.place,
+table.results th.laps,
+table.results th.state,
+table.results th.age {
+  width: 24px;  
+}
+
+table.results th.time_bonus_penalty,
+table.results th.points,
+table.results th.points_bonus,
+table.results th.points_penalty,
+table.results th.points_from_place,
+table.results th.points_total,
+table.results th.number,
+table.results th.number {
+  width: 55px;  
+}
+
+table.results th.time_total,
+table.results th.time_gap_to_winner,
+table.results th.time_gap_to_leader,
+table.results th.time {
+  width: 80px;
+}
+
+table.results th.first_name,
+table.results th.city {
+  width: 100px;
+}
+
+table.results th.category_name,
+table.results th.last_name {
+  width: 120px;
+}
+
+table.results th.name {
+  width: 220px;
+}
+
+table.results td.event {
   width: 400px;
 }
 
-table.person_results td.category {
+table.results td.category {
   width: 200px;
 }
 
-table.person_results td.dates {
+table.results td.dates {
   width: 100px;
+}
+
+table.results.scores tr:last-child {
+  font-weight: bold;
 }
 
 tr.new_number td.right {

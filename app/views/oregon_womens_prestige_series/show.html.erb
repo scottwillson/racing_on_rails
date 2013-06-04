@@ -75,41 +75,13 @@
   <ul class="centered">
     <% unless @event.new_record? %>
     <% @event.races.each do |race| %>
-    <%= table :caption => race.name, :class => "event_results" do %>
-      <% result_columns = %w{ place name team_name points } %>
-      <tr>
-        <%- result_columns.map.each do |column| -%>
-        <th class="<%= column %>"><%= result_header column %></th>
-        <%- end -%>
-      </tr>
-      <%- race.results.sort.each do |result| -%>
-      <tr class="<%= cycle "even", "odd" %>">
-        <%- result_columns.each do |column| -%>
-        <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-        <%- end -%>
-      </tr>
-      <%- end -%>
-    <%- end -%>
+    <%= results_table race %>
     <% end %>
     <% end %>  
 
     <% unless @team_event.new_record? %>
     <% @team_event.races.each do |race| %>
-    <%= table :caption => race.name, :class => "event_results" do %>
-      <% result_columns = %w{ place team_name points } %>
-      <tr>
-        <%- result_columns.map.each do |column| -%>
-        <th class="<%= column %>"><%= result_header column %></th>
-        <%- end -%>
-      </tr>
-      <%- race.results.sort.each do |result| -%>
-      <tr class="<%= cycle "even", "odd" %>">
-        <td class="place right"><%= result.place %></td>
-        <td class="team_name"><%= link_to_team_results result.team_name, result %></td>
-        <td class="points right"><%= result.points %></td>
-      </tr>
-      <%- end -%>
-    <%- end -%>
+    <%= results_table race %>
     <% end %>
     <% end %>  
   </ul>

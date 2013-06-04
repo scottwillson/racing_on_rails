@@ -25,33 +25,10 @@
 
 <span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
 
-<%- @event.races.each_with_index do |race, index| -%>
-<%- unless race.results.empty? -%>
-<%= table :caption => race.name, :class => "event_results" do %>
-  <% 
-    if race.discipline == "Team"
-      result_columns = %w{ place team_name points }
-    else
-      result_columns = %w{ place name team_name points }
-    end
-  %>
-  <tr>
-    <%- result_columns.map.each do |column| -%>
-    <th class="<%= column %>"><%= result_header column %></th>
-    <%- end -%>
-  </tr>
-  <%- race.results.sort.each do |result| -%>
-  <tr class="<%= cycle "even", "odd" %>">
-    <%- result_columns.each do |column| -%>
-    <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-    <%- end -%>
-  </tr>
+<%- @event.races do |race| -%>
+  <%- unless race.results.empty? -%>
+    <%= results_table race %>
   <%- end -%>
-<%- end -%>
-
-<br><br>
-
-<%- end -%>
 <%- end -%>
 
 <%- else -%>

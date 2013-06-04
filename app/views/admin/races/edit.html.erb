@@ -43,6 +43,7 @@
 
 <% if administrator? %>
 <div class="container">
-  <%= render :partial => "results", :locals => { :race => @race } %>
+  <h3>Results</h3>
+  <%= edit_results_table(@race) %>
 </div>
 <% end %>

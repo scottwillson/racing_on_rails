@@ -123,6 +123,14 @@ table.base td.not_found, table.base td.empty {
   color: rgb(153, 153, 153);
 }
 
+.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
+  background: rgb(230, 230, 230);
+}
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
+  background-color: $warm-gray;
+}
+
 table.base th.invalid {
   color: red;
 }

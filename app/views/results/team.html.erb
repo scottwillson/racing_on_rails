@@ -2,21 +2,5 @@
 
 <%= render_page "results/team_years", :locals => { :team => @team } %>
 
-<%= table :caption => @team.name, :id => "team", :collection => @results do %>
-  <tr>
-    <th>&nbsp;</th>
-    <th>Race</th>
-    <th>Category</th>
-    <th>Person</th>
-    <th>Date</th>
-  </tr>
-  <%- @results.sort { |x, y| y.event_end_date <=> x.event_end_date }.each do |result| -%>
-  <tr class="<%= cycle("even", "odd") %>">
-    <td class="right" width="24"><%= result.place %></td>
-    <td width="400"><%= link_to(result.race_full_name, event_results_path(:event_id => result.event_id)) %></td>
-    <td width="200"><%= link_to(result.race_name, event_results_path(:event_id => result.event_id, :anchor => "race_#{result.race_id}")) %></td>
-    <td width="200"><%= link_to_results result.person_name, result %></td>
-    <td width="100"><%= result.event_date_range_s %></td>
-  </tr>
-  <%- end -%>
-<%- end -%>
+<h3><%= @team.name %></h3>
+<%= participant_event_results_table @team, @event_results %>

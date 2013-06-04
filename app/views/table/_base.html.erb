@@ -1,5 +1,5 @@
 <div class="table_container<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
-  <%- if caption_visible %><div class="caption"><%= caption %></div><% end -%>
+  <%- if caption_visible && caption.present? %><div class="caption"><%= caption %></div><% end -%>
   <table class="base<%= " #{style_class}".html_safe if style_class %>"<%= " id='#{id}_table'".html_safe if id %><%= " data-id='#{dataid}'".html_safe if dataid %>>
     <%- if insert_header -%>
     <thead>

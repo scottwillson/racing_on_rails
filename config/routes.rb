@@ -70,10 +70,9 @@ RacingOnRails::Application.routes.draw do
 
     resources :races do
       member do
-        post :create_result
-        delete :destroy_result
         put :update_attribute
       end
+      resources :results
     end
     
     resources :results do

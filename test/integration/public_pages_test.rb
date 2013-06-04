@@ -46,12 +46,12 @@ class PublicPagesTest < ActionController::IntegrationTest
     result = FactoryGirl.create(:result)
     get "/events/#{result.event.to_param}"
     assert_response :success
-    assert_select "a", result.last_name
+    assert_select ".name a", result.name
     assert_select "h2", result.event.full_name
 
     get "/events/#{result.event.to_param}/results"
     assert_response :success
-    assert_select "a", result.last_name
+    assert_select ".name a", result.name
     assert_select "h2", result.event.full_name
     
     get "/people/#{result.person.to_param}"

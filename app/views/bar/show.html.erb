@@ -14,29 +14,4 @@
 
 <%= render :partial => "races", :locals => { :race => @race } %>
 
-<% if @race.nil? || @race.results.empty? %>
-No results for <%= params[:year] %>
-<% else %>
-
-<%= table :caption => @race.name, :class => "event_results" do %>
-  <% 
-    if @race.discipline == "Team"
-      result_columns = %w{ place team_name points }
-    else
-      result_columns = %w{ place name team_name points }
-    end
-  %>
-  <tr>
-    <%- result_columns.map.each do |column| -%>
-    <th class="<%= column %>"><%= result_header column %></th>
-    <%- end -%>
-  </tr>
-  <%- @race.results.sort.each do |result| -%>
-  <tr class="<%= cycle "even", "odd" %>">
-    <%- result_columns.each do |column| -%>
-    <td<%= result_cell_class column %>><%= result_cell result, column %></td>
-    <%- end -%>
-  </tr>
-  <%- end -%>
-<%- end -%>
-<%- end -%>
+<%= results_table @race %>
