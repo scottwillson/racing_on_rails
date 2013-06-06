@@ -1,7 +1,7 @@
 /*
  *= require jquery
  *= require jquery_ujs
- *= require jquery-ui
+ *= require jquery.ui.all
  *= require jquery.jeditable
  *= require_self
  *= require tabs
@@ -64,7 +64,7 @@ function autoComplete(model, attribute, path) {
         return false;
       }
     })
-    .data("autocomplete")
+    .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
         var description = [];
         if (item.person.team !== undefined && item.person.team.name !== undefined) {
@@ -108,7 +108,7 @@ function autoCompleteTeam(model, attribute, path) {
         return false;
       }
     })
-    .data("autocomplete")
+    .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
         return $('<li id="team_' + item.team.id + '"></li>')
           .data( "item.autocomplete", item )
