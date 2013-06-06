@@ -75,12 +75,14 @@
   <ul class="centered">
     <% unless @event.new_record? %>
     <% @event.races.each do |race| %>
+    <h3><%= race.name %></h3>
     <%= results_table race %>
     <% end %>
     <% end %>  
 
     <% unless @team_event.new_record? %>
     <% @team_event.races.each do |race| %>
+    <h3><%= race.name %></h3>
     <%= results_table race %>
     <% end %>
     <% end %>  
