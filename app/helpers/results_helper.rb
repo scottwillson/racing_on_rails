@@ -1,6 +1,6 @@
 module ResultsHelper
   # TODO Move to module in Race?
-  RESULT_COLUMNS = %W{ place name team_name age_group category_class category_name points_bonus points_bonus_penalty points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner points laps time time_total notes }.freeze
+  RESULT_COLUMNS = %W{ place number name team_name age_group category_class category_name points_bonus points_bonus_penalty points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner points laps time time_total notes }.freeze
 
   # results for pagination
   def results_table(race, results = nil)
@@ -16,7 +16,7 @@ module ResultsHelper
       end
     else
       table.row_mapper = RacingOnRails::Tabular::Mapper.new(
-                           %W{ place name team_name }, 
+                           %W{ place number name team_name }, 
                            race.try(:custom_columns), 
                            RESULT_COLUMNS - %W{ place name team_name }
                          )
