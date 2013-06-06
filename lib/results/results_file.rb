@@ -72,6 +72,7 @@ module Results
       "gap"               => "time_gap_to_leader",
       "delta_time"        => "time_gap_to_leader",
       "pts"               => "points",
+      "total_points"      => "points_total",
       "sex"               => "gender"
     }
 
