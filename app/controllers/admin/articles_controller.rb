@@ -21,6 +21,7 @@ class Admin::ArticlesController < Admin::AdminController
   def new
     @article = Article.new
     @article_category = ArticleCategory.first
+    render :edit
   end
 
   def edit
@@ -36,7 +37,7 @@ class Admin::ArticlesController < Admin::AdminController
       flash[:notice] = 'Article was successfully created.'
       redirect_to admin_articles_url
     else
-      render :new
+      render :edit
     end
   end
 
@@ -58,6 +59,8 @@ class Admin::ArticlesController < Admin::AdminController
     @article.destroy
     redirect_to admin_articles_url
   end
+
+  protected
 
   def assign_current_admin_tab
     @current_admin_tab = "Articles"

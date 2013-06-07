@@ -10,6 +10,7 @@ class Admin::ArticleCategoriesController < Admin::AdminController
 
   def new
     @article_category = ArticleCategory.new
+    render :edit
   end
 
   def edit
@@ -23,7 +24,7 @@ class Admin::ArticleCategoriesController < Admin::AdminController
       flash[:notice] = 'ArticleCategory was successfully created.'
       redirect_to admin_article_categories_url
     else
-      render :new
+      render :edit
     end
   end
 

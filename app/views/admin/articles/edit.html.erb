@@ -1,15 +1,41 @@
-<h1>Editing article</h1>
+<% if @article.new_record? %>
+<h2>New Article</h2>
+<% else %>
+<h2>Edit Article</h2>
+<% end %>
 
-<div class="column_grid_container">
-  <%= form_for([:admin, @article]) do |f| %>
-    <%= render :partial => "form", :locals => { :f => f, :action_button => "Update" } %>
-  <% end %>
+<%= form_for([:admin, @article], :html => { :class => "form-horizontal" }) do |f| %>
+  <%= f.error_messages %>
 
-  <%= form_tag({:action => 'update', :id => @article}) %>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.labelled_text_field :title %>
 
-  <div class="page_buttons span-6 last">
-    <%= link_to 'Delete', [:admin, @article], :confirm => 'Are you sure?', :method => :delete %>
-     | 
-    <%= link_to 'Back', admin_articles_path %>
-  </div>
-</div>
+        <div class="control-group">
+          <%= f.label :category, :class => "control-label" %>
+          <div class="controls">
+            <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
+          </div>
+        </div>
+      </div>
+      <div class="span6">
+        <%= f.labelled_text_field :position %>
+        <%= f.labelled_check_box :display %>
+      </div>
+      <div class="span12">
+        <%= f.labelled_text_area :body, :toolbarSet => 'Simple', :height => '400px', :class => 'ckeditor span12' %>
+      </div>
+    </div>
+
+    <hr />
+    
+    <div class="row-fluid">
+      <div class="span12">
+        <%= f.submit "Save", :class => 'btn btn-primary' %>
+        <%= link_to('Delete', [:admin, @article], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article.new_record? %>
+        <%= link_to 'Back', admin_articles_path, :class => 'btn btn-link' %>
+      </div>
+    </div>
+  </div>  
+<% end %>

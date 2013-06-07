@@ -1,9 +1,0 @@
-<h1>New article</h1>
-
-<%= form_for([:admin, @article]) do |f| %>
-  <%=render :partial => "form", :locals => { :f => f, :action_button => "Create" } %>
-<% end %>
-
-<div class="page_buttons span-6 last">
-<%= link_to 'Back', admin_articles_path %>
-</div>

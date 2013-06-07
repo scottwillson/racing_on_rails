@@ -1,8 +1,35 @@
-<h1>Edit Article Category</h1>
-
-<%= form_for([:admin, @article_category]) do |f| %>
-  <%=render :partial => "form", :locals => { :f => f, :action_button => "Update" } %>
+<% if @article_category.new_record? %>
+<h2>New Article Category</h2>
+<% else %>
+<h2>Edit Article Category</h2>
 <% end %>
-<%= link_to 'Destroy', [:admin, @article_category], :confirm => 'Are you sure?', :method => :delete %>
- | 
-<%= link_to 'Back', admin_article_categories_path %>
+
+<%= form_for([:admin, @article_category], :html => { :class => "form-horizontal" }) do |f| %>
+  <%= f.error_messages %>
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.labelled_text_field :name %>
+        <%= f.labelled_text_field :description %>
+      </div>
+      <div class="span6">    
+        <%= f.labelled_text_field :position %>
+
+        <div class="control-group">
+          <%= f.label :parent_id, :class => "control-label" %>
+          <div class="controls">
+            <%= tree_select ArticleCategory.all( :conditions => "parent_id = 0"), 'article_category', 'parent_id', @article_category %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <%= f.submit "Save", :class => 'btn btn-primary' %>
+        <%= link_to('Destroy', [:admin, @article_category], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article_category.new_record? %>
+        <%= link_to 'Back', admin_article_categories_path, :class => 'btn btn-link' %>
+      </div>
+    </div>
+  </div>
+<% end %>
