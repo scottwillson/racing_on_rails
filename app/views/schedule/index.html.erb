@@ -9,8 +9,8 @@ end -%>
 <%= render_page "sanctioning_organizations", :locals => { :year => @year, :sanctioning_organizations => @sanctioning_organizations } %>
 <%= render_page "schedule/disciplines", :locals => { :year => @year } %>
 
-<% if Time.zone.today < Date.new(@year, 2) %>
-<div>Tentative. Dates are subject to change.</div>
+<% if Time.zone.today < Time.zone.local(@year, 2) %>
+<p>Tentative. Dates are subject to change.</p>
 <% end %>
 
 <%= render_page "schedule/others" %>
