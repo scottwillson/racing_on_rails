@@ -1,8 +1,5 @@
 # All succcessful edit expire cache.
  class Admin::VelodromesController < Admin::AdminController
-  before_filter :require_administrator
-  layout "admin/application"
-
   def index
     @velodromes = Velodrome.all( :order => "name")
   end
@@ -56,5 +53,11 @@
     @velodrome.destroy
     redirect_to(admin_velodromes_path)
     expire_cache
+  end
+  
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Velodromes"
   end
 end

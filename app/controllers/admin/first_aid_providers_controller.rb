@@ -4,7 +4,6 @@ class Admin::FirstAidProvidersController < Admin::AdminController
   skip_filter :require_administrator
   before_filter :require_administrator_or_official
   helper :table
-  layout "admin/application"
 
   def index
     @year = RacingAssociation.current.effective_year
@@ -42,5 +41,11 @@ class Admin::FirstAidProvidersController < Admin::AdminController
     headers['Content-Type'] = 'text/plain'
 
     render :text => grid.to_s(false)
+  end
+
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "First Aid"
   end
 end

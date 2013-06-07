@@ -1,8 +1,5 @@
 # Edit categories for articles for homepage. Unrelated to Event Categories.
 class Admin::ArticleCategoriesController < Admin::AdminController
-  layout "admin/application"
-  before_filter :require_administrator
-
   def index
     @article_categories = ArticleCategory.all( :order => "parent_id, position")
   end
@@ -46,5 +43,11 @@ class Admin::ArticleCategoriesController < Admin::AdminController
     @article_category.destroy
 
     redirect_to admin_article_categories_url
+  end
+
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Article Categories"
   end
 end

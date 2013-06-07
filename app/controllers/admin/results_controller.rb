@@ -1,9 +1,6 @@
 # Allowed in-place editing added manually for each Result field. Dynamic Results columns will not work.
 # All succcessful edit expire cache.
 class Admin::ResultsController < Admin::AdminController
-  before_filter :require_administrator
-  layout "admin/application"
-  
   # Move Results from one Person to another
   def index
     @person = Person.find(params[:person_id])
@@ -84,5 +81,11 @@ class Admin::ResultsController < Admin::AdminController
     @race = @result.race
     @race.destroy_result @result
     @race.results true
+  end
+
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "People"
   end
 end

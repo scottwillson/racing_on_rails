@@ -6,7 +6,6 @@ class Admin::EventsController < Admin::AdminController
   before_filter :require_administrator_or_promoter, :only => [ :edit, :update ]
   before_filter :require_administrator, :except => [ :edit, :update ]
   before_filter :assign_disciplines, :only => [ :new, :create, :edit, :update ]
-  layout 'admin/application'
   
   # schedule calendar  with links to admin Event pages
   # === Params
@@ -300,5 +299,9 @@ class Admin::EventsController < Admin::AdminController
     end
 
     @event = eval(event_type).new(params[:event])
+  end
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Schedule"
   end
 end

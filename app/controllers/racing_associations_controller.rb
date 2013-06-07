@@ -1,7 +1,4 @@
 class RacingAssociationsController < Admin::AdminController
-  before_filter :require_administrator
-  layout "admin/application"
-
   def edit
     @racing_association = RacingAssociation.find(params[:id])
   end
@@ -14,5 +11,11 @@ class RacingAssociationsController < Admin::AdminController
     else
       render :edit
     end
+  end
+
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Site"
   end
 end

@@ -1,7 +1,6 @@
 # Admin editing for Pages in built-in CMS. All editing actions expire the cache.
 class Admin::PagesController < Admin::AdminController
   before_filter :require_administrator, :except => [ :show ]
-  layout "admin/application"
 
   def index
     @pages = Page.roots
@@ -63,5 +62,11 @@ class Admin::PagesController < Admin::AdminController
     expire_cache
     flash[:notice] = "Deleted #{@page.title}"
     redirect_to admin_pages_path
+  end
+
+  protected
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Pages"
   end
 end

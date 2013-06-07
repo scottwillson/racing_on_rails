@@ -1,9 +1,6 @@
 module Admin
   # Edit teams. All succcessful edit expire cache.
   class TeamsController < Admin::AdminController
-    before_filter :require_administrator
-    layout "admin/application"
-
     # Params
     # * team_name
     def index
@@ -104,6 +101,12 @@ module Admin
       team = Team.find(params[:id])
       team.toggle!(:member)
       render(:partial => "shared/member", :locals => { :record => team })
+    end
+    
+    protected
+    
+    def assign_current_admin_tab
+      @current_admin_tab = "Team"
     end
   end
 end

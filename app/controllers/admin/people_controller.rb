@@ -5,7 +5,7 @@ class Admin::PeopleController < Admin::AdminController
   skip_filter :require_administrator, :only => :index
   before_filter :require_administrator_or_promoter_or_official, :only => :index
   before_filter :remember_event
-  layout 'admin/application', :except => [:card, :cards]
+  layout 'admin/application', :except => [ :card, :cards ]
 
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
@@ -433,5 +433,11 @@ class Admin::PeopleController < Admin::AdminController
       current_person && current_person.promoter? && params[:format] == "xls" && params[:excel_layout] == "scoring_sheet"
       redirect_to unauthorized_path
     end
+  end
+
+  protected
+  
+  def assign_current_admin_tab
+    @current_admin_tab = "People"
   end
 end

@@ -1,8 +1,5 @@
 # Homepage articles. Includes XML format.
 class Admin::ArticlesController < Admin::AdminController
-  layout "admin/application"
-  before_filter :require_administrator
-
   def index
     if params[:article_category_id].nil?
       @articles = Article.all( :order => "title")
@@ -60,5 +57,9 @@ class Admin::ArticlesController < Admin::AdminController
     @article = Article.find(params[:id])
     @article.destroy
     redirect_to admin_articles_url
+  end
+
+  def assign_current_admin_tab
+    @current_admin_tab = "Articles"
   end
 end
