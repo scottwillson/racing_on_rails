@@ -44,6 +44,10 @@ module Concerns
         end
       end
 
+      def date_range_long_s=(value)
+        # Ignore
+      end
+
       def date_range_long_s
         date.to_s :long_with_week_day
       end
