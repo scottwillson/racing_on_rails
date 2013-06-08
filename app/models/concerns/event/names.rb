@@ -28,7 +28,7 @@ module Concerns
 
       # Try to intelligently combined parent name and child name for schedule pages
       def full_name
-        if parent.nil?
+        if parent_id.nil?
           name
         elsif parent.full_name == name
           name
