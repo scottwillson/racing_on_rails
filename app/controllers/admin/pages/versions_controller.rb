@@ -2,9 +2,6 @@ module Admin
   module Pages
     # Show old versions of Pages
     class VersionsController < Admin::AdminController
-      before_filter :require_administrator
-      layout "admin/application"
-
       def edit
         @version = Page::Version.find(params[:id])
         @page = @version.versioned

@@ -4,7 +4,6 @@ module Admin
     before_filter :assign_race, :only => [ :create, :destroy, :edit, :new, :update, :update_attribute ]
     before_filter :require_administrator_or_promoter, :only => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
     before_filter :require_administrator, :except => [ :create, :destroy, :edit, :new, :propagate, :update, :update_attribute ]
-    layout "admin/application"
 
     def new
       render :edit

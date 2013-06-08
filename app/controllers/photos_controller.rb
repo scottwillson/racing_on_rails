@@ -1,5 +1,4 @@
-class PhotosController < ApplicationController
-  before_filter :require_administrator
+class PhotosController < Admin::AdminController
   before_filter :assign_current_admin_tab
 
   def index

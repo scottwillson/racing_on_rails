@@ -1,9 +1,6 @@
 module Admin
   # Manage Asssociation and BAR categories
   class CategoriesController < Admin::AdminController
-    before_filter :require_administrator
-    layout "admin/application"
-
     # Show all Association Categories
     # === Assigns
     # * categories
