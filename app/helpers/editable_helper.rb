@@ -2,7 +2,7 @@ module EditableHelper
   def editable(object, attribute, options = {})
     object_name = ActiveModel::Naming.singular(object)
     
-    if options[:value].present?
+    if !options[:value].nil?
       value = options[:value]
     else
       value = object.send(attribute)
