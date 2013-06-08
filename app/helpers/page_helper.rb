@@ -5,7 +5,7 @@ module PageHelper
     if page
       render({ :inline => page.body }.merge(options))
     else
-      render({ :partial => path }.merge(options))
+      render path, options
     end
   end
   
