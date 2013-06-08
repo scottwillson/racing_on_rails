@@ -1,6 +1,6 @@
 module Admin
   class PostsController < Admin::AdminController
-    before_filter :require_administrator, :assign_mailing_list
+    before_filter :assign_mailing_list
     
     def index
       @posts = Post.paginate(
