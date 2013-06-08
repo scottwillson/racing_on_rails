@@ -13,7 +13,7 @@ class PasswordResetsController < ApplicationController
     if @people.any?
       Person.deliver_password_reset_instructions!(@people)
       flash[:notice] = "Please check your email. We've sent you password reset instructions."
-      redirect_to new_person_session_url(secure_redirect_options)
+      redirect_to new_password_reset_url(secure_redirect_options)
     else
       flash[:notice] = "Can't find anyone with this email address"
       render :new
