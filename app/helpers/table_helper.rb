@@ -52,7 +52,7 @@ module TableHelper
       locals[:sort_direction] = "asc"
     end
 
-    render :partial => "table/th", :locals => locals
+    render "table/th", locals
   end
   
   # Sort rows in memory based on +sort_by+. Paginated table contents need to be sorted in DB.
