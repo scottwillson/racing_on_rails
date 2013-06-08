@@ -38,6 +38,7 @@ module Schedule
       start_date = nil
       Event.transaction do
         table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
+        table.strip!
         events = parse_events(table)
         delete_all_future_events events
         multi_day_events = find_multi_day_events(events)
