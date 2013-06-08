@@ -50,13 +50,13 @@ module Admin
 
     def update_attribute
       respond_to do |format|
-        format.js {
+        format.js do
           @result = Result.find(params[:id])
           @result.send "#{params[:name]}=", params[:value]
           @result.save!
           expire_cache
           render :text => @result.send(params[:name]), :content_type => "text/html"
-        }
+        end
       end
     end
 
