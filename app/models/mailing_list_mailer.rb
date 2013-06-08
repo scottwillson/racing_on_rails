@@ -84,7 +84,7 @@ class MailingListMailer < ActionMailer::Base
         RacingOnRails::Application.exception_notifier.notify(save_error)
         raise
       end
-      post
     end
+    post
   end
 end
