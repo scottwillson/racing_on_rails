@@ -75,5 +75,9 @@ module Concerns
         end
       end
     end
+
+    def years(target_year)
+      (self.class.select(:date).map(&:year) << year << target_year).uniq.sort.reverse
+    end
   end
 end
