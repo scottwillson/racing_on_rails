@@ -20,6 +20,11 @@ class Ironman < Competition
     true
   end
   
+  def notes
+    "The Ironman Competition is a 'just for fun' record of the number of events riders do. There is no prize just identification of riders who need to get a life."
+  end
+  
+
   # Results as array of hashes. Select fewest fields needed to calculate results.
   # Some competition rules applied here in the query and results excluded. It's a judgement call to apply them here
   # rather than in #calculate.
