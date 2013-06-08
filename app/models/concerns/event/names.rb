@@ -10,16 +10,12 @@ module Concerns
       end
       
       def default_name
-        "New Event #{self.date.strftime("%-m-%-d-%Y")}"
+        "Untitled"
       end
   
       # Parent's name. Own name if no parent
       def parent_event_name
-        if parent.nil?
-          name
-        else
-          parent.name
-        end
+        parent.try(:name) || name
       end
   
       def name_with_date
