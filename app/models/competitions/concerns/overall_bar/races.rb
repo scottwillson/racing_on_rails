@@ -10,9 +10,11 @@ module Concerns
           event = children.detect { |e| e.discipline == discipline.name }
         end
 
-        if event
-          event.races.detect { |e| e.category == category }
-        end
+        ::Race.
+          where(:event_id => event.id).
+          where(:category_id => category.id).
+          includes(:results).
+          first
       end
 
       def create_races
