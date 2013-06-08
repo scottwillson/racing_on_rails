@@ -100,7 +100,7 @@ module Admin
     def toggle_member
       team = Team.find(params[:id])
       team.toggle!(:member)
-      render(:partial => "shared/member", :locals => { :record => team })
+      render :partial => "shared/member", :locals => { :record => team }
     end
     
     protected
