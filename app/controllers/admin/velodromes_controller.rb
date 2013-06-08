@@ -1,63 +1,65 @@
-# All succcessful edit expire cache.
- class Admin::VelodromesController < Admin::AdminController
-  def index
-    @velodromes = Velodrome.all( :order => "name")
-  end
+module Admin
+  # All succcessful edit expire cache.
+  class VelodromesController < Admin::AdminController
+    def index
+      @velodromes = Velodrome.all( :order => "name")
+    end
   
-  def new
-    @velodrome = Velodrome.new
-    render :action => "edit"
-  end
+    def new
+      @velodrome = Velodrome.new
+      render :action => "edit"
+    end
   
-  def create
-    expire_cache
-    @velodrome = Velodrome.create(params[:velodrome])
+    def create
+      expire_cache
+      @velodrome = Velodrome.create(params[:velodrome])
     
-    if @velodrome.errors.empty?
-      flash[:notice] = "Created #{@velodrome.name}"
-      return redirect_to(new_admin_velodrome_path)
+      if @velodrome.errors.empty?
+        flash[:notice] = "Created #{@velodrome.name}"
+        return redirect_to(new_admin_velodrome_path)
+      end
+      render(:template => 'admin/velodromes/edit')
     end
-    render(:template => 'admin/velodromes/edit')
-  end
   
-  def edit
-    @velodrome = Velodrome.find(params[:id])
-  end
+    def edit
+      @velodrome = Velodrome.find(params[:id])
+    end
   
-  def update
-    expire_cache
-    @velodrome = Velodrome.find(params[:id])
+    def update
+      expire_cache
+      @velodrome = Velodrome.find(params[:id])
     
-    if @velodrome.update_attributes(params[:velodrome])
-      flash[:notice] = "Updated #{@velodrome.name}"
-      return redirect_to(edit_admin_velodrome_path(@velodrome))
+      if @velodrome.update_attributes(params[:velodrome])
+        flash[:notice] = "Updated #{@velodrome.name}"
+        return redirect_to(edit_admin_velodrome_path(@velodrome))
+      end
+      render(:template => 'admin/velodromes/edit')
     end
-    render(:template => 'admin/velodromes/edit')
-  end
 
-  def update_attribute
-    respond_to do |format|
-      format.js {
-        @velodrome = Velodrome.find(params[:id])
-        @velodrome.send "#{params[:name]}=", params[:value]
-        @velodrome.save!
-        expire_cache
-        render :text => @velodrome.send(params[:name]), :content_type => "text/html"
-      }
+    def update_attribute
+      respond_to do |format|
+        format.js {
+          @velodrome = Velodrome.find(params[:id])
+          @velodrome.send "#{params[:name]}=", params[:value]
+          @velodrome.save!
+          expire_cache
+          render :text => @velodrome.send(params[:name]), :content_type => "text/html"
+        }
+      end
     end
-  end
 
-  def destroy
-    @velodrome = Velodrome.find(params[:id])
-    flash[:notice] = "Deleted #{@velodrome.name}"
-    @velodrome.destroy
-    redirect_to(admin_velodromes_path)
-    expire_cache
-  end
+    def destroy
+      @velodrome = Velodrome.find(params[:id])
+      flash[:notice] = "Deleted #{@velodrome.name}"
+      @velodrome.destroy
+      redirect_to(admin_velodromes_path)
+      expire_cache
+    end
   
-  protected
+    protected
 
-  def assign_current_admin_tab
-    @current_admin_tab = "Velodromes"
+    def assign_current_admin_tab
+      @current_admin_tab = "Velodromes"
+    end
   end
 end
