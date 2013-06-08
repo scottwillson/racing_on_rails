@@ -24,23 +24,27 @@ module EventsHelper
 
   # FIXME move to event?
   # Only show link if flyer approved
-  def public_link_to_flyer(event)
+  def public_link_to_flyer(event, text = nil)
     return unless event && event.respond_to?(:flyer)
     if event.flyer_approved?
-      link_to_flyer event
+      link_to_flyer event, text
+    elsif text.present?
+      text
     else
       event.full_name
     end
   end
 
   # Show link even if not approved
-  def link_to_flyer(event)
+  def link_to_flyer(event, text = nil)
     return unless event
     
+    text = text || event.full_name
+    
     if event.flyer.blank?
-      event.full_name
+      text
     else
-      link_to(event.full_name, event.flyer).html_safe
+      link_to(text, event.flyer).html_safe
     end
   end
 end
