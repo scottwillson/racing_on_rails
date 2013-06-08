@@ -1,8 +1,8 @@
 <% @page_title = "BAR" %>
 
-<%= render :partial => "years", :locals => { :overall_bar => @overall_bar, :race => @race } %>
-<%= render :partial => "disciplines", :locals => { :overall_bar => @overall_bar, :race => @race } %>
-<%= render :partial => "races", :locals => { :race => @race } %>
+<%= render "years", :overall_bar => @overall_bar, :race => @race, :year => @year %>
+<%= render("disciplines", :overall_bar => @overall_bar, :race => @race, :discipline => @overall_bar.discipline) if @overall_bar %>
+<%= render("races", :race => @race, :categories => @overall_bar.races_with_results.map(&:category)) if @race %>
 
 <div class="column_grid_container">
   <div class="prepend-1 span-4">

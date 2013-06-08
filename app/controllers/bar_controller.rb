@@ -5,6 +5,7 @@ class BarController < ApplicationController
   
   def index
     @overall_bar = OverallBar.find_for_year
+    @year = RacingAssociation.current.effective_year
   end
 
   # Default to Overall BAR with links to disciplines
@@ -41,11 +42,5 @@ class BarController < ApplicationController
       flash.now[:warn] = "Could not find results"
       return render(:show)
     end
-    
-    # Optimization
-    @results = Result.all( 
-                           :include => [ :person, :team ],
-                           :conditions => [ 'race_id = ?', @race.id ]
-    ) if @race
   end
 end

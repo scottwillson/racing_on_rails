@@ -1,17 +1,14 @@
-<% if @race
-     @page_title = "BAR: #{@race.year}: #{@race.discipline}: #{@race.category.name}"
-   else
-     @page_title = "BAR"
-   end  -%>
-
-<%= render :partial => "years", :locals => { :overall_bar => @overall_bar, :race => @race } %>
-<%= render :partial => "disciplines", :locals => { :overall_bar => @overall_bar, :race => @race } %>
-
-<% if @race && @race.results.any? -%>
-<h2><%= @race.year %> <%= @race.discipline %> BAR</h2>
-<div class="updatedon centered">Updated <%= @race.updated_at.to_formatted_s(:long) %></div>
-<% end -%>
-
-<%= render :partial => "races", :locals => { :race => @race } %>
+<% if @race -%>
+  <% @page_title = "BAR: #{@race.year}: #{@race.discipline}: #{@race.category.name}" %>
+  <%= render "years", :overall_bar => @overall_bar, :race => @race, :year => @year %>
+  <%= render "disciplines", :overall_bar => @overall_bar, :race => @race, :discipline => @race.discipline %>
+  <h2><%= @race.year %> <%= @race.discipline %> <%= @race.name %> BAR</h2>
+  <%= render "races", :race => @race, :categories => @race.event.races_with_results.map(&:category) %>
+  <p class="created_updated">Updated <%= @race.updated_at.to_formatted_s(:long) %></p>
+<% else %>
+  <% @page_title = "BAR" %>
+  <h2><%= @year %> BAR</h2>
+  <%= render "years", :overall_bar => @overall_bar, :race => @race, :year => @year %>
+<% end %>
 
 <%= results_table @race %>
