@@ -21,11 +21,12 @@ class PostsController < ApplicationController
     end
     
     if @subject.present?
-      if @subject.size >= 4
-        @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject)
-      else
-        @posts = []
-        flash[:notice] = "Search text must be at least four letters"
+      @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject).order("date desc")
+
+      if @subject.size < 4
+        flash[:notice] = "Searches must be at least four letters"
+      elsif @posts.count == 0
+        flash[:notice] = "No posts with subject matching '#{@subject}'"
       end
     end
     
