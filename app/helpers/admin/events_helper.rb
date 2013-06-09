@@ -5,7 +5,7 @@ module Admin::EventsHelper
   def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
     caption ||= link_to("Schedule", schedule_path)
     footer ||= link_to("More &hellip;".html_safe, schedule_path)
-    render_page 'events/upcoming', :locals => { :upcoming_events => upcoming_events, :caption => caption.html_safe, :footer => footer.html_safe }
+    render_page 'events/upcoming', :upcoming_events => upcoming_events, :caption => caption.html_safe, :footer => footer.html_safe
   end
   
   # Road upcoming events, Track upcoming events, etc …
@@ -15,7 +15,7 @@ module Admin::EventsHelper
     else
       caption = "&nbsp;".html_safe
     end
-    render :partial => 'events/discipline_upcoming', :locals => { :discipline => discipline, :dates => upcoming_events.dates, :caption => caption }
+    render :partial => 'events/discipline_upcoming', :discipline => discipline, :dates => upcoming_events.dates, :caption => caption
   end
 
   # Sunday, Monday, …

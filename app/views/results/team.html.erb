@@ -1,6 +1,6 @@
 <% @page_title = "Results: #{@team.name}" %>
 
-<%= render_page "results/team_years", :locals => { :team => @team } %>
+<%= render_page "results/team_years", :team => @team %>
 
 <h3><%= @team.name %></h3>
 <%= participant_event_results_table @team, @event_results %>

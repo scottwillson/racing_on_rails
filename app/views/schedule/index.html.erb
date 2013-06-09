@@ -6,8 +6,8 @@
     tabs.add(month.name, :anchor => month.name)
   end
 end -%>
-<%= render_page "sanctioning_organizations", :locals => { :year => @year, :sanctioning_organizations => @sanctioning_organizations } %>
-<%= render_page "schedule/disciplines", :locals => { :year => @year } %>
+<%= render_page "sanctioning_organizations", :year => @year, :sanctioning_organizations => @sanctioning_organizations %>
+<%= render_page "schedule/disciplines", :year => @year, :discipline => @discipline %>
 <%= render_page "schedule/tentative" %>
 
 <%= render_page "schedule/others" %>
