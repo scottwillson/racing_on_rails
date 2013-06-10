@@ -15,7 +15,7 @@ module Admin::EventsHelper
     else
       caption = "&nbsp;".html_safe
     end
-    render :partial => 'events/discipline_upcoming', :discipline => discipline, :dates => upcoming_events.dates, :caption => caption
+    render 'events/discipline_upcoming', :discipline => discipline, :dates => upcoming_events.dates, :caption => caption
   end
 
   # Sunday, Monday, …
