@@ -25,10 +25,6 @@ module RacingOnRails
     
     config.assets.enabled = true
     config.assets.version = "1.0"
-    config.assets.paths.insert 0, Rails.root.join("local", "app", "assets", "images")
-    config.assets.paths.insert 0, Rails.root.join("local", "app", "assets", "javascripts")
-    config.assets.paths.insert 0, Rails.root.join("local", "app", "assets", "stylesheets")
-    config.assets.paths << Rails.root.join("app", "assets", "stylesheets")
   
     config.time_zone = "Pacific Time (US & Canada)"
     
