@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
 
 
   before_filter :clear_racing_association, :toggle_tabs
-  helper_method :secure_redirect_options
 
   def self.expire_cache
     begin
