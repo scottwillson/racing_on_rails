@@ -15,6 +15,6 @@ class IronmanController < ApplicationController
                                   :page =>  page
                                 )
     end
-    @years = Ironman.years
+    @years = @ironman.years(@year)
   end
 end

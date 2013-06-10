@@ -74,10 +74,10 @@ module Concerns
           errors.add :date, "and end date must be in same year"
         end
       end
-    end
 
-    def years(target_year)
-      (self.class.select(:date).map(&:year) << year << target_year).uniq.sort.reverse
+      def years(target_year)
+        (self.class.select(:date).map(&:year) << year.to_i << target_year.to_i).uniq.sort.reverse
+      end
     end
   end
 end
