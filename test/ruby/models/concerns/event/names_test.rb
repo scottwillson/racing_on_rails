@@ -8,12 +8,15 @@ class Concerns::Event::NamesTest < Ruby::TestCase
     include Concerns::Event::Dates
     include Concerns::Event::Names
     
-    attr_accessor :date, :name, :children, :parent
+    attr_accessor :date, :name, :children, :parent, :parent_id
     
     def initialize(attributes)
       self.date = attributes[:date]
       self.name = attributes[:name]
       self.parent = attributes[:parent]
+      if parent
+        self.parent_id = 2
+      end
       self.children = []
     end
   end
