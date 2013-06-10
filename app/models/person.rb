@@ -494,6 +494,24 @@ class Person < ActiveRecord::Base
     gender == "M"
   end
 
+  def age_category
+    if female?
+      if junior?
+        "girl"
+      else
+        "woman"
+      end
+    else
+      if master?
+        "master"
+      elsif junior?
+        "boy"
+      else
+        "man"
+      end
+    end
+  end
+
   # Oldest age person will be at any point in year
   def racing_age
     if date_of_birth
