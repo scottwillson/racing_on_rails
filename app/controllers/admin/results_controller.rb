@@ -55,7 +55,14 @@ module Admin
           @result.send "#{params[:name]}=", params[:value]
           @result.save!
           expire_cache
-          render :text => @result.send(params[:name]), :content_type => "text/html"
+        
+          if @result.respond_to?("#{params[:name]}_s")
+            text = @result.send("#{params[:name]}_s")
+          else
+            text = @result.send(params[:name])
+          end
+        
+          render :text => text, :content_type => "text/html"
         end
       end
     end
