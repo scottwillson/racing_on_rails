@@ -24,9 +24,8 @@
 <% end -%>
 
 <span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
-
-<%- @event.races do |race| -%>
-  <%- unless race.results.empty? -%>
+<%- @event.races.each do |race| -%>
+  <%- if race.results.present? -%>
     <%= results_table race %>
   <%- end -%>
 <%- end -%>
