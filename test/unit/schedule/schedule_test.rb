@@ -66,7 +66,7 @@ class ScheduleTest < ActiveSupport::TestCase
     before_import_all = Event.count
     assert_equal(7, before_import_all, "All events count before import")
     
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../files/schedule/excel.xls")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/excel.xls")
     Schedule::Schedule.import(filename)
 
     expected = {
@@ -346,7 +346,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, :name => "Criterium")
     Team.create!(:id => 1200000, :name => "Bike Team")
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../files/schedule/tab-delimited.txt")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/tab-delimited.txt")
     Schedule::Schedule.import(filename)
 
     butte_hc = Event.find_by_name("Butte Hillclimb")
@@ -381,7 +381,7 @@ class ScheduleTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:discipline, :name => "Criterium")
     Team.create!(:id => 1200000, :name => "Bike Team")
-    filename = File.expand_path(File.dirname(__FILE__) + "/../../files/schedule/comma-delimited.csv")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../../fixtures/schedule/comma-delimited.csv")
     Schedule::Schedule.import(filename)
 
     butte_hc = Event.find_by_name("Butte Hillclimb")

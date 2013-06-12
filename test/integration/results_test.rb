@@ -13,7 +13,7 @@ class ResultsTest < ActionController::IntegrationTest
     get edit_admin_event_path(event)
     assert_response :success
 
-    post upload_admin_event_path(event), :results_file => fixture_file_upload(File.expand_path("../../fixtures/files/results/dh.xls", __FILE__), "application/vnd.ms-excel", :binary)
+    post upload_admin_event_path(event), :results_file => fixture_file_upload("results/dh.xls", "application/vnd.ms-excel", :binary)
     assert_response :redirect
     follow_redirect!
     assert_response :success

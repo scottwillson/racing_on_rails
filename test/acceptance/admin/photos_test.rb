@@ -8,7 +8,7 @@ module Admin
       login_as FactoryGirl.create(:administrator)
 
       visit "/photos/new"
-      attach_file "photo_image", "#{Rails.root}/test/files/photo.jpg"
+      attach_file "photo_image", "#{Rails.root}/test/fixtures/photo.jpg"
       fill_in "Caption", :with => "Bike racer wins the bike race"
       click_button "Save"
       

@@ -31,7 +31,7 @@ class PhotosControllerTest < ActionController::TestCase
     
     post :create, :photo => {
       :caption => "Caption",
-      :image => fixture_file_upload("../files/photo.jpg")
+      :image => fixture_file_upload("photo.jpg")
     }
 
     assert_redirected_to edit_photo_path(assigns(:photo))
@@ -52,7 +52,7 @@ class PhotosControllerTest < ActionController::TestCase
     post :create, :photo => {
       :caption => "Caption",
       :title => "Title",
-      :image => fixture_file_upload("../files/photo.jpg")
+      :image => fixture_file_upload("photo.jpg")
     }
     assert_redirected_to new_person_session_path
   end

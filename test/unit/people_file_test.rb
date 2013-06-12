@@ -27,11 +27,11 @@ class PersonFileTest < ActiveSupport::TestCase
       :ccx_category => "A",
       :road_category => "1",
       :track_category => "5",
-      :notes => 'Spent Christmans in Belgium',
+      :notes => 'Spent Christmas in Belgium',
       :login => "sellwood"
     )
 
-    file = File.new("#{File.dirname(__FILE__)}/../files/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
+    file = File.new("#{Rails.root}/test/fixtures/membership/55612_061202_151958.csv, attachment filename=55612_061202_151958.csv")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([4, 1], people, 'Number of people created and updated')
@@ -53,7 +53,7 @@ class PersonFileTest < ActiveSupport::TestCase
     assert_equal('Expert Junior', tonkin.mtb_category, 'MTB cat')
     assert_equal('Physician', tonkin.occupation, 'occupation')
     assert_equal("Sorella Forte Elite Team", tonkin.team_name, 'Team')
-    notes = %Q{Spent Christmans in Belgium
+    notes = %Q{Spent Christmas in Belgium
 Receipt Code: 2R2T6R7
 Confirmation Code: 462TLJ7
 Transaction Payment Total: 32.95
@@ -161,7 +161,7 @@ Downhill/Cross Country: Downhill}
       :first_name => 'Scott'
     )
 
-    file = File.new("#{File.dirname(__FILE__)}/../files/membership/database.xls")
+    file = File.new("#{Rails.root}/test/fixtures/membership/database.xls")
     people = PeopleFile.new(file).import(true)
     
     assert_equal([2, 3], people, 'Number of people created and updated')
@@ -263,7 +263,7 @@ Downhill/Cross Country: Downhill}
     existing_person_with_login = FactoryGirl.create(:person_with_login, :name => "Erik Tonkin")
     existing_person = FactoryGirl.create(:person, :name => "Erik Tonkin")
     
-    file = File.new("#{File.dirname(__FILE__)}/../files/membership/duplicates.xls")
+    file = File.new("#{Rails.root}/test/fixtures/membership/duplicates.xls")
     people_file = PeopleFile.new(file)
     
     people_file.import(true)

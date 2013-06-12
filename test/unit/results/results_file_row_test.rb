@@ -6,13 +6,13 @@ require "spreadsheet"
 module Results
   class ResultsFileRowTest < ActiveSupport::TestCase
     def test_create_row
-      book = ::Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
       Results::Row.new(spreadsheet_row, {}, false)
     end
   
     def test_row_last?
-      book = ::Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(0)
 
       row = Results::Row.new(spreadsheet_row, {}, false)
@@ -24,7 +24,7 @@ module Results
     end
   
     def test_hash_access
-      book = ::Spreadsheet.open(File.expand_path("../../../files/results/pir_2006_format.xls", __FILE__))
+      book = ::Spreadsheet.open(File.expand_path("../../../fixtures/results/pir_2006_format.xls", __FILE__))
       spreadsheet_row = book.worksheet(0).row(2)
 
       row = Results::Row.new(spreadsheet_row, { :place => 0, :last_name => 3 }, false)

@@ -1,6 +1,6 @@
 require File.expand_path("../../test_helper", __FILE__)
 
-ActionController::Base.prepend_view_path "test/files/views"
+ActionController::Base.prepend_view_path "#{Rails.root}/test/fixtures/views"
 
 # :stopdoc:
 class FakeController < ApplicationController

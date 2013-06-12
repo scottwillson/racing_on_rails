@@ -127,7 +127,15 @@ FactoryGirl.define do
       end
     end
   end
-  
+
+  factory :photo do
+    caption "Photo Caption"
+    image { File.new("#{Rails.root}/test/fixtures/photo.jpg") }
+    title "Photo title"
+    height 100
+    width 137
+  end
+
   factory :post do
     mailing_list
     subject "[OBRA Chat] Foo"
@@ -135,14 +143,6 @@ FactoryGirl.define do
     from_name "Foo"
     body "Test message"
     date Time.zone.today
-  end
-
-  factory :photo do
-    caption "Photo Caption"
-    image { File.new("#{Rails.root}/test/files/photo.jpg") }
-    title "Photo title"
-    height 100
-    width 137
   end
 
   factory :race do

@@ -1,5 +1,7 @@
 require File.expand_path("../../test_helper", __FILE__)
 
+ActionController::Base.prepend_view_path "test/fixtures/views"
+
 # :stopdoc:
 class PagesControllerTest < ActionController::TestCase
   setup :create_page
