@@ -5,11 +5,22 @@ class ResultsHelperTest < ActionView::TestCase
   setup do
     self.stubs(:mobile_request? => false)
   end
-  
+
   def test_results_table
     race = Race.new(:results => [ Result.new(:place => "1")])
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table.results").present?
+  end
+
+  def test_results_table_one_ttt
+    race = Race.new(:results => [ 
+      Result.new(:place => "1"),
+      Result.new(:place => "1"),
+      Result.new(:place => "1")
+    ])
+    table = Nokogiri::HTML(results_table(race))
+    assert table.css("table.results").present?
+    assert table.css("td.place").present?, "Should have place column in #{table}"
   end
 
   def test_participant_event_results_table_person

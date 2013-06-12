@@ -6,7 +6,7 @@ gem "fastercsv", :platforms => :ruby_18
 gem "oj"
 gem "rake"
 gem "authlogic"
-gem "tabular", ">0.2.0"
+gem "tabular", ">=0.2.3"
 gem "mysql2"
 gem "pdf-reader", :require => "pdf/reader"
 gem "Ascii85", :require => "ascii85"

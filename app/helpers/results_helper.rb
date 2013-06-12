@@ -31,7 +31,7 @@ module ResultsHelper
     # Minor speed improvement
     unless mobile_request?
       table.delete_blank_columns!
-      table.delete_homogenous_columns!
+      table.delete_homogenous_columns!(:except => [ :place, :number, :time ])
     end
 
     table.renderer = Renderers::DefaultResultRenderer
