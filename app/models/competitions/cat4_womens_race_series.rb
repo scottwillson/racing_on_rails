@@ -16,6 +16,8 @@ class Cat4WomensRaceSeries < Competition
           LEFT JOIN categories ON categories.id = races.category_id 
           LEFT JOIN events ON races.event_id = events.id 
           WHERE (place > 0 or place is null or place = '')
+            and results.name is not null
+            and results.name != ""
             and categories.id in (?)
             and (events.type = "SingleDayEvent" or events.type is null or events.id in (?))
             and events.ironman is true
