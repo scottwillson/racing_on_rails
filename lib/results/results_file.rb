@@ -112,6 +112,11 @@ module Results
         event.enable_notification!
         CombinedTimeTrialResults.create_or_destroy_for!(event)
       end
+      
+      if import_warnings.to_a.size > 10
+        self.import_warnings = import_warnings.to_a[0, 10]
+      end
+      
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} import done")
     end
 
@@ -271,7 +276,7 @@ module Results
             if race?(row) && result.place != 1
               self.import_warnings << "First racer #{row[:first_name]} #{row[:last_name]} should be 1st place racer. "
             # if we have a previous rov and the current place is not one more than the previous place, then sequence error.
-            elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
+          elsif !race?(row) && row.previous && row.previous[:place].present? && row.previous[:place].to_i != (result.place - 1)
               self.import_warnings << "Non-sequential placings detected for racer: #{row[:first_name]} #{row[:last_name]}. " unless row[:category_name].to_s.downcase.include?("tandem") # or event is TTT or ???
           end
         elsif result.place.present?
