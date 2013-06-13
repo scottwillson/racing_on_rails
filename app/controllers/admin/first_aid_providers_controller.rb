@@ -7,8 +7,6 @@ module Admin
     helper :table
 
     def index
-      @year = RacingAssociation.current.effective_year
-    
       @past_events = (params[:past_events] == "true") || false
       if @past_events
         conditions = [ 'date >= ?', RacingAssociation.current.effective_today ]

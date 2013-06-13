@@ -83,8 +83,6 @@ class ScheduleController < ApplicationController
   private
 
   def assign_schedule_data
-    @year = params["year"].to_i
-    @year = RacingAssociation.current.effective_year if @year == 0
     start_date = params["start"]
     end_date = params["end"]
     @discipline = Discipline[params["discipline"]]

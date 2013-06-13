@@ -7,8 +7,6 @@ class ResultsController < ApplicationController
   # == Params
   # * year (optional)
   def index
-    @year = params['year'].to_i
-    @year = Time.zone.today.year if @year == 0
     @discipline = Discipline[params['discipline']]
     @discipline_names = Discipline.names
     @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
@@ -71,7 +69,7 @@ class ResultsController < ApplicationController
   # Person's Results for an entire year
   def person
     @person = Person.find(params[:person_id])
-    set_date_and_year
+    set_date
     @event_results = Result.where(
       "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year
     )
@@ -89,7 +87,7 @@ class ResultsController < ApplicationController
   # Teams's Results for an entire year
   def team
     @team = Team.find(params[:team_id])
-    set_date_and_year
+    set_date
     @event_results = Result.where("team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year)
     respond_to do |format|
       format.html
@@ -101,13 +99,8 @@ class ResultsController < ApplicationController
   
   private
   
-  def set_date_and_year
-    if params[:year] && params[:year][/\d\d\d\d/].present?
-      @year = params[:year].to_i
-    else
-      @year = Time.zone.today.year
-    end
-    @date = Date.new(@year)
+  def set_date
+    @date = Time.zone.local(@year).to_date
   end
   
   def results_for_api(event_id)

@@ -14,8 +14,6 @@ module Admin
     # * schedule
     # * year
     def index
-      @year = params["year"].to_i
-      @year = RacingAssociation.current.effective_year if @year == 0
       @competitions = Event.all(
                           :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
                         )

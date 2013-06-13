@@ -82,7 +82,6 @@ module Admin
     end
   
     def new
-      @year = current_date.year
       @person = Person.new
       @race_numbers = []
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
@@ -91,7 +90,6 @@ module Admin
   
     def edit
       @person = Person.find(params[:id])
-      @year = current_date.year
       @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     end
@@ -133,7 +131,6 @@ module Admin
           redirect_to(edit_admin_person_path(@person))
         end
       else
-        @year = current_date.year
         @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
         @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
         render :edit
@@ -201,7 +198,6 @@ module Admin
         end
       end
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
-      @year = params[:year] || RacingAssociation.current.effective_year
       @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
       render :edit
     end
@@ -323,7 +319,6 @@ module Admin
         expire_cache
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
-        @year = current_date.year
         @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
         @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
         render :edit
@@ -338,7 +333,6 @@ module Admin
     end
   
     def number_year_changed
-      @year = params[:year] || current_date.year
       if params[:id]
         @person = Person.find(params[:id])
         @race_numbers = RaceNumber.all(

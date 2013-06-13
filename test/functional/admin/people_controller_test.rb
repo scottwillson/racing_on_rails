@@ -276,7 +276,7 @@ module Admin
       assert_template("admin/people/_numbers")
       assert_not_nil(assigns["race_numbers"], "Should assign 'race_numbers'")
       assert_not_nil(assigns["year"], "Should assign today's year as 'year'")
-      assert_equal('2010', assigns["year"], "Should assign selected year as 'year'")
+      assert_equal(2010, assigns["year"], "Should assign selected year as 'year'")
       assert_not_nil(assigns["years"], "Should assign range of years as 'years'")
       assert(assigns["years"].size >= 2, "Should assign range of years as 'years', but was: #{assigns[:years]}")
     end

@@ -1,6 +1,5 @@
 class IronmanController < ApplicationController
   def index
-    @year = params['year'] || Time.zone.today.year.to_s
     date = Date.new(@year.to_i, 1, 1)
     @ironman = Ironman.first(:conditions => ['date = ?', date])
 

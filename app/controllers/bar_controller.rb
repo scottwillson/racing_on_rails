@@ -5,13 +5,10 @@ class BarController < ApplicationController
   
   def index
     @overall_bar = OverallBar.find_for_year
-    @year = RacingAssociation.current.effective_year
   end
 
   # Default to Overall BAR with links to disciplines
   def show
-    @year = params['year'].to_i
-
     discipline = Discipline[params['discipline']]
     if discipline.nil?
       flash.now[:warn] = "Could not find discipline \'#{params['discipline']}\'"
