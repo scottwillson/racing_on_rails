@@ -1,7 +1,7 @@
 <% if @event.races_with_results.size > 1 %>
 <br />
 <table class="event_races top_margin">
-  <%- @event.races_with_results.sort.each_row_with_index do |row, row_index| -%>
+  <%- @event.races_with_results.sort.each_row do |row| -%>
   <tr>
     <td>
       <%= link_to row.first.name, "#race_#{row.first.id}" %>

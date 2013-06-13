@@ -43,7 +43,7 @@ module RacingOnRails
     require "#{config.root}/app/helpers/racing_on_rails/form_builder"
     config.action_view.default_form_builder = ::RacingOnRails::FormBuilder
 
-    require "array/each_row_with_index"
+    require "array/each_row"
     require "array/stable_sort"
 
     if File.exists?("#{config.root}/local/config/database.yml")
