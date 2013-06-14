@@ -67,7 +67,15 @@ class OregonWomensPrestigeSeries < Competition
     
     # Only consider results with categories that match +race+'s category
     if categories?
-      query = query.where("races.category_id in (?)", category_ids_for(race))
+      # Special case for OWPS
+      if race.category.name == "Women 1/2/3"
+        query = query.where(
+          "races.category_id in (?) or (races.category_id = ? and races.event_id = ?)", 
+          category_ids_for(race), 4, 21370
+        )
+      else
+        query = query.where("races.category_id in (?)", category_ids_for(race))
+      end
     end
     
     results = Result.connection.select_all(query)
