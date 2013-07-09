@@ -80,6 +80,38 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
   end
 
+  def test_calculate_handle_ttt_results
+    source_results = [ 
+      { event_id: 1, race_id: 1, participant_id: 1, place: 1 },
+      { event_id: 1, race_id: 1, participant_id: 1, place: 1 },
+      { event_id: 1, race_id: 1, participant_id: 1, place: 1 },
+      { event_id: 1, race_id: 1, participant_id: 1, place: 2 },
+      { event_id: 1, race_id: 1, participant_id: 2, place: 2 },
+      { event_id: 1, race_id: 1, participant_id: 2, place: 2 },
+      { event_id: 1, race_id: 1, participant_id: 2, place: 2 }
+    ]
+    expected = [
+      result(place: 1, participant_id: 1, points: 34, scores: [ 
+        { numeric_place: 1, participant_id: 1, points: 10 },
+        { numeric_place: 2, participant_id: 1, points: 9 },
+        { numeric_place: 3, participant_id: 1, points: 8 },
+        { numeric_place: 4, participant_id: 1, points: 7 }
+      ]),
+      result(place: 2, participant_id: 2, points: 13, scores: [ 
+        { numeric_place: 1, participant_id: 2, points: 10 },
+        { numeric_place: 8, participant_id: 2, points: 3 }
+      ])
+    ]
+    actual = Competitions::Calculator.calculate(
+      source_results, 
+      point_schedule: [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ], 
+      results_per_event: 3, 
+      results_per_race: Competitions::Calculator::UNLIMITED, 
+      members_only: false
+    )
+    assert_equal_results expected.sort_by(&:participant_id), actual.sort_by(&:participant_id)
+  end
+
   def test_calculate_should_ignore_non_scoring_results
     source_results = [ 
       { event_id: 1, participant_id: 1, place: "", member_from: Date.new(2012), member_to: end_of_year },
@@ -205,7 +237,7 @@ class Competitions::CalculatorTest < Ruby::TestCase
     assert_equal_results expected, actual
   end
   
-  def test_select_eligible_should_sort_choose_best_results
+  def test_select_eligible_should_choose_best_results
     source_results = [ 
       result(id: 1, event_id: 1, race_id: 1, participant_id: 1, place: "200"),
       result(id: 2, event_id: 1, race_id: 1, participant_id: 1, place: "6"),
