@@ -37,6 +37,7 @@ gem "rmagick"
 gem "formatize"
 gem "json", ">= 1.7.7"
 gem "nokogiri"
+gem "skylight"
 
 group :assets do
   gem "sass-rails",   "~> 3.2"
