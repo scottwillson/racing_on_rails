@@ -2,7 +2,7 @@ class OregonWomensPrestigeSeries < Competition
   include Concerns::Competition::CalculatorAdapter
   
   def friendly_name
-    "Oregon Womens Prestige Series"
+    "Oregon Women's Prestige Series"
   end
   
   def category_names
