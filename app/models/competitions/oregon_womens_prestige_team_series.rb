@@ -2,7 +2,7 @@ class OregonWomensPrestigeTeamSeries < Competition
   include Concerns::Competition::CalculatorAdapter
   
   def friendly_name
-    "Oregon Womens Prestige Team Series"
+    "Oregon Women's Prestige Team Series"
   end
   
   def category_names
@@ -69,10 +69,13 @@ class OregonWomensPrestigeTeamSeries < Competition
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("year = ?", year)
     
-    # Only consider results with categories that match +race+'s category
-    if categories?
-      query = query.where("races.category_id in (?)", category_ids_for(race))
-    end
+      if categories?
+        # Special case for OWPS
+        query = query.where(
+          "races.category_id in (?) or (races.category_id = ? and races.event_id = ?)", 
+          category_ids_for(race), 4, 21370
+        )
+      end
 
     results = Result.connection.select_all query
     results = results.reject do |result|
