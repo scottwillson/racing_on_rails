@@ -35,7 +35,7 @@
       "startup_list": [ 1, "http://fls.doubleclick.net/", "http://fonts.googleapis.com/", "http://ssl.gstatic.com/", "http://themes.googleusercontent.com/", "http://tools.google.com/", "http://www.google-analytics.com/", "http://www.google.com/" ]
    },
    "download": {
-      "default_directory": "/tmp/webdriver-downloads",
+      "default_directory": "/private/tmp/webdriver-downloads",
       "directory_upgrade": true,
       "extensions_to_open": ""
    },
