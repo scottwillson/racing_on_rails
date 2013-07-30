@@ -7,6 +7,7 @@
   end
 end -%>
 <%= render_page "sanctioning_organizations", :year => @year, :sanctioning_organizations => @sanctioning_organizations %>
+<%= render_page "regions", :year => @year, :regions => @regions, :region => @region %>
 <%= render_page "schedule/disciplines", :year => @year, :discipline => @discipline %>
 <%= render_page "schedule/tentative" %>
 
@@ -18,7 +19,7 @@ end -%>
 <%- end %>
 
 <div class="container">
-  <%- for month in @schedule.months -%>
+  <%- @schedule.months.each do |month| -%>
   <%= table :class => "calendar", :caption => "<a name='#{month.name}'>#{month.name} #{@year}</a>".html_safe do %>
       <tr>
         <th>Sunday</th>

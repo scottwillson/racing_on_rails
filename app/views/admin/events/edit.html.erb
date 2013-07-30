@@ -66,6 +66,10 @@
         <%= f.label :city, "City, State" %>
         <%= f.text_field :city, :class => "city_no_zip" %> <%= f.text_field :state, :class => "state_no_zip" %>
 
+        <% if Region.count > 0 -%>
+        <%= f.labelled_select :region_id, Region.order("name").all.map { |r| [ r.name, r.id ] } %>
+        <%- end %>
+
         <% if RacingAssociation.current.show_events_velodrome? && administrator? -%>
         <%= f.labelled_select(:velodrome_id, Velodrome.all.sort_by(&:name).collect {|v| [ v.name, v.id ] }, :include_blank => true) %>
         <% end -%>

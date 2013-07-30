@@ -82,6 +82,7 @@ class Event < ActiveRecord::Base
              :after_remove => :children_changed 
 
   belongs_to :velodrome
+  belongs_to :region
   
   scope :editable_by, lambda { |person|
     if person.nil?
@@ -197,6 +198,7 @@ class Event < ActiveRecord::Base
       self.name = default_name                   if self[:name].nil?
       self.ironman = default_ironman             if self[:ironman].nil?
       self.number_issuer = default_number_issuer if number_issuer.nil?
+      self.region_id = default_region_id         if self[:region_id].nil?
       self.sanctioned_by = default_sanctioned_by if (parent.nil? && self[:sanctioned_by].nil?) || (parent && parent[:sanctioned_by].nil?)
       self.state = default_state                 if (parent.nil? && self[:state].nil?) || (parent && parent[:state].nil?)
     end
@@ -219,6 +221,10 @@ class Event < ActiveRecord::Base
   
   def default_ironman
     1
+  end
+  
+  def default_region_id
+    RacingAssociation.current.default_region_id
   end
   
   def default_state

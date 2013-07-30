@@ -9,6 +9,7 @@ class RacingAssociation < ActiveRecord::Base
   # TODO bmx_numbers? Shouldn't this be in disciplines?
 
   belongs_to :cat4_womens_race_series_category, :class_name => "Category"
+  belongs_to :default_region, :class_name => "Region"
 
   attr_accessor :person
 

@@ -82,33 +82,45 @@ class ScheduleController < ApplicationController
 
   private
 
-  def assign_schedule_data
-    start_date = params["start"]
-    end_date = params["end"]
-    @discipline = Discipline[params["discipline"]]
-    @discipline_names = Discipline.names
-    
-    if !start_date.blank? and !end_date.blank?
-      @events = SingleDayEvent.find_all_by_unix_dates(start_date, end_date, @discipline)
-    else
-      @events = SingleDayEvent.find_all_by_year(@year, @discipline)
-    end
-    
+  def assign_schedule_data    
     if RacingAssociation.current.include_multiday_events_on_schedule?
-      #we will remove the single day events that are children of multi-day events
-      if !start_date.blank? and !end_date.blank?
-        @events += MultiDayEvent.find_all_by_unix_dates(start_date, end_date, @discipline)
-      else
-        @events += MultiDayEvent.find_all_by_year(@year, @discipline)
+      query = Event.where(:parent => nil).where("type != ?", "Event").includes(:parent)
+    else
+      query = Event.where(:type => "SingleDayEvent").includes(:parent)
+    end
+    
+    if !RacingAssociation.current.show_practices_on_calendar?
+      query = query.where(:practice => false)
+    end
+    
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+      query = query.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+    elsif RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
+      query = query.where(:sanctioned_by => params[:sanctioning_organization])
+    end
+
+    start_date = params[:start]
+    end_date = params[:end]
+    if start_date.present? && end_date.present?
+      query = query.where("date between ? and ?", start_date, end_date)
+    end
+
+    @discipline = Discipline[params[:discipline]]
+    if @discipline.present?
+      query = query.where(:discipline => @discipline.name)
+    end
+    
+    if RacingAssociation.current.filter_schedule_by_region?
+      @regions = Region.all
+      @region = Region.where(:friendly_param => params[:region]).first
+      if @region.present?
+        query = query.where(:region_id => @region.id)
       end
-      @events.delete_if {|x| !x.parent_id.nil? } #remove child events
     end
 
-    if RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
-      @events = @events.select { |event| event.sanctioned_by == params[:sanctioning_organization] }
-    end
-
+    @events = query.all
     @schedule = Schedule::Schedule.new(@year, @events)
+    @discipline_names = Discipline.names
   end
   
   def assign_sanctioning_organizations

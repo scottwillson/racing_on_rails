@@ -169,6 +169,26 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     end
   end
   
+  def test_filter_by_region
+    Timecop.freeze(2010, 2) do
+      racing_association = RacingAssociation.current
+      racing_association.filter_schedule_by_region = true
+      racing_association.save!
+
+      wa = Region.create! :name => "Washington"
+      oregon = Region.create! :name => "Oregon"
+      Region.create! :name => "Northern California"
+
+      FactoryGirl.create(:event, :region => wa, :name => "WA Event")
+      FactoryGirl.create(:event, :region => oregon, :name => "OR Event")
+    
+      get :index, :region => "washington"
+      html = @response.body
+      assert html["WA Event"], "Should include Washington event"
+      assert !html["OR Event"], "Should not include Oregon event"
+    end
+  end
+  
   def test_index_with_alias
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
@@ -194,10 +214,10 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
 
-    get(:index, {:year => year, :discipline => "mountain_bike"})
+    get :index, :year => year, :discipline => "mountain_bike"
 
     html = @response.body
-    assert(html["Mudslinger"], "Road events should include MTB")
+    assert(html["Mudslinger"], "mountain_bike should show MTB races")
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
   

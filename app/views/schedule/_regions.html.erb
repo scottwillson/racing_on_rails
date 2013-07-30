@@ -1,0 +1,8 @@
+<% if regions.present? %>
+  <%= tabs do |tabs|
+    tabs.add("All", schedule_path)
+    regions.each do |r|
+      tabs.add r.name, schedule_region_path(:region => r)
+    end
+  end%>
+<% end %>

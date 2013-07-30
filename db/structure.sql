@@ -265,6 +265,7 @@ CREATE TABLE `events` (
   `field_limit` int(11) DEFAULT NULL,
   `refund_policy` varchar(255) DEFAULT NULL,
   `refunds` tinyint(1) NOT NULL DEFAULT '1',
+  `region_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_disciplined` (`discipline`),
   KEY `parent_id` (`parent_id`),
@@ -276,6 +277,7 @@ CREATE TABLE `events` (
   KEY `index_events_on_sanctioned_by` (`sanctioned_by`),
   KEY `index_events_on_bar_points` (`bar_points`),
   KEY `index_events_on_promoter_id` (`promoter_id`),
+  KEY `index_events_on_region_id` (`region_id`),
   CONSTRAINT `events_events_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
   CONSTRAINT `events_number_issuers_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_promoter_id` FOREIGN KEY (`promoter_id`) REFERENCES `people` (`id`) ON DELETE SET NULL,
@@ -807,6 +809,8 @@ CREATE TABLE `racing_associations` (
   `cat4_womens_race_series_start_date` date DEFAULT NULL,
   `filter_schedule_by_sanctioning_organization` tinyint(1) NOT NULL DEFAULT '0',
   `result_questions_url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `filter_schedule_by_region` tinyint(1) NOT NULL DEFAULT '0',
+  `default_region_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -821,6 +825,17 @@ CREATE TABLE `refunds` (
   KEY `index_refunds_on_order_id` (`order_id`),
   KEY `index_refunds_on_line_item_id` (`line_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `regions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `friendly_param` varchar(255) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_regions_on_name` (`name`),
+  UNIQUE KEY `index_regions_on_friendly_param` (`friendly_param`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1413,6 +1428,8 @@ INSERT INTO schema_migrations (version) VALUES ('20130424203721');
 INSERT INTO schema_migrations (version) VALUES ('20130522185756');
 
 INSERT INTO schema_migrations (version) VALUES ('20130601153551');
+
+INSERT INTO schema_migrations (version) VALUES ('20130730202355');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
