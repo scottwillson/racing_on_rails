@@ -16,7 +16,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     SingleDayEvent.create!(
       :name => "Banana Belt I",
       :city => "Hagg Lake",
-      :date => Date.new(year, 1, 22),
+      :date => Date.new(year, 1, 1),
       :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
       :flyer_approved => true
     )

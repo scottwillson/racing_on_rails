@@ -24,6 +24,7 @@ module Schedule
 
     # 0-based array of Months
     attr_reader :months, :year
+    attr_accessor :events
 
     # Import Schedule from Excel +filename+.
     #
@@ -189,9 +190,49 @@ module Schedule
     def Schedule.logger
       Rails.logger
     end
+    
+    # params: year, sanctioning_organization, start, end, discipline, region
+    def self.find(params)
+      if RacingAssociation.current.include_multiday_events_on_schedule?
+        query = Event.where(:parent => nil).where("type != ?", "Event").includes(:parent)
+      else
+        query = Event.where(:type => "SingleDayEvent").includes(:parent)
+      end
+    
+      if !RacingAssociation.current.show_practices_on_calendar?
+        query = query.where(:practice => false)
+      end
+    
+      if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+        query = query.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+      elsif RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
+        query = query.where(:sanctioned_by => params[:sanctioning_organization])
+      end
+
+      start_date = params[:start]
+      end_date = params[:end]
+      if !(start_date.present? && end_date.present?)
+        start_date = Time.zone.local(params[:year]).beginning_of_year.to_date
+        end_date = Time.zone.local(params[:year]).end_of_year.to_date
+      end
+      query = query.where("date between ? and ?", start_date, end_date)
+
+      if params[:discipline].present?
+        query = query.where(:discipline => params[:discipline].name)
+      end
+    
+      if RacingAssociation.current.filter_schedule_by_region?
+        if params[:region].present?
+          query = query.where(:region_id => params[:region].id)
+        end
+      end
+
+      Schedule.new(params[:year], query.all)
+    end
 
     def initialize(year, events)
       @year = year.to_i
+      @events = events
       @months = []
       (1..12).each do |month|
         @months << Month.new(year, month)

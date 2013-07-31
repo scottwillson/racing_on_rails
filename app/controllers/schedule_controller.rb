@@ -2,7 +2,7 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  before_filter :assign_schedule_data, :except => :show
+  before_filter :assign_schedule, :except => :show
   before_filter :assign_sanctioning_organizations, :except => :show
   
   caches_page :index, :calendar, :list, :if => Proc.new { |c| !mobile_request? }
@@ -82,45 +82,25 @@ class ScheduleController < ApplicationController
 
   private
 
-  def assign_schedule_data    
-    if RacingAssociation.current.include_multiday_events_on_schedule?
-      query = Event.where(:parent => nil).where("type != ?", "Event").includes(:parent)
-    else
-      query = Event.where(:type => "SingleDayEvent").includes(:parent)
-    end
-    
-    if !RacingAssociation.current.show_practices_on_calendar?
-      query = query.where(:practice => false)
-    end
-    
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
-      query = query.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
-    elsif RacingAssociation.current.filter_schedule_by_sanctioning_organization? && params[:sanctioning_organization].present?
-      query = query.where(:sanctioned_by => params[:sanctioning_organization])
-    end
-
-    start_date = params[:start]
-    end_date = params[:end]
-    if start_date.present? && end_date.present?
-      query = query.where("date between ? and ?", start_date, end_date)
-    end
-
+  def assign_schedule    
     @discipline = Discipline[params[:discipline]]
-    if @discipline.present?
-      query = query.where(:discipline => @discipline.name)
-    end
-    
+    @discipline_names = Discipline.names
+
     if RacingAssociation.current.filter_schedule_by_region?
       @regions = Region.all
       @region = Region.where(:friendly_param => params[:region]).first
-      if @region.present?
-        query = query.where(:region_id => @region.id)
-      end
     end
 
-    @events = query.all
-    @schedule = Schedule::Schedule.new(@year, @events)
-    @discipline_names = Discipline.names
+    # year, sanctioning_organization, start, end, discipline, region
+    @schedule = Schedule::Schedule.find(
+      :discipline => @discipline,
+      :end => params[:end],
+      :region => @region,
+      :sanctioning_organization => params[:sanctioning_organization],
+      :start => params[:start],
+      :year => @year
+    )
+    @events = @schedule.events
   end
   
   def assign_sanctioning_organizations
