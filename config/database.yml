@@ -19,7 +19,11 @@ acceptance:
 test:
   adapter: mysql2
   database: racing_on_rails_test
+  <% if ENV["TRAVIS"] %>
+  username: travis
+  <% else %>
   username: ror_test
+  <% end %>
   host: localhost
   encoding: utf8
   reconnect: false
