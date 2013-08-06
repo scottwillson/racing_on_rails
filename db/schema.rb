@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130802185855) do
+ActiveRecord::Schema.define(:version => 20130730202355) do
 
   create_table "adjustments", :force => true do |t|
     t.integer  "order_id"
@@ -253,7 +253,6 @@ ActiveRecord::Schema.define(:version => 20130802185855) do
     t.string   "refund_policy"
     t.boolean  "refunds",                                                                      :default => true,  :null => false
     t.integer  "region_id"
-    t.date     "end_date",                                                                                        :null => false
   end
 
   add_index "events", ["bar_points"], :name => "index_events_on_bar_points"
@@ -267,14 +266,6 @@ ActiveRecord::Schema.define(:version => 20130802185855) do
   add_index "events", ["type"], :name => "idx_type"
   add_index "events", ["type"], :name => "index_events_on_type"
   add_index "events", ["velodrome_id"], :name => "velodrome_id"
-
-  create_table "homes", :force => true do |t|
-    t.integer  "photo_id"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "weeks_of_recent_results",  :default => 2, :null => false
-    t.integer  "weeks_of_upcoming_events", :default => 2, :null => false
-  end
 
   create_table "import_files", :force => true do |t|
     t.string   "name",                        :null => false
@@ -737,6 +728,8 @@ ActiveRecord::Schema.define(:version => 20130802185855) do
     t.integer  "rental_numbers_end",                                 :default => 99,                                    :null => false
     t.integer  "rental_numbers_start",                               :default => 51,                                    :null => false
     t.integer  "search_results_limit",                               :default => 100,                                   :null => false
+    t.integer  "weeks_of_recent_results",                            :default => 2,                                     :null => false
+    t.integer  "weeks_of_upcoming_events",                           :default => 5,                                     :null => false
     t.string   "cat4_womens_race_series_points"
     t.string   "administrator_tabs"
     t.string   "competitions"
