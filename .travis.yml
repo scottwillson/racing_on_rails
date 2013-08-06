@@ -1,6 +1,6 @@
 script: rake
 before_script:
-  - mysql -e 'create database racing_on_rails_test;'
+  - rake db:reset RAILS_ENV=test
 
 rvm:
   - "1.9.3"
