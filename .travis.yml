@@ -1,6 +1,7 @@
 script: rake
 before_script:
-  - rake db:reset RAILS_ENV=test
+  - mysql -e 'drop database if exists racing_on_rails_test'
+  - rake db:setup RAILS_ENV=test
 
 rvm:
   - "1.9.3"
