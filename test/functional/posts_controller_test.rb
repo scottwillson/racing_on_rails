@@ -167,7 +167,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
-    assert_equal_dates(Time.zone.today, delivered_mail.date, "Date")
+    assert_equal_dates(Time.zone.now.utc, delivered_mail.date.utc, "Date")
     assert_equal([obra_chat.name], delivered_mail.to, "Recipient")
   end
   
@@ -207,7 +207,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(subject, delivered_mail.subject, "Subject")
     assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
-    assert_equal_dates(Time.zone.today, delivered_mail.date, "Date")
+    assert_equal_dates(Time.zone.now.utc, delivered_mail.date.utc, "Date")
     assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
   end
   
