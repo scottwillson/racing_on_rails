@@ -1,7 +1,10 @@
-<%= f.label "#{attribute}_id", label_text %>
-<%= f.hidden_field "#{attribute}_id" -%>
-
-<input type="text" id="<%= attribute %>_auto_complete" name="<%= model %>[<%= attribute %>_name]" value="<%= value %>" autocomplete="off" />
+<div class="control-group <%= attribute %>">
+  <%= f.hidden_field "#{attribute}_id" -%>
+  <%= f.label "#{attribute}_id", label_text, :class => "control-label" %>
+  <div class="controls">
+    <input type="text" class="span12" id="<%= attribute %>_auto_complete" name="<%= model %>[<%= attribute %>_name]" value="<%= value %>" autocomplete="off" />
+  </div>
+</div>
 
 <%
   @auto_complete_fields = @auto_complete_fields || []

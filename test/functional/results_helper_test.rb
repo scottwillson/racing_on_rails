@@ -47,13 +47,14 @@ class ResultsHelperTest < ActionView::TestCase
   def test_results_table_for_mobile
     self.stubs(:mobile_request? => true)
 
-    race = Race.new(:results => [ Result.new(:place => "1", :name => "Molly Cameron", :team_name => "Veloshop", :time => 1000, :laps => 4)])
+    race = Race.new(:results => [ Result.new(:place => "1", :name => "Molly Cameron", :team_name => "Veloshop", :time => 1000, :laps => 4, :time => 120)])
 
     table = Nokogiri::HTML(results_table(race))
     assert table.css("table th.place").present?
     assert table.css("table th.name").present?
     assert table.css("table th.team_name").empty?, "only show mobile columns"
-    assert table.css("table th.points").empty?, "only show mobile columns"
+    assert table.css("table th.points").empty?
+    assert table.css("table th.time").present?
     assert table.css("table th.laps").empty?, "only show mobile columns"
   end
 end

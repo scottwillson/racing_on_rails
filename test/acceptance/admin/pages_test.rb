@@ -25,7 +25,7 @@ class PagesTest < AcceptanceTest
 
     visit "/admin/pages"
 
-    assert_table "pages_table", 2, 1, "Schedule"
+    assert_table "pages_table", 1, 2, "Schedule"
 
     # Create new page
     # 404 first

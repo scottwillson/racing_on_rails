@@ -1,21 +1,22 @@
 <% @page_title = 'Admin: People: Preview Import' %>
 <% @show_tabs = false %>
 
-<%= form_tag :action => 'import' %>
-<table>
-  <tr>
-    <td>
-      <%= check_box_tag 'update_membership', true, true %> Make all imported people current members for
-    </td>
-    <td>
-      <select name="year" id="import_year"><%= options_for_select @years, @year %></select>
-    </td>
-  </tr>
-</table>
-<br/>
-<%= submit_tag 'Cancel' %>
-<%= submit_tag 'Import' %>
-</form>
+<h2>Preview Import</h2>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <%= form_tag import_admin_people_path, :class => "form-inline" %>
+        <label class="checkbox">
+          <%= check_box_tag 'update_membership', true, true %> Make all imported people current members for
+        </label>
+        <select name="year" id="import_year"><%= options_for_select @years, @year %></select>
+        <%= submit_tag 'Import', :class => "btn btn-primary" %>
+        <%= submit_tag 'Cancel', :class => "btn" %>
+      </form>
+    </div>
+  </div>
+</div>
 
 <%= table :class => "preview_import", :id => "preview_import", :columns =>  @people_file.columns.size do %>
     <tr id="original">
@@ -30,7 +31,7 @@
     </tr>
 
   <%- @people_file.rows.each do |row| -%>
-    <tr class="<%= cycle("even", "odd") %>">
+    <tr>
     <%- row.each do |cell| -%>
       <td><%= cell %></td>
     <%- end -%>

@@ -1,6 +1,6 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<div class="centered">
+<div>
   <h4>Your new post is now in the mailing queue. What happens next:</h4>
   <ul>
     <li>Confirm that you are a list subscriber</li>
@@ -12,8 +12,4 @@
   </ul>
 </div>
 
-<table class="top_margin centered">
-  <tr>
-    <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
-  </tr>
-</table>
+<%= render("mailing_lists/links", :mailing_list => @mailing_list) %>

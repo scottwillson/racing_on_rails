@@ -18,7 +18,6 @@ require "minitest/autorun"
 # Chrome and Firefox drivers use custom profiles to ensure downloads can be tested.
 class AcceptanceTest < ActiveSupport::TestCase
   DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
-  @@profile_is_setup = false
 
   include Capybara::DSL
 
@@ -26,7 +25,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   # transaction, the server won't see it.
   DatabaseCleaner.strategy = :truncation
   
-  setup :clean_database, :setup_profile, :set_capybara_driver
+  setup :clean_database, :clear_downloads, :set_capybara_driver
   teardown :reset_session
   
   def self.javascript_driver
@@ -208,6 +207,15 @@ class AcceptanceTest < ActiveSupport::TestCase
     visit "/logout"
   end
 
+  # Work around Chrome bug
+  def visit_event(event)
+    if Capybara.current_driver == :chrome
+      visit "/admin/events/#{event.id}/edit"
+    else
+      click_link event.name
+    end
+  end
+
   def clean_database
     DatabaseCleaner.clean
     Discipline.reset
@@ -225,17 +233,9 @@ class AcceptanceTest < ActiveSupport::TestCase
     Capybara.current_driver = AcceptanceTest.default_driver
   end
 
-  def setup_profile
-    unless @@profile_is_setup
-      FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
-      FileUtils.mkdir_p "#{Rails.root}/tmp/chrome-profile"
-      FileUtils.cp_r "#{Rails.root}/test/chrome-profile", "#{Rails.root}/tmp"
-
-      FileUtils.rm_rf DOWNLOAD_DIRECTORY
-      FileUtils.mkdir_p DOWNLOAD_DIRECTORY
-      
-      @@profile_is_setup = true
-    end
+  def clear_downloads
+    FileUtils.rm_rf DOWNLOAD_DIRECTORY
+    FileUtils.mkdir_p DOWNLOAD_DIRECTORY
   end
   
   def reset_session
@@ -261,7 +261,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       :switches => ["--user-data-dir=#{Rails.root}/tmp/chrome-profile", "--ignore-certificate-errors", "--silent"]
     )
   end
-  
+
   Capybara.register_driver :firefox do |app|
     profile = Selenium::WebDriver::Firefox::Profile.new
     profile['browser.download.folderList']            = 2

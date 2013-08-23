@@ -1,7 +1,7 @@
 # BAR = Best All-around Rider
 # FIXME Add test for overall and make logic cleaner
 class BarController < ApplicationController
-  caches_page :index, :show, :if => Proc.new { |c| !mobile_request? }
+  caches_page :index, :show
   
   def index
     @overall_bar = OverallBar.find_for_year
@@ -26,7 +26,7 @@ class BarController < ApplicationController
       flash.now[:warn] = "Could not find Overall BAR for #{@year}"
       return render(:show)
     end
-
+    
     category = @overall_bar.equivalent_category_for(params[:category], discipline)
     unless category
       flash.now[:warn] = "Could not find BAR category \'#{params['category']}\'"

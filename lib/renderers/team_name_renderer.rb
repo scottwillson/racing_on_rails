@@ -12,9 +12,9 @@ module Renderers
         result.year < racing_association.year
       
         if result.team_competition_result?
-          "<a href=\"/events/#{result.event_id}/teams/#{result.team_id}/results/#{result.race_id}\">#{text}</a>"
+          "<a href=\"#{path_prefix(row)}/events/#{result.event_id}/teams/#{result.team_id}/results##{result.race_id}\">#{text}</a>"
         else
-          "<a href=\"/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
+          "<a href=\"#{path_prefix(row)}/teams/#{result.team_id}/#{result.year}\">#{text}</a>"
         end
       end
     end

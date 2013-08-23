@@ -19,7 +19,7 @@ class Overall < Competition
           if overall.nil? || overall.updated_at.nil? || Result.where("updated_at > ?", overall.updated_at).exists?
             unless parent.overall
               # parent.create_overall will create an instance of Overall, which is probably not what we want
-              overall = self.new(:parent_id => parent.id)
+              overall = self.new(:parent_id => parent.id, :date => parent.date)
               overall.save!
               parent.overall = overall
             end

@@ -6,7 +6,7 @@ class OregonCupControllerTest < ActionController::TestCase
     event = OregonCup.create!(:date => Date.new(2004, 3, 18))
     race = event.races.create!(:category => FactoryGirl.create(:category))
     result = race.results.create!(:place => 1, :person => Person.create!(:name => "Floyd Landis"))
-    
+
     get :index, :year => "2004"
     assert_response :success
     assert_template "oregon_cup/index"

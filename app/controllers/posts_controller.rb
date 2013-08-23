@@ -31,7 +31,7 @@ class PostsController < ApplicationController
     end
     
     @first_post_at = Post.minimum(:date)
-
+    
     respond_to do |format|
       format.html
       format.rss do

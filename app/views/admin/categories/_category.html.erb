@@ -1,8 +1,10 @@
 <div class="category" id="category_<%= category.id %>_row" data-id="<%= category.id %>">
-  <div class="disclosure<%= " collapsed" unless category.children.empty? %>" id="disclosure_<%= category.id %>" data-id="<%= category.id %>">&nbsp;</div>
-  <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><%= category.name %></div>
-  <%= link_to(image_tag('icons/table.png'), 
-    category_races_path(category), 
-    :title => 'View races', :class => "image") unless category.races.empty? %>
+  <i class="disclosure <%= "collapsed" if category.children.present? %>" 
+     id="disclosure_<%= category.id %>" 
+     data-id="<%= category.id%>"></i>
+  <div class="category_name" id="category_<%= category.id %>" data-id="<%= category.id %>"><i class="icon-star"></i> <%= category.name %></div>
+  <%= link_to(category_races_path(category), :title => 'View races') do %>
+    <i class="icon-list"></i> 
+  <% end if category.races.present? %>
   <div class="children" id="category_<%= category.id %>_children"></div>
 </div>

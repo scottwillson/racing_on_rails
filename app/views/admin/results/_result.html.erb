@@ -1,9 +1,9 @@
-<tr class="<%= cycle("even", "odd") %>" id="result_<%= result.id %>_row">
-  <td class="disclosure"><%= image_tag(
-    "icons/play_blue.png", 
-    :class => "disclosure collapsed", 
-    :id => "disclosure_#{result.id}", 
-    :alt => "") if result.competition_result? %></td>
+<tr id="result_<%= result.id %>_row">
+  <td>
+    <% if result.competition_result? %>
+      <i class="disclosure collapsed" id="disclosure_<%= result.id %>"></i>
+    <% end %>
+  </td>
   <td class="place"><%= result.place %></td>
   <td class="result">
     <div class="drag" data-id="<%= result.id %>">
@@ -11,10 +11,16 @@
     </div>
   </td>
   <td><%= result.race.name %></td>
-  <td class="right"><%= result.event_date_range_s %></td>
-  <td class="right"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
-  <td class="page_links"><%= link_to(image_tag('icons/page_go.png', :title => 'View public results web page', :alt => 'View public results web page'),
-    event_results_path(result.event, :anchor => "race_#{result.race.id}"), :class => "image") %>&nbsp;<%= link_to(image_tag('icons/table_edit.png', :title => 'Edit race results', :alt => 'Edit race results'),
-    edit_admin_race_path(result.race), :class => "image") %>
+  <td class="date"><%= result.event_date_range_s %></td>
+  <td class="points"><%= number_with_precision(result.points, :precision => 0) if result.points > 0 %></td>
+  <td class="page_links">
+    <%= link_to event_results_path(result.event, :anchor => "race_#{result.race.id}"), 
+               :title => 'View public results web page' do %>
+      <i class="icon-list"></i>
+    <% end %>
+    <%= link_to edit_admin_race_path(result.race),
+    :title => 'Edit race results' do %>
+      <i class="icon-edit"></i>
+    <% end %>
   </td>
 </tr>

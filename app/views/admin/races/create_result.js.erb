@@ -1,0 +1,2 @@
+jQuery('#results_table').html('<%= escape_javascript(edit_results_table(@race)) %>');
+jQuery('#result_<%= @result.id %>_row').highlight();

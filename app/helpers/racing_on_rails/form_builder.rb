@@ -2,43 +2,62 @@ module RacingOnRails
   # Label + form fields HTML. Wrap checkboxes in divs (probably should do this for all label + field chunks).
   class FormBuilder < ActionView::Helpers::FormBuilder
     # Set +editable+ to false for read-only
-    def labelled_text_field(method, text = method.to_s.titleize, text_field_options = {})
-      label_options = text_field_options.delete(:label) || {}
-      if text_field_options[:editable] == false
+    def labelled_text_field(method, text = method.to_s.titleize, text_field_options = { :class => "span12" })
+      label_options = text_field_options.delete(:label) || { :class => "control-label" }
+      editable = text_field_options.delete(:editable)
+      if editable == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}.html_safe
       else
-        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{text_field(method, text_field_options)}}.html_safe
+        help_block = nil
+        if text_field_options[:help]
+          help_block = "<span class='help-block'>#{text_field_options.delete(:help)}</span>"
+        end
+        %Q{<div class="control-group #{method.to_s}">#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="controls">#{text_field(method, text_field_options)}#{help_block}</div></div>}.html_safe
       end
+    end
+    
+    def labelled_date_picker(method)
+      @template.render "shared/date_picker", :f => self, :method => method, :object => @object, :object_name => object_name
+    end
+    
+    def labelled_datetime_picker(method)
+      @template.render "shared/date_time_picker", :f => self, :method => method, :object => @object, :object_name => object_name
     end
 
     # Set +editable+ to false for read-only
-    def labelled_select(method, select_options, options = {})
-      label_options = options.delete(:label) || {}
+    def labelled_select(method, choices, options = {}, html_options = { :class => "span12" })
+      label_options = options.delete(:label) || { :class => "control-label" }
       text = label_options.delete(:text) if label_options
       if options[:editable] == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}.html_safe
       else
-        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} #{select(method, select_options, options)}}.html_safe
+        help_block = nil
+        if options[:help]
+          help_block = "<span class='help-block'>#{options.delete(:help)}</span>"
+        end
+        %Q{<div class="control-group">#{label(method, "#{text || method.to_s.titleize}", label_options)}<div class="controls">#{select(method, choices, options, html_options)}#{help_block}</div></div>}.html_safe
       end
     end
 
     # List from Countries::COUNTRIES
     def labelled_country_select(method, options = {})
-      labelled_select method, RacingAssociation.current.priority_country_options + Countries::COUNTRIES, options.merge(:label => { :text => "Country" })
+      labelled_select method, 
+      RacingAssociation.current.priority_country_options + Countries::COUNTRIES, 
+      options.merge(:label => { :text => "Country", :class => "control-label" })
     end
     
-    def labelled_password_field(method, text = method.to_s.titleize, password_field_options = {})
-      label_options = password_field_options.delete(:label) || {}
-      %Q{#{label(method, "#{text}", label_options)} #{password_field(method, password_field_options)}}.html_safe
+    def labelled_password_field(method, text = method.to_s.titleize, password_field_options = { :class => "span12" })
+      label_options = password_field_options.delete(:label) || { :class => "control-label" }
+      %Q{<div class="control-group">#{label(method, "#{text}", label_options)} <div class="controls">#{password_field(method, password_field_options)}</div></div>}.html_safe
     end
 
     # Set +editable+ to false for read-only
     def labelled_check_box(method, text = nil, check_box_options = {})
-      label_options = check_box_options.delete(:label) || {}
+      label_options = check_box_options.delete(:label) || { :class => "checkbox" }
       if check_box_options[:editable] == false
-        %Q{#{label(method, "#{text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}.html_safe
+        labelled_text method, @object.send(method) ? "Yes" : "No", text, check_box_options
       else
-        %Q{<div class="check_box"><div class="input">#{check_box(method, check_box_options)}</div><div  class="label">#{label(method, text || method.to_s.titleize)}</div></div>}.html_safe
+        %Q{<div class="control-group"><div class="controls">#{label(method, label_options) { "#{check_box(method, check_box_options)}#{text || method.to_s.titleize}".html_safe }}</div></div>}.html_safe
       end
     end
     
@@ -47,18 +66,25 @@ module RacingOnRails
     end
     
     # Set +editable+ to false for read-only
-    def labelled_text_area(method, options = {})
+    def labelled_text_area(method, options = { :class => "span12", :rows => 6 })
       label_options = options.delete(:label) || {}
       text = label_options[:text] if label_options
+
+      help_block = nil
+      if options[:help]
+        help_block = "<span class='help-block'>#{options.delete(:help)}</span>"
+      end
+
       if options[:editable] == false
         %Q{#{label(method, "#{text || method.to_s.titleize}", :class => 'text_area')} <div class="labelled" id="#{object_name}_#{method}">#{@object.send(method)}</div>}.html_safe
       else
-        %Q{#{label(method, "#{text || method.to_s.titleize}", :class => 'text_area')}#{text_area(method, options)}}.html_safe
+        %Q{#{label(method, "#{text || method.to_s.titleize}", :class => 'text_area')}#{text_area(method, options)}#{help_block}}.html_safe
       end
     end
     
     def labelled_text(method, text = nil, label_text = nil, label_options = {})
-      %Q{#{label(method, "#{label_text || method.to_s.titleize}", label_options)} <div class="labelled" id="#{object_name}_#{method}">#{text || @object.send(method)}</div>}.html_safe
+      label_options.merge!(:class => "control-label")
+      %Q{<div class="control-group #{method.to_s}">#{label(method, "#{label_text || method.to_s.titleize}", label_options)} <div class="controls labelled_text" id="#{object_name}_#{method}">#{text || @object.send(method)}</div></div>}.html_safe
     end
   end
 end

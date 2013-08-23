@@ -65,5 +65,11 @@ module Renderers
         key = column
       end
     end
+    
+    def self.path_prefix(row)
+      if row.metadata[:mobile_request]
+        "/m"
+      end
+    end
   end
 end

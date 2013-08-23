@@ -24,7 +24,7 @@ module RacingOnRails
     config.session_store :secret, "9998d23d32c59a8161aba78b03630a93"
     
     config.assets.enabled = true
-    config.assets.version = "1.0"
+    config.assets.version = "1.1"
   
     config.time_zone = "Pacific Time (US & Canada)"
     
@@ -50,6 +50,8 @@ module RacingOnRails
       Rails.configuration.paths["config/database"] = [ "local/config/database.yml", "config/database.yml" ]
     end
     
+    config.action_mailer.default_url_options = { :mobile => nil }
+
     def exception_notifier
       if Rails.env.production?
         Airbrake

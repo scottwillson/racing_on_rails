@@ -1,10 +1,26 @@
-Sorry, you're not allowed to look at that page.
-<%= "You are logged-in as #{current_person.login}." if current_person %>
-<%= "You are not logged-in." unless current_person %>
+<div class="container-fluid error_page">
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="alert alert-info">
+        Sorry, you're not allowed to look at that page.
 
-<div class="column_grid_container top_margin centered">
-  <%= link_to("Login", new_person_session_path) unless current_person %><br/>
-  <%= link_to('Public Homepage', "/") %><br/>
-  <%= link_to('Admin Pages', admin_events_path) if current_person && current_person.administrator? %><br/>
-  <%= link_to("Logout and try a different login", logout_path) if current_person %>
+        <%= "You are logged-in as #{current_person.login}." if current_person %>
+        <%= "You are not logged-in." unless current_person %>
+        <%= link_to("Login", new_person_session_path, :class => "obvious") unless current_person %><br/>
+      </div>
+
+      <image src="/assets/photos/422.jpg" class="error" />
+      <br/>
+      <small>Photo: <a href="http://cheryljwillson.com/gallery/main.php">Cheryl J. Willson</a></small>
+
+      <div class="pills">
+        <ul class="nav nav-pills">
+          <li><%= link_to('Public Homepage', "/") %></li>
+          <li><%= link_to('Admin Pages', admin_events_path) if current_person && current_person.administrator? %></li>
+          <li><%= link_to("Logout and try a different login", logout_path) if current_person %></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
 </div>

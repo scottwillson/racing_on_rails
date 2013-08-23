@@ -1,9 +1,0 @@
-<% @page_title = @race.full_name %>
-<%
-    @back_path = event_races_path(@race.event)
-%>
-<ul data-role="listview">
-  <%- @race.results.each do |result| -%>
-  <li><%= result.place %>&nbsp; <%= result.name %></li>
-  <% end %>
-</ul>

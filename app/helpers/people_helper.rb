@@ -36,7 +36,7 @@ module PeopleHelper
       person.name
     end
   end
-
+  
   def abbreviate_category(category)
     case category
     when /Begin/i

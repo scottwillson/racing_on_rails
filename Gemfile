@@ -2,11 +2,10 @@ source "https://rubygems.org"
 
 gem "rails", ">=3.2.12"
 
-gem "fastercsv", :platforms => :ruby_18
 gem "oj"
 gem "rake"
 gem "authlogic"
-gem "tabular", ">=0.2.3"
+gem "tabular", ">=0.2.4"
 gem "mysql2"
 gem "pdf-reader", :require => "pdf/reader"
 gem "Ascii85", :require => "ascii85"
@@ -18,7 +17,7 @@ gem "will_paginate", "~> 3.0.beta"
 gem "ruby-ole", :github => "scottwillson/ruby-ole"
 gem "spreadsheet", :github => "scottwillson/spreadsheet"
 gem "ckeditor_rails", :require => "ckeditor-rails"
-gem "default_value_for", :git => "https://github.com/FooBarWidget/default_value_for"
+gem "default_value_for", :github => "FooBarWidget/default_value_for"
 gem "acts_as_list", :github => "swanandp/acts_as_list", :ref => "f62c43265f0e47fe7666a93849abad5aa7c5c6d3"
 gem "acts_as_tree", :github => "parasew/acts_as_tree"
 gem "dynamic_form"
@@ -28,16 +27,21 @@ gem "truncate_html"
 gem "jquery-rails"
 gem "jquery-ui-rails"
 gem "yui-compressor"
+gem "bootstrap-sass"
+gem "bootstrap-datepicker-rails"
 gem 'therubyracer', "~> 0.10.2"
-gem "libv8"
 gem "activemerchant"
+gem "money", :github => "RubyMoney/money"
 gem "registration_engine", :path => "lib/registration_engine"
+gem "will_paginate-bootstrap"
+gem "nokogiri"
 gem "carrierwave"
 gem "rmagick"
 gem "formatize"
 gem "json", ">= 1.7.7"
 gem "nokogiri"
 gem "skylight"
+gem "chronic"
 
 group :assets do
   gem "sass-rails",   "~> 3.2"
@@ -57,7 +61,7 @@ group :test do
   gem "mocha", :require => false
   gem "sqlite3"
   gem "timecop"
-  gem "minitest", "< 5.0.0"
+  gem "minitest", "~> 4.0"
 end
 
 group :acceptance do

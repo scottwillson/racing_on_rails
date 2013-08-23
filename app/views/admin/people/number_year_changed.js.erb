@@ -1,0 +1,7 @@
+jQuery('#numbers-span').html(
+  '<%= escape_javascript(render(
+    "admin/people/numbers", 
+    :year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers)) 
+  %>'
+);
+bindNumberYearChange();

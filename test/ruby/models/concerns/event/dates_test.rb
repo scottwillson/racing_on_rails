@@ -4,7 +4,11 @@ require File.expand_path("../../../../../../app/models/concerns/event/dates", __
 # :stopdoc:
 class Concerns::Event::DatesTest < Ruby::TestCase
   class TestEvent
+    def self.before_save(symbol)
+    end
+
     include Concerns::Event::Dates
+
     attr_accessor :date
     attr_accessor :end_date
   end

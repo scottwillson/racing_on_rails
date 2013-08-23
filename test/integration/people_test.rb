@@ -6,7 +6,7 @@ class PeopleTest < ActionController::IntegrationTest
     FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     get "/people"
     assert_response :success
-    assert_select "input[type=text]"
+    assert_select "input[type=search]"
 
     get "/people.xml?name=weaver"
     assert_response :success

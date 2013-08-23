@@ -1,0 +1,9 @@
+<h3>Names</h3>
+<%= table :class => "names", :insert_header => true, :columns => 2, :collection => names do %>
+<%- names.sort_by(&:year).reverse.each do |name| -%>
+  <tr id="name_<%= name.id %>">
+    <td><%= name.name %></td>
+    <td class="date"><%= name.year %></td>
+  </tr>
+  <%- end -%>
+<% end -%>

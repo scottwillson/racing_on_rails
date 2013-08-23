@@ -1,25 +1,22 @@
 <% row_id = rand(100000) %>
 <tr class="new_number" id="new_number_<%= row_id %>">
   <td>
-    <table cellspacing="0">
-      <tr>
-        <td>
-          <select name='number_issuer_id[]' id='number_issuer_id'>
-            <%= options_for_select NumberIssuer.all.collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
-          </select>
-        </td>
-        <td>
-          <select name='discipline_id[]' id='discipline_id_<%= row_id %>'>
-            <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].try(:id) %>
-          </select>
-        </td>
-        <td>
-          <%= text_field_tag 'number_value[]', '', :class => "number" %>
-        </td>
-        <td>
-          <%= link_to(image_tag('icons/decline.png'), "#", :class => "image destroy_number", "data-row-id" => row_id) %>
-        </td>
-      </tr>
-    </table>
+    <select name='number_issuer_id[]' class="input-small" id='number_issuer_id'>
+      <%= options_for_select NumberIssuer.all.collect {|number_issuer| [number_issuer.name, number_issuer.id]} %>
+    </select>
+    <select name='discipline_id[]' class="input-small" id='discipline_id_<%= row_id %>'>
+      <%= options_for_select Discipline.numbers.collect { |discipline| [discipline.name, discipline.id] }, Discipline[:road].try(:id) %>
+    </select>
+  </td>
+  <td>
+    <%= text_field_tag 'number_value[]', '', :class => "number input-small" %>
+  </td>
+  <td class="actions">
+    <%= link_to(
+          "#",
+          "data-row-id" => row_id,
+          :id => "destroy_number", 
+          :class => "icon"
+    ) do %><i class="icon-minus-sign"></i><% end %>
   </td>
 </tr>

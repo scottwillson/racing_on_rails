@@ -1,44 +1,50 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <title>
-      <%- if @page_title -%>
-      <%= RacingAssociation.current.short_name %>: <%= @page_title -%>
-      <%- else -%>
-      <%= RacingAssociation.current.name %>
-      <%- end %>
-    </title>
-    <%= airbrake_javascript_notifier if Rails.env.production? %>
-    <%= render :partial => "layouts/stylesheets" %>
-    <%= render :partial => "layouts/javascripts" %>
-    <%= javascript_include_tag "admin" %>
-	<%= yield :head %>
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= page_title %></title>
 
-  <body>
-  <div class="shadow_2">
-    <div class="shadow_1">
-      <div class="frame" id="frame">
-        <div class="nav" id="top">
-          <h1><%= link_to RacingAssociation.current.name, '/' %></h1>
-          <div class="breadcrumb"><%= link_to RacingAssociation.current.short_name, '/' %></div>
-        </div>
-        <div class="content container">
-        <%= render :partial => "shared/tabs" %>
-        <%= render :partial => "shared/flash_messages" %>
-<%= yield %>
-        </div>
-        <div class="nav" id="bottom">
-          <div class="breadcrumb">
-            <%= link_to RacingAssociation.current.short_name, '/' %> | 
-      <%= link_to "Logout", person_session_path, :method => :delete, :id => "account_link" %>
-      </div>
-        </div>
-      </div>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <%= render "layouts/stylesheets" %>
+  <%= render "layouts/javascripts" %>
+  <%= javascript_include_tag "admin" %>
+  
+  <link rel="shortcut icon" href="/assets/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/assets/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/assets/apple-touch-icon-114x114.png">
+  <%= yield :head %>
+</head>
+<body>
+  <%= render "layouts/nav" %>
+  <div class="container-fluid">
+    <div class="flash_messages">
+      <% [ :warn, :notice ].each do |key| %>
+        <% if flash[key] %>
+        <%= render "layouts/flash_message", :message => flash[key], :alert_class => alert_class(key) %>
+        <% end %>
+      <% end %>
     </div>
+
+<div class="content">
+<%= render :partial => "shared/tabs" %>
+<%= yield %>
+</div>
+
   </div>
-  <%= render :partial => "shared/auto_complete" %>
-  </body>
+  <div class="container-fluid nav">
+    <footer>
+      <ul>
+        <li><%= link_to "Account", account_path, :class => "account_link" %></li><li><%= 
+                link_to "Login", new_person_session_path, :class => "login_link" %></li>
+      </ul>
+    </footer>
+  </div>
+  <%= render "shared/google" %>
+</body>
 </html>

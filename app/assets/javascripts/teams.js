@@ -8,7 +8,7 @@ function bindTeamDragAndDrop() {
     zIndex: 10000,
     opacity: 0.7,
     helper: function(event) {
-      return $('<div class="team" data-id="' + $(this).attr('data-id') + '">' + $(this).attr('data-name') + '</div>');
+      return $('<div class="team" data-id="' + $(this).attr('data-id') + '"><i class="icon-group"></i> ' + $(this).attr('data-name') + '</div>');
     }
     });
   $('.team_row').droppable({

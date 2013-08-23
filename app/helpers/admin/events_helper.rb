@@ -1,22 +1,5 @@
 module Admin::EventsHelper
   LONG_DAYS_OF_WEEK = %w{ Sunday Monday Tuesday Wednesday Thursday Friday Saturday } unless defined?(LONG_DAYS_OF_WEEK)
-  
-  # Build a caption and footer links and render events/upcoming partial
-  def upcoming_events_table(upcoming_events, caption = nil, footer = nil)
-    caption ||= link_to("Schedule", schedule_path)
-    footer ||= link_to("More &hellip;".html_safe, schedule_path)
-    render_page 'events/upcoming', :upcoming_events => upcoming_events, :caption => caption.html_safe, :footer => footer.html_safe
-  end
-  
-  # Road upcoming events, Track upcoming events, etc …
-  def discipline_upcoming_events(discipline, upcoming_events)
-    if upcoming_events.disciplines.size > 1
-      caption = discipline.name.upcase
-    else
-      caption = "&nbsp;".html_safe
-    end
-    render 'events/discipline_upcoming', :discipline => discipline, :dates => upcoming_events.dates, :caption => caption
-  end
 
   # Sunday, Monday, …
   def long_day_of_week(index)

@@ -1,19 +1,17 @@
 class IronmanController < ApplicationController
   def index
-    date = Date.new(@year.to_i, 1, 1)
-    @ironman = Ironman.first(:conditions => ['date = ?', date])
-
-    page = params['page'].to_i rescue 1
-    page = 1 if page < 1
+    @ironman = Ironman.find_for_year(@year)
+    if @ironman
+      page = params['page'].to_i rescue 1
+      page = 1 if page < 1
     
-    if @ironman && !@ironman.races.empty?
-      @results = Result.paginate( :conditions => ['race_id = ?', @ironman.races.first.id],
-                                  :include => [:person],
-                                  :order => 'cast(place as signed)',
-                                  :limit  =>  200,
-                                  :page =>  page
-                                )
+      @results = Result.where(:event_id => @ironman.id).includes(:person).order("cast(place as signed)").limit(200)
+    else
+      @ironman = Ironman.new(:date => Time.zone.local(@year), :races => [ Race.new ])
+      @results = ActiveRecord::NullRelation
     end
+
+    @results = @results.page(page)
     @years = @ironman.years(@year)
   end
 end

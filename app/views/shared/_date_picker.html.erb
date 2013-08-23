@@ -1,0 +1,19 @@
+<div class="control-group">
+  <%= f.label "human_#{method}", method.to_s.titlecase, :class => "control-label" %>
+  <div class="controls">
+    <div class="input-append input-block-level">
+      <%= f.text_field "human_#{method}", :size => nil, :class => "span10" %>
+      <%= content_tag(
+            :a, 
+            :class => "btn", 
+            :id => "#{object_name}_human_#{method}_picker",
+            :data => {
+              "behaviour" => "datepicker",
+              "date-format" => "yyyy-mm-dd",
+              "date" => object.send(method).try(:to_s, :db),
+              "target" => "#{object_name}_human_#{method}"
+            }
+          ) do %><i class="icon-calendar"></i><% end %>
+    </div>
+  </div>
+</div>

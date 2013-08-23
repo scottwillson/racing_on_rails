@@ -20,7 +20,7 @@ module Admin
         assert_not_nil(assigns["event"], "Should assign event")
         assert_nil(assigns["race"], "Should not assign race")
         assert(!@response.body["#&lt;Velodrome:"], "Should not have model in text field")
-        assert_select "#event_date_1i", :count => 1
+        assert_select "input#event_human_date"
       end
   
       def test_edit_sti_subclasses
@@ -29,9 +29,9 @@ module Admin
           get(:edit, :id => event.to_param)
           assert_response(:success)
           if event_class == SingleDayEvent
-            assert_select "#event_date_1i", :count => 1
+            assert_select "input#event_human_date"
           else
-            assert_select "#event_date_1i", :count => 0
+            assert_select "input#event_human_date", :count => 0
           end
         end
       end
@@ -69,7 +69,7 @@ module Admin
         get :edit, :id => event.to_param
         assert_response :success
         assert_template "admin/events/edit"
-        assert_select "#event_date_1i", :count => 0
+        assert_select "#event_human_date", :count => 0
       end
   
       def test_promoter_can_only_edit_own_events
@@ -89,7 +89,7 @@ module Admin
         get :edit, :id => event.to_param
         assert_response :success
         assert_template "admin/events/edit"
-        assert_select "#event_date_1i", :count => 0
+        assert_select "#event_human_date", :count => 0
       end
   
       def test_edit_child_event

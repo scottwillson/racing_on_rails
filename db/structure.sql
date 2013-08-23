@@ -161,10 +161,8 @@ CREATE TABLE `discount_codes` (
   `amount` decimal(10,2) DEFAULT NULL,
   `quantity` int(11) NOT NULL DEFAULT '1',
   `used_count` int(11) NOT NULL DEFAULT '0',
-  `use_for` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'event',
   PRIMARY KEY (`id`),
   KEY `event_id` (`event_id`),
-  KEY `index_discount_codes_on_use_for` (`use_for`),
   CONSTRAINT `discount_codes_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -266,6 +264,7 @@ CREATE TABLE `events` (
   `refund_policy` varchar(255) DEFAULT NULL,
   `refunds` tinyint(1) NOT NULL DEFAULT '1',
   `region_id` int(11) DEFAULT NULL,
+  `end_date` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_disciplined` (`discipline`),
   KEY `parent_id` (`parent_id`),
@@ -282,6 +281,16 @@ CREATE TABLE `events` (
   CONSTRAINT `events_number_issuers_id_fk` FOREIGN KEY (`number_issuer_id`) REFERENCES `number_issuers` (`id`),
   CONSTRAINT `events_promoter_id` FOREIGN KEY (`promoter_id`) REFERENCES `people` (`id`) ON DELETE SET NULL,
   CONSTRAINT `events_velodrome_id_fk` FOREIGN KEY (`velodrome_id`) REFERENCES `velodromes` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `homes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `photo_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `weeks_of_recent_results` int(11) NOT NULL DEFAULT '2',
+  `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '2',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `import_files` (
@@ -781,8 +790,6 @@ CREATE TABLE `racing_associations` (
   `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
   `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
-  `weeks_of_recent_results` int(11) NOT NULL DEFAULT '2',
-  `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '5',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `competitions` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -1425,11 +1432,23 @@ INSERT INTO schema_migrations (version) VALUES ('20130418150015');
 
 INSERT INTO schema_migrations (version) VALUES ('20130424203721');
 
+INSERT INTO schema_migrations (version) VALUES ('20130515151312');
+
+INSERT INTO schema_migrations (version) VALUES ('20130515151637');
+
 INSERT INTO schema_migrations (version) VALUES ('20130522185756');
 
 INSERT INTO schema_migrations (version) VALUES ('20130601153551');
 
 INSERT INTO schema_migrations (version) VALUES ('20130730202355');
+
+INSERT INTO schema_migrations (version) VALUES ('20130731195457');
+
+INSERT INTO schema_migrations (version) VALUES ('20130802174740');
+
+INSERT INTO schema_migrations (version) VALUES ('20130802185855');
+
+INSERT INTO schema_migrations (version) VALUES ('20130820170738');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

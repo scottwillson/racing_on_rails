@@ -5,7 +5,7 @@
 <% if !@event.races.empty? %>
 <% if @event.races.size > 1 -%>
 <%# TODO Encapsulate in a helper method %>
-<table cellspacing="0" class="centered">
+<table cellspacing="0">
 <% index = 0 %>
 <% while index < @event.races.size %>
   <tr valign="top">
@@ -23,7 +23,8 @@
 </table>
 <% end -%>
 
-<span class="updatedon">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
+<span class="created_updated">Updated <%= @event.updated_at.to_formatted_s(:long) %></span>
+
 <%- @event.races.each do |race| -%>
   <%- if race.results.present? -%>
     <%= results_table race %>
@@ -32,7 +33,7 @@
 
 <%- else -%>
 <% if @event.is_a?(RiderRankings) && @year.to_i > 2011 %>
-<p class="centered">The WSBA is using the default USA Cycling ranking system from 2012 onward. Please see <%= link_to "http://www.usacycling.org/events/rr.php",  "http://www.usacycling.org/events/rr.php" %>.</p>
+<p>The WSBA is using the default USA Cycling ranking system from 2012 onward. Please see <%= link_to "http://www.usacycling.org/events/rr.php",  "http://www.usacycling.org/events/rr.php" %>.</p>
 <%- else -%>
 No results for <%= @year %>.
 <%- end -%>

@@ -1,3 +1,5 @@
+<%= render "shared/errors", :object => @article %>
+
 <% if @article.new_record? %>
 <h2>New Article</h2>
 <% else %>
@@ -5,8 +7,6 @@
 <% end %>
 
 <%= form_for([:admin, @article], :html => { :class => "form-horizontal" }) do |f| %>
-  <%= f.error_messages %>
-
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span6">

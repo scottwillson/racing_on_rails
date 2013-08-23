@@ -1,0 +1,17 @@
+<div class="container-fluid page-nav">
+  <nav>
+    <div class="row-fluid">
+      <div class="span12">
+        <h1><%= link_to RacingAssociation.current.short_name, root_path %></h1>
+        <ul class="pull-right">
+          <li><%= 
+            link_to "Schedule", schedule_path, :class => "schedule_link" %></li><li><%= 
+            link_to "Results", results_path, :class => "results_link" %></li><% 
+            if mobile_browser? %><li><%= 
+              link_to "Mobile", :mobile_site => "1" %></li><% 
+            end %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

@@ -1,17 +1,18 @@
-<% if race -%>
-<table class="centered top_margin">
-  <%- categories.sort.each_row do |row| -%>
-  <tr>
-    <td style="margin-right: 18px;">
-      <%= link_to row.first.name, bar_full_path(:year => race.year, :discipline => Discipline[race.discipline].to_param, :category => row.first.friendly_param) %>
-    </td>
-    <td style="margin-left: 18px;">
-    &nbsp;
-    <%- if row.size == 2 -%>
-      <%= link_to row.last.name, bar_full_path(race.year, Discipline[race.discipline].to_param, row.last.friendly_param) %>
-    <%- end -%>
-    </td>
-  </tr>
-  <%- end -%>  
-</table>
-<% end -%>
+<% if categories.many? %>
+<div class="event_info">
+  <table class="event_races">
+    <tbody>
+      <%- categories.sort.each_row do |first_category, second_category| -%>
+      <tr>
+        <td class="race">
+          <%= link_to first_category.name, bar_full_path(race.year, Discipline[race.discipline].to_param, first_category.friendly_param) %>
+        </td>
+        <td class="race">
+          <%= link_to(second_category.name, bar_full_path(race.year, Discipline[race.discipline].to_param, second_category.friendly_param)) if second_category %>
+        </td>
+      </tr>
+      <%- end -%>  
+    </tbody>
+  </table>
+</div>
+<%- end -%>

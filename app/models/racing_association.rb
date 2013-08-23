@@ -96,7 +96,11 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def effective_today
-    Date.new effective_year
+    if effective_year == Time.zone.now.year
+      Time.zone.today
+    else
+      Time.zone.now.beginning_of_year.to_date
+    end
   end
   
   def effective_year_range

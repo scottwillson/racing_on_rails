@@ -7,14 +7,11 @@ class TrackControllerTest < ActionController::TestCase
     Event.create! :discipline => "Track"
     get(:index)
     assert_response(:success)
-    assert_not_nil(assigns["upcoming_events"], 'Should assign @upcoming_events')
+    assert_not_nil(assigns["events"], 'Should assign @events')
   end
   
   def test_schedule
-    FactoryGirl.create(:discipline, :name => "Track")
-    Event.create! :discipline => "Track"
-    get(:schedule)
-    assert_response(:success)
-    assert_not_nil(assigns["events"], 'Should assign @events')
+    get :schedule
+    assert_redirected_to track_path
   end
 end

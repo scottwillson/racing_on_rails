@@ -1,5 +1,5 @@
 <% @page_title = "Article #{@article.title}" %>
-<br/>
-<h3><%= @article.title.html_safe %></h3>
+
+<h2><%= @article.title.html_safe %></h2>
 <p><%= @article.body.html_safe %></p>
-<p><i>(last update: <%=h @article.updated_at.to_formatted_s(:short) %></i></p>
+<p><em>(last update: <%=h @article.updated_at.to_formatted_s(:short) %>)</em></p>

@@ -1,14 +1,15 @@
 <% @page_title = "Photos" %>
 
+<h2>Photos</h2>
+
 <div class="container-fluid">
-  <h2>Photos</h2>
   <div class="row-fluid">
     <%= table :class => "photos", :collection => @photos, :columns => 3, :id => :people do %>
       <thead>
         <tr>
           <th class="icon"/>
           <th class="title">Title</th>
-          <th class="actions last"></th>
+          <th class="actions"></th>
         </tr>
       </thead>
       <%= render :partial => "photo", :collection => @photos %>

@@ -48,7 +48,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
     sql_results = series.connection.select_one("select date from events where id=#{series.id}")
     assert_equal_dates(Time.zone.today, sql_results["date"], "Series date column from DB")
 
-    new_series_event = series.children.create!(:date => Date.new(2001, 6, 19))
+    series.children.create!(:date => Date.new(2001, 6, 19))
     assert_equal_dates("2001-06-19", series.date, "PIR series date")
     assert_equal_dates("2001-06-19", series.start_date, "PIR series start date")
     assert_equal_dates("2001-06-19", series.end_date, "PIR series end date")
@@ -112,21 +112,23 @@ class MultiDayEventTest < ActiveSupport::TestCase
     assert_equal_dates("2007-06-22", multi_day_event.end_date, "MultiDayEvent events end date")
   end
   
-  def test_create_children
-    event = MultiDayEvent.create!(:start_date => Date.new(2009, 4), :end_date => Date.new(2009, 9), :every => "Monday", :time => "5:30 PM till dusk")
+  def test_create_for_every!
+    event = MultiDayEvent.create_for_every!("Monday",
+      :start_date => Date.new(2009, 4), :end_date => Date.new(2009, 9), :time => "5:30 PM till dusk"
+    )
     Date.new(2009, 4, 6).step(Date.new(2009, 8, 31), 7) do |date|
       assert(event.children(true).any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
     end
     assert_equal(22, event.children.count, "Should create child events")
     assert_equal(22, event.children.size, "Should create child events")
 
-    event = MultiDayEvent.create!(:start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10), :every => "Sunday")
+    event = MultiDayEvent.create_for_every!("Sunday", :start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10))
     assert_equal(22, event.children(true).size, "Should create child events")
     Date.new(2009, 5, 3).step(Date.new(2009, 9, 30), 7) do |date|
       assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
     end
 
-    event = MultiDayEvent.create!(:start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10), :every => "Tuesday")
+    event = MultiDayEvent.create_for_every!("Tuesday", :start_date => Date.new(2009, 5), :end_date => Date.new(2009, 10))
     assert_equal(22, event.children(true).size, "Should create child events")
     Date.new(2009, 5, 5).step(Date.new(2009, 10, 1), 7) do |date|
       assert(event.children.any? { |child| child.date == date }, "Should have child event for #{date} in #{event.children.map { |e| e.date }.join(', ')}")
@@ -134,7 +136,7 @@ class MultiDayEventTest < ActiveSupport::TestCase
   end
   
   def test_create_children_on_multiple_days_of_week
-    event = MultiDayEvent.create!(:start_date => Date.new(2009), :end_date => Date.new(2009, 12, 31), :every => ["Saturday", "Sunday"])
+    event = MultiDayEvent.create_for_every!(["Saturday", "Sunday"], :start_date => Date.new(2009), :end_date => Date.new(2009, 12, 31))
     assert_equal(104, event.children(true).size, "Should create child events")
 
     Date.new(2009, 1, 3).step(Date.new(2009, 12, 26), 7) do |date|

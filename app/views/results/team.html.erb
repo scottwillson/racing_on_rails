@@ -1,6 +1,8 @@
-<% @page_title = "Results: #{@team.name}" %>
+<% @page_title = "Results: #{@team.name}: #{@year}" %>
 
-<%= render_page "results/team_years", :team => @team %>
+<h2><%= @team.name %></h2>
 
-<h3><%= @team.name %></h3>
-<%= participant_event_results_table @team, @event_results %>
+<div class="container-fluid">
+  <%= render_page "years", :year => @year %>
+  <%= participant_event_results_table @team, @event_results %>
+</div>

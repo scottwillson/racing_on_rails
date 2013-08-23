@@ -27,6 +27,8 @@ class AddRegions < ActiveRecord::Migration
       
       ra = RacingAssociation.current
       ra.default_region_id = Region.where(:name => "Oregon").first
+      
+      Event.update_all(:region_id => Region.where(:name => "Oregon").first.id)
     end
   end
 end

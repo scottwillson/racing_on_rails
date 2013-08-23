@@ -15,7 +15,7 @@ class PromotersTest < AcceptanceTest
 
     year = RacingAssociation.current.effective_year
     promoter = FactoryGirl.create(:promoter)
-    series = Series.create!(:name => "Cross Crusade", :promoter => promoter, :date => Date.new(year, 10))
+    series = Series.create!(:name => "Cross Crusade Series", :promoter => promoter, :date => Date.new(year, 10))
     event = SingleDayEvent.create!(:name => "Cross Crusade: Alpenrose", :promoter => promoter, :date => Date.new(year, 10))
     series.children << event
     login_as promoter
@@ -24,7 +24,7 @@ class PromotersTest < AcceptanceTest
       visit "/admin/events/#{series.id}/edit"
     else
       click_link "events_tab"
-      first("a[href='/admin/events/#{series.id}/edit']").click
+      click_link "Cross Crusade Series"
     end
     click_button "Save"
     

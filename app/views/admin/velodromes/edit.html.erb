@@ -5,23 +5,24 @@
    end %>
 <% @page_title = "Admin: Velodromes: #{@velodrome.name}" %>
 
-<%= error_messages_for "velodrome" %>
+<%= render "shared/errors", :object => @velodrome %>
 
 <h2><%= @velodrome.name %></h2>
 
-<div class="column_grid_container">
-  <%= form_for([:admin, @velodrome]) do |f| -%>
-  <div class="prepend-1 span-3 append-2 last">
-    <%= f.labelled_text_field :name, nil, :class => "wants_focus" %>
-    <%= f.labelled_text_field :website %>
-  </div>
-
-  <div class="page_buttons clear span-4 last">
-    <div class="updatedon span-2"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, true) + " ago" unless @velodrome.updated_at.nil? %>&nbsp;</div>
-    <div class="right span-2 last">
-      <%= link_to("Delete", admin_velodrome_path(@velodrome), :method => :delete, :class => 'obvious', :id => 'delete') unless @velodrome.new_record? %>
-      <%= submit_tag "Save", :id => "save" %>
+<%= form_for([:admin, @velodrome], :html => { :class => "form-horizontal" }) do |f| -%>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.labelled_text_field :name, nil, :class => "wants_focus span12" %>
+      <%= f.labelled_text_field :website %>
     </div>
   </div>
-  <% end -%>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+      <%= link_to("Delete", admin_velodrome_path(@velodrome), :method => :delete, :class => 'btn', :id => 'delete') unless @velodrome.new_record? %>
+      <div class="pull-right created_updated"><%= "Updated: " + time_ago_in_words(@velodrome.updated_at, true) + " ago" unless @velodrome.updated_at.nil? || mobile_request? %></div>
+    </div>
+  </div>
 </div>
+<% end -%>

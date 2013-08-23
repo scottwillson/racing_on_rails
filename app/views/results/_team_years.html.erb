@@ -1,5 +1,0 @@
-<%= tabs do |tabs|
-  (RacingAssociation.current.effective_year).downto(2006) do |year|
-    tabs.add(year, team_results_year_path(team, year))
-  end
-end -%>

@@ -1,8 +1,13 @@
-<%= form_tag({}, {:method => "get", :id => "search_form"}) do %>
-  <div class="centered">
-    <%= label_tag "name" %>
-    <%= text_field_tag "name", name, :class => "wants_focus" %>
+<%= form_tag({}, { :method => "get", :id => "search_form", :class => "form-horizontal form-search" }) do %>
+  <div class="row-fluid">
+    <div class="span3"></div>
+    <div class="span6 input-append">
+    <% if mobile_request? %>
+      <%= text_field_tag("name", @name, :class => "wants_focus search-query span12", :placeholder => placeholder) %>
+    <% else %>
+      <%= search_field_tag("name", @name, :class => "wants_focus search-query span12", :placeholder => placeholder) %>
+    <% end %>
+      <button type="submit" class="btn"><i class="icon-search"></i></button>
+    </div>
   </div>
 <% end -%>
-
-<hr class="space clear"/>

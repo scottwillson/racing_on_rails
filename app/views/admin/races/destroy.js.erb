@@ -1,5 +1,5 @@
 <% if @destroyed %>
-  jQuery('#race_<%= @race.id %>_row').effect('puff', {}, 2000);
+  jQuery('#race_<%= @race.id %>_row').hide('fade');
   jQuery('#warn').hide();
   jQuery('#notice').show();
   jQuery('#notice_span').html('Deleted <%= @race.name %>');

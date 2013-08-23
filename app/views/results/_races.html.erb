@@ -1,15 +1,18 @@
-<% if @event.races_with_results.size > 1 %>
-<br />
-<table class="event_races top_margin">
-  <%- @event.races_with_results.sort.each_row do |row| -%>
-  <tr>
-    <td>
-      <%= link_to row.first.name, "#race_#{row.first.id}" %>
-    </td>
-    <td>
-      <%= link_to(row.last.name, "#race_#{row.last.id}") if row.last %>
-    </td>
-  </tr>
-  <%- end -%>  
-</table>
-<%- end -%>  
+<% if @event.races_with_results.many? %>
+<div class="event_info">
+  <table class="event_races">
+    <tbody>
+      <%- @event.races_with_results.sort.each_row do |first_race, second_race| -%>
+      <tr>
+        <td class="race">
+          <%= link_to first_race.name, "#race_#{first_race.id}" %>
+        </td>
+        <td class="race">
+          <%= link_to(second_race.name, "#race_#{second_race.id}") if second_race %>
+        </td>
+      </tr>
+      <%- end -%>  
+    </tbody>
+  </table>
+</div>
+<%- end -%>

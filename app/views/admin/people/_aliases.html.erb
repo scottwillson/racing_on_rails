@@ -1,3 +1,17 @@
-<span id="person_<%= person.id %>_aliases">
- <%= truncate(person.aliases.collect{ |a| a.name }.join(', '), :length => 200) %>
-</span>
+<h3>Aliases</h3>
+<%= table :class => "aliases", :insert_header => true, :columns => 2, :collection => @person.aliases do %>
+<%- @person.aliases.sort_by(&:name).each do |name_alias| -%>
+  <tr id="alias_<%= name_alias.id %>">
+    <td><%= name_alias.name %></td>
+    <td class="actions">
+      <%= link_to(
+           admin_person_alias_path(@person, name_alias),
+           :method => "delete",
+           :remote => true,
+           :class => "icon") do %>
+      <i class="icon-minus-sign"></i>
+     <% end %>
+    </td>
+  </tr>
+  <%- end -%>
+<% end -%>

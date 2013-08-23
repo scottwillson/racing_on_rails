@@ -7,16 +7,14 @@ jQuery(document).ready(function() {
 
 function bindNumberYearChange() {
   jQuery('#number_year').change(function() {
-    jQuery('#numbers_wrapper').load(
-      '/admin/people/number_year_changed',
-      { 
+    jQuery.ajax({
+      url: '/admin/people/number_year_changed.js',
+      data: { 
         year: jQuery('#number_year').val(),
         id: jQuery('#number_year').attr('data-person-id')
       },
-      function() {
-        bindNumberYearChange();
-      }
-    );
+      type: 'post'
+    });
   });  
 }
 
@@ -26,7 +24,7 @@ function bindPeopleDragAndDrop() {
     zIndex: 10000,
     opacity: 0.7,
     helper: function(event) {
-      return jQuery('<div class="person" data-id="' + jQuery(this).attr('data-id') + '">' + jQuery(this).attr('data-name') + '</div>');
+      return jQuery('<div class="person" data-id="' + jQuery(this).attr('data-id') + '"><i class="icon-user"></i> ' + jQuery(this).attr('data-name') + '</div>');
     }
     });
   jQuery('.person_row').droppable({

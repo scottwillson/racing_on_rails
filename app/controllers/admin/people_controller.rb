@@ -344,7 +344,10 @@ module Admin
         @race_numbers = []
       end
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
-      render(:partial => '/admin/people/numbers', :locals => {:year => @year.to_i, :years => @years, :person => @person, :race_numbers => @race_numbers})
+      
+      respond_to do |format|
+        format.js
+      end
     end
   
     # Membership card stickers/labels

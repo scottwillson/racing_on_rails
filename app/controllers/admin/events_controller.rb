@@ -284,7 +284,7 @@ module Admin
         event_type = "SingleDayEvent"
       end
       raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-
+      
       if params[:year].blank?
         date = RacingAssociation.current.effective_today
       else
@@ -292,7 +292,7 @@ module Admin
         date = Time.zone.local(year.to_i).to_date
       end
       params[:event] = params[:event] || {}
-      if params[:event][:date].blank?
+      if params[:event][:date].blank? && params[:event][:human_date].blank?
         params[:event][:date] = date
       end
 

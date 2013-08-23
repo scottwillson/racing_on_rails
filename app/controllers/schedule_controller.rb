@@ -5,7 +5,7 @@ class ScheduleController < ApplicationController
   before_filter :assign_schedule, :except => :show
   before_filter :assign_sanctioning_organizations, :except => :show
   
-  caches_page :index, :calendar, :list, :if => Proc.new { |c| !mobile_request? }
+  caches_page :index, :calendar, :list
   
   # Default calendar format
   # === Params
@@ -15,45 +15,42 @@ class ScheduleController < ApplicationController
   # * year
   # * schedule: instance of year's Schedule::Schedule
   def index
-    if mobile_request?
-      render :show
-    else
-      respond_to do |format|
-        format.html { render_page }
-        format.rss do
-          redirect_to schedule_path(:format => :atom), :status => :moved_permanently
-        end
-        format.atom
-        format.ics do
-          send_data(
-            RiCal.Calendar do |cal|
-              parent_ids = @events.map(&:parent_id).compact.uniq
-              multiday_events = MultiDayEvent.where("id in (?) and type = ?", parent_ids, "MultiDayEvent")
-              events = @events.reject { |e| multiday_events.include?(e.parent) } + multiday_events
-              events.each do |e|
-                cal.event do |event|
-                  event.summary = e.full_name
-                  event.dtstart =  e.start_date
-                  event.dtend = e.end_date
-                  event.location = e.city_state
-                  event.description = e.discipline
-                  if e.flyer_approved?
-                    event.url = e.flyer
-                  end
+    respond_to do |format|
+      @calendar_tab = "Calendar"
+      format.html { render_page }
+      format.rss do
+        redirect_to schedule_path(:format => :atom), :status => :moved_permanently
+      end
+      format.atom
+      format.ics do
+        send_data(
+          RiCal.Calendar do |cal|
+            parent_ids = @events.map(&:parent_id).compact.uniq
+            multiday_events = MultiDayEvent.where("id in (?) and type = ?", parent_ids, "MultiDayEvent")
+            events = @events.reject { |e| e.postponed? || e.cancelled? || multiday_events.include?(e.parent) } + multiday_events
+            events.each do |e|
+              cal.event do |event|
+                event.summary = e.full_name
+                event.dtstart =  e.start_date
+                event.dtend = e.end_date
+                event.location = e.city_state
+                event.description = e.discipline
+                if e.flyer_approved?
+                  event.url = e.flyer
                 end
               end
-            end,
-            :filename => "#{RacingAssociation.current.name} #{@year} Schedule.ics"
-          )
-        end
-        format.xls do
-          send_data(CSV.generate(:col_sep => "\t") do |csv|
-            csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
-            @events.each do |event|
-              csv << [ event.id, event.parent_id, event.date.to_s(:db), event.full_name, event.discipline, event.flyer, event.city, event.state, event.promoter_name ]
             end
-          end, :type => :xls)
-        end
+          end,
+          :filename => "#{RacingAssociation.current.name} #{@year} Schedule.ics"
+        )
+      end
+      format.xls do
+        send_data(CSV.generate(:col_sep => "\t") do |csv|
+          csv << [ "id", "parent_id", "date", "name", "discipline", "flyer", "city", "state", "promoter_name" ]
+          @events.each do |event|
+            csv << [ event.id, event.parent_id, event.date.to_s(:db), event.full_name, event.discipline, event.flyer, event.city, event.state, event.promoter_name ]
+          end
+        end, :type => :xls)
       end
     end
   end
@@ -65,6 +62,7 @@ class ScheduleController < ApplicationController
   # * year
   # * schedule: instance of year's Schedule::Schedule
   def list
+    @calendar_tab = "List with race organizer contact information"
     render_page
   end
 

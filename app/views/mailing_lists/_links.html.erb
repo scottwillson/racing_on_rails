@@ -1,32 +1,20 @@
-    <% if !current_page?({:controller => "mailing_lists", :action => "index"}) %>
-    <td>
-        <%= link_to "View Mailing Lists", mailing_lists_path %>
-    </td>
-    <% end %>
+<div class="pills">
+  <ul class="nav nav-pills">
+    <li><%= link_to "View Mailing Lists", mailing_lists_path %></li>
+    <li><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></li>
+    <li><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></li>
+    <li><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></li>
     
-    <td class="link_spacer">|</td>
-    <td><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></td>
-    
-    <td class="link_spacer">|</td>
-    <td><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></td>
-    
-    <% unless current_page?({:controller => "posts", :action => "new"}) %>
-    <td class="link_spacer">|</td>
-    <td>
-        <%= link_to "New Post", new_mailing_list_post_path(mailing_list) %>
-    </td>
-    <% end %>
-    
-    <% if !(current_page?({:controller => "posts", :action => "new"})) && @post && @post.topica_message_id.nil? %>
-    <td class="link_spacer">|</td>
-    <td>
+    <% if @post && @post.topica_message_id.nil? %>
+    <li>
         <%= link_to "Reply Privately", new_mailing_list_post_path(mailing_list, :reply_to_id => @post.id) %>
-    </td>
+    </li>
     <% end %>
     
     <% if mailing_list.present? %>
-    <td class="link_spacer">|</td>
-    <td>
-        <%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %>
-    </td>
+    <li>
+        <%= link_to "View Posts", mailing_list_posts_path(mailing_list) %>
+    </li>
     <% end %>
+  </ul>
+</div>

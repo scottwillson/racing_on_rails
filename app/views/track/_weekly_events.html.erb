@@ -1,15 +1,16 @@
-<% if !weekly_events.empty? %>
-  <hr class="space" />
-  <%= table :caption => caption, :class => "top_margin" do %>
+<%= table :collection => weekly_events, :columns => 6 do %>
+  <thead>
     <tr>
-       <th>Day</th>
-       <th width="200">Event</th>
-       <th width="160">Time</th>
-       <th width="100">Contact</th>
-       <th width="100">Phone</th>
-       <th width="300">Notes</th>
+      <th>Day</th>
+      <th>Event</th>
+      <th>Time</th>
+      <th>Contact</th>
+      <th>Phone</th>
+      <th>Notes</th>
     </tr>
-    <% weekly_events.sort_by(&:day_of_week).each do |event| %>
+  </thead>
+  <% weekly_events.sort_by(&:day_of_week).each do |event| %>
+  <tbody>
     <tr>
        <td><%= long_day_of_week(event.day_of_week) %></td>
        <td>
@@ -21,6 +22,6 @@
        <td><%= link_to_event_phone event %></td>
        <td><small><%= event.notes %></small></td>
     </tr>
-    <% end -%>
+  </tbody>
   <% end -%>
 <% end -%>

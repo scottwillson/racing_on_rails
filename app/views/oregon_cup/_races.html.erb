@@ -1,23 +1,27 @@
-<table class="base">
-  <tr>
-    <th colspan="2"><%= @oregon_cup.date.year %> Races</th>
-  </tr>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th colspan="2"><%= @oregon_cup.date.year %> Races</th>
+    </tr>
+  </thead>
   <%  unless @oregon_cup.new_record? or @oregon_cup.nil? %>
-  <%- for event in @oregon_cup.source_events.sort -%>
-  <tr>
-    <td><%= event.date.strftime("%B %-d") %></td>
-    <td>
-<%- unless event.has_results_including_children? -%>
-<%= public_link_to_flyer event -%>
-<%- else -%>
-<%= link_to event.name, event_results_path(event)  %>
-<%- end -%>
-<%- end -%>
-    </td>
-  </tr>
-<% else %>
-  <tr>
-    <td colspan="2">Not scheduled</td>
-  </tr>
+  <%- @oregon_cup.source_events.sort.each do |event| -%>
+  <tbody>
+    <tr>
+      <td class="date"><%= event.date.strftime("%B %-d") %></td>
+      <td class="name">
+  <%- unless event.has_results_including_children? -%>
+  <%= public_link_to_flyer event -%>
+  <%- else -%>
+  <%= link_to event.name, event_results_path(event)  %>
+  <%- end -%>
+  <%- end -%>
+      </td>
+    </tr>
+  <% else %>
+    <tr>
+      <td colspan="2">Not scheduled</td>
+    </tr>
+  </tbody>
 <%- end -%>
 </table>

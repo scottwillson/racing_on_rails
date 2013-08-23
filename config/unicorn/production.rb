@@ -9,6 +9,7 @@ user 'app', 'rails'
 app_path = File.expand_path(File.dirname(__FILE__) + "/../../../current")
 working_directory app_path
 listen "#{app_path}/tmp/sockets/unicorn.sock", :backlog => 64
+
 stderr_path "log/unicorn.stderr.log"
 stdout_path "log/unicorn.stdout.log"
 

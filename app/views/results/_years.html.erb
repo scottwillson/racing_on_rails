@@ -1,0 +1,6 @@
+<%= tabs(year) do |tabs|
+  years = (RacingAssociation.current.effective_year).downto(2006).to_a << year
+  years.uniq.sort.reverse.each do |y|
+    tabs.add(y, url_for(:year => y))
+  end
+end -%>

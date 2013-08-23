@@ -22,7 +22,7 @@ function bindCategoryEvents() {
     opacity: 0.7,
     zIndex: 10000,
     helper: function(event) {
-      return $('<div class="category">' + $(this).text() + '</div>');
+      return $('<div class="category"><i class="icon-star"></i>' + $(this).text() + '</div>');
     }
   });
 
@@ -38,12 +38,15 @@ function expandDisclosure(categoryId) {
   if (disclosure.is('.collapsed')) {
     disclosure.removeClass('collapsed');
     disclosure.removeClass('expanded');
-    disclosure.addClass('loading');
+    disclosure.addClass('icon-refresh');
+    disclosure.addClass('rotate');
+
     $.get(
       '/admin/categories.js',
       { parent_id: categoryId },
       function(data) {
-        disclosure.removeClass('loading');
+        disclosure.removeClass('icon-refresh');
+        disclosure.removeClass('rotate');
         disclosure.addClass('expanded');
         bindCategoryEvents();
       }

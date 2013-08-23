@@ -15,16 +15,24 @@
     <% end %>
   </td>
   <% end %>
-  <td class="actions last">
-    <%= link_to image_tag("icons/add.png"),
-          admin_race_results_path(result.race, :before_result_id => result.id), 
+  <td class="actions">
+    <%= link_to(
+    admin_race_results_path(:race_id => result.race_id, :before_result_id => result.id), 
           :remote => true,
-          :class => "image", :id => "result_#{result.id}_add", 
-          :method => "post"
-    %><%= link_to(image_tag("icons/delete.png"), 
-            admin_result_path(result), 
+          :class => "icon",
+          :id => "result_#{result.id}_add", 
+          :method => "post") do %>
+      <i class="icon-plus-sign"></i>
+    <% end %>
+    <% unless result.new_record? %>
+      <%= link_to(
+      admin_result_path(:id => result.id), 
             :remote => true,
-            :class => "image", :id => "result_#{result.id}_destroy", 
-            :method => "delete") unless result.new_record? %>
+            :class => "icon",
+            :id => "result_#{result.id}_destroy", 
+            :method => "delete") do %>
+        <i class="icon-minus-sign"></i>
+      <% end %>
+    <% end %>
   </td>
 </tr>

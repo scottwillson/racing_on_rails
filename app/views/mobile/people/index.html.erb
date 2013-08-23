@@ -1,0 +1,23 @@
+<% @page_title = "People" %>
+<% @show_tabs = (promoter? || administrator?) -%>
+
+<h2>People</h2>
+
+<div class="container-fluid">
+  <%= render_page "people/disciplines", :year => @year %>
+  
+  <%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <%= table :class => "people", :id => :people, :columns => 2, :collection => @people do %>
+        <th class="name">Name</th>
+        <th class="member">Member</th>
+        <%= render :partial => "person", :collection => @people %>
+        <% if @people.present? %>
+          <%= will_paginate @people, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,21 +1,23 @@
 <tr id="race_<%= race.id %>_row">
+  <td class="icon"><i class="icon-star"></i></td>
   <td class="race">
     <%= editable race, :category_name %>
   </td>
-  <td class="field_size right">
+  <td class="numeric">
     <%= race[:field_size] if race[:field_size] %>
   </td>
-  <td class="right">
+  <td class="actions">
     <%= link_to "Edit", edit_admin_race_path(race), :id => "edit_race_#{race.id}" %>
   </td>
-  <td class="right delete">
-    <%= link_to(image_tag("icons/delete.png"),
+  <td class="actions delete">
+    <%= link_to(
           admin_race_path(race),
           :remote => true,
-          :class => "image", :id => "destroy_race_#{race.id}", :title => "Delete race",
+          :class => "icon", 
+          :class => "icon", :id => "destroy_race_#{race.id}", :title => "Delete race",
           :data => { :confirm => (Rails.env.acceptance? || !promoter?) ? nil : "Really delete #{race.name}?" },
-          :method => :delete
-        )
-    %>
+          :method => :delete) do %>
+      <i class="icon-minus-sign"></i>
+    <% end %>
   </td>
 </tr>

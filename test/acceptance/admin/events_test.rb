@@ -11,6 +11,7 @@ class EventsTest < AcceptanceTest
     race_1 = kings_valley.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men Pro 1/2"))
     kings_valley.races.create!(:category => FactoryGirl.create(:category, :name => "Senior Men 3"))
 
+    visit "/"
     login_as FactoryGirl.create(:administrator)
 
     click_link "New Event"
@@ -98,6 +99,21 @@ class EventsTest < AcceptanceTest
 
     assert_equal "", find("#event_team_id", :visible => false).value
     assert_equal "", find("#team_auto_complete").value
+    
+    fill_in "Date", :with => "Nov 13, 2013"
+    click_button "Save"
+    
+    event = Event.order(:updated_at).last
+    
+    assert_equal "Wednesday, November 13, 2013", find("#event_human_date").value
+    assert_equal Time.zone.local(2013, 11, 13).to_date, event.reload.date, "date should be updated in DB"
+    
+    find("#event_human_date_picker").click
+    first(".datepicker-days td.day.old", :text => "31").click
+    click_button "Save"
+    
+    assert_equal "Thursday, October 31, 2013", find("#event_human_date").value
+    assert_equal Time.zone.local(2013, 10, 31).to_date, event.reload.date, "date should be updated in DB"
 
     click_link "Delete"
 
@@ -109,7 +125,10 @@ class EventsTest < AcceptanceTest
     visit "/admin/events?year=2003"
 
     assert_page_has_content "Import Schedule"
-    click_link "Kings Valley Road Race"
+
+    visit_event kings_valley
+
+    wait_for_page_content "Senior Men Pro 1/2"
     assert_page_has_content "Senior Men Pro 1/2"
     assert_page_has_content "Senior Men 3"
 
@@ -117,14 +136,14 @@ class EventsTest < AcceptanceTest
     click_link "destroy_race_#{race_1.id}"
 
     visit "/admin/events?year=2003"
-    click_link "Kings Valley Road Race"
+    visit_event kings_valley
 
     click_ok_on_confirm_dialog
     click_link "destroy_races"
 
     visit "/admin/events?year=2003"
 
-    click_link "Kings Valley Road Race"
+    visit_event kings_valley
     assert_page_has_no_content "Senior Men Pro 1/2"
     assert_page_has_no_content "Senior Men 3"
 

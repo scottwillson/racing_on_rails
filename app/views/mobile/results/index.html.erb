@@ -1,6 +1,0 @@
-<% @page_title = "Results" %>
-<ul data-role="listview">
-  <%- @events.sort_by(&:end_date).reverse.each do |event| -%>
-  <li><%= link_to event.full_name, event_races_url(event) %></li>
-  <% end %>
-</ul>

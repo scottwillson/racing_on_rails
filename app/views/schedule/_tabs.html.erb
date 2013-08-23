@@ -1,0 +1,6 @@
+<% if RacingAssociation.current.show_calendar_view? && !mobile_request? -%>
+  <%= tabs(calendar_tab) do |tabs|
+      tabs.add("Calendar", schedule_path)
+      tabs.add("List with race organizer contact information", schedule_list_path)
+  end -%>
+<% end -%>

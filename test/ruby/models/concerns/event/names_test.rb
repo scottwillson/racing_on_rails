@@ -5,6 +5,9 @@ require File.expand_path("../../../../../../app/models/concerns/event/names", __
 # :stopdoc:
 class Concerns::Event::NamesTest < Ruby::TestCase
   class TestEvent
+    def self.before_save(symbol)
+    end
+
     include Concerns::Event::Dates
     include Concerns::Event::Names
     

@@ -1,4 +1,4 @@
-jQuery('#right_person').html('<%= escape_javascript(render(:partial => "person", :locals => { :person => @person, :results => @results })) %>');
+jQuery('#right_person').html('<%= escape_javascript(render("person", :person => @person, :results => @results)) %>');
 jQuery('#right_person').stop();
 jQuery('#right_person').fadeIn("fast", 1);
 $('#right_person tr:last-child td').height($('#left_person table').height() - $('#right_person table').height());

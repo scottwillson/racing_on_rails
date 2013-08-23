@@ -1,0 +1,12 @@
+<tr id="person_<%= person.id %>_row">
+  <td class="name">
+    <%- @person = person -%>
+      <%= link_to person.name, person_results_path(person) %>
+    <div class="aliases">
+      <%= person.aliases.collect(&:name).join(", ") %>
+    </div>
+  </td>
+  <td class="member">
+    <%= "Yes" if person.member? %>
+  </td>
+</tr>

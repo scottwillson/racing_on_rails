@@ -9,10 +9,12 @@ module Admin
     def index
       @past_events = (params[:past_events] == "true") || false
       if @past_events
-        conditions = [ 'date >= ?', RacingAssociation.current.effective_today ]
+        query = SingleDayEvent.current_year
       else
-        conditions = [ 'date >= CURDATE()' ]
+        query = SingleDayEvent.today_and_future
       end
+      
+      query = query.where(:practice => false).where(:cancelled => false).where(:postponed => false)
     
       if params[:sort_by].present?
         @sort_by = params[:sort_by]
@@ -20,7 +22,7 @@ module Admin
         @sort_by = "date"
       end
     
-      @events = SingleDayEvent.all( :conditions => conditions)
+      @events = query.all
     
       respond_to do |format|
         format.html

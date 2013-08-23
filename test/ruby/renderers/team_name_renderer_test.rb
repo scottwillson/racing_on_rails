@@ -13,7 +13,7 @@ module Renderers
     
     def test_render_team
       column = stub("column", :key => :team_name)
-      row = stub("row", :[] => "Gentle Lovers", :source => stub("result", :team_id => 18, :team_competition_result? => false, :year => 2010))
+      row = stub("row", :[] => "Gentle Lovers", :metadata => {}, :source => stub("result", :team_id => 18, :team_competition_result? => false, :year => 2010))
       TeamNameRenderer.stubs(:racing_association => mock("racing_association", :unregistered_teams_in_results? => true))
       
       html = TeamNameRenderer.render(column, row)
@@ -21,17 +21,29 @@ module Renderers
       assert_equal "/teams/18/2010", link['href'], "href"
       assert_equal "Gentle Lovers", link.text, "text"
     end
+    
+    def test_mobile
+      column = stub("column", :key => :team_name)
+      row = stub("row", :[] => "Gentle Lovers", :metadata => { :mobile_request => true }, :source => stub("result", :team_id => 18, :team_competition_result? => false, :year => 2010))
+      TeamNameRenderer.stubs(:racing_association => mock("racing_association", :unregistered_teams_in_results? => true))
+      
+      html = TeamNameRenderer.render(column, row)
+      link = Nokogiri::HTML.fragment(html).search('a').first
+      assert_equal "/m/teams/18/2010", link['href'], "href"
+      assert_equal "Gentle Lovers", link.text, "text"
+    end
   
     def test_competition_result
       column = stub("column", :key => :team_name)
       row = stub("row", 
                    :[] => "Gentle Lovers", 
+                   :metadata => {},
                    :source => stub("result", :team_id => 18, :event_id => 3, :race_id => 200, :team_competition_result? => true, :year => 2010))
       TeamNameRenderer.stubs(:racing_association => mock("racing_association", :unregistered_teams_in_results? => true))
       
       html = TeamNameRenderer.render(column, row)
       link = Nokogiri::HTML.fragment(html).search('a').first
-      assert_equal "/events/3/teams/18/results/200", link['href'], "href"
+      assert_equal "/events/3/teams/18/results#200", link['href'], "href"
       assert_equal "Gentle Lovers", link.text, "text"
     end  
   end

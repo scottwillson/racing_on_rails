@@ -1,12 +1,23 @@
-<%= table :class => "pages", :id => :pages do %>
-  <tr>
-    <th class="title">Title</th>
-    <th class="updated">Updated</th>
-    <th class="actions last">&nbsp;</th>
-  </tr>
-  <%= render @pages %>
+<h3>Pages</h3>
+
+<%= table :class => "pages", :id => :pages, :collection => @pages, :columns => 4 do %>
+  <thead>
+    <tr>
+      <th class="icon"></th>
+      <th class="title">Title</th>
+      <th class="updated">Updated</th>
+      <th class="actions">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render @pages %>
+  </tbody>
 <% end -%>
 
-<div class="buttons container">
-  <%= link_to(image_tag('icons/add.png'), new_admin_page_path, :class => "image") %>
+<div class="row-fluid">
+  <div class="span12">
+    <%= link_to new_admin_page_path, :class => "btn", :id => "new_page" do %>
+      <i class="icon-file"></i> New Page
+    <% end %>
+  </div>
 </div>

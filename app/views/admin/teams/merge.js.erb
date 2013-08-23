@@ -1,5 +1,4 @@
 jQuery('#team_<%= @other_team.id %>_row').remove();
-jQuery('#team_<%= @team.id %>_aliases').html("<%= escape_javascript(render(:partial => 'aliases', :locals => { :team => @team })) %>");
+jQuery('#team_<%= @team.id %>_aliases').html('<%= escape_javascript(render('aliases', :team => @team)) %>');
 
-flash("notice", "Merged <%= @other_team.name %> into <%= @team.name %>");
-restripeTable('#teams_table');
+<%= flash_js "notice", "Merged #{@other_team.name} into #{@team.name}" %>

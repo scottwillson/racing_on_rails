@@ -1,19 +1,17 @@
-<% style_class = nil unless style_class  %>
-<%= table :caption => link_to('Results', results_path(:host => RacingAssociation.current.rails_host)), 
-         :class => style_class || "no_top_margin", 
-         :insert_header => true,
-         :id => "home_page_results" do %>
-  <%- @recent_results.each do |event| -%>
+<h3><%= link_to 'Results', results_path %></h3>
+<%= table :id => "home_page_results", :columns => 2 do %>
+  <%- events_with_recent_results[0, mobile_request? ? 6 : 1000].each do |event| -%>
   <tr>
-    <td><%= link_to event.full_name, event_results_path(event, :host => RacingAssociation.current.rails_host) %></td>
+    <td class="date"><%= link_to event.date.to_s(:md), event_results_path(event) %></td>
+    <td class="event"><%= link_to event.full_name, event_results_path(event) %></td>
   </tr>
   <%- end -%>
-  <%- if @recent_results.empty? -%>
+  <%- if events_with_recent_results.empty? -%>
   <tr>
-    <td>No results in the last two weeks</td>
+    <td>No results in the last <%= weeks_of_recent_results %> weeks</td>
   </tr>
   <%- end -%>
   <tr>
-    <td style="padding-top: 16px;"><%= link_to("More &hellip;".html_safe, results_path(:host => RacingAssociation.current.rails_host)) %></td>
+    <td colspan="2"><%= link_to("More &hellip;".html_safe, results_path) %></td>
   </tr>
 <% end -%>

@@ -1,0 +1,6 @@
+<%= tabs(discipline.try(:name) || "All") do |tabs|
+  tabs.add 'All', url_for(:discipline => nil, :year => year)
+  Discipline.all.select { |d| d.to_param.in?(%w{ criterium cyclocross downhill mountain_bike super_d road time_trial track }) }.each do |d|
+    tabs.add d.name, url_for(:discipline => d.to_param, :year => year)
+  end
+end  %>

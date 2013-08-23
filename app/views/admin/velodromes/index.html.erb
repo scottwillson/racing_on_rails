@@ -1,15 +1,26 @@
 <% @page_title = 'Admin: Velodromes' %>
 
-<%= table :class => :velodromes, :id => :velodromes do %>
-  <tr>
-    <th class="icon"/>
-    <th class="name">Name</th>
-    <th>Website</th>
-    <th class="actions last"></th>
-  </tr>
-  <%= render :partial => "velodrome", :collection => @velodromes %>
-<% end -%>
+<h2>Velodromes</h2>
 
-<div class="buttons container">
-  <%= link_to(image_tag('icons/add.png'), { :action => 'new' }, { :class => "image" }) %>
+<div class="container-fluid">
+  <%= render "shared/search", :name => @name, :placeholder => "Enter name to search"%>
+
+  <div class="row-fluid">
+    <%= table :class => :velodromes, :id => :velodromes, :collection => @velodromes, :columns => 4 do %>
+      <tr>
+        <th class="icon"/>
+        <th class="name">Name</th>
+        <th>Website</th>
+        <th class="actions"></th>
+      </tr>
+      <%= render :partial => "velodrome", :collection => @velodromes %>
+    <% end -%>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= link_to new_admin_velodrome_path, :class => "btn", :id => "new_velodrome" do %>
+        <i class="icon-flag"></i> New Velodrome
+      <% end %>
+    </div>
+  </div>
 </div>

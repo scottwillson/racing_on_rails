@@ -11,7 +11,7 @@ class EventsControllerTest < ActionController::TestCase
     promoter = FactoryGirl.create(:promoter)
     get :index, :person_id => promoter
     assert_response :success
-    assert_select ".tabs", :count => 0
+    assert_select ".nav", :count => 0
     assert_select "a[href=?]", /.*\/admin\/events.*/, :count => 0
   end
   
@@ -23,7 +23,7 @@ class EventsControllerTest < ActionController::TestCase
       use_ssl
       get :index, :person_id => promoter
       assert_response :success
-      if css_select(".tabs").present?
+      if css_select(".nav").present?
         assert_select "a[href=?]", /.*\/admin\/events.*/
       end
     end

@@ -6,19 +6,21 @@ set :deploy_to, "/var/www/rails/#{application}"
 
 load 'deploy/assets'
 load "config/db"
+
 require "capistrano-unicorn"
+set :unicorn_config_path, "#{current_path}/config/unicorn"
+set :unicorn_config_filename, "production.rb"
 
 require "rvm/capistrano"
 set :rvm_ruby_string, "1.9.3"
 
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
-set :branch, "master"
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
-set :bundle_without,  [:development, :test, :acceptance]
+set :bundle_without, [ :development, :test, :acceptance ]
 
 set :user, "app"
 set :use_sudo, false
@@ -54,7 +56,9 @@ namespace :deploy do
       rm -rf #{latest_release}/tmp/pids &&
       ln -s #{shared_path}/pids #{latest_release}/tmp/pids &&
       rm -rf #{latest_release}/tmp/sockets &&
-      ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets
+      ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets &&
+      rm -rf #{latest_release}/public/uploads &&
+      ln -s #{shared_path}/uploads #{latest_release}/public/uploads
     CMD
   end
 

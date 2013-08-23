@@ -1,10 +1,10 @@
-<tr class="<%= cycle("even", "odd") %>" id="person_<%= person.id %>_row" style="position: relative;">
-  <td class="name" style="position: relative;">
+<tr id="person_<%= person.id %>_row">
+  <td class="name">
     <%- @person = person -%>
       <%= link_to person.name, person_results_path(person) %>
-  </td>
-  <td class="aliases">
-    <%= truncate(person.aliases.collect{ |a| a.name }.join(', '), :limit => 200) %>
+    <div class="aliases">
+      <%= person.aliases.collect(&:name).join(", ") %>
+    </div>
   </td>
   <td class="member">
     <%= "Yes" if person.member? %>
@@ -18,13 +18,13 @@
   <td class="city">
     <%= person.city_state %>
   </td>
-  <td class="right">
+  <td>
     <%= person.road_category %>
   </td>
-  <td class="right">
+  <td>
     <%= person.mtb_category %>
   </td>
-  <td class="right">
+  <td>
     <%= person.ccx_category %>
   </td>
   <td class="racing_age">

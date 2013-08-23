@@ -1,10 +1,10 @@
-<% if @person.member? -%>
-  <p class="top_margin centered">Your membership runs from <%= @person.member_from.to_s(:long) %> to <%= @person.member_to.to_s(:long) %></p>
+<h2><% if @person.member? -%>
+  Your membership runs from <%= @person.member_from.to_s(:long) %> to <%= @person.member_to.to_s(:long) %>
 <%- else -%>
-  <p class="top_margin centered">Your are not a member</p>
-<%- end -%>
+  You are not a member
+<%- end -%></h2>
 
-<p class="centered">
-  <%= link_to "Your Account", edit_person_path(@person) %>  |
-  <%= link_to "#{RacingAssociation.current.name} Home", root_path %>
-</p>
+<ul class="page-links">
+  <li><%= link_to "Your Account", edit_person_path(@person) %></li>
+  <li><%= link_to "#{RacingAssociation.current.name} Home", root_path %></li>
+</ul>

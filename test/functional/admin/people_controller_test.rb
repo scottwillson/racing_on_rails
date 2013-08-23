@@ -268,10 +268,7 @@ module Admin
     def test_number_year_changed
       person = FactoryGirl.create(:person)
 
-      post(:number_year_changed, 
-           :id => person.to_param.to_s,
-           :year => '2010'
-      )
+      xhr :post, :number_year_changed, :id => person.to_param.to_s, :year => "2010"
       assert_response :success
       assert_template("admin/people/_numbers")
       assert_not_nil(assigns["race_numbers"], "Should assign 'race_numbers'")

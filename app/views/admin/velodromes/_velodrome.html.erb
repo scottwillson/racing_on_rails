@@ -1,12 +1,12 @@
-<%= content_tag :tr, :class => cycle("even", "odd"), :id => "velodrome_#{velodrome.id}_row" do %>
-  <td class="icon"><%= image_tag "icons/flag_checked.png", :id => "velodrome_#{velodrome.id}" %></td>
+<%= content_tag :tr, :id => "velodrome_#{velodrome.id}_row" do %>
+  <td class="icon"><i class="icon-flag" id="velodrome_<%= velodrome.id %>" ></i></td>
   <td class="name">
     <%= editable velodrome, :name %>
   </td>
   <td class="website not_editable">
     <%= editable velodrome, :website %>
   </td>
-  <td class="actions last">
+  <td class="actions">
     <%= link_to "Edit", edit_admin_velodrome_path(velodrome), :id => "edit_#{velodrome.id}" %>
   </td>
 <% end -%>

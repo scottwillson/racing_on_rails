@@ -1,4 +1,5 @@
 /*
+ *= require admin_results
  *= require categories
  *= require events
  *= require first_aid_providers

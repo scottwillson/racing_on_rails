@@ -1,72 +1,23 @@
 <% @page_title = "Admin: Results: #{@person.name}" %>
 
-<%= form_tag "", :id => "find_person_form" %>
-  <div class="buttons centered">
-    <%= label_tag :name, "Move Results to Person" %>
-    <%= text_field_tag :name %>
-    <%= image_tag '/assets/icons/spinner.gif', :id => 'find_progress_icon', :style => "display: none" %>
-  </div>
-</form>
+<h2><%= @person.name %></h2>
 
-<div class="people clear last" id="people">
-  <div class="full_width" id="left_person">
-    <%= render :partial => "person", :locals => {:person => @person, :results => @results} %>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <%= form_tag({}, { :method => "get", :id => "find_person_form", :class => "form-horizontal form-search" }) do %>
+      <div class="span3 find-progress"><i class="icon-refresh rotate" id="find_progress_icon" style="display: none"></i></div>
+      <div class="span6 input-append">
+        <%= search_field_tag("name", @name, :class => "wants_focus search-query span12", :placeholder => "Move results to person") %>
+        <button type="submit" class="btn"><i class="icon-search"></i></button>
+      </div>
+    <% end -%>
   </div>
 
-  <div class="half_width last" id="right_person"></div>
+  <div class="row-fluid" people id="people">
+    <div class="span6" id="left_person">
+      <%= render 'person', :person => @person, :results => @results %>
+    </div>
+
+    <div class="span6" id="right_person"></div>
+  </div>
 </div>
-
-<%= javascript_tag do %>
-  $(document).ready(function() {
-    $('#find_person_form').submit(function() {
-      $('#find_progress_icon').show();
-      jQuery.ajax(
-        { complete: function(request) {
-                      $(document).scrollTop(0); 
-                      $('#left_person').removeClass('full_width'); 
-                      $('#left_person').addClass('half_width'); 
-                      $('#right_person').show(); 
-                      $('#find_progress_icon').hide();
-                    }, 
-          data: jQuery.param(jQuery(this).serializeArray()), 
-          success: function(request) { 
-            jQuery('#right_person').html(request);
-          }, 
-          type: 'post',
-          url: '/admin/results/find_person?ignore_id=630815940'
-        }
-      ); 
-      return false;
-    });
-  });
-
-  function toggle_disclosure(element) {
-    var id = /\d+/.exec($(element).attr('id'))[0];
-    if ($(element).is('.collapsed')) {
-      $(element).removeClass('collapsed');
-      element.src='/assets/icons/spinner.gif';
-      $.ajax({
-        url: '/admin/results/' + id + '/scores',
-        type: 'post',
-        dataType: 'script',
-        complete: function() {
-          expand(element);          
-        }
-      });
-    }
-    else {
-      element.src = '/assets/icons/play_blue.png';
-      $(element).addClass('collapsed');
-      $(element).removeClass('expanded');
-      $('tr.scores_' + id).each(function(index, e) {
-        $(e).remove();
-      });
-    }
-  }
-
-  function expand(element) {
-    element.src = '/assets/icons/down_blue.png';
-    $(element).removeClass('collapsed');
-    $(element).addClass('expanded');
-  }
-<% end -%>

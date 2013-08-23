@@ -1,0 +1,5 @@
+<%= tabs do |tabs|
+  Date::MONTHNAMES.compact.each do |month|
+    tabs.add(month, "##{month.downcase}")
+  end
+end -%>

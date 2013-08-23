@@ -1,5 +1,5 @@
-<%= content_tag :tr, :class => "#{cycle("even", "odd")} person_row", :id => "person_#{person.id}_row", "data-id" => person.id do %>
-  <td class="icon"><%= image_tag "icons/user.png", :class => "person_icon", :id => "person_#{person.id}", "data-name" => person.name, "data-id" => person.id %></td>
+<%= content_tag :tr, :class => "person_row", :id => "person_#{person.id}_row", "data-id" => person.id do %>
+  <td class="icon"><i class="icon-user person_icon" id="person_<%= person.id %>" data-name="<%= person.name %>" data-id="<%= person.id %>"></i></td>
   <td class="name">
     <%= editable person, :name %>
   </td>
@@ -7,17 +7,16 @@
     <%= editable person, :team_name %>
   </td>
   <td class="aliases not_editable">
-    <%= render :partial => "aliases", :locals => { :person => person } %>
+    <%= render "aliases_cell", :person => person %>
   </td>
   <td class="number not_editable">
     <%= person.license %>
   </td>
   <td class="check_box not_editable">
-    <%= render :partial => "shared/member", :locals => { :record => person } %>
+    <%= render "shared/member", :record => person %>
   </td>
-  <td class="actions not_editable last">
-    <%= link_to 'Results', admin_person_results_path(person), :id => "#{person.id}_results" %> |
+  <td class="actions not_editable">
+    <%= link_to 'Results', admin_person_results_path(person), :id => "#{person.id}_results" %>
     <%= link_to 'Edit', edit_admin_person_path(person), :id => "edit_#{person.id}" %>
   </td>
 <% end %>
-

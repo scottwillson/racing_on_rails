@@ -1,42 +1,71 @@
 <% @page_title = "Alpenrose Velodrome" %>
 
-<div class="tabs">
-  <%= link_to "Track Home", track_path %> |
-  <%= link_to "History", "http://#{RacingAssociation.current.static_host}/track/history/index.html" %> |
-  <%= link_to "Information", "http://#{RacingAssociation.current.static_host}/track/information/index.html" %> |
-  <%= link_to "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html" %> |
-  <%= link_to "Schedule", track_schedule_path %>
-</div>
+<h2>Track: Alpenrose Velodrome</h2>
 
-<table class="centered top_margin">
-  <tr valign="top">
-    <td style="padding-right: 12px;">
-      <!-- Left-side cell for main content -->
-      
-      <table bgcolor="#000000" cellspacing="0" border="0" cellpadding="1" width="300">
-       
+<%= tabs("Track Home") do |tabs|
+  tabs.add "Track Home", track_path
+  tabs.add "History", "http://#{RacingAssociation.current.static_host}/track/history/index.html"
+  tabs.add "Information", "http://#{RacingAssociation.current.static_host}/track/information/index.html"
+  tabs.add "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html"
+end %>
+
+<div class="container-fluid">
+  <div class="span12">
+    <h3><%= link_to "Upcoming Races", "/track/schedule" %></h3>
+    <%= table :id => "upcoming_events", :columns => 5 do %>
+      <thead>
         <tr>
-          <td colspan="3">
-            <%= image_tag "http://#{RacingAssociation.current.static_host}/track/assets/photos/avc_missandout.jpg", :border => 0, :size => "300x222", :alt => "AVC Miss and Out" %>
-          </td>
-            </tr>
-            <tr bgcolor="black">
-              <td>&nbsp;</td>
-              <td><small><font color="#cccccc">Marty Nothstein leads the field during the Miss and Out competition of the Alpenrose Challenge.</font></small>
-          </td>
-              <td>&nbsp;</td>
+          <th class="date">Date</th>
+          <th></th>
+          <th>Event</th>
+          <th>Contact</th>
+          <th>Phone</th>
         </tr>
+      </thead>
+      <tbody>
+        <% @events.
+            select { |e| !e.instructional? && !e.practice? && e.date >= RacingAssociation.current.effective_today }.
+            sort_by(&:date)[0, mobile_request? ? 6 : 1000].
+            each do |event| %>
+          <tr>
+            <td class="date"><%= public_link_to_flyer(event, event.date.to_s(:short_with_week_day)) %></td>
+            <% unless mobile_request? %>
+            <td class="beginner_friendly icon">
+              <% if event.beginner_friendly? %>
+                <%= link_to("http://www.obra.org/beginner_friendly.html", 
+                            :class => "beginner_friendly", :title => "Beginner friendly event") do %>
+                  <i class="icon-ok-circle"></i>
+                <% end %>
+              <% end %>
+            </td>
+            <% end %>
+            <td><%= public_link_to_flyer(event) %></td>
+            <td><%= link_to_event_email event %></td>
+            <td><%= link_to_event_phone event %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    <% end -%>
 
-      </table>
+    <p>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>. 
+    Call the velodrome during event hours to check on weather cancellations: (503) 246-0330.</p>
 
-    </td>
-    <td style="padding-left: 12px;">
-      <%= upcoming_events_table(@upcoming_events,
-                                link_to("Velodrome Schedule", track_schedule_path), 
-                                "Please check the #{link_to("schedule page", track_schedule_path)} details and exceptions.".html_safe)
-      %>
-    </td>
-  </tr>
-</table>
+    <h3>Weekly Races</h3>
+    <%= render "weekly_events", 
+               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
 
-<div class="centered top_margin"><%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :border => 0, :size => "200x65", :alt => "Alpenrose" %></div>
+    <h3>Weekly Instruction Schedule</h3>
+    <%= render 'weekly_events', 
+               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
+
+    <h3>Weekly Practice Schedule</h3>
+    <%= render 'weekly_events', 
+               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12 associated">
+      <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :size => "200x65", :title => "Alpenrose" %>
+    </div>
+  </div>
+</div>

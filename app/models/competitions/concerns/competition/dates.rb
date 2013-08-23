@@ -71,7 +71,7 @@ module Concerns
           end
         end
         if start_date && end_date && start_date.to_date.year != end_date.to_date.year
-          errors.add :date, "and end date must be in same year"
+          errors.add :date, "and end date must be in same year but are #{start_date} and #{end_date}"
         end
       end
 

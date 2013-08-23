@@ -1,7 +1,7 @@
 <%- if (@show_tabs.nil? || @show_tabs) -%>
   <%- if administrator? -%>
 
-  <%= tabs do |tabs|
+  <%= tabs(@current_admin_tab) do |tabs|
       tabs.add("Schedule", admin_events_path) if RacingAssociation.current.administrator_tabs.include?(:schedule)
       tabs.add("First Aid", admin_first_aid_providers_path) if RacingAssociation.current.administrator_tabs.include?(:first_aid)
       tabs.add("People", admin_people_path) if RacingAssociation.current.administrator_tabs.include?(:people)
@@ -11,16 +11,17 @@
       tabs.add("Article Categories", admin_article_categories_path) if RacingAssociation.current.administrator_tabs.include?(:article_categories)
       tabs.add("Articles", admin_articles_path) if RacingAssociation.current.administrator_tabs.include?(:articles)
       tabs.add "Site", edit_racing_association_path(RacingAssociation.current)
+      tabs.add "Photos", photos_path
       tabs.add("Pages", admin_pages_path) if RacingAssociation.current.administrator_tabs.include?(:pages)
   end %>
   
   <%- elsif promoter? || official? -%>
 
-  <%= tabs do |tabs|
-    tabs.add "Account", "/account", :id => "account_tab"
-    tabs.add("Events", person_events_path(current_person), :id => "events_tab") if promoter?
-    tabs.add("People", people_path, :id => "people_tab") if promoter? || official?
-    tabs.add("First Aid", admin_first_aid_providers_path, :id => "first_aid_tab") if RacingAssociation.current.administrator_tabs.include?(:first_aid) && official?
+  <%= tabs(@current_admin_tab) do |tabs|
+    tabs.add "Account", "/account"
+    tabs.add("Events", person_events_path(current_person)) if promoter?
+    tabs.add("People", people_path) if promoter? || official?
+    tabs.add("First Aid", admin_first_aid_providers_path) if RacingAssociation.current.administrator_tabs.include?(:first_aid) && official?
   end %>
 
   <%- end -%>

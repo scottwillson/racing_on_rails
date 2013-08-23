@@ -58,15 +58,15 @@ module Competitions
     def self.calculate(source_results, options = {})
       assert_valid_options options
 
-      break_ties               = options.has_key?(:break_ties) ? options[:break_ties]               : false
-      dnf                      = options.has_key?(:dnf) ? options[:dnf]                             : false
-      field_size_bonus         = options.has_key?(:field_size) ? options[:field_size]               : false
-      members_only             = options.has_key?(:members_only) ? options[:members_only]           : true
+      break_ties               = options.has_key?(:break_ties) ? options[:break_ties] : false
+      dnf                      = options.has_key?(:dnf) ? options[:dnf] : false
+      field_size_bonus         = options.has_key?(:field_size) ? options[:field_size] : false
+      members_only             = options.has_key?(:members_only) ? options[:members_only] : true
       point_schedule           = options[:point_schedule]
       results_per_event        = options.has_key?(:results_per_event) ? options[:results_per_event] : UNLIMITED
-      results_per_race         = options.has_key?(:results_per_race) ? options[:results_per_race]   : 1
+      results_per_race         = options.has_key?(:results_per_race) ? options[:results_per_race] : 1
       source_event_ids         = options[:source_event_ids]
-      team                     = options.has_key?(:team) ? options[:team]                           : false
+      team                     = options.has_key?(:team) ? options[:team] : false
       use_source_result_points = options.has_key?(:use_source_result_points) ? options[:use_source_result_points] : false
 
       struct_results = map_hashes_to_results(source_results)
@@ -137,19 +137,7 @@ module Competitions
       else
         results.group_by { |r| [ r.participant_id, r.event_id ] }.
         map do |key, r|
-          count = 0
-          previous_place = nil
-          r.
-          sort_by { |r2| numeric_place(r2) }.
-          select do |r2|
-            count = count + 1
-            if count <= results_per_event || previous_place.nil? || previous_place == numeric_place(r2)
-              previous_place = numeric_place(r2)
-              true
-            else
-              false
-            end
-          end
+          r.sort_by { |r2| numeric_place(r2) }[0, results_per_event]
         end.
         flatten
       end
@@ -161,19 +149,7 @@ module Competitions
       else
         results.group_by { |r| [ r.participant_id, r.race_id ] }.
         map do |key, r|
-          count = 0
-          previous_place = nil
-          r.
-          sort_by { |r2| numeric_place(r2) }.
-          select do |r2|
-            count = count + 1
-            if count <= results_per_race || previous_place.nil? || previous_place == numeric_place(r2)
-              previous_place = numeric_place(r2)
-              true
-            else
-              false
-            end
-          end
+          r.sort_by { |r2| numeric_place(r2) }[0, results_per_race]
         end.
         flatten
       end

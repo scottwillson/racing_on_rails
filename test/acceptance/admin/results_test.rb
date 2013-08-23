@@ -22,7 +22,7 @@ class ResultsTest < AcceptanceTest
       visit "/admin/events?year=#{Time.zone.today.year - 1}"
     end
 
-    click_link "Copperopolis Road Race"
+    visit_event event
 
     click_link "edit_race_#{race.id}"
 

@@ -1,11 +1,14 @@
 <% @page_title = "Mailing Lists" %>
 
-<%= table :insert_header => true, :columns => 11 do %>
+<%= table :insert_header => true, :columns => 6 do %>
   <% @mailing_lists.each do |mailing_list| %>
   <tr valign="top">
     <td style="padding-right: 12px;"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %><b></td>
     <td width="300" style="padding-right: 16px;"><%= mailing_list.description %></td>
-    <%= render("links", :mailing_list => mailing_list) %>
+    <td><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></td>
+    <td><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></td>
+    <td><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></td>
+    <td><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></td>
   </tr>
   <% end %>
 <% end -%>

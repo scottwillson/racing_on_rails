@@ -1,0 +1,9 @@
+<tr>
+  <td class="club_name">
+    <%= link_to(team.name, team.website) unless team.website.blank? %>
+    <%= team.name if team.website.blank? %>
+  </td>
+  <td>
+    <%= link_to "Results", team_path(team) -%>
+  </td>
+</tr>

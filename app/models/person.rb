@@ -15,11 +15,12 @@ class Person < ActiveRecord::Base
     acts_as_authentic do |config|
       config.validates_length_of_login_field_options :within => 3..100, :allow_nil => true, :allow_blank => true
       config.validates_format_of_login_field_options :with => Authlogic::Regex.login, 
-                                                     :message => I18n.t('error_messages.login_invalid', :default => "should use only letters, numbers, spaces, and .-_@ please."),
+                                                     :message => I18n.t('error_messages.login_invalid', 
+                                                     :default => "should use only letters, numbers, spaces, and .-_@ please."),
                                                      :allow_nil => true,
                                                      :allow_blank => true
 
-      config.validates_uniqueness_of_login_field_options :allow_blank => true, :allow_nil => true
+      config.validates_uniqueness_of_login_field_options :allow_blank => true, :allow_nil => true, :case_sensitive => false
       config.validates_confirmation_of_password_field_options :unless => Proc.new { |user| user.password.blank? }    
       config.validates_length_of_password_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
       config.validates_length_of_password_confirmation_field_options  :minimum => 4, :allow_nil => true, :allow_blank => true
@@ -489,7 +490,7 @@ class Person < ActiveRecord::Base
   def female?
     gender == "F"
   end
-  
+
   def male?
     gender == "M"
   end
@@ -878,8 +879,10 @@ class Person < ActiveRecord::Base
     # Consider just using straight SQL for this --
     # it's not complicated, and the current process generates an
     # enormous amount of SQL
-    raise(ArgumentError, 'Cannot merge nil person') unless other_person
-    raise(ArgumentError, 'Cannot merge person onto itself') if other_person == self
+    
+    if other_person.nil? || other_person == self
+      return false
+    end
 
     Person.transaction do
       ActiveRecord::Base.lock_optimistically = false

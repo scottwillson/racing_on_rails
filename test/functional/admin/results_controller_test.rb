@@ -24,7 +24,7 @@ module Admin
   
     def test_update_no_team_to_existing
       result = FactoryGirl.create(:result, :team => nil)
-      vanilla = FactoryGirl.create(:team, :name => "Vanilla")
+      FactoryGirl.create(:team, :name => "Vanilla")
     
       xhr :put,
           :update_attribute,
@@ -292,6 +292,18 @@ module Admin
       assert_equal 3, weaver.results.size, "results"
     end
   
+    def test_update_attribute_should_format_times
+      result = FactoryGirl.create(:result, :time => 600)
+      xhr :put,
+          :update_attribute,
+          :id => result.to_param,
+          :name => "time",
+          :value => "7159"
+
+      assert_response :success
+      assert_equal "01:59:19.00", response.body, "Should format time but was #{response.body}"
+    end
+  
     def test_person
       weaver = FactoryGirl.create(:result).person
 
@@ -450,7 +462,6 @@ module Admin
   
     def test_destroy
       result_2 = FactoryGirl.create(:result)
-      race = result_2.race
       assert_not_nil(result_2, 'Result should exist in DB')
     
       xhr(:post, :destroy, :id => result_2.to_param)

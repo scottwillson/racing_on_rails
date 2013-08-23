@@ -8,3 +8,4 @@ Gem::Specification.new do |s|
   s.description = "Empty placeholder gem"
   s.add_dependency "activemerchant"
 end
+

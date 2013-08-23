@@ -1,15 +1,16 @@
 <tr>
   <td class="club_name">
-    <%= link_to(team.name, team_path(team)) -%>
+    <%= link_to(team.name, team.website) unless team.website.blank? %>
+    <%= team.name if team.website.blank? %>
   </td>
   <td>
     <%= raw team.sponsors %>
   </td>
-  <td>
-    <%= link_to(team.website, team.website) unless team.website.blank? %>
-  </td>
   <td class="contact">
-    <%= link_to_contact(team) %>
+    <%= link_to_contact(team) %><br/>
+    <%= team.contact_phone %>
   </td>
-  <td class="contact_phone"><%= team.contact_phone %></td>
+  <td>
+    <%= link_to "Results", team_path(team) -%>
+  </td>
 </tr>

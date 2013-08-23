@@ -1,32 +1,42 @@
 <% @page_title = "Admin: Article Categories" %>
 
-<h2>Article Category Tree</h2>
-<%= display_categories(@article_categories, 0) %>
+<h2>Article Categories</h2>
 
-<table class="base" id="article_categories">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Position</th>
-    <th>ID</th>
-    <th>Parent ID</th>
-    <th>?</th>
-    <th>!</th>
-  </tr>
-  <p><b><%= link_to 'New article category', new_admin_article_category_path %></b></p>
+<div class="container-fluid">
+  <%= display_categories(@article_categories, 0) %>
 
-  <% for article_category in @article_categories %>
-    <tr class="<%= cycle("even", "odd") %>" id="article_category_<%= article_category.id %>_row">
-      <td><%=h article_category.name %></td>
-      <td><%=h article_category.description %></td>
-      <td><%=h article_category.position %></td>
-      <td><%=h article_category.id %></td>
-      <td><%=h article_category.parent_id %></td>
-      <td><%= link_to 'Edit', edit_admin_article_category_path(article_category) %></td>
-      <td><%= link_to 'Destroy', [:admin, article_category], :confirm => 'Are you sure?', :method => :delete %></td>
-    </tr>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= link_to new_admin_article_category_path, :class => "btn", :id => "new_article_category" do %>
+        New Article Category
+      <% end %>
+    </div>
+  </div>
+  
+  <hr />
+
+  <%= table :class => "article_categories clear", :collection => @article_categories, :columns => 7, :id => :article_categories do %>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Position</th>
+        <th>ID</th>
+        <th>Parent ID</th>
+        <th>?</th>
+        <th>!</th>
+      </tr>
+    </thead>
+    <% for article_category in @article_categories %>
+      <tr id="article_category_<%= article_category.id %>_row">
+        <td><%=h article_category.name %></td>
+        <td><%=h article_category.description %></td>
+        <td><%=h article_category.position %></td>
+        <td><%=h article_category.id %></td>
+        <td><%=h article_category.parent_id %></td>
+        <td><%= link_to 'Edit', edit_admin_article_category_path(article_category) %></td>
+        <td><%= link_to 'Destroy', [:admin, article_category], :confirm => 'Are you sure?', :method => :delete, :class => "btn" %></td>
+      </tr>
+    <% end %>
   <% end %>
-</table>
-
-<br />
-
+</div>

@@ -1,28 +1,21 @@
 <% @page_title = "Ironman: #{@year}" %>
 
-<% unless @years.empty? %>	
-<%= tabs do |tabs|
-  for year in @years
-	tabs.add(year, :year => year)
+<%= tabs(@year) do |tabs|
+  @years.each do |year|
+    tabs.add year, ironman_path(year)
   end
-end -%>
-<% end %>  
+end %>
 
-<% if @ironman.nil? or @ironman.races.empty? %>
-No results for <%= @year %>
-<br/>
+<h3><%= @ironman.date.year %> Ironman</h3>
+
+<p class="event_notes"><%= @ironman.notes %></p>
+
+<% if @ironman.updated_at %>
+<p class="created_updated">Updated <%= @ironman.updated_at.to_s(:long) %></p>
 <% end %>
 
-<p>The Ironman Competition is a 'just for fun' record of the number of events riders do.<br>
-There is no prize just identification of riders who need to get a life.</p>
-
-<% unless @ironman.nil? or @ironman.races.empty? or @ironman.races.first.results.empty? %>
-
-<p><%= will_paginate @results %></p>
-
-<div class="updatedon centered">Updated <%= @ironman.updated_at.to_formatted_s(:long) %></div>
+<%= will_paginate @results, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
 
 <%= results_table @ironman.races.first, @results %>
 
-<p><%= will_paginate @results %></p>
-<% end %>  
+<%= will_paginate @results, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>

@@ -22,7 +22,7 @@ class ResultsTest < ActionController::IntegrationTest
     https! false
     get event_path(event)
     assert_response :success
-    
+
     assert @response.body["Run 1"]
     assert @response.body["Run 2"]
   end

@@ -95,7 +95,7 @@ class Event < ActiveRecord::Base
     end
   }
   
-  scope :today_and_future, lambda { { :conditions => [ "date >= ?", Time.zone.today ]}}
+  scope :today_and_future, lambda { where("date >= :today || end_date >= :today", :today => Time.zone.today) }
   
   scope :year, lambda { |year| 
     where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date)
@@ -108,7 +108,15 @@ class Event < ActiveRecord::Base
     )
   }
   
-  scope :not_child, { :conditions => "parent_id is null" }
+  scope :upcoming_in_weeks, lambda { |number_of_weeks|
+    where(
+      "(date between :today and :later) || (end_date between :today and :later)", 
+      :today => Time.zone.today, 
+      :later => number_of_weeks.weeks.from_now.to_date)
+  }
+  
+  scope :child, lambda { where("parent_id is not null") }
+  scope :not_child, lambda { where("parent_id is null") }
 
   attr_reader :new_promoter_name
   attr_reader :new_team_name
@@ -178,6 +186,42 @@ class Event < ActiveRecord::Base
               }, first_of_year, last_of_year, discipline_names]
       ))
 
+  end
+  
+  def self.upcoming(weeks = 2)
+    single_day_events = SingleDayEvent.
+      not_child.
+      where(:postponed => false).
+      where(:cancelled => false).
+      where(:practice => false).
+      upcoming_in_weeks(weeks)
+
+    multi_day_events = MultiDayEvent.
+    where(:postponed => false).
+      where(:cancelled => false).
+      where(:practice => false).
+      where(:type => "MultiDayEvent").
+      upcoming_in_weeks(weeks)
+
+    series_child_events = SingleDayEvent.
+      includes(:parent => :parent).
+      child.
+      where(:postponed => false).
+      where(:cancelled => false).
+      where(:practice => false).
+      upcoming_in_weeks(weeks)
+      
+    if multi_day_events.present?
+      series_child_events = series_child_events.where("parent_id not in (?)", multi_day_events.map(&:id))
+    end
+    
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+      single_day_events = single_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+      multi_day_events = multi_day_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+      series_child_events = series_child_events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+    end
+
+    single_day_events.all + multi_day_events.all + series_child_events.all
   end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled

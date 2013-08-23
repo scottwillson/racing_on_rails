@@ -1,15 +1,16 @@
-<%= content_tag :tr, :class => "#{cycle("even", "odd")} team_row", :id => "team_#{team.id}_row", "data-id" => team.id do %>
-  <td class="icon"><%= image_tag "icons/group.png", :class => "team_icon", :id => "team_#{team.id}", "data-id" => team.id, "data-name" => team.name %></td>
+<%= content_tag :tr, :class => "team_row", :id => "team_#{team.id}_row", "data-id" => team.id do %>
+  <td class="icon"><i class="glyphicon-group team_icon" id="team_<%= team.id %>" data-name="<%= team.name %>" data-id="<%= team.id %>"></i></td>
   <td class="name">
     <%= editable team, :name %>
   </td>
   <td class="not_editable">
-    <%= render :partial => "aliases", :locals => { :team => team } %>
+    <%= render "aliases", :team => team %>
   </td>
   <td class="check_box">
-    <%= render :partial => "shared/member", :locals => { :record => team } %>
+    <%= render "shared/member", :record => team %>
   </td>
-  <td class="actions not_editable last">
-    <%= link_to "Results", team_path(team), :id => "show_#{team.id}" %> | <%= link_to "Edit", edit_admin_team_path(team), :id => "edit_#{team.id}" %>
+  <td class="actions not_editable">
+    <%= link_to "Results", team_path(team), :id => "show_#{team.id}" %>
+    <%= link_to "Edit", edit_admin_team_path(team), :id => "edit_#{team.id}" %>
   </td>
 <% end -%>

@@ -337,17 +337,11 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_column_headers_display_correctly
-    race = FactoryGirl.create(:race)
-    race.results.create!(:points_bonus => 8, :points_penalty => -2, :laps => 9)
-    race.result_columns = Race::DEFAULT_RESULT_COLUMNS.dup
-    race.result_columns << "points_bonus"
-    race.result_columns << "points_penalty"
-    race.result_columns << "laps"
-    race.save!
+    result = FactoryGirl.create(:result, :points_bonus => 8, :points_penalty => -2, :laps => 9)
     
-    get(:event, :event_id => race.event.to_param)
-    assert_response(:success)
-    
+    get :event, :event_id => result.event_id
+    assert_response :success
+
     assert(@response.body["Bonus"], "Should format points_bonus correctly")
     assert(@response.body["Penalty"], "Should format points_penalty correctly")
     assert(@response.body["Laps"], "Should format laps correctly")
@@ -457,6 +451,11 @@ class ResultsControllerTest < ActionController::TestCase
       "result > license",
       "result > id"
     ].each { |key| assert_select key }
+  end
+  
+  def test_team
+    team = FactoryGirl.create(:result).team
+    get :team, :team_id => team.id
   end
   
   def test_team_json

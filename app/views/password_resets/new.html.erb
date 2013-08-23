@@ -1,13 +1,18 @@
 <% @page_title = "Reset Password" %>
 <% @show_tabs = false %>
 
-<div class="column_grid_container top_margin">
+<div class="container-fluid">
   <%= form_tag password_resets_path do %>
-    <div class="prepend-2 span-3 append-1 last">
-      <%= labelled_text_field_tag :email, "Send password reset instructions to email address", @email, :label => { :class => "top" }, :class =>  "wants_focus" %>
+    <div class="row-fluid">
+      <div class="span3"></div>
+      <div class="span6">
+        <%= label_tag :email, "Send password reset instructions to email address" %>
+        <%= email_field_tag :email, @email, :class =>  "wants_focus span12" %>
+      </div>
     </div>
-    <div class="prepend-2 span-2 append-2 last right">
-      <%= submit_tag "Reset My Password", :class => :right %>
+    <div class="row-fluid">
+      <div class="span3"></div>
+      <div class="span6"><%= submit_tag "Reset My Password", :class => "btn btn-primary" %></div>
     </div>
   <% end %>
 </div>

@@ -9,16 +9,6 @@ class EventTest < ActiveSupport::TestCase
     assert event.errors[:discipline]
   end
 
-  def test_find_years
-    Timecop.freeze(Date.new(2012)) do
-      FactoryGirl.create(:event, :date => Date.new(2007))
-      FactoryGirl.create(:event, :date => Date.new(2008))
-      FactoryGirl.create(:event, :date => Date.new(2009))
-      years = Event.find_all_years
-      assert_equal_enumerables [ 2012, 2011, 2010, 2009, 2008, 2007 ], years, "Should find all years with events"
-    end
-  end
-  
   def test_defaults
     number_issuer = NumberIssuer.create!(:name => RacingAssociation.current.short_name)
     event = SingleDayEvent.new
@@ -570,16 +560,6 @@ class EventTest < ActiveSupport::TestCase
     assert_equal [], Event.editable_by(nil), "nil can't edit any events"
   end
   
-  def test_today_and_future
-    past_event = FactoryGirl.create(:event, :date => 1.day.ago.to_date)
-    today_event = FactoryGirl.create(:event)
-    future_event = FactoryGirl.create(:event, :date => 1.day.from_now.to_date)
-
-    assert Event.today_and_future.include?(today_event), "today_and_future scope should include event from today"
-    assert Event.today_and_future.include?(future_event), "today_and_future scope should include future event"
-    assert !Event.today_and_future.include?(past_event), "today_and_future scope should not include past event with date of #{past_event.date}"
-  end
-
   def test_propagate_races
     FactoryGirl.create(:event).propagate_races
   end
@@ -602,14 +582,14 @@ class EventTest < ActiveSupport::TestCase
   end
 
   private
-  
-  def assert_orphans(count, event)
-    assert(event.missing_children?, "Should find missing children for #{event.name}")
-    assert_equal(count, event.missing_children.size, "#{event.name} missing children")
-  end
-  
+
   def assert_no_orphans(event)
     assert(!event.missing_children?, "No missing children for #{event.name}")
     assert_equal(0, event.missing_children.size, "#{event.name} missing children count")
+  end
+
+  def assert_orphans(count, event)
+    assert(event.missing_children?, "Should find missing children for #{event.name}")
+    assert_equal(count, event.missing_children.size, "#{event.name} missing children")
   end
 end

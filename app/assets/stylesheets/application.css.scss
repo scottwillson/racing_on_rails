@@ -1,0 +1,388 @@
+$baseFontSize: 13px;
+$font-size-bigger: 14px;
+$font-size-smaller: 10px;
+
+$baseLineHeight: 16px;
+
+$black: rgb(0, 0, 0);
+$near-black: rgb(30, 30, 30);
+$gray-darker: rgb(54, 54, 54);
+$gray: rgb(109, 109, 109);
+$mid-gray: rgb(128, 128, 128);
+$light-gray: rgb(204, 204, 204);
+$grayLighter: rgb(238, 238, 238);
+$grayLightest: rgb(250, 250, 250);
+$warm-gray: rgb(228, 228, 224);
+$warm-gray-light: rgb(250, 250, 248);
+$green-yellow: rgb(208, 250, 48);
+
+
+$highlight-color: $green-yellow;
+$font-color-light: $gray;
+$font-color: $gray-darker;
+$form-color: $font-color;
+
+$linkColor: $font-color;
+$linkColorHover: $black;
+
+$nav-background-color: $gray-darker;
+$nav-font-color: $light-gray;
+
+$body-background-color: $warm-gray;
+$content-background-color: $warm-gray-light;
+$content-border-color: $light-gray;
+
+$tableBorder: darken($warm-gray, 18);
+
+$content-margin-bottom: $baseLineHeight;
+$content-padding: $baseLineHeight;
+
+@import "racing_association_variables";
+@import "glyphicons";
+@import "bootstrap";
+@import "bootstrap-responsive";
+
+body {
+  background-color: $body-background-color;
+  color: $font-color;
+  padding-top: $baseLineHeight;
+}
+
+.container-fluid {
+  padding-left: 3%;
+  padding-right: 3%;
+}
+
+.container-fluid .container-fluid {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+body nav a:hover, body footer a:hover, body a:hover, a:hover, .nav > li > a:hover, .btn-link:hover {
+  background-color: $highlight-color;
+  color: $linkColorHover;
+  text-decoration: underline;
+  text-shadow: none;
+}
+
+.btn-link, a.obvious {
+  text-decoration: underline;
+}
+
+body a.icon:hover, body a.image:hover {
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.section {
+  padding-top: $baseLineHeight * 3;
+}
+
+h2, h2 a, h2 a:hover {
+  color: $linkColorHover;
+  text-align: center;
+  text-decoration: none;
+}
+
+h3, h3 a, h3 a:hover {
+  color: $linkColorHover;
+  text-align: center;
+  text-decoration: none;
+}
+
+h2 a:hover, h3 a:hover {
+  background-color: $highlight-color;
+}
+
+.page-nav, .footer {
+  margin-bottom: $baseLineHeight;
+}
+
+@media (max-width: 767px) {
+  .page-nav {
+    margin-bottom: $baseLineHeight / 2;
+  }
+
+  h2 {
+    font-size: 16px;
+    line-height: $baseLineHeight;
+  }
+  
+  h3 {
+    font-size: 12px;
+    line-height: $baseLineHeight;
+  }
+}
+
+nav, footer {
+  background-color: $nav-background-color;
+  border: 1px solid darken($nav-background-color, 10);
+  border-radius: 3px;
+  vertical-align: center;
+
+  background-image: -moz-linear-gradient(top, lighten($nav-background-color, 6), darken($nav-background-color, 6));
+  background-image: -ms-linear-gradient(top, lighten($nav-background-color, 6), darken($nav-background-color, 6));
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(lighten($nav-background-color, 6)), to(darken($nav-background-color, 6)));
+  background-image: -webkit-linear-gradient(top, lighten($nav-background-color, 6), darken($nav-background-color, 6));
+  background-image: -o-linear-gradient(top, lighten($nav-background-color, 6), darken($nav-background-color, 6));
+  background-image: linear-gradient(top, lighten($nav-background-color, 6), darken($nav-background-color, 6));
+  background-repeat: repeat-x;
+  -webkit-box-shadow: inset 0 1px 0 lighten($nav-background-color, 10);
+  -moz-box-shadow: inset 0 1px 0 lighten($nav-background-color, 10);
+  box-shadow: inset 0 1px 0 lighten($nav-background-color, 10);
+}
+
+nav h1 {
+  display: inline;
+  line-height: $baseLineHeight * 1.6;
+  margin: 0px;
+  padding-left: $baseLineHeight / 2;
+}
+
+nav h1, nav h1 a, nav a, footer a {
+  color: $nav-font-color;
+  font-size: $font-size-bigger;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, .35), 0 0 30px rgba(0, 0, 0, .3);
+}
+
+nav ul, footer ul {
+  line-height: $baseLineHeight * 1.5;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-right: $baseLineHeight / 2;
+  padding-top: 1px;
+  text-align: right;
+}
+
+footer ul {
+  text-align: center;
+}
+
+nav li, footer li {
+  border-right: 1px solid $nav-font-color;
+  display: inline;
+  list-style-type: none;
+  padding-left: $baseLineHeight / 2;
+  padding-right: $baseLineHeight / 2;
+}
+
+@media (max-width: 767px) {
+  nav ul, footer ul {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  
+  nav li, footer li {
+    padding-left: $baseLineHeight / 4;
+    padding-right: $baseLineHeight / 4;
+  }
+}
+
+nav li:last-child, footer li:last-child {
+  border-right: 0px;
+}
+
+.content {
+  background-color: $content-background-color;
+  border-radius: 6px;
+  border: 1px solid $content-border-color;
+  margin-bottom: $content-margin-bottom;
+  padding: $content-padding;
+}
+
+@media (max-width: 979px) {
+  .content {
+    margin-bottom: $content-margin-bottom / 2;
+    padding: $content-padding / 2;
+  }
+}
+
+.table th, .table td {
+  padding-bottom: 7px;
+}
+
+.table td {
+  border-bottom: 1px solid $tableBorder;
+  border-top: none;
+}
+
+.table-striped tbody tr:first-child td {
+  border-top: 2px solid $tableBorder;
+}
+
+.table-striped tbody tr:last-child td {
+  border-bottom: 2px solid $tableBorder;
+}
+
+.table-striped tbody tr:nth-child(even) td, .table-striped tbody tr:nth-child(even) td:hover {
+  background-color: lighten($warm-gray, 4);
+}
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) td:hover {
+  background-color: $warm-gray;
+}
+
+.table th, .table-striped tbody tr:nth-child(odd) th {
+  background-color: $tableBorder;
+  border-top: none;
+  color: $near-black;
+}
+
+.table-striped.table th {
+  padding-bottom: 3px;
+  padding-top: 4px;
+}
+
+.table-striped td.icon {
+  max-width: 16px;
+  padding-right: 0px;
+  width: 16px;
+}
+
+.table-striped .check_box {
+  text-align: center;
+}
+
+.table-striped td.actions {
+  padding-right: 16px;
+  text-align: right;
+  white-space: nowrap;
+
+  a + a {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 767px) {
+  body {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: $baseLineHeight / 2;
+  }
+  
+  nav ul {
+    text-align: center;
+  }
+
+  .table td, .table th {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
+.created_updated {
+  color: $font-color-light;
+  font-style: italic;
+  .btn-link {
+    text-decoration: none;
+  }
+  .btn-link:hover {
+    text-decoration: underline;
+  }
+}
+
+p.created_updated {
+  text-align: center;
+  padding-bottom: $baseLineHeight;
+}
+
+.table .date {
+  max-width: 240px;
+  text-align: right;
+  white-space: nowrap;
+  width: 80px;
+}
+
+@media (max-width: 767px) {
+  .table .date {
+    width: auto;
+  }
+}
+
+th.numeric,
+td.numeric {
+  text-align: right;
+}
+
+.pills {
+  text-align: center;
+}
+
+ul.nav-pills {
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+.nav-pills li a {
+  color: $mid-gray;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+  background-color: $grayLighter;
+  color: $mid-gray;
+}
+
+ul.nav + h2 {
+  margin-top: $baseLineHeight;
+}
+
+ul.page-links {
+  margin-bottom: $baseLineHeight / 4;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  text-align: center;
+  width: auto
+}
+
+ul.page-links li {
+  display: inline;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-left: 1px solid $light-gray;
+}
+
+ul.page-links li:first-child {
+  border-left: none;
+}
+
+@-ms-keyframes Rotate {
+  from {-ms-transform:rotate(0deg);}
+  to {-ms-transform:rotate(360deg);}
+}
+
+@-moz-keyframes Rotate {
+  from {-moz-transform:rotate(0deg);}
+  to {-moz-transform:rotate(360deg);}
+}
+
+@-webkit-keyframes Rotate {
+  from {-webkit-transform:rotate(0deg);}
+  to {-webkit-transform:rotate(360deg);}
+}
+
+@keyframes Rotate {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+.rotate {
+  -ms-animation: Rotate 2s infinite linear;
+  -moz-animation: Rotate 2s infinite linear;
+  -webkit-animation: Rotate 2s infinite linear;
+  animation: Rotate 2s infinite linear;
+}
+
+.dropdown {
+  text-align: center;
+  .dropdown-menu {
+    text-align: left;
+  }
+}
+
+@import "bootstrap-datepicker";
+@import "jquery-ui-1.10.3.custom";
+@import "forms";
+@import "pages";
+@import "racing_association";

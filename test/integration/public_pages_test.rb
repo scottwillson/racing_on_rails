@@ -102,9 +102,6 @@ class PublicPagesTest < ActionController::IntegrationTest
     
     get "/mailing_lists/#{mailing_list.id}/posts/new"
     assert_response :success
-
-    get "http://m.obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
-    assert_redirected_to "http://obra.org/mailing_lists/#{mailing_list.id}/posts?full_site=1"
   end
 
   def test_competitions

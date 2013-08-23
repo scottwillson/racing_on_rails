@@ -1,8 +1,6 @@
 # Road, track, criterium, time trial ...
 # Cached. Call +reset+ to clear cache.
 class Discipline < ActiveRecord::Base
-  include UpcomingEvents::DisciplineExtensions
-
   has_many :discipline_aliases
   has_and_belongs_to_many :bar_categories, :class_name => "Category", :join_table => "discipline_bar_categories"
   

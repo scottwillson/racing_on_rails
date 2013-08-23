@@ -1,17 +1,18 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
+<%= form_tag({}, { :method => "get", :id => "search_form", :class => "form-horizontal form-search" }) do %>
+  <div class="row-fluid">
+    <div class="span3"></div>
+    <div class="span6 input-append">
+      <%= search_field_tag("subject", @subject, :class => "wants_focus search-query span12", :placeholder => "Search by subject") %>
+      <button type="submit" class="btn"><i class="icon-search"></i></button>
+    </div>
+  </div>
+<% end -%>
+
+<%= will_paginate @posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+
 <div class="post_search_header">
-  <div class="post_search">
-    <%= form_tag({}, {:method => "get", :id => "post_search_form"}) do %>
-      <%= label_tag :subject, "Subject" %>
-      <%= text_field_tag "subject", @subject, :id => "search_text" %>
-      <%= submit_tag "Search", :id => "search" %>
-      <%= link_to("Clear", mailing_list_posts_path(@mailing_list), :class => "obvious") if @subject.present? %>
-    <% end -%>
-  </div>
-  <div class="post_search_pagination">
-    <%= will_paginate(@posts, :page_links => false) if @posts.present? %>&nbsp;
-  </div>
   <div class="post_dates">
   <% if @start_date && @end_date %>
     <%= @start_date.to_s(:long_and_friendly) %> to <%= @end_date.to_s(:long_and_friendly)%>. 
@@ -19,55 +20,45 @@
   <% end %>
   </div>
 </div>
-<div class="clear"></div>
 
-<% if @posts.empty? %>
-  <strong>No posts found.</strong>
-  <p class="centered"><%= link_to @mailing_list.friendly_name, mailing_list_posts_path(@mailing_list), :class => "obvious" %></p>
-<% end %>
-
-<% if @posts.present? %>
-<%= table do %>
+<%= table :collection => @posts, :columns => 3 do %>
   <tr>
-    <th>Date</th>
-    <th>Subject</th>
-    <th>From</th>
+    <th class="date">Date</th>
+    <th class="subject">Subject</th>
+    <th class="from hidden-phone">From</th>
   </tr>
   <% @posts.each do |post| %>
-  <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => @posts.current_page) %></td>
-    <td>
+  <tr>
+    <td class="date"><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => @posts.current_page) %></td>
+    <td class="subject">
       <%= link_to h(truncate(post.subject, :length => 50)), post_path(post, :page => @posts.current_page) %>
     </td>
-    <td><%= h(post.sender_obscured) %></td>
+    <td class="from hidden-phone"><%= h(post.sender_obscured) %></td>
   </tr>
   <% end %>
 <% end -%>
-<% end -%>
-<div class="clear"></div>
 
-<div class="top_margin centered">
-  <%= will_paginate(@posts, :page_links => false) if @posts.present? %>
-</div>
+<%= will_paginate @posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
 
 <% if @first_post_at %>
-<ul class="top_margin centered posts_navigation links">
-  <% Time.zone.now.year.downto(@first_post_at.year).each do |year| %>
-  <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => params[:month]) %></li>
-  <% end %>
-</ul>
-<ul class="centered posts_navigation links">
-  <% (1..12).each do |month| %>
-  <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => params[:year], :month => month) %></li>
-  <% end %>
-</ul>
+<div class="pills">
+  <ul class="nav nav-pills">
+    <% Time.zone.now.year.downto(@first_post_at.year).each do |year| %>
+    <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => params[:month]) %></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="pills">
+  <ul class="nav nav-pills">
+    <% (1..12).each do |month| %>
+    <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => params[:year], :month => month) %></li>
+    <% end %>
+ </ul>
+</div>
 <% end %>
 
-<table class="top_margin centered">
-  <tr>
-    <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
-  </tr>
-</table>
+<%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
 
 <% content_for :head do -%>
 <%= auto_discovery_link_tag :atom, :format => :atom %>

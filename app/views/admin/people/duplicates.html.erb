@@ -2,74 +2,77 @@
 
 <%= form_tag(:action => 'resolve_duplicates') %>
 <% @duplicates.each do |duplicate| %>
-<table class="base">
-  <caption><%= duplicate.person.name %></caption>
+<h3><%= duplicate.person.name %></h3>
+<table class="table table-striped">
   <tr>
-    <th>&nbsp;</th>
-    <th>&nbsp;</th>
-    <th>Aliases</th>
-    <th>Team</th>
-    <th>Hometown</th>
-    <th>Birthdate</th>
-    <th align="right">Road</th>
-    <th align="right">MTB</th>
-    <th align="right">DH</th>
-    <th align="right">Cross</th>
-    <th>Created at</th>
+    <thead>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>Aliases</th>
+      <th>Team</th>
+      <th>Hometown</th>
+      <th>Birthdate</th>
+      <th align="right">Road</th>
+      <th align="right">MTB</th>
+      <th align="right">DH</th>
+      <th align="right">Cross</th>
+      <th class="date">Created at</th>
+    </thead>
   </tr>
-  <tr class="<%= cycle('even', 'odd') %>">
-    <td></td>
-    <td><strong<%= duplicate.person.name %></strong></td>
-    <td></td>
-    <td><strong><%= duplicate.person.team_name %></strong></td>
-    <td><strong><%= duplicate.person.hometown %></strong></td>
-    <td><strong><%= duplicate.person.birthdate.to_formatted_s if duplicate.person.birthdate %></strong></td>
-    <td align="right">
-      <strong><%= duplicate.person.road_number %></strong>
-    </td>
-    <td align="right">
-      <strong><%= duplicate.person.xc_number %></strong>
-    </td>
-    <td align="right">
-      <strong><%= duplicate.person.dh_number %></strong>
-    </td>
-    <td align="right">
-      <strong><%= duplicate.person.ccx_number %></strong>
-    </td>
-    <td></td>
-  </tr>
-  <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= radio_button_tag duplicate.id, 'new', true %></td>
-    <td colspan="10">Create new person</td>
-  </tr>
-  <% for person in duplicate.people %>
-  <tr class="<%= cycle('even', 'odd') %>">
-    <td><%= radio_button_tag duplicate.id, person.id %></td>
-    <td>Merge:</td>
-    <td><%= person.aliases.collect{|a| a.name}.join(', ') %></td>
-    <td><%= person.team_name %></td>
-    <td><%= person.hometown %></td>
-    <td><%= person.birthdate.to_formatted_s if person.birthdate %></td>
-    <td align="right">
-      <%= person.road_number %>
-    </td>
-    <td align="right">
-      <%= person.xc_number %>
-    </td>
-    <td align="right">
-      <%= person.dh_number %>
-    </td>
-    <td align="right">
-      <%= person.ccx_number %>
-    </td>
-    <td>
-    <%= person.created_at.to_formatted_s(:long) if person.created_at -%>
-    <%= 'New' unless person.created_at -%>
-    </td>
-  </tr>
-  <% end %>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><strong><%= duplicate.person.name %></strong></td>
+      <td></td>
+      <td><strong><%= duplicate.person.team_name %></strong></td>
+      <td><strong><%= duplicate.person.hometown %></strong></td>
+      <td><strong><%= duplicate.person.birthdate.to_formatted_s if duplicate.person.birthdate %></strong></td>
+      <td align="right">
+        <strong><%= duplicate.person.road_number %></strong>
+      </td>
+      <td align="right">
+        <strong><%= duplicate.person.xc_number %></strong>
+      </td>
+      <td align="right">
+        <strong><%= duplicate.person.dh_number %></strong>
+      </td>
+      <td align="right">
+        <strong><%= duplicate.person.ccx_number %></strong>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><%= radio_button_tag duplicate.id, 'new', true %></td>
+      <td colspan="10">Create new person</td>
+    </tr>
+    <% duplicate.people.each do |duplicate| %>
+    <tr>
+      <td><%= radio_button_tag duplicate.id, person.id %></td>
+      <td>Merge:</td>
+      <td><%= person.aliases.collect{|a| a.name}.join(', ') %></td>
+      <td><%= person.team_name %></td>
+      <td><%= person.hometown %></td>
+      <td><%= person.birthdate.to_formatted_s if person.birthdate %></td>
+      <td align="right">
+        <%= person.road_number %>
+      </td>
+      <td align="right">
+        <%= person.xc_number %>
+      </td>
+      <td align="right">
+        <%= person.dh_number %>
+      </td>
+      <td align="right">
+        <%= person.ccx_number %>
+      </td>
+      <td class="date">
+      <%= person.created_at.to_formatted_s(:long) if person.created_at -%>
+      <%= 'New' unless person.created_at -%>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
 </table>
-<% reset_cycle %>
 <% end %>
-<%= submit_tag 'Done' %>
+<%= submit_tag 'Done', :class => "btn btn-primary" %>
 </form>

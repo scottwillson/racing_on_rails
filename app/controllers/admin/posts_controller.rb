@@ -1,7 +1,7 @@
 module Admin
   class PostsController < Admin::AdminController
     before_filter :assign_mailing_list
-    
+
     def index
       @posts = Post.paginate(
         :order => "date desc", 

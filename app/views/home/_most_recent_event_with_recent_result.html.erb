@@ -1,0 +1,17 @@
+<% if event %>
+<h3><%= link_to event.full_name, event_results_path(event) %> Winners</h3>
+<table class="base table table-striped">
+  <thead/>
+  <tbody>
+    <% event.races_with_results.sort_by(&:name)[0, 12].each do |race| %>
+  <tr>
+    <td><%= link_to race.name, event_results_path(event, :anchor => "race_#{race.id}") %></td>
+    <td><%= link_to race.results.sort.first.name, person_results_path(race.results.sort.first.person_id) %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <td colspan="2"><%= link_to("More &hellip;".html_safe, schedule_path) %></td>
+  </tr>
+  </tbody>
+</table>
+<% end %>

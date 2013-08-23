@@ -1,0 +1,236 @@
+.form-horizontal .controls {
+  margin-left: 170px;
+}
+
+.form-horizontal .control-group {
+  margin-bottom: $baseLineHeight / 2;
+}
+
+@media (max-width: 480px) {
+  .form-horizontal .controls {
+    margin-left: 0;
+  }
+}
+
+label {
+  color: $gray;
+  font-weight: bold;  
+}
+
+input[type="text"] {
+  color: $form-color;  
+}
+
+select {
+  color: $font-color;
+}
+
+.form-horizontal .check_boxes {
+  margin-bottom: $baseLineHeight;
+}
+
+.form-horizontal .check_boxes .control-group {
+  margin-bottom: 0px;
+}
+
+label.checkbox {
+  margin-bottom: 0px;
+}
+
+.controls > .radio:first-child,
+.controls > .checkbox:first-child {
+  padding-top: 3px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  margin: 3px 0 0;
+  *margin-top: 0;
+  /* IE7 */
+  margin-top: 1px \9;
+  /* IE8-9 */
+  line-height: normal;
+}
+
+.labelled_text {
+  padding-top: 6px;
+}
+
+input[type="search"].search_form {
+  -webkit-appearance: searchfield;
+  box-sizing: border-box;
+}
+
+legend {
+  font-size: $baseFontSize;
+  font-weight: bold;
+}
+
+fieldset {
+  padding-bottom: $baseLineHeight;
+}
+
+.editable {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  margin-bottom: -4px;
+  margin-left: -3px;
+  margin-top: -4px;
+  min-height: $baseLineHeight;
+  min-width: 40px;
+  padding: 3px;
+}
+
+.editable input {
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  display: inline;
+  margin-bottom: -4px;
+  margin-left: -4px;
+  margin-top: -3px;
+  padding: 2px;
+  position: absolute;
+  width: auto;
+}
+
+.editable:hover {
+  border: 1px solid $highlight-color;
+}
+
+.editable.editing, .editable.editing:hover, .editable.saving, .editable.saving:hover {
+  border: 1px solid transparent;
+}
+
+.editable.saving input {
+  background-color: lighten($inputBorder, 30);
+  border-color: $inputBorder;
+  color: $inputBorder;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.editor_cancel i.icon-remove-sign {
+  margin-top: 3px;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus,
+.editable input {
+  border-color: darken($highlight-color, 15);
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+}
+
+.ui-datepicker {
+  width: 17em;
+  padding: .2em .2em 0;
+  display: none;
+  border-color: $highlight-color;
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba($highlight-color, 0.6);
+}
+
+.ui-datepicker.ui-widget-content {
+  border-color: $highlight-color;
+}
+
+.bootstrap-datetimepicker-widget td.active, .bootstrap-datetimepicker-widget td.active:hover {
+  color: #fff;
+  background-color: black;
+  background-image: none;
+  border-color: none;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.bootstrap-datetimepicker-widget td.active:hover, .bootstrap-datetimepicker-widget td.active:hover:hover, .bootstrap-datetimepicker-widget td.active:active, .bootstrap-datetimepicker-widget td.active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active, .bootstrap-datetimepicker-widget td.active.disabled, .bootstrap-datetimepicker-widget td.active:hover.disabled, .bootstrap-datetimepicker-widget td.active[disabled], .bootstrap-datetimepicker-widget td.active:hover[disabled] {
+  color: #fff;
+  background-color: black;
+  *background-color: black;
+}
+
+.bootstrap-datetimepicker-widget td.active:active, .bootstrap-datetimepicker-widget td.active:hover:active, .bootstrap-datetimepicker-widget td.active.active, .bootstrap-datetimepicker-widget td.active:hover.active {
+  background-color: black \9;
+}
+
+.ui-menu .ui-menu-item {
+  list-style-image: none;
+}
+
+.ui-state-hover .ui-icon,
+.ui-state-focus .ui-icon {
+  background-image: none;
+}
+.ui-state-active .ui-icon {
+  background-image: none;
+}
+.ui-state-highlight .ui-icon {
+  background-image: none;
+}
+
+.date_of_birth select {
+  width: 32%;
+}
+
+.field_with_errors .control-label,
+.field_with_errors .help-block,
+.field_with_errors .help-inline {
+  color: #b94a48;
+}
+
+.field_with_errors .checkbox,
+.field_with_errors .radio,
+.field_with_errors input,
+.field_with_errors select,
+.field_with_errors textarea {
+  color: #b94a48;
+}
+
+.field_with_errors input,
+.field_with_errors select,
+.field_with_errors textarea {
+  border-color: #b94a48;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.field_with_errors input:focus,
+.field_with_errors select:focus,
+.field_with_errors textarea:focus {
+  border-color: #953b39;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}
+
+.field_with_errors .input-prepend .add-on,
+.field_with_errors .input-append .add-on {
+  color: #b94a48;
+  background-color: #f2dede;
+  border-color: #b94a48;
+}

@@ -2,11 +2,11 @@
 
 <h2>You are logged in as <%= current_person.login %></h2>
 
-<div class="tabs top_margin">
-  <%= link_to("#{RacingAssociation.current.short_name} Homepage", root_url(:protocol => "http")) %> |
-  <%= link_to("Your Account", account_url) %> |
+<ul class="page-links">
+  <li><%= link_to("#{RacingAssociation.current.short_name} Homepage", root_url(:protocol => "http")) %></li>
+  <li><%= link_to("Your Account", account_url) %></li>
   <% if administrator? -%>
-  <%= link_to('Admin Pages', admin_events_path) %> |
+  <li><%= link_to('Admin Pages', admin_events_path) %></li>
   <% end -%>
-  <%= link_to "Logout", person_session_path, :method => :delete %>
-</div>
+  <li><%= link_to "Logout", person_session_path, :method => :delete %></li>
+</ul>

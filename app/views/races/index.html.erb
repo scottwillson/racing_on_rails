@@ -1,9 +1,10 @@
 <% @page_title = "Races: #{@category.name}" %>
 
-<%= table :caption => @category.name do %>
+<h3><%= @category.name %></h3>
+<%= table  do %>
   <tr><th>&nbsp;</th></tr>
   <% for race in @category.races %>
-  <tr class="<%= cycle("even", "odd") %>">
+  <tr>
     <td><%= link_to(race.event.name, event_results_path(race.event, :anchor => "race_#{race.id}")) %></td>
   </tr>
   <% end %>

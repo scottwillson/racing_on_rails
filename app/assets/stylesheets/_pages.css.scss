@@ -1,0 +1,704 @@
+/* Page-specific. Do we really need so many of these?  Probably should be separate files for pages. */
+
+/* Home */
+.home {
+  img.hero_photo {
+    margin-bottom: $baseLineHeight / 2;
+    width: 100%;
+  }
+
+  ul li {
+    list-style-type: none;
+  }
+
+  .associated {
+    margin-bottom: $baseLineHeight;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .ad {
+    padding-bottom: $baseLineHeight;
+    width: 100%;
+  }
+}
+
+th.name {
+  white-space: nowrap;
+}
+
+/* Admin events */
+.edit_event h3.events {
+  padding-top: 0px;
+}
+
+.edit_event .control-group.name {
+  margin-bottom: 6px;
+}
+
+.edit_event .control-group.promoter {
+  margin-bottom: 6px;
+}
+
+table td.delete_all_races {
+  text-align: right;
+}
+
+#promoter_links {
+  margin-top: 4px;
+  margin-left: 5px;
+}
+
+#promoter_links a {
+  margin-right: 8px;
+}
+
+#event_notes {
+  height: $baseLineHeight * 4;
+}
+
+/* Calendar of events */
+table.calendar {
+  border-collapse: separate;
+  padding: 0px;
+  width: 100%;
+  margin-bottom: 36px;
+}
+
+table.calendar thead th {
+  text-align: center;
+}
+
+tr.month {
+  vertical-align: top;
+}
+
+.calendar td.day {
+  height: 100px;
+  width: 14%;
+  min-width: 14%;
+  background-color: $grayLighter;
+  border: 1px solid white;
+  text-align: left;
+}
+
+td.day div.event {
+  margin-bottom: 8px;
+  line-height: 16px;
+}
+
+.day .event.beginner-friendly {
+  padding-left: 16px;
+}
+
+.day .event i {
+  margin-left: -16px;
+}
+
+.cancelled, .postponed {
+  text-decoration: line-through;
+}
+
+td.day div.number {
+  font-weight: bold;
+  text-align: right;
+}
+
+td.day_from_other_month
+{
+  height: 100px;
+  width: 14%;
+  min-width: 14%;
+  border: 1px solid white;
+  background: white;
+  padding: 4px 4px;
+}
+
+td.day_from_other_month div.number {
+  font-style: italic;
+  text-align: right;
+}
+
+table.calendar td.beginner_friendly {
+  text-align: right;
+}
+
+h3.month a, h3.month a:hover {
+  background: none;
+  background-color: none;
+  color: $font-color;
+}
+
+
+table.calendar tbody tr:hover td, .table.calendar tbody tr:hover th {
+  background-color: #eee;
+}
+
+table.calendar tbody tr:hover td.day_from_other_month {
+  background: white;
+}
+
+table.calendar tbody td {
+  border-bottom: 2px solid white;
+}
+
+table td.discipline {
+  white-space: nowrap;
+}
+
+a.beginner_friendly {
+  padding-right: 8px;
+}
+
+p.list_link, p.atra_ncs {
+  margin-top: 9px;
+  text-align: center;
+}
+
+
+/* Categories */
+.category_root {
+  float: left;
+  min-height: 400px;
+  width: 90%;
+}
+
+.category_root.hovering {
+  border-color: $highlight-color;
+  background-color: lighten($highlight-color, 33);
+}
+
+.disclosure {
+  background-repeat: no-repeat;
+  clear: none;
+  cursor: pointer;
+  display: inline-block;
+  float: left;
+  height: 14px;
+  margin-right: 8px;
+  margin-top: 5px;
+  text-align: center;
+  vertical-align: middle;
+  width: 14px;
+}
+
+.collapsed {
+  background-image: image-url("glyphicons-halflings.png");
+  background-position: -264px -72px;
+}
+
+.expanded {
+  background-image: image-url("glyphicons-halflings.png");
+  background-position: -264px -72px;
+  @include rotate(90deg);
+}
+
+.category .icon-list {
+  margin-top: 2px;
+}
+
+.category_root .category {
+  clear: both;
+  float: left;
+  width: 376px;
+}
+
+.category .category_name {
+  clear: none;
+  float: left;
+  cursor: move;
+  background-repeat: no-repeat;
+  background-position: 0px 2px;
+  line-height: 24px;
+  height: 24px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.category i {
+  line-height: 24px;
+}
+
+.category .children {
+  clear: both;
+  float: left;
+  padding-left: 24px;
+}
+
+.category_root div.hovering {
+  background-color: #E9F79B;
+}
+
+/* Results admin */
+table.results .drag {
+  cursor: move;
+}
+
+table.results td.place,
+table.results th.points,
+table.results td.points,
+table.results td.age {
+  text-align: right;
+}
+
+table.results td.result .event {
+  float: left;
+  margin-left: 8px;
+}
+
+#left_person td.page_links,
+#right_person td.page_links {
+  min-width: 40px;
+  width: 40px;
+}
+
+.find-progress {
+  text-align: right;
+  i {
+    margin-top: 5px;
+    margin-right: -18px;
+  }
+}
+
+/* Pages */
+#page_body {
+  width: 100%;
+  height: 340px;
+  font-size: 10px;
+  font-family: Monaco, "Lucida Console", Monospace, "Bitstream Vera Sans Mono", "Courier New", Courier, monospaced;
+}
+
+#page_parent_id {
+  width: 270px;
+}
+
+table.base td img.cancel {
+  width: 16px;
+  height: 16px;
+  margin-left: -6px;
+}
+
+table.base td.name a.cancel {
+  border: none;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+table.person_categories td input[type=text] {
+  width: 120px;
+}
+
+/* public teams page */
+table.base#teams_table td.club_name {
+  width: 30%;
+}
+
+table.base#teams_table td.contact {
+  white-space: nowrap;
+}
+
+table.base a.preliminary {
+  font-style: italic;
+}
+
+input.state {
+  width: 32px;
+}
+
+input.state_no_zip {
+  width: 10%;
+}
+
+input.zip {
+  width: 56px;
+}
+
+.current, .renewed {
+  padding-right: 20px;
+}
+
+/* Event */
+table.event_nav td.category {
+  padding-left: 30px;
+}
+
+table.event_nav td.delete {
+  width: 16px;
+}
+
+td.delete_all_races {
+    white-space: nowrap;
+}
+
+/* Mailing lists */
+table.archive_navigation, div.archive_navigation, div.archive_navigation div {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+div.archive_navigation a
+{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+div.archive_navigation span
+{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+div.archive_navigation input
+{
+  padding-left: 4px;
+  padding-right: 4px;
+  vertical-align: middle;
+}
+
+/* Results */
+table.base td.total_points span.total
+{
+  font-size: 8pt;
+  font-weight: bold;
+  text-align: right;
+  padding-right: 12px;
+}
+
+table.base td.total_points {
+  font-weight: bold;
+  text-align: right;
+  padding-right: 8px;
+}
+
+.event_info {
+  padding-bottom: $baseLineHeight;
+  text-align: center;
+}
+
+.event_info p:last-child {
+  margin-bottom: 0px;
+}
+
+.event_races {
+  display: inline-table;
+}
+
+.event_races .race {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.event_races .race:first-child {
+  padding-right: $baseLineHeight;
+}
+
+table.child_single_day_events {
+  display: inline-table;
+}
+
+table.child_single_day_events td {
+  font-weight: bold;
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+table.child_single_day_events td.date {
+  text-align: right;
+  white-space: nowrap;
+}
+
+table.child_single_day_events td.event {
+  text-align: left;
+}
+
+table.child_single_day_events td.child {
+  padding-top: 2px;
+  text-align: left;
+}
+
+table.child_single_day_events td.child a {
+  font-weight: normal;
+}
+
+.event_notes {
+  text-align: center;
+}
+
+/* Event first aid providers */
+table.first_aid_providers td.date {
+  white-space: nowrap;
+}
+
+table.first_aid_providers td.name {
+  width: 200px;
+}
+
+.link_spacer {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+table.results {
+  margin-bottom: $baseLineHeight * 2;
+}
+
+table.results td.laps,
+table.results td.number,
+table.results td.place,
+table.results td.points,
+table.results td.points_bonus,
+table.results td.points_from_place,
+table.results td.points_penalty,
+table.results td.points_total,
+table.results td.time,
+table.results td.time_bonus_penalty,
+table.results td.time_down,
+table.results td.time_gap_to_leader,
+table.results td.time_gap_to_winner,
+table.results td.time_total,
+table.results th.laps,
+table.results th.number,
+table.results th.place,
+table.results th.points,
+table.results th.points_bonus,
+table.results th.points_from_place,
+table.results th.points_penalty,
+table.results th.points_total,
+table.results th.time,
+table.results th.time_bonus_penalty,
+table.results th.time_down,
+table.results th.time_gap_to_leader,
+table.results th.time_gap_to_winner,
+table.results th.time_total
+{
+  text-align: right;
+}
+
+table.results th.place,
+table.results th.place,
+table.results th.laps,
+table.results th.state,
+table.results th.age {
+  width: 24px;  
+}
+
+table.results th.time_bonus_penalty,
+table.results th.points,
+table.results th.points_bonus,
+table.results th.points_penalty,
+table.results th.points_from_place,
+table.results th.points_total,
+table.results th.number,
+table.results th.number {
+  width: 55px;  
+}
+
+table.results th.time_total,
+table.results th.time_gap_to_winner,
+table.results th.time_gap_to_leader,
+table.results th.time {
+  width: 80px;
+}
+
+table.results th.first_name,
+table.results th.city {
+  width: 100px;
+}
+
+table.results th.last_name {
+  width: 120px;
+}
+
+table.results th.category_name,
+table.results td.category_name {
+  width: 160px;
+}
+
+table.results th.name {
+  width: 220px;
+}
+
+table.results td.event {
+  width: 400px;
+}
+
+table.results td.category {
+  width: 200px;
+}
+
+table.results td.dates {
+  width: 100px;
+}
+
+table.results.scores tr:last-child {
+  font-weight: bold;
+}
+
+#person_notes {
+  height: $baseLineHeight * 8;
+}
+
+.table-striped th.bar, 
+.table-striped td.bar {
+  text-align: center;
+}
+
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
+}
+
+
+/* People */
+#preview_import_table tr th.invalid {
+  color: red;;
+}
+
+#import_year {
+  margin-top: 0px;
+  padding-top: 0px;
+  margin-left: 8px;
+}
+
+.pagination {
+  text-align: center;
+}
+
+.promoted_events .name,
+.promoted_events .link {
+  white-space: nowrap;
+}
+
+.promoted_events .link {
+  padding-right: 8px;
+}
+
+#merge_form {
+  padding-left: 24px;
+  padding-top: 2px;
+}
+
+select#person_date_of_birth_2i, select#person_member_from_2i, select#person_member_to_2i {
+	width: 100px;
+}
+
+select#person_date_of_birth_1i, select#person_member_from_1i, select#person_member_to_1i {
+	width: 70px;
+}
+
+select#person_date_of_birth_3i, select#person_member_from_3i, select#person_member_to_3i {
+	width: 50px;
+}
+
+.form-horizontal .membership .control-group {
+  margin-bottom: 0px;
+}
+
+.people .license, .people .racing_age {
+  text-align: right;
+}
+
+table.people div.aliases {
+  color: $gray;
+  font-style: italic;
+}
+
+@media (min-width: 767px) {
+  table.people .name {
+    white-space: nowrap;
+  }
+}
+
+.hovering, 
+.table-striped tbody tr:nth-child(even).hovering td, 
+.table-striped tbody tr:nth-child(odd).hovering td,
+.table-striped.hovering tbody tr:nth-child(even) td, 
+.table-striped.hovering tbody tr:nth-child(odd) td {
+  border-color: $highlight-color;
+  background-color: lighten($highlight-color, 33);
+}
+
+/* Versions */
+.version .what,
+.version .from,
+.version .to {
+  width: 33%;
+}
+
+/* Public results */
+td.right, th.right {
+  text-align: right;
+}
+
+.owps .logos {
+  text-align: center;
+}
+
+.owps img.logo {
+  height: 150px;
+  width: 228px;
+}
+
+.owps img.obra-logo {
+  height: 70px;
+  width: 248px;
+}
+
+.owps .giant-logo {
+  text-align: right;
+}
+
+.owps .giant-logo img {
+  height: 70px;
+  width: 239px;
+}
+
+.owps .rapha-logo {
+  text-align: left;
+}
+
+.owps .rapha-logo img {
+  height: 70px;
+  width: 153px;
+}
+
+.owps img.lets-race-bikes-logo {
+  height: 50px;
+  width: 513px;
+}
+
+.owps img {
+  padding: 16px;
+}
+
+.ows table.points th, table.points td {
+  text-align: right; 
+  padding: 4px;  
+}
+
+.copyright {
+  color: $font-color-light;
+  font-size: $font-size-smaller;
+  text-align: center;
+}
+
+.questions {
+  text-align: center;
+}
+
+.error_page p, .error_page div {
+  text-align: center;
+  
+}

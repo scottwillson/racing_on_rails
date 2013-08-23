@@ -2,3 +2,4 @@
 <% if Dir.exists? "lib/registration_engine/app/assets" %>
 <%= javascript_include_tag "registration_engine/application" %>
 <% end %>
+<%= airbrake_javascript_notifier if Rails.env.production? %>

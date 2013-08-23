@@ -22,7 +22,7 @@ module Concerns
           'Senior Women', 'Category 3 Women', 'Category 4 Women',
           'Junior Men', 'Junior Women', 'Masters Men', 'Masters Women',
           'Masters Men 4/5', 'Masters Women 4',
-        'Singlespeed/Fixed', 'Tandem', "Clydesdale" ].each do |category_name|
+          'Singlespeed/Fixed', 'Tandem', "Clydesdale" ].each do |category_name|
           races.create :category => ::Category.find_or_create_by_name(category_name)
         end
       end

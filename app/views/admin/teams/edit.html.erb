@@ -5,80 +5,94 @@
    end %>
 <% @page_title = "Admin: Teams: #{team_name}" %>
 
-<%= error_messages_for "team" %>
+<%= render "shared/errors", :object => @team %>
 
 <h2><%= @team.name %></h2>
 
-<div class="column_grid_container">
-  <%= form_for [:admin, @team] do |f| -%>
-    <div class="span-3">
-      <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus" : "" %>
+<div class="container-fluid">
+  <%= form_for [ :admin, @team ], :html => { :class => "form-horizontal" } do |f| -%>
+  <div class="row-fluid">
+    <div class="span6">
+      <%= f.labelled_text_field :name, nil, :class => @team.new_record? ? "wants_focus span12" : "span12" %>
       <%= f.labelled_text_field :contact_name %>
       <%= f.labelled_text_field :contact_email %>
       <%= f.labelled_text_field :contact_phone %>
       <%= f.labelled_text_field :website %>
-      <%= f.labelled_check_box :member, "Member" %>
-      <%= f.labelled_check_box :show_on_public_page, "Show on public teams page" %>
+      <div class="check_boxes">
+        <%= f.labelled_check_box :member, "Member" %>
+        <%= f.labelled_check_box :show_on_public_page, "Show on public teams page" %>
+      </div>
     </div>
-    <div class="span-3 last">
+    <div class="span6">
       <%= f.labelled_text_area :sponsors %>
     </div>
-
-    <hr class="space" />
-
-    <div class="clear span-6 last">
-      <%= table :caption => "People", :class => "box-2 clear", :insert_header => true do %>
+  </div>
+  <div class="row-fluid">
+    <div class="span4">
+      <h3>People</h3>
+      <%= table :insert_header => true, :collection => @team.people do %>
         <%- @team.people.sort { |x, y| x.last_name <=> y.last_name || x.first_name <=> y.first_name }.each do |person| -%>
         <tr>
           <td><%= link_to person.name, edit_admin_person_path(person) %></td>
         </tr>
         <%- end -%>
       <% end -%>
-  
-      <%= table :caption => "Aliases", :class => "box-2", :insert_header => true, :columns => 2 do %>
-        <%- @team.aliases.sort_by {|a| a.name}.each do |name_alias| -%>
+    </div>      
+    <div class="span4">
+      <h3>Aliases</h3>
+      <%= table :insert_header => true, :columns => 2, :collection => @team.aliases do %>
+      <%- @team.aliases.sort_by(&:name).each do |name_alias| -%>
         <tr id="alias_<%= name_alias.id %>">
           <td><%= name_alias.name %></td>
           <td>
-            <%= link_to(image_tag('icons/delete.png'), 
+            <%= link_to(
                  admin_team_alias_path(@team, name_alias),
                  :method => "delete",
                  :remote => true,
-                 :class => "image") %>
+                 :class => "icon") do %>
+               <i class="icon-minus-sign"></i>
+             <% end %>
           </td>
         </tr>
         <%- end -%>
       <% end -%>
-
-      <%= table :caption => "Historical Names", :class => "box-2 last", :insert_header => true, :columns => 3 do %>
+    </div>      
+    <div class="span4">
+      <h3>Historical Names</h3>
+      <%= table :insert_header => true, :columns => 3, :collection => @team.names do %>
         <%- @team.names.sort_by(&:year).reverse.each do |name| -%>
         <tr id="name_<%= name.id %>">
           <td><%= name.name %></td>
           <td><%= name.year %></td>
           <td>
-            <%= link_to(image_tag("icons/delete.png"), 
+            <%= link_to(
                  :url => { :action => "destroy_name", :id => @team.id, :name_id => name.id},
                  :remote => true
-                 ) %>
+                 ) do %>
+               <i class="icon-minus-sign"></i>
+             <% end %>
           </td>
         </tr>
         <%- end -%>
       <% end -%>
+      </div>
     </div>
     
-    <div class="page_buttons clear span-6 last">
-      <div class="updatedon span-2">
-        <span class="created_at">
-          <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, true) + " ago" %><% end %>
-          <% if @team.created_by %>by <%= truncate_from_end(@team.created_by.name) %><% end %>
-        </span>
-        <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, true) + " ago" %><% end %>
-        <% if @team.updated_by %>by <%= truncate_from_end(@team.updated_by_name) %><% end %>
-      </div>
-      <div class="right span-3 last">
-        <%= link_to("Results", team_path(@team), :class => 'obvious') unless @team.new_record? %>  
-        <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => 'obvious', :id => 'delete') unless @team.new_record? %>
-        <%= submit_tag "Save", :id => "save" %>
+    <div class="row-fluid">
+      <div class="span12">
+        <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+        <%= link_to("Delete", admin_team_path(@team), :method => :delete, :class => "btn", :id => 'delete') unless @team.new_record? %>
+        <%= link_to("Results", team_path(@team), :class => "btn btn-link") unless @team.new_record? %>
+        <% unless mobile_request? %>
+        <div class="pull-right created_updated">
+          <span class="created_at">
+            <% if @team.created_at %>Created <%= time_ago_in_words(@team.created_at, true) + " ago" %><% end %>
+            <% if @team.created_by %>by <%= truncate_from_end(@team.created_by.name) %><% end %>
+          </span>
+          <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, true) + " ago" %><% end %>
+          <% if @team.updated_by %>by <%= truncate_from_end(@team.updated_by_name) %><% end %>
+        </div>
+        <% end %>
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-<tr class="<%= cycle("even", "odd") %>">
+<tr>
   <%- if administrator? || Event.editable_by(current_person).include?(event) -%>
   <td><%= link_to event.date.to_s(:long), edit_admin_event_path(event) %></td>
   <td><%= link_to event.name, edit_admin_event_path(event) %></td>

@@ -1,16 +1,13 @@
-<%
-  @page_title = "#{@article_category.name.capitalize}"
+<% @page_title = "#{@article_category.name.capitalize}" %>
 
-  if @article_categories.any? && @article_category.articles.any?
-%>
-    <h1>General</h1>
-<%
-  end
-%>
+<% if @article_categories.present? && @article_category.articles.present? %>
+  <h2>General</h2>
+<% end %>
+
   <%= render :partial => "article", :collection => @article_category.articles %>
 
 <%
-  for article_category in @article_categories
+  @article_categories.each do |article_category|
     if article_category.articles.any?
 %>
       <h1><%= article_category.name %></h1>

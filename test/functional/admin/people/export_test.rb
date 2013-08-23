@@ -46,7 +46,7 @@ module Admin
           get :index, :format => "xls", :include => "all"
 
           assert_response :success
-          assert_equal("filename=\"people_#{today.year}_1_1.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
+          assert_equal("filename=\"people_#{today.year}_#{today.month}_#{today.day}.xls\"", @response.headers['Content-Disposition'], 'Should set disposition')
           assert_equal('application/vnd.ms-excel; charset=utf-8', @response.headers["Content-Type"], 'Should set content to Excel')
           # FIXME use send_data
           assert_equal(11, assigns['people'].size, "People export size")

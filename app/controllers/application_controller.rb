@@ -70,12 +70,13 @@ class ApplicationController < ActionController::Base
     page_path.gsub!(/.html$/, "")
     page_path.gsub!(/index$/, "")
     page_path.gsub!(/\/$/, "")
+
+    @page = find_mobile_page(page_path)
     
-    if mobile_request?
-      page_path = "mobile#{page_path}"
+    if !@page
+      @page = Page.find_by_path(page_path)
     end
 
-    @page = Page.find_by_path(page_path)
     if @page
       render(:inline => @page.body, :layout => true)
     end
@@ -91,7 +92,7 @@ class ApplicationController < ActionController::Base
           render :file => "#{::Rails.root.to_s}/public/404.html", :status => "404 Not Found"
         end
       }
-      type.all  { render :nothing => true, :status => "404 Not Found" }
+      type.all { render :nothing => true, :status => "404 Not Found" }
     end
   end
 
@@ -105,7 +106,7 @@ class ApplicationController < ActionController::Base
           render :file => "#{::Rails.root.to_s}/public/500.html", :status => "500 Error"
         end
       }
-      type.all  { render :nothing => true, :status => "500 Error" }
+      type.all { render :nothing => true, :status => "500 Error" }
     end
   end
   

@@ -19,7 +19,6 @@ class MultiDayEvent < Event
   end
 
   before_save :update_children
-  after_create :create_children
   
   # TODO Default first child event date to start date, next child to first child date + 1, additional children to next day if adjacent, 
   # same day of next week if not adjacent (Series/WeeklySeries)
@@ -113,6 +112,30 @@ class MultiDayEvent < Event
     multi_day_event
   end
   
+  # Expects a value from Date::DAYNAMES: Monday, Tuesday, etc., or an array of same. Example: ["Saturday", "Sunday"]
+  def self.create_for_every!(days_of_week, params)
+    raise(ArgumentError) unless days_of_week && (params[:date] || params[:start_date]) && params[:end_date]
+
+    days_of_week = Array.wrap(days_of_week)
+    days_of_week.each do |day|
+      raise ArgumentError, "'#{day}' must be in #{Date::DAYNAMES.join(', ')}" unless Date::DAYNAMES.index(day)
+    end
+    
+    event = self.create!(params)
+
+    days_of_week_indexes = days_of_week.map { |day| Date::DAYNAMES.index(day) }
+    start_date = event.date
+    until days_of_week_indexes.include?(start_date.wday)
+      start_date = start_date.next 
+    end
+    
+    start_date.step(event.end_date, 1) do |date|
+      event.children.create!(:date => date) if days_of_week_indexes.include?(date.wday)
+    end
+
+    event
+  end
+
   def MultiDayEvent.guess_type(name, date)
     events = SingleDayEvent.all( :conditions => ['name = ? and extract(year from date) = ?', name, date])
     MultiDayEvent.guess_type(events)
@@ -137,57 +160,31 @@ class MultiDayEvent < Event
     raise ArgumentError, "'event' cannot be nil" if event.nil?
     MultiDayEvent.first(:conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end
-  
-  # Create child events automatically, if we've got enough info to do so
-  def create_children
-    return unless start_date && @end_date && @every
-    
-    _start_date = start_date
-    until @every.include?(_start_date.wday)
-      _start_date = _start_date.next 
-    end
-    
-    _start_date.step(@end_date, 1) do |date|
-      children.create!(:date => date) if @every.include?(date.wday)
-    end
-  end
-  
-  # Uses SQL query to set +date+ from child events
+
+  # Uses SQL query to set +date+ from child events. Callbacks pass in unsued child parameter.
   def update_date(child = nil)
     return true if new_record?
     
-    minimum_date = Event.minimum(:date, :conditions => { :parent_id => id, :cancelled => false, :postponed => false })
-    unless minimum_date.blank?
-      self.date = minimum_date
-      if date_changed?
+    child_dates = Event.where(:parent_id => id).where(:cancelled => false).where(:postponed => false).pluck(:date)
+    if child_dates.present?
+      self.date = child_dates.min
+      self.end_date = child_dates.max
+      if date_changed? || end_date_changed?
         # Don't trigger callbacks
-        MultiDayEvent.update_all ["date = ?", date], ["id = ?", id]
+        MultiDayEvent.update_all ["date = ?, end_date = ?", date, end_date], ["id = ?", id]
       end
     end
     true
   end
   
-  # end_date is calculated from child events, and not saved to the DB. If there are no child events, end_date is set to start date.
-  # This value is stored in @end_date in memory, and is used to create a new MultiDayEvent with children. Example:
-  # MultiDayEvent.create!(:start_date => Date.new(2009, 4), :end_date => Date.new(2009, 10), :every => "Monday")
-  def end_date=(value)
-    @end_date = value
+  def set_end_date
+    if self[:end_date].nil?
+      self.end_date = children.map(&:date).max || date
+    end
   end
-  
+
   def end_date_s
     "#{end_date.month}/#{end_date.day}"
-  end
-
-  # Expects a value from Date::DAYNAMES: Monday, Tuesday, etc., or an array of same. Example: ["Saturday", "Sunday"]
-  def every=(value)
-    _every = value
-    _every = [_every] unless value.respond_to?(:each)
-    
-    _every.each do |day|
-      raise "'#{day}' must be in #{Date::DAYNAMES.join(', ')}" unless Date::DAYNAMES.index(day)
-    end
-
-    @every = _every.map { |day| Date::DAYNAMES.index(day) }
   end
   
   # +format+:

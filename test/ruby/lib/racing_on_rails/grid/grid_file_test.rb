@@ -1,8 +1,6 @@
 require File.expand_path("../../../../test_case", __FILE__)
 require File.expand_path("../../../../../../lib/racing_on_rails/grid/grid", __FILE__)
 require File.expand_path("../../../../../../lib/racing_on_rails/grid/grid_file", __FILE__)
-require File.expand_path("../../../../../../lib/racing_on_rails/grid/column", __FILE__)
-require File.expand_path("../../../../../../lib/racing_on_rails/grid/row", __FILE__)
 require "tempfile"
 
 # :stopdoc:

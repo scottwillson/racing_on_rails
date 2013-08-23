@@ -2,9 +2,9 @@ load "deploy"
 
 set :application, "racing_on_rails"
 
-role :app, "192.168.0.12"
-role :web, "192.168.0.12"
-role :db, "192.168.0.12", :primary => true
+role :app, "rocketsurgeryllc.com"
+role :web, "rocketsurgeryllc.com"
+role :db, "rocketsurgeryllc.com", :primary => true
 
 load "local/config/staging.rb" if File.exists?("local/config/staging.rb")
 
@@ -13,7 +13,8 @@ set :deploy_to, "/var/www/rails/#{application}"
 
 load "deploy/assets"
 load "config/db"
-require "bundler/capistrano"
+set :unicorn_config_path, "#{current_path}/config/unicorn"
+set :unicorn_config_filename, "staging.rb"
 require "capistrano-unicorn"
 
 require "rvm/capistrano"
@@ -21,10 +22,8 @@ set :rvm_ruby_string, "1.9.3"
 
 set :scm, "git"
 set :repository, "git@github.com:scottwillson/racing_on_rails.git"
-set :branch, "pir-team-pass"
 
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
-set :site_local_repository_branch, "master"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
 
@@ -35,26 +34,36 @@ set :scm_auth_cache, true
 namespace :deploy do
   desc "Deploy association-specific customizations"
   task :local_code do
-    if site_local_repository_branch
-      run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
-    else
-      run "git clone #{site_local_repository} #{release_path}/local"
-    end
-    run "chmod -R g+w #{release_path}/local"
-    run "ln -s #{release_path}/local/public #{release_path}/public/local"
-  end
+    if application != "racing_on_rails"
+      if site_local_repository_branch
+        run "git clone #{site_local_repository} -b #{site_local_repository_branch} #{release_path}/local"
+      else
+        run "git clone #{site_local_repository} #{release_path}/local"
+      end
+      run "chmod -R g+w #{release_path}/local"
+      run "ln -s #{release_path}/local/public #{release_path}/public/local"
 
+      run "if [ -e #{release_path}/local/config/unicorn/production.rb ]; then cp #{release_path}/local/config/unicorn/production.rb #{release_path}/config/unicorn/production.rb; fi"
+    end
+  end
+  
   task :registration_engine do
-    run "rm -rf #{release_path}/lib/registration_engine"
-    run "git clone git@github.com:scottwillson/registration_engine.git -b pir-team-pass #{release_path}/lib/registration_engine"
+    if application == "obra" || application == "nabra"
+      run "if [ -e \"#{release_path}/lib/registration_engine\" ]; then rm -rf \"#{release_path}/lib/registration_engine\"; fi"
+      run "if [ -L \"#{release_path}/lib/registration_engine\" ]; then rm -rf \"#{release_path}/lib/registration_engine\"; fi"
+      run "git clone git@github.com:scottwillson/registration_engine.git #{release_path}/lib/registration_engine"
+    end
   end
   
   task :symlinks do
     run <<-CMD
+      mkdir #{latest_release}/tmp &&
       rm -rf #{latest_release}/tmp/pids &&
       ln -s #{shared_path}/pids #{latest_release}/tmp/pids &&
       rm -rf #{latest_release}/tmp/sockets &&
-      ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets
+      ln -s #{shared_path}/sockets #{latest_release}/tmp/sockets &&
+      rm -rf #{latest_release}/public/uploads &&
+      ln -s #{shared_path}/uploads #{latest_release}/public/uploads
     CMD
   end
 
@@ -72,18 +81,13 @@ namespace :deploy do
       run "if [ -f #{previous_release}/local/public/maintenance.html ]; then cp #{previous_release}/local/public/maintenance.html #{shared_path}/system/maintenance.html; fi"
     end
   end
-
-  task :start, :roles => :app do
-    top.unicorn.start
-  end
-
-  task :stop, :roles => :app do
-    top.unicorn.graceful_stop
-  end
 end
 
-if Dir.exists?("local")
-  before "deploy:assets:precompile", "deploy:local_code", "deploy:registration_engine"
-end
+before "deploy:finalize_update", "deploy:symlinks", "deploy:copy_cache", "deploy:local_code", "deploy:registration_engine"
 
-after "deploy:update_code", "deploy:symlinks", "deploy:copy_cache"
+after "deploy:restart", "unicorn:restart"
+
+# Require last to ensure app callbacks are first
+require 'bundler/capistrano'
+
+require 'airbrake/capistrano'

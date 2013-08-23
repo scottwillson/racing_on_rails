@@ -22,6 +22,7 @@ module RacingOnRails
         @columns_after_custom_columns.each do |name|
           hash[name] = result[name]
         end
+
         hash
       end
       

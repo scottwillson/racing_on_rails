@@ -32,7 +32,7 @@ module Admin
           assert_not_nil(assigns["disciplines"], "Should assign disciplines")
           assert(assigns["event"].is_a?(Event), "Should default to SingleDayEvent")
           assert(assigns["event"].is_a?(SingleDayEvent), "Should default to SingleDayEvent")
-          assert_equal 2010, assigns[:event].date.year, "Should set year"
+          assert_equal 2009, assigns[:event].date.year, "Should set year"
         end
       end
   
