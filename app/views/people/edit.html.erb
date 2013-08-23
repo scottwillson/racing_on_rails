@@ -91,7 +91,7 @@
                            :return_to => @person.new_record? ? nil : edit_person_path(@person)
                          }
   %>
-  <%= render "people/events", :events => Event.editable_by(@person).current_year %>
+  <%= render "people/events", :events => @person.administrator? ? @person.events.current_year : Event.editable_by(@person).current_year %>
 
   <hr class="space" />
 
