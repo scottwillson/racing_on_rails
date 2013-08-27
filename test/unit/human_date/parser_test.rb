@@ -1,7 +1,7 @@
 require File.expand_path("../../../test_helper", __FILE__)
 
 # :stopdoc:
-module HuamndDate
+module HumanDate
   class ParserTest < ActiveSupport::TestCase
     test "parse human date" do
       # Unspecified time defaults to noon
