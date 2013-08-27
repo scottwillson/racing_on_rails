@@ -272,10 +272,6 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
 
   Capybara.configure do |config|
-    if default_driver == :webkit || javascript_driver == :webkit
-      require "capybara-webkit"
-    end
-    
     config.current_driver = default_driver
     config.javascript_driver = javascript_driver
 
