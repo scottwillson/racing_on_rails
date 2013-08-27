@@ -165,6 +165,7 @@ RacingOnRails::Application.routes.draw do
     match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
     match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
   
+    match '/oregon_womens_prestige_series' => 'oregon_womens_prestige_series#show'
     match '/owps' => 'oregon_womens_prestige_series#show'
   
     resources :password_resets
