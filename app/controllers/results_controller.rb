@@ -59,10 +59,7 @@ class ResultsController < ApplicationController
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
-    @result = Result.first(
-      :include => { :scores => [ :source_result, :competition_result ] },
-      :conditions => ['results.event_id = ? and team_id = ? and race_id = ?', params[:event_id], params[:team_id], params[:race_id]]
-    )
+    @result = Result.includes(:scores => [ :source_result, :competition_result ]).where("results.event_id" => params[:event_id]).where(:team_id => params[:team_id]).first
     raise ActiveRecord::RecordNotFound unless @result
   end
   
