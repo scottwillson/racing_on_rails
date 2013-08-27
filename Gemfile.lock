@@ -138,7 +138,7 @@ GEM
       json (>= 1.7)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
-    chronic (0.10.0)
+    chronic (0.9.1)
     ckeditor_rails (4.2)
       railties (>= 3.0)
     coffee-rails (3.2.1)
@@ -313,7 +313,7 @@ DEPENDENCIES
   capistrano-unicorn
   capybara
   carrierwave
-  chronic
+  chronic (< 0.10.0)
   ckeditor_rails
   coffee-rails (~> 3.2)
   database_cleaner
