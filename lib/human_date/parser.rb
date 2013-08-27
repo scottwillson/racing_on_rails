@@ -1,7 +1,7 @@
 module HumanDate
   class Parser
     def initialize
-      Chronic.time_class = Time.zone
+      # Chronic.time_class = Time.zone
     end
     
     def parse(text)
