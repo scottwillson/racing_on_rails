@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/RubyMoney/money.git
-  revision: d689d90d57a49f7876089a076dd562f1f21b46db
+  revision: 913510828b6ab63375967da06670f73824414a7b
   specs:
     money (6.0.0.pre2)
       i18n (~> 0.6.4)
@@ -141,9 +141,9 @@ GEM
     chronic (0.9.1)
     ckeditor_rails (4.2)
       railties (>= 3.0)
-    coffee-rails (3.2.2)
+    coffee-rails (3.2.1)
       coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
+      railties (~> 3.2.0.beta)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -157,10 +157,10 @@ GEM
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     ffi (1.9.0)
-    formatize (1.0.1)
+    formatize (1.1.0)
       RedCloth (~> 4.2)
       actionpack (~> 3.0)
-      bluecloth (~> 2.0)
+      bluecloth (~> 2.2)
     git (1.2.6)
     hashery (2.1.1)
     highline (1.6.19)
@@ -183,7 +183,7 @@ GEM
     kgio (2.8.0)
     launchy (2.3.0)
       addressable (~> 2.3)
-    libv8 (3.3.10.4)
+    libv8 (3.16.14.3)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -241,6 +241,7 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    ref (1.0.5)
     ri_cal (0.8.8)
     rmagick (2.13.2)
     ruby-rc4 (0.1.5)
@@ -257,8 +258,6 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
-    skylight (0.1.8)
-      activesupport (>= 3.0.0)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -269,8 +268,9 @@ GEM
       jeweler
       ruby-ole
       spreadsheet
-    therubyracer (0.10.2)
-      libv8 (~> 3.3.10)
+    therubyracer (0.12.0)
+      libv8 (~> 3.16.14.0)
+      ref
     thor (0.18.1)
     tilt (1.4.1)
     timecop (0.6.3)
@@ -344,7 +344,6 @@ DEPENDENCIES
   rvm-capistrano
   sass-rails (~> 3.2)
   selenium-webdriver
-  skylight
   spreadsheet!
   syslog-logger
   tabular (>= 0.2.4)
