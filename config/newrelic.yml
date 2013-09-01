@@ -5,10 +5,7 @@ common: &default_settings
   monitor_mode: true
   developer_mode: false
   log_level: info
-  ssl: false
-  apdex_t: 0.5
-  capture_params: false
-
+  capture_params: true
 
   transaction_tracer:
     enabled: true
@@ -24,17 +21,23 @@ common: &default_settings
 development:
   <<: *default_settings
   monitor_mode: false
-  developer_mode: true
+  app_name: Racing on Rails Development
 
 test:
   <<: *default_settings
   monitor_mode: false
+  app_name: Racing on Rails Test
 
-production:
+acceptance:
   <<: *default_settings
-  monitor_mode: true
+  monitor_mode: false
+  app_name: Racing on Rails Acceptance
 
 staging:
   <<: *default_settings
   monitor_mode: true
   app_name: Racing on Rails Staging
+
+production:
+  <<: *default_settings
+  monitor_mode: true
