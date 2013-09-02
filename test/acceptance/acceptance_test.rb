@@ -167,7 +167,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     when :firefox, :chrome
       find_field(field).native.send_keys(key)
     when :webkit
-      find_field(field).base.invoke('keypress', false, false, false, false, key_code(key), 0);
+      find_field(field).base.invoke('keypress', false, false, false, false, key_code(key), 0)
     else
       find_field(field).native.send_keys(key)
     end
