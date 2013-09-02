@@ -81,7 +81,7 @@ class MailingListMailer < ActionMailer::Base
         if post && post.errors.any?
           Rails.logger.error post.errors.full_messages
         end
-        RacingOnRails::Application.exception_notifier.notify(save_error)
+        RacingOnRails::Application.exception_notifier.track_exception(save_error)
         raise
       end
     end
