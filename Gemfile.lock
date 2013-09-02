@@ -105,9 +105,6 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.5)
     afm (0.2.0)
-    airbrake (3.1.14)
-      builder
-      json
     arel (3.0.2)
     authlogic (3.3.0)
       activerecord (>= 3.2)
@@ -141,9 +138,9 @@ GEM
     chronic (0.9.1)
     ckeditor_rails (4.2)
       railties (>= 3.0)
-    coffee-rails (3.2.1)
+    coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
-      railties (~> 3.2.0.beta)
+      railties (~> 3.2.0)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -157,14 +154,17 @@ GEM
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     ffi (1.9.0)
-    formatize (1.1.0)
+    formatize (1.0.1)
       RedCloth (~> 4.2)
       actionpack (~> 3.0)
-      bluecloth (~> 2.2)
+      bluecloth (~> 2.0)
     git (1.2.6)
     hashery (2.1.1)
     highline (1.6.19)
     hike (1.2.3)
+    httparty (0.11.0)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
     i18n (0.6.5)
     in_place_editing (1.2.0)
     jeweler (1.8.4)
@@ -194,6 +194,7 @@ GEM
     mocha (0.14.0)
       metaclass (~> 0.0.1)
     multi_json (1.7.9)
+    multi_xml (0.5.5)
     mysql2 (0.3.13)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
@@ -239,6 +240,11 @@ GEM
       thor (>= 0.14.6, < 2.0)
     raindrops (0.11.0)
     rake (10.1.0)
+    raygun4ruby (0.0.5)
+      activesupport
+      httparty (~> 0.11)
+      json
+      rack
     rdoc (3.12.2)
       json (~> 1.4)
     ref (1.0.5)
@@ -303,7 +309,6 @@ DEPENDENCIES
   activemerchant
   acts_as_list!
   acts_as_tree!
-  airbrake
   authlogic
   bootstrap-datepicker-rails
   bootstrap-sass
@@ -337,6 +342,7 @@ DEPENDENCIES
   quiet_assets
   rails (>= 3.2.12)
   rake
+  raygun4ruby
   registration_engine!
   ri_cal
   rmagick

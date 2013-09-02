@@ -89,5 +89,3 @@ after "deploy:restart", "unicorn:restart"
 
 # Require last to ensure app callbacks are first
 require 'bundler/capistrano'
-
-require 'airbrake/capistrano'

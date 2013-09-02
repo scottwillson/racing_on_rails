@@ -54,7 +54,7 @@ module RacingOnRails
 
     def exception_notifier
       if Rails.env.production?
-        Airbrake
+        Raygun
       else
         RacingOnRails::ExceptionNotifier
       end
