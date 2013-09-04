@@ -45,7 +45,7 @@
       <td><%= radio_button_tag duplicate.id, 'new', true %></td>
       <td colspan="10">Create new person</td>
     </tr>
-    <% duplicate.people.each do |duplicate| %>
+    <% duplicate.people.each do |person| %>
     <tr>
       <td><%= radio_button_tag duplicate.id, person.id %></td>
       <td>Merge:</td>
