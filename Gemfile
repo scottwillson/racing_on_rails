@@ -36,7 +36,7 @@ gem "spreadsheet", :github => "scottwillson/spreadsheet"
 gem "tabular", ">=0.2.4"
 gem "truncate_html"
 gem "vestal_versions", :github => "scottwillson/vestal_versions", :branch => "rails_3_2"
-gem "will_paginate", "~> 3.0.beta"
+gem "will_paginate"
 gem "will_paginate-bootstrap"
 gem "yui-compressor"
 
