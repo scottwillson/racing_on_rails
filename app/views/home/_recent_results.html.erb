@@ -1,6 +1,6 @@
 <h3><%= link_to 'Results', results_path %></h3>
 <%= table :id => "home_page_results", :columns => 2 do %>
-  <%- events_with_recent_results[0, mobile_request? ? 6 : 1000].each do |event| -%>
+  <%- events_with_recent_results.sort_by(&:date).reverse[0, mobile_request? ? 6 : 1000].each do |event| -%>
   <tr>
     <td class="date"><%= link_to event.date.to_s(:md), event_results_path(event) %></td>
     <td class="event"><%= link_to event.full_name, event_results_path(event) %></td>
