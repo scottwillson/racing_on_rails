@@ -17,8 +17,6 @@ require "minitest/autorun"
 #
 # Chrome and Firefox drivers use custom profiles to ensure downloads can be tested.
 class AcceptanceTest < ActiveSupport::TestCase
-  DOWNLOAD_DIRECTORY = "/tmp/webdriver-downloads"
-
   include Capybara::DSL
 
   # Selenium tests start the Rails server in a separate process. If test data is wrapped in a
@@ -69,12 +67,12 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
     begin
       Timeout::timeout(10) do
-        while Dir.glob("#{DOWNLOAD_DIRECTORY}/#{glob_pattern}").empty?
+        while Dir.glob("#{download_directory}/#{glob_pattern}").empty?
           sleep 0.25
         end
       end
     rescue Timeout::Error
-      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{DOWNLOAD_DIRECTORY} within seconds 10 seconds. Found: #{Dir.entries(DOWNLOAD_DIRECTORY).join(", ")}"
+      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{download_directory} within seconds 10 seconds. Found: #{Dir.entries(download_directory).join(", ")}"
     end
   end
 
@@ -222,7 +220,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def remove_download(filename)
-    FileUtils.rm_f "#{DOWNLOAD_DIRECTORY}/#{filename}"
+    FileUtils.rm_f "#{download_directory}/#{filename}"
   end
   
   def javascript!
@@ -232,10 +230,25 @@ class AcceptanceTest < ActiveSupport::TestCase
   def set_capybara_driver
     Capybara.current_driver = AcceptanceTest.default_driver
   end
+  
+  def download_directory
+    if AcceptanceTest.javascript_driver == :chrome
+      File.expand_path "~/Downloads"
+    else
+      "/tmp/webdriver-downloads"
+    end
+  end
 
   def clear_downloads
-    FileUtils.rm_rf DOWNLOAD_DIRECTORY
-    FileUtils.mkdir_p DOWNLOAD_DIRECTORY
+    unless AcceptanceTest.javascript_driver == :chrome
+      if Dir.exists?(download_directory)
+        FileUtils.rm_rf download_directory
+      end
+    end
+
+    unless Dir.exists?(download_directory)
+      FileUtils.mkdir_p download_directory
+    end
   end
   
   def reset_session
@@ -255,6 +268,14 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   Capybara.register_driver :chrome do |app|
+    if Dir.exists?("#{Rails.root}/tmp/chrome-profile")
+      FileUtils.rm_rf "#{Rails.root}/tmp/chrome-profile"
+    end
+    
+    unless Dir.exists?("#{Rails.root}/tmp/chrome-profile")
+      FileUtils.mkdir "#{Rails.root}/tmp/chrome-profile"
+    end
+
     Capybara::Selenium::Driver.new(
       app, 
       :browser => :chrome, 
@@ -265,7 +286,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara.register_driver :firefox do |app|
     profile = Selenium::WebDriver::Firefox::Profile.new
     profile['browser.download.folderList']            = 2
-    profile['browser.download.dir']                   = DOWNLOAD_DIRECTORY
+    profile['browser.download.dir']                   = download_directory
     profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
