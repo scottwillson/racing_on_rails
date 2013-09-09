@@ -43,6 +43,14 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
   
+  def self.download_directory
+    if AcceptanceTest.javascript_driver == :chrome
+      File.expand_path "~/Downloads"
+    else
+      "/tmp/webdriver-downloads"
+    end
+  end
+  
   def assert_page_has_content(text)
     unless page.has_content?(text)
       fail "Expected '#{text}' in page source"
@@ -68,12 +76,12 @@ class AcceptanceTest < ActiveSupport::TestCase
     raise ArgumentError if glob_pattern.blank? || (glob_pattern.respond_to?(:empty?) && glob_pattern.empty?)
     begin
       Timeout::timeout(10) do
-        while Dir.glob("#{download_directory}/#{glob_pattern}").empty?
+        while Dir.glob("#{self.download_directory}/#{glob_pattern}").empty?
           sleep 0.25
         end
       end
     rescue Timeout::Error
-      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{download_directory} within seconds 10 seconds. Found: #{Dir.entries(download_directory).join(", ")}"
+      raise Timeout::Error, "Did not find '#{glob_pattern}' in #{self.download_directory} within seconds 10 seconds. Found: #{Dir.entries(self.download_directory).join(", ")}"
     end
   end
 
@@ -221,7 +229,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   end
   
   def remove_download(filename)
-    FileUtils.rm_f "#{download_directory}/#{filename}"
+    FileUtils.rm_f "#{self.download_directory}/#{filename}"
   end
   
   def javascript!
@@ -231,24 +239,16 @@ class AcceptanceTest < ActiveSupport::TestCase
   def set_capybara_driver
     Capybara.current_driver = AcceptanceTest.default_driver
   end
-  
-  def download_directory
-    if AcceptanceTest.javascript_driver == :chrome
-      File.expand_path "~/Downloads"
-    else
-      "/tmp/webdriver-downloads"
-    end
-  end
 
   def clear_downloads
     unless AcceptanceTest.javascript_driver == :chrome
-      if Dir.exists?(download_directory)
-        FileUtils.rm_rf download_directory
+      if Dir.exists?(self.download_directory)
+        FileUtils.rm_rf self.download_directory
       end
     end
 
-    unless Dir.exists?(download_directory)
-      FileUtils.mkdir_p download_directory
+    unless Dir.exists?(self.download_directory)
+      FileUtils.mkdir_p self.download_directory
     end
   end
   
@@ -287,7 +287,7 @@ class AcceptanceTest < ActiveSupport::TestCase
   Capybara.register_driver :firefox do |app|
     profile = Selenium::WebDriver::Firefox::Profile.new
     profile['browser.download.folderList']            = 2
-    profile['browser.download.dir']                   = download_directory
+    profile['browser.download.dir']                   = self.download_directory
     profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.ms-excel,application/vnd.ms-excel; charset=utf-8"
 
     Capybara::Selenium::Driver.new(app, :browser => :firefox, :profile => profile) 
