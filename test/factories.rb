@@ -93,13 +93,13 @@ FactoryGirl.define do
     first_name "Ryan"
     sequence(:last_name) { |n| "Weaver#{n}" }
     name { "#{first_name} #{last_name}".strip }
-    member_from Time.zone.local(2000).beginning_of_year.to_date
-    member_to   Time.zone.now.end_of_year.to_date
+    member_from { Time.zone.local(2000).beginning_of_year.to_date }
+    member_to   { Time.zone.now.end_of_year.to_date }
 
     factory :past_member do
       first_name "Kevin"
       last_name "Condron"
-      member_to Time.zone.local(2003).beginning_of_year.to_date
+      member_to Time.zone.local(2003).beginning_of_year
       name "Kevin Condron"
     end
     
@@ -142,7 +142,7 @@ FactoryGirl.define do
     from_email_address "foo@bar.net"
     from_name "Foo"
     body "Test message"
-    date Time.zone.today
+    date { Time.zone.today }
   end
 
   factory :race do
