@@ -25,23 +25,37 @@ module ApplicationHelper
   # Add to_excel to strip out CSV-invalid characters.
   # Mark all content as "safe." It won't be parsed in a browser, but Erb will escape apostrophes.
   def to_excel(value)
-    _value = value
-    
-    if _value.is_a?(TrueClass)
-      _value = "1"
-    elsif _value.is_a?(FalseClass)
-      _value = "0"
+    case value
+    when TrueClass
+      "1"
+    when FalseClass
+      "0"
+    when Fixnum
+      value
+    when NilClass
+      ""
+    when Date, Time, DateTime
+      value.to_s(:mdY)
     else
+      _value = value
+      if _value.mb_chars.length > 250
+        _value = _value[0, 250]
+      end
+      
       if _value.try(:respond_to?, :gsub)
         _value.gsub!(/[\t\n\r]/, " ")
+
+        if _value[","]
+          _value.gsub!('"', '\"')
+          _value = "\"#{_value}\""
+        end
       end
-    
+
       if _value.try(:respond_to?, :html_safe)
         _value = _value.html_safe
       end
+      _value
     end
-
-    _value
   end
 
   def flash_js(key, message)
