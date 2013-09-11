@@ -79,15 +79,17 @@ class PostTest < ActiveSupport::TestCase
     post = Post.new
     assert_equal "", post.from_name, "from_name"
     assert_equal "", post.from_email_address, "from_email_address"
+    assert !post.valid?
 
     post = Post.new(:sender => "cmurray@obra.org")
     assert_equal "cmurray@obra.org", post.sender, "sender"
     assert_equal nil, post.from_name, "from_name"
     assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
 
-    post = Post.new(:sender => "Candi Murray <cmurray@obra.org>")
+    post = Post.new(:sender => "Candi Murray <cmurray@obra.org>", :mailing_list => MailingList.new, :subject => "Subject")
     assert_equal "Candi Murray", post.from_name, "from_name"
     assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
+    assert post.valid?, post.errors.full_messages.to_s
   end
   
   def test_full_text_search
