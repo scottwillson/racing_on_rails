@@ -63,9 +63,14 @@ class PostsController < ApplicationController
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post = @mailing_list.posts.build(params[:post])
     if @post.valid?
-      private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
-      flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
-      redirect_to mailing_list_confirm_private_reply_path(@mailing_list)
+      begin
+        private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
+        flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
+        redirect_to mailing_list_confirm_private_reply_path(@mailing_list)
+      rescue Net::SMTPFatalError => e
+        flash[:warn] = "Could not post: #{e}. Please retry, or email #{RacingAssociation.current.email} for help"
+        render(:action => "new", :reply_to_id => @reply_to.id)
+      end
     else
       render(:action => "new", :reply_to_id => @reply_to.id)
     end
@@ -76,11 +81,16 @@ class PostsController < ApplicationController
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post.mailing_list = @mailing_list
     if @post.valid?
-      MailingListMailer.post(@post).deliver
-      flash[:notice] = "Submitted new post: #{@post.subject}"
-      redirect_to mailing_list_confirm_path(@mailing_list)
+      begin
+        MailingListMailer.post(@post).deliver
+        flash[:notice] = "Submitted new post: #{@post.subject}"
+        redirect_to mailing_list_confirm_path(@mailing_list)
+      rescue Net::SMTPFatalError => e
+        flash[:warn] = "Could not post: #{e}. Please retry, or email #{RacingAssociation.current.email} for help"
+        render :action => "new"
+      end
     else
-      render(:action => "new")
+      render :action => "new"
     end
   end
   
