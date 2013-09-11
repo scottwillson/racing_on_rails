@@ -21,7 +21,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     tonkin = FactoryGirl.create(:person)
     cat_a_race.results.create!(:place => 9, :person => tonkin)
 
-    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+ A")
+    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+")
     masters_race = event.races.create!(:category => masters_35_plus_women)
     alice = FactoryGirl.create(:person)
     masters_race.results.create!(:place => 15, :person => alice)
@@ -39,7 +39,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     CrossCrusadeOverall.calculate!(2007)
     assert_not_nil(series.overall(true), "Should add new Overall Competition child to parent Series")
     overall = series.overall
-    assert_equal 21, overall.races.size, "Overall races"
+    assert_equal 20, overall.races.size, "Overall races"
     
     assert_equal "Series Overall", overall.name, "Overall name"
     assert_equal "Cross Crusade: Series Overall", overall.full_name, "Overall full name"
@@ -117,8 +117,8 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     result = masters_overall_race.results.first
     assert_equal(false, result.preliminary?, "Preliminary?")
     assert_equal("1", result.place, "place")
-    assert_equal(6, result.scores.size, "Scores")
-    assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26, result.points, "points")
+    assert_equal(7, result.scores.size, "Scores")
+    assert_equal(26 + 26 + 0 + 26 + 0 + 26 + 20 + 26 + 20, result.points, "points")
     assert_equal(person, result.person, "person")
 
     category_a_overall_race = series.overall.races.detect { |race| race.category == category_a }

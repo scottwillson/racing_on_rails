@@ -22,8 +22,7 @@ class CrossCrusadeOverall < Overall
     races.create!(:category => Category.find_or_create_by_name("Women B"))
     races.create!(:category => Category.find_or_create_by_name("Women C"))
     races.create!(:category => Category.find_or_create_by_name("Beginner Women"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ A"))
-    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+ B"))
+    races.create!(:category => Category.find_or_create_by_name("Masters Women 35+"))
     races.create!(:category => Category.find_or_create_by_name("Masters Women 45+"))
     races.create!(:category => Category.find_or_create_by_name("Beginner Men"))
     races.create!(:category => Category.find_or_create_by_name("Singlespeed"))
@@ -48,6 +47,10 @@ class CrossCrusadeOverall < Overall
     3
   end
   
+  def maximum_events(race)
+    7
+  end
+
   def set_notes
     self.notes = %Q{ Three event minimum. Results that don't meet the minimum are listed in italics. See the <a href="http://crosscrusade.com/series.html">series rules</a>. }
   end
