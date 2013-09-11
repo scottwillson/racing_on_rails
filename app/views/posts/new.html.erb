@@ -2,40 +2,38 @@
 
 <%= render "shared/errors", :object => @post %>
 
-<div class="container-fluid">
-  <%= form_for [ @mailing_list, @post ], :html => { :class => "form-horizontal" } do |f| %>
-    <%= hidden_field_tag("reply_to_id", @reply_to.id) if @reply_to %>
+<%= form_for [ @mailing_list, @post ], :html => { :class => "form-horizontal" } do |f| %>
+  <%= hidden_field_tag("reply_to_id", @reply_to.id) if @reply_to %>
 
-    <div class="row-fluid">
-      <div class="span6">
-        <% if @reply_to %>
-        <%= f.labelled_text :to, h(@reply_to.sender_obscured) %>
-        <% else %>
-        <%= f.labelled_text :to, @mailing_list.friendly_name %>
-        <% end %>
-
-        <%= f.labelled_text_field(:from_name, "Your Name", :size => "40") %>
-        <%= f.labelled_text_field(:from_email_address, "Your Email Address", :size => "40") %>
-        <%= f.labelled_text_field(:subject, nil, :size => "40") %>
-      </div>
-      <div class="span6">
-        <%= f.labelled_text_area(:body) %>
-      </div>
-    </div>
-
-    <div class="row-fluid">
-      <div class="span12">
-        <div class="created_updated pull-right"><% unless @reply_to %>You must be a subscriber to post<% end %></div>
-        <div class="right span4">
+  <div class="row-fluid">
+    <div class="span6">
       <% if @reply_to %>
-          <%= submit_tag("Send", :class => "btn btn-primary") %>
+      <%= f.labelled_text :to, h(@reply_to.sender_obscured) %>
       <% else %>
-        <%= submit_tag("Post", :class => "btn btn-primary", :id => "post") %>
+      <%= f.labelled_text :to, @mailing_list.friendly_name %>
       <% end %>
-        </div>
+
+      <%= f.labelled_text_field(:from_name, "Your Name", :size => "40") %>
+      <%= f.labelled_text_field(:from_email_address, "Your Email Address", :size => "40") %>
+      <%= f.labelled_text_field(:subject, nil, :size => "40") %>
+    </div>
+    <div class="span6">
+      <%= f.labelled_text_area(:body) %>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="created_updated pull-right"><% unless @reply_to %>You must be a subscriber to post<% end %></div>
+      <div class="right span4">
+    <% if @reply_to %>
+        <%= submit_tag("Send", :class => "btn btn-primary") %>
+    <% else %>
+      <%= submit_tag("Post", :class => "btn btn-primary", :id => "post") %>
+    <% end %>
       </div>
     </div>
-  <% end -%>
-</div>
+  </div>
+<% end -%>
 
 <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>

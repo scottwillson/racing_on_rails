@@ -46,6 +46,7 @@ body {
   background-color: $body-background-color;
   color: $font-color;
   padding-top: $baseLineHeight;
+  padding-bottom: $baseLineHeight;
 }
 
 .container-fluid {
@@ -306,6 +307,10 @@ td.numeric {
 
 .pills {
   text-align: center;
+}
+
+.pills + table, .pills + p {
+  margin-top: $baseLineHeight;
 }
 
 ul.nav-pills {

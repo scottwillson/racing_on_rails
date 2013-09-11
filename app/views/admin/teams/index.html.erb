@@ -2,36 +2,34 @@
 
 <h2>Teams</h2>
 
-<div class="container-fluid">
-  <%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
+<%= render "shared/search", :name => @name, :placeholder => "Enter name to search" %>
 
-  <div class="row-fluid">
-    <%= table :class => "teams", :id => :teams do %>
-      <tr>
-        <th class="icon"/>
-        <th class="name">Name</th>
-        <th>Aliases</th>
-        <th class="check_box">Member</th>
-        <th class="actions"></th>
-      </tr>
-      <%= render :partial => "team", :collection => @teams %>
-      <% if @teams.empty? %>
-      <tr>
-        <%- if @name.blank? -%>
-        <td colspan="5" class="not_found">Enter part of a team's name</td>
-        <%- else -%>
-        <td colspan="5" class="not_found">No teams found</td>
-        <%- end -%>
-      </tr>
-      <% end %>
-    <% end -%>
-  </div>
+<div class="row-fluid">
+  <%= table :class => "teams", :id => :teams do %>
+    <tr>
+      <th class="icon"/>
+      <th class="name">Name</th>
+      <th>Aliases</th>
+      <th class="check_box">Member</th>
+      <th class="actions"></th>
+    </tr>
+    <%= render :partial => "team", :collection => @teams %>
+    <% if @teams.empty? %>
+    <tr>
+      <%- if @name.blank? -%>
+      <td colspan="5" class="not_found">Enter part of a team's name</td>
+      <%- else -%>
+      <td colspan="5" class="not_found">No teams found</td>
+      <%- end -%>
+    </tr>
+    <% end %>
+  <% end -%>
+</div>
 
-  <div class="row-fluid">
-    <div class="span12">
-      <%= link_to new_admin_team_path, :class => "btn", :id => "new_team" do %>
-        <i class="glyphicon-group"></i> New Team
-      <% end %>
-    </div>
+<div class="row-fluid">
+  <div class="span12">
+    <%= link_to new_admin_team_path, :class => "btn", :id => "new_team" do %>
+      <i class="glyphicon-group"></i> New Team
+    <% end %>
   </div>
 </div>

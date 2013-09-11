@@ -2,32 +2,30 @@
 
 <h2><%= @mailing_list.friendly_name %></h2>
 
-<div class="container-fluid">
-  <%= form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
-     :method => :post,
-     :multipart => true, 
-     :id => "mailing_list_form"  do |f| -%>
-    <%= file_field_tag "raw", :onchange => "$('#mailing_list_form').submit();" %>
+<%= form_tag receive_admin_mailing_list_posts_path(@mailing_list), 
+   :method => :post,
+   :multipart => true, 
+   :id => "mailing_list_form"  do |f| -%>
+  <%= file_field_tag "raw", :onchange => "$('#mailing_list_form').submit();" %>
+<% end -%>
+
+<div class="row-fluid">
+  <%= table :class => "posts", :id => "posts", :collection => @posts, :columns => 5 do %>
+    <tr>
+      <th class="icon"></th>
+      <th class="date">Date</th>
+      <th class="subject">Subject</th>
+      <th class="from">From</th>
+      <th class="actions"></th>
+    </tr>
+    <%= render @posts %>
   <% end -%>
+</div>
 
-  <div class="row-fluid">
-    <%= table :class => "posts", :id => "posts", :collection => @posts, :columns => 5 do %>
-      <tr>
-        <th class="icon"></th>
-        <th class="date">Date</th>
-        <th class="subject">Subject</th>
-        <th class="from">From</th>
-        <th class="actions"></th>
-      </tr>
-      <%= render @posts %>
-    <% end -%>
-  </div>
+<div class="row-fluid">
+  <%= will_paginate(@posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request?) if @posts.present? %>
+</div>
 
-  <div class="row-fluid">
-    <%= will_paginate(@posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request?) if @posts.present? %>
-  </div>
-
-  <div class="row-fluid">
-    <%= link_to new_admin_mailing_list_post_path(@mailing_list), :class => "btn" do %><i class="icon-envelope"></i> New Post<% end %>
-  </div>
+<div class="row-fluid">
+  <%= link_to new_admin_mailing_list_post_path(@mailing_list), :class => "btn" do %><i class="icon-envelope"></i> New Post<% end %>
 </div>

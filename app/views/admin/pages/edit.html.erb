@@ -5,37 +5,34 @@
 <h2><%= @page.title %></h2>
 
 <%= form_for [:admin, @page] do |f| -%>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span4">
-        <%= f.labelled_text_field :title, "Title", :class => @page.new_record? ? "wants_focus span12" : "span12" %>
-        <%= f.labelled_text_field :slug, "Slug" %>
-        <%= f.label :parent_id, "Parent", :class => "control-label" %>
-        <%= f.select :parent_id, @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] }, { :include_blank => true } %>
-        <h3>Versions</h3>
-        <%= table :class => "versions", :id => :versions, :insert_header => true, :columns => 2 do %>
-          <%= render :partial => "version", :collection => @page.versions.sort_by(&:number).reverse, :locals => { :selected => @page.versions.last } %>
-        <% end -%>
-      </div>
-  
-      <div class="span8">
-        <%= f.labelled_text_area :body, :class => @page.new_record? ? "span12" : "wants_focus span12" %>
-      </div>
+  <div class="row-fluid">
+    <div class="span4">
+      <%= f.labelled_text_field :title, "Title", :class => @page.new_record? ? "wants_focus span12" : "span12" %>
+      <%= f.labelled_text_field :slug, "Slug" %>
+      <%= f.label :parent_id, "Parent", :class => "control-label" %>
+      <%= f.select :parent_id, @page.valid_parents.sort_by(&:path).collect { |p| [ "#{p.title} (#{p.path})", p.id ] }, { :include_blank => true } %>
+      <h3>Versions</h3>
+      <%= table :class => "versions", :id => :versions, :insert_header => true, :columns => 2 do %>
+        <%= render :partial => "version", :collection => @page.versions.sort_by(&:number).reverse, :locals => { :selected => @page.versions.last } %>
+      <% end -%>
     </div>
-    
-    <div class="row-fluid">
-      <div class="span12">
-        <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
-        <%= link_to("Delete", 
-                    admin_page_path(@page), 
-                    :data => { :confirm => confirm_destroy_message(@page) }, 
-                    :method => :delete, 
-                    :class => "btn", 
-                    :id => "delete") unless @page.new_record? %>
-        <%= link_to("Preview", "/#{@page.path}", :target => "_new", :class => "btn btn-link", :id => "preview") %>
-        <div class="created_updated pull-right"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
-      </div>
+
+    <div class="span8">
+      <%= f.labelled_text_area :body, :class => @page.new_record? ? "span12" : "wants_focus span12" %>
     </div>
   </div>
-
+  
+  <div class="row-fluid">
+    <div class="span12">
+      <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
+      <%= link_to("Delete", 
+                  admin_page_path(@page), 
+                  :data => { :confirm => confirm_destroy_message(@page) }, 
+                  :method => :delete, 
+                  :class => "btn", 
+                  :id => "delete") unless @page.new_record? %>
+      <%= link_to("Preview", "/#{@page.path}", :target => "_new", :class => "btn btn-link", :id => "preview") %>
+      <div class="created_updated pull-right"><%= "Updated: #{updated(@page)}".html_safe if @page.updated_at %></div>
+    </div>
+  </div>
 <% end -%>

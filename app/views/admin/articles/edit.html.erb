@@ -7,35 +7,33 @@
 <% end %>
 
 <%= form_for([:admin, @article], :html => { :class => "form-horizontal" }) do |f| %>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span6">
-        <%= f.labelled_text_field :title %>
+  <div class="row-fluid">
+    <div class="span6">
+      <%= f.labelled_text_field :title %>
 
-        <div class="control-group">
-          <%= f.label :category, :class => "control-label" %>
-          <div class="controls">
-            <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
-          </div>
+      <div class="control-group">
+        <%= f.label :category, :class => "control-label" %>
+        <div class="controls">
+          <%= tree_select(ArticleCategory.all( :conditions => "parent_id = 0"), 'article', 'article_category_id', @article, false) %>
         </div>
       </div>
-      <div class="span6">
-        <%= f.labelled_text_field :position %>
-        <%= f.labelled_check_box :display %>
-      </div>
-      <div class="span12">
-        <%= f.labelled_text_area :body, :toolbarSet => 'Simple', :height => '400px', :class => 'ckeditor span12' %>
-      </div>
     </div>
+    <div class="span6">
+      <%= f.labelled_text_field :position %>
+      <%= f.labelled_check_box :display %>
+    </div>
+    <div class="span12">
+      <%= f.labelled_text_area :body, :toolbarSet => 'Simple', :height => '400px', :class => 'ckeditor span12' %>
+    </div>
+  </div>
 
-    <hr />
-    
-    <div class="row-fluid">
-      <div class="span12">
-        <%= f.submit "Save", :class => 'btn btn-primary' %>
-        <%= link_to('Delete', [:admin, @article], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article.new_record? %>
-        <%= link_to 'Back', admin_articles_path, :class => 'btn btn-link' %>
-      </div>
+  <hr />
+  
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.submit "Save", :class => 'btn btn-primary' %>
+      <%= link_to('Delete', [:admin, @article], :confirm => 'Are you sure?', :class => 'btn', :method => :delete) unless @article.new_record? %>
+      <%= link_to 'Back', admin_articles_path, :class => 'btn btn-link' %>
     </div>
-  </div>  
+  </div>
 <% end %>

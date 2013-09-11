@@ -9,63 +9,61 @@
   tabs.add "Records", "http://#{RacingAssociation.current.static_host}/track/records/index.html"
 end %>
 
-<div class="container-fluid">
-  <div class="span12">
-    <h3><%= link_to "Upcoming Races", "/track/schedule" %></h3>
-    <%= table :id => "upcoming_events", :columns => 5 do %>
-      <thead>
+<div class="span12">
+  <h3><%= link_to "Upcoming Races", "/track/schedule" %></h3>
+  <%= table :id => "upcoming_events", :columns => 5 do %>
+    <thead>
+      <tr>
+        <th class="date">Date</th>
+        <th></th>
+        <th>Event</th>
+        <th>Contact</th>
+        <th>Phone</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.
+          select { |e| !e.instructional? && !e.practice? && e.date >= RacingAssociation.current.effective_today }.
+          sort_by(&:date)[0, mobile_request? ? 6 : 1000].
+          each do |event| %>
         <tr>
-          <th class="date">Date</th>
-          <th></th>
-          <th>Event</th>
-          <th>Contact</th>
-          <th>Phone</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @events.
-            select { |e| !e.instructional? && !e.practice? && e.date >= RacingAssociation.current.effective_today }.
-            sort_by(&:date)[0, mobile_request? ? 6 : 1000].
-            each do |event| %>
-          <tr>
-            <td class="date"><%= public_link_to_flyer(event, event.date.to_s(:short_with_week_day)) %></td>
-            <% unless mobile_request? %>
-            <td class="beginner_friendly icon">
-              <% if event.beginner_friendly? %>
-                <%= link_to("http://www.obra.org/beginner_friendly.html", 
-                            :class => "beginner_friendly", :title => "Beginner friendly event") do %>
-                  <i class="icon-ok-circle"></i>
-                <% end %>
+          <td class="date"><%= public_link_to_flyer(event, event.date.to_s(:short_with_week_day)) %></td>
+          <% unless mobile_request? %>
+          <td class="beginner_friendly icon">
+            <% if event.beginner_friendly? %>
+              <%= link_to("http://www.obra.org/beginner_friendly.html", 
+                          :class => "beginner_friendly", :title => "Beginner friendly event") do %>
+                <i class="icon-ok-circle"></i>
               <% end %>
-            </td>
             <% end %>
-            <td><%= public_link_to_flyer(event) %></td>
-            <td><%= link_to_event_email event %></td>
-            <td><%= link_to_event_phone event %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    <% end -%>
+          </td>
+          <% end %>
+          <td><%= public_link_to_flyer(event) %></td>
+          <td><%= link_to_event_email event %></td>
+          <td><%= link_to_event_phone event %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  <% end -%>
 
-    <p>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>. 
-    Call the velodrome during event hours to check on weather cancellations: (503) 246-0330.</p>
+  <p>Please review the <a href="http://www.obra.org/track/information/index.html#rules">Alpenrose Velodrome rules</a>. 
+  Call the velodrome during event hours to check on weather cancellations: (503) 246-0330.</p>
 
-    <h3>Weekly Races</h3>
-    <%= render "weekly_events", 
-               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
+  <h3>Weekly Races</h3>
+  <%= render "weekly_events", 
+             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && !e.instructional? && !e.practice? } %>
 
-    <h3>Weekly Instruction Schedule</h3>
-    <%= render 'weekly_events', 
-               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
+  <h3>Weekly Instruction Schedule</h3>
+  <%= render 'weekly_events', 
+             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.instructional? } %>
 
-    <h3>Weekly Practice Schedule</h3>
-    <%= render 'weekly_events', 
-               :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
-  </div>
+  <h3>Weekly Practice Schedule</h3>
+  <%= render 'weekly_events', 
+             :weekly_events => @events.select { |e| e.is_a?(WeeklySeries) && e.practice? } %>
+</div>
 
-  <div class="row-fluid">
-    <div class="span12 associated">
-      <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :size => "200x65", :title => "Alpenrose" %>
-    </div>
+<div class="row-fluid">
+  <div class="span12 associated">
+    <%= image_tag "http://#{RacingAssociation.current.static_host}/track/images/logos/alpenrose_logo.gif", :size => "200x65", :title => "Alpenrose" %>
   </div>
 </div>

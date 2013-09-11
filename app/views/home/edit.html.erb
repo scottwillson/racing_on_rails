@@ -3,27 +3,25 @@
 
 <h2>Home</h2>
 
-<div class="container-fluid">
-  <%= form_for @home, :url => home_path, :html => { :class => "form-horizontal" } do |f| %>
-    <div class="row-fluid">
-      <div class="span12">
-        <%= f.labelled_select :photo_id, 
-              Photo.order("updated_at desc").map { |photo| [ photo.caption, photo.id ] },
-              :include_blank => true
-        %>
-        <div class="control-group">
-          <div class="controls">
-            <%= link_to "Edit photos", photos_path, :class => "obvious" %> 
-          </div>
+<%= form_for @home, :url => home_path, :html => { :class => "form-horizontal" } do |f| %>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= f.labelled_select :photo_id, 
+            Photo.order("updated_at desc").map { |photo| [ photo.caption, photo.id ] },
+            :include_blank => true
+      %>
+      <div class="control-group">
+        <div class="controls">
+          <%= link_to "Edit photos", photos_path, :class => "obvious" %> 
         </div>
-        <%= f.labelled_text_field :weeks_of_recent_results, "Results (weeks)" %>
-        <%= f.labelled_text_field :weeks_of_upcoming_events, "Upcoming (weeks)" %>
       </div>
+      <%= f.labelled_text_field :weeks_of_recent_results, "Results (weeks)" %>
+      <%= f.labelled_text_field :weeks_of_upcoming_events, "Upcoming (weeks)" %>
     </div>
-    <div class="row-fluid">
-      <div class="span12">
-        <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
-      </div>
+  </div>
+  <div class="row-fluid">
+    <div class="span12">
+      <%= submit_tag "Save", :class => "btn btn-primary", :id => "save" %>
     </div>
-  <% end %>
-</div>
+  </div>
+<% end %>
