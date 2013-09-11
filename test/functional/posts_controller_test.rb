@@ -246,7 +246,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
   end
   
-  def test_post_smtp_error
+  def test_post_smtp_502_error
     MailingListMailer.deliveries.clear
   
     obra_chat = FactoryGirl.create(:mailing_list)
@@ -256,6 +256,33 @@ class PostsControllerTest < ActionController::TestCase
     body = "Barely used"
   
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPFatalError, "502 5.5.2 Error: command not recognized")
+    post(:create, 
+        :mailing_list_id => obra_chat.to_param,
+        :reply_to_id => '',
+        :post => {
+          :subject => subject, 
+          :from_name => from_name,
+          :from_email_address => from_email_address,
+          :body => body},
+        :commit => "Post"
+    )
+    
+    assert_not_nil flash[:warn]
+    assert_response :success
+    
+    assert_equal(0, MailingListMailer.deliveries.size, "Should have no email deliveries")
+  end
+  
+  def test_post_smtp_5450_error
+    MailingListMailer.deliveries.clear
+  
+    obra_chat = FactoryGirl.create(:mailing_list)
+    subject = "Spynergy for Sale"
+    from_name = "Tim Schauer"
+    from_email_address = "tim.schauer@butlerpress.com"
+    body = "Barely used"
+  
+    Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPServerBusy, "450 4.1.8 <wksryz@rxrzdj.com>: Sender address rejected: Domain not found")
     post(:create, 
         :mailing_list_id => obra_chat.to_param,
         :reply_to_id => '',
