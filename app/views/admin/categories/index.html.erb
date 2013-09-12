@@ -5,15 +5,16 @@
 <%# We're small enough we can recompute competitions on demand. alp -%>
 <% if RacingAssociation.current.competitions.include?(:mbra_bar) -%>
 <div class="row-fluid">    
-  <%= form_tag "/admin/categories/recompute_bar" do -%>
+  <div class="span12">
+    <%= form_tag "/admin/categories/recompute_bar" do -%>
       <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
     <% end -%>
     <%= form_tag "/admin/categories/recompute_team_bar" do -%>
       <%= submit_tag "Recompute MBRA BAT", :id => "recompute_bar" %>
     <% end -%>
   </div>
-<%- end %>
 </div>
+<%- end %>
 
 <div class="row-fluid">
   <div class="span6">
