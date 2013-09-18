@@ -829,6 +829,17 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal([r1, r2, r3], people, 'sorted')
   end
   
+  def test_sort_without_ids
+    r1 = Person.new(:name => "Aarron Burr")
+    r2 = Person.new(:name => "Aarron Car")
+    r3 = Person.new(:name => "A Lincoln")
+    
+    people = [r2, r1, r3]
+    people.sort!
+    
+    assert_same_elements([r1, r2, r3], people, 'sorted')
+  end
+  
   def test_add_number
     FactoryGirl.create(:discipline, :name => "Road")
     FactoryGirl.create(:number_issuer)
