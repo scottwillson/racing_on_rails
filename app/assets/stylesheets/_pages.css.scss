@@ -495,7 +495,6 @@ table.results th.points,
 table.results th.points_bonus,
 table.results th.points_penalty,
 table.results th.points_from_place,
-table.results th.points_total,
 table.results th.number,
 table.results th.number {
   width: 55px;  
@@ -504,7 +503,10 @@ table.results th.number {
 table.results th.time_total,
 table.results th.time_gap_to_winner,
 table.results th.time_gap_to_leader,
-table.results th.time {
+table.results th.time,
+table.results td.points_total,
+table.results th.points_total {
+  text-align: right;
   width: 80px;
 }
 
