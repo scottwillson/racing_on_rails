@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/RubyMoney/money.git
-  revision: 00f6717915ebc7752b371f01b8777c4e33b9aca6
+  revision: bd54acb7b1042e52f33613da7ae50202a934fc70
   specs:
-    money (6.0.0.pre3)
+    money (6.0.0.pre4)
       i18n (~> 0.6.4)
 
 GIT
@@ -81,7 +81,7 @@ GEM
     active_utils (2.0.0)
       activesupport (>= 2.3.11)
       i18n
-    activemerchant (1.38.0)
+    activemerchant (1.38.1)
       active_utils (~> 2.0)
       activesupport (>= 2.3.14, < 5.0.0)
       builder (>= 2.1.2, < 4.0.0)
@@ -138,9 +138,9 @@ GEM
     chronic (0.9.1)
     ckeditor_rails (4.2)
       railties (>= 3.0)
-    coffee-rails (3.2.2)
+    coffee-rails (3.2.1)
       coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
+      railties (~> 3.2.0.beta)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -154,10 +154,10 @@ GEM
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     ffi (1.9.0)
-    formatize (1.0.1)
+    formatize (1.1.0)
       RedCloth (~> 4.2)
       actionpack (~> 3.0)
-      bluecloth (~> 2.0)
+      bluecloth (~> 2.2)
     git (1.2.6)
     hashery (2.1.1)
     highline (1.6.19)
@@ -180,7 +180,7 @@ GEM
       jquery-rails
       railties (>= 3.1.0)
     json (1.8.0)
-    kgio (2.8.0)
+    kgio (2.8.1)
     launchy (2.3.0)
       addressable (~> 2.3)
     libv8 (3.16.14.3)
@@ -200,7 +200,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.8)
+    net-ssh (2.7.0)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
     newrelic_rpm (3.6.7.152)
@@ -294,7 +294,7 @@ GEM
       raindrops (~> 0.7)
     websocket (1.0.7)
     will_paginate (3.0.4)
-    will_paginate-bootstrap (0.2.4)
+    will_paginate-bootstrap (0.2.5)
       will_paginate (>= 3.0.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
