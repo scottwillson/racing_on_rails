@@ -2,9 +2,7 @@ require File.expand_path("../../test_helper", __FILE__)
 
 # :stopdoc:
 class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
-  # if RacingAssociation.current.short_name == "mbra"
-    assert_no_angle_brackets :except => [ :test_index, :test_index_with_alias, :test_mtb_index ]
-  # end
+  assert_no_angle_brackets :except => [ :test_index, :test_index_with_alias, :test_mtb_index ]
   
   def test_index
     FactoryGirl.create(:discipline)
