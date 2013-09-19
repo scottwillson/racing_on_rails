@@ -15,9 +15,9 @@ class PostsController < ApplicationController
     end
 
     if @start_date && @end_date
-      @posts = @mailing_list.posts.where("date between ? and ?", @start_date, @end_date).paginate(:page => params[:page]).order("date desc")
+      @posts = @mailing_list.posts.where("date between ? and ?", @start_date, @end_date).paginate(:page => page).order("date desc")
     else
-      @posts = @mailing_list.posts.paginate(:page => params[:page]).order("date desc")
+      @posts = @mailing_list.posts.paginate(:page => page).order("date desc")
     end
     
     if @subject.present?
@@ -100,6 +100,18 @@ class PostsController < ApplicationController
     if params[:reply_to_id].present?
       @reply_to = Post.find(params[:reply_to_id])
       @post.subject = "Re: #{@reply_to.subject}"
+    end
+  end
+  
+  private
+  
+  def page
+    begin
+      if params[:page].to_i > 0
+        params[:page].to_i
+      end
+    rescue
+      nil
     end
   end
 end

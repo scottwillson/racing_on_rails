@@ -103,6 +103,12 @@ class PostsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  def test_index_with_bogus_page
+    post = FactoryGirl.create(:post)
+    get :index, :mailing_list_id => post.mailing_list.id, :page => "atz"
+    assert_response :success
+  end
+  
   def test_list
     obra_chat = FactoryGirl.create(:mailing_list)
     for index in 1..22
