@@ -70,7 +70,26 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
   
-  def tets_road_index
+  def test_index_excel_discipline
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:mtb_discipline)
+
+    FactoryGirl.create(:event, :discipline => "Mountain Bike")
+
+    get :index, :discipline => "mtb", :format => :xls
+    assert_response :success
+  end
+  
+  def test_index_excel_discipline
+    FactoryGirl.create(:discipline)
+
+    FactoryGirl.create(:event, :discipline => "Road")
+
+    get :list, :discipline => "road", :format => :xls
+    assert_response :success
+  end
+  
+  def test_road_index
     FactoryGirl.create(:discipline)
     FactoryGirl.create(:mtb_discipline)
     year = 2006
@@ -253,6 +272,14 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     html = @response.body
     assert(html["Mudslinger"], "Road events should include MTB")
     assert(!html["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
+  end
+
+  def test_list_excel_discipline
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:event, :discipline => "Road")
+
+    get :list, :discipline => "road", :format => :xls
+    assert_response :success
   end
 
   def test_calendar_as_json
