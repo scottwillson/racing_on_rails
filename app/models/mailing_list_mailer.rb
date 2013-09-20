@@ -65,7 +65,7 @@ class MailingListMailer < ActionMailer::Base
         else
           post.body = (email.text_part || email.html_part || email.body).try(:decoded)
         end
-        post.body = post.body.encode('UTF-8')
+        post.body = post.body.encode("UTF-8", :undef => :replace)
         
         post.from_name = email[:from].display_names.first || email[:from].addresses.first
         post.from_email_address = email[:from].addresses.first
