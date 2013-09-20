@@ -78,7 +78,7 @@ module Admin
     def merge
       @team = Team.find(params[:id])
       @other_team = Team.find(params[:other_team_id])
-      @team.merge(@other_team)
+      @merged = @team.merge(@other_team)
       expire_cache
     end
   

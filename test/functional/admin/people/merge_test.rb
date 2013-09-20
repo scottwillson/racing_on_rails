@@ -42,6 +42,17 @@ module Admin
         assert_equal [], Person.find_all_by_name("Erik Tonkin"), "Tonkin should not be in database"
       end
 
+      def test_merge_same_person
+        tonkin = FactoryGirl.create(:person, :first_name => "Erik", :last_name => "Tonkin")
+        assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
+
+        xhr :post, :merge, :other_person_id => tonkin.to_param, :id => tonkin.to_param, :format => :js
+        assert_response :success
+        assert_template "admin/people/merge"
+
+        assert Person.find_all_by_name("Erik Tonkin"), "Tonkin should be in database"
+      end
+
       def test_dupes_merge?
         FactoryGirl.create(:discipline)
         FactoryGirl.create(:number_issuer)

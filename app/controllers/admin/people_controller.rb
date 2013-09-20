@@ -328,7 +328,7 @@ module Admin
     def merge
       @person = Person.find(params[:id])
       @other_person = Person.find(params[:other_person_id])
-      @person.merge(@other_person)
+      @merged = @person.merge(@other_person)
       expire_cache
     end
   

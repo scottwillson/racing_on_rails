@@ -92,7 +92,7 @@ class Team < ActiveRecord::Base
   # Also adds the other Team's name as a new alias
   def merge(team)
     raise(ArgumentError, 'Cannot merge nil team') unless team
-    raise(ArgumentError, 'Cannot merge team onto itself') if team == self
+    return false if team == self
 
     Team.transaction do
       events_with_results = team.results.collect do |result|
