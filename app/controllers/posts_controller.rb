@@ -67,7 +67,7 @@ class PostsController < ApplicationController
         private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
         flash[:notice] = "Sent private reply '#{@post.subject}' to #{private_reply_email.to}"
         redirect_to mailing_list_confirm_private_reply_path(@mailing_list)
-      rescue Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e
+      rescue ArgumentError, Net::SMTPSyntaxError, Net::SMTPServerBusy, Net::SMTPFatalError => e
         flash[:warn] = "Could not post: #{e}. Please retry, or email #{RacingAssociation.current.email} for help"
         render(:action => "new", :reply_to_id => @reply_to.id)
       end
