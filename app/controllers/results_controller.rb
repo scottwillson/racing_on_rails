@@ -7,12 +7,13 @@ class ResultsController < ApplicationController
   # == Params
   # * year (optional)
   def index
+    @discipline = Discipline[params['discipline']]
+    @discipline_names = Discipline.names
+    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+
     respond_to do |format|
-      format.html {
-        @discipline = Discipline[params['discipline']]
-        @discipline_names = Discipline.names
-        @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
-      }
+      format.xml
+      format.html
     end
   end
   
