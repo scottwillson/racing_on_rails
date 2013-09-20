@@ -93,6 +93,19 @@ module Admin
         after_import_all = Event.count
         assert_equal(76, after_import_all, "All events count after import")
       end
+
+      def test_upload_bad_xls_format
+        mt_hood_1 = FactoryGirl.create(:stage_race)
+        
+        Results::ResultsFile.any_instance.expects(:import).raises(Ole::Storage::FormatError, "OLE2 signature is invalid")
+
+        post :upload, :id => mt_hood_1.to_param, 
+                      :results_file => fixture_file_upload("results/pir_2006_format.xls", "application/vnd.ms-excel", :binary)
+
+        assert(flash[:warn].present?, "should have flash[:warn]")
+        assert_response :success
+        assert(mt_hood_1.races(true).empty?, 'Should have no races after failed upload attempt')
+      end
     end
   end
 end
