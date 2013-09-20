@@ -155,11 +155,18 @@ module Admin
       end
 
       temp_file = File.new(path)
-      event = Event.find(params[:id])
+      @event = Event.find(params[:id])
     
-      results_file = Results::ResultsFile.new(temp_file, event)
+      results_file = Results::ResultsFile.new(temp_file, @event)
     
-      results_file.import
+      begin
+        results_file.import
+      rescue Ole::Storage::FormatError => e
+        flash[:warn] = "Could not read results file. Try re-saving it in 'Excel 97-2004 Workbook format'"
+        assign_disciplines
+        return render(:edit)
+      end
+      
       expire_cache
       FileUtils.rm temp_file rescue nil
     
@@ -175,7 +182,7 @@ module Admin
           flash[:notice] = flash[:notice] + warning.to_s + " "
         end
       end
-      redirect_to(edit_admin_event_path(event))
+      redirect_to(edit_admin_event_path(@event))
     end
   
     # Upload new Excel Schedule
