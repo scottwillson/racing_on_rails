@@ -12,17 +12,15 @@ class CrossCrusadeTeamCompetition < Competition
 
         if series && series.has_results_including_children?(true)
           team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
-          if team_competition.nil? || team_competition.updated_at.nil? || Result.where("updated_at > ?", team_competition.updated_at).exists?
-            unless team_competition
-              team_competition = self.new(:parent_id => series.id)
-              team_competition.save!
-            end
-            team_competition.set_date
-            team_competition.destroy_races
-            team_competition.create_races
-            team_competition.calculate!
-            team_competition.expire_cache
+          unless team_competition
+            team_competition = self.new(:parent_id => series.id)
+            team_competition.save!
           end
+          team_competition.set_date
+          team_competition.destroy_races
+          team_competition.create_races
+          team_competition.calculate!
+          team_competition.expire_cache
         end
       end
     }
