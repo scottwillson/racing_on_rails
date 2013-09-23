@@ -5,9 +5,6 @@ class BlindDateAtTheDairyOverall < Overall
 
   def category_names
     [
-      "Beginner Men",
-      "Beginner Women",
-      "Fixed",
       "Junior Men 10-13",
       "Junior Men 14-18",
       "Junior Women 10-13",
@@ -19,7 +16,6 @@ class BlindDateAtTheDairyOverall < Overall
       "Men B",
       "Men C",
       "Singlespeed",
-      "Stampede",
       "Women A",
       "Women B",
       "Women C"
