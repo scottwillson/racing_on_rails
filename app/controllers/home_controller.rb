@@ -20,10 +20,14 @@ class HomeController < ApplicationController
       where("type != ?", "Event").
       where("type is not null").
       where("events.date >= ?", @home.weeks_of_recent_results.weeks.ago).
-      where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by).
       where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
-      order("updated_at desc").
-      all
+      order("updated_at desc")
+      
+    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
+      @events_with_recent_results = @events_with_recent_results.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
+    end
+    
+    @events_with_recent_results = @events_with_recent_results.all
       
     @most_recent_event_with_recent_result = Event.
       includes(:races => [ :category, :results ]).
