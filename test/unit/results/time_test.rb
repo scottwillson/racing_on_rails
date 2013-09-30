@@ -11,6 +11,9 @@ class ResultTest < ActiveSupport::TestCase
   
   def test_set_time
     result = Result.new
+    result.time = "20:23:00.9"
+    assert_in_delta 73380.9, result.time, 0.0001, "20:23:00.9 should be 20 hours and 23 minutes and 0.9 seconds"
+
     result.time = "20:23:00"
     assert_in_delta 73380.0, result.time, 0.0001, "20:23:00 should be 20 hours and 23 minutes"
 
@@ -37,8 +40,11 @@ class ResultTest < ActiveSupport::TestCase
     result.time_s = '30:00'
     assert_in_delta(1800.0, result.time, 0.0001, "time")
     assert_equal('30:00.00', result.time_s, 'time_s')
-    result.time_s = '30:00'
     assert_in_delta(1800.0, result.time, 0.0001, "time")
+    
+    result.time_s = ':00:30:00.1'
+    assert_in_delta(1800.1, result.time, 0.0001, "time")
+    assert_equal('30:00.10', result.time_s, 'time_s')
     
     result.time = 3609.0
     assert_in_delta(3609.0, result.time, 0.0001, "time")
