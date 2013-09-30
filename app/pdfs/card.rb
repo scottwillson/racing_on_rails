@@ -32,7 +32,7 @@ class Card < Prawn::Document
 
       draw_text "Road # #{person.road_number}", :at => [ card_left_side, card_top - 60 ]
 
-      draw_text "OBRA License # #{person.license}", :at => [ card_left_side, card_top - 72 ]
+      draw_text "#{RacingAssociation.current.short_name} License # #{person.license}", :at => [ card_left_side, card_top - 72 ]
 
       fill_color "296fa4"
       rectangle [ card_left_side + 164, card_top + 10 ], 20, 84
