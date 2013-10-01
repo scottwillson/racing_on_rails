@@ -24,9 +24,9 @@ module Concerns
 
         case race.category.name
         when "Senior Men"
-          categories = [::Category.find_or_create_by_name("Pro Men")]
+          categories = [::Category.find_or_create_by_name("Elite Men"), ::Category.find_or_create_by_name("Pro Men")]
         when "Senior Women"
-          categories = [::Category.find_or_create_by_name("Pro Women"), ::Category.find_or_create_by_name("Category 1 Women")]
+          categories = [::Category.find_or_create_by_name("Elite Women"), ::Category.find_or_create_by_name("Category 1 Women"), ::Category.find_or_create_by_name("Pro Women")]
         when "Category 3 Men"
           categories = [::Category.find_or_create_by_name("Category 1 Men")]
         when "Category 3 Women"
