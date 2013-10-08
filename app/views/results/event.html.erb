@@ -36,7 +36,9 @@
 
   <%= render :partial => "races", :object => @event %>
 
-  <%- unless @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.empty? -%>
+  <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.empty? -%>
+  <%= render "start_list" %>
+  <% else %>
 <div class="row-fluid event_info child_events">
   <%- @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.each do |child| -%>
   <%= link_to child.name, event_results_path(child), { :class => "obvious" } %><br/>
@@ -58,5 +60,3 @@
   <%= results_table race %>
 <%- end -%>
 <%- end -%>
-
-<%= render "start_list" %>
