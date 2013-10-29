@@ -37,7 +37,7 @@ gem "tabular", ">=0.2.4"
 gem "truncate_html"
 gem "vestal_versions", :github => "scottwillson/vestal_versions", :branch => "rails_3_2"
 gem "will_paginate"
-gem "will_paginate-bootstrap"
+gem "will_paginate-bootstrap", "0.2.5"
 gem "yui-compressor"
 
 group :assets do
