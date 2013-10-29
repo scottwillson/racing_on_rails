@@ -1,6 +1,7 @@
 rails_env = ENV['::Rails.env'] || 'production'
 
 worker_processes 2
+GC.respond_to?(:copy_on_write_friendly=) && GC.copy_on_write_friendly = true
 preload_app true
 timeout 180
 
