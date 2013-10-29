@@ -21,7 +21,7 @@ class CrossCrusadeOverallTest < ActiveSupport::TestCase
     tonkin = FactoryGirl.create(:person)
     cat_a_race.results.create!(:place => 9, :person => tonkin)
 
-    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+")
+    masters_35_plus_women = Category.find_or_create_by_name("Masters Women 35+ A")
     masters_race = event.races.create!(:category => masters_35_plus_women)
     alice = FactoryGirl.create(:person)
     masters_race.results.create!(:place => 15, :person => alice)
