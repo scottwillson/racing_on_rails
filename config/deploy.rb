@@ -8,8 +8,6 @@ load 'deploy/assets'
 load "config/db"
 
 require "capistrano-unicorn"
-# set :unicorn_config_path, "#{current_path}/config/unicorn"
-# set :unicorn_config_filename, "production.rb"
 
 require "rvm/capistrano"
 set :rvm_ruby_string, "1.9.3"
