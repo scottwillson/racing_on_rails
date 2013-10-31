@@ -1,7 +1,7 @@
 /*
  * Jeditable - jQuery in place edit plugin
  *
- * Copyright (c) 2006-2009 Mika Tuupola, Dylan Verheul
+ * Copyright (c) 2006-2013 Mika Tuupola, Dylan Verheul
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@
  */
 
 /**
-  * Version 1.7.2-dev
+  * Version 1.7.3
   *
   * ** means there is basic unit tests for this parameter. 
   *
@@ -342,8 +342,7 @@
                                   data    : submitdata,
                                   dataType: 'html',
                                   url     : settings.target,
-                                  success : function(result, status, jqXHR) {
-                                    if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
+                                  success : function(result, status) {
                                       if (ajaxoptions.dataType == 'html') {
                                         $(self).html(result);
                                       }
@@ -352,10 +351,6 @@
                                       if (!$.trim($(self).html())) {
                                           $(self).html(settings.placeholder);
                                       }
-                                    }
-                                    else {
-                                      $.globalEval(result);
-                                    }
                                   },
                                   error   : function(xhr, status, error) {
                                       onerror.apply(form, [settings, self, xhr]);
