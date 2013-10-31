@@ -1,13 +1,13 @@
 // TODO Consolidate this and toggle_member with makeEditable()
 function bindBarCheckBox() {
-  $('.bar_check_box').change(function(e) {
+  jQuery('.bar_check_box').change(function(e) {
     var ajaxoptions = {
       type    : 'PUT',
       data    : {
         '_method': 'PUT',
         name: 'bar'
       },
-      url     : $(this).data('url')
+      url     : jQuery(this).data('url')
     };
     if (e.target.checked) {
       ajaxoptions.data['value'] = '1';
@@ -15,10 +15,10 @@ function bindBarCheckBox() {
     else {
       ajaxoptions.data['value'] = '0';
     }
-    $.ajax(ajaxoptions);
+    jQuery.ajax(ajaxoptions);
   }); 
 }
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
   bindBarCheckBox();
 });

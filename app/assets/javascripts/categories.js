@@ -1,47 +1,47 @@
-$(document).ready(function() {
+jQuery(document).ready(function() {
   bindCategoryEvents();
 });
 
 function bindCategoryEvents() {
-  $('.category').unbind();
+  jQuery('.category').unbind();
   jQuery('.category').droppable({
     drop: function(ev, ui) {
       var droppedOn = jQuery(this);
       jQuery.ajax({
         type: 'PUT',
         url: '/admin/categories/' + encodeURIComponent(jQuery(ui.draggable).attr('data-id')) + '.js',
-        data: { category: { parent_id: $(this).attr('data-id') } }
+        data: { category: { parent_id: jQuery(this).attr('data-id') } }
       });
     },
     hoverClass: 'hovering'
   });
-  $('.category_root .category').droppable('option', 'greedy', true);
+  jQuery('.category_root .category').droppable('option', 'greedy', true);
 
-  $('.category_name').draggable({
+  jQuery('.category_name').draggable({
     revert: 'invalid',
     opacity: 0.7,
     zIndex: 10000,
     helper: function(event) {
-      return $('<div class="category"><i class="icon-star"></i>' + $(this).text() + '</div>');
+      return jQuery('<div class="category"><i class="icon-star"></i>' + jQuery(this).text() + '</div>');
     }
   });
 
-  $('.disclosure').unbind();
-  $('.disclosure').click(function(e) {
-    var categoryId = $(this).attr('data-id');
+  jQuery('.disclosure').unbind();
+  jQuery('.disclosure').click(function(e) {
+    var categoryId = jQuery(this).attr('data-id');
     expandDisclosure(categoryId);
   });
 }
 
 function expandDisclosure(categoryId) {
-  var disclosure = $('#disclosure_' + categoryId);
+  var disclosure = jQuery('#disclosure_' + categoryId);
   if (disclosure.is('.collapsed')) {
     disclosure.removeClass('collapsed');
     disclosure.removeClass('expanded');
     disclosure.addClass('icon-refresh');
     disclosure.addClass('rotate');
 
-    $.get(
+    jQuery.get(
       '/admin/categories.js',
       { parent_id: categoryId },
       function(data) {
@@ -55,6 +55,6 @@ function expandDisclosure(categoryId) {
   else {
     disclosure.removeClass('expanded');
     disclosure.addClass('collapsed');
-    $('#category_' + categoryId + "_children").html('');
+    jQuery('#category_' + categoryId + "_children").html('');
   }
 }

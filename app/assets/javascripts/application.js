@@ -8,24 +8,24 @@
  *= require_self
 */
 function autoComplete(model, attribute, path) {
-  $('#' + attribute + '_auto_complete').autocomplete({
+  jQuery('#' + attribute + '_auto_complete').autocomplete({
     delay: 200,
     minLength: 3,
     source: function(request, response) {
-      $.getJSON(path, { name: request.term }, response);
+      jQuery.getJSON(path, { name: request.term }, response);
     },
     messages: {
       noResults: null,
       results: function() {}
     },
     focus: function(event, ui) {
-      $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+      jQuery('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
       return false;
     },
     select: function(event, ui) {
-      $('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
-      $('#event_promoter_id').val(ui.item.person.id);
-      $('#event_promoter_id').change();
+      jQuery('#promoter_auto_complete').val(ui.item.person.first_name + ' ' + ui.item.person.last_name);
+      jQuery('#event_promoter_id').val(ui.item.person.id);
+      jQuery('#event_promoter_id').change();
       return false;
     }
   })
@@ -42,7 +42,7 @@ function autoComplete(model, attribute, path) {
         description.push(item.person.state);
       }
         
-      return $('<li id="person_' + item.person.id + '"></li>')
+      return jQuery('<li id="person_' + item.person.id + '"></li>')
         .data( "item.autocomplete", item )
         .append('<a>' + item.person.first_name + ' ' + item.person.last_name + '<div class="informal">' + description + "</div></a>")
         .appendTo( ul );
@@ -51,30 +51,30 @@ function autoComplete(model, attribute, path) {
 }    
 
 function autoCompleteTeam(model, attribute, path) {
-  $(document).ready(function() {
-    $('#' + attribute + '_auto_complete').autocomplete({
+  jQuery(document).ready(function() {
+    jQuery('#' + attribute + '_auto_complete').autocomplete({
       delay: 200,
       minLength: 3,
       source: function(request, response) {
-        $.getJSON(path, { name: request.term }, response);
+        jQuery.getJSON(path, { name: request.term }, response);
       },
       messages: {
         noResults: null,
         results: function() {}
       },
       focus: function(event, ui) {
-        $('#team_auto_complete').val(ui.item.team.name);
+        jQuery('#team_auto_complete').val(ui.item.team.name);
         return false;
       },
       select: function(event, ui) {
-        $('#team_auto_complete').val(ui.item.team.name);
-        $('#event_team_id').val(ui.item.team.id);
+        jQuery('#team_auto_complete').val(ui.item.team.name);
+        jQuery('#event_team_id').val(ui.item.team.id);
         return false;
       }
     })
     .data("ui-autocomplete")
     ._renderItem = function(ul, item) {
-        return $('<li id="team_' + item.team.id + '"></li>')
+        return jQuery('<li id="team_' + item.team.id + '"></li>')
           .data( "item.autocomplete", item )
           .append('<a>' + item.team.name + '</a>')
           .appendTo( ul );
@@ -84,9 +84,9 @@ function autoCompleteTeam(model, attribute, path) {
 }    
 
 function makeEditable() {
-  $('.editable').editable(
+  jQuery('.editable').editable(
     function(value, settings) {
-      var element = $(this);
+      var element = jQuery(this);
       element.addClass('saving');
       var ajaxoptions = {
         type    : 'PUT',
@@ -101,13 +101,13 @@ function makeEditable() {
           if (jqXHR.getResponseHeader('Content-Type').indexOf('text/javascript') == -1) {
             element.html(result);
             element.removeClass('saving');
-            if (!$.trim(element.html())) {
+            if (!jQuery.trim(element.html())) {
               element.html(settings.placeholder);
             }
           }
           else {
             element.removeClass('saving');
-            $.globalEval(result);
+            jQuery.globalEval(result);
           }
         },
         error   : function(xhr, status, error) {
@@ -119,7 +119,7 @@ function makeEditable() {
         }
       };
       element.find("input").attr("disabled", "disabled");
-      $.ajax(ajaxoptions);
+      jQuery.ajax(ajaxoptions);
     },
     {
       cssclass: 'editor_field',
@@ -143,7 +143,7 @@ function makeEditable() {
   );
 }
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
   makeEditable();
   jQuery('.wants_focus:visible').select();
 });

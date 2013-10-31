@@ -1,24 +1,24 @@
-$(document).ready(function() {
+jQuery(document).ready(function() {
   bindTeamDragAndDrop();
 });
 
 function bindTeamDragAndDrop() {
-  $('.team_icon').draggable({ 
+  jQuery('.team_icon').draggable({ 
     revert: 'invalid', 
     zIndex: 10000,
     opacity: 0.7,
     helper: function(event) {
-      return $('<div class="team" data-id="' + $(this).attr('data-id') + '"><i class="icon-group"></i> ' + $(this).attr('data-name') + '</div>');
+      return jQuery('<div class="team" data-id="' + jQuery(this).attr('data-id') + '"><i class="icon-group"></i> ' + jQuery(this).attr('data-name') + '</div>');
     }
     });
-  $('.team_row').droppable({
+  jQuery('.team_row').droppable({
     hoverClass: 'hovering',
     drop: function(event, ui) {
       ui.helper.hide('scale');
       ui.draggable.closest('tr').hide('fade');
-      $(this).addClass('merging');
-      $.ajax({
-        url: '/admin/teams/' + $(this).attr('data-id') + '/merge/' + ui.draggable.attr('data-id') +'.js',
+      jQuery(this).addClass('merging');
+      jQuery.ajax({
+        url: '/admin/teams/' + jQuery(this).attr('data-id') + '/merge/' + ui.draggable.attr('data-id') +'.js',
         type: 'POST',
         dataType: 'script'
       });
