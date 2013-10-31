@@ -153,7 +153,7 @@ GEM
     factory_girl_rails (4.2.1)
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
-    ffi (1.9.2)
+    ffi (1.9.3)
     formatize (1.0.1)
       RedCloth (~> 4.2)
       actionpack (~> 3.0)
