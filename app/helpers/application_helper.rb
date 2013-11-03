@@ -58,6 +58,11 @@ module ApplicationHelper
     end
   end
 
+  def markdown(source)
+    renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true)
+    renderer.render(source).html_safe
+  end
+
   def flash_js(key, message)
     "jQuery('.flash_messages').html('#{escape_javascript(render('layouts/flash_message', :message => message, :alert_class => alert_class(key)))}');".html_safe
   end

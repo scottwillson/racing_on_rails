@@ -64,7 +64,6 @@ GEM
   remote: https://rubygems.org/
   specs:
     Ascii85 (1.0.2)
-    RedCloth (4.2.9)
     actionmailer (3.2.15)
       actionpack (= 3.2.15)
       mail (~> 2.5.4)
@@ -109,7 +108,6 @@ GEM
     authlogic (3.3.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
-    bluecloth (2.2.0)
     bootstrap-datepicker-rails (1.1.1.8)
       railties (>= 3.0)
     bootstrap-sass (2.3.2.2)
@@ -154,10 +152,6 @@ GEM
       factory_girl (~> 4.2.0)
       railties (>= 3.0.0)
     ffi (1.9.3)
-    formatize (1.0.1)
-      RedCloth (~> 4.2)
-      actionpack (~> 3.0)
-      bluecloth (~> 2.0)
     git (1.2.6)
     hashery (2.1.1)
     highline (1.6.20)
@@ -245,6 +239,7 @@ GEM
       rack
     rdoc (3.12.2)
       json (~> 1.4)
+    redcarpet (3.0.0)
     ref (1.0.5)
     ri_cal (0.8.8)
     rmagick (2.13.2)
@@ -322,7 +317,6 @@ DEPENDENCIES
   erubis
   execjs
   factory_girl_rails
-  formatize
   in_place_editing
   jquery-rails
   jquery-ui-rails
@@ -341,6 +335,7 @@ DEPENDENCIES
   rails (>= 3.2.12)
   rake
   raygun4ruby
+  redcarpet
   registration_engine!
   ri_cal
   rmagick
