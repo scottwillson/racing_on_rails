@@ -9,6 +9,7 @@ load "config/db"
 
 require "capistrano-unicorn"
 set :unicorn_rack_env, "production"
+set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
 set :rvm_ruby_string, "1.9.3"
@@ -79,7 +80,7 @@ end
 
 before "deploy:finalize_update", "deploy:symlinks", "deploy:copy_cache", "deploy:local_code", "deploy:registration_engine"
 
-after "deploy:restart", "unicorn:restart"
+after "deploy:restart", "unicorn:duplicate"
 
 # Require last to ensure app callbacks are first
 require 'bundler/capistrano'
