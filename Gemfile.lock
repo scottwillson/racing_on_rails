@@ -40,7 +40,7 @@ GIT
 
 GIT
   remote: git://github.com/scottwillson/vestal_versions.git
-  revision: 7c652c693f6412b037443c6942bc0c9fc4e91ecc
+  revision: 09869a2c7530d1a1eee31866a27bd50771c23027
   branch: rails_3_2
   specs:
     vestal_versions (1.3.1)
@@ -108,7 +108,7 @@ GEM
     authlogic (3.3.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
-    bootstrap-datepicker-rails (1.1.1.8)
+    bootstrap-datepicker-rails (1.1.1.9)
       railties (>= 3.0)
     bootstrap-sass (2.3.2.2)
       sass (~> 3.2)
@@ -136,9 +136,9 @@ GEM
     chronic (0.9.1)
     ckeditor_rails (4.2.2)
       railties (>= 3.0)
-    coffee-rails (3.2.2)
+    coffee-rails (3.2.1)
       coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
+      railties (~> 3.2.0.beta)
     coffee-script (2.2.0)
       coffee-script-source
       execjs
@@ -146,10 +146,10 @@ GEM
     database_cleaner (1.2.0)
     erubis (2.7.0)
     execjs (2.0.2)
-    factory_girl (4.2.0)
+    factory_girl (4.3.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.2.1)
-      factory_girl (~> 4.2.0)
+    factory_girl_rails (4.3.0)
+      factory_girl (~> 4.3.0)
       railties (>= 3.0.0)
     ffi (1.9.3)
     git (1.2.6)
@@ -282,7 +282,7 @@ GEM
     uglifier (2.3.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    unicorn (4.6.3)
+    unicorn (4.7.0)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
@@ -304,7 +304,7 @@ DEPENDENCIES
   acts_as_tree!
   authlogic
   bootstrap-datepicker-rails
-  bootstrap-sass
+  bootstrap-sass (~> 2.3.2)
   capistrano
   capistrano-unicorn
   capybara
