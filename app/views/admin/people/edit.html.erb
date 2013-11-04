@@ -132,7 +132,7 @@
 
 <div class="row-fluid">
   <div class="span6" id="numbers-span">
-    <%= render 'numbers', :year => @year, :years => @years, :person => @person, :race_numbers => @race_numbers%>
+    <%= render "numbers", :year => @year, :years => @years, :person => @person, :number_issuers => @number_issuers, :disciplines => @disciplines, :f => f %>
   </div>
   <div class="span6">
     <%= render 'categories', :person => @person %>
@@ -165,7 +165,6 @@
   <div class="span12">
     <%= render "people/orders", :person => @person %>
   </div>
-</div>
 </div>
 
 <div class="row-fluid">

@@ -83,14 +83,14 @@ module Admin
   
     def new
       @person = Person.new
-      @race_numbers = []
+      assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
       render :edit
     end
   
     def edit
-      @person = Person.find(params[:id])
-      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      @person = Person.includes(:race_numbers).find(params[:id])
+      assign_race_numbers
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
     end
   
@@ -131,7 +131,7 @@ module Admin
           redirect_to(edit_admin_person_path(@person))
         end
       else
-        @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+        assign_race_numbers
         @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
         render :edit
       end
@@ -149,48 +149,10 @@ module Admin
     # :number_year => year (not array)
     # New blank numbers are ignored
     def update
-      begin
-        expire_cache
-        @person = Person.find(params[:id])
-        @person.update_attributes(params[:person])
-        if params[:number]
-          for number_id in params[:number].keys
-            begin
-              number = RaceNumber.find(number_id)
-              number_params = params[:number][number_id]
-              if number.value != params[:number][number_id][:value]
-                number_params[:updater] = current_person
-                RaceNumber.update(number_id, number_params)
-              end
-            rescue Exception => e
-              logger.warn("#{e} updating RaceNumber #{number_id}")
-            end
-          end
-        end
-    
-        if params[:number_value]
-          params[:number_value].each_with_index do |number_value, index|
-            unless number_value.blank?
-              race_number = @person.race_numbers.create(
-                :discipline_id => params[:discipline_id][index], 
-                :number_issuer_id => params[:number_issuer_id][index], 
-                :year => params[:number_year],
-                :value => number_value,
-                :updater => current_person
-              )
-              unless race_number.errors.empty?
-                @person.errors.add(:base, race_number.errors.full_messages)
-              end
-            end
-          end
-        end
-      rescue ActiveRecord::MultiparameterAssignmentErrors => e
-        e.errors.each do |multi_param_error|
-          @person.errors.add(multi_param_error.attribute)
-        end
-      end
+      expire_cache
+      @person = Person.find(params[:id])
 
-      if @person.errors.empty?
+      if @person.update_attributes(params[:person])
         if @event
           return redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
         else
@@ -198,7 +160,7 @@ module Admin
         end
       end
       @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
-      @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+      assign_race_numbers
       render :edit
     end
   
@@ -319,7 +281,7 @@ module Admin
         expire_cache
       else
         flash[:warn] = "Could not delete #{@person.name}. #{@person.errors.full_messages.join(". ")}"
-        @race_numbers = RaceNumber.all( :conditions => ['person_id=? and year=?', @person.id, @year], :order => 'number_issuer_id, discipline_id')
+        assign_race_numbers
         @years = (2005..(RacingAssociation.current.next_year)).to_a.reverse
         render :edit
       end
@@ -335,10 +297,7 @@ module Admin
     def number_year_changed
       if params[:id]
         @person = Person.find(params[:id])
-        @race_numbers = RaceNumber.all(
-          :conditions => [ 'person_id=? and year=?', @person.id, @year ], 
-          :order => 'number_issuer_id, discipline_id'
-        )
+        assign_race_numbers
       else
         @person = Person.new
         @race_numbers = []
@@ -402,6 +361,14 @@ module Admin
       end
     end
   
+    def assign_race_numbers
+      @disciplines = Discipline.numbers
+      @number_issuers = NumberIssuer.all
+      if @person.race_numbers.none?(&:new_record?)
+        @person.race_numbers.build
+      end
+    end
+
     def assign_years
       date = current_date
       if date.month == 12

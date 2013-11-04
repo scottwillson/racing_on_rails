@@ -8,14 +8,6 @@ module Admin
       create_administrator_session
       use_ssl
     end
-  
-    def test_new
-      FactoryGirl.create(:number_issuer)
-      FactoryGirl.create(:discipline)
-      person = FactoryGirl.create(:person)
-      xhr :get, :new, :person_id => person.to_param
-      assert_response :success
-    end
 
     def test_destroy
       race_number = FactoryGirl.create(:race_number)
@@ -24,7 +16,7 @@ module Admin
       xhr :delete, :destroy, :id => race_number.to_param
       assert_response :success
     
-      assert_raise(ActiveRecord::RecordNotFound, "Should delete RaceNumber") {RaceNumber.find(race_number.id)}
+      assert !RaceNumber.exists?(race_number.id)
     end
   end
 end

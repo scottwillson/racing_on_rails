@@ -632,6 +632,12 @@ table.people div.aliases {
   background-color: lighten($highlight-color, 33);
 }
 
+table.numbers.form-inline {
+  input, select {
+    width: auto;
+  }
+}
+
 /* Versions */
 .version .what,
 .version .from,

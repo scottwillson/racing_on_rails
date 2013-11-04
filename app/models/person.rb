@@ -51,6 +51,9 @@ class Person < ActiveRecord::Base
   has_many :sent_editor_requests, :foreign_key => "editor_id", :class_name => "EditorRequest", :dependent => :destroy
   belongs_to :team
   
+  accepts_nested_attributes_for :race_numbers, 
+    :reject_if => proc { |attributes| !attributes.has_key?(:value) || attributes[:value].blank? }
+    
   attr_accessor :year
   
   CATEGORY_FIELDS = [ :bmx_category, :ccx_category, :dh_category, :mtb_category, :road_category, :track_category ]

@@ -1,60 +1,65 @@
 <h3>Numbers</h3>
-<%= table :class => "numbers form-linline",
-         :id => "numbers",
-         :columns => 3 do %>
-  <tr>
-    <td class="number_year span6">
-      <select name='number_year' data-person-id="<%= person.id %>" class="input-small" id='number_year'>
-        <%= options_for_select years, year %>
-      </select>
-    </td>
-    <td colspan="2"></td>
-  </tr>
-  <% if RacingAssociation.current.show_license? %>
-  <tr>
-    <td class="number_issuer span6"><%= RacingAssociation.current.short_name %> Membership</td>
-    <td class="number span5"><%= text_field :person, :license, :class => "input-small" %></td>
-    <td class="span1"></td>
-  </tr>
-  <% end %>
-  <% race_numbers.each do |number| %>
-  <% @number = number %>
-  <tr id="<%= "number_#{number.id}_row" %>">
-    <td class="number_issuer span6">
-      <%= number.number_issuer.name %> <%= number.discipline.name %>
-    </td>
-    <td class="span5">
-      <%= text_field 'number[]', 'value', :class => "number input-small" %>
-    </td>
-    <td class="actions span1">
-      <%= link_to(
-            "#", 
-            :rel => "tooltip",
-            :title => "Updated #{time_ago_in_words(number.updated_at, true)} ago #{"by #{number.updated_by_name}"}", 
-            :class => "icon"
-          ) do %><i class="icon-info-sign"></i><% end %>
-      <%= link_to(
-            admin_person_race_number_path(person, number),
+<%= table :class => "numbers form-inline", :id => "numbers", :columns => 3 do %>
+  <tbody>
+    <tr>
+      <td class="number_year" colspan="3">
+        <select name="number_year" data-person-id="<%= person.id %>" class="input-small" id="number_year">
+          <%= options_for_select years, year %>
+        </select>
+      </td>
+    </tr>
+    <% if RacingAssociation.current.show_license? %>
+    <tr>
+      <td class="number_issuer8"><%= RacingAssociation.current.short_name %> Membership</td>
+      <td class="number"><%= text_field :person, :license, :class => "input-small" %></td>
+      <td></td>
+    </tr>
+    <% end %>
+
+    <% person.race_numbers.each do |race_number| %>
+      <% if race_number.new_record? %>
+    <tr class="new_number">
+      <td colspan="2">
+        <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
+          <%= race_number_fields.select :number_issuer_id, number_issuers.sort_by(&:name).map { |i| [ i.name, i.id ]} %>
+          <%= race_number_fields.select :discipline_id, disciplines.sort_by(&:name).map { |d| [ d.name, d.id ]} %>
+          <%= race_number_fields.hidden_field :year, :id => "new_number_year" %>
+          <%= race_number_fields.text_field :value, :class => "number input-small" %>
+        <% end %>
+      </td>
+      <td class="actions"></td>
+    </tr>
+    <% else %>
+    <%= content_tag :tr, 
+                    :class => "number year-#{race_number.year}", 
+                    :id => "number_#{race_number.id}_row", 
+                    :style => race_number.year == year ? "" : "display: none" do %>
+      <td class="number_issuer">
+        <%= race_number.number_issuer.name %>
+        <%= race_number.discipline.name %>
+      </td>
+      <td>
+        <%= f.fields_for :race_numbers, race_number do |race_number_fields| %>
+          <%= race_number_fields.text_field :value, :class => "number input-small" %>
+        <% end %>
+      </td>
+      <td class="actions">
+        <%= link_to(
+              "#", 
+              :rel => "tooltip",
+              :title => "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_name}"}", 
+              :class => "icon"
+            ) do %><i class="icon-info-sign"></i><% end %>
+        <%= link_to(
+          admin_person_race_number_path(person, race_number),
             :remote => true,
             :method => :delete,
-            :id => "destroy_number_#{number.id}", 
+            :id => "destroy_number_#{race_number.id}", 
             :class => "icon"
-      ) do %><i class="icon-minus-sign"></i><% end %>
-    </td>
-  </tr>
-  <% end %>
-  <% if @person.new_record? %>
-    <%= render :partial => "/admin/race_numbers/new" %>
-  <% else %>
-  <tr id="new_number_button_row">
-    <td colspan="2"></td>
-    <td class="actions span1">
-      <%= link_to(
-            new_admin_person_race_number_path(person),
-            :remote => true,
-            :title => "Add new number",
-            :class => "icon") do %><i class="icon-plus-sign"></i><% end %>
-    </td>
-  </tr>
-  <% end %>
+          ) do %><i class="icon-minus-sign"></i><% end %>
+      </td>
+      <% end %>
+    <% end %>
+  <% end -%>
+  </tbody>
 <% end -%>
