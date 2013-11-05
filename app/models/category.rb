@@ -10,6 +10,7 @@ class Category < ActiveRecord::Base
   include Ages
   include Comparable
   include Concerns::Category::FriendlyParam
+  include Concerns::TreeExtensions
   include Concerns::TreeValidation
   include Export::Categories
 
@@ -43,15 +44,6 @@ class Category < ActiveRecord::Base
   # Sr, Mst, Jr, Cat, Beg, Exp
   def short_name
     Category.short_name name
-  end
-  
-  # All children and children childrens
-  def descendants
-    _descendants = children(true)
-    children.each do |child|
-      _descendants = _descendants + child.descendants
-    end
-    _descendants
   end
 
   # Compare by position, then by name

@@ -4,6 +4,7 @@
 # do things like <% Person.destroy_all %>!
 class Page < ActiveRecord::Base
   include Concerns::Page::Paths
+  include Concerns::TreeExtensions
   include Concerns::TreeValidation
   include Concerns::Versioned
   include SentientUser

@@ -124,6 +124,7 @@ class Event < ActiveRecord::Base
   include Concerns::Event::Comparison
   include Concerns::Event::Dates
   include Concerns::Event::Names
+  include Concerns::TreeExtensions
   include Concerns::Versioned
   include Export::Events
   
@@ -567,27 +568,6 @@ class Event < ActiveRecord::Base
 
   def missing_parent
     nil
-  end
-  
-  def root
-    node = self
-    node = node.parent while node.parent
-    node
-  end
-
-  def ancestors
-    node, nodes = self, []
-    nodes << node = node.parent while node.parent
-    nodes
-  end
-
-  # All children and children childrens
-  def descendants
-    _descendants = children(true)
-    children.each do |child|
-      _descendants = _descendants + child.descendants
-    end
-    _descendants
   end
 
   def parent_is_not_self
