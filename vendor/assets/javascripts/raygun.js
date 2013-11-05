@@ -1,4 +1,4 @@
-/*! Raygun4js - v1.3.0 - 2013-05-01
+/*! Raygun4js - v1.3.0 - 2013-11-01
 * https://github.com/MindscapeHQ/raygun4js
 * Copyright (c) 2013 MindscapeHQ; Licensed MIT */
 ;(function(window, undefined) {
@@ -1175,6 +1175,8 @@ window.TraceKit = TraceKit;
       _raygunApiKey,
       _debugMode = false,
       _customData = {},
+      _user,
+      _version,
       $document;
 
   if ($) {
@@ -1230,13 +1232,23 @@ window.TraceKit = TraceKit;
 
     send: function (ex, customData) {
       try {
-        _traceKit.report(ex, merge(_customData, customData));
+        processUnhandledException(_traceKit.computeStackTrace(ex), merge(_customData, customData));        
       }
       catch (traceKitException) {
         if (ex !== traceKitException) {
           throw traceKitException;
         }
       }
+      return Raygun;
+    },
+
+    setUser: function (user) {
+      _user = { 'Identifier': user };
+      return Raygun;
+    },
+
+    setVersion: function (version) {
+      _version = version;
       return Raygun;
     }
   };
@@ -1318,7 +1330,7 @@ window.TraceKit = TraceKit;
           qs[decodeURIComponent(parts[0])] = parts[1];
         }
       });
-    }
+    }    
 
     if (isEmpty(options)) {
       options = _customData;
@@ -1326,7 +1338,7 @@ window.TraceKit = TraceKit;
 
     var screen = window.screen || { width: getViewPort().width, height: getViewPort().height, colorDepth: 8 };
 
-    sendToRaygun({
+    var payload = {
       'OccurredOn': new Date(),
       'Details': {
         'Error': {
@@ -1361,9 +1373,15 @@ window.TraceKit = TraceKit;
             'Referer': document.referrer,
             'Host': document.domain
           }
-        }
+        },
+        'Version': _version || 'Not supplied'        
       }
-    });
+    };
+
+    if (_user) {
+      payload.Details.User = _user;
+    }
+    sendToRaygun(payload);
   }
 
   function sendToRaygun(data) {
