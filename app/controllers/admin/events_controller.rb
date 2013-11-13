@@ -47,7 +47,7 @@ module Admin
     
       respond_to do |format|
         format.html { render :action => :edit }
-        format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => params[:event]) } }
+        format.js { render(:update) { |page| page.redirect_to(:action => :new, :event => event_params) } }
       end
     end
   
@@ -91,35 +91,21 @@ module Admin
     # === Flash
     # * warn
     def update
-      # TODO consolidate code
-      event_params = params[:event].clone
-      event_type = event_params.delete(:type)
-    
-      @event = Event.update(params[:id], event_params)
-    
-      if event_type == ""
-        event_type = "Event"
+      @event = Event.find(params[:id])
+      
+      event_type = params[:event].try(:[], :type)
+      if event_type && Event::TYPES.include?(event_type) && @event.type != event_type
+        # Rails 3 and strong parameters don't play nice here
+        @event.update_column :type, event_type
+        @event = Event.find(params[:id])
       end
-      if !event_type.blank? && event_type != @event.type
-        raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
-        if event_type == 'SingleDayEvent' && @event.is_a?(MultiDayEvent)
-          @event.children.each do |child|
-            child.parent = nil
-            child.save!
-          end
-        end
-        if @event.save
-          Event.connection.execute("update events set type = '#{event_type}' where id = #{@event.id}")
-          @event = Event.find(@event.id)
-        end
-      end
-    
-      if @event.errors.empty?
-        expire_cache
+
+      if @event.update_attributes(event_params)
         flash[:notice] = "Updated #{@event.name}"
-        redirect_to(edit_admin_event_path(@event))
+        expire_cache
+        redirect_to edit_admin_event_path(@event)
       else
-        render(:action => :edit)
+        render :edit
       end
     end
 
@@ -283,31 +269,94 @@ module Admin
     end
   
     def assign_new_event
-      if params[:event] && params[:event][:type].present?
-        event_type = params[:event][:type]
-      elsif params[:event] && params[:event][:parent_id].present?
-        event_type = "Event"
-      else
-        event_type = "SingleDayEvent"
+      if params[:event].nil?
+        @event = SingleDayEvent.new
+        return true
       end
-      raise "Unknown event type: #{event_type}" unless ['Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries'].include?(event_type)
       
-      if params[:year].blank?
-        date = RacingAssociation.current.effective_today
-      else
-        year = params[:year]
-        date = Time.zone.local(year.to_i).to_date
+      _params = event_params.dup
+      event_type = params[:event][:type]
+      if event_type.blank?
+        if  _params[:parent_id].present?
+          event_type = "Event"
+        else
+          event_type = "SingleDayEvent"
+        end
       end
-      params[:event] = params[:event] || {}
-      if params[:event][:date].blank? && params[:event][:human_date].blank?
-        params[:event][:date] = date
+      
+      unless Event::TYPES.include?(event_type)
+        raise "Unknown event type: #{event_type}"
       end
-
-      @event = eval(event_type).new(params[:event])
+      
+      @event = eval(event_type).new(_params)
     end
 
     def assign_current_admin_tab
       @current_admin_tab = "Schedule"
+    end
+
+
+    private
+
+    def event_params
+      _params = params.require(:event).permit(
+        :additional_race_price,
+        :all_events_discount,
+        :atra_points_series,
+        :auto_combined_results,
+        :bar_points,
+        :beginner_friendly,
+        :cancelled,
+        :chief_referee,
+        :city,
+        :created_at,
+        :custom_suggestion,
+        :date,
+        :discipline,
+        :email,
+        :end_date,
+        :field_limit,
+        :first_aid_provider,
+        :flyer,
+        :flyer_ad_fee,
+        :flyer_approved,
+        :human_date,
+        :instructional,
+        :ironman,
+        :membership_required,
+        :name,
+        :notes,
+        :number_issuer_id,
+        :override_registration_ends_at,
+        :parent_id,
+        :phone,
+        :postponed,
+        :post_event_fees,
+        :practice,
+        :pre_event_fees,
+        :price,
+        :prize_list,
+        :promoter_id,
+        :promoter_name, 
+        :promoter_pays_registration_fee,
+        :refunds,
+        :refund_policy,
+        :region_id,
+        :registration,
+        :registration_ends_at,
+        :registration_link,
+        :sanctioned_by,
+        :sanctioning_org_event_id,
+        :state,
+        :team_id,
+        :team_name,
+        :time,
+        :type,
+        :velodrome_id,
+        :website
+      )
+      _params.delete(:type)
+      _params
     end
   end
 end

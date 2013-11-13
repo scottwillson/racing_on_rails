@@ -39,4 +39,7 @@ RacingOnRails::Application.configure do
 
   # For fastness. Change locally if you need debug logging to catch a problem.
   config.log_level = ENV["LOG_LEVEL"] || :warn
+  
+  config.mass_assignment_sanitizer = :strict
+  config.action_controller.action_on_unpermitted_parameters = :raise
 end

@@ -107,7 +107,7 @@ module Admin
     # New blank numbers are ignored
     def create
       expire_cache
-      @person = Person.create(params[:person])
+      @person = Person.create(person_params)
     
       if params[:number_value]
         params[:number_value].each_with_index do |number_value, index|
@@ -152,7 +152,7 @@ module Admin
       expire_cache
       @person = Person.find(params[:id])
 
-      if @person.update_attributes(params[:person])
+      if @person.update_attributes(person_params)
         if @event
           return redirect_to(edit_admin_person_path(@person, :event_id => @event.id))
         else
@@ -404,6 +404,71 @@ module Admin
   
     def assign_current_admin_tab
       @current_admin_tab = "People"
+    end
+    
+    
+    private
+
+    def person_params
+      params.require(:person).permit(
+        :billing_city,
+        :billing_country_code,
+        :billing_first_name,
+        :billing_last_name,
+        :billing_state,
+        :billing_street,
+        :billing_zip,
+        :bmx_category,
+        :ccx_category,
+        :ccx_only,
+        :cell_fax,
+        :city,
+        :club_name,
+        :country_code,
+        :date_of_birth,
+        :dh_category,
+        :email,
+        :emergency_contact,
+        :emergency_contact_phone,
+        :first_name,
+        :gender,
+        :home_phone,
+        :last_name,
+        :license,
+        :license_expiration_date,
+        :license_type,
+        :login,
+        :member,
+        :membership_address_is_billing_address,
+        :membership_card,
+        :member_from,
+        :member_to,
+        :member_usac_to,
+        :mtb_category,
+        :ncca_club_name,
+        :notes,
+        :occupation,
+        :official,
+        :official_interest,
+        :password,
+        :password_confirmation,
+        :print_card,
+        :race_promotion_interest,
+        :road_category,
+        :state,
+        :status,
+        :street,
+        :team_id,
+        :team_interest,
+        :team_name,
+        :track_category,
+        :volunteer_interest,
+        :wants_email,
+        :wants_mail,
+        :work_phone,
+        :zip,
+        :race_numbers_attributes => [ :discipline_id, :id, :number_issuer_id, :value, :year ]
+      )
     end
   end
 end

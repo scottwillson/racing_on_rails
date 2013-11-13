@@ -32,6 +32,8 @@
 #
 # All notification code just supports combined TT results, and should be moved to background processing
 class Event < ActiveRecord::Base
+  TYPES =  [ 'Event', 'SingleDayEvent', 'MultiDayEvent', 'Series', 'WeeklySeries' ]
+
   before_destroy :validate_no_results
   before_save :set_promoter, :set_team
   after_initialize :set_defaults

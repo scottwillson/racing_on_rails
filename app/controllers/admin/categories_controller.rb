@@ -15,7 +15,7 @@ module Admin
     
     def update
       @category = Category.find(params[:id])
-      @category.update_attributes(params[:category])
+      @category.update_attributes(category_params)
       # parent_id could be nil, so can't use @category.children
       if @category.parent_id
         @children = @category.parent.children
@@ -34,6 +34,13 @@ module Admin
     def recompute_team_bar
       MbraTeamBar.calculate!
       redirect_to :action => :index
+    end
+
+
+    private
+
+    def category_params
+      params.require(:category).permit(:parent_id, :position)
     end
   end
 end

@@ -5,7 +5,7 @@
 
 <div class="row-fluid control-group">
   <div class="span12">
-    <%= link_to 'New Event', {:controller => 'events', :action => 'new', :year =>  @year}, {:class => "btn btn-primary", :id => "new_event"} %>
+    <%= link_to 'New Event', new_admin_event_path(:event => { :date => Time.zone.local(@year).to_date.to_s(:db) }), {:class => "btn btn-primary", :id => "new_event"} %>
   </div>
 </div>
 

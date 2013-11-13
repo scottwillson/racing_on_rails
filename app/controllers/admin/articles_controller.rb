@@ -31,7 +31,7 @@ module Admin
     end
 
     def create
-      @article = Article.new(params[:article])
+      @article = Article.new(article_params)
 
       if @article.save
         expire_cache
@@ -45,7 +45,7 @@ module Admin
     def update
       @article = Article.find(params[:id])
 
-      if @article.update_attributes(params[:article])
+      if @article.update_attributes(article_params)
         expire_cache
         flash[:notice] = 'Article was successfully updated.'
         redirect_to admin_articles_url
@@ -65,6 +65,13 @@ module Admin
 
     def assign_current_admin_tab
       @current_admin_tab = "Articles"
+    end
+
+
+    private
+
+    def article_params
+      params.require(:article).permit(:body, :position, :title)
     end
   end
 end

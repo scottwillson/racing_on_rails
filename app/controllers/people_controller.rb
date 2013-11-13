@@ -32,7 +32,7 @@ class PeopleController < ApplicationController
   end
   
   def update
-    if @person.update_attributes(params[:person])
+    if @person.update_attributes(person_params)
       flash[:notice] = "Updated #{@person.name}"
       redirect_to edit_person_path(@person)
     else
@@ -84,7 +84,7 @@ class PeopleController < ApplicationController
         return redirect_to(login_path)
       end
       
-      if @person.update_attributes(params[:person])
+      if @person.update_attributes(person_params)
         @person.reset_perishable_token!
         flash[:notice] = "Created your new login"
         PersonMailer.new_login_confirmation(@person).deliver rescue nil
@@ -94,54 +94,54 @@ class PeopleController < ApplicationController
       end
     end
     
-    license = params[:person][:license].try(:strip)
-    if license.present? && params[:person][:name].blank?
-      @person = Person.new(params[:person])
+    license = person_params[:license].try(:strip)
+    if license.present? && person_params[:name].blank?
+      @person = Person.new(person_params)
       @person.errors.add :name, "can't be blank if license is present"
       return render(:new_login)
     end
     
     if license.present?
-      @person = Person.find_all_by_name_like(params[:person][:name]).detect do |person|
+      @person = Person.find_all_by_name_like(person_params[:name]).detect do |person|
         person.license == license ||
         person.race_numbers.any? { |num| num.value == license && (num.year == RacingAssociation.current.effective_year || num.year == RacingAssociation.current.effective_year - 1) }
       end
 
       if @person && @person.login.present?
         flash.now[:warn] = "Sorry, there's already a login for number ##{license}. <a href=\"/password_resets/new\" class=\"obvious\">Forgot your password?</a>"
-        @person = Person.new(params[:person])
+        @person = Person.new(person_params)
         return render(:new_login)
       end
       
       if @person.nil?
-        @person = Person.new(params[:person])
+        @person = Person.new(person_params)
         @person.errors.add :base, "Didn't match your name and number. Please check your #{RacingAssociation.current.short_name} membership card."
       end
     end
     @person = Person.new if @person.nil?
-    @person.attributes = params[:person]
+    @person.attributes = person_params
     
-    if params[:person][:password].blank?
+    if person_params[:password].blank?
       @person.errors.add :password, "can't be blank"
     end
     
-    if params[:person][:email].blank?
+    if person_params[:email].blank?
       @person.errors.add :email, "can't be blank"
     end
     
-    if params[:person][:email].blank? || !params[:person][:email][Authlogic::Regex.email]
+    if person_params[:email].blank? || !person_params[:email][Authlogic::Regex.email]
       @person.errors.add :email, "must been email address"
     end
     
-    if params[:person][:login].blank?
+    if person_params[:login].blank?
       @person.errors.add :login, "can't be blank"
     end
     
-    if params[:person][:license].present? && params[:person][:license].strip[/\D+/]
+    if person_params[:license].present? && person_params[:license].strip[/\D+/]
       @person.errors.add :license, "should only be numbers"
     end
     
-    if params[:person][:name].present? && params[:person][:name].strip[/^\d+$/]
+    if person_params[:name].present? && person_params[:name].strip[/^\d+$/]
       @person.errors.add :name, "is a number. Did you accidently type your license in the name field?"
     end
 
@@ -149,7 +149,7 @@ class PeopleController < ApplicationController
       return render(:new_login)
     end
     
-    if @person.update_attributes(params[:person])
+    if @person.update_attributes(person_params)
       flash[:notice] = "Created your new login"
       PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
@@ -174,5 +174,62 @@ class PeopleController < ApplicationController
     else
       @people = []
     end
+  end
+
+  def person_params
+    params.require(:person).permit(
+      :billing_city,
+      :billing_country_code,
+      :billing_first_name,
+      :billing_last_name,
+      :billing_state,
+      :billing_street,
+      :billing_zip,
+      :bmx_category,
+      :ccx_category,
+      :ccx_only,
+      :cell_fax,
+      :city,
+      :club_name,
+      :country_code,
+      :date_of_birth,
+      :dh_category,
+      :email,
+      :emergency_contact,
+      :emergency_contact_phone,
+      :first_name,
+      :gender,
+      :home_phone,
+      :last_name,
+      :license,
+      :login,
+      :membership_address_is_billing_address,
+      :membership_card,
+      :member_from,
+      :member_to,
+      :member_usac_to,
+      :mtb_category,
+      :name,
+      :ncca_club_name,
+      :notes,
+      :occupation,
+      :official,
+      :official_interest,
+      :password,
+      :password_confirmation,
+      :race_promotion_interest,
+      :road_category,
+      :state,
+      :street,
+      :team_id,
+      :team_interest,
+      :team_name,
+      :track_category,
+      :volunteer_interest,
+      :wants_email,
+      :wants_mail,
+      :work_phone,
+      :zip
+    )
   end
 end

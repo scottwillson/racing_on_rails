@@ -42,7 +42,6 @@ module Admin
       )
       silverton = SingleDayEvent.find_by_name('Silverton')
       assert_not_nil(silverton, 'Silverton should be in database')
-      assert(!silverton.new_record?, "Silverton should be saved")
       assert_nil(silverton.promoter, "Silverton Promoter")
       assert_redirected_to edit_admin_event_path(assigns(:event))
     end

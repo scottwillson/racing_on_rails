@@ -19,7 +19,7 @@ module Admin
     end
 
     def create
-      @article_category = ArticleCategory.new(params[:article_category])
+      @article_category = ArticleCategory.new(article_category_params)
 
       if @article_category.save
         flash[:notice] = 'ArticleCategory was successfully created.'
@@ -32,7 +32,7 @@ module Admin
     def update
       @article_category = ArticleCategory.find(params[:id])
 
-      if @article_category.update_attributes(params[:article_category])
+      if @article_category.update_attributes(article_category_params)
         flash[:notice] = 'ArticleCategory was successfully updated.'
         redirect_to(admin_article_categories_url)
       else
@@ -51,6 +51,13 @@ module Admin
 
     def assign_current_admin_tab
       @current_admin_tab = "Article Categories"
+    end
+
+
+    private
+
+    def article_category_params
+      params.require(:article_category).permit(:description, :name, :parent_id, :position)
     end
   end
 end

@@ -42,7 +42,7 @@ module Admin
     # === Flash
     # * warn
     def update
-      if @race.update_attributes(params[:race])
+      if @race.update_attributes(race_params)
         expire_cache
         flash[:notice] = "Updated #{@race.name}"
         return redirect_to(edit_admin_race_path(@race))
@@ -85,7 +85,7 @@ module Admin
       if params[:event_id].present?
         @event = Event.find params[:event_id]
       elsif params[:race]
-        @event = Event.find params[:race][:event_id]
+        @event = Event.find race_params[:event_id]
       end
     end
   
@@ -93,9 +93,32 @@ module Admin
       if params[:id].present?
         @race = Race.find(params[:id])
         @event = @race.event unless @event
+      elsif params[:race]
+        @race = @event.races.build race_params
       else
-        @race = @event.races.build params[:race]
+        @race = @event.races.build
       end
+    end
+
+    def race_params
+      params.require(:race).permit(
+        :bar_points,
+        :category_id,
+        :category_name,
+        :city,
+        :custom_price,
+        :distance,
+        :event_id,
+        :field_limit,
+        :field_size,
+        :finishers,
+        :full,
+        :laps,
+        :notes,
+        :sanctioned_by,
+        :state,
+        :time
+      )
     end
   end
 end

@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/RubyMoney/money.git
-  revision: 5bb8cc6b1cdd35538e64a6c48073b5d41b092a27
+  revision: e42d8de9ccc04793a2d8b2ef205f5ab43d154716
   specs:
-    money (6.0.0.pre5)
+    money (6.0.0)
       i18n (~> 0.6.4)
 
 GIT
@@ -80,14 +80,14 @@ GEM
     active_utils (2.0.1)
       activesupport (>= 2.3.11)
       i18n
-    activemerchant (1.41.0)
-      active_utils (~> 2.0, >= 2.0.1)
-      activesupport (>= 2.3.14, < 5.0.0)
-      builder (>= 2.1.2, < 4.0.0)
-      i18n (~> 0.5)
-      json (~> 1.7)
-      money (< 6.0.0)
-      nokogiri (~> 1.4)
+    activemerchant (1.34.0)
+      active_utils (>= 1.0.2)
+      activesupport (>= 2.3.14)
+      builder (>= 2.0.0)
+      i18n
+      json (>= 1.5.1)
+      money
+      nokogiri
     activemodel (3.2.15)
       activesupport (= 3.2.15)
       builder (~> 3.0.0)
@@ -188,7 +188,7 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.8.2)
     multi_xml (0.5.5)
-    mysql2 (0.3.13)
+    mysql2 (0.3.14)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -196,10 +196,10 @@ GEM
     net-ssh (2.7.0)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.6.8.168)
+    newrelic_rpm (3.6.9.171)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
-    oj (2.1.7)
+    oj (2.2.0)
     pdf-reader (1.3.3)
       Ascii85 (~> 1.0.0)
       afm (~> 0.2.0)
@@ -262,6 +262,10 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    strong_parameters (0.2.1)
+      actionpack (~> 3.0)
+      activemodel (~> 3.0)
+      railties (~> 3.0)
     syslog-logger (1.6.8)
     tabular (0.2.4)
       jeweler
@@ -279,7 +283,7 @@ GEM
     truncate_html (0.9.2)
     ttfunk (1.0.3)
     tzinfo (0.3.38)
-    uglifier (2.3.0)
+    uglifier (2.3.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicorn (4.7.0)
@@ -344,6 +348,7 @@ DEPENDENCIES
   sass-rails (~> 3.2)
   selenium-webdriver
   spreadsheet!
+  strong_parameters
   syslog-logger
   tabular (>= 0.2.4)
   therubyracer

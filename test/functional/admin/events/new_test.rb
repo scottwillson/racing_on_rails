@@ -13,7 +13,7 @@ module Admin
       end
 
       def test_new_single_day_event
-        get(:new, :year => '2008')
+        get(:new, :event => { :date => '2008-01-01' })
         assert_response(:success)
         assert_template('admin/events/edit')
         assert_not_nil(assigns["event"], "Should assign event")

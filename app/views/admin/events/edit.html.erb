@@ -30,7 +30,7 @@
           ) %>
           <% end -%>
           <% if @event.type_modifiable? %>
-          <%= f.labelled_select(:type, [['Event', nil],
+          <%= f.labelled_select(:type, [['Event', 'Event'],
                                ['Single Day Event', 'SingleDayEvent'],
                                ['Multi Day Event', 'MultiDayEvent'], 
                                ['Series', 'Series'], 

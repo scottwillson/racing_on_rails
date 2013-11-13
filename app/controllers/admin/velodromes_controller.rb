@@ -12,7 +12,7 @@ module Admin
   
     def create
       expire_cache
-      @velodrome = Velodrome.create(params[:velodrome])
+      @velodrome = Velodrome.create(velodrome_params)
     
       if @velodrome.errors.empty?
         flash[:notice] = "Created #{@velodrome.name}"
@@ -29,7 +29,7 @@ module Admin
       expire_cache
       @velodrome = Velodrome.find(params[:id])
     
-      if @velodrome.update_attributes(params[:velodrome])
+      if @velodrome.update_attributes(velodrome_params)
         flash[:notice] = "Updated #{@velodrome.name}"
         return redirect_to(edit_admin_velodrome_path(@velodrome))
       end
@@ -60,6 +60,13 @@ module Admin
 
     def assign_current_admin_tab
       @current_admin_tab = "Velodromes"
+    end
+
+
+    private
+
+    def velodrome_params
+      params.require(:velodrome).permit(:name, :website)
     end
   end
 end

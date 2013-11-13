@@ -69,8 +69,8 @@ module Admin
                           "date_of_birth(2i)"=>"", "date_of_birth(1i)"=>"", "date_of_birth(3i)"=>"", 
                           "work_phone"=>"", "occupation"=>"", "city"=>"Brussels", "cell_fax"=>"", "zip"=>"", 
                           "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
-                          "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
-                          "dh_number"=>"", "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", 
+                          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
+                          "first_name"=>"Jon", "last_name"=>"Knowlson", 
                           "email"=>"", "state"=>"",
                           "race_numbers_attributes"=>{
                             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2013", "value"=>""}
@@ -101,7 +101,6 @@ module Admin
                        "number_year" => year,
                        "number_issuer_id"=>[@association.to_param], "number_value"=>["AZY"], 
                        "discipline_id" => [@mountain_bike.id.to_s],
-                       "number"=>{molly_road_number.to_param =>{"value"=>"202"}},
                        "person"=>{
                          "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
                          "cell_fax"=>"", "zip"=>"97070", 
@@ -141,7 +140,7 @@ module Admin
           "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
           "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
           "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
-          "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "first_name"=>"Jon",
+          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "first_name"=>"Jon",
            "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
           "race_numbers_attributes"=>{
             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2007", "value"=>"8977"},
@@ -186,8 +185,8 @@ module Admin
           "member_from(1i)"=>"2004", "member_from(2i)"=>"2", "member_from(3i)"=>"16", 
           "member_to(1i)"=>"2004", "member_to(2i)"=>"12", "member_to(3i)"=>"31", 
           "date_of_birth(3i)"=>"", "mtb_category"=>"", "dh_category"=>"", "member"=>"1", "gender"=>"", "ccx_category"=>"", 
-          "team_name"=>"", "road_category"=>"", "xc_number"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", "dh_number"=>"", 
-          "road_number"=>"", "first_name"=>"Jon", "ccx_number"=>"", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
+          "team_name"=>"", "road_category"=>"", "street"=>"", "track_category"=>"", "home_phone"=>"", 
+          "first_name"=>"Jon", "last_name"=>"Knowlson", "date_of_birth(1i)"=>"", "email"=>"", "state"=>"",
           "race_numbers_attributes"=>{
             "0"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"104"},
             "1"=>{"number_issuer_id"=>@association.id, "discipline_id"=>@road.id, "year"=>"2004", "value"=>"BBB9"}
@@ -227,8 +226,8 @@ module Admin
                        "print_card" => "1", "work_phone"=>"", "date_of_birth(2i)"=>"1", "occupation"=>"engineer", "city"=>"Wilsonville", 
                        "cell_fax"=>"", "zip"=>"97070", "date_of_birth(3i)"=>"1", "mtb_category"=>"Spt", "dh_category"=>"", 
                        "member"=>"1", "gender"=>"M", "notes"=>"rm", "ccx_category"=>"", "team_name"=>"", "road_category"=>"5", 
-                       "xc_number"=>"1061", "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
-                       "dh_number"=>"917", "road_number"=>"4051", "first_name"=>"Paul", "ccx_number"=>"112", "last_name"=>"Formiller", 
+                       "street"=>"31153 SW Willamette Hwy W", "track_category"=>"", "home_phone"=>"503-582-8823", 
+                       "first_name"=>"Paul", "last_name"=>"Formiller", 
                        "date_of_birth(1i)"=>"1969", "email"=>"paul.formiller@verizon.net", "state"=>"OR", "ccx_only" => "1",
                        "official" => "1",
                        "race_numbers_attributes" => {
@@ -364,7 +363,7 @@ module Admin
        jack_frost = FactoryGirl.create(:event)
 
       put(:update, :id => promoter.id, 
-        "person" => {"name" => "Fred Whatley", "home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
+        "person" => {"home_phone" => "(510) 410-2201", "email" => "fred@whatley.net"}, 
         "commit" => "Save",
         "event_id" => jack_frost.id)
     

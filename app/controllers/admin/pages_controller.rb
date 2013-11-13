@@ -8,7 +8,11 @@ module Admin
     end
   
     def new
-      @page = Page.new(params[:page])
+      if params[:page]
+        @page = Page.new(page_params)
+      else
+        @page = Page.new
+      end
       render :edit
     end
   
@@ -30,7 +34,7 @@ module Admin
   
     def update
       @page = Page.find(params[:id])
-      if @page.update_attributes(params[:page])
+      if @page.update_attributes(page_params)
         flash[:notice] = "Updated #{@page.title}"
         expire_cache
         redirect_to(edit_admin_page_path(@page))
@@ -69,6 +73,13 @@ module Admin
 
     def assign_current_admin_tab
       @current_admin_tab = "Pages"
+    end
+
+
+    private
+
+    def page_params
+      params.require(:page).permit(:body, :parent_id, :path, :slug, :title)
     end
   end
 end

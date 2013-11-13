@@ -34,8 +34,8 @@ module Admin
     end
   
     def create
-      params[:team][:updater] = current_person
-      @team = Team.new(params[:team])
+      team_params[:updater] = current_person
+      @team = Team.new(team_params)
 
       if @team.save
         expire_cache
@@ -49,7 +49,7 @@ module Admin
     def update
       @team = Team.find(params[:id])
 
-      if @team.update_attributes(params[:team])
+      if @team.update_attributes(team_params)
         expire_cache
         redirect_to(edit_admin_team_path(@team))
       else
@@ -107,6 +107,13 @@ module Admin
     
     def assign_current_admin_tab
       @current_admin_tab = "Team"
+    end
+    
+    
+    private
+
+    def team_params
+      params.require(:team).permit(:website, :sponsors, :contact_name, :contact_email, :contact_phone, :member, :name)
     end
   end
 end

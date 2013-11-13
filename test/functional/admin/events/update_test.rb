@@ -176,11 +176,11 @@ module Admin
                          "discipline"=>"Track", "cancelled"=>"1", "state"=>"OR",
                          "promoter_id" => event.promoter.to_param, 
                          'number_issuer_id' => number_issuer.to_param,
-                         'type' => "" }
+                         'type' => "Event" }
           )
           assert_redirected_to edit_admin_event_path(event)
           event = Event.find(event.id)
-          assert_equal Event, event.class, "#{event.name} should be an Event"
+          assert_equal Event, event.class, "#{event.name} should be an Event, but is a #{event.class}"
         end
       end
   
@@ -220,7 +220,7 @@ module Admin
         event = FactoryGirl.create(:stage_race)
         original_attributes = event.attributes.clone
   
-        post(:update, 
+        put(:update, 
              "commit"=>"Save", 
              :id => event.to_param,
              "event"=>{"city"=>event.city, "name"=>"Mt. Hood Series","date"=>event.date.to_date,
@@ -230,7 +230,7 @@ module Admin
         )
         assert_redirected_to edit_admin_event_path(event)
         event = Event.find(event.id)
-        assert(event.is_a?(Series), "Mt Hood should be a Series")
+        assert(event.is_a?(Series), "Mt Hood should be a Series, but is a #{event.class}")
   
         assert_equal("Mt. Hood Series", event.name, 'name')
         assert_equal(original_attributes["date"].to_date, event.date, 'date')

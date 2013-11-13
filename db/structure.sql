@@ -221,7 +221,6 @@ CREATE TABLE `events` (
   `sanctioned_by` varchar(255) DEFAULT NULL,
   `state` varchar(64) DEFAULT NULL,
   `type` varchar(32) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `flyer_approved` tinyint(1) NOT NULL DEFAULT '0',
@@ -1454,6 +1453,8 @@ INSERT INTO schema_migrations (version) VALUES ('20130820170738');
 INSERT INTO schema_migrations (version) VALUES ('20130913164501');
 
 INSERT INTO schema_migrations (version) VALUES ('20131015142703');
+
+INSERT INTO schema_migrations (version) VALUES ('20131113143051');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
