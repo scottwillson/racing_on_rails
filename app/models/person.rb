@@ -134,10 +134,12 @@ class Person < ActiveRecord::Base
     Person.find_by_name(name) || Person.create(:name => name)
   end
 
-  def Person.find_by_number(number)
-    Person.all( 
-               :include => :race_numbers,
-               :conditions => [ 'race_numbers.year in (?) and race_numbers.value = ?', [ RacingAssociation.current.year, RacingAssociation.current.next_year ], number ])
+  def self.find_all_by_number(number)
+    RaceNumber.
+      includes(:person).
+      where(:year => [ RacingAssociation.current.year, RacingAssociation.current.next_year ]).
+      where(:value => number).
+      map(&:person)
   end
 
   def Person.full_name(first_name, last_name)

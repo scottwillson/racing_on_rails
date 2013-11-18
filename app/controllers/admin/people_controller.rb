@@ -39,7 +39,7 @@ module Admin
         @people = []
       else
         @people = Person.find_all_by_name_like(@name, RacingAssociation.current.search_results_limit)
-        @people = @people + Person.find_by_number(@name)
+        @people = @people + Person.find_all_by_number(@name)
         @people = @people.stable_sort_by(:first_name).stable_sort_by(:last_name)
       end
       if @people.size == RacingAssociation.current.search_results_limit
@@ -311,7 +311,7 @@ module Admin
   
     # Membership card stickers/labels
     def cards
-      @people = Person.all( :conditions => ['print_card=?', true], :order => 'last_name, first_name')
+      @people = Person.where(:print_card => true).order("last_name, first_name")
       if @people.empty?
         return redirect_to(no_cards_admin_people_path(:format => "html"))
       else

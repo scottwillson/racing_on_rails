@@ -2,7 +2,7 @@ module Admin
 # Edit categories for articles for homepage. Unrelated to Event Categories.
   class ArticleCategoriesController < Admin::AdminController
     def index
-      @article_categories = ArticleCategory.all( :order => "parent_id, position")
+      @article_categories = ArticleCategory.order("parent_id, position")
     end
 
     def show
@@ -46,6 +46,7 @@ module Admin
 
       redirect_to admin_article_categories_url
     end
+
 
     protected
 

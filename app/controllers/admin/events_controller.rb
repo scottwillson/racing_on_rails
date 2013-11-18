@@ -14,10 +14,8 @@ module Admin
     # * schedule
     # * year
     def index
-      @competitions = Event.all(
-                          :conditions => ["type in (?) and date between ? and ?", Competition::TYPES, "#{@year}-01-01", "#{@year}-12-31"]
-                        )
-      events = SingleDayEvent.all( :conditions => ["date between ? and ?", "#{@year}-01-01", "#{@year}-12-31"])
+      @competitions = Event.where("type in (?)", Competition::TYPES).year(@year)
+      events = SingleDayEvent.year(@year)
       @schedule = Schedule::Schedule.new(@year, events)
     end
 
@@ -40,10 +38,6 @@ module Admin
     # * event: Unsaved SingleDayEvent
     def new
       assign_new_event
-      association_number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name)
-      if association_number_issuer
-        @event.number_issuer_id = association_number_issuer.id
-      end
     
       respond_to do |format|
         format.html { render :action => :edit }

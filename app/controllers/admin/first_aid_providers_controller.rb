@@ -9,20 +9,18 @@ module Admin
     def index
       @past_events = (params[:past_events] == "true") || false
       if @past_events
-        query = SingleDayEvent.current_year
+        @events = SingleDayEvent.current_year
       else
-        query = SingleDayEvent.today_and_future
+        @events = SingleDayEvent.today_and_future
       end
       
-      query = query.where(:practice => false).where(:cancelled => false).where(:postponed => false)
-    
       if params[:sort_by].present?
         @sort_by = params[:sort_by]
       else
         @sort_by = "date"
       end
     
-      @events = query.all
+      @events = @events.where(:practice => false).where(:cancelled => false).where(:postponed => false).all
     
       respond_to do |format|
         format.html

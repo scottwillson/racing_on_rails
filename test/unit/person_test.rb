@@ -691,11 +691,11 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal_dates "1973-05-07", person.date_of_birth, "date_of_birth from 05/07/73"
   end
   
-  def test_find_by_number
+  def test_find_all_by_number
     FactoryGirl.create(:number_issuer)
     FactoryGirl.create(:discipline, :name => "Road")
     person = FactoryGirl.create(:person, :road_number => "340")
-    found_person = Person.find_by_number('340')
+    found_person = Person.find_all_by_number('340')
     assert_equal([person], found_person, 'Should find Matson')
   end
   

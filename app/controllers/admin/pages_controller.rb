@@ -17,9 +17,9 @@ module Admin
     end
   
     def create
-      @page = Page.new(params["page"])
-      @page.save
-      if @page.errors.empty?
+      @page = Page.new(page_params)
+      
+      if @page.save
         flash[:notice] = "Created #{@page.title}"
         expire_cache
         redirect_to(edit_admin_page_path(@page))
