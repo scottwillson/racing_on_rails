@@ -17,6 +17,7 @@
 ._*
 /.idea/
 /local
+bin
 chromedriver.log
 db/*.sqlite3
 db/acceptance_structure.sql
