@@ -55,7 +55,7 @@ end
 
 group :test do
   gem "factory_girl_rails"
-  gem "minitest", "~> 4.0"
+  gem "minitest", "~> 4.7"
   gem "mocha", :require => false
   gem "timecop"
 end

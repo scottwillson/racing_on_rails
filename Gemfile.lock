@@ -316,7 +316,7 @@ DEPENDENCIES
   jquery-ui-rails
   json (>= 1.7.7)
   launchy
-  minitest (~> 4.0)
+  minitest (~> 4.7)
   mocha
   money
   mysql2
