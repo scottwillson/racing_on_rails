@@ -358,13 +358,11 @@ class Event < ActiveRecord::Base
       attribute = change.first
       was = change.last.first
       if was.blank?
-        SingleDayEvent.update_all(
-          ["#{attribute}=?", self[attribute]], 
-          ["(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, 
-          self[:id]]
-        )
+        SingleDayEvent.where(
+          "(#{attribute}=? or #{attribute} is null or #{attribute} = '') and parent_id=?", was, self[:id]
+        ).update_all(attribute => self[attribute])
       else
-        SingleDayEvent.update_all ["#{attribute}=?", self[attribute]], ["#{attribute}=? and parent_id=?", was, self[:id]]
+        SingleDayEvent.where(attribute => was, :parent_id => id).update_all(attribute => self[attribute])
       end
     end
     
@@ -379,7 +377,7 @@ class Event < ActiveRecord::Base
 
   def children_changed(child)
     # Don't trigger callbacks
-    Event.update_all ["updated_at = ?", Time.zone.now], ["id = ?", id]
+    Event.where(:id => id).update_all(:updated_at => Time.zone.now)
     true
   end
   
@@ -389,7 +387,7 @@ class Event < ActiveRecord::Base
       ActiveRecord::Base.lock_optimistically = false
       # Don't trigger after_save callback just because we're enabling notification
       self.notification = false
-      Event.update_all("notification = false", ["id = ?", id])
+      Event.where(:id => id).update_all("notification = false")
       children.each(&:disable_notification!)
       ActiveRecord::Base.lock_optimistically = true
     end
@@ -402,7 +400,7 @@ class Event < ActiveRecord::Base
       ActiveRecord::Base.lock_optimistically = false
       # Don't trigger after_save callback just because we're enabling notification
       self.notification = true
-      Event.update_all("notification = true", ["id = ?", id])
+      Event.where(:id => id).update_all("notification = true")
       children.each(&:enable_notification!)
       ActiveRecord::Base.lock_optimistically = true
     end

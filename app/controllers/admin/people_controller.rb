@@ -315,7 +315,7 @@ module Admin
       if @people.empty?
         return redirect_to(no_cards_admin_people_path(:format => "html"))
       else
-        Person.update_all("print_card=0, membership_card=1", ['id in (?)', @people.collect{|person| person.id}])
+        Person.where(id: @people.map(&:id)).update_all(print_card: 0, membership_card: 1)
       end
 
       respond_to do |format|

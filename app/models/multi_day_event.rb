@@ -171,7 +171,7 @@ class MultiDayEvent < Event
       self.end_date = child_dates.max
       if date_changed? || end_date_changed?
         # Don't trigger callbacks
-        MultiDayEvent.update_all ["date = ?, end_date = ?", date, end_date], ["id = ?", id]
+        MultiDayEvent.where(:id => id).update_all(:date => date, :end_date => end_date)
       end
     end
     true
