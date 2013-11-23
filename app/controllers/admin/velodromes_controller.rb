@@ -2,7 +2,7 @@ module Admin
   # All succcessful edit expire cache.
   class VelodromesController < Admin::AdminController
     def index
-      @velodromes = Velodrome.all( :order => "name")
+      @velodromes = Velodrome.order(:name)
     end
   
     def new

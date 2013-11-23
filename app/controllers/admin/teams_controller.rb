@@ -25,7 +25,7 @@ module Admin
     end
   
     def edit
-      @team = Team.find(params[:id], :include => [:aliases, :people])
+      @team = Team.includes(:aliases, :people).find(params[:id])
     end
   
     def new
@@ -61,13 +61,13 @@ module Admin
       respond_to do |format|
         format.js {
           @team = Team.find(params[:id])
-          @team.send "#{params[:name]}=", params[:value]
+          @team[params[:name]] = params[:value]
 
           @other_teams = @team.teams_with_same_name
           if @other_teams.empty?
             @team.save!
             expire_cache
-            render :text => @team.send(params[:name]), :content_type => "text/html"
+            render :text => @team[params[:name]], :content_type => "text/html"
           else
             render "merge_confirm"
           end
