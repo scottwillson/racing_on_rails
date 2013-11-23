@@ -210,8 +210,8 @@ RacingOnRails::Application.routes.draw do
     match '/results/:year' => 'results#index', :constraints => { :year => /(19|20)\d\d/ }, :as => :results_year
     match '/results/:discipline' => 'results#index'
     resources :results
-    match '/schedule/:year/calendar' => 'schedule#calendar', :constraints => { :year => /\d\d\d\d/ }
-    match '/schedule/calendar' => 'schedule#calendar'
+    match '/schedule/:year/calendar' => 'schedule#index', :constraints => { :year => /\d\d\d\d/ }
+    match '/schedule/calendar' => 'schedule#index'
     match '/schedule/list/:discipline' => 'schedule#list'
     match '/schedule/:year/list/:discipline' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }
     match '/schedule/:year/list' => 'schedule#list', :constraints => { :year => /\d\d\d\d/ }

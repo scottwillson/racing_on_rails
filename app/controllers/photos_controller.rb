@@ -13,7 +13,7 @@ class PhotosController < Admin::AdminController
   
   def create
     expire_cache
-    @photo = Photo.create(params[:photo])
+    @photo = Photo.create(photo_params)
     
     if @photo.errors.empty?
       flash[:notice] = "Created photo"
@@ -30,15 +30,25 @@ class PhotosController < Admin::AdminController
     expire_cache
     @photo = Photo.find(params[:id])
     
-    if @photo.update_attributes(params[:photo])
+    if @photo.update_attributes(photo_params)
       flash[:notice] = "Updated photo"
       return redirect_to(edit_photo_path(@photo))
     end
     render :edit
   end
   
+
+  protected
+
   def assign_current_admin_tab
     @current_admin_tab = "Photos"
     @show_tabs = true
+  end
+
+
+  private
+  
+  def photo_params
+    params.require(:photo).permit(:caption, :height, :image, :title, :width)
   end
 end

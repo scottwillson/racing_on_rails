@@ -1,3 +1,5 @@
+require "sentient_user/sentient_user"
+
 # Someone who either appears in race results or who is added as a member of a racing association
 #
 # Names are _not_ unique. In fact, there are many business rules about names. See Aliases and Names.

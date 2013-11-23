@@ -2,10 +2,10 @@
 #
 # Caches all of its pages
 class ScheduleController < ApplicationController
-  before_filter :assign_schedule, :except => :show
-  before_filter :assign_sanctioning_organizations, :except => :show
+  before_filter :assign_schedule
+  before_filter :assign_sanctioning_organizations
   
-  caches_page :index, :calendar, :list
+  caches_page :index, :list
   
   # Default calendar format
   # === Params
@@ -23,6 +23,21 @@ class ScheduleController < ApplicationController
         redirect_to schedule_path(:format => :atom), :status => :moved_permanently
       end
       format.atom
+      format.json {
+        events = []
+        @events.each do |event|
+          events << {
+            :id => event.id, 
+            :title => event.full_name, 
+            :description => event.full_name, 
+            :start => "#{event.date}", 
+            :end => "#{event.end_date}", 
+            :allDay => true, 
+            :url => "#{event.flyer}"
+          } 
+        end
+        render :json => events.to_json
+      }
       format.ics { render_ics }
       format.xls { render_xls }
     end
@@ -45,18 +60,6 @@ class ScheduleController < ApplicationController
       format.atom
       format.ics { render_ics }
       format.xls { render_xls }
-    end
-  end
-  
-  def calendar
-    respond_to do |format|
-      format.html { render_page }
-      format.json {
-        events = []
-        @events.each do |event|
-          events << {:id => event.id, :title => event.full_name, :description => event.full_name, :start => "#{event.date}" , :end => "#{event.end_date}", :allDay => true, :url => "#{event.flyer}"} 
-        end
-        render :json => events.to_json }
     end
   end
 

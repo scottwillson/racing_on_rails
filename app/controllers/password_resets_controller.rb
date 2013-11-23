@@ -9,7 +9,7 @@ class PasswordResetsController < ApplicationController
     end
     
     @email = params[:email].strip
-    @people = Person.all(:conditions => [ "email = ? and login is not null and login != ''", @email ])
+    @people = Person.where(:email => @email).where("login is not null and login != ''")
     if @people.any?
       Person.deliver_password_reset_instructions!(@people)
       flash[:notice] = "Please check your email. We've sent you password reset instructions."

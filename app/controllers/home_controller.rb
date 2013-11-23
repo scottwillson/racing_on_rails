@@ -22,13 +22,11 @@ class HomeController < ApplicationController
       where("events.date >= ?", @home.weeks_of_recent_results.weeks.ago).
       where("id in (select event_id from results where competition_result = false and team_competition_result = false)").
       order("updated_at desc")
-      
+
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar?
       @events_with_recent_results = @events_with_recent_results.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
     end
     
-    @events_with_recent_results = @events_with_recent_results.all
-      
     @most_recent_event_with_recent_result = Event.
       includes(:races => [ :category, :results ]).
       includes(:parent).
@@ -44,8 +42,7 @@ class HomeController < ApplicationController
     if @news_category
       @recent_news = Article.
         where("created_at > :cutoff OR updated_at > :cutoff", @home.weeks_of_upcoming_events.weeks.ago).
-        where(:category_id => @news_category.id).
-        all
+        where(:category_id => @news_category.id)
     end
 
     @photo = @home.photo
@@ -59,7 +56,7 @@ class HomeController < ApplicationController
   
   def update
     assign_home
-    if @home.update_attributes(params[:home])
+    if @home.update_attributes(home_params)
       expire_cache
       redirect_to edit_home_path
     else
@@ -71,5 +68,9 @@ class HomeController < ApplicationController
   
   def assign_home
     @home = Home.current
+  end
+
+  def home_params
+    params.require(:home).permit(:photo_id, :weeks_of_recent_results, :weeks_of_upcoming_events)
   end
 end

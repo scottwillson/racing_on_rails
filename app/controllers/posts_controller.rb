@@ -30,8 +30,6 @@ class PostsController < ApplicationController
       end
     end
     
-    @first_post_at = Post.minimum(:date)
-    
     respond_to do |format|
       format.html
       format.rss do
@@ -61,7 +59,7 @@ class PostsController < ApplicationController
   def post_private_reply
     @reply_to = Post.find(params[:reply_to_id])
     @mailing_list = MailingList.find(params[:mailing_list_id])
-    @post = @mailing_list.posts.build(params[:post])
+    @post = @mailing_list.posts.build(post_params)
     if @post.valid?
       begin
         private_reply_email = MailingListMailer.private_reply(@post, @reply_to.sender).deliver
@@ -77,7 +75,7 @@ class PostsController < ApplicationController
   end
   
   def post_to_list
-    @post = Post.new(params[:post])
+    @post = Post.new(post_params)
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post.mailing_list = @mailing_list
     if @post.valid?
@@ -113,5 +111,9 @@ class PostsController < ApplicationController
     rescue
       nil
     end
+  end
+
+  def post_params
+    params.require(:post).permit(:body, :from_name, :from_email_address, :sender, :subject)
   end
 end

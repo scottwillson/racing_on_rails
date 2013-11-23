@@ -28,6 +28,7 @@ class PersonSessionsController < ApplicationController
   def destroy
     session[:return_to] = nil
     current_person_session.destroy if current_person_session
+    flash[:notice] = "You are logged-out"
     redirect_back_or_default new_person_session_url(secure_redirect_options)
   end
 end

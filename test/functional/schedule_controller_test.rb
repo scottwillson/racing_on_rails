@@ -55,7 +55,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   def test_index_rss
     FactoryGirl.create(:event)
     get :index, :format => :rss
-    assert_redirected_to :format => :atom
+    assert_redirected_to schedule_path(:format => :atom)
   end
   
   def test_index_atom
@@ -283,7 +283,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
   end
 
   def test_calendar_as_json
-    get :calendar, :format => "json"
+    get :index, :format => "json"
     assert_response :success
   end
 
@@ -308,7 +308,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
 
-    get(:calendar, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
+    get(:index, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")

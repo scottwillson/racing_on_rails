@@ -39,10 +39,7 @@ class ResultsController < ApplicationController
     respond_to do |format|
       format.html {
         benchmark "Load results", :level => :debug do
-          @event = Event.find(
-            params[:event_id],
-            :include => [ :races => [ :category, { :results => :team } ] ]
-          )
+          @event = Event.includes(:races => [ :category, { :results => :team } ]).find(params[:event_id])
         end
       }
       format.json { render :json => results_for_api(@event.id) }
@@ -54,55 +51,86 @@ class ResultsController < ApplicationController
   def person_event
     @event = Event.find(params[:event_id])
     @person = Person.find(params[:person_id])
-    @results = Result.all(
-      :include => { :scores => [ :source_result, :competition_result ] },
-      :conditions => ['results.event_id = ? and person_id = ?', params[:event_id], params[:person_id]]
-    )
+    @results = Result.
+                includes(:scores => [ :source_result, :competition_result ]).
+                where(:event_id => params[:event_id]).
+                where(:person_id => params[:person_id])
   end
 
   # Single Team's Results for a single Event
   def team_event
     @team = Team.find(params[:team_id])
     @event = Event.find(params[:event_id])
-    @result = Result.includes(:scores => [ :source_result, :competition_result ]).where("results.event_id" => params[:event_id]).where(:team_id => params[:team_id]).first
+    @result = Result.
+              includes(:scores => [ :source_result, :competition_result ]).
+              where("results.event_id" => params[:event_id]).
+              where(:team_id => params[:team_id]).first!
     raise ActiveRecord::RecordNotFound unless @result
   end
   
   # Person's Results for an entire year
   def person
     @person = Person.find(params[:person_id])
-    set_date
-    @event_results = Result.where(
-      "person_id = ? and year = ? and competition_result = false and team_competition_result = false", @person.id, @date.year
-    )
-    @competition_results = Result.
-      includes(:scores => [ :source_result, :competition_result ]).
-      where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", @person.id, @date.year)
       
     respond_to do |format|
-      format.html {render :layout => !request.xhr?}
-      format.json { render :json => (@event_results + @competition_results).to_json }
-      format.xml { render :xml => (@event_results + @competition_results).to_xml }
+      format.html do
+        assign_person_results @person, @year
+        
+        render :layout => !request.xhr?
+      end
+
+      format.json do
+        assign_person_results @person, @year        
+        render :json => (@event_results + @competition_results).to_json
+      end
+
+      format.xml do
+        assign_person_results @person, @year
+         render :xml => (@event_results + @competition_results).to_xml
+      end
     end
   end
   
   # Teams's Results for an entire year
   def team
     @team = Team.find(params[:team_id])
-    set_date
-    @event_results = Result.where("team_id = ? and year = ? and competition_result = false and team_competition_result = false", @team.id, @date.year)
     respond_to do |format|
-      format.html
-      format.json { render :json => @event_results.to_json }
-      format.xml { render :xml => @event_results.to_xml }
+      format.html do
+        assign_team_results @team, @year
+        
+        render :layout => !request.xhr?
+      end
+
+      format.json do
+        assign_team_results @team, @year
+        render :json => @event_results.to_json
+      end
+
+      format.xml do
+        assign_team_results @team, @year
+        render :xml => @event_results.to_xml
+      end
     end
   end
   
   
   private
   
-  def set_date
-    @date = Time.zone.local(@year).to_date
+  def assign_events_with_results
+    @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
+  end
+  
+  def assign_person_results(person, year)
+    @event_results = Result.where(
+      "person_id = ? and year = ? and competition_result = false and team_competition_result = false", person.id, year
+    )
+    @competition_results = Result.
+      includes(:scores => [ :source_result, :competition_result ]).
+      where("person_id = ? and year = ? and (competition_result = true or team_competition_result = true)", person.id, year)
+  end
+  
+  def assign_team_results(team, year)
+    @event_results = Result.where(:team_id => team.id).where(:year => year).where("competition_result = false and team_competition_result = false")
   end
   
   def results_for_api(event_id)
