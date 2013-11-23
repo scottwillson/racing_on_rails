@@ -1,3 +1,5 @@
+require "sentient_user/sentient_controller"
+
 class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery

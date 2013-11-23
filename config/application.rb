@@ -15,7 +15,6 @@ module RacingOnRails
       #{config.root}/lib
       #{config.root}/lib/racing_on_rails 
       #{config.root}/lib/results
-      #{config.root}/lib/sentient_user
     )
 
     config.encoding = "utf-8"
