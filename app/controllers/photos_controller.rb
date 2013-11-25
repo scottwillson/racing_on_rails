@@ -49,6 +49,6 @@ class PhotosController < Admin::AdminController
   private
   
   def photo_params
-    params.require(:photo).permit(:caption, :height, :image, :title, :width)
+    params.require(:photo).permit(:caption, :height, :image, :image_cache, :title, :width)
   end
 end

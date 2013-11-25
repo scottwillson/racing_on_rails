@@ -7,8 +7,7 @@ class CrossCrusadeTeamCompetition < Competition
   def CrossCrusadeTeamCompetition.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
-        series = Series.first(
-                       :conditions => ["name = ? and date between ? and ?", "Cross Crusade", Date.new(year, 1, 1), Date.new(year, 12, 31)])
+        series = Series.where(:name => "Cross Crusade").year(year).first
 
         if series && series.has_results_including_children?(true)
           team_competition = series.child_competitions.detect { |c| c.is_a? CrossCrusadeTeamCompetition }
@@ -50,20 +49,13 @@ class CrossCrusadeTeamCompetition < Competition
   def source_results(race)
     return [] if parent.children.empty?
 
-    event_ids = parent.children.collect do |event|
-      event.id
-    end
-    event_ids = event_ids.join(', ')
+    event_ids = parent.children.map(&:id)
 
-    Result.find_by_sql(
-      %Q{ SELECT results.id as id, race_id, person_id, results.team_id, place FROM results  
-          JOIN races ON races.id = results.race_id 
-          JOIN events ON races.event_id = events.id 
-          WHERE results.team_id is not null
-          and events.id in (#{event_ids})
-          order by results.team_id
-        }
-    )
+    Result.
+      includes(:race => :event).
+      where("results.team_id is not null").
+      where("events.id" => event_ids).
+      order("results.team_id")
   end
 
   def create_competition_results_for(results, race)
@@ -75,7 +67,7 @@ class CrossCrusadeTeamCompetition < Competition
           competition_result = Result.create!(:team => team, :race => race)
         end
 
-        competition_result.scores.create(
+        competition_result.scores.create!(
           :source_result => source_result, 
           :competition_result => competition_result, 
           :points => points_for(source_result)
@@ -87,10 +79,10 @@ class CrossCrusadeTeamCompetition < Competition
   def after_create_competition_results_for(race)
     source_events.select(&:has_results?).each do |source_event|
       race.results.each do |competition_result|
-        scores_for_event_count = Score.count(
-           :conditions => ["competition_result_id = ? and events.id = ?", competition_result.id, source_event.id ],
-           :include => { :source_result => { :race => :event } }
-         )
+        scores_for_event_count = Score.
+          includes(:source_result => { :race => :event }).
+          where(:competition_result_id => competition_result.id, "events.id" => source_event.id).
+          count
 
         case scores_for_event_count
         when 0

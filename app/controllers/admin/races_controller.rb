@@ -102,6 +102,7 @@ module Admin
 
     def race_params
       params.require(:race).permit(
+        :additional_race_only,
         :bar_points,
         :category_id,
         :category_name,

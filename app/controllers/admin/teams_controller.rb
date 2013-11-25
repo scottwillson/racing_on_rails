@@ -113,7 +113,16 @@ module Admin
     private
 
     def team_params
-      params.require(:team).permit(:website, :sponsors, :contact_name, :contact_email, :contact_phone, :member, :name)
+      params.require(:team).permit(
+        :contact_email, 
+        :contact_name, 
+        :contact_phone, 
+        :member, 
+        :name,
+        :show_on_public_page,
+        :sponsors, 
+        :website
+      )
     end
   end
 end

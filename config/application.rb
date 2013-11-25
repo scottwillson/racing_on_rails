@@ -29,6 +29,8 @@ module RacingOnRails
     
     # Racing on Rails has many foreign key constraints, so :sql is required
     config.active_record.schema_format = :sql
+    
+    config.action_controller.action_on_unpermitted_parameters = :raise
   
     unless ENV["SKIP_OBSERVERS"]
       config.active_record.observers = :event_observer, :name_observer, :person_observer, :race_observer, :result_observer, :team_observer

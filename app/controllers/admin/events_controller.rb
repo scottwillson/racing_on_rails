@@ -315,6 +315,8 @@ module Admin
         :flyer_ad_fee,
         :flyer_approved,
         :human_date,
+        :human_registration_ends_on, 
+        :human_registration_ends_at_time,
         :instructional,
         :ironman,
         :membership_required,
