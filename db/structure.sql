@@ -5,7 +5,6 @@ CREATE TABLE `adjustments` (
   `date` datetime DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -17,7 +16,6 @@ CREATE TABLE `aliases` (
   `name` varchar(255) DEFAULT NULL,
   `person_id` int(11) DEFAULT NULL,
   `team_id` int(11) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -79,7 +77,6 @@ CREATE TABLE `bids` (
   `phone` varchar(255) NOT NULL,
   `amount` int(11) NOT NULL,
   `approved` tinyint(1) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -89,7 +86,6 @@ CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `position` int(11) NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
@@ -119,7 +115,6 @@ CREATE TABLE `competition_event_memberships` (
 CREATE TABLE `discipline_aliases` (
   `discipline_id` int(11) NOT NULL DEFAULT '0',
   `alias` varchar(64) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   KEY `idx_alias` (`alias`),
@@ -141,7 +136,6 @@ CREATE TABLE `disciplines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
   `bar` tinyint(1) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `numbers` tinyint(1) DEFAULT '0',
@@ -184,7 +178,6 @@ CREATE TABLE `duplicates_people` (
 
 CREATE TABLE `editor_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `person_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
   `expires_at` datetime NOT NULL,
@@ -295,7 +288,6 @@ CREATE TABLE `homes` (
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -342,7 +334,6 @@ CREATE TABLE `mailing_lists` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `friendly_name` varchar(255) NOT NULL DEFAULT '',
   `subject_line_prefix` varchar(255) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `description` text,
@@ -357,7 +348,6 @@ CREATE TABLE `names` (
   `year` int(11) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `nameable_type` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
@@ -387,7 +377,6 @@ CREATE TABLE `non_member_results_people` (
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -445,7 +434,6 @@ CREATE TABLE `order_people` (
   `track_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emergency_contact` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `emergency_contact_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `work_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -486,7 +474,6 @@ CREATE TABLE `pages` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_pages_on_path` (`path`),
   KEY `parent_id` (`parent_id`),
@@ -503,7 +490,6 @@ CREATE TABLE `payment_gateway_transactions` (
   `authorization` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `params` text COLLATE utf8_unicode_ci,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `line_item_id` int(11) DEFAULT NULL,
@@ -654,7 +640,6 @@ CREATE TABLE `posts` (
   `sender` varchar(255) NOT NULL DEFAULT '',
   `subject` varchar(255) NOT NULL DEFAULT '',
   `topica_message_id` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `mailing_list_id` int(11) NOT NULL DEFAULT '0',
@@ -691,7 +676,6 @@ CREATE TABLE `products` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `price` decimal(10,0) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `event_id` int(11) DEFAULT NULL,
@@ -720,7 +704,6 @@ CREATE TABLE `race_numbers` (
   `number_issuer_id` int(11) NOT NULL DEFAULT '0',
   `value` varchar(255) NOT NULL DEFAULT '',
   `year` int(11) NOT NULL DEFAULT '0',
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -746,7 +729,6 @@ CREATE TABLE `races` (
   `finishers` int(11) DEFAULT NULL,
   `notes` varchar(255) DEFAULT '',
   `sanctioned_by` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `result_columns` varchar(255) DEFAULT NULL,
@@ -785,7 +767,6 @@ CREATE TABLE `racing_associations` (
   `ssl` tinyint(1) NOT NULL DEFAULT '0',
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `masters_age` int(11) NOT NULL DEFAULT '35',
   `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
   `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
@@ -870,7 +851,6 @@ CREATE TABLE `results` (
   `time_gap_to_leader` double DEFAULT NULL,
   `time_gap_to_previous` double DEFAULT NULL,
   `time_gap_to_winner` double DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `time_total` double DEFAULT NULL,
@@ -954,7 +934,6 @@ CREATE TABLE `teams` (
   `city` varchar(128) DEFAULT NULL,
   `state` varchar(64) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `member` tinyint(1) DEFAULT '0',
@@ -970,7 +949,6 @@ CREATE TABLE `teams` (
 
 CREATE TABLE `update_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `order_person_id` int(11) NOT NULL,
   `expires_at` datetime NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -987,7 +965,6 @@ CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
-  `lock_version` int(11) NOT NULL DEFAULT '0',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1455,6 +1432,8 @@ INSERT INTO schema_migrations (version) VALUES ('20130913164501');
 INSERT INTO schema_migrations (version) VALUES ('20131015142703');
 
 INSERT INTO schema_migrations (version) VALUES ('20131113143051');
+
+INSERT INTO schema_migrations (version) VALUES ('20131126150417');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
