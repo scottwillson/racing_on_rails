@@ -33,8 +33,15 @@ module Concerns
       end
 
       def cleanup_number
-        self.number = number.to_s
-        self.number = number.to_i.to_s if number[/^\d+\.0$/]
+        return if number.nil?
+        
+        _number = number.to_s.strip.truncate(8)
+        
+        if _number[/^\d+\.0$/]
+          _number = number.to_i.to_s
+        end
+        
+        self.number = _number
       end
 
       def cleanup_license

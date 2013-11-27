@@ -359,7 +359,7 @@ class Event < ActiveRecord::Base
       end
     end
     
-    children.each { |child| child.update_children }
+    children.each(&:update_children)
     true
   end
 
@@ -547,11 +547,10 @@ class Event < ActiveRecord::Base
   def multi_day_event_children_with_no_parent
     return [] unless name && date
     
-    @multi_day_event_children_with_no_parent ||= SingleDayEvent.all(
-      :conditions => [
+    @multi_day_event_children_with_no_parent ||= SingleDayEvent.where(
         "parent_id is null and name = ? and extract(year from date) = ? 
          and ((select count(*) from events where name = ? and extract(year from date) = ? and type in ('MultiDayEvent', 'Series', 'WeeklySeries')) = 0)",
-         self.name, self.date.year, self.name, self.date.year])
+         self.name, self.date.year, self.name, self.date.year)
     # Could do this in SQL
     if @multi_day_event_children_with_no_parent.size == 1
       @multi_day_event_children_with_no_parent = []
