@@ -4,7 +4,7 @@ class CrossCrusadeTeamCompetition < Competition
   after_create :add_source_events
   before_create :set_notes, :set_name
 
-  def CrossCrusadeTeamCompetition.calculate!(year = Time.zone.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark("#{name} calculate!", :level => :info) {
       transaction do
         series = Series.where(:name => "Cross Crusade").year(year).first
@@ -19,8 +19,11 @@ class CrossCrusadeTeamCompetition < Competition
           team_competition.destroy_races
           team_competition.create_races
           team_competition.calculate!
-          team_competition.expire_cache
         end
+        team_competition.set_date
+        team_competition.destroy_races
+        team_competition.create_races
+        team_competition.calculate!
       end
     }
     true

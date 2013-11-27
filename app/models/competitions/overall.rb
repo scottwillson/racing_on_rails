@@ -11,8 +11,7 @@ class Overall < Competition
   def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
-        parent = ::MultiDayEvent.first(
-                        :conditions => ["name = ? and date between ? and ?", parent_event_name, Date.new(year, 1, 1), Date.new(year, 12, 31)])
+        parent = ::MultiDayEvent.year(year).where(:name => parent_event_name).first
 
         overall = parent.try(:overall)
         if parent && parent.has_results_including_children?(true)
@@ -30,14 +29,6 @@ class Overall < Competition
       end
     }
     true
-  end
-
-  def default_name
-    if parent && (parent.is_a?(Series) || parent.is_a?(WeeklySeries))
-      "Series Overall"
-    else
-      "Overall"
-    end
   end
 
   def add_source_events

@@ -23,7 +23,7 @@ class Bar < Competition
         ::Discipline.find_all_bar.reject { |discipline|
           [ ::Discipline[:age_graded], ::Discipline[:overall], ::Discipline[:team] ].include?(discipline)
         }.each do |discipline|
-          bar = Bar.first(:conditions => { :date => date, :discipline => discipline.name })
+          bar = Bar.where(:date => date, :discipline => discipline.name).first
           unless bar
             bar = Bar.create!(
               :parent => overall_bar,
@@ -34,7 +34,7 @@ class Bar < Competition
           end
         end
 
-        Bar.all( :conditions => { :date => date }).each do |bar|
+        Bar.where(:date => date).each do |bar|
           bar.set_date
           bar.delete_races
           bar.create_races
@@ -48,7 +48,7 @@ class Bar < Competition
   end
   
   def Bar.find_by_year_and_discipline(year, discipline_name)
-    Bar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
+    Bar.where(:date => Time.zone.local(year).to_date, :discipline => discipline_name).first
   end
 
   def point_schedule
@@ -85,7 +85,7 @@ class Bar < Competition
       joins("left outer join events parents_events on parents_events.id = events.parent_id").
       joins("left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id").
       where("place between 1 and ?", point_schedule.size).
-      where("(events.type in (?) or events.type is NULL)", %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries TaborOverall }).
+      where("(events.type in (?) or events.type is NULL)", source_event_types).
       where(:bar => true).
       where("races.category_id in (?)", category_ids_for(race)).
       where("events.sanctioned_by" => RacingAssociation.current.default_sanctioned_by).
@@ -97,6 +97,10 @@ class Bar < Competition
       where("results.year = ?", year)
 
     Result.connection.select_all query
+  end
+  
+  def source_event_types
+    %w{ Event SingleDayEvent MultiDayEvent Series WeeklySeries Competitions::TaborOverall }
   end
 
   def create_races

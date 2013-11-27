@@ -7,7 +7,7 @@
 class MbraBar < Competition
   validate :valid_dates
 
-  def MbraBar.calculate!(year = Time.zone.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
@@ -17,7 +17,7 @@ class MbraBar < Competition
         Discipline.find_all_bar.reject { |discipline|
           discipline == Discipline[:age_graded] || discipline == Discipline[:overall]
         }.each do |discipline|
-          bar = MbraBar.first(:conditions => { :date => date, :discipline => discipline.name })
+          bar = MbraBar.where(:date => date, :discipline => discipline.name).first
           unless bar
             bar = MbraBar.create!(
               :name => "#{year} #{discipline.name} BAR",
@@ -27,7 +27,7 @@ class MbraBar < Competition
           end
         end
 
-        MbraBar.all( :conditions => { :date => date }).each do |bar|
+        MbraBar.where(:date => date).each do |bar|
           bar.set_date
           bar.destroy_races
           bar.create_races
@@ -41,8 +41,8 @@ class MbraBar < Competition
     true
   end
   
-  def MbraBar.find_by_year_and_discipline(year, discipline_name)
-    MbraBar.first(:conditions => { :date => Date.new(year), :discipline => discipline_name })
+  def self.find_by_year_and_discipline(year, discipline_name)
+    MbraBar.year(year).where(:discipline => discipline_name).first
   end
   
   def calculate_threshold_number_of_races
@@ -79,23 +79,22 @@ class MbraBar < Competition
   def source_results(race)
     category_ids = category_ids_for(race).join(", ")
 
-    Result.all(
-                :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
-                :conditions => [%Q{
-                    (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
-                    and bar = true
-                    and categories.id in (#{category_ids})
-                    and (events.discipline = '#{race.discipline}'
-                      or (events.discipline is null and parents_events.discipline = '#{race.discipline}')
-                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline = '#{race.discipline}'))
-                    and (races.bar_points > 0
-                      or (races.bar_points is null and events.bar_points > 0)
-                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
-                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
-                    and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
-                }],
-                :order => 'person_id'
-      )
+    Result.
+    includes(:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}).
+      where(%Q{
+        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
+        and bar = true
+        and categories.id in (#{category_ids})
+        and (events.discipline = '#{race.discipline}'
+          or (events.discipline is null and parents_events.discipline = '#{race.discipline}')
+          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline = '#{race.discipline}'))
+        and (races.bar_points > 0
+          or (races.bar_points is null and events.bar_points > 0)
+          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
+          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
+        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
+    }).
+    order(:person_id)
   end
 
   # Apply points from point_schedule
@@ -142,7 +141,6 @@ class MbraBar < Competition
       ["cat_up" => "Cat 4 Men", "cat_down" => "Cat 5 Men"],
       ["cat_up" => "Cat 1/2/3 Women", "cat_down" => "Cat 4 Women"]
     ].each do |category_pair|
-      cat = category_pair[0]["cat_up"]
       cat_up_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_up"] }
       cat_down_race = self.races.detect { |r| r.category.name == category_pair[0]["cat_down"] }
       cat_up_race.results.each do |up_result|

@@ -28,6 +28,14 @@ class Race < ActiveRecord::Base
   has_one :promoter, :through => :event
   has_many :results, :dependent => :destroy
 
+  scope :year, lambda { |year| 
+    where(
+      "date between ? and ?", 
+      Time.zone.local(year).beginning_of_year.to_date, 
+      Time.zone.local(year).end_of_year.to_date
+    )
+  }
+
   default_value_for(:result_columns) { DEFAULT_RESULT_COLUMNS.dup }
   default_value_for :custom_columns, []
   

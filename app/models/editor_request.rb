@@ -15,7 +15,7 @@ class EditorRequest < ActiveRecord::Base
   
   before_save :destroy_duplicates
   
-  scope :expired, lambda { { :conditions => [ "expires_at <= ?", Time.zone.now ] } }
+  scope :expired, lambda { where("expires_at <= ?", Time.zone.now) }
   
   def set_email
     self.email = person.try(:email)

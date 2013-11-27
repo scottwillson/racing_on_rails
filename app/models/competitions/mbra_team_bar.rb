@@ -1,6 +1,6 @@
 class MbraTeamBar < Competition
   
-  def MbraTeamBar.calculate!(year = Time.zone.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
@@ -8,7 +8,7 @@ class MbraTeamBar < Competition
 
         # Maybe I will exclude MTB and CX if people are disturbed by it...but calc for now for fun.
         Discipline.find_all_bar.reject {|discipline| discipline == Discipline[:age_graded] || discipline == Discipline[:overall]}.each do |discipline|
-          bar = MbraTeamBar.first(:conditions => { :date => date, :discipline => discipline.name })
+          bar = MbraTeamBar.year(year).where(:discipline => discipline.name).first
           logger.debug("In MbraTeamBar.calculate!: discipline #{discipline}") if logger.debug?
           unless bar
             bar = MbraTeamBar.create!(
@@ -19,7 +19,7 @@ class MbraTeamBar < Competition
           end
         end
 
-        MbraTeamBar.all( :conditions => { :date => date }).each do |bar|
+        MbraTeamBar.where(:date => date).each do |bar|
           logger.debug("In MbraTeamBar.calculate!: processing bar #{bar.name}") if logger.debug?
           bar.set_date
           bar.destroy_races
@@ -52,23 +52,22 @@ class MbraTeamBar < Competition
   def source_results(race)
     race_disciplines = "'#{race.discipline}'"
     category_ids = category_ids_for(race).join(", ")
-    Result.all(
-                :include => [:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}],
-                :conditions => [%Q{
-                    (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
-                    and bar = true
-                    and categories.id in (#{category_ids})
-                    and (events.discipline in (#{race_disciplines})
-                      or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
-                      or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
-                    and (races.bar_points > 0
-                      or (races.bar_points is null and events.bar_points > 0)
-                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
-                      or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
-                    and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
-                }],
-                :order => 'results.team_id, race_id'
-      )
+    Result.
+      includes(:race, {:person => :team}, :team, {:race => [{:event => { :parent => :parent }}, :category]}).
+      where(%Q{
+        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)
+        and bar = true
+        and categories.id in (#{category_ids})
+        and (events.discipline in (#{race_disciplines})
+          or (events.discipline is null and parents_events.discipline in (#{race_disciplines}))
+          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{race_disciplines})))
+        and (races.bar_points > 0
+          or (races.bar_points is null and events.bar_points > 0)
+          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)
+          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))
+        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'
+    }).
+    order("results.team_id, race_id")
   end
   
   # create a competition_result for each team appearing in this set of results, which is per race
@@ -98,12 +97,11 @@ class MbraTeamBar < Competition
         # removing the lowest score for the event after every result.
         # I do it this way because results do not arrive in postion order.
         # SQL sorting does not work as position is a varchar field.
-        score = competition_result.scores.create(
+        competition_result.scores.create!(
           :source_result => source_result,
           :competition_result => competition_result,
           :points => points_for(source_result).to_f #/ teams.size
         )
-        this_points = score.points
         logger.debug("#{self.class.name} competition result: #{competition_result.event.name} | #{competition_result.race.name} | #{competition_result.place} | #{competition_result.team_name}") if logger.debug?
         # e.g., MbraTeamBar competition result: 2009 MBRA BAT | Master A Men |  | Gallatin Alpine Sports/Intrinsik Architecture
         scores_for_event = competition_result.scores.select{ |s| s.source_result.event.name == source_result.event.name}
@@ -128,10 +126,7 @@ class MbraTeamBar < Competition
       if source_result.place.strip.downcase == "dnf"
         points = 0.5
       else
-        # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
-        #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
-        #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
-        points = point_schedule[source_result.place.to_i] #/ team_size.to_f
+        points = point_schedule[source_result.place.to_i]
       end
     }
       logger.debug("#{self.class.name} points: #{points} for #{source_result.event.name} | #{source_result.race.name} | #{source_result.place} | #{source_result.name} | #{source_result.team_name}") if logger.debug?

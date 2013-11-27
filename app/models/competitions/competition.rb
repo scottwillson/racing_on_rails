@@ -113,12 +113,14 @@ class Competition < Event
   # Some competitions are only open to RacingAssociation members, and non-members are dropped from the results.
   def calculate_members_only_places
     if place_members_only?
-      Race.find_each(:include => :event,
-                :conditions => [ "events.type != ? and events.date between ? and ? and (events.updated_at > ? || races.updated_at > ?)", 
-                                 self.class.name.demodulize, start_date, end_date, 1.week.ago, 1.week.ago ]
-                ) do |r|
-                  r.calculate_members_only_places!
-                end
+      Race.
+        includes(:event).
+        where("events.type != ?", self.class.name.demodulize).
+        year(year).
+        where("events.updated_at > ? || races.updated_at > ?", 1.week.ago, 1.week.ago).
+        find_each do |r|
+          r.calculate_members_only_places!
+        end
     end
   end
   
@@ -197,11 +199,9 @@ class Competition < Event
       race.results.each do |result|
         # Don't bother sorting scores unless we need to drop some
         if result.scores.size > _maximum_events
-          result.scores.sort! { |x, y| y.points <=> x.points }
-          lowest_scores = result.scores[_maximum_events, 2]
-          lowest_scores.each do |lowest_score|
-            result.scores.destroy(lowest_score)
-          end
+          scores = result.scores.sort { |x, y| y.points <=> x.points }
+          lowest_scores = scores[_maximum_events, 2]
+          lowest_scores.each(&:destroy)
           # Rails destroys Score in database, but doesn't update the current association
           result.scores(true)
         end

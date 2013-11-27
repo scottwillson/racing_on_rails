@@ -9,22 +9,16 @@ class Cat4WomensRaceSeries < Competition
   def source_results(race)
     _start_date = RacingAssociation.current.cat4_womens_race_series_start_date || date.beginning_of_year
     _end_date = RacingAssociation.current.cat4_womens_race_series_end_date || self.end_date
-    Result.find_by_sql(
-      [%Q{ SELECT results.*
-          FROM results  
-          LEFT JOIN races ON races.id = results.race_id 
-          LEFT JOIN categories ON categories.id = races.category_id 
-          LEFT JOIN events ON races.event_id = events.id 
-          WHERE (place > 0 or place is null or place = '')
-            and results.name is not null
-            and results.name != ""
-            and categories.id in (?)
-            and (events.type = "SingleDayEvent" or events.type is null or events.id in (?))
-            and events.ironman is true
-            and events.date between ? and ?
-          order by person_id
-       }, category_ids_for(race), source_events.collect(&:id), _start_date, _end_date ]
-    )
+    Result.
+      includes(:race => [ :category, :event ]).
+      where("place > 0 or place is null or place = ''").
+      where("results.name is not null").
+      where("results.name != ''").
+      where("categories.id" => category_ids_for(race)).
+      where("(events.type = 'SingleDayEvent' or events.type is null or events.id in (?))", source_events.map(&:id)).
+      where("(events.ironman is true or events.id in (?))", source_events.map(&:id)).
+      where("events.date between ? and ?", _start_date, _end_date).
+      order(:person_id)
   end
   
   def participation_points?

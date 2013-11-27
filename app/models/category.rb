@@ -29,10 +29,7 @@ class Category < ActiveRecord::Base
   
   # All categories with no parent (except root 'association' category)
   def Category.find_all_unknowns
-    Category.all(
-      :conditions => ['parent_id is null and name <> ?', RacingAssociation.current.short_name],
-      :include => :children
-     )
+   Category.includes(:children).where(:parent_id => nil).where("name != ?", RacingAssociation.current.short_name)
   end
   
   # Sr, Mst, Jr, Cat, Beg, Exp

@@ -10,7 +10,7 @@ class OverallBar < Competition
     Discipline.find_all_bar.
     reject { |discipline| [Discipline[:age_graded], Discipline[:overall], Discipline[:team]].include?(discipline) }.
     each do |discipline|
-      bar = Bar.first(:conditions => { :date => date, :discipline => discipline.name })
+      bar = Bar.year(year).where(:discipline => discipline.name).first
       unless bar
         bar = Bar.create!(
           :parent => self,

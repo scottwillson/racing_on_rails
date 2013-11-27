@@ -12,24 +12,13 @@ class Alias < ActiveRecord::Base
   validate :cannot_shadow_person
   validate :cannot_shadow_team
   
-  def Alias.find_all_people_by_name(name)
-    aliases = Alias.all( 
-      :conditions => ['aliases.name = ? and person_id is not null', name],
-      :include => :person
-    )
-    aliases.collect do |person_alias|
-      person_alias.person
-    end
+  def self.find_all_people_by_name(name)
+    Alias.includes(:person).where("aliases.name" => name).where("person_id is not null").map(&:person)
   end
   
-  def Alias.find_all_teams_by_name(name)
-    aliases = Alias.all(
-      :conditions => ['aliases.name = ? and team_id is not null', name],
-      :include => :team
-    )
-    aliases.collect do |team_alias|
-      team_alias.team
-    end
+  def self.find_all_teams_by_name(name)
+    logger.debug "Alias find_all_teams_by_name #{name}"
+    Alias.includes(:team).where("aliases.name" => name).where("team_id is not null").map(&:team)
   end
   
   def person_or_team
@@ -46,13 +35,13 @@ class Alias < ActiveRecord::Base
   private
   
   def cannot_shadow_person
-    if person_id && Person.exists?(["name = ?", name])
+    if person_id && Person.where(:name => name).exists?
       errors.add('name', "Person named '#{name}' already exists. Cannot create alias that shadows a person's real name.")
     end
   end
   
   def cannot_shadow_team
-    if team_id && Team.exists?(['name = ?', name])
+    if team_id && Team.where(:name => name).exists?
       errors.add('name', "Team named '#{name}' already exists. Cannot create alias that shadows a team's real name.")
     end
   end

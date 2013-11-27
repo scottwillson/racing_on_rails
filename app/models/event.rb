@@ -100,7 +100,11 @@ class Event < ActiveRecord::Base
   scope :today_and_future, lambda { where("date >= :today || end_date >= :today", :today => Time.zone.today) }
   
   scope :year, lambda { |year| 
-    where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date)
+    where(
+      "date between ? and ?", 
+      Time.zone.local(year).beginning_of_year.to_date, 
+      Time.zone.local(year).end_of_year.to_date
+    )
   }
   
   scope :current_year, lambda { where(
