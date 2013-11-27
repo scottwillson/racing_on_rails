@@ -136,45 +136,30 @@ class Event < ActiveRecord::Base
   
   # Return [weekly_series, events] that have results
   # Honors RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-  def Event.find_all_with_results(year = Time.zone.today.year, discipline = nil)
+  def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
-    first_of_year = Date.new(year, 1, 1)
-    last_of_year = Date.new(year + 1, 1, 1) - 1
-    
+    events = Event.
+              distinct.
+              joins(:races => :results).
+              includes(:parent => :parent).
+              where("events.date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date)
+
     if discipline
       discipline_names = [discipline.name]
       if discipline == Discipline['road']
         discipline_names << 'Circuit'
       end
-      events = Set.new(Event.all(
-          :select => "distinct events.id, events.*",
-          :joins => { :races => :results },
-          :include => { :parent => :parent },
-          :conditions => [%Q{
-              events.date between ? and ? 
-              and events.discipline in (?)
-              }, first_of_year, last_of_year, discipline_names]
-      ))
-      
-    else
-      events = Set.new(Event.all(
-          :select => "distinct events.id, events.*",
-          :joins => { :races => :results },
-          :include => { :parent => :parent },
-          :conditions => ["events.date between ? and ?", first_of_year, last_of_year]
-      ))
+      events = events.where(:discipline => discipline_names)
     end
     
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-      events.reject! do |event|
-        event.sanctioned_by != RacingAssociation.current.default_sanctioned_by
-      end
+      events = events.where(:sanctioned_by => RacingAssociation.current.default_sanctioned_by)
     end
     
-    events.map!(&:root)
+    events.map!(&:root).uniq!
     
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitions, events = events.partition { |event| event.is_a?(Competition) }
+    competitions, events = events.partition { |event| event.is_a?(Competitions::Competition) }
 
     [ weekly_series, events, competitions ]
   end
@@ -263,7 +248,11 @@ class Event < ActiveRecord::Base
   end
   
   def default_bar_points
-    1
+    if parent.is_a?(WeeklySeries) || (parent.try(:parent) && parent.parent.is_a?(WeeklySeries))
+      0
+    else
+      1
+    end
   end
   
   def default_discipline
@@ -271,7 +260,7 @@ class Event < ActiveRecord::Base
   end
   
   def default_ironman
-    1
+    true
   end
   
   def default_region_id
