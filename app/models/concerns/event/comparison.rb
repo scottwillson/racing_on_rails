@@ -10,7 +10,7 @@ module Concerns
           return true
         end
         
-        if !(other.respond_to?(:id) || other.respond_to?(:new_record?))
+        if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
           return false
         end
         
@@ -26,7 +26,7 @@ module Concerns
           return true
         end
 
-        if !(other.respond_to?(:id) || other.respond_to?(:new_record?))
+        if !other.respond_to?(:id) || !other.respond_to?(:new_record?)
           return false
         end
 
