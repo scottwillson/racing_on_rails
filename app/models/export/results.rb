@@ -2,28 +2,28 @@ module Export
   module Results
     include Export::Base
 
-    def Result.export
+    def self.export
       Result.export_head
       Result.export_data
     end
 
     private
 
-    def Result.export_head
+    def self.export_head
       Base.export(Result.export_head_sql, "results.txt")
     end
 
-    def Result.export_data
+    def self.export_data
       Base.export(Result.export_data_sql, "results.csv")
     end
 
-    def Result.export_head_sql
+    def self.export_head_sql
       "SELECT '#{Result.export_columns.join("','")}'
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY '\\n'"
     end
 
-    def Result.export_data_sql
+    def self.export_data_sql
       "SELECT #{Result.export_columns(true).join(",")}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
@@ -32,7 +32,7 @@ module Export
        LEFT JOIN people ON results.person_id=people.id"
     end
 
-    def Result.export_columns(fully_qualified = false)
+    def self.export_columns(fully_qualified = false)
       if fully_qualified
         columns = []
         Result.export_columns_for_results.each do |column|
@@ -47,7 +47,7 @@ module Export
       end
     end
 
-    def Result.export_columns_for_results
+    def self.export_columns_for_results
       [
         "id", "category_id", "person_id", "race_id", "team_id", "age",
         "age_group", "date_of_birth", "gender", "license", "number", "city",
@@ -59,7 +59,7 @@ module Export
       ]
     end
 
-    def Result.export_columns_for_people
+    def self.export_columns_for_people
       [ "first_name", "last_name" ]
     end
   end

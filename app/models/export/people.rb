@@ -2,14 +2,14 @@ module Export
   module People
     include Export::Base
 
-    def Person.export
+    def self.export
       Person.export_head
       Person.export_data
     end
 
     private
 
-    def Person.export_data
+    def self.export_data
       basename = 'people.csv'
       path = Base.tmp_path basename
       path.unlink if path.exist?
@@ -38,17 +38,17 @@ module Export
       outfile.close
     end
 
-    def Person.export_head
+    def self.export_head
       Base.export(Person.export_head_sql, "people.txt")
     end
 
-    def Person.export_head_sql
+    def self.export_head_sql
       "SELECT '#{Person.export_columns.join("','")}'
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY '\\n'"
     end
 
-    def Person.export_columns
+    def self.export_columns
       [
         'id', "first_name", "last_name", "city", "state", "date_of_birth", "license",
         "team_id", "gender", "ccx_category", "road_category", "track_category", "mtb_category", "dh_category"

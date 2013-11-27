@@ -28,12 +28,12 @@ class Category < ActiveRecord::Base
   NONE = Category.new(:name => "", :id => nil)
   
   # All categories with no parent (except root 'association' category)
-  def Category.find_all_unknowns
+  def self.find_all_unknowns
    Category.includes(:children).where(:parent_id => nil).where("name != ?", RacingAssociation.current.short_name)
   end
   
   # Sr, Mst, Jr, Cat, Beg, Exp
-  def Category.short_name(name)
+  def self.short_name(name)
     return name if name.blank?
     name.gsub('Senior', 'Sr').gsub('Masters', 'Mst').gsub('Junior', 'Jr').gsub('Category', 'Cat').gsub('Beginner', 'Beg').gsub('Expert', 'Exp').gsub("Clydesdale", "Clyd")
   end

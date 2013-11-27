@@ -25,7 +25,7 @@ class RaceNumber < ActiveRecord::Base
   belongs_to :number_issuer
   belongs_to :person
   
-  def RaceNumber.find_all_by_value_and_event(value, _event)
+  def self.find_all_by_value_and_event(value, _event)
     return [] if _event.nil? || value.blank? || _event.number_issuer.nil?
     
     discipline_id = RaceNumber.discipline_id(_event.discipline)
@@ -42,7 +42,7 @@ class RaceNumber < ActiveRecord::Base
   end
   
   # Dupe of lousy code from Discipline
-  def RaceNumber.discipline_id(discipline)
+  def self.discipline_id(discipline)
     case Discipline[discipline]
     when Discipline[:road], Discipline[:track], Discipline[:time_trial], Discipline[:circuit], Discipline[:criterium]
       Discipline[:road].id
@@ -60,7 +60,7 @@ class RaceNumber < ActiveRecord::Base
   end
   
   # Different disciplines have different rules about what is a rental number
-  def RaceNumber.rental?(number, discipline = Discipline[:road])
+  def self.rental?(number, discipline = Discipline[:road])
     if RacingAssociation.current.rental_numbers.nil?
       return false
     end

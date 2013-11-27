@@ -43,7 +43,7 @@ class AcceptanceTest < ActiveSupport::TestCase
     end
   end
   
-  def AcceptanceTest.download_directory
+  def self.download_directory
     if AcceptanceTest.javascript_driver == :chrome
       File.expand_path "~/Downloads"
     else

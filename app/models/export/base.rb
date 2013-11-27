@@ -1,7 +1,7 @@
 require 'csv'
 
 module Export
-  def Export.export_all
+  def self.export_all
     Alias.export
     Category.export
     Event.export
@@ -20,7 +20,7 @@ module Export
   module Base
     private
 
-    def Base.export(sql, basename)
+    def self.export(sql, basename)
       # remove any existing tmp file
       path = Base.tmp_path basename
       path.unlink if path.exist?
@@ -36,11 +36,11 @@ module Export
       path.rename target
     end
 
-    def Base.tmp_path(basename)
+    def self.tmp_path(basename)
       Pathname.new File.join("#{Rails.root}/tmp/export", basename)
     end
 
-    def Base.public_path(basename)
+    def self.public_path(basename)
       Pathname.new File.join(::Rails.root.to_s, "public", "export", basename)
     end
   end

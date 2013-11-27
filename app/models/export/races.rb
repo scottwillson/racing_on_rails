@@ -2,28 +2,28 @@ module Export
   module Races
     include Export::Base
 
-    def Race.export
+    def self.export
       Race.export_head
       Race.export_data
     end
 
     private
 
-    def Race.export_head
+    def self.export_head
       Base.export(export_head_sql, "races.txt")
     end
 
-    def Race.export_data
+    def self.export_data
       Base.export(export_data_sql, "races.csv")
     end
 
-    def Race.export_head_sql
+    def self.export_head_sql
       "SELECT '#{Race.export_columns.join("','")}'
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY '\\n'"
     end
 
-    def Race.export_data_sql
+    def self.export_data_sql
       "SELECT #{Race.export_columns.join(",")}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
@@ -31,7 +31,7 @@ module Export
        FROM races"
     end
 
-    def Race.export_columns
+    def self.export_columns
       [
         "id", "event_id", "category_id", "city", "state", "distance",
         "field_size", "laps", "time", "finishers"

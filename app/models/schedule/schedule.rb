@@ -35,7 +35,7 @@ module Schedule
     #
     # === Returns
     # * date of first event
-    def Schedule.import(file_path)
+    def self.import(file_path)
       start_date = nil
       Event.transaction do
         table = Tabular::Table.read(file_path, :columns => COLUMNS_MAP)
@@ -50,7 +50,7 @@ module Schedule
     end
     
     # Events with results _will not_ be destroyed
-    def Schedule.delete_all_future_events(events)
+    def self.delete_all_future_events(events)
       date = events.map(&:date).min
       logger.debug "Delete all events after #{date}"
       # Avoid lock version errors by destroying child events first
@@ -59,7 +59,7 @@ module Schedule
     end
 
     # Read +file+, split city and state, read and create promoter
-    def Schedule.parse_events(file)
+    def self.parse_events(file)
       events = []
       file.rows.each do |row|
         if has_event?(row)
@@ -70,12 +70,12 @@ module Schedule
       events
     end
 
-    def Schedule.has_event?(row)
+    def self.has_event?(row)
       row[:name].present? && row[:date].present? && (row[:notes].blank? || !row[:notes]["Not on calendar"])
     end
 
     # Read Table Row and create SingleDayEvent
-    def Schedule.parse(row)
+    def self.parse(row)
       logger.debug(row.inspect) if logger.debug?
       event = nil
 
@@ -141,7 +141,7 @@ module Schedule
     end
 
     # Try and create parent MultiDayEvents from imported SingleDayEvents
-    def Schedule.find_multi_day_events(events)
+    def self.find_multi_day_events(events)
       logger.debug "Find multi-day events"
 
       # Hash of Arrays keyed by event name
@@ -164,7 +164,7 @@ module Schedule
       multi_day_events
     end
 
-    def Schedule.add_one_day_events_to_parents(events, multi_day_events)
+    def self.add_one_day_events_to_parents(events, multi_day_events)
       events.each do |event|
         parent = multi_day_events[event.name]
         if parent
@@ -173,7 +173,7 @@ module Schedule
       end
     end
 
-    def Schedule.save(events, multi_day_events)
+    def self.save(events, multi_day_events)
       events.each do |event|
         logger.debug "Save #{event.name}"
         unless Event.where(:name => event.name, :date => event.date).exists?
@@ -187,7 +187,7 @@ module Schedule
       end
     end
     
-    def Schedule.logger
+    def self.logger
       Rails.logger
     end
     

@@ -65,14 +65,14 @@ class Person < ActiveRecord::Base
   end
 
   # Does not consider Aliases
-  def Person.find_all_by_name(name)
+  def self.find_all_by_name(name)
     Person.all(
       :conditions => ["name = ?", name],
       :order => 'last_name, first_name')
   end
   
   # "Jane Doe" or "Jane", "Doe" or :name => "Jane Doe" or :first_name => "Jane", :last_name => "Doe"
-  def Person.find_all_by_name_or_alias(*args)
+  def self.find_all_by_name_or_alias(*args)
     options = args.extract_options!
     options.keys.each { |key| raise(ArgumentError, "'#{key}' is not a valid key") unless [:name, :first_name, :last_name].include?(key) }
     
@@ -102,7 +102,7 @@ class Person < ActiveRecord::Base
   end
   
   # Considers aliases
-  def Person.find_all_by_name_like(name, limit = RacingAssociation.current.search_results_limit, page = 1)
+  def self.find_all_by_name_like(name, limit = RacingAssociation.current.search_results_limit, page = 1)
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
@@ -115,7 +115,7 @@ class Person < ActiveRecord::Base
     )
   end
   
-  def Person.find_by_info(name, email = nil, home_phone = nil)
+  def self.find_by_info(name, email = nil, home_phone = nil)
     if name.present?
       Person.find_by_name(name)
     else
@@ -126,13 +126,13 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def Person.find_by_name(name)
+  def self.find_by_name(name)
     Person.first(
       :conditions => ["name = ?", name]
     )
   end
   
-  def Person.find_or_create_by_name(name)
+  def self.find_or_create_by_name(name)
     Person.find_by_name(name) || Person.create(:name => name)
   end
 
@@ -144,12 +144,12 @@ class Person < ActiveRecord::Base
       map(&:person)
   end
 
-  def Person.full_name(first_name, last_name)
+  def self.full_name(first_name, last_name)
     "#{first_name} #{last_name}".strip
   end
   
   # Flattened, straight SQL dump for export to Excel, FinishLynx, or SportsBase.
-  def Person.find_all_for_export(date = Time.zone.today, include_people = "members_only")
+  def self.find_all_for_export(date = Time.zone.today, include_people = "members_only")
     association_number_issuer_id = NumberIssuer.find_by_name(RacingAssociation.current.short_name).id
     if include_people == "members_only"
       where_clause = "WHERE (member_to >= '#{date.to_s}')" 
@@ -213,7 +213,7 @@ class Person < ActiveRecord::Base
   end
   
   # interprets dates returned in sql above for member export
-  def Person.lic_check(lic, lic_date)
+  def self.lic_check(lic, lic_date)
     if lic_date && lic.to_i > 0
       case lic_date
       when Date, Time, DateTime
@@ -227,7 +227,7 @@ class Person < ActiveRecord::Base
   end
   
   # Find Person with most recent. If no results, select the most recently updated Person.
-  def Person.select_by_recent_activity(people)
+  def self.select_by_recent_activity(people)
     results = people.to_a.inject([]) { |r, person| r + person.results }
     if results.empty?
       people.to_a.sort_by(&:updated_at).last
@@ -237,7 +237,7 @@ class Person < ActiveRecord::Base
     end
   end
 
-  def Person.deliver_password_reset_instructions!(people)
+  def self.deliver_password_reset_instructions!(people)
     people.each(&:reset_perishable_token!)
     Notifier.password_reset_instructions(people).deliver
   end

@@ -5,7 +5,7 @@
 # Cross Crusade
 class Series < MultiDayEvent
 
-  def Series.find_all_by_year(year)
+  def self.find_all_by_year(year)
     logger.debug("Series.find_all_by_year(year)")
     start_of_year = Date.new(year, 1, 1)
     end_of_year = Date.new(year, 12, 31)

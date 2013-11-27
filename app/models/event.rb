@@ -164,7 +164,7 @@ class Event < ActiveRecord::Base
     [ weekly_series, events, competitions ]
   end
 
-  def Event.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
+  def self.find_all_bar_for_discipline(discipline, year = Time.zone.today.year)
     first_of_year = Date.new(year, 1, 1)
     last_of_year = Date.new(year + 1, 1, 1) - 1
       discipline_names = [discipline]

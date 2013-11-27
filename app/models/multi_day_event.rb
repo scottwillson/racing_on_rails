@@ -54,17 +54,17 @@ class MultiDayEvent < Event
              end
            end
 
-  def MultiDayEvent.find_all_by_year(year, discipline = nil)
+  def self.find_all_by_year(year, discipline = nil)
     conditions = ["date between ? and ?", "#{year}-01-01", "#{year}-12-31"]
     MultiDayEvent.find_all_by_conditions(conditions, discipline)
   end
 
-  def MultiDayEvent.find_all_by_unix_dates(start_date, end_date,  discipline = nil)
+  def self.find_all_by_unix_dates(start_date, end_date,  discipline = nil)
     conditions = ["date between ? and ?", "#{Time.at(start_date.to_i).strftime('%Y-%m-%d')}", "#{Time.at(end_date.to_i).strftime('%Y-%m-%d')}"]
     MultiDayEvent.find_all_by_conditions(conditions, discipline)
   end
 
-  def MultiDayEvent.find_all_by_conditions(conditions, discipline = nil)
+  def self.find_all_by_conditions(conditions, discipline = nil)
     if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
       conditions.first << " and sanctioned_by = ?"
       conditions << RacingAssociation.current.default_sanctioned_by
@@ -81,7 +81,7 @@ class MultiDayEvent < Event
   # Create MultiDayEvent from several SingleDayEvents.
   # Use first SingleDayEvent to populate date, name, promoter, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
-  def MultiDayEvent.create_from_children(children)
+  def self.create_from_children(children)
     raise ArgumentError.new("children cannot be empty") if children.empty?
     
     first_event = children.first
@@ -136,14 +136,14 @@ class MultiDayEvent < Event
     event
   end
 
-  def MultiDayEvent.guess_type(name, date)
+  def self.guess_type(name, date)
     events = SingleDayEvent.all( :conditions => ['name = ? and extract(year from date) = ?', name, date])
     MultiDayEvent.guess_type(events)
   end
   
   # This fails if a stage race spans more than one day but has more events than days
   # we could look for events that span contiguous days...but a long stage race could have a rest day...
-  def MultiDayEvent.guess_type(events)
+  def self.guess_type(events)
     length = events.last.date - events.first.date
     if events.size - 1 == length
      MultiDayEvent
@@ -156,7 +156,7 @@ class MultiDayEvent < Event
     end
   end
   
-  def MultiDayEvent.same_name_and_year(event)
+  def self.same_name_and_year(event)
     raise ArgumentError, "'event' cannot be nil" if event.nil?
     MultiDayEvent.first(:conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
   end

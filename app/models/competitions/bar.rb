@@ -10,7 +10,7 @@ class Bar < Competition
   include Concerns::Bar::Discipline
   include Concerns::Competition::CalculatorAdapter
   
-  def Bar.calculate!(year = Time.zone.today.year)
+  def self.calculate!(year = Time.zone.today.year)
     benchmark(name, :level => :info) {
       transaction do
         year = year.to_i if year.is_a?(String)
@@ -47,7 +47,7 @@ class Bar < Competition
     true
   end
   
-  def Bar.find_by_year_and_discipline(year, discipline_name)
+  def self.find_by_year_and_discipline(year, discipline_name)
     Bar.where(:date => Time.zone.local(year).to_date, :discipline => discipline_name).first
   end
 

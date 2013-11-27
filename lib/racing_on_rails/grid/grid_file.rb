@@ -3,7 +3,7 @@ module RacingOnRails
     # Read and write Grid to files. To be replaced by Tabular.
     class GridFile < RacingOnRails::Grid::Grid
 
-      def GridFile.read_excel(file)
+      def self.read_excel(file)
         Rails.logger.debug("GridFile (#{Time.zone.now}) read_excel #{file}")
         if File::Stat.new(file.path).size == 0
           Rails.logger.warn("#{file.path} is empty")
@@ -56,14 +56,14 @@ module RacingOnRails
         excel_rows
       end
 
-      def GridFile.debug?
+      def self.debug?
         false
       end
 
       # TODO Dupe method
       # Time in hh:mm:ss.00 format. E.g., 1:20:59.75
       # This method doesn't handle some typical edge cases very well
-      def GridFile.s_to_time(string)
+      def self.s_to_time(string)
         if string.to_s.blank?
           0.0
         else

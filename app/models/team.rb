@@ -20,7 +20,7 @@ class Team < ActiveRecord::Base
   has_many :people
   has_many :results
 
-  def Team.find_by_name_or_alias(name)
+  def self.find_by_name_or_alias(name)
     team = Team.find_by_name(name)
     if team.nil?
       team_alias = Alias.find_by_name(name)
@@ -31,7 +31,7 @@ class Team < ActiveRecord::Base
     team
   end
   
-  def Team.find_by_name_or_alias_or_create(name)
+  def self.find_by_name_or_alias_or_create(name)
     team = find_by_name_or_alias(name)
     if team.nil?
       team = Team.create(:name => name)
@@ -39,7 +39,7 @@ class Team < ActiveRecord::Base
     team
   end
   
-  def Team.find_all_by_name_like(name, limit = 100)
+  def self.find_all_by_name_like(name, limit = 100)
     name_like = "%#{name}%"
     Team.all(
       :conditions => ['teams.name like ? or aliases.name like ?', name_like, name_like], 
