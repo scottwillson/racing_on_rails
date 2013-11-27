@@ -9,8 +9,12 @@ module Concerns
         if self.equal?(other)
           return true
         end
-
-        if other.nil? || !other || new_record? || other.new_record?
+        
+        if !(other.respond_to?(:id) || other.respond_to?(:new_record?))
+          return false
+        end
+        
+        if new_record? || other.new_record?
           return false
         end
 
@@ -22,7 +26,11 @@ module Concerns
           return true
         end
 
-        if other.nil? || !other || new_record? || other.new_record?
+        if !(other.respond_to?(:id) || other.respond_to?(:new_record?))
+          return false
+        end
+
+        if new_record? || other.new_record?
           return false
         end
 
