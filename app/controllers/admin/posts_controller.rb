@@ -3,11 +3,10 @@ module Admin
     before_filter :assign_mailing_list
 
     def index
-      @posts = Post.paginate(
-        :order => "date desc", 
-        :page => params[:page],
-        :conditions => [ "mailing_list_id = ?", @mailing_list.id ]
-      )
+      @posts = Post.
+        where(:mailing_list_id => @mailing_list.id).
+        order("date desc").
+        page(params[:page])
     end
     
     def new
