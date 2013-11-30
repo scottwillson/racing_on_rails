@@ -301,7 +301,13 @@ class Competition < Event
     Competition.benchmark("#{self.class.name} source_results", :level => :debug) {
       results = source_results(race)
     }
-    logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'") if logger.debug?
+    if logger.debug?
+      if results.respond_to?(:rows)
+        logger.debug("#{self.class.name} Found #{results.rows} source results for '#{race.name}'")
+      else
+        logger.debug("#{self.class.name} Found #{results.size} source results for '#{race.name}'")
+      end
+    end
     results
   end
 end
