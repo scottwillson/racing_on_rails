@@ -1,5 +1,3 @@
-require 'fileutils'
-
 # Results that derive their results from other Events. Se TYPES.
 # Year-long: BAR, Ironman, WSBA Rider Rankings, Oregon Cup.
 # Event-based: Cross Crusade, Mount Tabor Series.
