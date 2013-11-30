@@ -139,10 +139,14 @@ class Event < ActiveRecord::Base
   def self.find_all_with_results(year = Time.zone.today.year, discipline = nil)
     # Maybe this should be its own class, since it has knowledge of Event and Result?
     events = Event.
-              distinct.
               joins(:races => :results).
               includes(:parent => :parent).
-              where("events.date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date)
+              where(
+                "events.date between ? and ?", 
+                Time.zone.local(year).beginning_of_year.to_date, 
+                Time.zone.local(year).end_of_year.to_date
+              ).
+              uniq
 
     if discipline
       discipline_names = [discipline.name]
@@ -159,7 +163,7 @@ class Event < ActiveRecord::Base
     events.map!(&:root).uniq!
     
     weekly_series, events = events.partition { |event| event.is_a?(WeeklySeries) }
-    competitions, events = events.partition { |event| event.is_a?(Competitions::Competition) }
+    competitions, events = events.partition { |event| event.is_a?(Competition) }
 
     [ weekly_series, events, competitions ]
   end
