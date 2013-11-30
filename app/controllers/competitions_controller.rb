@@ -2,8 +2,6 @@ class CompetitionsController < ApplicationController
   caches_page :show
   
   def show
-    date = Date.new(@year.to_i, 1, 1)
-
     # Very explicit because we don't want to call something like 'eval' on a request parameter!
     if params[:type] == "rider_rankings"
       competition_class = RiderRankings
