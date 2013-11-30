@@ -1,4 +1,5 @@
 module ResultsHelper
+  # Order is significant
   # TODO Move to module in Race?
   RESULT_COLUMNS = %W{ place number name team_name age city age_group category_class category_name points_bonus points_bonus_penalty points_from_place points_penalty points_total time_bonus_penalty time_gap_to_leader time_gap_to_previous time_gap_to_winner points laps time time_total notes }.freeze
 
