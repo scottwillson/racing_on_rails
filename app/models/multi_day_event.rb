@@ -54,20 +54,6 @@ class MultiDayEvent < Event
              end
            end
 
-  def self.find_all_by_conditions(conditions, discipline = nil)
-    if RacingAssociation.current.show_only_association_sanctioned_races_on_calendar
-      conditions.first << " and sanctioned_by = ?"
-      conditions << RacingAssociation.current.default_sanctioned_by
-    end
-
-    if discipline
-      conditions.first << " and discipline = ?"
-      conditions << discipline.name
-    end
-
-    MultiDayEvent.all( :conditions => conditions, :order => "date")
-  end
-
   # Create MultiDayEvent from several SingleDayEvents.
   # Use first SingleDayEvent to populate date, name, promoter, etc.
   # Guess subclass (MultiDayEvent, Series, WeeklySeries) from SingleDayEvent dates
