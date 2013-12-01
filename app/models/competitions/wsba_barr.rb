@@ -22,7 +22,7 @@ class WsbaBarr < Competition
       "Women Cat 4"
     ].each do |category_name|
       category = Category.find_or_create_by_name(category_name)
-      races.create(:category => category)
+      races.create!(:category => category)
     end
   end
   

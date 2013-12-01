@@ -74,7 +74,7 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   # "Membership year." Used for race number export, schedule, and renewals. Returns current year until December.
-  # On and after December 1, returns the next year.
+  # On and after December 15, returns the next year.
   def effective_year
     if next_year_start_at && Time.zone.now < 1.year.from_now(next_year_start_at)
       if Time.zone.now < next_year_start_at
@@ -87,7 +87,7 @@ class RacingAssociation < ActiveRecord::Base
         end
       end
     else
-      if Time.zone.now.month == 12
+      if Time.zone.now.month == 12 && Time.zone.now.day >= 16
         return Time.zone.now.year + 1
       end
     end

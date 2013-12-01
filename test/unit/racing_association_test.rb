@@ -41,7 +41,11 @@ class RacingAssociationTest < ActiveSupport::TestCase
       assert_equal 2020, RacingAssociation.current.effective_year, "effective year for November 2020"
     end
 
-    Timecop.freeze(Time.zone.local(2020, 12, 1)) do
+    Timecop.freeze(Time.zone.local(2020, 12, 15)) do
+      assert_equal 2020, RacingAssociation.current.effective_year, "effective year for December 2020"
+    end
+
+    Timecop.freeze(Time.zone.local(2020, 12, 16)) do
       assert_equal 2021, RacingAssociation.current.effective_year, "effective year for December 2020"
     end
 
@@ -113,19 +117,19 @@ class RacingAssociationTest < ActiveSupport::TestCase
       assert_equal 2016, RacingAssociation.current.next_year, "next_year for January 2014"
     end
     
-    Timecop.freeze(Time.zone.local(2015, 12, 14)) do
-      assert_equal 2015, RacingAssociation.current.effective_year, "effective year for December 14, 2014"
-      assert_equal 2016, RacingAssociation.current.next_year, "next_year for December 14 2014"
-    end
-    
     Timecop.freeze(Time.zone.local(2015, 12, 15)) do
-      assert_equal 2016, RacingAssociation.current.effective_year, "effective year for December 15, 2014"
+      assert_equal 2015, RacingAssociation.current.effective_year, "effective year for December 15, 2014"
       assert_equal 2016, RacingAssociation.current.next_year, "next_year for December 15 2014"
     end
     
     Timecop.freeze(Time.zone.local(2015, 12, 16)) do
       assert_equal 2016, RacingAssociation.current.effective_year, "effective year for December 16, 2014"
       assert_equal 2016, RacingAssociation.current.next_year, "next_year for December 16 2014"
+    end
+    
+    Timecop.freeze(Time.zone.local(2015, 12, 17)) do
+      assert_equal 2016, RacingAssociation.current.effective_year, "effective year for December 17, 2014"
+      assert_equal 2016, RacingAssociation.current.next_year, "next_year for December 17 2014"
     end
     
     Timecop.freeze(Time.zone.local(2015, 12, 31)) do

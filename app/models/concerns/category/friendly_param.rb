@@ -5,7 +5,7 @@ module Concerns
 
       module ClassMethods
         def count_by_friendly_param(param)
-          ::Category.count :conditions => [ "friendly_param = ?", param ]
+          ::Category.where(:friendly_param => param).count
         end
 
         def find_by_friendly_param(param)
@@ -14,7 +14,7 @@ module Concerns
           when 0
             nil
           when 1
-            ::Category.first(:conditions => ['friendly_param = ?', param])
+            ::Category.where(:friendly_param => param).first
           else
             raise Concerns::Category::AmbiguousParamException, "#{category_count} occurrences of #{param}"
           end

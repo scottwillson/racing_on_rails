@@ -83,21 +83,13 @@ class Person < ActiveRecord::Base
     last_name = options[:last_name]
     
     if name.present?
-      return Person.all(
-        :conditions => ["name = ?", name]
-      ) | Alias.find_all_people_by_name(name)
+      Person.where(:name => name) | Alias.find_all_people_by_name(name)
     elsif first_name.present? && last_name.blank?
-      Person.all(
-        :conditions => ['first_name = ?', first_name]
-      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(:first_name => first_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     elsif first_name.blank? && last_name.present?
-      Person.all(
-        :conditions => ['last_name = ?', last_name]
-      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(:last_name => last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     else
-      Person.all(
-        :conditions => ['first_name = ? and last_name = ?', first_name, last_name]
-      ) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
+      Person.where(:first_name => first_name).where(:last_name => last_name) | Alias.find_all_people_by_name(Person.full_name(first_name, last_name))
     end
   end
   
@@ -106,34 +98,27 @@ class Person < ActiveRecord::Base
     return [] if name.blank?
     
     name_like = "%#{name.strip}%"
-    Person.paginate(
-      :conditions => ["people.name like ? or aliases.name like ?", name_like, name_like],
-      :include => :aliases,
-      :limit => limit,
-      :page => page,
-      :order => 'last_name, first_name'
-    )
+    Person.
+      where("people.name like ? or aliases.name like ?", name_like, name_like).
+      includes(:aliases).
+      limit(limit).
+      page(page).
+      order('last_name, first_name')
   end
   
   def self.find_by_info(name, email = nil, home_phone = nil)
     if name.present?
       Person.find_by_name(name)
     else
-      Person.first(
-        :conditions => ["(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)", 
-                        email, home_phone]
-      )
+      Person.where(
+        "(email = ? and email <> '' and email is not null) or (home_phone = ? and home_phone <> '' and home_phone is not null)", 
+        email, home_phone
+      ).first
     end
   end
 
   def self.find_by_name(name)
-    Person.first(
-      :conditions => ["name = ?", name]
-    )
-  end
-  
-  def self.find_or_create_by_name(name)
-    Person.find_by_name(name) || Person.create(:name => name)
+    Person.where(:name => name).first
   end
 
   def self.find_all_by_number(number)
@@ -255,11 +240,8 @@ class Person < ActiveRecord::Base
   def people_name_sounds_like
     return [] if name.blank?
     
-    Person.find(
-      :all, 
-      :conditions => ["id != ? and soundex(name) = soundex(?)", id, name.strip]
-    ) +
-    Person.all(:conditions => { :first_name => last_name, :last_name => first_name })
+    Person.where.not(:id => id).where("soundex(name) = soundex(?)", name.strip).all + 
+    Person.where(:first_name => last_name).where(:last_name => first_name)
   end
 
   # Name on year. Could be rolled into Nameable?

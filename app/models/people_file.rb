@@ -152,7 +152,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
         people = []
 
         if row_hash[:license].present?
-          people = Person.find_all_by_license(row_hash[:license])
+          people = Person.where(license: row_hash[:license])
         end
 
         if people.empty?

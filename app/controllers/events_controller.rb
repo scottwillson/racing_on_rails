@@ -21,6 +21,6 @@ class EventsController < ApplicationController
     if year.blank?
       year = RacingAssociation.current.effective_year
     end
-    Event.year(year.to_i)
+    Event.year year.to_i
   end
 end

@@ -113,7 +113,7 @@ class MultiDayEvent < Event
   end
 
   def self.guess_type(name, date)
-    events = SingleDayEvent.all( :conditions => ['name = ? and extract(year from date) = ?', name, date])
+    events = SingleDayEvent.where(:name => name).year(date.year)
     MultiDayEvent.guess_type(events)
   end
   
@@ -134,7 +134,7 @@ class MultiDayEvent < Event
   
   def self.same_name_and_year(event)
     raise ArgumentError, "'event' cannot be nil" if event.nil?
-    MultiDayEvent.first(:conditions => ['name = ? and extract(year from date) = ?', event.name, event.date.year])
+    MultiDayEvent.where(:name => event.name).year(event.date.year).first
   end
 
   # Uses SQL query to set +date+ from child events. Callbacks pass in unsued child parameter.
@@ -198,9 +198,7 @@ class MultiDayEvent < Event
   def missing_children
     return [] unless name && date
     
-    @missing_children ||= SingleDayEvent.all( 
-                          :conditions => ['parent_id is null and name = ? and extract(year from date) = ?', 
-                                          name, date.year])
+    @missing_children ||= SingleDayEvent.where(:parent_id =>nil).where(:name => name).year(date.year)
   end
   
   # All children have results?
