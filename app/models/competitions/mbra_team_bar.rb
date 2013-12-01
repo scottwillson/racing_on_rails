@@ -78,9 +78,6 @@ class MbraTeamBar < Competition
       # e.g., MbraTeamBar scoring result: Belt Creek Omnium - Highwood TT | Master A Men | 4 | Steve Zellmer | Northern Rockies Cycling
 
       # I don't need this now: no allowance for TTT or tandem teams with members of multiple teams
-      #  teams = extract_teams_from(source_result)
-      #  logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
-      #  for team in teams
 
       if member?(source_result.team, source_result.date)
 
@@ -90,7 +87,7 @@ class MbraTeamBar < Competition
           # So 'first result' really means 'not the same as last result'
           # race here is the category in the competition
           competition_result = race.results.detect {|result| result.team == source_result.team}
-          competition_result = race.results.create(:team => source_result.team) if competition_result.nil?
+          competition_result = race.results.create!(:team => source_result.team) if competition_result.nil?
         end
 
         # limit to top two results for team for each source race by 
@@ -100,7 +97,7 @@ class MbraTeamBar < Competition
         competition_result.scores.create!(
           :source_result => source_result,
           :competition_result => competition_result,
-          :points => points_for(source_result).to_f #/ teams.size
+          :points => points_for(source_result).to_f
         )
         logger.debug("#{self.class.name} competition result: #{competition_result.event.name} | #{competition_result.race.name} | #{competition_result.place} | #{competition_result.team_name}") if logger.debug?
         # e.g., MbraTeamBar competition result: 2009 MBRA BAT | Master A Men |  | Gallatin Alpine Sports/Intrinsik Architecture
