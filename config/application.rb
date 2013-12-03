@@ -27,6 +27,8 @@ module RacingOnRails
   
     config.time_zone = "Pacific Time (US & Canada)"
     
+    I18n.config.enforce_available_locales = true
+    
     # Racing on Rails has many foreign key constraints, so :sql is required
     config.active_record.schema_format = :sql
     
