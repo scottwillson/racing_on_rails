@@ -1,6 +1,4 @@
-load "deploy"
-
-set :application, "racing_on_rails"
+set :site_local_repository_branch, nil
 
 role :app, "rocketsurgeryllc.com"
 role :web, "rocketsurgeryllc.com"
@@ -11,21 +9,23 @@ load "local/config/staging.rb" if File.exists?("local/config/staging.rb")
 set :rails_env, "staging"
 set :deploy_to, "/var/www/rails/#{application}"
 
-load "deploy/assets"
+load 'deploy/assets'
 load "config/db"
-set :unicorn_config_path, "#{current_path}/config/unicorn"
-set :unicorn_config_filename, "staging.rb"
+
 require "capistrano-unicorn"
+set :unicorn_rack_env, "staging"
+set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
-set :rvm_ruby_string, "1.9.3"
+set :rvm_ruby_string, "ruby-2.0.0-p353"
 
 set :scm, "git"
-set :repository, "git@github.com:scottwillson/racing_on_rails.git"
-
+set :repository, "git://github.com/scottwillson/racing_on_rails.git"
 set :site_local_repository, "git@github.com:scottwillson/#{application}-local.git"
 set :deploy_via, :remote_cache
 set :keep_releases, 5
+
+set :bundle_without, [ :development, :test, :acceptance ]
 
 set :user, "app"
 set :use_sudo, false

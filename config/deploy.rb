@@ -12,7 +12,7 @@ set :unicorn_rack_env, "production"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
-set :rvm_ruby_string, "1.9.3"
+set :rvm_ruby_string, "ruby-2.0.0-p353"
 
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
