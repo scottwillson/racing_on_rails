@@ -125,7 +125,7 @@ class RacingAssociation < ActiveRecord::Base
   end
   
   def cyclocross_season_end
-    Time.zone.local(Time.zone.now.year, 12, 16).end_of_day
+    Time.zone.local(Time.zone.now.year, 12, 15).end_of_day
   end
 
   def rental_numbers
