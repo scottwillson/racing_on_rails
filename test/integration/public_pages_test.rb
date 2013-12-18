@@ -119,10 +119,12 @@ class PublicPagesTest < ActionController::IntegrationTest
     assert_response :success
     assert_equal rider_rankings, assigns(:event), "@event"
 
-    event = OregonWomensPrestigeSeries.create!
-    get "/owps"
-    assert_response :success
-    assert_equal event, assigns(:event), "@event"
+    Timecop.freeze(Time.zone.local(2013)) do
+      event = OregonWomensPrestigeSeries.create!
+      get "/owps"
+      assert_response :success
+      assert_equal event, assigns(:event), "@event"
+    end
   end
 
   private
