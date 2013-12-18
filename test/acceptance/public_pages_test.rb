@@ -10,9 +10,11 @@ class PublicPagesTest < AcceptanceTest
 
     promoter = FactoryGirl.create(:person, :name => "Brad Ross", :home_phone => "(503) 555-1212")
     new_event = FactoryGirl.create(:event, :promoter => promoter, :date => Date.new(RacingAssociation.current.effective_year, 5))
-    FactoryGirl.create(:result, :event => new_event)
-
     alice = FactoryGirl.create(:person, :name => "Alice Pennington")
+    Timecop.freeze(Date.new(RacingAssociation.current.effective_year, 5, 2)) do 
+      FactoryGirl.create(:result, :event => new_event)
+    end
+
     FactoryGirl.create(:event, :name => "Kings Valley Road Race", :date => Time.zone.local(2004).end_of_year.to_date).
       races.create!(:category => FactoryGirl.create(:category, :name => "Senior Women 1/2/3")).
       results.create!(:place => "2", :person => alice)
@@ -49,7 +51,7 @@ class PublicPagesTest < AcceptanceTest
     end
 
     visit "/results"
-    assert_page_has_content Time.zone.today.year.to_s
+    assert_page_has_content RacingAssociation.current.effective_year.to_s
     click_link new_event.name
 
     visit "/results/2004/road"
@@ -91,7 +93,7 @@ class PublicPagesTest < AcceptanceTest
     assert_page_has_content "WSBA is using the default USA Cycling ranking system from 2012 onward"
 
     visit "/cat4_womens_race_series"
-    assert_page_has_content "No results for #{Time.zone.today.year}"
+    assert_page_has_content "No results for #{RacingAssociation.current.effective_year}"
 
     visit "/oregon_cup"
     assert_page_has_content "Oregon Cup"
