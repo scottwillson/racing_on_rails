@@ -181,7 +181,7 @@ class PeopleTest < AcceptanceTest
 
     click_button "Export"
     today = RacingAssociation.current.effective_today
-    wait_for_download "people_#{RacingAssociation.current.effective_year}_#{today.month}_#{today.day}.xls"
+    wait_for_download "people_#{Time.zone.now.year}_#{today.month}_#{today.day}.xls"
 
     visit '/admin/teams'
 
