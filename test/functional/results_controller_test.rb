@@ -416,41 +416,43 @@ class ResultsControllerTest < ActionController::TestCase
   end
   
   def test_person_xml
-    person = FactoryGirl.create(:result).person
-    get :person, :person_id => person.id, :format => :xml
-    assert_equal "application/xml", @response.content_type
-    [
-      "results > result",
-      "result > age",
-      "result > age-group",
-      "result > category-class",
-      "result > city",
-      "result > custom-attributes",
-      "result > date-of-birth",
-      "result > gender",
-      "result > id",
-      "result > laps",
-      "result > license",
-      "result > number",
-      "result > place",
-      "result > place-in-category",
-      "result > points",
-      "result > points-bonus",
-      "result > points-bonus-penalty",
-      "result > points-from-place",
-      "result > points-penalty",
-      "result > points-total",
-      "result > preliminary",
-      "result > state",
-      "result > time",
-      "result > time-gap-to-leader",
-      "result > time-gap-to-previous",
-      "result > time-gap-to-winner",
-      "result > first-name",
-      "result > last-name",
-      "result > license",
-      "result > id"
-    ].each { |key| assert_select key }
+    Timecop.freeze(Time.zone.local(2015, 11)) do
+      person = FactoryGirl.create(:result).person
+      get :person, :person_id => person.id, :format => :xml
+      assert_equal "application/xml", @response.content_type
+      [
+        "results > result",
+        "result > age",
+        "result > age-group",
+        "result > category-class",
+        "result > city",
+        "result > custom-attributes",
+        "result > date-of-birth",
+        "result > gender",
+        "result > id",
+        "result > laps",
+        "result > license",
+        "result > number",
+        "result > place",
+        "result > place-in-category",
+        "result > points",
+        "result > points-bonus",
+        "result > points-bonus-penalty",
+        "result > points-from-place",
+        "result > points-penalty",
+        "result > points-total",
+        "result > preliminary",
+        "result > state",
+        "result > time",
+        "result > time-gap-to-leader",
+        "result > time-gap-to-previous",
+        "result > time-gap-to-winner",
+        "result > first-name",
+        "result > last-name",
+        "result > license",
+        "result > id"
+      ].each { |key| assert_select key }
+    end
   end
   
   def test_team
