@@ -154,12 +154,6 @@ RacingOnRails::Application.routes.draw do
     match '/rider_rankings' => 'competitions#show', :as => :rider_rankings_root, :type => 'rider_rankings'
     match '/ironman(/:year)' => 'ironman#index', :as => :ironman
 
-    resources :update_requests do
-      member do
-        get :confirm
-      end
-    end
-
     match '/oregon_cup/rules' => 'oregon_cup#rules'
     match '/oregon_cup/races' => 'oregon_cup#races'
     match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
