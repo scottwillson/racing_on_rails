@@ -2,13 +2,13 @@ require 'csv'
 
 module Export
   def self.export_all
-    Alias.export
-    Category.export
-    Event.export
-    Person.export
-    Race.export
-    Result.export
-    Team.export
+    ::Alias.export
+    ::Category.export
+    ::Event.export
+    ::Person.export
+    ::Race.export
+    ::Result.export
+    ::Team.export
     Dir.chdir("#{Rails.root}/public/export") do
       `rm *.bz2` if Dir.glob("*.bz2").present?
       `tar --create --bzip2 --file=#{RacingAssociation.current.short_name.downcase}.tar.bz2 *.*`
