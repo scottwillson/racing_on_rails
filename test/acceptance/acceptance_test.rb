@@ -24,8 +24,8 @@ class AcceptanceTest < ActiveSupport::TestCase
   # transaction, the server won't see it.
   DatabaseCleaner.strategy = :truncation
   
-  setup :clean_database, :clear_downloads, :set_capybara_driver
-  teardown :reset_session
+  setup :clean_database, :clear_downloads
+  teardown :reset_session, :reset_capybara_driver
   
   def self.javascript_driver
     if ENV["JAVASCRIPT_DRIVER"].present?
@@ -236,8 +236,10 @@ class AcceptanceTest < ActiveSupport::TestCase
     Capybara.current_driver = AcceptanceTest.javascript_driver
   end
   
-  def set_capybara_driver
-    Capybara.current_driver = AcceptanceTest.default_driver
+  def reset_capybara_driver
+    unless Capybara.current_driver == AcceptanceTest.default_driver
+      Capybara.current_driver = AcceptanceTest.default_driver
+    end
   end
 
   def clear_downloads
