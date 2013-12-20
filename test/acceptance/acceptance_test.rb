@@ -140,6 +140,20 @@ class AcceptanceTest < ActiveSupport::TestCase
       fail "'#{locator}' did not appear in page source within 10 seconds"
     end
   end
+  
+  def wait_for_no(locator)
+    raise ArgumentError if locator.blank?
+
+    begin
+      Timeout::timeout(10) do
+        while page.has_selector?(locator)
+          sleep 0.25
+        end
+      end
+    rescue Timeout::Error
+      fail "'#{locator}' still present after 10 seconds"
+    end
+  end
 
   # Helpful for clicking links that are bound to JS handlers. Need to click after handler is bound.
   def click_until(link_css, &block)
@@ -163,6 +177,7 @@ class AcceptanceTest < ActiveSupport::TestCase
       fill_in "value", options
       press_return "value"
     end
+    wait_for_no ".editing"
   end
 
   def press_return(field)
