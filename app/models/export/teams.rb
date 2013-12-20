@@ -2,28 +2,28 @@ module Export
   module Teams
     include Export::Base
 
-    def self.export
+    def Team.export
       Team.export_head
       Team.export_data
     end
 
     private
 
-    def self.export_head
+    def Team.export_head
       Base.export(Team.export_head_sql, "teams.txt")
     end
 
-    def self.export_data
+    def Team.export_data
       Base.export(Team.export_data_sql, "teams.csv")
     end
 
-    def self.export_head_sql
+    def Team.export_head_sql
       "SELECT '#{Team.export_columns.join("','")}'
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY '\\n'"
     end
 
-    def self.export_data_sql
+    def Team.export_data_sql
       "SELECT #{Team.export_columns.join(",")}
        INTO OUTFILE '%s'
        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
@@ -31,7 +31,7 @@ module Export
        FROM teams"
     end
 
-    def self.export_columns
+    def Team.export_columns
       [
         "id", "name", "city", "state", "website", "contact_name", "contact_email", "contact_phone"
       ]
