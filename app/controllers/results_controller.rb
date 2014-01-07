@@ -12,8 +12,8 @@ class ResultsController < ApplicationController
     @weekly_series, @events, @competitions = Event.find_all_with_results(@year, @discipline)
 
     respond_to do |format|
-      format.xml
       format.html
+      format.xml
     end
   end
   
