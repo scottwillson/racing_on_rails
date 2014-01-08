@@ -1,4 +1,4 @@
-<% if categories.many? %>
+<% if categories.many? || (race && categories.present? && !race.category.in?(categories)) %>
 <div class="event_info">
   <table class="event_races">
     <tbody>
