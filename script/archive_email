@@ -2,4 +2,5 @@
 
 export PATH=$PATH:/usr/local/bin
 
+cd /var/www/rails/obra/current
 bundle exec /var/www/rails/obra/current/script/rails runner -e "production" "MailingListMailer.receive(STDIN.read)" >> /var/log/mailman_archiver.log 2>&1
