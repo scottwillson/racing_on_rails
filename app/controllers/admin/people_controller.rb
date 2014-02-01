@@ -257,8 +257,7 @@ module Admin
           if params[:name] == "name"
             update_name
           else
-            @person.send "#{params[:name]}=", params[:value]
-            @person.save!
+            @person.update_attributes! params[:name] => params[:value]
             expire_cache
             render :text => @person.send(params[:name]), :content_type => "text/html"
           end

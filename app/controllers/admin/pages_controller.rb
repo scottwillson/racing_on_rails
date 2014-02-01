@@ -47,8 +47,7 @@ module Admin
       respond_to do |format|
         format.js {
           @page = Page.find(params[:id])
-          @page.send "#{params[:name]}=", params[:value]
-          @page.save!
+          @page.update_attributes! params[:name] => params[:value]
           expire_cache
           render :text => @page.send(params[:name]), :content_type => "text/html"
         }

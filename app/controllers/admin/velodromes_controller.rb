@@ -40,8 +40,7 @@ module Admin
       respond_to do |format|
         format.js {
           @velodrome = Velodrome.find(params[:id])
-          @velodrome.send "#{params[:name]}=", params[:value]
-          @velodrome.save!
+          @velodrome.update_attributes! params[:name] => params[:value]
           expire_cache
           render :text => @velodrome.send(params[:name]), :content_type => "text/html"
         }

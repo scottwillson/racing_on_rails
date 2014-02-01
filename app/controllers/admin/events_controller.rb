@@ -107,8 +107,7 @@ module Admin
       respond_to do |format|
         format.js {
           @event = Event.find(params[:id])
-          @event.send "#{params[:name]}=", params[:value]
-          @event.save!
+          @event.update_attributes! params[:name] => params[:value]
           expire_cache
           render :text => @event.send(params[:name]), :content_type => "text/html"
         }

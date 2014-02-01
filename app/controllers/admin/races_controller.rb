@@ -53,8 +53,7 @@ module Admin
     def update_attribute
       respond_to do |format|
         format.js {
-          @race.send "#{params[:name]}=", params[:value]
-          @race.save!
+          @race.update_attributes! params[:name] => params[:value]
           expire_cache
           render :text => @race.send(params[:name]), :content_type => "text/html"
         }
