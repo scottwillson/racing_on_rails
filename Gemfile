@@ -48,6 +48,7 @@ group :assets do
 end
 
 group :development do
+  gem "brakeman"
   gem "capistrano"
   gem "capistrano-unicorn", :require => false
   gem "quiet_assets"
