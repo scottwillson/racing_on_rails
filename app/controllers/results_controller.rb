@@ -64,7 +64,8 @@ class ResultsController < ApplicationController
     @result = Result.
               includes(:scores => [ :source_result, :competition_result ]).
               where("results.event_id" => params[:event_id]).
-              where(:team_id => params[:team_id]).first!
+              where(:team_id => params[:team_id]).
+              first!
     raise ActiveRecord::RecordNotFound unless @result
   end
   
