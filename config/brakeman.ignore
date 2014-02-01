@@ -1,0 +1,255 @@
+{
+  "ignored_warnings":[
+    {
+      "warning_type":"Redirect",
+      "warning_code":18,
+      "fingerprint":"0995340021ac45331856df4aa279a7860dabfd7113eeceb5c2e9dd43ee76a8cc",
+      "message":"Possible unprotected redirect",
+      "file":"app/controllers/bar_controller.rb",
+      "line":19,
+      "link":"http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code":"redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{(params[:year].to_i or RacingAssociation.current.effective_year)}/overall_by_age.html\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"BarController",
+        "method":"show"
+      },
+      "user_input":"RacingAssociation.current.static_host",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"Redirect",
+      "warning_code":18,
+      "fingerprint":"1ffdc5161e5d9aee8ec32f1b1dc00352d81169621ac9edda7139c489139d80cc",
+      "message":"Possible unprotected redirect",
+      "file":"app/controllers/bar_controller.rb",
+      "line":21,
+      "link":"http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code":"redirect_to(\"http://#{RacingAssociation.current.static_host}/bar/#{(params[:year].to_i or RacingAssociation.current.effective_year)}\")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"BarController",
+        "method":"show"
+      },
+      "user_input":"RacingAssociation.current.static_host",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"286af1d56483a7437eed4acf57591fbc079230754da6f870200f15fed0aa2ab7",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/overall.rb",
+      "line":138,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.count_by_sql(\" SELECT count(*) FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{parent.children.collect(&:id).join(\", \")})\n              and results.person_id = #{(local person).id}\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Overall",
+        "method":"raced_minimum_events?"
+      },
+      "user_input":"category_ids_for((local race)).join(\", \")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"0b2638c8dfc8b2d841f8dd5584a87ddc3e77f863847e2f0e402aedaa445b4283",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/cross_crusade_callups.rb",
+      "line":31,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.find_by_sql(\" SELECT results.* FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE place between 1 and #{(point_schedule.size - 1)}\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{source_events.map(&:id).join(\", \")})\n          order by person_id\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"CrossCrusadeCallups",
+        "method":"source_results"
+      },
+      "user_input":"(point_schedule.size - 1)",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"7b40a85c69c8ed5614d545eb9b46e4aa0c7d4159b5add2fe1e3df8f13723b2e0",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/oregon_cup.rb",
+      "line":21,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.find_by_sql(\"SELECT results.* FROM results  \n          LEFT OUTER JOIN races ON races.id = results.race_id \n          LEFT OUTER JOIN categories ON categories.id = races.category_id\n          LEFT OUTER JOIN events ON races.event_id = events.id \n            WHERE races.category_id is not null \n              and events.type = 'SingleDayEvent'\n              and place between 1 and 20\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and (results.category_id is null or results.category_id in (#{category_ids_for((local race)).join(\", \")}))\n              and (events.id in (#{source_events.collect do\n (local event).id\n end.join(\", \")}) or events.parent_id in (#{source_events.collect do\n (local event).id\n end.join(\", \")}))\n         order by person_id\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"OregonCup",
+        "method":"source_results"
+      },
+      "user_input":"category_ids_for((local race)).join(\", \")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"82fa4bd5fad8c65897bfbd516729dc24cf5613cac4be2cfb622d192f3b259917",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/oregon_junior_cyclocross_series.rb",
+      "line":10,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.find_by_sql(\" SELECT results.* FROM results  \n          LEFT JOIN races ON races.id = results.race_id \n          LEFT JOIN categories ON categories.id = races.category_id \n          LEFT JOIN events ON races.event_id = events.id \n          WHERE events.id in (#{source_events.map(&:id).join(\",\")})\n            and (place > 0 or place is null or place = '')\n            and categories.id in (#{category_ids_for((local race)).join(\",\")})\n            and (events.type = \"SingleDayEvent\" or events.type = \"Event\")\n            and events.date between '#{year}-01-01' and '#{year}-12-31'\n          order by person_id\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"OregonJuniorCyclocrossSeries",
+        "method":"source_results"
+      },
+      "user_input":"source_events.map(&:id).join(\",\")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"892f797beff8536aba3c60120f09f180c82275850032c3bf1eb073663c50d348",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/overall.rb",
+      "line":60,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.find_by_sql(\" SELECT results.* FROM results  \n          JOIN races ON races.id = results.race_id \n          JOIN categories ON categories.id = races.category_id \n          JOIN events ON races.event_id = events.id \n          WHERE place between 1 and #{(point_schedule.size - 1)}\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and events.id in (#{parent.children.collect do\n (local event).id\n end.join(\", \")})\n          order by person_id\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Overall",
+        "method":"source_results"
+      },
+      "user_input":"(point_schedule.size - 1)",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"7bfc4976df4a881bc5db01157f609788b38c63b66076b8ef93651ddde0fbfb02",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/wsba_barr.rb",
+      "line":36,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.find_by_sql(\" SELECT results.*\n          FROM results  \n          LEFT OUTER JOIN races ON races.id = results.race_id \n          LEFT OUTER JOIN categories ON categories.id = races.category_id\n          LEFT OUTER JOIN events ON races.event_id = events.id \n            WHERE races.category_id is not null \n              and members_only_place between 1 and 15\n              and categories.id in (#{category_ids_for((local race)).join(\", \")})\n              and (results.category_id is null or results.category_id in (#{category_ids_for((local race)).join(\", \")}))\n              and (events.id in (#{source_events.map(&:id).join(\", \")}))\n              and results.bar\n         order by person_id\n       \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"WsbaBarr",
+        "method":"source_results"
+      },
+      "user_input":"category_ids_for((local race)).join(\", \")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"cd74d5b87f88af5b5c341a60eef067d569042b55fed5097470718fd829d83dd6",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/bar.rb",
+      "line":91,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.select([\"results.id as id\", \"person_id as participant_id\", \"people.member_from\", \"people.member_to\", \"place\", \"results.event_id\", \"race_id\", \"events.date\", \"results.year\", \"coalesce(races.bar_points, events.bar_points, parents_events.bar_points, parents_events_2.bar_points) as multiplier\"]).joins(:race => :event).joins(\"left outer join people on people.id = results.person_id\").joins(\"left outer join events parents_events on parents_events.id = events.parent_id\").joins(\"left outer join events parents_events_2 on parents_events_2.id = parents_events.parent_id\").where(\"place between 1 and ?\", point_schedule.size).where(\"(events.type in (?) or events.type is NULL)\", source_event_types).where(:bar => (true)).where(\"races.category_id in (?)\", category_ids_for((local race))).where(\"events.sanctioned_by\" => (RacingAssociation.current.default_sanctioned_by))",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Bar",
+        "method":"source_results"
+      },
+      "user_input":"RacingAssociation.current.default_sanctioned_by",
+      "confidence":"High",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"e9e2db15e6c9774e74a27db1b993b31dd3ece95560b0ae9f76251de73994efdc",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/mbra_bar.rb",
+      "line":84,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.includes(:race, { :person => :team }, :team, :race => ([{ :event => ({ :parent => :parent }) }, :category])).where(\"\n        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)\n        and bar = true\n        and categories.id in (#{category_ids_for((local race)).join(\", \")})\n        and (events.discipline = '#{(local race).discipline}'\n          or (events.discipline is null and parents_events.discipline = '#{(local race).discipline}')\n          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline = '#{(local race).discipline}'))\n        and (races.bar_points > 0\n          or (races.bar_points is null and events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))\n        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'\n    \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"MbraBar",
+        "method":"source_results"
+      },
+      "user_input":"category_ids_for((local race)).join(\", \")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"1dd5f8800955ba19bdb53af6d5c2c12e1dc456809d96fbcecb25684a8cbe0bce",
+      "message":"Possible SQL injection",
+      "file":"app/models/competitions/mbra_team_bar.rb",
+      "line":57,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"Result.includes(:race, { :person => :team }, :team, :race => ([{ :event => ({ :parent => :parent }) }, :category])).where(\"\n        (events.type in ('Event', 'SingleDayEvent', 'MultiDayEvent') or events.type is NULL)\n        and bar = true\n        and categories.id in (#{category_ids_for((local race)).join(\", \")})\n        and (events.discipline in (#{\"'#{(local race).discipline}'\"})\n          or (events.discipline is null and parents_events.discipline in (#{\"'#{(local race).discipline}'\"}))\n          or (events.discipline is null and parents_events.discipline is null and parents_events_2.discipline in (#{\"'#{(local race).discipline}'\"})))\n        and (races.bar_points > 0\n          or (races.bar_points is null and events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points > 0)\n          or (races.bar_points is null and events.bar_points is null and parents_events.bar_points is null and parents_events_2.bar_points > 0))\n        and events.date between '#{date.year}-01-01' and '#{date.year}-12-31'\n    \")",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"MbraTeamBar",
+        "method":"source_results"
+      },
+      "user_input":"category_ids_for((local race)).join(\", \")",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"SQL Injection",
+      "warning_code":0,
+      "fingerprint":"603b27dee2f3e23ae673bad1a02974c359cce6ff2248113e562d2dd6051ff6e1",
+      "message":"Possible SQL injection",
+      "file":"app/models/event.rb",
+      "line":359,
+      "link":"http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code":"SingleDayEvent.where(\"(#{(local change).first}=? or #{(local change).first} is null or #{(local change).first} = '') and parent_id=?\", (local change).last.first, self[:id])",
+      "render_path":null,
+      "location":{
+        "type":"method",
+        "class":"Event",
+        "method":"update_children"
+      },
+      "user_input":"(local change).first",
+      "confidence":"Medium",
+      "note":""
+    },
+    {
+      "warning_type":"Cross Site Scripting",
+      "warning_code":2,
+      "fingerprint":"e66e37eef4a1017801c70b90eaf0b9e23e78ff6335d0c0c9ab70476bacfd55ad",
+      "message":"Unescaped model attribute",
+      "file":"app/views/teams/_team.html.erb",
+      "line":7,
+      "link":"http://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code":"(Unresolved Model).new.sponsors",
+      "render_path":[
+        "TeamsController#index",
+        "Template:teams/index"
+      ],
+      "location":{
+        "type":"template",
+        "template":"teams/_team (Template:teams/index)"
+      },
+      "user_input":null,
+      "confidence":"High",
+      "note":"Limited to admin users. Does echo raw HTML. Ideally would use Markdown."
+    }
+  ],
+  "updated":"2014-02-01 14:49:54 -0800",
+  "brakeman_version":"2.3.1"
+}
