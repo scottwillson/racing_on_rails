@@ -32,7 +32,7 @@ class BarController < ApplicationController
       flash.now[:warn] = "Could not find BAR category \'#{params['category']}\'"
       return render(:show)
     end
-    return redirect_to(:category => category.friendly_param) if category.friendly_param != params["category"]
+    return redirect_to(:category => category.friendly_param, :only_path => true) if category.friendly_param != params["category"]
     
     @race = @overall_bar.find_race(discipline, category)
     unless @race

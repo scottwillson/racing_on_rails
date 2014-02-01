@@ -26,7 +26,7 @@ class EditorRequestsController < ApplicationController
     end
     
     if params[:return_to].present?
-      redirect_to params[:return_to]
+      redirect_to :only_path => true, :path => params[:return_to]
     else
       redirect_to edit_person_path(@editor)
     end

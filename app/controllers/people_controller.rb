@@ -154,7 +154,7 @@ class PeopleController < ApplicationController
       PersonSession.create @person
       PersonMailer.new_login_confirmation(@person).deliver rescue nil
       if @return_to.present?
-        redirect_to @return_to
+        redirect_to URI.parse(@return_to).path
         session[:return_to] = nil
       else
         redirect_to edit_person_path(@person)
