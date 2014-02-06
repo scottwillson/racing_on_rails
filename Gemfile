@@ -3,8 +3,8 @@ source "https://rubygems.org"
 gem "rails", ">=3.2.12"
 
 gem "activemerchant"
-gem "acts_as_list", :github => "swanandp/acts_as_list"
-gem "acts_as_tree", :github => "parasew/acts_as_tree"
+gem "acts_as_list", :git => "https://github.com/swanandp/acts_as_list.git"
+gem "acts_as_tree", :git => "https://github.com/parasew/acts_as_tree.git"
 gem "Ascii85", :require => "ascii85"
 gem "authlogic"
 gem "bootstrap-datepicker-rails"
@@ -25,18 +25,18 @@ gem "newrelic_rpm"
 gem "nokogiri"
 gem "oj"
 gem "pdf-reader", :require => "pdf/reader"
-gem "prawn", :github => "sandal/prawn"
+gem "prawn", :git => "https://github.com/sandal/prawn.git"
 gem "rake"
 gem "raygun4ruby"
 gem "registration_engine", :path => "lib/registration_engine"
 gem "ri_cal"
 gem "rmagick"
-gem "ruby-ole", :github => "scottwillson/ruby-ole"
-gem "spreadsheet", :github => "scottwillson/spreadsheet"
+gem "ruby-ole", :git => "https://github.com/scottwillson/ruby-ole.git"
+gem "spreadsheet", :git => "https://github.com/scottwillson/spreadsheet.git"
 gem "strong_parameters"
 gem "tabular", ">=0.2.4"
 gem "truncate_html"
-gem "vestal_versions", :github => "scottwillson/vestal_versions", :branch => "rails_3_2"
+gem "vestal_versions", :git => "https://github.com/scottwillson/vestal_versions.git", :branch => "rails_3_2"
 gem "will_paginate"
 gem "will_paginate-bootstrap", "0.2.5"
 gem "yui-compressor"
@@ -49,40 +49,35 @@ end
 
 group :development do
   gem "brakeman"
+  gem "bundler-audit"
   gem "capistrano"
   gem "capistrano-unicorn", :require => false
   gem "quiet_assets"
 end
 
 group :test do
-  gem "factory_girl_rails"
   gem "minitest", "~> 4.7"
-  gem "mocha", :require => false
-  gem "timecop"
 end
 
 group :acceptance do
   gem "capybara"
   gem "database_cleaner"
-  gem "execjs"
-  gem "factory_girl_rails"
   gem "launchy"
-  gem "mocha", :require => false
   gem "selenium-webdriver"
-  gem "therubyracer"
+end
+
+group :test, :acceptance do
+  gem "factory_girl_rails"
+  gem "mocha", :require => false
   gem "timecop"
 end
 
-group :staging do
-  gem "capistrano-unicorn", :require => false
+group :production do
+  gem "syslog-logger"
+end
+
+group :acceptance, :staging, :production do
   gem "execjs"
   gem "rvm-capistrano"
   gem "therubyracer"
-end
-
-group :production do
-  gem "execjs"
-  gem "syslog-logger"
-  gem "therubyracer"
-  gem "unicorn"
 end
