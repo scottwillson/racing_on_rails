@@ -194,7 +194,7 @@ module Schedule
     # params: year, sanctioning_organization, start, end, discipline, region
     def self.find(params)
       if RacingAssociation.current.include_multiday_events_on_schedule?
-        query = Event.where(:parent => nil).where("type != ?", "Event").includes(:parent)
+        query = Event.where(:parent_id => nil).where("type != ?", "Event").includes(:parent)
       else
         query = Event.where(:type => "SingleDayEvent").includes(:parent)
       end

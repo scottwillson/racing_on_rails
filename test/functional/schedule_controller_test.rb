@@ -282,9 +282,42 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
     assert_response :success
   end
 
-  def test_calendar_as_json
+  def test_index_as_json
     get :index, :format => "json"
     assert_response :success
+  end
+
+  def test_calendar_as_json
+    get :calendar, :format => "json"
+    assert_response :success
+  end
+
+  def test_mtb_index_as_json
+    FactoryGirl.create(:discipline)
+    FactoryGirl.create(:mtb_discipline)
+    SingleDayEvent.create!(
+      :name => "Banana Belt I",
+      :city => "Hagg Lake",
+      :date => Date.new(2006, 1, 22),
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/banana_belt.html",
+      :flyer_approved => true
+    )
+
+    SingleDayEvent.create!(
+      :name => "Mudslinger",
+      :city => "Blodgett",
+      :date => Date.new(2006, 12, 27),
+      :discipline => "Mountain Bike",
+      :flyer => "http://#{RacingAssociation.current.static_host}/flyers/2005/mud_slinger.html",
+      :flyer_approved => false,
+      :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
+    )
+
+    get(:index, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
+
+    json = @response.body
+    assert(json["Mudslinger"], "Calendar should include MTB event")
+    assert(!json["banana_belt.html"], "Schedule should not include Banana Belt flyer URL")
   end
 
   def test_mtb_calendar_as_json
@@ -308,7 +341,7 @@ class ScheduleControllerTest < ActionController::TestCase #:nodoc: all
       :promoter => Person.create!(:name => "Mike Ripley", :email => "mikecycle@earthlink.net", :home_phone => "203-259-8577")
     )
 
-    get(:index, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
+    get(:calendar, {:year => 2006, :discipline => "Mountain Bike", :format => "json"})
 
     json = @response.body
     assert(json["Mudslinger"], "Calendar should include MTB event")
