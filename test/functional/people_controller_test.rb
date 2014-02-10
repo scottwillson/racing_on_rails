@@ -11,7 +11,7 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => member.to_param
     assert_response :success
     assert_equal member, assigns(:person), "@person"
-    assert_select ".nav", :count => 0
+    assert_select ".nav.tabs", :count => 0
   end
 
   def test_edit_promoter
@@ -32,7 +32,7 @@ class PeopleControllerTest < ActionController::TestCase
     get :edit, :id => molly.to_param
     assert_response :success
     assert_equal molly, assigns(:person), "@person"
-    assert_select ".nav", :count => 0
+    assert_select ".nav.tabs", :count => 0
   end
 
   def test_must_be_logged_in

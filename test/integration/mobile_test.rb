@@ -25,7 +25,12 @@ class MobileTest < ActionController::IntegrationTest
     get "/people"
     assert_response :success
     assert_template "people/index"
-    assert_select "th.license"
+    
+    # MBRA has custom template
+    if css_select("th.license").empty? && css_select("#people-list").empty?
+      flunk "Expected th.license or #people-list"
+    end
+
     assert cookies["prefer_full_site"].blank?, "cookies['prefer_full_site']"
   end
   

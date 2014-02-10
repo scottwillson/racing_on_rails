@@ -6,7 +6,11 @@ class PeopleTest < ActionController::IntegrationTest
     FactoryGirl.create(:person, :first_name => "Ryan", :last_name => "Weaver")
     get "/people"
     assert_response :success
-    assert_select "input[type=search]"
+    
+    # MBRA has custom template
+    if css_select("input#findPerson").empty? && css_select("input[type=search]").empty?
+      flunk "Expected input#findPerson or input[type=search]"
+    end
 
     get "/people.xml?name=weaver"
     assert_response :success

@@ -1,6 +1,6 @@
 <% if tabs.many? %>
 <div class="pills">
-  <ul class="nav nav-pills">
+  <ul class="nav nav-pills tabs">
     <% tabs.each do |tab| %>
       <% if tab.active? %>
     <li class="active"><a href="<%= tab.path %>" id="<%= tab.text.underscore.gsub(" ", "_") %>_tab"><%= tab.text %></a></li>
