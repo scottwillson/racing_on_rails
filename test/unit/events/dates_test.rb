@@ -54,6 +54,15 @@ module Events
       event = SingleDayEvent.new(:human_date => "June 28, 2011")
       assert_equal Time.zone.local(2011, 6, 28).to_date, event.date.to_date, "date"
     end
+    
+    def test_end_date
+      event = SingleDayEvent.new(:date => Date.new(2012, 4, 3))
+      event.set_end_date
+      assert_equal_dates Date.new(2012, 4, 3), event.end_date, "end_date"
+      
+      event.date = Date.new(2013, 1)
+      assert_equal_dates Date.new(2013, 1), event.end_date, "date change should update end_date"
+    end
 
     private
 
