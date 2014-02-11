@@ -193,7 +193,7 @@ class Event < ActiveRecord::Base
       upcoming_in_weeks(weeks)
 
     multi_day_events = MultiDayEvent.
-    where(:postponed => false).
+      where(:postponed => false).
       where(:cancelled => false).
       where(:practice => false).
       where(:type => "MultiDayEvent").
