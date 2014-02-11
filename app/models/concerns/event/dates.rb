@@ -106,7 +106,7 @@ module Concerns
       end
       
       def set_end_date
-        if self[:end_date].nil?
+        if self[:end_date].nil? || date != self[:end_date]
           self.end_date = date
         end
       end
