@@ -13,7 +13,7 @@ class HomeController < ApplicationController
     
     @page_title = RacingAssociation.current.name
     
-    @upcoming_events = Event.upcoming
+    @upcoming_events = Event.upcoming(@home.weeks_of_upcoming_events)
     
     @events_with_recent_results = Event.
       includes(:parent => :parent).
