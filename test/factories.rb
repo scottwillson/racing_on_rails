@@ -187,7 +187,6 @@ FactoryGirl.define do
   
   factory :team do
     member true
-    show_on_public_page true
     sequence(:name) { |n| "Team #{n}" }
   end
   
