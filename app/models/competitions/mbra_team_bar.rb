@@ -83,7 +83,8 @@ class MbraTeamBar < Competition
       #  logger.debug("#{self.class.name} teams for result: #{teams}") if logger.debug?
       #  for team in teams
 
-      if member?(source_result.team, source_result.date)
+      logger.debug("Determine team eligibility:  #{source_result.date} | #{source_result.team} |  #{race.discipline}") if logger.debug?
+      if member?(source_result.team, source_result.date) && source_result.team.eligible_for_mbra_team_bar?(source_result.date, race.discipline)
 
         if first_result_for_team?(source_result, competition_result)
           # Bit of a hack here, because we split tandem team results into two results,
@@ -129,7 +130,7 @@ class MbraTeamBar < Competition
         points = 0.5
       else
         # if multiple riders got the same place (must be a TTT or tandem team or... ?), then they split the points...
-        #this screws up the scoring of match sprints where riders eliminatined in qualifying heats all earn the same place
+        #this screws up the scoring of match sprints where riders eliminated in qualifying heats all earn the same place
         #team_size = team_size || Result.count(:conditions => ["race_id =? and place = ?", source_result.race.id, source_result.place])
         points = point_schedule[source_result.place.to_i] #/ team_size.to_f
       end

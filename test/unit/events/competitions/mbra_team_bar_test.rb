@@ -13,13 +13,24 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     kona          = FactoryGirl.create(:team)
     chocolate     = FactoryGirl.create(:team, :member => false)
     gentle_lovers = FactoryGirl.create(:team)
+    vanilla = FactoryGirl.create(:team)
 
     swan_island = SingleDayEvent.create!(
       :name => "Swan Island",
       :discipline => "Road",
-      :date => Date.new(2008, 5, 17)
+      :date => Date.new(2008, 5, 17),
+      :team => kona
     )
-    swan_island_senior_men = swan_island.races.create(:category => senior_men, :field_size => 6)
+
+    # future event, no results
+    pigeon_island = SingleDayEvent.create!(
+      :name => "Pigeon Island",
+      :discipline => "Road",
+      :date => Date.new(2008, 7, 17),
+      :team => gentle_lovers
+    )
+
+    swan_island_senior_men = swan_island.races.create(:category => senior_men, :field_size => 7)
 
     tonkin = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
@@ -57,6 +68,14 @@ class MbraTeamBarTest < ActiveSupport::TestCase
       :person => member
     )
 
+    # team does not sponsor an event for the discipline -> no bat results
+    member = FactoryGirl.create(:person)
+    swan_island_senior_men.results.create(
+      :place => 6,
+      :person => member,
+      :team => vanilla
+    )
+
     alice = FactoryGirl.create(:person)
     swan_island_senior_men.results.create(
       :place => "dnf",
@@ -76,6 +95,8 @@ class MbraTeamBarTest < ActiveSupport::TestCase
       MbraTeamBar.calculate!(2008)
     end
 
+    #MBRA BAR scoring rules: http://www.montanacycling.net/documents/racers/MBRA%20BAR-BAT.pdf
+
     road_bat = MbraTeamBar.find_by_name("2008 Road BAT")
     men_road_bat = road_bat.races.detect {|b| b.category == senior_men }
     assert_equal(senior_men, men_road_bat.category, "Senior Men BAT race BAT cat")
@@ -84,7 +105,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     men_road_bat.results.sort!
     assert_equal(kona, men_road_bat.results[0].team, "Senior Men Road BAT results team")
     assert_equal("1", men_road_bat.results[0].place, "Senior Men Road BAT results place")
-    assert_equal((6 + 6) + (5 + 3), men_road_bat.results[0].points, "Senior Men Road BAT results points")
+    assert_equal((7 + 6) + (6 + 3), men_road_bat.results[0].points, "Senior Men Road BAT results points")
 
     assert_equal(gentle_lovers, men_road_bat.results[1].team, "Senior Men Road BAT results team")
     assert_equal("2", men_road_bat.results[1].place, "Senior Men Road BAT results place")
@@ -127,7 +148,7 @@ class MbraTeamBarTest < ActiveSupport::TestCase
     men_road_bat.results.sort!
     assert_equal(kona, men_road_bat.results[0].team, "Senior Men Road BAT results team")
     assert_equal("1", men_road_bat.results[0].place, "Senior Men Road BAT results place")
-    assert_equal((6 + 6) + (5 + 3) + (2 + 6), men_road_bat.results[0].points, "Senior Men Road BAT results points")
+    assert_equal((7 + 6) + (6 + 3) + (2 + 6), men_road_bat.results[0].points, "Senior Men Road BAT results points")
 
     assert_equal(gentle_lovers, men_road_bat.results[1].team, "Senior Men Road BAT results team")
     assert_equal("2", men_road_bat.results[1].place, "Senior Men Road BAT results place")
