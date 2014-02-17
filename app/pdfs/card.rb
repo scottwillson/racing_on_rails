@@ -15,7 +15,7 @@ class Card < Prawn::Document
       card_top = bounds.top_left.last - ((index % 15) / 3) * 144
       card_left_side = bounds.top_left.first + (index % 3) * 199
       font "Helvetica-Bold"
-      fill_color "cc3333"
+      fill_color "000000"
       self.font_size = 13
       draw_text person.name || "", :at => [ card_left_side, card_top ]
       self.font_size = 10
@@ -34,7 +34,7 @@ class Card < Prawn::Document
 
       draw_text "#{RacingAssociation.current.short_name} License # #{person.license}", :at => [ card_left_side, card_top - 72 ]
 
-      fill_color "296fa4"
+      fill_color "8513a9"
       rectangle [ card_left_side + 164, card_top + 10 ], 20, 84
       fill
 
