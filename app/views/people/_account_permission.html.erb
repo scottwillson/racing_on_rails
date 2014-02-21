@@ -1,6 +1,10 @@
 <tr>
   <td>
+    <% if administrator? || account_permission.can_edit_person? -%>
+    <%= link_to account_permission.person.name, edit_person_path(account_permission.person) %>
+    <% else %>
     <%= account_permission.person.name %>
+    <% end %>
   </td>
   <td>
     <% if account_permission.person_can_edit? -%>
@@ -16,12 +20,12 @@
     <% end -%>
   </td>
   <td>
-    <% if account_permission.can_edit_person? -%>
+    <% if account_permission.can_edit_person? || administrator? -%>
     <%= link_to "Edit", 
                 edit_person_path(account_permission.person), 
                 :class => "obvious", 
                 :id => "edit_#{account_permission.person.id}" %>
-    <% else -%>
+    <% elsif !account_permission.can_edit_person? -%>
       <% if administrator? -%>
       <%= link_to "Allow access", 
                   create_person_editor_path(account_permission.person, person, :return_to => return_to), 
