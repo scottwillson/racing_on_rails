@@ -238,7 +238,11 @@ module Admin
         id = params[duplicate.to_param]
         if id == 'new'
           duplicate.person.save!
-        elsif !id.blank?
+        elsif id.present?
+          logger.info(
+            "Duplicate Update person #{id} with " + 
+            "'#{duplicate.new_attributes[:first_name]} #{duplicate.new_attributes[:last_name]}' lic: #{duplicate.new_attributes[:license]}"
+            ) 
           person = Person.update(id, duplicate.new_attributes)
           unless person.valid?
             raise ActiveRecord::RecordNotSaved.new(person.errors.full_messages.join(', '))

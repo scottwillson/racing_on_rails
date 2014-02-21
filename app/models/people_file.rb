@@ -151,7 +151,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
         # TODO or by USAC license number
         people = []
 
-        if row_hash[:license].present?
+        if row_hash[:license].present? && row_hash[:license].to_i > 0
           people = Person.where(license: row_hash[:license])
         end
 
@@ -159,9 +159,12 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           people = Person.find_all_by_name_or_alias(:first_name => row_hash[:first_name], :last_name => row_hash[:last_name])
         end
         
+        logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}' lic:  #{row_hash[:license]}") 
+
         person = nil
         row_hash[:member_to] = @member_to_for_imported_people if @update_membership
         if people.empty?
+          logger.info("PeopleFile Create new person") 
           delete_unwanted_member_from(row_hash, person)
           add_print_card_and_label(row_hash)
           person = Person.new(:updater => import_file)
@@ -172,9 +175,10 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           person.save!
           @created = @created + 1
         elsif people.size == 1
+          person = people.first
+          logger.info("PeopleFile Update #{person.id} '#{person.name}' lic: #{person.license}") 
           # Don't want to overwrite existing categories
           delete_blank_categories(row_hash)
-          person = people.first
           delete_unwanted_member_from(row_hash, person)
           unless person.notes.blank?
             row_hash[:notes] = "#{people.last.notes}#{$INPUT_RECORD_SEPARATOR}#{row_hash[:notes]}"
@@ -192,7 +196,7 @@ class PeopleFile < RacingOnRails::Grid::GridFile
           end
           @updated = @updated + 1
         else
-          logger.info("PeopleFile Found #{people.size} people for '#{row_hash[:first_name]} #{row_hash[:last_name]}'") 
+          logger.info("PeopleFile Add duplicate") 
           delete_blank_categories(row_hash)
           person = Person.new(row_hash)
           if year
