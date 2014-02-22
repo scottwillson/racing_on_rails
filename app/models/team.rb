@@ -144,7 +144,7 @@ class Team < ActiveRecord::Base
   end
 
   def eligible_for_mbra_team_bar?(date = Time.zone.today, discipline)
-    Event.find_all_for_team_and_discipline(self, discipline, date.year).count > 0
+    Event.find_all_for_team_and_discipline(self, discipline, date).count > 0
   end
 
   def name=(value)

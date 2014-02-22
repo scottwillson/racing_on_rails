@@ -161,22 +161,18 @@ class Event < ActiveRecord::Base
 
   end
     
-  def Event.find_all_for_team_and_discipline(team, discipline, year = Time.zone.today.year)
-    first_of_year = Date.new(year, 1, 1)
-    last_of_year = Date.new(year + 1, 1, 1) - 1
-    #team_name_like = "%#{team}%"
-    #     self.team = Team.find_by_name_or_alias(new_team_name)
+  def Event.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
+    first_of_year = date.beginning_of_year
+    last_of_year = date.end_of_year
     discipline_names = [discipline]
     discipline_names << 'Circuit' if discipline.downcase == 'road'
-    Set.new(Event.all(
-        :select => "distinct events.id, events.*",
-        :conditions => [%Q{
-            events.date between ? and ?
-            and events.discipline in (?)
-            and bar_points > 0
-            and events.team_id = (?)
-            }, first_of_year, last_of_year, discipline_names, team]
-    ))
+    Set.new(Event.select("distinct events.id, events.*").
+      where("events.date between ? and ?", first_of_year, last_of_year).
+      where("events.discipline in (?)", discipline_names).
+      where("bar_points > 0").
+      where("events.team_id = ?", team).
+      all
+    )
   end
 
   # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
