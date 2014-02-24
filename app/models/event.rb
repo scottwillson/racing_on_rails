@@ -221,6 +221,21 @@ class Event < ActiveRecord::Base
   end
     
   # Defaults state to RacingAssociation.current.state, date to today, name to Untitled
+  def Event.find_all_for_team_and_discipline(team, discipline, date = Time.zone.today)
+    first_of_year = date.beginning_of_year
+    last_of_year = date.end_of_year
+    discipline_names = [discipline]
+    discipline_names << 'Circuit' if discipline.downcase == 'road'
+    Set.new(Event.select("distinct events.id, events.*").
+      where("events.date between ? and ?", first_of_year, last_of_year).
+      where("events.discipline in (?)", discipline_names).
+      where("bar_points > 0").
+      where("events.team_id = ?", team).
+      all
+    )
+  end
+
+  # Defaults state to RacingAssociation.current.state, date to today, name to New Event mm-dd-yyyy
   # NumberIssuer: RacingAssociation.current.short_name
   # Child events use their parent's values unless explicity overriden. And you cannot override
   # parent values by passing in blank or nil attributes to initialize, as there is
