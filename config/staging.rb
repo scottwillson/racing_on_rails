@@ -17,7 +17,8 @@ set :unicorn_rack_env, "staging"
 set :unicorn_pid, "#{shared_path}/pids/unicorn.pid"
 
 require "rvm/capistrano"
-set :rvm_ruby_string, "ruby-2.0.0-p353"
+set :rvm_ruby_string, "ruby-2.1.0"
+set :rvm_install_ruby_params, "--patch railsexpress"
 
 set :scm, "git"
 set :repository, "git://github.com/scottwillson/racing_on_rails.git"
