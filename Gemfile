@@ -30,7 +30,7 @@ gem "rake"
 gem "raygun4ruby"
 gem "registration_engine", :path => "lib/registration_engine"
 gem "ri_cal"
-gem "rmagick"
+gem "rmagick", :require => false
 gem "ruby-ole", :git => "https://github.com/scottwillson/ruby-ole.git"
 gem "spreadsheet", :git => "https://github.com/scottwillson/spreadsheet.git"
 gem "strong_parameters"
