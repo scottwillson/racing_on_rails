@@ -3,24 +3,25 @@ require File.expand_path("../../test_helper", __FILE__)
 # :stopdoc:
 class RaceNumberTest < ActiveSupport::TestCase
   def test_defaults
-    number_issuer = FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:number_issuer, :name => "AVC")
+    association_number_issuer = FactoryGirl.create(:number_issuer, :name => "CBRA")
 
-    assert_not_nil(NumberIssuer.find_by_name(RacingAssociation.current.short_name), 'Number issuer exists')
+    FactoryGirl.create(:discipline, :name => "Road")
+    track = FactoryGirl.create(:discipline, :name => "Track")
+    FactoryGirl.create(:discipline, :name => "Cyclocross")
+    
+    racing_association = RacingAssociation.current
+    racing_association.update_attributes! :default_discipline => "Track"
+
     person = FactoryGirl.create(:person)
     race_number = RaceNumber.create!(:value => '999', :person => person)
-    assert_equal(RacingAssociation.current.effective_year, race_number.year, 'year default')
-    assert_equal(road, race_number.discipline, 'year discipline')
-    assert_equal(number_issuer, race_number.number_issuer, 'number issuer default')
-
-    race_number = RaceNumber.create!(:person => person, :value => '100')
-    assert_equal(RacingAssociation.current.effective_year, race_number.year, 'year default')
-    assert_equal(number_issuer, race_number.number_issuer, 'number issuer default')
-    assert_equal(road, race_number.discipline, 'year discipline')
+    assert_equal RacingAssociation.current.effective_year, race_number.year, 'year default'
+    assert_equal track, race_number.discipline, 'year discipline'
+    assert_equal association_number_issuer, race_number.number_issuer, 'number issuer default'
   end
 
   def test_create
-    number_issuer = FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer)
     road = FactoryGirl.create(:discipline, :name => "Road")
     track = FactoryGirl.create(:discipline, :name => "Track")
     alice = FactoryGirl.create(:person)
@@ -76,7 +77,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     alice = FactoryGirl.create(:person)
     obra = NumberIssuer.find_or_create_by_name('CBRA')
     cyclocross = FactoryGirl.create(:discipline, :name => "Cyclocross")
-    road = FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:discipline, :name => "Road")
 
     RaceNumber.create!(:person => alice, :value => '876', :year => 2001, :number_issuer => obra, :discipline => cyclocross)
     number = RaceNumber.create(:person => alice, :value => '876', :year => 2001, :number_issuer => obra, :discipline => cyclocross)
@@ -85,7 +86,7 @@ class RaceNumberTest < ActiveSupport::TestCase
 
   def test_rental
     alice = FactoryGirl.create(:person)
-    number_issuer = FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer)
     road = FactoryGirl.create(:discipline, :name => "Road")
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     
@@ -130,7 +131,7 @@ class RaceNumberTest < ActiveSupport::TestCase
     racing_association = RacingAssociation.current
     racing_association.rental_numbers = nil
     racing_association.save!
-    number_issuer = FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:number_issuer)
     road = FactoryGirl.create(:discipline, :name => "Road")
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     
@@ -172,8 +173,8 @@ class RaceNumberTest < ActiveSupport::TestCase
   
   def test_create_bmx
     alice = FactoryGirl.create(:person)
-    number_issuer = FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline, :name => "Road")
     bmx = FactoryGirl.create(:discipline, :name => "BMX")
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
     race_number = RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn, :discipline => bmx)
@@ -185,10 +186,10 @@ class RaceNumberTest < ActiveSupport::TestCase
   
   def test_destroy
     alice = FactoryGirl.create(:person)
-    number_issuer = FactoryGirl.create(:number_issuer)
-    road = FactoryGirl.create(:discipline, :name => "Road")
+    FactoryGirl.create(:number_issuer)
+    FactoryGirl.create(:discipline, :name => "Road")
     elkhorn = NumberIssuer.create!(:name => 'Elkhorn Classic SR')
-    race_number = RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn)
+    RaceNumber.create!(:person => alice, :value => 'A103', :year => 2001, :number_issuer => elkhorn)
     alice.results.clear
     alice.destroy
     assert(!RaceNumber.exists?(:person_id => alice.id, :value => 'A103'), "Shoud delete person")
@@ -214,7 +215,7 @@ class RaceNumberTest < ActiveSupport::TestCase
   
   def test_gender_alt
     alice = FactoryGirl.create(:person)
-    tonkin = FactoryGirl.create(:person)
+    FactoryGirl.create(:person)
     molly = FactoryGirl.create(:person)
 
     FactoryGirl.create(:number_issuer)

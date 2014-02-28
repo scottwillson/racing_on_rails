@@ -12,7 +12,6 @@
 class RaceNumber < ActiveRecord::Base
   include Concerns::Versioned
 
-  before_validation :defaults
   validates_presence_of :discipline
   validates_presence_of :number_issuer
   validates_presence_of :person, :unless => :new_record?
@@ -25,13 +24,18 @@ class RaceNumber < ActiveRecord::Base
   belongs_to :number_issuer
   belongs_to :person
   
+  default_value_for(:discipline_id)    { Discipline[RacingAssociation.current.default_discipline].try(:id) }
+  default_value_for(:number_issuer_id) { RacingAssociation.current.number_issuer.try(:id) }
+  default_value_for(:year)             { RacingAssociation.current.effective_year }
+  
+  
   def self.find_all_by_value_and_event(value, _event)
     return [] if _event.nil? || value.blank? || _event.number_issuer.nil?
     
     discipline_id = RaceNumber.discipline_id(_event.discipline)
     return [] unless discipline_id
     
-    race_numbers = RaceNumber.all(
+    RaceNumber.all(
       :conditions => ['value=? and discipline_id = ? and number_issuer_id=? and year=?',
                       value, 
                       discipline_id, 
@@ -85,11 +89,11 @@ class RaceNumber < ActiveRecord::Base
     false
   end
   
-  # Default to Road, RacingAssociation.current, and current year
-  def defaults
-    self.discipline = Discipline[:road] unless discipline
-    self.number_issuer = NumberIssuer.find_by_name(RacingAssociation.current.short_name) unless number_issuer
-    self.year = RacingAssociation.current.effective_year unless (year && year > 1800)
+  def year=(value)
+    if value && value.to_i > 1800
+      self[:year] = value
+    end
+    year
   end
   
   def validate_year
