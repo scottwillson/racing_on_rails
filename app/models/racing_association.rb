@@ -145,6 +145,10 @@ class RacingAssociation < ActiveRecord::Base
       self.rental_numbers_end = rental_numbers.last
     end
   end
+  
+  def number_issuer
+    NumberIssuer.where(:name => short_name).first
+  end
 
   def priority_country_options
     if country_code == "US"

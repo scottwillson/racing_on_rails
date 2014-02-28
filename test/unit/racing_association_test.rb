@@ -137,4 +137,13 @@ class RacingAssociationTest < ActiveSupport::TestCase
       assert_equal 2016, RacingAssociation.current.next_year, "next_year for December 31 2014"
     end
   end
+  
+  def test_number_issuer
+    assert_equal nil, RacingAssociation.current.number_issuer
+    
+    FactoryGirl.create(:number_issuer, :name => "AVC")
+    number_issuer = FactoryGirl.create(:number_issuer, :name => RacingAssociation.current.short_name)
+
+    assert_equal number_issuer, RacingAssociation.current.number_issuer
+  end
 end
