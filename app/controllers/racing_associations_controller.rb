@@ -22,7 +22,7 @@ class RacingAssociationsController < Admin::AdminController
   private
 
   def racing_association_params
-    params.require(:racing_association).permit(
+    params_without_mobile.require(:racing_association).permit(
       :add_members_from_results,
       :administrator_tabs,
       :always_insert_table_headers,

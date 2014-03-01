@@ -100,7 +100,7 @@ module Admin
     end
 
     def race_params
-      params.require(:race).permit(
+      params_without_mobile.require(:race).permit(
         :additional_race_only,
         :bar_points,
         :category_id,

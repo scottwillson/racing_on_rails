@@ -413,7 +413,7 @@ module Admin
     private
 
     def person_params
-      params.require(:person).permit(
+      params_without_mobile.require(:person).permit(
         :billing_city,
         :billing_country_code,
         :billing_first_name,

@@ -65,7 +65,7 @@ module Admin
     private
 
     def velodrome_params
-      params.require(:velodrome).permit(:name, :website)
+      params_without_mobile.require(:velodrome).permit(:name, :website)
     end
   end
 end

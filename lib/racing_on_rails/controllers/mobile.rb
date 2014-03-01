@@ -32,6 +32,12 @@ module RacingOnRails
           Page.find_by_path("mobile/#{page_path}")
         end
       end
+  
+      def params_without_mobile
+        _params = params.dup
+        _params.delete :mobile
+        _params
+      end
 
       def mobile_browser?
         request.env["HTTP_USER_AGENT"] && request.env["HTTP_USER_AGENT"].downcase =~ /'palm|blackberry|nokia|phone|midp|symbian|chtml|ericsson|minimo|'audiovox|motorola|samsung|telit|upg1|windows ce|ucweb|astel|plucker|'x320|x240|j2me|sgh|portable|sprint|docomo|kddi|softbank|android|mmp|'pdxgw|netfront|xiino|vodafone|portalmmm|sagem|mot-|sie-|ipod|up\\.b|'webos|amoi|novarra|cdm|alcatel|pocket|iphone|mobileexplorer'/
