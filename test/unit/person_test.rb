@@ -23,7 +23,7 @@ class PersonTest < ActiveSupport::TestCase
     assert(!person.team.new_record?, "team.new_record")
     assert(!person_from_db.new_record?, "person_from_db.new_record")
     assert_equal admin, person.created_by, "created_by"
-    assert_equal admin, person.updated_by, "updated_by"
+    assert_equal admin, person.updated_by_person, "updated_by_person"
     assert_equal 1, person.versions.size, "Should create initial version"
 
     another_admin = FactoryGirl.create(:person)
@@ -32,12 +32,12 @@ class PersonTest < ActiveSupport::TestCase
     person.save!
     assert_equal 2, person.versions.size, "Should create second version after update"
     assert_equal admin, person.created_by, "created_by"
-    assert_equal another_admin, person.updated_by, "updated_by"
+    assert_equal another_admin, person.updated_by_person, "updated_by_person"
 
     file = ImportFile.new(:name => "/tmp/import.xls")
-    assert person.update_attributes(:name => "Andrew Hampsten", :updater => file), "update_attributes"
+    assert person.update_attributes(:name => "Andrew Hampsten", :updated_by => file), "update_attributes"
     assert_equal admin, person.created_by, "created_by"
-    assert_equal file, person.updated_by, "updated_by"
+    assert_equal file, person.updated_by_person, "updated_by_person"
   end
 
   def test_save_existing_team
@@ -658,7 +658,7 @@ class PersonTest < ActiveSupport::TestCase
     FactoryGirl.create(:discipline, :name => "Time Trial")
     
     person = FactoryGirl.create(:person)
-    tonkin = Person.create!(:updater => person)
+    tonkin = Person.create!(:updated_by => person)
     tonkin.road_number = "102"
     road_number = tonkin.race_numbers.first
     assert_equal person, road_number.created_by, "created_by"
@@ -846,7 +846,7 @@ class PersonTest < ActiveSupport::TestCase
     
     person = Person.create!
     event = FactoryGirl.create(:event)
-    person.updater = event
+    person.updated_by = event
     person.add_number("7890", nil)
     assert_equal("7890", person.road_number, "Road number after add with nil discipline")    
     assert_equal event, person.race_numbers.first.created_by, "Number created_by"

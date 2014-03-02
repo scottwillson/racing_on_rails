@@ -50,7 +50,7 @@ module Admin
 
     def test_edit_created_by_import_file
       alice = FactoryGirl.create(:person)
-      alice.updater = ImportFile.create!(:name => "some_very_long_import_file_name.xls")
+      alice.updated_by = ImportFile.create!(:name => "some_very_long_import_file_name.xls")
       alice.save!
 
       get(:edit, :id => alice.to_param)
@@ -127,8 +127,8 @@ module Admin
         assert_equal('AZY', molly.xc_number(true, 2008), 'MTB number should be updated')
         assert_nil(molly.member_from, 'member_from after update')
         assert_nil(molly.member_to, 'member_to after update')
-        assert_nil(RaceNumber.find(molly_road_number.to_param).updated_by, "updated_by")
-        assert_equal(@administrator, RaceNumber.find_by_value("AZY").updated_by, "updated_by")
+        assert_nil(RaceNumber.find(molly_road_number.to_param).updated_by_person, "updated_by_person")
+        assert_equal(@administrator, RaceNumber.find_by_value("AZY").updated_by_person, "updated_by_person")
       end
     end
 
@@ -255,7 +255,7 @@ module Admin
       assert_not_nil change, "Should have change for team ID"
       assert_equal vanilla.id, change.first, "Team ID before"
       assert_equal nil, change.last, "Team ID after"
-      assert_equal @administrator, molly.updated_by, "updated_by"
+      assert_equal @administrator, molly.updated_by_person, "updated_by_person"
     end
   
     def test_update_bad_member_from_date

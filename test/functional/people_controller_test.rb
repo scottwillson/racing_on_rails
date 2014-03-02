@@ -79,7 +79,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
     assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal person, person.updated_by, "updated_by"
+    assert_equal person, person.updated_by_person, "updated_by_person"
   end
   
   def test_update_no_name
@@ -103,7 +103,7 @@ class PeopleControllerTest < ActionController::TestCase
     assert_not_nil change, "Should have change for team ID"
     assert_equal nil, change.first, "Team ID before"
     assert_equal Team.find_by_name("Gentle Lovers").id, change.last, "Team ID after"
-    assert_equal editor, person.updated_by, "updated_by"
+    assert_equal editor, person.updated_by_person, "updated_by_person"
   end
   
   def test_update_by_editor

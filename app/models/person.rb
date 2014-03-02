@@ -364,7 +364,7 @@ class Person < ActiveRecord::Base
       self.team = nil
     else
       self.team = Team.find_by_name_or_alias(value)
-      self.team = Team.new(:name => value, :updater => new_record? ? updater : nil) unless self.team
+      self.team = Team.new(:name => value, :updated_by => new_record? ? updated_by : nil) unless self.team
     end
   end
 
@@ -554,8 +554,8 @@ class Person < ActiveRecord::Base
   end
   
   # Look for RaceNumber +year+ in +attributes+. Not sure if there's a simple and better way to do that.
-  # Need to set +updater+ before setting numbers to ensure updater is passed to number. Setting all via a
-  # parameter hash may add number before updater is set.
+  # Need to set +updated_by+ before setting numbers to ensure updated_by is passed to number. Setting all via a
+  # parameter hash may add number before updated_by is set.
   def add_number(value, discipline, association = nil, _year = year)
     association = NumberIssuer.find_by_name(RacingAssociation.current.short_name) if association.nil?
     _year ||= RacingAssociation.current.year
@@ -579,7 +579,7 @@ class Person < ActiveRecord::Base
         end
         race_numbers.build(
           :value => value, :discipline => discipline, :year => _year, :number_issuer => association, 
-          :updater => updater
+          :updated_by => updated_by
         ) unless existing_number
       else
         race_number = RaceNumber.first(
@@ -588,7 +588,7 @@ class Person < ActiveRecord::Base
         unless race_number
           race_numbers.create(
             :value => value, :discipline => discipline, :year => _year, 
-            :number_issuer => association, :updater => updater
+            :number_issuer => association, :updated_by => updated_by
           )
         end
       end

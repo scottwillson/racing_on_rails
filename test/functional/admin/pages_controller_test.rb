@@ -31,7 +31,7 @@ module Admin
       assert_equal(page, assigns("page"), "@page")
       page.reload
       assert_equal("OBRA Banquet", page.title, "Page title")
-      assert_equal(@administrator, page.updated_by, "updated_by")
+      assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
   
     def test_edit_page
@@ -53,7 +53,7 @@ module Admin
       page = Page.find(page.id)
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
-      assert_equal(@administrator, page.updated_by, "updated_by")
+      assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
   
     def test_update_page_parent
@@ -70,7 +70,7 @@ module Admin
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
-      assert_equal(@administrator, page.updated_by, "updated_by")
+      assert_equal(@administrator, page.updated_by_person, "updated_by_person")
       assert_equal(parent_page, page.parent, "Page parent")
       assert_redirected_to(edit_admin_page_path(page))
     end
@@ -100,7 +100,7 @@ module Admin
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
-      assert_equal(@administrator, page.updated_by, "updated_by")
+      assert_equal(@administrator, page.updated_by_person, "updated_by_person")
     end
   
     def test_create_child_page
@@ -117,7 +117,7 @@ module Admin
       page.reload
       assert_equal("My Awesome Bike Racing Page", page.title, "title")
       assert_equal("<blink>Race</blink>", page.body, "body")
-      assert_equal(@administrator, page.updated_by, "updated_by")
+      assert_equal(@administrator, page.updated_by_person, "updated_by_person")
       assert_equal(parent_page, page.parent, "Page parent")
     end
   

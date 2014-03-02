@@ -47,7 +47,7 @@
         <%= link_to(
               "#", 
               :rel => "tooltip",
-              :title => "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_name}"}", 
+              :title => "Updated #{time_ago_in_words(race_number.updated_at, include_seconds: true)} ago #{"by #{race_number.updated_by_person_name}"}", 
               :class => "icon"
             ) do %><i class="icon-info-sign"></i><% end %>
         <%= link_to(

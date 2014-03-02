@@ -89,7 +89,7 @@
           <% if @team.created_by %>by <%= truncate_from_end(@team.created_by.name) %><% end %>
         </span>
         <% if @team.updated_at %>Updated <%= time_ago_in_words(@team.updated_at, true) + " ago" %><% end %>
-        <% if @team.updated_by %>by <%= truncate_from_end(@team.updated_by_name) %><% end %>
+        <% if @team.updated_by_person %>by <%= truncate_from_end(@team.updated_by_person_name) %><% end %>
       </div>
       <% end %>
     </div>

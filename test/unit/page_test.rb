@@ -40,13 +40,13 @@ class PageTest < ActiveSupport::TestCase
     assert_equal(2, child_child.depth, "depth")
   end
   
-  test "updated_by" do
+  test "updated_by_person" do
     administrator = FactoryGirl.create(:administrator)
     Person.current = administrator
     page = Page.create!(:body => "<h1>Welcome</h1>", :title => "")
     page.versions(true)
     assert_equal(administrator, page.created_by, "created_by")
-    assert_equal(administrator, page.updated_by, "updated_by")
+    assert_equal(administrator, page.updated_by_person, "updated_by_person")
   end
   
   test "Root page valid_parents" do
@@ -96,7 +96,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("plain/new_page", page.path, "path")
     assert_equal("Original content", page.body, "body")
     assert_equal(admin, page.created_by, "created_by")
-    assert_equal(admin, page.updated_by, "updated_by")
+    assert_equal(admin, page.updated_by_person, "updated_by_person")
     assert_equal(1, page.version, "version")
     
     page.body = "New content"
@@ -106,12 +106,12 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("new_page", page.slug, "slug")
     assert_equal("plain/new_page", page.path, "path")
     assert_equal("New content", page.body, "body")
-    assert_equal(admin, page.updated_by, "updated_by")
+    assert_equal(admin, page.updated_by_person, "updated_by_person")
     assert_equal(2, page.version, "version")
     
     original = page.versions.first
     assert(original.changes.empty?, "original should have no changes")
-    assert_equal(admin, original.user, "updated_by")
+    assert_equal(admin, original.user, "updated_by_person")
 
     last_version = page.versions.last
     assert_equal("Original content", last_version.changes["body"].first, "body in #{last_version.changes.inspect}")
@@ -127,7 +127,7 @@ class PageTest < ActiveSupport::TestCase
   
     new_person = Person.create!(:name => "New Person", :password => "foobar123", :password_confirmation => "foobar123", :email => "person@example.com")
     new_parent = Page.create!(:title => "Root")
-    page.updater = nil
+    page.updated_by = nil
     Person.current = new_person
     assert_equal(1, page.versions.count, "versions")
     page.update_attributes! :parent_id => new_parent.id, :title => "Revised Title", :body => "Revised content"
@@ -138,7 +138,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("new_page", page.slug, "slug")
     assert_equal("root/new_page", page.path, "path")
     assert_equal("Revised content", page.body, "body")
-    assert_equal(new_person, page.updated_by, "updated_by")
+    assert_equal(new_person, page.updated_by_person, "updated_by_person")
 
     original = page.versions.second
     assert_equal(parent.id, original.changes["parent_id"].first, "parent_id in #{original.changes.inspect}, #{page.versions.last.changes.inspect}")
@@ -146,7 +146,7 @@ class PageTest < ActiveSupport::TestCase
     assert_equal("New Page", original.changes["title"].first, "title")
     assert_equal("Original content", original.changes["body"].first, "body")
     assert_equal(admin, page.created_by, "created_by")
-    assert_equal(new_person, page.updated_by, "updated_by")
+    assert_equal(new_person, page.updated_by_person, "updated_by_person")
   end
   
   test "update updated at if child changes" do

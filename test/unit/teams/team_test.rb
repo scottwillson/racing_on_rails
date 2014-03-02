@@ -178,19 +178,19 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal(true, team.member, 'member')
   end
 
-  def test_delete_updater
+  def test_delete_updated_by
     team = FactoryGirl.create(:team)
     person = FactoryGirl.create(:person)
-    team.updater = person
+    team.updated_by = person
     team.name = "7-11"
     team.save!
     assert_equal person, team.versions.last.user, " version user"
-    assert_equal person, team.updated_by, "updated_by"
+    assert_equal person, team.updated_by_person, "updated_by_person"
 
     person.destroy
     assert !Person.exists?(person.id), "Updater Person should be destroyed"
 
     assert_equal nil, team.versions(true).last.user, " version user"
-    assert_equal nil, team.updated_by, "updated_by"
+    assert_equal nil, team.updated_by_person, "updated_by_person"
   end
 end
