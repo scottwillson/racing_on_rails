@@ -10,15 +10,10 @@
 
 <%= render :partial => "version", :collection => @person.versions.sort_by(&:updated_at).reverse %>
 
-<div class="span12">
-  <div class="created_updated span4">
-    <span class="created_at">
-      <%= render :partial => "people/created_updated" %>
-    </span>
-  </div>
-
-  <div class="right span8">
+<div class="row-fluid control-group">
+  <div class="span12">
     <%= link_to("Edit Account", edit_admin_person_path(@person), :class => "obvious") if administrator? %>
     <%= link_to("Edit Account", edit_person_path(@person), :class => "obvious") unless administrator? %>
+    <div class="pull-right created_updated"><%= render :partial => "people/created_updated" %></div>
   </div>
 </div>
