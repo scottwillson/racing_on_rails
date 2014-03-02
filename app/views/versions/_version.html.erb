@@ -1,34 +1,39 @@
-<hr class="space"/>
-
-<% changes = version.changes.select { |key, change| change.first.present? || change.last.present? } -%>
-
 <h3>Updated by <%= version.user_without_name.try(:name) %> on <%= version.updated_at.to_s(:long) %> </h3>
-<%= table :class => "version span12 last clear", 
-         :columns => 3, :collection => changes do %>
-  <tr>
-    <th class="what">What</th>
-    <th class="from">From</th>
-    <th class="to">To</th>
-  </tr>
-  <% changes.sort_by(&:first).each do |key, change| -%>
-    <% if key == "crypted_password" %>
-  <tr>
-    <td class="what">Password</td>
-    <td class="from"></td>
-    <td class="to"></td>
-  </tr>
-    <% elsif key == "team_id" -%>
-  <tr>
-    <td class="what"><%= key.humanize %></td>
-    <td class="from"><%= change.first.present? && Team.exists?(change.first) ? Team.find(change.first).name : "" %></td>
-    <td class="to"><%= change.last.present? && Team.exists?(change.last) ? Team.find(change.last).name : "" %></td>
-  </tr>
-    <% else -%>
-  <tr>
-    <td class="what"><%= key.humanize %></td>
-    <td class="from"><%= change.first %></td>
-    <td class="to"><%= change.last %></td>
-  </tr>
+
+<% if version.changes.is_a?(String) %>
+  <p><%= version.changes %></p>
+
+<% else %>
+  <% changes = version.changes.select { |key, change| change.first.present? || change.last.present? } -%>
+
+  <%= table :class => "version", :columns => 3, :collection => changes do %>
+    <tr>
+      <th class="what">What</th>
+      <th class="from">From</th>
+      <th class="to">To</th>
+    </tr>
+    <% changes.sort_by(&:first).each do |key, change| -%>
+      <% if key == "crypted_password" %>
+    <tr>
+      <td class="what">Password</td>
+      <td class="from"></td>
+      <td class="to"></td>
+    </tr>
+      <% elsif key == "team_id" -%>
+    <tr>
+      <td class="what"><%= key.humanize %></td>
+      <td class="from"><%= change.first.present? && Team.exists?(change.first) ? Team.find(change.first).name : "" %></td>
+      <td class="to"><%= change.last.present? && Team.exists?(change.last) ? Team.find(change.last).name : "" %></td>
+    </tr>
+      <% else -%>
+    <tr>
+      <td class="what"><%= key.humanize %></td>
+      <td class="from"><%= change.first %></td>
+      <td class="to"><%= change.last %></td>
+    </tr>
+      <% end -%>
     <% end -%>
   <% end -%>
-<% end -%>
+
+<% end %>
+

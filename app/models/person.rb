@@ -906,7 +906,12 @@ class Person < ActiveRecord::Base
         results << other_person.results
         race_numbers << other_person.race_numbers
 
-        versions << other_person.versions
+        begin
+          versions << other_person.versions
+        rescue ActiveRecord::SerializationTypeMismatch => e
+          logger.error e
+        end
+        
         versions.sort_by(&:created_at).each_with_index do |version, index|
           version.number = index + 2
           version.save!
