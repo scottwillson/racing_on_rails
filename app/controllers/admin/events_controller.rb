@@ -340,6 +340,7 @@ module Admin
         :registration,
         :registration_ends_at,
         :registration_link,
+        :registration_public,
         :sanctioned_by,
         :sanctioning_org_event_id,
         :state,
