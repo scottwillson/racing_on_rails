@@ -2,7 +2,7 @@
   <%= tabs(@region.try(:name) || "All") do |tabs|
     tabs.add("All", schedule_path)
     regions.each do |r|
-      tabs.add r.name, schedule_region_path(:region => r)
+      tabs.add r.name, schedule_region_path(:region => r, :year => year)
     end
   end%>
 <% end %>
