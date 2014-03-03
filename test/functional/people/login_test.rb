@@ -410,4 +410,18 @@ class LoginTest < ActionController::TestCase
     assert_equal existing_person, assigns(:person), "Should match existing Person"
   end
 
+  def test_create_login_with_return_to_with_params
+    use_ssl
+    post :create_login, 
+        :person => { 
+          :login => "racer@example.com", 
+          :password => "secret", 
+          :password_confirmation => "secret", 
+          :email => "racer@example.com"
+         },
+         :return_to => "/line_items/create?type=membership"
+ 
+    assert assigns(:person).errors.empty?, "Should not have errors, but had: #{assigns(:person).errors.full_messages}"
+    assert_redirected_to "/line_items/create?type=membership"
+  end
 end

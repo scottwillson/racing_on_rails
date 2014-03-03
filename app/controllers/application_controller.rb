@@ -135,7 +135,12 @@ class ApplicationController < ActionController::Base
   end
   
   def redirect_back_or_default(default)
-    redirect_to(session[:return_to] || default)
-    session[:return_to] = nil
+    if session[:return_to]
+      uri = URI.parse(session[:return_to])
+      redirect_to URI::Generic.build(:path => uri.path, :query => uri.query).to_s
+      session[:return_to] = nil
+    else
+      redirect_to default
+    end
   end
 end
