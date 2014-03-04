@@ -388,7 +388,7 @@ CREATE TABLE `people_roles` (
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `caption` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `caption` text COLLATE utf8_unicode_ci,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `image` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `height` int(11) DEFAULT NULL,
@@ -498,8 +498,8 @@ CREATE TABLE `racing_associations` (
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
   `masters_age` int(11) NOT NULL DEFAULT '35',
-  `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
-  `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
+  `rental_numbers_end` int(11) DEFAULT '99',
+  `rental_numbers_start` int(11) DEFAULT '51',
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -950,11 +950,17 @@ INSERT INTO schema_migrations (version) VALUES ('20131113143051');
 
 INSERT INTO schema_migrations (version) VALUES ('20131126150417');
 
+INSERT INTO schema_migrations (version) VALUES ('20131215151535');
+
 INSERT INTO schema_migrations (version) VALUES ('20140207223552');
 
 INSERT INTO schema_migrations (version) VALUES ('20140211232628');
 
 INSERT INTO schema_migrations (version) VALUES ('20140214002555');
+
+INSERT INTO schema_migrations (version) VALUES ('20140303223128');
+
+INSERT INTO schema_migrations (version) VALUES ('20140304153913');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
