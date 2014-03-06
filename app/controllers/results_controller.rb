@@ -41,6 +41,7 @@ class ResultsController < ApplicationController
         benchmark "Load results", :level => :debug do
           @event = Event.includes(:races => [ :category, { :results => :team } ]).find(params[:event_id])
         end
+        assign_start_list
       }
       format.json { render :json => results_for_api(@event.id) }
       format.xml { render :xml => results_for_api(@event.id) }
@@ -132,6 +133,11 @@ class ResultsController < ApplicationController
   
   def assign_team_results(team, year)
     @event_results = Result.where(:team_id => team.id).where(:year => year).where("competition_result = false and team_competition_result = false")
+  end
+  
+  # Default implementation. Return nil. Override in engines.
+  def assign_start_list
+    @start_list = nil
   end
   
   def results_for_api(event_id)

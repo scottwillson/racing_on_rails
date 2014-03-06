@@ -43,7 +43,9 @@
   <%- end -%>
 </div>
   <% else %>
-  <%= render "start_list" %>
+    <% if @event.races_with_results.empty? && @start_list %>
+      <%= render :partial => "start_list", :locals => { :start_list => @start_list } %>
+    <% end %>
   <%- end -%>
 
   <%- if @event.notes.present? -%>
