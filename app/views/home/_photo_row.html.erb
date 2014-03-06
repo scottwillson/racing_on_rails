@@ -1,0 +1,23 @@
+<% if photo %>
+<div class="row-fluid">
+  <% if photo.widescreen? %>
+    <div class="span12">
+      render photo
+    </div>
+    <% elsif photo.portrait? %>
+    <div class="span6">
+      render photo
+    </div>
+    <div class="span6">
+      <%= render "most_recent_event_with_recent_result", :event => most_recent_event_with_recent_result %>
+    </div>
+    <% else %>
+    <div class="span8">
+      render photo
+    </div>
+    <div class="span4">
+      <%= render "most_recent_event_with_recent_result", :event => most_recent_event_with_recent_result %>
+    </div>
+  <% end %>
+</div>
+<% end %>
