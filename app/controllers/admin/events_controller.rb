@@ -15,8 +15,7 @@ module Admin
     # * year
     def index
       @competitions = Event.where("type in (?)", Competition::TYPES).year(@year)
-      events = SingleDayEvent.year(@year)
-      @schedule = Schedule::Schedule.new(@year, events)
+      @schedule = Schedule::Schedule.new(@year, events_for_year(@year))
     end
 
     # Show results for Event
@@ -288,6 +287,11 @@ module Admin
       @current_admin_tab = "Schedule"
     end
 
+    def events_for_year(year)
+      single_day_events = SingleDayEvent.year(year)
+      childless_multi_day_events = MultiDayEvent.where("id not in (?)", single_day_events.map(&:parent_id).compact).year(year)
+      single_day_events + childless_multi_day_events
+    end
 
     private
 

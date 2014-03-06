@@ -112,7 +112,7 @@ module Admin
   
     def test_add_children
       Timecop.freeze(Time.zone.local(RacingAssociation.current.year, 10, 3)) do
-        lost_series_child = FactoryGirl.create(:event, :name => "Event", :date => 1.month.from_now)
+        FactoryGirl.create(:event, :name => "Event", :date => 1.month.from_now)
   
         event = FactoryGirl.create(:series, :name => "Event")
         get(:add_children, :parent_id => event.to_param)
@@ -187,6 +187,17 @@ module Admin
       assert_response(:success)
       assert_equal(0, jack_frost.races(true).count  , "Races after destroy")
       assert_nil(jack_frost.combined_results(true), "Event should have not combined results after destroying races")
+    end
+    
+    def test_events_for_year
+      Timecop.freeze(2005, 6) do
+        single_day_event = FactoryGirl.create(:event, :date => 3.days.from_now, :name => "Single Day Event")
+        multi_day_event_with_children = FactoryGirl.create(:stage_race, :name => "Stage Race")
+        multi_day_event = MultiDayEvent.create!(:date => 1.week.ago, :name => "Childless MultiDayEvent")
+      
+        expected_events = [ single_day_event, multi_day_event ] + multi_day_event_with_children.children
+        assert_same_elements expected_events, @controller.send(:events_for_year, 2005), "events_for_year should include childless MultiDayEvents"
+      end
     end
   end
 end
