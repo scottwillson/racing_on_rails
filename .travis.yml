@@ -7,4 +7,4 @@ before_script:
   - rake db:setup RAILS_ENV=test
 
 rvm:
-  - "1.9.3"
+  - "2.1.0"
