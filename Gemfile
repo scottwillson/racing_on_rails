@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", ">=3.2.12"
+gem "rails", "~>3.2.17"
 
 gem "activemerchant"
 gem "acts_as_list", :git => "https://github.com/swanandp/acts_as_list.git"
