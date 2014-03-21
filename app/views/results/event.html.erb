@@ -34,7 +34,7 @@
 </div>
 <% end -%>
 
-  <%= render :partial => "races", :locals => { :event => @event } %>
+  <%= render :partial => "results/races", :locals => { :event => @event } %>
 
   <%- if @event.children_and_child_competitions_with_results.select { |child| !child.is_a?(SingleDayEvent) }.present? -%>
 <div class="row-fluid event_info child_events">
@@ -50,6 +50,11 @@
 
   <%- if @event.notes.present? -%>
   <p class="event_notes"><%= @event.notes.html_safe -%></p>
+  <%- end -%>
+
+  <%- if @event.races_with_results.empty? && @event.is_a?(Competition) -%>
+  <p class="event_notes"><%= @event.notes.html_safe -%></p>
+    No results for <%= @event.year %>
   <%- end -%>
 
   <% if @event.races_with_results.present? -%>
