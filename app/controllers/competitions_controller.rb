@@ -13,10 +13,14 @@ class CompetitionsController < ApplicationController
       competition_class = WsbaMastersBarr
     elsif params[:type] == "mbra_bar"
       competition_class = MbraBar
+    elsif params[:type] == "obra_tt_cup"
+      competition_class = OBRATTCup
     else
       raise ActiveRecord::RecordNotFound.new("No competition of type: #{params[:type]}")
     end
 
     @event = competition_class.year(@year).first || competition_class.new(:date => Time.zone.local(@year))
+    
+    render "results/event"
   end
 end
