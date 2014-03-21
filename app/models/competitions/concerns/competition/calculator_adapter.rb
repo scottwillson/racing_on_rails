@@ -22,7 +22,7 @@ module Concerns
             use_source_result_points: use_source_result_points?
           )
 
-          create_competition_results_for(calculated_results, race)
+          create_competition_results_for calculated_results, race
         end
     
         after_calculate
