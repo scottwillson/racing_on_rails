@@ -2,7 +2,7 @@
 
 <%= table :insert_header => true, :columns => 6 do %>
   <% @mailing_lists.each do |mailing_list| %>
-  <tr valign="top">
+  <tr>
     <td style="padding-right: 12px;"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %><b></td>
     <td width="300" style="padding-right: 16px;"><%= mailing_list.description %></td>
     <td><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></td>

@@ -161,6 +161,7 @@ RacingOnRails::Application.routes.draw do
   
     match '/oregon_womens_prestige_series' => 'oregon_womens_prestige_series#show'
     match '/owps' => 'oregon_womens_prestige_series#show'
+    match "/obra_tt_cup" => "competitions#show", :type => "obra_tt_cup"
   
     resources :password_resets
 

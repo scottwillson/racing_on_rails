@@ -24,6 +24,7 @@ class Competition < Event
     CrossCrusadeOverall
     CrossCrusadeTeamCompetition
     Ironman
+    OBRATTCup
     OregonCup
     OregonJuniorCyclocrossSeries
     OregonWomensPrestigeSeries
