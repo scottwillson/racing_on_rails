@@ -15,7 +15,7 @@ class Competition < Event
   include Concerns::Competition::Dates
   include Concerns::Competition::Names
   include Concerns::Competition::Points
-  
+
   TYPES = %w{
     AgeGradedBar
     Bar
@@ -33,29 +33,29 @@ class Competition < Event
     TaborOverall
     TeamBar
   }
-  
+
   UNLIMITED = Float::INFINITY
 
   after_create  :create_races
   # return true from before_save callback or Competition won't save
   before_save   { |competition| competition.notification = false; true }
   after_save    :expire_cache
-  
+
   has_many :competition_event_memberships
   has_many :source_events, :through => :competition_event_memberships, :source => :event
-  
+
   def self.find_for_year(year = RacingAssociation.current.year)
     self.where("date between ? and ?", Time.zone.local(year).beginning_of_year.to_date, Time.zone.local(year).end_of_year.to_date).first
   end
-  
+
   def self.find_for_year!(year = RacingAssociation.current.year)
     self.find_for_year(year) || raise(ActiveRecord::RecordNotFound)
   end
-  
+
   def self.find_or_create_for_year(year = RacingAssociation.current.year)
     self.find_for_year(year) || self.create(:date => (Time.zone.local(year).beginning_of_year))
   end
-  
+
   # Update results based on source event results.
   # (Calculate clashes with internal Rails method)
   def self.calculate!(year = Time.zone.today.year)
@@ -77,7 +77,7 @@ class Competition < Event
     # Don't return the entire populated instance!
     true
   end
-  
+
   def default_ironman
     false
   end
@@ -85,25 +85,25 @@ class Competition < Event
   def delete_races
     ActiveRecord::Base.lock_optimistically = false
     disable_notification!
-    
+
     if races.present?
       race_ids = races.map(&:id)
       Score.delete_all("competition_result_id in (select id from results where race_id in (#{race_ids.join(',')}))")
       Result.where("race_id in (?)", race_ids).delete_all
     end
     races.clear
-    
+
     enable_notification!
     ActiveRecord::Base.lock_optimistically = true
   end
-  
+
   def create_races
     category_names.each do |name|
       category = Category.find_or_create_by_name(name)
       self.races.create(:category => category)
     end
   end
-  
+
   # Override in superclass for Competitions like OBRA OverallBAR
   def create_children
     true
@@ -122,7 +122,7 @@ class Competition < Event
         end
     end
   end
-  
+
   # Rebuild results
   def calculate!
     races.each do |race|
@@ -132,21 +132,21 @@ class Competition < Event
       race.results.each(&:update_points!)
       race.place_results_by_points(break_ties?, ascending_points?)
     end
-    
+
     after_calculate
     save!
   end
-  
+
   # Callback
   def after_calculate
     self.updated_at = Time.zone.now
   end
-  
+
   # source_results must be in person, place ascending order
   def source_results(race)
     []
   end
-  
+
   # If same rider places twice in same race, only highest result counts
   # TODO Replace ifs with methods
   def create_competition_results_for(results, race)
@@ -161,7 +161,7 @@ class Competition < Event
       if person.nil? || source_result.person_id != person.id
         person = source_result.person
       end
-      
+
       # Competitions that use competition results (e.g., Overall BAR uses discipline BAR)
       # assume that first competition checked membership requirements
       if person && points > 0.0 && (!members_only? || source_result.competition_result? || person.member_in_year?(source_result.date))
@@ -169,26 +169,26 @@ class Competition < Event
           # Intentionally not using results association create method. No need to hang on to all competition results.
           # In fact, this could cause serious memory issues with the Ironman
           competition_result = Result.create!(
-             :person => person, 
+             :person => person,
              :team => person.team,
              :event => self,
              :race => race,
              :competition_result => true)
         end
-       
+
         create_score competition_result, source_result, points
       end
     end
   end
-  
+
   def create_score(competition_result, source_result, points)
     competition_result.scores.create_if_best_result_for_race(
-      :source_result => source_result, 
-      :competition_result_id => competition_result.id, 
+      :source_result => source_result,
+      :competition_result_id => competition_result.id,
       :points => points
     )
   end
-  
+
   # By default, does nothing. Useful to apply rule like:
   # * Any results after the first four only get 50-point bonus
   # * Drop lowest-scoring result
@@ -207,32 +207,30 @@ class Competition < Event
 
         if preliminary?(result)
           result.update_column :preliminary, true
-        end    
+        end
       end
     end
   end
-  
+
   # Only consider results from source_events. Default to false: use all events in year.
   def source_events?
     false
   end
-  
+
   def source_event_ids(race)
-    if source_events? && source_events.present?
+    if source_events?
       source_events.map(&:id)
-    else
-      nil
     end
   end
-  
+
   def maximum_events(race)
     nil
   end
-  
+
   def preliminary?(result)
     false
   end
-  
+
   def first_result_for_person?(source_result, competition_result)
     competition_result.nil? || source_result.person_id != competition_result.person_id
   end
@@ -244,11 +242,11 @@ class Competition < Event
   def break_ties?
     true
   end
-  
+
   def dnf?
     false
   end
-  
+
   def requires_combined_results?
     false
   end
@@ -264,7 +262,7 @@ class Competition < Event
   def use_source_result_points?
     false
   end
-  
+
   # Team-based competition? False (default) implies it is person-based?
   def team?
     false
@@ -294,9 +292,9 @@ class Competition < Event
   def to_s
     "#<#{self.class} #{id} #{name} #{start_date} #{end_date}>"
   end
-  
+
   protected
-  
+
   def source_results_with_benchmark(race)
     results = []
     Competition.benchmark("#{self.class.name} source_results", :level => :debug) {
