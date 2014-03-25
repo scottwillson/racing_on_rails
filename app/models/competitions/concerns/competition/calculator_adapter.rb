@@ -10,11 +10,11 @@ module Concerns
           results = map_team_member_to_boolean(results)
 
           calculated_results = Competitions::Calculator.calculate(
-            results, 
+            results,
             break_ties: break_ties?,
             dnf: dnf?,
             field_size_bonus: field_size_bonus?,
-            point_schedule: point_schedule, 
+            point_schedule: point_schedule,
             results_per_event: results_per_event,
             results_per_race: results_per_race,
             source_event_ids: source_event_ids(race),
@@ -24,11 +24,11 @@ module Concerns
 
           create_competition_results_for calculated_results, race
         end
-    
+
         after_calculate
         save!
       end
-      
+
       # Calculate field size if needed. It's not stored in the DB, and can't be calculated
       # from source results.
       def add_field_size(results)
@@ -41,7 +41,7 @@ module Concerns
           results
         end
       end
-      
+
       def map_team_member_to_boolean(results)
         if team?
           results.each do |result|
@@ -56,7 +56,7 @@ module Concerns
         end
       end
 
-      # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules 
+      # Similar to superclass's method, except this method only saves results to the database. Superclass applies rules
       # and scoring. It also decorates the results with any display data (often denormalized)
       # like people's names, teams, and points.
       def create_competition_results_for(results, race)
@@ -71,7 +71,7 @@ module Concerns
             :team_competition_result => team?,
             :points                  => result.points
           )
-       
+
           result.scores.each do |score|
             create_score competition_result, score.source_result_id, score.points
           end
@@ -93,12 +93,12 @@ module Concerns
       # This is always the 'best' result
       def create_score(competition_result, source_result_id, points)
         ::Score.create!(
-          :source_result_id => source_result_id, 
-          :competition_result_id => competition_result.id, 
+          :source_result_id => source_result_id,
+          :competition_result_id => competition_result.id,
           :points => points
         )
       end
-      
+
       def person_id_for_competition_result(result)
         if team?
           nil
@@ -106,7 +106,7 @@ module Concerns
           result.participant_id
         end
       end
-      
+
       def team_id_for_competition_result(result, team_ids)
         if team?
           result.participant_id
