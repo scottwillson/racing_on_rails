@@ -1,5 +1,5 @@
 # Year-long OBRA TT competition
-class OBRATTCup < Competition
+class OregonTTCup < Competition
   include Concerns::Competition::CalculatorAdapter
 
   def friendly_name
@@ -27,7 +27,7 @@ class OBRATTCup < Competition
       "Masters Women 30+",
       "Masters Women 40+",
       "Masters Women 50+",
-      "Masters Women 60+", 
+      "Masters Women 60+",
       "Senior Men Pro/1/2",
       "Senior Women 1/2"
     ]

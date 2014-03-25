@@ -6,11 +6,11 @@ RacingOnRails::Application.routes.draw do
       resources :categories do
         collection do
           post :add_child
-          post :recompute_bar 
-          post :recompute_team_bar 
+          post :recompute_bar
+          post :recompute_team_bar
         end
       end
-    
+
       resources :events do
         collection do
           get  :add_children
@@ -75,7 +75,7 @@ RacingOnRails::Application.routes.draw do
         end
         resources :results
       end
-    
+
       resources :results do
         collection do
           post :find_person
@@ -86,7 +86,7 @@ RacingOnRails::Application.routes.draw do
         end
         resources :races
       end
-    
+
       resources :series
       resources :single_day_events
 
@@ -120,9 +120,9 @@ RacingOnRails::Application.routes.draw do
     match '/admin/persons/:action/:id' => 'admin/people#index', :as => :admin_persons
     match '/admin' => 'admin/home#index', :as => :admin_home
     match '/bar' => 'bar#index', :as => "bar_root"
-    match "/bar/:year/:discipline/:category" => "bar#show", 
+    match "/bar/:year/:discipline/:category" => "bar#show",
           :as => "bar_full"
-    match "/bar(/:year(/:discipline(/:category)))" => "bar#show", 
+    match "/bar(/:year(/:discipline(/:category)))" => "bar#show",
           :as => "bar",
           :defaults => { :discipline => "overall", :category => "senior_men" }
 
@@ -144,7 +144,7 @@ RacingOnRails::Application.routes.draw do
         resources :results
       end
     end
-    
+
     match "/human_dates/:date" => "human_dates#show", :constraints => { :date => /.*/ }
 
     resources :photos
@@ -158,11 +158,11 @@ RacingOnRails::Application.routes.draw do
     match '/oregon_cup/races' => 'oregon_cup#races'
     match '/oregon_cup/:year' => 'oregon_cup#index', :as => :oregon_cup
     match '/oregon_cup' => 'oregon_cup#index', :as => :oregon_cup_root
-  
+
     match '/oregon_womens_prestige_series' => 'oregon_womens_prestige_series#show'
     match '/owps' => 'oregon_womens_prestige_series#show'
-    match "/obra_tt_cup" => "competitions#show", :type => "obra_tt_cup"
-  
+    match "/oregon_tt_cup" => "competitions#show", :type => "oregon_tt_cup"
+
     resources :password_resets
 
     resources :mailing_lists do
@@ -244,7 +244,7 @@ RacingOnRails::Application.routes.draw do
     resource :home, :controller => :home
 
     match '*path', :to => 'pages#show', :constraints => PageConstraint.new
-  
+
     if Rails.env.test?
       resources :fake do
         collection do
