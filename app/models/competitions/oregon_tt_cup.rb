@@ -6,6 +6,10 @@ class OregonTTCup < Competition
     "OBRA Time Trial Cup"
   end
 
+  def default_discipline
+    "Time Trial"
+  end
+
   def category_names
     [
       "Category 3 Men",
@@ -34,7 +38,7 @@ class OregonTTCup < Competition
   end
 
   def point_schedule
-    [ 0, 20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
+    [ 20, 17, 15, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
   end
 
   def source_events?
