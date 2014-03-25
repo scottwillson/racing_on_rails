@@ -12,24 +12,24 @@ module Competitions
     UNLIMITED = Float::INFINITY
 
     # Use simple datatypes with no behavior. Hash doesn't have method-like accessors, which means we
-    # can't use symbol to proc. E.g., results.sort_by(&:points). OpenStruct is slow. Full-blown classes 
-    # are overkill. Could add methods to Struct using do…end, ActiveModels or maybe subclass Hash but Struct 
+    # can't use symbol to proc. E.g., results.sort_by(&:points). OpenStruct is slow. Full-blown classes
+    # are overkill. Could add methods to Struct using do…end, ActiveModels or maybe subclass Hash but Struct
     # works well.
     #
     # Struct::Result would clash with Active Record models so Structs are prefixed with "Calculator."
 
     # Source result or calculated competition result.
-    # +tied+ is plumbing set during calculation. If place method can't break a tie, results are marked as "tied" so they 
+    # +tied+ is plumbing set during calculation. If place method can't break a tie, results are marked as "tied" so they
     # are given the same points.
     #
     # +team_size+ is calculated here, too, though it could be passed in.
     Struct.new(
-      "CalculatorResult", 
+      "CalculatorResult",
       :bar, :multiplier, :category_id, :date, :date_of_birth, :event_id, :field_size, :id, :ironman,
-      :member_from, :member_to, :participant_id, :place, :points, :race_id, :sanctioned_by, :scores, 
+      :member_from, :member_to, :participant_id, :place, :points, :race_id, :sanctioned_by, :scores,
       :team_member, :team_size, :tied, :type, :year
     )
-    
+
     # Ties a source result to a competition result.
     # CalculatorScore#numeric_place is source result's place
     Struct.new("CalculatorScore", :date, :numeric_place, :participant_id, :points, :source_result_id, :team_size)
@@ -43,7 +43,7 @@ module Competitions
     # * results_per_event: integer. Default to UNLIMITED. How many results in the same event are counted for a participant?
     # * results_per_race: integer. Default to 1. How many results in the same race are counted for a participant?
     #   Used for team competitions. Team is the participant.
-    # * point_schedule: 0-based Array of points for result place. Default to nil (all results receive one point). 
+    # * point_schedule: 0-based Array of points for result place. Default to nil (all results receive one point).
     #                    First place gets points at point_schedule[0].
     # * source_event_ids: Array of event IDs. Only consider results from this event. Default to nil: all results eligible.
     # * team: true/false. Default to false. Team-based competition?
@@ -76,10 +76,10 @@ module Competitions
       scores = map_to_scores(eligible_results, point_schedule, dnf, field_size_bonus, use_source_result_points)
       scores_with_points = scores.select { |s| s.points && s.points > 0.0 && s.participant_id }
       competition_results = map_to_results(scores_with_points)
-      
+
       place competition_results, break_ties
     end
-    
+
     # Create Struct::CalculatorResults from Hashes
     def self.map_hashes_to_results(results)
       results.map do |result|
@@ -90,18 +90,18 @@ module Competitions
         new_result
       end
     end
-  
+
     def self.add_team_sizes(results, use_source_result_points = false)
       # No point in figuring team size if just reusing points
       if use_source_result_points
         return results
       end
-      
+
       # Use race and place as a key: Array of race_id and place_id
       results_by_race_and_place = Hash.new
       results.group_by { |r| [ r.race_id, r.place ] }.
       each { |key, results_with_same_place| results_by_race_and_place[key] = results_with_same_place.size }
-      
+
       results.map do |result|
         merge_struct(result, team_size: results_by_race_and_place[[ result.race_id, result.place ]])
       end
@@ -113,7 +113,7 @@ module Competitions
     # Only keep best +results_per_event+ results for participant (person or team).
     def self.select_eligible(results, results_per_event = UNLIMITED, results_per_race = 1, members_only = true, team = false, source_event_ids = nil)
       results = results.select { |r| r.participant_id && ![ nil, "", "DQ", "DNS" ].include?(r.place) }
-      
+
       if members_only && team
         results = results.select(&:team_member)
       end
@@ -121,15 +121,15 @@ module Competitions
       if members_only
         results = results.select { |r| member_in_year?(r) }
       end
-      
+
       if source_event_ids
         results = results.select { |r| source_event_ids.include? r.event_id }
       end
-      
+
       results = select_results_for_event(results, results_per_event)
       select_results_for_race(results, results_per_race)
     end
-    
+
     def self.select_results_for_event(results, results_per_event)
       if results_per_event == UNLIMITED
         results
@@ -141,7 +141,7 @@ module Competitions
         flatten
       end
     end
-    
+
     def self.select_results_for_race(results, results_per_race)
       if results_per_race == UNLIMITED
         results
@@ -206,7 +206,7 @@ module Competitions
         Float::INFINITY
       end
     end
-    
+
     def self.sort_by_points(results, break_ties = false)
       if break_ties
         results.sort do |x, y|
@@ -216,7 +216,7 @@ module Competitions
         results.sort_by(&:points).reverse
       end
     end
-    
+
     def self.compare_by_points(x, y)
       diff = y.points <=> x.points
       return diff if diff != 0
@@ -232,9 +232,9 @@ module Competitions
       y.tied = true
       0
     end
-    
+
     def self.compare_by_best_place(x, y)
-      return 0 if x.scores.nil? && y.scores.nil? 
+      return 0 if x.scores.nil? && y.scores.nil?
       return 0 if x.scores.size == 0 && y.scores.size == 0
 
       x_places = (x.scores || []).map(&:numeric_place).sort.reverse
@@ -243,7 +243,7 @@ module Competitions
       while x_places.size > 0 || y_places.size > 0 do
         x_place = x_places.pop
         y_place = y_places.pop
-        
+
         if x_place.nil? && y_place.nil?
           return 0
         elsif x_place.nil?
@@ -257,13 +257,13 @@ module Competitions
       end
       0
     end
-    
+
     def self.compare_by_most_recent_result(x, y)
-      return 0 if x.scores.nil? && y.scores.nil? 
-      
+      return 0 if x.scores.nil? && y.scores.nil?
+
       x_date = x.scores.map(&:date).max
       y_date = y.scores.map(&:date).max
-      
+
       if x_date.nil? && y_date.nil?
         0
       elsif x_date.nil?
@@ -279,7 +279,7 @@ module Competitions
       if use_source_result_points
         return result.points
       end
-      
+
       if numeric_place(result) < Float::INFINITY
         if point_schedule
           if (result.multiplier.nil? || result.multiplier == 1) && field_size_bonus && result.field_size >= 75
@@ -288,9 +288,9 @@ module Competitions
             field_size_multiplier = 1.0
           end
 
-          ((point_schedule[numeric_place(result) - 1] || 0) / 
-          (result.team_size || 1.0).to_f) * 
-          (result.multiplier || 1 ).to_f * 
+          ((point_schedule[numeric_place(result) - 1] || 0) /
+          (result.team_size || 1.0).to_f) *
+          (result.multiplier || 1 ).to_f *
           field_size_multiplier
         else
           1
@@ -305,20 +305,20 @@ module Competitions
     def self.team_size(result, results)
       results.count { |r| r.race_id == result.race_id && r.place == result.place }
     end
-    
+
     def self.member_in_year?(result)
       raise(ArgumentError, "Result year required to check membership") unless result.year
       result.member_from && result.member_to && result.member_from.year <= result.year && result.member_to.year >= result.year
     end
-    
+
     def self.valid_options
-      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :results_per_race, :point_schedule, 
+      [ :break_ties, :dnf, :field_size_bonus, :members_only, :results_per_event, :results_per_race, :point_schedule,
         :source_event_ids, :team, :use_source_result_points ]
     end
-    
+
     def self.assert_valid_options(options)
       return true if !options || options.size == 0
-      
+
       options.keys.each do |key|
         if !valid_options.include?(key)
           raise "#{key} is not a valid option for Calculator. Valid: #{valid_options}"
