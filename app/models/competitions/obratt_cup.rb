@@ -7,24 +7,28 @@ class OBRATTCup < Competition
   end
 
   def category_names
-    [ 
+    [
       "Category 3 Men",
-      "Category 3 Women", 
+      "Category 3 Women",
       "Category 4/5 Men",
-      "Category 4/5 Women", 
-      "Eddy Senior Men", 
+      "Category 4/5 Women",
+      "Eddy Senior Men",
       "Eddy Senior Women",
       "Junior Men 10-12",
       "Junior Men 13-14",
       "Junior Men 15-16",
-      "Junior Men 17-18", 
-      "Junior Women 10-14", 
-      "Junior Women 15-18", 
-      "Masters 30+", 
-      "Masters 40+", 
-      "Masters 50+", 
-      "Masters 60+", 
-      "Senior Men Pro/1/2", 
+      "Junior Men 17-18",
+      "Junior Women 10-14",
+      "Junior Women 15-18",
+      "Masters 30+",
+      "Masters 40+",
+      "Masters 50+",
+      "Masters 60+",
+      "Masters Women 30+",
+      "Masters Women 40+",
+      "Masters Women 50+",
+      "Masters Women 60+", 
+      "Senior Men Pro/1/2",
       "Senior Women 1/2"
     ]
   end
@@ -63,7 +67,7 @@ class OBRATTCup < Competition
         "races.category_id",
         "race_id",
         "results.event_id",
-        "results.id as id", 
+        "results.id as id",
         "year"
       ]).
       joins(:race => :event).
