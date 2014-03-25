@@ -4,7 +4,7 @@ jQuery('#category_<%= @category.id %>_row').remove();
 <% if @category.parent && @category.parent.name != RacingAssociation.current.short_name %>
   expandDisclosure('<%= @category.parent_id %>');
 <% else %>
-  jQuery('#category_<%= @category.parent_id %>_row').html("<%= escape_javascript(render(@children.sort)) %>");
+  jQuery('#category_<%= @category.parent_id %>_row').html("<%= escape_javascript(render(@children.sort_by(&:name))) %>");
 <% end %>
 
 jQuery('#category_<%= @category.id %>_row').effect("highlight", {}, 3000);

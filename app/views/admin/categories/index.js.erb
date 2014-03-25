@@ -1,1 +1,1 @@
-jQuery('#category_<%= @category.id %>_children').html("<%= escape_javascript(render(@category.children.sort)) %>");
+jQuery('#category_<%= @category.id %>_children').html("<%= escape_javascript(render(@category.children.sort_by(&:name))) %>");

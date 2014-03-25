@@ -4,7 +4,7 @@
 
 <%# We're small enough we can recompute competitions on demand. alp -%>
 <% if RacingAssociation.current.competitions.include?(:mbra_bar) -%>
-<div class="row-fluid">    
+<div class="row-fluid">
   <div class="span12">
     <%= form_tag "/admin/categories/recompute_bar" do -%>
       <%= submit_tag "Recompute MBRA BAR", :id => "recompute_bar" %>
@@ -20,14 +20,14 @@
   <div class="span6">
     <h3><%= RacingAssociation.current.short_name %></h3>
     <div class="category category_root association_category_root well" id="category_<%= @category.id %>_row" data-id="<%= @category.id %>">
-      <%= render :partial => "category", :collection => @category.children.sort %>
+      <%= render :partial => "category", :collection => @category.children.sort_by(&:name) %>
     </div>
   </div>
 
   <div class="span6">
     <h3>Unknown</h3>
     <div class="category category_root unknown_category_root well" id="category__row" data-id="">
-      <%= render :partial => "category", :collection => @unknowns.sort %>
+      <%= render :partial => "category", :collection => @unknowns.sort_by(&:name) %>
     </div>
   </div>
 </div>
