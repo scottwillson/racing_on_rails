@@ -3,7 +3,7 @@ require "sentient_user/sentient_controller"
 class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery
-  
+
   include ActionController::ForceHTTPS
   include RacingOnRails::Controllers::Authorization
   include RacingOnRails::Controllers::Authentication
@@ -31,6 +31,8 @@ class ApplicationController < ActionController::Base
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "home.html"), :force => true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "index.html"), :force => true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "m.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "owps.html"), :force => true)
+      FileUtils.rm(File.join(::Rails.root.to_s, "public", "oregon_tt_cup.html"), :force => true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "results.html"), :force => true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "rider_rankings.html"), :force => true)
       FileUtils.rm(File.join(::Rails.root.to_s, "public", "schedule.html"), :force =>true)
@@ -43,17 +45,17 @@ class ApplicationController < ActionController::Base
     rescue Exception => e
       logger.error e
     end
-    
+
     true
   end
 
 
   protected
-  
+
   def clear_racing_association
     RacingAssociation.current = nil
   end
-  
+
   def toggle_tabs
     @show_tabs = false
   end
@@ -69,14 +71,14 @@ class ApplicationController < ActionController::Base
       path = controller_path
       path = "#{path}/#{action_name}" unless action_name == "index"
     end
-    
+
     page_path = path.dup
     page_path.gsub!(/.html$/, "")
     page_path.gsub!(/index$/, "")
     page_path.gsub!(/\/$/, "")
 
     @page = find_mobile_page(page_path)
-    
+
     if !@page
       @page = Page.find_by_path(page_path)
     end
@@ -113,19 +115,19 @@ class ApplicationController < ActionController::Base
       type.all { render :nothing => true, :status => "500 Error" }
     end
   end
-  
+
   def assign_year
     if params[:year] && params[:year][/^\d\d\d\d$/]
       @year = params[:year].to_i
     end
-    
+
     if @year.nil? || @year < 1900 || @year > 2100
       @year = RacingAssociation.current.effective_year
     end
   end
 
   private
-  
+
   def secure_redirect_options
     if RacingAssociation.current.ssl?
       { :protocol => "https", :host => request.host }
@@ -133,7 +135,7 @@ class ApplicationController < ActionController::Base
       {}
     end
   end
-  
+
   def redirect_back_or_default(default)
     if session[:return_to]
       uri = URI.parse(session[:return_to])
