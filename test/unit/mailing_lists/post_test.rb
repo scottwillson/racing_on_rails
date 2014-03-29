@@ -1,46 +1,19 @@
-require File.expand_path("../../../test_helper", __FILE__)
+require_relative "../../test_helper"
 
 # :stopdoc:
 class PostTest < ActiveSupport::TestCase
-  def test_save
-    post = Post.new
-    post.subject = "[OBRA Chat] Foo"
-    post.from_email_address = "foo@bar.net"
-    post.from_name = "Foo"
-    post.body = "Test message"
-    post.mailing_list = FactoryGirl.create(:mailing_list)
-    post.date = Time.zone.today
-    post.save!
-  end
-  
-  def test_remove_prefix
-    obra = FactoryGirl.create(:mailing_list)
-    post = Post.new
-    post.subject = "[#{obra.friendly_name}] Foo"
-    post.body = "Test message"
-    post.mailing_list = obra
-    post.from_email_address = "scout@foo.net"
-    post.from_name = "Scout"
-    post.date = Time.zone.today
-    post.save!
-    
-    post_from_db = Post.find(post.id)
-    assert_equal("Foo", post.subject, "Subject")
+  test "strip list prefix from subject" do
+    mailing_list = FactoryGirl.build(:mailing_list, :subject_line_prefix => "OBRA Chat")
+    post = Post.new(:subject => "[OBRA Chat] Foo", :mailing_list => mailing_list)
+    post.remove_list_prefix
+    assert_equal "Foo", post.subject, "Subject"
 
-    post = Post.new
-    post.subject = "Re: [#{obra.friendly_name}] Foo"
-    post.body = "Test message"
-    post.mailing_list = obra
-    post.from_email_address = "scout@foo.net"
-    post.from_name = "Scout"
-    post.date = Time.zone.today
-    post.save!
-    
-    post_from_db = Post.find(post.id)
-    assert_equal("Re: Foo", post.subject, "Subject")
+    post = Post.new(:subject => "Re: [OBRA Chat] Foo", :mailing_list => mailing_list)
+    post.remove_list_prefix
+    assert_equal "Re: Foo", post.subject, "Subject"
   end
-  
-  def test_sender_obscured
+
+  test "sender_obscured" do
     post = Post.new
     post.sender = "scout@foo.net"
     assert_equal("sco..@foo.net", post.sender_obscured, "Sender obscured")
@@ -74,8 +47,8 @@ class PostTest < ActiveSupport::TestCase
     post.topica_message_id = 125633
     assert_equal("scott_will-@foo.net", post.sender_obscured, "Sender obscured")
   end
-  
-  def test_from
+
+  test "from" do
     post = Post.new
     assert_equal "", post.from_name, "from_name"
     assert_equal "", post.from_email_address, "from_email_address"
@@ -91,8 +64,8 @@ class PostTest < ActiveSupport::TestCase
     assert_equal "cmurray@obra.org", post.from_email_address, "from_email_address"
     assert post.valid?, post.errors.full_messages.to_s
   end
-  
-  def test_full_text_search
+
+  test "full text search index" do
     post = FactoryGirl.create(:post, :subject => "Vintage Vanilla cap")
     assert PostText.exists?(:text => "Vintage Vanilla cap"), "Should create matching PostText"
     assert_not_nil post.post_text, "Should create matching PostText"
