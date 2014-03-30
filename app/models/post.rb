@@ -16,6 +16,13 @@ class Post < ActiveRecord::Base
 
   default_value_for(:date) { Time.zone.now }
 
+  # acts_as_list puts the first post in the "first"/"top" position with a position of 1
+  # Behavior is different if position has a default value other than null
+  # Databases looks like (date, position):
+  # 2012-07-01  1
+  # 2012-07-05  2
+  # 2012-07-05  3
+  # 2012-07-08  4
   def self.reposition!(mailing_list)
     # Optimize for large mailing list
     transaction do
