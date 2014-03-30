@@ -1,5 +1,7 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
+<h2><%= @mailing_list.friendly_name %></h2>
+
 <%= form_tag({}, { :method => "get", :id => "search_form", :class => "form-horizontal form-search" }) do %>
   <div class="row-fluid">
     <div class="span3"></div>
