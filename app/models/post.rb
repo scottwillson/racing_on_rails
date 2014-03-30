@@ -24,6 +24,13 @@ class Post < ActiveRecord::Base
     )
   end
 
+  def self.reposition!(mailing_list)
+    # Optimize for large mailing list
+    connection.select_all(mailing_list.posts.select([:id, :date]).order(:date)).each.with_index do |post, index|
+      Post.where(:id => post["id"]).update_all(:position => index + 1)
+    end
+  end
+
   def from_name
     @from_name ||= (
     if sender

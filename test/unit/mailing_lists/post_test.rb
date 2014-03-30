@@ -70,4 +70,20 @@ class PostTest < ActiveSupport::TestCase
     assert PostText.exists?(:text => "Vintage Vanilla cap"), "Should create matching PostText"
     assert_not_nil post.post_text, "Should create matching PostText"
   end
+
+  test "reposition! empty mailing list" do
+    mailing_list = FactoryGirl.create(:mailing_list)
+    Post.reposition! mailing_list
+  end
+
+  test "reposition!" do
+    mailing_list = FactoryGirl.create(:mailing_list)
+    last_post = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "For Sale: Trek Madrone", :date => 1.day.ago, :position => 0)
+    first_post = FactoryGirl.create(:post, :mailing_list => mailing_list, :subject => "Autographed TDF Jersey", :date => 3.days.ago, :position => 2)
+
+    Post.reposition! mailing_list
+
+    assert_equal 1, first_post.reload.position, "first post should be repositioned to position 1"
+    assert_equal 2, last_post.reload.position, "last post should be repositioned to position 2"
+  end
 end
