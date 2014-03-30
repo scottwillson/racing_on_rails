@@ -33,24 +33,6 @@
                   :previous_label => "&larr; Newer",
                   :next_label => "Older &rarr;" %>
 
-<% if @first_post_at %>
-<div class="pills">
-  <ul class="nav nav-pills">
-    <% Time.zone.now.year.downto(@first_post_at.year).each do |year| %>
-    <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => params[:month]) %></li>
-    <% end %>
-  </ul>
-</div>
-
-<div class="pills">
-  <ul class="nav nav-pills">
-    <% (1..12).each do |month| %>
-    <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => params[:year], :month => month) %></li>
-    <% end %>
- </ul>
-</div>
-<% end %>
-
 <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
 
 <% content_for :head do -%>
