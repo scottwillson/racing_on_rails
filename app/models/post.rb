@@ -32,6 +32,14 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def newer
+    lower_item
+  end
+
+  def older
+    higher_item
+  end
+ 
   def from_name
     @from_name ||= (
     if sender
