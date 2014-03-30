@@ -7,9 +7,12 @@ class AddPostReplies < ActiveRecord::Migration
     end
 
     add_index :posts, :original_id
+    add_index :posts, :last_reply_at
   end
 
   def down
+    remove_column :posts, :last_reply_at
     remove_column :posts, :original_id
+    remove_column :posts, :replies_count
   end
 end
