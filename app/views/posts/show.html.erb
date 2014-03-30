@@ -5,7 +5,7 @@
     <div class="pagination">
       <ul>
         <% if @post.lower_item %>
-        <li class="prev"><%= link_to "&#larr; Newer".html_safe, post_path(@post.lower_item), :rel => "previous" %></li>
+        <li class="prev"><%= link_to "&larr; Newer".html_safe, post_path(@post.lower_item), :rel => "previous" %></li>
         <% else %>
         <li class="prev disabled"><span>&#8592; Previous</span></li>
         <% end %>
