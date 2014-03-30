@@ -1,15 +1,3 @@
-CREATE TABLE `adjustments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `date` datetime DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `aliases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) DEFAULT NULL,
@@ -47,24 +35,6 @@ CREATE TABLE `articles` (
   `body` text COLLATE utf8_unicode_ci,
   `position` int(11) DEFAULT '0',
   `article_category_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `bank_statements` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `american_express_fees` decimal(10,2) DEFAULT NULL,
-  `american_express_gross` decimal(10,2) DEFAULT NULL,
-  `credit_card_transaction_fees` decimal(10,2) DEFAULT NULL,
-  `credit_card_percentage_fees` decimal(10,2) DEFAULT NULL,
-  `credit_card_gross` decimal(10,2) DEFAULT NULL,
-  `items` int(11) DEFAULT NULL,
-  `refunds` int(11) DEFAULT NULL,
-  `gross` decimal(10,2) DEFAULT NULL,
-  `refunds_gross` decimal(10,2) DEFAULT NULL,
-  `other_fees` decimal(10,2) DEFAULT NULL,
-  `date` date DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -143,23 +113,6 @@ CREATE TABLE `disciplines` (
   UNIQUE KEY `index_disciplines_on_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `discount_codes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_by_id` int(11) DEFAULT NULL,
-  `created_by_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `quantity` int(11) NOT NULL DEFAULT '1',
-  `used_count` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `event_id` (`event_id`),
-  CONSTRAINT `discount_codes_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `duplicates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `new_attributes` text,
@@ -213,7 +166,7 @@ CREATE TABLE `events` (
   `notes` varchar(255) DEFAULT '',
   `sanctioned_by` varchar(255) DEFAULT NULL,
   `state` varchar(64) DEFAULT NULL,
-  `type` varchar(32) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `flyer_approved` tinyint(1) NOT NULL DEFAULT '0',
@@ -238,26 +191,13 @@ CREATE TABLE `events` (
   `promoter_id` int(11) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
   `postponed` tinyint(1) NOT NULL DEFAULT '0',
   `chief_referee` varchar(255) DEFAULT NULL,
-  `registration` tinyint(1) NOT NULL DEFAULT '0',
   `beginner_friendly` tinyint(1) NOT NULL DEFAULT '0',
-  `promoter_pays_registration_fee` tinyint(1) NOT NULL DEFAULT '0',
-  `membership_required` tinyint(1) NOT NULL DEFAULT '0',
-  `registration_ends_at` datetime DEFAULT NULL,
-  `override_registration_ends_at` tinyint(1) NOT NULL DEFAULT '0',
-  `all_events_discount` decimal(10,2) DEFAULT NULL,
-  `additional_race_price` decimal(10,2) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
   `registration_link` varchar(255) DEFAULT NULL,
-  `custom_suggestion` varchar(255) DEFAULT NULL,
-  `field_limit` int(11) DEFAULT NULL,
-  `refund_policy` varchar(255) DEFAULT NULL,
-  `refunds` tinyint(1) NOT NULL DEFAULT '1',
   `region_id` int(11) DEFAULT NULL,
   `end_date` date NOT NULL,
-  `registration_public` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_disciplined` (`discipline`),
   KEY `parent_id` (`parent_id`),
@@ -284,7 +224,7 @@ CREATE TABLE `homes` (
   `weeks_of_recent_results` int(11) NOT NULL DEFAULT '2',
   `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '2',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -293,42 +233,6 @@ CREATE TABLE `import_files` (
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `line_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `event_id` int(11) DEFAULT NULL,
-  `race_id` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `string_value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `boolean_value` tinyint(1) DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'LineItem',
-  `promoter_pays_registration_fee` tinyint(1) NOT NULL DEFAULT '0',
-  `purchase_price` decimal(10,2) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `year` int(11) DEFAULT NULL,
-  `discount_code_id` int(11) DEFAULT NULL,
-  `line_item_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `product_variant_id` int(11) DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'new',
-  `effective_purchased_at` datetime DEFAULT NULL,
-  `additional_product_variant_id` int(11) DEFAULT NULL,
-  `purchased_discount_code_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_line_items_on_order_id` (`order_id`),
-  KEY `index_line_items_on_person_id` (`person_id`),
-  KEY `index_line_items_on_event_id` (`event_id`),
-  KEY `index_line_items_on_race_id` (`race_id`),
-  KEY `index_line_items_on_discount_code_id` (`discount_code_id`),
-  KEY `index_line_items_on_line_item_id` (`line_item_id`),
-  KEY `index_line_items_on_product_id` (`product_id`),
-  KEY `index_line_items_on_product_variant_id` (`product_variant_id`),
-  KEY `index_line_items_on_additional_product_variant_id` (`additional_product_variant_id`),
-  KEY `index_line_items_on_purchased_discount_code_id` (`purchased_discount_code_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `mailing_lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -359,22 +263,6 @@ CREATE TABLE `names` (
   KEY `index_names_on_nameable_type` (`nameable_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `non_member_results` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `visible` tinyint(1) DEFAULT '1',
-  `person_id` int(11) DEFAULT NULL,
-  `size` int(11) DEFAULT '0',
-  `recent_result_on` date DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `non_member_results_people` (
-  `non_member_result_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `number_issuers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
@@ -383,88 +271,6 @@ CREATE TABLE `number_issuers` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `number_issuers_name_index` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `offline_single_event_licenses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) DEFAULT NULL,
-  `person_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `order_people` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `person_id` int(11) DEFAULT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `owner` tinyint(1) NOT NULL DEFAULT '0',
-  `membership_card` tinyint(1) NOT NULL DEFAULT '0',
-  `date_of_birth` date DEFAULT NULL,
-  `street` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country_code` varchar(2) COLLATE utf8_unicode_ci DEFAULT 'US',
-  `membership_address_is_billing_address` tinyint(1) NOT NULL DEFAULT '1',
-  `billing_first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_street` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_zip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `billing_country_code` varchar(2) COLLATE utf8_unicode_ci DEFAULT 'US',
-  `card_expires_on` date DEFAULT NULL,
-  `card_brand` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `ccx_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `dh_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `home_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `gender` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `mtb_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `occupation` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `official_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `team_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `volunteer_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `wants_mail` tinyint(1) NOT NULL DEFAULT '0',
-  `wants_email` tinyint(1) NOT NULL DEFAULT '0',
-  `road_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `team_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `track_category` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `emergency_contact` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `emergency_contact_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `work_phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `cell_fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_order_people_on_person_id` (`person_id`),
-  KEY `index_order_people_on_order_id` (`order_id`),
-  CONSTRAINT `order_people_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `order_people_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `orders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `purchase_price` decimal(10,2) DEFAULT NULL,
-  `notes` varchar(2000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'new',
-  `purchase_time` datetime DEFAULT NULL,
-  `ip_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `waiver_accepted` tinyint(1) DEFAULT NULL,
-  `error_message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `previous_status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `suggest` tinyint(1) DEFAULT '1',
-  `old_purchase_fees` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_orders_on_status` (`status`),
-  KEY `index_orders_on_purchase_time` (`purchase_time`),
-  KEY `index_orders_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `pages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -481,24 +287,6 @@ CREATE TABLE `pages` (
   KEY `index_pages_on_slug` (`slug`),
   CONSTRAINT `pages_parent_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `pages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `payment_gateway_transactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `action` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `amount` int(11) DEFAULT NULL,
-  `success` tinyint(1) DEFAULT NULL,
-  `authorization` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `params` text COLLATE utf8_unicode_ci,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `line_item_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_order_transactions_on_order_id` (`order_id`),
-  KEY `index_order_transactions_on_created_at` (`created_at`),
-  KEY `index_payment_gateway_transactions_on_line_item_id` (`line_item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -553,25 +341,13 @@ CREATE TABLE `people` (
   `license_expiration_date` date DEFAULT NULL,
   `club_name` varchar(255) DEFAULT NULL,
   `ncca_club_name` varchar(255) DEFAULT NULL,
-  `billing_first_name` varchar(255) DEFAULT NULL,
-  `billing_last_name` varchar(255) DEFAULT NULL,
-  `billing_street` varchar(255) DEFAULT NULL,
-  `billing_city` varchar(255) DEFAULT NULL,
-  `billing_state` varchar(255) DEFAULT NULL,
-  `billing_zip` varchar(255) DEFAULT NULL,
-  `billing_country_code` varchar(2) DEFAULT 'US',
-  `card_brand` varchar(255) DEFAULT NULL,
-  `card_expires_on` date DEFAULT NULL,
-  `membership_address_is_billing_address` tinyint(1) NOT NULL DEFAULT '1',
-  `license_type` varchar(255) DEFAULT NULL,
-  `country_code` varchar(2) DEFAULT 'US',
   `emergency_contact` varchar(255) DEFAULT NULL,
   `emergency_contact_phone` varchar(255) DEFAULT NULL,
   `card_printed_at` datetime DEFAULT NULL,
+  `license_type` varchar(255) DEFAULT NULL,
+  `country_code` varchar(2) DEFAULT 'US',
   `membership_card` tinyint(1) NOT NULL DEFAULT '0',
   `official` tinyint(1) NOT NULL DEFAULT '0',
-  `non_member_result_id` int(11) DEFAULT NULL,
-  `fullname` varchar(255) DEFAULT NULL,
   `name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `idx_last_name` (`last_name`),
@@ -583,11 +359,10 @@ CREATE TABLE `people` (
   KEY `index_people_on_persistence_token` (`persistence_token`),
   KEY `index_people_on_perishable_token` (`perishable_token`),
   KEY `index_people_on_single_access_token` (`single_access_token`),
+  KEY `index_people_on_email` (`email`),
   KEY `index_people_on_license` (`license`),
   KEY `index_people_on_print_card` (`print_card`),
-  KEY `index_people_on_email` (`email`),
   KEY `index_people_on_login` (`login`),
-  KEY `index_people_on_non_member_result_id` (`non_member_result_id`),
   KEY `index_people_on_name` (`name`),
   CONSTRAINT `people_team_id_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -613,16 +388,16 @@ CREATE TABLE `people_roles` (
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `caption` text,
-  `title` varchar(255) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
+  `caption` text COLLATE utf8_unicode_ci,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `height` int(11) DEFAULT NULL,
   `width` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `link` varchar(255) DEFAULT NULL,
+  `link` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `post_texts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -646,6 +421,7 @@ CREATE TABLE `posts` (
   `updated_at` datetime DEFAULT NULL,
   `mailing_list_id` int(11) NOT NULL DEFAULT '0',
   `position` int(11) NOT NULL DEFAULT '0',
+  `topic_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_topica_message_id` (`topica_message_id`),
   KEY `idx_date` (`date`),
@@ -656,49 +432,6 @@ CREATE TABLE `posts` (
   KEY `index_posts_on_position` (`position`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `product_variants` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `product_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT '0',
-  `inventory` int(11) DEFAULT NULL,
-  `default` tinyint(1) NOT NULL DEFAULT '0',
-  `additional` tinyint(1) NOT NULL DEFAULT '0',
-  `quantity` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `index_product_variants_on_product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-CREATE TABLE `products` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `price` decimal(10,0) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `event_id` int(11) DEFAULT NULL,
-  `notify_racing_association` tinyint(1) NOT NULL DEFAULT '0',
-  `inventory` int(11) DEFAULT NULL,
-  `seller_pays_fee` tinyint(1) NOT NULL DEFAULT '0',
-  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `suggest` tinyint(1) NOT NULL DEFAULT '0',
-  `image_url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `dependent` tinyint(1) NOT NULL DEFAULT '0',
-  `seller_id` int(11) DEFAULT NULL,
-  `has_amount` tinyint(1) DEFAULT '0',
-  `donation` tinyint(1) DEFAULT '0',
-  `unique` tinyint(1) NOT NULL DEFAULT '0',
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `concussion_waver_required` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `index_products_on_event_id` (`event_id`),
-  KEY `index_products_on_type` (`type`),
-  KEY `index_products_on_seller_id` (`seller_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `race_numbers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -737,11 +470,7 @@ CREATE TABLE `races` (
   `result_columns` varchar(255) DEFAULT NULL,
   `bar_points` int(11) DEFAULT NULL,
   `event_id` int(11) NOT NULL,
-  `custom_price` decimal(10,2) DEFAULT NULL,
   `custom_columns` text,
-  `full` tinyint(1) NOT NULL DEFAULT '0',
-  `field_limit` int(11) DEFAULT NULL,
-  `additional_race_only` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_category_id` (`category_id`),
   KEY `index_races_on_event_id` (`event_id`),
@@ -771,8 +500,8 @@ CREATE TABLE `racing_associations` (
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
   `masters_age` int(11) NOT NULL DEFAULT '35',
-  `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
-  `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
+  `rental_numbers_end` int(11) DEFAULT '99',
+  `rental_numbers_start` int(11) DEFAULT '51',
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
   `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -782,7 +511,7 @@ CREATE TABLE `racing_associations` (
   `default_sanctioned_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
   `exempt_team_categories` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `membership_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `membership_email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
   `rails_host` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'localhost:3000',
   `sanctioning_organizations` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -805,28 +534,16 @@ CREATE TABLE `racing_associations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `refunds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  `line_item_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_refunds_on_order_id` (`order_id`),
-  KEY `index_refunds_on_line_item_id` (`line_item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `friendly_param` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `friendly_param` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_regions_on_name` (`name`),
   UNIQUE KEY `index_regions_on_friendly_param` (`friendly_param`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -882,8 +599,6 @@ CREATE TABLE `results` (
   `race_full_name` varchar(255) NOT NULL,
   `team_name` varchar(255) DEFAULT NULL,
   `year` int(11) NOT NULL,
-  `non_member_result_id` int(11) DEFAULT NULL,
-  `single_event_license` tinyint(1) DEFAULT '0',
   `team_member` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_category_id` (`category_id`),
@@ -894,7 +609,6 @@ CREATE TABLE `results` (
   KEY `index_results_on_members_only_place` (`members_only_place`),
   KEY `index_results_on_event_id` (`event_id`),
   KEY `index_results_on_year` (`year`),
-  KEY `index_results_on_non_member_result_id` (`non_member_result_id`),
   CONSTRAINT `results_category_id_fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `results_person_id` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`),
   CONSTRAINT `results_race_id_fk` FOREIGN KEY (`race_id`) REFERENCES `races` (`id`) ON DELETE CASCADE,
@@ -950,19 +664,28 @@ CREATE TABLE `teams` (
   UNIQUE KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `update_requests` (
+CREATE TABLE `topic_texts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_person_id` int(11) NOT NULL,
-  `expires_at` datetime NOT NULL,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
+  `topic_id` int(11) DEFAULT NULL,
+  `text` text,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index_update_requests_on_order_person_id` (`order_person_id`),
-  KEY `index_update_requests_on_expires_at` (`expires_at`),
-  KEY `index_update_requests_on_token` (`token`),
-  CONSTRAINT `update_requests_ibfk_1` FOREIGN KEY (`order_person_id`) REFERENCES `order_people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  FULLTEXT KEY `index_topic_texts_on_text` (`text`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mailing_list_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `posts_count` int(11) NOT NULL DEFAULT '0',
+  `posts_updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `position` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_topics_on_position` (`position`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1088,8 +811,6 @@ INSERT INTO schema_migrations (version) VALUES ('20090504040328');
 
 INSERT INTO schema_migrations (version) VALUES ('20090505151122');
 
-INSERT INTO schema_migrations (version) VALUES ('20090509144814');
-
 INSERT INTO schema_migrations (version) VALUES ('20090514202305');
 
 INSERT INTO schema_migrations (version) VALUES ('20090515031733');
@@ -1126,51 +847,17 @@ INSERT INTO schema_migrations (version) VALUES ('20090730022816');
 
 INSERT INTO schema_migrations (version) VALUES ('20090815135542');
 
-INSERT INTO schema_migrations (version) VALUES ('20090829231216');
-
-INSERT INTO schema_migrations (version) VALUES ('20090906184838');
-
-INSERT INTO schema_migrations (version) VALUES ('20090909170450');
-
-INSERT INTO schema_migrations (version) VALUES ('20090924034224');
-
-INSERT INTO schema_migrations (version) VALUES ('20090924233516');
-
-INSERT INTO schema_migrations (version) VALUES ('20090925001042');
-
-INSERT INTO schema_migrations (version) VALUES ('20090925012750');
-
-INSERT INTO schema_migrations (version) VALUES ('20090925214807');
-
-INSERT INTO schema_migrations (version) VALUES ('20090926004056');
-
-INSERT INTO schema_migrations (version) VALUES ('20090929031408');
-
 INSERT INTO schema_migrations (version) VALUES ('20090930060618');
-
-INSERT INTO schema_migrations (version) VALUES ('20091006165946');
 
 INSERT INTO schema_migrations (version) VALUES ('20091006194727');
 
-INSERT INTO schema_migrations (version) VALUES ('20091006204303');
-
-INSERT INTO schema_migrations (version) VALUES ('20091006224643');
-
 INSERT INTO schema_migrations (version) VALUES ('20091007232822');
 
-INSERT INTO schema_migrations (version) VALUES ('20091009021023');
-
 INSERT INTO schema_migrations (version) VALUES ('20091009021956');
-
-INSERT INTO schema_migrations (version) VALUES ('20091011004112');
-
-INSERT INTO schema_migrations (version) VALUES ('20091011010109');
 
 INSERT INTO schema_migrations (version) VALUES ('20091011235631');
 
 INSERT INTO schema_migrations (version) VALUES ('20091015052458');
-
-INSERT INTO schema_migrations (version) VALUES ('20091027135638');
 
 INSERT INTO schema_migrations (version) VALUES ('20091122223629');
 
@@ -1178,101 +865,45 @@ INSERT INTO schema_migrations (version) VALUES ('20091129235114');
 
 INSERT INTO schema_migrations (version) VALUES ('20091201031927');
 
-INSERT INTO schema_migrations (version) VALUES ('20091215162457');
-
 INSERT INTO schema_migrations (version) VALUES ('20091220162338');
 
-INSERT INTO schema_migrations (version) VALUES ('20100104233836');
-
 INSERT INTO schema_migrations (version) VALUES ('20100107001744');
-
-INSERT INTO schema_migrations (version) VALUES ('20100112004614');
 
 INSERT INTO schema_migrations (version) VALUES ('20100113032309');
 
 INSERT INTO schema_migrations (version) VALUES ('20100121041557');
 
-INSERT INTO schema_migrations (version) VALUES ('20100125032403');
-
-INSERT INTO schema_migrations (version) VALUES ('20100126160430');
-
-INSERT INTO schema_migrations (version) VALUES ('20100126183846');
-
-INSERT INTO schema_migrations (version) VALUES ('20100128145812');
-
-INSERT INTO schema_migrations (version) VALUES ('20100129224705');
-
-INSERT INTO schema_migrations (version) VALUES ('20100129231429');
-
-INSERT INTO schema_migrations (version) VALUES ('20100129232454');
-
 INSERT INTO schema_migrations (version) VALUES ('20100210042552');
 
 INSERT INTO schema_migrations (version) VALUES ('20100211042204');
-
-INSERT INTO schema_migrations (version) VALUES ('20100303154200');
 
 INSERT INTO schema_migrations (version) VALUES ('20100320020606');
 
 INSERT INTO schema_migrations (version) VALUES ('20100320224529');
 
-INSERT INTO schema_migrations (version) VALUES ('20100324004849');
-
-INSERT INTO schema_migrations (version) VALUES ('20100327225456');
-
 INSERT INTO schema_migrations (version) VALUES ('20100406002503');
 
 INSERT INTO schema_migrations (version) VALUES ('20100407222156');
 
-INSERT INTO schema_migrations (version) VALUES ('20100409143544');
-
-INSERT INTO schema_migrations (version) VALUES ('20100409144717');
-
-INSERT INTO schema_migrations (version) VALUES ('20100412005442');
-
-INSERT INTO schema_migrations (version) VALUES ('20100412182645');
-
-INSERT INTO schema_migrations (version) VALUES ('20100430015547');
-
-INSERT INTO schema_migrations (version) VALUES ('20100507184143');
-
 INSERT INTO schema_migrations (version) VALUES ('20100511224150');
 
-INSERT INTO schema_migrations (version) VALUES ('20100513215853');
-
-INSERT INTO schema_migrations (version) VALUES ('20100523012054');
-
-INSERT INTO schema_migrations (version) VALUES ('20100527232921');
+INSERT INTO schema_migrations (version) VALUES ('20100601154817');
 
 INSERT INTO schema_migrations (version) VALUES ('20100608160458');
-
-INSERT INTO schema_migrations (version) VALUES ('20100609002810');
-
-INSERT INTO schema_migrations (version) VALUES ('20100609232344');
 
 INSERT INTO schema_migrations (version) VALUES ('20100613014859');
 
 INSERT INTO schema_migrations (version) VALUES ('20100613220247');
 
-INSERT INTO schema_migrations (version) VALUES ('20100614205955');
-
-INSERT INTO schema_migrations (version) VALUES ('20100614222945');
-
 INSERT INTO schema_migrations (version) VALUES ('20100616224058');
 
 INSERT INTO schema_migrations (version) VALUES ('20100616230454');
 
-INSERT INTO schema_migrations (version) VALUES ('20100621020112');
-
 INSERT INTO schema_migrations (version) VALUES ('20100701032620');
-
-INSERT INTO schema_migrations (version) VALUES ('20100703011213');
 
 INSERT INTO schema_migrations (version) VALUES ('20100831151754');
 
 INSERT INTO schema_migrations (version) VALUES ('20100905013917');
-
-INSERT INTO schema_migrations (version) VALUES ('20100910015601');
 
 INSERT INTO schema_migrations (version) VALUES ('20100920160034');
 
@@ -1280,41 +911,7 @@ INSERT INTO schema_migrations (version) VALUES ('20100924041956');
 
 INSERT INTO schema_migrations (version) VALUES ('20100924161426');
 
-INSERT INTO schema_migrations (version) VALUES ('20101021033517');
-
-INSERT INTO schema_migrations (version) VALUES ('20101028020512');
-
-INSERT INTO schema_migrations (version) VALUES ('20101221005852');
-
-INSERT INTO schema_migrations (version) VALUES ('20110121160728');
-
-INSERT INTO schema_migrations (version) VALUES ('20110202163656');
-
-INSERT INTO schema_migrations (version) VALUES ('20110208175430');
-
-INSERT INTO schema_migrations (version) VALUES ('20110208182140');
-
-INSERT INTO schema_migrations (version) VALUES ('20110208184544');
-
-INSERT INTO schema_migrations (version) VALUES ('20110208221459');
-
-INSERT INTO schema_migrations (version) VALUES ('20110212031120');
-
-INSERT INTO schema_migrations (version) VALUES ('20110219000353');
-
 INSERT INTO schema_migrations (version) VALUES ('20110219031339');
-
-INSERT INTO schema_migrations (version) VALUES ('20110220030932');
-
-INSERT INTO schema_migrations (version) VALUES ('20110302040707');
-
-INSERT INTO schema_migrations (version) VALUES ('20110309053057');
-
-INSERT INTO schema_migrations (version) VALUES ('20110310234534');
-
-INSERT INTO schema_migrations (version) VALUES ('20110325032517');
-
-INSERT INTO schema_migrations (version) VALUES ('20110328165841');
 
 INSERT INTO schema_migrations (version) VALUES ('20110328232024');
 
@@ -1322,19 +919,9 @@ INSERT INTO schema_migrations (version) VALUES ('20110329233050');
 
 INSERT INTO schema_migrations (version) VALUES ('20110521233707');
 
-INSERT INTO schema_migrations (version) VALUES ('20110531044736');
-
 INSERT INTO schema_migrations (version) VALUES ('20110618232719');
 
 INSERT INTO schema_migrations (version) VALUES ('20110806162623');
-
-INSERT INTO schema_migrations (version) VALUES ('20110816051113');
-
-INSERT INTO schema_migrations (version) VALUES ('20110816052549');
-
-INSERT INTO schema_migrations (version) VALUES ('20110830021352');
-
-INSERT INTO schema_migrations (version) VALUES ('20110905200911');
 
 INSERT INTO schema_migrations (version) VALUES ('20110922012402');
 
@@ -1348,65 +935,17 @@ INSERT INTO schema_migrations (version) VALUES ('20111218163759');
 
 INSERT INTO schema_migrations (version) VALUES ('20111218301508');
 
-INSERT INTO schema_migrations (version) VALUES ('20120112212751');
-
-INSERT INTO schema_migrations (version) VALUES ('20120112214256');
-
-INSERT INTO schema_migrations (version) VALUES ('20120112225110');
-
-INSERT INTO schema_migrations (version) VALUES ('20120113182155');
-
 INSERT INTO schema_migrations (version) VALUES ('20120205200408');
-
-INSERT INTO schema_migrations (version) VALUES ('20120207025120');
 
 INSERT INTO schema_migrations (version) VALUES ('20120211045337');
 
 INSERT INTO schema_migrations (version) VALUES ('20120301051824');
 
-INSERT INTO schema_migrations (version) VALUES ('20120314023439');
-
-INSERT INTO schema_migrations (version) VALUES ('20120428153143');
-
 INSERT INTO schema_migrations (version) VALUES ('20120528182244');
-
-INSERT INTO schema_migrations (version) VALUES ('20120613154239');
-
-INSERT INTO schema_migrations (version) VALUES ('20120619030745');
-
-INSERT INTO schema_migrations (version) VALUES ('20120623150400');
-
-INSERT INTO schema_migrations (version) VALUES ('20120623150418');
-
-INSERT INTO schema_migrations (version) VALUES ('20120623160624');
-
-INSERT INTO schema_migrations (version) VALUES ('20120625043413');
 
 INSERT INTO schema_migrations (version) VALUES ('20120720235539');
 
-INSERT INTO schema_migrations (version) VALUES ('20120912022048');
-
 INSERT INTO schema_migrations (version) VALUES ('20121002174208');
-
-INSERT INTO schema_migrations (version) VALUES ('20121012141636');
-
-INSERT INTO schema_migrations (version) VALUES ('20121015181304');
-
-INSERT INTO schema_migrations (version) VALUES ('20121018204850');
-
-INSERT INTO schema_migrations (version) VALUES ('20121018222339');
-
-INSERT INTO schema_migrations (version) VALUES ('20121205180749');
-
-INSERT INTO schema_migrations (version) VALUES ('20130320232203');
-
-INSERT INTO schema_migrations (version) VALUES ('20130320232204');
-
-INSERT INTO schema_migrations (version) VALUES ('20130320232205');
-
-INSERT INTO schema_migrations (version) VALUES ('20130320232206');
-
-INSERT INTO schema_migrations (version) VALUES ('20130320232207');
 
 INSERT INTO schema_migrations (version) VALUES ('20130418150015');
 
@@ -1417,8 +956,6 @@ INSERT INTO schema_migrations (version) VALUES ('20130515151312');
 INSERT INTO schema_migrations (version) VALUES ('20130515151637');
 
 INSERT INTO schema_migrations (version) VALUES ('20130522185756');
-
-INSERT INTO schema_migrations (version) VALUES ('20130601153551');
 
 INSERT INTO schema_migrations (version) VALUES ('20130730202355');
 
@@ -1438,6 +975,8 @@ INSERT INTO schema_migrations (version) VALUES ('20131113143051');
 
 INSERT INTO schema_migrations (version) VALUES ('20131126150417');
 
+INSERT INTO schema_migrations (version) VALUES ('20131215151535');
+
 INSERT INTO schema_migrations (version) VALUES ('20140207223552');
 
 INSERT INTO schema_migrations (version) VALUES ('20140211232628');
@@ -1448,7 +987,19 @@ INSERT INTO schema_migrations (version) VALUES ('20140303223128');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304153913');
 
+INSERT INTO schema_migrations (version) VALUES ('20140306011719');
+
 INSERT INTO schema_migrations (version) VALUES ('20140306165856');
+
+INSERT INTO schema_migrations (version) VALUES ('20140319234206');
+
+INSERT INTO schema_migrations (version) VALUES ('20140325180308');
+
+INSERT INTO schema_migrations (version) VALUES ('20140326210703');
+
+INSERT INTO schema_migrations (version) VALUES ('20140327214203');
+
+INSERT INTO schema_migrations (version) VALUES ('20140330010812');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

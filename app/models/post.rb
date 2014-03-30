@@ -12,7 +12,7 @@ class Post < ActiveRecord::Base
   belongs_to :mailing_list
   has_one :post_text
 
-  acts_as_list
+  acts_as_list :scope => :mailing_list
 
   default_value_for(:date) { Time.zone.now }
 
