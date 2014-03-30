@@ -10,7 +10,11 @@ class Post < ActiveRecord::Base
   after_save :add_post_text
 
   belongs_to :mailing_list
+  belongs_to :original, :class_name => "Post", :inverse_of => :replies
   has_one :post_text
+  has_many :replies, :class_name => "Post", :inverse_of => :original, :foreign_key => :original_id
+
+  scope :original, -> { where(:original_id => nil) }
 
   acts_as_list :scope => :mailing_list
 
@@ -32,6 +36,61 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def self.add_replies!(mailing_list)
+    # Optimize for large mailing list
+
+    transaction do
+      Post.update_all "last_reply_at = date"
+
+      # Create hash of arrays of hashes keyed by name (subject)
+      posts_by_subject = Hash.new
+
+      # Need to use case-normalized subjects for key, but preserve original subject
+      original_subjects = Hash.new
+
+      connection.select_all(mailing_list.posts.select([:id, :date, :subject])).each do |post|
+        key = strip_subject(remove_list_prefix(post["subject"], mailing_list.subject_line_prefix)).strip.downcase
+        posts = posts_by_subject[key] || []
+        posts << post
+        posts_by_subject[key] = posts
+
+        original_subjects[key] = name unless original_subjects.has_key?(key)
+      end
+
+      posts_by_subject.each do |key, posts|
+        if posts.size > 1
+          posts = posts.sort_by { |post| post["position"].to_i }
+          original = posts.first
+          last_reply = posts.last
+          Post.where(:id => original["id"]).update_all(
+            :last_reply_at => last_reply["date"],
+            :replies_count => posts.size - 1
+          )
+          reply_ids = posts.map { |post| post["id"] }
+          reply_ids.delete original["id"]
+          Post.where(:id => reply_ids).update_all(:original_id => original["id"])
+        end
+      end
+    end
+
+    true
+  end
+
+  def self.remove_list_prefix(subject, subject_line_prefix)
+    return "" unless subject
+    subject.gsub(/\[#{subject_line_prefix}\]\s*/, "").strip
+  end
+
+  def self.strip_subject(subject)
+    return "" unless subject
+
+    subject.
+      gsub(/\A(\s*)Re:(\s*)/i, "").
+      gsub(/\A(\s*)Fw(d):(\s*)/i, "").
+      gsub(/\s+/, " ").
+      strip
+  end
+
   def newer
     lower_item
   end
@@ -39,7 +98,7 @@ class Post < ActiveRecord::Base
   def older
     higher_item
   end
- 
+
   def from_name
     @from_name ||= (
     if sender
@@ -69,17 +128,15 @@ class Post < ActiveRecord::Base
   end
 
   def remove_list_prefix
-    subject.gsub!(/\[#{mailing_list.subject_line_prefix}\]\s*/, "")
-    subject.strip!
+    if mailing_list
+      self.subject = Post.remove_list_prefix(subject, mailing_list.subject_line_prefix)
+    end
+    subject
   end
 
   def from_email_address=(value)
     @from_email_address = value
     update_sender
-  end
-
-  def topica?
-    topica_message_id.present?
   end
 
   def from_name=(value)

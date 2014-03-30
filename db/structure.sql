@@ -422,6 +422,9 @@ CREATE TABLE `posts` (
   `mailing_list_id` int(11) NOT NULL DEFAULT '0',
   `position` int(11) DEFAULT NULL,
   `topic_id` int(11) DEFAULT NULL,
+  `last_reply_at` datetime DEFAULT NULL,
+  `original_id` int(11) DEFAULT NULL,
+  `replies_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_topica_message_id` (`topica_message_id`),
   KEY `idx_date` (`date`),
@@ -430,6 +433,7 @@ CREATE TABLE `posts` (
   KEY `idx_mailing_list_id` (`mailing_list_id`),
   KEY `idx_date_list` (`date`,`mailing_list_id`),
   KEY `index_posts_on_position` (`position`),
+  KEY `index_posts_on_original_id` (`original_id`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1000,6 +1004,8 @@ INSERT INTO schema_migrations (version) VALUES ('20140326210703');
 INSERT INTO schema_migrations (version) VALUES ('20140327214203');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330010812');
+
+INSERT INTO schema_migrations (version) VALUES ('20140330145224');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 
