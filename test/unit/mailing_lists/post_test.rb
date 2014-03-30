@@ -114,6 +114,7 @@ class PostTest < ActiveSupport::TestCase
     assert_equal original, second_reply.reload.original, "should set original post"
     assert_equal [ first_reply, second_reply ].sort, original.replies(true).sort, "replies"
     assert_equal second_reply.date, original.reload.last_reply_at, "original last_reply_at"
+    assert_equal second_reply.from_name, original.reload.last_reply_from_name, "original last_reply_from_name"
   end
 
 end

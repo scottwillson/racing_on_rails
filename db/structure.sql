@@ -423,6 +423,7 @@ CREATE TABLE `posts` (
   `position` int(11) DEFAULT NULL,
   `topic_id` int(11) DEFAULT NULL,
   `last_reply_at` datetime DEFAULT NULL,
+  `last_reply_from_name` varchar(255) DEFAULT NULL,
   `original_id` int(11) DEFAULT NULL,
   `replies_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -434,6 +435,7 @@ CREATE TABLE `posts` (
   KEY `idx_date_list` (`date`,`mailing_list_id`),
   KEY `index_posts_on_position` (`position`),
   KEY `index_posts_on_original_id` (`original_id`),
+  KEY `index_posts_on_last_reply_at` (`last_reply_at`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

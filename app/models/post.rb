@@ -48,7 +48,7 @@ class Post < ActiveRecord::Base
       # Need to use case-normalized subjects for key, but preserve original subject
       original_subjects = Hash.new
 
-      connection.select_all(mailing_list.posts.select([:id, :date, :subject])).each do |post|
+      connection.select_all(mailing_list.posts.select([:id, :date, :from_name, :subject])).each do |post|
         key = strip_subject(remove_list_prefix(post["subject"], mailing_list.subject_line_prefix)).strip.downcase
         posts = posts_by_subject[key] || []
         posts << post
@@ -64,6 +64,7 @@ class Post < ActiveRecord::Base
           last_reply = posts.last
           Post.where(:id => original["id"]).update_all(
             :last_reply_at => last_reply["date"],
+            :last_reply_from_name => last_reply["from_name"],
             :replies_count => posts.size - 1
           )
           reply_ids = posts.map { |post| post["id"] }

@@ -5,3 +5,16 @@
   </td>
   <td class="from hidden-phone"><%= post.from_name %></td>
 </tr>
+
+ <tr class="topic">
+   <td class="badges">
+     <% if post.replies_count > 0 -%>
+       <%= link_to post_path(topic, :page => current_page), :class => "image" do %><span class="badge"><%= post.replies_count %></span><% end %>
+     <% end -%>
+   </td>
+   <td class="subject">
+     <%= link_to post.subject, post_path(path, :page => current_page) %>
+   </td>
+   <td><%= post.last_reply_from_name %></td>
+   <td class="date"><%= link_to last_reply_at(post), post_path(path, :page => current_page) %></td>
+ </tr>
