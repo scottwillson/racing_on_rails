@@ -3,7 +3,7 @@ class PostsController < ApplicationController
     flash.clear
     @subject = params[:subject].try(:strip)
     @mailing_list = MailingList.find(params[:mailing_list_id])
-    
+
     if params[:month] && params[:year]
       begin
         date = Time.zone.local(params[:year].to_i, params[:month].to_i)
@@ -15,13 +15,13 @@ class PostsController < ApplicationController
     end
 
     if @start_date && @end_date
-      @posts = @mailing_list.posts.where("date between ? and ?", @start_date, @end_date).paginate(:page => page).order("date desc")
+      @posts = @mailing_list.posts.where("date between ? and ?", @start_date, @end_date).paginate(:page => page).order("position desc")
     else
-      @posts = @mailing_list.posts.paginate(:page => page).order("date desc")
+      @posts = @mailing_list.posts.paginate(:page => page).order("position desc")
     end
-    
+
     if @subject.present?
-      @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject).order("date desc")
+      @posts = @posts.joins(:post_text).where("match(text) against (?)", @subject).order("position desc")
 
       if @subject.size < 4
         flash[:notice] = "Searches must be at least four letters"
@@ -29,7 +29,7 @@ class PostsController < ApplicationController
         flash[:notice] = "No posts with subject matching '#{@subject}'"
       end
     end
-    
+
     respond_to do |format|
       format.html
       format.rss do
@@ -40,11 +40,11 @@ class PostsController < ApplicationController
 
     @first_post_at = Post.minimum(:date)
   end
-  
+
   def show
     @post = Post.find(params["id"])
   end
-  
+
   # Send email to local mail program. Don't save to database. Use mailing list's
   # archiver to store posts. This strategy gives spam filters a change to reject
   # bogus posts.
@@ -55,7 +55,7 @@ class PostsController < ApplicationController
       post_to_list
     end
   end
-  
+
   def post_private_reply
     @reply_to = Post.find(params[:reply_to_id])
     @mailing_list = MailingList.find(params[:mailing_list_id])
@@ -73,7 +73,7 @@ class PostsController < ApplicationController
       render(:action => "new", :reply_to_id => @reply_to.id)
     end
   end
-  
+
   def post_to_list
     @post = Post.new(post_params)
     @mailing_list = MailingList.find(params[:mailing_list_id])
@@ -91,7 +91,7 @@ class PostsController < ApplicationController
       render :action => "new"
     end
   end
-  
+
   def new
     @mailing_list = MailingList.find(params[:mailing_list_id])
     @post = Post.new(:mailing_list => @mailing_list)
@@ -100,9 +100,9 @@ class PostsController < ApplicationController
       @post.subject = "Re: #{@reply_to.subject}"
     end
   end
-  
+
   private
-  
+
   def page
     begin
       if params[:page].to_i > 0
