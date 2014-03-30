@@ -24,15 +24,7 @@
     <th class="subject">Subject</th>
     <th class="from hidden-phone">From</th>
   </tr>
-  <% @posts.each do |post| %>
-  <tr>
-    <td class="date"><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => @posts.current_page) %></td>
-    <td class="subject">
-      <%= link_to truncate(post.subject, :length => 50), post_path(post, :page => @posts.current_page) %>
-    </td>
-    <td class="from hidden-phone"><%= post.from_name %></td>
-  </tr>
-  <% end %>
+  <%= render :collection => @posts, :partial => "post", :locals => { :current_page => @posts.current_page } %>
 <% end -%>
 
 <%= will_paginate @posts,

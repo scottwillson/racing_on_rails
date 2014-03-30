@@ -1,0 +1,7 @@
+<tr>
+  <td class="date"><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => current_page) %></td>
+  <td class="subject">
+    <%= link_to post.subject, post_path(post, :page => current_page) %>
+  </td>
+  <td class="from hidden-phone"><%= post.from_name %></td>
+</tr>
