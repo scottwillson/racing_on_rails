@@ -1,6 +1,6 @@
 class ChangePostsPositionDefault < ActiveRecord::Migration
   def up
-    change_column :posts, :position, :integer, :default => nil, :null => false
+    change_column :posts, :position, :integer, :default => nil, :null => true
   end
 
   def down
