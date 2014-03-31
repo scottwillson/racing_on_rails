@@ -16,7 +16,7 @@ module Results
 
     # All custom columns in file
     attr_accessor :custom_columns
-    
+
     # Custom columns just for Race
     attr_accessor :race_custom_columns
 
@@ -38,6 +38,7 @@ module Results
       "categories"        => "category_name",
       "category"          => "category_name",
       "cat."              => "category_name",
+      "race_category"     => "category_name",
       "class"             => "category_class",  # Example: A for Masters A
       "first"             => "first_name",
       "firstname"         => "first_name",
@@ -112,11 +113,11 @@ module Results
         event.enable_notification!
         CombinedTimeTrialResults.create_or_destroy_for!(event)
       end
-      
+
       if import_warnings.to_a.size > 10
         self.import_warnings = import_warnings.to_a[0, 10]
       end
-      
+
       Rails.logger.info("Results::ResultsFile #{Time.zone.now} import done")
     end
 
@@ -176,16 +177,16 @@ module Results
           cell_string = cell_string.downcase.underscore
           cell_string.gsub!(" ", "_")
           cell_string = COLUMN_MAP[cell_string] if COLUMN_MAP[cell_string]
-          
+
           if cell_string.present?
             if usac_results_format?
               if prototype_result.respond_to?(cell_string.to_sym)
                 column_indexes[cell_string.to_sym] = index
-                self.columns << cell_string 
+                self.columns << cell_string
               end
             else
               column_indexes[cell_string.to_sym] = index
-              self.columns << cell_string 
+              self.columns << cell_string
               if !prototype_result.respond_to?(cell_string.to_sym)
                 self.custom_columns << cell_string
                 self.race_custom_columns << cell_string
@@ -211,7 +212,7 @@ module Results
         end
         return false if row[:category_name] == row.previous[:category_name] && row[:gender] == row.previous[:gender] && row[:category_class] == row.previous[:category_class]
         return true
-      else  
+      else
         return false if column_indexes.nil? || row.last? || row.blank? || (row.next && row.next.blank?)
         return false if row.place && row.place.to_i != 0
         row.next && row.next.place && row.next.place.to_i == 1
@@ -300,7 +301,7 @@ module Results
         Rails.logger.warn("No race. Skip.")
       end
     end
-    
+
     def result_attributes(row, race)
       attributes = row.to_hash.dup
       custom_attributes = {}
@@ -321,15 +322,15 @@ module Results
       attributes.merge! :custom_attributes => custom_attributes
       attributes
     end
-    
+
     def prototype_result
       @prototype_result ||= Result.new.freeze
     end
-    
+
     def usac_results_format?
       RacingAssociation.current.usac_results_format?
     end
-    
+
     def debug?
       ENV["DEBUG_RESULTS"].present? && Rails.logger.debug?
     end
