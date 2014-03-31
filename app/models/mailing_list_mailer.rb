@@ -6,7 +6,7 @@ class MailingListMailer < ActionMailer::Base
     mail(
       :subject => reply_post.subject,
       :to => to,
-      :from => "#{reply_post.from_name} <#{reply_post.from_email}>",
+      :from => reply_post.sender,
       :sent_on => reply_post.date.to_s,
       :body => reply_post.body.to_s
     )
@@ -16,7 +16,7 @@ class MailingListMailer < ActionMailer::Base
     mail(
       :subject => new_post.subject,
       :to => new_post.mailing_list.name,
-      :from => "#{new_post.from_name} <#{new_post.from_email}>",
+      :from => new_post.sender,
       :sent_on => new_post.date.to_s,
       :body => new_post.body.to_s
     )
@@ -39,9 +39,9 @@ class MailingListMailer < ActionMailer::Base
         else
           mailing_list_name = email.to.first.to_s
         end
-
+        
         mailing_list = MailingList.find_by_name(mailing_list_name.try(:strip))
-
+        
         unless mailing_list
           email_to = email.to.first.to_s rescue nil
           email_from = email[:from] rescue nil
@@ -49,7 +49,7 @@ class MailingListMailer < ActionMailer::Base
           Rails.logger.warn "No mailing list for '#{mailing_list_name}' header '#{list_post_header}' to '#{email_to}' from '#{email_from}' about '#{mail_subject}'"
           return true
         end
-
+        
         post.mailing_list = mailing_list
 
         post.subject = email.subject
@@ -66,13 +66,9 @@ class MailingListMailer < ActionMailer::Base
           post.body = (email.text_part || email.html_part || email.body).try(:decoded)
         end
         post.body = post.body.encode("UTF-8", :undef => :replace)
-
-        post.from_name = email[:from].display_names.first
-        post.from_email = email[:from].addresses.first
-        if post.from_name.blank?
-          post.from_name = post.from_email_obscured
-        end
-
+        
+        post.from_name = email[:from].display_names.first || email[:from].addresses.first
+        post.from_email_address = email[:from].addresses.first
         post.date = email.date
         post.save!
       rescue => save_error
@@ -82,10 +78,10 @@ class MailingListMailer < ActionMailer::Base
         rescue
           Rails.logger.error "Could not save email contents"
         end
-        if post && post.errors.present?
+        if post && post.errors.any?
           Rails.logger.error post.errors.full_messages
         end
-        RacingOnRails::Application.exception_notifier.track_exception save_error
+        RacingOnRails::Application.exception_notifier.track_exception(save_error)
         raise
       end
     end

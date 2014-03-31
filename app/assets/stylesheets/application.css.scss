@@ -108,7 +108,7 @@ h2 a:hover, h3 a:hover {
     font-size: 16px;
     line-height: $baseLineHeight;
   }
-
+  
   h3 {
     font-size: 12px;
     line-height: $baseLineHeight;
@@ -172,7 +172,7 @@ nav li, footer li {
     padding-left: 2px;
     padding-right: 2px;
   }
-
+  
   nav li, footer li {
     padding-left: $baseLineHeight / 4;
     padding-right: $baseLineHeight / 4;
@@ -260,7 +260,7 @@ nav li:last-child, footer li:last-child {
     padding-right: 0px;
     padding-top: $baseLineHeight / 2;
   }
-
+  
   nav ul {
     text-align: center;
   }
@@ -313,16 +313,7 @@ td.numeric {
   margin-top: $baseLineHeight;
 }
 
-th.badges,
-td.badges {
-  text-align: right;
-}
-
-td.badges {
-  padding-top: 7px;
-}
-
- ul.nav-pills {
+ul.nav-pills {
   display: inline-block;
   margin-bottom: 0px;
 }

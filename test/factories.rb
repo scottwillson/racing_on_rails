@@ -139,7 +139,7 @@ FactoryGirl.define do
   factory :post do
     mailing_list
     subject "[OBRA Chat] Foo"
-    from_email "foo@bar.net"
+    from_email_address "foo@bar.net"
     from_name "Foo"
     body "Test message"
     date { Time.zone.today }

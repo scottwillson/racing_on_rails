@@ -9,6 +9,10 @@
   </summary>
 
   <details>
-    <%= sanitize simple_format(@post.body) %>
+    <% if @post.topica? || @post.body["<html>"] %>
+      <%= sanitize(simple_format(@post.body)) %>
+    <% else %>
+      <%= sanitize(simple_format(@post.body)) %>
+    <% end -%>
   </details>
 </article>

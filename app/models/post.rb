@@ -1,62 +1,83 @@
 # Mailing list post
 class Post < ActiveRecord::Base
-  includes Posts::Migration
 
-  validates_presence_of :date
-  validates_presence_of :from_email, :on => :create
-  validates_presence_of :from_name, :on => :create
-  validates_presence_of :mailing_list
-  validates_presence_of :subject
+  attr_accessor :from_email_address, :from_name
 
-  before_create :remove_list_prefix
+  validates_presence_of :subject, :date, :mailing_list
+  validates_presence_of :from_name, :from_email_address
+
+  before_create :remove_list_prefix, :update_sender
   after_save :add_post_text
 
   belongs_to :mailing_list
-  belongs_to :original, :class_name => "Post", :inverse_of => :replies
   has_one :post_text
-  has_many :replies, :class_name => "Post", :inverse_of => :original, :foreign_key => :original_id
 
-  scope :original, -> { where(:original_id => nil) }
-
-  acts_as_list :scope => :mailing_list
+  acts_as_list
 
   default_value_for(:date) { Time.zone.now }
 
-  def self.remove_list_prefix(subject, subject_line_prefix)
-    return "" unless subject
-    subject.gsub(/\[#{subject_line_prefix}\]\s*/, "").strip
+  def self.find_for_dates(mailing_list, month_start, month_end)
+    mailing_list.posts.all(
+      :select => "id, date, sender, subject, topica_message_id" ,
+      :conditions => [ "date between ? and ?", month_start, month_end ],
+      :order => "date desc"
+    )
   end
 
-  def self.strip_subject(subject)
-    return "" unless subject
-
-    subject.
-      gsub(/\A(\s*)Re:(\s*)/i, "").
-      gsub(/\A(\s*)Fw(d):(\s*)/i, "").
-      gsub(/\s+/, " ").
-      strip
+  def from_name
+    @from_name ||= (
+    if sender
+      if sender["<"]
+        sender[/^([^<]+)/].try(:strip)
+      elsif !sender["@"]
+        sender
+      end
+    end
+    )
   end
 
-  def newer
-    lower_item
+  def from_email_address
+    @from_email_address ||= (
+    if sender
+      if sender["<"]
+        sender[/<(.*)>/, 1].try(:strip)
+      elsif !sender["<"]
+        sender
+      end
+    end
+    )
   end
 
-  def older
-    higher_item
+  def sender=(value)
+    self[:sender] = value
   end
 
   def remove_list_prefix
-    if mailing_list
-      self.subject = Post.remove_list_prefix(subject, mailing_list.subject_line_prefix)
-    end
-    subject
+    subject.gsub!(/\[#{mailing_list.subject_line_prefix}\]\s*/, "")
+    subject.strip!
+  end
+
+  def from_email_address=(value)
+    @from_email_address = value
+    update_sender
+  end
+
+  def topica?
+    topica_message_id.present?
+  end
+
+  def from_name=(value)
+    @from_name = value
+    update_sender
   end
 
   # Replace a couple letters from email addresses to avoid spammers
-  def from_email_obscured
-    return "" if from_email.blank?
+  def sender_obscured
+    if sender.blank? or !topica_message_id.blank?
+      return sender
+    end
 
-    sender_parts = from_email.split("@")
+    sender_parts = sender.split("@")
     if sender_parts.size > 1
       person_name = sender_parts.first
       if person_name.length > 2
@@ -66,7 +87,15 @@ class Post < ActiveRecord::Base
       end
     end
 
-    ""
+    sender
+  end
+
+  def update_sender
+    if @from_name.present? && from_email_address.present? && @from_email_address.present? && !(@from_name.to_s == @from_email_address.to_s )
+      self.sender = "#{@from_name} <#{@from_email_address}>"
+    else
+      self.sender = @from_email_address.to_s
+    end
   end
 
   def add_post_text

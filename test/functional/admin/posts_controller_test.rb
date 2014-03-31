@@ -39,7 +39,7 @@ module Admin
       mailing_list = FactoryGirl.create(:mailing_list)
       post :create, :mailing_list_id => mailing_list.to_param, :post => {
         :from_name => "Mike Murray",
-        :from_email => "mmurray@obra.org",
+        :from_email_address => "mmurray@obra.org",
         :subject => "No More Masters Races",
         :body => "That is all",
         "date(1i)"=>"2009",
@@ -74,7 +74,7 @@ module Admin
       post = FactoryGirl.create(:post)
       put :update, :mailing_list_id => mailing_list.to_param, :id => post.to_param, :post => {
         :from_name => "Mike Murray",
-        :from_email => "mmurray@obra.org",
+        :from_email_address => "mmurray@obra.org",
         :subject => "No More Masters Races",
         :body => "That is all",
         "date(1i)"=>"2009",

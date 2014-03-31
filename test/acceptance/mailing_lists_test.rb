@@ -4,14 +4,8 @@ require File.expand_path(File.dirname(__FILE__) + "/acceptance_test")
 class MailingListsTest < AcceptanceTest
   def test_mailing_lists
     mailing_list = FactoryGirl.create(:mailing_list, :name => "obra")
-    mailing_list.posts.create!(
-      :subject => "Schedule Changes",
-      :date => "2004-12-31",
-      :from_name => "Scout",
-      :from_email => "scout@obra.org",
-      :body => "This is a test message."
-    )
-
+    mailing_list.posts.create!(:subject => "Schedule Changes", :date => "2004-12-31", :sender => "Scout <scout@obra.org>", :body => "This is a test message.")
+    
     visit "/mailing_lists"
 
     visit "/mailing_lists/#{mailing_list.id}/posts"
@@ -20,7 +14,7 @@ class MailingListsTest < AcceptanceTest
     visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
     fill_in "post_from_name", :with => "Scott"
-    fill_in "post_from_email", :with => "scott.willson@gmail.com"
+    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
     fill_in "post_subject", :with => "Cervelo for sale"
     fill_in "post_body", :with => "My post message body"
 
@@ -38,16 +32,16 @@ class MailingListsTest < AcceptanceTest
     fill_in "post_body", :with => "This is a special private reply"
 
     click_button "Send"
-    assert_page_has_content "From email can't be blank"
+    assert_page_has_content "From email address can't be blank"
 
-    fill_in "post_from_email", :with => "don@butlerpress.com"
+    fill_in "post_from_email_address", :with => "don@butlerpress.com"
 
     click_button "Send"
     assert_page_has_content "Sent private reply"
 
     visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
-    fill_in "post_from_email", :with => "scott.willson@gmail.com"
+    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
     fill_in "post_subject", :with => "New Message 2"
     fill_in "post_body", :with => "My post message body"
 
@@ -56,7 +50,7 @@ class MailingListsTest < AcceptanceTest
 
     fill_in "post_from_name", :with => "Scott"
     click_button "Post"
-    assert_page_has_content "Your new post is now in the mailing queue"
+    assert_page_has_content "Your new post is now in the mailing queue"    
 
     visit "/mailing_lists/#{mailing_list.id}/posts?subject=Schedule"
     visit "/mailing_lists/#{mailing_list.id}/posts?subject=xy"

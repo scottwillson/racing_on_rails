@@ -14,7 +14,7 @@ class PostsControllerTest < ActionController::TestCase
     post = assigns["post"]
     assert_equal(obra_chat, post.mailing_list, "Post's mailing list")
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
     assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
     assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Post"})
@@ -27,7 +27,7 @@ class PostsControllerTest < ActionController::TestCase
       :subject => "Only OBRA Race Message",
       :date => Time.zone.today,
       :from_name => "Scout",
-      :from_email => "scout@obra.org",
+      :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
   
@@ -41,7 +41,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal("Re: Only OBRA Race Message", post.subject, 'Prepopulated subject')
     assert_equal(obra_race, post.mailing_list, "Post's mailing list")
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[subject]"})
-    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email]"})
+    assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_email_address]"})
     assert_tag(:tag => "input", :attributes => {:type => "text", :name => "post[from_name]"})
     assert_tag(:tag => "textarea", :attributes => {:name => "post[body]"})
     assert_tag(:tag => "input", :attributes => {:type => "submit", :name => "commit", :value => "Send"})
@@ -118,7 +118,7 @@ class PostsControllerTest < ActionController::TestCase
         :subject => "Subject Test #{index}",
         :date => date,
         :from_name => "Scout",
-        :from_email => "scout@obra.org",
+        :from_email_address => "scout@obra.org",
         :body => "This is a test message #{index}"
       )
     end
@@ -129,7 +129,7 @@ class PostsControllerTest < ActionController::TestCase
       :subject => "Only OBRA Race Message",
       :date => date,
       :from_name => "Scout",
-      :from_email => "scout@obra.org",
+      :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
   
@@ -151,7 +151,7 @@ class PostsControllerTest < ActionController::TestCase
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
+    from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
   
     post(:create, 
@@ -160,7 +160,7 @@ class PostsControllerTest < ActionController::TestCase
         :post => {
           :subject => subject, 
           :from_name => from_name,
-          :from_email => from_email,
+          :from_email_address => from_email_address,
           :body => body},
         :commit => "Post"
     )
@@ -171,7 +171,7 @@ class PostsControllerTest < ActionController::TestCase
     assert_equal(1, MailingListMailer.deliveries.size, "Should have one email delivery")
     delivered_mail = MailingListMailer.deliveries.first
     assert_equal(subject, delivered_mail.subject, "Subject")
-    assert_equal([from_email], delivered_mail.from, "From email")
+    assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
     assert_equal_dates(Time.zone.now.utc, delivered_mail.date.utc, "Date")
     assert_equal([obra_chat.name], delivered_mail.to, "Recipient")
@@ -181,14 +181,14 @@ class PostsControllerTest < ActionController::TestCase
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
+    from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
     reply_to_post = Post.create!(
       :mailing_list => obra_chat,
       :subject => "Schedule Changes",
       :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
-      :from_email => "scout@obra.org",
+      :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
   
@@ -198,7 +198,7 @@ class PostsControllerTest < ActionController::TestCase
           :post => {
             :subject => subject, 
             :from_name => from_name,
-            :from_email => from_email,
+            :from_email_address => from_email_address,
             :body => body},
           :reply_to_id => reply_to_post.id,
           :commit => "Post"
@@ -211,7 +211,7 @@ class PostsControllerTest < ActionController::TestCase
     
     delivered_mail = MailingListMailer.deliveries.last
     assert_equal(subject, delivered_mail.subject, "Subject")
-    assert_equal([from_email], delivered_mail.from, "From email")
+    assert_equal([from_email_address], delivered_mail.from, "From email")
     assert_equal(from_name, delivered_mail[:from].display_names.first, "From Name")
     assert_equal_dates(Time.zone.now.utc, delivered_mail.date.utc, "Date")
     assert_equal(['scout@obra.org'], delivered_mail.to, "Recipient")
@@ -221,14 +221,14 @@ class PostsControllerTest < ActionController::TestCase
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
+    from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
     reply_to_post = Post.create!(
       :mailing_list => obra_chat,
       :subject => "Schedule Changes",
       :date => Time.zone.local(2004, 12, 31, 23, 59, 59, 999999),
       :from_name => "Scout",
-      :from_email => "scout@obra.org",
+      :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
   
@@ -237,7 +237,7 @@ class PostsControllerTest < ActionController::TestCase
         :post => {
           :subject => "Re: #{subject}", 
           :from_name => "",
-          :from_email => "",
+          :from_email_address => "",
           :body => ""},
         :reply_to_id => reply_to_post.id,
         :commit => "Send"
@@ -258,7 +258,7 @@ class PostsControllerTest < ActionController::TestCase
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
+    from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
   
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPFatalError, "502 5.5.2 Error: command not recognized")
@@ -268,7 +268,7 @@ class PostsControllerTest < ActionController::TestCase
         :post => {
           :subject => subject, 
           :from_name => from_name,
-          :from_email => from_email,
+          :from_email_address => from_email_address,
           :body => body},
         :commit => "Post"
     )
@@ -285,7 +285,7 @@ class PostsControllerTest < ActionController::TestCase
     obra_chat = FactoryGirl.create(:mailing_list)
     subject = "Spynergy for Sale"
     from_name = "Tim Schauer"
-    from_email = "tim.schauer@butlerpress.com"
+    from_email_address = "tim.schauer@butlerpress.com"
     body = "Barely used"
   
     Mail::Message.any_instance.expects(:deliver).raises(Net::SMTPServerBusy, "450 4.1.8 <wksryz@rxrzdj.com>: Sender address rejected: Domain not found")
@@ -295,7 +295,7 @@ class PostsControllerTest < ActionController::TestCase
         :post => {
           :subject => subject, 
           :from_name => from_name,
-          :from_email => from_email,
+          :from_email_address => from_email_address,
           :body => body},
         :commit => "Post"
     )
@@ -313,7 +313,7 @@ class PostsControllerTest < ActionController::TestCase
       :subject => "Only OBRA Race Message",
       :date => Time.zone.now,
       :from_name => "Scout",
-      :from_email => "scout@obra.org",
+      :from_email_address => "scout@obra.org",
       :body => "This is a test message."
     )
     new_post.save!
@@ -342,7 +342,7 @@ class PostsControllerTest < ActionController::TestCase
                   "post" => { "from_name"=>"strap", 
                                "body"=>"<a href= http://www.blogextremo.com/elroybrito >strap on gallery</a> <a href= http://emmittmcclaine.blogownia.pl >lesbian strap on</a> <a href= http://www.cherryade.com/margenemohabeer >strap on sex</a> ", 
                                "subject"=>"onstrapdildo@mail.com", 
-                               "from_email"=>"onstrapdildo@mail.com"}
+                               "from_email_address"=>"onstrapdildo@mail.com"}
     })
     assert_response(:redirect)
   end

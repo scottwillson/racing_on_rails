@@ -1,7 +1,5 @@
 <% @page_title = "Mailing Lists: #{@mailing_list.friendly_name}" %>
 
-<h2><%= @mailing_list.friendly_name %></h2>
-
 <%= form_tag({}, { :method => "get", :id => "search_form", :class => "form-horizontal form-search" }) do %>
   <div class="row-fluid">
     <div class="span3"></div>
@@ -12,27 +10,53 @@
   </div>
 <% end -%>
 
-<%= will_paginate @posts,
-                  :renderer => BootstrapPagination::Rails,
-                  :page_links => false,
-                  :previous_label => "&larr; Newer",
-                  :next_label => "Older &rarr;" %>
+<%= will_paginate @posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+
+<div class="post_search_header">
+  <div class="post_dates">
+  <% if @start_date && @end_date %>
+    <%= @start_date.to_s(:long_and_friendly) %> to <%= @end_date.to_s(:long_and_friendly)%>. 
+    <%= link_to "Clear", mailing_list_posts_path(@mailing_list), :class => "obvious" %>
+  <% end %>
+  </div>
+</div>
 
 <%= table :collection => @posts, :columns => 3 do %>
   <tr>
-    <th></th>
+    <th class="date">Date</th>
     <th class="subject">Subject</th>
     <th class="from hidden-phone">From</th>
-    <th class="date">Date</th>
   </tr>
-  <%= render :collection => @posts, :partial => "post", :locals => { :current_page => @posts.current_page } %>
+  <% @posts.each do |post| %>
+  <tr>
+    <td class="date"><%= link_to post.date.strftime("%-m/%-d/%Y"), post_path(post, :page => @posts.current_page) %></td>
+    <td class="subject">
+      <%= link_to h(truncate(post.subject, :length => 50)), post_path(post, :page => @posts.current_page) %>
+    </td>
+    <td class="from hidden-phone"><%= h(post.sender_obscured) %></td>
+  </tr>
+  <% end %>
 <% end -%>
 
-<%= will_paginate @posts,
-                  :renderer => BootstrapPagination::Rails,
-                  :page_links => false,
-                  :previous_label => "&larr; Newer",
-                  :next_label => "Older &rarr;" %>
+<%= will_paginate @posts, :renderer => BootstrapPagination::Rails, :page_links => !mobile_request? %>
+
+<% if @first_post_at %>
+<div class="pills">
+  <ul class="nav nav-pills">
+    <% Time.zone.now.year.downto(@first_post_at.year).each do |year| %>
+    <li><%= link_to year, mailing_list_posts_path(@mailing_list, :year => year, :month => params[:month]) %></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="pills">
+  <ul class="nav nav-pills">
+    <% (1..12).each do |month| %>
+    <li><%= link_to Date::MONTHNAMES[month], mailing_list_posts_path(@mailing_list, :year => params[:year], :month => month) %></li>
+    <% end %>
+ </ul>
+</div>
+<% end %>
 
 <%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
 
