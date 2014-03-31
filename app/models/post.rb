@@ -1,5 +1,7 @@
 # Mailing list post
 class Post < ActiveRecord::Base
+  includes Posts::Migration
+
   validates_presence_of :date
   validates_presence_of :from_email, :on => :create
   validates_presence_of :from_name, :on => :create
@@ -19,63 +21,6 @@ class Post < ActiveRecord::Base
   acts_as_list :scope => :mailing_list
 
   default_value_for(:date) { Time.zone.now }
-
-  # acts_as_list puts the first post in the "first"/"top" position with a position of 1
-  # Behavior is different if position has a default value other than null
-  # Databases looks like (date, position):
-  # 2012-07-01  1
-  # 2012-07-05  2
-  # 2012-07-05  3
-  # 2012-07-08  4
-  def self.reposition!(mailing_list)
-    # Optimize for large mailing list
-    transaction do
-      connection.select_all(mailing_list.posts.select([:id, :date]).order(:date)).each.with_index do |post, index|
-        Post.where(:id => post["id"]).update_all(:position => index + 1)
-      end
-    end
-  end
-
-  def self.add_replies!(mailing_list)
-    # Optimize for large mailing list
-
-    transaction do
-      Post.update_all "last_reply_at = date"
-
-      # Create hash of arrays of hashes keyed by name (subject)
-      posts_by_subject = Hash.new
-
-      # Need to use case-normalized subjects for key, but preserve original subject
-      original_subjects = Hash.new
-
-      connection.select_all(mailing_list.posts.select([:id, :date, :from_name, :subject])).each do |post|
-        key = strip_subject(remove_list_prefix(post["subject"], mailing_list.subject_line_prefix)).strip.downcase
-        posts = posts_by_subject[key] || []
-        posts << post
-        posts_by_subject[key] = posts
-
-        original_subjects[key] = name unless original_subjects.has_key?(key)
-      end
-
-      posts_by_subject.each do |key, posts|
-        if posts.size > 1
-          posts = posts.sort_by { |post| post["position"].to_i }
-          original = posts.first
-          last_reply = posts.last
-          Post.where(:id => original["id"]).update_all(
-            :last_reply_at => last_reply["date"],
-            :last_reply_from_name => last_reply["from_name"],
-            :replies_count => posts.size - 1
-          )
-          reply_ids = posts.map { |post| post["id"] }
-          reply_ids.delete original["id"]
-          Post.where(:id => reply_ids).update_all(:original_id => original["id"])
-        end
-      end
-    end
-
-    true
-  end
 
   def self.remove_list_prefix(subject, subject_line_prefix)
     return "" unless subject
