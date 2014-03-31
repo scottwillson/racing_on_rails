@@ -1,0 +1,11 @@
+<div class="row-fluid">
+  <div class="span8">
+    <h4><%= reply.from_name %></h4>
+    <%= sanitize simple_format(reply.body) %>
+  </div>
+  <div class="span4 date">
+    <%= reply.date.to_s :long_and_friendly_date_and_time %>
+  </div>
+</div>
+
+<hr />
