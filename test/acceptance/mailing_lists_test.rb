@@ -14,7 +14,7 @@ class MailingListsTest < AcceptanceTest
     visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
     fill_in "post_from_name", :with => "Scott"
-    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
+    fill_in "post_from_email", :with => "scott.willson@gmail.com"
     fill_in "post_subject", :with => "Cervelo for sale"
     fill_in "post_body", :with => "My post message body"
 
@@ -34,14 +34,14 @@ class MailingListsTest < AcceptanceTest
     click_button "Send"
     assert_page_has_content "From email address can't be blank"
 
-    fill_in "post_from_email_address", :with => "don@butlerpress.com"
+    fill_in "post_from_email", :with => "don@butlerpress.com"
 
     click_button "Send"
     assert_page_has_content "Sent private reply"
 
     visit "/mailing_lists/#{mailing_list.id}/posts/new"
 
-    fill_in "post_from_email_address", :with => "scott.willson@gmail.com"
+    fill_in "post_from_email", :with => "scott.willson@gmail.com"
     fill_in "post_subject", :with => "New Message 2"
     fill_in "post_body", :with => "My post message body"
 

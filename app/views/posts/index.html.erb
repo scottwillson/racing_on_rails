@@ -20,9 +20,10 @@
 
 <%= table :collection => @posts, :columns => 3 do %>
   <tr>
-    <th class="date">Date</th>
+    <th></th>
     <th class="subject">Subject</th>
     <th class="from hidden-phone">From</th>
+    <th class="date">Date</th>
   </tr>
   <%= render :collection => @posts, :partial => "post", :locals => { :current_page => @posts.current_page } %>
 <% end -%>

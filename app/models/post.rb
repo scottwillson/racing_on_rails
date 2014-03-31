@@ -1,12 +1,12 @@
 # Mailing list post
 class Post < ActiveRecord::Base
+  validates_presence_of :date
+  validates_presence_of :from_email, :on => :create
+  validates_presence_of :from_name, :on => :create
+  validates_presence_of :mailing_list
+  validates_presence_of :subject
 
-  attr_accessor :from_email_address, :from_name
-
-  validates_presence_of :subject, :date, :mailing_list
-  validates_presence_of :from_name, :from_email_address
-
-  before_create :remove_list_prefix, :update_sender
+  before_create :remove_list_prefix
   after_save :add_post_text
 
   belongs_to :mailing_list
@@ -100,34 +100,6 @@ class Post < ActiveRecord::Base
     higher_item
   end
 
-  def from_name
-    @from_name ||= (
-    if sender
-      if sender["<"]
-        sender[/^([^<]+)/].try(:strip)
-      elsif !sender["@"]
-        sender
-      end
-    end
-    )
-  end
-
-  def from_email_address
-    @from_email_address ||= (
-    if sender
-      if sender["<"]
-        sender[/<(.*)>/, 1].try(:strip)
-      elsif !sender["<"]
-        sender
-      end
-    end
-    )
-  end
-
-  def sender=(value)
-    self[:sender] = value
-  end
-
   def remove_list_prefix
     if mailing_list
       self.subject = Post.remove_list_prefix(subject, mailing_list.subject_line_prefix)
@@ -135,23 +107,11 @@ class Post < ActiveRecord::Base
     subject
   end
 
-  def from_email_address=(value)
-    @from_email_address = value
-    update_sender
-  end
-
-  def from_name=(value)
-    @from_name = value
-    update_sender
-  end
-
   # Replace a couple letters from email addresses to avoid spammers
-  def sender_obscured
-    if sender.blank? or !topica_message_id.blank?
-      return sender
-    end
+  def from_email_obscured
+    return "" if from_email.blank?
 
-    sender_parts = sender.split("@")
+    sender_parts = from_email.split("@")
     if sender_parts.size > 1
       person_name = sender_parts.first
       if person_name.length > 2
@@ -161,15 +121,7 @@ class Post < ActiveRecord::Base
       end
     end
 
-    sender
-  end
-
-  def update_sender
-    if @from_name.present? && from_email_address.present? && @from_email_address.present? && !(@from_name.to_s == @from_email_address.to_s )
-      self.sender = "#{@from_name} <#{@from_email_address}>"
-    else
-      self.sender = @from_email_address.to_s
-    end
+    ""
   end
 
   def add_post_text
