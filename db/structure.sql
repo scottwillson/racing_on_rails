@@ -17,40 +17,40 @@ CREATE TABLE `aliases` (
 
 CREATE TABLE `article_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `position` int(11) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `parent_id` int(11) DEFAULT '0',
+  `position` int(11) DEFAULT '0',
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
-  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `heading` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `heading` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `display` tinyint(1) DEFAULT NULL,
-  `body` text,
+  `body` text COLLATE utf8_unicode_ci,
+  `position` int(11) DEFAULT '0',
   `article_category_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `position` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `bids` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `phone` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
   `amount` int(11) NOT NULL,
   `approved` tinyint(1) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -67,7 +67,7 @@ CREATE TABLE `categories` (
   KEY `parent_id` (`parent_id`),
   KEY `index_categories_on_friendly_param` (`friendly_param`),
   CONSTRAINT `categories_categories_id_fk` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `competition_event_memberships` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -111,7 +111,7 @@ CREATE TABLE `disciplines` (
   `numbers` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_disciplines_on_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `duplicates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -134,8 +134,8 @@ CREATE TABLE `editor_requests` (
   `person_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
   `expires_at` datetime NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -146,14 +146,14 @@ CREATE TABLE `editor_requests` (
   KEY `index_editor_requests_on_token` (`token`),
   CONSTRAINT `editor_requests_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `editor_requests_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `editors_events` (
   `event_id` int(11) NOT NULL,
   `editor_id` int(11) NOT NULL,
   KEY `index_editors_events_on_event_id` (`event_id`),
   KEY `index_editors_events_on_editor_id` (`editor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -166,7 +166,7 @@ CREATE TABLE `events` (
   `notes` varchar(255) DEFAULT '',
   `sanctioned_by` varchar(255) DEFAULT NULL,
   `state` varchar(64) DEFAULT NULL,
-  `type` varchar(32) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `flyer_approved` tinyint(1) NOT NULL DEFAULT '0',
@@ -182,11 +182,11 @@ CREATE TABLE `events` (
   `time` varchar(255) DEFAULT NULL,
   `instructional` tinyint(1) DEFAULT '0',
   `practice` tinyint(1) DEFAULT '0',
-  `team_id` int(11) DEFAULT NULL,
   `atra_points_series` tinyint(1) NOT NULL DEFAULT '0',
   `bar_points` int(11) NOT NULL,
   `ironman` tinyint(1) NOT NULL,
   `auto_combined_results` tinyint(1) NOT NULL DEFAULT '1',
+  `team_id` int(11) DEFAULT NULL,
   `sanctioning_org_event_id` varchar(16) DEFAULT NULL,
   `promoter_id` int(11) DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE `homes` (
   `weeks_of_recent_results` int(11) NOT NULL DEFAULT '2',
   `weeks_of_upcoming_events` int(11) NOT NULL DEFAULT '2',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `import_files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -318,13 +318,14 @@ CREATE TABLE `people` (
   `print_card` tinyint(1) DEFAULT '0',
   `ccx_only` tinyint(1) NOT NULL DEFAULT '0',
   `bmx_category` varchar(255) DEFAULT NULL,
-  `license_expiration_date` date DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
   `wants_email` tinyint(1) NOT NULL DEFAULT '0',
   `wants_mail` tinyint(1) NOT NULL DEFAULT '0',
-  `club_name` varchar(255) DEFAULT NULL,
-  `ncca_club_name` varchar(255) DEFAULT NULL,
+  `volunteer_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `official_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `team_interest` tinyint(1) NOT NULL DEFAULT '0',
   `member_usac_to` date DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
   `persistence_token` varchar(255) NOT NULL,
@@ -337,10 +338,9 @@ CREATE TABLE `people` (
   `current_login_ip` varchar(255) DEFAULT NULL,
   `last_login_ip` varchar(255) DEFAULT NULL,
   `login` varchar(100) DEFAULT NULL,
-  `volunteer_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `official_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `race_promotion_interest` tinyint(1) NOT NULL DEFAULT '0',
-  `team_interest` tinyint(1) NOT NULL DEFAULT '0',
+  `license_expiration_date` date DEFAULT NULL,
+  `club_name` varchar(255) DEFAULT NULL,
+  `ncca_club_name` varchar(255) DEFAULT NULL,
   `emergency_contact` varchar(255) DEFAULT NULL,
   `emergency_contact_phone` varchar(255) DEFAULT NULL,
   `card_printed_at` datetime DEFAULT NULL,
@@ -375,7 +375,7 @@ CREATE TABLE `people_people` (
   KEY `index_people_people_on_person_id` (`person_id`),
   CONSTRAINT `people_people_ibfk_1` FOREIGN KEY (`editor_id`) REFERENCES `people` (`id`) ON DELETE CASCADE,
   CONSTRAINT `people_people_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `people` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `people_roles` (
   `role_id` int(11) NOT NULL,
@@ -388,47 +388,53 @@ CREATE TABLE `people_roles` (
 
 CREATE TABLE `photos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `caption` text,
-  `title` varchar(255) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
+  `caption` text COLLATE utf8_unicode_ci,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `height` int(11) DEFAULT NULL,
   `width` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `link` varchar(255) DEFAULT NULL,
+  `link` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `post_texts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `post_id` int(11) NOT NULL,
-  `text` text,
+  `text` text COLLATE utf8_unicode_ci,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_post_texts_on_post_id` (`post_id`),
   FULLTEXT KEY `post_text` (`text`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `body` text NOT NULL,
   `date` datetime NOT NULL,
-  `sender` varchar(255) NOT NULL DEFAULT '',
   `subject` varchar(255) NOT NULL DEFAULT '',
   `topica_message_id` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `mailing_list_id` int(11) NOT NULL DEFAULT '0',
   `position` int(11) DEFAULT NULL,
+  `from_name` varchar(255) DEFAULT NULL,
+  `from_email` varchar(255) DEFAULT NULL,
+  `last_reply_at` datetime DEFAULT NULL,
+  `last_reply_from_name` varchar(255) DEFAULT NULL,
+  `original_id` int(11) DEFAULT NULL,
+  `replies_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_topica_message_id` (`topica_message_id`),
   KEY `idx_date` (`date`),
-  KEY `idx_sender` (`sender`),
   KEY `idx_subject` (`subject`),
   KEY `idx_mailing_list_id` (`mailing_list_id`),
   KEY `idx_date_list` (`date`,`mailing_list_id`),
   KEY `index_posts_on_position` (`position`),
+  KEY `index_posts_on_original_id` (`original_id`),
+  KEY `index_posts_on_last_reply_at` (`last_reply_at`),
   CONSTRAINT `posts_mailing_list_id_fk` FOREIGN KEY (`mailing_list_id`) REFERENCES `mailing_lists` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -499,26 +505,26 @@ CREATE TABLE `racing_associations` (
   `usac_results_format` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_category_id` int(11) DEFAULT NULL,
   `masters_age` int(11) NOT NULL DEFAULT '35',
-  `rental_numbers_end` int(11) NOT NULL DEFAULT '99',
-  `rental_numbers_start` int(11) NOT NULL DEFAULT '51',
+  `rental_numbers_end` int(11) DEFAULT '99',
+  `rental_numbers_start` int(11) DEFAULT '51',
   `search_results_limit` int(11) NOT NULL DEFAULT '100',
-  `cat4_womens_race_series_points` varchar(255) DEFAULT NULL,
-  `administrator_tabs` varchar(255) DEFAULT NULL,
-  `competitions` varchar(255) DEFAULT NULL,
-  `country_code` varchar(255) NOT NULL DEFAULT 'US',
-  `default_discipline` varchar(255) NOT NULL DEFAULT 'Road',
-  `default_sanctioned_by` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
-  `exempt_team_categories` varchar(255) NOT NULL DEFAULT '0',
-  `membership_email` varchar(255) NOT NULL DEFAULT 'scott.willson@gmail.com',
-  `name` varchar(255) NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
-  `rails_host` varchar(255) DEFAULT 'localhost:3000',
-  `sanctioning_organizations` varchar(255) DEFAULT NULL,
-  `short_name` varchar(255) NOT NULL DEFAULT 'CBRA',
-  `show_events_sanctioning_org_event_id` varchar(255) NOT NULL DEFAULT '0',
-  `state` varchar(255) NOT NULL DEFAULT 'OR',
-  `static_host` varchar(255) NOT NULL DEFAULT 'localhost',
-  `usac_region` varchar(255) NOT NULL DEFAULT 'North West',
+  `cat4_womens_race_series_points` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `administrator_tabs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `competitions` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `country_code` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'US',
+  `default_discipline` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Road',
+  `default_sanctioned_by` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `exempt_team_categories` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `membership_email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'scott.willson@gmail.com',
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Cascadia Bicycle Racing Association',
+  `rails_host` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'localhost:3000',
+  `sanctioning_organizations` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `short_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'CBRA',
+  `show_events_sanctioning_org_event_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `state` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'OR',
+  `static_host` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
+  `usac_region` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'North West',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `cat4_womens_race_series_end_date` date DEFAULT NULL,
@@ -527,22 +533,22 @@ CREATE TABLE `racing_associations` (
   `mobile_site` tinyint(1) NOT NULL DEFAULT '0',
   `cat4_womens_race_series_start_date` date DEFAULT NULL,
   `filter_schedule_by_sanctioning_organization` tinyint(1) NOT NULL DEFAULT '0',
-  `result_questions_url` varchar(255) DEFAULT NULL,
+  `result_questions_url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `filter_schedule_by_region` tinyint(1) NOT NULL DEFAULT '0',
-  `default_region_id` varchar(255) DEFAULT NULL,
+  `default_region_id` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `regions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `friendly_param` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `friendly_param` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_regions_on_name` (`name`),
   UNIQUE KEY `index_regions_on_friendly_param` (`friendly_param`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -550,7 +556,7 @@ CREATE TABLE `results` (
   `person_id` int(11) DEFAULT NULL,
   `race_id` int(11) NOT NULL,
   `team_id` int(11) DEFAULT NULL,
-  `age_group` varchar(16) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
   `city` varchar(128) DEFAULT NULL,
   `date_of_birth` datetime DEFAULT NULL,
   `is_series` tinyint(1) DEFAULT NULL,
@@ -564,9 +570,15 @@ CREATE TABLE `results` (
   `points_bonus_penalty` float DEFAULT '0',
   `points_total` float DEFAULT '0',
   `state` varchar(64) DEFAULT NULL,
-  `status` varchar(3) DEFAULT NULL,
+  `status` char(3) DEFAULT NULL,
+  `time` double DEFAULT NULL,
+  `time_bonus_penalty` double DEFAULT NULL,
+  `time_gap_to_leader` double DEFAULT NULL,
+  `time_gap_to_previous` double DEFAULT NULL,
+  `time_gap_to_winner` double DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
+  `time_total` double DEFAULT NULL,
   `laps` int(11) DEFAULT NULL,
   `members_only_place` varchar(8) DEFAULT NULL,
   `points_bonus` int(11) NOT NULL DEFAULT '0',
@@ -575,13 +587,7 @@ CREATE TABLE `results` (
   `bar` tinyint(1) DEFAULT '1',
   `gender` varchar(8) DEFAULT NULL,
   `category_class` varchar(16) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
-  `time` double DEFAULT NULL,
-  `time_gap_to_leader` double DEFAULT NULL,
-  `time_gap_to_previous` double DEFAULT NULL,
-  `time_gap_to_winner` double DEFAULT NULL,
-  `time_total` float DEFAULT NULL,
-  `time_bonus_penalty` double DEFAULT NULL,
+  `age_group` varchar(16) DEFAULT NULL,
   `custom_attributes` text,
   `competition_result` tinyint(1) NOT NULL,
   `team_competition_result` tinyint(1) NOT NULL,
@@ -663,6 +669,29 @@ CREATE TABLE `teams` (
   UNIQUE KEY `idx_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `topic_texts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic_id` int(11) DEFAULT NULL,
+  `text` text,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `index_topic_texts_on_text` (`text`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `topics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mailing_list_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `posts_count` int(11) NOT NULL DEFAULT '0',
+  `posts_updated_at` datetime DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `position` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_topics_on_position` (`position`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `velodromes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -676,13 +705,13 @@ CREATE TABLE `velodromes` (
 CREATE TABLE `versions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `versioned_id` int(11) DEFAULT NULL,
-  `versioned_type` varchar(255) DEFAULT NULL,
+  `versioned_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `user_type` varchar(255) DEFAULT NULL,
-  `user_name` varchar(255) DEFAULT NULL,
-  `modifications` text,
+  `user_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `user_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `modifications` text COLLATE utf8_unicode_ci,
   `number` int(11) DEFAULT NULL,
-  `tag` varchar(255) DEFAULT NULL,
+  `tag` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `reverted_from` int(11) DEFAULT NULL,
@@ -693,7 +722,7 @@ CREATE TABLE `versions` (
   KEY `index_versions_on_number` (`number`),
   KEY `index_versions_on_tag` (`tag`),
   KEY `index_versions_on_created_at` (`created_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO schema_migrations (version) VALUES ('1');
 
@@ -729,43 +758,31 @@ INSERT INTO schema_migrations (version) VALUES ('20080928152814');
 
 INSERT INTO schema_migrations (version) VALUES ('20081001234859');
 
-INSERT INTO schema_migrations (version) VALUES ('20081028024120');
-
-INSERT INTO schema_migrations (version) VALUES ('20081028032720');
-
 INSERT INTO schema_migrations (version) VALUES ('20081101221844');
 
 INSERT INTO schema_migrations (version) VALUES ('20081102001855');
 
-INSERT INTO schema_migrations (version) VALUES ('20081102200415');
+INSERT INTO schema_migrations (version) VALUES ('20081214033053');
 
-INSERT INTO schema_migrations (version) VALUES ('20081102203251');
+INSERT INTO schema_migrations (version) VALUES ('20090116235413');
 
-INSERT INTO schema_migrations (version) VALUES ('20081116011540');
+INSERT INTO schema_migrations (version) VALUES ('20090117215129');
 
-INSERT INTO schema_migrations (version) VALUES ('20081116181033');
+INSERT INTO schema_migrations (version) VALUES ('20090212200352');
 
-INSERT INTO schema_migrations (version) VALUES ('20081117023740');
+INSERT INTO schema_migrations (version) VALUES ('20090217170845');
 
-INSERT INTO schema_migrations (version) VALUES ('20081121054723');
+INSERT INTO schema_migrations (version) VALUES ('20090217170956');
 
-INSERT INTO schema_migrations (version) VALUES ('20081122034833');
+INSERT INTO schema_migrations (version) VALUES ('20090217212657');
 
-INSERT INTO schema_migrations (version) VALUES ('20081122215541');
+INSERT INTO schema_migrations (version) VALUES ('20090217212924');
 
-INSERT INTO schema_migrations (version) VALUES ('20081125031007');
+INSERT INTO schema_migrations (version) VALUES ('20090224224826');
 
-INSERT INTO schema_migrations (version) VALUES ('20081125031142');
+INSERT INTO schema_migrations (version) VALUES ('20090225004224');
 
-INSERT INTO schema_migrations (version) VALUES ('20081127050343');
-
-INSERT INTO schema_migrations (version) VALUES ('20081129231150');
-
-INSERT INTO schema_migrations (version) VALUES ('20081129231428');
-
-INSERT INTO schema_migrations (version) VALUES ('20090103032016');
-
-INSERT INTO schema_migrations (version) VALUES ('20090211004320');
+INSERT INTO schema_migrations (version) VALUES ('20090305222446');
 
 INSERT INTO schema_migrations (version) VALUES ('20090310155100');
 
@@ -963,6 +980,8 @@ INSERT INTO schema_migrations (version) VALUES ('20131113143051');
 
 INSERT INTO schema_migrations (version) VALUES ('20131126150417');
 
+INSERT INTO schema_migrations (version) VALUES ('20131215151535');
+
 INSERT INTO schema_migrations (version) VALUES ('20140207223552');
 
 INSERT INTO schema_migrations (version) VALUES ('20140211232628');
@@ -973,9 +992,23 @@ INSERT INTO schema_migrations (version) VALUES ('20140303223128');
 
 INSERT INTO schema_migrations (version) VALUES ('20140304153913');
 
+INSERT INTO schema_migrations (version) VALUES ('20140306011719');
+
 INSERT INTO schema_migrations (version) VALUES ('20140306165856');
 
+INSERT INTO schema_migrations (version) VALUES ('20140319234206');
+
+INSERT INTO schema_migrations (version) VALUES ('20140325180308');
+
+INSERT INTO schema_migrations (version) VALUES ('20140326210703');
+
+INSERT INTO schema_migrations (version) VALUES ('20140327214203');
+
 INSERT INTO schema_migrations (version) VALUES ('20140330010812');
+
+INSERT INTO schema_migrations (version) VALUES ('20140330145224');
+
+INSERT INTO schema_migrations (version) VALUES ('20140403051211');
 
 INSERT INTO schema_migrations (version) VALUES ('21');
 

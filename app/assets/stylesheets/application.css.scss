@@ -108,7 +108,7 @@ h2 a:hover, h3 a:hover {
     font-size: 16px;
     line-height: $baseLineHeight;
   }
-  
+
   h3 {
     font-size: 12px;
     line-height: $baseLineHeight;
@@ -172,7 +172,7 @@ nav li, footer li {
     padding-left: 2px;
     padding-right: 2px;
   }
-  
+
   nav li, footer li {
     padding-left: $baseLineHeight / 4;
     padding-right: $baseLineHeight / 4;
@@ -260,7 +260,7 @@ nav li:last-child, footer li:last-child {
     padding-right: 0px;
     padding-top: $baseLineHeight / 2;
   }
-  
+
   nav ul {
     text-align: center;
   }
@@ -287,7 +287,11 @@ p.created_updated {
   padding-bottom: $baseLineHeight;
 }
 
-.table .date {
+.post div.date {
+  margin-top: 8px;
+}
+
+div.date, .table .date {
   max-width: 240px;
   text-align: right;
   white-space: nowrap;
@@ -295,14 +299,27 @@ p.created_updated {
 }
 
 @media (max-width: 767px) {
-  .table .date {
+  div.date, .table .date {
     width: auto;
+  }
+
+  .post div.date {
+    text-align: left;
   }
 }
 
 th.numeric,
 td.numeric {
   text-align: right;
+}
+
+th.badges,
+td.badges {
+  text-align: right;
+}
+
+td.badges {
+  padding-top: 7px;
 }
 
 .pills {

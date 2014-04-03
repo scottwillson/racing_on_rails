@@ -8,32 +8,37 @@
   <div class="row-fluid">
     <div class="span6">
       <% if @reply_to %>
-      <%= f.labelled_text :to, h(@reply_to.sender_obscured) %>
+      <%= f.labelled_text :to, @reply_to.from_name %>
       <% else %>
       <%= f.labelled_text :to, @mailing_list.friendly_name %>
       <% end %>
 
-      <%= f.labelled_text_field(:from_name, "Your Name", :size => "40") %>
-      <%= f.labelled_text_field(:from_email_address, "Your Email Address", :size => "40") %>
-      <%= f.labelled_text_field(:subject, nil, :size => "40") %>
+      <%= f.labelled_text_field :subject %>
     </div>
     <div class="span6">
-      <%= f.labelled_text_area(:body) %>
+      <%= f.labelled_text_field :from_name, "Your Name" %>
+      <%= f.labelled_text_field :from_email, "Your Email Address" %>
     </div>
   </div>
 
   <div class="row-fluid">
     <div class="span12">
-      <div class="created_updated pull-right"><% unless @reply_to %>You must be a subscriber to post<% end %></div>
-      <div class="right span4">
-    <% if @reply_to %>
-        <%= submit_tag("Send", :class => "btn btn-primary") %>
-    <% else %>
-      <%= submit_tag("Post", :class => "btn btn-primary", :id => "post") %>
-    <% end %>
-      </div>
+      <%= f.labelled_text_area :body, :class => "span12", :rows => 12 %>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row-fluid">
+    <div class="span12">
+      <% if @reply_to %>
+        <%= submit_tag "Send", :class => "btn btn-primary" %>
+      <% else %>
+        <%= submit_tag "Post", :class => "btn btn-primary", :id => "post" %>
+      <% end %>
+      <span class="help-block"><% unless @reply_to %>You must be a subscriber to post<% end %></span>
     </div>
   </div>
 <% end -%>
 
-<%= render("mailing_lists/links", :mailing_list => @mailing_list) %>
+<%= render "mailing_lists/links", :mailing_list => @mailing_list %>

@@ -1,19 +1,20 @@
 <% @page_title = "Mailing Lists" %>
 
-<%= table :insert_header => true, :columns => 6 do %>
-  <% @mailing_lists.each do |mailing_list| %>
-  <tr>
-    <td style="padding-right: 12px;"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %><b></td>
-    <td width="300" style="padding-right: 16px;"><%= mailing_list.description %></td>
-    <td><a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a></td>
-    <td><a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a></td>
-    <td><%= link_to "New Post", new_mailing_list_post_path(mailing_list) %></td>
-    <td><%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %></td>
-  </tr>
-  <% end %>
-<% end -%>
+<% @mailing_lists.each do |mailing_list| %>
+<div class="row-fluid">
+  <div class="span3"><b><%= link_to mailing_list.friendly_name, mailing_list_posts_path(mailing_list) %></b></div>
+  <div class="span5"><%= mailing_list.description %></div>
+  <div class="span4">
+    <a href="/mailman/listinfo/<%= mailing_list.name %>">Subscribe</a> |
+    <a href="/mailman/listinfo/<%= mailing_list.name %>#subscribers">Subscription Options</a> |
+    <%= link_to "New Post", new_mailing_list_post_path(mailing_list) %> |
+    <%= link_to_unless_current "View Posts", mailing_list_posts_path(mailing_list) %>
+  </div>
+  <hr/>
+</div>
+<% end %>
 
-<p>Having trouble? Please don't email the entire list. Contact the 
+<p>Having trouble? Please don't email the entire list. Contact the
 <a href="mailto:mailman@list.obra.org">administrator</a> at mailman@list.obra.org.</p>
 
 <p>Forgot your password?
@@ -24,14 +25,7 @@
   </ol>
 </p>
 
-<p>You must subscribe and <b>confirm</b> before you can post. The system may 
+<p>You must subscribe and <b>confirm</b> before you can post. The system may
 take a few minutes to process your confirmation.</p>
-
-<p><b>AOL and Netscape Subscribers</b><br>
-  AOL is unfriendly towards mailing lists like OBRA. Occasionally, AOL will 
-  stop accepting OBRA list email. In the future, AOL may attempt to charge us 
-  to deliver mail to you. Consider <a href="http://mail.yahoo.com">Yahoo!</a> or 
-  <a href="http://gmail.com">Google GMail</a> for free email.
-</p>
 
 <p><%= link_to "Privacy Policy", "/privacy_policy" %></p>

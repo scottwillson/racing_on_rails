@@ -1,0 +1,12 @@
+<% if posts.present? %>
+<div class="row-fluid">
+  <div class="span12">
+    <h3><%= link_to "Posts", mailing_lists_path %></h3>
+    <%= table :class => "mailing_lists", :columns => 1 do %>
+    <tbody>
+      <%= render :partial => "home/post", :collection => posts %>
+    </tbody>
+    <% end %>
+  </div>
+</div>
+<% end %>

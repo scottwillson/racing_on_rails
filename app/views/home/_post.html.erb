@@ -1,0 +1,5 @@
+<tr>
+  <td><%= link_to post.subject, post_path(post) %></td>
+  <td class="mailing_list hidden-phone"><%= link_to post.mailing_list.friendly_name, mailing_list_path(post.mailing_list) %></td>
+  <td class="from hidden-phone"><%= post.last_reply_from_name || post.from_name %></td>
+</tr>

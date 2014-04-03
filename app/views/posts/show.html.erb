@@ -1,49 +1,12 @@
 <% @page_title = "#{@post.mailing_list.friendly_name}: #{truncate(@post.subject)}" %>
+<h2><%= @post.subject %></h2>
+
+<%= render "show_pagination", :post => @post %>
+<%= render :collection => @post.replies.sort_by(&:position).reverse.to_a << @post, :partial => "posts/reply" %>
+<%= render "show_pagination", :post => @post %>
 
 <div class="row-fluid">
   <div class="span12">
-    <div class="pagination">
-      <ul>
-        <% if @post.lower_item %>
-        <li class="prev"><%= link_to "&#8592; Previous".html_safe, post_path(@post.lower_item), :rel => "previous" %></li>
-        <% else %>
-        <li class="prev disabled"><span>&#8592; Previous</span></li>
-        <% end %>
-        <li class="next"><%= link_to @post.mailing_list.friendly_name, mailing_list_posts_path(@post.mailing_list, :page => params[:page] ) %></li>
-        <% if @post.higher_item %>
-        <li class="next"><%= link_to "Next &#8594;".html_safe, post_path(@post.higher_item), :rel => "next" %></li>
-        <% else %>
-        <li class="next disabled"><span>Next &#8594;</span></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div class="row-fluid">
-  <div class="span12">
-    <form action="#" class="form-horizontal">
-      <%= labelled_text :post, :subject, nil, h(@post.subject) %>
-      <%= labelled_text :post, :date, nil, @post.date.strftime("%-m/%-d/%Y %I:%M %p") %>
-      <%= labelled_text :post, :from, nil, h(@post.sender_obscured) %>
-    </form>
-  </div>
-</div>
-
-<div class="row-fluid">
-  <div class="span12">
-    <div id="archived_post_body">
-    <% if @post.topica? || @post.body["<html>"] %>
-      <%= sanitize(simple_format(@post.body)) %>
-    <% else %>
-      <%= sanitize(simple_format(@post.body)) %>
-    <% end -%>
-    </div>
-  </div>
-</div>
-
-<div class="row-fluid">
-  <div class="span12">
-    <%= render("mailing_lists/links", :mailing_list => @post.mailing_list) %>
+    <%= render "mailing_lists/links", :mailing_list => @post.mailing_list %>
   </div>
 </div>

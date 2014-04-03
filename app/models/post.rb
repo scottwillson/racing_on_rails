@@ -1,83 +1,114 @@
-# Mailing list post
+# Archived mailing list post
 class Post < ActiveRecord::Base
+  include Concerns::Posts::Migration
 
-  attr_accessor :from_email_address, :from_name
-
-  validates_presence_of :subject, :date, :mailing_list
-  validates_presence_of :from_name, :from_email_address
-
-  before_create :remove_list_prefix, :update_sender
-  after_save :add_post_text
+  validates_presence_of :date
+  validates_presence_of :from_email, :on => :create
+  validates_presence_of :from_name, :on => :create
+  validates_presence_of :mailing_list
+  validates_presence_of :subject
 
   belongs_to :mailing_list
+  belongs_to :original, :class_name => "Post", :inverse_of => :replies
   has_one :post_text
+  has_many :replies, :class_name => "Post", :inverse_of => :original, :foreign_key => :original_id
 
-  acts_as_list
+  scope :original, -> { where(:original_id => nil) }
+
+  acts_as_list :scope => :mailing_list
 
   default_value_for(:date) { Time.zone.now }
 
-  def self.find_for_dates(mailing_list, month_start, month_end)
-    mailing_list.posts.all(
-      :select => "id, date, sender, subject, topica_message_id" ,
-      :conditions => [ "date between ? and ?", month_start, month_end ],
-      :order => "date desc"
-    )
-  end
+  # Save new or updated Post to database.
+  #
+  # Associate reply posts with original and update original's reply count and last reply time.
+  # Reposition original based on reply time. Build or update full text search index.
+  #
+  # In most cases, you want to call this service method, not just save! or create!
+  def self.save(post, mailing_list)
+    post.subject = Post.remove_list_prefix(post.subject, mailing_list.subject_line_prefix)
 
-  def from_name
-    @from_name ||= (
-    if sender
-      if sender["<"]
-        sender[/^([^<]+)/].try(:strip)
-      elsif !sender["@"]
-        sender
+    transaction do
+      original = find_original(post)
+      if original
+        original.replies << post
+        original.replies_count = original.replies_count + 1
+        if original.last_reply_at.nil? || post.date > original.last_reply_at
+          original.last_reply_at = post.date
+        end
+        original.save
       end
+
+      post.last_reply_at = post.date
+      return false if !post.save
+
+      post.add_post_text
+      original.reposition! if original
     end
-    )
+
+    true
   end
 
-  def from_email_address
-    @from_email_address ||= (
-    if sender
-      if sender["<"]
-        sender[/<(.*)>/, 1].try(:strip)
-      elsif !sender["<"]
-        sender
-      end
+  # Find original post on this subject. Return nil if none.
+  def self.find_original(post)
+    subject = normalize_subject(post.subject, post.mailing_list.subject_line_prefix)
+    posts = post.mailing_list.posts.where(:subject => subject).original.order(:position)
+    if !post.new_record?
+      posts = posts.where("id != ?", post.id)
     end
-    )
+    posts.first
   end
 
-  def sender=(value)
-    self[:sender] = value
+  # Strip whitespace, mailing list prefix, and re: and fwd:
+  def self.normalize_subject(subject, subject_line_prefix)
+    strip_subject remove_list_prefix(subject, subject_line_prefix)
   end
 
-  def remove_list_prefix
-    subject.gsub!(/\[#{mailing_list.subject_line_prefix}\]\s*/, "")
-    subject.strip!
+  def self.remove_list_prefix(subject, subject_line_prefix)
+    return "" unless subject
+    subject.gsub(/\[#{subject_line_prefix}\]\s*/, "").strip
   end
 
-  def from_email_address=(value)
-    @from_email_address = value
-    update_sender
+  # Remove re: and fwd:
+  def self.strip_subject(subject)
+    return "" unless subject
+
+    subject.
+      gsub(/\A(\s*)Re:(\s*)/i, "").
+      gsub(/\A(\s*)Fw(d):(\s*)/i, "").
+      gsub(/\s+/, " ").
+      strip
   end
 
-  def topica?
-    topica_message_id.present?
+  # Last few Posts from all MailingLists
+  def self.recent
+    Post.original.includes(:mailing_list).order("position desc").limit(5)
   end
 
-  def from_name=(value)
-    @from_name = value
-    update_sender
+  # Move Post into position in list based on last_reply_at. In practice, most new Posts
+  # move to the top of the list (highest position).
+  def reposition!
+    new_position = Post.where("last_reply_at <= ?", last_reply_at).order("position desc").pluck(:position).first
+    if new_position && new_position != position
+      insert_at new_position
+    end
+  end
+
+  # Next most-recent original Post
+  def newer
+    @newer ||= mailing_list.posts.original.order(:position).where("position > ?", position).first
+  end
+
+  # Next oldest original Post
+  def older
+    @older ||= mailing_list.posts.original.order("position desc").where("position < ?", position).first
   end
 
   # Replace a couple letters from email addresses to avoid spammers
-  def sender_obscured
-    if sender.blank? or !topica_message_id.blank?
-      return sender
-    end
+  def from_email_obscured
+    return "" if from_email.blank?
 
-    sender_parts = sender.split("@")
+    sender_parts = from_email.split("@")
     if sender_parts.size > 1
       person_name = sender_parts.first
       if person_name.length > 2
@@ -87,15 +118,7 @@ class Post < ActiveRecord::Base
       end
     end
 
-    sender
-  end
-
-  def update_sender
-    if @from_name.present? && from_email_address.present? && @from_email_address.present? && !(@from_name.to_s == @from_email_address.to_s )
-      self.sender = "#{@from_name} <#{@from_email_address}>"
-    else
-      self.sender = @from_email_address.to_s
-    end
+    ""
   end
 
   def add_post_text

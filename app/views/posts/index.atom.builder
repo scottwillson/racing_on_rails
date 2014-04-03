@@ -8,7 +8,7 @@ atom_feed do |feed|
       entry.content post.body
 
       entry.author do |author|
-        author.name post.sender_obscured
+        author.name post.from_email_obscured
       end
     end
   end

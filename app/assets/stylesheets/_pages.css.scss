@@ -16,7 +16,7 @@
     text-align: center;
     vertical-align: middle;
   }
-  
+
   .ad {
     padding-bottom: $baseLineHeight;
     width: 100%;
@@ -24,7 +24,7 @@
 }
 
 .hero_photo_caption a {
-  text-decoration: underline;  
+  text-decoration: underline;
 }
 
 th.name {
@@ -335,35 +335,12 @@ td.delete_all_races {
 }
 
 /* Mailing lists */
-table.archive_navigation, div.archive_navigation, div.archive_navigation div {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+.posts .pagination {
+  margin-top: 0px;
 }
 
-div.archive_navigation a
-{
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-  vertical-align: middle;
-}
-
-div.archive_navigation span
-{
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 4px;
-  padding-right: 4px;
-  vertical-align: middle;
-}
-
-div.archive_navigation input
-{
-  padding-left: 4px;
-  padding-right: 4px;
-  vertical-align: middle;
+.posts .btn.new {
+  margin-bottom: 8px;
 }
 
 /* Results */
@@ -491,7 +468,7 @@ table.results th.place,
 table.results th.laps,
 table.results th.state,
 table.results th.age {
-  width: 24px;  
+  width: 24px;
 }
 
 table.results th.time_bonus_penalty,
@@ -501,7 +478,7 @@ table.results th.points_penalty,
 table.results th.points_from_place,
 table.results th.number,
 table.results th.number {
-  width: 55px;  
+  width: 55px;
 }
 
 table.results th.time_total,
@@ -552,7 +529,7 @@ table.results.scores tr:last-child {
   height: $baseLineHeight * 8;
 }
 
-.table-striped th.bar, 
+.table-striped th.bar,
 .table-striped td.bar {
   text-align: center;
 }
@@ -627,10 +604,10 @@ table.people div.aliases {
   }
 }
 
-.hovering, 
-.table-striped tbody tr:nth-child(even).hovering td, 
+.hovering,
+.table-striped tbody tr:nth-child(even).hovering td,
 .table-striped tbody tr:nth-child(odd).hovering td,
-.table-striped.hovering tbody tr:nth-child(even) td, 
+.table-striped.hovering tbody tr:nth-child(even) td,
 .table-striped.hovering tbody tr:nth-child(odd) td {
   border-color: $highlight-color;
   background-color: lighten($highlight-color, 33);
@@ -696,8 +673,8 @@ td.right, th.right {
 }
 
 .ows table.points th, table.points td {
-  text-align: right; 
-  padding: 4px;  
+  text-align: right;
+  padding: 4px;
 }
 
 .copyright {
@@ -712,5 +689,6 @@ td.right, th.right {
 
 .error_page p, .error_page div {
   text-align: center;
-  
+
 }
+

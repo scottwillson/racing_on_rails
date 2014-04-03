@@ -2,7 +2,7 @@
   <td class="icon"><i class="icon-envelope"></i></td>
   <td class="date"><%= post.date.to_s :short %></td>
   <td class="subject">
-    <%= link_to h(truncate(post.subject, :length => 50)), edit_admin_mailing_list_post_path(post.mailing_list, post) %>
+    <%= link_to post.subject, edit_admin_mailing_list_post_path(post.mailing_list, post) %>
   </td>
   <td class="sender"><%= mail_to post.sender, post.sender %></td>
   <td class="actions">
