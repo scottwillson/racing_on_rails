@@ -42,7 +42,6 @@ module Admin
       @post = Post.find(params[:id])
       @post.attributes = post_params
       if Post.save(@post, @mailing_list)
-        #@post.update_attributes(post_params)
         flash[:notice] = "Updated #{@post.subject}"
         redirect_to edit_admin_mailing_list_post_path(@mailing_list, @post)
       else
