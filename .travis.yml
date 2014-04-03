@@ -1,10 +1,10 @@
-script: "export DISPLAY=:99.0 && rake && rake test:acceptance"
+script: "export DISPLAY=:99.0 && bundle exec rake && bundle exec rake test:acceptance"
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 before_script:
   - mysql -e 'drop database if exists racing_on_rails_test'
-  - rake db:setup RAILS_ENV=test
+  - bundle exec rake db:setup RAILS_ENV=test
 
 rvm:
   - "2.1.0"
