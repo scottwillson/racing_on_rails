@@ -7,5 +7,6 @@ Gem::Specification.new do |s|
   s.summary     = "Event registration"
   s.description = "Empty placeholder gem"
   s.add_dependency "activemerchant"
+  s.add_dependency "rails", "~> 3.2.0"
 end
 
