@@ -10,18 +10,6 @@ RacingOnRails::Application.configure do
   config.assets.css_compressor               = :yui
   config.assets.digest                       = true
   config.assets.js_compressor                = :uglifier
-  config.assets.precompile                += %w(
-    admin.js
-    glyphicons-regular.eot
-    glyphicons-regular.svg
-    glyphicons-regular.ttf
-    glyphicons-regular.woff
-    ie.css
-    racing_association.css
-    racing_association.js
-    racing_association_ie.css
-    raygun.js
-  )
   config.cache_classes                       = true
   config.consider_all_requests_local         = true
   config.eager_load                          = true

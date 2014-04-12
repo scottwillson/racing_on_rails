@@ -69,11 +69,11 @@ $input-border-focus: darken($highlight-color, 15);
 
 @font-face {
   font-family: 'glyphicons-regular';
-  src: font-url('glyphicons-regular.eot');
-  src: url(font-path('glyphicons-regular.eot') + '?#iefix') format('embedded-opentype'),
-       font-url('glyphicons-regular.woff') format('woff'),
-       font-url('glyphicons-regular.ttf') format('truetype'),
-       url(font-path('glyphicons-regular.svg') + '#open_sans') format('svg');
+  src: asset-url('glyphicons-regular.eot');
+  src: asset-url(font-path('glyphicons-regular.eot') + '?#iefix') format('embedded-opentype'),
+       asset-url('glyphicons-regular.woff') format('woff'),
+       asset-url('glyphicons-regular.ttf') format('truetype'),
+       asset-url(font-path('glyphicons-regular.svg') + '#open_sans') format('svg');
 }
 
 body {
