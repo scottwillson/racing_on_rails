@@ -48,7 +48,7 @@ PATH
   specs:
     registration_engine (0.0.1)
       activemerchant
-      rails (>= 4.1.0)
+      rails (~> 4.1.0)
 
 GEM
   remote: https://rubygems.org/
