@@ -19,8 +19,8 @@ end
 association = ARGV[0]
 
 if !association.nil?
-  `ln -s ../racing_on_rails_local_4/#{association} local`
-  `ln -s ../../racing_on_rails_local_4/#{association}/public public/local`
+  `ln -s ../racing_on_rails_local/#{association} local`
+  `ln -s ../../racing_on_rails_local/#{association}/public public/local`
 end
 
 if association == "obra" || association == "nabra"
@@ -28,7 +28,7 @@ if association == "obra" || association == "nabra"
     FileUtils.mv "lib/registration_engine", "lib/registration_engine.disabled"
   end
   if !File.exist?("lib/registration_engine")
-    `ln -s ../../registration_engine_4 lib/registration_engine`
+    `ln -s ../../registration_engine lib/registration_engine`
   end
 else
   if File.symlink?("lib/registration_engine") && File.directory?("lib/registration_engine.disabled")

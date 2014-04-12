@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.30, for osx10.9 (i386)
 --
--- Host: localhost    Database: racing_on_rails_development_4
+-- Host: localhost    Database: racing_on_rails_development
 -- ------------------------------------------------------
 -- Server version	5.5.30
 
@@ -512,7 +512,7 @@ CREATE TABLE `people` (
   `status` varchar(255) DEFAULT NULL,
   `crypted_password` varchar(255) DEFAULT NULL,
   `password_salt` varchar(255) DEFAULT NULL,
-  `persistence_token` varchar(255) DEFAULT NULL,
+  `persistence_token` varchar(255) NOT NULL,
   `single_access_token` varchar(255) DEFAULT NULL,
   `perishable_token` varchar(255) DEFAULT NULL,
   `login_count` int(11) NOT NULL DEFAULT '0',
@@ -1062,7 +1062,7 @@ CREATE TABLE `versions` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-04-08 12:48:57
+-- Dump completed on 2014-04-12  9:55:00
 INSERT INTO schema_migrations (version) VALUES ('1');
 
 INSERT INTO schema_migrations (version) VALUES ('10');
@@ -1346,8 +1346,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140327214203');
 INSERT INTO schema_migrations (version) VALUES ('20140330010812');
 
 INSERT INTO schema_migrations (version) VALUES ('20140330145224');
-
-INSERT INTO schema_migrations (version) VALUES ('20140401041601');
 
 INSERT INTO schema_migrations (version) VALUES ('20140403051211');
 
